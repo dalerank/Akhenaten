@@ -1,0 +1,15 @@
+# Pharaoh PAK
+# script for QuickBMS http://quickbms.aluigi.org
+
+    get OFFSET long
+do
+    get NEXT_OFF long
+    if NEXT_OFF == 0
+        get SIZE asize
+        math SIZE -= OFFSET
+    else
+        xmath SIZE "NEXT_OFF - OFFSET"
+    endif
+    log "" OFFSET SIZE
+    math OFFSET = NEXT_OFF
+while NEXT_OFF != 0
