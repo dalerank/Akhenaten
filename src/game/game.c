@@ -95,7 +95,7 @@ int game_pre_init(void)
     random_init();
 
     if (!lang_load(0)) {
-        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        errlog("'*.eng' or '*_mm.eng' files not found or too large.");
         return 0;
     }
     update_encoding();

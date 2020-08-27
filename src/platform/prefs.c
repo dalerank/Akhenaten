@@ -1,6 +1,7 @@
 #include "platform/prefs.h"
 
 #include "platform/platform.h"
+#include "core/game_environment.h"
 
 #include "SDL.h"
 
@@ -20,7 +21,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
                 char *dir_path = SDL_GetBasePath();
             #endif
 
-            // I assume this mess is all for cross-system compatibility
+            // because C is crap
             size_t dir_len = strlen(dir_path);
             char *file_path = malloc((strlen(filename) + dir_len + 2) * sizeof(char)); // write the full filename path into the char* buffer
             if (!file_path) {
@@ -38,24 +39,23 @@ static FILE *open_pref_file(const char *filename, const char *mode)
         #endif
     return NULL;
 }
-const char *pref_data_dir(void)
+const char *pref_get_gamepath(void)
 {
     static char data_dir[1000];
-    // attempt opening pref file to determine if it exists
-    FILE *fp = open_pref_file("data_dir.txt", "r");
+    FILE *fp = open_pref_file(game_environment.pref_filename, "r"); // open pref file for specific game
     if (fp) {
         size_t length = fread(data_dir, 1, 1000, fp);
         fclose(fp);
         if (length > 0) {
             data_dir[length] = 0;
-            return data_dir; // return path to pref file if exists
+            return data_dir; // return path to game data
         }
     }
     return NULL;
 }
-void pref_save_data_dir(const char *data_dir)
+void pref_save_gamepath(const char *data_dir)
 {
-    FILE *fp = open_pref_file("data_dir.txt", "w");
+    FILE *fp = open_pref_file(game_environment.pref_filename, "w");
     if (fp) {
         fwrite(data_dir, 1, strlen(data_dir), fp);
         fclose(fp);

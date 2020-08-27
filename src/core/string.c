@@ -2,7 +2,7 @@
 
 #include <ctype.h>
 
-uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
+uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
     int length = 0;
     while (length < maxlength && *src) {
@@ -17,7 +17,6 @@ uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
     *dst = 0;
     return dst;
 }
-
 int string_length(const uint8_t *str)
 {
     int length = 0;
@@ -27,7 +26,6 @@ int string_length(const uint8_t *str)
     }
     return length;
 }
-
 const uint8_t *string_from_ascii(const char *str)
 {
     const char *s = str;
@@ -39,7 +37,6 @@ const uint8_t *string_from_ascii(const char *str)
     }
     return (const uint8_t *) str;
 }
-
 int string_to_int(const uint8_t *str)
 {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
@@ -73,7 +70,6 @@ int string_to_int(const uint8_t *str)
     }
     return result;
 }
-
 int string_from_int(uint8_t *dst, int value, int force_plus_sign)
 {
     int total_chars = 0;
@@ -122,7 +118,6 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
 
     return total_chars;
 }
-
 int string_compare_case_insensitive(const char *a, const char *b)
 {
     while (*a && *b) {
@@ -142,7 +137,6 @@ int string_compare_case_insensitive(const char *a, const char *b)
     }
     return 0;
 }
-
 int string_equals(const uint8_t *a, const uint8_t *b)
 {
     while (*a && *b && *a == *b) {

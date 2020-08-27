@@ -5,6 +5,7 @@
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
+#include "core/game_environment.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "input/mouse.h"
@@ -133,16 +134,26 @@ void system_set_fullscreen(int fullscreen)
 #ifdef USE_TINYFILEDIALOGS
 static const char *ask_for_data_dir(int again)
 {
+    const char *title = get_game_title();
+    const char *form_1 = "Augustus requires the original files from %s to run.\n\nThe selected folder is not a proper %s folder.\n\nPress OK to select another folder or Cancel to exit.";
+    const char *form_2 = "Please select your %s folder";
+
+    // size of buffer is 200 initially - resized to (excess discarded) size of format + size of arg (game title) - 2 (%s) + 1 (null terminator)
+    char *buf = malloc(200);
     if (again) {
-        int result = tinyfd_messageBox("Wrong folder selected",
-                                       "Julius requires the original files from Caesar 3 to run.\n\n"
-                                       "The selected folder is not a proper Caesar 3 folder.\n\n"
-                                       "Press OK to select another folder or Cancel to exit.",
-                                       "okcancel", "warning", 1);
-        if (!result)
+        snprintf(buf, strlen(form_1) + 2 * strlen(title) - 3, form_1, title, title);
+        if (!tinyfd_messageBox("Wrong folder selected", buf, "okcancel", "warning", 1)) // hitting cancel will return "0"
+        {
+            free(buf);
             return NULL;
+        }
     }
-    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
+
+    snprintf(buf, strlen(form_2) + strlen(title) - 1, form_2, title);
+
+    const char *dir = tinyfd_selectFolderDialog(buf, NULL);
+    free(buf);
+    return dir;
 }
 #endif
 
@@ -171,7 +182,8 @@ static int init_sdl(void)
     SDL_Log("SDL initialized");
     return 1;
 }
-int pre_init_dir_attempt(const char *data_dir, const char *lmsg) {
+int pre_init_dir_attempt(const char *data_dir, const char *lmsg)
+{
     SDL_Log(lmsg, data_dir);
     if (!platform_file_manager_set_base_path(data_dir))
         SDL_Log("%s: directory not found", data_dir);
@@ -208,21 +220,18 @@ static int pre_init(const char *custom_data_dir)
 
     // ...then finally from the user-defined path (saved in pref file)
     #ifdef USE_TINYFILEDIALOGS
-        const char *user_dir = pref_data_dir();
+        const char *user_dir = pref_get_gamepath();
         if (user_dir && pre_init_dir_attempt(user_dir, "Loading game from user pref %s"))
             return 1;
 
         // if the saved path fails, ask the user for one
-
-        while (1) {
-            user_dir = ask_for_data_dir(0);
-            if (user_dir) {
-                if (pre_init_dir_attempt(user_dir, "Loading game from user-selected dir %s")) {
-                    pref_save_data_dir(user_dir); // save new accepted dir to pref
-                    return 1;
-                }
-            } else // if not hitting "cancel" it will continue check the selected path
-                break;
+        user_dir = ask_for_data_dir(0);
+        while (user_dir) {
+            if (pre_init_dir_attempt(user_dir, "Loading game from user-selected dir %s")) {
+                pref_save_gamepath(user_dir); // save new accepted dir to pref
+                return 1;
+            }
+            user_dir = ask_for_data_dir(1); // if not hitting "cancel" it will continue check the selected path (because the selection fills user_dir)
         }
     #else
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
@@ -249,6 +258,7 @@ static void setup(const julius_args *args)
     #endif
 
     // pre-init engine: assert game directory, pref files, etc.
+    init_game_environment(args->game_engine_env);
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);

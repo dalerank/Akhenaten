@@ -43,7 +43,6 @@ static int parse_decimal_as_percentage(const char *str)
     }
     return percentage;
 }
-
 int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
 {
     int ok = 1;
@@ -52,6 +51,7 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
     output_args->data_directory = 0;
     output_args->display_scale_percentage = 100;
     output_args->cursor_scale_percentage = 100;
+    output_args->game_engine_env = 1;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -60,7 +60,11 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
         if (SDL_strncmp(argv[i], "-psn", 4) == 0) {
             continue;
         }
-        if (SDL_strcmp(argv[i], "--display-scale") == 0) {
+        if (SDL_strcmp(argv[i], "--caesar3") == 0) {
+            output_args->game_engine_env = 1;
+        } else if (SDL_strcmp(argv[i], "--pharaoh") == 0) {
+            output_args->game_engine_env = 2;
+        } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
