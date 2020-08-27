@@ -77,7 +77,6 @@ int config_get(config_key key)
 {
     return values[key];
 }
-
 void config_set(config_key key, int value)
 {
     values[key] = value;
@@ -87,7 +86,6 @@ const char *config_get_string(config_string_key key)
 {
     return string_values[key];
 }
-
 void config_set_string(config_string_key key, const char *value)
 {
     if (!value) {
@@ -96,12 +94,10 @@ void config_set_string(config_string_key key, const char *value)
         strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
-
 int config_get_default_value(config_key key)
 {
     return default_values[key];
 }
-
 const char *config_get_default_string_value(config_string_key key)
 {
     return default_string_values[key];
@@ -114,7 +110,6 @@ void config_set_defaults(void)
     }
     strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
 }
-
 void config_load(void)
 {
     config_set_defaults();
@@ -154,7 +149,6 @@ void config_load(void)
     }
     file_close(fp);
 }
-
 void config_save(void)
 {
     FILE *fp = file_open(INI_FILENAME, "wt");

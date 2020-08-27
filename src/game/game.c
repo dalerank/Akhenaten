@@ -43,7 +43,6 @@ static void errlog(const char *msg)
 {
     log_error(msg, 0, 0);
 }
-
 static encoding_type update_encoding(void)
 {
     language_type language = locale_determine_language();
@@ -53,24 +52,6 @@ static encoding_type update_encoding(void)
     translation_load(language);
     return encoding;
 }
-
-int game_pre_init(void)
-{
-    settings_load();
-    config_load();
-    hotkey_config_load();
-    scenario_settings_init();
-    game_state_unpause();
-
-    if (!lang_load(0)) {
-        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
-        return 0;
-    }
-    update_encoding();
-    random_init();
-    return 1;
-}
-
 static int is_unpatched(void)
 {
     const uint8_t *delete_game = lang_get_string(1, 6);
@@ -82,7 +63,45 @@ static int is_unpatched(void)
     // languages (pt_BR): delete game falls through to option menu
     return difficulty_option == help_menu || delete_game == option_menu;
 }
+static int reload_language(int is_editor, int reload_images)
+{
+    if (!lang_load(is_editor)) {
+        if (is_editor) {
+            errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+        } else {
+            errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        }
+        return 0;
+    }
+    encoding_type encoding = update_encoding();
 
+    if (!image_load_fonts(encoding)) {
+        errlog("unable to load font graphics");
+        return 0;
+    }
+    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
+        errlog("unable to load main graphics");
+        return 0;
+    }
+    return 1;
+}
+
+int game_pre_init(void)
+{
+    settings_load(); // c3.inf
+    config_load(); // augustus.txt
+    hotkey_config_load();
+    scenario_settings_init();
+    random_init();
+
+    if (!lang_load(0)) {
+        errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+        return 0;
+    }
+    update_encoding();
+    game_state_unpause();
+    return 1;
+}
 int game_init(void)
 {
     if (!image_init()) {
@@ -119,30 +138,6 @@ int game_init(void)
 
     return 1;
 }
-
-static int reload_language(int is_editor, int reload_images)
-{
-    if (!lang_load(is_editor)) {
-        if (is_editor) {
-            errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
-        } else {
-            errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
-        }
-        return 0;
-    }
-    encoding_type encoding = update_encoding();
-
-    if (!image_load_fonts(encoding)) {
-        errlog("unable to load font graphics");
-        return 0;
-    }
-    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
-        errlog("unable to load main graphics");
-        return 0;
-    }
-    return 1;
-}
-
 int game_init_editor(void)
 {
     if (!reload_language(1, 0)) {
@@ -160,7 +155,6 @@ int game_init_editor(void)
     window_editor_map_show();
     return 1;
 }
-
 void game_exit_editor(void)
 {
     if (!reload_language(0, 0)) {
@@ -169,12 +163,10 @@ void game_exit_editor(void)
     editor_set_active(0);
     window_main_menu_show(1);
 }
-
 int game_reload_language(void)
 {
     return reload_language(0, 1);
 }
-
 static int get_elapsed_ticks(void)
 {
     if (game_state_is_paused()) {
@@ -231,13 +223,11 @@ void game_run(void)
         }
     }
 }
-
 void game_draw(void)
 {
     window_draw(0);
     sound_city_play();
 }
-
 void game_exit(void)
 {
     video_shutdown();

@@ -78,13 +78,11 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
         fflush(log_file);
     }
 }
-
 static void setup_logging(void)
 {
     log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
-
 static void teardown_logging(void)
 {
     if (log_file) {
@@ -109,7 +107,6 @@ void system_exit(void)
 {
     post_event(USER_EVENT_QUIT);
 }
-
 void system_resize(int width, int height)
 {
     static int s_width;
@@ -124,15 +121,162 @@ void system_resize(int width, int height)
     event.user.data2 = &s_height;
     SDL_PushEvent(&event);
 }
-
 void system_center(void)
 {
     post_event(USER_EVENT_CENTER_WINDOW);
 }
-
 void system_set_fullscreen(int fullscreen)
 {
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
+}
+
+#ifdef USE_TINYFILEDIALOGS
+static const char *ask_for_data_dir(int again)
+{
+    if (again) {
+        int result = tinyfd_messageBox("Wrong folder selected",
+                                       "Julius requires the original files from Caesar 3 to run.\n\n"
+                                       "The selected folder is not a proper Caesar 3 folder.\n\n"
+                                       "Press OK to select another folder or Cancel to exit.",
+                                       "okcancel", "warning", 1);
+        if (!result)
+            return NULL;
+    }
+    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
+}
+#endif
+
+static int init_sdl(void)
+{
+    SDL_Log("Initializing SDL");
+    Uint32 SDL_flags = SDL_INIT_AUDIO;
+
+    // on Vita, need video init only to enable physical kbd/mouse and touch events
+    SDL_flags |= SDL_INIT_VIDEO;
+
+#if defined(__vita__) || defined(__SWITCH__)
+    SDL_flags |= SDL_INIT_JOYSTICK;
+#endif
+
+    if (SDL_Init(SDL_flags) != 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+        return 0;
+    }
+#if SDL_VERSION_ATLEAST(2, 0, 10)
+    SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+#elif SDL_VERSION_ATLEAST(2, 0, 4)
+    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
+#endif
+    SDL_Log("SDL initialized");
+    return 1;
+}
+int pre_init_dir_attempt(const char *data_dir, const char *lmsg) {
+    SDL_Log(lmsg, data_dir);
+    if (!platform_file_manager_set_base_path(data_dir))
+        SDL_Log("%s: directory not found", data_dir);
+    if (game_pre_init())
+        return 1;
+    return 0;
+}
+static int pre_init(const char *custom_data_dir)
+{
+    // first attempt loading game from custom path passed as argument...
+    if (custom_data_dir) {
+        if (pre_init_dir_attempt(custom_data_dir, "Loading game from %s"))
+            return 1;
+        SDL_Log("%s: directory not found", custom_data_dir);
+        return 0;
+    }
+
+    // ...then from working directory...
+    SDL_Log("Loading game from working directory");
+    if (game_pre_init()) {
+        return 1;
+    }
+
+    // ...then from the executable base path...
+    #if SDL_VERSION_ATLEAST(2, 0, 1)
+        if (platform_sdl_version_at_least(2, 0, 1)) {
+            char *base_path = SDL_GetBasePath();
+            if (pre_init_dir_attempt(base_path, "Loading game from base path %s")) {
+                SDL_free(base_path);
+                return 1;
+            }
+        }
+    #endif
+
+    // ...then finally from the user-defined path (saved in pref file)
+    #ifdef USE_TINYFILEDIALOGS
+        const char *user_dir = pref_data_dir();
+        if (user_dir && pre_init_dir_attempt(user_dir, "Loading game from user pref %s"))
+            return 1;
+
+        // if the saved path fails, ask the user for one
+
+        while (1) {
+            user_dir = ask_for_data_dir(0);
+            if (user_dir) {
+                if (pre_init_dir_attempt(user_dir, "Loading game from user-selected dir %s")) {
+                    pref_save_data_dir(user_dir); // save new accepted dir to pref
+                    return 1;
+                }
+            } else // if not hitting "cancel" it will continue check the selected path
+                break;
+        }
+    #else
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+            "Julius requires the original files from Caesar 3 to run.",
+            "Move the Julius executable to the directory containing an existing "
+            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
+            NULL);
+    #endif
+
+    return 0;
+}
+static void setup(const julius_args *args)
+{
+    // init SDL and some other stuff
+    signal(SIGSEGV, handler);
+    setup_logging();
+    SDL_Log("Augustus version %s", system_version());
+    if (!init_sdl()) {
+        SDL_Log("Exiting: SDL init failed");
+        exit(-1);
+    }
+    #ifdef PLATFORM_ENABLE_INIT_CALLBACK
+        platform_init_callback();
+    #endif
+
+    // pre-init engine: assert game directory, pref files, etc.
+    if (!pre_init(args->data_directory)) {
+        SDL_Log("Exiting: game pre-init failed");
+        exit(1);
+    }
+
+    // set up game display
+    char title[100];
+    encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
+    if (!platform_screen_create(title, args->display_scale_percentage)) {
+        SDL_Log("Exiting: SDL create window failed");
+        exit(-2);
+    }
+    platform_init_cursors(args->cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+
+    // init game!
+    time_set_millis(SDL_GetTicks());
+    if (!game_init()) {
+        SDL_Log("Exiting: game init failed");
+        exit(2);
+    }
+}
+static void teardown(void)
+{
+    SDL_Log("Exiting game");
+    game_exit();
+    platform_screen_destroy();
+    SDL_Quit();
+    teardown_logging();
 }
 
 #ifdef DRAW_FPS
@@ -194,7 +338,6 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
         mouse_set_right_down(is_down);
     }
 }
-
 #ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
@@ -228,7 +371,6 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
     }
 }
 #endif
-
 static void handle_event(SDL_Event *event, int *active, int *quit)
 {
     switch (event->type) {
@@ -299,7 +441,6 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
     }
 }
-
 static void main_loop(void)
 {
     mouse_set_inside_window(1);
@@ -330,157 +471,6 @@ static void main_loop(void)
             }
         }
     }
-}
-
-static int init_sdl(void)
-{
-    SDL_Log("Initializing SDL");
-    Uint32 SDL_flags = SDL_INIT_AUDIO;
-
-    // on Vita, need video init only to enable physical kbd/mouse and touch events
-    SDL_flags |= SDL_INIT_VIDEO;
-
-#if defined(__vita__) || defined(__SWITCH__)
-    SDL_flags |= SDL_INIT_JOYSTICK;
-#endif
-
-    if (SDL_Init(SDL_flags) != 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
-        return 0;
-    }
-#if SDL_VERSION_ATLEAST(2, 0, 10)
-    SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
-    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
-#elif SDL_VERSION_ATLEAST(2, 0, 4)
-    SDL_SetHint(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "1");
-#endif
-    SDL_Log("SDL initialized");
-    return 1;
-}
-
-#ifdef USE_TINYFILEDIALOGS
-static const char *ask_for_data_dir(int again)
-{
-    if (again) {
-        int result = tinyfd_messageBox("Wrong folder selected",
-            "Julius requires the original files from Caesar 3 to run.\n\n"
-            "The selected folder is not a proper Caesar 3 folder.\n\n"
-            "Press OK to select another folder or Cancel to exit.",
-            "okcancel", "warning", 1);
-        if (!result) {
-            return NULL;
-        }
-    }
-    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
-}
-#endif
-
-static int pre_init(const char *custom_data_dir)
-{
-    if (custom_data_dir) {
-        SDL_Log("Loading game from %s", custom_data_dir);
-        if (!platform_file_manager_set_base_path(custom_data_dir)) {
-            SDL_Log("%s: directory not found", custom_data_dir);
-            return 0;
-        }
-        return game_pre_init();
-    }
-
-    SDL_Log("Loading game from working directory");
-    if (game_pre_init()) {
-        return 1;
-    }
-
-    #if SDL_VERSION_ATLEAST(2, 0, 1)
-    if (platform_sdl_version_at_least(2, 0, 1)) {
-        char *base_path = SDL_GetBasePath();
-        if (base_path) {
-            if (platform_file_manager_set_base_path(base_path)) {
-                SDL_Log("Loading game from base path %s", base_path);
-                if (game_pre_init()) {
-                    SDL_free(base_path);
-                    return 1;
-                }
-            }
-            SDL_free(base_path);
-        }
-    }
-    #endif
-
-    #ifdef USE_TINYFILEDIALOGS
-        const char *user_dir = pref_data_dir();
-        if (user_dir) {
-            SDL_Log("Loading game from user pref %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                return 1;
-            }
-        }
-
-        user_dir = ask_for_data_dir(0);
-        while (user_dir) {
-            SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                pref_save_data_dir(user_dir);
-                return 1;
-            }
-            user_dir = ask_for_data_dir(1);
-        }
-    #else
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Julius requires the original files from Caesar 3 to run.",
-            "Move the Julius executable to the directory containing an existing "
-            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
-            NULL);
-    #endif
-
-    return 0;
-}
-
-static void setup(const julius_args *args)
-{
-    signal(SIGSEGV, handler);
-    setup_logging();
-
-    SDL_Log("Augustus version %s", system_version());
-
-    if (!init_sdl()) {
-        SDL_Log("Exiting: SDL init failed");
-        exit(-1);
-    }
-
-#ifdef PLATFORM_ENABLE_INIT_CALLBACK
-    platform_init_callback();
-#endif
-
-    if (!pre_init(args->data_directory)) {
-        SDL_Log("Exiting: game pre-init failed");
-        exit(1);
-    }
-
-    char title[100];
-    encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, args->display_scale_percentage)) {
-        SDL_Log("Exiting: SDL create window failed");
-        exit(-2);
-    }
-    // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
-    platform_init_cursors(args->cursor_scale_percentage);
-
-    time_set_millis(SDL_GetTicks());
-
-    if (!game_init()) {
-        SDL_Log("Exiting: game init failed");
-        exit(2);
-    }
-}
-
-static void teardown(void)
-{
-    SDL_Log("Exiting game");
-    game_exit();
-    platform_screen_destroy();
-    SDL_Quit();
-    teardown_logging();
 }
 
 int main(int argc, char **argv)
