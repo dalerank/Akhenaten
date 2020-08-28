@@ -195,14 +195,14 @@ static int pre_init(const char *custom_data_dir)
 {
     // first attempt loading game from custom path passed as argument...
     if (custom_data_dir) {
-        if (pre_init_dir_attempt(custom_data_dir, "Loading game from %s"))
+        if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s"))
             return 1;
         SDL_Log("%s: directory not found", custom_data_dir);
         return 0;
     }
 
     // ...then from working directory...
-    SDL_Log("Loading game from working directory");
+    SDL_Log("Attempting to load game from working directory");
     if (game_pre_init()) {
         return 1;
     }
@@ -211,7 +211,7 @@ static int pre_init(const char *custom_data_dir)
     #if SDL_VERSION_ATLEAST(2, 0, 1)
         if (platform_sdl_version_at_least(2, 0, 1)) {
             char *base_path = SDL_GetBasePath();
-            if (pre_init_dir_attempt(base_path, "Loading game from base path %s")) {
+            if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
                 SDL_free(base_path);
                 return 1;
             }
@@ -221,13 +221,13 @@ static int pre_init(const char *custom_data_dir)
     // ...then finally from the user-defined path (saved in pref file)
     #ifdef USE_TINYFILEDIALOGS
         const char *user_dir = pref_get_gamepath();
-        if (user_dir && pre_init_dir_attempt(user_dir, "Loading game from user pref %s"))
+        if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s"))
             return 1;
 
         // if the saved path fails, ask the user for one
         user_dir = ask_for_data_dir(0);
         while (user_dir) {
-            if (pre_init_dir_attempt(user_dir, "Loading game from user-selected dir %s")) {
+            if (pre_init_dir_attempt(user_dir, "Attempting to load game from user-selected dir %s")) {
                 pref_save_gamepath(user_dir); // save new accepted dir to pref
                 return 1;
             }
@@ -241,6 +241,7 @@ static int pre_init(const char *custom_data_dir)
             NULL);
     #endif
 
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "'*.eng' or '*_mm.eng' files not found or too large.");
     return 0;
 }
 static void setup(const julius_args *args)

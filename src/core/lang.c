@@ -11,7 +11,7 @@
 #include <string.h>
 
 #define MAX_TEXT_ENTRIES 1000
-#define MAX_TEXT_DATA 200000
+#define MAX_TEXT_DATA 300000
 #define MIN_TEXT_SIZE (28 + MAX_TEXT_ENTRIES * 8)
 #define MAX_TEXT_SIZE (MIN_TEXT_SIZE + MAX_TEXT_DATA)
 
@@ -39,20 +39,20 @@ typedef struct lang_files_collection {
 } lang_files_collection;
 
 lang_files_collection lfcs[] = {
-    (lang_files_collection) {
-            "c3.eng",
-            "c3_mm.eng",
-            "c3.rus",
-            "c3_mm.rus",
-            "c3_map.eng",
-            "c3_map_mm.eng"
-    }, (lang_files_collection) {
-            "Pharaoh_Text.eng",
-            "Pharaoh_MM.eng",
-            "Pharaoh_Text.rus",
-            "Pharaoh_MM.rus",
-            "Pharaoh_Map_Text.eng",
-            "Pharaoh_Map_MM.eng"
+    {
+        "c3.eng",
+        "c3_mm.eng",
+        "c3.rus",
+        "c3_mm.rus",
+        "c3_map.eng",
+        "c3_map_mm.eng"
+    }, {
+        "Pharaoh_Text.eng",
+        "Pharaoh_MM.eng",
+        "Pharaoh_Text.rus",
+        "Pharaoh_MM.rus",
+        "Pharaoh_Map_Text.eng",
+        "Pharaoh_Map_MM.eng"
     }
 };
 
@@ -84,26 +84,6 @@ int lang_dir_is_valid(const char *dir)
         return 1;
     }
     return 0;
-}
-static void parse_text(buffer *buf)
-{
-    buffer_skip(buf, 28); // header
-    for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-        data.text_entries[i].offset = buffer_read_i32(buf);
-        data.text_entries[i].in_use = buffer_read_i32(buf);
-    }
-    buffer_read_raw(buf, data.text_data, MAX_TEXT_DATA);
-}
-static int load_text(const char *filename, int localizable, uint8_t *buf_data)
-{
-    buffer buf;
-    int filesize = io_read_file_into_buffer(filename, localizable, buf_data, BUFFER_SIZE);
-    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
-        return 0;
-    }
-    buffer_init(&buf, buf_data, filesize);
-    parse_text(&buf);
-    return 1;
 }
 static uint8_t *get_message_text(int32_t offset)
 {
@@ -146,26 +126,40 @@ static void parse_message(buffer *buf)
     }
     buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
 }
-static int load_message(const char *filename, int localizable, uint8_t *data_buffer)
-{
-    buffer buf;
-    int filesize = io_read_file_into_buffer(filename, localizable, data_buffer, BUFFER_SIZE);
-    if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
-        return 0;
-    }
-    buffer_init(&buf, data_buffer, filesize);
-    parse_message(&buf);
-    return 1;
-}
 static int load_files(const char *text_filename, const char *message_filename, int localizable)
 {
-    uint8_t *buffer = (uint8_t *) malloc(BUFFER_SIZE);
-    if (!buffer) {
+    uint8_t *buf_data = (uint8_t *) malloc(BUFFER_SIZE);
+    if (!buf_data)
+        return 0;
+
+    // load text into buffer
+    buffer buf;
+    int filesize = io_read_file_into_buffer(text_filename, localizable, buf_data, BUFFER_SIZE);
+    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
+        free(buf_data);
         return 0;
     }
-    int success = load_text(text_filename, localizable, buffer) && load_message(message_filename, localizable, buffer);
-    free(buffer);
-    return success;
+    buffer_init(&buf, buf_data, filesize);
+
+    // parse text
+    buffer_skip(&buf, 28); // header
+    for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
+        data.text_entries[i].offset = buffer_read_i32(&buf);
+        data.text_entries[i].in_use = buffer_read_i32(&buf);
+    }
+    buffer_read_raw(&buf, data.text_data, MAX_TEXT_DATA);
+
+    // load message
+    buffer_reset(&buf);
+    filesize = io_read_file_into_buffer(message_filename, localizable, buf_data, BUFFER_SIZE);
+    if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
+        free(buf_data);
+        return 0;
+    }
+    buffer_init(&buf, buf_data, filesize);
+    parse_message(&buf);
+    free(buf_data);
+    return 1;
 }
 int lang_load(int is_editor)
 {

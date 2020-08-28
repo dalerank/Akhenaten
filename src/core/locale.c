@@ -56,7 +56,6 @@ static language_type determine_language(void)
         return LANGUAGE_UNKNOWN;
     }
 }
-
 static void log_language(void)
 {
     const char *desc;
@@ -77,20 +76,17 @@ static void log_language(void)
     }
     log_info("Detected language:", desc, 0);
 }
-
 language_type locale_determine_language(void)
 {
     data.last_determined_language = determine_language();
     log_language();
     return data.last_determined_language;
 }
-
 int locale_year_before_ad(void)
 {
     // In all languages it's "200 AD" except for English
     return data.last_determined_language != LANGUAGE_ENGLISH;
 }
-
 int locale_translate_rank_autosaves(void)
 {
     switch (data.last_determined_language) {

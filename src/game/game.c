@@ -88,16 +88,14 @@ static int reload_language(int is_editor, int reload_images)
 
 int game_pre_init(void)
 {
+    if (!lang_load(0))
+        return 0;
     settings_load(); // c3.inf
-    config_load(); // augustus.txt
+    config_load(); // augustus.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();
 
-    if (!lang_load(0)) {
-        errlog("'*.eng' or '*_mm.eng' files not found or too large.");
-        return 0;
-    }
     update_encoding();
     game_state_unpause();
     return 1;

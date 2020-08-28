@@ -42,7 +42,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
 const char *pref_get_gamepath(void)
 {
     static char data_dir[1000];
-    FILE *fp = open_pref_file(game_environment.pref_filename, "r"); // open pref file for specific game
+    FILE *fp = open_pref_file(get_engine_pref_path(), "r"); // open pref file for specific game
     if (fp) {
         size_t length = fread(data_dir, 1, 1000, fp);
         fclose(fp);
@@ -55,7 +55,7 @@ const char *pref_get_gamepath(void)
 }
 void pref_save_gamepath(const char *data_dir)
 {
-    FILE *fp = open_pref_file(game_environment.pref_filename, "w");
+    FILE *fp = open_pref_file(get_engine_pref_path(), "w");
     if (fp) {
         fwrite(data_dir, 1, strlen(data_dir), fp);
         fclose(fp);
