@@ -137,9 +137,12 @@ int string_compare_case_insensitive(const char *a, const char *b)
     }
     return 0;
 }
-int string_equals(const uint8_t *a, const uint8_t *b)
+int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive)
 {
-    while (*a && *b && *a == *b) {
+    while (*a && *b &&
+        ((case_sentitive == 1 && *a == *b) ||
+        (case_sentitive == 0 && tolower(*a) == tolower(*b))))
+    {
         ++a;
         ++b;
     }

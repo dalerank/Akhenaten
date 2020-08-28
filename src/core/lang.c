@@ -22,40 +22,6 @@
 
 #define BUFFER_SIZE 400000
 
-//#define FILE_TEXT_ENG "c3.eng"
-//#define FILE_MM_ENG "c3_mm.eng"
-//#define FILE_TEXT_RUS "c3.rus"
-//#define FILE_MM_RUS "c3_mm.rus"
-//#define FILE_EDITOR_TEXT_ENG "c3_map.eng"
-//#define FILE_EDITOR_MM_ENG "c3_map_mm.eng"
-
-typedef struct lang_files_collection {
-    char *FILE_TEXT_ENG;
-    char *FILE_MM_ENG;
-    char *FILE_TEXT_RUS;
-    char *FILE_MM_RUS;
-    char *FILE_EDITOR_TEXT_ENG;
-    char *FILE_EDITOR_MM_ENG;
-} lang_files_collection;
-
-lang_files_collection lfcs[] = {
-    {
-        "c3.eng",
-        "c3_mm.eng",
-        "c3.rus",
-        "c3_mm.rus",
-        "c3_map.eng",
-        "c3_map_mm.eng"
-    }, {
-        "Pharaoh_Text.eng",
-        "Pharaoh_MM.eng",
-        "Pharaoh_Text.rus",
-        "Pharaoh_MM.rus",
-        "Pharaoh_Map_Text.eng",
-        "Pharaoh_Map_MM.eng"
-    }
-};
-
 static struct {
     struct {
         int32_t offset;
@@ -66,6 +32,33 @@ static struct {
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
     uint8_t message_data[MAX_MESSAGE_DATA];
 } data;
+
+typedef struct lang_files_collection {
+    char *FILE_TEXT_ENG;
+    char *FILE_MM_ENG;
+    char *FILE_TEXT_RUS;
+    char *FILE_MM_RUS;
+    char *FILE_EDITOR_TEXT_ENG;
+    char *FILE_EDITOR_MM_ENG;
+} lang_files_collection;
+lang_files_collection lfcs[] = {
+        {
+                "c3.eng",
+                "c3_mm.eng",
+                "c3.rus",
+                "c3_mm.rus",
+                "c3_map.eng",
+                "c3_map_mm.eng"
+        }, {
+                "Pharaoh_Text.eng",
+                "Pharaoh_MM.eng",
+                "Pharaoh_Text.rus",
+                "Pharaoh_MM.rus",
+                "Pharaoh_Map_Text.eng",
+                "Pharaoh_Map_MM.eng"
+        }
+};
+
 static int file_exists_in_dir(const char *dir, const char *file)
 {
     char path[2 * FILE_NAME_MAX];
@@ -77,10 +70,11 @@ static int file_exists_in_dir(const char *dir, const char *file)
 }
 int lang_dir_is_valid(const char *dir)
 {
-    if (file_exists_in_dir(dir, lfcs[get_engine_environment()].FILE_TEXT_ENG) && file_exists_in_dir(dir, lfcs[get_engine_environment()].FILE_MM_ENG)) {
+    lang_files_collection *lfc = &lfcs[get_engine_environment()];
+    if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG)) {
         return 1;
     }
-    if (file_exists_in_dir(dir, lfcs[get_engine_environment()].FILE_TEXT_RUS) && file_exists_in_dir(dir, lfcs[get_engine_environment()].FILE_MM_RUS)) {
+    if (file_exists_in_dir(dir, lfc->FILE_TEXT_RUS) && file_exists_in_dir(dir, lfc->FILE_MM_RUS)) {
         return 1;
     }
     return 0;
@@ -163,15 +157,16 @@ static int load_files(const char *text_filename, const char *message_filename, i
 }
 int lang_load(int is_editor)
 {
+    lang_files_collection *lfc = &lfcs[get_engine_environment()];
     if (is_editor) {
-        return load_files(lfcs[get_engine_environment()].FILE_EDITOR_TEXT_ENG, lfcs[get_engine_environment()].FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
+        return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
     }
     // Prefer language files from localized dir, fall back to main dir
     return
-        load_files(lfcs[get_engine_environment()].FILE_TEXT_ENG, lfcs[get_engine_environment()].FILE_MM_ENG, MUST_BE_LOCALIZED) ||
-        load_files(lfcs[get_engine_environment()].FILE_TEXT_RUS, lfcs[get_engine_environment()].FILE_MM_RUS, MUST_BE_LOCALIZED) ||
-        load_files(lfcs[get_engine_environment()].FILE_TEXT_ENG, lfcs[get_engine_environment()].FILE_MM_ENG, NOT_LOCALIZED) ||
-        load_files(lfcs[get_engine_environment()].FILE_TEXT_RUS, lfcs[get_engine_environment()].FILE_MM_RUS, NOT_LOCALIZED);
+        load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, MUST_BE_LOCALIZED) ||
+        load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, MUST_BE_LOCALIZED) ||
+        load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, NOT_LOCALIZED) ||
+        load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, NOT_LOCALIZED);
 }
 const uint8_t *lang_get_string(int group, int index)
 {

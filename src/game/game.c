@@ -43,15 +43,6 @@ static void errlog(const char *msg)
 {
     log_error(msg, 0, 0);
 }
-static encoding_type update_encoding(void)
-{
-    language_type language = locale_determine_language();
-    encoding_type encoding = encoding_determine(language);
-    log_info("Detected encoding:", 0, encoding);
-    font_set_encoding(encoding);
-    translation_load(language);
-    return encoding;
-}
 static int is_unpatched(void)
 {
     const uint8_t *delete_game = lang_get_string(1, 6);
@@ -62,6 +53,15 @@ static int is_unpatched(void)
     // getting it "falls through" to the next text group, or, for some
     // languages (pt_BR): delete game falls through to option menu
     return difficulty_option == help_menu || delete_game == option_menu;
+}
+static encoding_type update_encoding(void)
+{
+    language_type language = locale_determine_language();
+    encoding_type encoding = encoding_determine(language);
+    log_info("Detected encoding:", 0, encoding);
+    font_set_encoding(encoding);
+    translation_load(language);
+    return encoding;
 }
 static int reload_language(int is_editor, int reload_images)
 {
@@ -90,13 +90,13 @@ int game_pre_init(void)
 {
     if (!lang_load(0))
         return 0;
+    update_encoding();
     settings_load(); // c3.inf
     config_load(); // augustus.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();
 
-    update_encoding();
     game_state_unpause();
     return 1;
 }
@@ -125,7 +125,7 @@ int game_init(void)
     }
 
     if (!model_load()) {
-        errlog("unable to load c3_model.txt");
+        errlog("unable to load model.txt");
         return 0;
     }
 

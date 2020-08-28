@@ -141,6 +141,153 @@ static struct {
     int selected_language_option;
 } data;
 
+static void set_language(int index)
+{
+    const char* dir = index == 0 ? "" : data.language_options_utf8[index];
+    strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
+
+    data.selected_language_option = index;
+}
+
+static void cancel_values(void)
+{
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
+        data.config_values[i].new_value = data.config_values[i].original_value;
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
+    }
+}
+static int config_changed(config_key key)
+{
+    return data.config_values[key].original_value != data.config_values[key].new_value;
+}
+static int config_string_changed(config_string_key key)
+{
+    return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
+}
+static int config_change_basic(config_key key)
+{
+    config_set(key, data.config_values[key].new_value);
+    data.config_values[key].original_value = data.config_values[key].new_value;
+    return 1;
+}
+static int config_change_string_basic(config_string_key key)
+{
+    config_set_string(key, data.config_string_values[key].new_value);
+    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    return 1;
+}
+static int config_change_zoom(config_key key)
+{
+    config_change_basic(key);
+    system_reload_textures();
+    return 1;
+}
+static int config_change_string_language(config_string_key key)
+{
+    config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
+    if (!game_reload_language()) {
+        // Notify user that language dir is invalid and revert to previously selected
+        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
+        config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
+        game_reload_language();
+        return 0;
+    }
+    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    return 1;
+}
+
+static int apply_changed_configs(void)
+{
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
+        if (config_changed(i)) {
+            if (!data.config_values[i].change_action(i)) {
+                return 0;
+            }
+        }
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
+        if (config_string_changed(i)) {
+            if (!data.config_string_values[i].change_action(i)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+static void button_hotkeys(int param1, int param2)
+{
+    window_hotkey_config_show();
+}
+static void button_language_select(int param1, int param2)
+{
+    window_select_list_show_text(
+            screen_dialog_offset_x() + language_button.x + language_button.width - 10,
+            screen_dialog_offset_y() + 45,
+            data.language_options, data.num_language_options, set_language
+    );
+}
+static void button_reset_defaults(int param1, int param2)
+{
+    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
+        data.config_values[i].new_value = config_get_default_value(i);
+    }
+    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
+        strncpy(data.config_string_values[i].new_value, config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
+    }
+    set_language(0);
+    window_invalidate();
+}
+static void button_close(int save, int param2)
+{
+    if (!save) {
+        cancel_values();
+        window_main_menu_show(0);
+        return;
+    }
+    if (apply_changed_configs()) {
+        window_main_menu_show(0);
+    }
+}
+static void button_page(int param1, int param2)
+{
+    if (param1) {
+        data.page++;
+        if (data.page >= CONFIG_PAGES) {
+            data.page = 0;
+        }
+    }
+    else {
+        data.page--;
+        if (data.page < 0) {
+            data.page = CONFIG_PAGES - 1;
+        }
+    }
+    data.starting_option = 0;
+    for (int i = 0; i < data.page; i++) {
+        data.starting_option += options_per_page[i];
+    }
+    window_invalidate();
+}
+
+static void handle_input(const mouse* m, const hotkeys* h)
+{
+    const mouse* m_dialog = mouse_in_dialog(m);
+    int handled = 0;
+    handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, sizeof(bottom_buttons) / sizeof(*bottom_buttons), &data.bottom_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons), &data.page_focus_button);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    if (!handled && (m->right.went_up || h->escape_pressed)) {
+        window_main_menu_show(0);
+    }
+}
+static void toggle_switch(int key, int param2)
+{
+    data.config_values[key].new_value = 1 - data.config_values[key].new_value;
+    window_invalidate();
+}
 
 static void init(void)
 {
@@ -178,7 +325,6 @@ static void init(void)
     }
 
 }
-
 static void draw_background(void)
 {
     graphics_clear_screens();
@@ -192,7 +338,7 @@ static void draw_background(void)
 
     text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK, 0);
     text_draw_centered(data.language_options[data.selected_language_option],
-        language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
+                       language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2), 44, FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
@@ -219,8 +365,6 @@ static void draw_background(void)
 
     graphics_reset_dialog();
 }
-
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -239,175 +383,14 @@ static void draw_foreground(void)
     button_border_draw(language_button.x, language_button.y, language_button.width, language_button.height, data.language_focus_button == 1);
     graphics_reset_dialog();
 }
-
-static void handle_input(const mouse* m, const hotkeys* h)
-{
-    const mouse* m_dialog = mouse_in_dialog(m);
-    int handled = 0;
-    handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons, data.starting_option + options_per_page[data.page], &data.focus_button, data.starting_option);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, sizeof(bottom_buttons) / sizeof(*bottom_buttons), &data.bottom_focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons), &data.page_focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_main_menu_show(0);
-    }
-}
-
-static void toggle_switch(int key, int param2)
-{
-    data.config_values[key].new_value = 1 - data.config_values[key].new_value;
-    window_invalidate();
-}
-
-static void set_language(int index)
-{
-    const char* dir = index == 0 ? "" : data.language_options_utf8[index];
-    strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
-
-    data.selected_language_option = index;
-}
-
-static void button_hotkeys(int param1, int param2)
-{
-    window_hotkey_config_show();
-}
-
-static void button_language_select(int param1, int param2)
-{
-    window_select_list_show_text(
-        screen_dialog_offset_x() + language_button.x + language_button.width - 10,
-        screen_dialog_offset_y() + 45,
-        data.language_options, data.num_language_options, set_language
-    );
-}
-
-static void button_reset_defaults(int param1, int param2)
-{
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        data.config_values[i].new_value = config_get_default_value(i);
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        strncpy(data.config_string_values[i].new_value, config_get_default_string_value(i), CONFIG_STRING_VALUE_MAX - 1);
-    }
-    set_language(0);
-    window_invalidate();
-}
-
-static void cancel_values(void)
-{
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
-        data.config_values[i].new_value = data.config_values[i].original_value;
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
-    }
-}
-
-static int config_changed(config_key key)
-{
-    return data.config_values[key].original_value != data.config_values[key].new_value;
-}
-
-static int config_string_changed(config_string_key key)
-{
-    return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
-}
-
-static int apply_changed_configs(void)
-{
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        if (config_changed(i)) {
-            if (!data.config_values[i].change_action(i)) {
-                return 0;
-            }
-        }
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        if (config_string_changed(i)) {
-            if (!data.config_string_values[i].change_action(i)) {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-static void button_close(int save, int param2)
-{
-    if (!save) {
-        cancel_values();
-        window_main_menu_show(0);
-        return;
-    }
-    if (apply_changed_configs()) {
-        window_main_menu_show(0);
-    }
-}
-
-static void button_page(int param1, int param2)
-{
-    if (param1) {
-        data.page++;
-        if (data.page >= CONFIG_PAGES) {
-            data.page = 0;
-        }
-    }
-    else {
-        data.page--;
-        if (data.page < 0) {
-            data.page = CONFIG_PAGES - 1;
-        }
-    }
-    data.starting_option = 0;
-    for (int i = 0; i < data.page; i++) {
-        data.starting_option += options_per_page[i];
-    }
-    window_invalidate();
-}
-
 void window_config_show(void)
 {
     window_type window = {
-        WINDOW_CONFIG,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_CONFIG,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init();
     window_show(&window);
-}
-
-static int config_change_basic(config_key key)
-{
-    config_set(key, data.config_values[key].new_value);
-    data.config_values[key].original_value = data.config_values[key].new_value;
-    return 1;
-}
-
-static int config_change_string_basic(config_string_key key)
-{
-    config_set_string(key, data.config_string_values[key].new_value);
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
-    return 1;
-}
-
-static int config_change_zoom(config_key key)
-{
-    config_change_basic(key);
-    system_reload_textures();
-    return 1;
-}
-
-static int config_change_string_language(config_string_key key)
-{
-    config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
-    if (!game_reload_language()) {
-        // Notify user that language dir is invalid and revert to previously selected
-        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
-        config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
-        game_reload_language();
-        return 0;
-    }
-    strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
-    return 1;
 }

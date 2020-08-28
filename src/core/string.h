@@ -61,6 +61,6 @@ int string_compare_case_insensitive(const char *a, const char *b);
  * @param b String B
  * @return Boolean true if the strings are equal, false if they differ
  */
-int string_equals(const uint8_t *a, const uint8_t *b);
+int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive);
 
 #endif // CORE_STRING_H

@@ -265,6 +265,7 @@ static void setup(const julius_args *args)
         exit(1);
     }
 
+    goto skip;
     // set up game display
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
@@ -274,6 +275,7 @@ static void setup(const julius_args *args)
     }
     platform_init_cursors(args->cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
 
+    skip:
     // init game!
     time_set_millis(SDL_GetTicks());
     if (!game_init()) {

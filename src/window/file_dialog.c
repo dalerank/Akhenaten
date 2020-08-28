@@ -182,7 +182,7 @@ static const char *get_chosen_filename(void)
     uint8_t selected_name[FILE_NAME_MAX];
     encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
 
-    if (string_equals(selected_name, data.typed_name)) {
+    if (string_equals(selected_name, data.typed_name, 1)) {
         // user has not modified the string after selecting it: use filename
         return data.selected_file;
     }

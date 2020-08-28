@@ -3,23 +3,33 @@ main (julius.c)
     init engine game environment (c3/pharaoh/etc.)
   setup
     init SDL/logging
-    pre-init
+    game pre-init
       >> (attempt 4 paths in order of priority)
       pref_data_dir (prefs.c) --> data_dir_xxx.txt
       game_pre_init (game.c)
         load lang files & assert data folder (lang.c)
           load MM.eng and Text.eng
+        load encoding
+          determine language
+          load translation (translation.c)
         load settings <-- c3.inf
         load configs <-- augustus.ini
         load hotkeys
         load scenario settings
         init random generator
-        load encoding
-          determine language
-          load translation (translation.c)
-            
         unpause game
     set up game window
-    init game
+    game init
+      init back-end graphics data (image.c)
+      load main "climate" graphics (image.c)
+        load main graphics and convert (555+sgx)
+        load "empire" data
+      load enemy graphics (image.c)
+      load fonts (image.c)
+      load models (model.c)
+      init mods (mods.c)
+      init soundsystem (system.c)
+      init gamestate (state.c)
+      load window logo (logo.c)
   main loop
   clear & exit

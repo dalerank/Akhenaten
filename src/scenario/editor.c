@@ -326,7 +326,7 @@ void scenario_editor_cycle_climate(void)
 
 void scenario_editor_update_brief_description(const uint8_t *new_description)
 {
-    if (!string_equals(scenario.brief_description, new_description)) {
+    if (!string_equals(scenario.brief_description, new_description, 1)) {
         string_copy(new_description, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
         scenario.is_saved = 0;
     }
