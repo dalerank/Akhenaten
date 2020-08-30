@@ -1,5 +1,7 @@
 #include "image.h"
 
+#include "SDL.h"
+
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -43,18 +45,24 @@ font_files_collection ffcs[] = {
 };
 
 struct graphics_files_collection {
-    const char C3_MAIN_GRAPHICS_555[3][NAME_SIZE];
-    const char C3_MAIN_GRAPHICS_SG2[3][NAME_SIZE];
-    const char C3_EDITOR_GRAPHICS_555[3][NAME_SIZE];
-    const char C3_EDITOR_GRAPHICS_SG2[3][NAME_SIZE];
+    const char C3_MAIN_555[3][NAME_SIZE];
+    const char C3_MAIN_SG2[3][NAME_SIZE];
+    const char C3_EDITOR_555[3][NAME_SIZE];
+    const char C3_EDITOR_SG2[3][NAME_SIZE];
     const char C3_EMPIRE_555[NAME_SIZE];
-    const char C3_ENEMY_GRAPHICS_555[20][NAME_SIZE];
-    const char C3_ENEMY_GRAPHICS_SG2[20][NAME_SIZE];
-    const char PH_MAIN_GRAPHICS_555[NAME_SIZE];
-    const char PH_MAIN_GRAPHICS_SG3[NAME_SIZE];
+    const char C3_ENEMY_555[20][NAME_SIZE];
+    const char C3_ENEMY_SG2[20][NAME_SIZE];
+    const char PH_MAIN_555[NAME_SIZE];
+    const char PH_MAIN_SG3[NAME_SIZE];
+    const char PH_UNLOADED_555[NAME_SIZE];
+    const char PH_UNLOADED_SG3[NAME_SIZE];
+    const char PH_TERRAIN_555[NAME_SIZE];
+    const char PH_TERRAIN_SG3[NAME_SIZE];
     const char PH_EDITOR_GRAPHICS_555[NAME_SIZE];
     const char PH_EDITOR_GRAPHICS_SG3[NAME_SIZE];
     const char PH_EMPIRE_555[NAME_SIZE];
+    const char PH_ENEMY_555[20][NAME_SIZE];
+    const char PH_ENEMY_SG2[20][NAME_SIZE];
 
 } gfc = {
         {
@@ -122,11 +130,47 @@ struct graphics_files_collection {
                 "North African.sg2",
                 "Phoenician.sg2",
         },
-        "data//Pharaoh_General.555",
-        "data//Pharaoh_General.sg3",
+        "data/Pharaoh_General.555",
+        "data/Pharaoh_General.sg3",
+        "data/Pharaoh_Unloaded.555",
+        "data/Pharaoh_Unloaded.sg3",
+        "data/Pharaoh_Terrain.555",
+        "data/Pharaoh_Terrain.sg3",
         "",
         "",
-        "data//Empire.555"
+        "data/Empire.555",
+        {
+                "data/Assyrian.555",
+                "data/Egyptian.555",
+                "data/Canaanite.555",
+                "data/Enemy_1.555",
+                "data/Hittite.555",
+                "data/Hyksos.555",
+                "data/Kushite.555",
+                "data/Libian.555",
+                "data/Mitani.555",
+                "data/Nubian.555",
+                "data/Persian.555",
+                "data/Phoenician.555",
+                "data/Roman.555",
+                "data/SeaPeople.555"
+        },
+        {
+                "data/Assyrian.sg3",
+                "data/Egyptian.sg3",
+                "data/Canaanite.sg3",
+                "data/Enemy_1.sg3",
+                "data/Hittite.sg3",
+                "data/Hyksos.sg3",
+                "data/Kushite.sg3",
+                "data/Libian.sg3",
+                "data/Mitani.sg3",
+                "data/Nubian.sg3",
+                "data/Persian.sg3",
+                "data/Phoenician.sg3",
+                "data/Roman.sg3",
+                "data/SeaPeople.sg3"
+        }
 };
 
 static const image DUMMY_IMAGE;
@@ -218,17 +262,30 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
     }
 }
 
-static const color_t *load_external_data(int image_id)
+static const color_t *load_external_data(image *img)
 {
-    // load up
-    image *img = &data.main.images[image_id];
-    char filename[FILE_NAME_MAX] = "555/";
-    strcpy(&filename[4], img->draw.bitmap_name);
-    file_change_extension(filename, "555");
-    int size = io_read_file_part_into_buffer(
-            &filename[4], MAY_BE_LOCALIZED, data.tmp_data,
-            img->draw.data_length, img->draw.offset - 1
-    );
+    char filename[FILE_NAME_MAX];
+    int size = 0;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            strcpy(&filename[0], "555/");
+            strcpy(&filename[4], img->draw.bitmap_name);
+            file_change_extension(filename, "555");
+            size = io_read_file_part_into_buffer(
+                    &filename[4], MAY_BE_LOCALIZED, data.tmp_data,
+                    img->draw.data_length, img->draw.offset - 1
+            );
+            break;
+        case ENGINE_ENV_PHARAOH:
+            strcpy(&filename[0], "Data/");
+            strcpy(&filename[5], img->draw.bitmap_name);
+            file_change_extension(filename, "555");
+            size = io_read_file_part_into_buffer(
+                    &filename[5], MAY_BE_LOCALIZED, data.tmp_data,
+                    img->draw.data_length, img->draw.offset - 1
+            );
+            break;
+    }
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
@@ -236,7 +293,7 @@ static const color_t *load_external_data(int image_id)
                 img->draw.data_length, img->draw.offset - 1
         );
         if (!size) {
-            log_error("unable to load external image", img->draw.bitmap_name, image_id);
+            log_error("unable to load external image", img->draw.bitmap_name, 0);
             return NULL;
         }
     }
@@ -252,6 +309,7 @@ static const color_t *load_external_data(int image_id)
     return dst;
 }
 
+
 int image_init(void)
 {
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
@@ -265,36 +323,73 @@ int image_init(void)
 }
 int image_id_from_group(int group)
 {
-    if (group < data.main.entries_num)
-        return data.main.group_image_ids[group];
-    else {
-        return 0; // todo: pharaoh indexing
+    switch (GAME_ENV)
+    {
+        case ENGINE_ENV_C3:
+            return data.main.group_image_ids[group];
+        case ENGINE_ENV_PHARAOH:
+            if (group < sizeof(translation_table_ph) / (sizeof(int) * 2) && translation_table_ph[2 * group + 1] != 0)
+                group = translation_table_ph[2 * group + 1];
+            if (group < 67)
+                return data.ph_terrain.group_image_ids[group];
+            else if (group < 295)
+                return data.main.group_image_ids[group - 66] + 2000;
+            else
+                return data.ph_unloaded.group_image_ids[group - 294] + 5000;
     }
 }
 const image *image_get(int id)
 {
-    if (id >= 0 && id < data.main.entries_num) { // MAIN_ENTRIES
-        return &data.main.images[id]; // todo: pharaoh indexing
-    } else if (id >= data.main.entries_num && id < data.main.entries_num + MAX_MODDED_IMAGES) {
-        return mods_get_image(id);
-    } else {
-        return NULL;
+    switch (GAME_ENV)
+    {
+        case ENGINE_ENV_C3:
+            if (id >= data.main.entries_num && id < data.main.entries_num + MAX_MODDED_IMAGES)
+                return mods_get_image(id);
+            else if (id >= 0)
+                return &data.main.images[id];
+            else
+                return NULL;
+        case ENGINE_ENV_PHARAOH:
+            if (id > 5000 && id - 5000 < data.ph_unloaded.entries_num) // todo: mods
+                return &data.ph_unloaded.images[id - 5000];
+            else if (id > 2000 && id - 2000 < data.main.entries_num)
+                return &data.main.images[id - 2000];
+            else if (id >= 0 && id < data.ph_terrain.entries_num)
+                return &data.ph_terrain.images[id];
+            else
+                return NULL;
     }
+
 }
 const color_t *image_data(int id)
 {
-    if (id < 0 || id >= data.main.entries_num) { // outside normal range, check for modded image
-        if (id < data.main.entries_num + MAX_MODDED_IMAGES) { // todo: pharaoh indexing
-            return mods_get_image_data(id);
-        }
-        return NULL;
-    }
-    if (!data.main.images[id].draw.is_external) {
-        return &data.main.data[data.main.images[id].draw.offset];
-//    } else if (id == image_id_from_group(GROUP_EMPIRE_MAP)) {
-//        return data.empire_bmp;
-    } else {
-        return load_external_data(id);
+    image *img = image_get(id);
+
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            if (id < 0 || id >= data.main.entries_num) { // outside normal range, check for modded image
+                if (id < data.main.entries_num + MAX_MODDED_IMAGES) {
+                    return mods_get_image_data(id);
+                }
+                return NULL;
+            }
+            if (!img->draw.is_external)
+                return &data.main.data[img->draw.offset];
+            else
+                return load_external_data(img);
+        case ENGINE_ENV_PHARAOH:
+            if (img == NULL) // todo: mods
+                return NULL;
+            else if (!img->draw.is_external) {
+                if (id > 5000)
+                    return &data.ph_unloaded.data[img->draw.offset];
+                else if (id > 2000)
+                    return &data.main.data[img->draw.offset];
+                else
+                    return &data.ph_terrain.data[img->draw.offset];
+            }
+            else
+                return load_external_data(img);
     }
 }
 const image *image_letter(int letter_id)
@@ -342,17 +437,24 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     // prepare sgx data
     if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
-    int HEADER_SIZE = 20680;
+    int HEADER_SIZE = 0;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            HEADER_SIZE = 20680;
+            break;
+        case ENGINE_ENV_PHARAOH:
+            HEADER_SIZE = 40680;
+            break;
+    }
     buffer buf;
     buffer_init(&buf, data.tmp_data, HEADER_SIZE);
 
     // read header
-    uint32_t header_data[10];
-    buffer_read_raw(&buf, header_data, sizeof(uint32_t) * 10);
+    buffer_read_raw(&buf, pak->header_data, sizeof(uint32_t) * 10);
 
     // allocate arrays
     int prev_pak_size = pak->entries_num;
-    pak->entries_num = (int)header_data[3];
+    pak->entries_num = (int)pak->header_data[4] + 1;
     if (prev_pak_size == 0) { // new pak! allocate memory!
         pak->images = (image *)malloc(sizeof(image) * pak->entries_num);
         pak->data = (color_t *)malloc(30000000);
@@ -364,9 +466,16 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 
     buffer_skip(&buf, 40); // skip remaining 40 bytes
     for (int i = 0; i < 300; i++) // go over every "group" and load in the corresponding image index from the file
+    {
         pak->group_image_ids[i] = buffer_read_u16(&buf);
+        if (pak->group_image_ids[i] != 0)
+            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i]-1);
+//        if (pak->group_image_ids[i] == 424) {
+//            int asd = 21;
+//        }
+    }
 
-    int num_bmp_names = (int)header_data[5];
+    int num_bmp_names = (int)pak->header_data[5];
     char bmp_names[num_bmp_names][200];
     buffer_read_raw(&buf, bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
@@ -375,31 +484,39 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 
     // fill in image data
     for (int i = 0; i < pak->entries_num; i++) {
-        pak->images[i].draw.offset = buffer_read_i32(&buf);
-        pak->images[i].draw.data_length = buffer_read_i32(&buf);
-        pak->images[i].draw.uncompressed_length = buffer_read_i32(&buf);
-        buffer_skip(&buf, 8);
-        pak->images[i].width = buffer_read_u16(&buf);
-        pak->images[i].height = buffer_read_u16(&buf);
+        image img;
+        img.draw.offset = buffer_read_i32(&buf);
+        img.draw.data_length = buffer_read_i32(&buf);
+        img.draw.uncompressed_length = buffer_read_i32(&buf);
+        buffer_skip(&buf, 4);
+        img.draw.offset_mirror = buffer_read_i32(&buf); // .sg3 only
+        img.width = buffer_read_u16(&buf);
+        img.height = buffer_read_u16(&buf);
         buffer_skip(&buf, 6);
-        pak->images[i].num_animation_sprites = buffer_read_u16(&buf);
+        img.num_animation_sprites = buffer_read_u16(&buf);
         buffer_skip(&buf, 2);
-        pak->images[i].sprite_offset_x = buffer_read_i16(&buf);
-        pak->images[i].sprite_offset_y = buffer_read_i16(&buf);
+        img.sprite_offset_x = buffer_read_i16(&buf);
+        img.sprite_offset_y = buffer_read_i16(&buf);
         buffer_skip(&buf, 10);
-        pak->images[i].animation_can_reverse = buffer_read_i8(&buf);
+        img.animation_can_reverse = buffer_read_i8(&buf);
         buffer_skip(&buf, 1);
-        pak->images[i].draw.type = buffer_read_u8(&buf);
-        pak->images[i].draw.is_fully_compressed = buffer_read_i8(&buf);
-        pak->images[i].draw.is_external = buffer_read_i8(&buf);
-        pak->images[i].draw.has_compressed_part = buffer_read_i8(&buf);
+        img.draw.type = buffer_read_u8(&buf);
+        img.draw.is_fully_compressed = buffer_read_i8(&buf);
+        img.draw.is_external = buffer_read_i8(&buf);
+        img.draw.has_compressed_part = buffer_read_i8(&buf);
         buffer_skip(&buf, 2);
         int bitmap_id = buffer_read_u8(&buf);
-        if (bmp_names)
-            strncpy(pak->images[i].draw.bitmap_name, bmp_names[bitmap_id], 200);
+        const char *bmn = bmp_names[bitmap_id];
+        strncpy(img.draw.bitmap_name, bmn, 200);
+//        SDL_Log("%s index %i -> %i : \"%s\"", filename_sgx, i, bitmap_id, bmn);
         buffer_skip(&buf, 1);
-        pak->images[i].animation_speed_id = buffer_read_u8(&buf);
-        buffer_skip(&buf, 5);
+        img.animation_speed_id = buffer_read_u8(&buf);
+        if (pak->header_data[1] < 214)
+            buffer_skip(&buf, 5);
+        else
+            buffer_skip(&buf, 5+8);
+        pak->images[i] = img;
+        int f = 1;
     }
 
     // fill in bmp offset data
@@ -423,6 +540,8 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(pak->images, pak->entries_num, &buf, pak->data);
 
+//    image im = pak->images[2740];
+
     return 1;
 }
 int image_load_main(int climate_id, int is_editor, int force_reload)
@@ -434,18 +553,25 @@ int image_load_main(int climate_id, int is_editor, int force_reload)
     const char *filename_sgx;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            filename_555 = is_editor ? gfc.C3_EDITOR_GRAPHICS_555[climate_id] : gfc.C3_MAIN_GRAPHICS_555[climate_id];
-            filename_sgx = is_editor ? gfc.C3_EDITOR_GRAPHICS_SG2[climate_id] : gfc.C3_MAIN_GRAPHICS_SG2[climate_id];
+            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
+            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
+            if (!image_load_555(&data.main, filename_555, filename_sgx))
+                return 0;
+            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_GRAPHICS_555;
-            filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_GRAPHICS_SG3;
+            filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_555;
+            filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_SG3;
+            if (!image_load_555(&data.main, filename_555, filename_sgx))
+                return 0;
+            if (!image_load_555(&data.ph_unloaded, gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3))
+                return 0;
+            if (!image_load_555(&data.ph_terrain, gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3))
+                return 0;
             break;
     }
 
-    if (!image_load_555(&data.main, filename_555, filename_sgx))
-        return 0;
-    data.current_climate = climate_id;
+
     data.is_editor = is_editor;
     return 1;
 }
@@ -455,8 +581,12 @@ int image_load_enemy(int enemy_id)
     const char *filename_sgx;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            filename_555 = gfc.C3_ENEMY_GRAPHICS_555[enemy_id];
-            filename_sgx = gfc.C3_ENEMY_GRAPHICS_SG2[enemy_id];
+            filename_555 = gfc.C3_ENEMY_555[enemy_id];
+            filename_sgx = gfc.C3_ENEMY_SG2[enemy_id];
+            break;
+        case ENGINE_ENV_PHARAOH:
+            filename_555 = gfc.PH_ENEMY_555[enemy_id];
+            filename_sgx = gfc.PH_ENEMY_SG2[enemy_id];
             break;
     }
 

@@ -40,6 +40,7 @@ typedef struct {
 //        int bitmap_id;
         char bitmap_name[200];
         int offset;
+        int offset_mirror;
         int data_length;
         int uncompressed_length;
     } draw;
@@ -47,6 +48,7 @@ typedef struct {
 
 typedef struct {
     int entries_num;
+    uint32_t header_data[10];
     uint16_t *group_image_ids;
     image *images;
     color_t *data;
