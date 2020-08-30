@@ -309,7 +309,6 @@ static const color_t *load_external_data(image *img)
     return dst;
 }
 
-
 int image_init(void)
 {
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
@@ -445,14 +444,10 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
     int HEADER_SIZE = 0;
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            HEADER_SIZE = 20680;
-            break;
-        case ENGINE_ENV_PHARAOH:
-            HEADER_SIZE = 40680;
-            break;
-    }
+    if (file_has_extension(filename_sgx, "sg2"))
+        HEADER_SIZE = 20680;
+    else
+        HEADER_SIZE = 40680;
     buffer buf;
     buffer_init(&buf, data.tmp_data, HEADER_SIZE);
 
@@ -462,7 +457,8 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     // allocate arrays
     int prev_pak_size = pak->entries_num;
     pak->entries_num = (int)pak->header_data[4] + 1;
-    if (prev_pak_size == 0) { // new pak! allocate memory!
+    if (pak->initialized == 0) { // new pak! allocate memory!
+        pak->initialized = 1;
         pak->images = (image *)malloc(sizeof(image) * pak->entries_num);
         pak->data = (color_t *)malloc(30000000);
         pak->group_image_ids = malloc(300 * sizeof(uint16_t)); // 300 entries is hardcoded? (total list is always 600 bytes)
@@ -470,18 +466,21 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         realloc(pak->images, sizeof(image) * pak->entries_num);
         realloc(pak->data, 30000000);
     }
-
     buffer_skip(&buf, 40); // skip remaining 40 bytes
-    for (int i = 0; i < 300; i++) // go over every "group" and load in the corresponding image index from the file
+
+    // parse groups (always a fixed 300 pool)
+    int groups_num = 0;
+    for (int i = 0; i < 300; i++)
     {
         pak->group_image_ids[i] = buffer_read_u16(&buf);
-        if (pak->group_image_ids[i] != 0)
-            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i]-1);
-//        if (pak->group_image_ids[i] == 424) {
-//            int asd = 21;
-//        }
+        if (pak->group_image_ids[i] != 0) {
+            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i] - 1);
+            groups_num++;
+        }
     }
+    pak->groups_num = groups_num;
 
+    // parse bitmap names
     int num_bmp_names = (int)pak->header_data[5];
     char bmp_names[num_bmp_names][200];
     buffer_read_raw(&buf, bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
@@ -490,6 +489,8 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * pak->entries_num);
 
     // fill in image data
+    int bmp_lastbmp = 0;
+    int bmp_lastindex = 1;
     for (int i = 0; i < pak->entries_num; i++) {
         image img;
         img.draw.offset = buffer_read_i32(&buf);
@@ -515,7 +516,12 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         int bitmap_id = buffer_read_u8(&buf);
         const char *bmn = bmp_names[bitmap_id];
         strncpy(img.draw.bitmap_name, bmn, 200);
-//        SDL_Log("%s index %i -> %i : \"%s\"", filename_sgx, i, bitmap_id, bmn);
+        if (bitmap_id != bmp_lastbmp) {// new bitmap name, reset bitmap grouping index
+            bmp_lastindex = 1;
+            bmp_lastbmp = bitmap_id;
+        }
+        img.draw.bmp_index = bmp_lastindex;
+        bmp_lastindex++;
         buffer_skip(&buf, 1);
         img.animation_speed_id = buffer_read_u8(&buf);
         if (pak->header_data[1] < 214)
@@ -547,12 +553,92 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(pak->images, pak->entries_num, &buf, pak->data);
 
-//    image im = pak->images[2740];
-
     return 1;
+}
+int image_pak_table_generate()
+{
+    static imagepak c3_main;
+    static imagepak ph_terr;
+    static imagepak ph_main;
+    static imagepak ph_unl;
+    image_load_555(&c3_main, "DEV_TESTING/C3.555", "DEV_TESTING/C3.sg2");
+    image_load_555(&ph_terr, gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3); // 1-2000
+    image_load_555(&ph_main, gfc.PH_MAIN_555, gfc.PH_MAIN_SG3); // 2001-5000
+    image_load_555(&ph_unl, gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3); // 5001-6000
+
+
+    FILE *fp = fopen("table_conversion.txt", "w+");
+    fprintf(fp, "{\n");
+
+    for (int group = 1; group <= 254; group++) {
+        // get image index from c3
+        int c3_id = c3_main.group_image_ids[group];
+
+        // get bitmap name
+        image c3_img = c3_main.images[c3_id];
+        const char *bmp = c3_img.draw.bitmap_name;
+        int bmp_index = c3_img.draw.bmp_index;
+
+        // look up bitmap name in other files
+        for (int i = 1; i < 6000; i++) {
+            image img;
+            imagepak *ph_pak;
+            int id_offset;
+            int group_offset;
+            int ph_id;
+
+            if (i > 5000) {
+                ph_pak = &ph_unl;
+                id_offset = 4999;
+                group_offset = 294;
+            }
+            else if (i > 2000) {
+                ph_pak = &ph_main;
+                id_offset = 1999;
+                group_offset = 66;
+            }
+            else if (i <= ph_terr.entries_num) {
+                ph_pak = &ph_terr;
+                id_offset = 0;
+                group_offset = 0;
+            }
+
+            // convert global index into local pak index
+            ph_id = i - id_offset;
+
+            if (ph_id > ph_pak->entries_num)
+                continue;
+            img = ph_pak->images[ph_id];
+
+            if (strcasecmp(bmp, img.draw.bitmap_name) == 0 && bmp_index == img.draw.bmp_index) { // yay, match! the image has the same bitmap name and index
+                int ph_g_total = ph_pak->groups_num;
+
+                // look through the ph imagepak groups and see if one points to the same image
+                for (int ph_group = 1; ph_group <= ph_g_total; ph_group++) {
+                    if (ph_id == ph_pak->group_image_ids[ph_group]) { // yay, double match! there's a group that points to an equivalent image!!
+                        fprintf(fp, "%i,%i,\n",group,ph_group + group_offset);
+                        SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> group %i (%i)", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset, ph_group, ph_group + group_offset);
+                        goto next;
+                    }
+                }
+                // no matching group found....
+                SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> ????????????", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset);
+                goto next;
+            }
+        }
+        // no matching image found....
+//        SDL_Log("[c3] group %i >> img %i (%s : %i) >> ????????????", group, c3_id-1, bmp, bmp_index);
+        next:
+        continue;
+    }
+
+    fprintf(fp, "GROUP_MAX_GROUP\n}");
+    fclose(fp);
 }
 int image_load_main(int climate_id, int is_editor, int force_reload)
 {
+//    image_pak_table_generate();
+
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
         return 1;
 

@@ -39,6 +39,7 @@ typedef struct {
         int has_compressed_part;
 //        int bitmap_id;
         char bitmap_name[200];
+        int bmp_index;
         int offset;
         int offset_mirror;
         int data_length;
@@ -47,7 +48,9 @@ typedef struct {
 } image;
 
 typedef struct {
+    int initialized;
     int entries_num;
+    int groups_num;
     uint32_t header_data[10];
     uint16_t *group_image_ids;
     image *images;
