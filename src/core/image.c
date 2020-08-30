@@ -137,26 +137,12 @@ static struct {
     int fonts_enabled;
     int font_base_offset;
 
-//    int main_entries_num;
-//    int enemy_entries_num;
-
     imagepak main;
     imagepak ph_unloaded;
     imagepak ph_terrain;
     imagepak enemy;
     imagepak empire;
     imagepak font;
-
-
-//    uint16_t *group_image_ids;
-//    char bmp_names[100][200];
-//    image main[10000];
-//    image enemy[1000];
-//    image *font;
-//    color_t *main_data;
-//    color_t *enemy_data;
-//    color_t *empire_bmp;
-//    color_t *font_data;
 
     uint8_t *tmp_data;
 } data = {
@@ -176,53 +162,6 @@ static color_t to_32_bit(uint16_t c)
            ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
 }
-
-//static void image_build_from_sgx_index(buffer *buf, image *images, int size, char bmp_names[][200])
-//{
-//    for (int i = 0; i < size; i++) {
-//        // fill in
-//        images[i].draw.offset = buffer_read_i32(buf);
-//        images[i].draw.data_length = buffer_read_i32(buf);
-//        images[i].draw.uncompressed_length = buffer_read_i32(buf);
-//        buffer_skip(buf, 8);
-//        images[i].width = buffer_read_u16(buf);
-//        images[i].height = buffer_read_u16(buf);
-//        buffer_skip(buf, 6);
-//        images[i].num_animation_sprites = buffer_read_u16(buf);
-//        buffer_skip(buf, 2);
-//        images[i].sprite_offset_x = buffer_read_i16(buf);
-//        images[i].sprite_offset_y = buffer_read_i16(buf);
-//        buffer_skip(buf, 10);
-//        images[i].animation_can_reverse = buffer_read_i8(buf);
-//        buffer_skip(buf, 1);
-//        images[i].draw.type = buffer_read_u8(buf);
-//        images[i].draw.is_fully_compressed = buffer_read_i8(buf);
-//        images[i].draw.is_external = buffer_read_i8(buf);
-//        images[i].draw.has_compressed_part = buffer_read_i8(buf);
-//        buffer_skip(buf, 2);
-////    images[i].draw.bitmap_id = buffer_read_u8(buf);
-//        int bitmap_id = buffer_read_u8(buf);
-//        if (bmp_names)
-//            strncpy(images[i].draw.bitmap_name, bmp_names[bitmap_id], 200);
-//        buffer_skip(buf, 1);
-//        images[i].animation_speed_id = buffer_read_u8(buf);
-//        buffer_skip(buf, 5);
-//    }
-//
-//    // prepare_index
-//    int offset = 4;
-//    for (int i = 1; i < size; i++) {
-//        image *img = &images[i];
-//        if (img->draw.is_external) {
-//            if (!img->draw.offset) {
-//                img->draw.offset = 1;
-//            }
-//        } else {
-//            img->draw.offset = offset;
-//            offset += img->draw.data_length;
-//        }
-//    }
-//}
 
 static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
 {
@@ -279,33 +218,6 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
     }
 }
 
-//static void load_empire(void)
-//{
-//    int size = 0;
-//    switch (GAME_ENV) {
-//        case ENGINE_ENV_C3:
-//            size = io_read_file_into_buffer(gfc.C3_EMPIRE_555, MAY_BE_LOCALIZED, data.tmp_data, 8000000);
-//            if (size != 4000000) {
-//                log_error("unable to load empire data", gfc.C3_EMPIRE_555, 0);
-//                return;
-//            }
-//            break;
-//
-//        case ENGINE_ENV_PHARAOH:
-//            size = io_read_file_into_buffer(gfc.PH_EMPIRE_555, MAY_BE_LOCALIZED, data.tmp_data, 7758436);
-//            if (size != 3879218) {
-//                log_error("unable to load empire data", gfc.PH_EMPIRE_555, 0);
-//                return;
-//            }
-//            break;
-//    }
-//    buffer buf;
-//    buffer_init(&buf, data.tmp_data, size);
-//    convert_uncompressed(&buf, size, data.empire_bmp);
-//}
-
-//#define MAIN_INDEX_SIZE 660680
-
 static const color_t *load_external_data(int image_id)
 {
     // load up
@@ -343,36 +255,12 @@ static const color_t *load_external_data(int image_id)
 int image_init(void)
 {
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
-//    data.main = {0};
-//    data.enemy = {0};
-//    data.empire = {0};
-//    data.font = {0};
-//    data.ph_unloaded = {0};
-//    data.ph_terrain = {0};
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-//            data.enemy_data = (color_t *) malloc(2400000);
-//            data.main_entries_num = 10000;
-//            data.enemy_entries_num = 801;
-//            data.main_data = (color_t *) malloc(30000000);
-//            data.empire_bmp = (color_t *) malloc(8000000);
             break;
         case ENGINE_ENV_PHARAOH:
-//            data.enemy_data = (color_t *) malloc(2400000);
-//            data.main_entries_num = 10000;
-//            data.enemy_entries_num = 801;
-//            data.main_data = (color_t *) malloc(30000000);
-//            data.empire_bmp = (color_t *) malloc(7758436);
             break;
     }
-
-//    if (!data.main_data || !data.enemy_data || !data.tmp_data) { // || !data.empire_bmp
-//        free(data.main_data);
-////        free(data.empire_bmp);
-//        free(data.enemy_data);
-//        free(data.tmp_data);
-//        return 0;
-//    }
     return 1;
 }
 int image_id_from_group(int group)
@@ -449,12 +337,9 @@ const color_t *image_data_enemy(int id)
     return NULL;
 }
 
-//#define HEADER_SIZE 20680
-
 int image_load_555(imagepak *pak, const char *filename_555, const char *filename_sgx)
 {
     // prepare sgx data
-    // int ENEMY_INDEX_SIZE = 51264 //// 64 * 801;
     if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
     int HEADER_SIZE = 20680;
@@ -545,7 +430,6 @@ int image_load_main(int climate_id, int is_editor, int force_reload)
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
         return 1;
 
-    // get correct filename depending on game environment and read into tmp_data buffer
     const char *filename_555;
     const char *filename_sgx;
     switch (GAME_ENV) {
@@ -559,11 +443,25 @@ int image_load_main(int climate_id, int is_editor, int force_reload)
             break;
     }
 
-    image_load_555(&data.main, filename_555, filename_sgx);
-
+    if (!image_load_555(&data.main, filename_555, filename_sgx))
+        return 0;
     data.current_climate = climate_id;
     data.is_editor = is_editor;
+    return 1;
+}
+int image_load_enemy(int enemy_id)
+{
+    const char *filename_555;
+    const char *filename_sgx;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            filename_555 = gfc.C3_ENEMY_GRAPHICS_555[enemy_id];
+            filename_sgx = gfc.C3_ENEMY_GRAPHICS_SG2[enemy_id];
+            break;
+    }
 
+    if (!image_load_555(&data.enemy, filename_555, filename_sgx))
+        return 0;
     return 1;
 }
 int image_load_fonts(encoding_type encoding)
@@ -584,36 +482,6 @@ int image_load_fonts(encoding_type encoding)
         data.fonts_enabled = NO_EXTRA_FONT;
         return 1;
     }
-}
-int image_load_enemy(int enemy_id)
-{
-    const char *filename_555;
-    const char *filename_sgx;
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            filename_555 = gfc.C3_ENEMY_GRAPHICS_555[enemy_id];
-            filename_sgx = gfc.C3_ENEMY_GRAPHICS_SG2[enemy_id];
-            break;
-    }
-
-//    int ENEMY_INDEX_SIZE = ENTRY_SIZE * 801;
-//    if (io_read_file_part_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, 20680) != ENEMY_INDEX_SIZE)
-//        return 0;
-//
-//    buffer buf;
-//    buffer_init(&buf, data.tmp_data, ENEMY_INDEX_SIZE);
-//    image_build_from_sgx_index(&buf, data.enemy, 801, 0);
-//
-//    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-//    if (!data_size) {
-//        return 0;
-//    }
-//    buffer_init(&buf, data.tmp_data, data_size);
-//    convert_images(data.enemy, 801, &buf, data.enemy_data);
-
-    image_load_555(&data.enemy, filename_555, filename_sgx);
-
-    return 1;
 }
 
 int get_main_entries_num(void)
