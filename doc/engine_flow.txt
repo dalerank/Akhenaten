@@ -23,13 +23,32 @@ main (julius.c)
       init back-end graphics data (image.c)
       load main "climate" graphics (image.c)
         load main graphics and convert (555+sgx)
-        load "empire" data
+        //load "empire" data
+        
+          ============
+        
+          init buffer << HEADER_SIZE (20680)
+          skip the first 80 bytes
+          (300~) >> read uint16 as index of image for groupid [i]
+          
+          
+          
+          
+          
+          ============
+        
       load enemy graphics (image.c)
       load fonts (image.c)
       load models (model.c)
       init mods (mods.c)
       init soundsystem (system.c)
       init gamestate (state.c)
-      load window logo (logo.c)
+      show logo window (logo.c)
+        init
+          play intro music (music.c)
+        show window (window.c)
+        show intro video (intro_video.c)
+          init intro video
+          show window (window.c)
   main loop
   clear & exit

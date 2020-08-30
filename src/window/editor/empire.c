@@ -69,7 +69,7 @@ static int map_viewport_height(void)
 
 static void draw_paneling(void)
 {
-    int image_base = image_group(GROUP_EDITOR_EMPIRE_PANELS);
+    int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
@@ -139,7 +139,7 @@ static void draw_empire_object(const empire_object *obj)
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
             city->type == EMPIRE_CITY_FUTURE_ROMAN) {
-            image_id = image_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
+            image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
         draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
@@ -170,7 +170,7 @@ static void draw_map(void)
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_group(GROUP_EDITOR_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    image_draw(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -180,18 +180,18 @@ static void draw_map(void)
 static void draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
-    int image_id = resource + image_group(GROUP_EDITOR_EMPIRE_RESOURCES);
+    int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1);
     switch (trade_max) {
         case 15:
-            image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
             break;
         case 25:
-            image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
             break;
         case 40:
-            image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
             break;
     }
 }

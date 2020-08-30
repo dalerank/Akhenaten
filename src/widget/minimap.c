@@ -133,7 +133,7 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 {
     if (grid_offset < 0) {
-        image_draw(image_group(GROUP_MINIMAP_BLACK), x_view, y_view);
+        image_draw(image_id_from_group(GROUP_MINIMAP_BLACK), x_view, y_view);
         return;
     }
 
@@ -154,11 +154,11 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             int image_id;
             building *b = building_get(map_building_at(grid_offset));
             if (b->house_size) {
-                image_id = image_group(GROUP_MINIMAP_HOUSE);
+                image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
             } else if (b->type == BUILDING_RESERVOIR) {
-                image_id = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
+                image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT) - 1;
             } else {
-                image_id = image_group(GROUP_MINIMAP_BUILDING);
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING);
             }
             switch (map_property_multi_tile_size(grid_offset)) {
                 case 1: image_draw(image_id, x_view, y_view); break;
@@ -172,25 +172,25 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         int rand = map_random_get(grid_offset);
         int image_id;
         if (terrain & TERRAIN_WATER) {
-            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_WATER) + (rand & 3);
         } else if (terrain & TERRAIN_SHRUB) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
         } else if (terrain & TERRAIN_TREE) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
         } else if (terrain & TERRAIN_ROCK) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         } else if (terrain & TERRAIN_ELEVATION) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         } else if (terrain & TERRAIN_ROAD) {
-            image_id = image_group(GROUP_MINIMAP_ROAD);
+            image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
         } else if (terrain & TERRAIN_AQUEDUCT) {
-            image_id = image_group(GROUP_MINIMAP_AQUEDUCT);
+            image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
         } else if (terrain & TERRAIN_WALL) {
-            image_id = image_group(GROUP_MINIMAP_WALL);
+            image_id = image_id_from_group(GROUP_MINIMAP_WALL);
         } else if (terrain & TERRAIN_MEADOW) {
-            image_id = image_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
+            image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
         } else {
-            image_id = image_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
+            image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
         }
         image_draw(image_id, x_view, y_view);
     }

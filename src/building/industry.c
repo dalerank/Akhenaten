@@ -30,8 +30,8 @@ static int max_progress(const building *b)
 static void update_farm_image(const building *b)
 {
     map_building_tiles_add_farm(b->id, b->x, b->y,
-        image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
-        b->data.industry.progress);
+                                image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
+                                b->data.industry.progress);
 }
 
 void building_industry_update_production(void)

@@ -59,7 +59,7 @@ static void culture_action(figure *f, int group)
     }
     figure_image_increase_offset(f, 12);
     roamer_action(f, 1);
-    figure_image_update(f, image_group(group));
+    figure_image_update(f, image_id_from_group(group));
 }
 
 void figure_priest_action(figure *f)
@@ -98,7 +98,7 @@ void figure_school_child_action(figure *f)
             figure_movement_roam_ticks(f, 2);
             break;
     }
-    figure_image_update(f, image_group(GROUP_FIGURE_SCHOOL_CHILD));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_SCHOOL_CHILD));
 }
 
 void figure_teacher_action(figure *f)
@@ -137,7 +137,7 @@ void figure_missionary_action(figure *f)
     }
     figure_image_increase_offset(f, 12);
     roamer_action(f, 1);
-    figure_image_update(f, image_group(GROUP_FIGURE_MISSIONARY));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_MISSIONARY));
 }
 
 void figure_patrician_action(figure *f)
@@ -150,7 +150,7 @@ void figure_patrician_action(figure *f)
     }
     figure_image_increase_offset(f, 12);
     roamer_action(f, 1);
-    figure_image_update(f, image_group(GROUP_FIGURE_PATRICIAN));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_PATRICIAN));
 }
 
 void figure_labor_seeker_action(figure *f)
@@ -164,7 +164,7 @@ void figure_labor_seeker_action(figure *f)
     }
     figure_image_increase_offset(f, 12);
     roamer_action(f, 1);
-    figure_image_update(f, image_group(GROUP_FIGURE_LABOR_SEEKER));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_LABOR_SEEKER));
 }
 
 void figure_market_trader_action(figure *f)
@@ -186,7 +186,7 @@ void figure_market_trader_action(figure *f)
         }
     }
     roamer_action(f, 1);
-    figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
 void figure_tax_collector_action(figure *f)
@@ -263,5 +263,5 @@ void figure_tax_collector_action(figure *f)
             }
             break;
     }
-    figure_image_update(f, image_group(GROUP_FIGURE_TAX_COLLECTOR));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_TAX_COLLECTOR));
 }

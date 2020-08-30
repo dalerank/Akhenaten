@@ -5,8 +5,7 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "sound/music.h"
-
-#define NUM_INTRO_VIDEOS 3
+#include "core/game_environment.h"
 
 static struct {
     int width;
@@ -14,12 +13,25 @@ static struct {
     int current_video;
 } data;
 
-static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
+static const char *C3_INTRO_VIDEOS[] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
+static const char *PH_INTRO_VIDEOS[] = { "BINKS/high/Intro_big.bik"};
 
 static int start_next_video(void)
 {
-    while (data.current_video < NUM_INTRO_VIDEOS) {
-        if (video_start(intro_videos[data.current_video++])) {
+    int videos_num = 0;
+    const char **videos;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            videos_num = 3;
+            videos = C3_INTRO_VIDEOS;
+            break;
+        case ENGINE_ENV_PHARAOH:
+            videos_num = 1;
+            videos = PH_INTRO_VIDEOS;
+            break;
+    }
+    while (data.current_video < 3) {
+        if (videos && video_start(C3_INTRO_VIDEOS[data.current_video++])) {
             video_size(&data.width, &data.height);
             video_init();
             return 1;
@@ -27,23 +39,19 @@ static int start_next_video(void)
     }
     return 0;
 }
-
 static int init(void)
 {
     data.current_video = 0;
     return start_next_video();
 }
-
 static void draw_background(void)
 {
     graphics_clear_screens();
 }
-
 static void draw_foreground(void)
 {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter_pressed) {

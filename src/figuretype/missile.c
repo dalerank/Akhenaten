@@ -111,10 +111,10 @@ void figure_explosion_cloud_action(figure *f)
     }
     figure_movement_move_ticks_cross_country(f, f->speed_multiplier);
     if (f->progress_on_tile < 48) {
-        f->image_id = image_group(GROUP_FIGURE_EXPLOSION) +
-                       CLOUD_IMAGE_OFFSETS[f->progress_on_tile / 2];
+        f->image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) +
+                      CLOUD_IMAGE_OFFSETS[f->progress_on_tile / 2];
     } else {
-        f->image_id = image_group(GROUP_FIGURE_EXPLOSION) + 7;
+        f->image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) + 7;
     }
 }
 
@@ -165,7 +165,7 @@ void figure_arrow_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->image_id = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
+    f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
 void figure_spear_action(figure *f)
@@ -184,7 +184,7 @@ void figure_spear_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->image_id = image_group(GROUP_FIGURE_MISSILE) + dir;
+    f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void figure_javelin_action(figure *f)
@@ -203,7 +203,7 @@ void figure_javelin_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->image_id = image_group(GROUP_FIGURE_MISSILE) + dir;
+    f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void figure_bolt_action(figure *f)
@@ -242,5 +242,5 @@ void figure_bolt_action(figure *f)
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
-    f->image_id = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
+    f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }

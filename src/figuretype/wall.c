@@ -97,10 +97,10 @@ void figure_ballista_action(figure *f)
     }
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_181_BALLISTA_FIRING) {
-        f->image_id = image_group(GROUP_FIGURE_BALLISTA) + dir +
+        f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir +
             8 * BALLISTA_FIRING_OFFSETS[f->wait_ticks_missile / 4];
     } else {
-        f->image_id = image_group(GROUP_FIGURE_BALLISTA) + dir;
+        f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
     }
 }
 
@@ -270,13 +270,13 @@ void figure_tower_sentry_action(figure *f)
     }
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            136 + figure_image_corpse_offset(f);
+        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      136 + figure_image_corpse_offset(f);
     } else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
+        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
+        int image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY);
         if (f->attack_image_offset < 16) {
             f->image_id = image_id + 96 + dir;
         }
@@ -285,8 +285,8 @@ void figure_tower_sentry_action(figure *f)
         }
     }
     else {
-        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
-            dir + 8 * f->image_offset;
+        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      dir + 8 * f->image_offset;
     }
 }
 

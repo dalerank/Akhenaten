@@ -167,9 +167,9 @@ void building_warehouse_space_set_image(building *space, int resource)
 {
     int image_id;
     if (space->loads_stored <= 0) {
-        image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
+        image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     } else {
-        image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
+        image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
             4 * (resource - 1) + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE) +
                    space->loads_stored - 1;
     }

@@ -95,7 +95,7 @@ static void draw_background(void)
     int y_offset = (screen_height() - 768) / 2;
 
     int mission = scenario_campaign_mission();
-    int image_base = image_group(GROUP_INTERMEZZO_BACKGROUND);
+    int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
         if (scenario_is_custom()) {
             image_draw(image_base + 1, x_offset, y_offset);

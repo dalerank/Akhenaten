@@ -247,15 +247,15 @@ void map_orientation_update_buildings(void)
             case BUILDING_GATEHOUSE:
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 1;
+                        image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                     } else {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 2;
+                        image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
                     }
                 } else {
                     if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 2;
+                        image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
                     } else {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 1;
+                        image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
@@ -264,15 +264,15 @@ void map_orientation_update_buildings(void)
             case BUILDING_TRIUMPHAL_ARCH:
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
+                        image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                     } else {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
+                        image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
                     }
                 } else {
                     if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
+                        image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
                     } else {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
+                        image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
@@ -292,28 +292,28 @@ void map_orientation_update_buildings(void)
                 }
                 map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
                 if (map_orientation == DIR_0_TOP) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0: image_id += 0; break; // part 1
                         case 1: image_id += 2; break; // part 2
                         case 2: image_id += 4; break; // part 3, same for switch cases below
                     }
                 } else if (map_orientation == DIR_4_BOTTOM) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 0; break;
                     }
                 } else if (map_orientation == DIR_6_LEFT) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
                         case 0: image_id += 0; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 4; break;
                     }
                 } else { // DIR_2_RIGHT
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
@@ -325,21 +325,21 @@ void map_orientation_update_buildings(void)
             }
             case BUILDING_SHIPYARD:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
-                image_id = image_group(GROUP_BUILDING_SHIPYARD) + image_offset;
+                image_id = image_id_from_group(GROUP_BUILDING_SHIPYARD) + image_offset;
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;
             case BUILDING_WHARF:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
-                image_id = image_group(GROUP_BUILDING_WHARF) + image_offset;
+                image_id = image_id_from_group(GROUP_BUILDING_WHARF) + image_offset;
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;
             case BUILDING_DOCK:
                 image_offset = (4 + b->data.dock.orientation - map_orientation / 2) % 4;
                 switch (image_offset) {
-                    case 0: image_id = image_group(GROUP_BUILDING_DOCK_1); break;
-                    case 1: image_id = image_group(GROUP_BUILDING_DOCK_2); break;
-                    case 2: image_id = image_group(GROUP_BUILDING_DOCK_3); break;
-                    default:image_id = image_group(GROUP_BUILDING_DOCK_4); break;
+                    case 0: image_id = image_id_from_group(GROUP_BUILDING_DOCK_1); break;
+                    case 1: image_id = image_id_from_group(GROUP_BUILDING_DOCK_2); break;
+                    case 2: image_id = image_id_from_group(GROUP_BUILDING_DOCK_3); break;
+                    default:image_id = image_id_from_group(GROUP_BUILDING_DOCK_4); break;
                 }
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;

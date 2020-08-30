@@ -5,8 +5,6 @@
 #include "core/image_group.h"
 #include "graphics/color.h"
 
-#define MAIN_ENTRIES 10000
-
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS 2188
 #define IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS 2130
@@ -39,12 +37,20 @@ typedef struct {
         int is_fully_compressed;
         int is_external;
         int has_compressed_part;
-        int bitmap_id;
+//        int bitmap_id;
+        char bitmap_name[200];
         int offset;
         int data_length;
         int uncompressed_length;
     } draw;
 } image;
+
+typedef struct {
+    int entries_num;
+    uint16_t *group_image_ids;
+    image *images;
+    color_t *data;
+} imagepak;
 
 /**
  * Initializes the image system
@@ -58,7 +64,7 @@ int image_init(void);
  * @param force_reload Whether to force loading graphics even if climate/editor are the same
  * @return boolean true on success, false on failure
  */
-int image_load_climate(int climate_id, int is_editor, int force_reload);
+int image_load_main(int climate_id, int is_editor, int force_reload);
 
 /**
  * Loads external fonts file (Cyrillic and Traditional Chinese)
@@ -78,7 +84,7 @@ int image_load_enemy(int enemy_id);
  * @param group Image group
  * @return Image id of first image
  */
-int image_group(int group);
+int image_id_from_group(int group);
 
 /**
  * Gets an image by id
@@ -121,5 +127,7 @@ const color_t *image_data_letter(int letter_id);
  * @return Pointer to data or null, short term use only.
  */
 const color_t *image_data_enemy(int id);
+
+int get_main_entries_num(void);
 
 #endif // CORE_IMAGE_H

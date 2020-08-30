@@ -89,7 +89,7 @@ static int get_land_type_citizen_building(int grid_offset)
 
 static int get_land_type_citizen_aqueduct(int grid_offset)
 {
-    int image_id = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     if (image_id <= 3) {
         return CITIZEN_N3_AQUEDUCT;
     } else if (image_id <= 7) {
@@ -125,7 +125,8 @@ void map_routing_update_land_citizen(void)
                     // shouldn't happen
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
                     map_terrain_remove(grid_offset, TERRAIN_BUILDING);
-                    map_image_set(grid_offset, (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1));
+                    map_image_set(grid_offset, (map_random_get(grid_offset) & 7) +
+                            image_id_from_group(GROUP_TERRAIN_GRASS_1));
                     map_property_mark_draw_tile(grid_offset);
                     map_property_set_multi_tile_size(grid_offset, 1);
                     continue;

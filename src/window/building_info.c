@@ -162,15 +162,37 @@ static int get_height_id(void)
     }
     return 0;
 }
-
-static void draw_mothball_button(int x, int y, int focused)
+static void get_tooltip(tooltip_context *c)
 {
-    uint8_t working_text[] = { 'x', 0 };
-        button_border_draw(x, y, 20, 20, focused ? 1 : 0);
-        building* b = building_get(context.building_id);
-        if (b->state == BUILDING_STATE_IN_USE) {
-            text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+    int text_id = 0, group_id = 0;
+    if (focus_image_button_id) {
+        text_id = focus_image_button_id;
+    }
+    else if (focus_generic_button_id) {
+        if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
+            text_id = 8;
+            group_id = 54;
+        } else {
+            text_id = 10;
+            group_id = 54;
         }
+    } else if (context.type == BUILDING_INFO_LEGION) {
+        text_id = window_building_get_legion_info_tooltip_text(&context);
+    } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
+        int btype = building_get(context.building_id)->type;
+        if (btype == BUILDING_GRANARY) {
+            window_building_get_tooltip_granary_orders(&group_id, &text_id);
+        } else if (btype == BUILDING_WAREHOUSE) {
+            window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
+        }
+    }
+    if (text_id || group_id) {
+        c->type = TOOLTIP_BUTTON;
+        c->text_id = text_id;
+        if (group_id) {
+            c->text_group = group_id;
+        }
+    }
 }
 
 static int center_in_city(int element_width_pixels)
@@ -219,7 +241,8 @@ static void init(int grid_offset)
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
-    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) -
+                                                                         image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;
@@ -268,7 +291,7 @@ static void init(int grid_offset)
         context.type = BUILDING_INFO_BUILDING;
         context.worker_percentage = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
         highlight_waypoints(b);
-               
+
         switch (b->type) {
             case BUILDING_FORT_GROUND:
                 context.building_id = b->prev_part_building_id;
@@ -305,7 +328,7 @@ static void init(int grid_offset)
                 }
                 break;
             case BUILDING_WAREHOUSE:
-                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0)) { 
+                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0)) {
                     context.has_road_access = 1;
                 }
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
@@ -402,6 +425,15 @@ static void init(int grid_offset)
     }
 }
 
+static void draw_mothball_button(int x, int y, int focused)
+{
+    uint8_t working_text[] = { 'x', 0 };
+    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    building* b = building_get(context.building_id);
+    if (b->state == BUILDING_STATE_IN_USE) {
+        text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+    }
+}
 static void draw_background(void)
 {
     window_city_draw_panels();
@@ -566,7 +598,6 @@ static void draw_background(void)
         window_building_draw_legion_info(&context);
     }
 }
-
 static void draw_foreground(void)
 {
     // building-specific buttons
@@ -674,7 +705,6 @@ static int handle_specific_building_info_mouse(const mouse *m)
     }
     return 0;
 }
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     int handled = 0;
@@ -703,39 +733,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void get_tooltip(tooltip_context *c)
-{
-    int text_id = 0, group_id = 0;
-    if (focus_image_button_id) {
-        text_id = focus_image_button_id;
-    }
-    else if (focus_generic_button_id) {
-        if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
-            text_id = 8;
-            group_id = 54;
-        } else {
-            text_id = 10;
-            group_id = 54;
-        }
-    } else if (context.type == BUILDING_INFO_LEGION) {
-        text_id = window_building_get_legion_info_tooltip_text(&context);
-    } else if (context.type == BUILDING_INFO_BUILDING && context.storage_show_special_orders) {
-        int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_GRANARY) {
-            window_building_get_tooltip_granary_orders(&group_id, &text_id);
-        } else if (btype == BUILDING_WAREHOUSE) {
-            window_building_get_tooltip_warehouse_orders(&group_id, &text_id);
-        }
-    }
-    if (text_id || group_id) {
-        c->type = TOOLTIP_BUTTON;
-        c->text_id = text_id;
-        if (group_id) {
-            c->text_group = group_id;
-        }
-    }
-}
-
 static void button_help(int param1, int param2)
 {
     if (context.help_id > 0) {
@@ -745,7 +742,6 @@ static void button_help(int param1, int param2)
     }
     window_invalidate();
 }
-
 static void button_close(int param1, int param2)
 {
     if (context.storage_show_special_orders) {
@@ -755,12 +751,10 @@ static void button_close(int param1, int param2)
         window_city_show();
     }
 }
-
 static void button_advisor(int advisor, int param2)
 {
     window_advisors_show_advisor(advisor);
 }
-
 static void button_mothball(int mothball, int param2)
 {
     building* b = building_get(context.building_id);
@@ -783,7 +777,6 @@ void window_building_info_show(int grid_offset)
     init(grid_offset);
     window_show(&window);
 }
-
 int window_building_info_get_building_type(void)
 {
     if (context.type == BUILDING_INFO_BUILDING) {
@@ -791,7 +784,6 @@ int window_building_info_get_building_type(void)
     }
     return BUILDING_NONE;
 }
-
 void window_building_info_show_storage_orders(void)
 {
     context.storage_show_special_orders = 1;

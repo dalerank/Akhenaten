@@ -24,9 +24,9 @@ static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy)
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT) {
-        image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
+        image_draw_blend_alpha(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
     } else {
-        image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
+        image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
     }
 }
 
@@ -60,7 +60,7 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
     if (blocked) {
         draw_partially_blocked(x_view, y_view, num_tiles, blocked_tiles);
     } else if (editor_tool_is_in_use()) {
-        int image_id = image_group(GROUP_TERRAIN_OVERLAY);
+        int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = x_view + X_VIEW_OFFSETS[i];
             int y_offset = y_view + Y_VIEW_OFFSETS[i];
@@ -69,9 +69,9 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
     } else {
         int image_id;
         if (type == BUILDING_NATIVE_CROPS) {
-            image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
+            image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
-            image_id = image_group(props->image_group) + props->image_offset;
+            image_id = image_id_from_group(props->image_group) + props->image_offset;
         }
         draw_building_image(image_id, x_view, y_view);
     }
@@ -85,7 +85,7 @@ static void draw_road(const map_tile *tile, int x, int y)
     if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         blocked = 1;
     } else {
-        image_id = image_group(GROUP_TERRAIN_ROAD);
+        image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
         if (!map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD) &&
             map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD)) {
             image_id++;
@@ -116,7 +116,7 @@ static void draw_access_ramp(const map_tile *tile, int x, int y)
 {
     int orientation;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
-        int image_id = image_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
+        int image_id = image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
         draw_building_image(image_id, x, y);
     } else {
         int blocked[4] = {1, 1, 1, 1};

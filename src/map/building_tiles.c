@@ -102,7 +102,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
             map_building_set(grid_offset, building_id);
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, 2);
-            map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_HOUSE));
+            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARM_HOUSE));
             map_property_set_multi_tile_xy(grid_offset, dx, dy,
                 dx == x_leftmost && dy == y_leftmost);
         }
@@ -199,8 +199,8 @@ void map_building_tiles_remove(int building_id, int x, int y)
                 map_tiles_set_water(x + dx, y + dy);
             } else {
                 map_image_set(grid_offset,
-                    image_group(GROUP_TERRAIN_UGLY_GRASS) +
-                    (map_random_get(grid_offset) & 7));
+                              image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) +
+                              (map_random_get(grid_offset) & 7));
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             }
         }
@@ -240,7 +240,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);
-                map_image_set(grid_offset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
             }
         }
     }

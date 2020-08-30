@@ -93,7 +93,7 @@ static void init(void)
 
 static void draw_paneling(void)
 {
-    int image_base = image_group(GROUP_EMPIRE_PANELS);
+    int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
@@ -130,7 +130,7 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
 
-    int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
+    int image_id = resource + image_id_from_group(GROUP_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1);
 
@@ -140,13 +140,13 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 
     switch (trade_max) {
         case 15:
-            image_draw(image_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
             break;
         case 25:
-            image_draw(image_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
             break;
         case 40:
-            image_draw(image_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
             break;
     }
 }
@@ -217,7 +217,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
             x_offset + 40, y_offset + 73, FONT_NORMAL_GREEN);
         lang_text_draw(47, 6, x_offset + index + 40, y_offset + 73, FONT_NORMAL_GREEN);
-        int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
+        int image_id = image_id_from_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
         image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
@@ -339,10 +339,10 @@ static void draw_empire_object(const empire_object *obj)
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
             city->type == EMPIRE_CITY_FUTURE_ROMAN) {
-            image_id = image_group(GROUP_EMPIRE_FOREIGN_CITY);
+            image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
         } else if (city->type == EMPIRE_CITY_TRADE) {
             // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
-            image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
+            image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
         }
     }
     if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
@@ -389,7 +389,7 @@ static void draw_map(void)
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    image_draw(image_id_from_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -400,7 +400,7 @@ static void draw_map(void)
 
 static void draw_city_name(const empire_city *city)
 {
-    int image_base = image_group(GROUP_EMPIRE_PANELS);
+    int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
     image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
     image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
     image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);

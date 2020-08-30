@@ -45,7 +45,7 @@ static int draw_background(void)
     city_resource_determine_available();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
+    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
     int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
@@ -62,8 +62,8 @@ static void draw_foreground(void)
         int y_offset = 22 * i;
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
+        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
+        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
 
         if (focus_button_id - 3 == i) {
             button_border_draw(80, y_offset + 54, 480, 24, 1);

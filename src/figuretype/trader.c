@@ -431,7 +431,7 @@ void figure_trade_caravan_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    f->image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
+    f->image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
 }
 
 void figure_trade_caravan_donkey_action(figure *f)
@@ -460,7 +460,7 @@ void figure_trade_caravan_donkey_action(figure *f)
         f->is_ghost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    f->image_id = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
+    f->image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->image_offset;
 }
 
 void figure_native_trader_action(figure *f)
@@ -545,13 +545,13 @@ void figure_native_trader_action(figure *f)
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
 
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset(f);
+        f->image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset(f);
         f->cart_image_id = 0;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
     }
-    f->cart_image_id = image_group(GROUP_FIGURE_MIGRANT_CART) +
-        8 + 8 * f->resource_id; // BUGFIX should be within else statement?
+    f->cart_image_id = image_id_from_group(GROUP_FIGURE_MIGRANT_CART) +
+                       8 + 8 * f->resource_id; // BUGFIX should be within else statement?
     if (f->cart_image_id) {
         f->cart_image_id += dir;
         figure_image_set_cart_offset(f, dir);
@@ -749,5 +749,5 @@ void figure_trade_ship_action(figure *f)
             break;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-    f->image_id = image_group(GROUP_FIGURE_SHIP) + dir;
+    f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir;
 }

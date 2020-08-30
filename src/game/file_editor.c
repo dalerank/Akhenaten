@@ -104,7 +104,7 @@ static void create_blank_map(int size)
 
 static void prepare_map_for_editing(void)
 {
-    image_load_climate(scenario_property_climate(), 1, 0);
+    image_load_main(scenario_property_climate(), 1, 0);
 
     empire_load(1, scenario_empire_id());
     empire_object_init_cities();
@@ -151,9 +151,9 @@ int game_file_editor_load_scenario(const char *scenario_file)
 int game_file_editor_write_scenario(const char *scenario_file)
 {
     scenario_editor_set_native_images(
-        image_group(GROUP_EDITOR_BUILDING_NATIVE),
-        image_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
-        image_group(GROUP_EDITOR_BUILDING_CROPS)
+            image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
+            image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
+            image_id_from_group(GROUP_EDITOR_BUILDING_CROPS)
     );
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();

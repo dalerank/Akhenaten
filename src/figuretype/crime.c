@@ -170,9 +170,9 @@ void figure_protestor_action(figure *f)
         f->image_offset = 0;
     }
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 4] + 104;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 4] + 104;
     }
 }
 
@@ -190,9 +190,9 @@ void figure_criminal_action(figure *f)
         f->image_offset = 0;
     }
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 2] + 104;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 2] + 104;
     }
 }
 
@@ -262,13 +262,13 @@ void figure_rioter_action(figure *f)
     dir = figure_image_normalize_direction(dir);
 
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
     } else if (f->direction == DIR_FIGURE_ATTACK) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset % 16];
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset % 16];
     } else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING) {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * f->image_offset;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * f->image_offset;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset / 2];
+        f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset / 2];
     }
 }
 

@@ -265,7 +265,9 @@ static void setup(const julius_args *args)
         exit(1);
     }
 
-    goto skip;
+    #ifdef DEBUG
+        goto skip;
+    #endif
     // set up game display
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);

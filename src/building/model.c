@@ -3,20 +3,21 @@
 #include "core/io.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "core/game_environment.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 #define TMP_BUFFER_SIZE 100000
 
-#define NUM_BUILDINGS 130
-#define NUM_HOUSES 20
+int NUM_BUILDINGS = 0;
+int NUM_HOUSES = 0;
 
 static const uint8_t ALL_BUILDINGS[] = {'A', 'L', 'L', ' ', 'B', 'U', 'I', 'L', 'D', 'I', 'N', 'G', 'S', 0};
 static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E', 'S', 0};
 
-static model_building buildings[NUM_BUILDINGS];
-static model_house houses[NUM_HOUSES];
+static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
+static model_house houses[20];
 
 static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
 {
@@ -27,7 +28,6 @@ static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
     }
     return 1;
 }
-
 static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length)
 {
     int needle_length = string_length(needle);
@@ -38,7 +38,6 @@ static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int h
     }
     return 0;
 }
-
 static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length)
 {
     for (int i = 0; i < haystack_length; i++) {
@@ -63,7 +62,6 @@ static const uint8_t *skip_non_digits(const uint8_t *str)
     }
     return str;
 }
-
 static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value)
 {
     ptr = skip_non_digits(ptr);
@@ -74,21 +72,35 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
 
 int model_load(void)
 {
+    // allocate buffer for file data & read file into it
     uint8_t *buffer = (uint8_t *) malloc(TMP_BUFFER_SIZE);
     if (!buffer) {
         log_error("No memory for model", 0, 0);
         return 0;
     }
     memset(buffer, 0, TMP_BUFFER_SIZE);
-    int filesize = io_read_file_into_buffer("c3_model.txt", NOT_LOCALIZED, buffer, TMP_BUFFER_SIZE);
+    int filesize = 0;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            NUM_BUILDINGS = 130;
+            NUM_HOUSES = 20;
+            filesize = io_read_file_into_buffer("c3_model.txt", NOT_LOCALIZED, buffer, TMP_BUFFER_SIZE);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            NUM_BUILDINGS = 237;
+            NUM_HOUSES = 20;
+            filesize = io_read_file_into_buffer("Pharaoh_Model_Easy.txt", NOT_LOCALIZED, buffer, TMP_BUFFER_SIZE);
+            break;
+    }
     if (filesize == 0) {
-        log_error("No c3_model.txt file", 0, 0);
+        log_error("Model file not found", 0, 0);
         free(buffer);
         return 0;
     }
 
+    // go through the file to assert number of buildings
     int num_lines = 0;
-    int guard = 200;
+    int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
     const uint8_t *ptr = &buffer[index_of_string(buffer, ALL_BUILDINGS, filesize)];
     do {
@@ -99,13 +111,13 @@ int model_load(void)
             num_lines++;
         }
     } while (brace_index && guard > 0);
-
     if (num_lines != NUM_BUILDINGS + NUM_HOUSES) {
         log_error("Model has incorrect no of lines ", 0, num_lines + 1);
         free(buffer);
         return 0;
     }
 
+    // parse buildings data
     int dummy;
     ptr = &buffer[index_of_string(buffer, ALL_BUILDINGS, filesize)];
     const uint8_t *end_ptr = &buffer[filesize];
@@ -122,8 +134,8 @@ int model_load(void)
         ptr = get_value(ptr, end_ptr, &dummy);
     }
 
+    // parse houses data
     ptr = &buffer[index_of_string(buffer, ALL_HOUSES, filesize)];
-
     for (int i = 0; i < NUM_HOUSES; i++) {
         ptr += index_of(ptr, '{', filesize);
 
@@ -155,7 +167,6 @@ int model_load(void)
 }
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
-
 const model_building *model_get_building(building_type type)
 {
     if(type == BUILDING_ROADBLOCK) {
@@ -163,7 +174,6 @@ const model_building *model_get_building(building_type type)
     }
     return &buildings[type];
 }
-
 const model_house *model_get_house(house_level level)
 {
     return &houses[level];

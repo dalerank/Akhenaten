@@ -180,7 +180,6 @@ static void correct_channel_filenames(void)
         }
     }
 }
-
 void sound_system_init(void)
 {
     correct_channel_filenames();
@@ -193,7 +192,6 @@ void sound_system_init(void)
     sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
     sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
 }
-
 void sound_system_shutdown(void)
 {
     sound_device_close();

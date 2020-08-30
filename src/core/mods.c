@@ -275,10 +275,10 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     current_layer->height = 0;
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
-        int group = data.groups[data.total_groups].id - MAIN_ENTRIES;
+        int group = data.groups[data.total_groups].id - get_main_entries_num();
         for (int i = 0; i < data.groups[data.total_groups].images; ++i) {
             if (strcmp(data.images[group].id, image_id) == 0) {
-                current_layer->original_image_id = group + MAIN_ENTRIES;
+                current_layer->original_image_id = group + get_main_entries_num();
                 break;
             }
             group++;
@@ -289,7 +289,7 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     } else {
         int group = string_to_int(string_from_ascii(group_id));
         int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
-        current_layer->original_image_id = image_group(group) + id;
+        current_layer->original_image_id = image_id_from_group(group) + id;
     }
     original_image = image_get(current_layer->original_image_id);
     if (!original_image) {
@@ -325,7 +325,7 @@ static void xml_start_mod_element(const char **attributes)
         return;
     }
     image_groups *group = &data.groups[data.total_groups];
-    group->id = data.total_images + MAIN_ENTRIES;
+    group->id = data.total_images + get_main_entries_num();
     group->images = 0;
     for (int i = 0; i < 4; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
@@ -642,10 +642,10 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
             break;
         }
     }
-    mod_group_id -= MAIN_ENTRIES;
+    mod_group_id -= get_main_entries_num();
     for (int i = 0; i < max_images; ++i) {
         if (strcmp(data.images[mod_group_id].id, image_name) == 0) {
-            return mod_group_id + MAIN_ENTRIES;
+            return mod_group_id + get_main_entries_num();
         }
         mod_group_id++;
     }
@@ -654,7 +654,7 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
 
 const image *mods_get_image(int image_id)
 {
-    modded_image *img = &data.images[image_id - MAIN_ENTRIES];
+    modded_image *img = &data.images[image_id - get_main_entries_num()];
     if (!img->active) {
         return image_get(0);
     }
@@ -663,7 +663,7 @@ const image *mods_get_image(int image_id)
 
 const color_t *mods_get_image_data(int image_id)
 {
-    modded_image *img = &data.images[image_id - MAIN_ENTRIES];
+    modded_image *img = &data.images[image_id - get_main_entries_num()];
     if (!img->active) {
         return image_data(0);
     }

@@ -70,7 +70,7 @@ static int file_exists_in_dir(const char *dir, const char *file)
 }
 int lang_dir_is_valid(const char *dir)
 {
-    lang_files_collection *lfc = &lfcs[get_engine_environment()];
+    lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG)) {
         return 1;
     }
@@ -157,7 +157,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
 }
 int lang_load(int is_editor)
 {
-    lang_files_collection *lfc = &lfcs[get_engine_environment()];
+    lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (is_editor) {
         return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
     }

@@ -149,7 +149,7 @@ void figure_market_buyer_action(figure *f)
             }
             break;
     }
-    figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
 void figure_delivery_boy_action(figure *f)
@@ -179,10 +179,10 @@ void figure_delivery_boy_action(figure *f)
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
-            figure_image_corpse_offset(f);
+        f->image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
+                      figure_image_corpse_offset(f);
     } else {
-        f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) +
-            dir + 8 * f->image_offset;
+        f->image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) +
+                      dir + 8 * f->image_offset;
     }
 }

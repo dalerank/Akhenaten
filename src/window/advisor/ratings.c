@@ -26,7 +26,7 @@ static int focus_button_id;
 
 static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
 {
-    int image_base = image_group(GROUP_RATINGS_COLUMN);
+    int image_base = image_id_from_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value;
     if (config_get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
@@ -52,7 +52,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
     if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
@@ -61,7 +61,7 @@ static int draw_background(void)
         text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }
 
-    image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
+    image_draw(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48);
 
     int open_play = scenario_is_open_play();
 

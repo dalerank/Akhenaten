@@ -57,10 +57,10 @@ static void destroy_on_fire(building *b, int plagued)
         memset(&b->data, 0, 42);
         int image_id;
         if (was_tent) {
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
             int random = map_random_get(b->grid_offset) & 3;
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
@@ -75,10 +75,10 @@ static void destroy_on_fire(building *b, int plagued)
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
         int image_id;
         if (was_tent) {
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
         } else {
             int random = map_random_get(ruin->grid_offset) & 3;
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;

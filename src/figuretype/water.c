@@ -118,22 +118,22 @@ void figure_flotsam_action(figure *f)
     if (f->resource_id == 0) {
         figure_image_increase_offset(f, 12);
         if (f->min_max_seen) {
-            f->image_id = image_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[f->image_offset];
+            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[f->image_offset];
         } else {
-            f->image_id = image_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[f->image_offset];
+            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[f->image_offset];
         }
     } else if (f->resource_id == 1) {
         figure_image_increase_offset(f, 24);
-        f->image_id = image_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[f->image_offset];
+        f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[f->image_offset];
     } else if (f->resource_id == 2) {
         figure_image_increase_offset(f, 24);
-        f->image_id = image_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[f->image_offset];
+        f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[f->image_offset];
     } else if (f->resource_id == 3) {
         figure_image_increase_offset(f, 24);
         if (FLOTSAM_TYPE_3[f->image_offset] == -1) {
             f->image_id = 0;
         } else {
-            f->image_id = image_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[f->image_offset];
+            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[f->image_offset];
         }
     }
 }
@@ -161,7 +161,7 @@ void figure_shipwreck_action(figure *f)
     if (f->wait_ticks > 2000) {
         f->state = FIGURE_STATE_DEAD;
     }
-    f->image_id = image_group(GROUP_FIGURE_SHIPWRECK) + f->image_offset / 16;
+    f->image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + f->image_offset / 16;
 }
 
 void figure_fishing_boat_action(figure *f)
@@ -294,9 +294,9 @@ void figure_fishing_boat_action(figure *f)
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
 
     if (f->action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING) {
-        f->image_id = image_group(GROUP_FIGURE_SHIP) + dir + 16;
+        f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_SHIP) + dir + 8;
+        f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
     }
 }
 

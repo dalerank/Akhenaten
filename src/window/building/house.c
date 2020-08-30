@@ -30,7 +30,7 @@ static void draw_vacant_lot(building_info_context *c)
 static void draw_population_info(building_info_context *c, int y_offset)
 {
     building *b = building_get(c->building_id);
-    image_draw(image_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
+    image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
     int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_SMALL_BLACK);
     width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_SMALL_BLACK);
 
@@ -96,7 +96,7 @@ void window_building_draw_house(building_info_context *c)
     draw_tax_info(c, c->y_offset + 194);
     draw_happiness_info(c, c->y_offset + 214);
 
-    int resource_image = image_group(GROUP_RESOURCE_ICONS);
+    int resource_image = image_id_from_group(GROUP_RESOURCE_ICONS);
     // food inventory
     if (model_get_house(b->subtype.house_level)->food_types) {
         // wheat

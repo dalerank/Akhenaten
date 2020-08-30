@@ -40,7 +40,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     int width = lang_text_draw(59, 32 + city_god_happiness(god) / 10, 460, y_offset, FONT_NORMAL_WHITE);
     int bolts = city_god_wrath_bolts(god);
     for (int i = 0; i < bolts / 10; i++) {
-        image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+        image_draw(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     }
 }
 
@@ -56,7 +56,7 @@ static int draw_background(void)
         lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
     }
 
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
+    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 
     lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
 

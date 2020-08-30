@@ -49,11 +49,11 @@ void figure_create_homeless(int x, int y, int num_people)
 
 static void update_direction_and_image(figure *f)
 {
-    figure_image_update(f, image_group(GROUP_FIGURE_MIGRANT));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_MIGRANT));
     if (f->action_state == FIGURE_ACTION_2_IMMIGRANT_ARRIVING ||
         f->action_state == FIGURE_ACTION_6_EMIGRANT_LEAVING) {
         int dir = figure_image_direction(f);
-        f->cart_image_id = image_group(GROUP_FIGURE_MIGRANT_CART) + dir;
+        f->cart_image_id = image_id_from_group(GROUP_FIGURE_MIGRANT_CART) + dir;
         figure_image_set_cart_offset(f, (dir + 4) % 8);
     }
 }
@@ -328,5 +328,5 @@ void figure_homeless_action(figure *f)
             }
             break;
     }
-    figure_image_update(f, image_group(GROUP_FIGURE_HOMELESS));
+    figure_image_update(f, image_id_from_group(GROUP_FIGURE_HOMELESS));
 }

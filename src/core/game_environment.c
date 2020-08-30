@@ -4,48 +4,39 @@
 
 #include <assert.h>
 
-struct game_environment_collection {
-    engine_environment env;
-    char *game_name;
-    char *pref_filename;
-} game_environment = {.env = ENGINE_ENV_MAX};
+engine_environment GAME_ENV = ENGINE_ENV_MAX;
+char *game_name;
+char *pref_filename;
 
 void init_game_environment(engine_environment env)
 {
-    game_environment.env = env;
+    assert(env != ENGINE_ENV_MAX);
+    GAME_ENV = env;
     switch (env)
     {
         case ENGINE_ENV_C3:
-            game_environment.game_name = "Caesar 3";
-            game_environment.pref_filename = "data_dir_c3.txt";
+            game_name = "Caesar 3";
+            pref_filename = "data_dir_c3.txt";
             break;
         case ENGINE_ENV_PHARAOH:
-            game_environment.game_name = "Pharaoh";
-            game_environment.pref_filename = "data_dir_pharaoh.txt";
+            game_name = "Pharaoh";
+            pref_filename = "data_dir_pharaoh.txt";
             break;
     }
-    SDL_Log("Engine set to %s", game_environment.game_name);
+    SDL_Log("Engine set to %s", game_name);
 }
 void assert_env_init(void)
 {
-    assert(game_environment.env < ENGINE_ENV_MAX);
-}
-int is_game_env(engine_environment env)
-{
-    return (int)(game_environment.env == env);
-}
-engine_environment get_engine_environment(void)
-{
-    return game_environment.env;
+    assert(GAME_ENV < ENGINE_ENV_MAX);
 }
 
 const char *get_game_title(void)
 {
     assert_env_init();
-    return game_environment.game_name;
+    return game_name;
 }
 const char *get_engine_pref_path(void)
 {
     assert_env_init();
-    return game_environment.pref_filename;
+    return pref_filename;
 }

@@ -79,11 +79,54 @@ static int reload_language(int is_editor, int reload_images)
         errlog("unable to load font graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
+    if (!image_load_main(CLIMATE_CENTRAL, is_editor, reload_images)) {
         errlog("unable to load main graphics");
         return 0;
     }
     return 1;
+}
+
+static int get_elapsed_ticks(void)
+{
+    if (game_state_is_paused()) {
+        return 0;
+    }
+    int game_speed_index = 0;
+    int ticks_per_frame = 1;
+    switch (window_get_id()) {
+        default:
+            return 0;
+        case WINDOW_CITY:
+        case WINDOW_CITY_MILITARY:
+        case WINDOW_SLIDING_SIDEBAR:
+        case WINDOW_OVERLAY_MENU:
+        case WINDOW_BUILD_MENU:
+            game_speed_index = (100 - setting_game_speed()) / 10;
+            if (game_speed_index >= 10) {
+                return 0;
+            } else if (game_speed_index < 0) {
+                ticks_per_frame = setting_game_speed() / 100;
+                game_speed_index = 0;
+            }
+            break;
+        case WINDOW_EDITOR_MAP:
+            game_speed_index = 3; // 70%, nice speed for flag animations
+            break;
+    }
+    if (building_construction_in_progress()) {
+        return 0;
+    }
+    if (scroll_in_progress() && !scroll_is_smooth()) {
+        return 0;
+    }
+
+    time_millis now = time_get_millis();
+    time_millis diff = now - last_update;
+    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
+        return 0;
+    }
+    last_update = now;
+    return ticks_per_frame;
 }
 
 int game_pre_init(void)
@@ -106,7 +149,7 @@ int game_init(void)
         errlog("unable to init graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, 0, 0)) {
+    if (!image_load_main(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -165,60 +208,17 @@ int game_reload_language(void)
 {
     return reload_language(0, 1);
 }
-static int get_elapsed_ticks(void)
-{
-    if (game_state_is_paused()) {
-        return 0;
-    }
-    int game_speed_index = 0;
-    int ticks_per_frame = 1;
-    switch (window_get_id()) {
-        default:
-            return 0;
-        case WINDOW_CITY:
-        case WINDOW_CITY_MILITARY:
-        case WINDOW_SLIDING_SIDEBAR:
-        case WINDOW_OVERLAY_MENU:
-        case WINDOW_BUILD_MENU:
-            game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10) {
-                return 0;
-            } else if (game_speed_index < 0) {
-                ticks_per_frame = setting_game_speed() / 100;
-                game_speed_index = 0;
-            }
-            break;
-        case WINDOW_EDITOR_MAP:
-            game_speed_index = 3; // 70%, nice speed for flag animations
-            break;
-    }
-    if (building_construction_in_progress()) {
-        return 0;
-    }
-    if (scroll_in_progress() && !scroll_is_smooth()) {
-        return 0;
-    }
-
-    time_millis now = time_get_millis();
-    time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
-        return 0;
-    }
-    last_update = now;
-    return ticks_per_frame;
-}
-
 void game_run(void)
 {
     game_animation_update();
     int num_ticks = get_elapsed_ticks();
-    for (int i = 0; i < num_ticks; i++) {
+    for (int i = 0; i < num_ticks; i++)
+    {
         game_tick_run();
         game_file_write_mission_saved_game();
 
-        if (window_is_invalid()) {
+        if (window_is_invalid())
             break;
-        }
     }
 }
 void game_draw(void)

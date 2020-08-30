@@ -23,7 +23,7 @@ static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0,
 
 static void set_cart_graphic(figure *f)
 {
-    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART) +
+    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) +
         8 * f->resource_id + resource_image_offset(f->resource_id, RESOURCE_IMAGE_CART);
 }
 
@@ -162,10 +162,10 @@ static void update_image(figure *f)
         f->direction < 8 ? f->direction : f->previous_tile_direction);
 
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
         f->cart_image_id = 0;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
+        f->image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
     }
     if (f->cart_image_id) {
         f->cart_image_id += dir;
@@ -296,7 +296,7 @@ void figure_cartpusher_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
-            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART);
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
@@ -480,7 +480,7 @@ void figure_warehouseman_action(figure *f)
         }
         case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
             if (f->loads_sold_or_carrying == 1) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                     8 * f->resource_id - 8 + resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
             } else {
                 set_cart_graphic(f);
@@ -522,7 +522,7 @@ void figure_warehouseman_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
-            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
@@ -534,7 +534,7 @@ void figure_warehouseman_action(figure *f)
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {	    
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 	    }
-            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY;
@@ -568,16 +568,16 @@ void figure_warehouseman_action(figure *f)
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 	    }
             if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+                f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             } else if (f->loads_sold_or_carrying == 1) {
                 set_cart_graphic(f);
             } else {
                 if (f->loads_sold_or_carrying >= 8) {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_8_LOADS_FOOD[f->resource_id];
+                    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                                       CART_OFFSET_8_LOADS_FOOD[f->resource_id];
                 } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
+                    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                                       CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
                 }
                 f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
             }
@@ -595,7 +595,7 @@ void figure_warehouseman_action(figure *f)
             break;
         case FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE:
             f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE;
@@ -627,17 +627,17 @@ void figure_warehouseman_action(figure *f)
             f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             // update graphic
             if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+                f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             } else if (f->loads_sold_or_carrying == 1) {
                 set_cart_graphic(f);
             } else {
                 if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
                     f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
+                    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                                       CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
                 } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
-                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
+                    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
+                                       CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
                 }
                 f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
             }

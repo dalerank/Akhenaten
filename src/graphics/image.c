@@ -92,7 +92,6 @@ static void draw_modded_footprint(int image_id, int x_offset, int y_offset, colo
         data += img->width - x_max;
     }
 }
-
 static void draw_modded_top(int image_id, int x_offset, int y_offset, color_t color)
 {
     const image *img = image_get(image_id);
@@ -190,7 +189,6 @@ static void draw_modded_top(int image_id, int x_offset, int y_offset, color_t co
         data += clip->clipped_pixels_right;
     }
 }
-
 static void draw_modded_image(const image *img, const color_t *data, int x_offset, int y_offset, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
@@ -226,7 +224,6 @@ static void draw_modded_image(const image *img, const color_t *data, int x_offse
         data += clip->clipped_pixels_right;
     }
 }
-
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
 {
     if (img->draw.type == IMAGE_TYPE_MOD) {
@@ -294,7 +291,6 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         data += clip->clipped_pixels_right;
     }
 }
-
 static void draw_compressed(const image *img, const color_t *data, int x_offset, int y_offset, int height)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -338,7 +334,6 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
         }
     }
 }
-
 static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -383,7 +378,6 @@ static void draw_compressed_set(const image *img, const color_t *data, int x_off
         }
     }
 }
-
 static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -432,7 +426,6 @@ static void draw_compressed_and(const image *img, const color_t *data, int x_off
         }
     }
 }
-
 static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -477,7 +470,6 @@ static void draw_compressed_blend(const image *img, const color_t *data, int x_o
         }
     }
 }
-
 static void draw_compressed_blend_alpha(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -539,7 +531,6 @@ static void draw_compressed_blend_alpha(const image *img, const color_t *data, i
         }
     }
 }
-
 static void draw_footprint_simple(const color_t *src, int x, int y)
 {
     memcpy(graphics_get_pixel(x + 28, y + 0), &src[0], 2 * sizeof(color_t));
@@ -573,7 +564,6 @@ static void draw_footprint_simple(const color_t *src, int x, int y)
     memcpy(graphics_get_pixel(x + 26, y + 28), &src[892], 6 * sizeof(color_t));
     memcpy(graphics_get_pixel(x + 28, y + 29), &src[898], 2 * sizeof(color_t));
 }
-
 static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset, color_t color_mask)
 {
     if (!color_mask) {
@@ -647,7 +637,6 @@ static void draw_footprint_size1(int image_id, int x, int y, color_t color_mask)
 
     draw_footprint_tile(tile_data(data, 0), x, y, color_mask);
 }
-
 static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
@@ -660,7 +649,6 @@ static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
 
     draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
 }
-
 static void draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
@@ -680,7 +668,6 @@ static void draw_footprint_size3(int image_id, int x, int y, color_t color_mask)
 
     draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
 }
-
 static void draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
@@ -709,7 +696,6 @@ static void draw_footprint_size4(int image_id, int x, int y, color_t color_mask)
 
     draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
 }
-
 static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
@@ -764,7 +750,6 @@ void image_draw(int image_id, int x, int y)
         draw_uncompressed(img, data, x, y, 0, DRAW_TYPE_NONE);
     }
 }
-
 void image_draw_enemy(int image_id, int x, int y)
 {
     if (image_id <= 0 || image_id >= 801) {
@@ -776,7 +761,6 @@ void image_draw_enemy(int image_id, int x, int y)
         draw_compressed(img, data, x, y, img->height);
     }
 }
-
 void image_draw_masked(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
@@ -801,7 +785,6 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask)
                               color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
     }
 }
-
 void image_draw_blend(int image_id, int x, int y, color_t color)
 {
     const image *img = image_get(image_id);
@@ -820,7 +803,6 @@ void image_draw_blend(int image_id, int x, int y, color_t color)
         draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
     }
 }
-
 void image_draw_blend_alpha(int image_id, int x, int y, color_t color)
 {
     const image *img = image_get(image_id);
@@ -839,7 +821,6 @@ void image_draw_blend_alpha(int image_id, int x, int y, color_t color)
         draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
     }
 }
-
 static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color)
 {
     switch (font) {
@@ -868,7 +849,6 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             break;
     }
 }
-
 void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
 {
     const image *img = image_letter(letter_id);
@@ -892,7 +872,6 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
             color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
     }
 }
-
 void image_draw_fullscreen_background(int image_id)
 {
     int s_width = screen_width();
@@ -902,7 +881,6 @@ void image_draw_fullscreen_background(int image_id)
     }
     image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
 }
-
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
@@ -930,7 +908,6 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
             break;
     }
 }
-
 void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
@@ -958,7 +935,6 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
             break;
     }
 }
-
 void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
@@ -1006,7 +982,6 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
         draw_compressed_and(img, data, x, y, height, color_mask);
     }
 }
-
 void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);

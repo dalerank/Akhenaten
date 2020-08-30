@@ -13,7 +13,7 @@
 
 int map_can_place_road_under_aqueduct(int grid_offset)
 {
-    int image_id = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     int check_y;
     switch (image_id) {
         case 0:
@@ -66,7 +66,7 @@ int map_can_place_road_under_aqueduct(int grid_offset)
 
 int map_can_place_aqueduct_on_road(int grid_offset)
 {
-    int image_id = map_image_at(grid_offset) - image_group(GROUP_TERRAIN_ROAD);
+    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_TERRAIN_ROAD);
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50) {
         return 0;
     }
@@ -90,7 +90,7 @@ int map_can_place_aqueduct_on_road(int grid_offset)
 
 int map_get_aqueduct_with_road_image(int grid_offset)
 {
-    int image_id = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     switch (image_id) {
         case 2:
             return 8;

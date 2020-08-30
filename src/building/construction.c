@@ -101,7 +101,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
                 if (b->id > 0) {
                     items_placed++;
                     map_building_tiles_add(b->id, x, y, 1,
-                        image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
+                                           image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
                     if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD)) {
                         needs_road_warning = 1;
                     }
@@ -633,13 +633,13 @@ void building_construction_place(void)
         if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3, image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_start-1, y_start-1), 0);
         }
         if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3, image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_end-1, y_end-1), 0);
             if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) && info.place_reservoir_at_start == PLACE_RESERVOIR_NO) {
                 building_construction_warning_check_reservoir(BUILDING_RESERVOIR);

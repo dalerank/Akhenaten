@@ -54,7 +54,7 @@ void building_house_change_to(building *house, building_type type)
 {
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_group(HOUSE_IMAGE[house->subtype.house_level].group);
+    int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].group);
     if (house->house_is_merged) {
         image_id += 4;
         if (HOUSE_IMAGE[house->subtype.house_level].offset) {
@@ -79,7 +79,7 @@ void building_house_change_to_vacant_lot(building *house)
 {
     house->type = BUILDING_HOUSE_VACANT_LOT;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+    int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
     if (house->house_is_merged) {
         map_building_tiles_remove(house->id, house->x, house->y);
         house->house_is_merged = 0;
@@ -126,7 +126,7 @@ static void merge(building *b)
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = image_group(HOUSE_IMAGE[b->subtype.house_level].group) + 4;
+    int image_id = image_id_from_group(HOUSE_IMAGE[b->subtype.house_level].group) + 4;
     if (HOUSE_IMAGE[b->subtype.house_level].offset) {
         image_id += 1;
     }
@@ -253,7 +253,7 @@ int building_house_can_expand(building *house, int num_tiles)
 
 static int house_image_group(int level)
 {
-    return image_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
+    return image_id_from_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
 static void create_house_tile(building_type type, int x, int y, int image_id, int population, const int *inventory)

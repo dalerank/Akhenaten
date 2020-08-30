@@ -145,16 +145,16 @@ static void draw_history_graph(int full_size, int x, int y)
             if (val > 0) {
                 switch (max_months) {
                     case 20:
-                        image_draw(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
+                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
                         break;
                     case 40:
-                        image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
                         break;
                     case 100:
-                        image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
+                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
                         break;
                     case 200:
-                        image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
+                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m, y + 200 - val);
                         break;
                     default:
                         graphics_draw_vertical_line(x + m, y + 200 - val, y + 199, COLOR_RED);
@@ -211,7 +211,7 @@ static void draw_census_graph(int full_size, int x, int y)
                 val = pop >> y_shift;
             }
             if (val > 0) {
-                image_draw(image_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
+                image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
             }
         }
         graphics_reset_clip_rectangle();
@@ -258,7 +258,7 @@ static void draw_society_graph(int full_size, int x, int y)
                 val = pop >> y_shift;
             }
             if (val > 0) {
-                image_draw(image_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
+                image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
             }
         }
         graphics_reset_clip_rectangle();
@@ -378,8 +378,8 @@ static void print_history_info(void) {
 
 static void draw_housing_button(int full_size, int x, int y)
 {
-    image_draw_isometric_footprint(image_group(29) + 2, x, y, COLOR_MASK_NONE);
-    image_draw_isometric_top(image_group(29) + 2, x, y, COLOR_MASK_NONE);
+    image_draw_isometric_footprint(image_id_from_group(29) + 2, x, y, COLOR_MASK_NONE);
+    image_draw_isometric_top(image_id_from_group(29) + 2, x, y, COLOR_MASK_NONE);
 }
 
 static int draw_background(void)
@@ -387,7 +387,7 @@ static int draw_background(void)
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
+    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
 
     int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
@@ -399,7 +399,7 @@ static int draw_background(void)
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
     }
 
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+    image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450+width, 25, FONT_NORMAL_BLACK, 0);
@@ -487,7 +487,7 @@ static int draw_background(void)
 
     // info panel
     inner_panel_draw(48, 336, 34, 5);
-    int image_id = image_group(GROUP_BULLET);
+    int image_id = image_id_from_group(GROUP_BULLET);
     image_draw(image_id, 56, 344);
     image_draw(image_id, 56, 362);
     image_draw(image_id, 56, 380);

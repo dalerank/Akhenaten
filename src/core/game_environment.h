@@ -8,11 +8,9 @@ typedef enum {
     ENGINE_ENV_MAX
 } engine_environment;
 
-
+engine_environment GAME_ENV;
 
 void init_game_environment(engine_environment env);
-int is_game_env(engine_environment env);
-engine_environment get_engine_environment(void);
 const char *get_game_title(void);
 const char *get_engine_pref_path(void);
 

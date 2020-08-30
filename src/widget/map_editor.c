@@ -42,7 +42,7 @@ static void init_draw_context(void)
         draw_context.last_water_animation_time = now;
         draw_context.advance_water_animation = 1;
     }
-    draw_context.image_id_water_first = image_group(GROUP_TERRAIN_WATER);
+    draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
 }
 
@@ -50,7 +50,7 @@ static void draw_footprint(int x, int y, int grid_offset)
 {
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset and leftmost tile -> draw
         color_t color_mask = 0;

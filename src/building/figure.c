@@ -591,10 +591,10 @@ static void set_market_graphic(building *b)
     }
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
 
@@ -673,18 +673,18 @@ static void set_bathhouse_graphic(building *b)
     if (b->has_water_access && b->num_workers) {
         if (map_desirability_get(b->grid_offset) <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
+                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
+                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
         if (map_desirability_get(b->grid_offset) <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
+                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
+                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
 }
@@ -901,10 +901,10 @@ static void set_senate_graphic(building *b)
     }
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
 
@@ -1100,7 +1100,7 @@ static void spawn_figure_dock(building *b)
 
 static void spawn_figure_native_hut(building *b)
 {
-    map_image_set(b->grid_offset, image_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->grid_offset) & 1));
+    map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->grid_offset) & 1));
     if (has_figure_of_type(b, FIGURE_INDIGENOUS_NATIVE)) {
         return;
     }
@@ -1120,7 +1120,7 @@ static void spawn_figure_native_hut(building *b)
 static void spawn_figure_native_meeting(building *b)
 {
     map_building_tiles_add(b->id, b->x, b->y, 2,
-        image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
+                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
     if (city_buildings_is_mission_post_operational() && !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
         int x_out, y_out;
         if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {
@@ -1193,7 +1193,7 @@ static void update_native_crop_progress(building *b)
     if (b->data.industry.progress >= 5) {
         b->data.industry.progress = 0;
     }
-    map_image_set(b->grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
+    map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
 }
 
 void building_figure_generate(void)

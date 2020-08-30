@@ -134,7 +134,7 @@ static void init(int text_id, void (*background_callback)(void))
 
 static int resource_image(int resource)
 {
-    int image_id = image_group(GROUP_RESOURCE_ICONS) + resource;
+    int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
     image_id += resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     return image_id;
 }
@@ -232,9 +232,9 @@ static int get_message_image_id(const lang_message *msg)
         return 0;
     } else if (data.text_id == 0) {
         // message id = 0 ==> "about": fixed image position
-        return image_group(GROUP_BIG_PEOPLE);
+        return image_id_from_group(GROUP_BIG_PEOPLE);
     } else {
-        return image_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
+        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
     }
 }
 
@@ -384,7 +384,7 @@ static void draw_background_video(void)
         const scenario_request *request = scenario_request_get(player_message.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE);
         image_draw(
-            image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
+                image_id_from_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
             data.x + 70, y_text - 5);
         lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE);
         if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {

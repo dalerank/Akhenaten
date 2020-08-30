@@ -193,7 +193,7 @@ static void add_building_to_terrain(building *b)
             case BUILDING_PIG_FARM: image_offset = 25; break;
         }
         map_building_tiles_add_farm(b->id, b->x, b->y,
-            image_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
+                                    image_id_from_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);

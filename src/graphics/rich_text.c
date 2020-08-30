@@ -285,7 +285,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                             while (c >= '0' && c <= '9') {
                                 c = *text++;
                             }
-                            image_id += image_group(GROUP_MESSAGE_IMAGES) - 1;
+                            image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
                             image_height_lines = image_get(image_id)->height / 16 + 2;
                             if (line > 0) {
                                 lines_before_image = 1;

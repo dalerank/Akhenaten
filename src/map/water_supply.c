@@ -72,7 +72,7 @@ void map_water_supply_update_houses(void)
 
 static void set_all_aqueducts_to_no_water(void)
 {
-    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + 15;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -95,7 +95,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
-    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + 15;
     do {
         if (++guard >= GRID_SIZE * GRID_SIZE) {
             break;
@@ -195,13 +195,13 @@ void map_water_supply_update_reservoir_fountain(void)
         int des = map_desirability_get(b->grid_offset);
         int image_id;
         if (des > 60) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_4);
+            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_4);
         } else if (des > 40) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_3);
+            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_3);
         } else if (des > 20) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_2);
+            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_2);
         } else {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
+            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
         }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {

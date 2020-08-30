@@ -39,7 +39,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
     fade_pressed_effect(buttons, num_buttons);
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
-        int image_id = image_group(btn->image_collection) + btn->image_offset;
+        int image_id = image_id_from_group(btn->image_collection) + btn->image_offset;
         if (btn->enabled) {
             if (btn->pressed) {
                 image_id += 2;

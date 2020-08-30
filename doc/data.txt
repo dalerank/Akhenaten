@@ -1,0 +1,93 @@
+On the top of the page (in music.txt) it says:
+;Tune M/A Mission# Posttunedelay Minpop Maxpop
+and a typical entry or record starts with:
+; Ramses: Popcon = 2500
+sps.mp3 M 44 20 0 799
+
+What do they mean?
+
+Firstly, there are 52 records in this file altogether and I take it they are the different missions, their "id numbers" if you like.
+
+Cleopatra missions have a name; Pharaoh ones do not.
+
+Popcon; first I thought it means pop concert, as that's what it is  at least I like to listen to those tunes  Well, it probably has something to do with the population, almost every record has that, but a few have 0-0 or 0-n and no. 38 Thutmose has ???. Usually the number is divisible by 500, like 1500, 2500 or 4000 and later records have bigger numbers, so it may be the mission population goal. Or maybe not. 
+
+In any one record there is first the music file name. Then there's either M or A, I'm not sure what it means. Music or Ambient? Any ideas?
+
+Mission number. They start with 0 and the last is 52.
+
+Posttunedelay? Maybe the time between the previous song has stopped and the next tune will start to play. In seconds perhaps?
+
+Minpop and Maxpop? This is e.g. 500 1499. If the city has at least 500 but no more than 1499 citizens, these tunes will play. And there are many tunes that fall into that category so to say... maybe the program takes one tune from the list and then goes to the next while the population stays between those limits.
+
+Every other line says AMBIENT. Maybe some tunes played will be related to the overall situation in the city, like an impending attack.
+
+So, whaddya think? Any additions, any corrections? Did I get at least some of it right? Does this make any sense?
+
+I just love that music , it's very beautiful and it suits the setting very well. BTW, one of my all time favourites is Mission 3, which is downloadable from Pharaoh's official page, definitely check that tune out if you haven't already.
+
+Magic music makes your morning mood.
+
+
+(popcon = ?????)
+filename M/A (???) 33 (mission n.) 15 (delay after) 0 999 (pop. range)
+AMBIENT
+...
+
+=====
+
+.555 / .sgx files
+
+.555 contains the actual bmp data
+.sgx contains the indexing data/bmp names
+  >> the header is always 20680 bytes long?
+  >> first 80 bytes are overhead ints
+  >> uint16 sequence: <image> index corresponding to sequential groupid
+    >>
+
+
+fonts:
+
+cyrillic base offset: 201
+otherwise: 0
+
+if separate:
+  image = font_images[base_offset + letter_id] vvvvv (use as id)
+  data = font_data[image.draw.offset]
+else:
+  image = main_images[group_image_id[GROUP_FONT] + letter_id]
+  data = main_data[image.draw.offset]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

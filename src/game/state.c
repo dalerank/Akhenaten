@@ -25,33 +25,27 @@ void game_state_init(void)
 
     city_warning_clear_all();
 }
-
 int game_state_is_paused(void)
 {
     return data.paused;
 }
-
 void game_state_unpause(void)
 {
     data.paused = 0;
 }
-
 void game_state_toggle_paused(void)
 {
     data.paused = data.paused ? 0 : 1;
 }
-
 int game_state_overlay(void)
 {
     return data.current_overlay;
 }
-
 void game_state_reset_overlay(void)
 {
     data.current_overlay = OVERLAY_NONE;
     data.previous_overlay = OVERLAY_NONE;
 }
-
 void game_state_toggle_overlay(void)
 {
     int tmp = data.previous_overlay;
@@ -59,7 +53,6 @@ void game_state_toggle_overlay(void)
     data.current_overlay = tmp;
     map_clear_highlights();
 }
-
 void game_state_set_overlay(int overlay)
 {
     if (overlay == OVERLAY_NONE) {

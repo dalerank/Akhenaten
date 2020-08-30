@@ -340,17 +340,17 @@ static void place_building(const map_tile *tile)
     switch (data.type) {
         case TOOL_NATIVE_HUT:
             type = BUILDING_NATIVE_HUT;
-            image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + (random_byte() & 1);
+            image_id = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + (random_byte() & 1);
             size = 1;
             break;
         case TOOL_NATIVE_CENTER:
             type = BUILDING_NATIVE_MEETING;
-            image_id = image_group(GROUP_EDITOR_BUILDING_NATIVE) + 2;
+            image_id = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2;
             size = 2;
             break;
         case TOOL_NATIVE_FIELD:
             type = BUILDING_NATIVE_CROPS;
-            image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
+            image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
             size = 1;
             break;
         default:
@@ -391,7 +391,7 @@ static void place_access_ramp(const map_tile *tile)
                 map_terrain_set(grid_offset, map_terrain_get(grid_offset) & terrain_mask);
             }
         }
-        map_building_tiles_add(0, tile->x, tile->y, 2, image_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
+        map_building_tiles_add(0, tile->x, tile->y, 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
 
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();

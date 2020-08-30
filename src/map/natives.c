@@ -91,7 +91,7 @@ void map_natives_init(void)
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
-    int native_image = image_group(GROUP_BUILDING_NATIVE);
+    int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -116,7 +116,7 @@ void map_natives_init(void)
                 map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
-                map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + random_bit);
+                map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + random_bit);
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
@@ -155,7 +155,7 @@ void map_natives_init_editor(void)
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
-    int native_image = image_group(GROUP_EDITOR_BUILDING_NATIVE);
+    int native_image = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE);
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -179,7 +179,7 @@ void map_natives_init_editor(void)
                 map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
-                map_image_set(grid_offset, image_group(GROUP_EDITOR_BUILDING_CROPS));
+                map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;

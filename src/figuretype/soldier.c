@@ -59,24 +59,24 @@ void figure_military_standard_action(figure *f)
     f->cross_country_y = 15 * f->y + 7;
     map_figure_add(f);
 
-    f->image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
+    f->image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {
         if (m->is_halted) {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 8;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         } else {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + f->image_offset / 2;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + f->image_offset / 2;
         }
     } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
         if (m->is_halted) {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 26;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         } else {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->image_offset / 2;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->image_offset / 2;
         }
     } else {
         if (m->is_halted) {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 17;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 17;
         } else {
-            f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->image_offset / 2;
+            f->cart_image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->image_offset / 2;
         }
     }
 }
@@ -143,7 +143,7 @@ static int find_mop_up_target(figure *f)
 
 static void update_image_javelin(figure *f, int dir)
 {
-    int image_id = image_group(GROUP_BUILDING_FORT_JAVELIN);
+    int image_id = image_id_from_group(GROUP_BUILDING_FORT_JAVELIN);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
             f->image_id = image_id + 96 + dir;
@@ -162,7 +162,7 @@ static void update_image_javelin(figure *f, int dir)
 
 static void update_image_mounted(figure *f, int dir)
 {
-    int image_id = image_group(GROUP_FIGURE_FORT_MOUNTED);
+    int image_id = image_id_from_group(GROUP_FIGURE_FORT_MOUNTED);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
             f->image_id = image_id + 96 + dir;
@@ -178,7 +178,7 @@ static void update_image_mounted(figure *f, int dir)
 
 static void update_image_legionary(figure *f, const formation *m, int dir)
 {
-    int image_id = image_group(GROUP_BUILDING_FORT_LEGIONARY);
+    int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
             f->image_id = image_id + 96 + dir;

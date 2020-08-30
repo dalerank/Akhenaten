@@ -19,7 +19,7 @@ void button_border_draw(int x, int y, int width_pixels, int height_pixels, int h
     int last_block_offset_x = 16 * width_blocks - width_pixels;
     int last_block_offset_y = 16 * height_blocks - height_pixels;
 
-    int image_base = image_group(GROUP_BORDERED_BUTTON);
+    int image_base = image_id_from_group(GROUP_BORDERED_BUTTON);
     if (has_focus) {
         image_base += 8;
     }

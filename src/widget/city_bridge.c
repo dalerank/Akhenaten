@@ -23,7 +23,7 @@ void city_draw_bridge(int x, int y, int grid_offset)
 
 void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color_t color_mask)
 {
-    int image_id = image_group(GROUP_BUILDING_BRIDGE);
+    int image_id = image_id_from_group(GROUP_BUILDING_BRIDGE);
     switch (bridge_sprite_id) {
         case 1:
             image_draw_masked(image_id + 5, x, y - 20, color_mask);

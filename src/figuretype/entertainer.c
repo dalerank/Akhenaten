@@ -97,24 +97,24 @@ static void update_image(figure *f)
         f->cart_image_id = 0;
         if (f->action_state == FIGURE_ACTION_150_ATTACK ||
             f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = image_group(GROUP_FIGURE_CHARIOTEER) + dir;
+            f->image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir;
         } else {
-            f->image_id = image_group(GROUP_FIGURE_CHARIOTEER) +
-                dir + 8 * f->image_offset;
+            f->image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) +
+                          dir + 8 * f->image_offset;
         }
         return;
     }
     int image_id;
     if (f->type == FIGURE_ACTOR) {
-        image_id = image_group(GROUP_FIGURE_ACTOR);
+        image_id = image_id_from_group(GROUP_FIGURE_ACTOR);
     } else if (f->type == FIGURE_GLADIATOR) {
-        image_id = image_group(GROUP_FIGURE_GLADIATOR);
+        image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR);
     } else if (f->type == FIGURE_LION_TAMER) {
-        image_id = image_group(GROUP_FIGURE_LION_TAMER);
+        image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER);
         if (f->wait_ticks_missile >= 96) {
-            image_id = image_group(GROUP_FIGURE_LION_TAMER_WHIP);
+            image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER_WHIP);
         }
-        f->cart_image_id = image_group(GROUP_FIGURE_LION);
+        f->cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
     } else {
         return;
     }
@@ -139,7 +139,7 @@ static void update_image(figure *f)
 void figure_entertainer_action(figure *f)
 {
     building *b = building_get(f->building_id);
-    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART);
+    f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 512;

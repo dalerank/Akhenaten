@@ -97,7 +97,7 @@ static void draw_scenario_info(void)
     const int scenario_info_width = 280;
     const int scenario_criteria_x = 420;
 
-    image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
+    image_draw(image_id_from_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
     text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width + 10);
     text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width + 10, FONT_LARGE_BLACK, 0);
@@ -174,7 +174,7 @@ static void draw_scenario_info(void)
 
 static void draw_background(void)
 {
-    image_draw_fullscreen_background(image_group(GROUP_CCK_BACKGROUND));
+    image_draw_fullscreen_background(image_id_from_group(GROUP_CCK_BACKGROUND));
     graphics_in_dialog();
     inner_panel_draw(280, 242, 2, 12);
     draw_scenario_list();
