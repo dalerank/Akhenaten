@@ -321,6 +321,14 @@ int image_init(void)
     }
     return 1;
 }
+int image_groupid_translation(int table[], int group)
+{
+    for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
+        if (group == table[i])
+            return group = table[i + 1];
+    }
+    return group;
+}
 int image_id_from_group(int group)
 {
     switch (GAME_ENV)
@@ -328,8 +336,7 @@ int image_id_from_group(int group)
         case ENGINE_ENV_C3:
             return data.main.group_image_ids[group];
         case ENGINE_ENV_PHARAOH:
-            if (group < sizeof(translation_table_ph) / (sizeof(int) * 2) && translation_table_ph[2 * group + 1] != 0)
-                group = translation_table_ph[2 * group + 1];
+            group = image_groupid_translation(groupid_translation_table_ph, group);
             if (group < 67)
                 return data.ph_terrain.group_image_ids[group];
             else if (group < 295)
