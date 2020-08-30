@@ -58,6 +58,8 @@ struct graphics_files_collection {
     const char PH_UNLOADED_SG3[NAME_SIZE];
     const char PH_TERRAIN_555[NAME_SIZE];
     const char PH_TERRAIN_SG3[NAME_SIZE];
+    const char PH_FONTS_555[NAME_SIZE];
+    const char PH_FONTS_SG3[NAME_SIZE];
     const char PH_EDITOR_GRAPHICS_555[NAME_SIZE];
     const char PH_EDITOR_GRAPHICS_SG3[NAME_SIZE];
     const char PH_EMPIRE_555[NAME_SIZE];
@@ -136,6 +138,8 @@ struct graphics_files_collection {
         "data/Pharaoh_Unloaded.sg3",
         "data/Pharaoh_Terrain.555",
         "data/Pharaoh_Terrain.sg3",
+        "data/Pharaoh_Fonts.555",
+        "data/Pharaoh_Fonts.sg3",
         "",
         "",
         "data/Empire.555",
@@ -184,6 +188,7 @@ static struct {
     imagepak main;
     imagepak ph_unloaded;
     imagepak ph_terrain;
+    imagepak ph_fonts;
     imagepak enemy;
     imagepak empire;
     imagepak font;
@@ -238,30 +243,6 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
     }
     return dst_length;
 }
-static void convert_images(image *images, int size, buffer *buf, color_t *dst)
-{
-    color_t *start_dst = dst;
-    dst++; // make sure img->offset > 0
-    for (int i = 0; i < size; i++) {
-        image *img = &images[i];
-        if (img->draw.is_external) {
-            continue;
-        }
-        buffer_set(buf, img->draw.offset);
-        int img_offset = (int) (dst - start_dst);
-        if (img->draw.is_fully_compressed) {
-            dst += convert_compressed(buf, img->draw.data_length, dst);
-        } else if (img->draw.has_compressed_part) { // isometric tile
-            dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
-            dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
-        } else {
-            dst += convert_uncompressed(buf, img->draw.data_length, dst);
-        }
-        img->draw.offset = img_offset;
-        img->draw.uncompressed_length /= 2;
-    }
-}
-
 static const color_t *load_external_data(image *img)
 {
     char filename[FILE_NAME_MAX];
@@ -340,8 +321,10 @@ int image_id_from_group(int group)
                 return data.ph_terrain.group_image_ids[group];
             else if (group < 295)
                 return data.main.group_image_ids[group - 66] + 2000;
-            else
+            else if (group < 333)
                 return data.ph_unloaded.group_image_ids[group - 294] + 5000;
+            else
+                return data.ph_fonts.group_image_ids[group - 332] + 6000;
     }
 }
 const image *image_get(int id)
@@ -355,8 +338,10 @@ const image *image_get(int id)
                 return &data.main.images[id];
             else
                 return NULL;
-        case ENGINE_ENV_PHARAOH:
-            if (id > 5000 && id - 5000 < data.ph_unloaded.entries_num) // todo: mods
+        case ENGINE_ENV_PHARAOH: // todo: mods
+            if (id > 6000 && id - 6000 < data.ph_fonts.entries_num)
+                return &data.ph_fonts.images[id - 6000];
+            else if (id > 5000 && id - 5000 < data.ph_unloaded.entries_num)
                 return &data.ph_unloaded.images[id - 5000];
             else if (id > 2000 && id - 2000 < data.main.entries_num)
                 return &data.main.images[id - 2000];
@@ -370,33 +355,10 @@ const image *image_get(int id)
 const color_t *image_data(int id)
 {
     image *img = image_get(id);
-
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            if (id < 0 || id >= data.main.entries_num) { // outside normal range, check for modded image
-                if (id < data.main.entries_num + MAX_MODDED_IMAGES) {
-                    return mods_get_image_data(id);
-                }
-                return NULL;
-            }
-            if (!img->draw.is_external)
-                return &data.main.data[img->draw.offset];
-            else
-                return load_external_data(img);
-        case ENGINE_ENV_PHARAOH:
-            if (img == NULL) // todo: mods
-                return NULL;
-            else if (!img->draw.is_external) {
-                if (id > 5000)
-                    return &data.ph_unloaded.data[img->draw.offset];
-                else if (id > 2000)
-                    return &data.main.data[img->draw.offset];
-                else
-                    return &data.ph_terrain.data[img->draw.offset];
-            }
-            else
-                return load_external_data(img);
-    }
+    if (img->draw.is_external)
+        return load_external_data(img);
+    else
+        return img->draw.data; // todo: mods
 }
 const image *image_letter(int letter_id)
 {
@@ -405,7 +367,7 @@ const image *image_letter(int letter_id)
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         return &data.font.images[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET];
     } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return &data.main.images[image_id_from_group(GROUP_FONT) + letter_id];
+        return image_get(image_id_from_group(GROUP_FONT) + letter_id);
     } else {
         return &DUMMY_IMAGE;
     }
@@ -420,15 +382,7 @@ const image *image_get_enemy(int id)
 }
 const color_t *image_data_letter(int letter_id)
 {
-    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
-        return &data.font.data[image_letter(letter_id)->draw.offset];
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return &data.font.data[image_letter(letter_id)->draw.offset];
-    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return &data.main.data[image_letter(letter_id)->draw.offset];
-    } else {
-        return NULL;
-    }
+    return image_letter(letter_id)->draw.data;
 }
 const color_t *image_data_enemy(int id)
 {
@@ -551,7 +505,30 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     if (!data_size)
         return 0;
     buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(pak->images, pak->entries_num, &buf, pak->data);
+
+    // convert bitmap data for image pool
+    color_t *dst = pak->data;
+    color_t *start_dst = dst;
+    dst++; // make sure img->offset > 0
+    for (int i = 0; i < pak->entries_num; i++) {
+        image *img = &pak->images[i];
+        if (img->draw.is_external) {
+            continue;
+        }
+        buffer_set(&buf, img->draw.offset);
+        int img_offset = (int) (dst - start_dst);
+        if (img->draw.is_fully_compressed) {
+            dst += convert_compressed(&buf, img->draw.data_length, dst);
+        } else if (img->draw.has_compressed_part) { // isometric tile
+            dst += convert_uncompressed(&buf, img->draw.uncompressed_length, dst);
+            dst += convert_compressed(&buf, img->draw.data_length - img->draw.uncompressed_length, dst);
+        } else {
+            dst += convert_uncompressed(&buf, img->draw.data_length, dst);
+        }
+        img->draw.offset = img_offset;
+        img->draw.uncompressed_length /= 2;
+        img->draw.data = &pak->data[img_offset];
+    }
 
     return 1;
 }
@@ -660,6 +637,8 @@ int image_load_main(int climate_id, int is_editor, int force_reload)
             if (!image_load_555(&data.ph_unloaded, gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3))
                 return 0;
             if (!image_load_555(&data.ph_terrain, gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3))
+                return 0;
+            if (!image_load_555(&data.ph_fonts, gfc.PH_FONTS_555, gfc.PH_FONTS_SG3))
                 return 0;
             break;
     }

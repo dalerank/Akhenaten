@@ -40,6 +40,7 @@ typedef struct {
 //        int bitmap_id;
         char bitmap_name[200];
         int bmp_index;
+        color_t *data;
         int offset;
         int offset_mirror;
         int data_length;
