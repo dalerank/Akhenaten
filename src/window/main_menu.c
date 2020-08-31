@@ -1,6 +1,7 @@
 #include "main_menu.h"
 
 #include "core/string.h"
+#include "core/game_environment.h"
 #include "editor/editor.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -72,12 +73,24 @@ static void draw_foreground(void)
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
     }
 
-    lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_GREEN); // play
+            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN); // mission
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN); // cck
+            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN); // options
+            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_GREEN); // quit
+            break;
+    }
 
     graphics_reset_dialog();
 }

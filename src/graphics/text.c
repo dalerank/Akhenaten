@@ -3,6 +3,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "core/game_environment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 
@@ -241,6 +242,9 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
 {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        y = y-3;
+
     const font_definition *def = font_definition_for(font);
 
     int length = string_length(str);
@@ -256,9 +260,9 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
         if (*str >= ' ') {
             int letter_id = font_letter_id(def, str, &num_bytes);
             int width;
-            if (*str == ' ' || *str == '_' || letter_id < 0) {
+            if (*str == ' ' || *str == '_' || letter_id < 0)
                 width = def->space_width;
-            } else {
+            else {
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height, def->line_height);
                 image_draw_letter(def->font, letter_id, current_x, y - height, color);

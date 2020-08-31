@@ -1,5 +1,7 @@
 #include "core/lang.h"
 
+#include "SDL.h"
+
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -153,6 +155,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
     buffer_init(&buf, buf_data, filesize);
     parse_message(&buf);
     free(buf_data);
+
     return 1;
 }
 int lang_load(int is_editor)
@@ -171,24 +174,21 @@ int lang_load(int is_editor)
 const uint8_t *lang_get_string(int group, int index)
 {
     // Add new strings
-    if ((group == 28) && (index == 115)) {
+    if ((group == 28) && (index == 115))
         return translation_for(TR_BUILDING_ROADBLOCK);
-    }
-    if ((group == 28) && (index == 116)) {
+    if ((group == 28) && (index == 116))
         return translation_for(TR_BUILDING_ROADBLOCK_DESC);
-    }
+
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {
-        if (!*str && (prev >= ' ' || prev == 0)) {
+        if (!*str && (prev >= ' ' || prev == 0))
             --index;
-        }
         prev = *str;
         ++str;
     }
-    while (*str < ' ') { // skip non-printables
+    while (*str < ' ') // skip non-printables
         ++str;
-    }
     return str;
 }
 const lang_message *lang_get_message(int id)
