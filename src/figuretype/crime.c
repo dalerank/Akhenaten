@@ -22,11 +22,10 @@
 #include "scenario/property.h"
 
 static const int CRIMINAL_OFFSETS[] = {
-    0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
+        0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
 };
 
-static void generate_rioter(building *b)
-{
+static void generate_rioter(building *b) {
     int x_road, y_road;
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
         return;
@@ -70,8 +69,7 @@ static void generate_rioter(building *b)
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
 }
 
-static void generate_mugger(building *b)
-{
+static void generate_mugger(building *b) {
     city_sentiment_add_criminal();
     if (b->house_criminal_active < 2) {
         b->house_criminal_active = 2;
@@ -93,8 +91,7 @@ static void generate_mugger(building *b)
     }
 }
 
-static void generate_protestor(building *b)
-{
+static void generate_protestor(building *b) {
     city_sentiment_add_protester();
     if (b->house_criminal_active < 1) {
         b->house_criminal_active = 1;
@@ -107,8 +104,7 @@ static void generate_protestor(building *b)
     }
 }
 
-void figure_generate_criminals(void)
-{
+void figure_generate_criminals(void) {
     building *min_building = 0;
     int min_happiness = 50;
     int max_id = building_get_highest_id();
@@ -156,8 +152,7 @@ void figure_generate_criminals(void)
     }
 }
 
-void figure_protestor_action(figure *f)
-{
+void figure_protestor_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 64);
     f->cart_image_id = 0;
@@ -176,8 +171,7 @@ void figure_protestor_action(figure *f)
     }
 }
 
-void figure_criminal_action(figure *f)
-{
+void figure_criminal_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 32);
     f->cart_image_id = 0;
@@ -196,8 +190,7 @@ void figure_criminal_action(figure *f)
     }
 }
 
-void figure_rioter_action(figure *f)
-{
+void figure_rioter_action(figure *f) {
     city_figures_add_rioter(!f->targeted_by_figure_id);
     f->terrain_usage = TERRAIN_USAGE_ENEMY;
     f->max_roam_length = 480;
@@ -272,8 +265,7 @@ void figure_rioter_action(figure *f)
     }
 }
 
-int figure_rioter_collapse_building(figure *f)
-{
+int figure_rioter_collapse_building(figure *f) {
     for (int dir = 0; dir < 8; dir += 2) {
         int grid_offset = f->grid_offset + map_grid_direction_delta(dir);
         if (!map_building_at(grid_offset)) {

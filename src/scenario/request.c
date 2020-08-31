@@ -12,8 +12,7 @@
 #include "game/tutorial.h"
 #include "scenario/data.h"
 
-void scenario_request_init(void)
-{
+void scenario_request_init(void) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         random_generate_next();
         if (scenario.requests[i].resource) {
@@ -23,8 +22,7 @@ void scenario_request_init(void)
     }
 }
 
-void scenario_request_process(void)
-{
+void scenario_request_process(void) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE) {
             continue;
@@ -95,8 +93,7 @@ void scenario_request_process(void)
     }
 }
 
-void scenario_request_dispatch(int id)
-{
+void scenario_request_dispatch(int id) {
     if (scenario.requests[id].state == REQUEST_STATE_NORMAL) {
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED;
     } else {
@@ -115,8 +112,7 @@ void scenario_request_dispatch(int id)
     }
 }
 
-const scenario_request *scenario_request_get(int id)
-{
+const scenario_request *scenario_request_get(int id) {
     static scenario_request request;
     request.id = id;
     request.amount = scenario.requests[id].amount;
@@ -126,8 +122,7 @@ const scenario_request *scenario_request_get(int id)
     return &request;
 }
 
-int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request))
-{
+int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
     int index = start_index;
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible) {
@@ -138,8 +133,7 @@ int scenario_request_foreach_visible(int start_index, void (*callback)(int index
     return index;
 }
 
-const scenario_request *scenario_request_get_visible(int index)
-{
+const scenario_request *scenario_request_get_visible(int index) {
     for (int i = 0; i < MAX_REQUESTS; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible &&
             scenario.requests[i].state <= 1) {

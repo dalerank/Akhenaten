@@ -17,31 +17,177 @@
 #include "map/point.h"
 
 static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},
-    {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1},
-    {0, -2}, {1, -2}, {2, -2}, {2, -1}, {2, 0}, {2, 1}, {2, 2}, {1, 2},
-    {0, 2}, {-1, 2}, {-2, 2}, {-2, 1}, {-2, 0}, {-2, -1}, {-2, -2}, {-1, -2},
-    {0, -3}, {1, -3}, {2, -3}, {3, -3}, {3, -2}, {3, -1}, {3, 0}, {3, 1},
-    {3, 2}, {3, 3}, {2, 3}, {1, 3}, {0, 3}, {-1, 3}, {-2, 3}, {-3, 3},
-    {-3, 2}, {-3, 1}, {-3, 0}, {-3, -1}, {-3, -2}, {-3, -3}, {-2, -3}, {-1, -3},
-    {0, -4}, {1, -4}, {2, -4}, {3, -4}, {4, -4}, {4, -3}, {4, -2}, {4, -1},
-    {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {3, 4}, {2, 4}, {1, 4},
-    {0, 4}, {-1, 4}, {-2, 4}, {-3, 4}, {-4, 4}, {-4, 3}, {-4, 2}, {-4, 1},
-    {-4, 0}, {-4, -1}, {-4, -2}, {-4, -3}, {-4, -4}, {-3, -4}, {-2, -4}, {-1, -4},
-    {0, -5}, {1, -5}, {2, -5}, {3, -5}, {4, -5}, {5, -5}, {5, -4}, {5, -3},
-    {5, -2}, {5, -1}, {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5},
-    {4, 5}, {3, 5}, {2, 5}, {1, 5}, {0, 5}, {-1, 5}, {-2, 5}, {-3, 5},
-    {-4, 5}, {-5, 5}, {-5, 4}, {-5, 3}, {-5, 2}, {-5, 1}, {-5, 0}, {-5, -1},
-    {-5, -2}, {-5, -3}, {-5, -4}, {-5, -5}, {-4, -5}, {-3, -5}, {-2, -5}, {-1, -5},
-    {0, -6}, {1, -6}, {2, -6}, {3, -6}, {4, -6}, {5, -6}, {6, -6}, {6, -5},
-    {6, -4}, {6, -3}, {6, -2}, {6, -1}, {6, 0}, {6, 1}, {6, 2}, {6, 3},
-    {6, 4}, {6, 5}, {6, 6}, {5, 6}, {4, 6}, {3, 6}, {2, 6}, {1, 6},
-    {0, 6}, {-1, 6}, {-2, 6}, {-3, 6}, {-4, 6}, {-5, 6}, {-6, 6}, {-6, 5},
-    {-6, 4}, {-6, 3}, {-6, 2}, {-6, 1}, {-6, 0}, {-6, -1}, {-6, -2}, {-6, -3},
-    {-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
+                                               {0,  -1},
+                                               {1,  -1},
+                                               {1,  0},
+                                               {1,  1},
+                                               {0,  1},
+                                               {-1, 1},
+                                               {-1, 0},
+                                               {-1, -1},
+                                               {0,  -2},
+                                               {1,  -2},
+                                               {2,  -2},
+                                               {2,  -1},
+                                               {2,  0},
+                                               {2,  1},
+                                               {2,  2},
+                                               {1,  2},
+                                               {0,  2},
+                                               {-1, 2},
+                                               {-2, 2},
+                                               {-2, 1},
+                                               {-2, 0},
+                                               {-2, -1},
+                                               {-2, -2},
+                                               {-1, -2},
+                                               {0,  -3},
+                                               {1,  -3},
+                                               {2,  -3},
+                                               {3,  -3},
+                                               {3,  -2},
+                                               {3,  -1},
+                                               {3,  0},
+                                               {3,  1},
+                                               {3,  2},
+                                               {3,  3},
+                                               {2,  3},
+                                               {1,  3},
+                                               {0,  3},
+                                               {-1, 3},
+                                               {-2, 3},
+                                               {-3, 3},
+                                               {-3, 2},
+                                               {-3, 1},
+                                               {-3, 0},
+                                               {-3, -1},
+                                               {-3, -2},
+                                               {-3, -3},
+                                               {-2, -3},
+                                               {-1, -3},
+                                               {0,  -4},
+                                               {1,  -4},
+                                               {2,  -4},
+                                               {3,  -4},
+                                               {4,  -4},
+                                               {4,  -3},
+                                               {4,  -2},
+                                               {4,  -1},
+                                               {4,  0},
+                                               {4,  1},
+                                               {4,  2},
+                                               {4,  3},
+                                               {4,  4},
+                                               {3,  4},
+                                               {2,  4},
+                                               {1,  4},
+                                               {0,  4},
+                                               {-1, 4},
+                                               {-2, 4},
+                                               {-3, 4},
+                                               {-4, 4},
+                                               {-4, 3},
+                                               {-4, 2},
+                                               {-4, 1},
+                                               {-4, 0},
+                                               {-4, -1},
+                                               {-4, -2},
+                                               {-4, -3},
+                                               {-4, -4},
+                                               {-3, -4},
+                                               {-2, -4},
+                                               {-1, -4},
+                                               {0,  -5},
+                                               {1,  -5},
+                                               {2,  -5},
+                                               {3,  -5},
+                                               {4,  -5},
+                                               {5,  -5},
+                                               {5,  -4},
+                                               {5,  -3},
+                                               {5,  -2},
+                                               {5,  -1},
+                                               {5,  0},
+                                               {5,  1},
+                                               {5,  2},
+                                               {5,  3},
+                                               {5,  4},
+                                               {5,  5},
+                                               {4,  5},
+                                               {3,  5},
+                                               {2,  5},
+                                               {1,  5},
+                                               {0,  5},
+                                               {-1, 5},
+                                               {-2, 5},
+                                               {-3, 5},
+                                               {-4, 5},
+                                               {-5, 5},
+                                               {-5, 4},
+                                               {-5, 3},
+                                               {-5, 2},
+                                               {-5, 1},
+                                               {-5, 0},
+                                               {-5, -1},
+                                               {-5, -2},
+                                               {-5, -3},
+                                               {-5, -4},
+                                               {-5, -5},
+                                               {-4, -5},
+                                               {-3, -5},
+                                               {-2, -5},
+                                               {-1, -5},
+                                               {0,  -6},
+                                               {1,  -6},
+                                               {2,  -6},
+                                               {3,  -6},
+                                               {4,  -6},
+                                               {5,  -6},
+                                               {6,  -6},
+                                               {6,  -5},
+                                               {6,  -4},
+                                               {6,  -3},
+                                               {6,  -2},
+                                               {6,  -1},
+                                               {6,  0},
+                                               {6,  1},
+                                               {6,  2},
+                                               {6,  3},
+                                               {6,  4},
+                                               {6,  5},
+                                               {6,  6},
+                                               {5,  6},
+                                               {4,  6},
+                                               {3,  6},
+                                               {2,  6},
+                                               {1,  6},
+                                               {0,  6},
+                                               {-1, 6},
+                                               {-2, 6},
+                                               {-3, 6},
+                                               {-4, 6},
+                                               {-5, 6},
+                                               {-6, 6},
+                                               {-6, 5},
+                                               {-6, 4},
+                                               {-6, 3},
+                                               {-6, 2},
+                                               {-6, 1},
+                                               {-6, 0},
+                                               {-6, -1},
+                                               {-6, -2},
+                                               {-6, -3},
+                                               {-6, -4},
+                                               {-6, -5},
+                                               {-6, -6},
+                                               {-5, -6},
+                                               {-4, -6},
+                                               {-3, -6},
+                                               {-2, -6},
+                                               {-1, -6},
 };
 
-void figure_military_standard_action(figure *f)
-{
+void figure_military_standard_action(figure *f) {
     const formation *m = formation_get(f->formation_id);
 
     f->terrain_usage = TERRAIN_USAGE_ANY;
@@ -81,8 +227,7 @@ void figure_military_standard_action(figure *f)
     }
 }
 
-static void javelin_launch_missile(figure *f)
-{
+static void javelin_launch_missile(figure *f) {
     map_point tile = {-1, -1};
     f->wait_ticks_missile++;
     if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
@@ -109,15 +254,13 @@ static void javelin_launch_missile(figure *f)
     }
 }
 
-static void legionary_attack_adjacent_enemy(figure *f)
-{
+static void legionary_attack_adjacent_enemy(figure *f) {
     for (int i = 0; i < 8 && f->action_state != FIGURE_ACTION_150_ATTACK; i++) {
         figure_combat_attack_figure_at(f, f->grid_offset + map_grid_direction_delta(i));
     }
 }
 
-static int find_mop_up_target(figure *f)
-{
+static int find_mop_up_target(figure *f) {
     int target_id = f->target_figure_id;
     if (figure_is_dead(figure_get(target_id))) {
         f->target_figure_id = 0;
@@ -141,8 +284,7 @@ static int find_mop_up_target(figure *f)
     return target_id;
 }
 
-static void update_image_javelin(figure *f, int dir)
-{
+static void update_image_javelin(figure *f, int dir) {
     int image_id = image_id_from_group(GROUP_BUILDING_FORT_JAVELIN);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
@@ -154,14 +296,13 @@ static void update_image_javelin(figure *f, int dir)
         f->image_id = image_id + 144 + figure_image_corpse_offset(f);
     } else if (f->action_state == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
         f->image_id = image_id + 96 + dir +
-            8 * figure_image_missile_launcher_offset(f);
+                      8 * figure_image_missile_launcher_offset(f);
     } else {
         f->image_id = image_id + dir + 8 * f->image_offset;
     }
 }
 
-static void update_image_mounted(figure *f, int dir)
-{
+static void update_image_mounted(figure *f, int dir) {
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_MOUNTED);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
@@ -176,8 +317,7 @@ static void update_image_mounted(figure *f, int dir)
     }
 }
 
-static void update_image_legionary(figure *f, const formation *m, int dir)
-{
+static void update_image_legionary(figure *f, const formation *m, int dir) {
     int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset < 12) {
@@ -198,8 +338,7 @@ static void update_image_legionary(figure *f, const formation *m, int dir)
     }
 }
 
-static void update_image(figure *f, const formation *m)
-{
+static void update_image(figure *f, const formation *m) {
     int dir;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         dir = f->attack_direction;
@@ -222,8 +361,7 @@ static void update_image(figure *f, const formation *m)
     }
 }
 
-void figure_soldier_action(figure *f)
-{
+void figure_soldier_action(figure *f) {
     formation *m = formation_get(f->formation_id);
     city_figures_add_soldier();
     f->terrain_usage = TERRAIN_USAGE_ANY;

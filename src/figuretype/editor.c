@@ -7,15 +7,13 @@
 #include "scenario/editor_map.h"
 #include "scenario/map.h"
 
-void figure_create_editor_flags(void)
-{
+void figure_create_editor_flags(void) {
     for (int id = MAP_FLAG_MIN; id < MAP_FLAG_MAX; id++) {
         figure_create(FIGURE_MAP_FLAG, -1, -1, 0)->resource_id = id;
     }
 }
 
-void figure_editor_flag_action(figure *f)
-{
+void figure_editor_flag_action(figure *f) {
     figure_image_increase_offset(f, 16);
     f->image_id = image_id_from_group(GROUP_FIGURE_MAP_FLAG_FLAGS) + f->image_offset / 2;
     map_figure_delete(f);

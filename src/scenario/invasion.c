@@ -22,30 +22,30 @@
 #define MAX_INVASION_WARNINGS 101
 
 static const int ENEMY_ID_TO_ENEMY_TYPE[20] = {
-    ENEMY_0_BARBARIAN,
-    ENEMY_7_ETRUSCAN,
-    ENEMY_7_ETRUSCAN,
-    ENEMY_10_CARTHAGINIAN,
-    ENEMY_8_GREEK,
-    ENEMY_8_GREEK,
-    ENEMY_9_EGYPTIAN,
-    ENEMY_5_PERGAMUM,
-    ENEMY_6_SELEUCID,
-    ENEMY_3_CELT,
-    ENEMY_3_CELT,
-    ENEMY_3_CELT,
-    ENEMY_2_GAUL,
-    ENEMY_2_GAUL,
-    ENEMY_4_GOTH,
-    ENEMY_4_GOTH,
-    ENEMY_4_GOTH,
-    ENEMY_6_SELEUCID,
-    ENEMY_1_NUMIDIAN,
-    ENEMY_6_SELEUCID
+        ENEMY_0_BARBARIAN,
+        ENEMY_7_ETRUSCAN,
+        ENEMY_7_ETRUSCAN,
+        ENEMY_10_CARTHAGINIAN,
+        ENEMY_8_GREEK,
+        ENEMY_8_GREEK,
+        ENEMY_9_EGYPTIAN,
+        ENEMY_5_PERGAMUM,
+        ENEMY_6_SELEUCID,
+        ENEMY_3_CELT,
+        ENEMY_3_CELT,
+        ENEMY_3_CELT,
+        ENEMY_2_GAUL,
+        ENEMY_2_GAUL,
+        ENEMY_4_GOTH,
+        ENEMY_4_GOTH,
+        ENEMY_4_GOTH,
+        ENEMY_6_SELEUCID,
+        ENEMY_1_NUMIDIAN,
+        ENEMY_6_SELEUCID
 };
 
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {
-    0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9
+        0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9
 };
 
 static const struct {
@@ -55,18 +55,18 @@ static const struct {
     int figure_types[3];
     int formation_layout;
 } ENEMY_PROPERTIES[12] = {
-    {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, 0, 0}, FORMATION_ENEMY_MOB}, // barbarian
-    {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, 0}, FORMATION_ENEMY_MOB}, // numidian
-    {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, 0}, FORMATION_ENEMY_MOB}, // gaul
-    {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, 0}, FORMATION_ENEMY_MOB}, // celt
-    {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, FORMATION_ENEMY_MOB}, // goth
-    {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_COLUMN}, // pergamum
-    {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE}, // seleucid
-    {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE}, // etruscan
-    {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, FORMATION_ENEMY_DOUBLE_LINE}, // greek
-    {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, FORMATION_ENEMY_WIDE_COLUMN}, // egyptian
-    {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, FORMATION_ENEMY_WIDE_COLUMN}, // carthaginian
-    {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, FORMATION_COLUMN} // caesar
+        {100, 0,  0, {FIGURE_ENEMY49_FAST_SWORD,     0,                             0}, FORMATION_ENEMY_MOB}, // barbarian
+        {40,  60, 0, {FIGURE_ENEMY49_FAST_SWORD,     FIGURE_ENEMY51_SPEAR,          0}, FORMATION_ENEMY_MOB}, // numidian
+        {50,  50, 0, {FIGURE_ENEMY50_SWORD,          FIGURE_ENEMY53_AXE,            0}, FORMATION_ENEMY_MOB}, // gaul
+        {80,  20, 0, {FIGURE_ENEMY50_SWORD,          FIGURE_ENEMY48_CHARIOT,        0}, FORMATION_ENEMY_MOB}, // celt
+        {50,  50, 0, {FIGURE_ENEMY49_FAST_SWORD,     FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, FORMATION_ENEMY_MOB}, // goth
+        {30,  70, 0, {FIGURE_ENEMY44_SWORD,          FIGURE_ENEMY43_SPEAR,          0}, FORMATION_COLUMN}, // pergamum
+        {50,  50, 0, {FIGURE_ENEMY44_SWORD,          FIGURE_ENEMY43_SPEAR,          0}, FORMATION_ENEMY_DOUBLE_LINE}, // seleucid
+        {50,  50, 0, {FIGURE_ENEMY45_SWORD,          FIGURE_ENEMY43_SPEAR,          0}, FORMATION_ENEMY_DOUBLE_LINE}, // etruscan
+        {80,  20, 0, {FIGURE_ENEMY45_SWORD,          FIGURE_ENEMY43_SPEAR,          0}, FORMATION_ENEMY_DOUBLE_LINE}, // greek
+        {80,  20, 0, {FIGURE_ENEMY44_SWORD,          FIGURE_ENEMY46_CAMEL,          0}, FORMATION_ENEMY_WIDE_COLUMN}, // egyptian
+        {90,  10, 0, {FIGURE_ENEMY45_SWORD,          FIGURE_ENEMY47_ELEPHANT,       0}, FORMATION_ENEMY_WIDE_COLUMN}, // carthaginian
+        {100, 0,  0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0,                             0}, FORMATION_COLUMN} // caesar
 };
 
 enum {
@@ -95,13 +95,11 @@ static struct {
     invasion_warning warnings[MAX_INVASION_WARNINGS];
 } data;
 
-void scenario_invasion_clear(void)
-{
+void scenario_invasion_clear(void) {
     memset(data.warnings, 0, MAX_INVASION_WARNINGS * sizeof(invasion_warning));
 }
 
-void scenario_invasion_init(void)
-{
+void scenario_invasion_init(void) {
     scenario_invasion_clear();
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
@@ -146,8 +144,7 @@ void scenario_invasion_init(void)
     }
 }
 
-int scenario_invasion_exists_upcoming(void)
-{
+int scenario_invasion_exists_upcoming(void) {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled) {
             return 1;
@@ -156,8 +153,7 @@ int scenario_invasion_exists_upcoming(void)
     return 0;
 }
 
-void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id))
-{
+void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id)) {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled) {
             callback(data.warnings[i].x, data.warnings[i].y, data.warnings[i].image_id);
@@ -165,8 +161,7 @@ void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_
     }
 }
 
-int scenario_invasion_count(void)
-{
+int scenario_invasion_count(void) {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (scenario.invasions[i].type) {
@@ -176,8 +171,7 @@ int scenario_invasion_count(void)
     return num_invasions;
 }
 
-static void determine_formations(int num_soldiers, int *num_formations, int soldiers_per_formation[])
-{
+static void determine_formations(int num_soldiers, int *num_formations, int soldiers_per_formation[]) {
     if (num_soldiers > 0) {
         if (num_soldiers <= 16) {
             *num_formations = 1;
@@ -195,8 +189,7 @@ static void determine_formations(int num_soldiers, int *num_formations, int sold
     }
 }
 
-static int start_invasion(int enemy_type, int amount, int invasion_point, int attack_type, int invasion_id)
-{
+static int start_invasion(int enemy_type, int amount, int invasion_point, int attack_type, int invasion_id) {
     if (amount <= 0) {
         return -1;
     }
@@ -301,8 +294,8 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         int figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(
-                figure_type, x, y, ENEMY_PROPERTIES[enemy_type].formation_layout, orientation,
-                enemy_type, attack_type, invasion_id, data.last_internal_invasion_id
+                    figure_type, x, y, ENEMY_PROPERTIES[enemy_type].formation_layout, orientation,
+                    enemy_type, attack_type, invasion_id, data.last_internal_invasion_id
             );
             if (formation_id <= 0) {
                 continue;
@@ -323,8 +316,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     return grid_offset;
 }
 
-void scenario_invasion_process(void)
-{
+void scenario_invasion_process(void) {
     int enemy_id = scenario.enemy_id;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (!data.warnings[i].in_use) {
@@ -357,11 +349,11 @@ void scenario_invasion_process(void)
             // enemy invasions
             if (scenario.invasions[warning->invasion_id].type == INVASION_TYPE_ENEMY_ARMY) {
                 int grid_offset = start_invasion(
-                    ENEMY_ID_TO_ENEMY_TYPE[enemy_id],
-                    scenario.invasions[warning->invasion_id].amount,
-                    scenario.invasions[warning->invasion_id].from,
-                    scenario.invasions[warning->invasion_id].attack_type,
-                    warning->invasion_id);
+                        ENEMY_ID_TO_ENEMY_TYPE[enemy_id],
+                        scenario.invasions[warning->invasion_id].amount,
+                        scenario.invasions[warning->invasion_id].from,
+                        scenario.invasions[warning->invasion_id].attack_type,
+                        warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {
                         city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
@@ -372,11 +364,11 @@ void scenario_invasion_process(void)
             }
             if (scenario.invasions[warning->invasion_id].type == INVASION_TYPE_CAESAR) {
                 int grid_offset = start_invasion(
-                    ENEMY_11_CAESAR,
-                    scenario.invasions[warning->invasion_id].amount,
-                    scenario.invasions[warning->invasion_id].from,
-                    scenario.invasions[warning->invasion_id].attack_type,
-                    warning->invasion_id);
+                        ENEMY_11_CAESAR,
+                        scenario.invasions[warning->invasion_id].amount,
+                        scenario.invasions[warning->invasion_id].from,
+                        scenario.invasions[warning->invasion_id].attack_type,
+                        warning->invasion_id);
                 if (grid_offset > 0) {
                     city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
                 }
@@ -389,11 +381,11 @@ void scenario_invasion_process(void)
             if (game_time_year() == scenario.start_year + scenario.invasions[i].year &&
                 game_time_month() == scenario.invasions[i].month) {
                 int grid_offset = start_invasion(
-                    ENEMY_0_BARBARIAN,
-                    scenario.invasions[i].amount,
-                    scenario.invasions[i].from,
-                    scenario.invasions[i].attack_type,
-                    i);
+                        ENEMY_0_BARBARIAN,
+                        scenario.invasions[i].amount,
+                        scenario.invasions[i].from,
+                        scenario.invasions[i].attack_type,
+                        i);
                 if (grid_offset > 0) {
                     city_message_post(1, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset);
                 }
@@ -402,8 +394,7 @@ void scenario_invasion_process(void)
     }
 }
 
-int scenario_invasion_start_from_mars(void)
-{
+int scenario_invasion_start_from_mars(void) {
     int mission = scenario_campaign_mission();
     if (mission < 0 || mission > 19) {
         return 0;
@@ -419,8 +410,7 @@ int scenario_invasion_start_from_mars(void)
     return 1;
 }
 
-int scenario_invasion_start_from_caesar(int size)
-{
+int scenario_invasion_start_from_caesar(int size) {
     int grid_offset = start_invasion(ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
     if (grid_offset > 0) {
         city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
@@ -429,8 +419,7 @@ int scenario_invasion_start_from_caesar(int size)
     return 0;
 }
 
-void scenario_invasion_start_from_cheat(void)
-{
+void scenario_invasion_start_from_cheat(void) {
     int enemy_id = scenario.enemy_id;
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
@@ -442,14 +431,13 @@ void scenario_invasion_start_from_cheat(void)
     }
 }
 
-void scenario_invasion_start_from_console(int attack_type, int size, int invasion_point)
-{
-    switch(attack_type){
+void scenario_invasion_start_from_console(int attack_type, int size, int invasion_point) {
+    switch (attack_type) {
 
-        case ATTACK_TYPE_BARBARIAN:
-        {
+        case ATTACK_TYPE_BARBARIAN: {
             int enemy_id = scenario.enemy_id;
-            int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
+            int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point,
+                                             FORMATION_ATTACK_RANDOM, 23);
             if (grid_offset) {
                 if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {
                     city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
@@ -459,13 +447,11 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
             }
             break;
         }
-        case ATTACK_TYPE_CAESAR:
-        {
+        case ATTACK_TYPE_CAESAR: {
             city_emperor_force_attack(size);
             break;
         }
-        case ATTACK_TYPE_NATIVES:
-        {
+        case ATTACK_TYPE_NATIVES: {
             int grid_offset = start_invasion(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
             if (grid_offset) {
                 city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
@@ -477,8 +463,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
     }
 }
 
-void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings)
-{
+void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings) {
     buffer_write_u16(invasion_id, data.last_internal_invasion_id);
 
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
@@ -501,8 +486,7 @@ void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings)
     }
 }
 
-void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings)
-{
+void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings) {
     data.last_internal_invasion_id = buffer_read_u16(invasion_id);
 
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {

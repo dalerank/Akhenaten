@@ -205,24 +205,21 @@ static struct {
         .ph_terrain = {0}
 };
 
-static color_t to_32_bit(uint16_t c)
-{
+static color_t to_32_bit(uint16_t c) {
     return ALPHA_OPAQUE |
            ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
-           ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
-           ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
+           ((c & 0x3e0) << 6) | ((c & 0x380) << 1) |
+           ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
-{
+static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst) {
     for (int i = 0; i < buf_length; i += 2) {
         *dst = to_32_bit(buffer_read_u16(buf));
         dst++;
     }
     return buf_length / 2;
 }
-static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
-{
+static int convert_compressed(buffer *buf, int buf_length, color_t *dst) {
     int dst_length = 0;
     while (buf_length > 0) {
         int control = buffer_read_u8(buf);
@@ -244,8 +241,7 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
     }
     return dst_length;
 }
-static const color_t *load_external_data(image *img)
-{
+static const color_t *load_external_data(image *img) {
     char filename[FILE_NAME_MAX];
     int size = 0;
     switch (GAME_ENV) {
@@ -281,7 +277,7 @@ static const color_t *load_external_data(image *img)
     }
     buffer buf;
     buffer_init(&buf, data.tmp_data, size);
-    color_t *dst = (color_t*) &data.tmp_data[4000000];
+    color_t *dst = (color_t *) &data.tmp_data[4000000];
     // NB: isometric images are never external
     if (img->draw.is_fully_compressed) {
         convert_compressed(&buf, img->draw.data_length, dst);
@@ -293,8 +289,7 @@ static const color_t *load_external_data(image *img)
 
 #include "assert.h"
 
-int image_init(void)
-{
+int image_init(void) {
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
@@ -304,10 +299,8 @@ int image_init(void)
     }
     return 1;
 }
-int image_groupid_translation(int table[], int group)
-{
-    if (group == 246)
-    {
+int image_groupid_translation(int table[], int group) {
+    if (group == 246) {
         int a = 2;
     }
 
@@ -319,10 +312,8 @@ int image_groupid_translation(int table[], int group)
     // missing entry!!!!
     return group;
 }
-int image_id_from_group(int group)
-{
-    switch (GAME_ENV)
-    {
+int image_id_from_group(int group) {
+    switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             return data.main.group_image_ids[group];
         case ENGINE_ENV_PHARAOH:
@@ -337,10 +328,8 @@ int image_id_from_group(int group)
                 return data.ph_fonts.group_image_ids[group - 332] + 6000;
     }
 }
-const image *image_get(int id)
-{
-    switch (GAME_ENV)
-    {
+const image *image_get(int id) {
+    switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             if (id >= data.main.entries_num && id < data.main.entries_num + MAX_MODDED_IMAGES)
                 return mods_get_image(id);
@@ -362,16 +351,14 @@ const image *image_get(int id)
     }
 
 }
-const color_t *image_data(int id)
-{
+const color_t *image_data(int id) {
     image *img = image_get(id);
     if (img->draw.is_external)
         return load_external_data(img);
     else
         return img->draw.data; // todo: mods
 }
-const image *image_letter(int letter_id)
-{
+const image *image_letter(int letter_id) {
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
         return &data.font.images[data.font_base_offset + letter_id];
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
@@ -382,30 +369,27 @@ const image *image_letter(int letter_id)
         return &DUMMY_IMAGE;
     }
 }
-const image *image_get_enemy(int id)
-{
+const image *image_get_enemy(int id) {
     if (id >= 0 && id < &data.enemy.entries_num) {
         return &data.enemy.images[id];
     } else {
         return NULL;
     }
 }
-const color_t *image_data_letter(int letter_id)
-{
+const color_t *image_data_letter(int letter_id) {
     return image_letter(letter_id)->draw.data;
 }
-const color_t *image_data_enemy(int id)
-{
+const color_t *image_data_enemy(int id) {
     if (data.enemy.images[id].draw.offset > 0) {
         return &data.enemy.data[data.enemy.images[id].draw.offset];
     }
     return NULL;
 }
 
-int image_load_555(imagepak *pak, const char *filename_555, const char *filename_sgx)
-{
+int image_load_555(imagepak *pak, const char *filename_555, const char *filename_sgx) {
     // prepare sgx data
-    if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
+    if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, data.tmp_data,
+                                  SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
     int HEADER_SIZE = 0;
     if (file_has_extension(filename_sgx, "sg2"))
@@ -420,13 +404,14 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 
     // allocate arrays
     int prev_pak_size = pak->entries_num;
-    pak->entries_num = (int)pak->header_data[4] + 1;
+    pak->entries_num = (int) pak->header_data[4] + 1;
     pak->name = filename_sgx;
     if (pak->initialized == 0) { // new pak! allocate memory!
         pak->initialized = 1;
-        pak->images = (image *)malloc(sizeof(image) * pak->entries_num);
-        pak->data = (color_t *)malloc(30000000);
-        pak->group_image_ids = malloc(300 * sizeof(uint16_t)); // 300 entries is hardcoded? (total list is always 600 bytes)
+        pak->images = (image *) malloc(sizeof(image) * pak->entries_num);
+        pak->data = (color_t *) malloc(30000000);
+        pak->group_image_ids = malloc(
+                300 * sizeof(uint16_t)); // 300 entries is hardcoded? (total list is always 600 bytes)
     } else if (prev_pak_size != pak->entries_num) { // not new, but different! resize memory!
         realloc(pak->images, sizeof(image) * pak->entries_num);
         realloc(pak->data, 30000000);
@@ -435,8 +420,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 
     // parse groups (always a fixed 300 pool)
     int groups_num = 0;
-    for (int i = 0; i < 300; i++)
-    {
+    for (int i = 0; i < 300; i++) {
         pak->group_image_ids[i] = buffer_read_u16(&buf);
         if (pak->group_image_ids[i] != 0) {
 //            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i]);
@@ -446,9 +430,10 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     pak->groups_num = groups_num;
 
     // parse bitmap names
-    int num_bmp_names = (int)pak->header_data[5];
+    int num_bmp_names = (int) pak->header_data[5];
     char bmp_names[num_bmp_names][200];
-    buffer_read_raw(&buf, bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
+    buffer_read_raw(&buf, bmp_names, 200 *
+                                     num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
     // move on to the rest of the content
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * pak->entries_num);
@@ -492,7 +477,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         if (pak->header_data[1] < 214)
             buffer_skip(&buf, 5);
         else
-            buffer_skip(&buf, 5+8);
+            buffer_skip(&buf, 5 + 8);
         pak->images[i] = img;
         int f = 1;
     }
@@ -543,8 +528,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 
     return 1;
 }
-int image_pak_table_generate()
-{
+int image_pak_table_generate() {
     // are you SURE you want to read through this mess?
     // I warn thee, you should stay away for your mental sanity's sake
     static imagepak c3_main;
@@ -584,18 +568,15 @@ int image_pak_table_generate()
                 ph_pak = &ph_font;
                 id_offset = 5999;
                 group_offset = 332;
-            }
-            else if (i > 5000) {
+            } else if (i > 5000) {
                 ph_pak = &ph_unl;
                 id_offset = 4999;
                 group_offset = 294;
-            }
-            else if (i > 2000) {
+            } else if (i > 2000) {
                 ph_pak = &ph_main;
                 id_offset = 1999;
                 group_offset = 66;
-            }
-            else if (i <= ph_terr.entries_num) {
+            } else if (i <= ph_terr.entries_num) {
                 ph_pak = &ph_terr;
                 id_offset = 0;
                 group_offset = 0;
@@ -621,15 +602,18 @@ int image_pak_table_generate()
                         if (gfirst && ph_group != group)
                             goto nextindex;
 //                        if (group != ph_group + group_offset)
-                            fprintf(fp, "    %i, %i, // %s %s\n",group, ph_group + group_offset, ph_pak->name, bmp);
-                        SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> group %i (%i)", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset, ph_group, ph_group + group_offset);
+                        fprintf(fp, "    %i, %i, // %s %s\n", group, ph_group + group_offset, ph_pak->name, bmp);
+                        SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> group %i (%i)", group,
+                                c3_id - 1, bmp, bmp_index, ph_id - 1, ph_id - 1 + id_offset, ph_group,
+                                ph_group + group_offset);
                         goto nextgroup;
                     }
                 }
                 if (gfirst)
                     goto nextindex;
                 // no matching group found....
-                SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> ????????????", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset);
+                SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> ????????????", group, c3_id - 1, bmp,
+                        bmp_index, ph_id - 1, ph_id - 1 + id_offset);
                 goto nextgroup;
             }
             nextindex:
@@ -645,8 +629,7 @@ int image_pak_table_generate()
                 "#endif // GRAPHICS_TABLE_TRANSLATION_H");
     fclose(fp);
 }
-int image_load_main(int climate_id, int is_editor, int force_reload)
-{
+int image_load_main(int climate_id, int is_editor, int force_reload) {
 //    image_pak_table_generate();
 
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
@@ -680,8 +663,7 @@ int image_load_main(int climate_id, int is_editor, int force_reload)
     data.is_editor = is_editor;
     return 1;
 }
-int image_load_enemy(int enemy_id)
-{
+int image_load_enemy(int enemy_id) {
     const char *filename_555;
     const char *filename_sgx;
     switch (GAME_ENV) {
@@ -699,8 +681,7 @@ int image_load_enemy(int enemy_id)
         return 0;
     return 1;
 }
-int image_load_fonts(encoding_type encoding)
-{
+int image_load_fonts(encoding_type encoding) {
     if (encoding == ENCODING_CYRILLIC) {
         return 0;
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
@@ -719,7 +700,6 @@ int image_load_fonts(encoding_type encoding)
     }
 }
 
-int get_main_entries_num(void)
-{
+int get_main_entries_num(void) {
     return data.main.entries_num;
 }

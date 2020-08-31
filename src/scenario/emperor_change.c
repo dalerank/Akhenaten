@@ -13,15 +13,13 @@ static struct {
     int state;
 } data;
 
-void scenario_emperor_change_init(void)
-{
+void scenario_emperor_change_init(void) {
     data.game_year = scenario.start_year + scenario.emperor_change.year;
     data.month = 1 + (random_byte() & 7);
     data.state = 0;
 }
 
-void scenario_emperor_change_process(void)
-{
+void scenario_emperor_change_process(void) {
     if (!scenario.emperor_change.enabled) {
         return;
     }
@@ -36,15 +34,13 @@ void scenario_emperor_change_process(void)
     }
 }
 
-void scenario_emperor_change_save_state(buffer *time, buffer *state)
-{
+void scenario_emperor_change_save_state(buffer *time, buffer *state) {
     buffer_write_i32(time, data.game_year);
     buffer_write_i32(time, data.month);
     buffer_write_i32(state, data.state);
 }
 
-void scenario_emperor_change_load_state(buffer *time, buffer *state)
-{
+void scenario_emperor_change_load_state(buffer *time, buffer *state) {
     data.game_year = buffer_read_i32(time);
     data.month = buffer_read_i32(time);
     data.state = buffer_read_i32(state);

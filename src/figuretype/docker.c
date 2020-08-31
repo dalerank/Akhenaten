@@ -17,21 +17,20 @@
 #include "figure/trader.h"
 #include "map/road_access.h"
 
-static int try_import_resource(int building_id, int resource, int city_id)
-{
+static int try_import_resource(int building_id, int resource, int city_id) {
     building *warehouse = building_get(building_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
     }
 
-    if (building_warehouse_is_not_accepting(resource,warehouse)) {
+    if (building_warehouse_is_not_accepting(resource, warehouse)) {
         return 0;
     }
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse)) {
         return 0;
     }
-    
+
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
     building *space = warehouse;
@@ -60,8 +59,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     return 0;
 }
 
-static int try_export_resource(int building_id, int resource, int city_id)
-{
+static int try_export_resource(int building_id, int resource, int city_id) {
     building *warehouse = building_get(building_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return 0;
@@ -70,7 +68,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse)) {
         return 0;
     }
-    
+
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
@@ -86,8 +84,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
 }
 
 static int get_closest_warehouse_for_import(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            map_point *warehouse, int *import_resource)
-{
+                                            map_point *warehouse, int *import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
@@ -117,7 +114,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             continue;
         }
         const building_storage *storage = building_storage_get(b->storage_id);
-        if (!building_warehouse_is_not_accepting(resource,b) && !storage->empty_all) {
+        if (!building_warehouse_is_not_accepting(resource, b) && !storage->empty_all) {
             int distance_penalty = 32;
             building *space = b;
             for (int s = 0; s < 8; s++) {
@@ -130,7 +127,8 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
                 }
             }
             if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+                int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry,
+                                                          b->distance_from_entry);
                 // prefer emptier warehouse
                 distance += distance_penalty;
                 if (distance < min_distance) {
@@ -154,8 +152,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
 }
 
 static int get_closest_warehouse_for_export(int x, int y, int city_id, int distance_from_entry, int road_network_id,
-                                            map_point *warehouse, int *export_resource)
-{
+                                            map_point *warehouse, int *export_resource) {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
@@ -215,8 +212,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     return min_building_id;
 }
 
-static void get_trade_center_location(const figure *f, int *x, int *y)
-{
+static void get_trade_center_location(const figure *f, int *x, int *y) {
     int trade_center_id = city_buildings_get_trade_center();
     if (trade_center_id) {
         building *trade_center = building_get(trade_center_id);
@@ -228,8 +224,7 @@ static void get_trade_center_location(const figure *f, int *x, int *y)
     }
 }
 
-static int deliver_import_resource(figure *f, building *dock)
-{
+static int deliver_import_resource(figure *f, building *dock) {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
         return 0;
@@ -243,7 +238,8 @@ static int deliver_import_resource(figure *f, building *dock)
     map_point tile;
     int resource;
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empire_city_id,
-                      dock->distance_from_entry, dock->road_network_id, &tile, &resource);
+                                                        dock->distance_from_entry, dock->road_network_id, &tile,
+                                                        &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -257,8 +253,7 @@ static int deliver_import_resource(figure *f, building *dock)
     return 1;
 }
 
-static int fetch_export_resource(figure *f, building *dock)
-{
+static int fetch_export_resource(figure *f, building *dock) {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
         return 0;
@@ -272,7 +267,8 @@ static int fetch_export_resource(figure *f, building *dock)
     map_point tile;
     int resource;
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empire_city_id,
-        dock->distance_from_entry, dock->road_network_id, &tile, &resource);
+                                                        dock->distance_from_entry, dock->road_network_id, &tile,
+                                                        &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -286,14 +282,12 @@ static int fetch_export_resource(figure *f, building *dock)
     return 1;
 }
 
-static void set_cart_graphic(figure *f)
-{
+static void set_cart_graphic(figure *f) {
     f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * f->resource_id;
     f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_CART);
 }
 
-void figure_docker_action(figure *f)
-{
+void figure_docker_action(figure *f) {
     building *b = building_get(f->building_id);
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;

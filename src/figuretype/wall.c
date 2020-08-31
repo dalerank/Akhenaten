@@ -19,29 +19,28 @@
 #include "sound/effect.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
-    0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 static const int TOWER_SENTRY_FIRING_OFFSETS[] = {
-    0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void figure_ballista_action(figure *f)
-{
+void figure_ballista_action(figure *f) {
     building *b = building_get(f->building_id);
     f->terrain_usage = TERRAIN_USAGE_WALLS;
     f->use_cross_country = 0;
@@ -57,10 +56,22 @@ void figure_ballista_action(figure *f)
     }
     map_figure_delete(f);
     switch (city_view_orientation()) {
-        case DIR_0_TOP: f->x = b->x; f->y = b->y; break;
-        case DIR_2_RIGHT: f->x = b->x + 1; f->y = b->y; break;
-        case DIR_4_BOTTOM: f->x = b->x + 1; f->y = b->y + 1; break;
-        case DIR_6_LEFT: f->x = b->x; f->y = b->y + 1; break;
+        case DIR_0_TOP:
+            f->x = b->x;
+            f->y = b->y;
+            break;
+        case DIR_2_RIGHT:
+            f->x = b->x + 1;
+            f->y = b->y;
+            break;
+        case DIR_4_BOTTOM:
+            f->x = b->x + 1;
+            f->y = b->y + 1;
+            break;
+        case DIR_6_LEFT:
+            f->x = b->x;
+            f->y = b->y + 1;
+            break;
     }
     f->grid_offset = map_grid_offset(f->x, f->y);
     map_figure_add(f);
@@ -98,14 +109,13 @@ void figure_ballista_action(figure *f)
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_181_BALLISTA_FIRING) {
         f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir +
-            8 * BALLISTA_FIRING_OFFSETS[f->wait_ticks_missile / 4];
+                      8 * BALLISTA_FIRING_OFFSETS[f->wait_ticks_missile / 4];
     } else {
         f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
     }
 }
 
-static void tower_sentry_pick_target(figure *f)
-{
+static void tower_sentry_pick_target(figure *f) {
     if (enemy_army_total_enemy_formations() <= 0) {
         return;
     }
@@ -128,16 +138,23 @@ static void tower_sentry_pick_target(figure *f)
     }
 }
 
-static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
-{
+static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
     int dir = b->figure_roam_direction;
     int x = b->x;
     int y = b->y;
     switch (dir) {
-        case DIR_0_TOP: y -= 8; break;
-        case DIR_2_RIGHT: x += 8; break;
-        case DIR_4_BOTTOM: y += 8; break;
-        case DIR_6_LEFT: x -= 8; break;
+        case DIR_0_TOP:
+            y -= 8;
+            break;
+        case DIR_2_RIGHT:
+            x += 8;
+            break;
+        case DIR_4_BOTTOM:
+            y += 8;
+            break;
+        case DIR_6_LEFT:
+            x -= 8;
+            break;
     }
     map_grid_bound(&x, &y);
 
@@ -153,10 +170,18 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
         x = b->x;
         y = b->y;
         switch (dir) {
-            case DIR_0_TOP: y -= 3; break;
-            case DIR_2_RIGHT: x += 3; break;
-            case DIR_4_BOTTOM: y += 3; break;
-            case DIR_6_LEFT: x -= 3; break;
+            case DIR_0_TOP:
+                y -= 3;
+                break;
+            case DIR_2_RIGHT:
+                x += 3;
+                break;
+            case DIR_4_BOTTOM:
+                y += 3;
+                break;
+            case DIR_6_LEFT:
+                x -= 3;
+                break;
         }
         map_grid_bound(&x, &y);
         if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
@@ -166,8 +191,7 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     return 0;
 }
 
-void figure_tower_sentry_action(figure *f)
-{
+void figure_tower_sentry_action(figure *f) {
     building *b = building_get(f->building_id);
     f->terrain_usage = TERRAIN_USAGE_WALLS;
     f->use_cross_country = 0;
@@ -241,8 +265,8 @@ void figure_tower_sentry_action(figure *f)
             f->terrain_usage = TERRAIN_USAGE_ROADS;
             if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD)) {
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-            }	    
-	    
+            }
+
             f->is_ghost = 0;
             f->height_adjusted_ticks = 0;
             figure_movement_move_ticks(f, 1);
@@ -263,7 +287,7 @@ void figure_tower_sentry_action(figure *f)
         f->current_height = 18;
     } else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE)) {
         f->in_building_wait_ticks = 24;
-    } 
+    }
     if (f->in_building_wait_ticks) {
         f->in_building_wait_ticks--;
         f->height_adjusted_ticks = 0;
@@ -279,19 +303,16 @@ void figure_tower_sentry_action(figure *f)
         int image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY);
         if (f->attack_image_offset < 16) {
             f->image_id = image_id + 96 + dir;
-        }
-        else {
+        } else {
             f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
         }
-    }
-    else {
+    } else {
         f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
                       dir + 8 * f->image_offset;
     }
 }
 
-void figure_tower_sentry_reroute(void)
-{
+void figure_tower_sentry_reroute(void) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset)) {
@@ -326,8 +347,7 @@ void figure_tower_sentry_reroute(void)
     }
 }
 
-void figure_kill_tower_sentries_at(int x, int y)
-{
+void figure_kill_tower_sentries_at(int x, int y) {
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (!figure_is_dead(f) && f->type == FIGURE_TOWER_SENTRY) {

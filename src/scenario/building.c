@@ -3,8 +3,7 @@
 #include "building/type.h"
 #include "scenario/data.h"
 
-int scenario_building_allowed(int building_type)
-{
+int scenario_building_allowed(int building_type) {
     switch (building_type) {
         case BUILDING_ROAD:
             return scenario.allowed_buildings[ALLOWED_BUILDING_ROAD];
@@ -110,17 +109,14 @@ int scenario_building_allowed(int building_type)
     return 1;
 }
 
-int scenario_building_image_native_hut(void)
-{
+int scenario_building_image_native_hut(void) {
     return scenario.native_images.hut;
 }
 
-int scenario_building_image_native_meeting(void)
-{
+int scenario_building_image_native_meeting(void) {
     return scenario.native_images.meeting;
 }
 
-int scenario_building_image_native_crops(void)
-{
+int scenario_building_image_native_crops(void) {
     return scenario.native_images.crops;
 }

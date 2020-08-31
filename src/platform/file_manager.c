@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 
 #ifdef _WIN32
+
 #include <windows.h>
 
 #define fs_dir_type _WDIR
@@ -19,24 +20,22 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) wchar_to_utf8(d->d_name)
-typedef const wchar_t * dir_name;
+typedef const wchar_t *dir_name;
 
-static const char *wchar_to_utf8(const wchar_t *str)
-{
+static const char *wchar_to_utf8(const wchar_t *str) {
     static char *filename_buffer = 0;
     static int filename_buffer_size = 0;
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
     if (size_needed > filename_buffer_size) {
         free(filename_buffer);
-        filename_buffer = (char*) malloc(sizeof(char) * size_needed);
+        filename_buffer = (char *) malloc(sizeof(char) * size_needed);
         filename_buffer_size = size_needed;
     }
     WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
     return filename_buffer;
 }
 
-static wchar_t *utf8_to_wchar(const char *str)
-{
+static wchar_t *utf8_to_wchar(const char *str) {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
     wchar_t *result = (wchar_t *) malloc(sizeof(wchar_t) * size_needed);
     MultiByteToWideChar(CP_UTF8, 0, str, -1, result, size_needed);
@@ -79,16 +78,17 @@ typedef const char * dir_name;
 #include <direct.h>
 #define chdir _chdir
 #elif !defined(__vita__)
+
 #include <unistd.h>
+
 #endif
 
-static int is_file(int mode)
-{
+static int is_file(int mode) {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
 
-int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
-{
+int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension,
+                                                  int (*callback)(const char *)) {
     if (type == TYPE_NONE) {
         return LIST_ERROR;
     }
@@ -138,8 +138,7 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
     return match;
 }
 
-int platform_file_manager_should_case_correct_file(void)
-{
+int platform_file_manager_should_case_correct_file(void) {
 #ifdef _WIN32
     return 0;
 #else
@@ -147,8 +146,7 @@ int platform_file_manager_should_case_correct_file(void)
 #endif
 }
 
-int platform_file_manager_set_base_path(const char *path)
-{
+int platform_file_manager_set_base_path(const char *path) {
     if (!path) {
         log_error("set_base_path: path was not set. Augustus will probably crash.", 0, 0);
         return 0;
@@ -176,8 +174,7 @@ int platform_file_manager_remove_file(const char *filename)
 
 #elif defined(_WIN32)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
+FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     wchar_t *wfile = utf8_to_wchar(filename);
     wchar_t *wmode = utf8_to_wchar(mode);
 
@@ -189,8 +186,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     return fp;
 }
 
-int platform_file_manager_remove_file(const char *filename)
-{
+int platform_file_manager_remove_file(const char *filename) {
     wchar_t *wfile = utf8_to_wchar(filename);
     int result = _wremove(wfile);
     free(wfile);

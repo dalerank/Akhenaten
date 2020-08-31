@@ -13,9 +13,8 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-static int determine_destination(int x, int y, building_type type1, building_type type2)
-{
-    int road_network = map_road_network_get(map_grid_offset(x,y));
+static int determine_destination(int x, int y, building_type type1, building_type type2) {
+    int road_network = map_road_network_get(map_grid_offset(x, y));
 
     building_list_small_clear();
 
@@ -60,8 +59,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
     return min_building_id;
 }
 
-static void update_shows(figure *f)
-{
+static void update_shows(figure *f) {
     building *b = building_get(f->destination_building_id);
     switch (f->type) {
         case FIGURE_ACTOR:
@@ -89,8 +87,7 @@ static void update_shows(figure *f)
     }
 }
 
-static void update_image(figure *f)
-{
+static void update_image(figure *f) {
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
 
     if (f->type == FIGURE_CHARIOTEER) {
@@ -136,8 +133,7 @@ static void update_image(figure *f)
     }
 }
 
-void figure_entertainer_action(figure *f)
-{
+void figure_entertainer_action(figure *f) {
     building *b = building_get(f->building_id);
     f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
     f->terrain_usage = TERRAIN_USAGE_ROADS;

@@ -15,8 +15,7 @@
 #include "map/road_access.h"
 #include "sound/effect.h"
 
-void figure_engineer_action(figure *f)
-{
+void figure_engineer_action(figure *f) {
     building *b = building_get(f->building_id);
 
     f->terrain_usage = TERRAIN_USAGE_ROADS;
@@ -92,8 +91,7 @@ void figure_engineer_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_ENGINEER));
 }
 
-static int get_nearest_enemy(int x, int y, int *distance)
-{
+static int get_nearest_enemy(int x, int y, int *distance) {
     int min_enemy_id = 0;
     int min_dist = 10000;
     for (int i = 1; i < MAX_FIGURES; i++) {
@@ -122,8 +120,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
     return min_enemy_id;
 }
 
-static int fight_enemy(figure *f)
-{
+static int fight_enemy(figure *f) {
     if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
         return 0;
     }
@@ -160,8 +157,7 @@ static int fight_enemy(figure *f)
     return 0;
 }
 
-static int fight_fire(figure *f)
-{
+static int fight_fire(figure *f) {
     if (building_list_burning_size() <= 0) {
         return 0;
     }
@@ -196,11 +192,11 @@ static int fight_fire(figure *f)
     return 0;
 }
 
-static void extinguish_fire(figure *f)
-{
+static void extinguish_fire(figure *f) {
     building *burn = building_get(f->destination_building_id);
     int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
-    if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
+    if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) &&
+        burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else {
@@ -228,8 +224,7 @@ static void extinguish_fire(figure *f)
     }
 }
 
-static int target_is_alive(figure *f)
-{
+static int target_is_alive(figure *f) {
     if (f->target_figure_id <= 0) {
         return 0;
     }
@@ -240,8 +235,7 @@ static int target_is_alive(figure *f)
     return 0;
 }
 
-void figure_prefect_action(figure *f)
-{
+void figure_prefect_action(figure *f) {
     building *b = building_get(f->building_id);
 
     f->terrain_usage = TERRAIN_USAGE_ROADS;
@@ -397,8 +391,7 @@ void figure_prefect_action(figure *f)
     }
 }
 
-void figure_worker_action(figure *f)
-{
+void figure_worker_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 384;

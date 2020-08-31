@@ -29,8 +29,7 @@ static struct {
     } expand[4];
 } data;
 
-void scenario_earthquake_init(void)
-{
+void scenario_earthquake_init(void) {
     data.game_year = scenario.start_year + scenario.earthquake.year;
     data.month = 2 + (random_byte() & 7);
     switch (scenario.earthquake.severity) {
@@ -58,8 +57,7 @@ void scenario_earthquake_init(void)
     }
 }
 
-static int can_advance_earthquake_to_tile(int x, int y)
-{
+static int can_advance_earthquake_to_tile(int x, int y) {
     if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER)) {
         return 0;
     } else {
@@ -67,8 +65,7 @@ static int can_advance_earthquake_to_tile(int x, int y)
     }
 }
 
-static void advance_earthquake_to_tile(int x, int y)
-{
+static void advance_earthquake_to_tile(int x, int y) {
     int grid_offset = map_grid_offset(x, y);
     int building_id = map_building_at(grid_offset);
     if (building_id) {
@@ -92,8 +89,7 @@ static void advance_earthquake_to_tile(int x, int y)
     figure_create_explosion_cloud(x, y, 1);
 }
 
-void scenario_earthquake_process(void)
-{
+void scenario_earthquake_process(void) {
     if (scenario.earthquake.severity == EARTHQUAKE_NONE ||
         scenario.earthquake_point.x == -1 || scenario.earthquake_point.y == -1) {
         return;
@@ -106,7 +102,7 @@ void scenario_earthquake_process(void)
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
             city_message_post(1, MESSAGE_EARTHQUAKE, 0,
-                map_grid_offset(data.expand[0].x, data.expand[0].y));
+                              map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_IN_PROGRESS) {
         data.delay++;
@@ -118,23 +114,88 @@ void scenario_earthquake_process(void)
             }
             int dx, dy, index;
             switch (random_byte() & 0xf) {
-                case 0: index = 0; dx = 0; dy = -1; break;
-                case 1: index = 1; dx = 1; dy = 0; break;
-                case 2: index = 2; dx = 0; dy = 1; break;
-                case 3: index = 3; dx = -1; dy = 0; break;
-                case 4: index = 0; dx = 0; dy = -1; break;
-                case 5: index = 0; dx = -1; dy = 0; break;
-                case 6: index = 0; dx = 1; dy = 0; break;
-                case 7: index = 1; dx = 1; dy = 0; break;
-                case 8: index = 1; dx = 0; dy = -1; break;
-                case 9: index = 1; dx = 0; dy = 1; break;
-                case 10: index = 2; dx = 0; dy = 1; break;
-                case 11: index = 2; dx = -1; dy = 0; break;
-                case 12: index = 2; dx = 1; dy = 0; break;
-                case 13: index = 3; dx = -1; dy = 0; break;
-                case 14: index = 3; dx = 0; dy = -1; break;
-                case 15: index = 3; dx = 0; dy = 1; break;
-                default: return;
+                case 0:
+                    index = 0;
+                    dx = 0;
+                    dy = -1;
+                    break;
+                case 1:
+                    index = 1;
+                    dx = 1;
+                    dy = 0;
+                    break;
+                case 2:
+                    index = 2;
+                    dx = 0;
+                    dy = 1;
+                    break;
+                case 3:
+                    index = 3;
+                    dx = -1;
+                    dy = 0;
+                    break;
+                case 4:
+                    index = 0;
+                    dx = 0;
+                    dy = -1;
+                    break;
+                case 5:
+                    index = 0;
+                    dx = -1;
+                    dy = 0;
+                    break;
+                case 6:
+                    index = 0;
+                    dx = 1;
+                    dy = 0;
+                    break;
+                case 7:
+                    index = 1;
+                    dx = 1;
+                    dy = 0;
+                    break;
+                case 8:
+                    index = 1;
+                    dx = 0;
+                    dy = -1;
+                    break;
+                case 9:
+                    index = 1;
+                    dx = 0;
+                    dy = 1;
+                    break;
+                case 10:
+                    index = 2;
+                    dx = 0;
+                    dy = 1;
+                    break;
+                case 11:
+                    index = 2;
+                    dx = -1;
+                    dy = 0;
+                    break;
+                case 12:
+                    index = 2;
+                    dx = 1;
+                    dy = 0;
+                    break;
+                case 13:
+                    index = 3;
+                    dx = -1;
+                    dy = 0;
+                    break;
+                case 14:
+                    index = 3;
+                    dx = 0;
+                    dy = -1;
+                    break;
+                case 15:
+                    index = 3;
+                    dx = 0;
+                    dy = 1;
+                    break;
+                default:
+                    return;
             }
             int x = calc_bound(data.expand[index].x + dx, 0, scenario.map.width - 1);
             int y = calc_bound(data.expand[index].y + dy, 0, scenario.map.height - 1);
@@ -147,13 +208,11 @@ void scenario_earthquake_process(void)
     }
 }
 
-int scenario_earthquake_is_in_progress(void)
-{
+int scenario_earthquake_is_in_progress(void) {
     return data.state == EVENT_IN_PROGRESS;
 }
 
-void scenario_earthquake_save_state(buffer *buf)
-{
+void scenario_earthquake_save_state(buffer *buf) {
     buffer_write_i32(buf, data.game_year);
     buffer_write_i32(buf, data.month);
     buffer_write_i32(buf, data.state);
@@ -167,8 +226,7 @@ void scenario_earthquake_save_state(buffer *buf)
     }
 }
 
-void scenario_earthquake_load_state(buffer *buf)
-{
+void scenario_earthquake_load_state(buffer *buf) {
     data.game_year = buffer_read_i32(buf);
     data.month = buffer_read_i32(buf);
     data.state = buffer_read_i32(buf);

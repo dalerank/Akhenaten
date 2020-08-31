@@ -7,8 +7,7 @@
 #include "game/time.h"
 #include "scenario/data.h"
 
-void scenario_demand_change_init(void)
-{
+void scenario_demand_change_init(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         random_generate_next();
         if (scenario.demand_changes[i].year) {
@@ -17,8 +16,7 @@ void scenario_demand_change_init(void)
     }
 }
 
-void scenario_demand_change_process(void)
-{
+void scenario_demand_change_process(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         if (!scenario.demand_changes[i].year) {
             continue;

@@ -8,12 +8,11 @@
 
 struct scenario_t scenario;
 
-int scenario_is_saved(void)
-{
+int scenario_is_saved(void) {
     return scenario.is_saved;
 }
-void scenario_save_state(buffer *buf)
-{
+
+void scenario_save_state(buffer *buf) {
     buffer_write_i16(buf, scenario.start_year);
     buffer_write_i16(buf, 0);
     buffer_write_i16(buf, scenario.empire.id);
@@ -225,8 +224,8 @@ void scenario_save_state(buffer *buf)
 
     scenario.is_saved = 1;
 }
-void scenario_load_state(buffer *buf)
-{
+
+void scenario_load_state(buffer *buf) {
     scenario.start_year = buffer_read_i16(buf);
     buffer_skip(buf, 2);
     scenario.empire.id = buffer_read_i16(buf);
@@ -437,19 +436,19 @@ void scenario_load_state(buffer *buf)
     scenario.is_saved = 1;
 }
 
-void scenario_settings_init(void)
-{
+void scenario_settings_init(void) {
     scenario.settings.campaign_mission = 0;
     scenario.settings.campaign_rank = 0;
     scenario.settings.is_custom = 0;
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = 0;
 }
-void scenario_settings_init_mission(void)
-{
+
+void scenario_settings_init_mission(void) {
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario.settings.campaign_rank);
 }
+
 void scenario_fix_patch_trade(int mission_id) {
     // Damascus, allow import of marble
     if (mission_id == 15) {
@@ -457,8 +456,8 @@ void scenario_fix_patch_trade(int mission_id) {
     }
 }
 
-void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
-{
+void
+scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name) {
     buffer_write_i32(part1, scenario.settings.campaign_mission);
 
     buffer_write_i32(part2, scenario.settings.starting_favor);
@@ -473,8 +472,9 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, b
     buffer_write_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_write_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
 }
-void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
-{
+
+void
+scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name) {
     scenario.settings.campaign_mission = buffer_read_i32(part1);
 
     scenario.settings.starting_favor = buffer_read_i32(part2);

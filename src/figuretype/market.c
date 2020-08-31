@@ -11,8 +11,7 @@
 #include "figure/route.h"
 #include "game/resource.h"
 
-static int create_delivery_boy(int leader_id, figure *f)
-{
+static int create_delivery_boy(int leader_id, figure *f) {
     figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = f->collecting_item_id;
@@ -20,15 +19,23 @@ static int create_delivery_boy(int leader_id, figure *f)
     return boy->id;
 }
 
-static int take_food_from_granary(figure *f, int market_id, int granary_id)
-{
+static int take_food_from_granary(figure *f, int market_id, int granary_id) {
     int resource;
     switch (f->collecting_item_id) {
-        case INVENTORY_WHEAT: resource = RESOURCE_WHEAT; break;
-        case INVENTORY_VEGETABLES: resource = RESOURCE_VEGETABLES; break;
-        case INVENTORY_FRUIT: resource = RESOURCE_FRUIT; break;
-        case INVENTORY_MEAT: resource = RESOURCE_MEAT; break;
-        default: return 0;
+        case INVENTORY_WHEAT:
+            resource = RESOURCE_WHEAT;
+            break;
+        case INVENTORY_VEGETABLES:
+            resource = RESOURCE_VEGETABLES;
+            break;
+        case INVENTORY_FRUIT:
+            resource = RESOURCE_FRUIT;
+            break;
+        case INVENTORY_MEAT:
+            resource = RESOURCE_MEAT;
+            break;
+        default:
+            return 0;
     }
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
@@ -69,15 +76,23 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     return 1;
 }
 
-static int take_resource_from_warehouse(figure *f, int warehouse_id)
-{
+static int take_resource_from_warehouse(figure *f, int warehouse_id) {
     int resource;
     switch (f->collecting_item_id) {
-        case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
-        case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
-        case INVENTORY_OIL: resource = RESOURCE_OIL; break;
-        case INVENTORY_WINE: resource = RESOURCE_WINE; break;
-        default: return 0;
+        case INVENTORY_POTTERY:
+            resource = RESOURCE_POTTERY;
+            break;
+        case INVENTORY_FURNITURE:
+            resource = RESOURCE_FURNITURE;
+            break;
+        case INVENTORY_OIL:
+            resource = RESOURCE_OIL;
+            break;
+        case INVENTORY_WINE:
+            resource = RESOURCE_WINE;
+            break;
+        default:
+            return 0;
     }
     building *warehouse = building_get(warehouse_id);
     int num_loads;
@@ -100,8 +115,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     return 1;
 }
 
-void figure_market_buyer_action(figure *f)
-{
+void figure_market_buyer_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 800;
@@ -152,8 +166,7 @@ void figure_market_buyer_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
-void figure_delivery_boy_action(figure *f)
-{
+void figure_delivery_boy_action(figure *f) {
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 12);

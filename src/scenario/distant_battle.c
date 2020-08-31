@@ -14,30 +14,25 @@
 #include "game/time.h"
 #include "scenario/data.h"
 
-int scenario_distant_battle_roman_travel_months(void)
-{
+int scenario_distant_battle_roman_travel_months(void) {
     return scenario.empire.distant_battle_roman_travel_months;
 }
 
-int scenario_distant_battle_enemy_travel_months(void)
-{
+int scenario_distant_battle_enemy_travel_months(void) {
     return scenario.empire.distant_battle_enemy_travel_months;
 }
 
-void scenario_distant_battle_set_roman_travel_months(void)
-{
+void scenario_distant_battle_set_roman_travel_months(void) {
     scenario.empire.distant_battle_roman_travel_months =
-        empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ROMAN_ARMY);
+            empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ROMAN_ARMY);
 }
 
-void scenario_distant_battle_set_enemy_travel_months(void)
-{
+void scenario_distant_battle_set_enemy_travel_months(void) {
     scenario.empire.distant_battle_enemy_travel_months =
-        empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
+            empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
 }
 
-void scenario_distant_battle_process(void)
-{
+void scenario_distant_battle_process(void) {
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE &&
             game_time_year() == scenario.invasions[i].year + scenario.start_year &&

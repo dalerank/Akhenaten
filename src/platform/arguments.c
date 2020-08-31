@@ -6,8 +6,7 @@
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
-static int parse_decimal_as_percentage(const char *str)
-{
+static int parse_decimal_as_percentage(const char *str) {
     const char *start = str;
     char *end;
     long whole = SDL_strtol(start, &end, 10);
@@ -43,8 +42,8 @@ static int parse_decimal_as_percentage(const char *str)
     }
     return percentage;
 }
-int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
-{
+
+int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
     int ok = 1;
 
     // Set sensible defaults

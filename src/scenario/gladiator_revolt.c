@@ -13,16 +13,14 @@ static struct {
     int state;
 } data;
 
-void scenario_gladiator_revolt_init(void)
-{
+void scenario_gladiator_revolt_init(void) {
     data.game_year = scenario.start_year + scenario.gladiator_revolt.year;
     data.month = 3 + (random_byte() & 3);
     data.end_month = 3 + data.month;
     data.state = EVENT_NOT_STARTED;
 }
 
-void scenario_gladiator_revolt_process(void)
-{
+void scenario_gladiator_revolt_process(void) {
     if (!scenario.gladiator_revolt.enabled) {
         return;
     }
@@ -43,26 +41,22 @@ void scenario_gladiator_revolt_process(void)
     }
 }
 
-int scenario_gladiator_revolt_is_in_progress(void)
-{
+int scenario_gladiator_revolt_is_in_progress(void) {
     return data.state == EVENT_IN_PROGRESS;
 }
 
-int scenario_gladiator_revolt_is_finished(void)
-{
+int scenario_gladiator_revolt_is_finished(void) {
     return data.state == EVENT_FINISHED;
 }
 
-void scenario_gladiator_revolt_save_state(buffer *buf)
-{
+void scenario_gladiator_revolt_save_state(buffer *buf) {
     buffer_write_i32(buf, data.game_year);
     buffer_write_i32(buf, data.month);
     buffer_write_i32(buf, data.end_month);
     buffer_write_i32(buf, data.state);
 }
 
-void scenario_gladiator_revolt_load_state(buffer *buf)
-{
+void scenario_gladiator_revolt_load_state(buffer *buf) {
     data.game_year = buffer_read_i32(buf);
     data.month = buffer_read_i32(buf);
     data.end_month = buffer_read_i32(buf);

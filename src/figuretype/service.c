@@ -11,8 +11,7 @@
 #include "map/building.h"
 #include "map/road_access.h"
 
-static void roamer_action(figure *f, int num_ticks)
-{
+static void roamer_action(figure *f, int num_ticks) {
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -48,8 +47,7 @@ static void roamer_action(figure *f, int num_ticks)
     }
 }
 
-static void culture_action(figure *f, int group)
-{
+static void culture_action(figure *f, int group) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 384;
@@ -62,19 +60,16 @@ static void culture_action(figure *f, int group)
     figure_image_update(f, image_id_from_group(group));
 }
 
-void figure_priest_action(figure *f)
-{
+void figure_priest_action(figure *f) {
     culture_action(f, GROUP_FIGURE_PRIEST);
 }
 
-void figure_school_child_action(figure *f)
-{
+void figure_school_child_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     if (config_get(CONFIG_GP_CH_SCHOOL_WALKERS)) {
         f->max_roam_length = 192;
-    }
-    else {
+    } else {
         f->max_roam_length = 96;
     }
     building *b = building_get(f->building_id);
@@ -101,33 +96,27 @@ void figure_school_child_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_SCHOOL_CHILD));
 }
 
-void figure_teacher_action(figure *f)
-{
+void figure_teacher_action(figure *f) {
     culture_action(f, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
-void figure_librarian_action(figure *f)
-{
+void figure_librarian_action(figure *f) {
     culture_action(f, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
-void figure_barber_action(figure *f)
-{
+void figure_barber_action(figure *f) {
     culture_action(f, GROUP_FIGURE_BARBER);
 }
 
-void figure_bathhouse_worker_action(figure *f)
-{
+void figure_bathhouse_worker_action(figure *f) {
     culture_action(f, GROUP_FIGURE_BATHHOUSE_WORKER);
 }
 
-void figure_doctor_action(figure *f)
-{
+void figure_doctor_action(figure *f) {
     culture_action(f, GROUP_FIGURE_DOCTOR_SURGEON);
 }
 
-void figure_missionary_action(figure *f)
-{
+void figure_missionary_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 192;
@@ -140,8 +129,7 @@ void figure_missionary_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_MISSIONARY));
 }
 
-void figure_patrician_action(figure *f)
-{
+void figure_patrician_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 128;
@@ -153,8 +141,7 @@ void figure_patrician_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_PATRICIAN));
 }
 
-void figure_labor_seeker_action(figure *f)
-{
+void figure_labor_seeker_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 384;
@@ -167,8 +154,7 @@ void figure_labor_seeker_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_LABOR_SEEKER));
 }
 
-void figure_market_trader_action(figure *f)
-{
+void figure_market_trader_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 384;
@@ -180,7 +166,7 @@ void figure_market_trader_action(figure *f)
     if (f->action_state == FIGURE_ACTION_125_ROAMING) {
         // force return on out of stock
         int stock = building_market_get_max_food_stock(market) +
-            building_market_get_max_goods_stock(market);
+                    building_market_get_max_goods_stock(market);
         if (f->roam_length >= 96 && stock <= 0) {
             f->roam_length = f->max_roam_length;
         }
@@ -189,8 +175,7 @@ void figure_market_trader_action(figure *f)
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
-void figure_tax_collector_action(figure *f)
-{
+void figure_tax_collector_action(figure *f) {
     building *b = building_get(f->building_id);
 
     f->terrain_usage = TERRAIN_USAGE_ROADS;

@@ -16,23 +16,22 @@
 #include "scenario/map.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {
-    3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1
+        3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1
 };
 static const int FLOTSAM_WAIT_TICKS[] = {
-    10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300
+        10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300
 };
 
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {
-    0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0
+        0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0
 };
 static const int FLOTSAM_TYPE_3[] = {
-    0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-void figure_create_flotsam(void)
-{
+void figure_create_flotsam(void) {
     if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
         return;
     }
@@ -52,8 +51,7 @@ void figure_create_flotsam(void)
     }
 }
 
-void figure_flotsam_action(figure *f)
-{
+void figure_flotsam_action(figure *f) {
     f->is_boat = 2;
     if (!scenario_map_has_river_exit()) {
         return;
@@ -138,8 +136,7 @@ void figure_flotsam_action(figure *f)
     }
 }
 
-void figure_shipwreck_action(figure *f)
-{
+void figure_shipwreck_action(figure *f) {
     f->is_ghost = 0;
     f->height_adjusted_ticks = 0;
     f->is_boat = 1;
@@ -164,8 +161,7 @@ void figure_shipwreck_action(figure *f)
     f->image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + f->image_offset / 16;
 }
 
-void figure_fishing_boat_action(figure *f)
-{
+void figure_fishing_boat_action(figure *f) {
     building *b = building_get(f->building_id);
     if (b->state != BUILDING_STATE_IN_USE) {
         f->state = FIGURE_STATE_DEAD;
@@ -254,8 +250,7 @@ void figure_fishing_boat_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
-            {
+        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             int max_wait_ticks = 5 * (102 - pct_workers);
             if (b->data.industry.has_fish > 0) {
@@ -274,7 +269,7 @@ void figure_fishing_boat_action(figure *f)
                     }
                 }
             }
-            }
+        }
             break;
         case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
             figure_movement_move_ticks(f, 1);
@@ -300,8 +295,7 @@ void figure_fishing_boat_action(figure *f)
     }
 }
 
-void figure_sink_all_ships(void)
-{
+void figure_sink_all_ships(void) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE) {

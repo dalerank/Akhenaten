@@ -23,18 +23,17 @@ enum {
 };
 
 static const int RANDOM_EVENT_PROBABILITY[128] = {
-    0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 6,
-    0, 0, 2, 0, 0, 0, 7, 0, 5, 0, 0, 7, 0, 0, 0, 0,
-    0, 7, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-    6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 0, 0,
-    0, 7, 0, 1, 6, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0,
-    0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
+        0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        0, 0, 2, 0, 0, 0, 7, 0, 5, 0, 0, 7, 0, 0, 0, 0,
+        0, 7, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+        6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 0, 0,
+        0, 7, 0, 1, 6, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0,
+        0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
 };
 
-static void raise_wages(void)
-{
+static void raise_wages(void) {
     if (scenario.random_events.raise_wages) {
         if (city_labor_raise_wages_rome()) {
             city_message_post(1, MESSAGE_ROME_RAISES_WAGES, 0, 0);
@@ -42,8 +41,7 @@ static void raise_wages(void)
     }
 }
 
-static void lower_wages(void)
-{
+static void lower_wages(void) {
     if (scenario.random_events.lower_wages) {
         if (city_labor_lower_wages_rome()) {
             city_message_post(1, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
@@ -51,8 +49,7 @@ static void lower_wages(void)
     }
 }
 
-static void disrupt_land_trade(void)
-{
+static void disrupt_land_trade(void) {
     if (scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
@@ -65,8 +62,7 @@ static void disrupt_land_trade(void)
     }
 }
 
-static void disrupt_sea_trade(void)
-{
+static void disrupt_sea_trade(void) {
     if (scenario.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
@@ -75,8 +71,7 @@ static void disrupt_sea_trade(void)
     }
 }
 
-static void contaminate_water(void)
-{
+static void contaminate_water(void) {
     if (scenario.random_events.contaminated_water) {
         if (city_population() > 200) {
             int change;
@@ -94,15 +89,14 @@ static void contaminate_water(void)
     }
 }
 
-static void destroy_iron_mine(void)
-{
+static void destroy_iron_mine(void) {
     if (scenario.random_events.iron_mine_collapse) {
-        if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            if(building_find(BUILDING_IRON_MINE) < MAX_BUILDINGS) {
+        if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+            if (building_find(BUILDING_IRON_MINE) < MAX_BUILDINGS) {
                 city_finance_process_sundry(250);
                 city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
             }
-    } else {
+        } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
             if (grid_offset) {
                 city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
@@ -111,11 +105,10 @@ static void destroy_iron_mine(void)
     }
 }
 
-static void destroy_clay_pit(void)
-{
+static void destroy_clay_pit(void) {
     if (scenario.random_events.clay_pit_flooded) {
-        if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            if(building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
+        if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
+            if (building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_sundry(250);
                 city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
             }
@@ -128,8 +121,7 @@ static void destroy_clay_pit(void)
     }
 }
 
-void scenario_random_event_process(void)
-{
+void scenario_random_event_process(void) {
     int event = RANDOM_EVENT_PROBABILITY[random_byte()];
     switch (event) {
         case EVENT_ROME_RAISES_WAGES:
