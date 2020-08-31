@@ -38,7 +38,7 @@ static generic_button buttons[] = {
 
 static void draw_version_string(void)
 {
-    uint8_t version_string[100] = "Augustus v";
+    uint8_t version_string[100] = "Ramesses v";
     int version_prefix_length = string_length(version_string);
     int text_y = screen_height() - 30;
 
@@ -54,7 +54,6 @@ static void draw_version_string(void)
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
-
 static void draw_background(void)
 {
     graphics_clear_screens();
@@ -65,7 +64,6 @@ static void draw_background(void)
         draw_version_string();
     }
 }
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -97,41 +95,36 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     }
 }
-
 static void confirm_exit(int accepted)
 {
     if (accepted) {
         system_exit();
     }
 }
-
 static void button_click(int type, int param2)
 {
-    if (type == 1) {
+    if (type == 1)
         window_new_career_show();
-    } else if (type == 2) {
+    else if (type == 2)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    } else if (type == 3) {
+    else if (type == 3)
         window_cck_selection_show();
-    } else if (type == 4) {
-        if (!editor_is_present() || !game_init_editor()) {
+    else if (type == 4)
+        if (!editor_is_present() || !game_init_editor())
             window_plain_message_dialog_show(
                 TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-        } else {
+        else
             sound_music_play_editor();
-        }
-    } else if (type == 5) {
+    else if (type == 5)
         window_config_show();
-    } else if (type == 6) {
+    else if (type == 6)
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
-    }
 }
 
 void window_main_menu_show(int restart_music)
 {
-    if (restart_music) {
+    if (restart_music)
         sound_music_play_intro();
-    }
     window_type window = {
         WINDOW_MAIN_MENU,
         draw_background,

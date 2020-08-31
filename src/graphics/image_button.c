@@ -1,5 +1,6 @@
 #include "image_button.h"
 
+#include "core/game_environment.h"
 #include "graphics/image.h"
 #include "sound/effect.h"
 
@@ -39,16 +40,23 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
     fade_pressed_effect(buttons, num_buttons);
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
+
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (btn->image_collection == GROUP_SIDEBAR_BUTTONS && btn->image_offset == 56) {
+                btn->image_collection = GROUP_BUTTON_EXCLAMATION;
+                btn->image_offset = 4;
+            }
+        }
+
+
         int image_id = image_id_from_group(btn->image_collection) + btn->image_offset;
         if (btn->enabled) {
-            if (btn->pressed) {
+            if (btn->pressed)
                 image_id += 2;
-            } else if (btn->focused) {
+            else if (btn->focused)
                 image_id += 1;
-            }
-        } else {
+        } else
             image_id += 3;
-        }
         image_draw(image_id, x + btn->x_offset, y + btn->y_offset);
     }
 }

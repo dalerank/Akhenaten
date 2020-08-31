@@ -50,7 +50,6 @@ void outer_panel_draw(int x, int y, int width_blocks, int height_blocks)
         }
     }
 }
-
 void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks)
 {
     int image_base = image_id_from_group(GROUP_DIALOG_BACKGROUND);
@@ -70,7 +69,6 @@ void unbordered_panel_draw(int x, int y, int width_blocks, int height_blocks)
         }
     }
 }
-
 void inner_panel_draw(int x, int y, int width_blocks, int height_blocks)
 {
     int image_base = image_id_from_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
@@ -119,7 +117,6 @@ void inner_panel_draw(int x, int y, int width_blocks, int height_blocks)
         }
     }
 }
-
 void label_draw(int x, int y, int width_blocks, int type)
 {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);
@@ -135,7 +132,6 @@ void label_draw(int x, int y, int width_blocks, int type)
         image_draw(image_base + image_id, x + 16 * i, y);
     }
 }
-
 void large_label_draw(int x, int y, int width_blocks, int type)
 {
     int image_base = image_id_from_group(GROUP_PANEL_BUTTON);

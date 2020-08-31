@@ -37,7 +37,6 @@ typedef struct {
         int is_fully_compressed;
         int is_external;
         int has_compressed_part;
-//        int bitmap_id;
         char bitmap_name[200];
         int bmp_index;
         color_t *data;
@@ -49,6 +48,7 @@ typedef struct {
 } image;
 
 typedef struct {
+    const char *name;
     int initialized;
     int entries_num;
     int groups_num;

@@ -65,7 +65,6 @@ static void draw_background(void)
     }
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -90,18 +89,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
         confirm();
     }
 }
-
 static void button_ok(int param1, int param2)
 {
     confirm();
 }
-
 static void button_cancel(int param1, int param2)
 {
     window_go_back();
     data.close_func(0);
 }
-
 static void confirm(void)
 {
     window_go_back();
@@ -121,7 +117,6 @@ void window_popup_dialog_show(popup_dialog_type type,
         window_show(&window);
     }
 }
-
 void window_popup_dialog_show_confirmation(int text_group, int text_id,
         void (*close_func)(int accepted))
 {

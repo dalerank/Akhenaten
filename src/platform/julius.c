@@ -129,6 +129,8 @@ void system_center(void)
 void system_set_fullscreen(int fullscreen)
 {
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
+    if (fullscreen == 0)
+        system_resize(1200,800);
 }
 
 #ifdef USE_TINYFILEDIALOGS

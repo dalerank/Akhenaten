@@ -8,6 +8,7 @@
 #include "core/log.h"
 #include "core/mods.h"
 #include "core/game_environment.h"
+#include "core/table_translation.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -290,6 +291,8 @@ static const color_t *load_external_data(image *img)
     return dst;
 }
 
+#include "assert.h"
+
 int image_init(void)
 {
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
@@ -303,10 +306,17 @@ int image_init(void)
 }
 int image_groupid_translation(int table[], int group)
 {
-    for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
-        if (group == table[i])
-            return group = table[i + 1];
+    if (group == 246)
+    {
+        int a = 2;
     }
+
+    for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
+        if (table[i] == group)
+            return table[i + 1];
+    }
+
+    // missing entry!!!!
     return group;
 }
 int image_id_from_group(int group)
@@ -411,6 +421,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     // allocate arrays
     int prev_pak_size = pak->entries_num;
     pak->entries_num = (int)pak->header_data[4] + 1;
+    pak->name = filename_sgx;
     if (pak->initialized == 0) { // new pak! allocate memory!
         pak->initialized = 1;
         pak->images = (image *)malloc(sizeof(image) * pak->entries_num);
@@ -428,7 +439,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     {
         pak->group_image_ids[i] = buffer_read_u16(&buf);
         if (pak->group_image_ids[i] != 0) {
-            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i] - 1);
+            SDL_Log("%s group %i -> id %i", filename_sgx, i, pak->group_image_ids[i]);
             groups_num++;
         }
     }
@@ -534,18 +545,23 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
 }
 int image_pak_table_generate()
 {
+    // are you SURE you want to read through this mess?
+    // I warn thee, you should stay away for your mental sanity's sake
     static imagepak c3_main;
     static imagepak ph_terr;
     static imagepak ph_main;
     static imagepak ph_unl;
+    static imagepak ph_font;
     image_load_555(&c3_main, "DEV_TESTING/C3.555", "DEV_TESTING/C3.sg2");
     image_load_555(&ph_terr, gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3); // 1-2000
     image_load_555(&ph_main, gfc.PH_MAIN_555, gfc.PH_MAIN_SG3); // 2001-5000
     image_load_555(&ph_unl, gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3); // 5001-6000
+    image_load_555(&ph_font, gfc.PH_FONTS_555, gfc.PH_FONTS_SG3); // 6001-8000
 
-
-    FILE *fp = fopen("table_conversion.txt", "w+");
-    fprintf(fp, "{\n");
+    FILE *fp = fopen("table_translation.txt", "w+"); // E:/Git/augustus/src/core/table_translation.h
+    fprintf(fp, "#ifndef GRAPHICS_TABLE_TRANSLATION_H\n"
+                "#define GRAPHICS_TABLE_TRANSLATION_H\n\n"
+                "static int groupid_translation_table_ph[] = {\n");
 
     for (int group = 1; group <= 254; group++) {
         // get image index from c3
@@ -557,14 +573,19 @@ int image_pak_table_generate()
         int bmp_index = c3_img.draw.bmp_index;
 
         // look up bitmap name in other files
-        for (int i = 1; i < 6000; i++) {
+        for (int i = 1; i < 7000; i++) {
             image img;
             imagepak *ph_pak;
             int id_offset;
             int group_offset;
             int ph_id;
 
-            if (i > 5000) {
+            if (i > 6000) {
+                ph_pak = &ph_font;
+                id_offset = 5999;
+                group_offset = 332;
+            }
+            else if (i > 5000) {
                 ph_pak = &ph_unl;
                 id_offset = 4999;
                 group_offset = 294;
@@ -587,29 +608,41 @@ int image_pak_table_generate()
                 continue;
             img = ph_pak->images[ph_id];
 
-            if (strcasecmp(bmp, img.draw.bitmap_name) == 0 && bmp_index == img.draw.bmp_index) { // yay, match! the image has the same bitmap name and index
-                int ph_g_total = ph_pak->groups_num;
+            if (strcasecmp(bmp, img.draw.bitmap_name) == 0) { // yay, the image has the same bitmap name!
+
+                int gfirst = 1;
+                if (bmp_index == img.draw.bmp_index)
+                    gfirst = 0;
 
                 // look through the ph imagepak groups and see if one points to the same image
-                for (int ph_group = 1; ph_group <= ph_g_total; ph_group++) {
-                    if (ph_id == ph_pak->group_image_ids[ph_group]) { // yay, double match! there's a group that points to an equivalent image!!
-                        fprintf(fp, "%i,%i,\n",group,ph_group + group_offset);
+                for (int ph_group = 1; ph_group <= ph_pak->groups_num; ph_group++) {
+                    int check_id = ph_pak->group_image_ids[ph_group];
+                    if (check_id == ph_id) { // yay, there's a group that points to this image!
+                        if (gfirst && ph_group != group)
+                            goto nextindex;
+//                        if (group != ph_group + group_offset)
+                            fprintf(fp, "    %i, %i, // %s %s\n",group, ph_group + group_offset, ph_pak->name, bmp);
                         SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> group %i (%i)", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset, ph_group, ph_group + group_offset);
-                        goto next;
+                        goto nextgroup;
                     }
                 }
+                if (gfirst)
+                    goto nextindex;
                 // no matching group found....
                 SDL_Log("[c3] group %i >> img %i (%s : %i) >> [ph] img %i (%i) >> ????????????", group, c3_id-1, bmp, bmp_index, ph_id-1, ph_id-1 + id_offset);
-                goto next;
+                goto nextgroup;
             }
+            nextindex:
+            continue;
         }
         // no matching image found....
 //        SDL_Log("[c3] group %i >> img %i (%s : %i) >> ????????????", group, c3_id-1, bmp, bmp_index);
-        next:
+        nextgroup:
         continue;
     }
 
-    fprintf(fp, "GROUP_MAX_GROUP\n}");
+    fprintf(fp, "};\n\n"
+                "#endif // GRAPHICS_TABLE_TRANSLATION_H");
     fclose(fp);
 }
 int image_load_main(int climate_id, int is_editor, int force_reload)
