@@ -44,7 +44,6 @@ static void draw_background(void)
     image_draw(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -57,6 +56,18 @@ static void draw_foreground(void)
     image_buttons_draw(159, 249, image_buttons, 2);
 
     graphics_reset_dialog();
+}
+
+static void button_back(int param1, int param2)
+{
+    input_box_stop(&player_name_input);
+    window_go_back();
+}
+static void start_mission(int param1, int param2)
+{
+    input_box_stop(&player_name_input);
+    setting_set_player_name(player_name);
+    window_mission_selection_show();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -74,20 +85,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
         button_back(0, 0);
     }
 }
-
-static void button_back(int param1, int param2)
-{
-    input_box_stop(&player_name_input);
-    window_go_back();
-}
-
-static void start_mission(int param1, int param2)
-{
-    input_box_stop(&player_name_input);
-    setting_set_player_name(player_name);
-    window_mission_selection_show();
-}
-
 void window_new_career_show(void)
 {
     window_type window = {

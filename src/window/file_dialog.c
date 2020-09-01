@@ -8,6 +8,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "core/game_environment.h"
 #include "game/file.h"
 #include "game/file_editor.h"
 #include "graphics/generic_button.h"
@@ -85,33 +86,41 @@ static void init(file_type type, file_dialog_type dialog_type)
 {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
+
+    // get last saved file name
     if (strlen(data.file_data->last_loaded_file) == 0) {
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
-        if (type == FILE_TYPE_SAVED_GAME) {
+        if (type == FILE_TYPE_SAVED_GAME)
             file_append_extension(data.typed_name, saved_game_data_expanded.extension);
-        }
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
-    } else {
+    } else
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
-    }
+
     data.dialog_type = dialog_type;
     data.message_not_exist_start_time = 0;
 
-    if (data.dialog_type != FILE_DIALOG_SAVE) {
-        if (type == FILE_TYPE_SCENARIO) {
-            data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
-        }  else {
-            data.file_list = dir_find_files_with_extension(".", data.file_data->extension);
-            data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
-        }
+    // populate file list
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            if (type == FILE_TYPE_SCENARIO)
+                data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
+            else if (data.dialog_type != FILE_DIALOG_SAVE) {
+                data.file_list = dir_find_files_with_extension(".", data.file_data->extension);
+                data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
+            } else
+                data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            if (type == FILE_TYPE_SCENARIO)
+                data.file_list = dir_find_files_with_extension("Maps/", scenario_data.extension);
+            else if (data.dialog_type != FILE_DIALOG_SAVE) {
+                data.file_list = dir_find_files_with_extension("Save/", data.file_data->extension);
+                data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
+            } else
+                data.file_list = dir_find_files_with_extension("Save/", saved_game_data_expanded.extension);
+            break;
     }
-    else {
-        if (type == FILE_TYPE_SCENARIO) {
-            data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
-        } else {
-            data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
-        }
-    }
+
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
     input_box_start(&file_name_input, data.typed_name, FILE_NAME_MAX, 0);
@@ -154,28 +163,6 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
-    double_click = m->left.double_click;
-
-    if (input_box_is_accepted(&file_name_input)) {
-        button_ok_cancel(1, 0);
-        return;
-    }
-
-    const mouse *m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &file_name_input) ||
-        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
-        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
-        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
-        return;
-    }
-    if (input_go_back_requested(m, h)) {
-        input_box_stop(&file_name_input);
-        window_go_back();
-    }
-}
-
 static const char *get_chosen_filename(void)
 {
     // Check if we should work with the selected file
@@ -192,7 +179,6 @@ static const char *get_chosen_filename(void)
     encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
     return typed_file;
 }
-
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
@@ -257,12 +243,6 @@ static void button_ok_cancel(int is_ok, int param2)
 
     strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX - 1);
 }
-
-static void on_scroll(void)
-{
-    data.message_not_exist_start_time = 0;
-}
-
 static void button_select_file(int index, int param2)
 {
     if (index < data.file_list->num_files) {
@@ -277,6 +257,31 @@ static void button_select_file(int index, int param2)
     }
 }
 
+static void on_scroll(void)
+{
+    data.message_not_exist_start_time = 0;
+}
+static void handle_input(const mouse *m, const hotkeys *h)
+{
+    double_click = m->left.double_click;
+
+    if (input_box_is_accepted(&file_name_input)) {
+        button_ok_cancel(1, 0);
+        return;
+    }
+
+    const mouse *m_dialog = mouse_in_dialog(m);
+    if (input_box_handle_mouse(m_dialog, &file_name_input) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
+        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        return;
+    }
+    if (input_go_back_requested(m, h)) {
+        input_box_stop(&file_name_input);
+        window_go_back();
+    }
+}
 void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
 {
     window_type window = {

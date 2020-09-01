@@ -154,7 +154,7 @@ static void play_track(int track)
                 sound_device_play_music(dir_get_file(c3_wav[track], NOT_LOCALIZED), volume);
             break;
         case ENGINE_ENV_PHARAOH:
-            volume = volume * 0.5;
+            volume = volume * 0.4;
             sound_device_play_music(dir_get_file(ph_mp3[track], NOT_LOCALIZED), volume);
             break;
     }

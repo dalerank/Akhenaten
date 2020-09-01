@@ -90,7 +90,6 @@ static void draw_scenario_list(void)
         text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
     }
 }
-
 static void draw_scenario_info(void)
 {
     const int scenario_info_x = 335;
@@ -171,7 +170,6 @@ static void draw_scenario_info(void)
     }
     lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
 }
-
 static void draw_background(void)
 {
     image_draw_fullscreen_background(image_id_from_group(GROUP_CCK_BACKGROUND));
@@ -181,7 +179,6 @@ static void draw_background(void)
     draw_scenario_info();
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -191,6 +188,30 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static void button_select_item(int index, int param2)
+{
+    if (index >= data.scenarios->num_files) {
+        return;
+    }
+    data.selected_item = scrollbar.scroll_position + index;
+    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
+    game_file_load_scenario_data(data.selected_scenario_filename);
+    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
+    file_remove_extension(data.selected_scenario_display);
+    window_invalidate();
+}
+static void button_start_scenario(int param1, int param2)
+{
+    if (game_file_start_scenario(data.selected_scenario_filename)) {
+        sound_music_update(1);
+        window_city_show();
+    }
+}
+
+static void on_scroll(void)
+{
+    window_invalidate();
+}
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -211,35 +232,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_go_back();
     }
 }
-
-static void button_select_item(int index, int param2)
-{
-    if (index >= data.scenarios->num_files) {
-        return;
-    }
-    data.selected_item = scrollbar.scroll_position + index;
-    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
-    game_file_load_scenario_data(data.selected_scenario_filename);
-    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-    file_remove_extension(data.selected_scenario_display);
-    window_invalidate();
-}
-
-static void button_start_scenario(int param1, int param2)
-{
-    if (game_file_start_scenario(data.selected_scenario_filename)) {
-        sound_music_update(1);
-        window_city_show();
-    }
-}
-
-static void on_scroll(void)
-{
-    window_invalidate();
-}
-
 void window_cck_selection_show(void)
 {
+    // city construction kit
     window_type window = {
         WINDOW_CCK_SELECTION,
         draw_background,

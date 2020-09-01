@@ -564,6 +564,8 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
+    ${PROJECT_SOURCE_DIR}/src/window/family_selection.c
+    ${PROJECT_SOURCE_DIR}/src/window/family_menu.c
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.c

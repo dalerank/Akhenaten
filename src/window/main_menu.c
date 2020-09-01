@@ -19,22 +19,24 @@
 #include "window/config.h"
 #include "window/file_dialog.h"
 #include "window/new_career.h"
+#include "window/family_selection.h"
+#include "window/family_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
-#define MAX_BUTTONS 6
-
 static void button_click(int type, int param2);
+
+#define MAX_BUTTONS 6
 
 static int focus_button_id;
 
 static generic_button buttons[] = {
-    {192, 100, 256, 25, button_click, button_none, 1, 0},
-    {192, 140, 256, 25, button_click, button_none, 2, 0},
-    {192, 180, 256, 25, button_click, button_none, 3, 0},
-    {192, 220, 256, 25, button_click, button_none, 4, 0},
-    {192, 260, 256, 25, button_click, button_none, 5, 0},
-    {192, 300, 256, 25, button_click, button_none, 6, 0},
+        {192, 100, 256, 25, button_click, button_none, 1, 0},
+        {192, 140, 256, 25, button_click, button_none, 2, 0},
+        {192, 180, 256, 25, button_click, button_none, 3, 0},
+        {192, 220, 256, 25, button_click, button_none, 4, 0},
+        {192, 260, 256, 25, button_click, button_none, 5, 0},
+        {192, 300, 256, 25, button_click, button_none, 6, 0},
 };
 
 static void draw_version_string(void)
@@ -69,12 +71,10 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    for (int i = 0; i < MAX_BUTTONS; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-    }
-
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
+            for (int i = 0; i < MAX_BUTTONS; i++)
+                large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
             lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
             lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
             lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
@@ -83,16 +83,62 @@ static void draw_foreground(void)
             lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
             break;
         case ENGINE_ENV_PHARAOH:
-            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_GREEN); // play
-            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN); // mission
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN); // cck
+            for (int i = 0; i < MAX_BUTTONS; i++)
+                large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
+            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_GREEN); // play/new career
+//            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_GREEN); // family scores
+            lang_text_draw_centered(1, 3, 192, 146, 256, FONT_NORMAL_GREEN); // family scores
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN); // cck/"mission" editor
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN); // "assignment" editor
             lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN); // options
             lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_GREEN); // quit
             break;
     }
 
     graphics_reset_dialog();
+}
+
+static void confirm_exit(int accepted)
+{
+    if (accepted) {
+        system_exit();
+    }
+}
+static void button_click(int type, int param2)
+{
+    if (type == 1)
+        switch (GAME_ENV) {
+            case ENGINE_ENV_C3:
+                window_new_career_show();
+                break;
+            case ENGINE_ENV_PHARAOH:
+//                window_family_selection_show();
+//                window_family_menu_show();
+                window_new_career_show();
+                break;
+        }
+    else if (type == 2)
+        switch (GAME_ENV) {
+            case ENGINE_ENV_C3:
+                window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+                break;
+            case ENGINE_ENV_PHARAOH:
+//                window_family_scores_show();
+                window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+                break;
+        }
+    else if (type == 3)
+        window_cck_selection_show();
+    else if (type == 4)
+        if (!editor_is_present() || !game_init_editor())
+            window_plain_message_dialog_show(
+                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+        else
+            sound_music_play_editor();
+    else if (type == 5)
+        window_config_show();
+    else if (type == 6)
+        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -108,32 +154,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     }
 }
-static void confirm_exit(int accepted)
-{
-    if (accepted) {
-        system_exit();
-    }
-}
-static void button_click(int type, int param2)
-{
-    if (type == 1)
-        window_new_career_show();
-    else if (type == 2)
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    else if (type == 3)
-        window_cck_selection_show();
-    else if (type == 4)
-        if (!editor_is_present() || !game_init_editor())
-            window_plain_message_dialog_show(
-                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-        else
-            sound_music_play_editor();
-    else if (type == 5)
-        window_config_show();
-    else if (type == 6)
-        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
-}
-
 void window_main_menu_show(int restart_music)
 {
     if (restart_music)

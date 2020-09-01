@@ -1,5 +1,6 @@
 #include "core/file.h"
 #include "core/log.h"
+#include "core/game_environment.h"
 #include "sound/device.h"
 #include "game/settings.h"
 #include "SDL.h"
@@ -103,6 +104,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         for (int i = 0; i < num_channels; i++) {
             data.channels[i].chunk = 0;
             data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
+            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
         }
     }
 }
@@ -234,7 +236,16 @@ void sound_device_play_channel(int channel, int volume_pct) {
     if (data.initialized) {
         sound_channel *ch = &data.channels[channel];
         if (load_channel(ch)) {
-            sound_device_set_channel_volume(channel, volume_pct);
+
+            switch (GAME_ENV) {
+                const char *mp3_track;
+                case ENGINE_ENV_C3:
+                    sound_device_set_channel_volume(channel, volume_pct);
+                    break;
+                case ENGINE_ENV_PHARAOH:
+                    sound_device_set_channel_volume(channel, volume_pct * 0.4);
+                    break;
+            }
             Mix_PlayChannel(channel, ch->chunk, 0);
         }
     }
