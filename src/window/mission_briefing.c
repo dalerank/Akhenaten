@@ -44,10 +44,8 @@ static void init(void)
 {
     data.focus_button = 0;
     rich_text_reset(0);
-}
 
-static void draw_background(void)
-{
+    // load map!
     if (!data.campaign_mission_loaded) {
         data.campaign_mission_loaded = 1;
         if (!game_file_start_scenario_by_name(scenario_name())) {
@@ -55,6 +53,17 @@ static void draw_background(void)
             return;
         }
     }
+}
+
+static void draw_background(void)
+{
+//    if (!data.campaign_mission_loaded) {
+//        data.campaign_mission_loaded = 1;
+//        if (!game_file_start_scenario_by_name(scenario_name())) {
+//            window_city_show();
+//            return;
+//        }
+//    }
 
     window_draw_underlying_window();
 
@@ -133,7 +142,6 @@ static void draw_background(void)
 
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void)
 {
     graphics_in_dialog();
@@ -161,7 +169,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     rich_text_handle_mouse(m_dialog);
 }
-
 static void button_back(int param1, int param2)
 {
     if (!data.is_review) {
@@ -169,7 +176,6 @@ static void button_back(int param1, int param2)
         window_mission_selection_show();
     }
 }
-
 static void button_start_mission(int param1, int param2)
 {
     sound_speech_stop();
@@ -189,14 +195,12 @@ static void show(void)
     init();
     window_show(&window);
 }
-
 void window_mission_briefing_show(void)
 {
     data.is_review = 0;
     data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
-
 void window_mission_briefing_show_review(void)
 {
     data.is_review = 1;

@@ -67,7 +67,6 @@ tutorial_availability tutorial_advisor_empire_availability(void)
         return AVAILABLE;
     }
 }
-
 tutorial_build_buttons tutorial_get_build_buttons(void)
 {
     if (scenario_is_tutorial_1()) {
@@ -91,6 +90,10 @@ tutorial_build_buttons tutorial_get_build_buttons(void)
     }
     return TUT_BUILD_NORMAL;
 }
+static void post_message(int message)
+{
+    city_message_post(1, message, 0, 0);
+}
 
 int tutorial_get_population_cap(int current_cap)
 {
@@ -109,7 +112,6 @@ int tutorial_get_population_cap(int current_cap)
     }
     return current_cap;
 }
-
 int tutorial_get_immediate_goal_text(void)
 {
     if (scenario_is_tutorial_1()) {
@@ -137,7 +139,6 @@ int tutorial_get_immediate_goal_text(void)
     }
     return 0;
 }
-
 int tutorial_adjust_request_year(int *year)
 {
     if (scenario_is_tutorial_2()) {
@@ -148,22 +149,14 @@ int tutorial_adjust_request_year(int *year)
     }
     return 1;
 }
-
 int tutorial_extra_fire_risk(void)
 {
     return !data.tutorial1.fire;
 }
-
 int tutorial_extra_damage_risk(void)
 {
     return data.tutorial1.fire && !data.tutorial1.collapse;
 }
-
-static void post_message(int message)
-{
-    city_message_post(1, message, 0, 0);
-}
-
 int tutorial_handle_fire(void)
 {
     if (data.tutorial1.fire) {
@@ -174,7 +167,6 @@ int tutorial_handle_fire(void)
     post_message(MESSAGE_TUTORIAL_FIRE);
     return 1;
 }
-
 int tutorial_handle_collapse(void)
 {
     if (data.tutorial1.collapse) {
@@ -193,12 +185,10 @@ void tutorial_on_crime(void)
         building_menu_update();
     }
 }
-
 void tutorial_on_disease(void)
 {
     data.tutorial3.disease = 1;
 }
-
 void tutorial_on_filled_granary(void)
 {
     if (!data.tutorial2.granary_built) {
@@ -207,7 +197,6 @@ void tutorial_on_filled_granary(void)
         post_message(MESSAGE_TUTORIAL_WATER);
     }
 }
-
 void tutorial_on_add_to_warehouse(void)
 {
     if (!data.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
@@ -217,7 +206,6 @@ void tutorial_on_add_to_warehouse(void)
         post_message(MESSAGE_TUTORIAL_TRADE);
     }
 }
-
 void tutorial_on_day_tick(void)
 {
     if (data.tutorial1.fire) {
@@ -254,7 +242,6 @@ void tutorial_on_day_tick(void)
         }
     }
 }
-
 void tutorial_on_month_tick(void)
 {
     if (scenario_is_tutorial_3()) {
@@ -263,7 +250,6 @@ void tutorial_on_month_tick(void)
         }
     }
 }
-
 void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3)
 {
     buffer_write_i32(buf1, data.tutorial1.fire);
@@ -279,7 +265,6 @@ void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3)
 
     buffer_write_i32(buf3, data.tutorial3.disease);
 }
-
 void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3)
 {
     data.tutorial1.fire = buffer_read_i32(buf1);

@@ -8,6 +8,7 @@
 #include "city/data.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "core/game_environment.h"
 #include "city/message.h"
 #include "city/view.h"
 #include "core/dir.h"
@@ -165,6 +166,13 @@ typedef struct {
     buffer *tutorial_part3;
     buffer *city_entry_exit_grid_offset;
     buffer *end_marker;
+
+    buffer *junk1;
+    buffer *junk2;
+    buffer *junk3;
+    buffer *junk4;
+    buffer *junk5;
+    buffer *junk6;
 } savegame_state;
 
 static struct {
@@ -180,16 +188,20 @@ static void init_file_piece(file_piece *piece, int size, int compressed)
     memset(data, 0, size);
     buffer_init(&piece->buf, data, size);
 }
-
 static buffer *create_scenario_piece(int size)
 {
     file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
     init_file_piece(piece, size, 0);
     return &piece->buf;
 }
-
 static buffer *create_savegame_piece(int size, int compressed)
 {
+    if (compressed)
+        switch (GAME_ENV) {
+            case ENGINE_ENV_PHARAOH:
+                size *= 10;
+        }
+
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
     return &piece->buf;
@@ -215,9 +227,6 @@ static void init_scenario_data(void)
     state->scenario = create_scenario_piece(1720);
     state->end_marker = create_scenario_piece(4);
 }
-
-
-
 static void init_savegame_data(void)
 {
     if (savegame_data.num_pieces > 0) {
@@ -229,91 +238,206 @@ static void init_savegame_data(void)
         savegame_data.num_pieces = 0;
     }
     savegame_state *state = &savegame_data.state;
-    state->scenario_campaign_mission = create_savegame_piece(4, 0);
-    state->file_version = create_savegame_piece(4, 0);
-    state->image_grid = create_savegame_piece(52488, 1);
-    state->edge_grid = create_savegame_piece(26244, 1);
-    state->building_grid = create_savegame_piece(52488, 1);
-    state->terrain_grid = create_savegame_piece(52488, 1);
-    state->aqueduct_grid = create_savegame_piece(26244, 1);
-    state->figure_grid = create_savegame_piece(52488, 1);
-    state->bitfields_grid = create_savegame_piece(26244, 1);
-    state->sprite_grid = create_savegame_piece(26244, 1);
-    state->random_grid = create_savegame_piece(26244, 0);
-    state->desirability_grid = create_savegame_piece(26244, 1);
-    state->elevation_grid = create_savegame_piece(26244, 1);
-    state->building_damage_grid = create_savegame_piece(26244, 1);
-    state->aqueduct_backup_grid = create_savegame_piece(26244, 1);
-    state->sprite_backup_grid = create_savegame_piece(26244, 1);
-    state->figures = create_savegame_piece(128000, 1);
-    state->route_figures = create_savegame_piece(1200, 1);
-    state->route_paths = create_savegame_piece(300000, 1);
-    state->formations = create_savegame_piece(6400, 1);
-    state->formation_totals = create_savegame_piece(12, 0);
-    state->city_data = create_savegame_piece(36136, 1);
-    state->city_faction_unknown = create_savegame_piece(2, 0);
-    state->player_name = create_savegame_piece(64, 0);
-    state->city_faction = create_savegame_piece(4, 0);
-    state->buildings = create_savegame_piece(256000, 1);
-    state->city_view_orientation = create_savegame_piece(4, 0);
-    state->game_time = create_savegame_piece(20, 0);
-    state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
-    state->random_iv = create_savegame_piece(8, 0);
-    state->city_view_camera = create_savegame_piece(8, 0);
-    state->building_count_culture1 = create_savegame_piece(132, 0);
-    state->city_graph_order = create_savegame_piece(8, 0);
-    state->emperor_change_time = create_savegame_piece(8, 0);
-    state->empire = create_savegame_piece(12, 0);
-    state->empire_cities = create_savegame_piece(2706, 1);
-    state->building_count_industry = create_savegame_piece(128, 0);
-    state->trade_prices = create_savegame_piece(128, 0);
-    state->figure_names = create_savegame_piece(84, 0);
-    state->culture_coverage = create_savegame_piece(60, 0);
-    state->scenario = create_savegame_piece(1720, 0);
-    state->max_game_year = create_savegame_piece(4, 0);
-    state->earthquake = create_savegame_piece(60, 0);
-    state->emperor_change_state = create_savegame_piece(4, 0);
-    state->messages = create_savegame_piece(16000, 1);
-    state->message_extra = create_savegame_piece(12, 0);
-    state->population_messages = create_savegame_piece(10, 0);
-    state->message_counts = create_savegame_piece(80, 0);
-    state->message_delays = create_savegame_piece(80, 0);
-    state->building_list_burning_totals = create_savegame_piece(8, 0);
-    state->figure_sequence = create_savegame_piece(4, 0);
-    state->scenario_settings = create_savegame_piece(12, 0);
-    state->invasion_warnings = create_savegame_piece(3232, 1);
-    state->scenario_is_custom = create_savegame_piece(4, 0);
-    state->city_sounds = create_savegame_piece(8960, 0);
-    state->building_extra_highest_id = create_savegame_piece(4, 0);
-    state->figure_traders = create_savegame_piece(4804, 0);
-    state->building_list_burning = create_savegame_piece(1000, 1);
-    state->building_list_small = create_savegame_piece(1000, 1);
-    state->building_list_large = create_savegame_piece(4000, 1);
-    state->tutorial_part1 = create_savegame_piece(32, 0);
-    state->building_count_military = create_savegame_piece(16, 0);
-    state->enemy_army_totals = create_savegame_piece(20, 0);
-    state->building_storages = create_savegame_piece(6400, 0);
-    state->building_count_culture2 = create_savegame_piece(32, 0);
-    state->building_count_support = create_savegame_piece(24, 0);
-    state->tutorial_part2 = create_savegame_piece(4, 0);
-    state->gladiator_revolt = create_savegame_piece(16, 0);
-    state->trade_route_limit = create_savegame_piece(1280, 1);
-    state->trade_route_traded = create_savegame_piece(1280, 1);
-    state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
-    state->building_extra_sequence = create_savegame_piece(4, 0);
-    state->routing_counters = create_savegame_piece(16, 0);
-    state->building_count_culture3 = create_savegame_piece(40, 0);
-    state->enemy_armies = create_savegame_piece(900, 0);
-    state->city_entry_exit_xy = create_savegame_piece(16, 0);
-    state->last_invasion_id = create_savegame_piece(2, 0);
-    state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
-    state->scenario_name = create_savegame_piece(65, 0);
-    state->bookmarks = create_savegame_piece(32, 0);
-    state->tutorial_part3 = create_savegame_piece(4, 0);
-    state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
-    state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
-}
 
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3: {
+            state->scenario_campaign_mission = create_savegame_piece(4, 0);
+            state->file_version = create_savegame_piece(4, 0);
+            state->image_grid = create_savegame_piece(52488, 1);
+            state->edge_grid = create_savegame_piece(26244, 1);
+            state->building_grid = create_savegame_piece(52488, 1);
+            state->terrain_grid = create_savegame_piece(52488, 1);
+            state->aqueduct_grid = create_savegame_piece(26244, 1);
+            state->figure_grid = create_savegame_piece(52488, 1);
+            state->bitfields_grid = create_savegame_piece(26244, 1);
+            state->sprite_grid = create_savegame_piece(26244, 1);
+            state->random_grid = create_savegame_piece(26244, 0);
+            state->desirability_grid = create_savegame_piece(26244, 1);
+            state->elevation_grid = create_savegame_piece(26244, 1);
+            state->building_damage_grid = create_savegame_piece(26244, 1);
+            state->aqueduct_backup_grid = create_savegame_piece(26244, 1);
+            state->sprite_backup_grid = create_savegame_piece(26244, 1);
+            state->figures = create_savegame_piece(128000, 1);
+            state->route_figures = create_savegame_piece(1200, 1);
+            state->route_paths = create_savegame_piece(300000, 1);
+            state->formations = create_savegame_piece(6400, 1);
+            state->formation_totals = create_savegame_piece(12, 0);
+            state->city_data = create_savegame_piece(36136, 1);
+            state->city_faction_unknown = create_savegame_piece(2, 0);
+            state->player_name = create_savegame_piece(64, 0);
+            state->city_faction = create_savegame_piece(4, 0);
+            state->buildings = create_savegame_piece(256000, 1);
+            state->city_view_orientation = create_savegame_piece(4, 0);
+            state->game_time = create_savegame_piece(20, 0);
+            state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
+            state->random_iv = create_savegame_piece(8, 0);
+            state->city_view_camera = create_savegame_piece(8, 0);
+            state->building_count_culture1 = create_savegame_piece(132, 0);
+            state->city_graph_order = create_savegame_piece(8, 0);
+            state->emperor_change_time = create_savegame_piece(8, 0);
+            state->empire = create_savegame_piece(12, 0);
+            state->empire_cities = create_savegame_piece(2706, 1);
+            state->building_count_industry = create_savegame_piece(128, 0);
+            state->trade_prices = create_savegame_piece(128, 0);
+            state->figure_names = create_savegame_piece(84, 0);
+            state->culture_coverage = create_savegame_piece(60, 0);
+            state->scenario = create_savegame_piece(1720, 0);
+            state->max_game_year = create_savegame_piece(4, 0);
+            state->earthquake = create_savegame_piece(60, 0);
+            state->emperor_change_state = create_savegame_piece(4, 0);
+            state->messages = create_savegame_piece(16000, 1);
+            state->message_extra = create_savegame_piece(12, 0);
+            state->population_messages = create_savegame_piece(10, 0);
+            state->message_counts = create_savegame_piece(80, 0);
+            state->message_delays = create_savegame_piece(80, 0);
+            state->building_list_burning_totals = create_savegame_piece(8, 0);
+            state->figure_sequence = create_savegame_piece(4, 0);
+            state->scenario_settings = create_savegame_piece(12, 0);
+            state->invasion_warnings = create_savegame_piece(3232, 1);
+            state->scenario_is_custom = create_savegame_piece(4, 0);
+            state->city_sounds = create_savegame_piece(8960, 0);
+            state->building_extra_highest_id = create_savegame_piece(4, 0);
+            state->figure_traders = create_savegame_piece(4804, 0);
+            state->building_list_burning = create_savegame_piece(1000, 1);
+            state->building_list_small = create_savegame_piece(1000, 1);
+            state->building_list_large = create_savegame_piece(4000, 1);
+            state->tutorial_part1 = create_savegame_piece(32, 0);
+            state->building_count_military = create_savegame_piece(16, 0);
+            state->enemy_army_totals = create_savegame_piece(20, 0);
+            state->building_storages = create_savegame_piece(6400, 0);
+            state->building_count_culture2 = create_savegame_piece(32, 0);
+            state->building_count_support = create_savegame_piece(24, 0);
+            state->tutorial_part2 = create_savegame_piece(4, 0);
+            state->gladiator_revolt = create_savegame_piece(16, 0);
+            state->trade_route_limit = create_savegame_piece(1280, 1);
+            state->trade_route_traded = create_savegame_piece(1280, 1);
+            state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
+            state->building_extra_sequence = create_savegame_piece(4, 0);
+            state->routing_counters = create_savegame_piece(16, 0);
+            state->building_count_culture3 = create_savegame_piece(40, 0);
+            state->enemy_armies = create_savegame_piece(900, 0);
+            state->city_entry_exit_xy = create_savegame_piece(16, 0);
+            state->last_invasion_id = create_savegame_piece(2, 0);
+            state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
+            state->scenario_name = create_savegame_piece(65, 0);
+            state->bookmarks = create_savegame_piece(32, 0);
+            state->tutorial_part3 = create_savegame_piece(4, 0);
+            state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
+            state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
+            break;
+        }
+        case ENGINE_ENV_PHARAOH: {
+//                state->scenario_campaign_mission = create_savegame_piece(4, 0);
+//                state->file_version = create_savegame_piece(4, 0);
+                state->junk1 = create_savegame_piece(6012, 0); // ?????
+                    state->image_grid = create_savegame_piece(52488, 1);
+                    state->edge_grid = create_savegame_piece(26244, 1);
+                    state->building_grid = create_savegame_piece(52488, 1);
+                    state->terrain_grid = create_savegame_piece(52488, 1);
+                    state->aqueduct_grid = create_savegame_piece(26244, 1);
+                    state->figure_grid = create_savegame_piece(52488, 1);
+                    state->bitfields_grid = create_savegame_piece(26244, 1);
+                    state->sprite_grid = create_savegame_piece(26244, 1);
+                state->random_grid = create_savegame_piece(51984, 0); // 26244
+                    state->desirability_grid = create_savegame_piece(26244, 1);
+                    state->elevation_grid = create_savegame_piece(26244, 1);
+                    state->building_damage_grid = create_savegame_piece(26244, 1);
+                    state->aqueduct_backup_grid = create_savegame_piece(26244, 1);
+                    state->sprite_backup_grid = create_savegame_piece(26244, 1);
+                    state->figures = create_savegame_piece(128000, 1);
+                    state->route_figures = create_savegame_piece(1200, 1);
+                    state->route_paths = create_savegame_piece(300000, 1);
+                    state->formations = create_savegame_piece(6400, 1);
+                state->formation_totals = create_savegame_piece(12, 0);
+                    state->city_data = create_savegame_piece(36136, 1);
+                state->city_faction_unknown = create_savegame_piece(4, 0);
+                state->player_name = create_savegame_piece(64, 0);
+                state->city_faction = create_savegame_piece(4, 0);
+                    state->buildings = create_savegame_piece(256000, 1);
+                state->city_view_orientation = create_savegame_piece(4, 0); //
+                state->game_time = create_savegame_piece(20, 0); //
+                state->building_extra_highest_id_ever = create_savegame_piece(8, 0); //
+                state->random_iv = create_savegame_piece(8, 0); //
+                state->city_view_camera = create_savegame_piece(8, 0); //
+//                state->building_count_culture1 = create_savegame_piece(132, 0);
+                state->city_graph_order = create_savegame_piece(8, 0);
+//                state->emperor_change_time = create_savegame_piece(8, 0);
+                state->empire = create_savegame_piece(12, 0);
+
+                // 20 bytes missing!!!
+                    state->empire_cities = create_savegame_piece(2706*10, 1); // 83920 + 7681 --> 91601
+
+//                state->building_count_industry = create_savegame_piece(128, 0);
+
+//                state->trade_prices = create_savegame_piece(128, 0);
+//                state->figure_names = create_savegame_piece(84, 0);
+//                state->culture_coverage = create_savegame_piece(60, 0);
+
+//                state->scenario = create_savegame_piece(1720, 0);
+//                state->max_game_year = create_savegame_piece(4, 0);
+//                state->earthquake = create_savegame_piece(60, 0);
+//                state->emperor_change_state = create_savegame_piece(4, 0);
+                state->junk2 = create_savegame_piece(2256, 0); // 2256 bytes
+
+                    state->messages = create_savegame_piece(16000, 1); // 94000 + 533 --> 94532 + 4 = 94536
+                state->message_extra = create_savegame_piece(12, 0); // ok
+                state->population_messages = create_savegame_piece(10, 0); // ok
+                state->message_counts = create_savegame_piece(80, 0); // ok
+                state->message_delays = create_savegame_piece(80, 0); // ok
+                state->building_list_burning_totals = create_savegame_piece(8, 0); // ok
+                state->figure_sequence = create_savegame_piece(4, 0); // ok
+                state->scenario_settings = create_savegame_piece(12, 0); // ok
+                    state->invasion_warnings = create_savegame_piece(3232, 1); // 94743 + 31 --> 94774 + 4 = 94778
+                state->scenario_is_custom = create_savegame_piece(4, 0); // ok
+                state->city_sounds = create_savegame_piece(8960, 0); // ok
+                state->building_extra_highest_id = create_savegame_piece(4, 0); // ok
+//                state->figure_traders = create_savegame_piece(4804, 0);
+                state->figure_traders = create_savegame_piece(8804, 0); // +4000 ???
+                    state->building_list_burning = create_savegame_piece(1000, 1); // ok
+                    state->building_list_small = create_savegame_piece(1000, 1); // ok
+                    state->building_list_large = create_savegame_piece(4000, 1); // ok
+                state->tutorial_part1 = create_savegame_piece(32, 0); // ok
+
+//                state->building_count_military = create_savegame_piece(16, 0);
+//                state->enemy_army_totals = create_savegame_piece(20, 0);
+//                state->building_storages = create_savegame_piece(6400, 0);
+//                state->building_count_culture2 = create_savegame_piece(32, 0);
+//                state->building_count_support = create_savegame_piece(24, 0);
+//                state->tutorial_part2 = create_savegame_piece(4, 0);
+//                state->gladiator_revolt = create_savegame_piece(16, 0);
+                state->junk3 = create_savegame_piece(39224, 0); // 39224 bytes
+
+                    state->trade_route_limit = create_savegame_piece(1280, 1); // ok
+                    state->trade_route_traded = create_savegame_piece(1280, 1); // ok
+
+//                state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
+//                state->building_extra_sequence = create_savegame_piece(4, 0);
+//                state->routing_counters = create_savegame_piece(16, 0);
+//                state->building_count_culture3 = create_savegame_piece(40, 0);
+//                state->enemy_armies = create_savegame_piece(900, 0);
+                state->junk4 = create_savegame_piece(12, 0); // 12 bytes
+
+                state->city_entry_exit_xy = create_savegame_piece(16, 0); // ok ?????
+
+//                state->last_invasion_id = create_savegame_piece(2, 0);
+//                state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
+                state->junk5 = create_savegame_piece(22, 0); // 22 bytes
+
+                state->scenario_name = create_savegame_piece(65, 0); // ok
+                state->bookmarks = create_savegame_piece(32, 0); // ok
+                state->tutorial_part3 = create_savegame_piece(4, 0); // ok ????
+                state->city_entry_exit_grid_offset = create_savegame_piece(8, 0); // ok ????
+
+//                state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness 150684
+                state->junk6 = create_savegame_piece(150680, 0); // 71x 4-bytes emptiness
+
+                break;
+            }
+    }
+
+
+
+}
 static void init_savegame_data_expanded(void)
 {
     if (savegame_data.num_pieces > 0) {
@@ -425,7 +549,6 @@ static void scenario_load_from_state(scenario_state *file)
 
     buffer_skip(file->end_marker, 4);
 }
-
 static void scenario_save_to_state(scenario_state *file)
 {
     map_image_save_state(file->graphic_ids);
@@ -441,7 +564,6 @@ static void scenario_save_to_state(scenario_state *file)
 
     buffer_skip(file->end_marker, 4);
 }
-
 static void savegame_load_from_state(savegame_state *state)
 {
     savegame_version = buffer_read_i32(state->file_version);
@@ -522,7 +644,6 @@ static void savegame_load_from_state(savegame_state *state)
 
     buffer_skip(state->end_marker, 284);
 }
-
 static void savegame_save_to_state(savegame_state *state)
 {
     buffer_write_i32(state->file_version, savegame_version);
@@ -604,6 +725,108 @@ static void savegame_save_to_state(savegame_state *state)
     buffer_skip(state->end_marker, 284);
 }
 
+#include "SDL.h"
+
+static int read_int32(FILE *fp)
+{
+    uint8_t data[4];
+    if (fread(&data, 1, 4, fp) != 4) {
+        return 0;
+    }
+    buffer buf;
+    buffer_init(&buf, data, 4);
+    return buffer_read_i32(&buf);
+}
+static void write_int32(FILE *fp, int value)
+{
+    uint8_t data[4];
+    buffer buf;
+    buffer_init(&buf, data, 4);
+    buffer_write_i32(&buf, value);
+    fwrite(&data, 1, 4, fp);
+}
+static int read_compressed_chunk(FILE *fp, void *buffer, int filepiece_size)
+{
+    // check that the stream size isn't above maximum temp buffer
+    if (filepiece_size > COMPRESS_BUFFER_SIZE)
+        return 0;
+
+    // read 32-bit int header denoting size of compressed chunk
+    int input_size = read_int32(fp);
+
+    // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
+    if ((unsigned int) input_size == UNCOMPRESSED) {
+        if (fread(buffer, 1, filepiece_size, fp) != filepiece_size)
+            return 0;
+    } else {
+        // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
+        if (fread(compress_buffer, 1, input_size, fp) != input_size
+        || !zip_decompress(compress_buffer, input_size, buffer, &filepiece_size))
+            return 0;
+    }
+    return 1;
+}
+static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_write)
+{
+    if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
+        return 0;
+    }
+    int output_size = COMPRESS_BUFFER_SIZE;
+    if (zip_compress(buffer, bytes_to_write, compress_buffer, &output_size)) {
+        write_int32(fp, output_size);
+        fwrite(compress_buffer, 1, output_size, fp);
+    } else {
+        // unable to compress: write uncompressed
+        write_int32(fp, UNCOMPRESSED);
+        fwrite(buffer, 1, bytes_to_write, fp);
+    }
+    return 1;
+}
+static int savegame_read_from_file(FILE *fp)
+{
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        file_piece *piece = &savegame_data.pieces[i];
+        int result = 0;
+        int offs = ftell(fp);
+        if (piece->compressed)
+            result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size);
+        else
+            result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
+
+        // log first few bytes of the filepiece
+        int s = piece->buf.size < 16 ? piece->buf.size : 16;
+        char hexstr[40] = {0};
+        for (int b = 0; b < s; b++)
+        {
+            char hexcode[3] = {0};
+            snprintf(hexcode, 4, "%02X", piece->buf.data[b]);
+            strncat(hexstr, hexcode, 4);
+            if ((b + 1) % 4 == 0 || (b + 1) == s)
+                strncat(hexstr, " ", 2);
+        }
+        SDL_Log("Filepiece %s %02i/%i : %8i@ %-36s(%i expected)", piece->compressed ? "(C)" : "---", i+1, savegame_data.num_pieces, offs, hexstr, piece->buf.size);
+
+        // The last piece may be smaller than buf.size
+        if (!result && i != (savegame_data.num_pieces - 1)) {
+            log_info("Incorrect buffer size, got.", 0, result);
+            log_info("Incorrect buffer size, expected." , 0, piece->buf.size);
+            return 0;
+        }
+    }
+    return 1;
+}
+static void savegame_write_to_file(FILE *fp)
+{
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        file_piece *piece = &savegame_data.pieces[i];
+        if (piece->compressed) {
+            write_compressed_chunk(fp, piece->buf.data, piece->buf.size);
+        } else {
+            fwrite(piece->buf.data, 1, piece->buf.size, fp);
+        }
+    }
+}
+
 int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
@@ -624,7 +847,6 @@ int game_file_io_read_scenario(const char *filename)
     scenario_load_from_state(&scenario_data.state);
     return 1;
 }
-
 int game_file_io_write_scenario(const char *filename)
 {
     log_info("Saving scenario", filename, 0);
@@ -641,93 +863,6 @@ int game_file_io_write_scenario(const char *filename)
     }
     file_close(fp);
     return 1;
-}
-
-static int read_int32(FILE *fp)
-{
-    uint8_t data[4];
-    if (fread(&data, 1, 4, fp) != 4) {
-        return 0;
-    }
-    buffer buf;
-    buffer_init(&buf, data, 4);
-    return buffer_read_i32(&buf);
-}
-
-static void write_int32(FILE *fp, int value)
-{
-    uint8_t data[4];
-    buffer buf;
-    buffer_init(&buf, data, 4);
-    buffer_write_i32(&buf, value);
-    fwrite(&data, 1, 4, fp);
-}
-
-static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
-{
-    if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
-        return 0;
-    }
-    int input_size = read_int32(fp);
-    if ((unsigned int) input_size == UNCOMPRESSED) {
-        if (fread(buffer, 1, bytes_to_read, fp) != bytes_to_read) {
-            return 0;
-        }
-    } else {
-        if (fread(compress_buffer, 1, input_size, fp) != input_size || !zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_write)
-{
-    if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
-        return 0;
-    }
-    int output_size = COMPRESS_BUFFER_SIZE;
-    if (zip_compress(buffer, bytes_to_write, compress_buffer, &output_size)) {
-        write_int32(fp, output_size);
-        fwrite(compress_buffer, 1, output_size, fp);
-    } else {
-        // unable to compress: write uncompressed
-        write_int32(fp, UNCOMPRESSED);
-        fwrite(buffer, 1, bytes_to_write, fp);
-    }
-    return 1;
-}
-
-static int savegame_read_from_file(FILE *fp)
-{
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
-        file_piece *piece = &savegame_data.pieces[i];
-        int result = 0;
-        if (piece->compressed) {
-            result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size);
-        } else {
-            result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
-        }
-        // The last piece may be smaller than buf.size
-        if (!result && i != (savegame_data.num_pieces - 1)) {
-            log_info("Incorrect buffer size, got.", 0, result);
-            log_info("Incorrect buffer size, expected." , 0,piece->buf.size);
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static void savegame_write_to_file(FILE *fp)
-{
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
-        file_piece *piece = &savegame_data.pieces[i];
-        if (piece->compressed) {
-            write_compressed_chunk(fp, piece->buf.data, piece->buf.size);
-        } else {
-            fwrite(piece->buf.data, 1, piece->buf.size, fp);
-        }
-    }
 }
 int game_file_io_read_saved_game(const char *filename, int offset)
 {
@@ -758,7 +893,6 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     savegame_load_from_state(&savegame_data.state);
     return 1;
 }
-
 int game_file_io_write_saved_game(const char *filename)
 {
     init_savegame_data_expanded();
@@ -776,7 +910,6 @@ int game_file_io_write_saved_game(const char *filename)
     file_close(fp);
     return 1;
 }
-
 int game_file_io_delete_saved_game(const char *filename)
 {
     log_info("Deleting game", filename, 0);

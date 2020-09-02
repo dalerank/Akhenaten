@@ -104,7 +104,7 @@ void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILEN
         for (int i = 0; i < num_channels; i++) {
             data.channels[i].chunk = 0;
             data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
-            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
+//            SDL_Log("Channel %i : %s", i, data.channels[i].filename);
         }
     }
 }

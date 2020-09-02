@@ -393,9 +393,9 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         return 0;
     int HEADER_SIZE = 0;
     if (file_has_extension(filename_sgx, "sg2"))
-        HEADER_SIZE = 20680;
+        HEADER_SIZE = 20680; // sg2 has 100 bitmap entries
     else
-        HEADER_SIZE = 40680;
+        HEADER_SIZE = 40680; //
     buffer buf;
     buffer_init(&buf, data.tmp_data, HEADER_SIZE);
 
@@ -432,8 +432,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     // parse bitmap names
     int num_bmp_names = (int) pak->header_data[5];
     char bmp_names[num_bmp_names][200];
-    buffer_read_raw(&buf, bmp_names, 200 *
-                                     num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
+    buffer_read_raw(&buf, bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
     // move on to the rest of the content
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * pak->entries_num);

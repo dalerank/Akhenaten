@@ -120,7 +120,6 @@ static void pk_memcpy(uint8_t *dst, const uint8_t *src, int length)
         dst[i] = src[i];
     }
 }
-
 static void pk_memset(void *buffer, uint8_t fill_byte, unsigned int length)
 {
     memset(buffer, fill_byte, length);
@@ -137,7 +136,6 @@ static int pk_implode_fill_input_buffer(struct pk_comp_buffer *buf, int bytes_to
     } while (read && bytes_to_read > 0);
     return used;
 }
-
 static void pk_implode_flush_full_buffer(struct pk_comp_buffer *buf)
 {
     buf->output_func(buf->output_data, 2048, buf->token);
@@ -152,7 +150,6 @@ static void pk_implode_flush_full_buffer(struct pk_comp_buffer *buf)
         buf->output_data[buf->output_ptr] = last_byte;
     }
 }
-
 static void pk_implode_write_bits(struct pk_comp_buffer *buf, int num_bits, unsigned int value)
 {
     if (num_bits > 8) { // but never more than 16
@@ -176,7 +173,6 @@ static void pk_implode_write_bits(struct pk_comp_buffer *buf, int num_bits, unsi
         pk_implode_flush_full_buffer(buf);
     }
 }
-
 static void pk_implode_write_copy_length_offset(struct pk_comp_buffer *buf, struct pk_copy_length_offset copy)
 {
     pk_implode_write_bits(buf, buf->codeword_bits[copy.length + 254], buf->codeword_values[copy.length + 254]);
@@ -191,7 +187,6 @@ static void pk_implode_write_copy_length_offset(struct pk_comp_buffer *buf, stru
         pk_implode_write_bits(buf, buf->window_size, copy.offset & buf->copy_offset_extra_mask);
     }
 }
-
 static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_index, struct pk_copy_length_offset *copy)
 {
     uint8_t *input_ptr = &buf->input_data[input_index];
@@ -339,7 +334,6 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
     }
     // never reached
 }
-
 static int pk_implode_next_copy_is_better(struct pk_comp_buffer *buf, int offset, const struct pk_copy_length_offset *current_copy)
 {
     struct pk_copy_length_offset next_copy;
@@ -352,7 +346,6 @@ static int pk_implode_next_copy_is_better(struct pk_comp_buffer *buf, int offset
     }
     return 1;
 }
-
 static void pk_implode_analyze_input(struct pk_comp_buffer *buf, int input_start, int input_end)
 {
     memset(buf->analyze_offset_table, 0, sizeof(buf->analyze_offset_table));
@@ -372,7 +365,6 @@ static void pk_implode_analyze_input(struct pk_comp_buffer *buf, int input_start
         buf->analyze_index[value] = (uint16_t) index;
     }
 }
-
 static void pk_implode_data(struct pk_comp_buffer *buf)
 {
     int eof = 0;
@@ -462,9 +454,7 @@ static void pk_implode_data(struct pk_comp_buffer *buf)
     }
     buf->output_func(buf->output_data, buf->output_ptr, buf->token);
 }
-
-static int pk_implode(pk_input_func *input_func, pk_output_func *output_func,
-                      struct pk_comp_buffer *buf, struct pk_token *token, int dictionary_size)
+static int pk_implode(pk_input_func *input_func, pk_output_func *output_func, struct pk_comp_buffer *buf, struct pk_token *token, int dictionary_size)
 {
     buf->input_func = input_func;
     buf->output_func = output_func;
@@ -517,7 +507,6 @@ static void pk_explode_construct_jump_table(int size, const uint8_t *bits, const
         } while (code < 0x100);
     }
 }
-
 static int pk_explode_set_bits_used(struct pk_decomp_buffer *buf, int num_bits)
 {
     if (buf->current_input_bits_available >= num_bits) {
@@ -530,9 +519,8 @@ static int pk_explode_set_bits_used(struct pk_decomp_buffer *buf, int num_bits)
         // Fill buffer
         buf->input_buffer_ptr = 2048;
         buf->input_buffer_end = buf->input_func(buf->input_buffer, buf->input_buffer_ptr, buf->token);
-        if (!buf->input_buffer_end) {
+        if (!buf->input_buffer_end)
             return 1;
-        }
         buf->input_buffer_ptr = 0;
     }
 
@@ -541,40 +529,34 @@ static int pk_explode_set_bits_used(struct pk_decomp_buffer *buf, int num_bits)
     buf->current_input_bits_available += 8 - num_bits;
     return 0;
 }
-
 static int pk_explode_decode_next_token(struct pk_decomp_buffer *buf)
 {
     if (buf->current_input_byte & 1) {
         // copy
-        if (pk_explode_set_bits_used(buf, 1)) {
+        if (pk_explode_set_bits_used(buf, 1))
             return PK_ERROR_VALUE;
-        }
         int index = buf->copy_length_jump_table[buf->current_input_byte & 0xff];
-        if (pk_explode_set_bits_used(buf, pk_copy_length_base_bits[index])) {
+        if (pk_explode_set_bits_used(buf, pk_copy_length_base_bits[index]))
             return PK_ERROR_VALUE;
-        }
         int extra_bits = pk_copy_length_extra_bits[index];
         if (extra_bits) {
             int extra_bits_value = buf->current_input_byte & ((1 << extra_bits) - 1);
-            if (pk_explode_set_bits_used(buf, extra_bits) && index + extra_bits_value != 270) {
+            if (pk_explode_set_bits_used(buf, extra_bits) && index + extra_bits_value != 270)
                 return PK_ERROR_VALUE;
-            }
+
             index = pk_copy_length_base_value[index] + extra_bits_value;
         }
         return index + 256;
     } else {
         // literal token
-        if (pk_explode_set_bits_used(buf, 1)) {
+        if (pk_explode_set_bits_used(buf, 1))
             return PK_ERROR_VALUE;
-        }
         int result = buf->current_input_byte & 0xff;
-        if (pk_explode_set_bits_used(buf, 8)) {
+        if (pk_explode_set_bits_used(buf, 8))
             return PK_ERROR_VALUE;
-        }
         return result;
     }
 }
-
 static int pk_explode_get_copy_offset(struct pk_decomp_buffer *buf, int copy_length)
 {
     int index = buf->copy_offset_jump_table[buf->current_input_byte & 0xff];
@@ -595,16 +577,14 @@ static int pk_explode_get_copy_offset(struct pk_decomp_buffer *buf, int copy_len
     }
     return offset + 1;
 }
-
 static int pk_explode_data(struct pk_decomp_buffer *buf)
 {
     int token;
     buf->output_buffer_ptr = 4096;
     while (1) {
         token = pk_explode_decode_next_token(buf);
-        if (token >= PK_ERROR_VALUE - 1) {
+        if (token >= PK_ERROR_VALUE - 1)
             break;
-        }
         if (token >= 256) {
             // copy offset
             int length = token - 254;
@@ -636,9 +616,7 @@ static int pk_explode_data(struct pk_decomp_buffer *buf)
     buf->output_func(&buf->output_buffer[4096], buf->output_buffer_ptr - 4096, buf->token);
     return token;
 }
-
-static int pk_explode(pk_input_func *input_func, pk_output_func *output_func,
-                      struct pk_decomp_buffer *buf, struct pk_token *token)
+static int pk_explode(pk_input_func *input_func, pk_output_func *output_func, struct pk_decomp_buffer *buf, struct pk_token *token)
 {
     buf->input_func = input_func;
     buf->output_func = output_func;
@@ -646,34 +624,35 @@ static int pk_explode(pk_input_func *input_func, pk_output_func *output_func,
     buf->input_buffer_ptr = 2048;
     int bytes_read = buf->input_func(buf->input_buffer, buf->input_buffer_ptr, buf->token);
     buf->input_buffer_end = bytes_read;
-    if (bytes_read <= 4) {
+    if (bytes_read <= 4)
         return PK_TOO_FEW_INPUT_BYTES;
-    }
     int has_literal_encoding = buf->input_buffer[0];
     buf->window_size = buf->input_buffer[1];
     buf->current_input_byte = buf->input_buffer[2];
     buf->current_input_bits_available = 0;
     buf->input_buffer_ptr = 3;
 
-    if (buf->window_size < 4 || buf->window_size > 6) {
+    if (buf->window_size < 4 || buf->window_size > 6)
         return PK_INVALID_WINDOWSIZE;
-    }
 
     buf->dictionary_size = 0xFFFF >> (16 - buf->window_size);
-    if (has_literal_encoding) {
+    if (has_literal_encoding)
         return PK_LITERAL_ENCODING_UNSUPPORTED;
-    }
 
     // Decode data for copying bytes
     pk_explode_construct_jump_table(16, pk_copy_length_base_bits, pk_copy_length_base_code, buf->copy_length_jump_table);
     pk_explode_construct_jump_table(64, pk_copy_offset_bits, pk_copy_offset_code, buf->copy_offset_jump_table);
 
     int result = pk_explode_data(buf);
-    if (result != PK_EOF) {
+    if (result != PK_EOF)
         return PK_ERROR_DECODING;
-    }
     return PK_SUCCESS;
 }
+
+#include "SDL.h"
+
+//static int tots = 0;
+//static int lefts = 0;
 
 static int zip_input_func(uint8_t *buffer, int length, struct pk_token *token)
 {
@@ -691,7 +670,6 @@ static int zip_input_func(uint8_t *buffer, int length, struct pk_token *token)
     token->input_ptr += length;
     return length;
 }
-
 static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
 {
     if (token->stop) {
@@ -702,7 +680,9 @@ static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
         token->stop = 1;
         return;
     }
-
+//    // for debugging
+//    tots = token->output_length;
+//    lefts = token->output_ptr;
     if (token->output_length - token->output_ptr >= length) {
         memcpy(&token->output_data[token->output_ptr], buffer, (size_t) length);
         token->output_ptr += length;
@@ -711,9 +691,7 @@ static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
         token->stop = 1;
     }
 }
-
-int zip_compress(const void *input_buffer, int input_length,
-                 void *output_buffer, int *output_length)
+int zip_compress(const void *input_buffer, int input_length, void *output_buffer, int *output_length)
 {
     struct pk_token token;
     struct pk_comp_buffer *buf = (struct pk_comp_buffer *) malloc(sizeof(struct pk_comp_buffer));
@@ -740,15 +718,12 @@ int zip_compress(const void *input_buffer, int input_length,
     free(buf);
     return ok;
 }
-
-int zip_decompress(const void *input_buffer, int input_length,
-                   void *output_buffer, int *output_length)
+int zip_decompress(const void *input_buffer, int input_length, void *output_buffer, int *output_length)
 {
     struct pk_token token;
     struct pk_decomp_buffer *buf = (struct pk_decomp_buffer *) malloc(sizeof(struct pk_decomp_buffer));
-    if (!buf) {
+    if (!buf)
         return 0;
-    }
     memset(buf, 0, sizeof(struct pk_decomp_buffer));
     memset(&token, 0, sizeof(struct pk_token));
     token.input_data = (const uint8_t *) input_buffer;
@@ -761,9 +736,11 @@ int zip_decompress(const void *input_buffer, int input_length,
     if (pk_error || token.stop) {
         log_error("COMP Error uncompressing.", 0, 0);
         ok = 0;
-    } else {
+    } else
         *output_length = token.output_ptr;
-    }
     free(buf);
+//    SDL_Log("Compression returned: %i : %i", tots, lefts);
+//    tots = 0;
+//    lefts = 0;
     return ok;
 }

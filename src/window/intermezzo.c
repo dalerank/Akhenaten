@@ -76,6 +76,8 @@ static void init(intermezzo_type type, void (*callback)(void))
     data.start_time = time_get_millis();
     sound_music_stop();
     sound_speech_stop();
+
+    // play briefing sound by mission number
     if (data.type == INTERMEZZO_FIRED) {
         sound_speech_play_file(SOUND_FILE_LOSE);
     } else if (!scenario_is_custom()) {
@@ -94,6 +96,7 @@ static void draw_background(void)
     int x_offset = (screen_width() - 1024) / 2;
     int y_offset = (screen_height() - 768) / 2;
 
+    // draw background by mission
     int mission = scenario_campaign_mission();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
