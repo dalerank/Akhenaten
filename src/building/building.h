@@ -31,7 +31,7 @@ typedef struct {
         short barracks_priority;
     } subtype;
     unsigned char road_network_id;
-    unsigned short created_sequence;
+    unsigned short creation_sequence_index;
     short houses_covered;
     short percentage_houses_covered;
     short house_population;
@@ -142,42 +142,28 @@ typedef struct {
     unsigned char show_on_problem_overlay;
 } building;
 
-building *building_get(int id);
-
 int building_find(building_type type);
-
+building *building_get(int id);
 building *building_main(building *b);
-
 building *building_next(building *b);
-
 building *building_create(building_type type, int x, int y);
 
 void building_clear_related_data(building *b);
-
-void building_update_state(void);
-
-void building_update_desirability(void);
+void building_clear_all(void);
+//void building_totals_add_corrupted_house(int unfixable);
 
 int building_is_house(building_type type);
-
 int building_is_fort(building_type type);
 
 int building_get_highest_id(void);
-
 void building_update_highest_id(void);
+void building_update_state(void);
+void building_update_desirability(void);
 
 int building_mothball_toggle(building* b);
-
 int building_mothball_set(building* b, int value);
 
-void building_totals_add_corrupted_house(int unfixable);
-
-void building_clear_all(void);
-
-void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses);
-
-void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses);
+void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever);
+void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever);
 
 #endif // BUILDING_BUILDING_H

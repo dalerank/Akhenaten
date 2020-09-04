@@ -28,14 +28,9 @@ static struct {
     int highest_id_in_use;
     int highest_id_ever;
     int created_sequence;
-    int incorrect_houses;
-    int unfixable_houses;
+//    int incorrect_houses;
+//    int unfixable_houses;
 } extra = {0, 0, 0, 0};
-
-building *building_get(int id)
-{
-    return &all_buildings[id];
-}
 
 int building_find(building_type type)
 {
@@ -47,7 +42,10 @@ int building_find(building_type type)
     }
     return MAX_BUILDINGS;
 }
-
+building *building_get(int id)
+{
+    return &all_buildings[id];
+}
 building *building_main(building *b)
 {
     for (int guard = 0; guard < 9; guard++) {
@@ -58,12 +56,10 @@ building *building_main(building *b)
     }
     return &all_buildings[0];
 }
-
 building *building_next(building *b)
 {
     return &all_buildings[b->next_part_building_id];
 }
-
 building *building_create(building_type type, int x, int y)
 {
     building *b = 0;
@@ -87,7 +83,7 @@ building *building_create(building_type type, int x, int y)
     b->unknown_value = city_buildings_unknown_value();
     b->type = type;
     b->size = props->size;
-    b->created_sequence = extra.created_sequence++;
+    b->creation_sequence_index = extra.created_sequence++;
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
 
@@ -197,7 +193,6 @@ static void building_delete(building *b)
     memset(b, 0, sizeof(building));
     b->id = id;
 }
-
 void building_clear_related_data(building *b)
 {
     if (b->storage_id) {
@@ -226,7 +221,53 @@ void building_clear_related_data(building *b)
         building_menu_update();
     }
 }
+void building_clear_all(void)
+{
+    for (int i = 0; i < MAX_BUILDINGS; i++) {
+        memset(&all_buildings[i], 0, sizeof(building));
+        all_buildings[i].id = i;
+    }
+    extra.highest_id_in_use = 0;
+    extra.highest_id_ever = 0;
+    extra.created_sequence = 0;
+//    extra.incorrect_houses = 0;
+//    extra.unfixable_houses = 0;
+}
+//void building_totals_add_corrupted_house(int unfixable)
+//{
+//    extra.incorrect_houses++;
+//    if (unfixable) {
+//        extra.unfixable_houses++;
+//    }
+//}
 
+int building_is_house(building_type type)
+{
+    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
+}
+int building_is_fort(building_type type)
+{
+    return type == BUILDING_FORT_LEGIONARIES ||
+        type == BUILDING_FORT_JAVELIN ||
+        type == BUILDING_FORT_MOUNTED;
+}
+
+int building_get_highest_id(void)
+{
+    return extra.highest_id_in_use;
+}
+void building_update_highest_id(void)
+{
+    extra.highest_id_in_use = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        if (all_buildings[i].state != BUILDING_STATE_UNUSED) {
+            extra.highest_id_in_use = i;
+        }
+    }
+    if (extra.highest_id_in_use > extra.highest_id_ever) {
+        extra.highest_id_ever = extra.highest_id_in_use;
+    }
+}
 void building_update_state(void)
 {
     int land_recalc = 0;
@@ -249,11 +290,11 @@ void building_update_state(void)
                     road_recalc = 1;
                 }
                 map_building_tiles_remove(i, b->x, b->y);
-		if (b->type == BUILDING_ROADBLOCK) {
-		    // Leave the road behind the deleted roadblock
-		    map_terrain_add_roadblock_road(b->x,b->y,0);
+                if (b->type == BUILDING_ROADBLOCK) {
+                    // Leave the road behind the deleted roadblock
+                    map_terrain_add_roadblock_road(b->x,b->y,0);
                     road_recalc = 1;
-		}
+                }
                 land_recalc = 1;
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
@@ -279,7 +320,6 @@ void building_update_state(void)
         map_tiles_update_all_roads();
     }
 }
-
 void building_update_desirability(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -302,36 +342,6 @@ void building_update_desirability(void)
     }
 }
 
-int building_is_house(building_type type)
-{
-    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
-}
-
-int building_is_fort(building_type type)
-{
-    return type == BUILDING_FORT_LEGIONARIES ||
-        type == BUILDING_FORT_JAVELIN ||
-        type == BUILDING_FORT_MOUNTED;
-}
-
-int building_get_highest_id(void)
-{
-    return extra.highest_id_in_use;
-}
-
-void building_update_highest_id(void)
-{
-    extra.highest_id_in_use = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (all_buildings[i].state != BUILDING_STATE_UNUSED) {
-            extra.highest_id_in_use = i;
-        }
-    }
-    if (extra.highest_id_in_use > extra.highest_id_ever) {
-        extra.highest_id_ever = extra.highest_id_in_use;
-    }
-}
-
 int building_mothball_toggle(building *b)
 {
     if (b->state == BUILDING_STATE_IN_USE ) {
@@ -343,7 +353,6 @@ int building_mothball_toggle(building *b)
     return b->state;
 
 }
-
 int building_mothball_set(building* b, int mothball)
 {
     if (mothball) {
@@ -358,30 +367,7 @@ int building_mothball_set(building* b, int mothball)
 
 }
 
-
-void building_totals_add_corrupted_house(int unfixable)
-{
-    extra.incorrect_houses++;
-    if (unfixable) {
-        extra.unfixable_houses++;
-    }
-}
-
-void building_clear_all(void)
-{
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&all_buildings[i], 0, sizeof(building));
-        all_buildings[i].id = i;
-    }
-    extra.highest_id_in_use = 0;
-    extra.highest_id_ever = 0;
-    extra.created_sequence = 0;
-    extra.incorrect_houses = 0;
-    extra.unfixable_houses = 0;
-}
-
-void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses)
+void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_state_save_to_buffer(buf, &all_buildings[i]);
@@ -389,14 +375,12 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     buffer_write_i32(highest_id, extra.highest_id_in_use);
     buffer_write_i32(highest_id_ever, extra.highest_id_ever);
     buffer_skip(highest_id_ever, 4);
-    buffer_write_i32(sequence, extra.created_sequence);
+//    buffer_write_i32(sequence, extra.created_sequence);
 
-    buffer_write_i32(corrupt_houses, extra.incorrect_houses);
-    buffer_write_i32(corrupt_houses, extra.unfixable_houses);
+//    buffer_write_i32(corrupt_houses, extra.incorrect_houses);
+//    buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }
-
-void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses)
+void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_state_load_from_buffer(buf, &all_buildings[i]);
@@ -405,8 +389,9 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     extra.highest_id_in_use = buffer_read_i32(highest_id);
     extra.highest_id_ever = buffer_read_i32(highest_id_ever);
     buffer_skip(highest_id_ever, 4);
-    extra.created_sequence = buffer_read_i32(sequence);
+    extra.created_sequence = 0;
+//    extra.created_sequence = buffer_read_i32(sequence);
 
-    extra.incorrect_houses = buffer_read_i32(corrupt_houses);
-    extra.unfixable_houses = buffer_read_i32(corrupt_houses);
+//    extra.incorrect_houses = buffer_read_i32(corrupt_houses);
+//    extra.unfixable_houses = buffer_read_i32(corrupt_houses);
 }

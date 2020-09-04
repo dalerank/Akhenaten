@@ -21,7 +21,6 @@ static void clear_counters(void)
 {
     memset(&data, 0, sizeof(data));
 }
-
 static void increase_count(building_type type, int active)
 {
     ++data.buildings[type].total;
@@ -29,7 +28,6 @@ static void increase_count(building_type type, int active)
         ++data.buildings[type].active;
     }
 }
-
 static void increase_industry_count(resource_type resource, int active)
 {
     ++data.industry[resource].total;
@@ -209,29 +207,23 @@ void building_count_update(void)
     }
     limit_hippodrome();
 }
-
 int building_count_active(building_type type)
 {
     return data.buildings[type].active;
 }
-
 int building_count_total(building_type type)
 {
     return data.buildings[type].total;
 }
-
 int building_count_industry_active(resource_type resource)
 {
     return data.industry[resource].active;
 }
-
 int building_count_industry_total(resource_type resource)
 {
     return data.industry[resource].total;
 }
-
-void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
 {
     // industry
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -312,17 +304,13 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     buffer_write_i32(support, data.buildings[BUILDING_FOUNTAIN].total);
     buffer_write_i32(support, data.buildings[BUILDING_FOUNTAIN].active);
 }
-
-void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
 {
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
         data.industry[i].total = buffer_read_i32(industry);
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
         data.industry[i].active = buffer_read_i32(industry);
-    }
 
     // culture 1
     data.buildings[BUILDING_THEATER].total = buffer_read_i32(culture1);

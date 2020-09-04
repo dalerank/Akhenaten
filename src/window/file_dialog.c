@@ -114,10 +114,10 @@ static void init(file_type type, file_dialog_type dialog_type)
             if (type == FILE_TYPE_SCENARIO)
                 data.file_list = dir_find_files_with_extension("Maps/", scenario_data.extension);
             else if (data.dialog_type != FILE_DIALOG_SAVE) {
-                data.file_list = dir_find_files_with_extension("Save/", data.file_data->extension);
+                data.file_list = dir_find_files_with_extension("Save/Banderus/", data.file_data->extension);
                 data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
             } else
-                data.file_list = dir_find_files_with_extension("Save/", saved_game_data_expanded.extension);
+                data.file_list = dir_find_files_with_extension("Save/Banderus/", saved_game_data_expanded.extension);
             break;
     }
 
@@ -187,7 +187,13 @@ static void button_ok_cancel(int is_ok, int param2)
         return;
     }
 
-    const char *filename = get_chosen_filename();
+    char filename[200] = "";
+//    const char *fn = get_chosen_filename();
+    switch (GAME_ENV) {
+        case ENGINE_ENV_PHARAOH:
+            strcat(filename, "Save/Banderus/");
+    }
+    strcat(filename, get_chosen_filename());
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();

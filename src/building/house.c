@@ -503,24 +503,27 @@ void building_house_devolve_from_large_palace(building *house)
 
 void building_house_check_for_corruption(building *house)
 {
-    int calc_grid_offset = map_grid_offset(house->x, house->y);
     house->data.house.no_space_to_expand = 0;
-    if (house->grid_offset != calc_grid_offset || map_building_at(house->grid_offset) != house->id) {
+
+    // house offset is corrupted??
+    if (house->grid_offset != map_grid_offset(house->x, house->y) || map_building_at(house->grid_offset) != house->id) {
         int map_width, map_height;
-        map_grid_size(&map_width, &map_height);
+        map_grid_size(&map_width, &map_height); // get map size and store in temp vars
+
+        // go through tiles and find tile belonging to the house
         for (int y = 0; y < map_height; y++) {
             for (int x = 0; x < map_width; x++) {
-                int grid_offset = map_grid_offset(x, y);
-                if (map_building_at(grid_offset) == house->id) {
-                    house->grid_offset = grid_offset;
-                    house->x = map_grid_offset_to_x(grid_offset);
-                    house->y = map_grid_offset_to_y(grid_offset);
-                    building_totals_add_corrupted_house(0);
+                int grid_offset = map_grid_offset(x, y); // get offset of current tile (global map tile offset)
+                if (map_building_at(grid_offset) == house->id) { // does this tile belong to the house I'm searching for??
+                    house->grid_offset = grid_offset; // set house offset to this tile's offset (i.e. lowest x & y; north-west corner)
+                    house->x = map_grid_offset_to_x(grid_offset); // set house coords (x) to tile's coords (x)
+                    house->y = map_grid_offset_to_y(grid_offset); // set house coords (y) to tile's coords (y)
+//                    building_totals_add_corrupted_house(0);
                     return;
                 }
             }
         }
-        building_totals_add_corrupted_house(1);
+//        building_totals_add_corrupted_house(1);
         house->state = BUILDING_STATE_RUBBLE;
     }
 }

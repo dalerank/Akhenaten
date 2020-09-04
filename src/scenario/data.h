@@ -15,7 +15,7 @@
 #define MAX_FISH_POINTS 8
 #define MAX_INVASION_POINTS 8
 
-#define MAX_ALLOWED_BUILDINGS 50
+//#define MAX_ALLOWED_BUILDINGS 50
 
 #define MAX_PLAYER_NAME 32
 #define MAX_SCENARIO_NAME 65
@@ -147,6 +147,8 @@ extern struct scenario_t {
         struct win_criteria_t prosperity;
         struct win_criteria_t peace;
         struct win_criteria_t favor;
+        struct win_criteria_t ph_goal1;
+        struct win_criteria_t ph_goal2;
         struct {
             int enabled;
             int years;

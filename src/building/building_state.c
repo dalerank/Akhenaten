@@ -126,7 +126,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i16(buf, b->subtype.house_level); // which union field we use does not matter
     buffer_write_u8(buf, b->road_network_id);
     buffer_write_u8(buf, 0);
-    buffer_write_u16(buf, b->created_sequence);
+    buffer_write_u16(buf, b->creation_sequence_index);
     buffer_write_i16(buf, b->houses_covered);
     buffer_write_i16(buf, b->percentage_houses_covered);
     buffer_write_i16(buf, b->house_population);
@@ -274,7 +274,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->subtype.house_level = buffer_read_i16(buf); // which union field we use does not matter
     b->road_network_id = buffer_read_u8(buf);
     buffer_skip(buf, 1);
-    b->created_sequence = buffer_read_u16(buf);
+    b->creation_sequence_index = buffer_read_u16(buf);
     b->houses_covered = buffer_read_i16(buf);
     b->percentage_houses_covered = buffer_read_i16(buf);
     b->house_population = buffer_read_i16(buf);

@@ -170,8 +170,8 @@ void building_destroy_last_placed(void)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_IN_USE) {
-            if (b->created_sequence > highest_sequence) {
-                highest_sequence = b->created_sequence;
+            if (b->creation_sequence_index > highest_sequence) {
+                highest_sequence = b->creation_sequence_index;
                 last_building = b;
             }
         }
