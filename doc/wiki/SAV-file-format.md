@@ -1,15 +1,17 @@
 Savegame/map data file format for Pharaoh.
 
-###File format offsets and description
-| Chunk | Rel. offset | Length | Description |
-| :---: | :---------: | :----  | :---------- |
+### File format offsets and description
+Offsets are relative to the beginning of each group to accomodate for variable size chunks of compressed (zip) data
+
+| Group | Offset | Length | Description |
+| ----: | :----: | :----  | :---------- |
 | #1  | 0 | 1 | Primary mission index. Used for briefing messages and map name |
 |     | 1 | 2 | ??? |
 |     | 3 | 1 | Secondary mission index. Used for goal messages in briefing and at the top of the screen |
-|     | 4 | 4 | File version |
+|     | 4 | 4 | File version? |
 |     | 8 | 4 | ??? |
 |     | 12 | 6000 | ?????????????????????????????? |
-|     | 6012 | - (*) | Image grid |
+|     | 6012 | - | Image grid |
 |     | - | - | Edge grid |
 |     | - | - | Building grid |
 |     | - | - | Terrain grid |
@@ -76,7 +78,7 @@ Savegame/map data file format for Pharaoh.
 |     | 1513 | 1 | Kingd. goal enabled flag |
 |     | 1514 | 1 | Extra goal 1 enabled flag |
 |     | 1515 | 1 | Extra goal 2 enabled flag |
-|     | 1516 | 22 | ??? (other win condition spaces?) |
+|     | 1516 | 22 | ??? (unused additional win condition spaces?) |
 |     | 1538 | 4 | Population goal enabled flag |
 |     | 1542 | 4 | Population goal |
 |     | 1546 | 52 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
@@ -112,25 +114,106 @@ Savegame/map data file format for Pharaoh.
 |     | - | - | Building list (small) |
 |     | - | - | Building list (large) |
 | #9  | 0 | 32 | ??? (Tutorial part 1?) |
-|     | 32 | 39224 | ?????????????????????????????? |
-|     | 39256 | 12 | ??? |
-|     | 39268 | 16 | City entry points coords |
-|     | 39284 | 22 | ??? |
-|     | 39306 | 65 | Scenario name |
-|     | 39371 | 32 | Bookmarks |
-|     | 39403 | 4 | ??? (Tutorial part 3?) |
-|     | 39407 | 8 | City entry points offsets |
-|     | 39415 | 150680 | ?????????????????????????????? |
+|     | 32 | 24 | ??? |
+|     | 56 | 39200 | ??? (200 196-byte fields) |
+|     | 39256 | - | Trade route - limits |
+|     | - | - | Trade route - traded so far |
+| #10 | 0 | 12 | ??? |
+|     | 12 | 16 | City entry points coords |
+|     | 28 | 22 | ??? |
+|     | 50 | 65 | Scenario name |
+|     | 115 | 32 | Bookmarks  (default FFFF (-1) 2-byte fields) |
+|     | 147 | 4 | ??? (Tutorial part 3?) |
+|     | 151 | 8 | City entry points offsets? |
+|     | 159 | 52370 | ??? (empty 0000 chunks) |
+|     | 52529 | 18600 | ??? (150 124-byte data chunks) |
+|     | 71129 | 38 | ??? |
+|     | 71167 | 13416 | ??? (00 chunk) |
+|     | 84583 | 8200 | ??? (10 820-byte data chunks) |
+|     | 92783 | - | ?????????????????????????????? |
+|     | - | - | ?????????????????????????????? |
+|     | - | - | ?????????????????????????????? |
+| #11 | 0 | 51984 | ??? (FF chunk) |
+|     | 51984 | 20 | ??? |
+|     | 52004 | 528 | ??? (22 24-byte data chunks) |
+|     | 52532 | - | ?????????????????????????????? |
+|     |  | - | ?????????????????????????????? |
+| #12 | 0 | 312 | ??? (13 24-byte data chunks) |
+|     | 312 | 64 | ??? |
+|     | 376 | 41 | ??? (41 1-byte flag fields) |
+|     | 417 | - | ?????????????????????????????? |
+| #13 | 0 | 1 | ??? (lone byte field?) |
+|     | 1 | - | ?????????????????????????????? |
+| #14 | 0 | 672 | ??? (28 24-byte data chunks) |
+|     | 672 | 20 | ??? |
+|     | 692 | 4800 | ?????????????????????????????? |
 
 
 ### Allowed building offsets
 | Field # | Building |
 | :-----: | :------: |
-1|House
+0|???
+1|???
+2|Gold Mine
+3|Water Lift
+4|Irrigation Ditch
+5|Shipwright
+6|Work Camp
+7|Granary
+8|Bazaar
+9|Storage Yard
+10|Dock
+11|Booth & Juggler School
+12|Bandstand & Conservatory
+13|Pavillion & Dance School
+14|Senet House
+15|Festival Square
+16|Scribal School
+17|Library
+18|Water Supply
+19|Dentist
+20|Apothecary
+21|Physician
+22|Mortuary
+23|Tax Collector
+24|Courthouse
+25|Village Palace
+26|Personal Mansion
+27|Roadblock
+28|Bridge
+29|Ferry Landing
+30|Beautification (gardens)
+31|Beautification (plaza)
+32|Beautification (statues)
+33|Wall
+34|Tower
+35|Gatehouse
+36|Recruiter
+37|Infantry Fort
+38|Archers Fort
+39|Charioteers Fort
+40|Academy
+41|Weaponsmith
+42|Chariot Maker
+43|Warship Wharf
+44|Transport Wharf
+45|Zoo
+46-103|???
+104|Temple Complex to Osiris
+105|Temple Complex to Ra
+106|Temple Complex to Ptah
+107|Temple Complex to Seth
+108|Temple Complex to Bast
+109|???
+110|???
+111|???
+112|???
+113|???
+114|???
 
 ### Monument field values
-| Value | Hex  | Monument |
-| ----: | ---: | :------: |
+| Value | Hex   | Monument |
+| :---: | :---: | :------: |
 0|00|N/A
 1|01|Small Bent Pyramid
 2|02|Medium Bent Pyramid
