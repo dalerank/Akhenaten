@@ -72,7 +72,8 @@ typedef struct {
     buffer *elevation;
     buffer *random_iv;
     buffer *camera;
-    buffer *scenario;
+//    buffer *scenario;
+    scenario_data_buffers scenario_data;
     buffer *end_marker;
 } scenario_state;
 
@@ -125,14 +126,46 @@ typedef struct {
     buffer *culture_coverage;
 //    buffer *scenario;
 
-    buffer *scenario_header;
-        buffer *scenario_request_events;
-        buffer *scenario_invasion_events;
-    buffer *scenario_map_info;
-        buffer *scenario_request_can_comply_dialogs;
-    buffer *scenario_map_info2;
-    buffer *scenario_win_criteria;
-    buffer *scenario_allowed_buildings;
+    // 1. header
+    // 2. requests/invasions
+    // 3. map info 1
+    // 4. request can-comply dialog
+    // 5. map info 2
+    // 6. herds
+    // 7. demands
+    // 8. random events
+    // 9. fishing
+    // 10. other request data
+    // 11. wheat
+    // 12. allowed buildings
+    // 13. win criteria
+    // 14. map points
+    // 15. invasion entry points
+    // 16. river entry points
+    // 17. map info 3
+    // 18. empire info
+
+    scenario_data_buffers scenario_data;
+
+//    buffer *scenario_header;
+//        buffer *scenario_request_events;
+//        buffer *scenario_invasion_events;
+//    buffer *scenario_map_info1;
+//        buffer *scenario_request_can_comply_dialogs;
+//    buffer *scenario_map_info2;
+//        buffer *scenario_animal_herds;
+//        buffer *scenario_demands;
+//    buffer *scenario_random_events;
+//        buffer *scenario_fishing_spots;
+//        buffer *scenario_requests_extra;
+//    buffer *scenario_wheat_rome;
+//        buffer *scenario_allowed_buildings;
+//    buffer *scenario_win_criteria;
+//    buffer *scenario_map_points;
+//        buffer *scenario_invasion_points;
+//    buffer *scenario_river_entry;
+//    buffer *scenario_map_info3;
+//    buffer *scenario_empire_info;
 
     buffer *max_game_year;
     buffer *earthquake;
@@ -270,7 +303,31 @@ static void init_savegame_buffers(savegame_state* state)
     state->trade_prices = 0;
     state->figure_names = 0;
     state->culture_coverage = 0;
-    state->scenario = 0;
+//    state->scenario = 0;
+
+//    state->scenario_data = {0};
+
+    state->scenario_data.header = 0;
+    state->scenario_data.info1 = 0;
+    state->scenario_data.info2 = 0;
+    state->scenario_data.info3 = 0;
+    state->scenario_data.events = 0;
+    state->scenario_data.win_criteria = 0;
+    state->scenario_data.map_points = 0;
+    state->scenario_data.river_points = 0;
+    state->scenario_data.empire = 0;
+    state->scenario_data.wheat = 0;
+    state->scenario_data.requests = 0;
+    state->scenario_data.invasions = 0;
+    state->scenario_data.invasion_points = 0;
+    state->scenario_data.request_comply_dialogs = 0;
+    state->scenario_data.herds = 0;
+    state->scenario_data.demands = 0;
+    state->scenario_data.price_changes = 0;
+    state->scenario_data.fishing_points = 0;
+    state->scenario_data.request_extra = 0;
+    state->scenario_data.allowed_builds = 0;
+
     state->max_game_year = 0;
     state->earthquake = 0;
     state->emperor_change_state = 0;
@@ -334,6 +391,7 @@ static void init_savegame_buffers(savegame_state* state)
 }
 static void init_scenario_data(void)
 {
+    return;
     if (scenario_data.num_pieces > 0) {
         for (int i = 0; i < scenario_data.num_pieces; i++) {
             buffer_reset(&scenario_data.pieces[i].buf);
@@ -349,7 +407,28 @@ static void init_scenario_data(void)
     state->elevation = create_scenario_piece(26244);
     state->random_iv = create_scenario_piece(8);
     state->camera = create_scenario_piece(8);
-    state->scenario = create_scenario_piece(1720);
+//    state->scenario = create_scenario_piece(1720);
+    state->scenario_data.header = create_scenario_piece(14);
+    state->scenario_data.requests = create_scenario_piece(160);
+    state->scenario_data.invasions = create_scenario_piece(202);
+    state->scenario_data.info1 = create_scenario_piece(614);
+    state->scenario_data.request_comply_dialogs = create_scenario_piece(20);
+    state->scenario_data.info2 = create_scenario_piece(6);
+    state->scenario_data.herds = create_scenario_piece(16);
+    state->scenario_data.demands = create_scenario_piece(120);
+    state->scenario_data.price_changes = create_scenario_piece(120);
+    state->scenario_data.events = create_scenario_piece(44);
+    state->scenario_data.fishing_points = create_scenario_piece(32);
+    state->scenario_data.request_extra = create_scenario_piece(120);
+    state->scenario_data.wheat = create_scenario_piece(4);
+    state->scenario_data.allowed_builds = create_scenario_piece(100);
+    state->scenario_data.win_criteria = create_scenario_piece(52);
+    state->scenario_data.map_points = create_scenario_piece(12);
+    state->scenario_data.invasion_points = create_scenario_piece(32);
+    state->scenario_data.river_points = create_scenario_piece(8);
+    state->scenario_data.info3 = create_scenario_piece(32);
+    state->scenario_data.empire = create_scenario_piece(12);
+
     state->end_marker = create_scenario_piece(4);
 }
 static void init_savegame_data(void)
@@ -407,7 +486,28 @@ static void init_savegame_data(void)
             state->trade_prices = create_savegame_piece(128, 0);
             state->figure_names = create_savegame_piece(84, 0);
             state->culture_coverage = create_savegame_piece(60, 0);
-            state->scenario = create_savegame_piece(1720, 0);
+//            state->scenario = create_savegame_piece(1720, 0);
+            state->scenario_data.header = create_savegame_piece(14, 0);
+            state->scenario_data.requests = create_savegame_piece(160, 0);
+            state->scenario_data.invasions = create_savegame_piece(202, 0);
+            state->scenario_data.info1 = create_savegame_piece(614, 0);
+            state->scenario_data.request_comply_dialogs = create_savegame_piece(20, 0);
+            state->scenario_data.info2 = create_savegame_piece(6, 0);
+            state->scenario_data.herds = create_savegame_piece(16, 0);
+            state->scenario_data.demands = create_savegame_piece(120, 0);
+            state->scenario_data.price_changes = create_savegame_piece(120, 0);
+            state->scenario_data.events = create_savegame_piece(44, 0);
+            state->scenario_data.fishing_points = create_savegame_piece(32, 0);
+            state->scenario_data.request_extra = create_savegame_piece(120, 0);
+            state->scenario_data.wheat = create_savegame_piece(4, 0);
+            state->scenario_data.allowed_builds = create_savegame_piece(100, 0);
+            state->scenario_data.win_criteria = create_savegame_piece(52, 0);
+            state->scenario_data.map_points = create_savegame_piece(12, 0);
+            state->scenario_data.invasion_points = create_savegame_piece(32, 0);
+            state->scenario_data.river_points = create_savegame_piece(8, 0);
+            state->scenario_data.info3 = create_savegame_piece(32, 0);
+            state->scenario_data.empire = create_savegame_piece(12, 0);
+
             state->max_game_year = create_savegame_piece(4, 0);
             state->earthquake = create_savegame_piece(60, 0);
             state->emperor_change_state = create_savegame_piece(4, 0);
@@ -505,10 +605,10 @@ static void init_savegame_data(void)
 
 
 //                state->scenario = create_savegame_piece(1720, 0); // MISSING
-                state->scenario_header = create_savegame_piece(14, 0);
-                state->scenario_map_info = create_savegame_piece(614, 0);
+                state->scenario_data.header = create_savegame_piece(14, 0);
+                state->scenario_data.info1 = create_savegame_piece(614, 0);
 //                state->scenario_request_can_comply_dialogs = create_savegame_piece(20, 0); // MISSING
-                state->scenario_map_info2 = create_savegame_piece(6, 0);
+                state->scenario_data.info2 = create_savegame_piece(6, 0);
 
         // 48 bytes     FF FF FF FF (non cyclic) ???
         // 44 bytes     00 00 00 00 ???
@@ -516,7 +616,7 @@ static void init_savegame_data(void)
         // 36 bytes     01 00 01 00 ???
         state->junk2 = create_savegame_piece(48+44+64+36, 0); // unknown bytes
 
-                state->scenario_win_criteria = create_savegame_piece(60, 0);
+                state->scenario_data.win_criteria = create_savegame_piece(60, 0);
 
         // 52 bytes     FF FF FF FF (non cyclic) ???
         // 4  bytes     B8 0B 00 00 ???
@@ -526,7 +626,7 @@ static void init_savegame_data(void)
         // 34 bytes     FF FF 2C 00 (....non cyclic?) ???
         state->junk3 = create_savegame_piece(52+4+12+12+14+34, 0); // unknown bytes
 
-                state->scenario_allowed_buildings = create_savegame_piece(228, 0);
+                state->scenario_data.allowed_builds = create_savegame_piece(228, 0);
 
         // 24 bytes     FF FF FF FF (cyclic) ???
         // 312 bytes
@@ -647,7 +747,28 @@ static void init_savegame_data_expanded(void) // this SHOULD only happen in C3..
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
-    state->scenario = create_savegame_piece(1720, 0);
+//    state->scenario = create_savegame_piece(1720, 0);
+    state->scenario_data.header = create_savegame_piece(14, 0);
+    state->scenario_data.requests = create_savegame_piece(160, 0);
+    state->scenario_data.invasions = create_savegame_piece(202, 0);
+    state->scenario_data.info1 = create_savegame_piece(614, 0);
+    state->scenario_data.request_comply_dialogs = create_savegame_piece(20, 0);
+    state->scenario_data.info2 = create_savegame_piece(6, 0);
+    state->scenario_data.herds = create_savegame_piece(16, 0);
+    state->scenario_data.demands = create_savegame_piece(120, 0);
+    state->scenario_data.price_changes = create_savegame_piece(120, 0);
+    state->scenario_data.events = create_savegame_piece(44, 0);
+    state->scenario_data.fishing_points = create_savegame_piece(32, 0);
+    state->scenario_data.request_extra = create_savegame_piece(120, 0);
+    state->scenario_data.wheat = create_savegame_piece(4, 0);
+    state->scenario_data.allowed_builds = create_savegame_piece(100, 0);
+    state->scenario_data.win_criteria = create_savegame_piece(52, 0);
+    state->scenario_data.map_points = create_savegame_piece(12, 0);
+    state->scenario_data.invasion_points = create_savegame_piece(32, 0);
+    state->scenario_data.river_points = create_savegame_piece(8, 0);
+    state->scenario_data.info3 = create_savegame_piece(32, 0);
+    state->scenario_data.empire = create_savegame_piece(12, 0);
+
     state->max_game_year = create_savegame_piece(4, 0);
     state->earthquake = create_savegame_piece(60, 0);
     state->emperor_change_state = create_savegame_piece(4, 0);
@@ -702,6 +823,31 @@ static buffer *safebuf(buffer *buf)
     assert(buf != 0);
     return buf;
 }
+static scenario_data_buffers *safebufbuf(scenario_data_buffers *data)
+{
+    safebuf(data->header);
+    safebuf(data->info1);
+    safebuf(data->info2);
+    safebuf(data->info3);
+    safebuf(data->events);
+    safebuf(data->win_criteria);
+    safebuf(data->map_points);
+    safebuf(data->river_points);
+    safebuf(data->empire);
+    safebuf(data->wheat);
+
+    safebuf(data->requests);
+    safebuf(data->invasions);
+    safebuf(data->invasion_points);
+    safebuf(data->request_comply_dialogs);
+    safebuf(data->herds);
+    safebuf(data->demands);
+    safebuf(data->price_changes);
+    safebuf(data->fishing_points);
+    safebuf(data->request_extra);
+    safebuf(data->allowed_builds);
+    return data;
+}
 
 static void scenario_load_from_state(scenario_state *file)
 {
@@ -714,7 +860,7 @@ static void scenario_load_from_state(scenario_state *file)
 
     random_load_state(file->random_iv);
 
-    scenario_load_state(file->scenario);
+    scenario_load_state(&file->scenario_data);
 
     buffer_skip(file->end_marker, 4);
 }
@@ -729,7 +875,7 @@ static void scenario_save_to_state(scenario_state *file)
 
     random_save_state(file->random_iv);
 
-    scenario_save_state(file->scenario);
+    scenario_save_state(&file->scenario_data);
 
     buffer_skip(file->end_marker, 4);
 }
@@ -787,7 +933,7 @@ static void savegame_load_from_state(savegame_state *state)
     figure_name_load_state(safebuf(state->figure_names));
     city_culture_load_state(safebuf(state->culture_coverage));
 
-    scenario_load_state(safebuf(state->scenario));
+    scenario_load_state(safebufbuf(&state->scenario_data));
     scenario_criteria_load_state(safebuf(state->max_game_year));
     scenario_earthquake_load_state(safebuf(state->earthquake));
     city_message_load_state(safebuf(state->messages), safebuf(state->message_extra),
@@ -865,7 +1011,7 @@ static void savegame_save_to_state(savegame_state *state)
     figure_name_save_state(safebuf(state->figure_names));
     city_culture_save_state(safebuf(state->culture_coverage));
 
-    scenario_save_state(safebuf(state->scenario));
+    scenario_save_state(safebufbuf(&state->scenario_data));
     scenario_criteria_save_state(safebuf(state->max_game_year));
     scenario_earthquake_save_state(safebuf(state->earthquake));
     city_message_save_state(safebuf(state->messages), safebuf(state->message_extra),

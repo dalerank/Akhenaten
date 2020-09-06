@@ -3,24 +3,25 @@
 
 #include "map/point.h"
 #include "scenario/types.h"
+#include "core/game_environment.h"
 
 #include <stdint.h>
 
-#define MAX_REQUESTS 20
-#define MAX_INVASIONS 20
-#define MAX_DEMAND_CHANGES 20
-#define MAX_PRICE_CHANGES 20
-
-#define MAX_HERD_POINTS 4
-#define MAX_FISH_POINTS 8
-#define MAX_INVASION_POINTS 8
-
+//#define MAX_REQUESTS 20
+//#define MAX_INVASIONS 20
+//#define MAX_DEMAND_CHANGES 20
+//#define MAX_PRICE_CHANGES 20
+//
+//#define MAX_HERD_POINTS 4
+//#define MAX_FISH_POINTS 8
+//#define MAX_INVASION_POINTS 8
+//
 //#define MAX_ALLOWED_BUILDINGS 50
-
-#define MAX_PLAYER_NAME 32
-#define MAX_SCENARIO_NAME 65
-#define MAX_BRIEF_DESCRIPTION 64
-#define MAX_BRIEFING 522
+//
+//#define MAX_PLAYER_NAME 32
+//#define MAX_SCENARIO_NAME 65
+//#define MAX_BRIEF_DESCRIPTION 64
+//#define MAX_BRIEFING 522
 
 enum {
     EVENT_NOT_STARTED = 0,
