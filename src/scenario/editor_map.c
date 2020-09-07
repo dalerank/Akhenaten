@@ -36,7 +36,7 @@ void scenario_editor_set_river_exit_point(int x, int y) {
 }
 
 void scenario_editor_clear_herd_points(void) {
-    for (int i = 0; i < MAX_HERD_POINTS; i++) {
+    for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++) {
         scenario.herd_points[i].x = -1;
         scenario.herd_points[i].y = -1;
     }
@@ -54,7 +54,7 @@ void scenario_editor_set_herd_point(int id, int x, int y) {
 }
 
 void scenario_editor_clear_fishing_points(void) {
-    for (int i = 0; i < MAX_FISH_POINTS; i++) {
+    for (int i = 0; i < env_sizes().MAX_FISH_POINTS; i++) {
         scenario.fishing_points[i].x = -1;
         scenario.fishing_points[i].y = -1;
     }
@@ -73,7 +73,7 @@ void scenario_editor_set_fishing_point(int id, int x, int y) {
 
 int scenario_editor_count_invasion_points(void) {
     int points = 0;
-    for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+    for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++) {
         if (scenario.invasion_points[i].x != -1) {
             points++;
         }
@@ -82,7 +82,7 @@ int scenario_editor_count_invasion_points(void) {
 }
 
 void scenario_editor_clear_invasion_points(void) {
-    for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+    for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++) {
         scenario.invasion_points[i].x = -1;
         scenario.invasion_points[i].y = -1;
     }

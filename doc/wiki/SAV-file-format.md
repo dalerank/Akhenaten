@@ -49,55 +49,55 @@ Offsets are relative to the beginning of each group to accomodate for variable s
 |     | 660 | 2 | Starting year |
 |     | 662 | 2 | ??? |
 |     | 664 | 2 | Empire ID |
-|     | 666 | 8 | ??? |
-|     | 674 | 4 | Initial funds (not adjusted by difficulty) |
-|     | 678 | 2 | Enemy ID |
-|     | 680 | 6 | ??? |
-|     | 686 | 4 | Map width |
-|     | 690 | 4 | Map height |
-|     | 694 | 4 | Map border start |
-|     | 698 | 4 | Map border start |
-|     | 702 | 64 | Scenario subtitle |
-|     | 766 | 522 | Brief description of scenario (unused?) |
-|     | 1288 | 2 | ??? (image id) |
-|     | 1290 | 2 | ??? (open play) |
-|     | 1292 | 2 | Player rank |
-|     | 1294 | 48 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
-|     | 1342 | 44 | ??? |
-|     | 1386 | 64 | ??? (default FFFF (-1) 2-byte fields, cyclic - invasion points?) |
-|     | 1450 | 36 | ??? (18 two-byte flag fields) |
-|     | 1486 | 4 | Prosperity rating goal |
-|     | 1490 | 4 | Culture rating goal |
-|     | 1494 | 4 | Monument rating goal |
-|     | 1498 | 4 | Kingdom rating goal |
-|     | 1502 | 4 | Extra scenario goal 1 |
-|     | 1506 | 4 | Extra scenario goal 2 |
-|     | 1510 | 1 | Prosp. goal enabled flag |
-|     | 1511 | 1 | Cult. goal enabled flag |
-|     | 1512 | 1 | Monum. goal enabled flag |
-|     | 1513 | 1 | Kingd. goal enabled flag |
-|     | 1514 | 1 | Extra goal 1 enabled flag |
-|     | 1515 | 1 | Extra goal 2 enabled flag |
-|     | 1516 | 22 | ??? (unused additional win condition spaces?) |
-|     | 1538 | 4 | Population goal enabled flag |
-|     | 1542 | 4 | Population goal |
-|     | 1546 | 52 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
-|     | 1598 | 4 | ??? |
-|     | 1602 | 12 | ??? (3 integers?) |
-|     | 1614 | 12 | ??? (3 integers? usually go n, n+2, n+1497) |
-|     | 1626 | 14 | ??? |
-|     | 1640 | 34 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
-|     | 1674 | 228 | Allowed buildings 2-byte flags (see offsets in table below) |
-|     | 1902 | 24 | ??? (default FFFF (-1) 2-byte fields, cyclic?) |
-|     | 1926 | 4 | ??? |
-|     | 1930 | 2 | First monument field |
-|     | 1932 | 2 | Second monument field |
-|     | 1934 | 2 | Third monument field |
-|     | 1936 | 290 | ??? |
-|     | 2226 | 4 | ??? |
-|     | 2230 | 4 | ??? |
-|     | 2234 | 4 | ??? |
-|     | 2238 | - | Messages |
+|     | 666 | 26 | ??? |
+|     | 622 | 4 | Initial funds (not adjusted by difficulty) |
+|     | 696 | 2 | Enemy ID |
+|     | 698 | 6 | ??? |
+|     | 704 | 4 | Map width |
+|     | 708 | 4 | Map height |
+|     | 712 | 4 | Map border start |
+|     | 716 | 4 | Map border start |
+|     | 720 | 64 | Scenario subtitle |
+|     | 784 | 522 | Brief description of scenario (unused?) |
+|     | 1306 | 2 | ??? (image id) |
+|     | 1308 | 2 | ??? (open play) |
+|     | 1310 | 2 | Player rank |
+|     | 1312 | 48 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
+|     | 1360 | 44 | ??? |
+|     | 1404 | 64 | ??? (default FFFF (-1) 2-byte fields, cyclic - invasion points?) |
+|     | 1468 | 36 | ??? (18 two-byte flag fields) |
+|     | 1504 | 4 | Prosperity rating goal |
+|     | 1508 | 4 | Culture rating goal |
+|     | 1512 | 4 | Monument rating goal |
+|     | 1516 | 4 | Kingdom rating goal |
+|     | 1520 | 4 | Extra scenario goal 1 |
+|     | 1524 | 4 | Extra scenario goal 2 |
+|     | 1528 | 1 | Prosp. goal enabled flag |
+|     | 1529 | 1 | Cult. goal enabled flag |
+|     | 1530 | 1 | Monum. goal enabled flag |
+|     | 1531 | 1 | Kingd. goal enabled flag |
+|     | 1532 | 1 | Extra goal 1 enabled flag |
+|     | 1533 | 1 | Extra goal 2 enabled flag |
+|     | 1534 | 22 | ??? (unused additional win condition spaces?) |
+|     | 1556 | 4 | Population goal enabled flag |
+|     | 1560 | 4 | Population goal |
+|     | 1564 | 52 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
+|     | 1616 | 4 | ??? |
+|     | 1620 | 12 | ??? (3 integers?) |
+|     | 1632 | 12 | ??? (3 integers? usually go n, n+2, n+1497) |
+|     | 1644 | 14 | ??? |
+|     | 1658 | 34 | ??? (default FFFF (-1) 2-byte fields, non cyclic) |
+|     | 1692 | 228 | Allowed buildings 2-byte flags (see offsets in table below) |
+|     | 1920 | 24 | ??? (default FFFF (-1) 2-byte fields, cyclic?) |
+|     | 1944 | 4 | ??? |
+|     | 1948 | 2 | First monument field |
+|     | 1950 | 2 | Second monument field |
+|     | 1952 | 2 | Third monument field |
+|     | 1954 | 290 | ??? |
+|     | 2244 | 4 | ??? |
+|     | 2248 | 4 | ??? |
+|     | 2252 | 4 | ??? |
+|     | 2256 | - | Messages |
 | #7  | 0 | 12 | Messages extra data |
 |     | 12 | 10 | Population messages |
 |     | 22 | 80 | Message counts |

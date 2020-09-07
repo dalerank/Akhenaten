@@ -7,21 +7,21 @@
 
 #include <stdint.h>
 
-//#define MAX_REQUESTS 20
-//#define MAX_INVASIONS 20
-//#define MAX_DEMAND_CHANGES 20
-//#define MAX_PRICE_CHANGES 20
+//#define env_sizes().MAX_REQUESTS 20
+//#define env_sizes().MAX_INVASIONS 20
+//#define env_sizes().MAX_DEMAND_CHANGES 20
+//#define env_sizes().MAX_PRICE_CHANGES 20
 //
-//#define MAX_HERD_POINTS 4
-//#define MAX_FISH_POINTS 8
-//#define MAX_INVASION_POINTS 8
+//#define env_sizes().MAX_HERD_POINTS 4
+//#define env_sizes().MAX_FISH_POINTS 8
+//#define env_sizes().MAX_INVASION_POINTS 8
 //
-//#define MAX_ALLOWED_BUILDINGS 50
+//#define env_sizes().MAX_ALLOWED_BUILDINGS 50
 //
-//#define MAX_PLAYER_NAME 32
-//#define MAX_SCENARIO_NAME 65
-//#define MAX_BRIEF_DESCRIPTION 64
-//#define MAX_BRIEFING 522
+//#define env_sizes().MAX_PLAYER_NAME 32
+//#define env_sizes().MAX_SCENARIO_NAME 65
+//#define env_sizes().MAX_BRIEF_DESCRIPTION 64
+//#define env_sizes().MAX_BRIEFING 522
 
 enum {
     EVENT_NOT_STARTED = 0,
@@ -125,7 +125,7 @@ typedef struct {
 } demand_change_t;
 
 extern struct scenario_t {
-    uint8_t scenario_name[MAX_SCENARIO_NAME];
+    uint8_t scenario_name[65];
 
     int start_year;
     int climate;
@@ -136,8 +136,8 @@ extern struct scenario_t {
 
     int rome_supplies_wheat;
     int image_id;
-    uint8_t brief_description[MAX_BRIEF_DESCRIPTION];
-    uint8_t briefing[MAX_BRIEFING];
+    uint8_t brief_description[64];
+    uint8_t briefing[522];
     int enemy_id;
     int is_open_play;
     int open_play_scenario_id;
@@ -171,13 +171,13 @@ extern struct scenario_t {
         int distant_battle_enemy_travel_months;
     } empire;
 
-    request_t requests[MAX_REQUESTS];
+    request_t requests[40];
 
-    demand_change_t demand_changes[MAX_DEMAND_CHANGES];
+    demand_change_t demand_changes[40];
 
-    price_change_t price_changes[MAX_DEMAND_CHANGES];
+    price_change_t price_changes[40];
 
-    invasion_t invasions[MAX_INVASIONS];
+    invasion_t invasions[40];
 
     struct {
         int severity;
@@ -216,11 +216,11 @@ extern struct scenario_t {
     map_point river_entry_point;
     map_point river_exit_point;
     map_point earthquake_point;
-    map_point herd_points[MAX_HERD_POINTS];
-    map_point fishing_points[MAX_FISH_POINTS];
-    map_point invasion_points[MAX_INVASION_POINTS];
+    map_point herd_points[6];
+    map_point fishing_points[16];
+    map_point invasion_points[16];
 
-    short allowed_buildings[MAX_ALLOWED_BUILDINGS];
+    short allowed_buildings[200];
 
     struct {
         int hut;
@@ -234,8 +234,8 @@ extern struct scenario_t {
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
-        uint8_t player_name[MAX_PLAYER_NAME];
-        uint8_t campaign_player_name[MAX_PLAYER_NAME]; /**< Temp storage for carrying over player name to next campaign mission */
+        uint8_t player_name[32];
+        uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
     } settings;
 
     int is_saved;

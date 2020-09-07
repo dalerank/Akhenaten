@@ -26,6 +26,8 @@ typedef struct scenario_data_buffers {
     buffer *request_extra;
     buffer *allowed_builds;
 
+    buffer *monuments;
+
 } scenario_data_buffers;
 
 int scenario_is_saved(void);

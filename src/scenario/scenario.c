@@ -40,9 +40,9 @@ void scenario_save_state(scenario_data_buffers *data) {
         buffer_write_i16(data->invasions, scenario.invasions[i].from);
     for (int i = 0; i < env_sizes().MAX_INVASIONS; i++)
         buffer_write_i16(data->invasions, scenario.invasions[i].attack_type);
+//    buffer_write_i16(data->invasions, 0);
 
     // info 1
-    buffer_write_i16(data->info1, 0);
     buffer_write_i32(data->info1, scenario.initial_funds);
     buffer_write_i16(data->info1, scenario.enemy_id);
     buffer_write_i16(data->info1, 0);
@@ -131,10 +131,7 @@ void scenario_save_state(scenario_data_buffers *data) {
     buffer_write_i32(data->wheat, scenario.rome_supplies_wheat);
 
     // allowed buildings
-    int MAX_ALLOWED_BUILDINGS = 50;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        MAX_ALLOWED_BUILDINGS = 114;
-    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++)
+    for (int i = 0; i < env_sizes().MAX_ALLOWED_BUILDINGS; i++)
         buffer_write_i16(data->allowed_builds, scenario.allowed_buildings[i]);
 
     // win criteria
@@ -236,7 +233,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     scenario.empire.id = buffer_read_i16(data->header); // 2 bytes
     buffer_skip(data->header, 8);
 
-    // 3. map info (614)
+    // 3. map info 1 (614)
     // (12)
     scenario.initial_funds = buffer_read_i32(data->info1); // 4
     scenario.enemy_id = buffer_read_i16(data->info1); // 2
@@ -418,10 +415,7 @@ void scenario_load_state(scenario_data_buffers *data) {
         scenario.requests[i].months_to_comply = buffer_read_u8(data->request_extra); // 1
 
     // 12. allowed buildings (100 / 228)
-    int MAX_ALLOWED_BUILDINGS = 50;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        MAX_ALLOWED_BUILDINGS = 114;
-    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) //                                                                  01 00 01 00 01
+    for (int i = 0; i < env_sizes().MAX_ALLOWED_BUILDINGS; i++) //                                                                  01 00 01 00 01
         scenario.allowed_buildings[i] = buffer_read_i16(data->allowed_builds); // 2                     00 01 00 01 00 00 00 01 00 01 00 01 00 01 00 00
                                                     //                                 00 01 00 01 00 01 00 01 00 00 00 01 00 01 00 01
                                                     //                                 00 01 00 01 00 01 00 01 00 01 00 01 00 01 00 01

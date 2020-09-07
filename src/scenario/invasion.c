@@ -107,7 +107,7 @@ void scenario_invasion_init(void) {
         return;
     }
     invasion_warning *warning = &data.warnings[1];
-    for (int i = 0; i < MAX_INVASIONS; i++) {
+    for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
         random_generate_next();
         if (!scenario.invasions[i].type) {
             continue;
@@ -163,7 +163,7 @@ void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_
 
 int scenario_invasion_count(void) {
     int num_invasions = 0;
-    for (int i = 0; i < MAX_INVASIONS; i++) {
+    for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
         if (scenario.invasions[i].type) {
             num_invasions++;
         }
@@ -231,12 +231,12 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         y = entry_point.y;
     } else {
         int num_points = 0;
-        for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+        for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++) {
             if (scenario.invasion_points[i].x != -1) {
                 num_points++;
             }
         }
-        if (invasion_point == MAX_INVASION_POINTS) { // random
+        if (invasion_point == env_sizes().MAX_INVASION_POINTS) { // random
             if (num_points <= 2) {
                 invasion_point = random_byte() & 1;
             } else if (num_points <= 4) {
@@ -248,7 +248,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         if (num_points > 0) {
             while (scenario.invasion_points[invasion_point].x == -1) {
                 invasion_point++;
-                if (invasion_point >= MAX_INVASION_POINTS) {
+                if (invasion_point >= env_sizes().MAX_INVASION_POINTS) {
                     invasion_point = 0;
                 }
             }
@@ -376,7 +376,7 @@ void scenario_invasion_process(void) {
         }
     }
     // local uprisings
-    for (int i = 0; i < MAX_INVASIONS; i++) {
+    for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
         if (scenario.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING) {
             if (game_time_year() == scenario.start_year + scenario.invasions[i].year &&
                 game_time_month() == scenario.invasions[i].month) {

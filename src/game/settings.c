@@ -5,10 +5,11 @@
 #include "core/calc.h"
 #include "core/io.h"
 #include "core/string.h"
+#include "core/game_environment.h"
 
 #define INF_SIZE 560
 #define MAX_PERSONAL_SAVINGS 100
-#define MAX_PLAYER_NAME 32
+//#define env_sizes().MAX_PLAYER_NAME 32
 
 static struct {
     // display settings
@@ -32,7 +33,7 @@ static struct {
     int victory_video;
     // persistent game state
     int last_advisor;
-    uint8_t player_name[MAX_PLAYER_NAME];
+    uint8_t player_name[32];
     // personal savings
     int personal_savings[MAX_PERSONAL_SAVINGS];
     // file data
@@ -77,7 +78,7 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 6);
     data.game_speed = buffer_read_i32(buf);
     data.scroll_speed = buffer_read_i32(buf);
-    buffer_read_raw(buf, data.player_name, MAX_PLAYER_NAME);
+    buffer_read_raw(buf, data.player_name, env_sizes().MAX_PLAYER_NAME);
     buffer_skip(buf, 16);
     data.last_advisor = buffer_read_i32(buf);
     buffer_skip(buf, 4); //int save_game_mission_id;
@@ -147,7 +148,7 @@ void settings_save(void)
     buffer_skip(buf, 6);
     buffer_write_i32(buf, data.game_speed);
     buffer_write_i32(buf, data.scroll_speed);
-    buffer_write_raw(buf, data.player_name, MAX_PLAYER_NAME);
+    buffer_write_raw(buf, data.player_name, env_sizes().MAX_PLAYER_NAME);
     buffer_skip(buf, 16);
     buffer_write_i32(buf, data.last_advisor);
     buffer_skip(buf, 4); //int save_game_mission_id;
@@ -358,7 +359,7 @@ const uint8_t *setting_player_name(void)
 }
 void setting_set_player_name(const uint8_t *player_name)
 {
-    string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
+    string_copy(player_name, data.player_name, env_sizes().MAX_PLAYER_NAME);
 }
 
 int setting_personal_savings_for_mission(int mission_id)

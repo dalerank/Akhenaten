@@ -227,11 +227,25 @@ typedef struct {
     buffer *junk4;
     buffer *junk5;
     buffer *junk6;
+    buffer *junk7;
+    buffer *junk8;
+    buffer *junk9;
+    buffer *junk10;
+    buffer *junk11;
+    buffer *junk12;
+    buffer *junk13;
+    buffer *junk14;
+    buffer *junk15;
+    buffer *junk16;
+    buffer *junk17;
+    buffer *junk18;
+    buffer *junk19;
+    buffer *junk20;
 } savegame_state;
 
 static struct {
     int num_pieces;
-    file_piece pieces[100];
+    file_piece pieces[200];
     savegame_state state;
 } savegame_data = {0};
 
@@ -306,7 +320,6 @@ static void init_savegame_buffers(savegame_state* state)
 //    state->scenario = 0;
 
 //    state->scenario_data = {0};
-
     state->scenario_data.header = 0;
     state->scenario_data.info1 = 0;
     state->scenario_data.info2 = 0;
@@ -327,6 +340,8 @@ static void init_savegame_buffers(savegame_state* state)
     state->scenario_data.fishing_points = 0;
     state->scenario_data.request_extra = 0;
     state->scenario_data.allowed_builds = 0;
+    // pharaoh only
+    state->scenario_data.monuments = 0;
 
     state->max_game_year = 0;
     state->earthquake = 0;
@@ -592,7 +607,7 @@ static void init_savegame_data(void)
                 state->city_graph_order = create_savegame_piece(8, 0); // I guess ????
 //                state->emperor_change_time = create_savegame_piece(8, 0); // MISSING
                 state->empire = create_savegame_piece(12, 0); // ok ???
-                    state->empire_cities = create_savegame_piece(2706*10, 1); // 83920 + 7681 --> 91601
+                    state->empire_cities = create_savegame_piece(2706, 1); // 83920 + 7681 --> 91601
 
                 state->building_count_industry = create_savegame_piece(288, 0); // 288 bytes ??????
                 state->trade_prices = create_savegame_piece(288, 0);
@@ -605,7 +620,7 @@ static void init_savegame_data(void)
 
 
 //                state->scenario = create_savegame_piece(1720, 0); // MISSING
-                state->scenario_data.header = create_savegame_piece(14, 0);
+                state->scenario_data.header = create_savegame_piece(32, 0);
                 state->scenario_data.info1 = create_savegame_piece(614, 0);
 //                state->scenario_request_can_comply_dialogs = create_savegame_piece(20, 0); // MISSING
                 state->scenario_data.info2 = create_savegame_piece(6, 0);
@@ -629,9 +644,16 @@ static void init_savegame_data(void)
                 state->scenario_data.allowed_builds = create_savegame_piece(228, 0);
 
         // 24 bytes     FF FF FF FF (cyclic) ???
-        // 312 bytes
+        state->junk4 = create_savegame_piece(24, 0); // unknown bytes
+
+                state->scenario_data.monuments = create_savegame_piece(10, 0); // 4 bytes + 3 x 2-byte
 
 
+        // 290 bytes    00 00 00 00 ???
+        // 4 bytes      00 00 00 00 ???
+        // 4 bytes      00 00 00 00 ???
+        // 4 bytes      00 00 00 00 ???
+        state->junk5 = create_savegame_piece(290+4+4+4, 0); // unknown bytes
 
                 /////////////////////
 
@@ -657,7 +679,7 @@ static void init_savegame_data(void)
                     state->building_list_burning = create_savegame_piece(1000, 1); // ok
                     state->building_list_small = create_savegame_piece(1000, 1); // ok
                     state->building_list_large = create_savegame_piece(4000, 1); // ok
-                state->tutorial_part1 = create_savegame_piece(32, 0); // ok
+                state->tutorial_part1 = create_savegame_piece(32, 0); // ok ????
 
 //                state->building_count_military = create_savegame_piece(16, 0);
 //                state->enemy_army_totals = create_savegame_piece(20, 0);
@@ -666,7 +688,11 @@ static void init_savegame_data(void)
 //                state->building_count_support = create_savegame_piece(24, 0);
 //                state->tutorial_part2 = create_savegame_piece(4, 0);
 //                state->gladiator_revolt = create_savegame_piece(16, 0);
-        state->junk3 = create_savegame_piece(39224, 0); // 39224 bytes
+
+
+        // 24 bytes     00 00 00 00 ???
+        // 39200 bytes  00 00 00 00 ??? 200 x 196-byte chunk
+        state->junk6 = create_savegame_piece(39224, 0); // 39224 bytes
 
                     state->trade_route_limit = create_savegame_piece(1280, 1); // ok
                     state->trade_route_traded = create_savegame_piece(1280, 1); // ok
@@ -676,13 +702,17 @@ static void init_savegame_data(void)
 //                state->routing_counters = create_savegame_piece(16, 0);
 //                state->building_count_culture3 = create_savegame_piece(40, 0);
 //                state->enemy_armies = create_savegame_piece(900, 0);
-        state->junk4 = create_savegame_piece(12, 0); // 12 bytes
+
+        // 12 bytes     00 00 00 00 ???
+        state->junk7 = create_savegame_piece(12, 0); // 12 bytes
 
                 state->city_entry_exit_xy = create_savegame_piece(16, 0); // ok ?????
 
 //                state->last_invasion_id = create_savegame_piece(2, 0);
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
-        state->junk5 = create_savegame_piece(22, 0); // 22 bytes
+
+        // 22 bytes     00 00 00 00 ???
+        state->junk8 = create_savegame_piece(22, 0); // 22 bytes
 
                 state->scenario_name = create_savegame_piece(65, 0); // ok
                 state->bookmarks = create_savegame_piece(32, 0); // ok
@@ -690,14 +720,49 @@ static void init_savegame_data(void)
                 state->city_entry_exit_grid_offset = create_savegame_piece(8, 0); // ok ????
 
 //                state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness 150684
-        state->junk6 = create_savegame_piece(150680, 0); // 71x 4-bytes emptiness
+
+        // 52370 bytes  00 00 00 00 ???
+        // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
+        // 38 bytes     2F 01 00 00 ???
+        // 13416 bytes  00 00 00 00 ???
+        // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
+        state->junk9 = create_savegame_piece(52370+18600+38+13416+8200, 0); // 71x 4-bytes emptiness
+
+        state->junk10 = create_savegame_piece(6200, 1); // unknown compressed data
+        state->junk11 = create_savegame_piece(6200, 1); // unknown compressed data
+        state->junk12 = create_savegame_piece(6200, 1); // unknown compressed data
+
+        // 51984 bytes  FF FF FF FF ???
+        // 20 bytes     19 00 00 00 ???
+        // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
+        state->junk13 = create_savegame_piece(51984+20+528, 0); // 71x 4-bytes emptiness
+
+        state->junk14 = create_savegame_piece(26244, 1); // unknown compressed data
+        state->junk15 = create_savegame_piece(26244, 1); // unknown compressed data
+
+        // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
+        // 64 bytes     00 00 00 00 ???
+        // 41 bytes     00 00 00 00 ??? 41 x 1-byte flag fields
+        state->junk16 = create_savegame_piece(312+64+41, 0); // 71x 4-bytes emptiness
+
+        state->junk17 = create_savegame_piece(26244, 1); // unknown compressed data
+
+        // lone byte ???
+        state->junk18 = create_savegame_piece(1, 0);
+
+        state->junk19 = create_savegame_piece(26244, 1); // unknown compressed data
+
+        // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
+        // 20 bytes     00 00 00 00 ???
+        // 4800 bytes   00 00 00 00 ??? 41 x 1-byte flag fields
+        state->junk20 = create_savegame_piece(672+20+4800, 0);
 
                 break;
             }
     }
 }
-static void init_savegame_data_expanded(void) // this SHOULD only happen in C3....
-{
+static void init_savegame_data_expanded(void)
+{ // this SHOULD only happen in C3....
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++) {
             buffer_reset(&savegame_data.pieces[i].buf);
@@ -706,7 +771,10 @@ static void init_savegame_data_expanded(void) // this SHOULD only happen in C3..
         //return;
         savegame_data.num_pieces = 0;
     }
+
     savegame_state *state = &savegame_data.state;
+    init_savegame_buffers(state);
+
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->file_version = create_savegame_piece(4, 0);
     state->image_grid = create_savegame_piece(52488, 1);
