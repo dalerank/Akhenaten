@@ -9,6 +9,7 @@
 #include "city/finance.h"
 #include "city/view.h"
 #include "core/config.h"
+#include "core/game_environment.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
@@ -45,41 +46,70 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {
     60, 60, 75, 75, 90, 90, 105, 105, 120
 };
 
-#define OFFSET(x,y) (x + GRID_SIZE * y)
+//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
-static const int TILE_GRID_OFFSETS[4][MAX_TILES] = {
-    {OFFSET(0,0),
-    OFFSET(0,1), OFFSET(1,0), OFFSET(1,1),
-    OFFSET(0,2), OFFSET(2,0), OFFSET(1,2), OFFSET(2,1), OFFSET(2,2),
-    OFFSET(0,3), OFFSET(3,0), OFFSET(1,3), OFFSET(3,1), OFFSET(2,3), OFFSET(3,2), OFFSET(3,3),
-    OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4)},
-    {OFFSET(0,0),
-    OFFSET(-1,0), OFFSET(0,1), OFFSET(-1,1),
-    OFFSET(-2,0), OFFSET(0,2), OFFSET(-2,1), OFFSET(-1,2), OFFSET(-2,2),
-    OFFSET(-3,0), OFFSET(0,3), OFFSET(-3,1), OFFSET(-1,3), OFFSET(-3,2), OFFSET(-2,3), OFFSET(-3,3),
-    OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4)},
-    {OFFSET(0,0),
-    OFFSET(0,-1), OFFSET(-1,0), OFFSET(-1,-1),
-    OFFSET(0,-2), OFFSET(-2,0), OFFSET(-1,-2), OFFSET(-2,-1), OFFSET(-2,-2),
-    OFFSET(0,-3), OFFSET(-3,0), OFFSET(-1,-3), OFFSET(-3,-1), OFFSET(-2,-3), OFFSET(-3,-2), OFFSET(-3,-3),
-    OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4)},
-    {OFFSET(0,0),
-    OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1),
-    OFFSET(2,0), OFFSET(0,-2), OFFSET(2,-1), OFFSET(1,-2), OFFSET(2,-2),
-    OFFSET(3,0), OFFSET(0,-3), OFFSET(3,-1), OFFSET(1,-3), OFFSET(3,-2), OFFSET(2,-3), OFFSET(3,-3),
-    OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4)},
+static const int TILE_GRID_OFFSETS_C3[4][MAX_TILES] = {
+    {OFFSET_C3(0,0),
+    OFFSET_C3(0,1), OFFSET_C3(1,0), OFFSET_C3(1,1),
+    OFFSET_C3(0,2), OFFSET_C3(2,0), OFFSET_C3(1,2), OFFSET_C3(2,1), OFFSET_C3(2,2),
+    OFFSET_C3(0,3), OFFSET_C3(3,0), OFFSET_C3(1,3), OFFSET_C3(3,1), OFFSET_C3(2,3), OFFSET_C3(3,2), OFFSET_C3(3,3),
+    OFFSET_C3(0,4), OFFSET_C3(4,0), OFFSET_C3(1,4), OFFSET_C3(4,1), OFFSET_C3(2,4), OFFSET_C3(4,2), OFFSET_C3(3,4), OFFSET_C3(4,3), OFFSET_C3(4,4)},
+    {OFFSET_C3(0,0),
+    OFFSET_C3(-1,0), OFFSET_C3(0,1), OFFSET_C3(-1,1),
+    OFFSET_C3(-2,0), OFFSET_C3(0,2), OFFSET_C3(-2,1), OFFSET_C3(-1,2), OFFSET_C3(-2,2),
+    OFFSET_C3(-3,0), OFFSET_C3(0,3), OFFSET_C3(-3,1), OFFSET_C3(-1,3), OFFSET_C3(-3,2), OFFSET_C3(-2,3), OFFSET_C3(-3,3),
+    OFFSET_C3(-4,0), OFFSET_C3(0,4), OFFSET_C3(-4,1), OFFSET_C3(-1,4), OFFSET_C3(-4,2), OFFSET_C3(-2,4), OFFSET_C3(-4,3), OFFSET_C3(-3,4), OFFSET_C3(-4,4)},
+    {OFFSET_C3(0,0),
+    OFFSET_C3(0,-1), OFFSET_C3(-1,0), OFFSET_C3(-1,-1),
+    OFFSET_C3(0,-2), OFFSET_C3(-2,0), OFFSET_C3(-1,-2), OFFSET_C3(-2,-1), OFFSET_C3(-2,-2),
+    OFFSET_C3(0,-3), OFFSET_C3(-3,0), OFFSET_C3(-1,-3), OFFSET_C3(-3,-1), OFFSET_C3(-2,-3), OFFSET_C3(-3,-2), OFFSET_C3(-3,-3),
+    OFFSET_C3(0,-4), OFFSET_C3(-4,0), OFFSET_C3(-1,-4), OFFSET_C3(-4,-1), OFFSET_C3(-2,-4), OFFSET_C3(-4,-2), OFFSET_C3(-3,-4), OFFSET_C3(-4,-3), OFFSET_C3(-4,-4)},
+    {OFFSET_C3(0,0),
+    OFFSET_C3(1,0), OFFSET_C3(0,-1), OFFSET_C3(1,-1),
+    OFFSET_C3(2,0), OFFSET_C3(0,-2), OFFSET_C3(2,-1), OFFSET_C3(1,-2), OFFSET_C3(2,-2),
+    OFFSET_C3(3,0), OFFSET_C3(0,-3), OFFSET_C3(3,-1), OFFSET_C3(1,-3), OFFSET_C3(3,-2), OFFSET_C3(2,-3), OFFSET_C3(3,-3),
+    OFFSET_C3(4,0), OFFSET_C3(0,-4), OFFSET_C3(4,-1), OFFSET_C3(1,-4), OFFSET_C3(4,-2), OFFSET_C3(2,-4), OFFSET_C3(4,-3), OFFSET_C3(3,-4), OFFSET_C3(4,-4)},
+};
+static const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
+    {OFFSET_PH(0,0),
+    OFFSET_PH(0,1), OFFSET_PH(1,0), OFFSET_PH(1,1),
+    OFFSET_PH(0,2), OFFSET_PH(2,0), OFFSET_PH(1,2), OFFSET_PH(2,1), OFFSET_PH(2,2),
+    OFFSET_PH(0,3), OFFSET_PH(3,0), OFFSET_PH(1,3), OFFSET_PH(3,1), OFFSET_PH(2,3), OFFSET_PH(3,2), OFFSET_PH(3,3),
+    OFFSET_PH(0,4), OFFSET_PH(4,0), OFFSET_PH(1,4), OFFSET_PH(4,1), OFFSET_PH(2,4), OFFSET_PH(4,2), OFFSET_PH(3,4), OFFSET_PH(4,3), OFFSET_PH(4,4)},
+    {OFFSET_PH(0,0),
+    OFFSET_PH(-1,0), OFFSET_PH(0,1), OFFSET_PH(-1,1),
+    OFFSET_PH(-2,0), OFFSET_PH(0,2), OFFSET_PH(-2,1), OFFSET_PH(-1,2), OFFSET_PH(-2,2),
+    OFFSET_PH(-3,0), OFFSET_PH(0,3), OFFSET_PH(-3,1), OFFSET_PH(-1,3), OFFSET_PH(-3,2), OFFSET_PH(-2,3), OFFSET_PH(-3,3),
+    OFFSET_PH(-4,0), OFFSET_PH(0,4), OFFSET_PH(-4,1), OFFSET_PH(-1,4), OFFSET_PH(-4,2), OFFSET_PH(-2,4), OFFSET_PH(-4,3), OFFSET_PH(-3,4), OFFSET_PH(-4,4)},
+    {OFFSET_PH(0,0),
+    OFFSET_PH(0,-1), OFFSET_PH(-1,0), OFFSET_PH(-1,-1),
+    OFFSET_PH(0,-2), OFFSET_PH(-2,0), OFFSET_PH(-1,-2), OFFSET_PH(-2,-1), OFFSET_PH(-2,-2),
+    OFFSET_PH(0,-3), OFFSET_PH(-3,0), OFFSET_PH(-1,-3), OFFSET_PH(-3,-1), OFFSET_PH(-2,-3), OFFSET_PH(-3,-2), OFFSET_PH(-3,-3),
+    OFFSET_PH(0,-4), OFFSET_PH(-4,0), OFFSET_PH(-1,-4), OFFSET_PH(-4,-1), OFFSET_PH(-2,-4), OFFSET_PH(-4,-2), OFFSET_PH(-3,-4), OFFSET_PH(-4,-3), OFFSET_PH(-4,-4)},
+    {OFFSET_PH(0,0),
+    OFFSET_PH(1,0), OFFSET_PH(0,-1), OFFSET_PH(1,-1),
+    OFFSET_PH(2,0), OFFSET_PH(0,-2), OFFSET_PH(2,-1), OFFSET_PH(1,-2), OFFSET_PH(2,-2),
+    OFFSET_PH(3,0), OFFSET_PH(0,-3), OFFSET_PH(3,-1), OFFSET_PH(1,-3), OFFSET_PH(3,-2), OFFSET_PH(2,-3), OFFSET_PH(3,-3),
+    OFFSET_PH(4,0), OFFSET_PH(0,-4), OFFSET_PH(4,-1), OFFSET_PH(1,-4), OFFSET_PH(4,-2), OFFSET_PH(2,-4), OFFSET_PH(4,-3), OFFSET_PH(3,-4), OFFSET_PH(4,-4)},
 };
 
-static const int FORT_GROUND_GRID_OFFSETS[4][4] = {
-    { OFFSET(3,-1),  OFFSET(4,-1), OFFSET(4,0),  OFFSET(3,0)},
-    { OFFSET(-1,-4), OFFSET(0,-4), OFFSET(0,-3), OFFSET(-1,-3)},
-    { OFFSET(-4,0),  OFFSET(-3,0), OFFSET(-3,1), OFFSET(-4,1)},
-    { OFFSET(0,3),   OFFSET(1,3), OFFSET(1,4),  OFFSET(0,4)}
+static const int FORT_GROUND_GRID_OFFSETS_C3[4][4] = {
+    { OFFSET_C3(3,-1),  OFFSET_C3(4,-1), OFFSET_C3(4,0),  OFFSET_C3(3,0)},
+    { OFFSET_C3(-1,-4), OFFSET_C3(0,-4), OFFSET_C3(0,-3), OFFSET_C3(-1,-3)},
+    { OFFSET_C3(-4,0),  OFFSET_C3(-3,0), OFFSET_C3(-3,1), OFFSET_C3(-4,1)},
+    { OFFSET_C3(0,3),   OFFSET_C3(1,3), OFFSET_C3(1,4),  OFFSET_C3(0,4)}
+};
+static const int FORT_GROUND_GRID_OFFSETS_PH[4][4] = {
+    { OFFSET_PH(3,-1),  OFFSET_PH(4,-1), OFFSET_PH(4,0),  OFFSET_PH(3,0)},
+    { OFFSET_PH(-1,-4), OFFSET_PH(0,-4), OFFSET_PH(0,-3), OFFSET_PH(-1,-3)},
+    { OFFSET_PH(-4,0),  OFFSET_PH(-3,0), OFFSET_PH(-3,1), OFFSET_PH(-4,1)},
+    { OFFSET_PH(0,3),   OFFSET_PH(1,3), OFFSET_PH(1,4),  OFFSET_PH(0,4)}
 };
 static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
 static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
 
-static const int RESERVOIR_GRID_OFFSETS[4] = {OFFSET(-1,-1), OFFSET(1,-1), OFFSET(1,1), OFFSET(-1,1)};
+static const int RESERVOIR_GRID_OFFSETS_C3[4] = {OFFSET_C3(-1,-1), OFFSET_C3(1,-1), OFFSET_C3(1,1), OFFSET_C3(-1,1)};
+static const int RESERVOIR_GRID_OFFSETS_PH[4] = {OFFSET_PH(-1,-1), OFFSET_PH(1,-1), OFFSET_PH(1,1), OFFSET_PH(-1,1)};
 
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
@@ -103,7 +133,15 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
     for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
+        int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
+        switch (GAME_ENV) {
+            case ENGINE_ENV_C3:
+                tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
+                break;
+            case ENGINE_ENV_PHARAOH:
+                tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
+                break;
+        }
         int tile_blocked = 0;
         if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
             tile_blocked = 1;
@@ -293,7 +331,15 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     int blocked_tiles[MAX_TILES];
     int orientation_index = city_view_orientation() / 2;
     for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
+        int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
+        switch (GAME_ENV) {
+            case ENGINE_ENV_C3:
+                tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
+                break;
+            case ENGINE_ENV_PHARAOH:
+                tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
+                break;
+        }
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_PLAZA || type == BUILDING_ROADBLOCK) {
             forbidden_terrain &= ~TERRAIN_ROAD;
@@ -406,8 +452,18 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             }
             if (!draw_later) {
                 if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
-                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+                    switch (GAME_ENV) {
+                        case ENGINE_ENV_C3:
+                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10, draw_first_reservoir_range);
+                            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10, draw_second_reservoir_range);
+                            break;
+                        case ENGINE_ENV_PHARAOH:
+                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10, draw_first_reservoir_range);
+                            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10, draw_second_reservoir_range);
+                            break;
+                    }
+//                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+//                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -424,10 +480,25 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
         }
     } else {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
-            if (draw_later) {
-                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+            switch (GAME_ENV) {
+                case ENGINE_ENV_C3:
+                    if (draw_later) {
+                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10, draw_first_reservoir_range);
+                    }
+                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10, draw_second_reservoir_range);
+                    break;
+                case ENGINE_ENV_PHARAOH:
+
+                    if (draw_later) {
+                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10, draw_first_reservoir_range);
+                    }
+                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10, draw_second_reservoir_range);
+                    break;
             }
-            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+//            if (draw_later) {
+//                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+//            }
+//            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
         }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
@@ -519,7 +590,15 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
         int has_water = 0;
         int orientation_index = city_view_orientation() / 2;
         for (int i = 0; i < num_tiles; i++) {
-            int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
+            int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
+            switch (GAME_ENV) {
+                case ENGINE_ENV_C3:
+                    tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
+                    break;
+                case ENGINE_ENV_PHARAOH:
+                    tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
+                    break;
+            }
             if (map_terrain_is(tile_offset, TERRAIN_RESERVOIR_RANGE)) {
                 has_water = 1;
             }
@@ -606,7 +685,15 @@ static void draw_fort(const map_tile *tile, int x, int y)
     num_tiles_ground *= num_tiles_ground;
 
     int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
+    int grid_offset_ground = grid_offset_fort;// + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_C3[building_rotation_get_rotation()][city_view_orientation()/2];
+            break;
+        case ENGINE_ENV_PHARAOH:
+            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_PH[building_rotation_get_rotation()][city_view_orientation()/2];
+            break;
+    }
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
 

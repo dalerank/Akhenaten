@@ -10,7 +10,7 @@
 #include "map/property.h"
 #include "map/terrain.h"
 
-#define OFFSET(x,y) (x + GRID_SIZE * y)
+//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id)
 {
@@ -60,6 +60,18 @@ static int blocked_land_terrain(void)
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
         TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN |
         TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
+}
+
+static int OFFSET(int x, int y)
+{
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            return OFFSET_C3(x, y);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            return OFFSET_PH(x, y);
+            break;
+    }
 }
 
 int map_water_determine_orientation_size2(int x, int y, int adjust_xy,

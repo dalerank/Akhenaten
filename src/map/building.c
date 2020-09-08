@@ -4,83 +4,72 @@
 #include "core/config.h"
 #include "map/grid.h"
 
-static grid_u16 buildings_grid;
-static grid_u8 damage_grid;
-static grid_u8 rubble_type_grid;
-static grid_u8 highlight_grid;
+static grid_u16_x buildings_grid = {0, 0};
+static grid_u8_x damage_grid = {0, 0};
+static grid_u8_x rubble_type_grid = {0, 0};
+static grid_u8_x highlight_grid = {0, 0};
 
 int map_building_at(int grid_offset)
 {
-    return map_grid_is_valid_offset(grid_offset) ? buildings_grid.items[grid_offset] : 0;
+    return map_grid_is_valid_offset(grid_offset) ? safe_u16(&buildings_grid)->items[grid_offset] : 0;
 }
-
 void map_building_set(int grid_offset, int building_id)
 {
-    buildings_grid.items[grid_offset] = building_id;
+    safe_u16(&buildings_grid)->items[grid_offset] = building_id;
 }
-
 void map_building_damage_clear(int grid_offset)
 {
-    damage_grid.items[grid_offset] = 0;
+    safe_u8(&damage_grid)->items[grid_offset] = 0;
 }
-
 void map_highlight_set(int grid_offset)
 {
-    highlight_grid.items[grid_offset] = 1;
+    safe_u8(&highlight_grid)->items[grid_offset] = 1;
 }
-
 void map_highlight_clear(int grid_offset)
 {
-    highlight_grid.items[grid_offset] = 0;
+    safe_u8(&highlight_grid)->items[grid_offset] = 0;
 }
-
 int map_is_highlighted(int grid_offset)
 {
     if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
-        return highlight_grid.items[grid_offset];
+        return safe_u8(&highlight_grid)->items[grid_offset];
     }
     else {    
         return 0;
     }
 }
-
 int map_building_damage_increase(int grid_offset)
 {
-    return ++damage_grid.items[grid_offset];
+    return ++safe_u8(&damage_grid)->items[grid_offset];
 }
-
 int map_rubble_building_type(int grid_offset)
 {
-    return rubble_type_grid.items[grid_offset];
+    return safe_u8(&rubble_type_grid)->items[grid_offset];
 }
-
 void map_set_rubble_building_type(int grid_offset, building_type type)
 {
-    rubble_type_grid.items[grid_offset] = type;
+    safe_u8(&rubble_type_grid)->items[grid_offset] = type;
 }
-
 void map_building_clear(void)
 {
-    map_grid_clear_u16(buildings_grid.items);
-    map_grid_clear_u8(damage_grid.items);
-    map_grid_clear_u8(rubble_type_grid.items);
+    map_grid_clear_u16(safe_u16(&buildings_grid)->items);
+    map_grid_clear_u8(safe_u8(&damage_grid)->items);
+    map_grid_clear_u8(safe_u8(&rubble_type_grid)->items);
 }
-
 void map_clear_highlights(void)
 {
-    map_grid_clear_u8(highlight_grid.items);
+    map_grid_clear_u8(safe_u8(&highlight_grid)->items);
 }
 
 void map_building_save_state(buffer *buildings, buffer *damage)
 {
-    map_grid_save_state_u16(buildings_grid.items, buildings);
-    map_grid_save_state_u8(damage_grid.items, damage);
+    map_grid_save_state_u16(safe_u16(&buildings_grid)->items, buildings);
+    map_grid_save_state_u8(safe_u8(&damage_grid)->items, damage);
 }
-
 void map_building_load_state(buffer *buildings, buffer *damage)
 {
-    map_grid_load_state_u16(buildings_grid.items, buildings);
-    map_grid_load_state_u8(damage_grid.items, damage);
+    map_grid_load_state_u16(safe_u16(&buildings_grid)->items, buildings);
+    map_grid_load_state_u8(safe_u8(&damage_grid)->items, damage);
 }
 
 int map_building_is_reservoir(int x, int y)

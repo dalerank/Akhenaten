@@ -2,28 +2,76 @@
 #define MAP_GRID_H
 
 #include "core/buffer.h"
+#include "core/game_environment.h"
 
 #include <stdint.h>
 
 enum {
-    GRID_SIZE = 162
+    GRID_SIZE_C3 = 162,
+    GRID_SIZE_PH = 228
 };
 
-typedef struct {
-    uint8_t items[GRID_SIZE * GRID_SIZE];
-} grid_u8;
+static int grid_size[] = {
+        GRID_SIZE_C3,
+        GRID_SIZE_PH
+};
+static int grid_total_size[] = {
+    GRID_SIZE_C3 * GRID_SIZE_C3,
+    GRID_SIZE_PH * GRID_SIZE_PH
+};
+
+#define OFFSET_C3(x,y) (x + GRID_SIZE_C3 * y)
+#define OFFSET_PH(x,y) (x + GRID_SIZE_PH * y)
 
 typedef struct {
-    int8_t items[GRID_SIZE * GRID_SIZE];
-} grid_i8;
+    uint8_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
+} grid_u8_C3;
 
 typedef struct {
-    uint16_t items[GRID_SIZE * GRID_SIZE];
-} grid_u16;
+    int8_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
+} grid_i8_C3;
 
 typedef struct {
-    int16_t items[GRID_SIZE * GRID_SIZE];
-} grid_i16;
+    uint16_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
+} grid_u16_C3;
+
+typedef struct {
+    int16_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
+} grid_i16_C3;
+
+/////
+
+#define MAX_GRID_ITEMS 300 * 300
+
+typedef struct {
+    int initialized;
+    uint8_t *items;
+} grid_u8_x;
+
+typedef struct {
+    int initialized;
+    int8_t *items;
+} grid_i8_x;
+
+typedef struct {
+    int initialized;
+    uint16_t *items;
+} grid_u16_x;
+
+typedef struct {
+    int initialized;
+    int16_t *items;
+} grid_i16_x;
+
+void grid_array_init_u8(grid_u8_x *grid);
+void grid_array_init_i8(grid_i8_x *grid);
+void grid_array_init_u16(grid_u16_x *grid);
+void grid_array_init_i16(grid_i16_x *grid);
+
+grid_u8_x *safe_u8(grid_u8_x *gr);
+grid_i8_x *safe_i8(grid_i8_x *gr);
+grid_u16_x *safe_u16(grid_u16_x *gr);
+grid_i16_x *safe_i16(grid_i16_x *gr);
 
 void map_grid_init(int width, int height, int start_offset, int border_size);
 

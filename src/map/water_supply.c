@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/image.h"
+#include "core/game_environment.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
 #include "map/data.h"
@@ -16,11 +17,11 @@
 
 #include <string.h>
 
-#define OFFSET(x,y) (x + GRID_SIZE * y)
+//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 #define MAX_QUEUE 1000
 
-static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
+//static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
 static struct {
     int items[MAX_QUEUE];
@@ -97,7 +98,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + 15;
     do {
-        if (++guard >= GRID_SIZE * GRID_SIZE) {
+        if (++guard >= grid_total_size[GAME_ENV]) {
             break;
         }
         map_aqueduct_set(grid_offset, 1);
@@ -107,6 +108,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
         }
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
+            const int ADJACENT_OFFSETS[] = {-grid_size[GAME_ENV], 1, grid_size[GAME_ENV], -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             building *b = building_get(map_building_at(new_offset));
             if (b->id && b->type == BUILDING_RESERVOIR) {
@@ -143,6 +145,18 @@ static void fill_aqueducts_from_offset(int grid_offset)
     } while (next_offset > -1);
 }
 
+static int OFFSET(int x, int y)
+{
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            return OFFSET_C3(x, y);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            return OFFSET_PH(x, y);
+            break;
+    }
+}
+
 void map_water_supply_update_reservoir_fountain(void)
 {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
@@ -165,7 +179,7 @@ void map_water_supply_update_reservoir_fountain(void)
     const int *reservoirs = building_list_large_items();
     // fill reservoirs from full ones
     int changed = 1;
-    static const int CONNECTOR_OFFSETS[] = {OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1)};
+    const int CONNECTOR_OFFSETS[] = {OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1)};
     while (changed == 1) {
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {

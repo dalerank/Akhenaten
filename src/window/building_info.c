@@ -43,7 +43,7 @@
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
 
-#define OFFSET(x,y) (x + GRID_SIZE * y)
+//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -233,6 +233,18 @@ void highlight_waypoints(building* b) // highlight the 4 routing tiles for roams
     window_invalidate();
 }
 
+int OFFSET(int x, int y)
+{
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            return OFFSET_C3(x, y);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            return OFFSET_PH(x, y);
+            break;
+    }
+}
+
 static void init(int grid_offset)
 {
     context.can_play_sound = 1;
@@ -346,7 +358,7 @@ static void init(int grid_offset)
     for (int i = 0; i < 7; i++) {
         context.figure.figure_ids[i] = 0;
     }
-    static const int FIGURE_OFFSETS[] = {
+    const int FIGURE_OFFSETS[] = {
         OFFSET(0,0), OFFSET(0,-1), OFFSET(0,1), OFFSET(1,0), OFFSET(-1,0),
         OFFSET(-1,-1), OFFSET(1,-1), OFFSET(-1,1), OFFSET(1,1)
     };

@@ -6,6 +6,8 @@
 
 #include "core/log.h"
 
+#include "assert.h"
+
 enum {
     PK_SUCCESS = 0,
     PK_INVALID_WINDOWSIZE = 1,
@@ -713,6 +715,10 @@ int zip_compress(const void *input_buffer, int input_length, void *output_buffer
         log_error("COMP Error occurred while compressing.", 0, 0);
         ok = 0;
     } else {
+//        assert(*output_length == token.output_ptr);
+        if (*output_length != token.output_ptr) {
+            int a = 235;
+        }
         *output_length = token.output_ptr;
     }
     free(buf);
@@ -736,8 +742,13 @@ int zip_decompress(const void *input_buffer, int input_length, void *output_buff
     if (pk_error || token.stop) {
         log_error("COMP Error uncompressing.", 0, 0);
         ok = 0;
-    } else
+    } else {
+//        assert(*output_length == token.output_ptr);
+        if (*output_length != token.output_ptr) {
+            int a = 235;
+        }
         *output_length = token.output_ptr;
+    }
     free(buf);
 //    SDL_Log("Compression returned: %i : %i", tots, lefts);
 //    tots = 0;

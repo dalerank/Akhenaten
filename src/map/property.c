@@ -28,11 +28,11 @@ enum {
     EDGE_NO_NATIVE_LAND = 0x7f,
 };
 
-static grid_u8 edge_grid;
-static grid_u8 bitfields_grid;
+static grid_u8_x edge_grid = {0, 0};
+static grid_u8_x bitfields_grid = {0, 0};
 
-static grid_u8 edge_backup;
-static grid_u8 bitfields_backup;
+static grid_u8_x edge_backup = {0, 0};
+static grid_u8_x bitfields_backup = {0, 0};
 
 static int edge_for(int x, int y)
 {
@@ -41,72 +41,63 @@ static int edge_for(int x, int y)
 
 int map_property_is_draw_tile(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & EDGE_LEFTMOST_TILE;
+    return safe_u8(&edge_grid)->items[grid_offset] & EDGE_LEFTMOST_TILE;
 }
-
 void map_property_mark_draw_tile(int grid_offset)
 {
-    edge_grid.items[grid_offset] |= EDGE_LEFTMOST_TILE;
+    safe_u8(&edge_grid)->items[grid_offset] |= EDGE_LEFTMOST_TILE;
 }
-
 void map_property_clear_draw_tile(int grid_offset)
 {
-    edge_grid.items[grid_offset] &= ~EDGE_LEFTMOST_TILE;
+    safe_u8(&edge_grid)->items[grid_offset] &= ~EDGE_LEFTMOST_TILE;
 }
-
 int map_property_is_native_land(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & EDGE_NATIVE_LAND;
+    return safe_u8(&edge_grid)->items[grid_offset] & EDGE_NATIVE_LAND;
 }
 
 void map_property_mark_native_land(int grid_offset)
 {
-    edge_grid.items[grid_offset] |= EDGE_NATIVE_LAND;
+    safe_u8(&edge_grid)->items[grid_offset] |= EDGE_NATIVE_LAND;
 }
-
 void map_property_clear_all_native_land(void)
 {
-    map_grid_and_u8(edge_grid.items, EDGE_NO_NATIVE_LAND);
+    map_grid_and_u8(safe_u8(&edge_grid)->items, EDGE_NO_NATIVE_LAND);
 }
 
 int map_property_multi_tile_xy(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & EDGE_MASK_XY;
+    return safe_u8(&edge_grid)->items[grid_offset] & EDGE_MASK_XY;
 }
-
 int map_property_multi_tile_x(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & EDGE_MASK_X;
+    return safe_u8(&edge_grid)->items[grid_offset] & EDGE_MASK_X;
 }
-
 int map_property_multi_tile_y(int grid_offset)
 {
-    return edge_grid.items[grid_offset] & EDGE_MASK_Y;
+    return safe_u8(&edge_grid)->items[grid_offset] & EDGE_MASK_Y;
 }
 
 int map_property_is_multi_tile_xy(int grid_offset, int x, int y)
 {
-    return (edge_grid.items[grid_offset] & EDGE_MASK_XY) == edge_for(x, y);
+    return (safe_u8(&edge_grid)->items[grid_offset] & EDGE_MASK_XY) == edge_for(x, y);
 }
-
 void map_property_set_multi_tile_xy(int grid_offset, int x, int y, int is_draw_tile)
 {
     if (is_draw_tile) {
-        edge_grid.items[grid_offset] = edge_for(x, y) | EDGE_LEFTMOST_TILE;
+        safe_u8(&edge_grid)->items[grid_offset] = edge_for(x, y) | EDGE_LEFTMOST_TILE;
     } else {
-        edge_grid.items[grid_offset] = edge_for(x, y);
+        safe_u8(&edge_grid)->items[grid_offset] = edge_for(x, y);
     }
 }
-
 void map_property_clear_multi_tile_xy(int grid_offset)
 {
     // only keep native land marker
-    edge_grid.items[grid_offset] &= EDGE_NATIVE_LAND;
+    safe_u8(&edge_grid)->items[grid_offset] &= EDGE_NATIVE_LAND;
 }
-
 int map_property_multi_tile_size(int grid_offset)
 {
-    switch (bitfields_grid.items[grid_offset] & BIT_SIZES) {
+    switch (safe_u8(&bitfields_grid)->items[grid_offset] & BIT_SIZES) {
         case BIT_SIZE2: return 2;
         case BIT_SIZE3: return 3;
         case BIT_SIZE4: return 4;
@@ -114,15 +105,14 @@ int map_property_multi_tile_size(int grid_offset)
         default: return 1;
     }
 }
-
 void map_property_set_multi_tile_size(int grid_offset, int size)
 {
-    bitfields_grid.items[grid_offset] &= BIT_NO_SIZES;
+    safe_u8(&bitfields_grid)->items[grid_offset] &= BIT_NO_SIZES;
     switch (size) {
-        case 2: bitfields_grid.items[grid_offset] |= BIT_SIZE2; break;
-        case 3: bitfields_grid.items[grid_offset] |= BIT_SIZE3; break;
-        case 4: bitfields_grid.items[grid_offset] |= BIT_SIZE4; break;
-        case 5: bitfields_grid.items[grid_offset] |= BIT_SIZE5; break;
+        case 2: safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_SIZE2; break;
+        case 3: safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_SIZE3; break;
+        case 4: safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_SIZE4; break;
+        case 5: safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_SIZE5; break;
     }
 }
 
@@ -139,93 +129,80 @@ void map_property_init_alternate_terrain(void)
         }
     }
 }
-
 int map_property_is_alternate_terrain(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & BIT_ALTERNATE_TERRAIN;
+    return safe_u8(&bitfields_grid)->items[grid_offset] & BIT_ALTERNATE_TERRAIN;
 }
-
 void map_property_set_alternate_terrain(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= BIT_ALTERNATE_TERRAIN;
+    safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_ALTERNATE_TERRAIN;
 }
-
 int map_property_is_plaza_or_earthquake(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & BIT_PLAZA_OR_EARTHQUAKE;
+    return safe_u8(&bitfields_grid)->items[grid_offset] & BIT_PLAZA_OR_EARTHQUAKE;
 }
 
 void map_property_mark_plaza_or_earthquake(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= BIT_PLAZA_OR_EARTHQUAKE;
+    safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_PLAZA_OR_EARTHQUAKE;
 }
-
 void map_property_clear_plaza_or_earthquake(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= BIT_NO_PLAZA;
+    safe_u8(&bitfields_grid)->items[grid_offset] &= BIT_NO_PLAZA;
 }
 
 int map_property_is_constructing(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & BIT_CONSTRUCTION;
+    return safe_u8(&bitfields_grid)->items[grid_offset] & BIT_CONSTRUCTION;
 }
-
 void map_property_mark_constructing(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= BIT_CONSTRUCTION;
+    safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_CONSTRUCTION;
 }
-
 void map_property_clear_constructing(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= BIT_NO_CONSTRUCTION;
+    safe_u8(&bitfields_grid)->items[grid_offset] &= BIT_NO_CONSTRUCTION;
 }
-
 int map_property_is_deleted(int grid_offset)
 {
-    return bitfields_grid.items[grid_offset] & BIT_DELETED;
+    return safe_u8(&bitfields_grid)->items[grid_offset] & BIT_DELETED;
 }
 
 void map_property_mark_deleted(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] |= BIT_DELETED;
+    safe_u8(&bitfields_grid)->items[grid_offset] |= BIT_DELETED;
 }
-
 void map_property_clear_deleted(int grid_offset)
 {
-    bitfields_grid.items[grid_offset] &= BIT_NO_DELETED;
+    safe_u8(&bitfields_grid)->items[grid_offset] &= BIT_NO_DELETED;
 }
-
 void map_property_clear_constructing_and_deleted(void)
 {
-    map_grid_and_u8(bitfields_grid.items, BIT_NO_CONSTRUCTION_AND_DELETED);
+    map_grid_and_u8(safe_u8(&bitfields_grid)->items, BIT_NO_CONSTRUCTION_AND_DELETED);
 }
-
 void map_property_clear(void)
 {
-    map_grid_clear_u8(bitfields_grid.items);
-    map_grid_clear_u8(edge_grid.items);
+    map_grid_clear_u8(safe_u8(&bitfields_grid)->items);
+    map_grid_clear_u8(safe_u8(&edge_grid)->items);
 }
 
 void map_property_backup(void)
 {
-    map_grid_copy_u8(bitfields_grid.items, bitfields_backup.items);
-    map_grid_copy_u8(edge_grid.items, edge_backup.items);
+    map_grid_copy_u8(safe_u8(&bitfields_grid)->items, safe_u8(&bitfields_backup)->items);
+    map_grid_copy_u8(safe_u8(&edge_grid)->items, safe_u8(&edge_backup)->items);
 }
-
 void map_property_restore(void)
 {
-    map_grid_copy_u8(bitfields_backup.items, bitfields_grid.items);
-    map_grid_copy_u8(edge_backup.items, edge_grid.items);
+    map_grid_copy_u8(safe_u8(&bitfields_backup)->items, safe_u8(&bitfields_grid)->items);
+    map_grid_copy_u8(safe_u8(&edge_backup)->items, safe_u8(&edge_grid)->items);
 }
-
 void map_property_save_state(buffer *bitfields, buffer *edge)
 {
-    map_grid_save_state_u8(bitfields_grid.items, bitfields);
-    map_grid_save_state_u8(edge_grid.items, edge);
+    map_grid_save_state_u8(safe_u8(&bitfields_grid)->items, bitfields);
+    map_grid_save_state_u8(safe_u8(&edge_grid)->items, edge);
 }
-
 void map_property_load_state(buffer *bitfields, buffer *edge)
 {
-    map_grid_load_state_u8(bitfields_grid.items, bitfields);
-    map_grid_load_state_u8(edge_grid.items, edge);
+    map_grid_load_state_u8(safe_u8(&bitfields_grid)->items, bitfields);
+    map_grid_load_state_u8(safe_u8(&edge_grid)->items, edge);
 }

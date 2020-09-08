@@ -5,6 +5,7 @@
 #include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "core/game_environment.h"
 #include "game/system.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
@@ -254,8 +255,8 @@ static void create_full_city_screenshot(void)
     screen_set_resolution(canvas_width, TOP_MENU_HEIGHT + IMAGE_HEIGHT_CHUNK);
     graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, city_width_pixels, IMAGE_HEIGHT_CHUNK);
 
-    int base_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
-    int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
+    int base_width = (grid_size[GAME_ENV] * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
+    int max_height = (grid_size[GAME_ENV] * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
     map_tile dummy_tile = { 0, 0, 0 };
     int error = 0;

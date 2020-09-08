@@ -8,59 +8,53 @@
  * 2) to store image IDs for the aqueduct (0-15)
  * This leads to some strange results
  */
-static grid_u8 aqueduct;
-static grid_u8 aqueduct_backup;
+static grid_u8_x aqueduct = {0, 0};
+static grid_u8_x aqueduct_backup = {0, 0};
 
 int map_aqueduct_at(int grid_offset)
 {
-    return aqueduct.items[grid_offset];
+    return safe_u8(&aqueduct)->items[grid_offset];
 }
-
 void map_aqueduct_set(int grid_offset, int value)
 {
-    aqueduct.items[grid_offset] = value;
+    safe_u8(&aqueduct)->items[grid_offset] = value;
 }
-
 void map_aqueduct_remove(int grid_offset)
 {
-    aqueduct.items[grid_offset] = 0;
-    if (aqueduct.items[grid_offset + map_grid_delta(0, -1)] == 5) {
-        aqueduct.items[grid_offset + map_grid_delta(0, -1)] = 1;
+    safe_u8(&aqueduct)->items[grid_offset] = 0;
+    if (safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(0, -1)] == 5) {
+        safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(0, -1)] = 1;
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(1, 0)] == 6) {
-        aqueduct.items[grid_offset + map_grid_delta(1, 0)] = 2;
+    if (safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(1, 0)] == 6) {
+        safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(1, 0)] = 2;
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(0, 1)] == 5) {
-        aqueduct.items[grid_offset + map_grid_delta(0, 1)] = 3;
+    if (safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(0, 1)] == 5) {
+        safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(0, 1)] = 3;
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(-1, 0)] == 6) {
-        aqueduct.items[grid_offset + map_grid_delta(-1, 0)] = 4;
+    if (safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(-1, 0)] == 6) {
+        safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(-1, 0)] = 4;
     }
 }
-
 void map_aqueduct_clear(void)
 {
-    map_grid_clear_u8(aqueduct.items);
+    map_grid_clear_u8(safe_u8(&aqueduct)->items);
 }
-
 void map_aqueduct_backup(void)
 {
-    map_grid_copy_u8(aqueduct.items, aqueduct_backup.items);
+    map_grid_copy_u8(safe_u8(&aqueduct)->items, safe_u8(&aqueduct_backup)->items);
 }
-
 void map_aqueduct_restore(void)
 {
-    map_grid_copy_u8(aqueduct_backup.items, aqueduct.items);
+    map_grid_copy_u8(safe_u8(&aqueduct_backup)->items, safe_u8(&aqueduct)->items);
 }
 
 void map_aqueduct_save_state(buffer *buf, buffer *backup)
 {
-    map_grid_save_state_u8(aqueduct.items, buf);
-    map_grid_save_state_u8(aqueduct_backup.items, backup);
+    map_grid_save_state_u8(safe_u8(&aqueduct)->items, buf);
+    map_grid_save_state_u8(safe_u8(&aqueduct_backup)->items, backup);
 }
-
 void map_aqueduct_load_state(buffer *buf, buffer *backup)
 {
-    map_grid_load_state_u8(aqueduct.items, buf);
-    map_grid_load_state_u8(aqueduct_backup.items, backup);
+    map_grid_load_state_u8(safe_u8(&aqueduct)->items, buf);
+    map_grid_load_state_u8(safe_u8(&aqueduct_backup)->items, backup);
 }

@@ -4,6 +4,7 @@
 #include "city/view.h"
 #include "core/direction.h"
 #include "core/image.h"
+#include "core/game_environment.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
@@ -19,7 +20,7 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-#define OFFSET(x,y) (x + GRID_SIZE * y)
+//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
@@ -74,7 +75,7 @@ static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max,
             callback(xx, yy, grid_offset);
             ++grid_offset;
         }
-        grid_offset += GRID_SIZE - (x_max - x_min + 1);
+        grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
     }
 }
 
@@ -1008,24 +1009,43 @@ static void clear_access_ramp_image(int x, int y, int grid_offset)
     }
 }
 
+
+static const int offsets_C3[4][6] = {
+        {OFFSET_C3(0,1), OFFSET_C3(1,1), OFFSET_C3(0,0), OFFSET_C3(1,0), OFFSET_C3(0,2), OFFSET_C3(1,2)},
+        {OFFSET_C3(0,0), OFFSET_C3(0,1), OFFSET_C3(1,0), OFFSET_C3(1,1), OFFSET_C3(-1,0), OFFSET_C3(-1,1)},
+        {OFFSET_C3(0,0), OFFSET_C3(1,0), OFFSET_C3(0,1), OFFSET_C3(1,1), OFFSET_C3(0,-1), OFFSET_C3(1,-1)},
+        {OFFSET_C3(1,0), OFFSET_C3(1,1), OFFSET_C3(0,0), OFFSET_C3(0,1), OFFSET_C3(2,0), OFFSET_C3(2,1)},
+};
+static const int offsets_PH[4][6] = {
+        {OFFSET_PH(0,1), OFFSET_PH(1,1), OFFSET_PH(0,0), OFFSET_PH(1,0), OFFSET_PH(0,2), OFFSET_PH(1,2)},
+        {OFFSET_PH(0,0), OFFSET_PH(0,1), OFFSET_PH(1,0), OFFSET_PH(1,1), OFFSET_PH(-1,0), OFFSET_PH(-1,1)},
+        {OFFSET_PH(0,0), OFFSET_PH(1,0), OFFSET_PH(0,1), OFFSET_PH(1,1), OFFSET_PH(0,-1), OFFSET_PH(1,-1)},
+        {OFFSET_PH(1,0), OFFSET_PH(1,1), OFFSET_PH(0,0), OFFSET_PH(0,1), OFFSET_PH(2,0), OFFSET_PH(2,1)},
+};
+
+
 static int get_access_ramp_image_offset(int x, int y)
 {
     if (!map_grid_is_inside(x, y, 1)) {
         return -1;
     }
-    static const int offsets[4][6] = {
-        {OFFSET(0,1), OFFSET(1,1), OFFSET(0,0), OFFSET(1,0), OFFSET(0,2), OFFSET(1,2)},
-        {OFFSET(0,0), OFFSET(0,1), OFFSET(1,0), OFFSET(1,1), OFFSET(-1,0), OFFSET(-1,1)},
-        {OFFSET(0,0), OFFSET(1,0), OFFSET(0,1), OFFSET(1,1), OFFSET(0,-1), OFFSET(1,-1)},
-        {OFFSET(1,0), OFFSET(1,1), OFFSET(0,0), OFFSET(0,1), OFFSET(2,0), OFFSET(2,1)},
-    };
     int base_offset = map_grid_offset(x, y);
     int image_offset = -1;
     for (int dir = 0; dir < 4; dir++) {
         int right_tiles = 0;
         int height = -1;
         for (int i = 0; i < 6; i++) {
-            int grid_offset = base_offset + offsets[dir][i];
+            int grid_offset = base_offset;
+
+            switch (GAME_ENV) {
+                case ENGINE_ENV_C3:
+                    grid_offset += offsets_C3[dir][i];
+                    break;
+                case ENGINE_ENV_PHARAOH:
+                    grid_offset += offsets_PH[dir][i];
+                    break;
+            }
+
             if (i < 2) { // 2nd row
                 if (map_terrain_is(grid_offset, TERRAIN_ELEVATION)) {
                     right_tiles++;

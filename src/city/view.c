@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/direction.h"
+#include "core/game_environment.h"
 #include "graphics/menu.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -119,11 +120,20 @@ static void calculate_lookup(void)
             break;
     }
 
-    for (int y = 0; y < GRID_SIZE; y++) {
+    int grid_s;
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            grid_s = GRID_SIZE_C3;
+            break;
+        case ENGINE_ENV_PHARAOH:
+            grid_s = GRID_SIZE_PH;
+            break;
+    }
+    for (int y = 0; y < grid_s; y++) {
         int x_view = x_view_start;
         int y_view = y_view_start;
-        for (int x = 0; x < GRID_SIZE; x++) {
-            int grid_offset = x + GRID_SIZE * y;
+        for (int x = 0; x < grid_s; x++) {
+            int grid_offset = x + grid_s * y;
             if (map_image_at(grid_offset) < 6) {
                 view_to_grid_offset_lookup[x_view/2][y_view] = -1;
             } else {

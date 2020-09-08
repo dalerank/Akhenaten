@@ -10,9 +10,10 @@
 
 #define MAX_QUEUE 1000
 
-static const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
+static const int ADJACENT_OFFSETS_C3[] = {-GRID_SIZE_C3, 1, GRID_SIZE_C3, -1};
+static const int ADJACENT_OFFSETS_PH[] = {-GRID_SIZE_PH, 1, GRID_SIZE_PH, -1};
 
-static grid_u8 network;
+static grid_u8_x network = {0, 0};
 
 static struct {
     int items[MAX_QUEUE];
@@ -20,14 +21,23 @@ static struct {
     int tail;
 } queue;
 
-void map_road_network_clear(void)
+int adjacent_offsets(int i)
 {
-    map_grid_clear_u8(network.items);
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            return ADJACENT_OFFSETS_C3[i];
+        case ENGINE_ENV_PHARAOH:
+            return ADJACENT_OFFSETS_PH[i];
+    }
 }
 
+void map_road_network_clear(void)
+{
+    map_grid_clear_u8(safe_u8(&network)->items);
+}
 int map_road_network_get(int grid_offset)
 {
-    return network.items[grid_offset];
+    return safe_u8(&network)->items[grid_offset];
 }
 
 static int mark_road_network(int grid_offset, uint8_t network_id)
@@ -37,16 +47,16 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
     int next_offset;
     int size = 1;
     do {
-        if (++guard >= GRID_SIZE * GRID_SIZE) {
+        if (++guard >= grid_total_size[GAME_ENV]) {
             break;
         }
-        network.items[grid_offset] = network_id;
+        safe_u8(&network)->items[grid_offset] = network_id;
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
-            int new_offset = grid_offset + ADJACENT_OFFSETS[i];
-            if (map_routing_citizen_is_passable(new_offset) && !network.items[new_offset]) {
+            int new_offset = grid_offset + adjacent_offsets(i);
+            if (map_routing_citizen_is_passable(new_offset) && !safe_u8(&network)->items[new_offset]) {
                 if (map_routing_citizen_is_road(new_offset) || map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP)) {
-                    network.items[new_offset] = network_id;
+                    safe_u8(&network)->items[new_offset] = network_id;
                     size++;
                     if (next_offset == -1) {
                         next_offset = new_offset;
@@ -76,12 +86,12 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
 void map_road_network_update(void)
 {
     city_map_clear_largest_road_networks();
-    map_grid_clear_u8(network.items);
+    map_grid_clear_u8(safe_u8(&network)->items);
     int network_id = 1;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !network.items[grid_offset]) {
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !safe_u8(&network)->items[grid_offset]) {
                 int size = mark_road_network(grid_offset, network_id);
                 city_map_add_to_largest_road_networks(network_id, size);
                 network_id++;

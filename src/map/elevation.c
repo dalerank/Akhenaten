@@ -3,35 +3,32 @@
 #include "map/data.h"
 #include "map/grid.h"
 
-static grid_u8 elevation;
+static grid_u8_x elevation = {0, 0};
 
 int map_elevation_at(int grid_offset)
 {
-    return elevation.items[grid_offset];
+    return safe_u8(&elevation)->items[grid_offset];
 }
-
 void map_elevation_set(int grid_offset, int value)
 {
-    elevation.items[grid_offset] = value;
+    safe_u8(&elevation)->items[grid_offset] = value;
 }
 
 void map_elevation_clear(void)
 {
-    map_grid_clear_u8(elevation.items);
+    map_grid_clear_u8(safe_u8(&elevation)->items);
 }
-
 static void fix_cliff_tiles(int grid_offset)
 {
     // reduce elevation when the surrounding tiles are at least 2 lower
-    int max = elevation.items[grid_offset] - 1;
-    if (elevation.items[grid_offset + map_grid_delta(-1, 0)] < max ||
-        elevation.items[grid_offset + map_grid_delta(0, -1)] < max ||
-        elevation.items[grid_offset + map_grid_delta(1, 0)] < max ||
-        elevation.items[grid_offset + map_grid_delta(0, 1)] < max) {
-        elevation.items[grid_offset]--;
+    int max = safe_u8(&elevation)->items[grid_offset] - 1;
+    if (safe_u8(&elevation)->items[grid_offset + map_grid_delta(-1, 0)] < max ||
+        safe_u8(&elevation)->items[grid_offset + map_grid_delta(0, -1)] < max ||
+        safe_u8(&elevation)->items[grid_offset + map_grid_delta(1, 0)] < max ||
+        safe_u8(&elevation)->items[grid_offset + map_grid_delta(0, 1)] < max) {
+        safe_u8(&elevation)->items[grid_offset]--;
     }
 }
-
 void map_elevation_remove_cliffs(void)
 {
     // elevation is max 5, so we need 4 passes to fix the lot
@@ -39,7 +36,7 @@ void map_elevation_remove_cliffs(void)
         int grid_offset = map_data.start_offset;
         for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
             for (int x = 0; x < map_data.width; x++, grid_offset++) {
-                if (elevation.items[grid_offset] > 0) {
+                if (safe_u8(&elevation)->items[grid_offset] > 0) {
                     fix_cliff_tiles(grid_offset);
                 }
             }
@@ -49,10 +46,9 @@ void map_elevation_remove_cliffs(void)
 
 void map_elevation_save_state(buffer *buf)
 {
-    map_grid_save_state_u8(elevation.items, buf);
+    map_grid_save_state_u8(safe_u8(&elevation)->items, buf);
 }
-
 void map_elevation_load_state(buffer *buf)
 {
-    map_grid_load_state_u8(elevation.items, buf);
+    map_grid_load_state_u8(safe_u8(&elevation)->items, buf);
 }

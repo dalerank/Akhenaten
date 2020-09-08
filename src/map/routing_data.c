@@ -1,6 +1,6 @@
 #include "routing_data.h"
 
-grid_i8 terrain_land_citizen;
-grid_i8 terrain_land_noncitizen;
-grid_i8 terrain_water;
-grid_i8 terrain_walls;
+grid_i8_x terrain_land_citizen = {0, 0};
+grid_i8_x terrain_land_noncitizen = {0, 0};
+grid_i8_x terrain_water = {0, 0};
+grid_i8_x terrain_walls = {0, 0};
