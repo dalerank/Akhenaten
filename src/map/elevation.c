@@ -3,7 +3,7 @@
 #include "map/data.h"
 #include "map/grid.h"
 
-static grid_xx elevation = {0, FS_UINT8};
+static grid_xx elevation = {0, {FS_UINT8, FS_UINT8}};
 
 int map_elevation_at(int grid_offset)
 {

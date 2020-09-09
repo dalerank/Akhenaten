@@ -14,7 +14,7 @@
 
 static const int ROUTE_OFFSETS[] = {-162, 1, 162, -1, -161, 163, 161, -163};
 
-static grid_xx routing_distance = {0, FS_INT16};
+static grid_xx routing_distance = {0, {FS_INT16, FS_INT16}};
 
 static struct {
     int total_routes_calculated;
@@ -27,7 +27,7 @@ static struct {
     int items[MAX_QUEUE];
 } queue;
 
-static grid_xx water_drag = {0, FS_UINT8};
+static grid_xx water_drag = {0, {FS_UINT8, FS_UINT8}};
 
 static struct {
     int through_building_id;

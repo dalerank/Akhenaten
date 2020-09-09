@@ -8,8 +8,8 @@
  * 2) to store image IDs for the aqueduct (0-15)
  * This leads to some strange results
  */
-static grid_xx aqueduct = {0, FS_UINT8};
-static grid_xx aqueduct_backup = {0, FS_UINT8};
+static grid_xx aqueduct = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx aqueduct_backup = {0, {FS_UINT8, FS_UINT8}};
 
 int map_aqueduct_at(int grid_offset)
 {

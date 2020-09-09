@@ -23,24 +23,6 @@ static int grid_total_size[] = {
 #define OFFSET_C3(x,y) (x + GRID_SIZE_C3 * y)
 #define OFFSET_PH(x,y) (x + GRID_SIZE_PH * y)
 
-//typedef struct {
-//    uint8_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
-//} grid_u8_C3;
-//
-//typedef struct {
-//    int8_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
-//} grid_i8_C3;
-//
-//typedef struct {
-//    uint16_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
-//} grid_u16_C3;
-//
-//typedef struct {
-//    int16_t items[GRID_SIZE_C3 * GRID_SIZE_C3];
-//} grid_i16_C3;
-
-/////
-
 #define MAX_GRID_ITEMS 300 * 300
 
 enum {
@@ -48,7 +30,9 @@ enum {
     FS_UINT8 = 1,
     FS_INT8 = 2,
     FS_UINT16 = 3,
-    FS_INT16 = 4
+    FS_INT16 = 4,
+    FS_UINT32 = 5,
+    FS_INT32 = 6
 };
 
 static size_t gr_sizes[] = {
@@ -56,41 +40,19 @@ static size_t gr_sizes[] = {
         sizeof(uint8_t),
         sizeof(int8_t),
         sizeof(uint16_t),
-        sizeof(int16_t)
+        sizeof(int16_t),
+        sizeof(uint32_t),
+        sizeof(int32_t)
 };
 
 typedef struct {
     int initialized;
-    char datatype;
+    char datatype[2];
     size_t size_field;
     int size_total;
 
     void *items_xx;
-//    uint8_t *items_u8;
-//    int8_t *items_i8;
-//    uint16_t *items_u16;
-//    int16_t *items_i16;
 } grid_xx;
-
-//typedef struct {
-//    int initialized;
-//    uint8_t *items;
-//} grid_u8_x;
-//
-//typedef struct {
-//    int initialized;
-//    int8_t *items;
-//} grid_i8_x;
-//
-//typedef struct {
-//    int initialized;
-//    uint16_t *items;
-//} grid_u16_x;
-//
-//typedef struct {
-//    int initialized;
-//    int16_t *items;
-//} grid_i16_x;
 
 void map_grid_init(grid_xx *grid);
 int map_grid_get(grid_xx *grid, uint32_t at);
@@ -105,16 +67,6 @@ void map_grid_and_all(grid_xx *grid, int mask);
 
 void map_grid_save_state(grid_xx *grid, buffer *buf);
 void map_grid_load_state(grid_xx *grid, buffer *buf);
-
-//void grid_array_init_u8(grid_u8_x *grid);
-//void grid_array_init_i8(grid_i8_x *grid);
-//void grid_array_init_u16(grid_u16_x *grid);
-//void grid_array_init_i16(grid_i16_x *grid);
-//
-//grid_u8_x *safe_u8(grid_u8_x *gr);
-//grid_i8_x *safe_i8(grid_i8_x *gr);
-//grid_u16_x *safe_u16(grid_u16_x *gr);
-//grid_i16_x *safe_i16(grid_i16_x *gr);
 
 void map_data_init(int width, int height, int start_offset, int border_size);
 
@@ -139,20 +91,6 @@ void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_mi
 void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max, int *y_max);
 int map_grid_is_inside(int x, int y, int size);
 const int *map_grid_adjacent_offsets(int size);
-
-//void map_grid_init_i8(int8_t *grid, int8_t value);
-//
-//void map_grid_clear_u8(uint8_t *grid);
-//void map_grid_clear_i8(int8_t *grid);
-//void map_grid_clear_u16(uint16_t *grid);
-//void map_grid_clear_i16(int16_t *grid);
-//
-//void map_grid_and_u8(uint8_t *grid, uint8_t mask);
-//void map_grid_and_u16(uint16_t *grid, uint16_t mask);
-//
-//void map_grid_copy_u8(const uint8_t *src, uint8_t *dst);
-//void map_grid_copy_u16(const uint16_t *src, uint16_t *dst);
-
 
 void map_grid_save_state_u8(const uint8_t *grid, buffer *buf);
 void map_grid_save_state_i8(const int8_t *grid, buffer *buf);

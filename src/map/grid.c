@@ -63,7 +63,7 @@ static const int ADJACENT_OFFSETS_PH[][21] = {
 
 void map_grid_init(grid_xx *grid)
 {
-    grid->size_field = gr_sizes[grid->datatype];
+    grid->size_field = gr_sizes[grid->datatype[GAME_ENV]];
     grid->size_total = grid->size_field * grid_total_size[GAME_ENV];
     grid->items_xx = malloc(grid->size_total);
     grid->initialized = 1;
@@ -77,7 +77,7 @@ int map_grid_get(grid_xx *grid, uint32_t at)
         return 0;
     }
 //    assert(at < grid_total_size[GAME_ENV]);
-    switch (grid->datatype) {
+    switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
             return (int)((uint8_t*)grid->items_xx)[at];
         case FS_INT8:
@@ -96,7 +96,7 @@ void map_grid_set(grid_xx *grid, uint32_t at, int value)
         return;
     }
 //    assert(at < grid_total_size[GAME_ENV]);
-    switch (grid->datatype) {
+    switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
             ((uint8_t*)grid->items_xx)[at] = (uint8_t)value;
             break;
@@ -115,7 +115,7 @@ void map_grid_fill(grid_xx *grid, int value)
 {
     if (!grid->initialized)
         map_grid_init(grid);
-    switch (grid->datatype) {
+    switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
             memset(grid->items_xx, (uint8_t)value, grid->size_total);
             break;
@@ -143,7 +143,7 @@ void map_grid_copy(grid_xx *src, grid_xx *dst)
     if (!dst->initialized)
         map_grid_init(dst);
 
-    assert(src->datatype == dst->datatype);
+    assert(src->datatype[GAME_ENV] == dst->datatype[GAME_ENV]);
     assert(src->size_total == dst->size_total);
 
     memcpy(dst->items_xx, src->items_xx, src->size_total);
@@ -170,7 +170,7 @@ void map_grid_and_all(grid_xx *grid, int mask)
     if (!grid->initialized)
         map_grid_init(grid);
     for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-        switch (grid->datatype) {
+        switch (grid->datatype[GAME_ENV]) {
             case FS_UINT8:
                 ((uint8_t*)grid->items_xx)[i] &= (uint8_t)mask;
                 break;
@@ -192,7 +192,7 @@ void map_grid_save_state(grid_xx *grid, buffer *buf)
     if (!grid->initialized)
         map_grid_init(grid);
     for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-        switch (grid->datatype) {
+        switch (grid->datatype[GAME_ENV]) {
             case FS_UINT8:
                 buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
                 break;
@@ -214,7 +214,7 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
 {
     if (!grid->initialized)
         map_grid_init(grid);
-    switch (grid->datatype) {
+    switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
             buffer_read_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
             break;
@@ -236,52 +236,6 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
     }
     return;
 }
-
-//void grid_array_init_u8(grid_u8_x *grid)
-//{
-//    grid->items = malloc(sizeof(uint8_t) * grid_total_size[GAME_ENV]);
-//    grid->initialized = 1;
-//}
-//void grid_array_init_i8(grid_i8_x *grid)
-//{
-//    grid->items = malloc(sizeof(int8_t) * grid_total_size[GAME_ENV]);
-//    grid->initialized = 1;
-//}
-//void grid_array_init_u16(grid_u16_x *grid)
-//{
-//    grid->items = malloc(sizeof(uint16_t) * grid_total_size[GAME_ENV]);
-//    grid->initialized = 1;
-//}
-//void grid_array_init_i16(grid_i16_x *grid)
-//{
-//    grid->items = malloc(sizeof(int16_t) * grid_total_size[GAME_ENV]);
-//    grid->initialized = 1;
-//}
-//
-//grid_u8_x *safe_u8(grid_u8_x *gr)
-//{
-//    if (!gr->initialized)
-//        grid_array_init_u8(gr);
-//    return gr;
-//}
-//grid_i8_x *safe_i8(grid_i8_x *gr)
-//{
-//    if (!gr->initialized)
-//        grid_array_init_i8(gr);
-//    return gr;
-//}
-//grid_u16_x *safe_u16(grid_u16_x *gr)
-//{
-//    if (!gr->initialized)
-//        grid_array_init_u16(gr);
-//    return gr;
-//}
-//grid_i16_x *safe_i16(grid_i16_x *gr)
-//{
-//    if (!gr->initialized)
-//        grid_array_init_i16(gr);
-//    return gr;
-//}
 
 void map_data_init(int width, int height, int start_offset, int border_size)
 {
@@ -418,76 +372,5 @@ const int *map_grid_adjacent_offsets(int size)
             return ADJACENT_OFFSETS_PH[size];
     }
 }
-
-//void map_grid_init_i8(int8_t *grid, int8_t value)
-//{
-//    memset(grid, value, grid_total_size[GAME_ENV] * sizeof(int8_t));
-//}
-//
-//void map_grid_clear_i8(int8_t *grid)
-//{
-//    memset(grid, 0, grid_total_size[GAME_ENV] * sizeof(int8_t));
-//}
-//void map_grid_clear_u8(uint8_t *grid)
-//{
-//    memset(grid, 0, grid_total_size[GAME_ENV] * sizeof(uint8_t));
-//}
-//void map_grid_clear_u16(uint16_t *grid)
-//{
-//    memset(grid, 0, grid_total_size[GAME_ENV] * sizeof(uint16_t));
-//}
-//void map_grid_clear_i16(int16_t *grid)
-//{
-//    memset(grid, 0, grid_total_size[GAME_ENV] * sizeof(int16_t));
-//}
-//
-//void map_grid_and_u8(uint8_t *grid, uint8_t mask)
-//{
-//    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-//        grid[i] &= mask;
-//    }
-//}
-//void map_grid_and_u16(uint16_t *grid, uint16_t mask)
-//{
-//    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-//        grid[i] &= mask;
-//    }
-//}
-//void map_grid_copy_u8(const uint8_t *src, uint8_t *dst)
-//{
-//    memcpy(dst, src, grid_total_size[GAME_ENV] * sizeof(uint8_t));
-//}
-//void map_grid_copy_u16(const uint16_t *src, uint16_t *dst)
-//{
-//    memcpy(dst, src, grid_total_size[GAME_ENV] * sizeof(uint16_t));
-//}
-//void map_grid_save_state_u8(const uint8_t *grid, buffer *buf)
-//{
-//    buffer_write_raw(buf, grid, grid_total_size[GAME_ENV]);
-//}
-//void map_grid_save_state_i8(const int8_t *grid, buffer *buf)
-//{
-//    buffer_write_raw(buf, grid, grid_total_size[GAME_ENV]);
-//}
-//void map_grid_save_state_u16(const uint16_t *grid, buffer *buf)
-//{
-//    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-//        buffer_write_u16(buf, grid[i]);
-//    }
-//}
-//void map_grid_load_state_u8(uint8_t *grid, buffer *buf)
-//{
-//    buffer_read_raw(buf, grid, grid_total_size[GAME_ENV]);
-//}
-//void map_grid_load_state_i8(int8_t *grid, buffer *buf)
-//{
-//    buffer_read_raw(buf, grid, grid_total_size[GAME_ENV]);
-//}
-//void map_grid_load_state_u16(uint16_t *grid, buffer *buf)
-//{
-//    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-//        grid[i] = buffer_read_u16(buf);
-//    }
-//}
 
 

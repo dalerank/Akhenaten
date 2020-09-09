@@ -2,8 +2,8 @@
 
 #include "map/grid.h"
 
-static grid_xx sprite = {0, FS_UINT8};
-static grid_xx sprite_backup = {0, FS_UINT8};
+static grid_xx sprite = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx sprite_backup = {0, {FS_UINT8, FS_UINT8}};
 
 int map_sprite_animation_at(int grid_offset)
 {

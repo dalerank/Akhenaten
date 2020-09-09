@@ -28,11 +28,11 @@ enum {
     EDGE_NO_NATIVE_LAND = 0x7f,
 };
 
-static grid_xx edge_grid = {0, FS_UINT8};
-static grid_xx bitfields_grid = {0, FS_UINT8};
+static grid_xx edge_grid = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx bitfields_grid = {0, {FS_UINT8, FS_UINT8}};
 
-static grid_xx edge_backup = {0, FS_UINT8};
-static grid_xx bitfields_backup = {0, FS_UINT8};
+static grid_xx edge_backup = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx bitfields_backup = {0, {FS_UINT8, FS_UINT8}};
 
 static int edge_for(int x, int y)
 {

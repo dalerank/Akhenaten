@@ -2,7 +2,7 @@
 
 #include "map/grid.h"
 
-static grid_xx figures = {0, FS_UINT16};
+static grid_xx figures = {0, {FS_UINT16, FS_UINT16}};
 
 int map_has_figure_at(int grid_offset)
 {

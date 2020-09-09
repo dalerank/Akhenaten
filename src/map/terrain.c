@@ -5,8 +5,8 @@
 #include "map/routing.h"
 #include "core/game_environment.h"
 
-static grid_xx terrain_grid = {0, FS_UINT16};
-static grid_xx terrain_grid_backup = {0, FS_UINT16};
+static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
+static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
 
 int map_terrain_is(int grid_offset, int terrain)
 {

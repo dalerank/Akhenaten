@@ -13,7 +13,7 @@
 static const int ADJACENT_OFFSETS_C3[] = {-GRID_SIZE_C3, 1, GRID_SIZE_C3, -1};
 static const int ADJACENT_OFFSETS_PH[] = {-GRID_SIZE_PH, 1, GRID_SIZE_PH, -1};
 
-static grid_xx network = {0, FS_UINT8};
+static grid_xx network = {0, {FS_UINT8, FS_UINT8}};
 
 static struct {
     int items[MAX_QUEUE];

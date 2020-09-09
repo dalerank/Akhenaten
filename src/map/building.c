@@ -4,10 +4,10 @@
 #include "core/config.h"
 #include "map/grid.h"
 
-static grid_xx buildings_grid = {0, FS_UINT16};
-static grid_xx damage_grid = {0, FS_UINT8};
-static grid_xx rubble_type_grid = {0, FS_UINT8};
-static grid_xx highlight_grid = {0, FS_UINT8};
+static grid_xx buildings_grid = {0, {FS_UINT16, FS_UINT16}};
+static grid_xx damage_grid = {0, {FS_UINT8, FS_UINT16}};
+static grid_xx rubble_type_grid = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx highlight_grid = {0, {FS_UINT8, FS_UINT8}};
 
 int map_building_at(int grid_offset)
 {

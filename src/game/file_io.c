@@ -266,12 +266,6 @@ static buffer *create_scenario_piece(int size, char *name)
 }
 static buffer *create_savegame_piece(int size, int compressed, char *name)
 {
-//    if (compressed)
-//        switch (GAME_ENV) {
-//            case ENGINE_ENV_PHARAOH:
-//                size *= 10;
-//        }
-
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
     strncpy(piece->name, name, 99);
@@ -576,20 +570,20 @@ static void init_savegame_data(void)
 //                state->ph_unk01 = create_savegame_piece(3, 0, ""); // 3 bytes
         state->junk1 = create_savegame_piece(6011, 0, "junk1"); // ?????
 
-                    state->image_grid = create_savegame_piece(207936, 1, "image_grid");
-                    state->edge_grid = create_savegame_piece(51984, 1, "edge_grid");
-                    state->building_grid = create_savegame_piece(103968, 1, "building_grid");
-                    state->terrain_grid = create_savegame_piece(207936, 1, "terrain_grid");
-                    state->aqueduct_grid = create_savegame_piece(51984, 1, "aqueduct_grid");
-                    state->figure_grid = create_savegame_piece(103968, 1, "figure_grid");
-                    state->bitfields_grid = create_savegame_piece(51984, 1, "bitfields_grid");
-                    state->sprite_grid = create_savegame_piece(51984, 1, "sprite_grid");
-                state->random_grid = create_savegame_piece(51984, 0, "random_grid"); // 26244
-                    state->desirability_grid = create_savegame_piece(51984, 1, "desirability_grid");
-                    state->elevation_grid = create_savegame_piece(51984, 1, "elevation_grid");
-                    state->building_damage_grid = create_savegame_piece(103968, 1, "building_damage_grid");
-                    state->aqueduct_backup_grid = create_savegame_piece(51984, 1, "aqueduct_backup_grid");
-                    state->sprite_backup_grid = create_savegame_piece(51984, 1, "sprite_backup_grid");
+                    state->image_grid = create_savegame_piece(207936, 1, "image_grid");                         // (228²) * 4 <<
+                    state->edge_grid = create_savegame_piece(51984, 1, "edge_grid");                            // (228²) * 1
+                    state->building_grid = create_savegame_piece(103968, 1, "building_grid");                   // (228²) * 2
+                    state->terrain_grid = create_savegame_piece(207936, 1, "terrain_grid");                     // (228²) * 4 <<
+                    state->aqueduct_grid = create_savegame_piece(51984, 1, "aqueduct_grid");                    // (228²) * 1
+                    state->figure_grid = create_savegame_piece(103968, 1, "figure_grid");                       // (228²) * 2
+                    state->bitfields_grid = create_savegame_piece(51984, 1, "bitfields_grid");                  // (228²) * 1
+                    state->sprite_grid = create_savegame_piece(51984, 1, "sprite_grid");                        // (228²) * 1
+                state->random_grid = create_savegame_piece(51984, 0, "random_grid");                            // (228²) * 1
+                    state->desirability_grid = create_savegame_piece(51984, 1, "desirability_grid");            // (228²) * 1
+                    state->elevation_grid = create_savegame_piece(51984, 1, "elevation_grid");                  // (228²) * 1
+                    state->building_damage_grid = create_savegame_piece(103968, 1, "building_damage_grid");     // (228²) * 2 <<
+                    state->aqueduct_backup_grid = create_savegame_piece(51984, 1, "aqueduct_backup_grid");      // (228²) * 1
+                    state->sprite_backup_grid = create_savegame_piece(51984, 1, "sprite_backup_grid");          // (228²) * 1
                     state->figures = create_savegame_piece(776000, 1, "figures");
                     state->route_figures = create_savegame_piece(2000, 1, "route_figures");
                     state->route_paths = create_savegame_piece(500000, 1, "route_paths");
@@ -734,7 +728,7 @@ static void init_savegame_data(void)
         state->junk11 = create_savegame_piece(19600, 1, "junk11"); // unknown compressed data
         state->junk12 = create_savegame_piece(16200, 1, "junk12"); // unknown compressed data
 
-        // 51984 bytes  FF FF FF FF ???
+        // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
         // 20 bytes     19 00 00 00 ???
         // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
         state->junk13 = create_savegame_piece(51984+20+528, 0, "junk13"); // 71x 4-bytes emptiness
@@ -747,12 +741,12 @@ static void init_savegame_data(void)
         // 41 bytes     00 00 00 00 ??? 41 x 1-byte flag fields
         state->junk16 = create_savegame_piece(312+64+41, 0, "junk16"); // 71x 4-bytes emptiness
 
-        state->junk17 = create_savegame_piece(51984, 1, "junk17"); // unknown compressed data
+        state->junk17 = create_savegame_piece(51984, 1, "junk17"); // unknown compressed data          // (228²) * 1
 
         // lone byte ???
         state->junk18 = create_savegame_piece(1, 0, "junk18");
 
-        state->junk19 = create_savegame_piece(51984, 1, "junk19"); // unknown compressed data
+        state->junk19 = create_savegame_piece(51984, 1, "junk19"); // unknown compressed data          // (228²) * 1
 
         // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
         // 20 bytes     00 00 00 00 ???
@@ -780,20 +774,20 @@ static void init_savegame_data_expanded(void)
 
     state->scenario_campaign_mission = create_savegame_piece(4, 0, "scenario_campaign_mission");
     state->file_version = create_savegame_piece(4, 0, "file_version");
-    state->image_grid = create_savegame_piece(52488, 1, "image_grid");
-    state->edge_grid = create_savegame_piece(26244, 1, "edge_grid");
-    state->building_grid = create_savegame_piece(52488, 1, "building_grid");
-    state->terrain_grid = create_savegame_piece(52488, 1, "terrain_grid");
-    state->aqueduct_grid = create_savegame_piece(26244, 1, "aqueduct_grid");
-    state->figure_grid = create_savegame_piece(52488, 1, "figure_grid");
-    state->bitfields_grid = create_savegame_piece(26244, 1, "bitfields_grid");
-    state->sprite_grid = create_savegame_piece(26244, 1, "sprite_grid");
-    state->random_grid = create_savegame_piece(26244, 0, "random_grid");
-    state->desirability_grid = create_savegame_piece(26244, 1, "desirability_grid");
-    state->elevation_grid = create_savegame_piece(26244, 1, "elevation_grid");
-    state->building_damage_grid = create_savegame_piece(26244, 1, "building_damage_grid");
-    state->aqueduct_backup_grid = create_savegame_piece(26244, 1, "aqueduct_backup_grid");
-    state->sprite_backup_grid = create_savegame_piece(26244, 1, "sprite_backup_grid");
+    state->image_grid = create_savegame_piece(52488, 1, "image_grid");                          // (162²) * 2
+    state->edge_grid = create_savegame_piece(26244, 1, "edge_grid");                            // (162²) * 1
+    state->building_grid = create_savegame_piece(52488, 1, "building_grid");                    // (162²) * 2
+    state->terrain_grid = create_savegame_piece(52488, 1, "terrain_grid");                      // (162²) * 2
+    state->aqueduct_grid = create_savegame_piece(26244, 1, "aqueduct_grid");                    // (162²) * 1
+    state->figure_grid = create_savegame_piece(52488, 1, "figure_grid");                        // (162²) * 2
+    state->bitfields_grid = create_savegame_piece(26244, 1, "bitfields_grid");                  // (162²) * 1
+    state->sprite_grid = create_savegame_piece(26244, 1, "sprite_grid");                        // (162²) * 1
+    state->random_grid = create_savegame_piece(26244, 0, "random_grid");                        // (162²) * 1
+    state->desirability_grid = create_savegame_piece(26244, 1, "desirability_grid");            // (162²) * 1
+    state->elevation_grid = create_savegame_piece(26244, 1, "elevation_grid");                  // (162²) * 1
+    state->building_damage_grid = create_savegame_piece(26244, 1, "building_damage_grid");      // (162²) * 1
+    state->aqueduct_backup_grid = create_savegame_piece(26244, 1, "aqueduct_backup_grid");      // (162²) * 1
+    state->sprite_backup_grid = create_savegame_piece(26244, 1, "sprite_backup_grid");          // (162²) * 1
     state->figures = create_savegame_piece(640000, 1, "figures");
     state->route_figures = create_savegame_piece(6000, 1, "route_figures");
     state->route_paths = create_savegame_piece(1500000, 1, "route_paths");

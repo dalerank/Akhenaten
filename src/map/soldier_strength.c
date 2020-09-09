@@ -5,7 +5,7 @@
 #include "map/grid.h"
 #include "map/routing.h"
 
-static grid_xx strength = {0, FS_UINT8};
+static grid_xx strength = {0, {FS_UINT8, FS_UINT8}};
 
 void map_soldier_strength_clear(void)
 {

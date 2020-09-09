@@ -2,8 +2,8 @@
 
 #include "map/grid.h"
 
-static grid_xx images = {0, FS_UINT16};
-static grid_xx images_backup = {0, FS_UINT16};
+static grid_xx images = {0, {FS_UINT16, FS_UINT32}};
+static grid_xx images_backup = {0, {FS_UINT16, FS_UINT32}};
 
 int map_image_at(int grid_offset)
 {

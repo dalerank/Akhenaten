@@ -9,7 +9,7 @@
 #include "map/ring.h"
 #include "map/terrain.h"
 
-static grid_xx desirability_grid = {0, FS_INT8};
+static grid_xx desirability_grid = {0, {FS_INT8, FS_INT8}};
 
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability)
 {

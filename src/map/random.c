@@ -4,7 +4,7 @@
 #include "core/game_environment.h"
 #include "map/grid.h"
 
-static grid_xx random = {0, FS_UINT8};
+static grid_xx random = {0, {FS_UINT8, FS_UINT8}};
 
 void map_random_clear(void)
 {
