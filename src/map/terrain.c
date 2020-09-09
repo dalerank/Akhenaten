@@ -5,28 +5,28 @@
 #include "map/routing.h"
 #include "core/game_environment.h"
 
-static grid_u16_x terrain_grid = {0, 0};
-static grid_u16_x terrain_grid_backup = {0, 0};
+static grid_xx terrain_grid = {0, FS_UINT16};
+static grid_xx terrain_grid_backup = {0, FS_UINT16};
 
 int map_terrain_is(int grid_offset, int terrain)
 {
-    return map_grid_is_valid_offset(grid_offset) && safe_u16(&terrain_grid)->items[grid_offset] & terrain;
+    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&terrain_grid, grid_offset) & terrain;
 }
 int map_terrain_get(int grid_offset)
 {
-    return safe_u16(&terrain_grid)->items[grid_offset];
+    return map_grid_get(&terrain_grid, grid_offset);
 }
 void map_terrain_set(int grid_offset, int terrain)
 {
-    safe_u16(&terrain_grid)->items[grid_offset] = terrain;
+    map_grid_set(&terrain_grid, grid_offset, terrain);
 }
 void map_terrain_add(int grid_offset, int terrain)
 {
-    safe_u16(&terrain_grid)->items[grid_offset] |= terrain;
+    map_grid_or(&terrain_grid, grid_offset, terrain);
 }
 void map_terrain_remove(int grid_offset, int terrain)
 {
-    safe_u16(&terrain_grid)->items[grid_offset] &= ~terrain;
+    map_grid_and(&terrain_grid, grid_offset, ~terrain);
 }
 void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain)
 {
@@ -52,7 +52,7 @@ void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terr
 }
 void map_terrain_remove_all(int terrain)
 {
-    map_grid_and_u16(safe_u16(&terrain_grid)->items, ~terrain);
+    map_grid_and_all(&terrain_grid, ~terrain);
 }
 
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain)
@@ -110,7 +110,7 @@ int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrai
 {
     for (int yy = y; yy < y + size; yy++) {
         for (int xx = x; xx < x + size; xx++) {
-            if (map_grid_is_inside(xx, yy, 1) && safe_u16(&terrain_grid)->items[map_grid_offset(xx, yy)] & terrain) {
+            if (map_grid_is_inside(xx, yy, 1) && map_grid_get(&terrain_grid, map_grid_offset(xx, yy)) & terrain) {
                 return 1;
             }
         }
@@ -139,7 +139,7 @@ int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
-            if (grid_offset != except_grid_offset && !safe_u16(&terrain_grid)->items[grid_offset]) {
+            if (grid_offset != except_grid_offset && !map_grid_get(&terrain_grid, grid_offset)) {
                 *x_tile = xx;
                 *y_tile = yy;
                 return 1;
@@ -304,16 +304,15 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation)
 
 void map_terrain_backup(void)
 {
-    map_grid_copy_u16(safe_u16(&terrain_grid)->items, safe_u16(&terrain_grid_backup)->items);
+    map_grid_copy(&terrain_grid, &terrain_grid_backup);
 }
 void map_terrain_restore(void)
 {
-    map_grid_copy_u16(safe_u16(&terrain_grid_backup)->items, safe_u16(&terrain_grid)->items);
+    map_grid_copy(&terrain_grid_backup, &terrain_grid);
 }
 void map_terrain_clear(void)
 {
-    map_grid_clear_u16(safe_u16(&terrain_grid)->items);
-}
+    map_grid_clear(&terrain_grid);}
 void map_terrain_init_outside_map(void)
 {
     int map_width, map_height;
@@ -324,7 +323,7 @@ void map_terrain_init_outside_map(void)
         int y_outside_map = y < y_start || y >= y_start + map_height;
         for (int x = 0; x < grid_size[GAME_ENV]; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width) {
-                safe_u16(&terrain_grid)->items[x + grid_size[GAME_ENV] * y] = TERRAIN_TREE | TERRAIN_WATER;
+                map_grid_set(&terrain_grid, x + grid_size[GAME_ENV] * y, TERRAIN_TREE | TERRAIN_WATER);
             }
         }
     }
@@ -332,9 +331,9 @@ void map_terrain_init_outside_map(void)
 
 void map_terrain_save_state(buffer *buf)
 {
-    map_grid_save_state_u16(safe_u16(&terrain_grid)->items, buf);
+    map_grid_save_state(&terrain_grid, buf);
 }
 void map_terrain_load_state(buffer *buf)
 {
-    map_grid_load_state_u16(safe_u16(&terrain_grid)->items, buf);
+    map_grid_load_state(&terrain_grid, buf);
 }

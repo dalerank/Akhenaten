@@ -5,11 +5,11 @@
 #include "map/grid.h"
 #include "map/routing.h"
 
-static grid_u8_x strength = {0, 0};
+static grid_xx strength = {0, FS_UINT8};
 
 void map_soldier_strength_clear(void)
 {
-    map_grid_clear_u8(safe_u8(&strength)->items);
+    map_grid_clear(&strength);
 }
 void map_soldier_strength_add(int x, int y, int radius, int amount)
 {
@@ -19,10 +19,11 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
-            safe_u8(&strength)->items[grid_offset] += amount;
+            int v = map_grid_get(&strength, grid_offset);
+            map_grid_set(&strength, grid_offset, v + amount);
             if (map_has_figure_at(grid_offset)) {
                 if (figure_is_legion(figure_get(map_figure_at(grid_offset)))) {
-                    safe_u8(&strength)->items[grid_offset] += 2;
+                    map_grid_set(&strength, grid_offset, v + amount + 2);
                 }
             }
         }
@@ -31,7 +32,7 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
 
 int map_soldier_strength_get(int grid_offset)
 {
-    return safe_u8(&strength)->items[grid_offset];
+    return map_grid_get(&strength, grid_offset);
 }
 int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_y)
 {
@@ -43,8 +44,8 @@ int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
-            if (map_routing_distance(grid_offset) > 0 && safe_u8(&strength)->items[grid_offset] > max_value) {
-                max_value = safe_u8(&strength)->items[grid_offset];
+            if (map_routing_distance(grid_offset) > 0 && map_grid_get(&strength, grid_offset) > max_value) {
+                max_value = map_grid_get(&strength, grid_offset);
                 max_tile_x = xx;
                 max_tile_y = yy;
             }

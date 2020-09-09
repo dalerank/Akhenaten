@@ -277,7 +277,6 @@ static buffer *create_savegame_piece(int size, int compressed, char *name)
     strncpy(piece->name, name, 99);
     return &piece->buf;
 }
-
 static void init_savegame_buffers(savegame_state* state)
 {
     state->scenario_campaign_mission = 0;
@@ -480,16 +479,16 @@ static void init_savegame_data(void)
             state->building_damage_grid = create_savegame_piece(26244, 1, "building_damage_grid");
             state->aqueduct_backup_grid = create_savegame_piece(26244, 1, "aqueduct_backup_grid");
             state->sprite_backup_grid = create_savegame_piece(26244, 1, "sprite_backup_grid");
-            state->figures = create_savegame_piece(640000, 1, "figures");
-            state->route_figures = create_savegame_piece(6000, 1, "route_figures");
-            state->route_paths = create_savegame_piece(1500000, 1, "route_paths");
-            state->formations = create_savegame_piece(32000, 1, "formations");
+            state->figures = create_savegame_piece(128000, 1, "figures");
+            state->route_figures = create_savegame_piece(1200, 1, "route_figures");
+            state->route_paths = create_savegame_piece(300000, 1, "route_paths");
+            state->formations = create_savegame_piece(6400, 1, "formations");
             state->formation_totals = create_savegame_piece(12, 0, "formation_totals");
             state->city_data = create_savegame_piece(36136, 1, "city_data");
             state->city_faction_unknown = create_savegame_piece(2, 0, "city_faction_unknown");
             state->player_name = create_savegame_piece(64, 0, "player_name");
             state->city_faction = create_savegame_piece(4, 0, "city_faction");
-            state->buildings = create_savegame_piece(1280000, 1, "buildings");
+            state->buildings = create_savegame_piece(256000, 1, "buildings");
             state->city_view_orientation = create_savegame_piece(4, 0, "city_view_orientation");
             state->game_time = create_savegame_piece(20, 0, "game_time");
             state->building_extra_highest_id_ever = create_savegame_piece(8, 0, "building_extra_highest_id_ever");
@@ -542,13 +541,13 @@ static void init_savegame_data(void)
             state->city_sounds = create_savegame_piece(8960, 0, "city_sounds");
             state->building_extra_highest_id = create_savegame_piece(4, 0, "building_extra_highest_id");
             state->figure_traders = create_savegame_piece(4804, 0, "figure_traders");
-            state->building_list_burning = create_savegame_piece(5000, 1, "building_list_burning");
-            state->building_list_small = create_savegame_piece(5000, 1, "building_list_small");
-            state->building_list_large = create_savegame_piece(20000, 1, "building_list_large");
+            state->building_list_burning = create_savegame_piece(1000, 1, "building_list_burning");
+            state->building_list_small = create_savegame_piece(1000, 1, "building_list_small");
+            state->building_list_large = create_savegame_piece(4000, 1, "building_list_large");
             state->tutorial_part1 = create_savegame_piece(32, 0, "tutorial_part1");
             state->building_count_military = create_savegame_piece(16, 0, "building_count_military");
             state->enemy_army_totals = create_savegame_piece(20, 0, "enemy_army_totals");
-            state->building_storages = create_savegame_piece(32000, 0, "building_storages");
+            state->building_storages = create_savegame_piece(6400, 0, "building_storages");
             state->building_count_culture2 = create_savegame_piece(32, 0, "building_count_culture2");
             state->building_count_support = create_savegame_piece(24, 0, "building_count_support");
             state->tutorial_part2 = create_savegame_piece(4, 0, "tutorial_part2");

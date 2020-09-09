@@ -1,0 +1,178 @@
+return safe_u8(&aqueduct)->items[grid_offset];
+
+(safe_u8\()(?<=safe_u8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\])(\])
+(safe_i8\()(?<=safe_i8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\])(\])
+(safe_u16\()(?<=safe_u16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\])(\])
+(safe_i16\()(?<=safe_i16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\])(\])
+
+map_grid_get($2, $4)
+
+
+
+
+
+
+
+map_grid_copy_u16(safe_u16(&images)->items, safe_u16(&images_backup)->items);
+
+(map_grid_copy_u8\(safe_u8\()(?<=map_grid_copy_u8\(safe_u8\()(.*)(?=\)->items, safe_u8\()(\)->items, safe_u8\()(?<=\)->items, safe_u8\()(.*)(?=\)->items\);)(\)->items\);)
+
+(map_grid_copy_i8\(safe_i8\()(?<=map_grid_copy_i8\(safe_i8\()(.*)(?=\)->items, safe_i8\()(\)->items, safe_i8\()(?<=\)->items, safe_i8\()(.*)(?=\)->items\);)(\)->items\);)
+
+(map_grid_copy_u16\(safe_u16\()(?<=map_grid_copy_u16\(safe_u16\()(.*)(?=\)->items, safe_u16\()(\)->items, safe_u16\()(?<=\)->items, safe_u16\()(.*)(?=\)->items\);)(\)->items\);)
+
+(map_grid_copy_i16\(safe_i16\()(?<=map_grid_copy_i16\(safe_i16\()(.*)(?=\)->items, safe_i16\()(\)->items, safe_i16\()(?<=\)->items, safe_i16\()(.*)(?=\)->items\);)(\)->items\);)
+
+map_grid_copy($2, $4);
+
+
+
+
+
+map_grid_clear_u16(safe_u16(&images)->items);
+
+(map_grid_clear_u8\(safe_u8\()(?<=map_grid_clear_u8\(safe_u8\()(.*)(?=\)->items\);)(\)->items\);)
+(map_grid_clear_i8\(safe_i8\()(?<=map_grid_clear_i8\(safe_i8\()(.*)(?=\)->items\);)(\)->items\);)
+(map_grid_clear_u16\(safe_u16\()(?<=map_grid_clear_u16\(safe_u16\()(.*)(?=\)->items\);)(\)->items\);)
+(map_grid_clear_i16\(safe_i16\()(?<=map_grid_clear_i16\(safe_i16\()(.*)(?=\)->items\);)(\)->items\);)
+
+(map_grid_clear_u16\(safe_u16\()
+(?<=map_grid_clear_u16\(safe_u16\()
+(.*)
+(?=\)->items\);)
+(\)->items\);)
+
+map_grid_clear($2);
+
+
+
+
+map_grid_save_state_u16(safe_u16(&images)->items, buf);
+
+(map_grid_save_state_u8\(safe_u8\()(?<=map_grid_save_state_u8\(safe_u8\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_save_state_i8\(safe_i8\()(?<=map_grid_save_state_i8\(safe_i8\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_save_state_u16\(safe_u16\()(?<=map_grid_save_state_u16\(safe_u16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_save_state_i16\(safe_i16\()(?<=map_grid_save_state_i16\(safe_i16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+
+(map_grid_save_state_u16\(safe_u16\()
+(?<=map_grid_save_state_u16\(safe_u16\()
+(.*)
+(?=\)->items, )
+(\)->items, )
+(?<=\)->items, )
+(.*)
+(?=\);)
+(\);)
+
+map_grid_save_state($2, $4);
+
+
+
+
+
+(map_grid_load_state_u8\(safe_u8\()(?<=map_grid_load_state_u8\(safe_u8\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_load_state_i8\(safe_i8\()(?<=map_grid_load_state_i8\(safe_i8\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_load_state_u16\(safe_u16\()(?<=map_grid_load_state_u16\(safe_u16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+(map_grid_load_state_i16\(safe_i16\()(?<=map_grid_load_state_i16\(safe_i16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
+
+map_grid_load_state($2, $4);
+
+
+
+
+
+
+
+
+safe_u8(&aqueduct)->items[grid_offset + map_grid_delta(0, -1)] ==
+
+(safe_u8\()(?<=safe_u8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] ==)(\] ==)
+(safe_i8\()(?<=safe_i8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] ==)(\] ==)
+(safe_u16\()(?<=safe_u16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] ==)(\] ==)
+(safe_i16\()(?<=safe_i16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] ==)(\] ==)
+
+grid_get_at($2, $4) ==
+
+
+
+
+
+safe_u16(&images)->items[map_grid_offset(x, height)] = 1;
+
+(safe_u8\()(?<=safe_u8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = )(\] = )(?<=\] = )(.*)(?=\);)(\);)
+(safe_i8\()(?<=safe_i8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = )(\] = )(?<=\] = )(.*)(?=\);)(\);)
+(safe_u16\()(?<=safe_u16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = )(\] = )(?<=\] = )(.*)(?=\);)(\);)
+(safe_i16\()(?<=safe_i16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = )(\] = )(?<=\] = )(.*)(?=\);)(\);)
+
+(safe_u16\()
+(?<=safe_u16\()
+(.*)
+(?=\)->items\[)
+(\)->items\[)
+(?<=\)->items\[)
+(.*)
+(?=\] = )
+(\] = )
+(?<=\] = )
+(.*)
+(?=;)
+(;)
+
+grid_array_set($2, $4, $6));
+
+
+
+
+
+
+
+safe_u16(&images)->items[grid_offset] = safe_u16(&images_backup)->items[grid_offset];
+
+(safe_u8\()(?<=safe_u8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = safe_u8\()(\] = safe_u8\()(?<=\] = safe_u8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\];)(\];)
+
+(safe_i8\()(?<=safe_i8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = safe_i8\()(\] = safe_i8\()(?<=\] = safe_i8\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\];)(\];)
+
+(safe_u16\()(?<=safe_u16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = safe_u16\()(\] = safe_u16\()(?<=\] = safe_u16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\];)(\];)
+
+(safe_i16\()(?<=safe_i16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\] = safe_i16\()(\] = safe_i16\()(?<=\] = safe_i16\()(.*)(?=\)->items\[)(\)->items\[)(?<=\)->items\[)(.*)(?=\];)(\];)
+
+
+(safe_u16\()
+(?<=safe_u16\()
+(.*)
+(?=\)->items\[)
+(\)->items\[)
+(?<=\)->items\[)
+(.*)
+(?=\] = safe_u16\()
+(\] = safe_u16\()
+(?<=\] = safe_u16\()
+(.*)
+(?=\)->items\[)
+(\)->items\[)
+(?<=\)->items\[)
+(.*)
+(?=\];)
+(\];)
+
+map_grid_set($2, $4, map_grid_get($6, $8));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static grid_u8_x images = {0, 0};
+
+(static grid_u8_x )(?<=static grid_u8_x )(.*)(?= = \{0, 0};)( = \{0, 0};)
+(static grid_u8_x )(?<=static grid_u8_x )(.*)(?= = {0, 0};)( = {0, 0};)
+
+static grid_xx $2 = {0, UINT8};

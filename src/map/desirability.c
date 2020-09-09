@@ -9,7 +9,7 @@
 #include "map/ring.h"
 #include "map/terrain.h"
 
-static grid_i8_x desirability_grid = {0, 0};
+static grid_xx desirability_grid = {0, FS_INT8};
 
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability)
 {
@@ -28,15 +28,15 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
         for (int i = start; i < end; i++) {
             const ring_tile *tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                safe_i8(&desirability_grid)->items[base_offset + tile->grid_offset] =
-                    calc_bound(safe_i8(&desirability_grid)->items[base_offset + tile->grid_offset] + desirability, -100, 100);
+                map_grid_set(&desirability_grid, base_offset + tile->grid_offset,
+                             calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile *tile = map_ring_tile(i);
-            safe_i8(&desirability_grid)->items[base_offset + tile->grid_offset] =
-                calc_bound(safe_i8(&desirability_grid)->items[base_offset + tile->grid_offset] + desirability, -100, 100);
+            map_grid_set(&desirability_grid, base_offset + tile->grid_offset,
+                         calc_bound(map_grid_get(&desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
         }
     }
 }
@@ -115,7 +115,7 @@ static void update_terrain(void)
 
 void map_desirability_clear(void)
 {
-    map_grid_clear_i8(safe_i8(&desirability_grid)->items);
+    map_grid_clear(&desirability_grid);
 }
 void map_desirability_update(void)
 {
@@ -125,19 +125,19 @@ void map_desirability_update(void)
 }
 int map_desirability_get(int grid_offset)
 {
-    return safe_i8(&desirability_grid)->items[grid_offset];
+    return map_grid_get(&desirability_grid, grid_offset);
 }
 int map_desirability_get_max(int x, int y, int size)
 {
     if (size == 1) {
-        return safe_i8(&desirability_grid)->items[map_grid_offset(x, y)];
+        return map_grid_get(&desirability_grid, map_grid_offset(x, y));
     }
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            if (safe_i8(&desirability_grid)->items[grid_offset] > max) {
-                max = safe_i8(&desirability_grid)->items[grid_offset];
+            if (map_grid_get(&desirability_grid, grid_offset) > max) {
+                max = map_grid_get(&desirability_grid, grid_offset);
             }
         }
     }
@@ -146,9 +146,9 @@ int map_desirability_get_max(int x, int y, int size)
 
 void map_desirability_save_state(buffer *buf)
 {
-    map_grid_save_state_i8(safe_i8(&desirability_grid)->items, buf);
+    map_grid_save_state(&desirability_grid, buf);
 }
 void map_desirability_load_state(buffer *buf)
 {
-    map_grid_load_state_i8(safe_i8(&desirability_grid)->items, buf);
+    map_grid_load_state(&desirability_grid, buf);
 }
