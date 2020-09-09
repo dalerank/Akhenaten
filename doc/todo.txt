@@ -1,0 +1,4 @@
+===== task for today: =====
+
+- fix objectives/tutorial goals/scenario goals
+- fix briefing
