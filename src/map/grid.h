@@ -55,14 +55,14 @@ typedef struct {
 } grid_xx;
 
 void map_grid_init(grid_xx *grid);
-int map_grid_get(grid_xx *grid, uint32_t at);
-void map_grid_set(grid_xx *grid, uint32_t at, int value);
-void map_grid_fill(grid_xx *grid, int value);
+int64_t map_grid_get(grid_xx *grid, uint32_t at);
+void map_grid_set(grid_xx *grid, uint32_t at, int64_t value);
+void map_grid_fill(grid_xx *grid, int64_t value);
 void map_grid_clear(grid_xx *grid);
 void map_grid_copy(grid_xx *src, grid_xx *dst);
 
-void map_grid_and(grid_xx *grid, int at, int mask);
-void map_grid_or(grid_xx *grid, int at, int mask);
+void map_grid_and(grid_xx *grid, uint32_t at, int mask);
+void map_grid_or(grid_xx *grid, uint32_t at, int mask);
 void map_grid_and_all(grid_xx *grid, int mask);
 
 void map_grid_save_state(grid_xx *grid, buffer *buf);

@@ -179,8 +179,15 @@ static void toggle_pause(void)
     city_warning_clear_all();
 }
 
+//extern int image_debug_offset = 14900;
+
 static void handle_hotkeys(const hotkeys *h)
 {
+//    if (h->decrease_game_speed)
+//        image_debug_offset--;
+//    if (h->increase_game_speed)
+//        image_debug_offset++;
+    ////
     if (h->toggle_pause) {
         toggle_pause();
     }

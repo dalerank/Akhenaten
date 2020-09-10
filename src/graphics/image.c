@@ -911,6 +911,12 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
 void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
+    if (img == NULL) {
+        int a = 243;
+        return;
+    } else {
+        int a = 243;
+    }
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD) {
             draw_modded_footprint(image_id, x, y, color_mask);

@@ -68,7 +68,7 @@ void map_grid_init(grid_xx *grid)
     grid->items_xx = malloc(grid->size_total);
     grid->initialized = 1;
 }
-int map_grid_get(grid_xx *grid, uint32_t at)
+int64_t map_grid_get(grid_xx *grid, uint32_t at)
 {
     if (!grid->initialized)
         map_grid_init(grid);
@@ -79,16 +79,20 @@ int map_grid_get(grid_xx *grid, uint32_t at)
 //    assert(at < grid_total_size[GAME_ENV]);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            return (int)((uint8_t*)grid->items_xx)[at];
+            return (int64_t)((uint8_t*)grid->items_xx)[at];
         case FS_INT8:
-            return (int)((int8_t*)grid->items_xx)[at];
+            return (int64_t)((int8_t*)grid->items_xx)[at];
         case FS_UINT16:
-            return (int)((uint16_t*)grid->items_xx)[at];
+            return (int64_t)((uint16_t*)grid->items_xx)[at];
         case FS_INT16:
-            return (int)((int16_t*)grid->items_xx)[at];
+            return (int64_t)((int16_t*)grid->items_xx)[at];
+        case FS_UINT32:
+            return (int64_t)((uint32_t*)grid->items_xx)[at];
+        case FS_INT32:
+            return (int64_t)((int32_t*)grid->items_xx)[at];
     }
 }
-void map_grid_set(grid_xx *grid, uint32_t at, int value)
+void map_grid_set(grid_xx *grid, uint32_t at, int64_t value)
 {
     if (!grid->initialized)
         map_grid_init(grid);
@@ -109,9 +113,15 @@ void map_grid_set(grid_xx *grid, uint32_t at, int value)
         case FS_INT16:
             ((int16_t*)grid->items_xx)[at] = (int16_t)value;
             break;
+        case FS_UINT32:
+            ((uint32_t*)grid->items_xx)[at] = (uint32_t)value;
+            break;
+        case FS_INT32:
+            ((int32_t*)grid->items_xx)[at] = (int32_t)value;
+            break;
     }
 }
-void map_grid_fill(grid_xx *grid, int value)
+void map_grid_fill(grid_xx *grid, int64_t value)
 {
     if (!grid->initialized)
         map_grid_init(grid);
@@ -127,6 +137,12 @@ void map_grid_fill(grid_xx *grid, int value)
             break;
         case FS_INT16:
             memset(grid->items_xx, (int16_t)value, grid->size_total);
+            break;
+        case FS_UINT32:
+            memset(grid->items_xx, (uint32_t)value, grid->size_total);
+            break;
+        case FS_INT32:
+            memset(grid->items_xx, (int32_t)value, grid->size_total);
             break;
     }
 }
@@ -149,7 +165,7 @@ void map_grid_copy(grid_xx *src, grid_xx *dst)
     memcpy(dst->items_xx, src->items_xx, src->size_total);
 }
 
-void map_grid_and(grid_xx *grid, int at, int mask)
+void map_grid_and(grid_xx *grid, uint32_t at, int mask)
 {
     if (!grid->initialized)
         map_grid_init(grid);
@@ -157,7 +173,7 @@ void map_grid_and(grid_xx *grid, int at, int mask)
     v &= mask;
     map_grid_set(grid, at, v);
 }
-void map_grid_or(grid_xx *grid, int at, int mask)
+void map_grid_or(grid_xx *grid, uint32_t at, int mask)
 {
     if (!grid->initialized)
         map_grid_init(grid);
@@ -183,6 +199,12 @@ void map_grid_and_all(grid_xx *grid, int mask)
             case FS_INT16:
                 ((int16_t*)grid->items_xx)[i] &= (int16_t)mask;
                 break;
+            case FS_UINT32:
+                ((uint32_t*)grid->items_xx)[i] &= (uint32_t)mask;
+                break;
+            case FS_INT32:
+                ((int32_t*)grid->items_xx)[i] &= (int32_t)mask;
+                break;
         }
     }
 }
@@ -191,23 +213,29 @@ void map_grid_save_state(grid_xx *grid, buffer *buf)
 {
     if (!grid->initialized)
         map_grid_init(grid);
-    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-        switch (grid->datatype[GAME_ENV]) {
-            case FS_UINT8:
-                buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
-                break;
-            case FS_INT8:
-                buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
-                break;
-            case FS_UINT16:
-                for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                    buffer_write_u16(buf, ((uint16_t*)grid->items_xx)[i]);
-                break;
-            case FS_INT16:
-                for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                    buffer_write_i16(buf, ((int16_t*)grid->items_xx)[i]);
-                break;
-        }
+    switch (grid->datatype[GAME_ENV]) {
+        case FS_UINT8:
+            buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            break;
+        case FS_INT8:
+            buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            break;
+        case FS_UINT16:
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                buffer_write_u16(buf, ((uint16_t*)grid->items_xx)[i]);
+            break;
+        case FS_INT16:
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                buffer_write_i16(buf, ((int16_t*)grid->items_xx)[i]);
+            break;
+        case FS_UINT32:
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                buffer_write_u32(buf, ((uint32_t*)grid->items_xx)[i]);
+            break;
+        case FS_INT32:
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                buffer_write_i32(buf, ((int32_t*)grid->items_xx)[i]);
+            break;
     }
 }
 void map_grid_load_state(grid_xx *grid, buffer *buf)
@@ -233,16 +261,35 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
                 dr_data[i] = buffer_read_i16(buf);
             break;
         }
+        case FS_UINT32: {
+            uint32_t *dr_data = (uint32_t *) grid->items_xx;
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                dr_data[i] = buffer_read_u32(buf);
+            break;
+        }
+        case FS_INT32: {
+            int32_t *dr_data = (int32_t *) grid->items_xx;
+            for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
+                dr_data[i] = buffer_read_i32(buf);
+            break;
+        }
     }
     return;
 }
 
 void map_data_init(int width, int height, int start_offset, int border_size)
 {
-    map_data.width = width;
-    map_data.height = height;
-    map_data.start_offset = start_offset;
-    map_data.border_size = border_size;
+    if (1) {
+        map_data.width = grid_size[GAME_ENV];
+        map_data.height = grid_size[GAME_ENV];
+        map_data.start_offset = 0;
+        map_data.border_size = 0;
+    } else {
+        map_data.width = width;
+        map_data.height = height;
+        map_data.start_offset = start_offset;
+        map_data.border_size = border_size;
+    }
 }
 
 int map_grid_is_valid_offset(int grid_offset)

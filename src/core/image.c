@@ -7,6 +7,7 @@
 #include "core/io.h"
 #include "core/log.h"
 #include "core/mods.h"
+#include "core/config.h"
 #include "core/game_environment.h"
 #include "core/table_translation.h"
 
@@ -312,6 +313,9 @@ int image_groupid_translation(int table[], int group) {
     // missing entry!!!!
     return group;
 }
+
+int image_debug_offset = 14252;
+
 int image_id_from_group(int group) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
@@ -336,8 +340,10 @@ const image *image_get(int id) {
             else if (id >= 0)
                 return &data.main.images[id];
             else
-                return NULL;
+                return &DUMMY_IMAGE;
         case ENGINE_ENV_PHARAOH: // todo: mods
+            if (id > 14000)
+                id -= 14252;
             if (id > 6000 && id - 6000 < data.ph_fonts.entries_num)
                 return &data.ph_fonts.images[id - 6000];
             else if (id > 5000 && id - 5000 < data.ph_unloaded.entries_num)
@@ -347,7 +353,7 @@ const image *image_get(int id) {
             else if (id >= 0 && id < data.ph_terrain.entries_num)
                 return &data.ph_terrain.images[id];
             else
-                return NULL;
+                return &DUMMY_IMAGE;
     }
 
 }

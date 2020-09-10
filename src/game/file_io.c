@@ -545,9 +545,15 @@ static void init_savegame_data(int expanded)
             state->city_sounds = create_savegame_piece(8960, 0, "city_sounds");
             state->building_extra_highest_id = create_savegame_piece(4, 0, "building_extra_highest_id");
             state->figure_traders = create_savegame_piece(4804, 0, "figure_traders");
-            state->building_list_burning = create_savegame_piece(1000, 1, "building_list_burning");
-            state->building_list_small = create_savegame_piece(1000, 1, "building_list_small");
-            state->building_list_large = create_savegame_piece(4000, 1, "building_list_large");
+            if (expanded) {
+                state->building_list_burning = create_savegame_piece(5000, 1, "building_list_burning");
+                state->building_list_small = create_savegame_piece(5000, 1, "building_list_small");
+                state->building_list_large = create_savegame_piece(20000, 1, "building_list_large");
+            } else {
+                state->building_list_burning = create_savegame_piece(1000, 1, "building_list_burning");
+                state->building_list_small = create_savegame_piece(1000, 1, "building_list_small");
+                state->building_list_large = create_savegame_piece(4000, 1, "building_list_large");
+            }
             state->tutorial_part1 = create_savegame_piece(32, 0, "tutorial_part1");
             state->building_count_military = create_savegame_piece(16, 0, "building_count_military");
             state->enemy_army_totals = create_savegame_piece(20, 0, "enemy_army_totals");

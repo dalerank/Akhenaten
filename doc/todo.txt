@@ -2,3 +2,5 @@
 
 - fix objectives/tutorial goals/scenario goals
 - fix briefing
+- fix messages
+- fix UI
