@@ -329,10 +329,6 @@ void map_terrain_init_outside_map(void)
     }
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 void map_terrain_save_state(buffer *buf)
 {
     map_grid_save_state(&terrain_grid, buf);
@@ -340,76 +336,4 @@ void map_terrain_save_state(buffer *buf)
 void map_terrain_load_state(buffer *buf)
 {
     map_grid_load_state(&terrain_grid, buf);
-
-
-    FILE *f;
-    unsigned char *img = NULL;
-    int filesize = 54 + 3*grid_total_size[GAME_ENV];  //w is your image width, h is image height, both int
-
-    img = (unsigned char *)malloc(3*grid_total_size[GAME_ENV]);
-    memset(img,0,3*grid_total_size[GAME_ENV]);
-
-    for(int x = 0; x < grid_size[GAME_ENV]; x++) {
-        for(int y = 0; y < grid_size[GAME_ENV]; y++) {
-//            int x = i;
-//            int y=(grid_size[GAME_ENV]-1)-j;
-//            int y = j;
-
-
-            int o = (x + grid_size[GAME_ENV] * y);// * 2;
-//            if (o > grid_total_size[GAME_ENV])
-//                o -= (grid_total_size[GAME_ENV] - 1);
-
-            int v = map_grid_get(&terrain_grid, o);
-
-            int r = v;//*255;
-            int g = v;//*255;
-            int b = v;//*255;
-            if (r > 255) r=255;
-            if (g > 255) g=255;
-            if (b > 255) b=255;
-            img[(x+y*grid_size[GAME_ENV])*3+2] = (unsigned char)(r);
-            img[(x+y*grid_size[GAME_ENV])*3+1] = (unsigned char)(g);
-            img[(x+y*grid_size[GAME_ENV])*3+0] = (unsigned char)(b);
-        }
-    }
-
-    unsigned char bmpfileheader[14] = {'B','M', 0,0,0,0, 0,0, 0,0, 54,0,0,0};
-    unsigned char bmpinfoheader[40] = {40,0,0,0, 0,0,0,0, 0,0,0,0, 1,0, 24,0};
-    unsigned char bmppad[3] = {0,0,0};
-
-    bmpfileheader[ 2] = (unsigned char)(filesize    );
-    bmpfileheader[ 3] = (unsigned char)(filesize>> 8);
-    bmpfileheader[ 4] = (unsigned char)(filesize>>16);
-    bmpfileheader[ 5] = (unsigned char)(filesize>>24);
-
-    bmpinfoheader[ 4] = (unsigned char)(       grid_size[GAME_ENV]    );
-    bmpinfoheader[ 5] = (unsigned char)(       grid_size[GAME_ENV]>> 8);
-    bmpinfoheader[ 6] = (unsigned char)(       grid_size[GAME_ENV]>>16);
-    bmpinfoheader[ 7] = (unsigned char)(       grid_size[GAME_ENV]>>24);
-    bmpinfoheader[ 8] = (unsigned char)(       grid_size[GAME_ENV]    );
-    bmpinfoheader[ 9] = (unsigned char)(       grid_size[GAME_ENV]>> 8);
-    bmpinfoheader[10] = (unsigned char)(       grid_size[GAME_ENV]>>16);
-    bmpinfoheader[11] = (unsigned char)(       grid_size[GAME_ENV]>>24);
-
-    f = fopen("img.bmp","wb+");
-    fwrite(bmpfileheader,1,14,f);
-    fwrite(bmpinfoheader,1,40,f);
-    for(int i=0; i<grid_size[GAME_ENV]; i++)
-    {
-        fwrite(img+(grid_size[GAME_ENV]*(grid_size[GAME_ENV]-i-1)*3),3,grid_size[GAME_ENV],f);
-        fwrite(bmppad,1,(4-(grid_size[GAME_ENV]*3)%4)%4,f);
-    }
-
-    free(img);
-    fclose(f);
-
-    return;
-
-
-
-
-
-
-
 }

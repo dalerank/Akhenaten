@@ -136,4 +136,6 @@ const color_t *image_data_enemy(int id);
 
 int get_main_entries_num(void);
 
+void set_terrain_graphics_offset(int offset);
+
 #endif // CORE_IMAGE_H

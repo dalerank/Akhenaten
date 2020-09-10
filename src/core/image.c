@@ -186,6 +186,7 @@ static struct {
     int is_editor;
     int fonts_enabled;
     int font_base_offset;
+    int terrain_ph_offset;
 
     imagepak main;
     imagepak ph_unloaded;
@@ -203,7 +204,8 @@ static struct {
         .empire = {0},
         .font = {0},
         .ph_unloaded = {0},
-        .ph_terrain = {0}
+        .ph_terrain = {0},
+        .terrain_ph_offset = 14252
 };
 
 static color_t to_32_bit(uint16_t c) {
@@ -314,7 +316,8 @@ int image_groupid_translation(int table[], int group) {
     return group;
 }
 
-int image_debug_offset = 14252;
+image_debug_offset = 14791;
+//image_debug_offset = 15949;
 
 int image_id_from_group(int group) {
     switch (GAME_ENV) {
@@ -342,8 +345,12 @@ const image *image_get(int id) {
             else
                 return &DUMMY_IMAGE;
         case ENGINE_ENV_PHARAOH: // todo: mods
+            // 14252
+            // 15949
+            // 14791
             if (id > 14000)
-                id -= 14252;
+//                id -= image_debug_offset;
+                id -= data.terrain_ph_offset;
             if (id > 6000 && id - 6000 < data.ph_fonts.entries_num)
                 return &data.ph_fonts.images[id - 6000];
             else if (id > 5000 && id - 5000 < data.ph_unloaded.entries_num)
@@ -502,7 +509,8 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     }
 
     // prepare bitmap data
-    int data_size = io_read_file_into_buffer(filename_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int maxsize = SCRATCH_DATA_SIZE;
+    int data_size = io_read_file_into_buffer(filename_555, MAY_BE_LOCALIZED, data.tmp_data, maxsize);
     if (!data_size)
         return 0;
     buffer_init(&buf, data.tmp_data, data_size);
@@ -707,4 +715,9 @@ int image_load_fonts(encoding_type encoding) {
 
 int get_main_entries_num(void) {
     return data.main.entries_num;
+}
+
+void set_terrain_graphics_offset(int offset)
+{
+    data.terrain_ph_offset = offset;
 }

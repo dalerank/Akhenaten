@@ -77,20 +77,28 @@ int64_t map_grid_get(grid_xx *grid, uint32_t at)
         return 0;
     }
 //    assert(at < grid_total_size[GAME_ENV]);
+    int64_t res = 0;
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            return (int64_t)((uint8_t*)grid->items_xx)[at];
+            res = ((uint8_t*)grid->items_xx)[at];
+            break;
         case FS_INT8:
-            return (int64_t)((int8_t*)grid->items_xx)[at];
+            res = ((int8_t*)grid->items_xx)[at];
+            break;
         case FS_UINT16:
-            return (int64_t)((uint16_t*)grid->items_xx)[at];
+            res = ((uint16_t*)grid->items_xx)[at];
+            break;
         case FS_INT16:
-            return (int64_t)((int16_t*)grid->items_xx)[at];
+            res = ((int16_t*)grid->items_xx)[at];
+            break;
         case FS_UINT32:
-            return (int64_t)((uint32_t*)grid->items_xx)[at];
+            res = ((uint32_t*)grid->items_xx)[at];
+            break;
         case FS_INT32:
-            return (int64_t)((int32_t*)grid->items_xx)[at];
+            res = ((int32_t*)grid->items_xx)[at];
+            break;
     }
+    return res;
 }
 void map_grid_set(grid_xx *grid, uint32_t at, int64_t value)
 {
@@ -279,7 +287,7 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
 
 void map_data_init(int width, int height, int start_offset, int border_size)
 {
-    if (1) {
+    if (0) {
         map_data.width = grid_size[GAME_ENV];
         map_data.height = grid_size[GAME_ENV];
         map_data.start_offset = 0;

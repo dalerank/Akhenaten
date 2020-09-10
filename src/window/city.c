@@ -7,6 +7,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/config.h"
+#include "core/image.h"
 #include "figure/formation.h"
 #include "game/orientation.h"
 #include "game/settings.h"
@@ -183,20 +184,20 @@ static void toggle_pause(void)
 
 static void handle_hotkeys(const hotkeys *h)
 {
-//    if (h->decrease_game_speed)
-//        image_debug_offset--;
-//    if (h->increase_game_speed)
-//        image_debug_offset++;
+    if (h->decrease_game_speed)
+        image_debug_offset--;
+    if (h->increase_game_speed)
+        image_debug_offset++;
     ////
     if (h->toggle_pause) {
         toggle_pause();
     }
-    if (h->decrease_game_speed) {
-        setting_decrease_game_speed();
-    }
-    if (h->increase_game_speed) {
-        setting_increase_game_speed();
-    }
+//    if (h->decrease_game_speed) {
+//        setting_decrease_game_speed();
+//    }
+//    if (h->increase_game_speed) {
+//        setting_increase_game_speed();
+//    }
     if (h->show_overlay) {
         show_overlay(h->show_overlay);
     }

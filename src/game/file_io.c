@@ -1120,6 +1120,8 @@ static void savegame_write_to_file(FILE *fp)
     }
 }
 
+#include "core/image.h"
+
 int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
@@ -1162,9 +1164,11 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     if (file_has_extension(filename,"pak")) {
         log_info("Loading saved game.", filename, 0);
         init_savegame_data(0);
+        set_terrain_graphics_offset(14791);
     } else {
-        init_savegame_data(1);
         log_info("Loading saved game (expanded).", filename, 0);
+        init_savegame_data(1);
+        set_terrain_graphics_offset(14252);
     }
 
     log_info("Loading saved game", filename, 0);
