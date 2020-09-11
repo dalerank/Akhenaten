@@ -25,7 +25,7 @@ typedef enum {
     LABOR_CATEGORY_GOVERNANCE_RELIGION = 8
 } labor_category;
 
-static int CATEGORY_FOR_BUILDING_TYPE[] = {
+static int CATEGORY_FOR_int[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
@@ -186,7 +186,7 @@ static void calculate_workers_needed_per_category(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int category = CATEGORY_FOR_BUILDING_TYPE[b->type];
+        int category = CATEGORY_FOR_int[b->type];
         b->labor_category = category;
         if (!should_have_workers(b, category, 1)) {
             continue;
@@ -299,7 +299,7 @@ static void set_building_worker_weight(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
+        int cat = CATEGORY_FOR_int[b->type];
         if (cat == LABOR_CATEGORY_WATER) {
             b->percentage_houses_covered = water_per_10k_per_building;
         } else if (cat >= 0) {
@@ -335,7 +335,7 @@ static void allocate_workers_to_water(void)
             building_id = 1;
         }
         building *b = building_get(building_id);
-        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_BUILDING_TYPE[b->type] != LABOR_CATEGORY_WATER) {
+        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_int[b->type] != LABOR_CATEGORY_WATER) {
             continue;
         }
         b->num_workers = 0;
@@ -375,7 +375,7 @@ static void allocate_workers_to_non_water_buildings(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
+        int cat = CATEGORY_FOR_int[b->type];
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
             // water is handled by allocate_workers_to_water(void)
             continue;
@@ -416,7 +416,7 @@ static void allocate_workers_to_non_water_buildings(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
+        int cat = CATEGORY_FOR_int[b->type];
         if (cat < 0 || cat == LABOR_CATEGORY_WATER || cat == LABOR_CATEGORY_MILITARY) {
             continue;
         }

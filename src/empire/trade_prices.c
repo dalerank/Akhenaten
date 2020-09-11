@@ -21,17 +21,17 @@ void trade_prices_reset(void)
     }
 }
 
-int trade_price_buy(resource_type resource)
+int trade_price_buy(int resource)
 {
     return prices[resource].buy;
 }
 
-int trade_price_sell(resource_type resource)
+int trade_price_sell(int resource)
 {
     return prices[resource].sell;
 }
 
-int trade_price_change(resource_type resource, int amount)
+int trade_price_change(int resource, int amount)
 {
     if (amount < 0 && prices[resource].sell <= 0) {
         // cannot lower the price to negative

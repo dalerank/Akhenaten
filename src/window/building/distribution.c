@@ -188,7 +188,7 @@ void window_building_draw_dock_orders_foreground(building_info_context* c)
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
     for (int i = 0; i < 15; i++) {
-        resource_type resource = i + 1;
+        int resource = i + 1;
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
@@ -314,12 +314,12 @@ void window_building_draw_market_orders(building_info_context* c)
 void window_building_draw_market_orders_foreground(building_info_context* c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    resource_type resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
+    int resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
     for (int i = INVENTORY_WHEAT; i < INVENTORY_MAX; i++) {
-        resource_type resource = resources[i];
+        int resource = resources[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
@@ -464,7 +464,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
     // accept none button
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2);
 
-    const resource_list *list = city_resource_get_available_foods();
+    const resources_list *list = city_resource_get_available_foods();
     for (int i = 0; i < list->size; i++) {
         int resource = list->items[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
@@ -652,7 +652,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     // accept none button
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 3);
 
-    const resource_list *list = city_resource_get_available();
+    const resources_list *list = city_resource_get_available();
     for (int i = 0; i < list->size; i++) {
         int resource = list->items[i];
         int image_id =

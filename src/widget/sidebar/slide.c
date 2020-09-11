@@ -15,7 +15,7 @@
 static struct {
     int position;
     speed_type slide_speed;
-    slide_direction direction;
+    int direction;
     back_sidebar_draw_function back_sidebar_draw;
     front_sidebar_draw_function front_sidebar_draw;
     slide_finished_function finished_callback;
@@ -48,7 +48,7 @@ static void draw_sliding_foreground(void)
     graphics_reset_clip_rectangle();
 }
 
-void sidebar_slide(slide_direction direction, back_sidebar_draw_function back_sidebar_callback, front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback)
+void sidebar_slide(int direction, back_sidebar_draw_function back_sidebar_callback, front_sidebar_draw_function front_sidebar_callback, slide_finished_function finished_callback)
 {
     data.direction = direction;
     data.position = 0;

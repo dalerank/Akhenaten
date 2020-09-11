@@ -20,13 +20,13 @@ typedef enum {
     LANGUAGE_SWEDISH,
     LANGUAGE_SIMPLIFIED_CHINESE,
     LANGUAGE_TRADITIONAL_CHINESE
-} language_type;
+};
 
 /**
  * Determines language based on the language file
  * @return Guessed language
  */
-language_type locale_determine_language(void);
+int locale_determine_language(void);
 
 /**
  * Check whether to write the year before the 'AD' part or the other way around

@@ -12,7 +12,7 @@ int city_culture_coverage_colosseum(void);
 int city_culture_coverage_hippodrome(void);
 int city_culture_coverage_average_entertainment(void);
 
-int city_culture_coverage_religion(god_type god);
+int city_culture_coverage_religion(int god);
 
 int city_culture_coverage_school(void);
 int city_culture_coverage_library(void);

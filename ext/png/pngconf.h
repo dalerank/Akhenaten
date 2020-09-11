@@ -512,7 +512,8 @@
 #elif ULONG_MAX > 4294967294U
    typedef unsigned long int png_uint_32;
 #else
-#  error "libpng requires an unsigned 32-bit (or more) type"
+//#  error "libpng requires an unsigned 32-bit (or more) type"
+    typedef uint32_t  png_uint_32;
 #endif
 
 /* Prior to 1.6.0, it was possible to disable the use of size_t and ptrdiff_t.

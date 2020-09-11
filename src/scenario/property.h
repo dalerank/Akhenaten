@@ -7,7 +7,7 @@ typedef enum {
     CLIMATE_CENTRAL = 0,
     CLIMATE_NORTHERN = 1,
     CLIMATE_DESERT = 2
-} scenario_climate;
+};
 
 int scenario_is_custom(void);
 
@@ -53,7 +53,7 @@ int scenario_is_open_play(void);
 
 int scenario_open_play_id(void);
 
-scenario_climate scenario_property_climate(void);
+int scenario_property_climate(void);
 
 int scenario_property_start_year(void);
 

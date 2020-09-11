@@ -147,7 +147,7 @@ void building_destroy_by_rioter(building *b)
     destroy_on_fire(b, 0);
 }
 
-int building_destroy_first_of_type(building_type type)
+int building_destroy_first_of_type(int type)
 {
     int i = building_find(type);
     if (i < MAX_BUILDINGS) {

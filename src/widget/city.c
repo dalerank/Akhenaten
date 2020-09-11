@@ -333,7 +333,7 @@ static int handle_cancel_construction_button(const touch *t)
 static void handle_first_touch(map_tile *tile)
 {
     const touch *first = get_earliest_touch();
-    building_type type = building_construction_type();
+    int type = building_construction_type();
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {

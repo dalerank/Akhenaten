@@ -14,14 +14,14 @@ typedef enum {
     EMULATED_MOUSE_CLICK_NONE = 0,
     EMULATED_MOUSE_CLICK_LEFT = 1,
     EMULATED_MOUSE_CLICK_RIGHT = 2
-} emulated_mouse_click;
+};
 
 static struct {
     touch finger[MAX_ACTIVE_TOUCHES + 1];
     touch old_touch;
     int last_scroll_position;
-    touch_mode mode;
-    emulated_mouse_click touchpad_mode_click_type;
+    int mode;
+    int touchpad_mode_click_type;
 } data;
 
 static int start_delayed(const touch *t)
@@ -318,7 +318,7 @@ int touch_to_mouse(void)
     return 1;
 }
 
-void touch_set_mode(touch_mode mode)
+void touch_set_mode(int mode)
 {
     data.mode = mode;
 }

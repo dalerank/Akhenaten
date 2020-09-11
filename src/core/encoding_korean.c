@@ -2415,7 +2415,7 @@ void encoding_korean_to_utf8(const uint8_t *input, char *output, int output_leng
         } else {
             // multi-byte char
             const korean_entry key = {input[0] << 8 | input[1]};
-            const korean_entry *entry = bsearch(&key, codepage_to_utf8,
+            const korean_entry *entry = (korean_entry*)bsearch(&key, codepage_to_utf8,
                 IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS, sizeof(korean_entry), compare_codepage);
             if (entry && output + 3 <= max_output) {
                 for (int i = 0; i < 3; i++) {
@@ -2445,7 +2445,7 @@ void encoding_korean_from_utf8(const char *input, uint8_t *output, int output_le
         } else {
             // multi-byte char: Korean characters are always 3 bytes in utf-8
             const korean_entry key = {0, {(uint8_t)input[0], (uint8_t)input[1], (uint8_t)input[2]}};
-            const korean_entry *entry = bsearch(&key, utf8_to_codepage,
+            const korean_entry *entry = (korean_entry*)bsearch(&key, utf8_to_codepage,
                 IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS, sizeof(korean_entry), compare_utf8);
             if (entry && output + 2 <= max_output) {
                 *output = (entry->cp949 >> 8) & 0xff;

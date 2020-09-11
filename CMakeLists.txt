@@ -28,7 +28,8 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 set(SHORT_NAME augustus)
-project(${SHORT_NAME} C)
+#project(${SHORT_NAME} C)
+project(${SHORT_NAME} CXX)
 
 if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
@@ -37,21 +38,29 @@ endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-if (CMAKE_VERSION VERSION_LESS 3.1)
-    if (CMAKE_COMPILER_IS_GNUCC)
-        set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
-    endif()
-else()
-    set(CMAKE_C_STANDARD 99)
-endif()
+#SET(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
+SET(CMAKE_CXX_FLAGS "-std=c++0x" ${CMAKE_CXX_FLAGS})
+set (CMAKE_CXX_STANDARD 11)
 
-if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+#SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
+#list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS c)
+#set(CMAKE_USER_MAKE_RULES_OVERRIDE "CryptoppMakeRulesOverwrite.cmake")
 
-    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
-        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
-    endif()
-endif()
+#if (CMAKE_VERSION VERSION_LESS 3.1)
+#    if (CMAKE_COMPILER_IS_GNUCC)
+#        set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+#    endif()
+#else()
+#    set(CMAKE_C_STANDARD 99)
+#endif()
+#
+#if (CMAKE_COMPILER_IS_GNUCC)
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+#
+#    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
+#        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
+#    endif()
+#endif()
 
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 4)
@@ -130,9 +139,9 @@ if (SWITCH_BUILD)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
+#configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
+#configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
+#configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
 if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
@@ -148,34 +157,34 @@ set(TINYFD_FILES
     ext/tinyfiledialogs/tinyfiledialogs.c
 )
 
-set(PNG_FILES
-    ext/png/png.c
-    ext/png/pngerror.c
-    ext/png/pngget.c
-    ext/png/pngmem.c
-    ext/png/pngpread.c
-    ext/png/pngread.c
-    ext/png/pngrio.c
-    ext/png/pngrtran.c
-    ext/png/pngrutil.c
-    ext/png/pngset.c
-    ext/png/pngtrans.c
-    ext/png/pngwio.c
-    ext/png/pngwrite.c
-    ext/png/pngwtran.c
-    ext/png/pngwutil.c
-)
+#set(PNG_FILES
+#    ext/png/png.c
+#    ext/png/pngerror.c
+#    ext/png/pngget.c
+#    ext/png/pngmem.c
+#    ext/png/pngpread.c
+#    ext/png/pngread.c
+#    ext/png/pngrio.c
+#    ext/png/pngrtran.c
+#    ext/png/pngrutil.c
+#    ext/png/pngset.c
+#    ext/png/pngtrans.c
+#    ext/png/pngwio.c
+#    ext/png/pngwrite.c
+#    ext/png/pngwtran.c
+#    ext/png/pngwutil.c
+#)
 
-set(ZLIB_FILES
-    ext/zlib/adler32.c
-    ext/zlib/crc32.c
-    ext/zlib/deflate.c
-    ext/zlib/inffast.c
-    ext/zlib/inflate.c
-    ext/zlib/inftrees.c
-    ext/zlib/trees.c
-    ext/zlib/zutil.c
-)
+#set(ZLIB_FILES
+#    ext/zlib/adler32.c
+#    ext/zlib/crc32.c
+#    ext/zlib/deflate.c
+#    ext/zlib/inffast.c
+#    ext/zlib/inflate.c
+#    ext/zlib/inftrees.c
+#    ext/zlib/trees.c
+#    ext/zlib/zutil.c
+#)
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
@@ -232,8 +241,8 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c
-    ${PROJECT_SOURCE_DIR}/src/core/mods.c
-    ${PROJECT_SOURCE_DIR}/src/core/png_read.c
+#    ${PROJECT_SOURCE_DIR}/src/core/mods.c
+#    ${PROJECT_SOURCE_DIR}/src/core/png_read.c
     ${PROJECT_SOURCE_DIR}/src/core/random.c
     ${PROJECT_SOURCE_DIR}/src/core/smacker.c
     ${PROJECT_SOURCE_DIR}/src/core/speed.c
@@ -444,7 +453,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/panel.c
     ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.c
+#    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.c
     ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.c
     ${PROJECT_SOURCE_DIR}/src/graphics/text.c
     ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.c
@@ -611,9 +620,13 @@ set(SOURCE_FILES
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
     ${TINYFD_FILES}
-    ${PROJECT_SOURCE_DIR}/res/augustus.rc
+#    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
+#    ${PNG_FILES}
+#    ${ZLIB_FILES}
 )
+
+SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 
 function(GET_SDL_EXT_DIR result module)
     if(NOT module STREQUAL "")
@@ -704,6 +717,7 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
+#include_directories("LIB/64/include")
 
 if(SYSTEM_LIBS)
     find_package(ZLIB)
@@ -722,9 +736,9 @@ endif()
 if(PNG_FOUND)
     include_directories(${PNG_INCLUDE_DIRS})
     target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
-else()
-    include_directories("ext/png")
-    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
+#else()
+#    include_directories("ext/png")
+#    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
 endif()
 
 if(EXPAT_FOUND)

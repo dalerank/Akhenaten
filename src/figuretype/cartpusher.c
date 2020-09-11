@@ -57,9 +57,9 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         int dist = 0;
         building *src_building = building_get(f->building_id);
         building *dst_building = building_get(dst_building_id);
-        int src_building_type = src_building->type;
-        if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) ||
-            src_building_type == BUILDING_WHARF) {
+        int src_int = src_building->type;
+        if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) ||
+            src_int == BUILDING_WHARF) {
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y,
                                               src_building->distance_from_entry, dst_building->distance_from_entry);
         }
@@ -96,9 +96,9 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         int dist = 0;
         building *src_building = building_get(f->building_id);
         building *dst_building = building_get(dst_building_id);
-        int src_building_type = src_building->type;
-        if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) ||
-            src_building_type == BUILDING_WHARF) {
+        int src_int = src_building->type;
+        if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) ||
+            src_int == BUILDING_WHARF) {
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y,
                                               src_building->distance_from_entry, dst_building->distance_from_entry);
         }

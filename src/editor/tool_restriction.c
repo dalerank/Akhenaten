@@ -61,7 +61,7 @@ static int is_deep_water(const map_tile *tile, int *warning)
     return result;
 }
 
-int editor_tool_can_place_flag(tool_type type, const map_tile *tile, int *warning)
+int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning)
 {
     switch (type) {
         case TOOL_ENTRY_POINT:

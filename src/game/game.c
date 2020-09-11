@@ -56,7 +56,7 @@ static int is_unpatched(void)
 }
 static encoding_type update_encoding(void)
 {
-    language_type language = locale_determine_language();
+    int language = locale_determine_language();
     encoding_type encoding = encoding_determine(language);
     log_info("Detected encoding:", 0, encoding);
     font_set_encoding(encoding);
@@ -172,7 +172,7 @@ int game_init(void)
         return 0;
     }
 
-    mods_init();
+//    mods_init();
     sound_system_init();
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));

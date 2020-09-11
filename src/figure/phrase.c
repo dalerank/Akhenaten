@@ -75,7 +75,7 @@ static const char FIGURE_PHRASE_VARIANTS[2][20][SOUND_FILENAME_MAX] = {
         "_e07.wav", "_e08.wav", "_e09.wav", "_e10.wav"
     }
 };
-static const int FIGURE_TYPE_TO_SOUND_TYPE[2][200] = {
+static const int int_TO_SOUND_TYPE[2][200] = {
     {
         -1, 24, 23, 21, 5, 19, -1, 3, 2, 5, // 0-9
         0, 1, 1, 1, -1, 14, 15, 16, 17, 6, // 10-19
@@ -220,14 +220,14 @@ static int house_seeker_phrase(figure *f)
 }
 static int emigrant_phrase(void)
 {
-    switch (city_sentiment_low_mood_cause()) {
-        case LOW_MOOD_CAUSE_NO_JOBS:
+    switch (city_sentiment_int()) {
+        case int_NO_JOBS:
             return 7;
-        case LOW_MOOD_CAUSE_NO_FOOD:
+        case int_NO_FOOD:
             return 8;
-        case LOW_MOOD_CAUSE_HIGH_TAXES:
+        case int_HIGH_TAXES:
             return 9;
-        case LOW_MOOD_CAUSE_LOW_WAGES:
+        case int_LOW_WAGES:
             return 10;
         default:
             return 11;
@@ -451,7 +451,7 @@ int figure_phrase_play(figure *f)
 {
     if (f->id <= 0)
         return 0;
-    int sound_id = FIGURE_TYPE_TO_SOUND_TYPE[GAME_ENV][f->type];
+    int sound_id = int_TO_SOUND_TYPE[GAME_ENV][f->type];
     play_sound_file(sound_id, f->phrase_id);
     return sound_id;
 }

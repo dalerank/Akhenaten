@@ -3,7 +3,7 @@
 #include "building/type.h"
 #include "scenario/building.h"
 
-int resource_image_offset(resource_type resource, resource_image_type type)
+int resource_image_offset(int resource, int type)
 {
     if (resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
         switch (type) {
@@ -18,13 +18,13 @@ int resource_image_offset(resource_type resource, resource_image_type type)
     }
 }
 
-int resource_is_food(resource_type resource)
+int resource_is_food(int resource)
 {
     return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
         resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT;
 }
 
-workshop_type resource_to_workshop_type(resource_type resource)
+int resource_to_workshop_type(int resource)
 {
     switch (resource) {
         case RESOURCE_OLIVES:

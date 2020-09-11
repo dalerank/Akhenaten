@@ -36,7 +36,7 @@ void building_maintenance_update_fire_direction(void)
 
 void building_maintenance_update_burning_ruins(void)
 {
-    scenario_climate climate = scenario_property_climate();
+    int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -160,7 +160,7 @@ void building_maintenance_check_fire_collapse(void)
 {
     city_sentiment_reset_protesters_criminals();
 
-    scenario_climate climate = scenario_property_climate();
+    int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     int random_global = random_byte() & 7;
     int max_id = building_get_highest_id();

@@ -2194,7 +2194,7 @@ void encoding_simp_chinese_to_utf8(const uint8_t *input, char *output, int outpu
         } else {
             // multi-byte char
             const chinese_entry key = {input[1] << 8 | input[0]};
-            const chinese_entry *entry = bsearch(&key, codepage_to_utf8,
+            const chinese_entry *entry = (chinese_entry*)bsearch(&key, codepage_to_utf8,
                 IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_internal);
             if (entry && output + 3 <= max_output) {
                 for (int i = 0; i < 3; i++) {
@@ -2224,7 +2224,7 @@ void encoding_simp_chinese_from_utf8(const char *input, uint8_t *output, int out
         } else {
             // multi-byte char: Chinese characters from the table are always 3 bytes in UTF-8
             const chinese_entry key = {0, {(uint8_t)input[0], (uint8_t)input[1], (uint8_t)input[2]}};
-            const chinese_entry *entry = bsearch(&key, utf8_to_codepage,
+            const chinese_entry *entry = (chinese_entry*)bsearch(&key, utf8_to_codepage,
                 IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS, sizeof(chinese_entry), compare_utf8);
             if (entry && output + 2 <= max_output) {
                 *output = entry->internal & 0xff;

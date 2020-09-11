@@ -23,7 +23,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
 
             // because C is crap
             size_t dir_len = strlen(dir_path);
-            char *file_path = malloc((strlen(filename) + dir_len + 2) * sizeof(char)); // write the full filename path into the char* buffer
+            char *file_path = (char*)malloc((strlen(filename) + dir_len + 2) * sizeof(char)); // write the full filename path into the char* buffer
             if (!file_path) {
                 SDL_free(dir_path);
                 return NULL;

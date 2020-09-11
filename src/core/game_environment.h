@@ -2,10 +2,10 @@
 #define AUGUSTUS_GAME_ENVIRONMENT_H
 
 typedef enum {
-    ENGINE_ENV_C3,
-    ENGINE_ENV_PHARAOH,
-    ENGINE_ENV_MAX
-} engine_environment;
+    ENGINE_ENV_C3 = 0,
+    ENGINE_ENV_PHARAOH = 1,
+    ENGINE_ENV_MAX = 2
+};
 
 typedef struct engine_sizes {
     int MAX_REQUESTS;
@@ -25,9 +25,9 @@ typedef struct engine_sizes {
     int MAX_BRIEFING;
 } engine_sizes;
 
-engine_environment GAME_ENV;
+extern int GAME_ENV;
 
-void init_game_environment(engine_environment env);
+void init_game_environment(int env);
 const char *get_game_title(void);
 const char *get_engine_pref_path(void);
 engine_sizes env_sizes(void);

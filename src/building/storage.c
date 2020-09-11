@@ -83,7 +83,7 @@ void building_storage_toggle_empty_all(int storage_id)
     data.storages[storage_id].storage.empty_all = 1 - data.storages[storage_id].storage.empty_all;
 }
 
-void building_storage_cycle_resource_state(int storage_id, resource_type resource_id)
+void building_storage_cycle_resource_state(int storage_id, int resource_id)
 {
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (state == BUILDING_STORAGE_STATE_ACCEPTING || state == BUILDING_STORAGE_STATE_ACCEPTING_HALF || state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS || state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
@@ -96,7 +96,7 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     data.storages[storage_id].storage.resource_state[resource_id] = state;
 }
 
-void building_storage_set_permission(building_storage_permission_states p, building* b)
+void building_storage_set_permission(int p, building* b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
@@ -105,14 +105,14 @@ void building_storage_set_permission(building_storage_permission_states p, build
     data.storages[b->storage_id].storage.permissions = perms;
 }
 
-int building_storage_get_permission(building_storage_permission_states p, building* b)
+int building_storage_get_permission(int p, building* b)
 {
     const building_storage* s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
     return !(s->permissions & permission_bit);
 }
 
-void building_storage_cycle_partial_resource_state(int storage_id, resource_type resource_id)
+void building_storage_cycle_partial_resource_state(int storage_id, int resource_id)
 {
     int state = data.storages[storage_id].storage.resource_state[resource_id];
     if (state == BUILDING_STORAGE_STATE_ACCEPTING) {

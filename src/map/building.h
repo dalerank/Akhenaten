@@ -24,7 +24,7 @@ void map_building_damage_clear(int grid_offset);
 
 int map_rubble_building_type(int grid_offset);
 
-void map_set_rubble_building_type(int grid_offset, building_type type);
+void map_set_rubble_building_type(int grid_offset, int type);
 
 /**
  * Clears the maps related to buildings

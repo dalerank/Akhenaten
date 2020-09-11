@@ -3,6 +3,6 @@
 
 #include "building/type.h"
 
-int building_construction_place_building(building_type type, int x, int y);
+int building_construction_place_building(int type, int x, int y);
 
 #endif // BUILDING_CONSTRUCTION_BUILDING_H

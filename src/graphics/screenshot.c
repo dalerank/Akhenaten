@@ -165,14 +165,14 @@ static int image_write_canvas(void)
     const color_t *canvas;
     color_t *screen_buffer = 0;
     if (config_get(CONFIG_UI_ZOOM)) {
-        screen_buffer = malloc(image.width * image.height * sizeof(color_t));
+        screen_buffer = (color_t*)malloc(image.width * image.height * sizeof(color_t));
         if (!system_save_screen_buffer(screen_buffer)) {
             free(screen_buffer);
             return 0;
         }
         canvas = screen_buffer;
     } else {
-        canvas = graphics_canvas(CANVAS_UI);
+        canvas = (const color_t*)graphics_canvas(CANVAS_UI);
     }
     int current_height = image_set_loop_height_limits(0, image.height);
     int size;

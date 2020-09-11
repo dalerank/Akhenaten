@@ -523,7 +523,7 @@ static int is_combining_char(uint8_t b1, uint8_t b2)
 
 static const letter_code *search_utf8_table(const from_utf8_lookup *key, const from_utf8_lookup *table, int size)
 {
-    const from_utf8_lookup *result = bsearch(key, table, size, sizeof(from_utf8_lookup), compare_utf8_lookup);
+    const from_utf8_lookup *result = (from_utf8_lookup*)bsearch(key, table, size, sizeof(from_utf8_lookup), compare_utf8_lookup);
     return result ? result->code : NULL;
 }
 
@@ -577,7 +577,7 @@ static const letter_code *get_letter_code_for_combining_utf8(const char *prev_ch
     return search_utf8_table(&key, data.from_utf8_decomposed_table, data.decomposed_table_size);
 }
 
-encoding_type encoding_determine(language_type language)
+encoding_type encoding_determine(int language)
 {
     // Determine encoding based on language:
     // - Windows-1250 (Central/Eastern Europe) is used in Polish only

@@ -83,7 +83,7 @@ typedef enum {
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72
-} figure_type;
+};
 
 typedef enum {
     ENEMY_0_BARBARIAN = 0,
@@ -98,7 +98,7 @@ typedef enum {
     ENEMY_9_EGYPTIAN = 9,
     ENEMY_10_CARTHAGINIAN = 10,
     ENEMY_11_CAESAR = 11
-} enemy_type;
+};
 
 enum {
     FIGURE_STATE_ALIVE = 1,

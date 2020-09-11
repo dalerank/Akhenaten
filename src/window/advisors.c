@@ -106,7 +106,7 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
 };
 
 static const advisor_window_type *current_advisor_window = 0;
-static advisor_type current_advisor = ADVISOR_NONE;
+static int current_advisor = ADVISOR_NONE;
 
 static int focus_button_id;
 static int advisor_height;
@@ -137,7 +137,7 @@ static void init(void)
     city_finance_update_salary();
     city_finance_calculate_totals();
 
-    city_migration_determine_no_immigration_cause();
+    city_migration_determine_int();
 
     city_houses_calculate_culture_demands();
     city_culture_update_coverage();
@@ -257,7 +257,7 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-advisor_type window_advisors_get_advisor(void)
+int window_advisors_get_advisor(void)
 {
     return current_advisor;
 }
@@ -286,7 +286,7 @@ void window_advisors_show_checked(void)
     }
 }
 
-int window_advisors_show_advisor(advisor_type advisor)
+int window_advisors_show_advisor(int advisor)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {

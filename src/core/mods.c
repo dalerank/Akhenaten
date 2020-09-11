@@ -113,7 +113,7 @@ static void load_dummy_layer(layer *l)
 static void load_layer(layer *l)
 {
     int size = l->width * l->height * sizeof(color_t);
-    l->data = malloc(size);
+    l->data = (color_t*)malloc(size);
     if (!l->data) {
         log_error("Problem loading layer", l->modded_image_path, 0);
         load_dummy_layer(l);
@@ -184,7 +184,7 @@ static int load_modded_image(modded_image *img)
         load_layer(&img->layers[i]);
     }
 
-    img->data = malloc(img->img.draw.data_length);
+    img->data = (color_t*)malloc(img->img.draw.data_length);
     memset(img->data, 0, img->img.draw.data_length);
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
@@ -247,7 +247,7 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
 {
     layer *current_layer = &img->layers[img->num_layers];
     size_t path_size = strlen(path);
-    current_layer->modded_image_path = malloc((path_size + 5) * sizeof(char));
+    current_layer->modded_image_path = (char*)malloc((path_size + 5) * sizeof(char));
     strncpy(current_layer->modded_image_path, path, path_size);
     strncpy(current_layer->modded_image_path + path_size, ".png", 5);
 

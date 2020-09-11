@@ -789,7 +789,7 @@ void window_building_info_show(int grid_offset)
     init(grid_offset);
     window_show(&window);
 }
-int window_building_info_get_building_type(void)
+int window_building_info_get_int(void)
 {
     if (context.type == BUILDING_INFO_BUILDING) {
         return building_get(context.building_id)->type;

@@ -25,7 +25,7 @@
 
 static struct {
     int active;
-    tool_type type;
+    int type;
     int id;
     int brush_size;
     int build_in_progress;
@@ -33,7 +33,7 @@ static struct {
     map_tile start_tile;
 } data = { 0, TOOL_GRASS, 0, 3, 0 };
 
-tool_type editor_tool_type(void)
+int editor_tool_type(void)
 {
     return data.type;
 }
@@ -53,12 +53,12 @@ void editor_tool_deactivate(void)
     }
 }
 
-void editor_tool_set_type(tool_type type)
+void editor_tool_set_type(int type)
 {
     editor_tool_set_with_id(type, 0);
 }
 
-void editor_tool_set_with_id(tool_type type, int id)
+void editor_tool_set_with_id(int type, int id)
 {
     data.active = 1;
     data.type = type;
@@ -336,7 +336,7 @@ static void place_building(const map_tile *tile)
 {
     int image_id;
     int size;
-    building_type type;
+    int type;
     switch (data.type) {
         case TOOL_NATIVE_HUT:
             type = BUILDING_NATIVE_HUT;

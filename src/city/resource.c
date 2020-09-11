@@ -12,21 +12,21 @@
 #include "scenario/property.h"
 
 static struct {
-    resource_list resource_list;
-    resource_list food_list;
+    resources_list resource_list;
+    resources_list food_list;
 } available;
 
-int city_resource_count(resource_type resource)
+int city_resource_count(int resource)
 {
     return city_data.resource.stored_in_warehouses[resource];
 }
 
-const resource_list *city_resource_get_available(void)
+const resources_list *city_resource_get_available(void)
 {
     return &available.resource_list;
 }
 
-const resource_list *city_resource_get_available_foods(void)
+const resources_list *city_resource_get_available_foods(void)
 {
     return &available.food_list;
 }
@@ -76,12 +76,12 @@ void city_resource_set_last_used_warehouse(int warehouse_id)
     city_data.resource.last_used_warehouse = warehouse_id;
 }
 
-resource_trade_status city_resource_trade_status(resource_type resource)
+int city_int(int resource)
 {
     return city_data.resource.trade_status[resource];
 }
 
-void city_resource_cycle_trade_status(resource_type resource)
+void city_resource_cycle_trade_status(int resource)
 {
     ++city_data.resource.trade_status[resource];
     if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT) {
@@ -101,22 +101,22 @@ void city_resource_cycle_trade_status(resource_type resource)
     }
 }
 
-int city_resource_export_over(resource_type resource)
+int city_resource_export_over(int resource)
 {
     return city_data.resource.export_over[resource];
 }
 
-void city_resource_change_export_over(resource_type resource, int change)
+void city_resource_change_export_over(int resource, int change)
 {
     city_data.resource.export_over[resource] = calc_bound(city_data.resource.export_over[resource] + change, 0, 100);
 }
 
-int city_resource_is_stockpiled(resource_type resource)
+int city_resource_is_stockpiled(int resource)
 {
     return city_data.resource.stockpiled[resource];
 }
 
-void city_resource_toggle_stockpiled(resource_type resource)
+void city_resource_toggle_stockpiled(int resource)
 {
     if (city_data.resource.stockpiled[resource]) {
         city_data.resource.stockpiled[resource] = 0;
@@ -128,12 +128,12 @@ void city_resource_toggle_stockpiled(resource_type resource)
     }
 }
 
-int city_resource_is_mothballed(resource_type resource)
+int city_resource_is_mothballed(int resource)
 {
     return city_data.resource.mothballed[resource];
 }
 
-void city_resource_toggle_mothballed(resource_type resource)
+void city_resource_toggle_mothballed(int resource)
 {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
@@ -148,18 +148,18 @@ void city_resource_add_produced_to_granary(int amount)
     city_data.resource.food_produced_this_month += amount;
 }
 
-void city_resource_remove_from_granary(resource_type food, int amount)
+void city_resource_remove_from_granary(int food, int amount)
 {
     city_data.resource.granary_food_stored[food] -= amount;
 }
 
-void city_resource_add_to_warehouse(resource_type resource, int amount)
+void city_resource_add_to_warehouse(int resource, int amount)
 {
     city_data.resource.space_in_warehouses[resource] -= amount;
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
 
-void city_resource_remove_from_warehouse(resource_type resource, int amount)
+void city_resource_remove_from_warehouse(int resource, int amount)
 {
     city_data.resource.space_in_warehouses[resource] += amount;
     city_data.resource.stored_in_warehouses[resource] -= amount;

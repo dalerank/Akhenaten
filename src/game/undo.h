@@ -17,7 +17,7 @@ void game_undo_restore_building_state(void);
 
 void game_undo_restore_map(int include_properties);
 
-int game_undo_start_build(building_type type);
+int game_undo_start_build(int type);
 
 void game_undo_finish_build(int cost);
 

@@ -33,7 +33,7 @@ static void draw_housing_table()
     int width;
     int y_offset = 68;
     int rows = 0;
-    translation_key goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
+    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
     int goods_icons[4] = {RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE};
 
     housing_type_counts = calculate_number_of_each_housing_type();

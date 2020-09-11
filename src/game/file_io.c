@@ -1046,7 +1046,7 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int filepiece_size)
         || !zip_decompress(compress_buffer, input_size, buffer, &filepiece_size))
             return 0;
     }
-    char *lfile = malloc(200);
+    char *lfile = (char*)malloc(200);
 //    char nfile = malloc(20);
     sprintf(lfile,"DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
 //    strcat(lfile, nfile);

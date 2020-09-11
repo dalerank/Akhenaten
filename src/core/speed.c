@@ -57,7 +57,7 @@ void speed_invert(speed_type *speed)
     speed_set_target(speed, -speed->current_speed, SPEED_CHANGE_IMMEDIATE, speed->adjust_for_time);
 }
 
-speed_direction speed_get_current_direction(const speed_type *speed)
+int speed_get_current_direction(const speed_type *speed)
 {
     if (!speed->current_speed) {
         return SPEED_DIRECTION_STOPPED;

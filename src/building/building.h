@@ -142,18 +142,18 @@ typedef struct {
     unsigned char show_on_problem_overlay;
 } building;
 
-int building_find(building_type type);
+int building_find(int type);
 building *building_get(int id);
 building *building_main(building *b);
 building *building_next(building *b);
-building *building_create(building_type type, int x, int y);
+building *building_create(int type, int x, int y);
 
 void building_clear_related_data(building *b);
 void building_clear_all(void);
 //void building_totals_add_corrupted_house(int unfixable);
 
-int building_is_house(building_type type);
-int building_is_fort(building_type type);
+int building_is_house(int type);
+int building_is_fort(int type);
 
 int building_get_highest_id(void);
 void building_update_highest_id(void);

@@ -19,7 +19,7 @@ static struct {
 static void allocate_listing_files(int min, int max)
 {
     for (int i = min; i < max; i++) {
-        data.listing.files[i] = malloc(FILE_NAME_MAX * sizeof(char));
+        data.listing.files[i] = (char*)malloc(FILE_NAME_MAX * sizeof(char));
         data.listing.files[i][0] = 0;
     }
 }

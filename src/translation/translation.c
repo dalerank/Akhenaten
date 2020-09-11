@@ -30,7 +30,7 @@ static void set_strings(const translation_string *strings, int num_strings, int 
     }
 }
 
-void translation_load(language_type language) {
+void translation_load(int language) {
     const translation_string *strings = NULL;
     int num_strings = 0;
     const translation_string *default_strings = NULL;
@@ -79,6 +79,6 @@ void translation_load(language_type language) {
     set_strings(default_strings, num_default_strings, 1);
 }
 
-const uint8_t *translation_for(translation_key key) {
+const uint8_t *translation_for(int key) {
     return data.strings[key];
 }

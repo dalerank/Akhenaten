@@ -163,7 +163,7 @@ static void button_cancel(int param1, int param2)
     data.close_callback();
 }
 
-static void update_volume(set_sound_type type, int is_decrease)
+static void update_volume(int type, int is_decrease)
 {
     if (is_decrease) {
         setting_decrease_sound_volume(type);

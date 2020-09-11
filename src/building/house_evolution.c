@@ -16,7 +16,7 @@ typedef enum {
     EVOLVE = 1,
     NONE = 0,
     DEVOLVE = -1
-} evolve_status;
+};
 
 static int check_evolve_desirability(building *house)
 {
@@ -175,7 +175,7 @@ static int check_requirements(building *house, house_demands *demands)
     return status;
 }
 
-static int has_devolve_delay(building *house, evolve_status status)
+static int has_devolve_delay(building *house, int status)
 {
     if (status == DEVOLVE && house->data.house.devolve_delay < 2) {
         house->data.house.devolve_delay++;
@@ -190,7 +190,7 @@ static int evolve_small_tent(building *house, house_demands *demands)
 {
     if (house->house_population > 0) {
         building_house_merge(house);
-        evolve_status status = check_requirements(house, demands);
+        int status = check_requirements(house, demands);
         if (status == EVOLVE) {
             building_house_change_to(house, BUILDING_HOUSE_LARGE_TENT);
         }
@@ -202,7 +202,7 @@ static int evolve_large_tent(building *house, house_demands *demands)
 {
     if (house->house_population > 0) {
         building_house_merge(house);
-        evolve_status status = check_requirements(house, demands);
+        int status = check_requirements(house, demands);
         if (!has_devolve_delay(house, status)) {
             if (status == EVOLVE) {
                 building_house_change_to(house, BUILDING_HOUSE_SMALL_SHACK);

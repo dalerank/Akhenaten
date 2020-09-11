@@ -177,7 +177,7 @@ static void draw_map(void)
     graphics_reset_clip_rectangle();
 }
 
-static void draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
+static void draw_resource(int resource, int trade_max, int x_offset, int y_offset)
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);

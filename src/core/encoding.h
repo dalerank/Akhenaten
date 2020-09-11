@@ -23,7 +23,7 @@ typedef enum {
  * @param language Game language
  * @return encoding (best guess)
  */
-encoding_type encoding_determine(language_type language);
+encoding_type encoding_determine(int language);
 
 /**
  * Returns the determined internal encoding type

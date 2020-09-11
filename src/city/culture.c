@@ -47,7 +47,7 @@ int city_culture_coverage_average_entertainment(void)
     return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater) / 4;
 }
 
-int city_culture_coverage_religion(god_type god)
+int city_culture_coverage_religion(int god)
 {
     return coverage.religion[god];
 }

@@ -4,11 +4,11 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 
-void trade_route_init(int route_id, resource_type resource, int limit);
+void trade_route_init(int route_id, int resource, int limit);
 
-int trade_route_limit(int route_id, resource_type resource);
+int trade_route_limit(int route_id, int resource);
 
-int trade_route_traded(int route_id, resource_type resource);
+int trade_route_traded(int route_id, int resource);
 
 /**
  * Increases the trade limit of the resource
@@ -16,7 +16,7 @@ int trade_route_traded(int route_id, resource_type resource);
  * @param resource Resource
  * @return True on success, false if the limit couldn't be increased
  */
-int trade_route_increase_limit(int route_id, resource_type resource);
+int trade_route_increase_limit(int route_id, int resource);
 
 /**
  * Decreases the trade limit of the resource
@@ -24,13 +24,13 @@ int trade_route_increase_limit(int route_id, resource_type resource);
  * @param resource Resource
  * @return True on success, false if the limit couldn't be decreased
  */
-int trade_route_decrease_limit(int route_id, resource_type resource);
+int trade_route_decrease_limit(int route_id, int resource);
 
-void trade_route_increase_traded(int route_id, resource_type resource);
+void trade_route_increase_traded(int route_id, int resource);
 
 void trade_route_reset_traded(int route_id);
 
-int trade_route_limit_reached(int route_id, resource_type resource);
+int trade_route_limit_reached(int route_id, int resource);
 
 void trade_routes_save_state(buffer *limit, buffer *traded);
 

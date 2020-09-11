@@ -416,10 +416,10 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_id_from_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, mods_get_group_id("Keriew", "Roadblocks"));
-            map_terrain_add_roadblock_road(b->x, b->y, orientation);	    
-            map_tiles_update_area_roads(b->x, b->y, 5);
-            map_tiles_update_all_plazas();
+//            add_building(b, mods_get_group_id("Keriew", "Roadblocks"));
+//            map_terrain_add_roadblock_road(b->x, b->y, orientation);
+//            map_tiles_update_area_roads(b->x, b->y, 5);
+//            map_tiles_update_all_plazas();
             break;
         // ships
         case BUILDING_SHIPYARD:
@@ -512,7 +512,7 @@ static void add_to_map(int type, building *b, int size,
     map_routing_update_walls();
 }
 
-int building_construction_place_building(building_type type, int x, int y)
+int building_construction_place_building(int type, int x, int y)
 {
     int terrain_mask = TERRAIN_ALL;
     if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_ROADBLOCK) {

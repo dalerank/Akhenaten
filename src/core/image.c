@@ -179,7 +179,7 @@ struct graphics_files_collection {
         }
 };
 
-static const image DUMMY_IMAGE;
+static image DUMMY_IMAGE;
 
 static struct {
     int current_climate;
@@ -198,14 +198,19 @@ static struct {
 
     uint8_t *tmp_data;
 } data = {
-        .current_climate = -1,
-        .main = {0},
-        .enemy = {0},
-        .empire = {0},
-        .font = {0},
-        .ph_unloaded = {0},
-        .ph_terrain = {0},
-        .terrain_ph_offset = 14252
+        -1,
+        0,
+        0,
+        0,
+        14252,
+        {0},
+        {0},
+        {0},
+        {0},
+        {0},
+        {0},
+        {0},
+        0
 };
 
 static color_t to_32_bit(uint16_t c) {
@@ -244,7 +249,7 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst) {
     }
     return dst_length;
 }
-static const color_t *load_external_data(image *img) {
+static const color_t *load_external_data(const image *img) {
     char filename[FILE_NAME_MAX];
     int size = 0;
     switch (GAME_ENV) {
@@ -316,8 +321,8 @@ int image_groupid_translation(int table[], int group) {
     return group;
 }
 
-image_debug_offset = 14791;
-//image_debug_offset = 15949;
+int image_debug_offset = 14791;
+//int image_debug_offset = 15949;
 
 int image_id_from_group(int group) {
     switch (GAME_ENV) {
@@ -339,7 +344,8 @@ const image *image_get(int id) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             if (id >= data.main.entries_num && id < data.main.entries_num + MAX_MODDED_IMAGES)
-                return mods_get_image(id);
+//                return mods_get_image(id);
+                return &DUMMY_IMAGE;
             else if (id >= 0)
                 return &data.main.images[id];
             else
@@ -365,7 +371,7 @@ const image *image_get(int id) {
 
 }
 const color_t *image_data(int id) {
-    image *img = image_get(id);
+    const image *img = image_get(id);
     if (img->draw.is_external)
         return load_external_data(img);
     else
@@ -383,7 +389,7 @@ const image *image_letter(int letter_id) {
     }
 }
 const image *image_get_enemy(int id) {
-    if (id >= 0 && id < &data.enemy.entries_num) {
+    if (id >= 0 && id < data.enemy.entries_num) {
         return &data.enemy.images[id];
     } else {
         return NULL;
@@ -423,7 +429,7 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         pak->initialized = 1;
         pak->images = (image *) malloc(sizeof(image) * pak->entries_num);
         pak->data = (color_t *) malloc(30000000);
-        pak->group_image_ids = malloc(
+        pak->group_image_ids = (uint16_t*)malloc(
                 300 * sizeof(uint16_t)); // 300 entries is hardcoded? (total list is always 600 bytes)
     } else if (prev_pak_size != pak->entries_num) { // not new, but different! resize memory!
         realloc(pak->images, sizeof(image) * pak->entries_num);

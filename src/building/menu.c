@@ -8,7 +8,7 @@
 
 #define BUILD_MENU_ITEM_MAX 30
 
-static const building_type MENU_BUILDING_TYPE[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
+static const int MENU_int[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
     {BUILDING_HOUSE_VACANT_LOT, 0},
     {BUILDING_CLEAR_LAND, 0},
     {BUILDING_ROAD, 0},
@@ -46,29 +46,29 @@ void building_menu_enable_all(void)
     }
 }
 
-static void enable_house(int *enabled, building_type menu_building_type)
+static void enable_house(int *enabled, int menu_int)
 {
-    if (menu_building_type >= BUILDING_HOUSE_VACANT_LOT && menu_building_type <= BUILDING_HOUSE_LUXURY_PALACE) {
+    if (menu_int >= BUILDING_HOUSE_VACANT_LOT && menu_int <= BUILDING_HOUSE_LUXURY_PALACE) {
         *enabled = 1;
     }
 }
 
-static void enable_clear(int *enabled, building_type menu_building_type)
+static void enable_clear(int *enabled, int menu_int)
 {
-    if (menu_building_type == BUILDING_CLEAR_LAND) {
+    if (menu_int == BUILDING_CLEAR_LAND) {
         *enabled = 1;
     }
 }
 
-static void enable_cycling_temples_if_allowed(building_type type)
+static void enable_cycling_temples_if_allowed(int type)
 {
     int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
     menu_enabled[sub][0] = 1;
 }
 
-static void enable_if_allowed(int *enabled, building_type menu_building_type, building_type type)
+static void enable_if_allowed(int *enabled, int menu_int, int type)
 {
-    if (menu_building_type == type && scenario_building_allowed(type)) {
+    if (menu_int == type && scenario_building_allowed(type)) {
         *enabled = 1;
         if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
             enable_cycling_temples_if_allowed(type);
@@ -76,21 +76,21 @@ static void enable_if_allowed(int *enabled, building_type menu_building_type, bu
     }
 }
 
-static void disable_raw(int *enabled, building_type menu_building_type, building_type type, int resource)
+static void disable_raw(int *enabled, int menu_int, int type, int resource)
 {
-    if (type == menu_building_type && !empire_can_produce_resource(resource)) {
+    if (type == menu_int && !empire_can_produce_resource(resource)) {
         *enabled = 0;
     }
 }
 
-static void disable_finished(int *enabled, building_type menu_building_type, building_type type, int resource)
+static void disable_finished(int *enabled, int menu_int, int type, int resource)
 {
-    if (type == menu_building_type && !empire_can_produce_resource_potentially(resource)) {
+    if (type == menu_int && !empire_can_produce_resource_potentially(resource)) {
         *enabled = 0;
     }
 }
 
-static void enable_normal(int *enabled, building_type type)
+static void enable_normal(int *enabled, int type)
 {
     enable_house(enabled, type);
     enable_clear(enabled, type);
@@ -156,7 +156,7 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
 }
 
-static void enable_tutorial1_start(int *enabled, building_type type)
+static void enable_tutorial1_start(int *enabled, int type)
 {
     enable_house(enabled, type);
     enable_clear(enabled, type);
@@ -164,14 +164,14 @@ static void enable_tutorial1_start(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ROAD);
 }
 
-static void enable_tutorial1_after_fire(int *enabled, building_type type)
+static void enable_tutorial1_after_fire(int *enabled, int type)
 {
     enable_tutorial1_start(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
     enable_if_allowed(enabled, type, BUILDING_MARKET);
 }
 
-static void enable_tutorial1_after_collapse(int *enabled, building_type type)
+static void enable_tutorial1_after_collapse(int *enabled, int type)
 {
     enable_tutorial1_after_fire(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
@@ -179,7 +179,7 @@ static void enable_tutorial1_after_collapse(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
 }
 
-static void enable_tutorial2_start(int *enabled, building_type type)
+static void enable_tutorial2_start(int *enabled, int type)
 {
     enable_house(enabled, type);
     enable_clear(enabled, type);
@@ -195,7 +195,7 @@ static void enable_tutorial2_start(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_MENU_SMALL_TEMPLES);
 }
 
-static void enable_tutorial2_up_to_250(int *enabled, building_type type)
+static void enable_tutorial2_up_to_250(int *enabled, int type)
 {
     enable_tutorial2_start(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_DRAGGABLE_RESERVOIR);
@@ -203,7 +203,7 @@ static void enable_tutorial2_up_to_250(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_FOUNTAIN);
 }
 
-static void enable_tutorial2_up_to_450(int *enabled, building_type type)
+static void enable_tutorial2_up_to_450(int *enabled, int type)
 {
     enable_tutorial2_up_to_250(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_GARDENS);
@@ -213,7 +213,7 @@ static void enable_tutorial2_up_to_450(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_SCHOOL);
 }
 
-static void enable_tutorial2_after_450(int *enabled, building_type type)
+static void enable_tutorial2_after_450(int *enabled, int type)
 {
     enable_tutorial2_up_to_450(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_MENU_RAW_MATERIALS);
@@ -224,7 +224,7 @@ static void enable_tutorial2_after_450(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_GLADIATOR_SCHOOL);
 }
 
-static void disable_resources(int *enabled, building_type type)
+static void disable_resources(int *enabled, int type)
 {
     disable_raw(enabled, type, BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
     disable_raw(enabled, type, BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
@@ -248,7 +248,7 @@ void building_menu_update(void)
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            int building_type = MENU_BUILDING_TYPE[sub][item];
+            int building_type = MENU_int[sub][item];
             int *menu_item = &menu_enabled[sub][item];
             // first 12 items always disabled
             if (sub < 12) {
@@ -293,7 +293,7 @@ int building_menu_count_items(int submenu)
 {
     int count = 0;
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-        if (menu_enabled[submenu][item] && MENU_BUILDING_TYPE[submenu][item] > 0) {
+        if (menu_enabled[submenu][item] && MENU_int[submenu][item] > 0) {
             count++;
         }
     }
@@ -303,7 +303,7 @@ int building_menu_count_items(int submenu)
 int building_menu_next_index(int submenu, int current_index)
 {
     for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
-        if (MENU_BUILDING_TYPE[submenu][i] <= 0) {
+        if (MENU_int[submenu][i] <= 0) {
             return 0;
         }
         if (menu_enabled[submenu][i]) {
@@ -313,9 +313,9 @@ int building_menu_next_index(int submenu, int current_index)
     return 0;
 }
 
-building_type building_menu_type(int submenu, int item)
+int building_menu_type(int submenu, int item)
 {
-    return MENU_BUILDING_TYPE[submenu][item];
+    return MENU_int[submenu][item];
 }
 
 int building_menu_has_changed(void)

@@ -16,7 +16,7 @@ typedef enum {
     TYPE_ABOUT = 1,
     TYPE_MESSAGE = 2,
     TYPE_MISSION = 3
-} lang_type;
+};
 
 /**
  * Message type
@@ -30,7 +30,7 @@ typedef enum {
     MESSAGE_TYPE_TRADE_CHANGE = 5,
     MESSAGE_TYPE_PRICE_CHANGE = 6,
     MESSAGE_TYPE_INVASION = 7
-} lang_message_type;
+};
 
 /**
  * Image in a message
@@ -54,8 +54,8 @@ struct lang_message_string {
  * Message
  */
 typedef struct {
-    lang_type type;
-    lang_message_type message_type;
+    int type;
+    int message_type;
     int x;
     int y;
     int width_blocks;

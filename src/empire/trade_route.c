@@ -9,23 +9,23 @@ struct route_resource {
 
 static struct route_resource data[MAX_ROUTES][RESOURCE_MAX];
 
-void trade_route_init(int route_id, resource_type resource, int limit)
+void trade_route_init(int route_id, int resource, int limit)
 {
     data[route_id][resource].limit = limit;
     data[route_id][resource].traded = 0;
 }
 
-int trade_route_limit(int route_id, resource_type resource)
+int trade_route_limit(int route_id, int resource)
 {
     return data[route_id][resource].limit;
 }
 
-int trade_route_traded(int route_id, resource_type resource)
+int trade_route_traded(int route_id, int resource)
 {
     return data[route_id][resource].traded;
 }
 
-int trade_route_increase_limit(int route_id, resource_type resource)
+int trade_route_increase_limit(int route_id, int resource)
 {
     switch (data[route_id][resource].limit) {
         case 0: data[route_id][resource].limit = 15; break;
@@ -36,7 +36,7 @@ int trade_route_increase_limit(int route_id, resource_type resource)
     return 1;
 }
 
-int trade_route_decrease_limit(int route_id, resource_type resource)
+int trade_route_decrease_limit(int route_id, int resource)
 {
     switch (data[route_id][resource].limit) {
         case 40: data[route_id][resource].limit = 25; break;
@@ -47,7 +47,7 @@ int trade_route_decrease_limit(int route_id, resource_type resource)
     return 1;
 }
 
-void trade_route_increase_traded(int route_id, resource_type resource)
+void trade_route_increase_traded(int route_id, int resource)
 {
     data[route_id][resource].traded++;
 }
@@ -59,7 +59,7 @@ void trade_route_reset_traded(int route_id)
     }
 }
 
-int trade_route_limit_reached(int route_id, resource_type resource)
+int trade_route_limit_reached(int route_id, int resource)
 {
     return data[route_id][resource].traded >= data[route_id][resource].limit;
 }

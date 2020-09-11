@@ -49,7 +49,7 @@ static void draw_building_image(int image_id, int x, int y)
     image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN);
 }
 
-static void draw_building(const map_tile *tile, int x_view, int y_view, building_type type)
+static void draw_building(const map_tile *tile, int x_view, int y_view, int type)
 {
     const building_properties *props = building_properties_for_type(type);
 
@@ -135,7 +135,7 @@ void map_editor_tool_draw(const map_tile *tile)
         return;
     }
 
-    tool_type type = editor_tool_type();
+    int type = editor_tool_type();
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
     switch (type) {

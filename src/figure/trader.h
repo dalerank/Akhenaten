@@ -25,14 +25,14 @@ int trader_create(void);
  * @param trader_id Trader
  * @param resource Resource bought
  */
-void trader_record_bought_resource(int trader_id, resource_type resource);
+void trader_record_bought_resource(int trader_id, int resource);
 
 /**
  * Record that the trader has sold a resource to the city
  * @param trader_id Trader
  * @param resource Resource sold
  */
-void trader_record_sold_resource(int trader_id, resource_type resource);
+void trader_record_sold_resource(int trader_id, int resource);
 
 /**
  * Gets the amount bought of the given resource
@@ -40,7 +40,7 @@ void trader_record_sold_resource(int trader_id, resource_type resource);
  * @param resource Resource
  * @return Amount of resource bought by the trader from the city
  */
-int trader_bought_resources(int trader_id, resource_type resource);
+int trader_bought_resources(int trader_id, int resource);
 
 /**
  * Gets the amount sold of the given resource
@@ -48,7 +48,7 @@ int trader_bought_resources(int trader_id, resource_type resource);
  * @param resource Resource
  * @return Amount of resource sold by the trader to the city
  */
-int trader_sold_resources(int trader_id, resource_type resource);
+int trader_sold_resources(int trader_id, int resource);
 
 /**
  * Check whether this trader has bought/sold any items

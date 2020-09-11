@@ -20,22 +20,22 @@ static generic_button bottom_buttons[] = {
     { 328, 228, 120, 24, button_close, button_none, 1 },
 };
 
-static translation_key bottom_button_texts[] = {
+static int bottom_button_texts[] = {
     TR_BUTTON_CANCEL,
     TR_BUTTON_OK
 };
 
 static struct {
-    hotkey_action action;
+    int action;
     int index;
-    key_type key;
-    key_modifier_type modifiers;
-    void (*callback)(hotkey_action, int, key_type, key_modifier_type);
+    int key;
+    int modifiers;
+    void (*callback)(int, int, int, int);
     int focus_button;
 } data;
 
-static void init(hotkey_action action, int index,
-    void (*callback)(hotkey_action, int, key_type, key_modifier_type))
+static void init(int action, int index,
+    void (*callback)(int, int, int, int))
 {
     data.action = action;
     data.index = index;
@@ -96,7 +96,7 @@ static void button_close(int ok, int param2)
     window_go_back();
 }
 
-void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
+void window_hotkey_editor_key_pressed(int key, int modifiers)
 {
     if (key == KEY_ENTER && modifiers == KEY_MOD_NONE) {
         button_close(1, 0);
@@ -110,7 +110,7 @@ void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
     }
 }
 
-void window_hotkey_editor_key_released(key_type key, key_modifier_type modifiers)
+void window_hotkey_editor_key_released(int key, int modifiers)
 {
     // update modifiers as long as we don't have a proper keypress
     if (data.key == KEY_NONE && key == KEY_NONE) {
@@ -118,8 +118,8 @@ void window_hotkey_editor_key_released(key_type key, key_modifier_type modifiers
     }
 }
 
-void window_hotkey_editor_show(hotkey_action action, int index,
-    void (*callback)(hotkey_action, int, key_type, key_modifier_type))
+void window_hotkey_editor_show(int action, int index,
+    void (*callback)(int, int, int, int))
 {
     window_type window = {
         WINDOW_HOTKEY_EDITOR,

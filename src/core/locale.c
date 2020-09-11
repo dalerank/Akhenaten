@@ -20,10 +20,10 @@ static const uint8_t NEW_GAME_SIMPLIFIED_CHINESE[] = { 0x82, 0x80, 0x20, 0x83, 0
 static const uint8_t NEW_GAME_KOREAN[] = { 0xbb, 0xf5, 0x20, 0xb0, 0xd4, 0xc0, 0xd3, 0 };
 
 static struct {
-    language_type last_determined_language;
+    int last_determined_language;
 } data;
 
-static language_type determine_language(void)
+static int determine_language(void)
 {
     // Dirty way to check the language, but there's not really another way:
     // Check if the string for "New game" is in one of the supported languages
@@ -76,7 +76,7 @@ static void log_language(void)
     }
     log_info("Detected language:", desc, 0);
 }
-language_type locale_determine_language(void)
+int locale_determine_language(void)
 {
     data.last_determined_language = determine_language();
     log_language();

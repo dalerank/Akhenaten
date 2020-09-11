@@ -193,7 +193,7 @@ static void image_draw_warehouse(int image_id, int x, int y){
     }
 }
 
-static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
+static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset)
 {
     if (building_is_farm(type)) {
         draw_building(image_id, x, y);
@@ -227,7 +227,7 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
     }
 }
 
-static int get_building_image_id(int map_x, int map_y, building_type type, const building_properties *props)
+static int get_building_image_id(int map_x, int map_y, int type, const building_properties *props)
 {
     int image_id = image_id_from_group(props->image_group) + props->image_offset;
     if (type == BUILDING_GATEHOUSE) {
@@ -288,7 +288,7 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int *x
     }
 }
 
-static int is_fully_blocked(int map_x, int map_y, building_type type, int building_size, int grid_offset)
+static int is_fully_blocked(int map_x, int map_y, int type, int building_size, int grid_offset)
 {
     // determine x and y offset
     int x = 0, y = 0;
@@ -315,7 +315,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     return 0;
 }
 
-static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
+static void draw_default(const map_tile *tile, int x_view, int y_view, int type)
 {
 
 
@@ -611,7 +611,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
     }
 }
 
-static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
+static void draw_bridge(const map_tile *tile, int x, int y, int type)
 {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile->x, tile->y, &length, &direction);
@@ -783,7 +783,7 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
     }
 }
 
-static void draw_shipyard_wharf(const map_tile *tile, int x, int y, building_type type)
+static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type)
 {
     int dir_absolute, dir_relative;
     int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute, &dir_relative);
@@ -877,7 +877,7 @@ void city_building_ghost_draw(const map_tile *tile)
     if (!tile->grid_offset || scroll_in_progress()) {
         return;
     }
-    building_type type = building_construction_type();
+    int type = building_construction_type();
     if (building_construction_draw_as_constructing() || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND) {
         return;
     }

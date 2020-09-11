@@ -88,7 +88,7 @@ static struct {
     int num_mappings;
 } data;
 
-static void set_mapping(key_type key, key_modifier_type modifiers, hotkey_action action)
+static void set_mapping(int key, int modifiers, int action)
 {
     hotkey_mapping *mapping = &data.default_mappings[action][0];
     if (mapping->key) {
@@ -102,9 +102,9 @@ static void set_mapping(key_type key, key_modifier_type modifiers, hotkey_action
     mapping->action = action;
 }
 
-static void set_layout_mapping(const char *name, key_type default_key, key_modifier_type modifiers, hotkey_action action)
+static void set_layout_mapping(const char *name, int default_key, int modifiers, int action)
 {
-    key_type key = system_keyboard_key_for_symbol(name);
+    int key = system_keyboard_key_for_symbol(name);
     if (key == KEY_NONE) {
         log_info("No key found on layout for", name, 0);
         key = default_key;
@@ -182,7 +182,7 @@ void init_defaults(void)
     set_mapping(KEY_F12, KEY_MOD_CTRL, HOTKEY_SAVE_CITY_SCREENSHOT);
 }
 
-const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
+const hotkey_mapping *hotkey_for_action(int action, int index)
 {
     int num = 0;
     for (int i = 0; i < data.num_mappings; i++) {
@@ -196,7 +196,7 @@ const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
     return 0;
 }
 
-const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index)
+const hotkey_mapping *hotkey_default_for_action(int action, int index)
 {
     if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS) {
         return 0;

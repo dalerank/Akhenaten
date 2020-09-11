@@ -160,7 +160,7 @@ int model_load(void)
     return 1;
 }
 
-const model_building *model_get_building(building_type type)
+const model_building *model_get_building(int type)
 {
     return &buildings[type];
 }

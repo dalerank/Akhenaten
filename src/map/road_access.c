@@ -295,7 +295,7 @@ static int terrain_is_road_like(int grid_offset)
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 
-static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permission perm)
+static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm)
 {
 	int is_road = terrain_is_road_like(grid_offset);
 	if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {

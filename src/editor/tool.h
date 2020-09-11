@@ -25,13 +25,13 @@ typedef enum {
     TOOL_NATIVE_FIELD = 23,
     TOOL_FISHING_POINT = 24,
     TOOL_HERD_POINT = 25
-} tool_type;
+};
 
-tool_type editor_tool_type(void);
+int editor_tool_type(void);
 int editor_tool_is_active(void);
 void editor_tool_deactivate(void);
-void editor_tool_set_type(tool_type tool);
-void editor_tool_set_with_id(tool_type tool, int id);
+void editor_tool_set_type(int tool);
+void editor_tool_set_with_id(int tool, int id);
 
 int editor_tool_is_brush(void);
 int editor_tool_brush_size(void);

@@ -60,14 +60,14 @@ static const int Y_MENU_OFFSETS[] = {
 };
 
 static struct {
-    build_menu_group selected_submenu;
+    int  selected_submenu;
     int num_items;
     int y_offset;
 
     int focus_button_id;
 } data;
 
-static int init(build_menu_group submenu)
+static int init(int  submenu)
 {
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
@@ -145,7 +145,7 @@ static int get_sidebar_x_offset(void)
     return view_x + view_width;
 }
 
-static int is_all_button(building_type type)
+static int is_all_button(int type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
            (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
@@ -222,9 +222,9 @@ static void button_menu_index(int param1, int param2)
     button_menu_item(button_index_to_submenu_item(param1 - 1));
 }
 
-static int set_submenu_for_type(building_type type)
+static int set_submenu_for_type(int type)
 {
-    build_menu_group current_menu = data.selected_submenu;
+    int  current_menu = data.selected_submenu;
     switch (type) {
         case BUILDING_MENU_FARMS:
             data.selected_submenu = BUILD_MENU_FARMS;
@@ -254,7 +254,7 @@ static void button_menu_item(int item)
 {
     widget_city_clear_current_tile();
 
-    building_type type = building_menu_type(data.selected_submenu, item);
+    int type = building_menu_type(data.selected_submenu, item);
     building_construction_set_type(type);
 
     if (set_submenu_for_type(type)) {

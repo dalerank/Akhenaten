@@ -3,7 +3,7 @@
 
 int city_sentiment(void);
 
-int city_sentiment_low_mood_cause(void);
+int city_sentiment_int(void);
 
 void city_sentiment_change_happiness(int amount);
 

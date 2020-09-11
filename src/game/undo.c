@@ -30,7 +30,7 @@ static struct {
     int timeout_ticks;
     int building_cost;
     int num_buildings;
-    building_type type;
+    int type;
     building buildings[MAX_UNDO_BUILDINGS];
 } data;
 
@@ -102,7 +102,7 @@ static void clear_buildings(void)
     memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(building));
 }
 
-int game_undo_start_build(building_type type)
+int game_undo_start_build(int type)
 {
     data.ready = 0;
     data.available = 1;

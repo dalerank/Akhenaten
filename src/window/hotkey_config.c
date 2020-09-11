@@ -33,7 +33,7 @@ static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
 
 typedef struct {
     int action;
-    translation_key name_translation;
+    int name_translation;
     int name_text_group;
     int name_text_id;
 } hotkey_widget;
@@ -156,7 +156,7 @@ static generic_button bottom_buttons[] = {
     { 520, 430, 100, 30, button_close, button_none, 1 },
 };
 
-static translation_key bottom_button_texts[] = {
+static int bottom_button_texts[] = {
     TR_BUTTON_RESET_DEFAULTS,
     TR_BUTTON_CANCEL,
     TR_BUTTON_OK
@@ -279,7 +279,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void set_hotkey(hotkey_action action, int index, key_type key, key_modifier_type modifiers)
+static void set_hotkey(int action, int index, int key, int modifiers)
 {
     data.mappings[action][index].key = key;
     data.mappings[action][index].modifiers = modifiers;

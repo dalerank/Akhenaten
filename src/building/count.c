@@ -13,7 +13,7 @@ struct record {
 };
 
 static struct {
-    struct record buildings[BUILDING_TYPE_MAX];
+    struct record buildings[int_MAX];
     struct record industry[RESOURCE_MAX];
 } data;
 
@@ -21,14 +21,14 @@ static void clear_counters(void)
 {
     memset(&data, 0, sizeof(data));
 }
-static void increase_count(building_type type, int active)
+static void increase_count(int type, int active)
 {
     ++data.buildings[type].total;
     if (active) {
         ++data.buildings[type].active;
     }
 }
-static void increase_industry_count(resource_type resource, int active)
+static void increase_industry_count(int resource, int active)
 {
     ++data.industry[resource].total;
     if (active) {
@@ -207,19 +207,19 @@ void building_count_update(void)
     }
     limit_hippodrome();
 }
-int building_count_active(building_type type)
+int building_count_active(int type)
 {
     return data.buildings[type].active;
 }
-int building_count_total(building_type type)
+int building_count_total(int type)
 {
     return data.buildings[type].total;
 }
-int building_count_industry_active(resource_type resource)
+int building_count_industry_active(int resource)
 {
     return data.industry[resource].active;
 }
-int building_count_industry_total(resource_type resource)
+int building_count_industry_total(int resource)
 {
     return data.industry[resource].total;
 }

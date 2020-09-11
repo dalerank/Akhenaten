@@ -84,7 +84,7 @@ static const figure_properties properties[] = {
     {0, 100,   0,   0,   0,   0,   0}
 };
 
-const figure_properties *figure_properties_for_type(figure_type type)
+const figure_properties *figure_properties_for_type(int type)
 {
     return &properties[type];
 }

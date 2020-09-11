@@ -22,7 +22,7 @@ void building_construction_warning_reset(void)
     has_warning = 0;
 }
 
-static void show(warning_type warning)
+static void show(int warning)
 {
     city_warning_show(warning);
     has_warning = 1;
@@ -176,7 +176,7 @@ static void check_iron_access(int type)
                 show(WARNING_BUILD_IRON_MINE);
             } else if (!empire_can_import_resource(RESOURCE_IRON)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (city_resource_trade_status(RESOURCE_IRON) != TRADE_STATUS_IMPORT) {
+            } else if (city_int(RESOURCE_IRON) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -193,7 +193,7 @@ static void check_vines_access(int type)
                 show(WARNING_BUILD_VINES_FARM);
             } else if (!empire_can_import_resource(RESOURCE_VINES)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (city_resource_trade_status(RESOURCE_VINES) != TRADE_STATUS_IMPORT) {
+            } else if (city_int(RESOURCE_VINES) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -210,7 +210,7 @@ static void check_olives_access(int type)
                 show(WARNING_BUILD_OLIVE_FARM);
             } else if (!empire_can_import_resource(RESOURCE_OLIVES)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (city_resource_trade_status(RESOURCE_OLIVES) != TRADE_STATUS_IMPORT) {
+            } else if (city_int(RESOURCE_OLIVES) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -227,7 +227,7 @@ static void check_timber_access(int type)
                 show(WARNING_BUILD_TIMBER_YARD);
             } else if (!empire_can_import_resource(RESOURCE_TIMBER)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (city_resource_trade_status(RESOURCE_TIMBER) != TRADE_STATUS_IMPORT) {
+            } else if (city_int(RESOURCE_TIMBER) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
@@ -244,14 +244,14 @@ static void check_clay_access(int type)
                 show(WARNING_BUILD_CLAY_PIT);
             } else if (!empire_can_import_resource(RESOURCE_CLAY)) {
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (city_resource_trade_status(RESOURCE_CLAY) != TRADE_STATUS_IMPORT) {
+            } else if (city_int(RESOURCE_CLAY) != TRADE_STATUS_IMPORT) {
                 show(WARNING_TRADE_IMPORT_RESOURCE);
             }
         }
     }
 }
 
-void building_construction_warning_check_all(building_type type, int x, int y, int size)
+void building_construction_warning_check_all(int type, int x, int y, int size)
 {
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
@@ -276,7 +276,7 @@ void building_construction_warning_check_all(building_type type, int x, int y, i
     check_road_access(type, x, y, size);
 }
 
-void building_construction_warning_check_food_stocks(building_type type)
+void building_construction_warning_check_food_stocks(int type)
 {
     if (!has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
         if (city_population() >= 200 && !scenario_property_rome_supplies_wheat()) {
@@ -287,7 +287,7 @@ void building_construction_warning_check_food_stocks(building_type type)
     }
 }
 
-void building_construction_warning_check_reservoir(building_type type)
+void building_construction_warning_check_reservoir(int type)
 {
     if (!has_warning && type == BUILDING_RESERVOIR) {
         if (building_count_active(BUILDING_RESERVOIR)) {

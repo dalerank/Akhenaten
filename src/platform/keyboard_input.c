@@ -10,7 +10,7 @@ static int is_alt_down(SDL_KeyboardEvent *event) {
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
-static key_type get_key_from_scancode(SDL_Scancode scancode) {
+static int get_key_from_scancode(SDL_Scancode scancode) {
     switch (scancode) {
         case SDL_SCANCODE_A:
             return KEY_A;
@@ -199,7 +199,7 @@ static key_type get_key_from_scancode(SDL_Scancode scancode) {
     }
 }
 
-static SDL_Scancode get_scancode_from_key(key_type key) {
+static SDL_Scancode get_scancode_from_key(int key) {
     switch (key) {
         case KEY_A:
             return SDL_SCANCODE_A;
@@ -386,8 +386,8 @@ static SDL_Scancode get_scancode_from_key(key_type key) {
     }
 }
 
-static key_modifier_type get_modifier(int mod) {
-    key_modifier_type key_mod = KEY_MOD_NONE;
+static int get_modifier(int mod) {
+    int key_mod = KEY_MOD_NONE;
     if (mod & KMOD_SHIFT) {
         key_mod |= KEY_MOD_SHIFT;
     }
@@ -400,7 +400,7 @@ static key_modifier_type get_modifier(int mod) {
     if (mod & KMOD_GUI) {
         key_mod |= KEY_MOD_GUI;
     }
-    return key_mod;
+    return (int)key_mod;
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event) {
@@ -443,8 +443,8 @@ void platform_handle_key_down(SDL_KeyboardEvent *event) {
     }
 
     // handle hotkeys
-    key_type key = get_key_from_scancode(event->keysym.scancode);
-    key_modifier_type mod = get_modifier(event->keysym.mod);
+    int key = get_key_from_scancode(event->keysym.scancode);
+    int mod = get_modifier(event->keysym.mod);
     hotkey_key_pressed(key, mod, event->repeat);
 
     // handle cheats: special case since they ARE layout dependent
@@ -469,8 +469,8 @@ void platform_handle_key_down(SDL_KeyboardEvent *event) {
 }
 
 void platform_handle_key_up(SDL_KeyboardEvent *event) {
-    key_type key = get_key_from_scancode(event->keysym.scancode);
-    key_modifier_type mod = get_modifier(event->keysym.mod);
+    int key = get_key_from_scancode(event->keysym.scancode);
+    int mod = get_modifier(event->keysym.mod);
     hotkey_key_released(key, mod);
 }
 
@@ -478,7 +478,7 @@ void platform_handle_text(SDL_TextInputEvent *event) {
     keyboard_text(event->text);
 }
 
-key_type system_keyboard_key_for_symbol(const char *name) {
+int system_keyboard_key_for_symbol(const char *name) {
     SDL_Keycode keycode = SDL_GetKeyFromName(name);
     if (keycode == SDLK_UNKNOWN) {
         return KEY_NONE;
@@ -490,12 +490,12 @@ key_type system_keyboard_key_for_symbol(const char *name) {
     return get_key_from_scancode(scancode);
 }
 
-const char *system_keyboard_key_name(key_type key) {
+const char *system_keyboard_key_name(int key) {
     SDL_Scancode scancode = get_scancode_from_key(key);
     return SDL_GetKeyName(SDL_GetKeyFromScancode(scancode));
 }
 
-const char *system_keyboard_key_modifier_name(key_modifier_type modifier) {
+const char *system_keyboard_key_modifier_name(int modifier) {
     switch (modifier) {
         case KEY_MOD_CTRL:
             return "Ctrl";

@@ -60,21 +60,21 @@ void system_set_cursor(int cursor_id);
  * @param name Name of the key
  * @return Corresponding key, or KEY_NONE if the key does not exist on the layout
  */
-key_type system_keyboard_key_for_symbol(const char *name);
+int system_keyboard_key_for_symbol(const char *name);
 
 /**
  * Gets the key name for the current keyboard layout
  * @param key Key to get the name for
  * @return Key name, may be empty
  */
-const char *system_keyboard_key_name(key_type key);
+const char *system_keyboard_key_name(int key);
 
 /**
  * Gets the key modifier name
  * @param modifier Modifier
  * @return Modifier name, may depend on OS
  */
-const char *system_keyboard_key_modifier_name(key_modifier_type modifier);
+const char *system_keyboard_key_modifier_name(int modifier);
 
 /**
  * Sets the position/size of the keyboard input box

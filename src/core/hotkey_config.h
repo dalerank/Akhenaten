@@ -70,12 +70,12 @@ typedef enum {
     HOTKEY_SAVE_SCREENSHOT,
     HOTKEY_SAVE_CITY_SCREENSHOT,
     HOTKEY_MAX_ITEMS
-} hotkey_action;
+};
 
 typedef struct {
-    key_type key;
-    key_modifier_type modifiers;
-    hotkey_action action;
+    int key;
+    int modifiers;
+    int action;
 } hotkey_mapping;
 
 /**
@@ -84,7 +84,7 @@ typedef struct {
  * @param index Index
  * @return Mapping or NULL if not set
  */
-const hotkey_mapping *hotkey_for_action(hotkey_action action, int index);
+const hotkey_mapping *hotkey_for_action(int action, int index);
 
 /**
  * Get default mapping for action
@@ -92,7 +92,7 @@ const hotkey_mapping *hotkey_for_action(hotkey_action action, int index);
  * @param index Index, can be 0 or 1
  * @return Mapping, may be an empty mapping. Only returns NULL on invalid input
  */
-const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index);
+const hotkey_mapping *hotkey_default_for_action(int action, int index);
 
 /**
  * Clear all hotkey mappings

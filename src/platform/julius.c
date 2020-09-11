@@ -141,7 +141,7 @@ static const char *ask_for_data_dir(int again)
     const char *form_2 = "Please select your %s folder";
 
     // size of buffer is 200 initially - resized to (excess discarded) size of format + size of arg (game title) - 2 (%s) + 1 (null terminator)
-    char *buf = malloc(200);
+    char *buf = (char*)malloc(200);
     if (again) {
         snprintf(buf, strlen(form_1) + 2 * strlen(title) - 3, form_1, title, title);
         if (!tinyfd_messageBox("Wrong folder selected", buf, "okcancel", "warning", 1)) // hitting cancel will return "0"

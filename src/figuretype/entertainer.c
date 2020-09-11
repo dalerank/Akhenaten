@@ -13,7 +13,7 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-static int determine_destination(int x, int y, building_type type1, building_type type2) {
+static int determine_destination(int x, int y, int type1, int type2) {
     int road_network = map_road_network_get(map_grid_offset(x, y));
 
     building_list_small_clear();

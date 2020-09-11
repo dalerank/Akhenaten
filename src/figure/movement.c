@@ -78,7 +78,7 @@ static void set_target_height_bridge(figure *f)
     f->target_height = map_bridge_height(f->grid_offset);
 }
 
-static roadblock_permission get_permission_for_figure_type(figure* f)
+static int get_permission_for_int(figure* f)
 {
     switch (f->type) {
     case FIGURE_ENGINEER:
@@ -234,7 +234,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
             }
             if (b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through roadblock
-                int permission = get_permission_for_figure_type(f);
+                int permission = get_permission_for_int(f);
                 if (!building_roadblock_get_permission(permission, b)) {
                     f->direction = DIR_FIGURE_REROUTE;
                 }
@@ -428,7 +428,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 return;
             }
             int road_tiles[8];
-            int permission = get_permission_for_figure_type(f);
+            int permission = get_permission_for_int(f);
             int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(f->grid_offset, road_tiles, permission);
             if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(f->grid_offset, road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road

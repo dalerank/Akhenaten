@@ -171,10 +171,10 @@ static void draw_city_message_text(const lang_message *msg)
             break;
 
         case MESSAGE_TYPE_EMIGRATION: {
-            int low_mood_cause = city_sentiment_low_mood_cause();
-            if (low_mood_cause >= 1 && low_mood_cause <= 5) {
+            int city_sentiment = city_sentiment_int();
+            if (city_sentiment >= 1 && city_sentiment <= 5) {
                 int max_width = 16 * (data.text_width_blocks - 1) - 64;
-                lang_text_draw_multiline(12, low_mood_cause + 2,
+                lang_text_draw_multiline(12, city_sentiment + 2,
                     data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
             }
             rich_text_draw(msg->content.text,

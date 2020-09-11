@@ -20,7 +20,7 @@ static struct {
     const uint8_t *message;
 } data;
 
-static int init(translation_key title, translation_key message)
+static int init(int title, int message)
 {
     if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
         // don't show popup over popup
@@ -67,7 +67,7 @@ static void button_ok(int param1, int param2)
     close();
 }
 
-void window_plain_message_dialog_show(translation_key title, translation_key message)
+void window_plain_message_dialog_show(int title, int message)
 {
     if (init(title, message)) {
         window_type window = {

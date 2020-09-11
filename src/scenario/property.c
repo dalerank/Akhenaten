@@ -65,7 +65,7 @@ int scenario_open_play_id(void) {
     return scenario.open_play_scenario_id;
 }
 
-scenario_climate scenario_property_climate(void) {
+int scenario_property_climate(void) {
     return scenario.climate;
 }
 

@@ -8,11 +8,11 @@ typedef enum {
     REQUEST_STATE_DISPATCHED_LATE = 3,
     REQUEST_STATE_IGNORED = 4,
     REQUEST_STATE_RECEIVED = 5
-} scenario_request_state;
+};
 
 typedef struct {
     int id;
-    scenario_request_state state;
+    int state;
     int resource;
     int amount;
     int months_to_comply;

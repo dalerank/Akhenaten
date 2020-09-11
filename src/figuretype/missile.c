@@ -63,7 +63,7 @@ void figure_create_explosion_cloud(int x, int y, int size) {
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, figure_type type) {
+void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, int type) {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
     if (f->id) {
         f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
@@ -126,7 +126,7 @@ void figure_explosion_cloud_action(figure *f) {
     }
 }
 
-static void missile_hit_target(figure *f, int target_id, figure_type legionary_type) {
+static void missile_hit_target(figure *f, int target_id, int legionary_type) {
     figure *target = figure_get(target_id);
     const figure_properties *target_props = figure_properties_for_type(target->type);
     int max_damage = target_props->max_damage;

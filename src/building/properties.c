@@ -147,7 +147,7 @@ static building_properties properties[140] = {
 
 building_properties ROADBLOCK_PROPERTIES = { 1, 1 , 10000, 0 };
 
-const building_properties *building_properties_for_type(building_type type)
+const building_properties *building_properties_for_type(int type)
 {
     // Roadblock properties, as plaza
     if (type == 115){

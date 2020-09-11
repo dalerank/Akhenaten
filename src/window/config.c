@@ -49,10 +49,10 @@ static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
-static int config_change_basic(config_key key);
-static int config_change_zoom(config_key key);
-static int config_change_string_basic(config_string_key key);
-static int config_change_string_language(config_string_key key);
+static int config_change_basic(int key);
+static int config_change_zoom(int key);
+static int config_change_string_basic(int key);
+static int config_change_string_language(int key);
 
 
 static generic_button checkbox_buttons[] = {
@@ -111,7 +111,7 @@ static generic_button page_buttons[] = {
     { 160, 410, 25, 25, button_page, button_none, 1, TR_BUTTON_NEXT }
 };
 
-static translation_key page_names[] = {
+static int page_names[] = {
     TR_CONFIG_HEADER_UI_CHANGES,
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES,
     TR_CONFIG_HEADER_GAMEPLAY_CHANGES
@@ -127,12 +127,12 @@ static struct {
     struct {
         int original_value;
         int new_value;
-        int (*change_action)(config_key key);
+        int (*change_action)(int key);
     } config_values[CONFIG_MAX_ENTRIES];
     struct {
         char original_value[CONFIG_STRING_VALUE_MAX];
         char new_value[CONFIG_STRING_VALUE_MAX];
-        int (*change_action)(config_string_key key);
+        int (*change_action)(int key);
     } config_string_values[CONFIG_STRING_MAX_ENTRIES];
     uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
     uint8_t* language_options[MAX_LANGUAGE_DIRS];
@@ -158,33 +158,33 @@ static void cancel_values(void)
         memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1); // memcpy required to fix warning on Switch build
     }
 }
-static int config_changed(config_key key)
+static int config_changed(int key)
 {
     return data.config_values[key].original_value != data.config_values[key].new_value;
 }
-static int config_string_changed(config_string_key key)
+static int config_string_changed(int key)
 {
     return strcmp(data.config_string_values[key].original_value, data.config_string_values[key].new_value) != 0;
 }
-static int config_change_basic(config_key key)
+static int config_change_basic(int key)
 {
     config_set(key, data.config_values[key].new_value);
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
-static int config_change_string_basic(config_string_key key)
+static int config_change_string_basic(int key)
 {
     config_set_string(key, data.config_string_values[key].new_value);
     strncpy(data.config_string_values[key].original_value, data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
-static int config_change_zoom(config_key key)
+static int config_change_zoom(int key)
 {
     config_change_basic(key);
     system_reload_textures();
     return 1;
 }
-static int config_change_string_language(config_string_key key)
+static int config_change_string_language(int key)
 {
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
@@ -294,7 +294,7 @@ static void init(void)
     data.page = 0;
     data.starting_option = 0;
     for (int i = 0; i < NUM_CHECKBOXES; i++) {
-        config_key key = checkbox_buttons[i].parameter1;
+        int key = checkbox_buttons[i].parameter1;
         data.config_values[i].original_value = config_get(i);
         data.config_values[i].new_value = config_get(i);
         data.config_values[i].change_action = config_change_basic;
@@ -358,7 +358,7 @@ static void draw_background(void)
         text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6, page_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
-    text_draw_label_and_number_centered(translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK, 0);
+    text_draw_label_and_number_centered((const char*)translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60, 416, 85, FONT_NORMAL_BLACK, 0);
 
     //text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);
     //text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);

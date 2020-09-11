@@ -49,7 +49,7 @@ static int get_free_formation(int start_index)
     return 0;
 }
 
-formation *formation_create_legion(int building_id, int x, int y, figure_type type)
+formation *formation_create_legion(int building_id, int x, int y, int type)
 {
     int formation_id = get_free_formation(1);
     if (!formation_id) {

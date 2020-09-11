@@ -15,7 +15,7 @@ typedef enum {
     TOUCH_MODE_TOUCHPAD = 1, // drag the pointer and tap-click like on a touchpad (default)
     TOUCH_MODE_DIRECT = 2, // pointer jumps to finger but doesn't click on tap
     TOUCH_MODE_MAX = 3
-} touch_mode;
+};
 
 typedef struct {
     int in_use;
@@ -51,7 +51,7 @@ int touch_in_use(int index);
 
 int touch_to_mouse(void);
 
-void touch_set_mode(touch_mode mode);
+void touch_set_mode(int mode);
 void touch_cycle_mode(void);
 
 #endif // INPUT_TOUCH_H

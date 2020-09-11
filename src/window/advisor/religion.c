@@ -30,7 +30,7 @@ static int get_religion_advice(void)
     }
 }
 
-static void draw_god_row(god_type god, int y_offset, building_type small_temple, building_type large_temple)
+static void draw_god_row(int god, int y_offset, int small_temple, int large_temple)
 {
     lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);

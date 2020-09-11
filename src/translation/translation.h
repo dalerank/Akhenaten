@@ -148,16 +148,16 @@ typedef enum {
     TR_ADVISOR_DEATHS_LAST_YEAR,
     TR_ADVISOR_TOTAL_POPULATION,
     TRANSLATION_MAX_KEY
-} translation_key;
+};
 
 typedef struct {
-    translation_key key;
+    int key;
     const char *string;
 } translation_string;
 
-void translation_load(language_type language);
+void translation_load(int language);
 
-const uint8_t *translation_for(translation_key key);
+const uint8_t *translation_for(int key);
 
 void translation_english(const translation_string **strings, int *num_strings);
 

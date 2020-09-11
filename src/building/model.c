@@ -167,14 +167,14 @@ int model_load(void)
 }
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
-const model_building *model_get_building(building_type type)
+const model_building *model_get_building(int type)
 {
     if(type == BUILDING_ROADBLOCK) {
         return &MODEL_ROADBLOCK;
     }
     return &buildings[type];
 }
-const model_house *model_get_house(house_level level)
+const model_house *model_get_house(int level)
 {
     return &houses[level];
 }

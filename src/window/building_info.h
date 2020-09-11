@@ -3,7 +3,7 @@
 
 void window_building_info_show(int grid_offset);
 
-int window_building_info_get_building_type(void);
+int window_building_info_get_int(void);
 
 void window_building_info_show_storage_orders(void);
 

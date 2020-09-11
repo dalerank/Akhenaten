@@ -22,7 +22,7 @@ int city_sentiment(void)
     return city_data.sentiment.value;
 }
 
-int city_sentiment_low_mood_cause(void)
+int city_sentiment_int(void)
 {
     return city_data.sentiment.low_mood_cause;
 }
@@ -279,25 +279,25 @@ void city_sentiment_update(void)
     }
 
     int worst_sentiment = 0;
-    city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NONE;
+    city_data.sentiment.low_mood_cause = int_NONE;
     if (sentiment_contribution_food < worst_sentiment) {
         worst_sentiment = sentiment_contribution_food;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_FOOD;
+        city_data.sentiment.low_mood_cause = int_NO_FOOD;
     }
     if (sentiment_contribution_employment < worst_sentiment) {
         worst_sentiment = sentiment_contribution_employment;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_JOBS;
+        city_data.sentiment.low_mood_cause = int_NO_JOBS;
     }
     if (sentiment_contribution_taxes < worst_sentiment) {
         worst_sentiment = sentiment_contribution_taxes;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_HIGH_TAXES;
+        city_data.sentiment.low_mood_cause = int_HIGH_TAXES;
     }
     if (sentiment_contribution_wages < worst_sentiment) {
         worst_sentiment = sentiment_contribution_wages;
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_LOW_WAGES;
+        city_data.sentiment.low_mood_cause = int_LOW_WAGES;
     }
     if (sentiment_contribution_tents < worst_sentiment) {
-        city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_MANY_TENTS;
+        city_data.sentiment.low_mood_cause = int_MANY_TENTS;
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }

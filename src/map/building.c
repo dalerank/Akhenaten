@@ -48,7 +48,7 @@ int map_rubble_building_type(int grid_offset)
 {
     return map_grid_get(&rubble_type_grid, grid_offset);
 }
-void map_set_rubble_building_type(int grid_offset, building_type type)
+void map_set_rubble_building_type(int grid_offset, int type)
 {
     map_grid_set(&rubble_type_grid, grid_offset, type);
 }

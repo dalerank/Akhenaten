@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 
-void building_house_change_to(building *house, building_type type);
+void building_house_change_to(building *house, int type);
 void building_house_change_to_vacant_lot(building *house);
 
 void building_house_merge(building *house);

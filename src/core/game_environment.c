@@ -4,11 +4,11 @@
 
 #include <assert.h>
 
-engine_environment GAME_ENV = ENGINE_ENV_MAX;
+int GAME_ENV = ENGINE_ENV_MAX;
 char *game_name;
 char *pref_filename;
 
-void init_game_environment(engine_environment env)
+void init_game_environment(int env)
 {
     assert(env != ENGINE_ENV_MAX);
     GAME_ENV = env;

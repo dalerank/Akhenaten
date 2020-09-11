@@ -10,6 +10,6 @@ typedef struct {
     int image_offset;
 } building_properties;
 
-const building_properties *building_properties_for_type(building_type type);
+const building_properties *building_properties_for_type(int type);
 
 #endif // BUILDING_PROPERTIES_H

@@ -27,13 +27,13 @@ typedef enum {
     BUILDING_STORAGE_STATE_GETTING_QUARTER = 6,
     BUILDING_STORAGE_STATE_GETTING_3QUARTERS = 7,
     BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS = 8,
-} building_storage_state;
+};
 
 typedef enum {
     BUILDING_STORAGE_PERMISSION_MARKET = 0,
     BUILDING_STORAGE_PERMISSION_TRADERS = 1,
     BUILDING_STORAGE_PERMISSION_DOCK = 2,
-} building_storage_permission_states;
+};
 
 
 /**
@@ -41,7 +41,7 @@ typedef enum {
  */
 typedef struct {
     int empty_all;
-    building_storage_state resource_state[RESOURCE_MAX];
+    int resource_state[RESOURCE_MAX];
     int permissions;
 } building_storage;
 
@@ -81,9 +81,9 @@ const building_storage *building_storage_get(int storage_id);
  * @param storage_id Storage id
  * @param resource_id Resource id
  */
-void building_storage_cycle_resource_state(int storage_id, resource_type resource_id);
+void building_storage_cycle_resource_state(int storage_id, int resource_id);
 
-void building_storage_cycle_partial_resource_state(int storage_id, resource_type resource_id);
+void building_storage_cycle_partial_resource_state(int storage_id, int resource_id);
 /**
  * Sets all goods to 'not accepting'
  * @param storage_id Storage id
@@ -115,8 +115,8 @@ void building_storage_load_state(buffer *buf);
 
 
 
-void building_storage_set_permission(building_storage_permission_states p, building *b);
-int building_storage_get_permission(building_storage_permission_states p, building *b);
+void building_storage_set_permission(int p, building *b);
+int building_storage_get_permission(int p, building *b);
 
 
 #endif // BUILDING_STORAGE_H

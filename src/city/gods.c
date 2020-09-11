@@ -43,7 +43,7 @@ void city_gods_reset_neptune_blessing(void)
     city_data.religion.neptune_double_trade_active = 0;
 }
 
-static void perform_blessing(god_type god)
+static void perform_blessing(int god)
 {
     switch (god) {
         case GOD_CERES:
@@ -69,7 +69,7 @@ static void perform_blessing(god_type god)
     }
 }
 
-static void perform_small_curse(god_type god)
+static void perform_small_curse(int god)
 {
     switch (god) {
         case GOD_CERES:
@@ -102,7 +102,7 @@ static void perform_small_curse(god_type god)
     }
 }
 
-static int perform_large_curse(god_type god)
+static int perform_large_curse(int god)
 {
     switch (god) {
         case GOD_CERES:

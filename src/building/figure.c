@@ -80,7 +80,7 @@ static void spawn_labor_seeker(building *b, int x, int y, int min_houses)
     }
 }
 
-static int has_figure_of_types(building *b, figure_type type1, figure_type type2)
+static int has_figure_of_types(building *b, int type1, int type2)
 {
     if (b->figure_id <= 0) {
         return 0;
@@ -94,7 +94,7 @@ static int has_figure_of_types(building *b, figure_type type1, figure_type type2
     }
 }
 
-static int has_figure_of_type(building *b, figure_type type)
+static int has_figure_of_type(building *b, int type)
 {
     return has_figure_of_types(b, type, 0);
 }
@@ -117,7 +117,7 @@ static int default_spawn_delay(building *b)
     }
 }
 
-static void create_roaming_figure(building *b, int x, int y, figure_type type)
+static void create_roaming_figure(building *b, int x, int y, int type)
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_125_ROAMING;

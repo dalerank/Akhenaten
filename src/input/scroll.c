@@ -66,8 +66,8 @@ static struct {
         float modifier_x;
         float modifier_y;
     } speed;
-    speed_direction x_align_direction;
-    speed_direction y_align_direction;
+    int x_align_direction;
+    int y_align_direction;
     time_millis last_time;
     struct {
         int active;
@@ -407,12 +407,12 @@ static int get_direction(const mouse* m)
     return direction_from_sides(top, left, bottom, right);
 }
 
-static int get_alignment_delta(speed_direction direction, int camera_max_offset, int camera_offset)
+static int get_alignment_delta(int direction, int camera_max_offset, int camera_offset)
 {
     if (camera_offset == 0) {
         return 0;
     }
-    speed_direction calc_direction = SPEED_DIRECTION_STOPPED;
+    int calc_direction = SPEED_DIRECTION_STOPPED;
     switch (direction) {
     case SPEED_DIRECTION_STOPPED:
         calc_direction = (camera_offset >= camera_max_offset / 2) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;

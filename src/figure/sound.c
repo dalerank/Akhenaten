@@ -76,7 +76,7 @@ void figure_play_die_sound(const figure *f)
     }
 }
 
-void figure_play_hit_sound(figure_type type)
+void figure_play_hit_sound(int type)
 {
     switch (type) {
         case FIGURE_FORT_LEGIONARY:

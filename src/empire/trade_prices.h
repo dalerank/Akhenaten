@@ -18,13 +18,13 @@ void trade_prices_reset(void);
  * Get the buy price for the resource
  * @param resource Resource
  */
-int trade_price_buy(resource_type resource);
+int trade_price_buy(int resource);
 
 /**
  * Get the sell price for the resource
  * @param resource Resource
  */
-int trade_price_sell(resource_type resource);
+int trade_price_sell(int resource);
 
 /**
  * Change the trade price for resource by amount
@@ -32,7 +32,7 @@ int trade_price_sell(resource_type resource);
  * @param amount Amount to change, can be positive or negative
  * @return True if the price has been changed
  */
-int trade_price_change(resource_type resource, int amount);
+int trade_price_change(int resource, int amount);
 
 /**
  * Save trade prices to buffer

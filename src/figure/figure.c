@@ -22,7 +22,7 @@ figure *figure_get(int id)
     return &data.figures[id];
 }
 
-figure *figure_create(figure_type type, int x, int y, direction_type dir)
+figure *figure_create(int type, int x, int y, int dir)
 {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES; i++) {

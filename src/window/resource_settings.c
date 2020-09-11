@@ -44,11 +44,11 @@ static generic_button resource_generic_buttons[] = {
 };
 
 static struct {
-    resource_type resource;
+    int resource;
     int focus_button_id;
 } data;
 
-static void init(resource_type resource)
+static void init(int resource)
 {
     data.resource = resource;
 }
@@ -115,7 +115,7 @@ static void draw_foreground(void)
     lang_text_draw(54, 15, 98 + width, 192, FONT_NORMAL_BLACK);
 
     int trade_flags = TRADE_STATUS_NONE;
-    int trade_status = city_resource_trade_status(data.resource);
+    int trade_status = city_int(data.resource);
     if (empire_can_import_resource(data.resource)) {
         trade_flags |= TRADE_STATUS_IMPORT;
     }
@@ -177,7 +177,7 @@ static void handle_input(const mouse* m, const hotkeys* h)
     if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
         return;
     }
-    if ((city_resource_trade_status(data.resource) == TRADE_STATUS_EXPORT || city_resource_trade_status(data.resource) == TRADE_STATUS_IMPORT)) {
+    if ((city_int(data.resource) == TRADE_STATUS_EXPORT || city_int(data.resource) == TRADE_STATUS_IMPORT)) {
         int button = 0;
         arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2, &button);
         if (button) {
@@ -224,7 +224,7 @@ static void button_toggle_stockpile(int param1, int param2)
     city_resource_toggle_stockpiled(data.resource);
 }
 
-void window_resource_settings_show(resource_type resource)
+void window_resource_settings_show(int resource)
 {
     window_type window = {
         WINDOW_RESOURCE_SETTINGS,

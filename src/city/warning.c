@@ -29,7 +29,7 @@ static struct warning *new_warning(void)
     return 0;
 }
 
-void city_warning_show(warning_type type)
+void city_warning_show(int type)
 {
     if (!setting_warnings()) {
         return;

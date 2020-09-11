@@ -9,12 +9,12 @@ typedef enum {
     SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT = 2,
     SIDEBAR_EXTRA_DISPLAY_RATINGS = 4,
     SIDEBAR_EXTRA_DISPLAY_ALL = 7
-} sidebar_extra_display;
+};
 
 /**
  * @return The actual height of the extra info
  */
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int height, int is_collapsed, sidebar_extra_display info_to_display);
+int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int height, int is_collapsed, int  info_to_display);
 void sidebar_extra_draw_foreground(void);
 
 int sidebar_extra_handle_mouse(const mouse *m);

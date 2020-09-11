@@ -7,17 +7,17 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
 {
 }
 
-const char *key_combination_name(key_type key, key_modifier_type modifiers)
+const char *key_combination_name(int key, int modifiers)
 {
     return "";
 }
 
-int key_combination_from_name(const char *name, key_type *key, key_modifier_type *modifiers)
+int key_combination_from_name(const char *name, int *key, int *modifiers)
 {
     return 0;
 }
 
-key_type system_keyboard_key_for_symbol(const char *name)
+int system_keyboard_key_for_symbol(const char *name)
 {
     return KEY_NONE;
 }

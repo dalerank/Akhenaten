@@ -78,7 +78,7 @@ static int parse_integer(uint8_t * string, int * value){
 void game_cheat_activate(void)
 {
     if (window_is(WINDOW_BUILDING_INFO)) {
-        data.is_cheating = window_building_info_get_building_type() == BUILDING_WELL;
+        data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
     } else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
         data.is_cheating = 2;
         scenario_invasion_start_from_cheat();

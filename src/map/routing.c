@@ -319,7 +319,7 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
     }
 }
 
-int map_routing_calculate_distances_for_building(routed_building_type type, int x, int y)
+int map_routing_calculate_distances_for_building(routed_int type, int x, int y)
 {
     if (type == ROUTED_BUILDING_WALL) {
         route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);

@@ -48,8 +48,8 @@ enum {
 };
 
 static struct {
-    building_type type;
-    building_type sub_type;
+    int type;
+    int sub_type;
     int in_progress;
     map_tile start;
     map_tile end;
@@ -261,7 +261,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     return 1;
 }
 
-void building_construction_set_type(building_type type)
+void building_construction_set_type(int type)
 {
     data.type = type;
     data.sub_type = BUILDING_NONE;
@@ -320,7 +320,7 @@ void building_construction_clear_type(void)
     data.type = BUILDING_NONE;
 }
 
-building_type building_construction_type(void)
+int building_construction_type(void)
 {
     return data.sub_type ? data.sub_type : data.type;
 }
@@ -419,7 +419,7 @@ void building_construction_cancel(void)
 
 void building_construction_update(int x, int y, int grid_offset)
 {
-    building_type type = data.sub_type ? data.sub_type : data.type;
+    int type = data.sub_type ? data.sub_type : data.type;
     if (grid_offset) {
         data.end.x = x;
         data.end.y = y;
@@ -545,7 +545,7 @@ void building_construction_place(void)
     int y_start = data.start.y;
     int x_end = data.end.x;
     int y_end = data.end.y;
-    building_type type = data.sub_type ? data.sub_type : data.type;
+    int type = data.sub_type ? data.sub_type : data.type;
     building_construction_warning_reset();
     if (!type) {
         return;

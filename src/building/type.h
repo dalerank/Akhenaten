@@ -1,5 +1,5 @@
-#ifndef BUILDING_TYPE_H
-#define BUILDING_TYPE_H
+#ifndef int_H
+#define int_H
 
 /**
  * @file
@@ -127,8 +127,8 @@ typedef enum {
     BUILDING_POTTERY_WORKSHOP = 114,
     BUILDING_ROADBLOCK = 115,
     // helper constants
-    BUILDING_TYPE_MAX = 116
-} building_type;
+    int_MAX = 116
+};
 
 /**
  * House levels
@@ -154,7 +154,7 @@ typedef enum {
     HOUSE_MEDIUM_PALACE = 17,
     HOUSE_LARGE_PALACE = 18,
     HOUSE_LUXURY_PALACE = 19,
-} house_level;
+};
 
 enum {
     BUILDING_STATE_UNUSED = 0,
@@ -167,4 +167,4 @@ enum {
     BUILDING_STATE_MOTHBALLED = 7
 };
 
-#endif // BUILDING_TYPE_H
+#endif // int_H

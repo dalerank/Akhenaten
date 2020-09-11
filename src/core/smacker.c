@@ -490,14 +490,14 @@ static int read_trees_data(smacker s)
 
 int allocate_frame_memory(smacker s)
 {
-    s->frame_data.video = clear_malloc(sizeof(uint8_t) * s->width * s->height);
+    s->frame_data.video = (uint8_t*)clear_malloc(sizeof(uint8_t) * s->width * s->height);
     if (!s->frame_data.video) {
         log_error("SMK: no memory for video frame", 0, 0);
         return 0;
     }
     for (int i = 0; i < MAX_TRACKS; i++) {
         if (s->audio_rate[i] & AUDIO_FLAG_HAS_TRACK) {
-            s->frame_data.audio[i] = clear_malloc(s->audio_size[i]);
+            s->frame_data.audio[i] = (uint8_t*)clear_malloc(s->audio_size[i]);
             if (!s->frame_data.audio[i]) {
                 log_error("SMK: no memory for audio track", 0, i);
                 return 0;

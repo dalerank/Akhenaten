@@ -41,7 +41,7 @@ int building_market_get_max_goods_stock(building *market)
     return max_stock;
 }
 
-static void update_food_resource(struct resource_data *data, resource_type resource, const building *b, int distance)
+static void update_food_resource(struct resource_data *data, int resource, const building *b, int distance)
 {
     if (b->data.granary.resource_stored[resource]) {
         data->num_buildings++;
@@ -52,7 +52,7 @@ static void update_food_resource(struct resource_data *data, resource_type resou
     }
 }
 
-static void update_good_resource(struct resource_data *data, resource_type resource, building *b, int distance)
+static void update_good_resource(struct resource_data *data, int resource, building *b, int distance)
 {
     if (!city_resource_is_stockpiled(resource) && building_warehouse_get_amount(b, resource) > 0) {
         data->num_buildings++;
@@ -63,12 +63,12 @@ static void update_good_resource(struct resource_data *data, resource_type resou
     }
 }
 
-int is_good_accepted(inventory_type resource, building *market) {
+int is_good_accepted(int resource, building *market) {
     int goods_bit = 1 << resource;
     return !(market->subtype.market_goods & goods_bit);
 }
 
-void toggle_good_accepted(inventory_type resource, building *market) {
+void toggle_good_accepted(int resource, building *market) {
     int goods_bit = 1 << resource;
     market->subtype.market_goods ^= goods_bit;
 }

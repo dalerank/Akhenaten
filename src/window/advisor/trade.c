@@ -57,7 +57,7 @@ static int draw_background(void)
 static void draw_foreground(void)
 {
     inner_panel_draw(32, 52, 36, 21);
-    const resource_list *list = city_resource_get_available();
+    const resources_list *list = city_resource_get_available();
     for (int i = 0; i < list->size; i++) {
         int y_offset = 22 * i;
         int resource = list->items[i];
@@ -77,7 +77,7 @@ static void draw_foreground(void)
         if (city_resource_is_stockpiled(resource)) {
             lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_WHITE);
         } else {
-            resource_trade_status trade_status = city_resource_trade_status(resource);
+            int trade_status = city_int(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
                 lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",

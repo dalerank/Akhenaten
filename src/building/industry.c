@@ -12,12 +12,12 @@
 #define MAX_PROGRESS_WORKSHOP 400
 #define INFINITE 10000
 
-int building_is_farm(building_type type)
+int building_is_farm(int type)
 {
     return type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM;
 }
 
-int building_is_workshop(building_type type)
+int building_is_workshop(int type)
 {
     return type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP;
 }

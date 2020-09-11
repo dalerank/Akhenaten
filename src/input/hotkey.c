@@ -18,14 +18,14 @@
 typedef struct {
     int *action;
     int value;
-    key_type key;
-    key_modifier_type modifiers;
+    int key;
+    int modifiers;
     int repeatable;
 } hotkey_definition;
 
 typedef struct {
     void (*action)(int is_down);
-    key_type key;
+    int key;
 } arrow_definition;
 
 typedef struct {
@@ -325,8 +325,8 @@ static int allocate_mapping_memory(int total_definitions, int total_arrows)
     free(data.arrows);
     data.num_definitions = 0;
     data.num_arrows = 0;
-    data.definitions = malloc(sizeof(hotkey_definition) * total_definitions);
-    data.arrows = malloc(sizeof(arrow_definition) * total_arrows);
+    data.definitions = (hotkey_definition*)malloc(sizeof(hotkey_definition) * total_definitions);
+    data.arrows = (arrow_definition*)malloc(sizeof(arrow_definition) * total_arrows);
     if (!data.definitions || !data.arrows) {
         free(data.definitions);
         free(data.arrows);
@@ -340,7 +340,7 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
     int total_definitions = 2; // Enter and ESC are fixed hotkeys
     int total_arrows = 0;
     for (int i = 0; i < num_mappings; i++) {
-        hotkey_action action = mappings[i].action;
+        int action = mappings[i].action;
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
             action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
             total_arrows++;
@@ -368,7 +368,7 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
     data.num_definitions = 2;
 
     for (int i = 0; i < num_mappings; i++) {
-        hotkey_action action = mappings[i].action;
+        int action = mappings[i].action;
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
             action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
             add_arrow(&mappings[i]);
@@ -389,7 +389,7 @@ void hotkey_reset_state(void)
     memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
-void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
+void hotkey_key_pressed(int key, int modifiers, int repeat)
 {
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_pressed(key, modifiers);
@@ -412,7 +412,7 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
     }
 }
 
-void hotkey_key_released(key_type key, key_modifier_type modifiers)
+void hotkey_key_released(int key, int modifiers)
 {
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_released(key, modifiers);
@@ -457,10 +457,10 @@ void hotkey_handle_global_keys(void)
     if (data.global_hotkey_state.toggle_fullscreen) {
         system_set_fullscreen(!setting_fullscreen());
     }
-    if (data.global_hotkey_state.save_screenshot) {
-        graphics_save_screenshot(0);
-    }
-    if (data.global_hotkey_state.save_city_screenshot) {
-        graphics_save_screenshot(1);
-    }
+//    if (data.global_hotkey_state.save_screenshot) {
+//        graphics_save_screenshot(0);
+//    }
+//    if (data.global_hotkey_state.save_city_screenshot) {
+//        graphics_save_screenshot(1);
+//    }
 }

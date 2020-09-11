@@ -30,9 +30,9 @@ static struct {
     int created_sequence;
 //    int incorrect_houses;
 //    int unfixable_houses;
-} extra = {0, 0, 0, 0};
+} extra = {0, 0, 0};
 
-int building_find(building_type type)
+int building_find(int type)
 {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);
@@ -60,7 +60,7 @@ building *building_next(building *b)
 {
     return &all_buildings[b->next_part_building_id];
 }
-building *building_create(building_type type, int x, int y)
+building *building_create(int type, int x, int y)
 {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -241,11 +241,11 @@ void building_clear_all(void)
 //    }
 //}
 
-int building_is_house(building_type type)
+int building_is_house(int type)
 {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
-int building_is_fort(building_type type)
+int building_is_fort(int type)
 {
     return type == BUILDING_FORT_LEGIONARIES ||
         type == BUILDING_FORT_JAVELIN ||

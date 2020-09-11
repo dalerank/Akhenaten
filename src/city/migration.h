@@ -3,9 +3,9 @@
 
 void city_migration_update(void);
 
-void city_migration_determine_no_immigration_cause(void);
+void city_migration_determine_int(void);
 
-int city_migration_no_immigration_cause(void);
+int city_migration_int(void);
 
 int city_migration_no_room_for_immigrants(void);
 

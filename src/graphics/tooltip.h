@@ -11,12 +11,12 @@ typedef enum {
     TOOLTIP_OVERLAY = 2,
     TOOLTIP_SENATE = 3,
     TOOLTIP_TILES = 4
-} tooltip_type;
+};
 
 typedef struct {
     const int mouse_x;
     const int mouse_y;
-    tooltip_type type;
+    int type;
     int high_priority;
     int text_group;
     int text_id;

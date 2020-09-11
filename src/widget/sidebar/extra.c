@@ -40,7 +40,7 @@ static struct {
     int width;
     int height;
     int is_collapsed;
-    sidebar_extra_display info_to_display;
+    int  info_to_display;
     int game_speed;
     int unemployment_percentage;
     int unemployment_amount;
@@ -51,12 +51,12 @@ static struct {
     objective population;
 } data;
 
-static sidebar_extra_display calculate_displayable_info(sidebar_extra_display info_to_display, int available_height)
+static int  calculate_displayable_info(int  info_to_display, int available_height)
 {
     if (data.is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO) || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE) {
         return SIDEBAR_EXTRA_DISPLAY_NONE;
     }
-    sidebar_extra_display result = SIDEBAR_EXTRA_DISPLAY_NONE;
+    int  result = SIDEBAR_EXTRA_DISPLAY_NONE;
     if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
             available_height -= EXTRA_INFO_HEIGHT_GAME_SPEED;
@@ -231,7 +231,7 @@ static void draw_extra_info_panel(void)
     }
 }
 
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, sidebar_extra_display info_to_display)
+int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, int  info_to_display)
 {
     data.is_collapsed = is_collapsed;
     data.x_offset = x_offset;

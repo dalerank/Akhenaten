@@ -319,7 +319,7 @@ static int unpack(const char *filename, unsigned char *buffer)
     return offset;
 }
 
-static int has_adjacent_building_type(int part_offset, int building_type)
+static int has_adjacent_int(int part_offset, int int)
 {
     int grid_offset = part_offset / 2;
     const int adjacent_tiles[] = { -162, 1, 162, -1 };
@@ -332,7 +332,7 @@ static int has_adjacent_building_type(int part_offset, int building_type)
         int building_id = to_ushort(&file1_data[offset_of_part("building_grid") + adjacent_offset * 2]);
         int building_offset = offset_of_part("buildings") + building_id * 128;
         int type = to_ushort(&file1_data[building_offset + 10]);
-        if (type == building_type) {
+        if (type == int) {
             return 1;
         }
     }
@@ -379,7 +379,7 @@ static int is_exception_image_grid(int global_offset, int part_offset)
     // Exception for roads next to a granary: in julius the dirt roads and paved roads lead
     // into the granary, while in Caesar 3 they do not. Therefore we do not check roads that
     // are adjacent to a granary (building type 71).
-    if (both_between(v1, v2, 591, 657) && has_adjacent_building_type(part_offset, 71)) {
+    if (both_between(v1, v2, 591, 657) && has_adjacent_int(part_offset, 71)) {
         return 1;
     }
     return 0;

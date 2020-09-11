@@ -4,8 +4,8 @@
 #include "building/building.h"
 #include "map/point.h"
 
-int building_is_farm(building_type type);
-int building_is_workshop(building_type type);
+int building_is_farm(int type);
+int building_is_workshop(int type);
 
 void building_industry_update_production(void);
 void building_industry_update_wheat_production(void);

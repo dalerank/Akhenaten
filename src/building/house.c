@@ -87,7 +87,7 @@ static void create_vacant_lot(int x, int y, int image_id)
     map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
 }
 
-void building_house_change_to(building *house, building_type type)
+void building_house_change_to(building *house, int type)
 {
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
@@ -282,7 +282,7 @@ static int house_image_group(int level)
     return image_id_from_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
-static void create_house_tile(building_type type, int x, int y, int image_id, int population, const int *inventory)
+static void create_house_tile(int type, int x, int y, int image_id, int population, const int *inventory)
 {
     building *house = building_create(type, x, y);
     house->house_population = population;
@@ -294,7 +294,7 @@ static void create_house_tile(building_type type, int x, int y, int image_id, in
                            image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 }
 
-static void split_size2(building *house, building_type new_type)
+static void split_size2(building *house, int new_type)
 {
     int inventory_per_tile[INVENTORY_MAX];
     int inventory_remainder[INVENTORY_MAX];

@@ -57,9 +57,9 @@ typedef enum {
     WARNING_CITY_BOXED_IN = 63,
     WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH = 64,
     WARNING_DATA_LIMIT_REACHED = 65
-} warning_type;
+};
 
-void city_warning_show(warning_type type);
+void city_warning_show(int type);
 
 int city_has_warnings(void);
 

@@ -47,7 +47,7 @@ static struct {
     building_info_context *context_for_callback;
 } data;
 
-static int big_people_image(figure_type type)
+static int big_people_image(int type)
 {
     return image_id_from_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
 }

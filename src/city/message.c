@@ -153,7 +153,7 @@ void city_message_disable_sound_for_next_message(void)
     should_play_sound = 0;
 }
 
-void city_message_apply_sound_interval(message_category category)
+void city_message_apply_sound_interval(int category)
 {
     time_millis now = time_get_millis();
     if (now - data.last_sound_time[category] <= 15000) {
@@ -182,7 +182,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     msg->sequence = data.next_message_sequence++;
 
     int text_id = city_message_get_text_id(message_type);
-    lang_message_type lang_msg_type = lang_get_message(text_id)->message_type;
+    int lang_msg_type = lang_get_message(text_id)->message_type;
     if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
         window_invalidate();
@@ -198,7 +198,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     should_play_sound = 1;
 }
 
-void city_message_post_with_popup_delay(message_category category, int message_type, int param1, short param2)
+void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2)
 {
     int use_popup = 0;
     if (data.message_delay[category] <= 0) {
@@ -209,7 +209,7 @@ void city_message_post_with_popup_delay(message_category category, int message_t
     data.message_count[category]++;
 }
 
-void city_message_post_with_message_delay(message_category category, int use_popup, int message_type, int delay)
+void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay)
 {
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
@@ -289,7 +289,7 @@ void city_message_sort_and_compact(void)
     }
 }
 
-int city_message_get_text_id(city_message_type message_type)
+int city_message_get_text_id(int message_type)
 {
     if (message_type > 50) {
         return message_type + 199;
@@ -298,7 +298,7 @@ int city_message_get_text_id(city_message_type message_type)
     }
 }
 
-message_advisor city_message_get_advisor(city_message_type message_type)
+int city_message_get_advisor(int message_type)
 {
     switch (message_type) {
         case MESSAGE_LOCAL_UPRISING:
@@ -340,17 +340,17 @@ message_advisor city_message_get_advisor(city_message_type message_type)
     }
 }
 
-void city_message_reset_category_count(message_category category)
+void city_message_reset_category_count(int category)
 {
     data.message_count[category] = 0;
 }
 
-void city_message_increase_category_count(message_category category)
+void city_message_increase_category_count(int category)
 {
     data.message_count[category]++;
 }
 
-int city_message_get_category_count(message_category category)
+int city_message_get_category_count(int category)
 {
     return data.message_count[category];
 }
@@ -417,7 +417,7 @@ int city_message_problem_area_count(void)
     return data.problem_count;
 }
 
-static int has_problem_area(const city_message *msg, lang_message_type lang_msg_type)
+static int has_problem_area(const city_message *msg, int lang_msg_type)
 {
     if (lang_msg_type == MESSAGE_TYPE_DISASTER) {
         return 1;
@@ -449,7 +449,7 @@ int city_message_next_problem_area_grid_offset(void)
         city_message *msg = &data.messages[i];
         if (msg->message_type && msg->year >= game_time_year() - 1) {
             const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
-            lang_message_type lang_msg_type = lang_msg->message_type;
+            int lang_msg_type = lang_msg->message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 data.problem_count++;
             }
@@ -468,7 +468,7 @@ int city_message_next_problem_area_grid_offset(void)
         city_message *msg = &data.messages[i];
         if (msg->message_type && msg->year >= current_year - 1) {
             int text_id = city_message_get_text_id(msg->message_type);
-            lang_message_type lang_msg_type = lang_get_message(text_id)->message_type;
+            int lang_msg_type = lang_get_message(text_id)->message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
                 if (data.problem_index < index) {

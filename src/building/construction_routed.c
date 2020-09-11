@@ -13,7 +13,7 @@
 #include "map/tiles.h"
 #include "graphics/window.h"
 
-static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_building_type type, int *items)
+static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_int type, int *items)
 {
     static const int direction_indices[8][4] = {
         {0, 2, 6, 4},
@@ -167,6 +167,6 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
 
 int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end, int *items)
 {
-    routed_building_type type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
+    routed_int type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
     return place_routed_building(x_start, y_start, x_end, y_end, type, items);
 }

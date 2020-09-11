@@ -22,7 +22,7 @@ typedef enum {
     SPEED_DIRECTION_NEGATIVE = -1,
     SPEED_DIRECTION_STOPPED  = 0,
     SPEED_DIRECTION_POSITIVE = 1
-} speed_direction;
+};
 
 typedef struct {
     time_millis start_time;
@@ -76,7 +76,7 @@ int speed_get_delta(speed_type *speed);
  * @param speed Speed structure to act on
  * @return An enum with the current direction
  */
-speed_direction speed_get_current_direction(const speed_type *speed);
+int speed_get_current_direction(const speed_type *speed);
 
 /**
  * Indicates whether the speed is accelerating/decelerating

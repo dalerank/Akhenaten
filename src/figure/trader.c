@@ -37,26 +37,26 @@ int trader_create(void)
     return trader_id;
 }
 
-void trader_record_bought_resource(int trader_id, resource_type resource)
+void trader_record_bought_resource(int trader_id, int resource)
 {
     data.traders[trader_id].bought_amount++;
     data.traders[trader_id].bought_resources[resource]++;
     data.traders[trader_id].bought_value += trade_price_sell(resource);
 }
 
-void trader_record_sold_resource(int trader_id, resource_type resource)
+void trader_record_sold_resource(int trader_id, int resource)
 {
     data.traders[trader_id].sold_amount++;
     data.traders[trader_id].sold_resources[resource]++;
     data.traders[trader_id].sold_value += trade_price_buy(resource);
 }
 
-int trader_bought_resources(int trader_id, resource_type resource)
+int trader_bought_resources(int trader_id, int resource)
 {
     return data.traders[trader_id].bought_resources[resource];
 }
 
-int trader_sold_resources(int trader_id, resource_type resource)
+int trader_sold_resources(int trader_id, int resource)
 {
     return data.traders[trader_id].sold_resources[resource];
 }

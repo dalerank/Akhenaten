@@ -23,7 +23,7 @@ typedef enum {
     SCROLL_NONE = 0,
     SCROLL_UP = -1,
     SCROLL_DOWN = 1
-} scroll_state;
+};
 
 /**
  * Mouse state
@@ -31,7 +31,7 @@ typedef enum {
 typedef struct {
     int x; /**< Global position X */
     int y; /**< Global position Y */
-    scroll_state scrolled; /**< Scroll state (up/down/none) */
+    int scrolled; /**< Scroll state (up/down/none) */
     mouse_button left; /**< Left mouse button */
     mouse_button middle; /**< Middle mouse button */
     mouse_button right; /**< Right mouse button */
@@ -58,7 +58,7 @@ void mouse_set_middle_down(int down);
 
 void mouse_set_right_down(int down);
 
-void mouse_set_scroll(scroll_state state);
+void mouse_set_scroll(int state);
 
 void mouse_set_inside_window(int inside);
 

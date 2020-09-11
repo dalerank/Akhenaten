@@ -120,7 +120,7 @@ void mouse_determine_button_state(void)
     update_button_state(&data.right);
 }
 
-void mouse_set_scroll(scroll_state state)
+void mouse_set_scroll(int state)
 {
     data.scrolled = state;
     data.is_touch = 0;

@@ -25,8 +25,8 @@ static struct {
     int game_speed;
     int scroll_speed;
     // misc settings
-    set_difficulty difficulty;
-    set_tooltips tooltips;
+    int difficulty;
+    int tooltips;
     int monthly_autosave;
     int warnings;
     int gods_enabled;
@@ -196,7 +196,7 @@ void setting_set_display(int fullscreen, int width, int height)
     }
 }
 
-static set_sound *get_sound(set_sound_type type)
+static set_sound *get_sound(int type)
 {
     switch (type) {
     case SOUND_MUSIC: return &data.sound_music;
@@ -206,31 +206,31 @@ static set_sound *get_sound(set_sound_type type)
     default: return 0;
     }
 }
-const set_sound *setting_sound(set_sound_type type)
+const set_sound *setting_sound(int type)
 {
     return get_sound(type);
 }
 
-int setting_sound_is_enabled(set_sound_type type)
+int setting_sound_is_enabled(int type)
 {
     return get_sound(type)->enabled;
 }
-void setting_toggle_sound_enabled(set_sound_type type)
+void setting_toggle_sound_enabled(int type)
 {
     set_sound *sound = get_sound(type);
     sound->enabled = sound->enabled ? 0 : 1;
 }
-void setting_increase_sound_volume(set_sound_type type)
+void setting_increase_sound_volume(int type)
 {
     set_sound *sound = get_sound(type);
     sound->volume = calc_bound(sound->volume + 1, 0, 100);
 }
-void setting_decrease_sound_volume(set_sound_type type)
+void setting_decrease_sound_volume(int type)
 {
     set_sound *sound = get_sound(type);
     sound->volume = calc_bound(sound->volume - 1, 0, 100);
 }
-void setting_reset_sound(set_sound_type type, int enabled, int volume)
+void setting_reset_sound(int type, int enabled, int volume)
 {
     set_sound *sound = get_sound(type);
     sound->enabled = enabled;
@@ -277,7 +277,7 @@ void setting_reset_speeds(int game_speed, int scroll_speed)
     data.scroll_speed = scroll_speed;
 }
 
-set_tooltips setting_tooltips(void)
+int setting_tooltips(void)
 {
     return data.tooltips;
 }
@@ -317,7 +317,7 @@ void setting_toggle_gods_enabled(void)
     data.gods_enabled = data.gods_enabled ? 0 : 1;
 }
 
-set_difficulty setting_difficulty(void)
+int setting_difficulty(void)
 {
     return data.difficulty;
 }

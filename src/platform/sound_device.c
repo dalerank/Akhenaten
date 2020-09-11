@@ -324,7 +324,7 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
     custom_music.buffer_size = dst_rate * dst_channels * 2 * 2;
-    custom_music.buffer = malloc(custom_music.buffer_size);
+    custom_music.buffer = (unsigned char*)malloc(custom_music.buffer_size);
     if (!custom_music.buffer) {
         return 0;
     }

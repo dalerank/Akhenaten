@@ -11,10 +11,10 @@ typedef enum {
     FIGURE_CATEGORY_CRIMINAL = 4,
     FIGURE_CATEGORY_NATIVE = 5,
     FIGURE_CATEGORY_ANIMAL = 6
-} figure_category;
+};
 
 typedef struct {
-    figure_category category;
+    int category;
     int max_damage;
     int attack_value;
     int defense_value;
@@ -23,6 +23,6 @@ typedef struct {
     int missile_delay;
 } figure_properties;
 
-const figure_properties *figure_properties_for_type(figure_type type);
+const figure_properties *figure_properties_for_type(int type);
 
 #endif // FIGURE_PROPERTIES_H

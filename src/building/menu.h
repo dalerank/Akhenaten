@@ -23,7 +23,7 @@ typedef enum {
     BUILD_MENU_LARGE_TEMPLES = 16,
     BUILD_MENU_FORTS = 17,
     BUILD_MENU_MAX = 18
-} build_menu_group;
+};
 
 void building_menu_enable_all(void);
 
@@ -33,7 +33,7 @@ int building_menu_count_items(int submenu);
 
 int building_menu_next_index(int submenu, int current_index);
 
-building_type building_menu_type(int submenu, int item);
+int building_menu_type(int submenu, int item);
 
 /**
  * Checks whether the building menu has changed.

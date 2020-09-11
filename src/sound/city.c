@@ -94,7 +94,7 @@ typedef struct {
 
 static city_channel channels[MAX_CHANNELS];
 
-static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
+static const int int_TO_CHANNEL_ID[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
     1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
     3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
@@ -204,7 +204,7 @@ void sound_city_mark_building_view(building *b, int direction)
         return;
     }
     int type = b->type;
-    int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
+    int channel = int_TO_CHANNEL_ID[type];
     if (!channel) {
         return;
     }
