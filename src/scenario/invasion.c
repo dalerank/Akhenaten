@@ -464,45 +464,45 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
 }
 
 void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings) {
-    buffer_write_u16(invasion_id, data.last_internal_invasion_id);
+    invasion_id->write_u16(data.last_internal_invasion_id);
 
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         const invasion_warning *w = &data.warnings[i];
-        buffer_write_u8(warnings, w->in_use);
-        buffer_write_u8(warnings, w->handled);
-        buffer_write_u8(warnings, w->invasion_path_id);
-        buffer_write_u8(warnings, w->warning_years);
-        buffer_write_i16(warnings, w->x);
-        buffer_write_i16(warnings, w->y);
-        buffer_write_i16(warnings, w->image_id);
-        buffer_write_i16(warnings, w->empire_object_id);
-        buffer_write_i16(warnings, w->month_notified);
-        buffer_write_i16(warnings, w->year_notified);
-        buffer_write_i32(warnings, w->months_to_go);
-        buffer_write_u8(warnings, w->invasion_id);
+        warnings->write_u8(w->in_use);
+        warnings->write_u8(w->handled);
+        warnings->write_u8(w->invasion_path_id);
+        warnings->write_u8(w->warning_years);
+        warnings->write_i16(w->x);
+        warnings->write_i16(w->y);
+        warnings->write_i16(w->image_id);
+        warnings->write_i16(w->empire_object_id);
+        warnings->write_i16(w->month_notified);
+        warnings->write_i16(w->year_notified);
+        warnings->write_i32(w->months_to_go);
+        warnings->write_u8(w->invasion_id);
         for (int x = 0; x < 11; x++) {
-            buffer_write_u8(warnings, 0);
+            warnings->write_u8(0);
         }
     }
 }
 
 void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings) {
-    data.last_internal_invasion_id = buffer_read_u16(invasion_id);
+    data.last_internal_invasion_id = invasion_id->read_u16();
 
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         invasion_warning *w = &data.warnings[i];
-        w->in_use = buffer_read_u8(warnings);
-        w->handled = buffer_read_u8(warnings);
-        w->invasion_path_id = buffer_read_u8(warnings);
-        w->warning_years = buffer_read_u8(warnings);
-        w->x = buffer_read_i16(warnings);
-        w->y = buffer_read_i16(warnings);
-        w->image_id = buffer_read_i16(warnings);
-        w->empire_object_id = buffer_read_i16(warnings);
-        w->month_notified = buffer_read_i16(warnings);
-        w->year_notified = buffer_read_i16(warnings);
-        w->months_to_go = buffer_read_i32(warnings);
-        w->invasion_id = buffer_read_u8(warnings);
-        buffer_skip(warnings, 11);
+        w->in_use = warnings->read_u8();
+        w->handled = warnings->read_u8();
+        w->invasion_path_id = warnings->read_u8();
+        w->warning_years = warnings->read_u8();
+        w->x = warnings->read_i16();
+        w->y = warnings->read_i16();
+        w->image_id = warnings->read_i16();
+        w->empire_object_id = warnings->read_i16();
+        w->month_notified = warnings->read_i16();
+        w->year_notified = warnings->read_i16();
+        w->months_to_go = warnings->read_i32();
+        w->invasion_id = warnings->read_u8();
+        warnings->skip(11);
     }
 }

@@ -59,7 +59,7 @@ static char compress_buffer[COMPRESS_BUFFER_SIZE];
 static int savegame_version;
 
 typedef struct {
-    buffer buf;
+    buffer *buf;
     int compressed;
     char name[100];
 } file_piece;
@@ -253,23 +253,24 @@ static struct {
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
     piece->compressed = compressed;
-    void *data = malloc(size);
-    memset(data, 0, size);
-    buffer_init(&piece->buf, data, size);
+//    void *data = malloc(size);
+//    memset(data, 0, size);
+//    piece->buf->init_unsafe_pls(data, size);
+    piece->buf->init(size + compressed * 4);
 }
 static buffer *create_scenario_piece(int size, char *name)
 {
     file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
     init_file_piece(piece, size, 0);
     strncpy(piece->name, name, 99);
-    return &piece->buf;
+    return piece->buf;
 }
 static buffer *create_savegame_piece(int size, int compressed, char *name)
 {
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
     strncpy(piece->name, name, 99);
-    return &piece->buf;
+    return piece->buf;
 }
 static void init_savegame_buffers(savegame_state* state)
 {
@@ -405,7 +406,8 @@ static void init_scenario_data(void)
     return;
     if (scenario_data.num_pieces > 0) {
         for (int i = 0; i < scenario_data.num_pieces; i++) {
-            buffer_reset(&scenario_data.pieces[i].buf);
+//            buffer_reset(&scenario_data.pieces[i].buf);
+            delete &savegame_data.pieces[i].buf;
         }
         return;
     }
@@ -446,8 +448,9 @@ static void init_savegame_data(int expanded)
 {
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++) {
-            buffer_reset(&savegame_data.pieces[i].buf);
-            free(savegame_data.pieces[i].buf.data);
+            delete &savegame_data.pieces[i].buf;
+//            buffer_reset(&savegame_data.pieces[i].buf);
+//            free(savegame_data.pieces[i].buf->data);
         }
         //return;
         savegame_data.num_pieces = 0;
@@ -830,7 +833,7 @@ static void scenario_load_from_state(scenario_state *file)
 
     scenario_load_state(&file->scenario_data);
 
-    buffer_skip(file->end_marker, 4);
+//    file->end_marker->skip(4);
 }
 static void scenario_save_to_state(scenario_state *file)
 {
@@ -845,11 +848,11 @@ static void scenario_save_to_state(scenario_state *file)
 
     scenario_save_state(&file->scenario_data);
 
-    buffer_skip(file->end_marker, 4);
+//    file->end_marker->skip(4);
 }
 static void savegame_load_from_state(savegame_state *state)
 {
-//    savegame_version = buffer_read_i32(state->file_version);
+//    savegame_version = state->file_version->read_i32();
 
     scenario_settings_load_state(safebuf(state->scenario_campaign_mission),
                                  safebuf(state->scenario_settings),
@@ -923,11 +926,11 @@ static void savegame_load_from_state(savegame_state *state)
 //    scenario_invasion_load_state(safebuf(state->last_invasion_id), safebuf(state->invasion_warnings));
     map_bookmark_load_state(safebuf(state->bookmarks));
 
-    buffer_skip(state->end_marker, 284);
+//    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state)
 {
-//    buffer_write_i32(state->file_version, savegame_version);
+//    state->file_version->write_i32(savegame_version);
 
     scenario_settings_save_state(safebuf(state->scenario_campaign_mission),
                                  safebuf(state->scenario_settings),
@@ -1001,7 +1004,7 @@ static void savegame_save_to_state(savegame_state *state)
     scenario_invasion_save_state(safebuf(state->last_invasion_id), safebuf(state->invasion_warnings));
     map_bookmark_save_state(safebuf(state->bookmarks));
 
-    buffer_skip(state->end_marker, 284);
+//    state->end_marker->skip(284);
 }
 
 #include "SDL.h"
@@ -1009,67 +1012,65 @@ static void savegame_save_to_state(savegame_state *state)
 int findex;
 char *fname;
 
-static int read_int32(FILE *fp)
+void log_hex(file_piece *piece, int i, int offs)
 {
-    uint8_t data[4];
-    if (fread(&data, 1, 4, fp) != 4) {
-        return 0;
+    // log first few bytes of the filepiece
+    int s = piece->buf->size() < 16 ? piece->buf->size() : 16;
+    char hexstr[40] = {0};
+    for (int b = 0; b < s; b++)
+    {
+        char hexcode[3] = {0};
+        snprintf(hexcode, 4, "%02X", ((char*) piece->buf->data_const())[b]);
+        strncat(hexstr, hexcode, 4);
+        if ((b + 1) % 4 == 0 || (b + 1) == s)
+            strncat(hexstr, " ", 2);
     }
-    buffer buf;
-    buffer_init(&buf, data, 4);
-    return buffer_read_i32(&buf);
+    SDL_Log("Piece %s %02i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i+1, savegame_data.num_pieces, offs, hexstr, piece->buf->size(), fname);
 }
-static void write_int32(FILE *fp, int value)
-{
-    uint8_t data[4];
-    buffer buf;
-    buffer_init(&buf, data, 4);
-    buffer_write_i32(&buf, value);
-    fwrite(&data, 1, 4, fp);
-}
-static int read_compressed_chunk(FILE *fp, void *buffer, int filepiece_size)
+static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size)
 {
     // check that the stream size isn't above maximum temp buffer
     if (filepiece_size > COMPRESS_BUFFER_SIZE)
         return 0;
 
     // read 32-bit int header denoting size of compressed chunk
-    int input_size = read_int32(fp);
+    size_t returned_size = buf->from_file(1, filepiece_size, fp);
+    uint32_t chunk_size = buf->read_u32();
 
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
-    if ((unsigned int) input_size == UNCOMPRESSED) {
-        if (fread(buffer, 1, filepiece_size, fp) != filepiece_size)
+    if ((unsigned int) chunk_size == UNCOMPRESSED) {
+        if (returned_size != filepiece_size)
             return 0;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
-        if (fread(compress_buffer, 1, input_size, fp) != input_size
-        || !zip_decompress(compress_buffer, input_size, buffer, &filepiece_size))
+        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
+        || !zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size))
             return 0;
     }
     char *lfile = (char*)malloc(200);
-//    char nfile = malloc(20);
     sprintf(lfile,"DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
-//    strcat(lfile, nfile);
     FILE *log = fopen(lfile, "wb+");
-    fwrite(buffer, filepiece_size, 1, log);
+
     fclose(log);
     free(lfile);
-//    free(nfile);
     return 1;
 }
-static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_write)
+static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write)
 {
     if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
         return 0;
     }
     int output_size = COMPRESS_BUFFER_SIZE;
-    if (zip_compress(buffer, bytes_to_write, compress_buffer, &output_size)) {
-        write_int32(fp, output_size);
+    if (zip_compress(buf->data_const(), bytes_to_write, compress_buffer, &output_size)) {
+//        write_int32(fp, output_size);
+        fwrite(&output_size, 4, 1, fp);
         fwrite(compress_buffer, 1, output_size, fp);
     } else {
         // unable to compress: write uncompressed
-        write_int32(fp, UNCOMPRESSED);
-        fwrite(buffer, 1, bytes_to_write, fp);
+//        write_int32(fp, UNCOMPRESSED);
+        output_size = UNCOMPRESSED;
+        fwrite(&output_size, 4, 1, fp);
+        fwrite(buf->data_const(), 1, bytes_to_write, fp);
     }
     return 1;
 }
@@ -1080,29 +1081,16 @@ static int savegame_read_from_file(FILE *fp)
         findex = i;
         fname = piece->name;
         int result = 0;
-        int offs = ftell(fp);
+//        int offs = ftell(fp);
         if (piece->compressed)
-            result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size);
+            result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
         else
-            result = fread(piece->buf.data, 1, piece->buf.size, fp) == piece->buf.size;
+            result = piece->buf->from_file(1, piece->buf->size(), fp) == piece->buf->size();
 
-        // log first few bytes of the filepiece
-        int s = piece->buf.size < 16 ? piece->buf.size : 16;
-        char hexstr[40] = {0};
-        for (int b = 0; b < s; b++)
-        {
-            char hexcode[3] = {0};
-            snprintf(hexcode, 4, "%02X", piece->buf.data[b]);
-            strncat(hexstr, hexcode, 4);
-            if ((b + 1) % 4 == 0 || (b + 1) == s)
-                strncat(hexstr, " ", 2);
-        }
-        SDL_Log("Piece %s %02i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i+1, savegame_data.num_pieces, offs, hexstr, piece->buf.size, fname);
-
-        // The last piece may be smaller than buf.size
+        // The last piece may be smaller than buf->size
         if (!result && i != (savegame_data.num_pieces - 1)) {
             log_info("Incorrect buffer size, got.", 0, result);
-            log_info("Incorrect buffer size, expected.", 0, piece->buf.size);
+            log_info("Incorrect buffer size, expected.", 0, piece->buf->size());
             return 0;
         }
     }
@@ -1112,11 +1100,10 @@ static void savegame_write_to_file(FILE *fp)
 {
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
-        if (piece->compressed) {
-            write_compressed_chunk(fp, piece->buf.data, piece->buf.size);
-        } else {
-            fwrite(piece->buf.data, 1, piece->buf.size, fp);
-        }
+        if (piece->compressed)
+            write_compressed_chunk(fp, piece->buf, piece->buf->size());
+        else
+            piece->buf->to_file(1, piece->buf->size(), fp);
     }
 }
 
@@ -1124,40 +1111,42 @@ static void savegame_write_to_file(FILE *fp)
 
 int game_file_io_read_scenario(const char *filename)
 {
-    log_info("Loading scenario", filename, 0);
-    init_scenario_data();
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-    if (!fp) {
-        return 0;
-    }
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        if (fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp) != scenario_data.pieces[i].buf.size) {
-            log_error("Unable to load scenario", filename, 0);
-            file_close(fp);
-            return 0;
-        }
-    }
-    file_close(fp);
-
-    scenario_load_from_state(&scenario_data.state);
-    return 1;
+    return 0;
+//    log_info("Loading scenario", filename, 0);
+//    init_scenario_data();
+//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+//    if (!fp) {
+//        return 0;
+//    }
+//    for (int i = 0; i < scenario_data.num_pieces; i++) {
+//        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
+//            log_error("Unable to load scenario", filename, 0);
+//            file_close(fp);
+//            return 0;
+//        }
+//    }
+//    file_close(fp);
+//
+//    scenario_load_from_state(&scenario_data.state);
+//    return 1;
 }
 int game_file_io_write_scenario(const char *filename)
 {
-    log_info("Saving scenario", filename, 0);
-    init_scenario_data();
-    scenario_save_to_state(&scenario_data.state);
-
-    FILE *fp = file_open(filename, "wb");
-    if (!fp) {
-        log_error("Unable to save scenario", 0, 0);
-        return 0;
-    }
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        fwrite(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
-    }
-    file_close(fp);
-    return 1;
+    return 0;
+//    log_info("Saving scenario", filename, 0);
+//    init_scenario_data();
+//    scenario_save_to_state(&scenario_data.state);
+//
+//    FILE *fp = file_open(filename, "wb");
+//    if (!fp) {
+//        log_error("Unable to save scenario", 0, 0);
+//        return 0;
+//    }
+//    for (int i = 0; i < scenario_data.num_pieces; i++) {
+//        fwrite(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp);
+//    }
+//    file_close(fp);
+//    return 1;
 }
 int game_file_io_read_saved_game(const char *filename, int offset)
 {

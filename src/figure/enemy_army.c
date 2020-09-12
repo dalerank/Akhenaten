@@ -128,71 +128,71 @@ int enemy_army_is_stronger_than_legions(void)
 void enemy_armies_save_state(buffer *buf, buffer *totals_buf)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].formation_id);
+        buf->write_i32(enemy_armies[i].formation_id);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].home_x);
+        buf->write_i32(enemy_armies[i].home_x);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].home_y);
+        buf->write_i32(enemy_armies[i].home_y);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].layout);
+        buf->write_i32(enemy_armies[i].layout);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].destination_x);
+        buf->write_i32(enemy_armies[i].destination_x);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].destination_y);
+        buf->write_i32(enemy_armies[i].destination_y);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].destination_building_id);
+        buf->write_i32(enemy_armies[i].destination_building_id);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].num_legions);
+        buf->write_i32(enemy_armies[i].num_legions);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buffer_write_i32(buf, enemy_armies[i].ignore_roman_soldiers);
+        buf->write_i32(enemy_armies[i].ignore_roman_soldiers);
     }
-    buffer_write_i32(totals_buf, totals.enemy_formations);
-    buffer_write_i32(totals_buf, totals.enemy_strength);
-    buffer_write_i32(totals_buf, totals.legion_formations);
-    buffer_write_i32(totals_buf, totals.legion_strength);
-    buffer_write_i32(totals_buf, totals.days_since_roman_influence_calculation);
+    totals_buf->write_i32(totals.enemy_formations);
+    totals_buf->write_i32(totals.enemy_strength);
+    totals_buf->write_i32(totals.legion_formations);
+    totals_buf->write_i32(totals.legion_strength);
+    totals_buf->write_i32(totals.days_since_roman_influence_calculation);
 }
 
 void enemy_armies_load_state(buffer *buf, buffer *totals_buf)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].formation_id = buffer_read_i32(buf);
+        enemy_armies[i].formation_id = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].home_x = buffer_read_i32(buf);
+        enemy_armies[i].home_x = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].home_y = buffer_read_i32(buf);
+        enemy_armies[i].home_y = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].layout = buffer_read_i32(buf);
+        enemy_armies[i].layout = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].destination_x = buffer_read_i32(buf);
+        enemy_armies[i].destination_x = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].destination_y = buffer_read_i32(buf);
+        enemy_armies[i].destination_y = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].destination_building_id = buffer_read_i32(buf);
+        enemy_armies[i].destination_building_id = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].num_legions = buffer_read_i32(buf);
+        enemy_armies[i].num_legions = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].ignore_roman_soldiers = buffer_read_i32(buf);
+        enemy_armies[i].ignore_roman_soldiers = buf->read_i32();
     }
-    totals.enemy_formations = buffer_read_i32(totals_buf);
-    totals.enemy_strength = buffer_read_i32(totals_buf);
-    totals.legion_formations = buffer_read_i32(totals_buf);
-    totals.legion_strength = buffer_read_i32(totals_buf);
-    totals.days_since_roman_influence_calculation = buffer_read_i32(totals_buf);
+    totals.enemy_formations = totals_buf->read_i32();
+    totals.enemy_strength = totals_buf->read_i32();
+    totals.legion_formations = totals_buf->read_i32();
+    totals.legion_strength = totals_buf->read_i32();
+    totals.days_since_roman_influence_calculation = totals_buf->read_i32();
 }

@@ -37,7 +37,7 @@ static struct {
     // personal savings
     int personal_savings[MAX_PERSONAL_SAVINGS];
     // file data
-    uint8_t inf_file[INF_SIZE];
+    buffer *inf_file = new buffer(INF_SIZE);
 } data;
 
 static void load_default_settings(void)
@@ -69,48 +69,48 @@ static void load_default_settings(void)
 }
 static void load_settings(buffer *buf)
 {
-    buffer_skip(buf, 4);
-    data.fullscreen = buffer_read_i32(buf);
-    buffer_skip(buf, 3);
-    data.sound_effects.enabled = buffer_read_u8(buf);
-    data.sound_music.enabled = buffer_read_u8(buf);
-    data.sound_speech.enabled = buffer_read_u8(buf);
-    buffer_skip(buf, 6);
-    data.game_speed = buffer_read_i32(buf);
-    data.scroll_speed = buffer_read_i32(buf);
-    buffer_read_raw(buf, data.player_name, env_sizes().MAX_PLAYER_NAME);
-    buffer_skip(buf, 16);
-    data.last_advisor = buffer_read_i32(buf);
-    buffer_skip(buf, 4); //int save_game_mission_id;
-    data.tooltips = buffer_read_i32(buf);
-    buffer_skip(buf, 4); //int starting_favor;
-    buffer_skip(buf, 4); //int personal_savings_last_mission;
-    buffer_skip(buf, 4); //int current_mission_id;
-    buffer_skip(buf, 4); //int is_custom_scenario;
-    data.sound_city.enabled = buffer_read_u8(buf);
-    data.warnings = buffer_read_u8(buf);
-    data.monthly_autosave = buffer_read_u8(buf);
-    buffer_skip(buf, 1); //unsigned char autoclear_enabled;
-    data.sound_effects.volume = buffer_read_i32(buf);
-    data.sound_music.volume = buffer_read_i32(buf);
-    data.sound_speech.volume = buffer_read_i32(buf);
-    data.sound_city.volume = buffer_read_i32(buf);
-    buffer_skip(buf, 8); // ram
-    data.window_width = buffer_read_i32(buf);
-    data.window_height = buffer_read_i32(buf);
-    buffer_skip(buf, 8); //int max_confirmed_resolution;
+    buf->skip(4);
+    data.fullscreen = buf->read_i32();
+    buf->skip(3);
+    data.sound_effects.enabled = buf->read_u8();
+    data.sound_music.enabled = buf->read_u8();
+    data.sound_speech.enabled = buf->read_u8();
+    buf->skip(6);
+    data.game_speed = buf->read_i32();
+    data.scroll_speed = buf->read_i32();
+    buf->read_raw(data.player_name, env_sizes().MAX_PLAYER_NAME);
+    buf->skip(16);
+    data.last_advisor = buf->read_i32();
+    buf->skip(4); //int save_game_mission_id;
+    data.tooltips = buf->read_i32();
+    buf->skip(4); //int starting_favor;
+    buf->skip(4); //int personal_savings_last_mission;
+    buf->skip(4); //int current_mission_id;
+    buf->skip(4); //int is_custom_scenario;
+    data.sound_city.enabled = buf->read_u8();
+    data.warnings = buf->read_u8();
+    data.monthly_autosave = buf->read_u8();
+    buf->skip(1); //unsigned char autoclear_enabled;
+    data.sound_effects.volume = buf->read_i32();
+    data.sound_music.volume = buf->read_i32();
+    data.sound_speech.volume = buf->read_i32();
+    data.sound_city.volume = buf->read_i32();
+    buf->skip(8); // ram
+    data.window_width = buf->read_i32();
+    data.window_height = buf->read_i32();
+    buf->skip(8); //int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        data.personal_savings[i] = buffer_read_i32(buf);
+        data.personal_savings[i] = buf->read_i32();
     }
-    data.victory_video = buffer_read_i32(buf);
+    data.victory_video = buf->read_i32();
 
-    if (buffer_at_end(buf)) {
+    if (buf->at_end()) {
         // Settings file is from unpatched C3, use default values
         data.difficulty = DIFFICULTY_HARD;
         data.gods_enabled = 1;
     } else {
-        data.difficulty = buffer_read_i32(buf);
-        data.gods_enabled = buffer_read_i32(buf);
+        data.difficulty = buf->read_i32();
+        data.gods_enabled = buf->read_i32();
     }
 }
 
@@ -122,10 +122,7 @@ void settings_load(void)
     if (!size) {
         return;
     }
-
-    buffer buf;
-    buffer_init(&buf, data.inf_file, size);
-    load_settings(&buf);
+    load_settings(data.inf_file);
 
     if (data.window_width + data.window_height < 500) {
         // most likely migration from Caesar 3
@@ -135,46 +132,44 @@ void settings_load(void)
 }
 void settings_save(void)
 {
-    buffer b;
-    buffer *buf = &b;
-    buffer_init(buf, data.inf_file, INF_SIZE);
+    buffer *buf = data.inf_file;
 
-    buffer_skip(buf, 4);
-    buffer_write_i32(buf, data.fullscreen);
-    buffer_skip(buf, 3);
-    buffer_write_u8(buf, data.sound_effects.enabled);
-    buffer_write_u8(buf, data.sound_music.enabled);
-    buffer_write_u8(buf, data.sound_speech.enabled);
-    buffer_skip(buf, 6);
-    buffer_write_i32(buf, data.game_speed);
-    buffer_write_i32(buf, data.scroll_speed);
-    buffer_write_raw(buf, data.player_name, env_sizes().MAX_PLAYER_NAME);
-    buffer_skip(buf, 16);
-    buffer_write_i32(buf, data.last_advisor);
-    buffer_skip(buf, 4); //int save_game_mission_id;
-    buffer_write_i32(buf, data.tooltips);
-    buffer_skip(buf, 4); //int starting_favor;
-    buffer_skip(buf, 4); //int personal_savings_last_mission;
-    buffer_skip(buf, 4); //int current_mission_id;
-    buffer_skip(buf, 4); //int is_custom_scenario;
-    buffer_write_u8(buf, data.sound_city.enabled);
-    buffer_write_u8(buf, data.warnings);
-    buffer_write_u8(buf, data.monthly_autosave);
-    buffer_skip(buf, 1); //unsigned char autoclear_enabled;
-    buffer_write_i32(buf, data.sound_effects.volume);
-    buffer_write_i32(buf, data.sound_music.volume);
-    buffer_write_i32(buf, data.sound_speech.volume);
-    buffer_write_i32(buf, data.sound_city.volume);
-    buffer_skip(buf, 8); // ram
-    buffer_write_i32(buf, data.window_width);
-    buffer_write_i32(buf, data.window_height);
-    buffer_skip(buf, 8); //int max_confirmed_resolution;
+    buf->skip(4);
+    buf->write_i32(data.fullscreen);
+    buf->skip(3);
+    buf->write_u8(data.sound_effects.enabled);
+    buf->write_u8(data.sound_music.enabled);
+    buf->write_u8(data.sound_speech.enabled);
+    buf->skip(6);
+    buf->write_i32(data.game_speed);
+    buf->write_i32(data.scroll_speed);
+    buf->write_raw(data.player_name, env_sizes().MAX_PLAYER_NAME);
+    buf->skip(16);
+    buf->write_i32(data.last_advisor);
+    buf->skip(4); //int save_game_mission_id;
+    buf->write_i32(data.tooltips);
+    buf->skip(4); //int starting_favor;
+    buf->skip(4); //int personal_savings_last_mission;
+    buf->skip(4); //int current_mission_id;
+    buf->skip(4); //int is_custom_scenario;
+    buf->write_u8(data.sound_city.enabled);
+    buf->write_u8(data.warnings);
+    buf->write_u8(data.monthly_autosave);
+    buf->skip(1); //unsigned char autoclear_enabled;
+    buf->write_i32(data.sound_effects.volume);
+    buf->write_i32(data.sound_music.volume);
+    buf->write_i32(data.sound_speech.volume);
+    buf->write_i32(data.sound_city.volume);
+    buf->skip(8); // ram
+    buf->write_i32(data.window_width);
+    buf->write_i32(data.window_height);
+    buf->skip(8); //int max_confirmed_resolution;
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        buffer_write_i32(buf, data.personal_savings[i]);
+        buf->write_i32(data.personal_savings[i]);
     }
-    buffer_write_i32(buf, data.victory_video);
-    buffer_write_i32(buf, data.difficulty);
-    buffer_write_i32(buf, data.gods_enabled);
+    buf->write_i32(data.victory_video);
+    buf->write_i32(data.difficulty);
+    buf->write_i32(data.gods_enabled);
 
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }

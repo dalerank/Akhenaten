@@ -146,15 +146,15 @@ int figure_route_get_direction(int path_id, int index)
 void figure_route_save_state(buffer *figures, buffer *paths)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
-        buffer_write_i16(figures, data.figure_ids[i]);
-        buffer_write_raw(paths, data.direction_paths[i], MAX_PATH_LENGTH);
+        figures->write_i16(data.figure_ids[i]);
+        paths->write_raw(data.direction_paths[i], MAX_PATH_LENGTH);
     }
 }
 
 void figure_route_load_state(buffer *figures, buffer *paths)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
-        data.figure_ids[i] = buffer_read_i16(figures);
-        buffer_read_raw(paths, data.direction_paths[i], MAX_PATH_LENGTH);
+        data.figure_ids[i] = figures->read_i16();
+        paths->read_raw(data.direction_paths[i], MAX_PATH_LENGTH);
     }
 }

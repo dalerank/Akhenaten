@@ -1,176 +1,232 @@
 #include "core/buffer.h"
 
 #include <string.h>
+#include "assert.h"
 
-void buffer_init(buffer *buf, void *data, int size)
+buffer::buffer(size_t s)
 {
-    buf->data = (uint8_t*)data;
-    buf->size = size;
-    buf->index = 0;
-    buf->overflow = 0;
+    init(s);
+}
+buffer::~buffer()
+{
+    if (initialized)
+        delete data;
 }
 
-void buffer_reset(buffer *buf)
+void buffer::init(int s)
 {
-    buf->index = 0;
-    buf->overflow = 0;
+    clear();
+    data = new uint8_t[s];
+    datasize = s;
+    initialized = true;
+}
+void buffer::clear()
+{
+    if (initialized) {
+        initialized = false;
+        delete data;
+    }
+    data = nullptr;
+    index = 0;
+    overflow = 0;
+}
+const uint8_t* buffer::data_const()
+{
+    return data;
+}
+void* buffer::data_unsafe_pls_use_carefully()
+{
+    return (void*)data;
 }
 
-void buffer_set(buffer *buf, int offset)
+size_t buffer::size()
 {
-    buf->index = offset;
-}
+    return datasize;
+};
 
-static int check_size(buffer *buf, int size)
+void buffer::set_offset(int offset)
 {
-    if (buf->index + size > buf->size) {
-        buf->overflow = 1;
+    assert(initialized);
+    index = offset;
+}
+void buffer::reset_offset()
+{
+    assert(initialized);
+    index = 0;
+    overflow = 0;
+}
+void buffer::skip(int s)
+{
+    assert(initialized);
+    index += s;
+}
+int buffer::at_end()
+{
+    assert(initialized);
+    return index >= datasize;
+}
+int buffer::check_size(int s)
+{
+    assert(initialized);
+    if (index + datasize > s) {
+        overflow = 1;
         return 0;
     }
     return 1;
 }
 
-void buffer_write_u8(buffer *buf, uint8_t value)
+uint8_t buffer::read_u8()
 {
-    if (check_size(buf, 1)) {
-        buf->data[buf->index++] = value;
-    }
-}
-
-void buffer_write_u16(buffer *buf, uint16_t value)
-{
-    if (check_size(buf, 2)) {
-        buf->data[buf->index++] = value & 0xff;
-        buf->data[buf->index++] = (value >> 8) & 0xff;
-    }
-}
-
-void buffer_write_u32(buffer *buf, uint32_t value)
-{
-    if (check_size(buf, 4)) {
-        buf->data[buf->index++] = value & 0xff;
-        buf->data[buf->index++] = (value >> 8) & 0xff;
-        buf->data[buf->index++] = (value >> 16) & 0xff;
-        buf->data[buf->index++] = (value >> 24) & 0xff;
-    }
-}
-
-void buffer_write_i8(buffer *buf, int8_t value)
-{
-    if (check_size(buf, 1)) {
-        buf->data[buf->index++] = value & 0xff;
-    }
-}
-
-void buffer_write_i16(buffer *buf, int16_t value)
-{
-    if (check_size(buf, 2)) {
-        buf->data[buf->index++] = value & 0xff;
-        buf->data[buf->index++] = (value >> 8) & 0xff;
-    }
-}
-
-void buffer_write_i32(buffer *buf, int32_t value)
-{
-    if (check_size(buf, 4)) {
-        buf->data[buf->index++] = value & 0xff;
-        buf->data[buf->index++] = (value >> 8) & 0xff;
-        buf->data[buf->index++] = (value >> 16) & 0xff;
-        buf->data[buf->index++] = (value >> 24) & 0xff;
-    }
-}
-
-void buffer_write_raw(buffer *buf, const void *value, int size)
-{
-    if (check_size(buf, size)) {
-        memcpy(&buf->data[buf->index], value, size);
-        buf->index += size;
-    }
-}
-
-uint8_t buffer_read_u8(buffer *buf)
-{
-    if (check_size(buf, 1)) {
-        return buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(1)) {
+        return data[index++];
     } else {
         return 0;
     }
 }
-
-uint16_t buffer_read_u16(buffer *buf)
+uint16_t buffer::read_u16()
 {
-    if (check_size(buf, 2)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(2)) {
+        uint8_t b0 = data[index++];
+        uint8_t b1 = data[index++];
         return (uint16_t) (b0 | (b1 << 8));
     } else {
         return 0;
     }
 }
-
-uint32_t buffer_read_u32(buffer *buf)
+uint32_t buffer::read_u32()
 {
-    if (check_size(buf, 4)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
-        uint8_t b2 = buf->data[buf->index++];
-        uint8_t b3 = buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(4)) {
+        uint8_t b0 = data[index++];
+        uint8_t b1 = data[index++];
+        uint8_t b2 = data[index++];
+        uint8_t b3 = data[index++];
         return (uint32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
     } else {
         return 0;
     }
 }
-
-int8_t buffer_read_i8(buffer *buf)
+int8_t buffer::read_i8()
 {
-    if (check_size(buf, 1)) {
-        return (int8_t) buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(1)) {
+        return (int8_t) data[index++];
     } else {
         return 0;
     }
 }
-
-int16_t buffer_read_i16(buffer *buf)
+int16_t buffer::read_i16()
 {
-    if (check_size(buf, 2)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(2)) {
+        uint8_t b0 = data[index++];
+        uint8_t b1 = data[index++];
         return (int16_t) (b0 | (b1 << 8));
     } else {
         return 0;
     }
 }
-
-int32_t buffer_read_i32(buffer *buf)
+int32_t buffer::read_i32()
 {
-    if (check_size(buf, 4)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
-        uint8_t b2 = buf->data[buf->index++];
-        uint8_t b3 = buf->data[buf->index++];
+    assert(initialized);
+    if (check_size(4)) {
+        uint8_t b0 = data[index++];
+        uint8_t b1 = data[index++];
+        uint8_t b2 = data[index++];
+        uint8_t b3 = data[index++];
         return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
     } else {
         return 0;
     }
 }
-
-int buffer_read_raw(buffer *buf, void *value, int max_size)
+int buffer::read_raw(void *value, int max_size)
 {
-    int size = buf->size - buf->index;
-    if (size > max_size) {
-        size = max_size;
+    assert(initialized);
+    int s = datasize - index;
+    if (s > max_size) {
+        s = max_size;
     }
-    memcpy(value, &buf->data[buf->index], size);
-    buf->index += size;
-    return size;
+    memcpy(value, &data[index], s);
+    index += s;
+    return s;
 }
 
-void buffer_skip(buffer *buf, int size)
+void buffer::fill(uint8_t val)
 {
-    buf->index += size;
+    assert(initialized);
+    memset(data, val, datasize);
+}
+void buffer::write_u8(uint8_t value)
+{
+    assert(initialized);
+    if (check_size(1)) {
+        data[index++] = value;
+    }
+}
+void buffer::write_u16(uint16_t value)
+{
+    assert(initialized);
+    if (check_size(2)) {
+        data[index++] = value & 0xff;
+        data[index++] = (value >> 8) & 0xff;
+    }
+}
+void buffer::write_u32(uint32_t value)
+{
+    assert(initialized);
+    if (check_size(4)) {
+        data[index++] = value & 0xff;
+        data[index++] = (value >> 8) & 0xff;
+        data[index++] = (value >> 16) & 0xff;
+        data[index++] = (value >> 24) & 0xff;
+    }
+}
+void buffer::write_i8(int8_t value)
+{
+    assert(initialized);
+    if (check_size(1)) {
+        data[index++] = value & 0xff;
+    }
+}
+void buffer::write_i16(int16_t value)
+{
+    assert(initialized);
+    if (check_size(2)) {
+        data[index++] = value & 0xff;
+        data[index++] = (value >> 8) & 0xff;
+    }
+}
+void buffer::write_i32(int32_t value)
+{
+    assert(initialized);
+    if (check_size(4)) {
+        data[index++] = value & 0xff;
+        data[index++] = (value >> 8) & 0xff;
+        data[index++] = (value >> 16) & 0xff;
+        data[index++] = (value >> 24) & 0xff;
+    }
+}
+void buffer::write_raw(const void *value, int s)
+{
+    assert(initialized);
+    if (check_size(datasize)) {
+        memcpy(&data[index], value, s);
+        index += s;
+    }
 }
 
-int buffer_at_end(buffer *buf)
+size_t buffer::from_file(size_t _ElementSize, size_t _Count, FILE * __restrict__ _File)
 {
-    return buf->index >= buf->size;
+    assert(initialized);
+    return fread(data, _ElementSize, _Count, _File);
 }
+size_t buffer::to_file(size_t _Size, size_t _Count, FILE * __restrict__ _File)
+{
+    assert(initialized);
+    return fwrite(data, _Size, _Count, _File);
+}
+
+
+

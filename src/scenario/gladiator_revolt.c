@@ -50,15 +50,15 @@ int scenario_gladiator_revolt_is_finished(void) {
 }
 
 void scenario_gladiator_revolt_save_state(buffer *buf) {
-    buffer_write_i32(buf, data.game_year);
-    buffer_write_i32(buf, data.month);
-    buffer_write_i32(buf, data.end_month);
-    buffer_write_i32(buf, data.state);
+    buf->write_i32(data.game_year);
+    buf->write_i32(data.month);
+    buf->write_i32(data.end_month);
+    buf->write_i32(data.state);
 }
 
 void scenario_gladiator_revolt_load_state(buffer *buf) {
-    data.game_year = buffer_read_i32(buf);
-    data.month = buffer_read_i32(buf);
-    data.end_month = buffer_read_i32(buf);
-    data.state = buffer_read_i32(buf);
+    data.game_year = buf->read_i32();
+    data.month = buf->read_i32();
+    data.end_month = buf->read_i32();
+    data.state = buf->read_i32();
 }

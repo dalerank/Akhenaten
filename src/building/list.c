@@ -98,29 +98,29 @@ const int *building_list_burning_items(void)
 void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {
-        buffer_write_i16(small, data.small.items[i]);
+        small->write_i16(data.small.items[i]);
     }
     for (int i = 0; i < MAX_LARGE; i++) {
-        buffer_write_i16(large, data.large.items[i]);
+        large->write_i16(data.large.items[i]);
     }
     for (int i = 0; i < MAX_BURNING; i++) {
-        buffer_write_i16(burning, data.burning.items[i]);
+        burning->write_i16(data.burning.items[i]);
     }
-    buffer_write_i32(burning_totals, data.burning.total);
-    buffer_write_i32(burning_totals, data.burning.size);
+    burning_totals->write_i32(data.burning.total);
+    burning_totals->write_i32(data.burning.size);
 }
 
 void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {
-        data.small.items[i] = buffer_read_i16(small);
+        data.small.items[i] = small->read_i16();
     }
     for (int i = 0; i < MAX_LARGE; i++) {
-        data.large.items[i] = buffer_read_i16(large);
+        data.large.items[i] = large->read_i16();
     }
     for (int i = 0; i < MAX_BURNING; i++) {
-        data.burning.items[i] = buffer_read_i16(burning);
+        data.burning.items[i] = burning->read_i16();
     }
-    data.burning.total = buffer_read_i32(burning_totals);
-    data.burning.size = buffer_read_i32(burning_totals);
+    data.burning.total = burning_totals->read_i32();
+    data.burning.size = burning_totals->read_i32();
 }

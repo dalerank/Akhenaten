@@ -32,27 +32,25 @@ static struct {
 
 void empire_load(int is_custom_scenario, int empire_id)
 {
-    char raw_data[EMPIRE_DATA_SIZE];
+    buffer *buf = new buffer(EMPIRE_DATA_SIZE);
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
 
     // read header with scroll positions
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, raw_data, 4, 32 * empire_id)) {
-        memset(raw_data, 0, 4);
+    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, 4, 32 * empire_id)) {
+        buf->write_u32(0);
+        buf->reset_offset();
     }
-    buffer buf;
-    buffer_init(&buf, raw_data, 4);
-    data.initial_scroll_x = buffer_read_i16(&buf);
-    data.initial_scroll_y = buffer_read_i16(&buf);
+    data.initial_scroll_x = buf->read_i16();
+    data.initial_scroll_y = buf->read_i16();
 
     // read data section with objects
     int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE * empire_id;
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, raw_data, EMPIRE_DATA_SIZE, offset) != EMPIRE_DATA_SIZE) {
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, EMPIRE_DATA_SIZE, offset) != EMPIRE_DATA_SIZE) {
         // load empty empire when loading fails
         log_error("Unable to load empire data from file", filename, 0);
-        memset(raw_data, 0, EMPIRE_DATA_SIZE);
+        buf->fill(0);
     }
-    buffer_init(&buf, raw_data, EMPIRE_DATA_SIZE);
-    empire_object_load(&buf);
+    empire_object_load(buf);
 }
 
 static void check_scroll_boundaries(void)
@@ -235,14 +233,14 @@ int empire_can_import_resource_from_city(int city_id, int resource)
 
 void empire_save_state(buffer *buf)
 {
-    buffer_write_i32(buf, data.scroll_x);
-    buffer_write_i32(buf, data.scroll_y);
-    buffer_write_i32(buf, data.selected_object);
+    buf->write_i32(data.scroll_x);
+    buf->write_i32(data.scroll_y);
+    buf->write_i32(data.selected_object);
 }
 
 void empire_load_state(buffer *buf)
 {
-    data.scroll_x = buffer_read_i32(buf);
-    data.scroll_y = buffer_read_i32(buf);
-    data.selected_object = buffer_read_i32(buf);
+    data.scroll_x = buf->read_i32();
+    data.scroll_y = buf->read_i32();
+    data.selected_object = buf->read_i32();
 }

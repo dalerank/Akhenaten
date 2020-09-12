@@ -223,26 +223,26 @@ void map_grid_save_state(grid_xx *grid, buffer *buf)
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            buf->write_raw(grid->items_xx, grid_total_size[GAME_ENV]);
             break;
         case FS_INT8:
-            buffer_write_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            buf->write_raw(grid->items_xx, grid_total_size[GAME_ENV]);
             break;
         case FS_UINT16:
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                buffer_write_u16(buf, ((uint16_t*)grid->items_xx)[i]);
+                buf->write_u16(((uint16_t*)grid->items_xx)[i]);
             break;
         case FS_INT16:
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                buffer_write_i16(buf, ((int16_t*)grid->items_xx)[i]);
+                buf->write_i16(((int16_t*)grid->items_xx)[i]);
             break;
         case FS_UINT32:
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                buffer_write_u32(buf, ((uint32_t*)grid->items_xx)[i]);
+                buf->write_u32(((uint32_t*)grid->items_xx)[i]);
             break;
         case FS_INT32:
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                buffer_write_i32(buf, ((int32_t*)grid->items_xx)[i]);
+                buf->write_i32(((int32_t*)grid->items_xx)[i]);
             break;
     }
 }
@@ -252,33 +252,33 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            buffer_read_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            buf->read_raw(grid->items_xx, grid_total_size[GAME_ENV]);
             break;
         case FS_INT8:
-            buffer_read_raw(buf, grid->items_xx, grid_total_size[GAME_ENV]);
+            buf->read_raw(grid->items_xx, grid_total_size[GAME_ENV]);
             break;
         case FS_UINT16: {
             uint16_t *dr_data = (uint16_t *) grid->items_xx;
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                dr_data[i] = buffer_read_u16(buf);
+                dr_data[i] = buf->read_u16();
             break;
         }
         case FS_INT16: {
             int16_t *dr_data = (int16_t *) grid->items_xx;
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                dr_data[i] = buffer_read_i16(buf);
+                dr_data[i] = buf->read_i16();
             break;
         }
         case FS_UINT32: {
             uint32_t *dr_data = (uint32_t *) grid->items_xx;
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                dr_data[i] = buffer_read_u32(buf);
+                dr_data[i] = buf->read_u32();
             break;
         }
         case FS_INT32: {
             int32_t *dr_data = (int32_t *) grid->items_xx;
             for (int i = 0; i < grid_total_size[GAME_ENV]; i++)
-                dr_data[i] = buffer_read_i32(buf);
+                dr_data[i] = buf->read_i32();
             break;
         }
     }

@@ -39,15 +39,15 @@ int map_bookmark_go_to(int number)
 void map_bookmark_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        buffer_write_i32(buf, bookmarks[i].x);
-        buffer_write_i32(buf, bookmarks[i].y);
+        buf->write_i32(bookmarks[i].x);
+        buf->write_i32(bookmarks[i].y);
     }
 }
 
 void map_bookmark_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        bookmarks[i].x = buffer_read_i32(buf);
-        bookmarks[i].y = buffer_read_i32(buf);
+        bookmarks[i].x = buf->read_i32();
+        bookmarks[i].y = buf->read_i32();
     }
 }

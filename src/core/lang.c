@@ -90,71 +90,66 @@ static uint8_t *get_message_text(int32_t offset)
 }
 static void parse_message(buffer *buf)
 {
-    buffer_skip(buf, 24); // header
+    buf->skip(24); // header
     for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
         lang_message *m = &data.message_entries[i];
-        m->type = buffer_read_i16(buf);
-        m->message_type = buffer_read_i16(buf);
-        buffer_skip(buf, 2);
-        m->x = buffer_read_i16(buf);
-        m->y = buffer_read_i16(buf);
-        m->width_blocks = buffer_read_i16(buf);
-        m->height_blocks = buffer_read_i16(buf);
-        m->image.id = buffer_read_i16(buf);
-        m->image.x = buffer_read_i16(buf);
-        m->image.y = buffer_read_i16(buf);
-        buffer_skip(buf, 6); // unused image2 id, x, y
-        m->title.x = buffer_read_i16(buf);
-        m->title.y = buffer_read_i16(buf);
-        m->subtitle.x = buffer_read_i16(buf);
-        m->subtitle.y = buffer_read_i16(buf);
-        buffer_skip(buf, 4);
-        m->video.x = buffer_read_i16(buf);
-        m->video.y = buffer_read_i16(buf);
-        buffer_skip(buf, 14);
-        m->urgent = buffer_read_i32(buf);
+        m->type = buf->read_i16();
+        m->message_type = buf->read_i16();
+        buf->skip(2);
+        m->x = buf->read_i16();
+        m->y = buf->read_i16();
+        m->width_blocks = buf->read_i16();
+        m->height_blocks = buf->read_i16();
+        m->image.id = buf->read_i16();
+        m->image.x = buf->read_i16();
+        m->image.y = buf->read_i16();
+        buf->skip(6); // unused image2 id, x, y
+        m->title.x = buf->read_i16();
+        m->title.y = buf->read_i16();
+        m->subtitle.x = buf->read_i16();
+        m->subtitle.y = buf->read_i16();
+        buf->skip(4);
+        m->video.x = buf->read_i16();
+        m->video.y = buf->read_i16();
+        buf->skip(14);
+        m->urgent = buf->read_i32();
 
-        m->video.text = get_message_text(buffer_read_i32(buf));
-        buffer_skip(buf, 4);
-        m->title.text = get_message_text(buffer_read_i32(buf));
-        m->subtitle.text = get_message_text(buffer_read_i32(buf));
-        m->content.text = get_message_text(buffer_read_i32(buf));
+        m->video.text = get_message_text(buf->read_i32());
+        buf->skip(4);
+        m->title.text = get_message_text(buf->read_i32());
+        m->subtitle.text = get_message_text(buf->read_i32());
+        m->content.text = get_message_text(buf->read_i32());
     }
-    buffer_read_raw(buf, &data.message_data, MAX_MESSAGE_DATA);
+    buf->read_raw(&data.message_data, MAX_MESSAGE_DATA);
 }
 static int load_files(const char *text_filename, const char *message_filename, int localizable)
 {
-    uint8_t *buf_data = (uint8_t *) malloc(BUFFER_SIZE);
-    if (!buf_data)
-        return 0;
-
     // load text into buffer
-    buffer buf;
-    int filesize = io_read_file_into_buffer(text_filename, localizable, buf_data, BUFFER_SIZE);
+    buffer *buf = new buffer(BUFFER_SIZE);
+    buf->init(BUFFER_SIZE);
+    int filesize = io_read_file_into_buffer(text_filename, localizable, buf, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
-        free(buf_data);
+        delete buf;
         return 0;
     }
-    buffer_init(&buf, buf_data, filesize);
 
     // parse text
-    buffer_skip(&buf, 28); // header
+    buf->skip(28); // header
     for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-        data.text_entries[i].offset = buffer_read_i32(&buf);
-        data.text_entries[i].in_use = buffer_read_i32(&buf);
+        data.text_entries[i].offset = buf->read_i32();
+        data.text_entries[i].in_use = buf->read_i32();
     }
-    buffer_read_raw(&buf, data.text_data, MAX_TEXT_DATA);
+    buf->read_raw(data.text_data, MAX_TEXT_DATA);
 
     // load message
-    buffer_reset(&buf);
-    filesize = io_read_file_into_buffer(message_filename, localizable, buf_data, BUFFER_SIZE);
+    buf->init(BUFFER_SIZE);
+    filesize = io_read_file_into_buffer(message_filename, localizable, buf, BUFFER_SIZE);
     if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
-        free(buf_data);
+        delete buf;
         return 0;
     }
-    buffer_init(&buf, buf_data, filesize);
-    parse_message(&buf);
-    free(buf_data);
+    parse_message(buf);
+    delete buf;
 
     return 1;
 }

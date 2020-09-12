@@ -63,39 +63,39 @@ void empire_object_load(buffer *buf)
         full_empire_object *full = &objects[i];
         empire_object *obj = &full->obj;
         obj->id = i;
-        obj->type = buffer_read_u8(buf);
-        full->in_use = buffer_read_u8(buf);
-        obj->animation_index = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
-        obj->x = buffer_read_i16(buf);
-        obj->y = buffer_read_i16(buf);
-        obj->width = buffer_read_i16(buf);
-        obj->height = buffer_read_i16(buf);
-        obj->image_id = buffer_read_i16(buf);
-        obj->expanded.image_id = buffer_read_i16(buf);
-        buffer_skip(buf, 1);
-        obj->distant_battle_travel_months = buffer_read_u8(buf);
-        buffer_skip(buf, 2);
-        obj->expanded.x = buffer_read_i16(buf);
-        obj->expanded.y = buffer_read_i16(buf);
-        full->city_type = buffer_read_u8(buf);
-        full->city_name_id = buffer_read_u8(buf);
-        obj->trade_route_id = buffer_read_u8(buf);
-        full->trade_route_open = buffer_read_u8(buf);
-        full->trade_route_cost = buffer_read_i16(buf);
+        obj->type = buf->read_u8();
+        full->in_use = buf->read_u8();
+        obj->animation_index = buf->read_u8();
+        buf->skip(1);
+        obj->x = buf->read_i16();
+        obj->y = buf->read_i16();
+        obj->width = buf->read_i16();
+        obj->height = buf->read_i16();
+        obj->image_id = buf->read_i16();
+        obj->expanded.image_id = buf->read_i16();
+        buf->skip(1);
+        obj->distant_battle_travel_months = buf->read_u8();
+        buf->skip(2);
+        obj->expanded.x = buf->read_i16();
+        obj->expanded.y = buf->read_i16();
+        full->city_type = buf->read_u8();
+        full->city_name_id = buf->read_u8();
+        obj->trade_route_id = buf->read_u8();
+        full->trade_route_open = buf->read_u8();
+        full->trade_route_cost = buf->read_i16();
         for (int r = 0; r < 10; r++) {
-            full->city_sells_resource[r] = buffer_read_u8(buf);
+            full->city_sells_resource[r] = buf->read_u8();
         }
-        buffer_skip(buf, 2);
+        buf->skip(2);
         for (int r = 0; r < 8; r++) {
-            full->city_buys_resource[r] = buffer_read_u8(buf);
+            full->city_buys_resource[r] = buf->read_u8();
         }
-        obj->invasion_path_id = buffer_read_u8(buf);
-        obj->invasion_years = buffer_read_u8(buf);
-        full->trade40 = buffer_read_u16(buf);
-        full->trade25 = buffer_read_u16(buf);
-        full->trade15 = buffer_read_u16(buf);
-        buffer_skip(buf, 6);
+        obj->invasion_path_id = buf->read_u8();
+        obj->invasion_years = buf->read_u8();
+        full->trade40 = buf->read_u16();
+        full->trade25 = buf->read_u16();
+        full->trade15 = buf->read_u16();
+        buf->skip(6);
     }
 
     fix_image_ids();

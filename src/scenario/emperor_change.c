@@ -35,13 +35,13 @@ void scenario_emperor_change_process(void) {
 }
 
 void scenario_emperor_change_save_state(buffer *time, buffer *state) {
-    buffer_write_i32(time, data.game_year);
-    buffer_write_i32(time, data.month);
-    buffer_write_i32(state, data.state);
+    time->write_i32(data.game_year);
+    time->write_i32(data.month);
+    state->write_i32(data.state);
 }
 
 void scenario_emperor_change_load_state(buffer *time, buffer *state) {
-    data.game_year = buffer_read_i32(time);
-    data.month = buffer_read_i32(time);
-    data.state = buffer_read_i32(state);
+    data.game_year = time->read_i32();
+    data.month = time->read_i32();
+    data.state = state->read_i32();
 }

@@ -76,12 +76,12 @@ int32_t random_from_pool(int index)
 
 void random_load_state(buffer *buf)
 {
-    data.iv1 = buffer_read_u32(buf);
-    data.iv2 = buffer_read_u32(buf);
+    data.iv1 = buf->read_u32();
+    data.iv2 = buf->read_u32();
 }
 
 void random_save_state(buffer *buf)
 {
-    buffer_write_u32(buf, data.iv1);
-    buffer_write_u32(buf, data.iv2);
+    buf->write_u32(data.iv1);
+    buf->write_u32(data.iv2);
 }

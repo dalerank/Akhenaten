@@ -372,13 +372,13 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_state_save_to_buffer(buf, &all_buildings[i]);
     }
-    buffer_write_i32(highest_id, extra.highest_id_in_use);
-    buffer_write_i32(highest_id_ever, extra.highest_id_ever);
-    buffer_skip(highest_id_ever, 4);
-//    buffer_write_i32(sequence, extra.created_sequence);
+    highest_id->write_i32(extra.highest_id_in_use);
+    highest_id_ever->write_i32(extra.highest_id_ever);
+    highest_id_ever->skip(4);
+//    sequence->write_i32(extra.created_sequence);
 
-//    buffer_write_i32(corrupt_houses, extra.incorrect_houses);
-//    buffer_write_i32(corrupt_houses, extra.unfixable_houses);
+//    corrupt_houses->write_i32(extra.incorrect_houses);
+//    corrupt_houses->write_i32(extra.unfixable_houses);
 }
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
@@ -386,12 +386,12 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
         building_state_load_from_buffer(buf, &all_buildings[i]);
         all_buildings[i].id = i;
     }
-    extra.highest_id_in_use = buffer_read_i32(highest_id);
-    extra.highest_id_ever = buffer_read_i32(highest_id_ever);
-    buffer_skip(highest_id_ever, 4);
+    extra.highest_id_in_use = highest_id->read_i32();
+    extra.highest_id_ever = highest_id_ever->read_i32();
+    highest_id_ever->skip(4);
     extra.created_sequence = 0;
-//    extra.created_sequence = buffer_read_i32(sequence);
+//    extra.created_sequence = sequence->read_i32();
 
-//    extra.incorrect_houses = buffer_read_i32(corrupt_houses);
-//    extra.unfixable_houses = buffer_read_i32(corrupt_houses);
+//    extra.incorrect_houses = corrupt_houses->read_i32();
+//    extra.unfixable_houses = corrupt_houses->read_i32();
 }

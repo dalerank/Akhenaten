@@ -145,15 +145,15 @@ void building_storage_accept_none(int storage_id)
 void building_storage_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_STORAGES; i++) {
-        buffer_write_i32(buf, data.storages[i].storage.permissions); // Originally unused
-        buffer_write_i32(buf, data.storages[i].building_id);
-        buffer_write_u8(buf, (uint8_t) data.storages[i].in_use);
-        buffer_write_u8(buf, (uint8_t) data.storages[i].storage.empty_all);
+        buf->write_i32(data.storages[i].storage.permissions); // Originally unused
+        buf->write_i32(data.storages[i].building_id);
+        buf->write_u8((uint8_t) data.storages[i].in_use);
+        buf->write_u8((uint8_t) data.storages[i].storage.empty_all);
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_u8(buf, data.storages[i].storage.resource_state[r]);
+            buf->write_u8(data.storages[i].storage.resource_state[r]);
         }
         for (int r = 0; r < 6; r++) {
-            buffer_write_u8(buf, 0); // unused resource states
+            buf->write_u8(0); // unused resource states
         }
     }
 }
@@ -161,13 +161,13 @@ void building_storage_save_state(buffer *buf)
 void building_storage_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_STORAGES; i++) {
-        data.storages[i].storage.permissions = buffer_read_i32(buf); // Originally unused
-        data.storages[i].building_id = buffer_read_i32(buf);
-        data.storages[i].in_use = buffer_read_u8(buf);
-        data.storages[i].storage.empty_all = buffer_read_u8(buf);
+        data.storages[i].storage.permissions = buf->read_i32(); // Originally unused
+        data.storages[i].building_id = buf->read_i32();
+        data.storages[i].in_use = buf->read_u8();
+        data.storages[i].storage.empty_all = buf->read_u8();
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            data.storages[i].storage.resource_state[r] = buffer_read_u8(buf);
+            data.storages[i].storage.resource_state[r] = buf->read_u8();
         }
-        buffer_skip(buf, 6); // unused resource states
+        buf->skip(6); // unused resource states
     }
 }

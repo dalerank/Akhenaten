@@ -88,9 +88,9 @@ int scenario_criteria_max_year(void) {
 }
 
 void scenario_criteria_save_state(buffer *buf) {
-    buffer_write_i32(buf, max_game_year);
+    buf->write_i32(max_game_year);
 }
 
 void scenario_criteria_load_state(buffer *buf) {
-    max_game_year = buffer_read_i32(buf);
+    max_game_year = buf->read_i32();
 }

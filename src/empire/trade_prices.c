@@ -50,15 +50,15 @@ int trade_price_change(int resource, int amount)
 void trade_prices_save_state(buffer *buf)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
-        buffer_write_i32(buf, prices[i].buy);
-        buffer_write_i32(buf, prices[i].sell);
+        buf->write_i32(prices[i].buy);
+        buf->write_i32(prices[i].sell);
     }
 }
 
 void trade_prices_load_state(buffer *buf)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
-        prices[i].buy = buffer_read_i32(buf);
-        prices[i].sell = buffer_read_i32(buf);
+        prices[i].buy = buf->read_i32();
+        prices[i].sell = buf->read_i32();
     }
 }

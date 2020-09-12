@@ -267,12 +267,10 @@ static void initialize_saved_game(void)
 static int get_campaign_mission_offset(int mission_id)
 {
     // init 4-byte buffer and read from file header corresponding to mission index (i.e. mission 20 = offset 20*4 = 80)
-    uint8_t offset_data[4];
-    buffer buf;
-    buffer_init(&buf, offset_data, 4);
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_data, 4, 4 * mission_id))
+    buffer *buf = new buffer(4);
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, buf, 4, 4 * mission_id))
         return 0;
-    return buffer_read_i32(&buf);
+    return buf->read_i32();
 }
 static int load_campaign_mission(int mission_id)
 {

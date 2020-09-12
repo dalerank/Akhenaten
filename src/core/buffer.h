@@ -2,6 +2,7 @@
 #define CORE_BUFFER_H
 
 #include <stdint.h>
+#include <stdio.h>
 
 /**
 * @file
@@ -11,147 +12,53 @@
 /**
 * Struct representing a buffer to read from / write to
 */
-typedef struct {
-    uint8_t *data; /**< Read-only: data */
-    int size; /**< Read-only: size of the data */
-    int index; /**< Read-only: bytes read/written so far */
-    int overflow; /**< Read-only: indicates attempt to read/write beyond end of buffer */
-} buffer;
+class buffer {
+    bool initialized = false;
+    uint8_t *data = nullptr;
+    size_t datasize = 0;
+    int index = 0;
+    int overflow = 0;
 
-/**
- * Initializes the buffer with the given data and size.
- * @param buffer Buffer
- * @param data Data to use
- * @param size Size of the data
- */
-void buffer_init(buffer *buffer, void *data, int size);
+    void clear();
 
-/**
- * Resets the buffer so that reading/writing starts at the beginning again
- * @param buffer Buffer
- */
-void buffer_reset(buffer *buffer);
+public:
 
-/**
- * Sets the buffer so that reading/writing starts at the specififed offset
- * @param buffer Buffer
- * @param offset Offset to set it to
- */
-void buffer_set(buffer *buffer, int offset);
+    buffer(size_t s);
+//    buffer(void *d, int s);
+    ~buffer();
 
-/**
- * Writes an unsigned 8-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_u8(buffer *buffer, uint8_t value);
+    size_t size();
+//    void init_unsafe_pls(void *d, int s);
+    void init(int s);
 
-/**
- * Writes an unsigned 16-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_u16(buffer *buffer, uint16_t value);
+    void set_offset(int offset);
+    void reset_offset();
+    void skip(int s);
+    int at_end();
+    int check_size(int s);
 
-/**
- * Writes an unsigned 32-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_u32(buffer *buffer, uint32_t value);
+    const uint8_t* data_const();
+    void* data_unsafe_pls_use_carefully();
 
-/**
- * Writes a signed 8-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_i8(buffer *buffer, int8_t value);
+    uint8_t read_u8();
+    uint16_t read_u16();
+    uint32_t read_u32();
+    int8_t read_i8();
+    int16_t read_i16();
+    int32_t read_i32();
+    int read_raw(void *value, int max_size);
 
-/**
- * Writes a signed 16-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_i16(buffer *buffer, int16_t value);
+    void fill(uint8_t val);
+    void write_u8(uint8_t value);
+    void write_u16(uint16_t value);
+    void write_u32(uint32_t value);
+    void write_i8(int8_t value);
+    void write_i16(int16_t value);
+    void write_i32(int32_t value);
+    void write_raw(const void *value, int s);
 
-/**
- * Writes a signed 32-bit integer
- * @param buffer Buffer
- * @param value Value to write
- */
-void buffer_write_i32(buffer *buffer, int32_t value);
-
-/**
- * Writes raw data
- * @param buffer Buffer
- * @param value Value to write
- * @param size Size in bytes
- */
-void buffer_write_raw(buffer *buffer, const void *value, int size);
-
-/**
- * Reads an unsigned 8-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-uint8_t buffer_read_u8(buffer *buffer);
-
-/**
- * Reads an unsigned 16-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-uint16_t buffer_read_u16(buffer *buffer);
-
-/**
- * Reads an unsigned 32-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-uint32_t buffer_read_u32(buffer *buffer);
-
-/**
- * Reads a signed 8-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-int8_t buffer_read_i8(buffer *buffer);
-
-/**
- * Reads a signed 16-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-int16_t buffer_read_i16(buffer *buffer);
-
-/**
- * Reads a signed 32-bit integer
- * @param buffer Buffer
- * @return Read value
- */
-int32_t buffer_read_i32(buffer *buffer);
-
-/**
- * Reads raw data
- * @param buffer Buffer
- * @param value Value to read into
- * @param max_size Size of the value, max bytes to read
- * @return Bytes read
- */
-int buffer_read_raw(buffer *buffer, void *value, int max_size);
-
-/**
- * Skip data in the buffer
- * @param buffer Buffer
- * @param size Bytes to skip
- */
-void buffer_skip(buffer *buffer, int size);
-
-/**
- * Returns whether the pointer of this buffer is at the end of the buffer
- * @param buffer Buffer
- * @return True if pointer is at end of buffer, false otherwise
- */
-int buffer_at_end(buffer *buffer);
+    size_t from_file(size_t _ElementSize, size_t _Count, FILE * __restrict__ _File);
+    size_t to_file(size_t _Size, size_t _Count, FILE * __restrict__ _File);
+};
 
 #endif // CORE_BUFFER_H

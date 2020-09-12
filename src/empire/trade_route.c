@@ -68,8 +68,8 @@ void trade_routes_save_state(buffer *limit, buffer *traded)
 {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_i32(limit, data[route_id][r].limit);
-            buffer_write_i32(traded, data[route_id][r].traded);
+            limit->write_i32(data[route_id][r].limit);
+            traded->write_i32(data[route_id][r].traded);
         }
     }
 }
@@ -78,8 +78,8 @@ void trade_routes_load_state(buffer *limit, buffer *traded)
 {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            data[route_id][r].limit = buffer_read_i32(limit);
-            data[route_id][r].traded = buffer_read_i32(traded);
+            data[route_id][r].limit = limit->read_i32();
+            data[route_id][r].traded = traded->read_i32();
         }
     }
 }

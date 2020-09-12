@@ -75,34 +75,34 @@ void traders_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader *t = &data.traders[i];
-        buffer_write_i32(buf, t->bought_amount);
-        buffer_write_i32(buf, t->sold_amount);
+        buf->write_i32(t->bought_amount);
+        buf->write_i32(t->sold_amount);
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_u8(buf, t->bought_resources[r]);
+            buf->write_u8(t->bought_resources[r]);
         }
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_u8(buf, t->sold_resources[r]);
+            buf->write_u8(t->sold_resources[r]);
         }
-        buffer_write_i32(buf, t->bought_value);
-        buffer_write_i32(buf, t->sold_value);
+        buf->write_i32(t->bought_value);
+        buf->write_i32(t->sold_value);
     }
-    buffer_write_i32(buf, data.next_index);
+    buf->write_i32(data.next_index);
 }
 
 void traders_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader *t = &data.traders[i];
-        t->bought_amount = buffer_read_i32(buf);
-        t->sold_amount = buffer_read_i32(buf);
+        t->bought_amount = buf->read_i32();
+        t->sold_amount = buf->read_i32();
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            t->bought_resources[r] = buffer_read_u8(buf);
+            t->bought_resources[r] = buf->read_u8();
         }
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            t->sold_resources[r] = buffer_read_u8(buf);
+            t->sold_resources[r] = buf->read_u8();
         }
-        t->bought_value = buffer_read_i32(buf);
-        t->sold_value = buffer_read_i32(buf);
+        t->bought_value = buf->read_i32();
+        t->sold_value = buf->read_i32();
     }
-    data.next_index = buffer_read_i32(buf);
+    data.next_index = buf->read_i32();
 }

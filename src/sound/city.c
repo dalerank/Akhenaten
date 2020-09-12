@@ -326,25 +326,25 @@ void sound_city_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         const city_channel *ch = &channels[i];
-        buffer_write_i32(buf, ch->available);
-        buffer_write_i32(buf, ch->total_views);
-        buffer_write_i32(buf, ch->views_threshold);
+        buf->write_i32(ch->available);
+        buf->write_i32(ch->total_views);
+        buf->write_i32(ch->views_threshold);
         for (int d = 0; d < 5; d++) {
-            buffer_write_i32(buf, ch->direction_views[d]);
+            buf->write_i32(ch->direction_views[d]);
         }
-        buffer_write_i32(buf, 0); // current channel, always 0
-        buffer_write_i32(buf, ch->in_use ? 1 : 0); // num channels, max 1
-        buffer_write_i32(buf, ch->channel);
+        buf->write_i32(0); // current channel, always 0
+        buf->write_i32(ch->in_use ? 1 : 0); // num channels, max 1
+        buf->write_i32(ch->channel);
         for (int c = 1; c < 8; c++) {
-            buffer_write_i32(buf, 0); // channels 1-7: never used
+            buf->write_i32(0); // channels 1-7: never used
         }
-        buffer_write_i32(buf, ch->in_use);
-        buffer_write_i32(buf, ch->times_played);
-        buffer_write_u32(buf, ch->last_played_time);
-        buffer_write_u32(buf, ch->delay_millis);
-        buffer_write_i32(buf, ch->should_play);
+        buf->write_i32(ch->in_use);
+        buf->write_i32(ch->times_played);
+        buf->write_u32(ch->last_played_time);
+        buf->write_u32(ch->delay_millis);
+        buf->write_i32(ch->should_play);
         for (int x = 0; x < 9; x++) {
-            buffer_write_i32(buf, 0);
+            buf->write_i32(0);
         }
     }
 }
@@ -353,21 +353,21 @@ void sound_city_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         city_channel *ch = &channels[i];
-        ch->available = buffer_read_i32(buf);
-        ch->total_views = buffer_read_i32(buf);
-        ch->views_threshold = buffer_read_i32(buf);
+        ch->available = buf->read_i32();
+        ch->total_views = buf->read_i32();
+        ch->views_threshold = buf->read_i32();
         for (int d = 0; d < 5; d++) {
-            ch->direction_views[d] = buffer_read_i32(buf);
+            ch->direction_views[d] = buf->read_i32();
         }
-        buffer_skip(buf, 4); // current channel
-        buffer_skip(buf, 4); // num channels
-        ch->channel = buffer_read_i32(buf);
-        buffer_skip(buf, 28);
-        ch->in_use = buffer_read_i32(buf);
-        ch->times_played = buffer_read_i32(buf);
-        ch->last_played_time = buffer_read_u32(buf);
-        ch->delay_millis = buffer_read_u32(buf);
-        ch->should_play = buffer_read_i32(buf);
-        buffer_skip(buf, 36);
+        buf->skip(4); // current channel
+        buf->skip(4); // num channels
+        ch->channel = buf->read_i32();
+        buf->skip(28);
+        ch->in_use = buf->read_i32();
+        ch->times_played = buf->read_i32();
+        ch->last_played_time = buf->read_u32();
+        ch->delay_millis = buf->read_u32();
+        ch->should_play = buf->read_i32();
+        buf->skip(36);
     }
 }

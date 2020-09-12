@@ -474,15 +474,15 @@ void city_view_toggle_sidebar(void)
 
 void city_view_save_state(buffer *orientation, buffer *camera)
 {
-    buffer_write_i32(orientation, data.orientation);
+    orientation->write_i32(data.orientation);
 
-    buffer_write_i32(camera, data.camera.tile.x);
-    buffer_write_i32(camera, data.camera.tile.y);
+    camera->write_i32(data.camera.tile.x);
+    camera->write_i32(data.camera.tile.y);
 }
 
 void city_view_load_state(buffer *orientation, buffer *camera)
 {
-    data.orientation = buffer_read_i32(orientation);
+    data.orientation = orientation->read_i32();
     city_view_load_scenario_state(camera);
 
     if (data.orientation >= 0 && data.orientation <= 6) {
@@ -495,14 +495,14 @@ void city_view_load_state(buffer *orientation, buffer *camera)
 
 void city_view_save_scenario_state(buffer *camera)
 {
-    buffer_write_i32(camera, data.camera.tile.x);
-    buffer_write_i32(camera, data.camera.tile.y);
+    camera->write_i32(data.camera.tile.x);
+    camera->write_i32(data.camera.tile.y);
 }
 
 void city_view_load_scenario_state(buffer *camera)
 {
-    data.camera.tile.x = buffer_read_i32(camera);
-    data.camera.tile.y = buffer_read_i32(camera);
+    data.camera.tile.x = camera->read_i32();
+    data.camera.tile.y = camera->read_i32();
 }
 
 void city_view_foreach_map_tile(map_callback *callback)

@@ -12,314 +12,314 @@ static void write_type_data(buffer *buf, const building *b)
 {
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
-            buffer_write_i16(buf, b->data.house.inventory[i]);
+            buf->write_i16(b->data.house.inventory[i]);
         }
-        buffer_write_u8(buf, b->data.house.theater);
-        buffer_write_u8(buf, b->data.house.amphitheater_actor);
-        buffer_write_u8(buf, b->data.house.amphitheater_gladiator);
-        buffer_write_u8(buf, b->data.house.colosseum_gladiator);
-        buffer_write_u8(buf, b->data.house.colosseum_lion);
-        buffer_write_u8(buf, b->data.house.hippodrome);
-        buffer_write_u8(buf, b->data.house.school);
-        buffer_write_u8(buf, b->data.house.library);
-        buffer_write_u8(buf, b->data.house.academy);
-        buffer_write_u8(buf, b->data.house.barber);
-        buffer_write_u8(buf, b->data.house.clinic);
-        buffer_write_u8(buf, b->data.house.bathhouse);
-        buffer_write_u8(buf, b->data.house.hospital);
-        buffer_write_u8(buf, b->data.house.temple_ceres);
-        buffer_write_u8(buf, b->data.house.temple_neptune);
-        buffer_write_u8(buf, b->data.house.temple_mercury);
-        buffer_write_u8(buf, b->data.house.temple_mars);
-        buffer_write_u8(buf, b->data.house.temple_venus);
-        buffer_write_u8(buf, b->data.house.no_space_to_expand);
-        buffer_write_u8(buf, b->data.house.num_foods);
-        buffer_write_u8(buf, b->data.house.entertainment);
-        buffer_write_u8(buf, b->data.house.education);
-        buffer_write_u8(buf, b->data.house.health);
-        buffer_write_u8(buf, b->data.house.num_gods);
-        buffer_write_u8(buf, b->data.house.devolve_delay);
-        buffer_write_u8(buf, b->data.house.evolve_text_id);
+        buf->write_u8(b->data.house.theater);
+        buf->write_u8(b->data.house.amphitheater_actor);
+        buf->write_u8(b->data.house.amphitheater_gladiator);
+        buf->write_u8(b->data.house.colosseum_gladiator);
+        buf->write_u8(b->data.house.colosseum_lion);
+        buf->write_u8(b->data.house.hippodrome);
+        buf->write_u8(b->data.house.school);
+        buf->write_u8(b->data.house.library);
+        buf->write_u8(b->data.house.academy);
+        buf->write_u8(b->data.house.barber);
+        buf->write_u8(b->data.house.clinic);
+        buf->write_u8(b->data.house.bathhouse);
+        buf->write_u8(b->data.house.hospital);
+        buf->write_u8(b->data.house.temple_ceres);
+        buf->write_u8(b->data.house.temple_neptune);
+        buf->write_u8(b->data.house.temple_mercury);
+        buf->write_u8(b->data.house.temple_mars);
+        buf->write_u8(b->data.house.temple_venus);
+        buf->write_u8(b->data.house.no_space_to_expand);
+        buf->write_u8(b->data.house.num_foods);
+        buf->write_u8(b->data.house.entertainment);
+        buf->write_u8(b->data.house.education);
+        buf->write_u8(b->data.house.health);
+        buf->write_u8(b->data.house.num_gods);
+        buf->write_u8(b->data.house.devolve_delay);
+        buf->write_u8(b->data.house.evolve_text_id);
     } else if (b->type == BUILDING_MARKET) {
-        buffer_write_i16(buf, 0);
+        buf->write_i16(0);
         for (int i = 0; i < INVENTORY_MAX; i++) {
-            buffer_write_i16(buf, b->data.market.inventory[i]);
+            buf->write_i16(b->data.market.inventory[i]);
         }
-        buffer_write_i16(buf, b->data.market.pottery_demand);
-        buffer_write_i16(buf, b->data.market.furniture_demand);
-        buffer_write_i16(buf, b->data.market.oil_demand);
-        buffer_write_i16(buf, b->data.market.wine_demand);
+        buf->write_i16(b->data.market.pottery_demand);
+        buf->write_i16(b->data.market.furniture_demand);
+        buf->write_i16(b->data.market.oil_demand);
+        buf->write_i16(b->data.market.wine_demand);
         for (int i = 0; i < 3; i++) {
-            buffer_write_i16(buf, 0);
+            buf->write_i16(0);
         }
-        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
+        buf->write_u8(b->data.market.fetch_inventory_id);
         for (int i = 0; i < 9; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
     } else if (b->type == BUILDING_GRANARY) {
-        buffer_write_i16(buf, 0);
+        buf->write_i16(0);
         for (int i = 0; i < RESOURCE_MAX; i++) {
-            buffer_write_i16(buf, b->data.granary.resource_stored[i]);
+            buf->write_i16(b->data.granary.resource_stored[i]);
         }
-        buffer_write_i32(buf, 0);
-        buffer_write_i32(buf, 0);
+        buf->write_i32(0);
+        buf->write_i32(0);
     } else if (b->type == BUILDING_DOCK) {
-        buffer_write_i16(buf, b->data.dock.queued_docker_id);
+        buf->write_i16(b->data.dock.queued_docker_id);
         for (int i = 0; i < 25; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
-        buffer_write_u8(buf, b->data.dock.num_ships);
-        buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, 0);
-        buffer_write_i8(buf, b->data.dock.orientation);
-        buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, 0);
+        buf->write_u8(b->data.dock.num_ships);
+        buf->write_u8(0);
+        buf->write_u8(0);
+        buf->write_i8(b->data.dock.orientation);
+        buf->write_u8(0);
+        buf->write_u8(0);
+        buf->write_u8(0);
         for (int i = 0; i < 3; i++) {
-            buffer_write_i16(buf, b->data.dock.docker_ids[i]);
+            buf->write_i16(b->data.dock.docker_ids[i]);
         }
-        buffer_write_i16(buf, b->data.dock.trade_ship_id);
+        buf->write_i16(b->data.dock.trade_ship_id);
     } else if (is_industry_type(b)) {
-        buffer_write_i16(buf, b->data.industry.progress);
+        buf->write_i16(b->data.industry.progress);
         for (int i = 0; i < 12; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
-        buffer_write_u8(buf, b->data.industry.has_fish);
+        buf->write_u8(b->data.industry.has_fish);
         for (int i = 0; i < 14; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
-        buffer_write_u8(buf, b->data.industry.blessing_days_left);
-        buffer_write_u8(buf, b->data.industry.orientation);
-        buffer_write_u8(buf, b->data.industry.has_raw_materials);
-        buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, b->data.industry.curse_days_left);
+        buf->write_u8(b->data.industry.blessing_days_left);
+        buf->write_u8(b->data.industry.orientation);
+        buf->write_u8(b->data.industry.has_raw_materials);
+        buf->write_u8(0);
+        buf->write_u8(b->data.industry.curse_days_left);
         for (int i = 0; i < 6; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
-        buffer_write_i16(buf, b->data.industry.fishing_boat_id);
+        buf->write_i16(b->data.industry.fishing_boat_id);
     } else {
         for (int i = 0; i < 26; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
-        buffer_write_u8(buf, b->data.entertainment.num_shows);
-        buffer_write_u8(buf, b->data.entertainment.days1);
-        buffer_write_u8(buf, b->data.entertainment.days2);
-        buffer_write_u8(buf, b->data.entertainment.play);
+        buf->write_u8(b->data.entertainment.num_shows);
+        buf->write_u8(b->data.entertainment.days1);
+        buf->write_u8(b->data.entertainment.days2);
+        buf->write_u8(b->data.entertainment.play);
         for (int i = 0; i < 12; i++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
     }
 }
 
 void building_state_save_to_buffer(buffer *buf, const building *b)
 {
-    buffer_write_u8(buf, b->state);
-    buffer_write_u8(buf, b->faction_id);
-    buffer_write_u8(buf, b->unknown_value);
-    buffer_write_u8(buf, b->size);
-    buffer_write_u8(buf, b->house_is_merged);
-    buffer_write_u8(buf, b->house_size);
-    buffer_write_u8(buf, b->x);
-    buffer_write_u8(buf, b->y);
-    buffer_write_i16(buf, b->grid_offset);
-    buffer_write_i16(buf, b->type);
-    buffer_write_i16(buf, b->subtype.house_level); // which union field we use does not matter
-    buffer_write_u8(buf, b->road_network_id);
-    buffer_write_u8(buf, 0);
-    buffer_write_u16(buf, b->creation_sequence_index);
-    buffer_write_i16(buf, b->houses_covered);
-    buffer_write_i16(buf, b->percentage_houses_covered);
-    buffer_write_i16(buf, b->house_population);
-    buffer_write_i16(buf, b->house_population_room);
-    buffer_write_i16(buf, b->distance_from_entry);
-    buffer_write_i16(buf, b->house_highest_population);
-    buffer_write_i16(buf, b->house_unreachable_ticks);
-    buffer_write_u8(buf, b->road_access_x);
-    buffer_write_u8(buf, b->road_access_y);
-    buffer_write_i16(buf, b->figure_id);
-    buffer_write_i16(buf, b->figure_id2);
-    buffer_write_i16(buf, b->immigrant_figure_id);
-    buffer_write_i16(buf, b->figure_id4);
-    buffer_write_u8(buf, b->figure_spawn_delay);
-    buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, b->figure_roam_direction);
-    buffer_write_u8(buf, b->has_water_access);
-    buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, 0);
-    buffer_write_i16(buf, b->prev_part_building_id);
-    buffer_write_i16(buf, b->next_part_building_id);
-    buffer_write_i16(buf, b->loads_stored);
-    buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, b->has_well_access);
-    buffer_write_i16(buf, b->num_workers);
-    buffer_write_u8(buf, b->labor_category);
-    buffer_write_u8(buf, b->output_resource_id);
-    buffer_write_u8(buf, b->has_road_access);
-    buffer_write_u8(buf, b->house_criminal_active);
-    buffer_write_i16(buf, b->damage_risk);
-    buffer_write_i16(buf, b->fire_risk);
-    buffer_write_i16(buf, b->fire_duration);
-    buffer_write_u8(buf, b->fire_proof);
-    buffer_write_u8(buf, b->house_figure_generation_delay);
-    buffer_write_u8(buf, b->house_tax_coverage);
-    buffer_write_u8(buf, 0);
-    buffer_write_i16(buf, b->formation_id);
+    buf->write_u8(b->state);
+    buf->write_u8(b->faction_id);
+    buf->write_u8(b->unknown_value);
+    buf->write_u8(b->size);
+    buf->write_u8(b->house_is_merged);
+    buf->write_u8(b->house_size);
+    buf->write_u8(b->x);
+    buf->write_u8(b->y);
+    buf->write_i16(b->grid_offset);
+    buf->write_i16(b->type);
+    buf->write_i16(b->subtype.house_level); // which union field we use does not matter
+    buf->write_u8(b->road_network_id);
+    buf->write_u8(0);
+    buf->write_u16(b->creation_sequence_index);
+    buf->write_i16(b->houses_covered);
+    buf->write_i16(b->percentage_houses_covered);
+    buf->write_i16(b->house_population);
+    buf->write_i16(b->house_population_room);
+    buf->write_i16(b->distance_from_entry);
+    buf->write_i16(b->house_highest_population);
+    buf->write_i16(b->house_unreachable_ticks);
+    buf->write_u8(b->road_access_x);
+    buf->write_u8(b->road_access_y);
+    buf->write_i16(b->figure_id);
+    buf->write_i16(b->figure_id2);
+    buf->write_i16(b->immigrant_figure_id);
+    buf->write_i16(b->figure_id4);
+    buf->write_u8(b->figure_spawn_delay);
+    buf->write_u8(0);
+    buf->write_u8(b->figure_roam_direction);
+    buf->write_u8(b->has_water_access);
+    buf->write_u8(0);
+    buf->write_u8(0);
+    buf->write_i16(b->prev_part_building_id);
+    buf->write_i16(b->next_part_building_id);
+    buf->write_i16(b->loads_stored);
+    buf->write_u8(0);
+    buf->write_u8(b->has_well_access);
+    buf->write_i16(b->num_workers);
+    buf->write_u8(b->labor_category);
+    buf->write_u8(b->output_resource_id);
+    buf->write_u8(b->has_road_access);
+    buf->write_u8(b->house_criminal_active);
+    buf->write_i16(b->damage_risk);
+    buf->write_i16(b->fire_risk);
+    buf->write_i16(b->fire_duration);
+    buf->write_u8(b->fire_proof);
+    buf->write_u8(b->house_figure_generation_delay);
+    buf->write_u8(b->house_tax_coverage);
+    buf->write_u8(0);
+    buf->write_i16(b->formation_id);
     write_type_data(buf, b);
-    buffer_write_i32(buf, b->tax_income_or_storage);
-    buffer_write_u8(buf, b->house_days_without_food);
-    buffer_write_u8(buf, b->ruin_has_plague);
-    buffer_write_i8(buf, b->desirability);
-    buffer_write_u8(buf, b->is_deleted);
-    buffer_write_u8(buf, b->is_adjacent_to_water);
-    buffer_write_u8(buf, b->storage_id);
-    buffer_write_i8(buf, b->sentiment.house_happiness); // which union field we use does not matter
-    buffer_write_u8(buf, b->show_on_problem_overlay);
+    buf->write_i32(b->tax_income_or_storage);
+    buf->write_u8(b->house_days_without_food);
+    buf->write_u8(b->ruin_has_plague);
+    buf->write_i8(b->desirability);
+    buf->write_u8(b->is_deleted);
+    buf->write_u8(b->is_adjacent_to_water);
+    buf->write_u8(b->storage_id);
+    buf->write_i8(b->sentiment.house_happiness); // which union field we use does not matter
+    buf->write_u8(b->show_on_problem_overlay);
 }
 
 static void read_type_data(buffer *buf, building *b)
 {
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
-            b->data.house.inventory[i] = buffer_read_i16(buf);
+            b->data.house.inventory[i] = buf->read_i16();
         }
-        b->data.house.theater = buffer_read_u8(buf);
-        b->data.house.amphitheater_actor = buffer_read_u8(buf);
-        b->data.house.amphitheater_gladiator = buffer_read_u8(buf);
-        b->data.house.colosseum_gladiator = buffer_read_u8(buf);
-        b->data.house.colosseum_lion = buffer_read_u8(buf);
-        b->data.house.hippodrome = buffer_read_u8(buf);
-        b->data.house.school = buffer_read_u8(buf);
-        b->data.house.library = buffer_read_u8(buf);
-        b->data.house.academy = buffer_read_u8(buf);
-        b->data.house.barber = buffer_read_u8(buf);
-        b->data.house.clinic = buffer_read_u8(buf);
-        b->data.house.bathhouse = buffer_read_u8(buf);
-        b->data.house.hospital = buffer_read_u8(buf);
-        b->data.house.temple_ceres = buffer_read_u8(buf);
-        b->data.house.temple_neptune = buffer_read_u8(buf);
-        b->data.house.temple_mercury = buffer_read_u8(buf);
-        b->data.house.temple_mars = buffer_read_u8(buf);
-        b->data.house.temple_venus = buffer_read_u8(buf);
-        b->data.house.no_space_to_expand = buffer_read_u8(buf);
-        b->data.house.num_foods = buffer_read_u8(buf);
-        b->data.house.entertainment = buffer_read_u8(buf);
-        b->data.house.education = buffer_read_u8(buf);
-        b->data.house.health = buffer_read_u8(buf);
-        b->data.house.num_gods = buffer_read_u8(buf);
-        b->data.house.devolve_delay = buffer_read_u8(buf);
-        b->data.house.evolve_text_id = buffer_read_u8(buf);
+        b->data.house.theater = buf->read_u8();
+        b->data.house.amphitheater_actor = buf->read_u8();
+        b->data.house.amphitheater_gladiator = buf->read_u8();
+        b->data.house.colosseum_gladiator = buf->read_u8();
+        b->data.house.colosseum_lion = buf->read_u8();
+        b->data.house.hippodrome = buf->read_u8();
+        b->data.house.school = buf->read_u8();
+        b->data.house.library = buf->read_u8();
+        b->data.house.academy = buf->read_u8();
+        b->data.house.barber = buf->read_u8();
+        b->data.house.clinic = buf->read_u8();
+        b->data.house.bathhouse = buf->read_u8();
+        b->data.house.hospital = buf->read_u8();
+        b->data.house.temple_ceres = buf->read_u8();
+        b->data.house.temple_neptune = buf->read_u8();
+        b->data.house.temple_mercury = buf->read_u8();
+        b->data.house.temple_mars = buf->read_u8();
+        b->data.house.temple_venus = buf->read_u8();
+        b->data.house.no_space_to_expand = buf->read_u8();
+        b->data.house.num_foods = buf->read_u8();
+        b->data.house.entertainment = buf->read_u8();
+        b->data.house.education = buf->read_u8();
+        b->data.house.health = buf->read_u8();
+        b->data.house.num_gods = buf->read_u8();
+        b->data.house.devolve_delay = buf->read_u8();
+        b->data.house.evolve_text_id = buf->read_u8();
     } else if (b->type == BUILDING_MARKET) {
-        buffer_skip(buf, 2);
+        buf->skip(2);
         for (int i = 0; i < INVENTORY_MAX; i++) {
-            b->data.market.inventory[i] = buffer_read_i16(buf);
+            b->data.market.inventory[i] = buf->read_i16();
         }
-        b->data.market.pottery_demand = buffer_read_i16(buf);
-        b->data.market.furniture_demand = buffer_read_i16(buf);
-        b->data.market.oil_demand = buffer_read_i16(buf);
-        b->data.market.wine_demand = buffer_read_i16(buf);
-        buffer_skip(buf, 6);
-        b->data.market.fetch_inventory_id = buffer_read_u8(buf);
-        buffer_skip(buf, 9);
+        b->data.market.pottery_demand = buf->read_i16();
+        b->data.market.furniture_demand = buf->read_i16();
+        b->data.market.oil_demand = buf->read_i16();
+        b->data.market.wine_demand = buf->read_i16();
+        buf->skip(6);
+        b->data.market.fetch_inventory_id = buf->read_u8();
+        buf->skip(9);
     } else if (b->type == BUILDING_GRANARY) {
-        buffer_skip(buf, 2);
+        buf->skip(2);
         for (int i = 0; i < RESOURCE_MAX; i++) {
-            b->data.granary.resource_stored[i] = buffer_read_i16(buf);
+            b->data.granary.resource_stored[i] = buf->read_i16();
         }
-        buffer_skip(buf, 8);
+        buf->skip(8);
     } else if (b->type == BUILDING_DOCK) {
-        b->data.dock.queued_docker_id = buffer_read_i16(buf);
-        buffer_skip(buf, 25);
-        b->data.dock.num_ships = buffer_read_u8(buf);
-        buffer_skip(buf, 2);
-        b->data.dock.orientation = buffer_read_i8(buf);
-        buffer_skip(buf, 3);
+        b->data.dock.queued_docker_id = buf->read_i16();
+        buf->skip(25);
+        b->data.dock.num_ships = buf->read_u8();
+        buf->skip(2);
+        b->data.dock.orientation = buf->read_i8();
+        buf->skip(3);
         for (int i = 0; i < 3; i++) {
-            b->data.dock.docker_ids[i] = buffer_read_i16(buf);
+            b->data.dock.docker_ids[i] = buf->read_i16();
         }
-        b->data.dock.trade_ship_id = buffer_read_i16(buf);
+        b->data.dock.trade_ship_id = buf->read_i16();
     } else if (is_industry_type(b)) {
-        b->data.industry.progress = buffer_read_i16(buf);
-        buffer_skip(buf, 12);
-        b->data.industry.has_fish = buffer_read_u8(buf);
-        buffer_skip(buf, 14);
-        b->data.industry.blessing_days_left = buffer_read_u8(buf);
-        b->data.industry.orientation = buffer_read_u8(buf);
-        b->data.industry.has_raw_materials = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
-        b->data.industry.curse_days_left = buffer_read_u8(buf);
-        buffer_skip(buf, 6);
-        b->data.industry.fishing_boat_id = buffer_read_i16(buf);
+        b->data.industry.progress = buf->read_i16();
+        buf->skip(12);
+        b->data.industry.has_fish = buf->read_u8();
+        buf->skip(14);
+        b->data.industry.blessing_days_left = buf->read_u8();
+        b->data.industry.orientation = buf->read_u8();
+        b->data.industry.has_raw_materials = buf->read_u8();
+        buf->skip(1);
+        b->data.industry.curse_days_left = buf->read_u8();
+        buf->skip(6);
+        b->data.industry.fishing_boat_id = buf->read_i16();
     } else {
-        buffer_skip(buf, 26);
-        b->data.entertainment.num_shows = buffer_read_u8(buf);
-        b->data.entertainment.days1 = buffer_read_u8(buf);
-        b->data.entertainment.days2 = buffer_read_u8(buf);
-        b->data.entertainment.play = buffer_read_u8(buf);
-        buffer_skip(buf, 12);
+        buf->skip(26);
+        b->data.entertainment.num_shows = buf->read_u8();
+        b->data.entertainment.days1 = buf->read_u8();
+        b->data.entertainment.days2 = buf->read_u8();
+        b->data.entertainment.play = buf->read_u8();
+        buf->skip(12);
     }
 }
 
 void building_state_load_from_buffer(buffer *buf, building *b)
 {
-    b->state = buffer_read_u8(buf);
-    b->faction_id = buffer_read_u8(buf);
-    b->unknown_value = buffer_read_u8(buf);
-    b->size = buffer_read_u8(buf);
-    b->house_is_merged = buffer_read_u8(buf);
-    b->house_size = buffer_read_u8(buf);
-    b->x = buffer_read_u8(buf);
-    b->y = buffer_read_u8(buf);
-    b->grid_offset = buffer_read_i16(buf);
-    b->type = buffer_read_i16(buf);
-    b->subtype.house_level = buffer_read_i16(buf); // which union field we use does not matter
-    b->road_network_id = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    b->creation_sequence_index = buffer_read_u16(buf);
-    b->houses_covered = buffer_read_i16(buf);
-    b->percentage_houses_covered = buffer_read_i16(buf);
-    b->house_population = buffer_read_i16(buf);
-    b->house_population_room = buffer_read_i16(buf);
-    b->distance_from_entry = buffer_read_i16(buf);
-    b->house_highest_population = buffer_read_i16(buf);
-    b->house_unreachable_ticks = buffer_read_i16(buf);
-    b->road_access_x = buffer_read_u8(buf);
-    b->road_access_y = buffer_read_u8(buf);
-    b->figure_id = buffer_read_i16(buf);
-    b->figure_id2 = buffer_read_i16(buf);
-    b->immigrant_figure_id = buffer_read_i16(buf);
-    b->figure_id4 = buffer_read_i16(buf);
-    b->figure_spawn_delay = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    b->figure_roam_direction = buffer_read_u8(buf);
-    b->has_water_access = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    buffer_skip(buf, 1);
-    b->prev_part_building_id = buffer_read_i16(buf);
-    b->next_part_building_id = buffer_read_i16(buf);
-    b->loads_stored = buffer_read_i16(buf);
-    buffer_skip(buf, 1);
-    b->has_well_access = buffer_read_u8(buf);
-    b->num_workers = buffer_read_i16(buf);
-    b->labor_category = buffer_read_u8(buf);
-    b->output_resource_id = buffer_read_u8(buf);
-    b->has_road_access = buffer_read_u8(buf);
-    b->house_criminal_active = buffer_read_u8(buf);
-    b->damage_risk = buffer_read_i16(buf);
-    b->fire_risk = buffer_read_i16(buf);
-    b->fire_duration = buffer_read_i16(buf);
-    b->fire_proof = buffer_read_u8(buf);
-    b->house_figure_generation_delay = buffer_read_u8(buf);
-    b->house_tax_coverage = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    b->formation_id = buffer_read_i16(buf);
+    b->state = buf->read_u8();
+    b->faction_id = buf->read_u8();
+    b->unknown_value = buf->read_u8();
+    b->size = buf->read_u8();
+    b->house_is_merged = buf->read_u8();
+    b->house_size = buf->read_u8();
+    b->x = buf->read_u8();
+    b->y = buf->read_u8();
+    b->grid_offset = buf->read_i16();
+    b->type = buf->read_i16();
+    b->subtype.house_level = buf->read_i16(); // which union field we use does not matter
+    b->road_network_id = buf->read_u8();
+    buf->skip(1);
+    b->creation_sequence_index = buf->read_u16();
+    b->houses_covered = buf->read_i16();
+    b->percentage_houses_covered = buf->read_i16();
+    b->house_population = buf->read_i16();
+    b->house_population_room = buf->read_i16();
+    b->distance_from_entry = buf->read_i16();
+    b->house_highest_population = buf->read_i16();
+    b->house_unreachable_ticks = buf->read_i16();
+    b->road_access_x = buf->read_u8();
+    b->road_access_y = buf->read_u8();
+    b->figure_id = buf->read_i16();
+    b->figure_id2 = buf->read_i16();
+    b->immigrant_figure_id = buf->read_i16();
+    b->figure_id4 = buf->read_i16();
+    b->figure_spawn_delay = buf->read_u8();
+    buf->skip(1);
+    b->figure_roam_direction = buf->read_u8();
+    b->has_water_access = buf->read_u8();
+    buf->skip(1);
+    buf->skip(1);
+    b->prev_part_building_id = buf->read_i16();
+    b->next_part_building_id = buf->read_i16();
+    b->loads_stored = buf->read_i16();
+    buf->skip(1);
+    b->has_well_access = buf->read_u8();
+    b->num_workers = buf->read_i16();
+    b->labor_category = buf->read_u8();
+    b->output_resource_id = buf->read_u8();
+    b->has_road_access = buf->read_u8();
+    b->house_criminal_active = buf->read_u8();
+    b->damage_risk = buf->read_i16();
+    b->fire_risk = buf->read_i16();
+    b->fire_duration = buf->read_i16();
+    b->fire_proof = buf->read_u8();
+    b->house_figure_generation_delay = buf->read_u8();
+    b->house_tax_coverage = buf->read_u8();
+    buf->skip(1);
+    b->formation_id = buf->read_i16();
     read_type_data(buf, b);
-    b->tax_income_or_storage = buffer_read_i32(buf);
-    b->house_days_without_food = buffer_read_u8(buf);
-    b->ruin_has_plague = buffer_read_u8(buf);
-    b->desirability = buffer_read_i8(buf);
-    b->is_deleted = buffer_read_u8(buf);
-    b->is_adjacent_to_water = buffer_read_u8(buf);
-    b->storage_id = buffer_read_u8(buf);
-    b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
-    b->show_on_problem_overlay = buffer_read_u8(buf);
+    b->tax_income_or_storage = buf->read_i32();
+    b->house_days_without_food = buf->read_u8();
+    b->ruin_has_plague = buf->read_u8();
+    b->desirability = buf->read_i8();
+    b->is_deleted = buf->read_u8();
+    b->is_adjacent_to_water = buf->read_u8();
+    b->storage_id = buf->read_u8();
+    b->sentiment.house_happiness = buf->read_i8(); // which union field we use does not matter
+    b->show_on_problem_overlay = buf->read_u8();
 }

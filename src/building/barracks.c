@@ -194,12 +194,12 @@ int building_barracks_has_tower_sentry_request(void)
 
 void building_barracks_save_state(buffer *buf)
 {
-    buffer_write_i32(buf, tower_sentry_request);
+    buf->write_i32(tower_sentry_request);
 }
 
 void building_barracks_load_state(buffer *buf)
 {
-    tower_sentry_request = buffer_read_i32(buf);
+    tower_sentry_request = buf->read_i32();
 }
 
 void building_barracks_toggle_priority(building* barracks) {

@@ -190,36 +190,36 @@ void city_culture_calculate(void)
 void city_culture_save_state(buffer *buf)
 {
     // Yes, hospital is saved twice
-    buffer_write_i32(buf, coverage.theater);
-    buffer_write_i32(buf, coverage.amphitheater);
-    buffer_write_i32(buf, coverage.colosseum);
-    buffer_write_i32(buf, coverage.hospital);
-    buffer_write_i32(buf, coverage.hippodrome);
+    buf->write_i32(coverage.theater);
+    buf->write_i32(coverage.amphitheater);
+    buf->write_i32(coverage.colosseum);
+    buf->write_i32(coverage.hospital);
+    buf->write_i32(coverage.hippodrome);
     for (int i = GOD_CERES; i <= GOD_VENUS; i++) {
-        buffer_write_i32(buf, coverage.religion[i]);
+        buf->write_i32(coverage.religion[i]);
     }
-    buffer_write_i32(buf, coverage.oracle);
-    buffer_write_i32(buf, coverage.school);
-    buffer_write_i32(buf, coverage.library);
-    buffer_write_i32(buf, coverage.academy);
-    buffer_write_i32(buf, coverage.hospital);
+    buf->write_i32(coverage.oracle);
+    buf->write_i32(coverage.school);
+    buf->write_i32(coverage.library);
+    buf->write_i32(coverage.academy);
+    buf->write_i32(coverage.hospital);
 }
 
 void city_culture_load_state(buffer *buf)
 {
     // Yes, hospital is saved twice
-    coverage.theater = buffer_read_i32(buf);
-    coverage.amphitheater = buffer_read_i32(buf);
-    coverage.colosseum = buffer_read_i32(buf);
-    coverage.hospital = buffer_read_i32(buf);
-    coverage.hippodrome = buffer_read_i32(buf);
+    coverage.theater = buf->read_i32();
+    coverage.amphitheater = buf->read_i32();
+    coverage.colosseum = buf->read_i32();
+    coverage.hospital = buf->read_i32();
+    coverage.hippodrome = buf->read_i32();
     for (int i = GOD_CERES; i <= GOD_VENUS; i++) {
-        coverage.religion[i] = buffer_read_i32(buf);
+        coverage.religion[i] = buf->read_i32();
     }
-    coverage.oracle = buffer_read_i32(buf);
-    coverage.school = buffer_read_i32(buf);
-    coverage.library = buffer_read_i32(buf);
-    coverage.academy = buffer_read_i32(buf);
-    coverage.hospital = buffer_read_i32(buf);
+    coverage.oracle = buf->read_i32();
+    coverage.school = buf->read_i32();
+    coverage.library = buf->read_i32();
+    coverage.academy = buf->read_i32();
+    coverage.hospital = buf->read_i32();
 }
 

@@ -213,30 +213,30 @@ int scenario_earthquake_is_in_progress(void) {
 }
 
 void scenario_earthquake_save_state(buffer *buf) {
-    buffer_write_i32(buf, data.game_year);
-    buffer_write_i32(buf, data.month);
-    buffer_write_i32(buf, data.state);
-    buffer_write_i32(buf, data.duration);
-    buffer_write_i32(buf, data.max_duration);
-    buffer_write_i32(buf, data.max_delay);
-    buffer_write_i32(buf, data.delay);
+    buf->write_i32(data.game_year);
+    buf->write_i32(data.month);
+    buf->write_i32(data.state);
+    buf->write_i32(data.duration);
+    buf->write_i32(data.max_duration);
+    buf->write_i32(data.max_delay);
+    buf->write_i32(data.delay);
     for (int i = 0; i < 4; i++) {
-        buffer_write_i32(buf, data.expand[i].x);
-        buffer_write_i32(buf, data.expand[i].y);
+        buf->write_i32(data.expand[i].x);
+        buf->write_i32(data.expand[i].y);
     }
 }
 
 void scenario_earthquake_load_state(buffer *buf) {
-    data.game_year = buffer_read_i32(buf);
-    data.month = buffer_read_i32(buf);
-    data.state = buffer_read_i32(buf);
-    data.duration = buffer_read_i32(buf);
-    data.max_duration = buffer_read_i32(buf);
-    data.max_delay = buffer_read_i32(buf);
-    data.delay = buffer_read_i32(buf);
+    data.game_year = buf->read_i32();
+    data.month = buf->read_i32();
+    data.state = buf->read_i32();
+    data.duration = buf->read_i32();
+    data.max_duration = buf->read_i32();
+    data.max_delay = buf->read_i32();
+    data.delay = buf->read_i32();
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = buffer_read_i32(buf);
-        data.expand[i].y = buffer_read_i32(buf);
+        data.expand[i].x = buf->read_i32();
+        data.expand[i].y = buf->read_i32();
     }
 }
 

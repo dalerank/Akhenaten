@@ -72,18 +72,18 @@ void game_time_advance_year(void)
 
 void game_time_save_state(buffer *buf)
 {
-    buffer_write_i32(buf, data.tick);
-    buffer_write_i32(buf, data.day);
-    buffer_write_i32(buf, data.month);
-    buffer_write_i32(buf, data.year);
-    buffer_write_i32(buf, data.total_days);
+    buf->write_i32(data.tick);
+    buf->write_i32(data.day);
+    buf->write_i32(data.month);
+    buf->write_i32(data.year);
+    buf->write_i32(data.total_days);
 }
 
 void game_time_load_state(buffer *buf)
 {
-    data.tick = buffer_read_i32(buf);
-    data.day = buffer_read_i32(buf);
-    data.month = buffer_read_i32(buf);
-    data.year = buffer_read_i32(buf);
-    data.total_days = buffer_read_i32(buf);
+    data.tick = buf->read_i32();
+    data.day = buf->read_i32();
+    data.month = buf->read_i32();
+    data.year = buf->read_i32();
+    data.total_days = buf->read_i32();
 }

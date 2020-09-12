@@ -178,50 +178,50 @@ int figure_name_get(int type, int enemy)
 
 void figure_name_save_state(buffer *buf)
 {
-    buffer_write_i32(buf, data.citizen_male);
-    buffer_write_i32(buf, data.patrician);
-    buffer_write_i32(buf, data.citizen_female);
-    buffer_write_i32(buf, data.tax_collector);
-    buffer_write_i32(buf, data.engineer);
-    buffer_write_i32(buf, data.prefect);
-    buffer_write_i32(buf, data.javelin_thrower);
-    buffer_write_i32(buf, data.cavalry);
-    buffer_write_i32(buf, data.legionary);
-    buffer_write_i32(buf, data.actor);
-    buffer_write_i32(buf, data.gladiator);
-    buffer_write_i32(buf, data.lion_tamer);
-    buffer_write_i32(buf, data.charioteer);
-    buffer_write_i32(buf, data.barbarian);
-    buffer_write_i32(buf, data.enemy_greek);
-    buffer_write_i32(buf, data.enemy_egyptian);
-    buffer_write_i32(buf, data.enemy_arabian);
-    buffer_write_i32(buf, data.trader);
-    buffer_write_i32(buf, data.ship);
-    buffer_write_i32(buf, data.warship);
-    buffer_write_i32(buf, data.enemy_warship);
+    buf->write_i32(data.citizen_male);
+    buf->write_i32(data.patrician);
+    buf->write_i32(data.citizen_female);
+    buf->write_i32(data.tax_collector);
+    buf->write_i32(data.engineer);
+    buf->write_i32(data.prefect);
+    buf->write_i32(data.javelin_thrower);
+    buf->write_i32(data.cavalry);
+    buf->write_i32(data.legionary);
+    buf->write_i32(data.actor);
+    buf->write_i32(data.gladiator);
+    buf->write_i32(data.lion_tamer);
+    buf->write_i32(data.charioteer);
+    buf->write_i32(data.barbarian);
+    buf->write_i32(data.enemy_greek);
+    buf->write_i32(data.enemy_egyptian);
+    buf->write_i32(data.enemy_arabian);
+    buf->write_i32(data.trader);
+    buf->write_i32(data.ship);
+    buf->write_i32(data.warship);
+    buf->write_i32(data.enemy_warship);
 }
 
 void figure_name_load_state(buffer *buf)
 {
-    data.citizen_male = buffer_read_i32(buf);
-    data.patrician = buffer_read_i32(buf);
-    data.citizen_female = buffer_read_i32(buf);
-    data.tax_collector = buffer_read_i32(buf);
-    data.engineer = buffer_read_i32(buf);
-    data.prefect = buffer_read_i32(buf);
-    data.javelin_thrower = buffer_read_i32(buf);
-    data.cavalry = buffer_read_i32(buf);
-    data.legionary = buffer_read_i32(buf);
-    data.actor = buffer_read_i32(buf);
-    data.gladiator = buffer_read_i32(buf);
-    data.lion_tamer = buffer_read_i32(buf);
-    data.charioteer = buffer_read_i32(buf);
-    data.barbarian = buffer_read_i32(buf);
-    data.enemy_greek = buffer_read_i32(buf);
-    data.enemy_egyptian = buffer_read_i32(buf);
-    data.enemy_arabian = buffer_read_i32(buf);
-    data.trader = buffer_read_i32(buf);
-    data.ship = buffer_read_i32(buf);
-    data.warship = buffer_read_i32(buf);
-    data.enemy_warship = buffer_read_i32(buf);
+    data.citizen_male = buf->read_i32();
+    data.patrician = buf->read_i32();
+    data.citizen_female = buf->read_i32();
+    data.tax_collector = buf->read_i32();
+    data.engineer = buf->read_i32();
+    data.prefect = buf->read_i32();
+    data.javelin_thrower = buf->read_i32();
+    data.cavalry = buf->read_i32();
+    data.legionary = buf->read_i32();
+    data.actor = buf->read_i32();
+    data.gladiator = buf->read_i32();
+    data.lion_tamer = buf->read_i32();
+    data.charioteer = buf->read_i32();
+    data.barbarian = buf->read_i32();
+    data.enemy_greek = buf->read_i32();
+    data.enemy_egyptian = buf->read_i32();
+    data.enemy_arabian = buf->read_i32();
+    data.trader = buf->read_i32();
+    data.ship = buf->read_i32();
+    data.warship = buf->read_i32();
+    data.enemy_warship = buf->read_i32();
 }

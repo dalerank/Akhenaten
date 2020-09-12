@@ -340,30 +340,30 @@ void empire_city_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         empire_city *city = &cities[i];
-        buffer_write_u8(buf, city->in_use);
-        buffer_write_u8(buf, 0);
-        buffer_write_u8(buf, city->type);
-        buffer_write_u8(buf, city->name_id);
-        buffer_write_u8(buf, city->route_id);
-        buffer_write_u8(buf, city->is_open);
+        buf->write_u8(city->in_use);
+        buf->write_u8(0);
+        buf->write_u8(city->type);
+        buf->write_u8(city->name_id);
+        buf->write_u8(city->route_id);
+        buf->write_u8(city->is_open);
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_u8(buf, city->buys_resource[r]);
+            buf->write_u8(city->buys_resource[r]);
         }
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            buffer_write_u8(buf, city->sells_resource[r]);
+            buf->write_u8(city->sells_resource[r]);
         }
-        buffer_write_i16(buf, city->cost_to_open);
-        buffer_skip(buf, 2);
-        buffer_write_i16(buf, city->trader_entry_delay);
-        buffer_write_i16(buf, 0);
-        buffer_write_i16(buf, city->empire_object_id);
-        buffer_write_u8(buf, city->is_sea_trade);
-        buffer_write_u8(buf, 0);
+        buf->write_i16(city->cost_to_open);
+        buf->skip(2);
+        buf->write_i16(city->trader_entry_delay);
+        buf->write_i16(0);
+        buf->write_i16(city->empire_object_id);
+        buf->write_u8(city->is_sea_trade);
+        buf->write_u8(0);
         for (int f = 0; f < 3; f++) {
-            buffer_write_i16(buf, city->trader_figure_ids[f]);
+            buf->write_i16(city->trader_figure_ids[f]);
         }
         for (int p = 0; p < 10; p++) {
-            buffer_write_u8(buf, 0);
+            buf->write_u8(0);
         }
     }
 }
@@ -372,29 +372,29 @@ void empire_city_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         empire_city *city = &cities[i];
-        city->in_use = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
-        city->type = buffer_read_u8(buf);
-        city->name_id = buffer_read_u8(buf);
-        city->route_id = buffer_read_u8(buf);
-        city->is_open = buffer_read_u8(buf);
+        city->in_use = buf->read_u8();
+        buf->skip(1);
+        city->type = buf->read_u8();
+        city->name_id = buf->read_u8();
+        city->route_id = buf->read_u8();
+        city->is_open = buf->read_u8();
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            city->buys_resource[r] = buffer_read_u8(buf);
+            city->buys_resource[r] = buf->read_u8();
         }
         for (int r = 0; r < RESOURCE_MAX; r++) {
-            city->sells_resource[r] = buffer_read_u8(buf);
+            city->sells_resource[r] = buf->read_u8();
         }
-        city->cost_to_open = buffer_read_i16(buf);
-        buffer_skip(buf, 2);
-        city->trader_entry_delay = buffer_read_i16(buf);
-        buffer_skip(buf, 2);
-        city->empire_object_id = buffer_read_i16(buf);
-        city->is_sea_trade = buffer_read_u8(buf);
-        buffer_skip(buf, 1);
+        city->cost_to_open = buf->read_i16();
+        buf->skip(2);
+        city->trader_entry_delay = buf->read_i16();
+        buf->skip(2);
+        city->empire_object_id = buf->read_i16();
+        city->is_sea_trade = buf->read_u8();
+        buf->skip(1);
         for (int f = 0; f < 3; f++) {
-            city->trader_figure_ids[f] = buffer_read_i16(buf);
+            city->trader_figure_ids[f] = buf->read_i16();
         }
-        buffer_skip(buf, 10);
+        buf->skip(10);
     }
 }
 
