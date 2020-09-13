@@ -4,29 +4,29 @@
 #include "core/buffer.h"
 
 typedef struct scenario_data_buffers {
-    buffer *header;
-    buffer *info1;
-    buffer *info2;
-    buffer *info3;
-    buffer *events;
-    buffer *win_criteria;
-    buffer *map_points;
-    buffer *river_points;
-    buffer *empire;
-    buffer *wheat;
+    buffer *header = new buffer;
+    buffer *info1 = new buffer;
+    buffer *info2 = new buffer;
+    buffer *info3 = new buffer;
+    buffer *events = new buffer;
+    buffer *win_criteria = new buffer;
+    buffer *map_points = new buffer;
+    buffer *river_points = new buffer;
+    buffer *empire = new buffer;
+    buffer *wheat = new buffer;
 
-    buffer *requests;
-    buffer *invasions;
-    buffer *invasion_points;
-    buffer *request_comply_dialogs;
-    buffer *herds;
-    buffer *demands;
-    buffer *price_changes;
-    buffer *fishing_points;
-    buffer *request_extra;
-    buffer *allowed_builds;
+    buffer *requests = new buffer;
+    buffer *invasions = new buffer;
+    buffer *invasion_points = new buffer;
+    buffer *request_comply_dialogs = new buffer;
+    buffer *herds = new buffer;
+    buffer *demands = new buffer;
+    buffer *price_changes = new buffer;
+    buffer *fishing_points = new buffer;
+    buffer *request_extra = new buffer;
+    buffer *allowed_builds = new buffer;
 
-    buffer *monuments;
+    buffer *monuments = new buffer;
 
 } scenario_data_buffers;
 

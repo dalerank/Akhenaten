@@ -139,7 +139,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
         data.text_entries[i].offset = buf->read_i32();
         data.text_entries[i].in_use = buf->read_i32();
     }
-    buf->read_raw(data.text_data, MAX_TEXT_DATA);
+    buf->read_raw(data.text_data, filesize - 8028); //MAX_TEXT_DATA
 
     // load message
     buf->init(BUFFER_SIZE);

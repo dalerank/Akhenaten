@@ -145,10 +145,10 @@ int game_pre_init(void)
 }
 int game_init(void)
 {
-//    if (!image_init()) {
-//        errlog("unable to init graphics");
-//        return 0;
-//    }
+    if (!image_init()) {
+        errlog("unable to init graphics");
+        return 0;
+    }
     if (!image_load_main(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return 0;

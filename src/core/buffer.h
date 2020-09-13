@@ -14,28 +14,32 @@
 */
 class buffer {
     bool initialized = false;
+//    bool validdata = false;
+    uint8_t *valid_memory = nullptr;
     uint8_t *data = nullptr;
     size_t datasize = 0;
     int index = 0;
     int overflow = 0;
 
-    void clear();
 
 public:
 
+    buffer();
     buffer(size_t s);
-//    buffer(void *d, int s);
     ~buffer();
 
     size_t size();
-//    void init_unsafe_pls(void *d, int s);
     void init(int s);
+    void clear();
 
     void set_offset(int offset);
     void reset_offset();
     void skip(int s);
     int at_end();
+
     int check_size(int s);
+    void check_valid(int i, int s);
+    void validate(int i, int s);
 
     const uint8_t* data_const();
     void* data_unsafe_pls_use_carefully();

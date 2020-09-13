@@ -212,7 +212,7 @@ static struct {
         {0},
         {0},
         {0},
-        new color_t[SCRATCH_DATA_SIZE-4000000]
+        nullptr
 };
 
 static color_t to_32_bit(uint16_t c) {
@@ -222,23 +222,24 @@ static color_t to_32_bit(uint16_t c) {
            ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst) {
-    for (int i = 0; i < buf_length; i += 2) {
-        *dst = to_32_bit(buf->read_u16());
+static int convert_uncompressed(buffer *buf, int amount, color_t *dst) {
+    for (int i = 0; i < amount; i += 2) {
+        color_t c = to_32_bit(buf->read_u16());
+        *dst = c;
         dst++;
     }
-    return buf_length / 2;
+    return amount / 2;
 }
-static int convert_compressed(buffer *buf, int buf_length, color_t *dst) {
+static int convert_compressed(buffer *buf, int amount, color_t *dst) {
     int dst_length = 0;
-    while (buf_length > 0) {
+    while (amount > 0) {
         int control = buf->read_u8();
         if (control == 255) {
             // next byte = transparent pixels to skip
             *dst++ = 255;
             *dst++ = buf->read_u8();
             dst_length += 2;
-            buf_length -= 2;
+            amount -= 2;
         } else {
             // control = number of concrete pixels
             *dst++ = control;
@@ -246,7 +247,7 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst) {
                 *dst++ = to_32_bit(buf->read_u16());
             }
             dst_length += control + 1;
-            buf_length -= control * 2 + 1;
+            amount -= control * 2 + 1;
         }
     }
     return dst_length;
@@ -299,17 +300,17 @@ static const color_t *load_external_data(const image *img) {
 
 #include "assert.h"
 
-//int image_init(void) {
+int image_init(void) {
 //    data.tmp_data->init(SCRATCH_DATA_SIZE);
-////    data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
-//    switch (GAME_ENV) {
-//        case ENGINE_ENV_C3:
-//            break;
-//        case ENGINE_ENV_PHARAOH:
-//            break;
-//    }
-//    return 1;
-//}
+    data.tmp_image_data = new color_t[SCRATCH_DATA_SIZE-4000000];
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            break;
+        case ENGINE_ENV_PHARAOH:
+            break;
+    }
+    return 1;
+}
 int image_groupid_translation(int table[], int group) {
     if (group == 246) {
         int a = 2;
@@ -410,8 +411,6 @@ const color_t *image_data_enemy(int id) {
 
 int image_load_555(imagepak *pak, const char *filename_555, const char *filename_sgx) {
     // prepare sgx data
-//    data.tmp_data = new buffer;
-//    data.tmp_data->init(SCRATCH_DATA_SIZE);
     buffer *buf = new buffer(SCRATCH_DATA_SIZE);
     if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, buf,
                                   SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
@@ -421,8 +420,6 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
         HEADER_SIZE = 20680; // sg2 has 100 bitmap entries
     else
         HEADER_SIZE = 40680; //
-//    buffer *buf = new buffer;
-    buf->set_offset(HEADER_SIZE);
 
     // read header
     buf->read_raw(pak->header_data, sizeof(uint32_t) * 10);
@@ -458,7 +455,6 @@ int image_load_555(imagepak *pak, const char *filename_555, const char *filename
     buf->read_raw(bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
     // move on to the rest of the content
-//    buf->init_unsafe_pls(&data.tmp_data[HEADER_SIZE], ENTRY_SIZE * pak->entries_num);
     buf->set_offset(HEADER_SIZE);
 
     // fill in image data
