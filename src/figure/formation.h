@@ -2,9 +2,10 @@
 #define FIGURE_FORMATION_H
 
 #include "core/buffer.h"
+#include "core/game_environment.h"
 #include "figure/type.h"
 
-#define MAX_FORMATIONS 250
+//#define MAX_FORMATIONS 250
 
 #define MAX_LEGIONS 6
 #define MAX_FORMATION_FIGURES 16

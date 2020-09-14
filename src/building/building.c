@@ -383,6 +383,8 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
+        if (!buf->is_valid(1))
+            break;
         building_state_load_from_buffer(buf, &all_buildings[i]);
         all_buildings[i].id = i;
     }

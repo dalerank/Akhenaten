@@ -17,7 +17,7 @@
 #define ENTRY_SIZE 64
 #define NAME_SIZE 32
 
-#define SCRATCH_DATA_SIZE 12100000
+#define SCRATCH_DATA_SIZE 20000000
 
 enum {
     NO_EXTRA_FONT = 0,
@@ -298,7 +298,7 @@ static const color_t *load_external_data(const image *img) {
     return data.tmp_image_data;
 }
 
-#include "assert.h"
+#include <cassert>
 
 int image_init(void) {
 //    data.tmp_data->init(SCRATCH_DATA_SIZE);

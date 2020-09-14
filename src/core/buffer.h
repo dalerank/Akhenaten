@@ -18,9 +18,13 @@ class buffer {
     uint8_t *valid_memory = nullptr;
     uint8_t *data = nullptr;
     size_t datasize = 0;
-    int index = 0;
+    size_t index = 0;
     int overflow = 0;
 
+    int check_size(size_t s);
+    void check_initialized();
+    void check_valid(size_t i, size_t s);
+    void validate(size_t i, size_t s);
 
 public:
 
@@ -29,17 +33,16 @@ public:
     ~buffer();
 
     size_t size();
-    void init(int s);
+    void init(size_t s);
     void clear();
 
-    void set_offset(int offset);
+    void set_offset(size_t offset);
     void reset_offset();
-    void skip(int s);
+    void skip(size_t s);
     int at_end();
 
-    int check_size(int s);
-    void check_valid(int i, int s);
-    void validate(int i, int s);
+    bool is_valid(size_t s);
+    void force_validate_unsafe_pls_use_carefully();
 
     const uint8_t* data_const();
     void* data_unsafe_pls_use_carefully();
@@ -50,7 +53,7 @@ public:
     int8_t read_i8();
     int16_t read_i16();
     int32_t read_i32();
-    int read_raw(void *value, int max_size);
+    int read_raw(void *value, size_t max_size);
 
     void fill(uint8_t val);
     void write_u8(uint8_t value);
@@ -59,10 +62,10 @@ public:
     void write_i8(int8_t value);
     void write_i16(int16_t value);
     void write_i32(int32_t value);
-    void write_raw(const void *value, int s);
+    void write_raw(const void *value, size_t s);
 
-    size_t from_file(size_t _ElementSize, size_t _Count, FILE * __restrict__ _File);
-    size_t to_file(size_t _Size, size_t _Count, FILE * __restrict__ _File);
+    size_t from_file(size_t s, size_t c, FILE * __restrict__ fp);
+    size_t to_file(size_t s, size_t c, FILE * __restrict__ fp);
 };
 
 #endif // CORE_BUFFER_H

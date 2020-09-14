@@ -60,7 +60,9 @@ engine_sizes env_sizes(void)
                     32,
                     65,
                     64,
-                    522
+                    522,
+
+                    250
             };
             return s;
         }
@@ -80,7 +82,9 @@ engine_sizes env_sizes(void)
                     32,
                     65,
                     64,
-                    522
+                    522,
+
+                    50
             };
             return s;
         }

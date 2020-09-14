@@ -154,6 +154,8 @@ void figure_route_save_state(buffer *figures, buffer *paths)
 void figure_route_load_state(buffer *figures, buffer *paths)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
+        if (!figures->is_valid(2))
+            return;
         data.figure_ids[i] = figures->read_i16();
         paths->read_raw(data.direction_paths[i], MAX_PATH_LENGTH);
     }

@@ -6,7 +6,7 @@
 
 #include "core/log.h"
 
-#include "assert.h"
+#include <cassert>
 
 enum {
     PK_SUCCESS = 0,
@@ -748,10 +748,8 @@ int zip_decompress(const void *input_buffer, int input_length, void *output_buff
             int a = 235;
         }
         *output_length = token.output_ptr;
+        ok = *output_length;
     }
     free(buf);
-//    SDL_Log("Compression returned: %i : %i", tots, lefts);
-//    tots = 0;
-//    lefts = 0;
     return ok;
 }

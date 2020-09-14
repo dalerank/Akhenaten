@@ -59,7 +59,7 @@ static const int ADJACENT_OFFSETS_PH[][21] = {
 
 #include <stdlib.h>
 #include "core/game_environment.h"
-#include "assert.h"
+#include <cassert>
 
 void map_grid_init(grid_xx *grid)
 {

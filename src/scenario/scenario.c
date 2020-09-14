@@ -265,7 +265,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     // 18. empire info
 
     // 1. header (14)
-    if (data->header) {
+    if (data->header->is_valid(1)) {
         scenario.start_year = data->header->read_i16(); // 2 bytes
         data->header->skip(2);
         scenario.empire.id = data->header->read_i16(); // 2 bytes
@@ -273,7 +273,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 3. map info 1 (614)
-    if (data->info1) { // (12)
+    if (data->info1->is_valid(1)) { // (12)
         scenario.initial_funds = data->info1->read_i32(); // 4
         scenario.enemy_id = data->info1->read_i16(); // 2
         data->info1->skip(6);
@@ -288,14 +288,14 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 5. map info 2 (6)
-    if (data->info2) {
+    if (data->info2->is_valid(1)) {
         scenario.image_id = data->info2->read_i16(); // 2
         scenario.is_open_play = data->info2->read_i16(); // 2
         scenario.player_rank = data->info2->read_i16(); // 2
     }
 
     // 17. map info 3 (30 + 2)
-    if (data->info3) {
+    if (data->info3->is_valid(1)) {
         scenario.rescue_loan = data->info3->read_i32(); // 4
         scenario.win_criteria.milestone25_year = data->info3->read_i32(); // 4
         scenario.win_criteria.milestone50_year = data->info3->read_i32(); // 4
@@ -310,7 +310,7 @@ void scenario_load_state(scenario_data_buffers *data) {
 
     // 8. random events (44)
     // events
-    if (data->events) {
+    if (data->events->is_valid(1)) {
         scenario.gladiator_revolt.enabled = data->events->read_i32(); // 4
         scenario.gladiator_revolt.year = data->events->read_i32(); // 4
         scenario.emperor_change.enabled = data->events->read_i32(); // 4
@@ -325,7 +325,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 13. win criteria (52 / 60)
-    if (data->win_criteria) {
+    if (data->win_criteria->is_valid(1)) {
         scenario.win_criteria.culture.goal = data->win_criteria->read_i32(); // 4
         scenario.win_criteria.prosperity.goal = data->win_criteria->read_i32(); // 4
         scenario.win_criteria.peace.goal = data->win_criteria->read_i32(); // 4
@@ -356,7 +356,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 14. map points (12)
-    if (data->map_points) {
+    if (data->map_points->is_valid(1)) {
         scenario.earthquake_point.x = data->map_points->read_i16(); // 2
         scenario.earthquake_point.y = data->map_points->read_i16(); // 2
         scenario.entry_point.x = data->map_points->read_i16(); // 2
@@ -366,7 +366,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 16. river entry points (8)
-    if (data->map_points) {
+    if (data->map_points->is_valid(1)) {
         scenario.river_entry_point.x = data->river_points->read_i16(); // 2
         scenario.river_entry_point.y = data->river_points->read_i16(); // 2
         scenario.river_exit_point.x = data->river_points->read_i16(); // 2
@@ -374,7 +374,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 18. empire (11 + 1)
-    if (data->empire) {
+    if (data->empire->is_valid(1)) {
         scenario.empire.is_expanded = data->empire->read_i32(); // 4
         scenario.empire.expansion_year = data->empire->read_i32(); // 4
         scenario.empire.distant_battle_roman_travel_months = data->empire->read_u8(); // 1
@@ -384,11 +384,11 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 11. wheat??? (4)
-    if (data->wheat)
+    if (data->wheat->is_valid(1))
         scenario.rome_supplies_wheat = data->wheat->read_i32(); // 4
 
     // 2. requests (160)
-    if (data->requests) {
+    if (data->requests->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_REQUESTS; i++)
             scenario.requests[i].year = data->requests->read_i16(); // 40
         for (int i = 0; i < env_sizes().MAX_REQUESTS; i++)
@@ -399,7 +399,7 @@ void scenario_load_state(scenario_data_buffers *data) {
             scenario.requests[i].deadline_years = data->requests->read_i16(); // 40
     }
     // 2b. invasions (200 + 2)
-    if (data->invasions) {
+    if (data->invasions->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_INVASIONS; i++)
             scenario.invasions[i].year = data->invasions->read_i16(); // 40
         for (int i = 0; i < env_sizes().MAX_INVASIONS; i++)
@@ -414,7 +414,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 15. invasion entry points (32)
-    if (data->invasion_points) {
+    if (data->invasion_points->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++)
             scenario.invasion_points[i].x = data->invasion_points->read_i16(); // 2
         for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++)
@@ -422,12 +422,12 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 4. request can-comply dialog (20)
-    if (data->request_comply_dialogs)
+    if (data->request_comply_dialogs->is_valid(1))
         for (int i = 0; i < env_sizes().MAX_REQUESTS; i++)
             scenario.requests[i].can_comply_dialog_shown = data->request_comply_dialogs->read_u8(); // 1
 
     // 6. animal herds (16)
-    if (data->herds) {
+    if (data->herds->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
             scenario.herd_points[i].x = data->herds->read_i16(); // 2
         for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
@@ -436,7 +436,7 @@ void scenario_load_state(scenario_data_buffers *data) {
 
     // 7. demands (240)
     // demand changes (120)
-    if (data->demands) {
+    if (data->demands->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++)
             scenario.demand_changes[i].year = data->demands->read_i16(); // 2
         for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++)
@@ -449,7 +449,7 @@ void scenario_load_state(scenario_data_buffers *data) {
             scenario.demand_changes[i].is_rise = data->demands->read_u8(); // 1
     }
     // 7b. price changes (120)
-    if (data->price_changes) {
+    if (data->price_changes->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++)
             scenario.price_changes[i].year = data->price_changes->read_i16(); // 2
         for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++)
@@ -463,7 +463,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 9. fishing (32)
-    if (data->fishing_points) {
+    if (data->fishing_points->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_FISH_POINTS; i++)
             scenario.fishing_points[i].x = data->fishing_points->read_i16(); // 2
         for (int i = 0; i < env_sizes().MAX_FISH_POINTS; i++)
@@ -471,7 +471,7 @@ void scenario_load_state(scenario_data_buffers *data) {
     }
 
     // 10. other request data (120)
-    if (data->request_extra) {
+    if (data->request_extra->is_valid(1)) {
         for (int i = 0; i < env_sizes().MAX_REQUESTS; i++)
             scenario.requests[i].favor = data->request_extra->read_u8(); // 1
         for (int i = 0; i < env_sizes().MAX_INVASIONS; i++)
@@ -486,7 +486,7 @@ void scenario_load_state(scenario_data_buffers *data) {
             scenario.requests[i].months_to_comply = data->request_extra->read_u8(); // 1
     }
     // 12. allowed buildings (100 / 228)
-    if (data->allowed_builds)
+    if (data->allowed_builds->is_valid(1))
         for (int i = 0; i < env_sizes().MAX_ALLOWED_BUILDINGS; i++)
             scenario.allowed_buildings[i] = data->allowed_builds->read_i16(); // 2
 

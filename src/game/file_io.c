@@ -253,7 +253,7 @@ static struct {
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
     piece->compressed = compressed;
-    piece->buf = new buffer(size + compressed * 4);
+    piece->buf = new buffer(size);
 }
 static buffer *create_scenario_piece(int size, char *name)
 {
@@ -269,135 +269,7 @@ static buffer *create_savegame_piece(int size, int compressed, char *name)
     strncpy(piece->name, name, 99);
     return piece->buf;
 }
-//static void init_savegame_buffers(savegame_state* state)
-//{
-//    state->scenario_campaign_mission = 0;
-//    state->file_version = 0;
-//    state->image_grid = 0;
-//    state->edge_grid = 0;
-//    state->building_grid = 0;
-//    state->terrain_grid = 0;
-//    state->aqueduct_grid = 0;
-//    state->figure_grid = 0;
-//    state->bitfields_grid = 0;
-//    state->sprite_grid = 0;
-//    state->random_grid = 0;
-//    state->desirability_grid = 0;
-//    state->elevation_grid = 0;
-//    state->building_damage_grid = 0;
-//    state->aqueduct_backup_grid = 0;
-//    state->sprite_backup_grid = 0;
-//    state->figures = 0;
-//    state->route_figures = 0;
-//    state->route_paths = 0;
-//    state->formations = 0;
-//    state->formation_totals = 0;
-//    state->city_data = 0;
-//    state->city_faction_unknown = 0;
-//    state->player_name = 0;
-//    state->city_faction = 0;
-//    state->buildings = 0;
-//    state->city_view_orientation = 0;
-//    state->game_time = 0;
-//    state->building_extra_highest_id_ever = 0;
-//    state->random_iv = 0;
-//    state->city_view_camera = 0;
-//    state->building_count_culture1 = 0;
-//    state->city_graph_order = 0;
-//    state->emperor_change_time = 0;
-//    state->empire = 0;
-//    state->empire_cities = 0;
-//    state->building_count_industry = 0;
-//    state->trade_prices = 0;
-//    state->figure_names = 0;
-//    state->culture_coverage = 0;
-////    state->scenario = 0;
-//
-////    state->scenario_data = {0};
-//    state->scenario_data.header = 0;
-//    state->scenario_data.info1 = 0;
-//    state->scenario_data.info2 = 0;
-//    state->scenario_data.info3 = 0;
-//    state->scenario_data.events = 0;
-//    state->scenario_data.win_criteria = 0;
-//    state->scenario_data.map_points = 0;
-//    state->scenario_data.river_points = 0;
-//    state->scenario_data.empire = 0;
-//    state->scenario_data.wheat = 0;
-//    state->scenario_data.requests = 0;
-//    state->scenario_data.invasions = 0;
-//    state->scenario_data.invasion_points = 0;
-//    state->scenario_data.request_comply_dialogs = 0;
-//    state->scenario_data.herds = 0;
-//    state->scenario_data.demands = 0;
-//    state->scenario_data.price_changes = 0;
-//    state->scenario_data.fishing_points = 0;
-//    state->scenario_data.request_extra = 0;
-//    state->scenario_data.allowed_builds = 0;
-//    // pharaoh only
-//    state->scenario_data.monuments = 0;
-//
-//    state->max_game_year = 0;
-//    state->earthquake = 0;
-//    state->emperor_change_state = 0;
-//    state->messages = 0;
-//    state->message_extra = 0;
-//    state->population_messages = 0;
-//    state->message_counts = 0;
-//    state->message_delays = 0;
-//    state->building_list_burning_totals = 0;
-//    state->figure_sequence = 0;
-//    state->scenario_settings = 0;
-//    state->invasion_warnings = 0;
-//    state->scenario_is_custom = 0;
-//    state->city_sounds = 0;
-//    state->building_extra_highest_id = 0;
-//    state->figure_traders = 0;
-//    state->building_list_burning = 0;
-//    state->building_list_small = 0;
-//    state->building_list_large = 0;
-//    state->tutorial_part1 = 0;
-//    state->building_count_military = 0;
-//    state->enemy_army_totals = 0;
-//    state->building_storages = 0;
-//    state->building_count_culture2 = 0;
-//    state->building_count_support = 0;
-//    state->tutorial_part2 = 0;
-//    state->gladiator_revolt = 0;
-//    state->trade_route_limit = 0;
-//    state->trade_route_traded = 0;
-//    state->building_barracks_tower_sentry = 0;
-//    state->building_extra_sequence = 0;
-//    state->routing_counters = 0;
-//    state->building_count_culture3 = 0;
-//    state->enemy_armies = 0;
-//    state->city_entry_exit_xy = 0;
-//    state->last_invasion_id = 0;
-//    state->building_extra_corrupt_houses = 0;
-//    state->scenario_name = 0;
-//    state->bookmarks = 0;
-//    state->tutorial_part3 = 0;
-//    state->city_entry_exit_grid_offset = 0;
-//    state->end_marker = 0;
-//
-//    state->ph_unk01 = 0;
-//    state->ph_unk02 = 0;
-//    state->ph_unk03 = 0;
-//    state->ph_unk04 = 0;
-//    state->ph_unk05 = 0;
-//    state->ph_unk06 = 0;
-//    state->ph_unk07 = 0;
-//    state->ph_unk08 = 0;
-//    state->ph_unk09 = 0;
-//    state->ph_unk10 = 0;
-//
-//    state->junk1 = 0;
-//    state->junk2 = 0;
-//    state->junk3 = 0;
-//    state->junk4 = 0;
-//    state->junk5 = 0;
-//    state->junk6 = 0;
-//}
+
 static void init_scenario_data(void)
 {
     return;
@@ -772,7 +644,7 @@ static void init_savegame_data(int expanded)
             }
     }
 }
-#include "assert.h"
+#include <cassert>
 
 static void scenario_load_from_state(scenario_state *file)
 {
@@ -969,12 +841,13 @@ char *fname;
 void log_hex(file_piece *piece, int i, int offs)
 {
     // log first few bytes of the filepiece
-    int s = piece->buf->size() < 16 ? piece->buf->size() : 16;
+    size_t s = piece->buf->size() < 16 ? piece->buf->size() : 16;
     char hexstr[40] = {0};
     for (int b = 0; b < s; b++)
     {
         char hexcode[3] = {0};
-        snprintf(hexcode, 4, "%02X", ((char*) piece->buf->data_const())[b]);
+        uint8_t inbyte = ((uint8_t*) piece->buf->data_const())[b];
+        snprintf(hexcode, 4, "%02X", inbyte);
         strncat(hexstr, hexcode, 4);
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
@@ -988,23 +861,24 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size)
         return 0;
 
     // read 32-bit int header denoting size of compressed chunk
-    size_t returned_size = buf->from_file(1, filepiece_size, fp);
-    uint32_t chunk_size = buf->read_u32();
+    uint32_t chunk_size = 0;
+    fread(&chunk_size, 4, 1, fp);
 
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
     if ((unsigned int) chunk_size == UNCOMPRESSED) {
-        if (returned_size != filepiece_size)
+        if (buf->from_file(1, filepiece_size, fp) != filepiece_size)
             return 0;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
         if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
-        || !zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size))
+        || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size) != buf->size())
             return 0;
     }
+    buf->force_validate_unsafe_pls_use_carefully();
     char *lfile = (char*)malloc(200);
     sprintf(lfile,"DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
     FILE *log = fopen(lfile, "wb+");
-
+    fwrite(buf->data_const(), filepiece_size, 1, log);
     fclose(log);
     free(lfile);
     return 1;

@@ -23,6 +23,8 @@ typedef struct engine_sizes {
     int MAX_SCENARIO_NAME;
     int MAX_BRIEF_DESCRIPTION;
     int MAX_BRIEFING;
+
+    int MAX_FORMATIONS;
 } engine_sizes;
 
 extern int GAME_ENV;

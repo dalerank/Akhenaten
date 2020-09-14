@@ -113,12 +113,18 @@ void building_list_save_state(buffer *small, buffer *large, buffer *burning, buf
 void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {
+        if (!small->is_valid(1))
+            break;
         data.small.items[i] = small->read_i16();
     }
     for (int i = 0; i < MAX_LARGE; i++) {
+        if (!large->is_valid(1))
+            break;
         data.large.items[i] = large->read_i16();
     }
     for (int i = 0; i < MAX_BURNING; i++) {
+        if (!burning->is_valid(1))
+            break;
         data.burning.items[i] = burning->read_i16();
     }
     data.burning.total = burning_totals->read_i32();

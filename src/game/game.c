@@ -149,6 +149,29 @@ int game_init(void)
         errlog("unable to init graphics");
         return 0;
     }
+
+
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+//    image_load_main(CLIMATE_CENTRAL, 0, 0);
+
+
+
+
+
+
     if (!image_load_main(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return 0;
