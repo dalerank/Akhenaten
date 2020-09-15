@@ -14,15 +14,15 @@
 */
 class buffer {
     bool initialized = false;
-//    bool validdata = false;
     uint8_t *valid_memory = nullptr;
     uint8_t *data = nullptr;
     size_t datasize = 0;
     size_t index = 0;
-    int overflow = 0;
 
-    int check_size(size_t s);
+    size_t reinit = 0;
+
     void check_initialized();
+    bool out_of_bounds(size_t i, size_t s);
     void check_valid(size_t i, size_t s);
     void validate(size_t i, size_t s);
 
@@ -39,7 +39,7 @@ public:
     void set_offset(size_t offset);
     void reset_offset();
     void skip(size_t s);
-    int at_end();
+    bool at_end();
 
     bool is_valid(size_t s);
     void force_validate_unsafe_pls_use_carefully();

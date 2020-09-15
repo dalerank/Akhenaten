@@ -3,7 +3,7 @@
 
 #include "building/type.h"
 
-typedef enum {
+enum {
     SELECTED_RATING_NONE = 0,
     SELECTED_RATING_CULTURE = 1,
     SELECTED_RATING_PROSPERITY = 2,

@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum {
     TR_NO_PATCH_TITLE,
     TR_NO_PATCH_MESSAGE,
     TR_MISSING_FONTS_TITLE,

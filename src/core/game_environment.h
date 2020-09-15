@@ -1,7 +1,7 @@
 #ifndef AUGUSTUS_GAME_ENVIRONMENT_H
 #define AUGUSTUS_GAME_ENVIRONMENT_H
 
-typedef enum {
+enum {
     ENGINE_ENV_C3 = 0,
     ENGINE_ENV_PHARAOH = 1,
     ENGINE_ENV_MAX = 2

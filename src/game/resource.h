@@ -9,7 +9,7 @@
 /**
  * Resource types
  */
-typedef enum {
+enum {
     RESOURCE_NONE = 0,
     RESOURCE_WHEAT = 1,
     RESOURCE_VEGETABLES = 2,
@@ -35,7 +35,7 @@ typedef enum {
     RESOURCE_MAX_FOOD = 7
 };
 
-typedef enum {
+enum {
     INVENTORY_WHEAT = 0,
     INVENTORY_VEGETABLES = 1,
     INVENTORY_FRUIT = 2,
@@ -52,7 +52,7 @@ typedef enum {
     INVENTORY_MAX = 8
 };
 
-typedef enum {
+enum {
     WORKSHOP_NONE = 0,
     WORKSHOP_OLIVES_TO_OIL = 1,
     WORKSHOP_VINES_TO_WINE = 2,
@@ -61,7 +61,7 @@ typedef enum {
     WORKSHOP_CLAY_TO_POTTERY = 5
 };
 
-typedef enum {
+enum {
     RESOURCE_IMAGE_STORAGE = 0,
     RESOURCE_IMAGE_CART = 1,
     RESOURCE_IMAGE_FOOD_CART = 2,

@@ -1,7 +1,7 @@
 #ifndef CITY_CONSTANTS_H
 #define CITY_CONSTANTS_H
 
-typedef enum {
+enum {
     ADVISOR_NONE = 0,
     ADVISOR_LABOR = 1,
     ADVISOR_MILITARY = 2,
@@ -18,7 +18,7 @@ typedef enum {
     ADVISOR_HOUSING = 19
 };
 
-typedef enum {
+enum {
     int_NONE = 0,
     int_NO_FOOD = 1,
     int_NO_JOBS = 2,
@@ -27,7 +27,7 @@ typedef enum {
     int_MANY_TENTS = 5,
 };
 
-typedef enum {
+enum {
     NO_IMMIGRATION_LOW_WAGES = 0,
     NO_IMMIGRATION_NO_JOBS = 1,
     NO_IMMIGRATION_NO_FOOD = 2,
@@ -36,14 +36,14 @@ typedef enum {
     NO_IMMIGRATION_LOW_MOOD = 5
 };
 
-typedef enum {
+enum {
     FESTIVAL_NONE = 0,
     FESTIVAL_SMALL = 1,
     FESTIVAL_LARGE = 2,
     FESTIVAL_GRAND = 3
 };
 
-typedef enum {
+enum {
     GOD_CERES = 0,
     GOD_NEPTUNE = 1,
     GOD_MERCURY = 2,
@@ -51,7 +51,7 @@ typedef enum {
     GOD_VENUS = 4
 };
 
-typedef enum {
+enum {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
     TRADE_STATUS_EXPORT = 2

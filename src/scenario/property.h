@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum {
     CLIMATE_CENTRAL = 0,
     CLIMATE_NORTHERN = 1,
     CLIMATE_DESERT = 2

@@ -32,11 +32,9 @@ void buffer::clear()
         delete data; data = nullptr;
         delete valid_memory; valid_memory = nullptr;
         initialized = false;
-//        validdata = false;
     }
     data = nullptr;
     index = 0;
-    overflow = 0;
 }
 const uint8_t* buffer::data_const()
 {
@@ -52,6 +50,18 @@ size_t buffer::size()
 {
     return datasize;
 };
+bool buffer::out_of_bounds(size_t i, size_t s) // WILL check initialized
+{
+    check_initialized();
+    if (i + s > datasize)
+        return true;
+    return false;
+}
+bool buffer::at_end()
+{
+    check_initialized();
+    return index >= datasize;
+}
 void buffer::set_offset(size_t offset)
 {
     check_initialized();
@@ -61,39 +71,27 @@ void buffer::reset_offset()
 {
     check_initialized();
     index = 0;
-    overflow = 0;
 }
-void buffer::skip(size_t s)
+void buffer::skip(size_t s) // WILL assert !out_of_bounds --- AND therefore check initialized
 {
-    check_initialized();
-    index += s;
+    if (out_of_bounds(index, s))
+        index = datasize;
+    else
+        index += s;
 }
-int buffer::at_end()
-{
-    check_initialized();
-    return index >= datasize;
-}
-int buffer::check_size(size_t s)
-{
-    check_initialized();
-    if (index + s > datasize) {
-        overflow = 1;
-        return 0;
-    }
-    return 1;
-}
+
 void buffer::check_initialized()
 {
     assert(initialized);
     assert(data != nullptr);
     assert(valid_memory != nullptr);
 }
+// vvv WILL assert !out_of_bounds --- AND therefore check initialized
 void buffer::check_valid(size_t i, size_t s)
 {
-    check_initialized();
-    for (int j = i; j < i + s; j++) {
+    assert(!out_of_bounds(i, s));
+    for (int j = i; j < i + s; j++)
         assert(valid_memory[j] == 1);
-    }
 }
 void buffer::validate(size_t i, size_t s)
 {
@@ -117,78 +115,54 @@ bool buffer::is_valid(size_t s)
     return true;
 }
 
+// vvv these WILL assert valid --- and therefore assert !out_of_bounds --- AND therefore check initialized
 uint8_t buffer::read_u8()
 {
     check_valid(index, 1);
-    if (check_size(1)) {
-        return data[index++];
-    } else {
-        return 0;
-    }
+    return data[index++];
 }
 uint16_t buffer::read_u16()
 {
     check_valid(index, 2);
-    if (check_size(2)) {
-        uint8_t b0 = data[index++];
-        uint8_t b1 = data[index++];
-        return (uint16_t) (b0 | (b1 << 8));
-    } else {
-        return 0;
-    }
+    uint8_t b0 = data[index++];
+    uint8_t b1 = data[index++];
+    return (uint16_t) (b0 | (b1 << 8));
 }
 uint32_t buffer::read_u32()
 {
     check_valid(index, 4);
-    if (check_size(4)) {
-        uint8_t b0 = data[index++];
-        uint8_t b1 = data[index++];
-        uint8_t b2 = data[index++];
-        uint8_t b3 = data[index++];
-        return (uint32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
-    } else {
-        return 0;
-    }
+    uint8_t b0 = data[index++];
+    uint8_t b1 = data[index++];
+    uint8_t b2 = data[index++];
+    uint8_t b3 = data[index++];
+    return (uint32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
 }
 int8_t buffer::read_i8()
 {
     check_valid(index, 1);
-    if (check_size(1)) {
-        return (int8_t) data[index++];
-    } else {
-        return 0;
-    }
+    return (int8_t) data[index++];
 }
 int16_t buffer::read_i16()
 {
     check_valid(index, 2);
-    if (check_size(2)) {
-        uint8_t b0 = data[index++];
-        uint8_t b1 = data[index++];
-        return (int16_t) (b0 | (b1 << 8));
-    } else {
-        return 0;
-    }
+    uint8_t b0 = data[index++];
+    uint8_t b1 = data[index++];
+    return (int16_t) (b0 | (b1 << 8));
 }
 int32_t buffer::read_i32()
 {
     check_valid(index, 4);
-    if (check_size(4)) {
-        uint8_t b0 = data[index++];
-        uint8_t b1 = data[index++];
-        uint8_t b2 = data[index++];
-        uint8_t b3 = data[index++];
-        return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
-    } else {
-        return 0;
-    }
+    uint8_t b0 = data[index++];
+    uint8_t b1 = data[index++];
+    uint8_t b2 = data[index++];
+    uint8_t b3 = data[index++];
+    return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
 }
-int buffer::read_raw(void *value, size_t max_size)
+int buffer::read_raw(void *value, size_t s)
 {
-    int s = datasize - index;
-    if (s > max_size) {
-        s = max_size;
-    }
+//    int s = datasize - index; <---- this used to clamp read size to datasize anyways...
+//    if (s > max_size)
+//        s = max_size;
     check_valid(index, s);
     memcpy(value, &data[index], s);
     index += s;
@@ -201,18 +175,17 @@ void buffer::fill(uint8_t val)
     memset(data, val, datasize);
     validate(0, datasize);
 }
+// vvv these WILL assert !out_of_bounds --- AND therefore check initialized
 void buffer::write_u8(uint8_t value)
 {
-    check_initialized();
-    if (check_size(1)) {
+    if (!out_of_bounds(index, 1)) {
         validate(index, 1);
         data[index++] = value;
     }
 }
 void buffer::write_u16(uint16_t value)
 {
-    check_initialized();
-    if (check_size(2)) {
+    if (!out_of_bounds(index, 2)) {
         validate(index, 2);
         data[index++] = value & 0xff;
         data[index++] = (value >> 8) & 0xff;
@@ -220,8 +193,7 @@ void buffer::write_u16(uint16_t value)
 }
 void buffer::write_u32(uint32_t value)
 {
-    check_initialized();
-    if (check_size(4)) {
+    if (!out_of_bounds(index, 4)) {
         validate(index, 4);
         data[index++] = value & 0xff;
         data[index++] = (value >> 8) & 0xff;
@@ -231,16 +203,14 @@ void buffer::write_u32(uint32_t value)
 }
 void buffer::write_i8(int8_t value)
 {
-    check_initialized();
-    if (check_size(1)) {
+    if (!out_of_bounds(index, 1)) {
         validate(index, 1);
         data[index++] = value & 0xff;
     }
 }
 void buffer::write_i16(int16_t value)
 {
-    check_initialized();
-    if (check_size(2)) {
+    if (!out_of_bounds(index, 2)) {
         validate(index, 2);
         data[index++] = value & 0xff;
         data[index++] = (value >> 8) & 0xff;
@@ -248,8 +218,7 @@ void buffer::write_i16(int16_t value)
 }
 void buffer::write_i32(int32_t value)
 {
-    check_initialized();
-    if (check_size(4)) {
+    if (!out_of_bounds(index, 4)) {
         validate(index, 4);
         data[index++] = value & 0xff;
         data[index++] = (value >> 8) & 0xff;
@@ -259,60 +228,28 @@ void buffer::write_i32(int32_t value)
 }
 void buffer::write_raw(const void *value, size_t s)
 {
-    check_initialized();
-    if (check_size(datasize)) {
+    if (!out_of_bounds(index, s)) {
         memcpy(&data[index], value, s);
         validate(index, s);
         index += s;
     }
 }
 
+// WILL assert !out_of_bounds --- AND therefore check initialized
 size_t buffer::from_file(size_t s, size_t c, FILE * __restrict__ fp)
 {
-    check_initialized();
-    assert(s * c <= datasize);
+//    check_initialized();
+//    assert(s * c <= datasize);
+    assert(!out_of_bounds(0, s * c));
 
-    auto offs = ftell(fp);
-
-    uint8_t *td;
-
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-    td = new uint8_t[datasize]; delete td;
-
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-    td = new uint8_t[datasize];
-    fseek (fp, offs, SEEK_SET);
-    fread(td, s, c, fp); delete td;
-
-    fseek (fp, offs, SEEK_SET);
     size_t result = fread(data, s, c, fp);
     validate(0, std::min(s * c, result));
     return result;
 }
+// WILL assert valid --- and therefore assert !out_of_bounds --- AND therefore check initialized
 size_t buffer::to_file(size_t s, size_t c, FILE * __restrict__ fp)
 {
-    check_valid(0, std::min(s * c, datasize));
-    assert(s * c <= datasize);
+    check_valid(0, s * c);
     return fwrite(data, s, c, fp);
 }
 

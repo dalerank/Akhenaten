@@ -5,8 +5,8 @@
 #include <assert.h>
 
 int GAME_ENV = ENGINE_ENV_MAX;
-char *game_name;
-char *pref_filename;
+const char *game_name;
+const char *pref_filename;
 
 void init_game_environment(int env)
 {

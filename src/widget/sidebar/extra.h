@@ -3,7 +3,7 @@
 
 #include "input/mouse.h"
 
-typedef enum {
+enum {
     SIDEBAR_EXTRA_DISPLAY_NONE = 0,
     SIDEBAR_EXTRA_DISPLAY_GAME_SPEED = 1,
     SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT = 2,

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum {
     WARNING_ORIENTATION = 1,
     WARNING_CLEAR_LAND_NEEDED = 2,
     WARNING_OUT_OF_MONEY = 3,

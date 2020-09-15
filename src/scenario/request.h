@@ -1,7 +1,7 @@
 #ifndef SCENARIO_REQUEST_H
 #define SCENARIO_REQUEST_H
 
-typedef enum {
+enum {
     REQUEST_STATE_NORMAL = 0,
     REQUEST_STATE_OVERDUE = 1,
     REQUEST_STATE_DISPATCHED = 2,

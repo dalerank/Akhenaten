@@ -9,7 +9,7 @@
 /**
  * Direction constants
  */
-typedef enum {
+enum {
     DIR_0_TOP = 0,
     DIR_1_TOP_RIGHT = 1,
     DIR_2_RIGHT = 2,

@@ -9,7 +9,7 @@
 /**
  * Figure types
  */
-typedef enum {
+enum {
     FIGURE_NONE = 0,
     FIGURE_IMMIGRANT = 1,
     FIGURE_EMIGRANT = 2,
@@ -85,7 +85,7 @@ typedef enum {
     FIGURE_HIPPODROME_HORSES = 72
 };
 
-typedef enum {
+enum {
     ENEMY_0_BARBARIAN = 0,
     ENEMY_1_NUMIDIAN = 1,
     ENEMY_2_GAUL = 2,

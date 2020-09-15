@@ -5,7 +5,7 @@
 
 #define TOOLTIP_MAX_EXTRA_VALUES 5
 
-typedef enum {
+enum {
     TOOLTIP_NONE = 0,
     TOOLTIP_BUTTON = 1,
     TOOLTIP_OVERLAY = 2,

@@ -37,6 +37,8 @@
 
 #if defined(_WIN32)
 #include <string.h>
+#include <bits/exception_defines.h>
+
 #endif
 
 #ifdef DRAW_FPS

@@ -10,7 +10,7 @@ typedef struct {
     int y;
 } touch_coords;
 
-typedef enum {
+enum {
     TOUCH_MODE_ORIGINAL = 0, // original julius touch mode
     TOUCH_MODE_TOUCHPAD = 1, // drag the pointer and tap-click like on a touchpad (default)
     TOUCH_MODE_DIRECT = 2, // pointer jumps to finger but doesn't click on tap

@@ -3,7 +3,7 @@
 
 #include "input/keys.h"
 
-typedef enum {
+enum {
     HOTKEY_ARROW_UP,
     HOTKEY_ARROW_DOWN,
     HOTKEY_ARROW_LEFT,

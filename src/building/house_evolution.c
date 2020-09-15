@@ -12,7 +12,7 @@
 #include "map/routing_terrain.h"
 #include "map/tiles.h"
 
-typedef enum {
+enum {
     EVOLVE = 1,
     NONE = 0,
     DEVOLVE = -1

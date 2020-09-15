@@ -105,8 +105,51 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_nobody_action,
     figure_nobody_action,
     figure_nobody_action,
-    figure_nobody_action
-}; //80
+    figure_nobody_action, // 80
+
+    // temp, for Pharaoh
+
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action,
+    figure_nobody_action, // 120
+};
 
 void figure_action_handle(void)
 {

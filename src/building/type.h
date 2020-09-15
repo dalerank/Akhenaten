@@ -9,7 +9,7 @@
 /**
  * Building types
  */
-typedef enum {
+enum {
     BUILDING_NONE = 0,
     BUILDING_MENU_FARMS = 2,
     BUILDING_MENU_RAW_MATERIALS = 3,
@@ -133,7 +133,7 @@ typedef enum {
 /**
  * House levels
  */
-typedef enum {
+enum {
     HOUSE_SMALL_TENT = 0,
     HOUSE_LARGE_TENT = 1,
     HOUSE_SMALL_SHACK = 2,

@@ -71,8 +71,8 @@ static struct {
     const dir_listing *file_list;
 
 //    file_type_data *file_data;
-//    uint8_t typed_name[FILE_NAME_MAX];
-//    char selected_file[FILE_NAME_MAX];
+    uint8_t typed_name[FILE_NAME_MAX];
+    char selected_file[FILE_NAME_MAX];
 } data;
 
 static int double_click = 0;
@@ -157,17 +157,17 @@ static const char *get_chosen_filename(void)
 {
     // Check if we should work with the selected file
     uint8_t selected_name[FILE_NAME_MAX];
-//    encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
+    encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
 
-//    if (string_equals(selected_name, data.typed_name, 1)) {
-//        // user has not modified the string after selecting it: use filename
-//        return data.selected_file;
-//    }
+    if (string_equals(selected_name, data.typed_name, 1)) {
+        // user has not modified the string after selecting it: use filename
+        return data.selected_file;
+    }
 
-//    // We should use the typed name, which needs to be converted to UTF-8...
-//    static char typed_file[FILE_NAME_MAX];
-//    encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
-//    return typed_file;
+    // We should use the typed name, which needs to be converted to UTF-8...
+    static char typed_file[FILE_NAME_MAX];
+    encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
+    return typed_file;
 }
 static void button_ok_cancel(int is_ok, int param2)
 {

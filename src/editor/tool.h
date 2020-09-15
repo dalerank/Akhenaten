@@ -3,7 +3,7 @@
 
 #include "map/point.h"
 
-typedef enum {
+enum {
     TOOL_GRASS = 0,
     TOOL_TREES = 1,
     TOOL_WATER = 2,

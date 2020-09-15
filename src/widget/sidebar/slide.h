@@ -1,7 +1,7 @@
 #ifndef WIDGET_SIDEBAR_SLIDE_H
 #define WIDGET_SIDEBAR_SLIDE_H
 
-typedef enum {
+enum {
     SLIDE_DIRECTION_IN = 0,
     SLIDE_DIRECTION_OUT = 1
 };

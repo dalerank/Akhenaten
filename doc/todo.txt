@@ -1,5 +1,6 @@
 ===== task for today: =====
 
+- refactor pak file loading?????
 - fix objectives/tutorial goals/scenario goals
 - fix briefing
 - fix messages

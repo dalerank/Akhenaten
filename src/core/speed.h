@@ -18,7 +18,7 @@
 /**
 * Speed direction constants
 */
-typedef enum {
+enum {
     SPEED_DIRECTION_NEGATIVE = -1,
     SPEED_DIRECTION_STOPPED  = 0,
     SPEED_DIRECTION_POSITIVE = 1

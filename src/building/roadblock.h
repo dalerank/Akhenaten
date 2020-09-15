@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 
-typedef enum {
+enum {
 	PERMISSION_NONE = 0,
 	PERMISSION_MAINTENANCE = 1,
 	PERMISSION_PRIEST = 2,

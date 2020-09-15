@@ -17,12 +17,12 @@
 #define MIN_TEXT_SIZE (28 + MAX_TEXT_ENTRIES * 8)
 #define MAX_TEXT_SIZE (MIN_TEXT_SIZE + MAX_TEXT_DATA)
 
-#define MAX_MESSAGE_ENTRIES 400
+#define MAX_MESSAGE_ENTRIES 500
 #define MAX_MESSAGE_DATA 460000
 #define MIN_MESSAGE_SIZE 32024
-#define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
+//#define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
 
-#define BUFFER_SIZE 400000
+#define BUFFER_SIZE 800000
 
 static struct {
     struct {
@@ -36,12 +36,12 @@ static struct {
 } data;
 
 typedef struct lang_files_collection {
-    char *FILE_TEXT_ENG;
-    char *FILE_MM_ENG;
-    char *FILE_TEXT_RUS;
-    char *FILE_MM_RUS;
-    char *FILE_EDITOR_TEXT_ENG;
-    char *FILE_EDITOR_MM_ENG;
+    const char *FILE_TEXT_ENG;
+    const char *FILE_MM_ENG;
+    const char *FILE_TEXT_RUS;
+    const char *FILE_MM_RUS;
+    const char *FILE_EDITOR_TEXT_ENG;
+    const char *FILE_EDITOR_MM_ENG;
 } lang_files_collection;
 lang_files_collection lfcs[] = {
         {
@@ -144,7 +144,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
     // load message
     buf->init(BUFFER_SIZE);
     filesize = io_read_file_into_buffer(message_filename, localizable, buf, BUFFER_SIZE);
-    if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
+    if (filesize < MIN_MESSAGE_SIZE) { // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
         delete buf;
         return 0;
     }

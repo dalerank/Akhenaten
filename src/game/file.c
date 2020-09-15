@@ -256,26 +256,6 @@ static void initialize_saved_game(void)
     city_mission_tutorial_set_disease_message_shown(1);
 
     image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
-    image_load_main(scenario_property_climate(), 0, 0);
 
     image_load_enemy(scenario_property_enemy());
     city_military_determine_distant_battle_city();

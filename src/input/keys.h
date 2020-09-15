@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum {
     KEY_NONE = 0,
     KEY_A,
     KEY_B,
@@ -101,7 +101,7 @@ typedef enum {
     KEY_MAX_ITEMS
 };
 
-typedef enum {
+enum {
     KEY_MOD_NONE = 0,
     KEY_MOD_SHIFT = 1,
     KEY_MOD_CTRL = 2,

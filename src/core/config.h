@@ -3,7 +3,7 @@
 
 #define CONFIG_STRING_VALUE_MAX 64
 
-typedef enum {
+enum {
     CONFIG_GP_FIX_IMMIGRATION_BUG,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
     CONFIG_GP_FIX_EDITOR_EVENTS,
@@ -44,7 +44,7 @@ typedef enum {
     CONFIG_MAX_ENTRIES
 };
 
-typedef enum {
+enum {
     CONFIG_STRING_UI_LANGUAGE_DIR,
     CONFIG_STRING_MAX_ENTRIES
 };

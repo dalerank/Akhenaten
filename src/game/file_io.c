@@ -255,14 +255,14 @@ static void init_file_piece(file_piece *piece, int size, int compressed)
     piece->compressed = compressed;
     piece->buf = new buffer(size);
 }
-static buffer *create_scenario_piece(int size, char *name)
+static buffer *create_scenario_piece(int size, const char *name)
 {
     file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
     init_file_piece(piece, size, 0);
     strncpy(piece->name, name, 99);
     return piece->buf;
 }
-static buffer *create_savegame_piece(int size, int compressed, char *name)
+static buffer *create_savegame_piece(int size, int compressed, const char *name)
 {
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
@@ -611,7 +611,10 @@ static void init_savegame_data(int expanded)
             state->junk9 = create_savegame_piece(52370+18600+38+13216+8200, 0, "junk9");
 
         state->junk10 = create_savegame_piece(1280, 1, "junk10"); // unknown compressed data
-        state->junk11 = create_savegame_piece(19600, 1, "junk11"); // unknown compressed data
+        if (expanded)
+            state->junk11 = create_savegame_piece(19600, 1, "junk11"); // unknown compressed data
+        else
+            state->junk11 = create_savegame_piece(15200, 1, "junk11"); // unknown compressed data
         state->junk12 = create_savegame_piece(16200, 1, "junk12"); // unknown compressed data
 
         // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
@@ -644,7 +647,7 @@ static void init_savegame_data(int expanded)
             }
     }
 }
-#include <cassert>
+//#include <cassert>
 
 static void scenario_load_from_state(scenario_state *file)
 {
@@ -912,6 +915,10 @@ static int savegame_read_from_file(FILE *fp)
 
         auto offs = ftell(fp);
 
+        if (i == 76) {
+            int a = 24;
+        }
+
         if (piece->compressed)
             result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
         else
@@ -1000,6 +1007,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     if (offset) {
         fseek(fp, offset, SEEK_SET);
     }
+
     int result = savegame_read_from_file(fp);
     file_close(fp);
     if (!result) {

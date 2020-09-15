@@ -3,7 +3,7 @@
 
 #include "core/buffer.h"
 
-typedef enum {
+enum {
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
     MESSAGE_CAT_COLLAPSE = 2,
@@ -15,7 +15,7 @@ typedef enum {
     MESSAGE_CAT_FISHING_BLOCKED = 11,
 };
 
-typedef enum {
+enum {
     MESSAGE_ADVISOR_NONE = 0,
     MESSAGE_ADVISOR_LABOR = 1,
     MESSAGE_ADVISOR_TRADE = 2,
@@ -26,7 +26,7 @@ typedef enum {
     MESSAGE_ADVISOR_RELIGION = 7,
 };
 
-typedef enum {
+enum {
     MESSAGE_POPULATION_500 = 2,
     MESSAGE_POPULATION_1000 = 3,
     MESSAGE_POPULATION_2000 = 4,

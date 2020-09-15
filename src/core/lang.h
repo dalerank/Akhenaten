@@ -11,7 +11,7 @@
 /**
  * Type
  */
-typedef enum {
+enum {
     TYPE_MANUAL = 0,
     TYPE_ABOUT = 1,
     TYPE_MESSAGE = 2,
@@ -21,7 +21,7 @@ typedef enum {
 /**
  * Message type
  */
-typedef enum {
+enum {
     MESSAGE_TYPE_GENERAL = 0,
     MESSAGE_TYPE_DISASTER = 1,
     MESSAGE_TYPE_IMPERIAL = 2,

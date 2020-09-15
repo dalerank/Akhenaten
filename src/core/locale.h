@@ -4,7 +4,7 @@
 /**
  * Language type
  */
-typedef enum {
+enum {
     LANGUAGE_UNKNOWN,
     // Official Sierra versions
     LANGUAGE_ENGLISH,

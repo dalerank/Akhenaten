@@ -3,13 +3,13 @@
 
 #include <stdint.h>
 
-typedef enum {
+enum {
     TOOLTIPS_NONE = 0,
     TOOLTIPS_SOME = 1,
     TOOLTIPS_FULL = 2
 };
 
-typedef enum {
+enum {
     DIFFICULTY_VERY_EASY = 0,
     DIFFICULTY_EASY = 1,
     DIFFICULTY_NORMAL = 2,
@@ -17,7 +17,7 @@ typedef enum {
     DIFFICULTY_VERY_HARD = 4
 };
 
-typedef enum {
+enum {
     SOUND_MUSIC = 1,
     SOUND_SPEECH = 2,
     SOUND_EFFECTS = 3,
