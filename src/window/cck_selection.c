@@ -31,7 +31,7 @@ static void button_start_scenario(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
-    {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
+    {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_scenario, button_none, 1, 0, 1};
 
 static generic_button file_buttons[] = {
     {18, 220, 252, 16, button_select_item, button_none, 0, 0},

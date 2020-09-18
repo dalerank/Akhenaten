@@ -3,7 +3,14 @@
 
 #include "input/mouse.h"
 
-#define TOP_MENU_HEIGHT 24
+static int TOP_MENU_HEIGHT[] = {
+    24,
+    30
+};
+static int SIDEBAR_EXPANDED_WIDTH[] = {
+    162,
+    162 + 24
+};
 
 typedef struct {
     short text_group;

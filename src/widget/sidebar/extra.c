@@ -81,7 +81,6 @@ static int  calculate_displayable_info(int  info_to_display, int available_heigh
     }
     return result;
 }
-
 static int calculate_extra_info_height(void)
 {
     if (data.info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE) {
@@ -127,7 +126,6 @@ static void set_extra_info_objectives(void)
         data.population.target = scenario_criteria_population();
     }
 }
-
 static int update_extra_info_value(int value, int *field)
 {
     if (value == *field) {
@@ -137,7 +135,6 @@ static int update_extra_info_value(int value, int *field)
         return 1;
     }
 }
-
 static int update_extra_info(int is_background)
 {
     int changed = 0;
@@ -164,6 +161,8 @@ static int update_extra_info(int is_background)
     return changed;
 }
 
+#include "core/game_environment.h"
+
 static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis)
 {
     if (cut_off_at_parenthesis) {
@@ -186,7 +185,6 @@ static int draw_extra_info_objective(int x_offset, int y_offset, int text_group,
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font);
     return EXTRA_INFO_LINE_SPACE * 2;
 }
-
 static void draw_extra_info_panel(void)
 {
     int panel_blocks = data.height / 16;
@@ -230,9 +228,10 @@ static void draw_extra_info_panel(void)
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
     }
 }
-
 int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, int  info_to_display)
 {
+//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//        x_offset -= 24;
     data.is_collapsed = is_collapsed;
     data.x_offset = x_offset;
     data.y_offset = y_offset;
@@ -246,22 +245,13 @@ int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int ava
     }
     return data.height;
 }
-
-static void draw_extra_info_buttons(void)
-{
-    if (update_extra_info(0)) {
-        // Updates displayed speed % after clicking the arrows
-        draw_extra_info_panel();
-    } else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
-        arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
-    }
-}
-
 void sidebar_extra_draw_foreground(void)
 {
-    draw_extra_info_buttons();
+    if (update_extra_info(0))
+        draw_extra_info_panel(); // Updates displayed speed % after clicking the arrows
+    else if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
+        arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
 }
-
 int sidebar_extra_handle_mouse(const mouse *m)
 {
     if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {

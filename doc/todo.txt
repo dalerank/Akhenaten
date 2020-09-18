@@ -1,7 +1,18 @@
 ===== task for today: =====
 
-- refactor pak file loading?????
 - fix objectives/tutorial goals/scenario goals
-- fix briefing
 - fix messages
 - fix UI
+	- menu buttons
+	- goals text
+	- messages
+- wrong tooltips
+- wrong build button functions
+- wrong build panel graphics
+
+
+
+19958 15543
+
+0007b = ??????????????
+0007c = figure action callback out of bounds

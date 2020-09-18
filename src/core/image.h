@@ -68,12 +68,8 @@ public:
     int get_entry_count();
     int get_id(int group);
     const image *get_image(int id);
-
-
-
 };
 
-//int image_init(void);
 
 int image_load_main(int climate_id, int is_editor, int force_reload);
 int image_load_fonts(encoding_type encoding);

@@ -647,7 +647,6 @@ static void init_savegame_data(int expanded)
             }
     }
 }
-//#include <cassert>
 
 static void scenario_load_from_state(scenario_state *file)
 {

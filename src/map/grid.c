@@ -346,15 +346,24 @@ int map_grid_direction_delta(int direction)
 }
 void map_grid_size(int *width, int *height)
 {
-    *width = map_data.width;
-    *height = map_data.height;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        *width = map_data.width;
+        *height = map_data.height;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        *width = map_data.width / 2;
+        *height = map_data.height / 2;
+    }
 }
 int map_grid_width(void)
 {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return map_data.width / 2;
     return map_data.width;
 }
 int map_grid_height(void)
 {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return map_data.height / 2;
     return map_data.height;
 }
 void map_grid_bound(int *x, int *y)

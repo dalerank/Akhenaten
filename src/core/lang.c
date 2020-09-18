@@ -18,7 +18,7 @@
 #define MAX_TEXT_SIZE (MIN_TEXT_SIZE + MAX_TEXT_DATA)
 
 #define MAX_MESSAGE_ENTRIES 500
-#define MAX_MESSAGE_DATA 460000
+//#define MAX_MESSAGE_DATA 460000
 #define MIN_MESSAGE_SIZE 32024
 //#define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
 
@@ -32,7 +32,7 @@ static struct {
     uint8_t text_data[MAX_TEXT_DATA];
 
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
-    uint8_t message_data[MAX_MESSAGE_DATA];
+    uint8_t message_data[510103];
 } data;
 
 typedef struct lang_files_collection {
@@ -88,7 +88,7 @@ static uint8_t *get_message_text(int32_t offset)
     }
     return &data.message_data[offset];
 }
-static void parse_message(buffer *buf)
+static void parse_MM_file(buffer *buf)
 {
     buf->skip(24); // header
     for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
@@ -120,7 +120,16 @@ static void parse_message(buffer *buf)
         m->subtitle.text = get_message_text(buf->read_i32());
         m->content.text = get_message_text(buf->read_i32());
     }
-    buf->read_raw(&data.message_data, MAX_MESSAGE_DATA);
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            buf->set_offset(32024);
+            buf->read_raw(&data.message_data, 262704);
+            break;
+        case ENGINE_ENV_PHARAOH:
+            buf->set_offset(80024);
+            buf->read_raw(&data.message_data, 510103);
+            break;
+    }
 }
 static int load_files(const char *text_filename, const char *message_filename, int localizable)
 {
@@ -148,7 +157,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
         delete buf;
         return 0;
     }
-    parse_message(buf);
+    parse_MM_file(buf);
     delete buf;
 
     return 1;

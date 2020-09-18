@@ -1,7 +1,6 @@
 #include "build_menu.h"
 
 #include "building/construction.h"
-#include "building/menu.h"
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"
@@ -15,6 +14,7 @@
 #include "widget/city.h"
 #include "widget/sidebar/city.h"
 #include "window/city.h"
+#include "core/game_environment.h"
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -67,7 +67,7 @@ static struct {
     int focus_button_id;
 } data;
 
-static int init(int  submenu)
+static int init(int submenu)
 {
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
@@ -82,75 +82,49 @@ static int init(int  submenu)
     }
 }
 
-int window_build_menu_image(void)
-{
-    if (building_construction_type() == BUILDING_NONE) {
-        return image_id_from_group(GROUP_PANEL_WINDOWS) + 12;
-    }
-    int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
-    switch (data.selected_submenu) {
-        default:
-        case BUILD_MENU_VACANT_HOUSE:
-            return image_base;
-        case BUILD_MENU_CLEAR_LAND:
-            if (scenario_property_climate() == CLIMATE_DESERT) {
-                return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT);
-            } else {
-                return image_base + 11;
-            }
-        case BUILD_MENU_ROAD:
-            if (scenario_property_climate() == CLIMATE_DESERT) {
-                return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
-            } else {
-                return image_base + 10;
-            }
-        case BUILD_MENU_WATER:
-            if (scenario_property_climate() == CLIMATE_DESERT) {
-                return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
-            } else {
-                return image_base + 3;
-            }
-        case BUILD_MENU_HEALTH:
-            return image_base + 5;
-        case BUILD_MENU_TEMPLES:
-            return image_base + 1;
-        case BUILD_MENU_EDUCATION:
-            return image_base + 6;
-        case BUILD_MENU_ENTERTAINMENT:
-            return image_base + 4;
-        case BUILD_MENU_ADMINISTRATION:
-            return image_base + 2;
-        case BUILD_MENU_ENGINEERING:
-            return image_base + 7;
-        case BUILD_MENU_SECURITY:
-            if (scenario_property_climate() == CLIMATE_DESERT) {
-                return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
-            } else {
-                return image_base + 8;
-            }
-        case BUILD_MENU_INDUSTRY:
-            return image_base + 9;
-    }
-}
-
-static void draw_background(void)
-{
-    window_city_draw_panels();
-}
-
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
     city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
-
 static int is_all_button(int type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
            (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
+static int set_submenu_for_type(int type)
+{
+    int  current_menu = data.selected_submenu;
+    switch (type) {
+        case BUILDING_MENU_FARMS:
+            data.selected_submenu = BUILD_MENU_FARMS;
+            break;
+        case BUILDING_MENU_RAW_MATERIALS:
+            data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
+            break;
+        case BUILDING_MENU_WORKSHOPS:
+            data.selected_submenu = BUILD_MENU_WORKSHOPS;
+            break;
+        case BUILDING_MENU_SMALL_TEMPLES:
+            data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
+            break;
+        case BUILDING_MENU_LARGE_TEMPLES:
+            data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
+            break;
+        case BUILDING_FORT:
+            data.selected_submenu = BUILD_MENU_FORTS;
+            break;
+        default:
+            return 0;
+    }
+    return current_menu != data.selected_submenu;
+}
 
+static void draw_background(void)
+{
+    window_city_draw_panels();
+}
 static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
@@ -182,7 +156,6 @@ static void draw_menu_buttons(void)
         }
     }
 }
-
 static void draw_foreground(void)
 {
     window_city_draw();
@@ -191,11 +164,14 @@ static void draw_foreground(void)
 
 static int handle_build_submenu(const mouse *m)
 {
-    return generic_buttons_handle_mouse(
-        m, get_sidebar_x_offset() - 258, data.y_offset + 110,
-               build_menu_buttons, data.num_items, &data.focus_button_id);
+    return generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 258, data.y_offset + 110, build_menu_buttons, data.num_items, &data.focus_button_id);
+//    switch (GAME_ENV) {
+//        case ENGINE_ENV_C3:
+//            return generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 258, data.y_offset + 110, build_menu_buttons_c3, data.num_items, &data.focus_button_id);
+//        case ENGINE_ENV_PHARAOH:
+//            return generic_buttons_handle_mouse(m, get_sidebar_x_offset() - 258, data.y_offset + 110, build_menu_buttons_ph, data.num_items, &data.focus_button_id);
+//    }
 }
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (handle_build_submenu(m) ||
@@ -207,7 +183,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
 }
-
 static int button_index_to_submenu_item(int index)
 {
     int item = -1;
@@ -216,40 +191,10 @@ static int button_index_to_submenu_item(int index)
     }
     return item;
 }
-
 static void button_menu_index(int param1, int param2)
 {
     button_menu_item(button_index_to_submenu_item(param1 - 1));
 }
-
-static int set_submenu_for_type(int type)
-{
-    int  current_menu = data.selected_submenu;
-    switch (type) {
-        case BUILDING_MENU_FARMS:
-            data.selected_submenu = BUILD_MENU_FARMS;
-            break;
-        case BUILDING_MENU_RAW_MATERIALS:
-            data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
-            break;
-        case BUILDING_MENU_WORKSHOPS:
-            data.selected_submenu = BUILD_MENU_WORKSHOPS;
-            break;
-        case BUILDING_MENU_SMALL_TEMPLES:
-            data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
-            break;
-        case BUILDING_MENU_LARGE_TEMPLES:
-            data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
-            break;
-        case BUILDING_FORT:
-            data.selected_submenu = BUILD_MENU_FORTS;
-            break;
-        default:
-            return 0;
-    }
-    return current_menu != data.selected_submenu;
-}
-
 static void button_menu_item(int item)
 {
     widget_city_clear_current_tile();
@@ -267,6 +212,92 @@ static void button_menu_item(int item)
     }
 }
 
+int window_build_menu_image(void)
+{
+    int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            if (building_construction_type() == BUILDING_NONE)
+                return image_base + 12;
+            switch (data.selected_submenu) {
+                default:
+                case BUILD_MENU_VACANT_HOUSE:
+                    return image_base;
+                case BUILD_MENU_CLEAR_LAND:
+                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT);
+                    } else {
+                        return image_base + 11;
+                    }
+                case BUILD_MENU_ROAD:
+                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
+                    } else {
+                        return image_base + 10;
+                    }
+                case BUILD_MENU_WATER:
+                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
+                    } else {
+                        return image_base + 3;
+                    }
+                case BUILD_MENU_HEALTH:
+                    return image_base + 5;
+                case BUILD_MENU_TEMPLES:
+                    return image_base + 1;
+                case BUILD_MENU_EDUCATION:
+                    return image_base + 6;
+                case BUILD_MENU_ENTERTAINMENT:
+                    return image_base + 4;
+                case BUILD_MENU_ADMINISTRATION:
+                    return image_base + 2;
+                case BUILD_MENU_ENGINEERING:
+                    return image_base + 7;
+                case BUILD_MENU_SECURITY:
+                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
+                    } else {
+                        return image_base + 8;
+                    }
+                case BUILD_MENU_INDUSTRY:
+                    return image_base + 9;
+            }
+            break;
+        case ENGINE_ENV_PHARAOH:
+            image_base = image_id_from_group(GROUP_PANEL_WINDOWS_PH);
+            if (building_construction_type() == BUILDING_NONE)
+                return image_base;
+            switch (data.selected_submenu) {
+                default:
+                case BUILD_MENU_VACANT_HOUSE:
+                    return image_base;
+                case BUILD_MENU_CLEAR_LAND:
+                    return image_base + 9;
+                case BUILD_MENU_ROAD:
+                    return image_base + 5;
+                case BUILD_MENU_WATER:
+                    return image_base + 2;
+                case BUILD_MENU_HEALTH:
+                    return image_base + 4;
+                case BUILD_MENU_TEMPLES:
+                    return image_base + 7;
+                case BUILD_MENU_EDUCATION:
+                    return image_base + 11;
+                case BUILD_MENU_ENTERTAINMENT:
+                    return image_base + 3;
+                case BUILD_MENU_ADMINISTRATION:
+                    return image_base + 1;
+                case BUILD_MENU_ENGINEERING:
+                    return image_base + 10;
+                case BUILD_MENU_SECURITY:
+                    return image_base + 12;
+                case BUILD_MENU_INDUSTRY:
+                    return image_base + 8;
+            }
+            break;
+    }
+
+}
 void window_build_menu_show(int submenu)
 {
     if (init(submenu)) {

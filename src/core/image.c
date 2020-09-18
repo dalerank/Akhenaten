@@ -196,8 +196,6 @@ static struct {
     imagepak *empire;
     imagepak *font;
 
-//    uint8_t *tmp_data;
-//    buffer *tmp_data;
     color_t *tmp_image_data;
 } data = {
         -1,
@@ -243,18 +241,18 @@ static int convert_uncompressed(buffer *buf, int amount, color_t *dst) {
 static int convert_compressed(buffer *buf, int amount, color_t *dst) {
     int dst_length = 0;
     while (amount > 0) {
-        int control = buf->read_u8();
+        int control = buf->read_u8(true);
         if (control == 255) {
             // next byte = transparent pixels to skip
             *dst++ = 255;
-            *dst++ = buf->read_u8();
+            *dst++ = buf->read_u8(true);
             dst_length += 2;
             amount -= 2;
         } else {
             // control = number of concrete pixels
             *dst++ = control;
             for (int i = 0; i < control; i++) {
-                *dst++ = to_32_bit(buf->read_u16());
+                *dst++ = to_32_bit(buf->read_u16(true));
             }
             dst_length += control + 1;
             amount -= control * 2 + 1;
@@ -316,7 +314,7 @@ imagepak::imagepak()
     images = nullptr;
     data = nullptr;
     entries_num = 0;
-    group_image_ids = new uint16_t[300]; //(uint16_t*)malloc(300 * sizeof(uint16_t));
+    group_image_ids = new uint16_t[300];
 }
 bool imagepak::check_initialized()
 {
@@ -338,7 +336,6 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
     buf->read_raw(header_data, sizeof(uint32_t) * 10);
 
     // allocate arrays
-//    int prev_pak_size = entries_num;
     entries_num = (size_t) header_data[4] + 1;
     name = filename_sgx;
     if (check_initialized()) {
@@ -349,17 +346,6 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
     images = new image[entries_num];
     data = new color_t[30000000];
     initialized = true;
-//    if (!check_initialized()) { // new pak! allocate memory!
-//        initialized = 1;
-////        images = (image *) malloc(sizeof(image) * entries_num);
-////        data = (color_t *) malloc(30000000);
-////        group_image_ids = (uint16_t*)malloc(300 * sizeof(uint16_t)); // 300 entries is hardcoded? (total list is always 600 bytes)
-//    } else if (prev_pak_size != entries_num) { // not new, but different! resize memory!
-//        delete images;
-//        delete data;
-////        realloc(images, sizeof(image) * entries_num);
-////        realloc(data, 30000000);
-//    }
 
     buf->skip(40); // skip remaining 40 bytes
 
@@ -384,7 +370,6 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
     int bmp_lastbmp = 0;
     int bmp_lastindex = 1;
     for (int i = 0; i < entries_num; i++) {
-
         image img;
         img.draw.offset = buf->read_i32();
         img.draw.data_length = buf->read_i32();
@@ -413,12 +398,10 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
             bmp_lastindex = 1;
             bmp_lastbmp = bitmap_id;
         }
-
         img.draw.bmp_index = bmp_lastindex;
         bmp_lastindex++;
         buf->skip(1);
         img.animation_speed_id = buf->read_u8();
-
         if (header_data[1] < 214)
             buf->skip(5);
         else
@@ -473,20 +456,6 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
 
     return 1;
 }
-
-
-
-//int image_init(void) {
-////    data.tmp_data->init(SCRATCH_DATA_SIZE);
-////    data.tmp_image_data = new color_t[SCRATCH_DATA_SIZE-4000000];
-//    switch (GAME_ENV) {
-//        case ENGINE_ENV_C3:
-//            break;
-//        case ENGINE_ENV_PHARAOH:
-//            break;
-//    }
-//    return 1;
-//}
 
 int imagepak::get_entry_count()
 {

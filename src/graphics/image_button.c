@@ -38,13 +38,13 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
 
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (btn->image_collection == GROUP_SIDEBAR_BUTTONS && btn->image_offset == 56) {
-                btn->image_collection = GROUP_BUTTON_EXCLAMATION;
-                btn->image_offset = 4;
+        // hacky workaround
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            if (btn->image_collection == GROUP_BUTTON_EXCLAMATION && btn->image_offset == 4) {
+                btn->image_collection = GROUP_SIDEBAR_BUTTONS;
+                btn->image_offset = 56;
             }
         }
-
 
         int image_id = image_id_from_group(btn->image_collection) + btn->image_offset;
         if (btn->enabled) {

@@ -20,6 +20,7 @@
 #include "window/editor/attributes.h"
 #include "window/editor/build_menu.h"
 #include "window/editor/map.h"
+#include "core/game_environment.h"
 
 #define MINIMAP_Y_OFFSET 30
 
@@ -50,7 +51,7 @@ static image_button buttons_build[] = {
 
 static void draw_buttons(void)
 {
-    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT, buttons_build, 17);
+    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT[GAME_ENV], buttons_build, 17);
 }
 
 static void draw_status(void)
@@ -135,11 +136,11 @@ void widget_sidebar_editor_draw_background(void)
 {
     int image_base = image_id_from_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = sidebar_common_get_x_offset_expanded();
-    image_draw(image_base, x_offset, TOP_MENU_HEIGHT);
+    image_draw(image_base, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     draw_buttons();
     widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();
-    sidebar_common_draw_relief(x_offset, SIDEBAR_FILLER_Y_OFFSET, GROUP_EDITOR_SIDE_PANEL, 0);
+    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[GAME_ENV], GROUP_EDITOR_SIDE_PANEL, 0);
 }
 
 void widget_sidebar_editor_draw_foreground(void)

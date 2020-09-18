@@ -23,7 +23,6 @@ class buffer {
 
     void check_initialized();
     bool out_of_bounds(size_t i, size_t s);
-    void check_valid(size_t i, size_t s);
     void validate(size_t i, size_t s);
 
 public:
@@ -41,18 +40,18 @@ public:
     void skip(size_t s);
     bool at_end();
 
-    bool is_valid(size_t s);
+    bool is_valid(size_t s, int i = -1);
     void force_validate_unsafe_pls_use_carefully();
 
     const uint8_t* data_const();
     void* data_unsafe_pls_use_carefully();
 
-    uint8_t read_u8();
-    uint16_t read_u16();
-    uint32_t read_u32();
-    int8_t read_i8();
-    int16_t read_i16();
-    int32_t read_i32();
+    uint8_t read_u8(bool force = false);
+    uint16_t read_u16(bool force = false);
+    uint32_t read_u32(bool force = false);
+    int8_t read_i8(bool force = false);
+    int16_t read_i16(bool force = false);
+    int32_t read_i32(bool force = false);
     int read_raw(void *value, size_t max_size);
 
     void fill(uint8_t val);

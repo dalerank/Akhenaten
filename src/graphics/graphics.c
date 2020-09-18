@@ -5,6 +5,7 @@
 #include "graphics/color.h"
 #include "graphics/menu.h"
 #include "graphics/screen.h"
+#include "core/game_environment.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -266,7 +267,7 @@ void graphics_clear_city_viewport(void)
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     while (y < height) {
-        memset(graphics_get_pixel(0, y + TOP_MENU_HEIGHT), 0, width * sizeof(color_t));
+        memset(graphics_get_pixel(0, y + TOP_MENU_HEIGHT[GAME_ENV]), 0, width * sizeof(color_t));
         y++;
     }
 }

@@ -33,6 +33,13 @@
 static int selected_legion_formation_id;
 static int city_view_dirty;
 
+static int center_in_city(int element_width_pixels)
+{
+    int x, y, width, height;
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    int margin = (width - element_width_pixels) / 2;
+    return x + margin;
+}
 static void clear_city_view(int force)
 {
     if (config_get(CONFIG_UI_ZOOM) && (force || city_view_dirty)) {
@@ -47,15 +54,6 @@ static void draw_background(void)
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
-
-static int center_in_city(int element_width_pixels)
-{
-    int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
-    int margin = (width - element_width_pixels) / 2;
-    return x + margin;
-}
-
 static void draw_paused_and_time_left(void)
 {
     if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
@@ -90,7 +88,6 @@ static void draw_paused_and_time_left(void)
         city_view_dirty = 1;
     }
 }
-
 static void draw_cancel_construction(void)
 {
     if (!mouse_get()->is_touch || !building_construction_type()) {
@@ -103,7 +100,6 @@ static void draw_cancel_construction(void)
     image_draw(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
     city_view_dirty = 1;
 }
-
 static void draw_foreground(void)
 {
     clear_city_view(0);
@@ -119,7 +115,6 @@ static void draw_foreground(void)
         city_message_process_queue();
     }
 }
-
 static void draw_foreground_military(void)
 {
     widget_top_menu_draw(0);
@@ -134,7 +129,6 @@ static void exit_military_command(void)
         window_city_show();
     }
 }
-
 static void show_overlay(int overlay)
 {
     exit_military_command();
@@ -146,7 +140,6 @@ static void show_overlay(int overlay)
     city_with_overlay_update();
     window_invalidate();
 }
-
 static void cycle_legion(void)
 {
     static int current_legion_id = 1;
@@ -173,14 +166,11 @@ static void cycle_legion(void)
         }
     }
 }
-
 static void toggle_pause(void)
 {
     game_state_toggle_paused();
     city_warning_clear_all();
 }
-
-//extern int image_debug_offset = 14900;
 
 static void handle_hotkeys(const hotkeys *h)
 {
@@ -245,7 +235,6 @@ static void handle_hotkeys(const hotkeys *h)
         }
     }
 }
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
@@ -259,7 +248,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     widget_city_handle_input(m, h);
 }
-
 static void handle_input_military(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
@@ -285,17 +273,14 @@ void window_city_draw_all(void)
     draw_background();
     draw_foreground();
 }
-
 void window_city_draw_panels(void)
 {
     draw_background();
 }
-
 void window_city_draw(void)
 {
     widget_city_draw();
 }
-
 void window_city_show(void)
 {
     window_type window = {
@@ -307,7 +292,6 @@ void window_city_show(void)
     };
     window_show(&window);
 }
-
 void window_city_military_show(int legion_formation_id)
 {
     selected_legion_formation_id = legion_formation_id;

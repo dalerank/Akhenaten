@@ -8,6 +8,7 @@
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
 #include "graphics/screen.h"
+#include "core/game_environment.h"
 
 #include "SDL.h"
 
@@ -141,8 +142,8 @@ static int create_textures(int width, int height) {
                                              SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
                                              width * 2, height * 2);
         city_texture_position.renderer.x = 0;
-        city_texture_position.renderer.y = TOP_MENU_HEIGHT;
-        city_texture_position.renderer.h = height - TOP_MENU_HEIGHT;
+        city_texture_position.renderer.y = TOP_MENU_HEIGHT[GAME_ENV];
+        city_texture_position.renderer.h = height - TOP_MENU_HEIGHT[GAME_ENV];
         SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_BLEND);
         city_texture_error = SDL.texture_city == 0;
     } else {

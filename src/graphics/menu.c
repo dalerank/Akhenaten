@@ -3,6 +3,7 @@
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "core/game_environment.h"
 
 #define TOP_MENU_BASE_X_OFFSET 10
 #define MENU_BASE_TEXT_Y_OFFSET 6
@@ -67,9 +68,9 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
     if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0) {
         calculate_menu_dimensions(menu);
     }
-    unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT,
+    unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT[GAME_ENV],
         menu->calculated_width_blocks, menu->calculated_height_blocks);
-    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
         if (sub->hidden) {
@@ -90,7 +91,7 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
 
 static int get_menu_item(const mouse *m, menu_bar_item *menu)
 {
-    int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
+    int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         if (menu->items[i].hidden) {
             continue;

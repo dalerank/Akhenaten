@@ -3,9 +3,8 @@
 
 #include "core/buffer.h"
 
-// TODO get rid of these
-#define VIEW_X_MAX 165
-#define VIEW_Y_MAX 325
+int VIEW_X_MAX();
+int VIEW_Y_MAX();
 
 typedef struct {
     int x;
