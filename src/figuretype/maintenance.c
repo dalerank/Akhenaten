@@ -91,10 +91,12 @@ void figure_engineer_action(figure *f) {
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_ENGINEER));
 }
 
+#include "core/game_environment.h"
+
 static int get_nearest_enemy(int x, int y, int *distance) {
     int min_enemy_id = 0;
     int min_dist = 10000;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id) {
             continue;

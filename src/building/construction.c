@@ -77,6 +77,30 @@ static void mark_construction(int x, int y, int size, int terrain, int absolute_
         data.draw_as_constructing = 1;
     }
 }
+static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
+{
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure *f = figure_get(i);
+        if(config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
+            if (f->state != FIGURE_STATE_ALIVE || (!figure_is_enemy(f) && f->type != FIGURE_WOLF)) {
+                continue;
+            }
+        } else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
+            continue;
+        }
+        int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
+        int dy = (f->y > y_start) ? (f->y - y_start) : (y_start - f->y);
+        if (dx <= 12 && dy <= 12) {
+            return 1;
+        }
+        dx = (f->x > x_end) ? (f->x - x_end) : (x_end - f->x);
+        dy = (f->y > y_end) ? (f->y - y_end) : (y_end - f->y);
+        if (dx <= 12 && dy <= 12) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 static int place_houses(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
@@ -119,7 +143,6 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
     }
     return items_placed;
 }
-
 static int place_plaza(int x_start, int y_start, int x_end, int y_end)
 {
     int x_min, y_min, x_max, y_max;
@@ -145,7 +168,6 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end)
     map_tiles_update_all_plazas();
     return items_placed;
 }
-
 static int place_garden(int x_start, int y_start, int x_end, int y_end)
 {
     game_undo_restore_map(1);
@@ -166,7 +188,6 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
     map_tiles_update_all_gardens();
     return items_placed;
 }
-
 static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info)
 {
     info->cost = 0;
@@ -312,24 +333,20 @@ void building_construction_set_type(int type)
         }
     }
 }
-
 void building_construction_clear_type(void)
 {
     data.cost = 0;
     data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
 }
-
 int building_construction_type(void)
 {
     return data.sub_type ? data.sub_type : data.type;
 }
-
 int building_construction_cost(void)
 {
     return data.cost;
 }
-
 int building_construction_size(int *x, int *y)
 {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
@@ -351,12 +368,10 @@ int building_construction_size(int *x, int *y)
     *y = size_y;
     return 1;
 }
-
 int building_construction_in_progress(void)
 {
     return data.in_progress;
 }
-
 void building_construction_start(int x, int y, int grid_offset)
 {
     data.start.grid_offset = grid_offset;
@@ -385,7 +400,6 @@ void building_construction_start(int x, int y, int grid_offset)
         }
     }
 }
-
 int building_construction_is_updatable(void)
 {
     switch (data.type) {
@@ -402,7 +416,6 @@ int building_construction_is_updatable(void)
             return 0;
     }
 }
-
 void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
@@ -416,7 +429,6 @@ void building_construction_cancel(void)
     }
     building_rotation_reset_rotation();
 }
-
 void building_construction_update(int x, int y, int grid_offset)
 {
     int type = data.sub_type ? data.sub_type : data.type;
@@ -512,32 +524,6 @@ void building_construction_update(int x, int y, int grid_offset)
     }
     data.cost = current_cost;
 }
-
-static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
-{
-    for (int i = 1; i < MAX_FIGURES; i++) {
-        figure *f = figure_get(i);
-        if(config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
-	    if (f->state != FIGURE_STATE_ALIVE || (!figure_is_enemy(f) && f->type != FIGURE_WOLF)) {
-            continue;
-	    }
-	} else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
-            continue;
-        }
-        int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
-        int dy = (f->y > y_start) ? (f->y - y_start) : (y_start - f->y);
-        if (dx <= 12 && dy <= 12) {
-            return 1;
-        }
-        dx = (f->x > x_end) ? (f->x - x_end) : (x_end - f->x);
-        dy = (f->y > y_end) ? (f->y - y_end) : (y_end - f->y);
-        if (dx <= 12 && dy <= 12) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 void building_construction_place(void)
 {
     data.in_progress = 0;
@@ -710,7 +696,6 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
     }
     return 1;
 }
-
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset)
 {
     if (grid_offset == data.start.grid_offset) {
@@ -718,23 +703,19 @@ void building_construction_record_view_position(int view_x, int view_y, int grid
         data.start_offset_y_view = view_y;
     }
 }
-
 void building_construction_get_view_position(int *view_x, int *view_y)
 {
     *view_x = data.start_offset_x_view;
     *view_y = data.start_offset_y_view;
 }
-
 int building_construction_get_start_grid_offset(void)
 {
     return data.start.grid_offset;
 }
-
 void building_construction_reset_draw_as_constructing(void)
 {
     data.draw_as_constructing = 0;
 }
-
 int building_construction_draw_as_constructing(void)
 {
     return data.draw_as_constructing;

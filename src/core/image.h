@@ -51,6 +51,7 @@ class imagepak {
     bool initialized;
     const char *name;
     int entries_num;
+    int id_shift_overall = 0;
     int groups_num;
     uint32_t header_data[10];
     uint16_t *group_image_ids;
@@ -63,13 +64,14 @@ public:
 
     imagepak();
 
-    int load_555(const char *filename_555, const char *filename_sgx);
+    int load_555(const char *filename_555, const char *filename_sgx, int shift = 0);
 
     int get_entry_count();
     int get_id(int group);
     const image *get_image(int id);
 };
 
+extern int terrain_ph_offset;
 
 int image_load_main(int climate_id, int is_editor, int force_reload);
 int image_load_fonts(encoding_type encoding);
@@ -77,13 +79,11 @@ int image_load_enemy(int enemy_id);
 
 int image_id_from_group(int group);
 
-const image *image_get(int id);
+const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);
 const image *image_get_enemy(int id);
 const color_t *image_data(int id);
 const color_t *image_data_letter(int letter_id);
 const color_t *image_data_enemy(int id);
-
-void set_terrain_graphics_offset(int offset);
 
 #endif // CORE_IMAGE_H

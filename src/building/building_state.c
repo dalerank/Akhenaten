@@ -259,6 +259,8 @@ static void read_type_data(buffer *buf, building *b)
     }
 }
 
+#include "core/game_environment.h"
+
 void building_state_load_from_buffer(buffer *buf, building *b)
 {
     b->state = buf->read_u8();
@@ -267,10 +269,19 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->size = buf->read_u8();
     b->house_is_merged = buf->read_u8();
     b->house_size = buf->read_u8();
-    b->x = buf->read_u8();
-    b->y = buf->read_u8();
-    b->grid_offset = buf->read_i16();
-    b->type = buf->read_i16();
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        b->x = buf->read_u8();
+        b->y = buf->read_u8();
+        b->grid_offset = buf->read_i16();
+        b->type = buf->read_i16();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        b->x = buf->read_u16();
+        b->y = buf->read_u16();
+        buf->skip(2);
+        b->grid_offset = buf->read_i16();
+        buf->skip(2);
+        b->type = buf->read_i16();
+    }
     b->subtype.house_level = buf->read_i16(); // which union field we use does not matter
     b->road_network_id = buf->read_u8();
     buf->skip(1);
@@ -281,6 +292,7 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->house_population_room = buf->read_i16();
     b->distance_from_entry = buf->read_i16();
     b->house_highest_population = buf->read_i16();
+
     b->house_unreachable_ticks = buf->read_i16();
     b->road_access_x = buf->read_u8();
     b->road_access_y = buf->read_u8();
@@ -291,35 +303,52 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->figure_spawn_delay = buf->read_u8();
     buf->skip(1);
     b->figure_roam_direction = buf->read_u8();
-    b->has_water_access = buf->read_u8();
-    buf->skip(1);
-    buf->skip(1);
+    b->has_water_access = buf->read_u8(); // 16 bytes
+
+    buf->skip(2);
     b->prev_part_building_id = buf->read_i16();
     b->next_part_building_id = buf->read_i16();
     b->loads_stored = buf->read_i16();
-    buf->skip(1);
+    if (GAME_ENV == ENGINE_ENV_C3)
+        buf->skip(1);
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(3);
     b->has_well_access = buf->read_u8();
     b->num_workers = buf->read_i16();
-    b->labor_category = buf->read_u8();
+
+    b->labor_category = buf->read_u8(); // FF
     b->output_resource_id = buf->read_u8();
     b->has_road_access = buf->read_u8();
     b->house_criminal_active = buf->read_u8();
+
     b->damage_risk = buf->read_i16();
+
     b->fire_risk = buf->read_i16();
     b->fire_duration = buf->read_i16();
     b->fire_proof = buf->read_u8();
+
     b->house_figure_generation_delay = buf->read_u8();
     b->house_tax_coverage = buf->read_u8();
     buf->skip(1);
     b->formation_id = buf->read_i16();
-    read_type_data(buf, b);
+
+    read_type_data(buf, b); // 42 bytes for C3, 102 for PH
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(60);
     b->tax_income_or_storage = buf->read_i32();
     b->house_days_without_food = buf->read_u8();
-    b->ruin_has_plague = buf->read_u8();
+    b->ruin_has_plague = buf->read_u8(); // 6
+
     b->desirability = buf->read_i8();
     b->is_deleted = buf->read_u8();
     b->is_adjacent_to_water = buf->read_u8();
-    b->storage_id = buf->read_u8();
-    b->sentiment.house_happiness = buf->read_i8(); // which union field we use does not matter
-    b->show_on_problem_overlay = buf->read_u8();
+    b->storage_id = buf->read_u8(); // 4
+
+    b->sentiment.house_happiness = buf->read_i8(); // which union field we use does not matter // 90 for house, 50 for wells
+    b->show_on_problem_overlay = buf->read_u8(); // 4
+
+    // 68 additional bytes
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(68); // temp for debugging
 }

@@ -152,7 +152,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
 {
     int min_figure_id = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f)) {
             continue;
@@ -173,7 +173,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
     if (min_figure_id) {
         return min_figure_id;
     }
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f)) {
             continue;
@@ -189,7 +189,7 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
 {
     int min_figure_id = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f) || !f->type) {
             continue;
@@ -237,7 +237,7 @@ int figure_combat_get_target_for_enemy(int x, int y)
 {
     int min_figure_id = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f)) {
             continue;
@@ -254,7 +254,7 @@ int figure_combat_get_target_for_enemy(int x, int y)
         return min_figure_id;
     }
     // no 'free' soldier found, take first one
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f)) {
             continue;
@@ -273,7 +273,7 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
 
     int min_distance = max_distance;
     figure *min_figure = 0;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f)) {
             continue;
@@ -301,7 +301,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
 
     figure *min_figure = 0;
     int min_distance = max_distance;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (figure_is_dead(f) || !f->type) {
             continue;
@@ -356,7 +356,7 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
     int guard = 0;
     int opponent_id = map_figure_at(grid_offset);
     while (1) {
-        if (++guard >= MAX_FIGURES || opponent_id <= 0) {
+        if (++guard >= MAX_FIGURES[GAME_ENV] || opponent_id <= 0) {
             break;
         }
         figure *opponent = figure_get(opponent_id);

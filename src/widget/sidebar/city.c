@@ -77,7 +77,7 @@ static image_button buttons_build_collapsed[][20] = {
         {2, 102, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
         {2, 137, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_WATER, 0, 1},
         {2, 172, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-        {2, 207, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_TEMPLES, 0, 1},
+        {2, 207, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
         {2, 242, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
         {2, 277, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
         {2, 312, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
@@ -91,7 +91,7 @@ static image_button buttons_build_collapsed[][20] = {
         {9, CL_ROW0 + 71, 36, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
         {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_WATER, 0, 1},
         {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-        {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_TEMPLES, 0, 1},
+        {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
         {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
         {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
         {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
@@ -118,9 +118,9 @@ static image_button buttons_build_expanded[][20] = {
         {113, 277, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
         {13, 313, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_WATER, 0, 1},
         {63, 313, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-        {113, 313, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_TEMPLES, 0, 1},
+        {113, 313, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none,   BUILD_MENU_RELIGION,     0, 1},
         {13, 349, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
-        {63, 349, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+        {63, 349, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none,    BUILD_MENU_ENTERTAINMENT, 0, 1},
         {113, 349, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
         {13, 385, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_ENGINEERING, 0, 1},
         {63, 385, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
@@ -131,17 +131,21 @@ static image_button buttons_build_expanded[][20] = {
     },
     {
         {COL1, ROW1, 34, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-        {COL1, ROW2, 34, 50, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-        {COL1, ROW3, 34, 49, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 8, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
-        {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_WATER, 0, 1},
-        {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-        {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_TEMPLES, 0, 1},
-        {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
-        {COL3, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-        {COL3, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-        {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_ENGINEERING, 0, 1},
-        {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
-        {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+        {COL1, ROW2, 34, 50, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
+        {COL1, ROW3, 34, 49, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 8, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
+
+        {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
+        {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+        {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
+
+        {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+        {COL3, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION,      0, 1},
+        {COL3, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
+
+        {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
+        {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
+        {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
+
         {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
         {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
         {COL3, ROW4, 28, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
@@ -259,6 +263,7 @@ static void draw_expanded_background(int x_offset)
         image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
         image_draw(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
         widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+        draw_number_of_messages(x_offset);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
         image_draw(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
@@ -273,10 +278,10 @@ static void draw_expanded_background(int x_offset)
             image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
         }
         image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
+        draw_number_of_messages(x_offset - 26);
     }
     draw_buttons_expanded(x_offset);
     draw_overlay_text(x_offset + 4);
-    draw_number_of_messages(x_offset);
 
     draw_sidebar_remainder(x_offset, false);
 }
@@ -300,12 +305,15 @@ void widget_sidebar_city_draw_foreground(void)
         draw_buttons_expanded(x_offset);
         draw_overlay_text(x_offset + 4);
 
-        if (GAME_ENV == ENGINE_ENV_C3)
+        if (GAME_ENV == ENGINE_ENV_C3) {
             widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET - 6, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+            draw_number_of_messages(x_offset);
+        }
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+            draw_number_of_messages(x_offset - 26);
+        }
 
-        draw_number_of_messages(x_offset);
     }
     sidebar_extra_draw_foreground();
 }
@@ -351,6 +359,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         }
         handled |= sidebar_extra_handle_mouse(m);
     }
+//    return 0;
     return handled;
 }
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)

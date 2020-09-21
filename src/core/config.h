@@ -106,6 +106,4 @@ void config_load(void);
  */
 void config_save(void);
 
-extern int image_debug_offset;
-
 #endif // CORE_CONFIG_H

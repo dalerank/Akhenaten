@@ -178,10 +178,12 @@ int lang_load(int is_editor)
 const uint8_t *lang_get_string(int group, int index)
 {
     // Add new strings
-    if ((group == 28) && (index == 115))
-        return translation_for(TR_BUILDING_ROADBLOCK);
-    if ((group == 28) && (index == 116))
-        return translation_for(TR_BUILDING_ROADBLOCK_DESC);
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if ((group == 28) && (index == 115))
+            return translation_for(TR_BUILDING_ROADBLOCK);
+        if ((group == 28) && (index == 116))
+            return translation_for(TR_BUILDING_ROADBLOCK_DESC);
+    }
 
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;

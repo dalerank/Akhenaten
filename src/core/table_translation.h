@@ -56,6 +56,7 @@ static int groupid_translation_table_ph[] = {
     102, 168, // data/Pharaoh_General.sg3 Sprites.bmp
     103, 169, // data/Pharaoh_General.sg3 Sprites.bmp
     112, 21, // data/Pharaoh_Terrain.sg3 Land2a.bmp
+    119, 36,
     122, 185, // data/Pharaoh_General.sg3 Commerce.bmp
     124, 228, // data/Pharaoh_General.sg3 Commerce.bmp
     128, 194, // data/Pharaoh_General.sg3 paneling.bmp
@@ -102,6 +103,16 @@ static int groupid_translation_table_ph[] = {
     197, 295, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
     208, 174+66, // bordered paneling
     227, 293, // data/Pharaoh_General.sg3 Sprites.bmp
+//    228, 228+340,
+//    229, 229+340,
+//    230, 230+340,
+//    231, 231+340,
+//    232, 232+340,
+//    233, 233+340,
+    234, 156+340,
+//    235, 235+340,
+//    236, 236+340,
+//    237, 237+340,
     244, 306, // data/Pharaoh_Unloaded.sg3 Mapback.bmp
     246, 15+294, // data/Pharaoh_Unloaded.sg3 FE_Map Editor.bmp
     247, 322, // data/Pharaoh_Unloaded.sg3 Picture9.bmp

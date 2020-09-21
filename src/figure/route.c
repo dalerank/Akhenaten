@@ -21,11 +21,13 @@ void figure_route_clear_all(void)
     }
 }
 
+#include "core/game_environment.h"
+
 void figure_route_clean(void)
 {
     for (int i = 0; i < MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
-        if (figure_id > 0 && figure_id < MAX_FIGURES) {
+        if (figure_id > 0 && figure_id < MAX_FIGURES[GAME_ENV]) {
             const figure *f = figure_get(figure_id);
             if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i) {
                 data.figure_ids[i] = 0;

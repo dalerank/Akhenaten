@@ -1,0 +1,401 @@
+0 : Nowhere
+1 : Undo
+2 : Farm
+3 : Raw Materials
+4 : Construction Guilds
+5 : Road
+6 : Mud Wall
+7 : Water Lift
+8 : Irrigation Ditch
+9 : Dig
+10 : House1
+11 : House2
+12 : House3
+13 : House4
+14 : House5
+15 : House6
+16 : House7
+17 : House8
+18 : House9
+19 : House10
+20 : House11
+21 : House12
+22 : House13
+23 : House14
+24 : House15
+25 : House16
+26 : House17
+27 : House18
+28 : House19
+29 : House20
+30 : Bandstand
+31 : Booth
+32 : Senet House
+33 : Pavilion
+34 : Conservatory
+35 : Dance School
+36 : Juggler School
+37 : Senet Master
+38 : Plaza
+39 : Gardens
+40 : Charioteers
+41 : Small Statue
+42 : Medium Statue
+43 : Large Statue
+44 : Archers
+45 : Infantry
+46 : Apothecary
+47 : Mortuary
+48 : Monuments
+49 : Dentist
+50 : Storage Yard
+51 : Scribal School
+52 : Water Crossings
+53 : Library
+54 : Fort
+55 : Police Station
+56 : unused 921
+57 : Fort
+58 : Mud Gatehouse
+59 : Mud Tower
+60 : Temple to Osiris
+61 : Temple to Ra
+62 : Temple to Ptah
+63 : Temple to Seth
+64 : Temple to Bast
+65 : Temple Complex to Osiris
+66 : Temple Complex to Ra
+67 : Temple Complex to Ptah
+68 : Temple Complex to Seth
+69 : Temple Complex to Bast
+70 : Bazaar
+71 : Granary
+72 : Storage Yard
+73 : Storage Yards
+74 : Shipwright
+75 : Dock
+76 : Fishing Wharf
+77 : Personal Mansion
+78 : Family Mansion
+79 : Dynasty Mansion
+80 : unused 945
+81 : Architect's Post
+82 : Bridge
+83 : unused 948
+84 : Village Palace
+85 : Town Palace
+86 : Tax Collector
+87 : Tax Collector
+88 : Nothing
+89 : Nothing
+90 : Water Lift
+91 : Beautification
+92 : Well
+93 : Nothing
+94 : Academy
+95 : Recruiter
+96 : Temples
+97 : Temple Complex
+98 : Oracle
+99 : Burning ruin
+100 : Barley
+101 : Flax
+102 : Grain
+103 : Lettuce
+104 : Pomegranates
+105 : Chickpeas
+106 : Plain Stone Quarry
+107 : Limestone Quarry
+108 : Wood Cutter
+109 : Clay Pit
+110 : Brewery
+111 : Weaver
+112 : Weaponsmith
+113 : Jeweler
+114 : Potter
+115 : Roadblock
+116 : Roadblock stops loitering citizens.
+117 : Nothing
+118 : Nothing
+119 : Nothing
+120 : unused 985
+121 : Crack (not used?)
+122 : unused 987
+123 : Nothing
+124 : Nothing
+125 : Nothing
+126 : Nothing
+127 : Nothing
+128 : Nothing
+129 : Nothing
+130 : TXT_BUILDING_130
+131 : TXT_BUILDING_131
+132 : TXT_BUILDING_132
+133 : TXT_BUILDING_133
+134 : TXT_BUILDING_134
+135 : TXT_BUILDING_135
+136 : Ferry Landing
+137 : TXT_BUILDING_137
+138 : Roadblock
+139 : TXT_BUILDING_139
+140 : Shrine to Osiris
+141 : Shrine to Ra
+142 : Shrine to Ptah
+143 : Shrine to Seth
+144 : Shrine to Bast
+145 : Shrine to 
+146 : Shrine to
+147 : Shrine to 
+148 : Shrine to 
+149 : Shrine to
+150 : Shrines
+151 : Temple to Osiris
+152 : Temple to Ra
+153 : Temple to Ptah
+154 : Temple to Seth
+155 : Temple to Bast
+156 : God 5
+157 : God 6
+158 : God 7
+159 : God 8
+160 : God 9
+161 : Gold Mine
+162 : Gemstone Mine
+163 : Ordinary rock
+164 : Ore-bearing rock
+165 : Unused 1030
+166 : Unused 1031
+167 : Firehouse
+168 : Brick Wall
+169 : Wall
+170 : Brick Gatehouse
+171 : Gatehouse
+172 : Brick Tower
+173 : Tower
+174 : Mud structures
+175 : Brick structures
+176 : Defensive Structures
+177 : Carpenters' Guild
+178 : Bricklayers' Guild
+179 : Stonemasons' Guild
+180 : Water Supply
+181 : Transport Wharf
+182 : Warship Wharf
+183 : Pyramid
+184 : Courthouse
+185 : Military academy 2
+186 : Military academy 3
+187 : Village Palace
+188 : Town Palace
+189 : City Palace
+190 : Bazaar 2
+191 : Granary 2
+192 : Dock 2
+193 : Storage Yard 2
+194 : Cattle Ranch
+195 : Reed Gatherer
+196 : Fig Farm
+197 : Marshland
+198 : Sand dunes
+199 : Work Camp
+200 : Mud gatehouse
+201 : Brick gatehouse
+202 : Gatehouse
+203 : Papyrus Maker
+204 : Brickworks
+205 : Chariot Maker
+206 : Physician
+207 : unused 1072
+208 : unused 1073
+209 : Festival Square
+210 : Sphinx
+211 : Temple Complex upgrade
+212 : Temple Complex upgrade
+213 : unused 1078
+214 : Disembark point
+215 : unused 1080
+216 : Granite Quarry
+217 : Copper Mine
+218 : temp1
+219 : temp2
+220 : temp3
+221 : Sandstone Quarry
+222 : Mausoleum
+223 : Cliff
+224 : Henna
+225 : Alexandria's Library
+226 : Zoo
+227 : Caesareum
+228 : Pharos Lighthouse
+229 : Small Royal Burial Tomb
+230 : Abu Simbel
+231 : Artisans' Guild
+232 : Lamp Maker
+233 : Paint Maker
+234 : Medium Royal Burial Tomb
+235 : Large Royal Burial Tomb
+236 : Grand Royal Burial Tomb
+
+237 : Crude Hut
+238 : Sturdy Hut
+239 : Meager Shanty
+240 : Common Shanty
+241 : Rough Cottage
+242 : Ordinary Cottage
+243 : Modest Homestead
+244 : Spacious Homestead
+245 : Modest Apartment
+246 : Spacious Apartment
+247 : Common Residence
+248 : Spacious Residence
+249 : Elegant Residence
+250 : Fancy Residence
+251 : Common Manor
+252 : Spacious Manor
+253 : Elegant Manor
+254 : Stately Manor
+255 : Modest Estate
+256 : Palatial Estate
+257 : Crude Huts
+258 : Sturdy Huts
+259 : Meager Shanties
+260 : Common Shanties
+261 : Rough Cottages
+262 : Ordinary Cottages
+263 : Modest Homesteads
+264 : Spacious Homesteads
+265 : Modest Apartments
+266 : Spacious Apartments
+267 : Common Residences
+268 : Spacious Residences
+269 : Elegant Residences
+270 : Fancy Residences
+271 : Common Manors
+272 : Spacious Manors
+273 : Elegant Manors
+274 : Stately Manors
+275 : Modest Estates
+276 : Palatial Estates
+277 : Crude Huts:
+278 : Sturdy Huts:
+279 : Meager Shanties:
+280 : Common Shanties:
+281 : Rough Cottages:
+282 : Ordinary Cottages:
+283 : Modest Homesteads:
+284 : Spacious Homesteads:
+285 : Modest Apartments:
+286 : Spacious Apartments:
+287 : Common Residences:
+288 : Spacious Residences:
+289 : Elegant Residences:
+290 : Fancy Residences:
+291 : Common Manors:
+292 : Spacious Manors:
+293 : Elegant Manors:
+294 : Stately Manors:
+295 : Modest Estates:
+296 : Palatial Estates:
+297 : Play Pharaoh/Cleopatra
+298 : Play Pharaoh Demo
+299 :   Activision Website 
+300 : Mission Editor
+301 : Quit 
+302 : Greatest Families
+303 : Enter a family name
+304 : Right-click to continue
+305 : Village Elder
+306 : Village Noble
+307 : Royal Scholar
+308 : Royal Scribe
+309 : Royal Judge
+310 : Royal Mayor
+311 : Royal Governor
+312 : Nomarch
+313 : Chancellor
+314 : Vizier
+315 : Pharaoh
+316 : O Village Elder
+317 : O Village Noble
+318 : O Royal Scholar
+319 : O Royal Scribe
+320 : O Royal Judge
+321 : O Royal Mayor
+322 : O Royal Governor
+323 : O Nomarch
+324 : O Chancellor
+325 : O Vizier
+326 : O Great Pharaoh
+327 : Trivial mission
+328 : Very simple mission
+329 : Easy mission
+330 : Somewhat easy mission
+331 : Standard mission
+332 : Somewhat hard mission
+333 : Hard mission
+334 : Very hard mission
+335 : Extremely hard mission
+336 : Virtually impossible mission
+337 : Tiny map
+338 : Small map
+339 : Medium map
+340 : Large map
+341 : Huge map
+342 : Enormous map
+343 : Cancel
+344 : No invaders
+345 : Enemy army
+346 : Egyptian Army
+347 : Pharaoh's Army
+348 : Bedouin Army
+349 : Egyptian city falls
+350 : foreign city conquered
+351 : trade route now available
+352 : trade route shuts down
+353 : trade city under siege
+354 : Attack food chain
+355 : Attack gold stores
+356 : Attack best buildings
+357 : Attack troops
+358 : Random attack
+359 : Hyksos
+360 : Sea People
+361 : Hittites
+362 : Mitani
+363 : Kushites
+364 : Libyans
+365 : Nubians
+366 : Canaanites
+367 : Assyrians
+368 : Romans
+369 : Phoenicians
+370 : Persians
+371 : Egyptians
+372 : Bedouin
+373 : A Hyksos soldier
+374 : A soldier of the Sea People
+375 : A Hittite soldier
+376 : A Mitani soldier
+377 : A Kushite soldier
+378 : A Libyan soldier
+379 : A Nubian soldier
+380 : A Canaanite soldier
+381 : An Assyrian soldier
+382 : A Roman soldier
+383 : A Phoenician soldier
+384 : A Persian soldier
+385 : An Egyptian soldier
+386 : A Bedouin soldier
+387 : a Hyksos army
+388 : an army of the Sea People
+389 : a Hittite army
+390 : a Mitani army
+391 : a Kushite army
+392 : a Libyan army
+393 : a Nubian army
+394 : a Canaanite army
+395 : an Assyrian army
+396 : a Roman army
+397 : a Phoenician army
+398 : a Persian army
+399 : an Eygptian army

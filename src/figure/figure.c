@@ -14,7 +14,7 @@
 
 static struct {
     int created_sequence;
-    figure figures[MAX_FIGURES];
+    figure figures[5000];
 } data = {0};
 
 figure *figure_get(int id)
@@ -25,7 +25,7 @@ figure *figure_get(int id)
 figure *figure_create(int type, int x, int y, int dir)
 {
     int id = 0;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         if (!data.figures[i].state) {
             id = i;
             break;
@@ -136,7 +136,7 @@ int figure_is_herd(const figure *f)
 
 void figure_init_scenario(void)
 {
-    for (int i = 0; i < MAX_FIGURES; i++) {
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         memset(&data.figures[i], 0, sizeof(figure));
         data.figures[i].id = i;
     }
@@ -145,7 +145,7 @@ void figure_init_scenario(void)
 
 void figure_kill_all()
 {
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         data.figures[i].state = FIGURE_STATE_DEAD;
     }
 }
@@ -348,13 +348,15 @@ static void figure_load(buffer *buf, figure *f)
     f->attacker_id1 = buf->read_i16();
     f->attacker_id2 = buf->read_i16();
     f->opponent_id = buf->read_i16();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(260);
 }
 
 void figure_save_state(buffer *list, buffer *seq)
 {
     seq->write_i32(data.created_sequence);
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure_save(list, &data.figures[i]);
     }
 }
@@ -363,7 +365,7 @@ void figure_load_state(buffer *list, buffer *seq)
 {
     data.created_sequence = seq->read_i32();
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure_load(list, &data.figures[i]);
         data.figures[i].id = i;
     }

@@ -67,6 +67,14 @@ struct graphics_files_collection {
     const char PH_EMPIRE_555[NAME_SIZE];
     const char PH_ENEMY_555[20][NAME_SIZE];
     const char PH_ENEMY_SG2[20][NAME_SIZE];
+    const char PH_EXPANSION_555[NAME_SIZE];
+    const char PH_EXPANSION_SG3[NAME_SIZE];
+    const char PH_SPRMAIN_555[NAME_SIZE];
+    const char PH_SPRMAIN_SG3[NAME_SIZE];
+    const char PH_SPRMAIN2_555[NAME_SIZE];
+    const char PH_SPRMAIN2_SG3[NAME_SIZE];
+    const char PH_SPRAMBIENT_555[NAME_SIZE];
+    const char PH_SPRAMBIENT_SG3[NAME_SIZE];
 
 } gfc = {
         {
@@ -176,7 +184,15 @@ struct graphics_files_collection {
                 "data/Phoenician.sg3",
                 "data/Roman.sg3",
                 "data/SeaPeople.sg3"
-        }
+        },
+        "data/Expansion.555",
+        "data/Expansion.sg3",
+        "data/SprMain.555",
+        "data/SprMain.sg3",
+        "data/SprMain2.555",
+        "data/SprMain2.sg3",
+        "data/SprAmbient.555",
+        "data/SprAmbient.sg3",
 };
 
 static image DUMMY_IMAGE;
@@ -186,14 +202,16 @@ static struct {
     int is_editor;
     int fonts_enabled;
     int font_base_offset;
-    int terrain_ph_offset;
+//    int terrain_ph_offset;
 
-    imagepak *main;
+    imagepak *ph_expansion;
+    imagepak *ph_sprmain;
     imagepak *ph_unloaded;
+    imagepak *main;
     imagepak *ph_terrain;
-    imagepak *ph_fonts;
     imagepak *enemy;
     imagepak *empire;
+//    imagepak *ph_fonts;
     imagepak *font;
 
     color_t *tmp_image_data;
@@ -202,8 +220,9 @@ static struct {
         0,
         0,
         0,
-        14252,
+//        14252,
 
+        new imagepak,
         new imagepak,
         new imagepak,
         new imagepak,
@@ -215,13 +234,15 @@ static struct {
         new color_t[SCRATCH_DATA_SIZE-4000000]
 };
 
-void mem_test_leak(int j = 100) {
-    uint8_t *td;
-    for (j = 0; j < 1; j++) {
-        td = new uint8_t[100000];
-        delete td;
-    }
-}
+int terrain_ph_offset = 0;
+
+//void mem_test_leak(int j = 100) {
+//    uint8_t *td;
+//    for (j = 0; j < 1; j++) {
+//        td = new uint8_t[100000];
+//        delete td;
+//    }
+//}
 
 static color_t to_32_bit(uint16_t c) {
     return ALPHA_OPAQUE |
@@ -320,7 +341,7 @@ bool imagepak::check_initialized()
 {
     return initialized == 0;
 }
-int imagepak::load_555(const char *filename_555, const char *filename_sgx)
+int imagepak::load_555(const char *filename_555, const char *filename_sgx, int shift)
 {
     // prepare sgx data
     buffer *buf = new buffer(SCRATCH_DATA_SIZE);
@@ -337,6 +358,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
 
     // allocate arrays
     entries_num = (size_t) header_data[4] + 1;
+    id_shift_overall = shift;
     name = filename_sgx;
     if (check_initialized()) {
         initialized = false;
@@ -344,19 +366,19 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
         delete data;
     }
     images = new image[entries_num];
-    data = new color_t[30000000];
+    data = new color_t[entries_num * 10000];
     initialized = true;
 
     buf->skip(40); // skip remaining 40 bytes
 
     // parse groups (always a fixed 300 pool)
-    int groups_num = 0;
+    groups_num = 0;
     for (int i = 0; i < 300; i++) {
         group_image_ids[i] = buf->read_u16();
         if (group_image_ids[i] != 0)
             groups_num++;
+//        SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
     }
-    groups_num = groups_num;
 
     // parse bitmap names
     int num_bmp_names = (int) header_data[5];
@@ -452,6 +474,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx)
         img->draw.offset = img_offset;
         img->draw.uncompressed_length /= 2;
         img->draw.data = &data[img_offset];
+//        SDL_Log("Loading... %s : %i", filename_555, i);
     }
 
     return 1;
@@ -463,10 +486,14 @@ int imagepak::get_entry_count()
 }
 int imagepak::get_id(int group)
 {
-    return group_image_ids[group];
+    return group_image_ids[group] + id_shift_overall;
 }
 const image *imagepak::get_image(int id)
 {
+    id -= id_shift_overall;
+//    assert(id >= 0 && id <= entries_num);
+    if (id < 0 || id >= entries_num)
+        return &DUMMY_IMAGE;
     return &images[id];
 }
 
@@ -484,7 +511,7 @@ int image_groupid_translation(int table[], int group) {
     return group;
 }
 
-int image_debug_offset = 14791;
+//int image_debug_offset = 14791;
 //int image_debug_offset = 15949;
 
 int image_id_from_group(int group) {
@@ -496,15 +523,19 @@ int image_id_from_group(int group) {
             if (group < 67)
                 return data.ph_terrain->get_id(group);
             else if (group < 295)
-                return data.main->get_id(group - 66) + 2000;
+                return data.main->get_id(group - 66);// + 2000;
             else if (group < 333)
-                return data.ph_unloaded->get_id(group - 294) + 5000;
+                return data.ph_unloaded->get_id(group - 294);// + 5000;
+            else if (group < 341)
+                return data.font->get_id(group - 332);// + 6000;
             else
-                return data.ph_fonts->get_id(group - 332) + 6000;
+                return data.ph_sprmain->get_id(group - 340);// + 6000;
     }
     return -1;
 }
-const image *image_get(int id) {
+
+#include "window/city.h"
+const image *image_get(int id, int mode) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             if (id >= data.main->get_entry_count() && id < data.main->get_entry_count() + MAX_MODDED_IMAGES)
@@ -518,19 +549,51 @@ const image *image_get(int id) {
             // 14252
             // 15949
             // 14791
-            if (id > 14000)
-//                id -= image_debug_offset;
-                id -= data.terrain_ph_offset;
-            if (id > 6000 && id - 6000 < data.ph_fonts->get_entry_count())
-                return data.ph_fonts->get_image(id - 6000);
-            else if (id > 5000 && id - 5000 < data.ph_unloaded->get_entry_count())
-                return data.ph_unloaded->get_image(id - 5000);
-            else if (id > 2000 && id - 2000 < data.main->get_entry_count())
-                return data.main->get_image(id - 2000);
-            else if (id >= 0 && id < data.ph_terrain->get_entry_count())
-                return data.ph_terrain->get_image(id);
-            else
-                return &DUMMY_IMAGE;
+//            if (id > 14000)
+////                id -= image_debug_offset;
+//                id -= data.terrain_ph_offset;
+//            else if (id > 11706)
+//                id -= 9706;
+
+//            if (mode == 1)
+//                id -= debug_range_1; //data.terrain_ph_offset; // debug_range_1 // 1078
+
+            const image *img;
+            img = data.ph_expansion->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_sprmain->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_unloaded->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.main->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_terrain->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.font->get_image(id); if (img != &DUMMY_IMAGE) return img;
+
+//
+//            if (id - 15766 > data.font->get_entry_count())
+//                return &DUMMY_IMAGE;
+//            else if (id > 15766)
+//                return data.font->get_image(id);
+//            else if (id > 14252 + 200) // ignore first 200
+//                return data.ph_terrain->get_image(id);
+//            else if (id > 11706)
+//                return data.main->get_image(id);
+//            else if (id > 11025)
+//                return data.ph_unloaded->get_image(id);
+//            else if (id > 700)
+//                return data.ph_sprmain->get_image(id);
+//            else
+//                return data.ph_expansion->get_image(id);
+
+
+
+//            if (id > 6000 && id - 6000 < data.font->get_entry_count())
+//                return data.font->get_image(id);
+//            else if (id > 5000 && id - 5000 < data.ph_unloaded->get_entry_count())
+//                return data.ph_unloaded->get_image(id);
+//            else if (id > 2000 && id - 2000 < data.main->get_entry_count())
+//                return data.main->get_image(id);
+//            else if (id >= 0 && id < data.ph_terrain->get_entry_count())
+//                return data.ph_terrain->get_image(id - data.terrain_ph_offset);
+//            else
+//                return &DUMMY_IMAGE;
     }
     return &DUMMY_IMAGE;
 }
@@ -584,14 +647,13 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
         case ENGINE_ENV_PHARAOH:
             filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_555;
             filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_SG3;
-            if (!data.main->load_555(filename_555, filename_sgx))
-                return 0;
-            if (!data.ph_unloaded->load_555(gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3))
-                return 0;
-            if (!data.ph_terrain->load_555(gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3))
-                return 0;
-            if (!data.ph_fonts->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3))
-                return 0;
+            if (!data.ph_expansion->load_555(gfc.PH_EXPANSION_555, gfc.PH_EXPANSION_SG3)) return 0;
+            if (!data.ph_sprmain->load_555(gfc.PH_SPRMAIN_555, gfc.PH_SPRMAIN_SG3, 700)) return 0;
+            if (!data.ph_unloaded->load_555(gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3, 11025)) return 0;
+            if (!data.main->load_555(filename_555, filename_sgx, 11706)) return 0;
+            // ???? 539-long gap?
+            if (!data.ph_terrain->load_555(gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3, 14252)) return 0;
+            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 15766 )) return 0;
             break;
     }
 
@@ -634,10 +696,6 @@ int image_load_fonts(encoding_type encoding) {
         data.fonts_enabled = NO_EXTRA_FONT;
         return 1;
     }
-}
-void set_terrain_graphics_offset(int offset)
-{
-    data.terrain_ph_offset = offset;
 }
 
 //void image_pak_table_generate() {

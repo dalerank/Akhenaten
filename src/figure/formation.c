@@ -480,7 +480,7 @@ void formation_move_herds_away(int x, int y)
 void formation_calculate_figures(void)
 {
     formation_clear_figures();
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE) {
             continue;

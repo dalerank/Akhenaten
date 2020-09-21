@@ -172,12 +172,18 @@ static void toggle_pause(void)
     city_warning_clear_all();
 }
 
+int debug_range_1 = 120;
+
 static void handle_hotkeys(const hotkeys *h)
 {
     if (h->decrease_game_speed)
-        image_debug_offset--;
+        debug_range_1--;
     if (h->increase_game_speed)
-        image_debug_offset++;
+        debug_range_1++;
+//    if (debug_range_1 < 0)
+//        debug_range_1 = 0;
+//    if (debug_range_1 > 20)
+//        debug_range_1 = 20;
     ////
     if (h->toggle_pause) {
         toggle_pause();

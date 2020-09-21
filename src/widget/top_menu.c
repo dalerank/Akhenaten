@@ -242,11 +242,10 @@ void widget_top_menu_draw(int force)
     menu_bar_draw(menu, 4);
 
     color_t treasure_color = COLOR_WHITE;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        treasure_color = 0;
     int treasury = city_finance_treasury();
     if (treasury < 0)
         treasure_color = COLOR_FONT_RED;
+    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
     int s_width = screen_width();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.offset_funds = s_width - 540;
@@ -285,8 +284,8 @@ void widget_top_menu_draw(int force)
 
             lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, FONT_NORMAL_GREEN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, FONT_NORMAL_GREEN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
+            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
 
             width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_GREEN);
             text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width + 100, 5, FONT_NORMAL_GREEN);
@@ -305,8 +304,8 @@ void widget_top_menu_draw(int force)
 
             lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, FONT_NORMAL_GREEN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, FONT_NORMAL_GREEN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
+            text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
 
             width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_GREEN);
             text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_GREEN);
