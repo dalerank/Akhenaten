@@ -40,6 +40,7 @@ INFO: data/Expansion.sg3 group 38 -> id 865
 INFO: data/Expansion.sg3 group 39 -> id 873
 INFO: data/Expansion.sg3 group 40 -> id 884
 INFO: data/Expansion.sg3 group 41 -> id 900
+
 INFO: data/SprMain.sg3 group 0 -> id 1
 INFO: data/SprMain.sg3 group 1 -> id 33
 INFO: data/SprMain.sg3 group 2 -> id 65
@@ -550,6 +551,7 @@ INFO: data/Pharaoh_General.sg3 group 225 -> id 2199
 INFO: data/Pharaoh_General.sg3 group 226 -> id 1742
 INFO: data/Pharaoh_General.sg3 group 227 -> id 1750
 INFO: data/Pharaoh_General.sg3 group 228 -> id 2439
+
 INFO: data/Pharaoh_Unloaded.sg3 group 1 -> id 229
 INFO: data/Pharaoh_Unloaded.sg3 group 2 -> id 228
 INFO: data/Pharaoh_Unloaded.sg3 group 3 -> id 429
@@ -588,6 +590,7 @@ INFO: data/Pharaoh_Unloaded.sg3 group 35 -> id 266
 INFO: data/Pharaoh_Unloaded.sg3 group 36 -> id 272
 INFO: data/Pharaoh_Unloaded.sg3 group 37 -> id 279
 INFO: data/Pharaoh_Unloaded.sg3 group 38 -> id 285
+
 INFO: data/Pharaoh_Fonts.sg3 group 1 -> id 201
 INFO: data/Pharaoh_Fonts.sg3 group 2 -> id 335
 INFO: data/Pharaoh_Fonts.sg3 group 3 -> id 1273

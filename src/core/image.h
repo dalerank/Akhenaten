@@ -51,7 +51,6 @@ class imagepak {
     bool initialized;
     const char *name;
     int entries_num;
-    int id_shift_overall = 0;
     int groups_num;
     uint32_t header_data[10];
     uint16_t *group_image_ids;
@@ -61,6 +60,7 @@ class imagepak {
     bool check_initialized();
 
 public:
+    int id_shift_overall = 0;
 
     imagepak();
 
@@ -68,7 +68,7 @@ public:
 
     int get_entry_count();
     int get_id(int group);
-    const image *get_image(int id);
+    const image *get_image(int id, bool relative = false);
 };
 
 extern int terrain_ph_offset;

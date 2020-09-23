@@ -488,14 +488,16 @@ int imagepak::get_id(int group)
 {
     return group_image_ids[group] + id_shift_overall;
 }
-const image *imagepak::get_image(int id)
+const image *imagepak::get_image(int id, bool relative)
 {
-    id -= id_shift_overall;
-//    assert(id >= 0 && id <= entries_num);
+    if (!relative)
+        id -= id_shift_overall;
     if (id < 0 || id >= entries_num)
         return &DUMMY_IMAGE;
     return &images[id];
 }
+
+#include "window/city.h"
 
 int image_groupid_translation(int table[], int group) {
     if (group == 246) {
@@ -510,16 +512,14 @@ int image_groupid_translation(int table[], int group) {
     // missing entry!!!!
     return group;
 }
-
-//int image_debug_offset = 14791;
-//int image_debug_offset = 15949;
-
 int image_id_from_group(int group) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             return data.main->get_id(group);
         case ENGINE_ENV_PHARAOH:
             group = image_groupid_translation(groupid_translation_table_ph, group);
+//            if (group == 1)
+//                return 615 + data.ph_terrain->id_shift_overall;
             if (group < 67)
                 return data.ph_terrain->get_id(group);
             else if (group < 295)
@@ -529,12 +529,10 @@ int image_id_from_group(int group) {
             else if (group < 341)
                 return data.font->get_id(group - 332);// + 6000;
             else
-                return data.ph_sprmain->get_id(group - 340);// + 6000;
+                return data.ph_sprmain->get_id(group - 340);// + 8000;
     }
     return -1;
 }
-
-#include "window/city.h"
 const image *image_get(int id, int mode) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
@@ -546,18 +544,6 @@ const image *image_get(int id, int mode) {
             else
                 return &DUMMY_IMAGE;
         case ENGINE_ENV_PHARAOH: // todo: mods
-            // 14252
-            // 15949
-            // 14791
-//            if (id > 14000)
-////                id -= image_debug_offset;
-//                id -= data.terrain_ph_offset;
-//            else if (id > 11706)
-//                id -= 9706;
-
-//            if (mode == 1)
-//                id -= debug_range_1; //data.terrain_ph_offset; // debug_range_1 // 1078
-
             const image *img;
             img = data.ph_expansion->get_image(id); if (img != &DUMMY_IMAGE) return img;
             img = data.ph_sprmain->get_image(id); if (img != &DUMMY_IMAGE) return img;
@@ -565,36 +551,9 @@ const image *image_get(int id, int mode) {
             img = data.main->get_image(id); if (img != &DUMMY_IMAGE) return img;
             img = data.ph_terrain->get_image(id); if (img != &DUMMY_IMAGE) return img;
             img = data.font->get_image(id); if (img != &DUMMY_IMAGE) return img;
-
-//
-//            if (id - 15766 > data.font->get_entry_count())
-//                return &DUMMY_IMAGE;
-//            else if (id > 15766)
-//                return data.font->get_image(id);
-//            else if (id > 14252 + 200) // ignore first 200
-//                return data.ph_terrain->get_image(id);
-//            else if (id > 11706)
-//                return data.main->get_image(id);
-//            else if (id > 11025)
-//                return data.ph_unloaded->get_image(id);
-//            else if (id > 700)
-//                return data.ph_sprmain->get_image(id);
-//            else
-//                return data.ph_expansion->get_image(id);
-
-
-
-//            if (id > 6000 && id - 6000 < data.font->get_entry_count())
-//                return data.font->get_image(id);
-//            else if (id > 5000 && id - 5000 < data.ph_unloaded->get_entry_count())
-//                return data.ph_unloaded->get_image(id);
-//            else if (id > 2000 && id - 2000 < data.main->get_entry_count())
-//                return data.main->get_image(id);
-//            else if (id >= 0 && id < data.ph_terrain->get_entry_count())
-//                return data.ph_terrain->get_image(id - data.terrain_ph_offset);
-//            else
-//                return &DUMMY_IMAGE;
+            return data.ph_terrain->get_image(615, true);
     }
+//    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
     return &DUMMY_IMAGE;
 }
 const image *image_letter(int letter_id) {
@@ -656,7 +615,6 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
             if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 15766 )) return 0;
             break;
     }
-
 
     data.is_editor = is_editor;
     return 1;

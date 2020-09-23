@@ -634,7 +634,6 @@ static const color_t *tile_data(const color_t *data, int index)
 static void draw_footprint_size1(int image_id, int x, int y, color_t color_mask)
 {
     const color_t *data = image_data(image_id);
-
     draw_footprint_tile(tile_data(data, 0), x, y, color_mask);
 }
 static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask)
@@ -740,15 +739,12 @@ void image_draw(int image_id, int x, int y)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
-    if (!data) {
+    if (!data)
         return;
-    }
-
-    if (img->draw.is_fully_compressed) {
+    if (img->draw.is_fully_compressed)
         draw_compressed(img, data, x, y, img->height);
-    } else {
+    else
         draw_uncompressed(img, data, x, y, 0, DRAW_TYPE_NONE);
-    }
 }
 void image_draw_enemy(int image_id, int x, int y)
 {
@@ -914,6 +910,8 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
             draw_modded_footprint(image_id, x, y, color_mask);
+        else
+            draw_footprint_size1(image_id, x, y, color_mask);
         return;
     }
     switch (img->width) {

@@ -17,6 +17,43 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 
+static int north_tile_grid_offset(int x, int y, int *size)
+{
+    int grid_offset = map_grid_offset(x, y);
+    *size = map_property_multi_tile_size(grid_offset);
+    for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++) {
+        grid_offset += map_grid_delta(-1, 0);
+    }
+    for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++) {
+        grid_offset += map_grid_delta(0, -1);
+    }
+    return grid_offset;
+}
+static void adjust_to_absolute_xy(int *x, int *y, int size)
+{
+    switch (city_view_orientation()) {
+        case DIR_2_RIGHT:
+            *x = *x - size + 1;
+            break;
+        case DIR_4_BOTTOM:
+            *x = *x - size + 1;
+            // fall-through
+        case DIR_6_LEFT:
+            *y = *y - size + 1;
+            break;
+    }
+}
+static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth)
+{
+    int grid_offset = map_grid_offset(x + dx, y + dy);
+    map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+    map_terrain_add(grid_offset, TERRAIN_BUILDING);
+    map_building_set(grid_offset, building_id);
+    map_property_clear_constructing(grid_offset);
+    map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
+    map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
+}
+
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
 {
     if (!map_grid_is_inside(x, y, size)) {
@@ -55,18 +92,6 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
         }
     }
 }
-
-static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth)
-{
-    int grid_offset = map_grid_offset(x + dx, y + dy);
-    map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-    map_terrain_add(grid_offset, TERRAIN_BUILDING);
-    map_building_set(grid_offset, building_id);
-    map_property_clear_constructing(grid_offset);
-    map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
-    map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
-}
-
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_id, int progress)
 {
     if (!map_grid_is_inside(x, y, 3)) {
@@ -139,7 +164,6 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     }
     set_crop_tile(building_id, x, y, 2, 0, crop_image_id, growth);
 }
-
 int map_building_tiles_add_aqueduct(int x, int y)
 {
     int grid_offset = map_grid_offset(x,y);
@@ -147,20 +171,6 @@ int map_building_tiles_add_aqueduct(int x, int y)
     map_property_clear_constructing(grid_offset);
     return 1;
 }
-
-static int north_tile_grid_offset(int x, int y, int *size)
-{
-    int grid_offset = map_grid_offset(x, y);
-    *size = map_property_multi_tile_size(grid_offset);
-    for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++) {
-        grid_offset += map_grid_delta(-1, 0);
-    }
-    for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++) {
-        grid_offset += map_grid_delta(0, -1);
-    }
-    return grid_offset;
-}
-
 void map_building_tiles_remove(int building_id, int x, int y)
 {
     if (!map_grid_is_inside(x, y, 1)) {
@@ -209,7 +219,6 @@ void map_building_tiles_remove(int building_id, int x, int y)
     map_tiles_update_region_meadow(x, y, x + size, y + size);
     map_tiles_update_region_rubble(x, y, x + size, y + size);
 }
-
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
 {
     if (!map_grid_is_inside(x, y, size)) {
@@ -245,22 +254,6 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
         }
     }
 }
-
-static void adjust_to_absolute_xy(int *x, int *y, int size)
-{
-    switch (city_view_orientation()) {
-        case DIR_2_RIGHT:
-            *x = *x - size + 1;
-            break;
-        case DIR_4_BOTTOM:
-            *x = *x - size + 1;
-            // fall-through
-        case DIR_6_LEFT:
-            *y = *y - size + 1;
-            break;
-    }
-}
-
 int map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy)
 {
     if (!absolute_xy) {
@@ -286,7 +279,6 @@ int map_building_tiles_mark_construction(int x, int y, int size, int terrain, in
     }
     return 1;
 }
-
 void map_building_tiles_mark_deleting(int grid_offset)
 {
     int building_id = map_building_at(grid_offset);
@@ -297,7 +289,6 @@ void map_building_tiles_mark_deleting(int grid_offset)
     }
     map_property_mark_deleted(grid_offset);
 }
-
 int map_building_tiles_are_clear(int x, int y, int size, int terrain)
 {
     adjust_to_absolute_xy(&x, &y, size);

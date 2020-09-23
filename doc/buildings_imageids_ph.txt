@@ -1,0 +1,152 @@
+793 vacantlot
+794 villagepalace
+801 townpalace
+808 citypalace
+816 roadblock
+
+817 bazaar
+830 bazaar2
+843 wood
+856 carp.guild
+871 stoneguild
+887 brickguild
+902 chariots
+915 jewel
+926 granite
+927 gold
+928 gems
+929 stone
+930 stone (unused)
+931 copper
+932 sandstone
+933 limestone (unused)
+934 limestone
+935 bricks
+946 linen
+959 pottery
+979 papyrus
+990 clay
+1015 beer
+1028 weapons
+1051 hunting
+
+1070 dancers
+1071 music
+1072 jugglers
+1087 gardens
+- - -
+1095 booth
+1096 booth2
+1100 booth3
+1101 senet
+
+1121 mansion1
+1134 mansion2
+1147 mansion3
+1160 tax
+1173 tax2
+1174 courthouse
+1187 library
+1204 library (unused)
+1206 scribes
+
+1222 police
+1235 firemen
+1248 architects
+1261 apothecary
+1274 dentist
+1287 mortuary
+1300 physician
+1313 academy
+1314 academy (unused)
+1315 fort
+1316 fortground
+1317 fort archers
+1318 fort charioteers
+1319 infantry
+1320 recruiter
+1341 well
+1343 well2
+1345 watersupp
+1347 watersupp2
+
+1353 storageyard post
+1371 storageyard space
+
+2170 farm
+2178 work camp
+2199 farm (meadows)
+2201 ranch
+2222 reeds
+2243 farmland: barley
+2249 farmland: fig
+2255 farmland: grain
+2261 farmland: lettuce
+2267 farmland: pomegranates
+2273 farmland: chickpeas
+2279 farmland: flax
+2285 granary
+
+2296 smallobelisk
+2297 smallstatue
+2301 smallcat
+2305 midstatue
+2309 midbirb
+2313 bigstatue
+2317 bigsphynx
+2321 midobelisk
+2322 bigobelisk
+
+2323 gate_croc
+2325 gate_ra
+2327 gate_seth
+2329 gate_bast
+2331 gate_stork
+2333 gate_osiris
+2335 gatemain
+2339 tower
+2340 gateoverlay
+2342 walls
+
+2376 boothplaza1
+2377 boothplaza2
+2381 boothplaza3
+2390 boothplaza4
+2406 festival
+2431 plaza1
+2437 plaza2
+2439 woodenplanks
+
+2676 templeosiris
+2689 templteseth
+2702 templeptah
+2715 templera
+2728 templebast
+2741 shrineosiris
+2742 shrineseth
+2743 shrineptah
+2744 shrinera
+2745 shrinebast
+2746 shrinera2 (double???)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -57,7 +57,7 @@ static void destroy_on_fire(building *b, int plagued)
         memset(&b->data, 0, 42);
         int image_id;
         if (was_tent) {
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
         } else {
             int random = map_random_get(b->grid_offset) & 3;
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
@@ -90,7 +90,6 @@ static void destroy_on_fire(building *b, int plagued)
         map_routing_update_water();
     }
 }
-
 static void destroy_linked_parts(building *b, int on_fire)
 {
     building *part = b;
@@ -130,18 +129,15 @@ void building_destroy_by_collapse(building *b)
     figure_create_explosion_cloud(b->x, b->y, b->size);
     destroy_linked_parts(b, 0);
 }
-
 void building_destroy_by_fire(building *b)
 {
     destroy_on_fire(b, 0);
     destroy_linked_parts(b, 1);
 }
-
 void building_destroy_by_plague(building *b)
 {
     destroy_on_fire(b, 1);
 }
-
 void building_destroy_by_rioter(building *b)
 {
     destroy_on_fire(b, 0);
@@ -162,7 +158,6 @@ int building_destroy_first_of_type(int type)
     }
     return 0;
 }
-
 void building_destroy_last_placed(void)
 {
     int highest_sequence = 0;
@@ -183,7 +178,6 @@ void building_destroy_last_placed(void)
         map_routing_update_land();
     }
 }
-
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage)
 {
     if (map_building_damage_increase(grid_offset) > max_damage) {
@@ -191,7 +185,6 @@ void building_destroy_increase_enemy_damage(int grid_offset, int max_damage)
             map_grid_offset_to_y(grid_offset), grid_offset);
     }
 }
-
 void building_destroy_by_enemy(int x, int y, int grid_offset)
 {
     int building_id = map_building_at(grid_offset);

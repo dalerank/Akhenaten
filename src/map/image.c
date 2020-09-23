@@ -11,6 +11,9 @@ int map_image_at(int grid_offset)
 }
 void map_image_set(int grid_offset, int image_id)
 {
+    if (grid_offset == 26105) {
+        int a = 3245;
+    }
     map_grid_set(&images, grid_offset, image_id);
 }
 
@@ -55,8 +58,6 @@ void map_image_load_state(buffer *buf, int shift)
     map_grid_load_state(&images, buf);
     for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
         auto nv = map_grid_get(&images, i) - shift;
-//        if (nv <= 14454)
-//            nv = 14454;
         map_grid_set(&images, i, nv);
     }
 }
