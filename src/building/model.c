@@ -22,9 +22,9 @@ static model_house houses[20];
 static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
 {
     for (int i = 0; i < len; i++, a++, b++) {
-        if (*a != *b) {
+        if (*a != *b)
             return 0;
-        }
+
     }
     return 1;
 }
@@ -32,18 +32,18 @@ static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int h
 {
     int needle_length = string_length(needle);
     for (int i = 0; i < haystack_length; i++) {
-        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length)) {
+        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
             return i + 1;
-        }
+
     }
     return 0;
 }
 static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length)
 {
     for (int i = 0; i < haystack_length; i++) {
-        if (haystack[i] == needle) {
+        if (haystack[i] == needle)
             return i + 1;
-        }
+
     }
     return 0;
 }
@@ -52,12 +52,12 @@ static const uint8_t *skip_non_digits(const uint8_t *str)
 {
     int safeguard = 0;
     while (1) {
-        if (++safeguard >= 1000) {
+        if (++safeguard >= 1000)
             break;
-        }
-        if ((*str >= '0' && *str <= '9') || *str == '-') {
+
+        if ((*str >= '0' && *str <= '9') || *str == '-')
             break;
-        }
+
         str++;
     }
     return str;

@@ -57,9 +57,9 @@ static void determine_meeting_center(void)
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_MEETING) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_MEETING)
             building_list_small_add(i);
-        }
+
     }
     int total_meetings = building_list_small_size();
     if (total_meetings <= 0)
@@ -94,9 +94,9 @@ void map_natives_init(void)
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
-            }
+
 
             int random_bit = map_random_get(grid_offset) & 1;
             int type;
@@ -133,9 +133,9 @@ void map_natives_init(void)
                     map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
                     map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
                     mark_native_land(b->x, b->y, 2, 6);
-                    if (!meeting_center_set) {
+                    if (!meeting_center_set)
                         city_buildings_set_main_native_meeting_center(b->x, b->y);
-                    }
+
                     break;
                 case BUILDING_NATIVE_HUT:
                     b->sentiment.native_anger = 100;
@@ -158,9 +158,9 @@ void map_natives_init_editor(void)
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
-            }
+
 
             int type;
             int image_id = map_image_at(grid_offset);
@@ -202,9 +202,9 @@ void map_natives_check_land(void)
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
+        if (b->state != BUILDING_STATE_IN_USE)
             continue;
-        }
+
         int size, radius;
         if (b->type == BUILDING_NATIVE_HUT) {
             size = 1;
@@ -217,9 +217,9 @@ void map_natives_check_land(void)
         }
         if (b->sentiment.native_anger >= 100) {
             mark_native_land(b->x, b->y, size, radius);
-            if (has_building_on_native_land(b->x, b->y, size, radius)) {
+            if (has_building_on_native_land(b->x, b->y, size, radius))
                 city_military_start_native_attack();
-            }
+
         } else {
             b->sentiment.native_anger++;
         }

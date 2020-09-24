@@ -60,9 +60,9 @@ void mouse_set_from_touch(const touch *first, const touch *last)
 
 void mouse_set_position(int x, int y)
 {
-    if (x != data.x || y != data.y) {
+    if (x != data.x || y != data.y)
         last_click = 0;
-    }
+
     data.x = x;
     data.y = y;
     data.is_touch = 0;

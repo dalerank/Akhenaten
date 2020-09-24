@@ -62,9 +62,9 @@ const char *key_combination_name(int key, int modifiers)
 static int parse_modifier(const char *name)
 {
     for (const modifier_name *modname = modifier_names; modname->modifier; modname++) {
-        if (strcmp(modname->name, name) == 0) {
+        if (strcmp(modname->name, name) == 0)
             return modname->modifier;
-        }
+
     }
     return KEY_MOD_NONE;
 }
@@ -72,9 +72,9 @@ static int parse_modifier(const char *name)
 static int parse_key(const char *name)
 {
     for (int i = 1; i < KEY_MAX_ITEMS; i++) {
-        if (strcmp(key_names[i], name) == 0) {
+        if (strcmp(key_names[i], name) == 0)
             return i;
-        }
+
     }
     return KEY_NONE;
 }
@@ -91,28 +91,28 @@ int key_combination_from_name(const char *name, int *key, int *modifiers)
     while (token) {
         if (token[0]) {
             int mod = parse_modifier(token);
-            if (mod != KEY_MOD_NONE) {
+            if (mod != KEY_MOD_NONE)
                 *modifiers |= mod;
-            } else {
+ else {
                 *key = parse_key(token);
-                if (*key == KEY_NONE) {
+                if (*key == KEY_NONE)
                     return 0;
-                }
+
             }
         }
         token = strtok(0, " ");
     }
-    if (*key == KEY_NONE) {
+    if (*key == KEY_NONE)
         return 0;
-    }
+
     return 1;
 }
 
 static int can_display(const char *key_name)
 {
-    if (!encoding_can_display(key_name)) {
+    if (!encoding_can_display(key_name))
         return 0;
-    }
+
     uint8_t internal_name[10];
     encoding_from_utf8(key_name, internal_name, 10);
     return font_can_display(internal_name);
@@ -165,9 +165,9 @@ const uint8_t *key_combination_display_name(int key, int modifiers)
             case '\0': key_name = key_display_names[key];
         }
         strcat(result, key_name);
-    } else if (can_display(key_name)) {
+    } else if (can_display(key_name))
         strcat(result, key_name);
-    } else {
+ else {
         strcat(result, "? (");
         strcat(result, key_display_names[key]);
         strcat(result, ")");

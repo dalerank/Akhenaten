@@ -45,9 +45,9 @@ static void draw_foreground(void)
 
     if (city_victory_state() == VICTORY_STATE_WON) {
         large_label_draw(80, 240, 30, focus_button_id == 1);
-        if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
+        if (scenario_campaign_rank() < 10 || scenario_is_custom())
             lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
-        } else {
+ else {
             lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
         }
         if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
@@ -69,9 +69,9 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     int num_buttons;
-    if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
+    if (scenario_campaign_rank() >= 2 || scenario_is_custom())
         num_buttons = 3;
-    } else {
+ else {
         num_buttons = 1;
     }
     generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 128, victory_buttons, num_buttons, &focus_button_id);

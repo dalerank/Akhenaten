@@ -237,18 +237,18 @@ int setting_game_speed(void)
 void setting_increase_game_speed(void)
 {
     if (data.game_speed >= 100) {
-        if (data.game_speed < 500) {
+        if (data.game_speed < 500)
             data.game_speed += 100;
-        }
+
     } else {
         data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
     }
 }
 void setting_decrease_game_speed(void)
 {
-    if (data.game_speed > 100) {
+    if (data.game_speed > 100)
         data.game_speed -= 100;
-    } else {
+ else {
         data.game_speed = calc_bound(data.game_speed - 10, 10, 100);
     }
 }
@@ -317,17 +317,17 @@ int setting_difficulty(void)
 }
 void setting_increase_difficulty(void)
 {
-    if (data.difficulty >= DIFFICULTY_VERY_HARD) {
+    if (data.difficulty >= DIFFICULTY_VERY_HARD)
         data.difficulty = DIFFICULTY_VERY_HARD;
-    } else {
+ else {
         data.difficulty++;
     }
 }
 void setting_decrease_difficulty(void)
 {
-    if (data.difficulty <= DIFFICULTY_VERY_EASY) {
+    if (data.difficulty <= DIFFICULTY_VERY_EASY)
         data.difficulty = DIFFICULTY_VERY_EASY;
-    } else {
+ else {
         data.difficulty--;
     }
 }

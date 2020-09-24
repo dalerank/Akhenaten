@@ -22,9 +22,9 @@ static touch_coords get_touch_coordinates(float x, float y)
 static int get_touch_index(SDL_FingerID id)
 {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        if (touch_id[i] == id && touch_in_use(i)) {
+        if (touch_id[i] == id && touch_in_use(i))
             return i;
-        }
+
     }
     return MAX_ACTIVE_TOUCHES;
 }
@@ -33,9 +33,9 @@ void platform_touch_start(SDL_TouchFingerEvent *event)
 {
 #ifdef __APPLE__
     // Attempt to disable trackpad touches on MacOS
-    if (!trackpad_id) {
+    if (!trackpad_id)
         trackpad_id = SDL_GetTouchDevice(0);
-    }
+
     if (event->touchId == trackpad_id)
             return;
 #elif defined(__vita__)
@@ -44,9 +44,9 @@ void platform_touch_start(SDL_TouchFingerEvent *event)
             return;
 #endif
     int index = touch_create(get_touch_coordinates(event->x, event->y), event->timestamp);
-    if (index != MAX_ACTIVE_TOUCHES) {
+    if (index != MAX_ACTIVE_TOUCHES)
         touch_id[index] = event->fingerId;
-    }
+
 }
 
 void platform_touch_move(SDL_TouchFingerEvent *event)

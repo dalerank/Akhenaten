@@ -137,9 +137,9 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h)
         return 1;
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 5, &data.focus_menu_id);
-    if (menu_id && menu_id != data.open_sub_menu) {
+    if (menu_id && menu_id != data.open_sub_menu)
         data.open_sub_menu = menu_id;
-    }
+
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {
         if (m->left.went_up) {
             clear_state();
@@ -163,9 +163,9 @@ static int handle_mouse_menu(const mouse *m)
 
 int widget_top_menu_editor_handle_input(const mouse *m, const hotkeys *h)
 {
-    if (data.open_sub_menu) {
+    if (data.open_sub_menu)
         return handle_input_submenu(m, h);
-    } else {
+ else {
         return handle_mouse_menu(m);
     }
 }
@@ -202,9 +202,9 @@ static void menu_file_save_map(int param)
 
 static void menu_file_confirm_exit(int accepted)
 {
-    if (accepted) {
+    if (accepted)
         game_exit_editor();
-    } else {
+ else {
         window_editor_map_show();
     }
 }
@@ -213,9 +213,9 @@ static void menu_file_exit_editor(int param)
 {
     clear_state();
     window_editor_map_show();
-    if (scenario_is_saved()) {
+    if (scenario_is_saved())
         game_exit_editor();
-    } else {
+ else {
         window_popup_dialog_show(POPUP_DIALOG_EDITOR_QUIT_WITHOUT_SAVING, menu_file_confirm_exit, 1);
     }
 }

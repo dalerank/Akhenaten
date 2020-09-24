@@ -24,13 +24,13 @@ void building_government_distribute_treasury(void)
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->house_size) {
+        if (b->state != BUILDING_STATE_IN_USE || b->house_size)
             continue;
-        }
+
         b->tax_income_or_storage = 0;
-        if (b->num_workers <= 0) {
+        if (b->num_workers <= 0)
             continue;
-        }
+
         switch (b->type) {
             // ordered based on importance: most important gets the remainder
             case BUILDING_SENATE_UPGRADED:

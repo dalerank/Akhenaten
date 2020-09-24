@@ -49,9 +49,9 @@ static void init(void)
 {
     data.selected_button = 0;
     int selected_object = empire_selected_object();
-    if (selected_object) {
+    if (selected_object)
         data.selected_city = empire_city_get_for_object(selected_object - 1);
-    } else {
+ else {
         data.selected_city = 0;
     }
     data.focus_button_id = 0;
@@ -111,9 +111,9 @@ static void draw_background(void)
     data.y_min = s_height <= MAX_HEIGHT ? 0 : (s_height - MAX_HEIGHT) / 2;
     data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
 
-    if (data.x_min || data.y_min) {
+    if (data.x_min || data.y_min)
         graphics_clear_screens();
-    }
+
     draw_paneling();
 }
 
@@ -250,9 +250,9 @@ static void draw_panel_buttons(const empire_city *city)
 {
     arrow_buttons_draw(data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2);
 
-    if (city) {
+    if (city)
         draw_city_info(city);
-    } else {
+ else {
         lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
     }
     lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
@@ -296,12 +296,12 @@ static void determine_selected_object(const mouse *m)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     pixel_offset position;
-    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
+    if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE))
         empire_scroll_map(position.x, position.y);
-    }
-    if (h->toggle_editor_battle_info) {
+
+    if (h->toggle_editor_battle_info)
         data.show_battle_objects = !data.show_battle_objects;
-    }
+
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
@@ -322,12 +322,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
             determine_selected_object(m);
             int selected_object = empire_selected_object();
             if (selected_object) {
-                if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
+                if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY)
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
-                }
-            } else if (input_go_back_requested(m, h)) {
+
+            } else if (input_go_back_requested(m, h))
                 window_editor_map_show();
-            }
+
         }
     }
 }

@@ -2152,9 +2152,9 @@ static int compare_utf8(const void *a, const void *b)
     const uint8_t *va = ((const chinese_entry*) a)->utf8;
     const uint8_t *vb = ((const chinese_entry*) b)->utf8;
     for (int i = 0; i < 3; i++) {
-        if (va[i] != vb[i]) {
+        if (va[i] != vb[i])
             return va[i] < vb[i] ? -1 : 1;
-        }
+
     }
     return 0;
 }

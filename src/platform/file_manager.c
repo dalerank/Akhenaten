@@ -89,21 +89,21 @@ static int is_file(int mode) {
 
 int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension,
                                                   int (*callback)(const char *)) {
-    if (type == TYPE_NONE) {
+    if (type == TYPE_NONE)
         return LIST_ERROR;
-    }
+
 
     dir_name current_dir;
 
-    if (!dir || !*dir || strcmp(dir, ".") == 0) {
+    if (!dir || !*dir || strcmp(dir, ".") == 0)
         current_dir = CURRENT_DIR;
-    } else {
+ else {
         current_dir = set_dir_name(dir);
     }
     fs_dir_type *d = fs_dir_open(current_dir);
-    if (!d) {
+    if (!d)
         return LIST_ERROR;
-    }
+
     int match = LIST_NO_MATCH;
     fs_dir_entry *entry;
     struct stat file_info;
@@ -116,25 +116,25 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
                 S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
                 continue;
             }
-            if (is_file(m) && !file_has_extension(name, extension)) {
+            if (is_file(m) && !file_has_extension(name, extension))
                 continue;
-            }
+
             if (type & TYPE_DIR && name[0] == '.') {
                 // Skip current (.), parent (..) and hidden directories (.*)
                 continue;
             }
             match = callback(name);
-        } else if (file_has_extension(name, extension)) {
+        } else if (file_has_extension(name, extension))
             match = callback(name);
-        }
-        if (match == LIST_MATCH) {
+
+        if (match == LIST_MATCH)
             break;
-        }
+
     }
     fs_dir_close(d);
-    if (dir && *dir && strcmp(dir, ".") != 0) {
+    if (dir && *dir && strcmp(dir, ".") != 0)
         free_dir_name(current_dir);
-    }
+
     return match;
 }
 

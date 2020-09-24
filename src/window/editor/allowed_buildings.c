@@ -93,9 +93,9 @@ static void draw_foreground(void)
             y = 82 + 20 * (i - 33);
         }
         button_border_draw(x, y, 190, 18, focus_button_id == i);
-        if (scenario_editor_is_building_allowed(i)) {
+        if (scenario_editor_is_building_allowed(i))
             lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK);
-        } else {
+ else {
             lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         }
     }
@@ -107,9 +107,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 47, &focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_editor_attributes_show();
-    }
+
 }
 
 void toggle_building(int id, int param2)

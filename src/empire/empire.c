@@ -153,9 +153,9 @@ int empire_can_export_resource_to_city(int city_id, int resource)
         // stocks too low
         return 0;
     }
-    if (city_id == 0 || city->buys_resource[resource]) {
+    if (city_id == 0 || city->buys_resource[resource])
         return city_int(resource) == TRADE_STATUS_EXPORT;
-    } else {
+ else {
         return 0;
     }
 }
@@ -163,13 +163,13 @@ int empire_can_export_resource_to_city(int city_id, int resource)
 static int get_max_stock_for_population(void)
 {
     int population = city_population();
-    if (population < 2000) {
+    if (population < 2000)
         return 10;
-    } else if (population < 4000) {
+ else if (population < 4000)
         return 20;
-    } else if (population < 6000) {
+ else if (population < 6000)
         return 30;
-    } else {
+ else {
         return 40;
     }
 }
@@ -177,15 +177,15 @@ static int get_max_stock_for_population(void)
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
     empire_city *city = empire_city_get(city_id);
-    if (!city->sells_resource[resource]) {
+    if (!city->sells_resource[resource])
         return 0;
-    }
-    if (city_int(resource) != TRADE_STATUS_IMPORT) {
+
+    if (city_int(resource) != TRADE_STATUS_IMPORT)
         return 0;
-    }
-    if (trade_route_limit_reached(city->route_id, resource)) {
+
+    if (trade_route_limit_reached(city->route_id, resource))
         return 0;
-    }
+
 
     int in_stock = city_resource_count(resource);
     int max_in_stock = 0;
@@ -224,9 +224,9 @@ int empire_can_import_resource_from_city(int city_id, int resource)
             finished_good = RESOURCE_WEAPONS;
             break;
     }
-    if (finished_good) {
+    if (finished_good)
         max_in_stock = 2 + 2 * building_count_industry_active(finished_good);
-    }*/
+*/
     max_in_stock = city_resource_export_over(resource);
     return in_stock < max_in_stock ? 1 : 0;
 }

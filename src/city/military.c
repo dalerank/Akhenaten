@@ -56,9 +56,9 @@ void city_military_update_totals(void)
         if (m->in_use && m->is_legion) {
             city_data.military.total_legions++;
             city_data.military.total_soldiers += m->num_figures;
-            if (m->empire_service && m->num_figures > 0) {
+            if (m->empire_service && m->num_figures > 0)
                 city_data.military.empire_service_legions++;
-            }
+
         }
     }
 }
@@ -75,9 +75,9 @@ void city_military_start_native_attack(void)
 
 void city_military_decrease_native_attack_duration(void)
 {
-    if (city_data.military.native_attack_duration) {
+    if (city_data.military.native_attack_duration)
         city_data.military.native_attack_duration--;
-    }
+
 }
 
 void city_military_determine_distant_battle_city(void)
@@ -160,9 +160,9 @@ static void update_time_traveled(void)
 {
     int roman_travel_months = scenario_distant_battle_roman_travel_months();
     int enemy_travel_months = scenario_distant_battle_enemy_travel_months();
-    if (city_data.distant_battle.months_until_battle < enemy_travel_months) {
+    if (city_data.distant_battle.months_until_battle < enemy_travel_months)
         city_data.distant_battle.enemy_months_traveled = enemy_travel_months - city_data.distant_battle.months_until_battle + 1;
-    } else {
+ else {
         city_data.distant_battle.enemy_months_traveled = 1;
     }
     if (city_data.distant_battle.roman_months_to_travel_forth >= 1) {
@@ -172,31 +172,31 @@ static void update_time_traveled(void)
         } else {
             city_data.distant_battle.roman_months_to_travel_forth--;
         }
-        if (city_data.distant_battle.roman_months_to_travel_forth <= 1) {
+        if (city_data.distant_battle.roman_months_to_travel_forth <= 1)
             city_data.distant_battle.roman_months_to_travel_forth = 1;
-        }
+
         city_data.distant_battle.roman_months_traveled = roman_travel_months - city_data.distant_battle.roman_months_to_travel_forth + 1;
-        if (city_data.distant_battle.roman_months_traveled < 1) {
+        if (city_data.distant_battle.roman_months_traveled < 1)
             city_data.distant_battle.roman_months_traveled = 1;
-        }
-        if (city_data.distant_battle.roman_months_traveled > roman_travel_months) {
+
+        if (city_data.distant_battle.roman_months_traveled > roman_travel_months)
             city_data.distant_battle.roman_months_traveled = roman_travel_months;
-        }
+
     }
 }
 
 static void set_city_vulnerable(void)
 {
-    if (city_data.distant_battle.city) {
+    if (city_data.distant_battle.city)
         empire_city_set_vulnerable(city_data.distant_battle.city);
-    }
+
 }
 
 static void set_city_foreign(void)
 {
-    if (city_data.distant_battle.city) {
+    if (city_data.distant_battle.city)
         empire_city_set_foreign(city_data.distant_battle.city);
-    }
+
     city_data.distant_battle.city_foreign_months_left = 24;
 }
 
@@ -212,19 +212,19 @@ static int player_has_won(void)
         int pct_advantage = calc_percentage(
             city_data.distant_battle.roman_strength - city_data.distant_battle.enemy_strength,
             city_data.distant_battle.roman_strength);
-        if (pct_advantage < 10) {
+        if (pct_advantage < 10)
             pct_loss = 70;
-        } else if (pct_advantage < 25) {
+ else if (pct_advantage < 25)
             pct_loss = 50;
-        } else if (pct_advantage < 50) {
+ else if (pct_advantage < 50)
             pct_loss = 25;
-        } else if (pct_advantage < 75) {
+ else if (pct_advantage < 75)
             pct_loss = 15;
-        } else if (pct_advantage < 100) {
+ else if (pct_advantage < 100)
             pct_loss = 10;
-        } else if (pct_advantage < 150) {
+ else if (pct_advantage < 150)
             pct_loss = 5;
-        } else {
+ else {
             pct_loss = 0;
         }
     }
@@ -292,9 +292,9 @@ void city_military_process_distant_battle(void)
 {
     if (city_data.distant_battle.months_until_battle > 0) {
         --city_data.distant_battle.months_until_battle;
-        if (city_data.distant_battle.months_until_battle > 0) {
+        if (city_data.distant_battle.months_until_battle > 0)
             update_time_traveled();
-        } else {
+ else {
             fight_distant_battle();
         }
     } else {

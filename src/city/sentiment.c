@@ -31,9 +31,9 @@ void city_sentiment_change_happiness(int amount)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size)
             b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness + amount, 0, 100);
-        }
+
     }
 }
 
@@ -42,9 +42,9 @@ void city_sentiment_set_max_happiness(int max)
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
-            if (b->sentiment.house_happiness > max) {
+            if (b->sentiment.house_happiness > max)
                 b->sentiment.house_happiness = max;
-            }
+
             b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
         }
     }
@@ -88,37 +88,37 @@ static int get_sentiment_penalty_for_tent_dwellers(void)
     int penalty;
     int pct_tents = calc_percentage(city_data.population.people_in_tents, city_data.population.population);
     if (city_data.population.people_in_villas_palaces > 0) {
-        if (pct_tents >= 57) {
+        if (pct_tents >= 57)
             penalty = 0;
-        } else if (pct_tents >= 40) {
+ else if (pct_tents >= 40)
             penalty = -3;
-        } else if (pct_tents >= 26) {
+ else if (pct_tents >= 26)
             penalty = -4;
-        } else if (pct_tents >= 10) {
+ else if (pct_tents >= 10)
             penalty = -5;
-        } else {
+ else {
             penalty = -6;
         }
     } else if (city_data.population.people_in_large_insula_and_above > 0) {
-        if (pct_tents >= 57) {
+        if (pct_tents >= 57)
             penalty = 0;
-        } else if (pct_tents >= 40) {
+ else if (pct_tents >= 40)
             penalty = -2;
-        } else if (pct_tents >= 26) {
+ else if (pct_tents >= 26)
             penalty = -3;
-        } else if (pct_tents >= 10) {
+ else if (pct_tents >= 10)
             penalty = -4;
-        } else {
+ else {
             penalty = -5;
         }
     } else {
-        if (pct_tents >= 40) {
+        if (pct_tents >= 40)
             penalty = 0;
-        } else if (pct_tents >= 26) {
+ else if (pct_tents >= 26)
             penalty = -1;
-        } else if (pct_tents >= 10) {
+ else if (pct_tents >= 10)
             penalty = -2;
-        } else {
+ else {
             penalty = -3;
         }
     }
@@ -132,33 +132,33 @@ static int get_sentiment_contribution_wages(void)
     int wage_diff = city_data.labor.wages - city_data.labor.wages_rome;
     if (wage_diff < 0) {
         contribution = wage_diff / 2;
-        if (!contribution) {
+        if (!contribution)
             contribution = -1;
-        }
-    } else if (wage_diff > 7) {
+
+    } else if (wage_diff > 7)
         contribution = 4;
-    } else if (wage_diff > 4) {
+ else if (wage_diff > 4)
         contribution = 3;
-    } else if (wage_diff > 1) {
+ else if (wage_diff > 1)
         contribution = 2;
-    } else if (wage_diff > 0) {
+ else if (wage_diff > 0)
         contribution = 1;
-    }
+
     return contribution;
 }
 
 static int get_sentiment_contribution_employment(void)
 {
     int unemployment = city_data.sentiment.unemployment = city_data.labor.unemployment_percentage;
-    if (unemployment > 25) {
+    if (unemployment > 25)
         return -3;
-    } else if (unemployment > 17) {
+ else if (unemployment > 17)
         return -2;
-    } else if (unemployment > 10) {
+ else if (unemployment > 10)
         return -1;
-    } else if (unemployment > 4) {
+ else if (unemployment > 4)
         return 0;
-    } else {
+ else {
         return 1;
     }
 }
@@ -179,9 +179,9 @@ void city_sentiment_update(void)
     int default_sentiment = difficulty_sentiment();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size)
             continue;
-        }
+
         if (!b->house_population) {
             b->sentiment.house_happiness = 10 + default_sentiment;
             continue;
@@ -193,9 +193,9 @@ void city_sentiment_update(void)
             sentiment_contribution_wages = 0;
 
             b->sentiment.house_happiness = default_sentiment;
-            if (city_data.population.population < 200) {
+            if (city_data.population.population < 200)
                 b->sentiment.house_happiness += 10;
-            } else if (default_sentiment < 50 && config_get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
+ else if (default_sentiment < 50 && config_get(CONFIG_GP_FIX_IMMIGRATION_BUG)) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
                 // immigration is not halted simply because you are between pop 200 and 300
                 b->sentiment.house_happiness += 50 - default_sentiment;
@@ -224,9 +224,9 @@ void city_sentiment_update(void)
                 b->house_days_without_food = 0;
             } else {
                 // needs food but has no food
-                if (b->house_days_without_food < 3) {
+                if (b->house_days_without_food < 3)
                     b->house_days_without_food++;
-                }
+
                 sentiment_contribution_food = -b->house_days_without_food;
                 total_sentiment_contribution_food -= b->house_days_without_food;
             }
@@ -241,12 +241,12 @@ void city_sentiment_update(void)
 
     int sentiment_contribution_food = 0;
     int sentiment_contribution_tents = 0;
-    if (houses_needing_food) {
+    if (houses_needing_food)
         sentiment_contribution_food = total_sentiment_contribution_food / houses_needing_food;
-    }
-    if (houses_calculated) {
+
+    if (houses_calculated)
         sentiment_contribution_tents = total_sentiment_penalty_tents / houses_calculated;
-    }
+
 
     int total_sentiment = 0;
     int total_houses = 0;
@@ -257,22 +257,22 @@ void city_sentiment_update(void)
             total_sentiment += b->sentiment.house_happiness;
         }
     }
-    if (total_houses) {
+    if (total_houses)
         city_data.sentiment.value = total_sentiment / total_houses;
-    } else {
+ else {
         city_data.sentiment.value = 60;
     }
-    if (city_data.sentiment.message_delay) {
+    if (city_data.sentiment.message_delay)
         city_data.sentiment.message_delay--;
-    }
+
     if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
         if (city_data.sentiment.message_delay <= 0) {
             city_data.sentiment.message_delay = 3;
-            if (city_data.sentiment.value < 35) {
+            if (city_data.sentiment.value < 35)
                 city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            } else if (city_data.sentiment.value < 40) {
+ else if (city_data.sentiment.value < 40)
                 city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
-            } else {
+ else {
                 city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
             }
         }
@@ -296,8 +296,8 @@ void city_sentiment_update(void)
         worst_sentiment = sentiment_contribution_wages;
         city_data.sentiment.low_mood_cause = int_LOW_WAGES;
     }
-    if (sentiment_contribution_tents < worst_sentiment) {
+    if (sentiment_contribution_tents < worst_sentiment)
         city_data.sentiment.low_mood_cause = int_MANY_TENTS;
-    }
+
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }

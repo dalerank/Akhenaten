@@ -55,9 +55,9 @@ static int compare_lower(const void *va, const void *vb)
 
 static int add_to_listing(const char *filename)
 {
-    if (data.listing.num_files >= data.max_files) {
+    if (data.listing.num_files >= data.max_files)
         expand_dir_listing();
-    }
+
     strncpy(data.listing.files[data.listing.num_files], filename, FILE_NAME_MAX);
     data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
     ++data.listing.num_files;
@@ -126,16 +126,16 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return corrected_filename;
     }
 
-    if (!platform_file_manager_should_case_correct_file()) {
+    if (!platform_file_manager_should_case_correct_file())
         return 0;
-    }
+
 
     strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
 
     char *slash = strchr(&corrected_filename[dir_len], '/');
-    if (!slash) {
+    if (!slash)
         slash = strchr(&corrected_filename[dir_len], '\\');
-    }
+
     if (slash) {
         *slash = 0;
         if (correct_case(dir, &corrected_filename[dir_len], TYPE_DIR)) {
@@ -150,9 +150,9 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
             }
         }
     } else {
-        if (correct_case(dir, corrected_filename, TYPE_FILE)) {
+        if (correct_case(dir, corrected_filename, TYPE_FILE))
             return corrected_filename;
-        }
+
     }
     return 0;
 }
@@ -170,11 +170,11 @@ const char *dir_get_file(const char *filepath, int localizable)
         const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
         if (*custom_dir) {
             const char *path = get_case_corrected_file(custom_dir, filepath);
-            if (path) {
+            if (path)
                 return path;
-            } else if (localizable == MUST_BE_LOCALIZED) {
+ else if (localizable == MUST_BE_LOCALIZED)
                 return 0;
-            }
+
         }
     }
 

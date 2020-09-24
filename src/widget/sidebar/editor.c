@@ -83,14 +83,14 @@ static void draw_status(void)
     int people_text;
     font_t people_font = FONT_NORMAL_RED;
     if (entry.x == -1) {
-        if (exit.x == -1) {
+        if (exit.x == -1)
             people_text = 60;
-        } else {
+ else {
             people_text = 59;
         }
-    } else if (exit.x == -1) {
+    } else if (exit.x == -1)
         people_text = 61;
-    } else {
+ else {
         people_text = 62;
         people_font = FONT_NORMAL_GREEN;
     }
@@ -99,34 +99,34 @@ static void draw_status(void)
     entry = scenario_map_river_entry();
     exit = scenario_map_river_exit();
     if (entry.x != -1 || exit.x != -1) {
-        if (entry.x == -1) {
+        if (entry.x == -1)
             lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_RED);
-        } else if (exit.x == -1) {
+ else if (exit.x == -1)
             lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_RED);
-        } else {
+ else {
             lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_GREEN);
         }
     }
 
     int invasion_points = scenario_editor_count_invasion_points();
-    if (invasion_points == 1) {
+    if (invasion_points == 1)
         lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_GREEN);
-    } else if (invasion_points > 1) {
+ else if (invasion_points > 1) {
         int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN);
         lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_GREEN);
     } else {
         editor_invasion first_invasion;
         scenario_editor_invasion_get(0, &first_invasion);
-        if (first_invasion.type) {
+        if (first_invasion.type)
             lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_RED);
-        }
+
     }
 
     if (scenario_editor_earthquake_severity() > 0) {
         map_point earthquake = scenario_editor_earthquake_point();
-        if (earthquake.x == -1 || earthquake.y == -1) {
+        if (earthquake.x == -1 || earthquake.y == -1)
             lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_RED);
-        } else {
+ else {
             lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_GREEN);
         }
     }
@@ -151,9 +151,9 @@ void widget_sidebar_editor_draw_foreground(void)
 
 int widget_sidebar_editor_handle_mouse(const mouse *m)
 {
-    if (widget_minimap_handle_mouse(m)) {
+    if (widget_minimap_handle_mouse(m))
         return 1;
-    }
+
     return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build, 17, 0);
 }
 
@@ -170,13 +170,13 @@ int widget_sidebar_editor_handle_mouse_attributes(const mouse *m)
 static void button_attributes(int show, int param2)
 {
     if (show) {
-        if (!window_is(WINDOW_EDITOR_ATTRIBUTES)) {
+        if (!window_is(WINDOW_EDITOR_ATTRIBUTES))
             window_editor_attributes_show();
-        }
+
     } else {
-        if (!window_is(WINDOW_EDITOR_MAP)) {
+        if (!window_is(WINDOW_EDITOR_MAP))
             window_editor_map_show();
-        }
+
     }
 }
 
@@ -184,9 +184,9 @@ static void button_build_tool(int tool, int param2)
 {
     widget_map_editor_clear_current_tile();
     editor_tool_set_type(tool);
-    if (window_is(WINDOW_EDITOR_BUILD_MENU)) {
+    if (window_is(WINDOW_EDITOR_BUILD_MENU))
         window_editor_map_show();
-    } else {
+ else {
         window_request_refresh();
     }
 }

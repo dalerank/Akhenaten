@@ -42,9 +42,9 @@ static void draw_cancel_construction(void)
 
 static void clear_city_view(void)
 {
-    if (config_get(CONFIG_UI_ZOOM) && city_view_dirty) {
+    if (config_get(CONFIG_UI_ZOOM) && city_view_dirty)
         graphics_clear_city_viewport();
-    }
+
     city_view_dirty = 0;
 }
 
@@ -53,19 +53,19 @@ static void draw_foreground(void)
     clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
-    if (window_is(WINDOW_EDITOR_MAP)) {
+    if (window_is(WINDOW_EDITOR_MAP))
         draw_cancel_construction();
-    }
+
 }
 
 static void handle_hotkeys(const hotkeys *h)
 {
-    if (h->load_file) {
+    if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
-    }
-    if (h->save_file) {
+
+    if (h->save_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
-    }
+
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)

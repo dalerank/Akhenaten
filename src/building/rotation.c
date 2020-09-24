@@ -61,11 +61,11 @@ int building_rotation_get_building_orientation(int building_rotation){
 int building_rotation_get_delta_with_rotation(int default_delta){
     if(rotation == 0) {
         return map_grid_delta(default_delta, 0);
-    } else if (rotation == 1) {
+    } else if (rotation == 1)
         return map_grid_delta(0, -default_delta);
-    } else if (rotation == 2) {
+ else if (rotation == 2)
         return map_grid_delta(-default_delta, 0);
-    } else {
+ else {
         return map_grid_delta(0, default_delta);
     }
 }

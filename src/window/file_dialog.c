@@ -136,11 +136,11 @@ static void draw_foreground(void)
     inner_panel_draw(144, 120, 20, 13);
 
     // title
-    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT) {
+    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT)
         lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK);
-    } else if (data.dialog_type == FILE_DIALOG_DELETE) {
+ else if (data.dialog_type == FILE_DIALOG_DELETE)
         lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK);
-    } else {
+ else {
         int text_id = data.dialog_type + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
         lang_text_draw_centered(43, text_id, 160, 50, 304, FONT_LARGE_BLACK);
     }
@@ -148,9 +148,9 @@ static void draw_foreground(void)
 
     for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
         font_t font = FONT_NORMAL_GREEN;
-        if (data.focus_button_id == i + 1) {
+        if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_WHITE;
-        }
+
         encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], file, FILE_NAME_MAX);
         //file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
@@ -220,15 +220,15 @@ static void button_ok_cancel(int is_ok, int param2)
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         input_box_stop(&file_name_input);
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            if (!file_has_extension(filename, saved_game_data_expanded.extension)) {
+            if (!file_has_extension(filename, saved_game_data_expanded.extension))
                 file_append_extension(filename, saved_game_data_expanded.extension);
-            }
+
             game_file_write_saved_game(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            if (!file_has_extension(filename, scenario_data.extension)) {
+            if (!file_has_extension(filename, scenario_data.extension))
                 file_append_extension(filename, scenario_data.extension);
-            }
+
             game_file_editor_write_scenario(filename);
             window_editor_map_show();
         }
@@ -237,13 +237,12 @@ static void button_ok_cancel(int is_ok, int param2)
             dir_find_files_with_extension(".", data.file_data->extension);
             dir_append_files_with_extension(saved_game_data_expanded.extension);
 
-            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files) {
+            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files)
                 --scrollbar.scroll_position;
 
-            }
-            if (scrollbar.scroll_position < 0) {
+            if (scrollbar.scroll_position < 0)
                 scrollbar.scroll_position = 0;
-            }
+
         }
     }
 

@@ -56,14 +56,14 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
         // we ignore "-psn" arguments, this is needed to launch the app
         // from the Finder on macOS.
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
-        if (SDL_strncmp(argv[i], "-psn", 4) == 0) {
+        if (SDL_strncmp(argv[i], "-psn", 4) == 0)
             continue;
-        }
-        if (SDL_strcmp(argv[i], "--caesar3") == 0) {
+
+        if (SDL_strcmp(argv[i], "--caesar3") == 0)
             output_args->game_engine_env = 0;
-        } else if (SDL_strcmp(argv[i], "--pharaoh") == 0) {
+ else if (SDL_strcmp(argv[i], "--pharaoh") == 0)
             output_args->game_engine_env = 1;
-        } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
+ else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
@@ -81,9 +81,9 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
-                if (percentage == 100 || percentage == 150 || percentage == 200) {
+                if (percentage == 100 || percentage == 150 || percentage == 200)
                     output_args->cursor_scale_percentage = percentage;
-                } else {
+ else {
                     SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 }
@@ -91,9 +91,9 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
                 SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
-        } else if (SDL_strcmp(argv[i], "--help") == 0) {
+        } else if (SDL_strcmp(argv[i], "--help") == 0)
             ok = 0;
-        } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
+ else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {

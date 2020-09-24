@@ -71,9 +71,9 @@ static void get_min_max_month_year(int max_months, int *start_month, int *start_
     if (city_population_monthly_count() > max_months) {
         *end_month = game_time_month() - 1;
         *end_year = game_time_year();
-        if (*end_month < 0) {
+        if (*end_month < 0)
             *end_year -= 1;
-        }
+
         *start_month = 11 - (max_months % 12);
         *start_year = *end_year - max_months / 12;
     } else {
@@ -88,21 +88,21 @@ static void draw_history_graph(int full_size, int x, int y)
 {
     int max_months;
     int month_count = city_population_monthly_count();
-    if (month_count <= 20) {
+    if (month_count <= 20)
         max_months = 20;
-    } else if (month_count <= 40) {
+ else if (month_count <= 40)
         max_months = 40;
-    } else if (month_count <= 100) {
+ else if (month_count <= 100)
         max_months = 100;
-    } else if (month_count <= 200) {
+ else if (month_count <= 200)
         max_months = 200;
-    } else {
+ else {
         max_months = 400;
     }
     if (!full_size) {
-        if (max_months <= 40) {
+        if (max_months <= 40)
             max_months = 20;
-        } else {
+ else {
             max_months = 100;
         }
     }
@@ -110,9 +110,9 @@ static void draw_history_graph(int full_size, int x, int y)
     int max_value = 0;
     for (int m = 0; m < max_months; m++) {
         int value = city_population_at_month(max_months, m);
-        if (value > max_value) {
+        if (value > max_value)
             max_value = value;
-        }
+
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -137,9 +137,9 @@ static void draw_history_graph(int full_size, int x, int y)
         for (int m = 0; m < max_months; m++) {
             int pop = city_population_at_month(max_months, m);
             int val;
-            if (y_shift == -1) {
+            if (y_shift == -1)
                 val = 2 * pop;
-            } else {
+ else {
                 val = pop >> y_shift;
             }
             if (val > 0) {
@@ -168,9 +168,9 @@ static void draw_history_graph(int full_size, int x, int y)
         for (int m = 0; m < max_months; m++) {
             int val = city_population_at_month(max_months, m) >> y_shift;
             if (val > 0) {
-                if (max_months == 20) {
+                if (max_months == 20)
                     graphics_fill_rect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);
-                } else {
+ else {
                     graphics_draw_vertical_line(x + m, y + 50 - val, y + 50, COLOR_RED);
                 }
             }
@@ -183,9 +183,9 @@ static void draw_census_graph(int full_size, int x, int y)
     int max_value = 0;
     for (int i = 0; i < 100; i++) {
         int value = city_population_at_age(i);
-        if (value > max_value) {
+        if (value > max_value)
             max_value = value;
-        }
+
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -205,23 +205,23 @@ static void draw_census_graph(int full_size, int x, int y)
         for (int i = 0; i < 100; i++) {
             int pop = city_population_at_age(i);
             int val;
-            if (y_shift == -1) {
+            if (y_shift == -1)
                 val = 2 * pop;
-            } else {
+ else {
                 val = pop >> y_shift;
             }
-            if (val > 0) {
+            if (val > 0)
                 image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
-            }
+
         }
         graphics_reset_clip_rectangle();
     } else {
         y_shift += 2;
         for (int i = 0; i < 100; i++) {
             int val = city_population_at_age(i) >> y_shift;
-            if (val > 0) {
+            if (val > 0)
                 graphics_draw_vertical_line(x + i, y + 50 - val, y + 50, COLOR_RED);
-            }
+
         }
     }
 }
@@ -231,9 +231,9 @@ static void draw_society_graph(int full_size, int x, int y)
     int max_value = 0;
     for (int i = 0; i < 20; i++) {
         int value = city_population_at_level(i);
-        if (value > max_value) {
+        if (value > max_value)
             max_value = value;
-        }
+
     }
     int y_max, y_shift;
     get_y_axis(max_value, &y_max, &y_shift);
@@ -252,23 +252,23 @@ static void draw_society_graph(int full_size, int x, int y)
         for (int i = 0; i < 20; i++) {
             int pop = city_population_at_level(i);
             int val;
-            if (y_shift == -1) {
+            if (y_shift == -1)
                 val = 2 * pop;
-            } else {
+ else {
                 val = pop >> y_shift;
             }
-            if (val > 0) {
+            if (val > 0)
                 image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
-            }
+
         }
         graphics_reset_clip_rectangle();
     } else {
         y_shift += 2;
         for (int i = 0; i < 20; i++) {
             int val = city_population_at_level(i) >> y_shift;
-            if (val > 0) {
+            if (val > 0)
                 graphics_fill_rect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
-            }
+
         }
     }
 }
@@ -276,9 +276,9 @@ static void draw_society_graph(int full_size, int x, int y)
 static void print_society_info(void) {
     int width;
     int avg_tax_per_house = 0;
-    if (calculate_total_housing_buildings() > 0) {
+    if (calculate_total_housing_buildings() > 0)
         avg_tax_per_house = city_finance_estimated_tax_income() / calculate_total_housing_buildings();
-    }
+
 
     // Housing prosperity cap
     width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE, 0);
@@ -322,18 +322,18 @@ static void print_history_info(void) {
     int width;
 
     // food stores
-    if (scenario_property_rome_supplies_wheat()) {
+    if (scenario_property_rome_supplies_wheat())
         lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
-    } else {
+ else {
         width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE);
         if (city_resource_food_supply_months() > 0) {
             width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE);
             lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 70 + width, 342, FONT_NORMAL_WHITE);
-        } else if (city_resource_food_stored() > city_resource_food_needed() / 2) {
+        } else if (city_resource_food_stored() > city_resource_food_needed() / 2)
             lang_text_draw(55, 13, 70 + width, 342, FONT_NORMAL_WHITE);
-        } else if (city_resource_food_stored() > 0) {
+ else if (city_resource_food_stored() > 0)
             lang_text_draw(55, 15, 70 + width, 342, FONT_NORMAL_WHITE);
-        } else {
+ else {
             lang_text_draw(55, 14, 70 + width, 342, FONT_NORMAL_WHITE);
         }
     }
@@ -363,15 +363,15 @@ static void print_history_info(void) {
             case NO_IMMIGRATION_LOW_MOOD: text_id = 32; break;
             default: text_id = 0; break;
         }
-        if (text_id) {
+        if (text_id)
             lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE);
-        }
+
     } else {
         lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
         width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE);
-        if (newcomers == 1) {
+        if (newcomers == 1)
             lang_text_draw(55, 18, 70 + width, 396, FONT_NORMAL_WHITE);
-        } else {
+ else {
             lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
         }
     }}
@@ -391,11 +391,11 @@ static int draw_background(void)
 
     int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
-    if (graph_order < 2) {
+    if (graph_order < 2)
         lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK);
-    } else if (graph_order < 4) {
+ else if (graph_order < 4)
         lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK);
-    } else {
+ else {
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
     }
 
@@ -563,9 +563,9 @@ static void button_graph(int param1, int param2)
 
 static int get_tooltip_text(void)
 {
-    if (focus_button_id && focus_button_id < 3) {
+    if (focus_button_id && focus_button_id < 3)
         return 111;
-    } else {
+ else {
         return 0;
     }
 }

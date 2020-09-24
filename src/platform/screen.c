@@ -84,9 +84,9 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
 
     SDL_Log("Creating screen %d x %d, fullscreen? %d\n", width, height, fullscreen);
     Uint32 flags = SDL_WINDOW_RESIZABLE;
-    if (fullscreen) {
+    if (fullscreen)
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    }
+
 
     SDL.window = SDL_CreateWindow(title,
                                   SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -97,9 +97,9 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
         return 0;
     }
 
-    if (system_is_fullscreen_only()) {
+    if (system_is_fullscreen_only())
         SDL_GetWindowSize(SDL.window, &width, &height);
-    }
+
 
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!SDL.renderer) {
@@ -111,9 +111,9 @@ int platform_screen_create(const char *title, int display_scale_percentage) {
         }
     }
 #if !defined(__APPLE__)
-    if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
+    if (fullscreen && SDL_GetNumVideoDisplays() > 1)
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
-    }
+
 #endif
     SDL_SetRenderDrawColor(SDL.renderer, 0, 0, 0, 0xff);
     SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH),
@@ -183,9 +183,9 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save) {
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
 
-    if (save) {
+    if (save)
         setting_set_display(setting_fullscreen(), logical_width, logical_height);
-    }
+
 
 
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
@@ -220,9 +220,9 @@ void platform_screen_set_fullscreen(void) {
     SDL_SetWindowDisplayMode(SDL.window, &mode);
 
 #if !defined(__APPLE__)
-    if (SDL_GetNumVideoDisplays() > 1) {
+    if (SDL_GetNumVideoDisplays() > 1)
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
-    }
+
 #endif
     setting_set_display(1, mode.w, mode.h);
 }
@@ -237,12 +237,12 @@ void platform_screen_set_windowed(void) {
     SDL_Log("User to windowed %d x %d", pixel_width, pixel_height);
     SDL_SetWindowFullscreen(SDL.window, 0);
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
-    if (window_pos.centered) {
+    if (window_pos.centered)
         platform_screen_center_window();
-    }
-    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
+
+    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE)
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
-    }
+
     setting_set_display(0, pixel_width, pixel_height);
 }
 
@@ -251,22 +251,22 @@ void platform_screen_set_window_size(int logical_width, int logical_height) {
             return;
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
-    if (setting_fullscreen()) {
+    if (setting_fullscreen())
         SDL_SetWindowFullscreen(SDL.window, 0);
-    } else {
+ else {
         SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     }
-    if (SDL_GetWindowFlags(SDL.window) & SDL_WINDOW_MAXIMIZED) {
+    if (SDL_GetWindowFlags(SDL.window) & SDL_WINDOW_MAXIMIZED)
         SDL_RestoreWindow(SDL.window);
-    }
+
     SDL_SetWindowSize(SDL.window, pixel_width, pixel_height);
-    if (window_pos.centered) {
+    if (window_pos.centered)
         platform_screen_center_window();
-    }
+
     SDL_Log("User resize to %d x %d\n", pixel_width, pixel_height);
-    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE) {
+    if (SDL_GetWindowGrab(SDL.window) == SDL_TRUE)
         SDL_SetWindowGrab(SDL.window, SDL_FALSE);
-    }
+
     setting_set_display(0, pixel_width, pixel_height);
 }
 

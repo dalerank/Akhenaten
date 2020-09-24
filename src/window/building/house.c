@@ -21,9 +21,9 @@ static void draw_vacant_lot(building_info_context *c)
 
     int text_id = 2;
     building *b = building_get(c->building_id);
-    if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0)) {
+    if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0))
         text_id = 1;
-    }
+
     window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);
 }
 
@@ -60,19 +60,19 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
 {
     int happiness = building_get(c->building_id)->sentiment.house_happiness;
     int text_id;
-    if (happiness >= 50) {
+    if (happiness >= 50)
         text_id = 26;
-    } else if (happiness >= 40) {
+ else if (happiness >= 40)
         text_id = 27;
-    } else if (happiness >= 30) {
+ else if (happiness >= 30)
         text_id = 28;
-    } else if (happiness >= 20) {
+ else if (happiness >= 20)
         text_id = 29;
-    } else if (happiness >= 10) {
+ else if (happiness >= 10)
         text_id = 30;
-    } else if (happiness >= 1) {
+ else if (happiness >= 1)
         text_id = 31;
-    } else {
+ else {
         text_id = 32;
     }
     lang_text_draw(127, text_id, c->x_offset + 36, y_offset, FONT_SMALL_BLACK);

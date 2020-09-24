@@ -16,9 +16,9 @@ void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons)
 {
     for (int i = 0; i < num_buttons; i++) {
         int image_id = buttons[i].image_id;
-        if (buttons[i].pressed) {
+        if (buttons[i].pressed)
             image_id += 1;
-        }
+
         image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
     }
 }
@@ -50,20 +50,20 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
         arrow_button *btn = &buttons[i];
         if (btn->pressed) {
             btn->pressed--;
-            if (!btn->pressed) {
+            if (!btn->pressed)
                 btn->repeats = 0;
-            }
+
         } else {
             btn->repeats = 0;
         }
     }
     int button_id = get_button(m, x, y, buttons, num_buttons);
-    if (focus_button_id) {
+    if (focus_button_id)
         *focus_button_id = button_id;
-    }
-    if (!button_id) {
+
+    if (!button_id)
         return 0;
-    }
+
     arrow_button *btn = &buttons[button_id -1];
     if (m->left.went_down) {
         btn->pressed = BUTTON_PRESSED_FRAMES;
@@ -76,9 +76,9 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
         if (should_repeat) {
             btn->repeats++;
             if (btn->repeats < 48) {
-                if (!REPEATS[btn->repeats]) {
+                if (!REPEATS[btn->repeats])
                     return 0;
-                }
+
             } else {
                 btn->repeats = 47;
             }

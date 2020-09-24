@@ -80,9 +80,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         start_mission(0, 0);
         return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         button_back(0, 0);
-    }
+
 }
 void window_new_career_show(void)
 {

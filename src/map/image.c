@@ -11,9 +11,9 @@ int map_image_at(int grid_offset)
 }
 void map_image_set(int grid_offset, int image_id)
 {
-    if (grid_offset == 26105) {
+    if (grid_offset == 26105)
         int a = 3245;
-    }
+
     map_grid_set(&images, grid_offset, image_id);
 }
 

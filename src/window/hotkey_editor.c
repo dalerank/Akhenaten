@@ -83,29 +83,29 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.focus_button);
-    if (!handled && m->right.went_up) {
+    if (!handled && m->right.went_up)
         button_close(0, 0);
-    }
+
 }
 
 static void button_close(int ok, int param2)
 {
-    if (ok) {
+    if (ok)
         data.callback(data.action, data.index, data.key, data.modifiers);
-    }
+
     window_go_back();
 }
 
 void window_hotkey_editor_key_pressed(int key, int modifiers)
 {
-    if (key == KEY_ENTER && modifiers == KEY_MOD_NONE) {
+    if (key == KEY_ENTER && modifiers == KEY_MOD_NONE)
         button_close(1, 0);
-    } else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE) {
+ else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE)
         button_close(0, 0);
-    } else {
-        if (key != KEY_NONE) {
+ else {
+        if (key != KEY_NONE)
             data.key = key;
-        }
+
         data.modifiers = modifiers;
     }
 }
@@ -113,9 +113,9 @@ void window_hotkey_editor_key_pressed(int key, int modifiers)
 void window_hotkey_editor_key_released(int key, int modifiers)
 {
     // update modifiers as long as we don't have a proper keypress
-    if (data.key == KEY_NONE && key == KEY_NONE) {
+    if (data.key == KEY_NONE && key == KEY_NONE)
         data.modifiers = modifiers;
-    }
+
 }
 
 void window_hotkey_editor_show(int action, int index,

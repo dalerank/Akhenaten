@@ -63,9 +63,9 @@ static void draw_background(void)
     graphics_in_dialog();
     image_draw(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
-    if (window_is(WINDOW_MAIN_MENU)) {
+    if (window_is(WINDOW_MAIN_MENU))
         draw_version_string();
-    }
+
 }
 static void draw_foreground(void)
 {
@@ -100,9 +100,9 @@ static void draw_foreground(void)
 
 static void confirm_exit(int accepted)
 {
-    if (accepted) {
+    if (accepted)
         system_exit();
-    }
+
 }
 static void button_click(int type, int param2)
 {
@@ -146,12 +146,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id))
             return;
-    if (h->escape_pressed) {
+    if (h->escape_pressed)
         hotkey_handle_escape();
-    }
-    if (h->load_file) {
+
+    if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    }
+
 }
 void window_main_menu_show(int restart_music)
 {

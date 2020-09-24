@@ -78,15 +78,15 @@ static void init(intermezzo_type type, void (*callback)(void))
     sound_speech_stop();
 
     // play briefing sound by mission number
-    if (data.type == INTERMEZZO_FIRED) {
+    if (data.type == INTERMEZZO_FIRED)
         sound_speech_play_file(SOUND_FILE_LOSE);
-    } else if (!scenario_is_custom()) {
+ else if (!scenario_is_custom()) {
         int mission = scenario_campaign_mission();
-        if (data.type == INTERMEZZO_MISSION_BRIEFING) {
+        if (data.type == INTERMEZZO_MISSION_BRIEFING)
             sound_speech_play_file(SOUND_FILES_BRIEFING[mission]);
-        } else if (data.type == INTERMEZZO_WON) {
+ else if (data.type == INTERMEZZO_WON)
             sound_speech_play_file(SOUND_FILES_WON[mission]);
-        }
+
     }
 }
 
@@ -100,17 +100,17 @@ static void draw_background(void)
     int mission = scenario_campaign_mission();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
-        if (scenario_is_custom()) {
+        if (scenario_is_custom())
             image_draw(image_base + 1, x_offset, y_offset);
-        } else {
+ else {
             image_draw(image_base + 1 + 2 * mission, x_offset, y_offset);
         }
-    } else if (data.type == INTERMEZZO_FIRED) {
+    } else if (data.type == INTERMEZZO_FIRED)
         image_draw(image_base, x_offset, y_offset);
-    } else if (data.type == INTERMEZZO_WON) {
-        if (scenario_is_custom()) {
+ else if (data.type == INTERMEZZO_WON) {
+        if (scenario_is_custom())
             image_draw(image_base + 2, x_offset, y_offset);
-        } else {
+ else {
             image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
         }
     }
@@ -119,9 +119,9 @@ static void draw_background(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     time_millis current_time = time_get_millis();
-    if (m->right.went_up || (m->is_touch && m->left.double_click) || current_time - data.start_time > DISPLAY_TIME_MILLIS) {
+    if (m->right.went_up || (m->is_touch && m->left.double_click) || current_time - data.start_time > DISPLAY_TIME_MILLIS)
         data.callback();
-    }
+
 }
 
 void window_intermezzo_show(intermezzo_type type, void (*callback)(void))

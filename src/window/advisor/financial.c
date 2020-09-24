@@ -118,9 +118,9 @@ static void button_change_taxes(int is_down, int param2)
 
 static int get_tooltip_text(void)
 {
-    if (arrow_button_focus) {
+    if (arrow_button_focus)
         return 120;
-    } else {
+ else {
         return 0;
     }
 }

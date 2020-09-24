@@ -64,17 +64,17 @@ static void theater_coverage(building *b)
 static void amphitheater_coverage(building *b, int shows)
 {
     b->data.house.amphitheater_actor = MAX_COVERAGE;
-    if (shows == 2) {
+    if (shows == 2)
         b->data.house.amphitheater_gladiator = MAX_COVERAGE;
-    }
+
 }
 
 static void colosseum_coverage(building *b, int shows)
 {
     b->data.house.colosseum_gladiator = MAX_COVERAGE;
-    if (shows == 2) {
+    if (shows == 2)
         b->data.house.colosseum_lion = MAX_COVERAGE;
-    }
+
 }
 
 static void hippodrome_coverage(building *b)
@@ -151,9 +151,9 @@ static int provide_missionary_coverage(int x, int y)
             int building_id = map_building_at(map_grid_offset(xx, yy));
             if (building_id) {
                 building *b = building_get(building_id);
-                if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
+                if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING)
                     b->sentiment.native_anger = 0;
-                }
+
             }
         }
     }
@@ -172,9 +172,9 @@ static int provide_service(int x, int y, int *data, void (*callback)(building *,
             if (building_id) {
                 building *b = building_get(building_id);
                 callback(b, data);
-                if (b->house_size && b->house_population > 0) {
+                if (b->house_size && b->house_population > 0)
                     serviced++;
-                }
+
             }
         }
     }
@@ -183,33 +183,33 @@ static int provide_service(int x, int y, int *data, void (*callback)(building *,
 
 static void engineer_coverage(building *b, int *max_damage_seen)
 {
-    if (b->type == BUILDING_HIPPODROME) {
+    if (b->type == BUILDING_HIPPODROME)
         b = building_main(b);
-    }
-    if (b->damage_risk > *max_damage_seen) {
+
+    if (b->damage_risk > *max_damage_seen)
         *max_damage_seen = b->damage_risk;
-    }
+
     b->damage_risk = 0;
 }
 
 static void prefect_coverage(building *b, int *min_happiness_seen)
 {
-    if (b->type == BUILDING_HIPPODROME) {
+    if (b->type == BUILDING_HIPPODROME)
         b = building_main(b);
-    }
+
     b->fire_risk = 0;
-    if (b->sentiment.house_happiness < *min_happiness_seen) {
+    if (b->sentiment.house_happiness < *min_happiness_seen)
         *min_happiness_seen = b->sentiment.house_happiness;
-    }
+
 }
 
 static void tax_collector_coverage(building *b, int *max_tax_multiplier)
 {
     if (b->house_size && b->house_population > 0) {
         int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
-        if (tax_multiplier > *max_tax_multiplier) {
+        if (tax_multiplier > *max_tax_multiplier)
             *max_tax_multiplier = tax_multiplier;
-        }
+
         b->house_tax_coverage = 50;
     }
 }
@@ -231,22 +231,22 @@ static void distribute_good(building *b, building *market, int stock_wanted, int
 static void distribute_market_resources(building *b, building *market)
 {
     int level = b->subtype.house_level;
-    if (level < HOUSE_LUXURY_PALACE) {
+    if (level < HOUSE_LUXURY_PALACE)
         level++;
-    }
+
     int max_food_stocks = 4 * b->house_highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-        if (b->data.house.inventory[i] >= max_food_stocks) {
+        if (b->data.house.inventory[i] >= max_food_stocks)
             food_types_stored_max++;
-        }
+
     }
     const model_house *model = model_get_house(level);
     if (model->food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (b->data.house.inventory[i] >= max_food_stocks) {
+            if (b->data.house.inventory[i] >= max_food_stocks)
                 continue;
-            }
+
             if (market->data.market.inventory[i] >= max_food_stocks) {
                 b->data.house.inventory[i] += max_food_stocks;
                 market->data.market.inventory[i] -= max_food_stocks;
@@ -263,9 +263,9 @@ static void distribute_market_resources(building *b, building *market)
         distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
     }
     int goods_no = 4;
-    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE)) {
+    if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
         goods_no = 8;
-    }
+
     
     if (model->furniture) {
         market->data.market.furniture_demand = 10;
@@ -335,9 +335,9 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_market_goods(f->building_id, x, y);
             break;
         case FIGURE_MARKET_BUYER:
-            if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
+            if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
                 houses_serviced = provide_market_goods(f->building_id, x, y);
-            }
+
             break;
         case FIGURE_BATHHOUSE_WORKER:
             houses_serviced = provide_culture(x, y, bathhouse_coverage);
@@ -391,9 +391,9 @@ int figure_service_provide_coverage(figure *f)
             break;
         case FIGURE_ACTOR:
             b = get_entertainment_building(f);
-            if (b->type == BUILDING_THEATER) {
+            if (b->type == BUILDING_THEATER)
                 houses_serviced = provide_culture(x, y, theater_coverage);
-            } else if (b->type == BUILDING_AMPHITHEATER) {
+ else if (b->type == BUILDING_AMPHITHEATER) {
                 houses_serviced = provide_entertainment(x, y,
                     b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
             }
@@ -419,11 +419,11 @@ int figure_service_provide_coverage(figure *f)
         case FIGURE_ENGINEER: {
             int max_damage = 0;
             houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
-            if (max_damage > f->min_max_seen) {
+            if (max_damage > f->min_max_seen)
                 f->min_max_seen = max_damage;
-            } else if (f->min_max_seen <= 10) {
+ else if (f->min_max_seen <= 10)
                 f->min_max_seen = 0;
-            } else {
+ else {
                 f->min_max_seen -= 10;
             }
             break;
@@ -435,17 +435,17 @@ int figure_service_provide_coverage(figure *f)
             break;
         }
         case FIGURE_RIOTER:
-            if (figure_rioter_collapse_building(f) == 1) {
+            if (figure_rioter_collapse_building(f) == 1)
                 return 1;
-            }
+
             break;
     }
     if (f->building_id) {
         b = building_get(f->building_id);
         b->houses_covered += houses_serviced;
-        if (b->houses_covered > 300) {
+        if (b->houses_covered > 300)
             b->houses_covered = 300;
-        }
+
     }
     return 0;
 }

@@ -55,9 +55,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         send_command(0,0);
         return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         button_back(0, 0);
-    }
+
 }
 
 static void button_back(int param1, int param2)

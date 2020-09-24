@@ -18,17 +18,17 @@ int file_close(FILE *stream)
 
 int file_has_extension(const char *filename, const char *extension)
 {
-    if (!extension || !*extension) {
+    if (!extension || !*extension)
         return 1;
-    }
+
     char c;
     do {
         c = *filename;
         filename++;
     } while (c != '.' && c);
-    if (!c) {
+    if (!c)
         filename--;
-    }
+
     return string_compare_case_insensitive(filename, extension) == 0;
 }
 

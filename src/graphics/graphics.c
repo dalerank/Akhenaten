@@ -43,18 +43,18 @@ void graphics_init_canvas(int width, int height)
 {
 #ifdef __vita__
     canvas[CANVAS_UI].pixels = vita2d_texture_get_datap(tex_buffer_ui);
-    if (config_get(CONFIG_UI_ZOOM)) {
+    if (config_get(CONFIG_UI_ZOOM))
         canvas[CANVAS_CITY].pixels = vita2d_texture_get_datap(tex_buffer_city);
-    } else {
+ else {
         canvas[CANVAS_CITY].pixels = 0;
     }
 #else
     free(canvas[CANVAS_UI].pixels);
     free(canvas[CANVAS_CITY].pixels);
     canvas[CANVAS_UI].pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
-    if (config_get(CONFIG_UI_ZOOM)) {
+    if (config_get(CONFIG_UI_ZOOM))
         canvas[CANVAS_CITY].pixels = (color_t *) malloc((size_t) width * height * 4 * sizeof(color_t));
-    } else {
+ else {
         canvas[CANVAS_CITY].pixels = 0;
     }
 #endif
@@ -69,9 +69,9 @@ void graphics_init_canvas(int width, int height)
 
 const void *graphics_canvas(canvas_type type)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
+    if (!config_get(CONFIG_UI_ZOOM))
         return canvas[CANVAS_UI].pixels;
-    }
+
     return canvas[type].pixels;
 }
 
@@ -128,18 +128,18 @@ void graphics_set_clip_rectangle(int x, int y, int width, int height)
     clip_rectangle.y_start = y;
     clip_rectangle.y_end = y + height;
     // fix clip rectangle going over the edges of the screen
-    if (translation.x + clip_rectangle.x_start < 0) {
+    if (translation.x + clip_rectangle.x_start < 0)
         clip_rectangle.x_start = -translation.x;
-    }
-    if (translation.y + clip_rectangle.y_start < 0) {
+
+    if (translation.y + clip_rectangle.y_start < 0)
         clip_rectangle.y_start = -translation.y;
-    }
-    if (translation.x + clip_rectangle.x_end > canvas[active_canvas].width) {
+
+    if (translation.x + clip_rectangle.x_end > canvas[active_canvas].width)
         clip_rectangle.x_end = canvas[active_canvas].width - translation.x;
-    }
-    if (translation.y + clip_rectangle.y_end > canvas[active_canvas].height) {
+
+    if (translation.y + clip_rectangle.y_end > canvas[active_canvas].height)
         clip_rectangle.y_end = canvas[active_canvas].height - translation.y;
-    }
+
 }
 
 void graphics_reset_clip_rectangle(void)
@@ -148,9 +148,9 @@ void graphics_reset_clip_rectangle(void)
     clip_rectangle.x_end = canvas[active_canvas].width;
     clip_rectangle.y_start = 0;
     clip_rectangle.y_end = canvas[active_canvas].height;
-    if (active_canvas == CANVAS_UI) {
+    if (active_canvas == CANVAS_UI)
         translate_clip(translation.x, translation.y);
-    }
+
 }
 
 static void set_clip_x(int x_offset, int width)
@@ -167,9 +167,9 @@ static void set_clip_x(int x_offset, int width)
     if (x_offset < clip_rectangle.x_start) {
         // clipped on the left
         clip.clipped_pixels_left = clip_rectangle.x_start - x_offset;
-        if (x_offset + width <= clip_rectangle.x_end) {
+        if (x_offset + width <= clip_rectangle.x_end)
             clip.clip_x = CLIP_LEFT;
-        } else {
+ else {
             clip.clip_x = CLIP_BOTH;
             clip.clipped_pixels_right = x_offset + width - clip_rectangle.x_end;
         }
@@ -193,9 +193,9 @@ static void set_clip_y(int y_offset, int height)
     } else if (y_offset < clip_rectangle.y_start) {
         // clipped on the top
         clip.clipped_pixels_top = clip_rectangle.y_start - y_offset;
-        if (y_offset + height <= clip_rectangle.y_end) {
+        if (y_offset + height <= clip_rectangle.y_end)
             clip.clip_y = CLIP_TOP;
-        } else {
+ else {
             clip.clip_y = CLIP_BOTH;
             clip.clipped_pixels_bottom = y_offset + height - clip_rectangle.y_end;
         }
@@ -212,9 +212,9 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 {
     set_clip_x(x, width);
     set_clip_y(y, height);
-    if (clip.clip_x == CLIP_INVISIBLE || clip.clip_y == CLIP_INVISIBLE) {
+    if (clip.clip_x == CLIP_INVISIBLE || clip.clip_y == CLIP_INVISIBLE)
         clip.is_visible = 0;
-    } else {
+ else {
         clip.is_visible = 1;
     }
     return &clip;
@@ -248,9 +248,9 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
 
 color_t *graphics_get_pixel(int x, int y)
 {
-    if (active_canvas == CANVAS_UI) {
+    if (active_canvas == CANVAS_UI)
         return &canvas[CANVAS_UI].pixels[(translation.y + y) * canvas[CANVAS_UI].width + translation.x + x];
-    } else {
+ else {
         return &canvas[active_canvas].pixels[y * canvas[active_canvas].width + x];
     }
 }
@@ -273,9 +273,9 @@ void graphics_clear_city_viewport(void)
 void graphics_clear_screens(void)
 {
     graphics_clear_screen(CANVAS_UI);
-    if (config_get(CONFIG_UI_ZOOM)) {
+    if (config_get(CONFIG_UI_ZOOM))
         graphics_clear_screen(CANVAS_CITY);
-    }
+
 }
 
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)

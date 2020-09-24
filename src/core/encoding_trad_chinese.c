@@ -2240,9 +2240,9 @@ static int compare_utf8(const void *a, const void *b)
     const uint8_t *va = ((const chinese_entry*) a)->utf8;
     const uint8_t *vb = ((const chinese_entry*) b)->utf8;
     for (int i = 0; i < 3; i++) {
-        if (va[i] == vb[i] || (va[i] == 0 || vb[i] == 0)) {
+        if (va[i] == vb[i] || (va[i] == 0 || vb[i] == 0))
             continue;
-        }
+
         return va[i] < vb[i] ? -1 : 1;
     }
     return 0;
@@ -2335,9 +2335,9 @@ void encoding_trad_chinese_from_utf8(const char *input, uint8_t *output, int out
 int encoding_trad_chinese_big5_to_image_id(int big5)
 {
     for (int i = 0; image_entries[i].image_id; i++) {
-        if (image_entries[i].codepage == big5) {
+        if (image_entries[i].codepage == big5)
             return image_entries[i].image_id;
-        }
+
     }
     return -1;
 }

@@ -145,12 +145,12 @@ static void pk_implode_flush_full_buffer(struct pk_comp_buffer *buf)
     uint8_t last_byte = buf->output_data[buf->output_ptr];
     buf->output_ptr -= 2048;
     memset(buf->output_data, 0, 2050);
-    if (buf->output_ptr) {
+    if (buf->output_ptr)
         buf->output_data[0] = new_first_byte;
-    }
-    if (buf->current_output_bits_used) {
+
+    if (buf->current_output_bits_used)
         buf->output_data[buf->output_ptr] = last_byte;
-    }
+
 }
 static void pk_implode_write_bits(struct pk_comp_buffer *buf, int num_bits, unsigned int value)
 {
@@ -171,9 +171,9 @@ static void pk_implode_write_bits(struct pk_comp_buffer *buf, int num_bits, unsi
         buf->output_data[buf->output_ptr] = (uint8_t) (value >> (8 - current_bits_used));
         buf->current_output_bits_used -= 8;
     }
-    if (buf->output_ptr >= 2048) {
+    if (buf->output_ptr >= 2048)
         pk_implode_flush_full_buffer(buf);
-    }
+
 }
 static void pk_implode_write_copy_length_offset(struct pk_comp_buffer *buf, struct pk_copy_length_offset copy)
 {
@@ -222,18 +222,18 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
             do {
                 start_match_plus_one++;
                 input_ptr_copy_plus_one++;
-                if (*start_match_plus_one != *input_ptr_copy_plus_one) {
+                if (*start_match_plus_one != *input_ptr_copy_plus_one)
                     break;
-                }
+
                 matched_bytes++;
             } while (matched_bytes < 516);
             input_ptr_copy = input_ptr;
             if (matched_bytes >= max_matched_bytes) {
                 copy->offset = (uint16_t) (input_ptr - start_match_plus_one - 1 + matched_bytes);
                 max_matched_bytes = matched_bytes;
-                if (matched_bytes > 10) {
+                if (matched_bytes > 10)
                     break;
-                }
+
             }
         }
         hash_analyze_index_ptr++;
@@ -261,9 +261,9 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
     do {
         if (input_ptr[long_index] != input_ptr[long_offset]) {
             long_offset = buf->long_matcher[long_offset];
-            if (long_offset != -1) {
+            if (long_offset != -1)
                 continue;
-            }
+
         }
         long_index++;
         long_offset++;
@@ -273,9 +273,9 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
     uint8_t *match_ptr = &buf->input_data[max_matched_bytes] + buf->analyze_index[hash_analyze_index];
     while (1) {
         matched_bytes = buf->long_matcher[matched_bytes];
-        if (matched_bytes == -1) {
+        if (matched_bytes == -1)
             matched_bytes = 0;
-        }
+
         hash_analyze_index_ptr = &buf->analyze_index[hash_analyze_index];
         uint8_t *better_match_ptr;
         do {
@@ -307,9 +307,9 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
         }
         while (input_ptr[matched_bytes] == *match_ptr) {
             matched_bytes++;
-            if (matched_bytes >= 516) {
+            if (matched_bytes >= 516)
                 break;
-            }
+
             match_ptr++;
         }
         if (matched_bytes >= max_matched_bytes) {
@@ -323,9 +323,9 @@ static void pk_implode_determine_copy(struct pk_comp_buffer *buf, int input_inde
                 do {
                     if (input_ptr[long_index] != input_ptr[long_offset]) {
                         long_offset = buf->long_matcher[long_offset];
-                        if (long_offset != -1) {
+                        if (long_offset != -1)
                             continue;
-                        }
+
                     }
                     long_index++;
                     long_offset++;
@@ -340,12 +340,12 @@ static int pk_implode_next_copy_is_better(struct pk_comp_buffer *buf, int offset
 {
     struct pk_copy_length_offset next_copy;
     pk_implode_determine_copy(buf, offset + 1, &next_copy);
-    if (current_copy->length >= next_copy.length) {
+    if (current_copy->length >= next_copy.length)
         return 0;
-    }
-    if (current_copy->length + 1 == next_copy.length && current_copy->offset <= 128) {
+
+    if (current_copy->length + 1 == next_copy.length && current_copy->offset <= 128)
         return 0;
-    }
+
     return 1;
 }
 static void pk_implode_analyze_input(struct pk_comp_buffer *buf, int input_start, int input_end)
@@ -385,27 +385,27 @@ static void pk_implode_data(struct pk_comp_buffer *buf)
         int bytes_read = pk_implode_fill_input_buffer(buf, 4096);
         if (bytes_read != 4096) {
             eof = 1;
-            if (!bytes_read && has_leftover_data == 0) {
+            if (!bytes_read && has_leftover_data == 0)
                 break;
-            }
+
         }
         int input_end = buf->dictionary_size + bytes_read; // keep 516 bytes leftover
-        if (eof) {
+        if (eof)
             input_end += 516; // eat the 516 leftovers anyway
-        }
+
 
         if (has_leftover_data == 0) {
             pk_implode_analyze_input(buf, input_ptr, input_end + 1);
             has_leftover_data++;
-            if (buf->dictionary_size != 4096) {
+            if (buf->dictionary_size != 4096)
                 has_leftover_data++;
-            }
+
         } else if (has_leftover_data == 1) {
             pk_implode_analyze_input(buf, input_ptr - buf->dictionary_size + 516, input_end + 1);
             has_leftover_data++;
-        } else if (has_leftover_data == 2) {
+        } else if (has_leftover_data == 2)
             pk_implode_analyze_input(buf, input_ptr - buf->dictionary_size, input_end + 1);
-        }
+
 
         while (input_ptr < input_end) {
             int write_literal = 0;
@@ -413,22 +413,22 @@ static void pk_implode_data(struct pk_comp_buffer *buf)
             struct pk_copy_length_offset copy;
             pk_implode_determine_copy(buf, input_ptr, &copy);
 
-            if (copy.length == 0) {
+            if (copy.length == 0)
                 write_literal = 1;
-            } else if (copy.length == 2 && copy.offset >= 256) {
+ else if (copy.length == 2 && copy.offset >= 256)
                 write_literal = 1;
-            } else if (eof && input_ptr + copy.length > input_end) {
+ else if (eof && input_ptr + copy.length > input_end) {
                 copy.length = input_end - input_ptr;
-                if (input_end - input_ptr > 2 || (input_end - input_ptr == 2 && copy.offset < 256)) {
+                if (input_end - input_ptr > 2 || (input_end - input_ptr == 2 && copy.offset < 256))
                     write_copy = 1;
-                } else {
+ else {
                     write_literal = 1;
                 }
-            } else if (copy.length >= 8 || input_ptr + 1 >= input_end) {
+            } else if (copy.length >= 8 || input_ptr + 1 >= input_end)
                 write_copy = 1;
-            } else if (pk_implode_next_copy_is_better(buf, input_ptr, &copy)) {
+ else if (pk_implode_next_copy_is_better(buf, input_ptr, &copy))
                 write_literal = 1;
-            } else {
+ else {
                 write_copy = 1;
             }
 
@@ -451,9 +451,9 @@ static void pk_implode_data(struct pk_comp_buffer *buf)
 
     // Write EOF
     pk_implode_write_bits(buf, buf->codeword_bits[PK_EOF], buf->codeword_values[PK_EOF]);
-    if (buf->current_output_bits_used) {
+    if (buf->current_output_bits_used)
         buf->output_ptr++;
-    }
+
     buf->output_func(buf->output_data, buf->output_ptr, buf->token);
 }
 static int pk_implode(pk_input_func *input_func, pk_output_func *output_func, struct pk_comp_buffer *buf, struct pk_token *token, int dictionary_size)
@@ -562,20 +562,20 @@ static int pk_explode_decode_next_token(struct pk_decomp_buffer *buf)
 static int pk_explode_get_copy_offset(struct pk_decomp_buffer *buf, int copy_length)
 {
     int index = buf->copy_offset_jump_table[buf->current_input_byte & 0xff];
-    if (pk_explode_set_bits_used(buf, pk_copy_offset_bits[index])) {
+    if (pk_explode_set_bits_used(buf, pk_copy_offset_bits[index]))
         return 0;
-    }
+
     int offset;
     if (copy_length == 2) {
         offset = (buf->current_input_byte & 3) | (index << 2);
-        if (pk_explode_set_bits_used(buf, 2)) {
+        if (pk_explode_set_bits_used(buf, 2))
             return 0;
-        }
+
     } else {
         offset = (buf->current_input_byte & buf->dictionary_size) | (index << buf->window_size);
-        if (pk_explode_set_bits_used(buf, buf->window_size)) {
+        if (pk_explode_set_bits_used(buf, buf->window_size))
             return 0;
-        }
+
     }
     return offset + 1;
 }
@@ -658,16 +658,16 @@ static int pk_explode(pk_input_func *input_func, pk_output_func *output_func, st
 
 static int zip_input_func(uint8_t *buffer, int length, struct pk_token *token)
 {
-    if (token->stop) {
+    if (token->stop)
         return 0;
-    }
-    if (token->input_ptr >= token->input_length) {
-        return 0;
-    }
 
-    if (token->input_length - token->input_ptr < length) {
+    if (token->input_ptr >= token->input_length)
+        return 0;
+
+
+    if (token->input_length - token->input_ptr < length)
         length = token->input_length - token->input_ptr;
-    }
+
     memcpy(buffer, &token->input_data[token->input_ptr], (size_t) length);
     token->input_ptr += length;
     return length;
@@ -697,9 +697,9 @@ int zip_compress(const void *input_buffer, int input_length, void *output_buffer
     struct pk_token token;
     struct pk_comp_buffer *buf = (struct pk_comp_buffer *) malloc(sizeof(struct pk_comp_buffer));
 
-    if (!buf) {
+    if (!buf)
         return 0;
-    }
+
 
     memset(buf, 0, sizeof(struct pk_comp_buffer));
     memset(&token, 0, sizeof(struct pk_token));
@@ -715,9 +715,9 @@ int zip_compress(const void *input_buffer, int input_length, void *output_buffer
         ok = 0;
     } else {
 //        assert(*output_length == token.output_ptr);
-        if (*output_length != token.output_ptr) {
+        if (*output_length != token.output_ptr)
             int a = 235;
-        }
+
         *output_length = token.output_ptr;
     }
     free(buf);
@@ -743,9 +743,9 @@ int zip_decompress(const void *input_buffer, int input_length, void *output_buff
         ok = 0;
     } else {
 //        assert(*output_length == token.output_ptr);
-        if (*output_length != token.output_ptr) {
+        if (*output_length != token.output_ptr)
             int a = 235;
-        }
+
         *output_length = token.output_ptr;
         ok = *output_length;
     }

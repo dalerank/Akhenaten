@@ -25,20 +25,20 @@ void random_init(void)
 void random_generate_next(void)
 {
     data.pool[data.pool_index++] = data.random1_7bit;
-    if (data.pool_index >= MAX_RANDOM) {
+    if (data.pool_index >= MAX_RANDOM)
         data.pool_index = 0;
-    }
+
     for (int i = 0; i < 31; i++) {
         unsigned int r1 = (((data.iv1 & 0x10) >> 4) ^ data.iv1) & 1;
         unsigned int r2 = (((data.iv2 & 0x10) >> 4) ^ data.iv2) & 1;
         data.iv1 = data.iv1 >> 1;
         data.iv2 = data.iv2 >> 1;
-        if (r1) {
+        if (r1)
             data.iv1 |= 0x40000000;
-        }
-        if (r2) {
+
+        if (r2)
             data.iv2 |= 0x40000000;
-        }
+
     }
     data.random1_7bit = data.iv1 & 0x7f;
     data.random1_15bit = data.iv1 & 0x7fff;

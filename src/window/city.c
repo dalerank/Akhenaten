@@ -42,9 +42,9 @@ static int center_in_city(int element_width_pixels)
 }
 static void clear_city_view(int force)
 {
-    if (config_get(CONFIG_UI_ZOOM) && (force || city_view_dirty)) {
+    if (config_get(CONFIG_UI_ZOOM) && (force || city_view_dirty))
         graphics_clear_city_viewport();
-    }
+
     city_view_dirty = 0;
 }
 
@@ -58,9 +58,9 @@ static void draw_paused_and_time_left(void)
 {
     if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
         int years;
-        if (scenario_criteria_max_year() <= game_time_year() + 1) {
+        if (scenario_criteria_max_year() <= game_time_year() + 1)
             years = 0;
-        } else {
+ else {
             years = scenario_criteria_max_year() - game_time_year() - 1;
         }
         int total_months = 12 - game_time_month() + 12 * years;
@@ -70,9 +70,9 @@ static void draw_paused_and_time_left(void)
         city_view_dirty = 1;
     } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
         int years;
-        if (scenario_criteria_max_year() <= game_time_year() + 1) {
+        if (scenario_criteria_max_year() <= game_time_year() + 1)
             years = 0;
-        } else {
+ else {
             years = scenario_criteria_max_year() - game_time_year() - 1;
         }
         int total_months = 12 - game_time_month() + 12 * years;
@@ -110,9 +110,9 @@ static void draw_foreground(void)
         draw_cancel_construction();
     }
     city_view_dirty |= widget_city_draw_construction_cost_and_size();
-    if (window_is(WINDOW_CITY)) {
+    if (window_is(WINDOW_CITY))
         city_message_process_queue();
-    }
+
 }
 static void draw_foreground_military(void)
 {
@@ -124,16 +124,16 @@ static void draw_foreground_military(void)
 
 static void exit_military_command(void)
 {
-    if (window_is(WINDOW_CITY_MILITARY)) {
+    if (window_is(WINDOW_CITY_MILITARY))
         window_city_show();
-    }
+
 }
 static void show_overlay(int overlay)
 {
     exit_military_command();
-    if (game_state_overlay() == overlay) {
+    if (game_state_overlay() == overlay)
         game_state_set_overlay(OVERLAY_NONE);
-    } else {
+ else {
         game_state_set_overlay(overlay);
     }
     city_with_overlay_update();
@@ -147,9 +147,9 @@ static void cycle_legion(void)
         current_legion_id = 0;
         for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
             legion_id++;
-            if (legion_id > MAX_LEGIONS) {
+            if (legion_id > MAX_LEGIONS)
                 legion_id = 1;
-            }
+
             const formation *m = formation_get(legion_id);
             if (m->in_use == 1 && !m->is_herd && m->is_legion) {
                 if (current_legion_id == 0) {
@@ -184,30 +184,30 @@ static void handle_hotkeys(const hotkeys *h)
 //    if (debug_range_1 > 20)
 //        debug_range_1 = 20;
     ////
-    if (h->toggle_pause) {
+    if (h->toggle_pause)
         toggle_pause();
-    }
+
 //    if (h->decrease_game_speed) {
 //        setting_decrease_game_speed();
 //    }
 //    if (h->increase_game_speed) {
 //        setting_increase_game_speed();
 //    }
-    if (h->show_overlay) {
+    if (h->show_overlay)
         show_overlay(h->show_overlay);
-    }
+
     if (h->toggle_overlay) {
         exit_military_command();
         game_state_toggle_overlay();
         city_with_overlay_update();
         window_invalidate();
     }
-    if (h->show_advisor) {
+    if (h->show_advisor)
         window_advisors_show_advisor(h->show_advisor);
-    }
-    if (h->cycle_legion) {
+
+    if (h->cycle_legion)
         cycle_legion();
-    }
+
     if (h->rotate_map_left) {
         game_orientation_rotate_left();
         window_invalidate();
@@ -217,22 +217,22 @@ static void handle_hotkeys(const hotkeys *h)
         window_invalidate();
     }
     if (h->go_to_bookmark) {
-        if (map_bookmark_go_to(h->go_to_bookmark - 1)) {
+        if (map_bookmark_go_to(h->go_to_bookmark - 1))
             window_invalidate();
-        }
+
     }
-    if (h->set_bookmark) {
+    if (h->set_bookmark)
         map_bookmark_save(h->set_bookmark - 1);
-    }
-    if (h->load_file) {
+
+    if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    }
-    if (h->save_file) {
+
+    if (h->save_file)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
-    }
-    if (h->rotate_building) {
+
+    if (h->rotate_building)
         building_rotation_rotate_by_hotkey();
-    }
+
     if (h->building) {
         if (scenario_building_allowed(h->building)) {
             building_construction_cancel();
@@ -260,9 +260,9 @@ static void handle_input_military(const mouse *m, const hotkeys *h)
 static void get_tooltip(tooltip_context *c)
 {
     int text_id = widget_top_menu_get_tooltip_text(c);
-    if (!text_id) {
+    if (!text_id)
         text_id = widget_sidebar_city_get_tooltip_text();
-    }
+
     if (text_id) {
         c->type = TOOLTIP_BUTTON;
         c->text_id = text_id;

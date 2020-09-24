@@ -49,27 +49,27 @@ static int show_figure_entertainment(const figure *f)
 
 static int show_figure_theater(const figure *f)
 {
-    if (f->type == FIGURE_ACTOR) {
+    if (f->type == FIGURE_ACTOR)
         return get_entertainment_building(f)->type == BUILDING_THEATER;
-    }
+
     return 0;
 }
 
 static int show_figure_amphitheater(const figure *f)
 {
-    if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR) {
+    if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR)
         return get_entertainment_building(f)->type == BUILDING_AMPHITHEATER;
-    }
+
     return 0;
 }
 
 static int show_figure_colosseum(const figure *f)
 {
-    if (f->type == FIGURE_GLADIATOR) {
+    if (f->type == FIGURE_GLADIATOR)
         return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
-    } else if (f->type == FIGURE_LION_TAMER) {
+ else if (f->type == FIGURE_LION_TAMER)
         return 1;
-    }
+
     return 0;
 }
 
@@ -105,79 +105,79 @@ static int get_column_height_hippodrome(const building *b)
 
 static int get_tooltip_entertainment(tooltip_context *c, const building *b)
 {
-    if (b->data.house.entertainment <= 0) {
+    if (b->data.house.entertainment <= 0)
         return 64;
-    } else if (b->data.house.entertainment < 10) {
+ else if (b->data.house.entertainment < 10)
         return 65;
-    } else if (b->data.house.entertainment < 20) {
+ else if (b->data.house.entertainment < 20)
         return 66;
-    } else if (b->data.house.entertainment < 30) {
+ else if (b->data.house.entertainment < 30)
         return 67;
-    } else if (b->data.house.entertainment < 40) {
+ else if (b->data.house.entertainment < 40)
         return 68;
-    } else if (b->data.house.entertainment < 50) {
+ else if (b->data.house.entertainment < 50)
         return 69;
-    } else if (b->data.house.entertainment < 60) {
+ else if (b->data.house.entertainment < 60)
         return 70;
-    } else if (b->data.house.entertainment < 70) {
+ else if (b->data.house.entertainment < 70)
         return 71;
-    } else if (b->data.house.entertainment < 80) {
+ else if (b->data.house.entertainment < 80)
         return 72;
-    } else if (b->data.house.entertainment < 90) {
+ else if (b->data.house.entertainment < 90)
         return 73;
-    } else {
+ else {
         return 74;
     }
 }
 
 static int get_tooltip_theater(tooltip_context *c, const building *b)
 {
-    if (b->data.house.theater <= 0) {
+    if (b->data.house.theater <= 0)
         return 75;
-    } else if (b->data.house.theater >= 80) {
+ else if (b->data.house.theater >= 80)
         return 76;
-    } else if (b->data.house.theater >= 20) {
+ else if (b->data.house.theater >= 20)
         return 77;
-    } else {
+ else {
         return 78;
     }
 }
 
 static int get_tooltip_amphitheater(tooltip_context *c, const building *b)
 {
-    if (b->data.house.amphitheater_actor <= 0) {
+    if (b->data.house.amphitheater_actor <= 0)
         return 79;
-    } else if (b->data.house.amphitheater_actor >= 80) {
+ else if (b->data.house.amphitheater_actor >= 80)
         return 80;
-    } else if (b->data.house.amphitheater_actor >= 20) {
+ else if (b->data.house.amphitheater_actor >= 20)
         return 81;
-    } else {
+ else {
         return 82;
     }
 }
 
 static int get_tooltip_colosseum(tooltip_context *c, const building *b)
 {
-    if (b->data.house.colosseum_gladiator <= 0) {
+    if (b->data.house.colosseum_gladiator <= 0)
         return 83;
-    } else if (b->data.house.colosseum_gladiator >= 80) {
+ else if (b->data.house.colosseum_gladiator >= 80)
         return 84;
-    } else if (b->data.house.colosseum_gladiator >= 20) {
+ else if (b->data.house.colosseum_gladiator >= 20)
         return 85;
-    } else {
+ else {
         return 86;
     }
 }
 
 static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
 {
-    if (b->data.house.hippodrome <= 0) {
+    if (b->data.house.hippodrome <= 0)
         return 87;
-    } else if (b->data.house.hippodrome >= 80) {
+ else if (b->data.house.hippodrome >= 80)
         return 88;
-    } else if (b->data.house.hippodrome >= 20) {
+ else if (b->data.house.hippodrome >= 20)
         return 89;
-    } else {
+ else {
         return 90;
     }
 }

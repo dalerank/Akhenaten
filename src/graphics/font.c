@@ -165,33 +165,33 @@ static struct {
 static int image_y_offset_none(uint8_t c, int image_height, int line_height)
 {
     int offset = image_height - line_height;
-    if (offset < 0 || c < 0x80) {
+    if (offset < 0 || c < 0x80)
         offset = 0;
-    }
+
     return offset;
 }
 
 static int image_y_offset_default(uint8_t c, int image_height, int line_height)
 {
     int offset = image_height - line_height;
-    if (offset < 0) {
+    if (offset < 0)
         offset = 0;
-    }
-    if (c < 0x80 || c == 0xE7) {
+
+    if (c < 0x80 || c == 0xE7)
         offset = 0;
-    }
+
     return offset;
 }
 
 static int image_y_offset_eastern(uint8_t c, int image_height, int line_height)
 {
     int offset = image_height - line_height;
-    if (offset < 0) {
+    if (offset < 0)
         offset = 0;
-    }
-    if (c < 0x80 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA) {
+
+    if (c < 0x80 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA)
         offset = 0;
-    }
+
     return offset;
 }
 
@@ -342,15 +342,15 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
 
 static int image_y_offset_korean(uint8_t c, int image_height, int line_height)
 {
-    if (c < 0x80) {
+    if (c < 0x80)
         return 0;
-    }
+
     if (line_height == 11) {
-        if (image_height == 12) {
+        if (image_height == 12)
             return 0;
-        } else if (image_height == 15) {
+ else if (image_height == 15)
             return 3;
-        }
+
     }
     return image_height - line_height;
 }
@@ -403,33 +403,33 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
                 // lookup in table
                 int big5_encoded = str[0] << 8 | str[1];
                 char_id = encoding_trad_chinese_big5_to_image_id(big5_encoded);
-                if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS) {
+                if (char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS)
                     return -1;
-                }
+
             }
             return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
         } else if (data.multibyte == MULTIBYTE_SIMPLIFIED_CHINESE) {
             int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
-            if (char_id >= IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS) {
+            if (char_id >= IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS)
                 return -1;
-            }
+
             return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
         } else if (data.multibyte == MULTIBYTE_KOREAN) {
             int b0 = str[0] - 0xb0;
             int b1 = str[1] - 0xa1;
             int char_id = b0 * 94 + b1;
-            if (b0 < 0 || b1 < 0 || char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS) {
+            if (b0 < 0 || b1 < 0 || char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
                 return -1;
-            }
+
             return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
         } else {
             return -1;
         }
     } else {
         *num_bytes = 1;
-        if (!data.font_mapping[*str]) {
+        if (!data.font_mapping[*str])
             return -1;
-        }
+
         return data.font_mapping[*str] + def->image_offset - 1;
     }
 }

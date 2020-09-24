@@ -91,13 +91,12 @@ static void update_viewport(int has_changed)
         data.cursor_position < data.viewport_end;
     if (!has_changed && is_within_viewport) {
         // no update necessary
-    } else if (data.cursor_position == 0) {
+    } else if (data.cursor_position == 0)
         set_viewport_to_start();
-    } else if (data.cursor_position == data.length) {
+     else if (data.cursor_position == data.length)
         set_viewport_to_end();
-    } else {
+    else
         include_cursor_in_viewport();
-    }
     data.viewport_cursor_position = data.cursor_position;
 }
 
@@ -252,12 +251,12 @@ static void remove_current_char(void)
 
 static void add_char(const uint8_t *value, int bytes)
 {
-    if (data.insert) {
+    if (data.insert)
         insert_char(value, bytes);
-    } else {
-        if (data.cursor_position < data.length) {
+ else {
+        if (data.cursor_position < data.length)
             remove_current_char();
-        }
+
         insert_char(value, bytes);
     }
 }
@@ -325,17 +324,17 @@ static int keyboard_character(uint8_t *text)
     uint8_t c = text[0];
 
     int add = 0;
-    if (c == ' ' || c == '-') {
+    if (c == ' ' || c == '-')
         add = 1;
-    } else if (c >= '0' && c <= '9') {
+ else if (c >= '0' && c <= '9')
         add = 1;
-    } else if (c >= 'a' && c <= 'z') {
+ else if (c >= 'a' && c <= 'z')
         add = 1;
-    } else if (c >= 'A' && c <= 'Z') {
+ else if (c >= 'A' && c <= 'Z')
         add = 1;
-    } else if (c == ',' || c == '.' || c == '?' || c == '!') {
+ else if (c == ',' || c == '.' || c == '?' || c == '!')
         add = data.allow_punctuation;
-    } else if (c >= 0x80) { // do not check non-ascii for valid characters
+ else if (c >= 0x80) { // do not check non-ascii for valid characters
         add = 1;
     }
 
@@ -351,9 +350,9 @@ void keyboard_text(const char *text_utf8)
 {
     if (data.capture_numeric) {
         char c = text_utf8[0];
-        if (c >= '0' && c <= '9') {
+        if (c >= '0' && c <= '9')
             data.capture_numeric_callback(c - '0');
-        }
+
         return;
     }
     if (!data.capture)

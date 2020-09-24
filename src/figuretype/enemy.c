@@ -25,23 +25,23 @@ static void enemy_initial(figure *f, formation *m) {
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
         if (f->is_ghost && f->index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB) {
+            if (m->layout == FORMATION_ENEMY_MOB)
                 sound_speech_play_file("wavs/drums.wav");
-            } else if (m->layout == FORMATION_ENEMY12) {
+ else if (m->layout == FORMATION_ENEMY12)
                 sound_speech_play_file("wavs/horn2.wav");
-            } else {
+ else {
                 sound_speech_play_file("wavs/horn1.wav");
             }
         }
         f->is_ghost = 0;
-        if (m->recent_fight) {
+        if (m->recent_fight)
             f->action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
-        } else {
+ else {
             f->destination_x = m->destination_x + f->formation_position_x.enemy;
             f->destination_y = m->destination_y + f->formation_position_y.enemy;
-            if (calc_general_direction(f->x, f->y, f->destination_x, f->destination_y) < 8) {
+            if (calc_general_direction(f->x, f->y, f->destination_x, f->destination_y) < 8)
                 f->action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
-            }
+
         }
     }
     if (f->type == FIGURE_ENEMY43_SPEAR || f->type == FIGURE_ENEMY46_CAMEL ||
@@ -72,19 +72,19 @@ static void enemy_initial(figure *f, formation *m) {
                     break;
             }
             if (f->attack_image_offset == 1) {
-                if (tile.x == -1 || tile.y == -1) {
+                if (tile.x == -1 || tile.y == -1)
                     map_point_get_last_result(&tile);
-                }
+
                 figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, missile_type);
                 formation_record_missile_fired(m);
             }
-            if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+            if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())
                 sound_effect_play(SOUND_EFFECT_ARROW);
-            }
+
             f->attack_image_offset++;
-            if (f->attack_image_offset > 100) {
+            if (f->attack_image_offset > 100)
                 f->attack_image_offset = 0;
-            }
+
         }
     }
 }
@@ -111,18 +111,18 @@ static void enemy_marching(figure *f, const formation *m) {
 }
 
 static void enemy_fighting(figure *f, const formation *m) {
-    if (!m->recent_fight) {
+    if (!m->recent_fight)
         f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
-    }
+
     if (f->type != FIGURE_ENEMY46_CAMEL && f->type != FIGURE_ENEMY47_ELEPHANT) {
         if (f->type == FIGURE_ENEMY48_CHARIOT || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
-            if (city_sound_update_march_horse()) {
+            if (city_sound_update_march_horse())
                 sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
-            }
+
         } else {
-            if (city_sound_update_march_enemy()) {
+            if (city_sound_update_march_enemy())
                 sound_effect_play(SOUND_EFFECT_MARCHING);
-            }
+
         }
     }
     int target_id = f->target_figure_id;
@@ -199,11 +199,11 @@ static void enemy_action(figure *f, formation *m) {
 
 static int get_direction(figure *f) {
     int dir;
-    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK)
         dir = f->attack_direction;
-    } else if (f->direction < 8) {
+ else if (f->direction < 8)
         dir = f->direction;
-    } else {
+ else {
         dir = f->previous_tile_direction;
     }
     return figure_image_normalize_direction(dir);
@@ -211,11 +211,11 @@ static int get_direction(figure *f) {
 
 static int get_missile_direction(figure *f, const formation *m) {
     int dir;
-    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK)
         dir = f->attack_direction;
-    } else if (m->missile_fired || f->direction < 8) {
+ else if (m->missile_fired || f->direction < 8)
         dir = f->direction;
-    } else {
+ else {
         dir = f->previous_tile_direction;
     }
     return figure_image_normalize_direction(dir);
@@ -242,18 +242,18 @@ void figure_enemy43_spear_action(figure *f) {
             return;
     }
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 745 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 745 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
+    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL)
         f->image_id = 697 + dir + 8 * figure_image_missile_launcher_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 793 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 745 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -278,16 +278,16 @@ void figure_enemy44_sword_action(figure *f) {
             return;
     }
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 545 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 545 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 593 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 545 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 449 + dir + 8 * f->image_offset;
     }
 }
@@ -312,16 +312,16 @@ void figure_enemy45_sword_action(figure *f) {
             return;
     }
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 545 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 545 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 593 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 545 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 449 + dir + 8 * f->image_offset;
     }
 }
@@ -337,15 +337,15 @@ void figure_enemy_camel_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK) {
+    if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 601 + dir + 8 * f->image_offset;
-    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+ else if (f->action_state == FIGURE_ACTION_150_ATTACK)
         f->image_id = 601 + dir;
-    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
+ else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL)
         f->image_id = 697 + dir + 8 * figure_image_missile_launcher_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 745 + figure_image_corpse_offset(f);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -360,11 +360,11 @@ void figure_enemy_elephant_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK) {
+    if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK)
         f->image_id = 601 + dir + 8 * f->image_offset;
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 705 + figure_image_corpse_offset(f);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -379,11 +379,11 @@ void figure_enemy_chariot_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK) {
+    if (f->direction == DIR_FIGURE_ATTACK || f->action_state == FIGURE_ACTION_150_ATTACK)
         f->image_id = 697 + dir + 8 * (f->image_offset / 2);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 745 + figure_image_corpse_offset(f);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -415,16 +415,16 @@ void figure_enemy49_fast_sword_action(figure *f) {
     } else
             return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = attack_id + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = attack_id + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = corpse_id + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = attack_id + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = normal_id + dir + 8 * f->image_offset;
     }
 }
@@ -443,16 +443,16 @@ void figure_enemy50_sword_action(figure *f) {
     if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT)
             return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 545 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 545 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 593 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 545 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 449 + dir + 8 * f->image_offset;
     }
 }
@@ -471,18 +471,18 @@ void figure_enemy51_spear_action(figure *f) {
     if (m->enemy_type != ENEMY_1_NUMIDIAN)
             return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 593 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 593 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
+    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL)
         f->image_id = 545 + dir + 8 * figure_image_missile_launcher_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 641 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 593 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 449 + dir + 8 * f->image_offset;
     }
 }
@@ -498,15 +498,15 @@ void figure_enemy52_mounted_archer_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK) {
+    if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 601 + dir + 8 * f->image_offset;
-    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+ else if (f->action_state == FIGURE_ACTION_150_ATTACK)
         f->image_id = 601 + dir;
-    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
+ else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL)
         f->image_id = 697 + dir + 8 * figure_image_missile_launcher_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 745 + figure_image_corpse_offset(f);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -525,16 +525,16 @@ void figure_enemy53_axe_action(figure *f) {
     if (m->enemy_type != ENEMY_2_GAUL)
             return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 697 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 697 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 745 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 697 + dir + 8 * (f->image_offset / 2);
-    } else {
+ else {
         f->image_id = 601 + dir + 8 * f->image_offset;
     }
 }
@@ -589,20 +589,20 @@ void figure_enemy_gladiator_action(figure *f) {
             break;
     }
     int dir;
-    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK) {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK)
         dir = f->attack_direction;
-    } else if (f->direction < 8) {
+ else if (f->direction < 8)
         dir = f->direction;
-    } else {
+ else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
 
-    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK) {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK)
         f->image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (f->image_offset / 2);
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + 96 + figure_image_corpse_offset(f);
-    } else {
+ else {
         f->image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + dir + 8 * f->image_offset;
     }
 }
@@ -635,9 +635,9 @@ void figure_enemy_caesar_legionary_action(figure *f) {
                           figure_image_corpse_offset(f) + 152;
             break;
         case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
-            if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
+            if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
                 f->image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir + 144;
-            } else {
+ else {
                 f->image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir;
             }
             break;

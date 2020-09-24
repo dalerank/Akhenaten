@@ -68,9 +68,9 @@ static void draw_request(int index, const scenario_request *request)
         int treasury = city_finance_treasury();
         width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (treasury < request->amount) {
+        if (treasury < request->amount)
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        } else {
+ else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     } else {
@@ -78,9 +78,9 @@ static void draw_request(int index, const scenario_request *request)
         int amount_stored = city_resource_count(request->resource);
         width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (amount_stored < request->amount) {
+        if (amount_stored < request->amount)
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        } else {
+ else {
             lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         }
     }
@@ -111,11 +111,11 @@ static int draw_background(void)
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
-        if (enemy_strength < 46) {
+        if (enemy_strength < 46)
             strength_text_id = 73;
-        } else if (enemy_strength < 89) {
+ else if (enemy_strength < 89)
             strength_text_id = 74;
-        } else {
+ else {
             strength_text_id = 75;
         }
         width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE);
@@ -123,9 +123,9 @@ static int draw_background(void)
         num_requests = 1;
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
-    if (!num_requests) {
+    if (!num_requests)
         lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE);
-    }
+
 
     return ADVISOR_HEIGHT;
 }
@@ -136,11 +136,11 @@ static int get_request_status(int index)
     if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         num_requests = 1;
         if (index == 0) {
-            if (city_military_total_legions() <= 0) {
+            if (city_military_total_legions() <= 0)
                 return STATUS_NO_LEGIONS_AVAILABLE;
-            } else if (city_military_empire_service_legions() <= 0) {
+ else if (city_military_empire_service_legions() <= 0)
                 return STATUS_NO_LEGIONS_SELECTED;
-            } else {
+ else {
                 return STATUS_CONFIRM_SEND_LEGIONS;
             }
         }
@@ -148,13 +148,13 @@ static int get_request_status(int index)
     const scenario_request *request = scenario_request_get_visible(index - num_requests);
     if (request) {
         if (request->resource == RESOURCE_DENARII) {
-            if (city_finance_treasury() <= request->amount) {
+            if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
-            }
+
         } else {
-            if (city_resource_count(request->resource) < request->amount) {
+            if (city_resource_count(request->resource) < request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
-            }
+
         }
         return request->id + 1;
     }
@@ -182,21 +182,21 @@ static void draw_foreground(void)
     lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
 
     // Request buttons
-    if (get_request_status(0)) {
+    if (get_request_status(0))
         button_border_draw(38, 96, 560, 40, focus_button_id == 4);
-    }
-    if (get_request_status(1)) {
+
+    if (get_request_status(1))
         button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-    }
-    if (get_request_status(2)) {
+
+    if (get_request_status(2))
         button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-    }
-    if (get_request_status(3)) {
+
+    if (get_request_status(3))
         button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-    }
-    if (get_request_status(4)) {
+
+    if (get_request_status(4))
         button_border_draw(38, 264, 560, 40, focus_button_id == 8);
-    }
+
 }
 
 static int handle_mouse(const mouse *m)
@@ -233,9 +233,9 @@ static void confirm_send_troops(int accepted)
 
 static void confirm_send_goods(int accepted)
 {
-    if (accepted) {
+    if (accepted)
         scenario_request_dispatch(selected_request_id);
-    }
+
 }
 
 static void button_request(int index, int param2)
@@ -266,11 +266,11 @@ static void button_request(int index, int param2)
 
 static int get_tooltip_text(void)
 {
-    if (focus_button_id && focus_button_id <= 2) {
+    if (focus_button_id && focus_button_id <= 2)
         return 93 + focus_button_id;
-    } else if (focus_button_id == 3) {
+ else if (focus_button_id == 3)
         return 131;
-    } else {
+ else {
         return 0;
     }
 }

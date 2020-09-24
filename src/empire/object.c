@@ -44,14 +44,14 @@ static void fix_image_ids(void)
         // empire map uses old version of graphics: increase every graphic id
         int offset = image_id_from_group(GROUP_EMPIRE_CITY) - image_id;
         for (int i = 0; i < MAX_OBJECTS; i++) {
-            if (!objects[i].in_use) {
+            if (!objects[i].in_use)
                 continue;
-            }
+
             if (objects[i].obj.image_id) {
                 objects[i].obj.image_id += offset;
-                if (objects[i].obj.expanded.image_id) {
+                if (objects[i].obj.expanded.image_id)
                     objects[i].obj.expanded.image_id += offset;
-                }
+
             }
         }
     }
@@ -106,20 +106,20 @@ void empire_object_init_cities(void)
     empire_city_clear_all();
     int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY) {
+        if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY)
             continue;
-        }
+
         full_empire_object *obj = &objects[i];
         empire_city *city = empire_city_get(route_index++);
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
-        if (obj->obj.trade_route_id < 0) {
+        if (obj->obj.trade_route_id < 0)
             obj->obj.trade_route_id = 0;
-        }
-        if (obj->obj.trade_route_id >= 20) {
+
+        if (obj->obj.trade_route_id >= 20)
             obj->obj.trade_route_id = 19;
-        }
+
         city->route_id = obj->obj.trade_route_id;
         city->is_open = obj->trade_route_open;
         city->cost_to_open = obj->trade_route_cost;
@@ -134,12 +134,12 @@ void empire_object_init_cities(void)
                 || city->type == EMPIRE_CITY_FUTURE_ROMAN) {
                 continue;
             }
-            if (empire_object_city_sells_resource(i, resource)) {
+            if (empire_object_city_sells_resource(i, resource))
                 city->sells_resource[resource] = 1;
-            }
-            if (empire_object_city_buys_resource(i, resource)) {
+
+            if (empire_object_city_buys_resource(i, resource))
                 city->buys_resource[resource] = 1;
-            }
+
             int amount;
             switch (get_trade_amount_code(i, resource)) {
                 case 1: amount = 15; break;
@@ -179,9 +179,9 @@ const empire_object *empire_object_get_our_city(void)
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
             const empire_object *obj = &objects[i].obj;
-            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_OURS) {
+            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_OURS)
                 return obj;
-            }
+
         }
     }
     return 0;
@@ -190,9 +190,9 @@ const empire_object *empire_object_get_our_city(void)
 void empire_object_foreach(void (*callback)(const empire_object *))
 {
     for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (objects[i].in_use) {
+        if (objects[i].in_use)
             callback(&objects[i].obj);
-        }
+
     }
 }
 
@@ -215,9 +215,9 @@ int empire_object_get_max_invasion_path(void)
     int max_path = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.type == EMPIRE_OBJECT_BATTLE_ICON) {
-            if (objects[i].obj.invasion_path_id > max_path) {
+            if (objects[i].obj.invasion_path_id > max_path)
                 max_path = objects[i].obj.invasion_path_id;
-            }
+
         }
     }
     return max_path;
@@ -237,12 +237,12 @@ int empire_object_get_closest(int x, int y)
             obj_x = obj->x;
             obj_y = obj->y;
         }
-        if (obj_x - 8 > x || obj_x + obj->width + 8 <= x) {
+        if (obj_x - 8 > x || obj_x + obj->width + 8 <= x)
             continue;
-        }
-        if (obj_y - 8 > y || obj_y + obj->height + 8 <= y) {
+
+        if (obj_y - 8 > y || obj_y + obj->height + 8 <= y)
             continue;
-        }
+
         int dist = calc_maximum_distance(x, y, obj_x + obj->width / 2, obj_y + obj->height / 2);
         if (dist < min_dist) {
             min_dist = dist;
@@ -255,20 +255,20 @@ int empire_object_get_closest(int x, int y)
 void empire_object_set_expanded(int object_id, int new_city_type)
 {
     objects[object_id].city_type = new_city_type;
-    if (new_city_type == EMPIRE_CITY_TRADE) {
+    if (new_city_type == EMPIRE_CITY_TRADE)
         objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
-    } else if (new_city_type == EMPIRE_CITY_DISTANT_ROMAN) {
+ else if (new_city_type == EMPIRE_CITY_DISTANT_ROMAN)
         objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_DISTANT_ROMAN);
-    }
+
 }
 
 int empire_object_city_buys_resource(int object_id, int resource)
 {
     const full_empire_object *object = &objects[object_id];
     for (int i = 0; i < 8; i++) {
-        if (object->city_buys_resource[i] == resource) {
+        if (object->city_buys_resource[i] == resource)
             return 1;
-        }
+
     }
     return 0;
 }
@@ -277,36 +277,36 @@ int empire_object_city_sells_resource(int object_id, int resource)
 {
     const full_empire_object *object = &objects[object_id];
     for (int i = 0; i < 10; i++) {
-        if (object->city_sells_resource[i] == resource) {
+        if (object->city_sells_resource[i] == resource)
             return 1;
-        }
+
     }
     return 0;
 }
 
 static int is_trade_city(int index)
 {
-    if (objects[index].obj.type != EMPIRE_OBJECT_CITY) {
+    if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
         return 0;
-    }
+
     return objects[index].city_type > EMPIRE_CITY_OURS && objects[index].city_type < EMPIRE_CITY_FUTURE_ROMAN;
 }
 
 static int get_trade_amount_code(int index, int resource)
 {
-    if (!is_trade_city(index)) {
+    if (!is_trade_city(index))
         return 0;
-    }
+
     int resource_flag = 1 << resource;
-    if (objects[index].trade40 & resource_flag) {
+    if (objects[index].trade40 & resource_flag)
         return 3;
-    }
-    if (objects[index].trade25 & resource_flag) {
+
+    if (objects[index].trade25 & resource_flag)
         return 2;
-    }
-    if (objects[index].trade15 & resource_flag) {
+
+    if (objects[index].trade15 & resource_flag)
         return 1;
-    }
+
     return 0;
 }
 
@@ -314,12 +314,12 @@ static int is_sea_trade_route(int route_id)
 {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
-            if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
+            if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
                 return 1;
-            }
-            if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE) {
+
+            if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE)
                 return 0;
-            }
+
         }
     }
     return 0;
@@ -327,19 +327,19 @@ static int is_sea_trade_route(int route_id)
 
 static int get_animation_offset(int image_id, int current_index)
 {
-    if (current_index <= 0) {
+    if (current_index <= 0)
         current_index = 1;
-    }
+
     const image *img = image_get(image_id);
     int animation_speed = img->animation_speed_id;
-    if (!game_animation_should_advance(animation_speed)) {
+    if (!game_animation_should_advance(animation_speed))
         return current_index;
-    }
+
     if (img->animation_can_reverse) {
         int is_reverse = 0;
-        if (current_index & 0x80) {
+        if (current_index & 0x80)
             is_reverse = 1;
-        }
+
         int current_sprite = current_index & 0x7f;
         if (is_reverse) {
             current_index = current_sprite - 1;
@@ -354,15 +354,15 @@ static int get_animation_offset(int image_id, int current_index)
                 is_reverse = 1;
             }
         }
-        if (is_reverse) {
+        if (is_reverse)
             current_index = current_index | 0x80;
-        }
+
     } else {
         // Absolutely normal case
         current_index++;
-        if (current_index > img->num_animation_sprites) {
+        if (current_index > img->num_animation_sprites)
             current_index = 1;
-        }
+
     }
     return current_index;
 }

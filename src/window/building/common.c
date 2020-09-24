@@ -20,15 +20,15 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
     city_view_get_unscaled_viewport(&stub, &stub, &width, &stub);
     width -= MARGIN_POSITION;
 
-    if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {
+    if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION)
         *y_offset -= dialog_height;
-    }
+
 
     *y_offset = (*y_offset < MIN_Y_POSITION) ? MIN_Y_POSITION : *y_offset;
 
-    if (*x_offset + dialog_width > width) {
+    if (*x_offset + dialog_width > width)
         *x_offset = width - dialog_width;
-    }
+
 }
 
 int window_building_get_vertical_offset(building_info_context *c, int new_window_height)
@@ -40,14 +40,14 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
     int center = (old_window_height / 2) + y_offset;
     int new_window_y = center - (new_window_height / 2);
 
-    if (new_window_y < MIN_Y_POSITION) {
+    if (new_window_y < MIN_Y_POSITION)
         new_window_y = MIN_Y_POSITION;
-    } else {
+ else {
         int height = screen_height() - MARGIN_POSITION;
 
-        if (new_window_y + new_window_height > height) {
+        if (new_window_y + new_window_height > height)
             new_window_y = height - new_window_height;
-        }
+
     }
 
     return new_window_y;
@@ -56,24 +56,24 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
 static int draw_employment_info(building_info_context *c, building *b, int y_offset, int consider_house_covering)
 {
     int text_id;
-    if (b->num_workers >= model_get_building(b->type)->laborers) {
+    if (b->num_workers >= model_get_building(b->type)->laborers)
         text_id = 0;
-    } else if (city_population() <= 0) {
+ else if (city_population() <= 0)
         text_id = 16; // no people in city
-    } else if (!consider_house_covering) {
+ else if (!consider_house_covering)
         text_id = 19;
-    } else if (b->houses_covered <= 0) {
+ else if (b->houses_covered <= 0)
         text_id = 17; // no employees nearby
-    } else if (b->houses_covered < 40) {
+ else if (b->houses_covered < 40)
         text_id = 20; // poor access to employees
-    } else if (city_labor_category(b->labor_category)->workers_allocated <= 0) {
+ else if (city_labor_category(b->labor_category)->workers_allocated <= 0)
         text_id = 18; // no people allocated
-    } else {
+ else {
         text_id = 19; // too few people allocated
     }
-    if (!text_id && consider_house_covering && b->houses_covered < 40) {
+    if (!text_id && consider_house_covering && b->houses_covered < 40)
         text_id = 20; // poor access to employees
-    }
+
     return text_id;
 }
 

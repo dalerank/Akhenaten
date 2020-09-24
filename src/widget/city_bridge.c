@@ -14,9 +14,9 @@ void city_draw_bridge(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
             return;
     color_t color_mask = 0;
-    if (map_property_is_deleted(grid_offset)) {
+    if (map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
-    }
+
     city_draw_bridge_tile(x, y, map_sprite_bridge_at(grid_offset), color_mask);
 }
 

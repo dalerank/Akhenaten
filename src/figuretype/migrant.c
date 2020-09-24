@@ -24,9 +24,9 @@ void figure_create_immigrant(building *house, int num_people) {
 
 void figure_create_emigrant(building *house, int num_people) {
     city_population_remove(num_people);
-    if (num_people < house->house_population) {
+    if (num_people < house->house_population)
         house->house_population -= num_people;
-    } else {
+ else {
         house->house_population = 0;
         building_house_change_to_vacant_lot(house);
     }
@@ -135,19 +135,19 @@ void figure_immigrant_action(figure *f) {
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FIGURE_STATE_DEAD;
                 int max_people = model_get_house(b->subtype.house_level)->max_people;
-                if (b->house_is_merged) {
+                if (b->house_is_merged)
                     max_people *= 4;
-                }
+
                 int room = max_people - b->house_population;
-                if (room < 0) {
+                if (room < 0)
                     room = 0;
-                }
-                if (room < f->migrant_num_people) {
+
+                if (room < f->migrant_num_people)
                     f->migrant_num_people = room;
-                }
-                if (!b->house_population) {
+
+                if (!b->house_population)
                     building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-                }
+
                 b->house_population += f->migrant_num_people;
                 b->house_population_room = max_people - b->house_population;
                 city_population_add(f->migrant_num_people);
@@ -179,9 +179,9 @@ void figure_emigrant_action(figure *f) {
             f->wait_ticks++;
             if (f->wait_ticks >= 5) {
                 int x_road, y_road;
-                if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &x_road, &y_road)) {
+                if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &x_road, &y_road))
                     f->state = FIGURE_STATE_DEAD;
-                }
+
                 f->action_state = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
                 figure_movement_set_cross_country_destination(f, x_road, y_road);
                 f->roam_length = 0;
@@ -274,19 +274,19 @@ void figure_homeless_action(figure *f) {
                 building *b = building_get(f->immigrant_building_id);
                 if (f->immigrant_building_id && building_is_house(b->type)) {
                     int max_people = model_get_house(b->subtype.house_level)->max_people;
-                    if (b->house_is_merged) {
+                    if (b->house_is_merged)
                         max_people *= 4;
-                    }
+
                     int room = max_people - b->house_population;
-                    if (room < 0) {
+                    if (room < 0)
                         room = 0;
-                    }
-                    if (room < f->migrant_num_people) {
+
+                    if (room < f->migrant_num_people)
                         f->migrant_num_people = room;
-                    }
-                    if (!b->house_population) {
+
+                    if (!b->house_population)
                         building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-                    }
+
                     b->house_population += f->migrant_num_people;
                     b->house_population_room = max_people - b->house_population;
                     city_population_add_homeless(f->migrant_num_people);
@@ -296,11 +296,11 @@ void figure_homeless_action(figure *f) {
             break;
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+ else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            }
+
             f->wait_ticks++;
             if (f->wait_ticks > 30) {
                 f->wait_ticks = 0;

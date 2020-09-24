@@ -60,9 +60,9 @@ int city_sound_update_hit_spear(void)
 
 int city_sound_update_hit_elephant(void)
 {
-    if (city_data.sound.hit_elephant == 1) {
+    if (city_data.sound.hit_elephant == 1)
         city_data.sound.hit_elephant = 0;
-    } else {
+ else {
         city_data.sound.hit_elephant = 1;
     }
     return city_data.sound.hit_elephant;
@@ -71,17 +71,17 @@ int city_sound_update_hit_elephant(void)
 int city_sound_update_die_citizen(void)
 {
     city_data.sound.die_citizen++;
-    if (city_data.sound.die_citizen >= 4) {
+    if (city_data.sound.die_citizen >= 4)
         city_data.sound.die_citizen = 0;
-    }
+
     return city_data.sound.die_citizen;
 }
 
 int city_sound_update_die_soldier(void)
 {
     city_data.sound.die_soldier++;
-    if (city_data.sound.die_soldier >= 4) {
+    if (city_data.sound.die_soldier >= 4)
         city_data.sound.die_soldier = 0;
-    }
+
     return city_data.sound.die_soldier;
 }

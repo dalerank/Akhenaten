@@ -24,77 +24,74 @@ static void draw_hippodrome_horse(const figure *f, int x, int y)
     switch (city_view_orientation()) {
         case DIR_0_TOP:
             x += 10;
-            if (val <= 10) {
+            if (val <= 10)
                 y -= 2;
-            } else if (val <= 11) {
+            else if (val <= 11)
                 y -= 10;
-            } else if (val <= 12) {
+            else if (val <= 12)
                 y -= 18;
-            } else if (val <= 13) {
+            else if (val <= 13)
                 y -= 16;
-            } else if (val <= 20) {
+            else if (val <= 20)
                 y -= 14;
-            } else if (val <= 21) {
+            else if (val <= 21)
                 y -= 10;
-            } else {
+            else
                 y -= 2;
-            }
             break;
         case DIR_2_RIGHT:
             x -= 10;
-            if (val <= 9) {
+            if (val <= 9)
                 y -= 12;
-            } else if (val <= 10) {
+            else if (val <= 10)
                 y += 4;
-            } else if (val <= 11) {
+            else if (val <= 11) {
                 x -= 5;
                 y += 2;
-            } else if (val <= 13) {
+            } else if (val <= 13)
                 x -= 5;
-            } else if (val <= 20) {
+            else if (val <= 20)
                 y -= 2;
-            } else if (val <= 21) {
+            else if (val <= 21)
                 y -= 6;
-            } else {
+            else
                 y -= 12;
-            }
         case DIR_4_BOTTOM:
             x += 20;
-            if (val <= 9) {
+            if (val <= 9)
                 y += 4;
-            } else if (val <= 10) {
+            else if (val <= 10) {
                 x += 10;
                 y += 4;
             } else if (val <= 11) {
                 x += 10;
                 y -= 4;
-            } else if (val <= 13) {
+            } else if (val <= 13)
                 y -= 6;
-            } else if (val <= 20) {
+            else if (val <= 20)
                 y -= 12;
-            } else if (val <= 21) {
+            else if (val <= 21)
                 y -= 10;
-            } else {
+            else {
                 y -= 2;
             }
             break;
         case DIR_6_LEFT:
             x -= 10;
-            if (val <= 9) {
+            if (val <= 9)
                 y -= 12;
-            } else if (val <= 10) {
+            else if (val <= 10)
                 y += 4;
-            } else if (val <= 11) {
+            else if (val <= 11)
                 y += 2;
-            } else if (val <= 13) {
+            else if (val <= 13) {
                 // no change
-            } else if (val <= 20) {
+            } else if (val <= 20)
                 y -= 2;
-            } else if (val <= 21) {
+            else if (val <= 21)
                 y -= 6;
-            } else {
+            else
                 y -= 12;
-            }
             break;
     }
     draw_figure_with_cart(f, x, y);
@@ -124,16 +121,16 @@ static void draw_map_flag(const figure *f, int x, int y)
     // flag number
     int number = 0;
     int id = f->resource_id;
-    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX)
         number = id - MAP_FLAG_INVASION_MIN + 1;
-    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
+ else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
         number = id - MAP_FLAG_FISHING_MIN + 1;
-    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
+ else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
         number = id - MAP_FLAG_HERD_MIN + 1;
-    }
-    if (number > 0) {
+
+    if (number > 0)
         text_draw_number_colored(number, '@', " ", x + 6, y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE);
-    }
+
 }
 
 static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y,
@@ -155,9 +152,9 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 static int tile_progress_to_pixel_offset_x(int direction, int progress)
 {
-    if (progress >= 15) {
+    if (progress >= 15)
         return 0;
-    }
+
     switch (direction) {
         case DIR_0_TOP:
         case DIR_2_RIGHT:
@@ -176,9 +173,9 @@ static int tile_progress_to_pixel_offset_x(int direction, int progress)
 
 static int tile_progress_to_pixel_offset_y(int direction, int progress)
 {
-    if (progress >= 15) {
+    if (progress >= 15)
         return 0;
-    }
+
     switch (direction) {
         case DIR_0_TOP:
         case DIR_6_LEFT:
@@ -261,13 +258,13 @@ static void draw_figure(const figure *f, int x, int y, int highlight)
                 break;
         }
     } else {
-        if (f->is_enemy_image) {
+        if (f->is_enemy_image)
             image_draw_enemy(f->image_id, x, y);
-        } else {
+ else {
             image_draw(f->image_id, x, y);
-            if (highlight) {
+            if (highlight)
                 image_draw_blend_alpha(f->image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
-            }
+
         }
     }
 }

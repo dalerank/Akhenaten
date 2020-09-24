@@ -41,12 +41,12 @@ void building_maintenance_update_burning_ruins(void)
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->type != BUILDING_BURNING_RUIN ) {
+        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->type != BUILDING_BURNING_RUIN )
             continue;
-        }
-        if (b->fire_duration < 0) {
+
+        if (b->fire_duration < 0)
             b->fire_duration = 0;
-        }
+
         b->fire_duration++;
         if (b->fire_duration > 32) {
             game_undo_disable();
@@ -55,9 +55,9 @@ void building_maintenance_update_burning_ruins(void)
             recalculate_terrain = 1;
             continue;
         }
-        if (b->ruin_has_plague) {
+        if (b->ruin_has_plague)
             continue;
-        }
+
         building_list_burning_add(i);
         if (climate == CLIMATE_DESERT) {
             if (b->fire_duration & 3) { // check spread every 4 ticks
@@ -68,9 +68,9 @@ void building_maintenance_update_burning_ruins(void)
                 continue;
             }
         }
-        if ((b->house_figure_generation_delay & 3) != (random_byte() & 3)) {
+        if ((b->house_figure_generation_delay & 3) != (random_byte() & 3))
             continue;
-        }
+
         int dir1 = fire_spread_direction - 1;
         if (dir1 < 0) dir1 = 7;
         int dir2 = fire_spread_direction + 1;
@@ -98,9 +98,9 @@ void building_maintenance_update_burning_ruins(void)
             }
         }
     }
-    if (recalculate_terrain) {
+    if (recalculate_terrain)
         map_routing_update_land();
-    }
+
 }
 
 int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
@@ -137,9 +137,9 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
 static void collapse_building(building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-    if (!tutorial_handle_collapse()) {
+    if (!tutorial_handle_collapse())
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
-    }
+
 
     game_undo_disable();
     building_destroy_by_collapse(b);
@@ -148,9 +148,9 @@ static void collapse_building(building *b)
 static void fire_building(building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
-    if (!tutorial_handle_fire()) {
+    if (!tutorial_handle_fire())
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
-    }
+
 
     building_destroy_by_fire(b);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -166,21 +166,21 @@ void building_maintenance_check_fire_collapse(void)
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->fire_proof) {
+        if (b->state != BUILDING_STATE_IN_USE || b->fire_proof)
             continue;
-        }
-        if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+
+        if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
             continue;
-        }
+
         int random_building = (i + map_random_get(b->grid_offset)) & 7;
         // damage
         b->damage_risk += random_building == random_global ? 3 : 1;
-        if (tutorial_extra_damage_risk()) {
+        if (tutorial_extra_damage_risk())
             b->damage_risk += 5;
-        }
-        if (b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT) {
+
+        if (b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT)
             b->damage_risk = 0;
-        }
+
         if (b->damage_risk > 200) {
             collapse_building(b);
             recalculate_terrain = 1;
@@ -188,25 +188,25 @@ void building_maintenance_check_fire_collapse(void)
         }
         // fire
         if (random_building == random_global) {
-            if (!b->house_size) {
+            if (!b->house_size)
                 b->fire_risk += 5;
-            } else if (b->house_population <= 0) {
+ else if (b->house_population <= 0)
                 b->fire_risk = 0;
-            } else if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
+ else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
                 b->fire_risk += 10;
-            } else if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
+ else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
                 b->fire_risk += 5;
-            } else {
+ else {
                 b->fire_risk += 2;
             }
-            if (tutorial_extra_fire_risk()) {
+            if (tutorial_extra_fire_risk())
                 b->fire_risk += 5;
-            }
-            if (climate == CLIMATE_NORTHERN) {
+
+            if (climate == CLIMATE_NORTHERN)
                 b->fire_risk = 0;
-            } else if (climate == CLIMATE_DESERT) {
+ else if (climate == CLIMATE_DESERT)
                 b->fire_risk += 3;
-            }
+
         }
         if (b->fire_risk > 100) {
             fire_building(b);
@@ -214,9 +214,9 @@ void building_maintenance_check_fire_collapse(void)
         }
     }
 
-    if (recalculate_terrain) {
+    if (recalculate_terrain)
         map_routing_update_land();
-    }
+
 }
 
 void building_maintenance_check_rome_access(void)
@@ -226,9 +226,9 @@ void building_maintenance_check_rome_access(void)
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
+        if (b->state != BUILDING_STATE_IN_USE)
             continue;
-        }
+
         if (b->house_size) {
             int x_road, y_road;
             if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
@@ -252,9 +252,9 @@ void building_maintenance_check_rome_access(void)
                 b->house_unreachable_ticks = 0;
             } else {
                 // no reachable road in radius
-                if (!b->house_unreachable_ticks) {
+                if (!b->house_unreachable_ticks)
                     problem_grid_offset = b->grid_offset;
-                }
+
                 b->house_unreachable_ticks++;
                 if (b->house_unreachable_ticks > 8) {
                     b->distance_from_entry = 0;
@@ -263,9 +263,9 @@ void building_maintenance_check_rome_access(void)
                 }
             }
         } else if (b->type == BUILDING_WAREHOUSE) {
-            if (!city_buildings_get_trade_center()) {
+            if (!city_buildings_get_trade_center())
                 city_buildings_set_trade_center(i);
-            }
+
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);

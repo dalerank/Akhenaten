@@ -74,21 +74,21 @@ static int get_land_type_citizen_building(int grid_offset)
 static int get_land_type_citizen_aqueduct(int grid_offset)
 {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-    if (image_id <= 3) {
+    if (image_id <= 3)
         return CITIZEN_N3_AQUEDUCT;
-    } else if (image_id <= 7) {
+ else if (image_id <= 7)
         return CITIZEN_N1_BLOCKED;
-    } else if (image_id <= 9) {
+ else if (image_id <= 9)
         return CITIZEN_N3_AQUEDUCT;
-    } else if (image_id <= 14) {
+ else if (image_id <= 14)
         return CITIZEN_N1_BLOCKED;
-    } else if (image_id <= 18) {
+ else if (image_id <= 18)
         return CITIZEN_N3_AQUEDUCT;
-    } else if (image_id <= 22) {
+ else if (image_id <= 22)
         return CITIZEN_N1_BLOCKED;
-    } else if (image_id <= 24) {
+ else if (image_id <= 24)
         return CITIZEN_N3_AQUEDUCT;
-    } else {
+ else {
         return CITIZEN_N1_BLOCKED;
     }
 }
@@ -287,9 +287,9 @@ static int wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wal
 int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wall)
 {
     for (int i = 1; i <= radius; i++) {
-        if (wall_tile_in_radius(x, y, i, x_wall, y_wall)) {
+        if (wall_tile_in_radius(x, y, i, x_wall, y_wall))
             return 1;
-        }
+
     }
     return 0;
 }

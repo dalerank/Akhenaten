@@ -60,9 +60,9 @@ static void draw_background(void)
     int width = lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE);
 
     int button_start = 128 + width + 10;
-    if (button_start < 240) {
+    if (button_start < 240)
         button_start = 240;
-    }
+
     arrow_buttons[0].x_offset = button_start;
     arrow_buttons[1].x_offset = arrow_buttons[0].x_offset + arrow_buttons[0].size;
 
@@ -100,9 +100,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
             return;
     if (arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &data.focus_arrow_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_advisors_show();
-    }
+
 }
 
 static void button_set_amount(int amount_id, int param2)
@@ -142,15 +142,15 @@ static void get_tooltip(tooltip_context *c)
     if (!data.focus_button_id && !data.focus_arrow_button_id)
             return;
     c->type = TOOLTIP_BUTTON;
-    if (data.focus_button_id == 1) {
+    if (data.focus_button_id == 1)
         c->text_id = 98;
-    } else if (data.focus_button_id == 2) {
+ else if (data.focus_button_id == 2)
         c->text_id = 99;
-    } else if (data.focus_button_id) {
+ else if (data.focus_button_id)
         c->text_id = 100;
-    } else if (data.focus_arrow_button_id) {
+ else if (data.focus_arrow_button_id)
         c->text_id = 101;
-    }
+
 }
 
 void window_donate_to_city_show(void)

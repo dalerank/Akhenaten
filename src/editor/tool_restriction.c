@@ -27,27 +27,27 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
 static int is_clear_terrain(const map_tile *tile, int *warning)
 {
     int result = !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
-    if (!result && warning) {
+    if (!result && warning)
         *warning = WARNING_EDITOR_CANNOT_PLACE;
-    }
+
     return result;
 }
 
 static int is_edge(const map_tile *tile, int *warning)
 {
     int result = tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
-    if (!result && warning) {
+    if (!result && warning)
         *warning = WARNING_EDITOR_NEED_MAP_EDGE;
-    }
+
     return result;
 }
 
 static int is_water(const map_tile *tile, int *warning)
 {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER);
-    if (!result && warning) {
+    if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
-    }
+
     return result;
 }
 
@@ -55,9 +55,9 @@ static int is_deep_water(const map_tile *tile, int *warning)
 {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
         map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
-    if (!result && warning) {
+    if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
-    }
+
     return result;
 }
 
@@ -87,9 +87,9 @@ int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning)
 
 int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_index)
 {
-    if (!map_grid_is_inside(tile->x, tile->y, 2)) {
+    if (!map_grid_is_inside(tile->x, tile->y, 2))
         return 0;
-    }
+
     for (int orientation = 0; orientation < 4; orientation++) {
         int right_tiles = 0;
         int wrong_tiles = 0;
@@ -106,38 +106,38 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
             }
             int elevation = map_elevation_at(tile_offset);
             if (index < 2) {
-                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
+                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION))
                     right_tiles++;
-                } else {
+ else {
                     wrong_tiles++;
                 }
                 top_elevation = elevation;
             } else if (index < 4) {
                 if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
-                    if (elevation == top_elevation) {
+                    if (elevation == top_elevation)
                         wrong_tiles++;
-                    } else {
+ else {
                         right_tiles++;
                     }
-                } else if (elevation >= top_elevation) {
+                } else if (elevation >= top_elevation)
                     right_tiles++;
-                } else {
+ else {
                     wrong_tiles++;
                 }
             } else {
-                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+                if (map_terrain_is(tile_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP))
                     wrong_tiles++;
-                } else if (elevation >= top_elevation) {
+ else if (elevation >= top_elevation)
                     wrong_tiles++;
-                } else {
+ else {
                     right_tiles++;
                 }
             }
         }
         if (right_tiles == 6) {
-            if (orientation_index) {
+            if (orientation_index)
                 *orientation_index = orientation;
-            }
+
             return 1;
         }
     }

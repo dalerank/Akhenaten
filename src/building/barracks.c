@@ -19,29 +19,29 @@ static int tower_sentry_request = 0;
 
 int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point* dst)
 {
-	if (resource != RESOURCE_WEAPONS) {
+	if (resource != RESOURCE_WEAPONS)
 		return 0;
-	}
-	if (city_resource_is_stockpiled(resource)) {
+
+	if (city_resource_is_stockpiled(resource))
 		return 0;
-	}
+
 	int min_dist = INFINITE;
 	building* min_building = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building* b = building_get(i);
-		if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_BARRACKS) {
+		if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_BARRACKS)
 			continue;
-		}
-		if (!map_has_road_access(b->x, b->y, b->size, 0)) {
-            continue;
-		}
-        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-            continue;
-        }
 
-		if (b->loads_stored >= MAX_WEAPONS_BARRACKS) {
+		if (!map_has_road_access(b->x, b->y, b->size, 0))
+            continue;
+
+        if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
+            continue;
+
+
+		if (b->loads_stored >= MAX_WEAPONS_BARRACKS)
 			continue;
-		}
+
 		int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
 		dist += 8 * b->loads_stored;
 		if (dist < min_dist) {
@@ -50,9 +50,9 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
 		}
 	}
 	if (min_building && min_dist < INFINITE) {
-		if (dst) {
+		if (dst)
 			map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
-		}
+
         return min_building->id;
 	}
 	return 0;
@@ -60,9 +60,9 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
 
 void building_barracks_add_weapon(building *barracks)
 {
-    if (barracks->id > 0) {
+    if (barracks->id > 0)
         barracks->loads_stored++;
-    }
+
 }
 
 static int get_closest_legion_needing_soldiers(const building *barracks)
@@ -72,15 +72,15 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
     int min_distance = INFINITE;
     for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (!m->in_use || !m->is_legion) {
+        if (!m->in_use || !m->is_legion)
             continue;
-        }
-        if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE) {
+
+        if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)
             continue;
-        }
-        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->loads_stored <= 0) {
+
+        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->loads_stored <= 0)
             continue;
-        }
+
         building *fort = building_get(m->building_id);
         int dist = calc_maximum_distance(barracks->x, barracks->y, fort->x, fort->y);
         if (m->legion_recruit_type > recruit_type ||
@@ -120,9 +120,9 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-            if (barracks->loads_stored > 0) {
+            if (barracks->loads_stored > 0)
                 barracks->loads_stored--;
-            }
+
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
         if (academy_id) {
@@ -146,9 +146,9 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
 
 int building_barracks_create_tower_sentry(building *barracks, int x, int y)
 {
-    if (tower_sentry_request <= 0) {
+    if (tower_sentry_request <= 0)
         return 0;
-    }
+
     building *tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -158,9 +158,9 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
             break;
         }
     }
-    if (!tower) {
+    if (!tower)
         return 0;
-    }
+
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
@@ -182,9 +182,9 @@ void building_barracks_request_tower_sentry(void)
 
 void building_barracks_decay_tower_sentry_request(void)
 {
-    if (tower_sentry_request > 0) {
+    if (tower_sentry_request > 0)
         tower_sentry_request--;
-    }
+
 }
 
 int building_barracks_has_tower_sentry_request(void)

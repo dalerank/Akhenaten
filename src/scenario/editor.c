@@ -193,9 +193,9 @@ void scenario_editor_price_change_get(int index, editor_price_change *price_chan
 
 static void sort_price_changes(void) {
     for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
-        if (!scenario.price_changes[i].resource) {
+        if (!scenario.price_changes[i].resource)
             scenario.price_changes[i].year = 0;
-        }
+
     }
     for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
         for (int j = env_sizes().MAX_PRICE_CHANGES - 1; j > 0; j--) {
@@ -237,9 +237,9 @@ void scenario_editor_demand_change_get(int index, editor_demand_change *demand_c
 
 static void sort_demand_changes(void) {
     for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++) {
-        if (!scenario.demand_changes[i].resource) {
+        if (!scenario.demand_changes[i].resource)
             scenario.demand_changes[i].year = 0;
-        }
+
     }
     for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++) {
         for (int j = env_sizes().MAX_DEMAND_CHANGES - 1; j > 0; j--) {
@@ -273,17 +273,17 @@ void scenario_editor_demand_change_save(int index, editor_demand_change *demand_
 }
 
 void scenario_editor_cycle_image(int forward) {
-    if (forward) {
+    if (forward)
         scenario.image_id++;
-    } else {
+ else {
         scenario.image_id--;
     }
-    if (scenario.image_id < 0) {
+    if (scenario.image_id < 0)
         scenario.image_id = 15;
-    }
-    if (scenario.image_id > 15) {
+
+    if (scenario.image_id > 15)
         scenario.image_id = 0;
-    }
+
     scenario.is_saved = 0;
 }
 
@@ -317,11 +317,11 @@ void scenario_editor_set_enemy(int enemy_id) {
 
 void scenario_editor_change_empire(int change) {
     scenario.empire.id += change;
-    if (scenario.empire.id < 0) {
+    if (scenario.empire.id < 0)
         scenario.empire.id = 39;
-    } else if (scenario.empire.id >= 40) {
+ else if (scenario.empire.id >= 40)
         scenario.empire.id = 0;
-    }
+
     scenario.is_saved = 0;
 }
 
@@ -396,9 +396,9 @@ void scenario_editor_set_start_year(int year) {
 
 void scenario_editor_toggle_open_play(void) {
     scenario.is_open_play = !scenario.is_open_play;
-    if (scenario.is_open_play) {
+    if (scenario.is_open_play)
         scenario.open_play_scenario_id = 12; // fix it to 12: first unused entry
-    }
+
     scenario.is_saved = 0;
 }
 
@@ -454,9 +454,9 @@ void scenario_editor_set_population(int goal) {
 
 void scenario_editor_toggle_time_limit(void) {
     scenario.win_criteria.time_limit.enabled = !scenario.win_criteria.time_limit.enabled;
-    if (scenario.win_criteria.time_limit.enabled) {
+    if (scenario.win_criteria.time_limit.enabled)
         scenario.win_criteria.survival_time.enabled = 0;
-    }
+
     scenario.is_saved = 0;
 }
 
@@ -467,9 +467,9 @@ void scenario_editor_set_time_limit(int years) {
 
 void scenario_editor_toggle_survival_time(void) {
     scenario.win_criteria.survival_time.enabled = !scenario.win_criteria.survival_time.enabled;
-    if (scenario.win_criteria.survival_time.enabled) {
+    if (scenario.win_criteria.survival_time.enabled)
         scenario.win_criteria.time_limit.enabled = 0;
-    }
+
     scenario.is_saved = 0;
 }
 

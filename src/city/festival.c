@@ -60,9 +60,9 @@ int city_festival_selected_size(void)
 
 int city_festival_select_size(int size)
 {
-    if (size == FESTIVAL_GRAND && city_data.festival.not_enough_wine) {
+    if (size == FESTIVAL_GRAND && city_data.festival.not_enough_wine)
         return 0;
-    }
+
     city_data.festival.selected.size = size;
     return 1;
 }
@@ -85,9 +85,9 @@ void city_festival_schedule(void)
 
     city_finance_process_sundry(cost);
 
-    if (city_data.festival.selected.size == FESTIVAL_GRAND) {
+    if (city_data.festival.selected.size == FESTIVAL_GRAND)
         building_warehouses_remove_resource(RESOURCE_WINE, city_data.festival.grand_wine);
-    }
+
 }
 
 static void throw_party(void)
@@ -114,9 +114,9 @@ static void throw_party(void)
         case FESTIVAL_LARGE: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
         case FESTIVAL_GRAND: 
             city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); 
-	        if (config_get(CONFIG_GP_CH_GRANDFESTIVAL)) {
+	        if (config_get(CONFIG_GP_CH_GRANDFESTIVAL))
                 city_data.religion.gods[city_data.festival.planned.god].blessing_done = 0;
-	        }
+
             break;
     }
     city_data.festival.planned.size = FESTIVAL_NONE;
@@ -126,17 +126,17 @@ static void throw_party(void)
 void city_festival_update(void)
 {
     city_data.festival.months_since_festival++;
-    if (city_data.festival.first_festival_effect_months) {
+    if (city_data.festival.first_festival_effect_months)
         --city_data.festival.first_festival_effect_months;
-    }
-    if (city_data.festival.second_festival_effect_months) {
+
+    if (city_data.festival.second_festival_effect_months)
         --city_data.festival.second_festival_effect_months;
-    }
+
     if (city_festival_is_planned()) {
         city_data.festival.planned.months_to_go--;
-        if (city_data.festival.planned.months_to_go <= 0) {
+        if (city_data.festival.planned.months_to_go <= 0)
             throw_party();
-        }
+
     }
 }
 
@@ -149,8 +149,8 @@ void city_festival_calculate_costs(void)
     city_data.festival.not_enough_wine = 0;
     if (city_data.resource.stored_in_warehouses[RESOURCE_WINE] < city_data.festival.grand_wine) {
         city_data.festival.not_enough_wine = 1;
-        if (city_data.festival.selected.size == FESTIVAL_GRAND) {
+        if (city_data.festival.selected.size == FESTIVAL_GRAND)
             city_data.festival.selected.size = FESTIVAL_LARGE;
-        }
+
     }
 }

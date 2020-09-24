@@ -35,15 +35,15 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     bridge.length = *length = 0;
     bridge.direction = *direction = 0;
 
-    if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
+    if (!map_terrain_is(grid_offset, TERRAIN_WATER))
         return 0;
-    }
-    if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
+
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_BUILDING))
         return 0;
-    }
-    if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3) {
+
+    if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
         return 0;
-    }
+
     if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WATER)) {
         bridge.direction_grid_delta = map_grid_delta(0, 1);
         bridge.direction = DIR_4_BOTTOM;
@@ -65,23 +65,23 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
         grid_offset += bridge.direction_grid_delta;
         bridge.length++;
         int next_offset = grid_offset + bridge.direction_grid_delta;
-        if (map_terrain_is(next_offset, TERRAIN_TREE)) {
+        if (map_terrain_is(next_offset, TERRAIN_TREE))
             break;
-        }
+
         if (!map_terrain_is(next_offset, TERRAIN_WATER)) {
             bridge.end_grid_offset = grid_offset;
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3) {
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
                 bridge.end_grid_offset = 0;
-            }
+
             *length = bridge.length;
             return bridge.end_grid_offset;
         }
-        if (map_terrain_is(next_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
+        if (map_terrain_is(next_offset, TERRAIN_ROAD | TERRAIN_BUILDING))
             break;
-        }
-        if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4) {
+
+        if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4)
             break;
-        }
+
     }
     // invalid bridge
     *length = bridge.length;
@@ -140,16 +140,16 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
                     return 8;
             }
         } else if (index == pillar_distance) {
-            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 14;
-            } else {
+ else {
                 return 15;
             }
         } else {
             // middle of the bridge
-            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 11;
-            } else {
+ else {
                 return 12;
             }
         }
@@ -180,9 +180,9 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
             }
         } else {
             // middle part
-            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
+            if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 5;
-            } else {
+ else {
                 return 6;
             }
         }
@@ -199,9 +199,9 @@ int map_bridge_add(int x, int y, int is_ship_bridge)
     }
 
     bridge.direction -= city_view_orientation();
-    if (bridge.direction < 0) {
+    if (bridge.direction < 0)
         bridge.direction += 8;
-    }
+
 
     int grid_offset = map_grid_offset(x, y);
     for (int i = 0; i < bridge.length; i++) {
@@ -225,36 +225,36 @@ int map_is_bridge(int grid_offset)
 static int get_y_bridge_tiles(int grid_offset)
 {
     int tiles = 0;
-    if (map_is_bridge(grid_offset + map_grid_delta(0, -1))) {
+    if (map_is_bridge(grid_offset + map_grid_delta(0, -1)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(0, -2))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(0, -2)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(0, 1))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(0, 1)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(0, 2))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(0, 2)))
         tiles++;
-    }
+
     return tiles;
 }
 
 static int get_x_bridge_tiles(int grid_offset)
 {
     int tiles = 0;
-    if (map_is_bridge(grid_offset + map_grid_delta(-1, 0))) {
+    if (map_is_bridge(grid_offset + map_grid_delta(-1, 0)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(-2, 0))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(-2, 0)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(1, 0))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(1, 0)))
         tiles++;
-    }
-    if (map_is_bridge(grid_offset + map_grid_delta(2, 0))) {
+
+    if (map_is_bridge(grid_offset + map_grid_delta(2, 0)))
         tiles++;
-    }
+
     return tiles;
 }
 
@@ -272,17 +272,17 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
         grid_offset -= offset_up;
     }
 
-    if (mark_deleted) {
+    if (mark_deleted)
         map_property_mark_deleted(grid_offset);
-    } else {
+ else {
         map_sprite_clear_tile(grid_offset);
         map_terrain_remove(grid_offset, TERRAIN_ROAD);
     }
     while (map_is_bridge(grid_offset + offset_up)) {
         grid_offset += offset_up;
-        if (mark_deleted) {
+        if (mark_deleted)
             map_property_mark_deleted(grid_offset);
-        } else {
+ else {
             map_sprite_clear_tile(grid_offset);
             map_terrain_remove(grid_offset, TERRAIN_ROAD);
         }
@@ -291,9 +291,9 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
 
 int map_bridge_count_figures(int grid_offset)
 {
-    if (!map_is_bridge(grid_offset)) {
+    if (!map_is_bridge(grid_offset))
         return 0;
-    }
+
     int tiles_x = get_x_bridge_tiles(grid_offset);
     int tiles_y = get_y_bridge_tiles(grid_offset);
 
@@ -304,14 +304,14 @@ int map_bridge_count_figures(int grid_offset)
     }
 
     int figures = 0;
-    if (map_has_figure_at(grid_offset)) {
+    if (map_has_figure_at(grid_offset))
         figures = 1;
-    }
+
     while (map_is_bridge(grid_offset + offset_up)) {
         grid_offset += offset_up;
-        if (map_has_figure_at(grid_offset)) {
+        if (map_has_figure_at(grid_offset))
             figures++;
-        }
+
     }
     return figures;
 }

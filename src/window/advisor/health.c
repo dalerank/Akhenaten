@@ -34,9 +34,9 @@ static int draw_background(void)
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
-    if (city_population() >= 200) {
+    if (city_population() >= 200)
         lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK);
-    } else {
+ else {
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK);
     }
     lang_text_draw(56, 3, 180, 94, FONT_SMALL_PLAIN);
@@ -71,11 +71,11 @@ static int draw_background(void)
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_GREEN);
 
     int pct_hospital = city_culture_coverage_hospital();
-    if (pct_hospital == 0) {
+    if (pct_hospital == 0)
         lang_text_draw_centered(57, 10, 440, 172, 160, FONT_NORMAL_GREEN);
-    } else if (pct_hospital < 100) {
+ else if (pct_hospital < 100)
         lang_text_draw_centered(57, pct_hospital / 10 + 11, 440, 172, 160, FONT_NORMAL_GREEN);
-    } else {
+ else {
         lang_text_draw_centered(57, 21, 440, 172, 160, FONT_NORMAL_GREEN);
     }
 

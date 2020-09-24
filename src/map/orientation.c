@@ -31,9 +31,9 @@ static void determine_leftmost_tile(void)
             map_property_clear_draw_tile(grid_offset);
             int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size - 1 : 0;
             int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size - 1 : 0;
-            if (map_property_is_multi_tile_xy(grid_offset, dx, dy)) {
+            if (map_property_is_multi_tile_xy(grid_offset, dx, dy))
                 map_property_mark_draw_tile(grid_offset);
-            }
+
         }
     }
 }
@@ -98,9 +98,9 @@ int map_orientation_for_gatehouse(int x, int y)
         num_road_tiles_within++;
     }
 
-    if (num_road_tiles_within != 2 && num_road_tiles_within != 4) {
+    if (num_road_tiles_within != 2 && num_road_tiles_within != 4)
         return 0;
-    }
+
     if (num_road_tiles_within == 2) {
         if (road_tiles_within_flags == 6 || road_tiles_within_flags == 9) { // diagonals
             return 0;
@@ -119,42 +119,42 @@ int map_orientation_for_gatehouse(int x, int y)
     int num_road_tiles_bottom = 0;
     int num_road_tiles_left = 0;
     // top
-    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD))
         num_road_tiles_top++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_ROAD)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_ROAD))
         num_road_tiles_top++;
-    }
+
     // bottom
-    if (map_terrain_is(grid_offset + map_grid_delta(0, 2), TERRAIN_ROAD)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(0, 2), TERRAIN_ROAD))
         num_road_tiles_bottom++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(1, 2), TERRAIN_ROAD)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(1, 2), TERRAIN_ROAD))
         num_road_tiles_bottom++;
-    }
+
     // left
-    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_ROAD)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_ROAD))
         num_road_tiles_left++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_ROAD)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_ROAD))
         num_road_tiles_left++;
-    }
+
     // right
-    if (map_terrain_is(grid_offset + map_grid_delta(2, 0), TERRAIN_ROAD)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(2, 0), TERRAIN_ROAD))
         num_road_tiles_right++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(2, 1), TERRAIN_ROAD)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(2, 1), TERRAIN_ROAD))
         num_road_tiles_right++;
-    }
+
     // determine direction
     if (num_road_tiles_top || num_road_tiles_bottom) {
-        if (num_road_tiles_left || num_road_tiles_right) {
+        if (num_road_tiles_left || num_road_tiles_right)
             return 0;
-        }
+
         return 1;
-    } else if (num_road_tiles_left || num_road_tiles_right) {
+    } else if (num_road_tiles_left || num_road_tiles_right)
         return 2;
-    }
+
     return 0;
 }
 
@@ -171,64 +171,64 @@ int map_orientation_for_triumphal_arch(int x, int y)
 
     int grid_offset = map_grid_offset(x, y);
     // check corner tiles
-    if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+    if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(2, 0), TERRAIN_NOT_CLEAR)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(2, 0), TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(0, 2), TERRAIN_NOT_CLEAR)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(0, 2), TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
-    if (map_terrain_is(grid_offset + map_grid_delta(2, 2), TERRAIN_NOT_CLEAR)) {
+
+    if (map_terrain_is(grid_offset + map_grid_delta(2, 2), TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     // road tiles top to bottom
     int top_offset = grid_offset + map_grid_delta(1, 0);
-    if ((map_terrain_get(top_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
+    if ((map_terrain_get(top_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_top_bottom++;
-    } else if (map_terrain_is(top_offset, TERRAIN_NOT_CLEAR)) {
+ else if (map_terrain_is(top_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     int bottom_offset = grid_offset + map_grid_delta(1, 2);
-    if ((map_terrain_get(bottom_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
+    if ((map_terrain_get(bottom_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_top_bottom++;
-    } else if (map_terrain_is(bottom_offset, TERRAIN_NOT_CLEAR)) {
+ else if (map_terrain_is(bottom_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     // road tiles left to right
     int left_offset = grid_offset + map_grid_delta(0, 1);
-    if ((map_terrain_get(left_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
+    if ((map_terrain_get(left_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_left_right++;
-    } else if (map_terrain_is(left_offset, TERRAIN_NOT_CLEAR)) {
+ else if (map_terrain_is(left_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     int right_offset = grid_offset + map_grid_delta(2, 1);
-    if ((map_terrain_get(right_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
+    if ((map_terrain_get(right_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_left_right++;
-    } else if (map_terrain_is(right_offset, TERRAIN_NOT_CLEAR)) {
+ else if (map_terrain_is(right_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     // center tile
     int center_offset = grid_offset + map_grid_delta(2, 1);
     if ((map_terrain_get(center_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
         // do nothing
-    } else if (map_terrain_is(center_offset, TERRAIN_NOT_CLEAR)) {
+    } else if (map_terrain_is(center_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
-    }
+
     // judgement time
-    if (num_blocked_tiles) {
+    if (num_blocked_tiles)
         return 0;
-    }
-    if (!num_road_tiles_left_right && !num_road_tiles_top_bottom) {
+
+    if (!num_road_tiles_left_right && !num_road_tiles_top_bottom)
         return 0; // no road: can't determine direction
-    }
-    if (num_road_tiles_top_bottom == 2 && !num_road_tiles_left_right) {
+
+    if (num_road_tiles_top_bottom == 2 && !num_road_tiles_left_right)
         return 1;
-    }
-    if (num_road_tiles_left_right == 2 && !num_road_tiles_top_bottom) {
+
+    if (num_road_tiles_left_right == 2 && !num_road_tiles_top_bottom)
         return 2;
-    }
+
     return 0;
 }
 
@@ -238,23 +238,23 @@ void map_orientation_update_buildings(void)
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED) {
+        if (b->state == BUILDING_STATE_UNUSED)
             continue;
-        }
+
         int image_id;
         int image_offset;
         switch (b->type) {
             case BUILDING_GATEHOUSE:
                 if (b->subtype.orientation == 1) {
-                    if (orientation_is_top_bottom) {
+                    if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
-                    } else {
+ else {
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
                     }
                 } else {
-                    if (orientation_is_top_bottom) {
+                    if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
-                    } else {
+ else {
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                     }
                 }
@@ -263,15 +263,15 @@ void map_orientation_update_buildings(void)
                 break;
             case BUILDING_TRIUMPHAL_ARCH:
                 if (b->subtype.orientation == 1) {
-                    if (orientation_is_top_bottom) {
+                    if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
-                    } else {
+ else {
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
                     }
                 } else {
-                    if (orientation_is_top_bottom) {
+                    if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
-                    } else {
+ else {
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                     }
                 }

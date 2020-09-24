@@ -29,9 +29,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_main_menu_show(0);
         return;
     }
-    if (h->escape_pressed) {
+    if (h->escape_pressed)
         hotkey_handle_escape();
-    }
+
 }
 void window_logo_show(int show_patch_message)
 {
@@ -43,11 +43,11 @@ void window_logo_show(int show_patch_message)
     };
     init(); // play menu track
     window_show(&window);
-    if (show_patch_message == MESSAGE_MISSING_PATCH) {
+    if (show_patch_message == MESSAGE_MISSING_PATCH)
         window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE);
-    } else if (show_patch_message == MESSAGE_MISSING_FONTS) {
+    else if (show_patch_message == MESSAGE_MISSING_FONTS)
         window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE);
-    }
+
     if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
 //        window_intro_video_show();
     }

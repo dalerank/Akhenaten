@@ -347,9 +347,9 @@ void scenario_load_state(scenario_data_buffers *data) {
         scenario.win_criteria.survival_time.enabled = data->win_criteria->read_i32(); // 4
         scenario.win_criteria.survival_time.years = data->win_criteria->read_i32(); // 4
         scenario.earthquake.severity = data->win_criteria->read_i32(); // 4
-        if (GAME_ENV == ENGINE_ENV_C3) {
+        if (GAME_ENV == ENGINE_ENV_C3)
             scenario.earthquake.year = data->win_criteria->read_i32(); // 4
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+ else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             data->win_criteria->skip(2); // 2
         scenario.win_criteria.population.enabled = data->win_criteria->read_i32(); // 4
         scenario.win_criteria.population.goal = data->win_criteria->read_i32(); // 4

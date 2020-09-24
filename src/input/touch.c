@@ -63,9 +63,9 @@ int get_total_active_touches(void)
 {
     int active_touches = 0;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        if (data.finger[i].in_use) {
+        if (data.finger[i].in_use)
             ++active_touches;
-        }
+
     }
     return active_touches;
 }
@@ -91,9 +91,9 @@ int touch_was_double_click(const touch *t)
 int touch_is_scroll(void)
 {
     int num_touches = get_total_active_touches();
-    if (num_touches > 2) {
+    if (num_touches > 2)
         return 0;
-    }
+
     const touch *first = get_earliest_touch();
     if (num_touches == 2) {
         const touch *last = get_latest_touch();
@@ -106,21 +106,21 @@ int touch_get_scroll(void)
 {
     const touch *first = get_earliest_touch();
     const touch *last = get_latest_touch();
-    if (!touch_is_scroll() || !first->has_moved || !last->has_moved) {
+    if (!touch_is_scroll() || !first->has_moved || !last->has_moved)
         return SCROLL_NONE;
-    }
-    if (!data.last_scroll_position) {
+
+    if (!data.last_scroll_position)
         data.last_scroll_position = first->start_point.y;
-    }
+
     int delta_x = abs((first->current_point.x - first->start_point.x) - (last->current_point.x - last->start_point.x));
     int delta_y = abs((first->current_point.y - first->start_point.y) - (last->current_point.y - last->start_point.y));
-    if (delta_x > SCROLL_FINGER_RADIUS || delta_y > SCROLL_FINGER_RADIUS) {
+    if (delta_x > SCROLL_FINGER_RADIUS || delta_y > SCROLL_FINGER_RADIUS)
         return SCROLL_NONE;
-    }
+
     int delta = first->current_point.y - data.last_scroll_position;
-    if (abs(delta) < NOT_MOVING_RANGE * 2) {
+    if (abs(delta) < NOT_MOVING_RANGE * 2)
         return SCROLL_NONE;
-    }
+
     data.last_scroll_position = first->current_point.y;
     return (delta > 0) ? SCROLL_UP : SCROLL_DOWN;
 }
@@ -129,9 +129,9 @@ static int get_unused_touch_index(void)
 {
     int i = 0;
     while (i < MAX_ACTIVE_TOUCHES) {
-        if (!data.finger[i].in_use) {
+        if (!data.finger[i].in_use)
             break;
-        }
+
         ++i;
     }
     return i;
@@ -169,9 +169,9 @@ void touch_move(int index, touch_coords current_coords, time_millis current_time
     touch *t = &data.finger[index];
     t->last_change_time = current_time;
     t->current_point = current_coords;
-    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE)) {
+    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE))
         t->has_moved = 1;
-    }
+
 }
 
 void touch_end(int index, time_millis current_time)
@@ -181,23 +181,23 @@ void touch_end(int index, time_millis current_time)
     touch *t = &data.finger[index];
     t->has_ended = 1;
     // This is needed because sometimes SDL waits for up to three frames to register the touch end
-    if (current_time - t->last_change_time < MILLIS_TOLERANCE_BETWEEN_LAST_MOVE_AND_TOUCH_END) {
+    if (current_time - t->last_change_time < MILLIS_TOLERANCE_BETWEEN_LAST_MOVE_AND_TOUCH_END)
         t->frame_movement = t->last_movement;
-    }
+
 }
 
 void reset_touches(int reset_old_touch)
 {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         touch *t = &data.finger[i];
-        if (!t->in_use) {
+        if (!t->in_use)
             continue;
-        }
+
         if (t->has_ended) {
             t->in_use = 0;
-            if (!reset_old_touch) {
+            if (!reset_old_touch)
                 data.old_touch = *t;
-            } else {
+ else {
                 data.old_touch.last_change_time = 0;
             }
             t->has_started = 0;
@@ -207,9 +207,9 @@ void reset_touches(int reset_old_touch)
         } else {
             t->frame_movement.x = t->current_point.x - t->previous_frame_point.x;
             t->frame_movement.y = t->current_point.y - t->previous_frame_point.y;
-            if (t->frame_movement.x != 0 || t->frame_movement.y != 0) {
+            if (t->frame_movement.x != 0 || t->frame_movement.y != 0)
                 t->last_movement = t->frame_movement;
-            }
+
             t->previous_frame_point = t->current_point;
             t->has_started = start_delayed(t);
         }
@@ -219,9 +219,9 @@ void reset_touches(int reset_old_touch)
 static int any_touch_went_up(void)
 {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        if (data.finger[i].has_ended) {
+        if (data.finger[i].has_ended)
             return 1;
-        }
+
     }
     return 0;
 }
@@ -294,9 +294,9 @@ int touch_to_mouse(void)
             mouse_reset_scroll();
             mouse_reset_button_state();
             return 1;
-        } else if (data.touchpad_mode_click_type != EMULATED_MOUSE_CLICK_NONE) {
+        } else if (data.touchpad_mode_click_type != EMULATED_MOUSE_CLICK_NONE)
             return handle_emulated_mouse_clicks();
-        }
+
         return 0;
     }
     switch (data.mode) {

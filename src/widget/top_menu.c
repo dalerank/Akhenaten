@@ -208,9 +208,9 @@ static void refresh_background(void)
             image_draw(image_base + i % 8, i * block_width, 0);
 
         // black panels for funds/pop/time
-        if (s_width < 800) {
+        if (s_width < 800)
             image_draw(image_base + 14, 336, 0);
-        } else if (s_width < 1024) {
+ else if (s_width < 1024) {
             image_draw(image_base + 14, 336, 0);
             image_draw(image_base + 14, 456, 0);
             image_draw(image_base + 14, 648, 0);
@@ -268,6 +268,7 @@ void widget_top_menu_draw(int force)
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             //
         }
+
     } else if (s_width < 1024) {
         if (GAME_ENV == ENGINE_ENV_C3) {
             data.offset_funds = 338; // +2
@@ -316,18 +317,18 @@ void widget_top_menu_draw(int force)
 
 static int get_info_id(int mouse_x, int mouse_y)
 {
-    if (mouse_y < 4 || mouse_y >= 18) {
+    if (mouse_y < 4 || mouse_y >= 18)
         return INFO_NONE;
-    }
-    if (mouse_x > data.offset_funds && mouse_x < data.offset_funds + 128) {
+
+    if (mouse_x > data.offset_funds && mouse_x < data.offset_funds + 128)
         return INFO_FUNDS;
-    }
-    if (mouse_x > data.offset_population && mouse_x < data.offset_population + 128) {
+
+    if (mouse_x > data.offset_population && mouse_x < data.offset_population + 128)
         return INFO_POPULATION;
-    }
-    if (mouse_x > data.offset_date && mouse_x < data.offset_date + 128) {
+
+    if (mouse_x > data.offset_date && mouse_x < data.offset_date + 128)
         return INFO_DATE;
-    }
+
     return INFO_NONE;
 }
 
@@ -354,16 +355,16 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h)
 }
 static int handle_right_click(int type)
 {
-    if (type == INFO_NONE) {
+    if (type == INFO_NONE)
         return 0;
-    }
-    if (type == INFO_FUNDS) {
+
+    if (type == INFO_FUNDS)
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, window_city_draw_all);
-    } else if (type == INFO_POPULATION) {
+ else if (type == INFO_POPULATION)
         window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, window_city_draw_all);
-    } else if (type == INFO_DATE) {
+ else if (type == INFO_DATE)
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, window_city_draw_all);
-    }
+
     return 1;
 }
 static int handle_mouse_menu(const mouse *m)
@@ -374,32 +375,32 @@ static int handle_mouse_menu(const mouse *m)
         top_menu_window_show();
         return 1;
     }
-    if (m->right.went_up) {
+    if (m->right.went_up)
         return handle_right_click(get_info_id(m->x, m->y));
-    }
+
     return 0;
 }
 
 int widget_top_menu_handle_input(const mouse *m, const hotkeys *h)
 {
-    if (widget_city_has_input()) {
+    if (widget_city_has_input())
         return 0;
-    }
-    if (data.open_sub_menu) {
+
+    if (data.open_sub_menu)
         return handle_input_submenu(m, h);
-    } else {
+ else {
         return handle_mouse_menu(m);
     }
 }
 int widget_top_menu_get_tooltip_text(tooltip_context *c)
 {
-    if (data.focus_menu_id) {
+    if (data.focus_menu_id)
         return 49 + data.focus_menu_id;
-    }
+
     int button_id = get_info_id(c->mouse_x, c->mouse_y);
-    if (button_id) {
+    if (button_id)
         return 59 + button_id;
-    }
+
     return 0;
 }
 
@@ -452,9 +453,9 @@ static void menu_file_delete_game(int param)
 }
 static void menu_file_confirm_exit(int accepted)
 {
-    if (accepted) {
+    if (accepted)
         system_exit();
-    } else {
+ else {
         window_city_show();
     }
 }

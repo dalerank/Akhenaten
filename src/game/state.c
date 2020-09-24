@@ -55,9 +55,9 @@ void game_state_toggle_overlay(void)
 }
 void game_state_set_overlay(int overlay)
 {
-    if (overlay == OVERLAY_NONE) {
+    if (overlay == OVERLAY_NONE)
         data.previous_overlay = data.current_overlay;
-    } else {
+ else {
         data.previous_overlay = OVERLAY_NONE;
     }
     data.current_overlay = overlay;

@@ -34,16 +34,16 @@ static void reset_input(void)
 static void increase_queue_index(void)
 {
     data.queue_index++;
-    if (data.queue_index >= MAX_QUEUE) {
+    if (data.queue_index >= MAX_QUEUE)
         data.queue_index = 0;
-    }
+
 }
 static void decrease_queue_index(void)
 {
     data.queue_index--;
-    if (data.queue_index < 0) {
+    if (data.queue_index < 0)
         data.queue_index = MAX_QUEUE - 1;
-    }
+
 }
 
 void window_invalidate(void)
@@ -91,9 +91,9 @@ void window_go_back(void)
 }
 static void update_input_before(void)
 {
-    if (!touch_to_mouse()) {
+    if (!touch_to_mouse())
         mouse_determine_button_state();  // touch overrides mouse
-    }
+
     hotkey_handle_global_keys();
 }
 static void update_input_after(void)
@@ -131,12 +131,12 @@ void window_draw_underlying_window(void)
         ++data.underlying_windows_redrawing;
         decrease_queue_index();
         window_type *window_behind = &data.window_queue[data.queue_index];
-        if (window_behind->draw_background) {
+        if (window_behind->draw_background)
             window_behind->draw_background();
-        }
-        if (window_behind->draw_foreground) {
+
+        if (window_behind->draw_foreground)
             window_behind->draw_foreground();
-        }
+
         increase_queue_index();
         --data.underlying_windows_redrawing;
     }

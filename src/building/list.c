@@ -30,9 +30,9 @@ void building_list_small_clear(void)
 void building_list_small_add(int building_id)
 {
     data.small.items[data.small.size++] = building_id;
-    if (data.small.size >= MAX_SMALL) {
+    if (data.small.size >= MAX_SMALL)
         data.small.size = MAX_SMALL - 1;
-    }
+
 }
 
 int building_list_small_size(void)
@@ -48,16 +48,16 @@ const int *building_list_small_items(void)
 void building_list_large_clear(int clear_entries)
 {
     data.large.size = 0;
-    if (clear_entries) {
+    if (clear_entries)
         memset(data.large.items, 0, MAX_LARGE * sizeof(int));
-    }
+
 }
 
 void building_list_large_add(int building_id)
 {
-    if (data.large.size < MAX_LARGE) {
+    if (data.large.size < MAX_LARGE)
         data.large.items[data.large.size++] = building_id;
-    }
+
 }
 
 int building_list_large_size(void)
@@ -80,9 +80,9 @@ void building_list_burning_add(int building_id)
 {
     data.burning.total++;
     data.burning.items[data.burning.size++] = building_id;
-    if (data.burning.size >= MAX_BURNING) {
+    if (data.burning.size >= MAX_BURNING)
         data.burning.size = MAX_BURNING - 1;
-    }
+
 }
 
 int building_list_burning_size(void)

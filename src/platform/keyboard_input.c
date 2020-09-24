@@ -388,18 +388,18 @@ static SDL_Scancode get_scancode_from_key(int key) {
 
 static int get_modifier(int mod) {
     int key_mod = KEY_MOD_NONE;
-    if (mod & KMOD_SHIFT) {
+    if (mod & KMOD_SHIFT)
         key_mod |= KEY_MOD_SHIFT;
-    }
-    if (mod & KMOD_CTRL) {
+
+    if (mod & KMOD_CTRL)
         key_mod |= KEY_MOD_CTRL;
-    }
-    if (mod & KMOD_ALT) {
+
+    if (mod & KMOD_ALT)
         key_mod |= KEY_MOD_ALT;
-    }
-    if (mod & KMOD_GUI) {
+
+    if (mod & KMOD_GUI)
         key_mod |= KEY_MOD_GUI;
-    }
+
     return (int)key_mod;
 }
 
@@ -409,9 +409,9 @@ void platform_handle_key_down(SDL_KeyboardEvent *event) {
         case SDLK_RETURN:
         case SDLK_KP_ENTER:
             // only send enter if no modifier is also down
-            if ((event->keysym.mod & (KMOD_CTRL | KMOD_ALT | KMOD_GUI)) == 0) {
+            if ((event->keysym.mod & (KMOD_CTRL | KMOD_ALT | KMOD_GUI)) == 0)
                 keyboard_return();
-            }
+
             break;
         case SDLK_BACKSPACE:
             keyboard_backspace();
@@ -480,13 +480,13 @@ void platform_handle_text(SDL_TextInputEvent *event) {
 
 int system_keyboard_key_for_symbol(const char *name) {
     SDL_Keycode keycode = SDL_GetKeyFromName(name);
-    if (keycode == SDLK_UNKNOWN) {
+    if (keycode == SDLK_UNKNOWN)
         return KEY_NONE;
-    }
+
     SDL_Scancode scancode = SDL_GetScancodeFromKey(keycode);
-    if (scancode == SDL_SCANCODE_UNKNOWN) {
+    if (scancode == SDL_SCANCODE_UNKNOWN)
         return KEY_NONE;
-    }
+
     return get_key_from_scancode(scancode);
 }
 

@@ -51,9 +51,9 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
                 break;
         }
         int direction = calc_general_direction(x_end, y_end, x_start, y_start);
-        if (direction == DIR_8_NONE) {
+        if (direction == DIR_8_NONE)
             return 1; // destination reached
-        }
+
         int routed = 0;
         for (int i = 0; i < 4; i++) {
             int index = direction_indices[direction][i];
@@ -107,12 +107,12 @@ int building_construction_place_wall(int measure_only, int x_start, int y_start,
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |
         TERRAIN_SHRUB | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
         TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask)) {
+    if (map_terrain_is(start_offset, forbidden_terrain_mask))
         return 0;
-    }
-    if (map_terrain_is(end_offset, forbidden_terrain_mask)) {
+
+    if (map_terrain_is(end_offset, forbidden_terrain_mask))
         return 0;
-    }
+
     int items_placed = 0;
     if (place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_WALL, &items_placed)) {
         if (!measure_only) {
@@ -132,26 +132,26 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     int blocked = 0;
     int grid_offset = map_grid_offset(x_start, y_start);
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_property_is_plaza_or_earthquake(grid_offset))
             blocked = 1;
-        }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         blocked = 1;
-    }
+
     grid_offset = map_grid_offset(x_end, y_end);
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_property_is_plaza_or_earthquake(grid_offset))
             blocked = 1;
-        }
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         blocked = 1;
-    }
-    if (blocked) {
+
+    if (blocked)
         return 0;
-    }
-    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, x_start, y_start)) {
+
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, x_start, y_start))
         return 0;
-    }
+
     int num_items;
     place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_AQUEDUCT, &num_items);
     *cost = item_cost * num_items;

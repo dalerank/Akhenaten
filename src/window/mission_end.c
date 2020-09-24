@@ -43,12 +43,12 @@ static void draw_lost(void)
 static int get_max(int value1, int value2, int value3)
 {
     int max = value1;
-    if (value2 > max) {
+    if (value2 > max)
         max = value2;
-    }
-    if (value3 > max) {
+
+    if (value3 > max)
         max = value3;
-    }
+
     return max;
 }
 
@@ -59,9 +59,9 @@ static void draw_won(void)
 
     inner_panel_draw(64, 184, 32, 7);
 
-    if (scenario_is_custom()) {
+    if (scenario_is_custom())
         lang_text_draw_multiline(147, 20, 80, 192, 488, FONT_NORMAL_WHITE);
-    } else {
+ else {
         lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 488, FONT_NORMAL_WHITE);
     }
 
@@ -102,9 +102,9 @@ static void draw_background(void)
 {
     window_draw_underlying_window();    
     graphics_in_dialog();
-    if (city_victory_state() == VICTORY_STATE_WON) {
+    if (city_victory_state() == VICTORY_STATE_WON)
         draw_won();
-    } else {
+ else {
         draw_lost();
     }
     graphics_reset_dialog();
@@ -164,9 +164,9 @@ static void button_fired(int param1, int param2)
     sound_speech_stop();
     city_victory_stop_governing();
     game_undo_disable();
-    if (scenario_is_custom()) {
+    if (scenario_is_custom())
         window_main_menu_show(1);
-    } else {
+ else {
         window_mission_selection_show();
     }
 }
@@ -197,9 +197,9 @@ void window_mission_end_show_won(void)
         // Won campaign
         window_victory_video_show("smk/win_game.smk", 400, 292, show_intermezzo);
     } else {
-        if (setting_victory_video()) {
+        if (setting_victory_video())
             window_victory_video_show("smk/victory_balcony.smk", 400, 292, show_intermezzo);
-        } else {
+ else {
             window_victory_video_show("smk/victory_senate.smk", 400, 292, show_intermezzo);
         }
     }

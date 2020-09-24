@@ -91,9 +91,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         button_save(0, 0);
-    }
+
 }
 
 static void set_year(int value)
@@ -128,9 +128,9 @@ static void button_amount(int param1, int param2)
 static void set_resource(int value)
 {
     data.request.resource = value;
-    if (data.request.amount > 999) {
+    if (data.request.amount > 999)
         data.request.amount = 999;
-    }
+
 }
 
 static void button_resource(int param1, int param2)

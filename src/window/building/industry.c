@@ -26,23 +26,23 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
-    } else if (city_resource_is_mothballed(resource)) {
+ else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 70, group_id, 4);
-    } else if (b->data.industry.curse_days_left > 4) {
+ else if (b->data.industry.curse_days_left > 4)
         window_building_draw_description_at(c, 70, group_id, 11);
-    } else if (b->num_workers <= 0) {
+ else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 70, group_id, 5);
-    } else if (c->worker_percentage >= 100) {
+ else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 70, group_id, 6);
-    } else if (c->worker_percentage >= 75) {
+ else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 70, group_id, 7);
-    } else if (c->worker_percentage >= 50) {
+ else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 70, group_id, 8);
-    } else if (c->worker_percentage >= 25) {
+ else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 70, group_id, 9);
-    } else {
+ else {
         window_building_draw_description_at(c, 70, group_id, 10);
     }
 
@@ -96,21 +96,21 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
     width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
-    } else if (city_resource_is_mothballed(resource)) {
+ else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 70, group_id, 4);
-    } else if (b->num_workers <= 0) {
+ else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 70, group_id, 5);
-    } else if (c->worker_percentage >= 100) {
+ else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 70, group_id, 6);
-    } else if (c->worker_percentage >= 75) {
+ else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 70, group_id, 7);
-    } else if (c->worker_percentage >= 50) {
+ else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 70, group_id, 8);
-    } else if (c->worker_percentage >= 25) {
+ else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 70, group_id, 9);
-    } else {
+ else {
         window_building_draw_description_at(c, 70, group_id, 10);
     }
 
@@ -156,29 +156,29 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
 
     image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32, c->y_offset + 56);
     width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
-    if (b->loads_stored < 1) {
+    if (b->loads_stored < 1)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
-    } else {
+ else {
         lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
     }
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
-    } else if (city_resource_is_mothballed(resource)) {
+ else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 86, group_id, 4);
-    } else if (b->num_workers <= 0) {
+ else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
-    } else if (b->loads_stored <= 0) {
+ else if (b->loads_stored <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
-    } else if (c->worker_percentage >= 100) {
+ else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);
-    } else if (c->worker_percentage >= 75) {
+ else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 86, group_id, 7);
-    } else if (c->worker_percentage >= 50) {
+ else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 86, group_id, 8);
-    } else if (c->worker_percentage >= 25) {
+ else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 86, group_id, 9);
-    } else {
+ else {
         window_building_draw_description_at(c, 86, group_id, 10);
     }
 
@@ -220,16 +220,16 @@ void window_building_draw_shipyard(building_info_context *c)
 
     building *b = building_get(c->building_id);
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    } else {
+ else {
         int pct_done = calc_percentage(b->data.industry.progress, 160);
         int width = lang_text_draw(100, 2, c->x_offset + 32, c->y_offset + 56, FONT_NORMAL_BLACK);
         width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         lang_text_draw(100, 3, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
-        if (city_buildings_shipyard_boats_requested()) {
+        if (city_buildings_shipyard_boats_requested())
             lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
-        } else {
+ else {
             lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         }
     }
@@ -250,11 +250,11 @@ void window_building_draw_wharf(building_info_context *c)
 
     building *b = building_get(c->building_id);
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    } else if (!b->data.industry.fishing_boat_id) {
+ else if (!b->data.industry.fishing_boat_id)
         window_building_draw_description(c, 102, 2);
-    } else {
+ else {
         int text_id;
         switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
             case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: text_id = 3; break;

@@ -37,9 +37,9 @@ void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_
 int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font)
 {
     int amount_offset = 1;
-    if (amount == 1 || amount == -1) {
+    if (amount == 1 || amount == -1)
         amount_offset = 0;
-    }
+
     int desc_offset_x;
     if (amount >= 0) {
         desc_offset_x = text_draw_number(amount, ' ', " ",
@@ -83,9 +83,9 @@ void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int 
     if (total_width > box_width) {
         // take the overflow and divide it by two since we have two places to correct: after month, and after year
         negative_padding = (box_width - total_width) / 2;
-        if (negative_padding < -2 * (space_width - 2)) {
+        if (negative_padding < -2 * (space_width - 2))
             negative_padding = -2 * (space_width - 2);
-        }
+
     }
 
     int width = negative_padding + lang_text_draw_colored(25, month, x_offset, y_offset, font, color);

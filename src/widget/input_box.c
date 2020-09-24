@@ -61,13 +61,13 @@ void input_box_draw(const input_box *box)
 
 int input_box_handle_mouse(const mouse *m, const input_box *box)
 {
-    if (!m->left.went_up) {
+    if (!m->left.went_up)
         return 0;
-    }
+
     int selected = is_mouse_inside_input(m, box);
-    if (selected) {
+    if (selected)
         system_keyboard_show(box->text, box->max_length);
-    } else {
+ else {
         system_keyboard_hide();
     }
     return selected;

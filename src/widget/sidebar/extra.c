@@ -53,9 +53,9 @@ static struct {
 
 static int  calculate_displayable_info(int  info_to_display, int available_height)
 {
-    if (data.is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO) || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE) {
+    if (data.is_collapsed || !config_get(CONFIG_UI_SIDEBAR_INFO) || info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE)
         return SIDEBAR_EXTRA_DISPLAY_NONE;
-    }
+
     int  result = SIDEBAR_EXTRA_DISPLAY_NONE;
     if (available_height >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
@@ -83,19 +83,19 @@ static int  calculate_displayable_info(int  info_to_display, int available_heigh
 }
 static int calculate_extra_info_height(void)
 {
-    if (data.info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE) {
+    if (data.info_to_display == SIDEBAR_EXTRA_DISPLAY_NONE)
         return 0;
-    }
+
     int height = 0;
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
         height += EXTRA_INFO_HEIGHT_GAME_SPEED;
-    }
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
+
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT)
         height += EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
-    }
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS)
         height += EXTRA_INFO_HEIGHT_RATINGS;
-    }
+
     return height;
 }
 
@@ -109,27 +109,27 @@ static void set_extra_info_objectives(void)
 
     if (scenario_is_open_play())
             return;
-    if (scenario_criteria_culture_enabled()) {
+    if (scenario_criteria_culture_enabled())
         data.culture.target = scenario_criteria_culture();
-    }
-    if (scenario_criteria_prosperity_enabled()) {
+
+    if (scenario_criteria_prosperity_enabled())
         data.prosperity.target = scenario_criteria_prosperity();
-    }
-    if (scenario_criteria_peace_enabled()) {
+
+    if (scenario_criteria_peace_enabled())
         data.peace.target = scenario_criteria_peace();
-    }
-    if (scenario_criteria_favor_enabled()) {
+
+    if (scenario_criteria_favor_enabled())
         data.favor.target = scenario_criteria_favor();
-    }
-    if (scenario_criteria_population_enabled()) {
+
+    if (scenario_criteria_population_enabled())
         data.population.target = scenario_criteria_population();
-    }
+
 }
 static int update_extra_info_value(int value, int *field)
 {
-    if (value == *field) {
+    if (value == *field)
         return 0;
-    } else {
+ else {
         *field = value;
         return 1;
     }
@@ -137,9 +137,9 @@ static int update_extra_info_value(int value, int *field)
 static int update_extra_info(int is_background)
 {
     int changed = 0;
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
         changed |= update_extra_info_value(setting_game_speed(), &data.game_speed);
-    }
+
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.unemployment_percentage);
         changed |= update_extra_info_value(
@@ -148,9 +148,9 @@ static int update_extra_info(int is_background)
                    );
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
-        if (is_background) {
+        if (is_background)
             set_extra_info_objectives();
-        }
+
         changed |= update_extra_info_value(city_rating_culture(), &data.culture.value);
         changed |= update_extra_info_value(city_rating_prosperity(), &data.prosperity.value);
         changed |= update_extra_info_value(city_rating_peace(), &data.peace.value);
@@ -253,17 +253,17 @@ void sidebar_extra_draw_foreground(void)
 }
 int sidebar_extra_handle_mouse(const mouse *m)
 {
-    if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
+    if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED))
         return 0;
-    }
+
     return arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0);
 }
 
 static void button_game_speed(int is_down, int param2)
 {
-    if (is_down) {
+    if (is_down)
         setting_decrease_game_speed();
-    } else {
+ else {
         setting_increase_game_speed();
     }
 }

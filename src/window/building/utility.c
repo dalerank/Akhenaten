@@ -56,25 +56,25 @@ void window_building_draw_engineers_post(building_info_context *c)
 
     building *b = building_get(c->building_id);
 
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    } else if (!b->num_workers) {
+ else if (!b->num_workers)
         window_building_draw_description(c, 104, 9);
-    } else {
-        if (b->figure_id) {
+ else {
+        if (b->figure_id)
             window_building_draw_description(c, 104, 2);
-        } else {
+ else {
             window_building_draw_description(c, 104, 3);
         }
-        if (c->worker_percentage >= 100) {
+        if (c->worker_percentage >= 100)
             window_building_draw_description_at(c, 72, 104, 4);
-        } else if (c->worker_percentage >= 75) {
+ else if (c->worker_percentage >= 75)
             window_building_draw_description_at(c, 72, 104, 5);
-        } else if (c->worker_percentage >= 50) {
+ else if (c->worker_percentage >= 50)
             window_building_draw_description_at(c, 72, 104, 6);
-        } else if (c->worker_percentage >= 25) {
+ else if (c->worker_percentage >= 25)
             window_building_draw_description_at(c, 72, 104, 7);
-        } else {
+ else {
             window_building_draw_description_at(c, 72, 104, 8);
         }
     }
@@ -91,25 +91,25 @@ void window_building_draw_prefect(building_info_context *c)
     lang_text_draw_centered(88, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
-    if (!c->has_road_access) {
+    if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
+ else if (b->num_workers <= 0)
         window_building_draw_description(c, 88, 9);
-    } else {
-        if (b->figure_id) {
+ else {
+        if (b->figure_id)
             window_building_draw_description(c, 88, 2);
-        } else {
+ else {
             window_building_draw_description(c, 88, 3);
         }
-        if (c->worker_percentage >= 100) {
+        if (c->worker_percentage >= 100)
             window_building_draw_description_at(c, 72, 88, 4);
-        } else if (c->worker_percentage >= 75) {
+ else if (c->worker_percentage >= 75)
             window_building_draw_description_at(c, 72, 88, 5);
-        } else if (c->worker_percentage >= 50) {
+ else if (c->worker_percentage >= 50)
             window_building_draw_description_at(c, 72, 88, 6);
-        } else if (c->worker_percentage >= 25) {
+ else if (c->worker_percentage >= 25)
             window_building_draw_description_at(c, 72, 88, 7);
-        } else {
+ else {
             window_building_draw_description_at(c, 72, 88, 8);
         }
     }
@@ -166,9 +166,9 @@ void window_building_draw_roadblock_orders_foreground(building_info_context* c)
        // lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 50 + 32 * i, 210, 22, data.figure_focus_button_id == i + 1);
         int state = building_roadblock_get_permission(i+1, b);
-        if (state) {
+        if (state)
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_WHITE);
-        }
+
         else {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_RED);
         }
@@ -228,14 +228,14 @@ void window_building_draw_fountain(building_info_context *c)
     int text_id;
     building *b = building_get(c->building_id);
     if (b->has_water_access) {
-        if (b->num_workers > 0) {
+        if (b->num_workers > 0)
             text_id = 1;
-        } else {
+ else {
             text_id = 2;
         }
-    } else if (c->has_reservoir_pipes) {
+    } else if (c->has_reservoir_pipes)
         text_id = 2;
-    } else {
+ else {
         text_id = 3;
     }
     window_building_draw_description(c, 108, text_id);
@@ -258,9 +258,9 @@ void window_building_draw_well(building_info_context *c)
     } else if (well_necessity == WELL_UNNECESSARY_NO_HOUSES) { // no houses around
         text_id = 3;
     }
-    if (text_id) {
+    if (text_id)
         window_building_draw_description_at(c, 16 * c->height_blocks - 160, 109, text_id);
-    }
+
 }
 
 void window_building_draw_mission_post(building_info_context *c)
@@ -300,9 +300,9 @@ void window_building_draw_native_crops(building_info_context *c)
 
 void toggle_figure_state(int index, int param2) {
     building* b = building_get(data.building_id);
-    if (b->type == BUILDING_ROADBLOCK) {
+    if (b->type == BUILDING_ROADBLOCK)
         building_roadblock_set_permission(index, b);
-    }
+
     window_invalidate();
 
 }

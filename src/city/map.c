@@ -55,9 +55,9 @@ int city_map_set_exit_flag(int x, int y)
 int city_map_road_network_index(int network_id)
 {
     for (int n = 0; n < 10; n++) {
-        if (city_data.map.largest_road_networks[n].id == network_id) {
+        if (city_data.map.largest_road_networks[n].id == network_id)
             return n;
-        }
+
     }
     return 11;
 }

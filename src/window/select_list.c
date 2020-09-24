@@ -103,9 +103,9 @@ static int items_in_first_list(void)
 static void draw_item(int item_id, int x, int y, int selected)
 {
     color_t color = selected ? COLOR_FONT_BLUE : COLOR_BLACK;
-    if (data.mode == MODE_GROUP) {
+    if (data.mode == MODE_GROUP)
         lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
-    } else {
+ else {
         text_draw_centered(data.items[item_id], data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
     }
 }
@@ -137,24 +137,24 @@ static void handle_input(const mouse *m, const hotkeys *h)
             return;
         int second_id = 0;
         generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
-        if (second_id > 0) {
+        if (second_id > 0)
             data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;
-        }
+
     } else {
         if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, data.num_items, &data.focus_button_id))
             return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_go_back();
-    }
+
 }
 
 void select_item(int id, int list_id)
 {
     window_go_back();
-    if (list_id == 0) {
+    if (list_id == 0)
         data.callback(id);
-    } else {
+ else {
         data.callback(id + items_in_first_list());
     }
 }

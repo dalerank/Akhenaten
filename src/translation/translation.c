@@ -17,12 +17,12 @@ static struct {
 static void set_strings(const translation_string *strings, int num_strings, int is_default) {
     for (int i = 0; i < num_strings; i++) {
         const translation_string *string = &strings[i];
-        if (data.strings[string->key]) {
+        if (data.strings[string->key])
             continue;
-        }
-        if (is_default) {
+
+        if (is_default)
             log_info("Translation key not found:", string->string, string->key);
-        }
+
         int length_left = BUFFER_SIZE - data.buf_index;
         encoding_from_utf8(string->string, &data.buffer[data.buf_index], length_left);
         data.strings[string->key] = &data.buffer[data.buf_index];

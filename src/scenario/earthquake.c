@@ -58,9 +58,9 @@ void scenario_earthquake_init(void) {
 }
 
 static int can_advance_earthquake_to_tile(int x, int y) {
-    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER)) {
+    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
         return 0;
-    } else {
+ else {
         return 1;
     }
 }
@@ -108,9 +108,9 @@ void scenario_earthquake_process(void) {
         if (data.delay >= data.max_delay) {
             data.delay = 0;
             data.duration++;
-            if (data.duration >= data.max_duration) {
+            if (data.duration >= data.max_duration)
                 data.state = EVENT_FINISHED;
-            }
+
             int dx, dy, index;
             switch (random_byte() & 0xf) {
                 case 0:

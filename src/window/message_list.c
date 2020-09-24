@@ -101,9 +101,9 @@ static void draw_messages(int total_messages)
         const city_message *msg = city_message_get(index);
         const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
         int image_offset = 0;
-        if (lang_msg->message_type == MESSAGE_TYPE_DISASTER) {
+        if (lang_msg->message_type == MESSAGE_TYPE_DISASTER)
             image_offset = 2;
-        }
+
         if (msg->is_read) {
             image_draw(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_offset,
                 data.x_text + 12, data.y_text + 6 + 20 * i);
@@ -112,9 +112,9 @@ static void draw_messages(int total_messages)
                 data.x_text + 12, data.y_text + 6 + 20 * i);
         }
         font_t font = FONT_NORMAL_WHITE;
-        if (data.focus_button_id == i + 1) {
+        if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_RED;
-        }
+
         int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year,
             data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
@@ -132,9 +132,9 @@ static void draw_foreground(void)
     image_buttons_draw(16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1);
 
     int total_messages = city_message_count();
-    if (total_messages > 0) {
+    if (total_messages > 0)
         draw_messages(total_messages);
-    }
+
 
     graphics_reset_dialog();
 }
@@ -147,28 +147,28 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
     int button_id;
     int handled = image_buttons_handle_mouse(m_dialog, 16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1, &button_id);
-    if (button_id) {
+    if (button_id)
         data.focus_button_id = 11;
-    }
+
     handled |= image_buttons_handle_mouse(m_dialog, 16 * data.width_blocks - 38,
         32 + 16 * data.height_blocks - 36, &image_button_close, 1, &button_id);
-    if (button_id) {
+    if (button_id)
         data.focus_button_id = 12;
-    }
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         data.focus_button_id = 13;
-    }
+
     handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
         generic_buttons_messages, MAX_MESSAGES, &button_id);
-    if (!data.focus_button_id) {
+    if (!data.focus_button_id)
         data.focus_button_id = button_id;
-    }
-    if (button_id && old_button_id != button_id) {
+
+    if (button_id && old_button_id != button_id)
         window_invalidate();
-    }
-    if (!handled && input_go_back_requested(m, h)) {
+
+    if (!handled && input_go_back_requested(m, h))
         button_close(0, 0);
-    }
+
 }
 
 static void on_scroll(void)
@@ -213,11 +213,11 @@ static void button_delete(int id_to_delete, int param2)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (data.focus_button_id == 11) {
+    if (data.focus_button_id == 11)
         c->text_id = 1;
-    } else if (data.focus_button_id == 12) {
+ else if (data.focus_button_id == 12)
         c->text_id = 2;
-    } else
+ else
             return;
     c->type = TOOLTIP_BUTTON;
 }

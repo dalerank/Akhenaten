@@ -15,9 +15,9 @@ void figure_indigenous_native_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ANY;
     f->use_cross_country = 0;
     f->max_roam_length = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_image_increase_offset(f, 12);
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -32,9 +32,9 @@ void figure_indigenous_native_action(figure *f) {
                 f->action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
             figure_movement_move_ticks(f, 1);
@@ -80,29 +80,29 @@ void figure_indigenous_native_action(figure *f) {
             break;
     }
     int dir;
-    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK) {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK)
         dir = f->attack_direction;
-    } else if (f->direction < 8) {
+ else if (f->direction < 8)
         dir = f->direction;
-    } else {
+ else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
 
     f->is_enemy_image = 1;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
-        if (f->attack_image_offset >= 12) {
+        if (f->attack_image_offset >= 12)
             f->image_id = 393 + dir + 8 * ((f->attack_image_offset - 12) / 2);
-        } else {
+ else {
             f->image_id = 393 + dir;
         }
-    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 441 + figure_image_corpse_offset(f);
-    } else if (f->direction == DIR_FIGURE_ATTACK) {
+ else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 393 + dir + 8 * (f->image_offset / 2);
-    } else if (f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+ else if (f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
         f->image_id = 297 + dir + 8 * f->image_offset;
-    } else {
+ else {
         f->image_id = 201 + dir + 8 * f->image_offset;
     }
 }

@@ -36,9 +36,9 @@ static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items
 int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id)
 {
     int menu_id = get_menu_bar_item(m, items, num_items);
-    if (focus_menu_id) {
+    if (focus_menu_id)
         *focus_menu_id = menu_id;
-    }
+
     return menu_id;
 }
 
@@ -48,14 +48,14 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
     int height_pixels = MENU_ITEM_HEIGHT;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
-        if (sub->hidden) {
+        if (sub->hidden)
             continue;
-        }
+
         int width_pixels = lang_text_get_width(
             sub->text_group, sub->text_number, FONT_NORMAL_BLACK);
-        if (width_pixels > max_width) {
+        if (width_pixels > max_width)
             max_width = width_pixels;
-        }
+
         height_pixels += MENU_ITEM_HEIGHT;
     }
     int blocks = (max_width + 8) / 16 + 1; // 1 block padding
@@ -65,17 +65,17 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
 
 void menu_draw(menu_bar_item *menu, int focus_item_id)
 {
-    if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0) {
+    if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0)
         calculate_menu_dimensions(menu);
-    }
+
     unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT[GAME_ENV],
         menu->calculated_width_blocks, menu->calculated_height_blocks);
     int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
-        if (sub->hidden) {
+        if (sub->hidden)
             continue;
-        }
+
         if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 4,
                 16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
@@ -93,9 +93,9 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
 {
     int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
-        if (menu->items[i].hidden) {
+        if (menu->items[i].hidden)
             continue;
-        }
+
         if (menu->x_start <= m->x &&
             menu->x_start + 16 * menu->calculated_width_blocks > m->x &&
             y_offset - 2 <= m->y &&
@@ -110,12 +110,12 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
 int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
 {
     int item_id = get_menu_item(m, menu);
-    if (focus_item_id) {
+    if (focus_item_id)
         *focus_item_id = item_id;
-    }
-    if (!item_id) {
+
+    if (!item_id)
         return 0;
-    }
+
     if (m->left.went_up) {
         menu_item *item = &menu->items[item_id -1];
         item->left_click_handler(item->parameter);
@@ -130,8 +130,8 @@ void menu_update_text(menu_bar_item *menu, int index, int text_number)
         int item_width = lang_text_get_width(
             menu->items[index].text_group, text_number, FONT_NORMAL_BLACK);
         int blocks = (item_width + 8) / 16 + 1;
-        if (blocks > menu->calculated_width_blocks) {
+        if (blocks > menu->calculated_width_blocks)
             menu->calculated_width_blocks = blocks;
-        }
+
     }
 }

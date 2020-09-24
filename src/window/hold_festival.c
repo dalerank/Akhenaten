@@ -68,9 +68,9 @@ static void draw_buttons(void)
         graphics_shade_rect(104, 218, 426, 22, 0);
         graphics_shade_rect(104, 248, 426, 22, 0);
         graphics_shade_rect(104, 278, 426, 22, 0);
-    } else if (city_festival_out_of_wine()) {
+    } else if (city_festival_out_of_wine())
         graphics_shade_rect(104, 278, 426, 22, 0);
-    }
+
 }
 
 static void draw_background(void)
@@ -109,12 +109,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 8, &focus_button_id);
-    if (focus_image_button_id) {
+    if (focus_image_button_id)
         focus_button_id = 0;
-    }
-    if (!handled && input_go_back_requested(m, h)) {
+
+    if (!handled && input_go_back_requested(m, h))
         window_advisors_show();
-    }
+
 }
 
 static void button_god(int god, int param2)
@@ -126,9 +126,9 @@ static void button_god(int god, int param2)
 static void button_size(int size, int param2)
 {
     if (!city_finance_out_of_money()) {
-        if (city_festival_select_size(size)) {
+        if (city_festival_select_size(size))
             window_invalidate();
-        }
+
     }
 }
 

@@ -76,18 +76,18 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     if ((map_grid_width() - width_tiles) / 2 > 0) {
-        if (camera_x < data.absolute_x) {
+        if (camera_x < data.absolute_x)
             data.absolute_x = camera_x;
-        } else if (camera_x > width_tiles + data.absolute_x - view_width_tiles) {
+ else if (camera_x > width_tiles + data.absolute_x - view_width_tiles)
             data.absolute_x = view_width_tiles + camera_x - width_tiles;
-        }
+
     }
     if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
-        if (camera_y < data.absolute_y) {
+        if (camera_y < data.absolute_y)
             data.absolute_y = camera_y;
-        } else if (camera_y > height_tiles + data.absolute_y - view_height_tiles) {
+ else if (camera_y > height_tiles + data.absolute_y - view_height_tiles)
             data.absolute_y = view_height_tiles + camera_y - height_tiles;
-        }
+
     }
     // ensure even height
     data.absolute_y &= ~1;
@@ -104,33 +104,33 @@ static int is_in_minimap(const mouse *m)
 static int has_figure_color(figure *f)
 {
     int type = f->type;
-    if (figure_is_legion(f)) {
+    if (figure_is_legion(f))
         return FIGURE_COLOR_SOLDIER;
-    }
-    if (figure_is_enemy(f)) {
+
+    if (figure_is_enemy(f))
         return FIGURE_COLOR_ENEMY;
-    }
+
     if (f->type == FIGURE_INDIGENOUS_NATIVE &&
         f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
-    if (type == FIGURE_WOLF) {
+    if (type == FIGURE_WOLF)
         return FIGURE_COLOR_WOLF;
-    }
+
     return FIGURE_COLOR_NONE;
 }
 static int draw_figure(int x_view, int y_view, int grid_offset)
 {
     int color_type = map_figure_foreach_until(grid_offset, has_figure_color);
-    if (color_type == FIGURE_COLOR_NONE) {
+    if (color_type == FIGURE_COLOR_NONE)
         return 0;
-    }
+
     color_t color = COLOR_MINIMAP_WOLF;
-    if (color_type == FIGURE_COLOR_SOLDIER) {
+    if (color_type == FIGURE_COLOR_SOLDIER)
         color = COLOR_MINIMAP_SOLDIER;
-    } else if (color_type == FIGURE_COLOR_ENEMY) {
+ else if (color_type == FIGURE_COLOR_ENEMY)
         color = data.enemy_color;
-    }
+
     graphics_draw_horizontal_line(x_view, x_view +1, y_view, color);
     return 1;
 }
@@ -147,20 +147,20 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land
     if (terrain & TERRAIN_BUILDING) {
-        if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT_GROUND) {
+        if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT_GROUND)
             terrain = 0;
-        }
+
     }
 
     if (terrain & TERRAIN_BUILDING) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
             building *b = building_get(map_building_at(grid_offset));
-            if (b->house_size) {
+            if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
-            } else if (b->type == BUILDING_RESERVOIR) {
+ else if (b->type == BUILDING_RESERVOIR)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT) - 1;
-            } else {
+ else {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING);
             }
             switch (map_property_multi_tile_size(grid_offset)) {
@@ -174,25 +174,25 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     } else {
         int rand = map_random_get(grid_offset);
         int image_id;
-        if (terrain & TERRAIN_WATER) {
+        if (terrain & TERRAIN_WATER)
             image_id = image_id_from_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & TERRAIN_SHRUB) {
+ else if (terrain & TERRAIN_SHRUB)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_TREE) {
+ else if (terrain & TERRAIN_TREE)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_ROCK) {
+ else if (terrain & TERRAIN_ROCK)
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ELEVATION) {
+ else if (terrain & TERRAIN_ELEVATION)
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ROAD) {
+ else if (terrain & TERRAIN_ROAD)
             image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
-        } else if (terrain & TERRAIN_AQUEDUCT) {
+ else if (terrain & TERRAIN_AQUEDUCT)
             image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
-        } else if (terrain & TERRAIN_WALL) {
+ else if (terrain & TERRAIN_WALL)
             image_id = image_id_from_group(GROUP_MINIMAP_WALL);
-        } else if (terrain & TERRAIN_MEADOW) {
+ else if (terrain & TERRAIN_MEADOW)
             image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
-        } else {
+ else {
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
         }
         image_draw(image_id, x_view, y_view);
@@ -208,12 +208,12 @@ static void draw_viewport_rectangle(void)
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     int x_offset = data.x_offset + 2 * (camera_x - data.absolute_x) - 2 + camera_pixels_x / 30;
-    if (x_offset < data.x_offset) {
+    if (x_offset < data.x_offset)
         x_offset = data.x_offset;
-    }
-    if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles) {
+
+    if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles)
         x_offset -= 2;
-    }
+
     int y_offset = data.y_offset + camera_y - data.absolute_y + 2;
     graphics_draw_rect(x_offset, y_offset,
         view_width_tiles * 2 + 4,
@@ -290,9 +290,9 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
 
 static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
 {
-    if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1)) {
+    if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1))
         data.mouse.grid_offset = grid_offset < 0 ? 0 : grid_offset;
-    }
+
 }
 static int get_mouse_grid_offset(const mouse *m)
 {

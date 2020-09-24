@@ -75,9 +75,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 2, &data.focus_button_id) ||
         arrow_buttons_handle_mouse(m_dialog, 160, 40, arrow_buttons, 4, 0))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         data.close_callback();
-    }
+
 }
 
 static void button_ok(int param1, int param2)
@@ -93,18 +93,18 @@ static void button_cancel(int param1, int param2)
 
 static void arrow_button_game(int is_down, int param2)
 {
-    if (is_down) {
+    if (is_down)
         setting_decrease_game_speed();
-    } else {
+ else {
         setting_increase_game_speed();
     }
 }
 
 static void arrow_button_scroll(int is_down, int param2)
 {
-    if (is_down) {
+    if (is_down)
         setting_decrease_scroll_speed();
-    } else {
+ else {
         setting_increase_scroll_speed();
     }
 }

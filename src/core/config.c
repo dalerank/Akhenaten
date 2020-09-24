@@ -154,9 +154,9 @@ const char *config_get_string(int key)
 }
 void config_set_string(int key, const char *value)
 {
-    if (!value) {
+    if (!value)
         string_values[key][0] = 0;
-    } else {
+ else {
         strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }

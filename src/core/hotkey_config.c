@@ -91,9 +91,9 @@ static struct {
 static void set_mapping(int key, int modifiers, int action)
 {
     hotkey_mapping *mapping = &data.default_mappings[action][0];
-    if (mapping->key) {
+    if (mapping->key)
         mapping = &data.default_mappings[action][1];
-    }
+
     if (mapping->key)
             return;
     mapping->key = key;
@@ -186,9 +186,9 @@ const hotkey_mapping *hotkey_for_action(int action, int index)
     int num = 0;
     for (int i = 0; i < data.num_mappings; i++) {
         if (data.mappings[i].action == action) {
-            if (num == index) {
+            if (num == index)
                 return &data.mappings[i];
-            }
+
             num++;
         }
     }
@@ -197,9 +197,9 @@ const hotkey_mapping *hotkey_for_action(int action, int index)
 
 const hotkey_mapping *hotkey_default_for_action(int action, int index)
 {
-    if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS) {
+    if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS)
         return 0;
-    }
+
     return &data.default_mappings[action][index];
 }
 
@@ -221,9 +221,9 @@ static void load_defaults(void)
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
-            if (data.default_mappings[action][index].key) {
+            if (data.default_mappings[action][index].key)
                 hotkey_config_add_mapping(&data.default_mappings[action][index]);
-            }
+
         }
     }
 }
@@ -243,9 +243,9 @@ static void load_file(void)
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');
-        if (!equals) {
+        if (!equals)
             continue;
-        }
+
         *equals = 0;
         char *value = &equals[1];
         for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
@@ -266,9 +266,9 @@ void hotkey_config_load(void)
 {
     init_defaults();
     load_file();
-    if (data.num_mappings == 0) {
+    if (data.num_mappings == 0)
         load_defaults();
-    }
+
     hotkey_install_mapping(data.mappings, data.num_mappings);
 }
 

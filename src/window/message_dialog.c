@@ -120,16 +120,16 @@ static void init(int text_id, void (*background_callback)(void))
     data.text_id = text_id;
     data.background_callback = background_callback;
     const lang_message *msg = lang_get_message(text_id);
-    if (player_message.use_popup != 1) {
+    if (player_message.use_popup != 1)
         data.show_video = 0;
-    } else if (msg->video.text && video_start((char*)msg->video.text)) {
+ else if (msg->video.text && video_start((char*)msg->video.text))
         data.show_video = 1;
-    } else {
+ else {
         data.show_video = 0;
     }
-    if (data.show_video) {
+    if (data.show_video)
         video_init();
-    }
+
 }
 
 static int resource_image(int resource)
@@ -228,9 +228,9 @@ static void draw_city_message_text(const lang_message *msg)
 
 static int get_message_image_id(const lang_message *msg)
 {
-    if (!msg->image.id) {
+    if (!msg->image.id)
         return 0;
-    } else if (data.text_id == 0) {
+ else if (data.text_id == 0) {
         // message id = 0 ==> "about": fixed image position
         return image_id_from_group(GROUP_BIG_PEOPLE);
     } else {
@@ -262,9 +262,9 @@ static void draw_title(const lang_message *msg)
         int image_x = msg->image.x;
         int image_y = msg->image.y;
         image_draw(image_id, data.x + image_x, data.y + image_y);
-        if (data.y + image_y + img->height + 8 > data.y_text) {
+        if (data.y + image_y + img->height + 8 > data.y_text)
             data.y_text = data.y + image_y + img->height + 8;
-        }
+
     }
 }
 
@@ -274,9 +274,9 @@ static void draw_subtitle(const lang_message *msg)
         int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
         int height = text_draw_multiline(msg->subtitle.text,
             data.x + msg->subtitle.x, data.y + msg->subtitle.y, width, FONT_NORMAL_BLACK, 0);
-        if (data.y + msg->subtitle.y + height > data.y_text) {
+        if (data.y + msg->subtitle.y + height > data.y_text)
             data.y_text = data.y + msg->subtitle.y + height;
-        }
+
     }
 }
 
@@ -295,9 +295,9 @@ static void draw_content(const lang_message *msg)
         16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
     rich_text_clear_links();
 
-    if (msg->type == TYPE_MESSAGE) {
+    if (msg->type == TYPE_MESSAGE)
         draw_city_message_text(msg);
-    } else {
+ else {
         rich_text_draw(msg->content.text,
             data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16,
             data.text_height_blocks - 1, 0);
@@ -327,9 +327,9 @@ static void draw_background_video(void)
 
     int small_font = 0;
     int lines_available = 4;
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
+    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL)
         lines_available = 3;
-    }
+
     rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
     rich_text_clear_links();
     int lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
@@ -376,9 +376,9 @@ static void draw_background_video(void)
 
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
         int y_text = data.y + 384;
-        if (lines_required > lines_available) {
+        if (lines_required > lines_available)
             y_text += 8;
-        }
+
         const scenario_request *request = scenario_request_get(player_message.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE);
         image_draw(
@@ -396,15 +396,15 @@ static void draw_background_video(void)
 
 static void draw_background(void)
 {
-    if (data.background_callback) {
+    if (data.background_callback)
         data.background_callback();
-    } else {
+ else {
         window_draw_underlying_window();
     }
     graphics_in_dialog();
-    if (data.show_video) {
+    if (data.show_video)
         draw_background_video();
-    } else {
+ else {
         draw_background_normal();
     }
     graphics_reset_dialog();
@@ -446,9 +446,9 @@ static void draw_foreground_normal(void)
 
     if (msg->type == TYPE_MESSAGE) {
         image_buttons_draw(data.x + 16, data.y + 16 * msg->height_blocks - 40, get_advisor_button(), 1);
-        if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
+        if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
             image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
-        }
+
     }
     image_buttons_draw(data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36, &image_button_close, 1);
     rich_text_draw_scrollbar();
@@ -460,17 +460,17 @@ static void draw_foreground_video(void)
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
     const lang_message *msg = lang_get_message(data.text_id);
-    if (is_problem_message(msg)) {
+    if (is_problem_message(msg))
         image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
-    }
+
 }
 
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    if (data.show_video) {
+    if (data.show_video)
         draw_foreground_video();
-    } else {
+ else {
         draw_foreground_normal();
     }
     graphics_reset_dialog();
@@ -478,16 +478,16 @@ static void draw_foreground(void)
 
 static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
 {
-    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, data.x + 16, data.y + 408, get_advisor_button(), 1, 0))
         return 1;
-    }
-    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0)) {
+
+    if (image_buttons_handle_mouse(m_dialog, data.x + 372, data.y + 410, &image_button_close, 1, 0))
         return 1;
-    }
+
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407, &image_button_go_to_problem, 1, &data.focus_button_id))
             return 1;
-        }
+
     }
     return 0;
 }
@@ -504,9 +504,9 @@ static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
             return 1;
         }
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-            if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0)) {
+            if (image_buttons_handle_mouse(m_dialog, data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1, 0))
                 return 1;
-            }
+
         }
     }
 
@@ -538,14 +538,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
     const mouse *m_dialog = mouse_in_dialog(m);
     const lang_message *msg = lang_get_message(data.text_id);
     int handled;
-    if (data.show_video) {
+    if (data.show_video)
         handled = handle_input_video(m_dialog, msg);
-    } else {
+ else {
         handled = handle_input_normal(m_dialog, msg);
     }
-    if (!handled && input_go_back_requested(m, h)) {
+    if (!handled && input_go_back_requested(m, h))
         button_close(0, 0);
-    }
+
 
 
 }
@@ -585,9 +585,9 @@ static void button_help(int param1, int param2)
 static void button_advisor(int advisor, int param2)
 {
     cleanup();
-    if (!window_advisors_show_advisor(advisor)) {
+    if (!window_advisors_show_advisor(advisor))
         window_city_show();
-    }
+
 }
 
 static void button_go_to_problem(int param1, int param2)
@@ -597,13 +597,13 @@ static void button_go_to_problem(int param1, int param2)
     int grid_offset = player_message.param2;
     if (msg->message_type == MESSAGE_TYPE_INVASION) {
         int invasion_grid_offset = formation_grid_offset_for_invasion(player_message.param1);
-        if (invasion_grid_offset > 0) {
+        if (invasion_grid_offset > 0)
             grid_offset = invasion_grid_offset;
-        }
+
     }
-    if (grid_offset > 0 && grid_offset < 26244) {
+    if (grid_offset > 0 && grid_offset < 26244)
         city_view_go_to_grid_offset(grid_offset);
-    }
+
     window_city_show();
 }
 

@@ -89,28 +89,28 @@ static void advance_month(void)
     map_routing_update_land_citizen();
     city_message_sort_and_compact();
 
-    if (game_time_advance_month()) {
+    if (game_time_advance_month())
         advance_year();
-    } else {
+ else {
         city_ratings_update(0);
     }
 
     city_population_record_monthly();
     city_festival_update();
     tutorial_on_month_tick();
-    if (setting_monthly_autosave()) {
+    if (setting_monthly_autosave())
         game_file_write_saved_game("autosave.svx");
-    }
+
 }
 
 static void advance_day(void)
 {
-    if (game_time_advance_day()) {
+    if (game_time_advance_day())
         advance_month();
-    }
-    if (game_time_day() == 0 || game_time_day() == 8) {
+
+    if (game_time_day() == 0 || game_time_day() == 8)
         city_sentiment_update();
-    }
+
     tutorial_on_day_tick();
 }
 
@@ -160,9 +160,9 @@ static void advance_tick(void)
         case 48: house_service_decay_tax_collector(); break;
         case 49: city_culture_calculate(); break;
     }
-    if (game_time_advance_tick()) {
+    if (game_time_advance_tick())
         advance_day();
-    }
+
 }
 
 void game_tick_run(void)

@@ -78,11 +78,11 @@ static void draw_scenario_list(void)
     uint8_t displayable_file[FILE_NAME_MAX];
     for (int i = 0; i < MAX_SCENARIOS; i++) {
         font_t font = FONT_NORMAL_GREEN;
-        if (data.focus_button_id == i + 1) {
+        if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_WHITE;
-        } else if (!data.focus_button_id && data.selected_item == i + scrollbar.scroll_position) {
+ else if (!data.focus_button_id && data.selected_item == i + scrollbar.scroll_position)
             font = FONT_NORMAL_WHITE;
-        }
+
         strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
         file_remove_extension(displayable_file);
@@ -118,24 +118,24 @@ static void draw_scenario_info(void)
 
     // military
     int num_invasions = scenario_invasion_count();
-    if (num_invasions <= 0) {
+    if (num_invasions <= 0)
         text_id = 112;
-    } else if (num_invasions <= 2) {
+ else if (num_invasions <= 2)
         text_id = 113;
-    } else if (num_invasions <= 4) {
+ else if (num_invasions <= 4)
         text_id = 114;
-    } else if (num_invasions <= 10) {
+ else if (num_invasions <= 10)
         text_id = 115;
-    } else {
+ else {
         text_id = 116;
     }
     lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK);
 
     lang_text_draw_centered(32, 11 + scenario_property_player_rank(), scenario_info_x, 210, scenario_info_width, FONT_NORMAL_BLACK);
     if (scenario_is_open_play()) {
-        if (scenario_open_play_id() < 12) {
+        if (scenario_open_play_id() < 12)
             lang_text_draw_multiline(145, scenario_open_play_id(), scenario_info_x + 10, 270, scenario_info_width - 10, FONT_NORMAL_BLACK);
-        }
+
     } else {
         lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
         int width;
@@ -224,9 +224,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         button_start_scenario(0, 0);
         return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_go_back();
-    }
+
 }
 void window_cck_selection_show(void)
 {

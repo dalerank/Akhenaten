@@ -9,19 +9,19 @@
 
 static void update_status(void)
 {
-    if (city_data.sentiment.value > 70) {
+    if (city_data.sentiment.value > 70)
         city_data.migration.percentage = 100;
-    } else if (city_data.sentiment.value > 60) {
+ else if (city_data.sentiment.value > 60)
         city_data.migration.percentage = 75;
-    } else if (city_data.sentiment.value >= 50) {
+ else if (city_data.sentiment.value >= 50)
         city_data.migration.percentage = 50;
-    } else if (city_data.sentiment.value > 40) {
+ else if (city_data.sentiment.value > 40)
         city_data.migration.percentage = 0;
-    } else if (city_data.sentiment.value > 30) {
+ else if (city_data.sentiment.value > 30)
         city_data.migration.percentage = -10;
-    } else if (city_data.sentiment.value > 20) {
+ else if (city_data.sentiment.value > 20)
         city_data.migration.percentage = -25;
-    } else {
+ else {
         city_data.migration.percentage = -50;
     }
 
@@ -41,18 +41,18 @@ static void update_status(void)
     }
     if (city_data.migration.percentage > 0) {
         // immigration
-        if (city_data.migration.emigration_duration) {
+        if (city_data.migration.emigration_duration)
             city_data.migration.emigration_duration--;
-        } else {
+ else {
             city_data.migration.immigration_amount_per_batch =
                 calc_adjust_with_percentage(12, city_data.migration.percentage);
             city_data.migration.immigration_duration = 2;
         }
     } else if (city_data.migration.percentage < 0) {
         // emigration
-        if (city_data.migration.immigration_duration) {
+        if (city_data.migration.immigration_duration)
             city_data.migration.immigration_duration--;
-        } else if (city_data.population.population > 100) {
+ else if (city_data.population.population > 100) {
             city_data.migration.emigration_amount_per_batch =
                 calc_adjust_with_percentage(12, -city_data.migration.percentage);
             city_data.migration.emigration_duration = 2;
@@ -65,9 +65,9 @@ static void create_immigrants(int num_people)
     int immigrated = house_population_create_immigrants(num_people);
     city_data.migration.immigrated_today += immigrated;
     city_data.migration.newcomers += city_data.migration.immigrated_today;
-    if (immigrated == 0) {
+    if (immigrated == 0)
         city_data.migration.refused_immigrants_today += num_people;
-    }
+
 }
 
 static void create_emigrants(int num_people)
@@ -82,9 +82,9 @@ static void create_migrants(void)
     city_data.migration.refused_immigrants_today = 0;
 
     if (city_data.migration.immigration_amount_per_batch > 0) {
-        if (city_data.migration.immigration_amount_per_batch >= 4) {
+        if (city_data.migration.immigration_amount_per_batch >= 4)
             create_immigrants(city_data.migration.immigration_amount_per_batch);
-        } else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
+ else if (city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size >= 4) {
             create_immigrants(city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size);
             city_data.migration.immigration_queue_size = 0;
         } else {
@@ -93,9 +93,9 @@ static void create_migrants(void)
         }
     }
     if (city_data.migration.emigration_amount_per_batch > 0) {
-        if (city_data.migration.emigration_amount_per_batch >= 4) {
+        if (city_data.migration.emigration_amount_per_batch >= 4)
             create_emigrants(city_data.migration.emigration_amount_per_batch);
-        } else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
+ else if (city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size >= 4) {
             create_emigrants(city_data.migration.emigration_amount_per_batch + city_data.migration.emigration_queue_size);
             city_data.migration.emigration_queue_size = 0;
             if (!city_data.migration.emigration_message_shown) {

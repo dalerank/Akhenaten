@@ -24,9 +24,9 @@ void scenario_request_init(void) {
 
 void scenario_request_process(void) {
     for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
-        if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE) {
+        if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE)
             continue;
-        }
+
         int state = scenario.requests[i].state;
         if (state == REQUEST_STATE_DISPATCHED || state == REQUEST_STATE_DISPATCHED_LATE) {
             --scenario.requests[i].months_to_comply;
@@ -76,14 +76,14 @@ void scenario_request_process(void) {
                 if (game_time_year() == year + scenario.requests[i].year &&
                     game_time_month() == scenario.requests[i].month) {
                     scenario.requests[i].visible = 1;
-                    if (city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount) {
+                    if (city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount)
                         scenario.requests[i].can_comply_dialog_shown = 1;
-                    }
-                    if (scenario.requests[i].resource == RESOURCE_DENARII) {
+
+                    if (scenario.requests[i].resource == RESOURCE_DENARII)
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
-                    } else if (scenario.requests[i].resource == RESOURCE_TROOPS) {
+ else if (scenario.requests[i].resource == RESOURCE_TROOPS)
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
-                    } else {
+ else {
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
                     }
                 }
@@ -93,17 +93,17 @@ void scenario_request_process(void) {
 }
 
 void scenario_request_dispatch(int id) {
-    if (scenario.requests[id].state == REQUEST_STATE_NORMAL) {
+    if (scenario.requests[id].state == REQUEST_STATE_NORMAL)
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED;
-    } else {
+ else {
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED_LATE;
     }
     scenario.requests[id].months_to_comply = (random_byte() & 3) + 1;
     scenario.requests[id].visible = 0;
     int amount = scenario.requests[id].amount;
-    if (scenario.requests[id].resource == RESOURCE_DENARII) {
+    if (scenario.requests[id].resource == RESOURCE_DENARII)
         city_finance_process_sundry(amount);
-    } else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
+ else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
@@ -136,9 +136,9 @@ const scenario_request *scenario_request_get_visible(int index) {
     for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible &&
             scenario.requests[i].state <= 1) {
-            if (index == 0) {
+            if (index == 0)
                 return scenario_request_get(i);
-            }
+
             index--;
         }
     }

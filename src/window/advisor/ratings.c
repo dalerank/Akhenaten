@@ -30,23 +30,23 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value;
     if (config_get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
-        if (has_reached && value < 25) {
+        if (has_reached && value < 25)
             value_to_draw = 25;
-        }
+
     }
     else {
         // Default behaviour: not completing too small columns
-        if (value < 30) {
+        if (value < 30)
             has_reached = 0;
-        }
+
     }
     image_draw(image_base, x_offset, y);
     for (int i = 0; i < 2 * value_to_draw; i++) {
         image_draw(image_base + 1, x_offset + 11, --y);
     }
-    if (has_reached) {
+    if (has_reached)
         image_draw(image_base + 2, x_offset - 6, y);
-    }
+
 }
 
 static int draw_background(void)
@@ -54,9 +54,9 @@ static int draw_background(void)
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
-    if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
+    if (!scenario_criteria_population_enabled() || scenario_is_open_play())
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
-    } else {
+ else {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
         text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }

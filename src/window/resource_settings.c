@@ -71,14 +71,14 @@ static void draw_foreground(void)
     if (empire_can_produce_resource(data.resource)) {
         int total_buildings = building_count_industry_total(data.resource);
         int active_buildings = building_count_industry_active(data.resource);
-        if (building_count_industry_total(data.resource) <= 0) {
+        if (building_count_industry_total(data.resource) <= 0)
             lang_text_draw(54, 7, 98, 172, FONT_NORMAL_BLACK);
-        }
+
         else if (city_resource_is_mothballed(data.resource)) {
             int width = text_draw_number(total_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
-            if (total_buildings == 1) {
+            if (total_buildings == 1)
                 lang_text_draw(54, 10, 98 + width, 172, FONT_NORMAL_BLACK);
-            }
+
             else {
                 lang_text_draw(54, 11, 98 + width, 172, FONT_NORMAL_BLACK);
             }
@@ -86,9 +86,9 @@ static void draw_foreground(void)
         else if (total_buildings == active_buildings) {
             // not mothballed, all working
             int width = text_draw_number(total_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
-            if (total_buildings == 1) {
+            if (total_buildings == 1)
                 lang_text_draw(54, 8, 98 + width, 172, FONT_NORMAL_BLACK);
-            }
+
             else {
                 lang_text_draw(54, 9, 98 + width, 172, FONT_NORMAL_BLACK);
             }
@@ -98,9 +98,9 @@ static void draw_foreground(void)
             int width = text_draw_number(active_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
             width += lang_text_draw(54, 12, 98 + width, 172, FONT_NORMAL_BLACK);
             width += text_draw_number(total_buildings - active_buildings, '@', " ", 98 + width, 172, FONT_NORMAL_BLACK);
-            if (active_buildings == 1) {
+            if (active_buildings == 1)
                 lang_text_draw(54, 13, 98 + width, 172, FONT_NORMAL_BLACK);
-            }
+
             else {
                 lang_text_draw(54, 14, 98 + width, 172, FONT_NORMAL_BLACK);
             }
@@ -116,15 +116,15 @@ static void draw_foreground(void)
 
     int trade_flags = TRADE_STATUS_NONE;
     int trade_status = city_int(data.resource);
-    if (empire_can_import_resource(data.resource)) {
+    if (empire_can_import_resource(data.resource))
         trade_flags |= TRADE_STATUS_IMPORT;
-    }
-    if (empire_can_export_resource(data.resource)) {
+
+    if (empire_can_export_resource(data.resource))
         trade_flags |= TRADE_STATUS_EXPORT;
-    }
-    if (!trade_flags) {
+
+    if (!trade_flags)
         lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK);
-    }
+
     else {
         button_border_draw(98, 212, 432, 30, data.focus_button_id == 2);
         switch (trade_status) {
@@ -140,15 +140,15 @@ static void draw_foreground(void)
         }
     }
 
-    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
+    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT)
         lang_text_draw_amount(8, 10, city_resource_export_over(data.resource), 386, 221, FONT_NORMAL_BLACK);
-    }
+
 
     if (building_count_industry_total(data.resource) > 0) {
         button_border_draw(98, 250, 432, 30, data.focus_button_id == 1);
-        if (city_resource_is_mothballed(data.resource)) {
+        if (city_resource_is_mothballed(data.resource))
             lang_text_draw_centered(54, 17, 114, 259, 400, FONT_NORMAL_BLACK);
-        }
+
         else {
             lang_text_draw_centered(54, 16, 114, 259, 400, FONT_NORMAL_BLACK);
         }
@@ -165,9 +165,9 @@ static void draw_foreground(void)
     }
 
     image_buttons_draw(0, 0, resource_image_buttons, 2);
-    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
+    if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT)
         arrow_buttons_draw(0, 0, resource_arrow_buttons, 2);
-    }
+
     graphics_reset_dialog();
 }
 
@@ -184,9 +184,9 @@ static void handle_input(const mouse* m, const hotkeys* h)
     }
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_go_back();
-    }
+
 }
 
 static void button_help(int param1, int param2)
@@ -206,9 +206,9 @@ static void button_export_up_down(int is_down, int param2)
 
 static void button_toggle_industry(int param1, int param2)
 {
-    if (building_count_industry_total(data.resource) > 0) {
+    if (building_count_industry_total(data.resource) > 0)
         city_resource_toggle_mothballed(data.resource);
-    }
+
 }
 
 static void button_toggle_trade(int param1, int param2)

@@ -59,9 +59,9 @@ static void draw_footprint(int x, int y, int grid_offset)
             image_id >= draw_context.image_id_water_first &&
             image_id <= draw_context.image_id_water_last) {
             image_id++;
-            if (image_id > draw_context.image_id_water_last) {
+            if (image_id > draw_context.image_id_water_last)
                 image_id = draw_context.image_id_water_first;
-            }
+
             map_image_set(grid_offset, image_id);
         }
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
@@ -82,9 +82,9 @@ static void draw_flags(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        if (!f->is_ghost) {
+        if (!f->is_ghost)
             city_draw_figure(f, x, y, 0);
-        }
+
         figure_id = f->next_figure_id_on_same_tile;
     }
 }
@@ -165,9 +165,9 @@ static void handle_touch_scroll(const touch *t)
             city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
-        if (t->has_ended) {
+        if (t->has_ended)
             scroll_restore_margins();
-        }
+
         return;
     }
     scroll_restore_margins();
@@ -183,19 +183,19 @@ static void handle_touch_scroll(const touch *t)
     if (!touch_not_click(t))
             return;
 
-    if (t->has_ended) {
+    if (t->has_ended)
         scroll_drag_end();
-    }
+
 }
 
 static void handle_touch_zoom(const touch *first, const touch *last)
 {
-    if (touch_not_click(first)) {
+    if (touch_not_click(first))
         zoom_update_touch(first, last, city_view_get_scale());
-    }
-    if (first->has_ended || last->has_ended) {
+
+    if (first->has_ended || last->has_ended)
         zoom_end_touch();
-    }
+
 }
 
 static void handle_last_touch(void)
@@ -207,16 +207,16 @@ static void handle_last_touch(void)
         editor_tool_deactivate();
         return;
     }
-    if (touch_not_click(last)) {
+    if (touch_not_click(last))
         handle_touch_zoom(get_earliest_touch(), last);
-    }
+
 }
 
 static int handle_cancel_construction_button(const touch *t)
 {
-    if (!editor_tool_is_active()) {
+    if (!editor_tool_is_active())
         return 0;
-    }
+
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
@@ -252,9 +252,9 @@ static void handle_first_touch(map_tile *tile)
             }
         } else {
             if (first->has_started) {
-                if (data.selected_grid_offset != tile->grid_offset) {
+                if (data.selected_grid_offset != tile->grid_offset)
                     data.new_start_grid_offset = tile->grid_offset;
-                }
+
             }
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
@@ -263,9 +263,9 @@ static void handle_first_touch(map_tile *tile)
                 editor_tool_start_use(tile);
             }
             editor_tool_update_use(tile);
-            if (data.selected_grid_offset != tile->grid_offset) {
+            if (data.selected_grid_offset != tile->grid_offset)
                 data.selected_grid_offset = 0;
-            }
+
             if (first->has_ended) {
                 if (data.selected_grid_offset == tile->grid_offset) {
                     editor_tool_end_use(tile);
@@ -280,13 +280,13 @@ static void handle_first_touch(map_tile *tile)
     }
 
     if (editor_tool_is_brush()) {
-        if (first->has_started) {
+        if (first->has_started)
             editor_tool_start_use(tile);
-        }
+
         editor_tool_update_use(tile);
-        if (first->has_ended) {
+        if (first->has_ended)
             editor_tool_end_use(tile);
-        }
+
         return;
     }
 
@@ -296,9 +296,9 @@ static void handle_first_touch(map_tile *tile)
         editor_tool_update_use(tile);
         editor_tool_end_use(tile);
         widget_map_editor_clear_current_tile();
-    } else if (first->has_ended) {
+    } else if (first->has_ended)
         data.selected_grid_offset = tile->grid_offset;
-    }
+
 }
 
 static void handle_touch(void)
@@ -310,9 +310,9 @@ static void handle_touch(void)
     }
 
     map_tile *tile = &data.current_tile;
-    if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y)) {
+    if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
-    }
+
 
     if (first->has_started && input_coords_in_map(first->current_point.x, first->current_point.y)) {
         data.capture_input = 1;
@@ -322,9 +322,9 @@ static void handle_touch(void)
     handle_last_touch();
     handle_first_touch(tile);
 
-    if (first->has_ended) {
+    if (first->has_ended)
         data.capture_input = 0;
-    }
+
 }
 
 void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
@@ -335,15 +335,15 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
         zoom_map(m);
         handle_touch();
     } else {
-        if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
+        if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active())
             scroll_drag_start(0);
-        }
+
         if (m->right.went_up) {
             if (!editor_tool_is_active()) {
                 int has_scrolled = scroll_drag_end();
-                if (!has_scrolled) {
+                if (!has_scrolled)
                     editor_tool_deactivate();
-                }
+
             } else {
                 editor_tool_deactivate();
             }
@@ -351,9 +351,9 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     }
 
     if (h->escape_pressed) {
-        if (editor_tool_is_active()) {
+        if (editor_tool_is_active())
             editor_tool_deactivate();
-        } else {
+ else {
             hotkey_handle_escape();
         }
         return;
@@ -366,13 +366,13 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
             return;
 
     if (m->left.went_down) {
-        if (!editor_tool_is_in_use()) {
+        if (!editor_tool_is_in_use())
             editor_tool_start_use(tile);
-        }
+
         editor_tool_update_use(tile);
-    } else if (m->left.is_down || editor_tool_is_in_use()) {
+    } else if (m->left.is_down || editor_tool_is_in_use())
         editor_tool_update_use(tile);
-    }
+
     if (m->left.went_up) {
         editor_tool_end_use(tile);
         sound_effect_play(SOUND_EFFECT_BUILD);

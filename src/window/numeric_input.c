@@ -79,9 +79,9 @@ static void draw_foreground(void)
     outer_panel_draw(data.x, data.y, 8, 14);
 
     graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
-    if (data.num_digits > 0) {
+    if (data.num_digits > 0)
         text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_LARGE_PLAIN, COLOR_FONT_RED);
-    }
+
 
     draw_number_button(data.x + 21, data.y + 51, 1, data.focus_button_id == 1);
     draw_number_button(data.x + 51, data.y + 51, 2, data.focus_button_id == 2);
@@ -107,12 +107,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         close();
-    }
-    if (h->enter_pressed) {
+
+    if (h->enter_pressed)
         input_accept();
-    }
+
 }
 
 static void button_number(int number, int param2)
@@ -142,9 +142,9 @@ static void input_number(int number)
 static void input_accept(void)
 {
     close();
-    if (data.value > data.max_value) {
+    if (data.value > data.max_value)
         data.value = data.max_value;
-    }
+
     data.callback(data.value);
 }
 

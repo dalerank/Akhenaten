@@ -61,9 +61,9 @@ static int get_next_name(int32_t *field, int offset, int max)
 {
     int name = offset + *field;
     *field = *field + 1;
-    if (*field >= max) {
+    if (*field >= max)
         *field = 0;
-    }
+
     return name;
 }
 

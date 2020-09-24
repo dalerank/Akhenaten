@@ -288,9 +288,9 @@ static void add_definition(const hotkey_mapping *mapping)
         default:
             def->action = 0;
     }
-    if (def->action) {
+    if (def->action)
         data.num_definitions++;
-    }
+
 }
 
 static void add_arrow(const hotkey_mapping *mapping)
@@ -314,9 +314,9 @@ static void add_arrow(const hotkey_mapping *mapping)
             arrow->action = 0;
             break;
     }
-    if (arrow->action) {
+    if (arrow->action)
         data.num_arrows++;
-    }
+
 }
 
 static int allocate_mapping_memory(int total_definitions, int total_arrows)
@@ -398,15 +398,15 @@ void hotkey_key_pressed(int key, int modifiers, int repeat)
             return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
-        if (arrow->key == key) {
+        if (arrow->key == key)
             arrow->action(1);
-        }
+
     }
     for (int i = 0; i < data.num_definitions; i++) {
         hotkey_definition *def = &data.definitions[i];
-        if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
+        if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable))
             *(def->action) = def->value;
-        }
+
     }
 }
 
@@ -420,17 +420,17 @@ void hotkey_key_released(int key, int modifiers)
             return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
-        if (arrow->key == key) {
+        if (arrow->key == key)
             arrow->action(0);
-        }
+
     }
 }
 
 static void confirm_exit(int accepted)
 {
-    if (accepted) {
+    if (accepted)
         system_exit();
-    }
+
 }
 
 void hotkey_handle_escape(void)
@@ -441,9 +441,9 @@ void hotkey_handle_escape(void)
 
 void hotkey_handle_global_keys(void)
 {
-    if (data.global_hotkey_state.center_screen) {
+    if (data.global_hotkey_state.center_screen)
         system_center();
-    }
+
     if (data.global_hotkey_state.resize_to) {
         switch (data.global_hotkey_state.resize_to) {
             case 640: system_resize(640, 480); break;
@@ -451,9 +451,9 @@ void hotkey_handle_global_keys(void)
             case 1024: system_resize(1024, 768); break;
         }
     }
-    if (data.global_hotkey_state.toggle_fullscreen) {
+    if (data.global_hotkey_state.toggle_fullscreen)
         system_set_fullscreen(!setting_fullscreen());
-    }
+
 //    if (data.global_hotkey_state.save_screenshot) {
 //        graphics_save_screenshot(0);
 //    }

@@ -888,9 +888,9 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size)
 }
 static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write)
 {
-    if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
+    if (bytes_to_write > COMPRESS_BUFFER_SIZE)
         return 0;
-    }
+
     int output_size = COMPRESS_BUFFER_SIZE;
     if (zip_compress(buf->data_const(), bytes_to_write, compress_buffer, &output_size)) {
 //        write_int32(fp, output_size);
@@ -915,9 +915,9 @@ static int savegame_read_from_file(FILE *fp)
 
         auto offs = ftell(fp);
 
-        if (i == 76) {
+        if (i == 76)
             int a = 24;
-        }
+
 
         if (piece->compressed)
             result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
@@ -1002,9 +1002,9 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         log_error("Unable to load game, unable to open file.", 0, 0);
         return 0;
     }
-    if (offset) {
+    if (offset)
         fseek(fp, offset, SEEK_SET);
-    }
+
 
     int result = savegame_read_from_file(fp);
     file_close(fp);
@@ -1036,8 +1036,8 @@ int game_file_io_delete_saved_game(const char *filename)
 {
     log_info("Deleting game", filename, 0);
     int result = file_remove(filename);
-    if (!result) {
+    if (!result)
         log_error("Unable to delete game", 0, 0);
-    }
+
     return result;
 }

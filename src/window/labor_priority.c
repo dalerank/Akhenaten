@@ -63,9 +63,9 @@ static void draw_background(void)
     for (int i = 0; i < 9; i++) {
         graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
         lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
-        if (i >= data.max_items) {
+        if (i >= data.max_items)
             graphics_shade_rect(179 + 32 * i, 222, 25, 25, 1);
-        }
+
     }
 
     graphics_draw_rect(180, 256, 280, 25, COLOR_BLACK);
@@ -81,15 +81,15 @@ static void draw_foreground(void)
     color_t color;
     for (int i = 0; i < 9; i++) {
         color = COLOR_BLACK;
-        if (i == data.focus_button_id - 2) {
+        if (i == data.focus_button_id - 2)
             color = COLOR_RED;
-        }
+
         graphics_draw_rect(178 + 32 * i, 221, 27, 27, color);
     }
     color = COLOR_BLACK;
-    if (data.focus_button_id == 1) {
+    if (data.focus_button_id == 1)
         color = COLOR_RED;
-    }
+
     graphics_draw_rect(180, 256, 280, 25, color);
 
     graphics_reset_dialog();
@@ -99,9 +99,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, priority_buttons, 1 + data.max_items, &data.focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_go_back();
-    }
+
 }
 
 static void button_set_priority(int new_priority, int param2)
@@ -115,9 +115,9 @@ static void get_tooltip(tooltip_context *c)
     if (!data.focus_button_id)
             return;
     c->type = TOOLTIP_BUTTON;
-    if (data.focus_button_id == 1) {
+    if (data.focus_button_id == 1)
         c->text_id = 92;
-    } else {
+ else {
         c->text_id = 93;
     }
 }

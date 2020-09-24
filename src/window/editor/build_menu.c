@@ -110,9 +110,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (handle_build_submenu(m) ||
         widget_sidebar_editor_handle_mouse_build_menu(m))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_editor_map_show();
-    }
+
 }
 
 static void button_menu_item(int index, int param2)
@@ -153,9 +153,9 @@ static void button_menu_item(int index, int param2)
             editor_tool_set_with_id(TOOL_INVASION_POINT, index);
             break;
         case MENU_ANIMAL_POINTS:
-            if (index < 8) {
+            if (index < 8)
                 editor_tool_set_with_id(TOOL_FISHING_POINT, index);
-            } else {
+ else {
                 editor_tool_set_with_id(TOOL_HERD_POINT, index - 8);
             }
             break;

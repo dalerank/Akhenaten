@@ -42,31 +42,31 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id) {
     int max_units = (f->collecting_item_id == INVENTORY_WHEAT ? 800 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
-    if (granary_units >= 800) {
+    if (granary_units >= 800)
         num_loads = 8;
-    } else if (granary_units >= 700) {
+ else if (granary_units >= 700)
         num_loads = 7;
-    } else if (granary_units >= 600) {
+ else if (granary_units >= 600)
         num_loads = 6;
-    } else if (granary_units >= 500) {
+ else if (granary_units >= 500)
         num_loads = 5;
-    } else if (granary_units >= 400) {
+ else if (granary_units >= 400)
         num_loads = 4;
-    } else if (granary_units >= 300) {
+ else if (granary_units >= 300)
         num_loads = 3;
-    } else if (granary_units >= 200) {
+ else if (granary_units >= 200)
         num_loads = 2;
-    } else if (granary_units >= 100) {
+ else if (granary_units >= 100)
         num_loads = 1;
-    } else {
+ else {
         num_loads = 0;
     }
-    if (num_loads > max_units / 100) {
+    if (num_loads > max_units / 100)
         num_loads = max_units / 100;
-    }
-    if (num_loads <= 0) {
+
+    if (num_loads <= 0)
         return 0;
-    }
+
     building_granary_remove_resource(granary, resource, 100 * num_loads);
     // create delivery boys
     int previous_boy = f->id;
@@ -97,21 +97,21 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id) {
     building *warehouse = building_get(warehouse_id);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
-    if (stored < 2) {
+    if (stored < 2)
         num_loads = stored;
-    } else {
+ else {
         num_loads = 2;
     }
-    if (num_loads <= 0) {
+    if (num_loads <= 0)
         return 0;
-    }
+
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
     int boy1 = create_delivery_boy(f->id, f);
-    if (num_loads > 1) {
+    if (num_loads > 1)
         create_delivery_boy(boy1, f);
-    }
+
     return 1;
 }
 
@@ -121,9 +121,9 @@ void figure_market_buyer_action(figure *f) {
     f->max_roam_length = 800;
 
     building *b = building_get(f->building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_image_increase_offset(f, 12);
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -136,13 +136,13 @@ void figure_market_buyer_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 if (f->collecting_item_id > 3) {
-                    if (!take_resource_from_warehouse(f, f->destination_building_id)) {
+                    if (!take_resource_from_warehouse(f, f->destination_building_id))
                         f->state = FIGURE_STATE_DEAD;
-                    }
+
                 } else {
-                    if (!take_food_from_granary(f, f->building_id, f->destination_building_id)) {
+                    if (!take_food_from_granary(f, f->building_id, f->destination_building_id))
                         f->state = FIGURE_STATE_DEAD;
-                    }
+
                 }
                 f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
                 f->destination_x = f->source_x;
@@ -156,11 +156,11 @@ void figure_market_buyer_action(figure *f) {
             break;
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+ else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            }
+
             break;
     }
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_MARKET_LADY));
@@ -173,13 +173,13 @@ void figure_delivery_boy_action(figure *f) {
     f->cart_image_id = 0;
 
     figure *leader = figure_get(f->leading_figure_id);
-    if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE) {
+    if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
         f->state = FIGURE_STATE_DEAD;
-    } else {
+ else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
+            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
                 figure_movement_follow_ticks(f, 1);
-            } else {
+ else {
                 f->state = FIGURE_STATE_DEAD;
             }
         } else { // leader arrived at market, drop resource at market
@@ -187,9 +187,9 @@ void figure_delivery_boy_action(figure *f) {
             f->state = FIGURE_STATE_DEAD;
         }
     }
-    if (leader->is_ghost) {
+    if (leader->is_ghost)
         f->is_ghost = 1;
-    }
+
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +

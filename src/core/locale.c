@@ -28,31 +28,31 @@ static int determine_language(void)
     // Dirty way to check the language, but there's not really another way:
     // Check if the string for "New game" is in one of the supported languages
     const uint8_t *new_game_string = lang_get_string(1, 1);
-    if (string_equals(NEW_GAME_ENGLISH, new_game_string, 0)) {
+    if (string_equals(NEW_GAME_ENGLISH, new_game_string, 0))
         return LANGUAGE_ENGLISH;
-    } else if (string_equals(NEW_GAME_FRENCH, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_FRENCH, new_game_string, 0))
         return LANGUAGE_FRENCH;
-    } else if (string_equals(NEW_GAME_GERMAN, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_GERMAN, new_game_string, 0))
         return LANGUAGE_GERMAN;
-    } else if (string_equals(NEW_GAME_ITALIAN, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_ITALIAN, new_game_string, 0))
         return LANGUAGE_ITALIAN;
-    } else if (string_equals(NEW_GAME_SPANISH, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_SPANISH, new_game_string, 0))
         return LANGUAGE_SPANISH;
-    } else if (string_equals(NEW_GAME_PORTUGUESE, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_PORTUGUESE, new_game_string, 0))
         return LANGUAGE_PORTUGUESE;
-    } else if (string_equals(NEW_GAME_POLISH, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_POLISH, new_game_string, 0))
         return LANGUAGE_POLISH;
-    } else if (string_equals(NEW_GAME_RUSSIAN, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_RUSSIAN, new_game_string, 0))
         return LANGUAGE_RUSSIAN;
-    } else if (string_equals(NEW_GAME_SWEDISH, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_SWEDISH, new_game_string, 0))
         return LANGUAGE_SWEDISH;
-    } else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_TRADITIONAL_CHINESE, new_game_string, 0))
         return LANGUAGE_TRADITIONAL_CHINESE;
-    } else if (string_equals(NEW_GAME_SIMPLIFIED_CHINESE, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_SIMPLIFIED_CHINESE, new_game_string, 0))
         return LANGUAGE_SIMPLIFIED_CHINESE;
-    } else if (string_equals(NEW_GAME_KOREAN, new_game_string, 0)) {
+ else if (string_equals(NEW_GAME_KOREAN, new_game_string, 0))
         return LANGUAGE_KOREAN;
-    } else {
+ else {
         return LANGUAGE_UNKNOWN;
     }
 }

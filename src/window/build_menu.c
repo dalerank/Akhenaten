@@ -152,9 +152,9 @@ static void draw_menu_buttons(void)
     int label_width = (BTN_W_TOT) / 16;
     int label_margin = BTN_W_TOT + 10;
     int label_offset = 0;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
         label_offset = 20;
-    }
+
     font_t font = FONT_NORMAL_GREEN;
     int item_index = -1;
     for (int i = 0; i < data.num_items; i++) {
@@ -243,21 +243,21 @@ int window_build_menu_image(void)
                 case BUILD_MENU_VACANT_HOUSE:
                     return image_base;
                 case BUILD_MENU_CLEAR_LAND:
-                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                    if (scenario_property_climate() == CLIMATE_DESERT)
                         return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT);
-                    } else {
+ else {
                         return image_base + 11;
                     }
                 case BUILD_MENU_ROAD:
-                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                    if (scenario_property_climate() == CLIMATE_DESERT)
                         return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
-                    } else {
+ else {
                         return image_base + 10;
                     }
                 case BUILD_MENU_WATER:
-                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                    if (scenario_property_climate() == CLIMATE_DESERT)
                         return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
-                    } else {
+ else {
                         return image_base + 3;
                     }
                 case BUILD_MENU_HEALTH:
@@ -273,9 +273,9 @@ int window_build_menu_image(void)
                 case BUILD_MENU_ENGINEERING:
                     return image_base + 7;
                 case BUILD_MENU_SECURITY:
-                    if (scenario_property_climate() == CLIMATE_DESERT) {
+                    if (scenario_property_climate() == CLIMATE_DESERT)
                         return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
-                    } else {
+ else {
                         return image_base + 8;
                     }
                 case BUILD_MENU_INDUSTRY:

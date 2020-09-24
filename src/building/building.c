@@ -36,9 +36,9 @@ int building_find(int type)
 {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
+        if (b->state == BUILDING_STATE_IN_USE && b->type == type)
             return i;
-        }
+
     }
     return MAX_BUILDINGS;
 }
@@ -49,9 +49,9 @@ building *building_get(int id)
 building *building_main(building *b)
 {
     for (int guard = 0; guard < 9; guard++) {
-        if (b->prev_part_building_id <= 0) {
+        if (b->prev_part_building_id <= 0)
             return b;
-        }
+
         b = &all_buildings[b->prev_part_building_id];
     }
     return &all_buildings[0];
@@ -89,20 +89,20 @@ building *building_create(int type, int x, int y)
 
     // house size
     b->house_size = 0;
-    if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
+    if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA)
         b->house_size = 1;
-    } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
+ else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA)
         b->house_size = 2;
-    } else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
+ else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE)
         b->house_size = 3;
-    } else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
+ else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE)
         b->house_size = 4;
-    }
+
 
     // subtype
-    if (building_is_house(type)) {
+    if (building_is_house(type))
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
-    } else {
+ else {
         b->subtype.house_level = 0;
     }
 
@@ -163,9 +163,9 @@ building *building_create(int type, int x, int y)
             break;
     }
 
-    if (type == BUILDING_GRANARY) {
+    if (type == BUILDING_GRANARY)
         b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
-    }
+
     
     if (type == BUILDING_MARKET) {
 	// Set it as accepting all goods
@@ -195,27 +195,27 @@ static void building_delete(building *b)
 }
 void building_clear_related_data(building *b)
 {
-    if (b->storage_id) {
+    if (b->storage_id)
         building_storage_delete(b->storage_id);
-    }
-    if (b->type == BUILDING_SENATE_UPGRADED) {
+
+    if (b->type == BUILDING_SENATE_UPGRADED)
         city_buildings_remove_senate(b);
-    }
-    if (b->type == BUILDING_DOCK) {
+
+    if (b->type == BUILDING_DOCK)
         city_buildings_remove_dock();
-    }
-    if (b->type == BUILDING_BARRACKS) {
+
+    if (b->type == BUILDING_BARRACKS)
         city_buildings_remove_barracks(b);
-    }
-    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED) {
+
+    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(b);
-    }
-    if (b->type == BUILDING_FORT) {
+
+    if (b->type == BUILDING_FORT)
         formation_legion_delete_for_fort(b);
-    }
-    if (b->type == BUILDING_HIPPODROME) {
+
+    if (b->type == BUILDING_HIPPODROME)
         city_buildings_remove_hippodrome();
-    }
+
     if (b->type == BUILDING_TRIUMPHAL_ARCH) {
         city_buildings_remove_triumphal_arch();
         building_menu_update();
@@ -260,13 +260,13 @@ void building_update_highest_id(void)
 {
     extra.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (all_buildings[i].state != BUILDING_STATE_UNUSED) {
+        if (all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
-        }
+
     }
-    if (extra.highest_id_in_use > extra.highest_id_ever) {
+    if (extra.highest_id_in_use > extra.highest_id_ever)
         extra.highest_id_ever = extra.highest_id_in_use;
-    }
+
 }
 void building_update_state(void)
 {
@@ -276,19 +276,19 @@ void building_update_state(void)
     int aqueduct_recalc = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
-        if (b->state == BUILDING_STATE_CREATED) {
+        if (b->state == BUILDING_STATE_CREATED)
             b->state = BUILDING_STATE_IN_USE;
-        }
+
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = 1;
                     road_recalc = 1;
-                } else if (b->type == BUILDING_RESERVOIR) {
+                } else if (b->type == BUILDING_RESERVOIR)
                     aqueduct_recalc = 1;
-                } else if (b->type == BUILDING_GRANARY) {
+ else if (b->type == BUILDING_GRANARY)
                     road_recalc = 1;
-                }
+
                 map_building_tiles_remove(i, b->x, b->y);
                 if (b->type == BUILDING_ROADBLOCK) {
                     // Leave the road behind the deleted roadblock
@@ -298,39 +298,39 @@ void building_update_state(void)
                 land_recalc = 1;
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
-                if (b->house_size) {
+                if (b->house_size)
                     city_population_remove_home_removed(b->house_population);
-                }
+
                 building_delete(b);
-            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
+            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME)
                 building_delete(b);
-            }
+
         }
     }
-    if (wall_recalc) {
+    if (wall_recalc)
         map_tiles_update_all_walls();
-    }
-    if (aqueduct_recalc) {
+
+    if (aqueduct_recalc)
         map_tiles_update_all_aqueducts(0);
-    }
-    if (land_recalc) {
+
+    if (land_recalc)
         map_routing_update_land();
-    }
-    if (road_recalc) {
+
+    if (road_recalc)
         map_tiles_update_all_roads();
-    }
+
 }
 void building_update_desirability(void)
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
-        if (b->state != BUILDING_STATE_IN_USE) {
+        if (b->state != BUILDING_STATE_IN_USE)
             continue;
-        }
+
         b->desirability = map_desirability_get_max(b->x, b->y, b->size);
-        if (b->is_adjacent_to_water) {
+        if (b->is_adjacent_to_water)
             b->desirability += 10;
-        }
+
         switch (map_elevation_at(b->grid_offset)) {
             case 0: break;
             case 1: b->desirability += 10; break;
@@ -347,9 +347,9 @@ int building_mothball_toggle(building *b)
     if (b->state == BUILDING_STATE_IN_USE ) {
         b->state = BUILDING_STATE_MOTHBALLED;
         b->num_workers = 0;
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+    } else if (b->state == BUILDING_STATE_MOTHBALLED)
         b->state = BUILDING_STATE_IN_USE;
-    }
+
     return b->state;
 
 }
@@ -360,9 +360,9 @@ int building_mothball_set(building* b, int mothball)
             b->state = BUILDING_STATE_MOTHBALLED;
             b->num_workers = 0;
         }
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+    } else if (b->state == BUILDING_STATE_MOTHBALLED)
         b->state = BUILDING_STATE_IN_USE;
-    }
+
     return b->state;
 
 }

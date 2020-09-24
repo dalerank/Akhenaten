@@ -76,9 +76,9 @@ static void draw_background(void)
     text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
-    if (!data.is_review && game_mission_has_choice()) {
+    if (!data.is_review && game_mission_has_choice())
         lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK);
-    }
+
 
     inner_panel_draw(32, 96, 33, 5);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE);
@@ -148,9 +148,9 @@ static void draw_foreground(void)
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);
-    if (!data.is_review && game_mission_has_choice()) {
+    if (!data.is_review && game_mission_has_choice())
         image_buttons_draw(26, 428, &image_button_back, 1);
-    }
+
 
     graphics_reset_dialog();
 }

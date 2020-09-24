@@ -13,13 +13,13 @@ static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 static int determine_width(const uint8_t *text)
 {
     int width = text_get_width(text, FONT_NORMAL_BLACK);
-    if (width <= 100) {
+    if (width <= 100)
         return 200;
-    } else if (width <= 200) {
+ else if (width <= 200)
         return 300;
-    } else if (width <= 300) {
+ else if (width <= 300)
         return 400;
-    } else {
+ else {
         return 460;
     }
 }
@@ -34,13 +34,13 @@ void warning_draw(void)
     int center = (screen_width() - 180) / 2;
     for (int i = 0; i < 5; i++) {
         const uint8_t *text = city_warning_get(i);
-        if (!text) {
+        if (!text)
             continue;
-        }
+
         int top_offset = TOP_OFFSETS[i];
-        if (game_state_is_paused()) {
+        if (game_state_is_paused())
             top_offset += 70;
-        }
+
         int box_width = determine_width(text);
         label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
         if (box_width < 460) {

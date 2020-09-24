@@ -130,12 +130,12 @@ static void handle_submenu_focus(void)
 {
     if (data.menu_focus_button_id || data.submenu_focus_button_id) {
         data.submenu_focus_time = time_get_millis();
-        if (data.menu_focus_button_id) {
+        if (data.menu_focus_button_id)
             open_submenu(data.menu_focus_button_id - 1, 0);
-        }
-    } else if (time_get_millis() - data.submenu_focus_time > 500) {
+
+    } else if (time_get_millis() - data.submenu_focus_time > 500)
         close_submenu();
-    }
+
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -144,18 +144,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, 8, &data.menu_focus_button_id);
 
-    if (!data.keep_submenu_open) {
+    if (!data.keep_submenu_open)
         handle_submenu_focus();
-    }
+
     if (data.selected_submenu) {
         handled |= generic_buttons_handle_mouse(
             m, x_offset - 348, 72 + 24 * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
     if (!handled && input_go_back_requested(m, h)) {
-        if (data.keep_submenu_open) {
+        if (data.keep_submenu_open)
             close_submenu();
-        } else {
+ else {
             window_city_show();
         }
     }
@@ -168,9 +168,9 @@ static void button_menu_item(int index, int param2)
         close_submenu();
         window_city_show();
     } else {
-        if (data.keep_submenu_open && data.selected_submenu == MENU_ID_TO_SUBMENU_ID[index]) {
+        if (data.keep_submenu_open && data.selected_submenu == MENU_ID_TO_SUBMENU_ID[index])
             close_submenu();
-        } else {
+ else {
             open_submenu(index, 1);
         }
     }
@@ -179,9 +179,9 @@ static void button_menu_item(int index, int param2)
 static void button_submenu_item(int index, int param2)
 {
     int overlay = SUBMENU_ID_TO_OVERLAY[data.selected_submenu][index];
-    if (overlay) {
+    if (overlay)
         game_state_set_overlay(overlay);
-    }
+
     close_submenu();
     window_city_show();
 }

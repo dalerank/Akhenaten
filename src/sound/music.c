@@ -166,15 +166,15 @@ void sound_music_set_volume(int percentage)
 }
 void sound_music_play_intro(void)
 {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_MENU);
-    }
+
 }
 void sound_music_play_editor(void)
 {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_CITY_1);
-    }
+
 }
 void sound_music_update(int force)
 {
@@ -187,19 +187,19 @@ void sound_music_update(int force)
     int track;
     int population = city_population();
     int total_enemies = city_figures_total_invading_enemies();
-    if (total_enemies >= 32) {
+    if (total_enemies >= 32)
         track = TRACK_COMBAT_LONG;
-    } else if (total_enemies > 0) {
+ else if (total_enemies > 0)
         track = TRACK_COMBAT_SHORT;
-    } else if (population < 1000) {
+ else if (population < 1000)
         track = TRACK_CITY_1;
-    } else if (population < 2000) {
+ else if (population < 2000)
         track = TRACK_CITY_2;
-    } else if (population < 5000) {
+ else if (population < 5000)
         track = TRACK_CITY_3;
-    } else if (population < 7000) {
+ else if (population < 7000)
         track = TRACK_CITY_4;
-    } else {
+ else {
         track = TRACK_CITY_5;
     }
 

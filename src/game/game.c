@@ -66,9 +66,9 @@ static encoding_type update_encoding(void)
 static int reload_language(int is_editor, int reload_images)
 {
     if (!lang_load(is_editor)) {
-        if (is_editor) {
+        if (is_editor)
             errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
-        } else {
+ else {
             errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         }
         return 0;
@@ -88,9 +88,9 @@ static int reload_language(int is_editor, int reload_images)
 
 static int get_elapsed_ticks(void)
 {
-    if (game_state_is_paused()) {
+    if (game_state_is_paused())
         return 0;
-    }
+
     int game_speed_index = 0;
     int ticks_per_frame = 1;
     switch (window_get_id()) {
@@ -102,9 +102,9 @@ static int get_elapsed_ticks(void)
         case WINDOW_OVERLAY_MENU:
         case WINDOW_BUILD_MENU:
             game_speed_index = (100 - setting_game_speed()) / 10;
-            if (game_speed_index >= 10) {
+            if (game_speed_index >= 10)
                 return 0;
-            } else if (game_speed_index < 0) {
+ else if (game_speed_index < 0) {
                 ticks_per_frame = setting_game_speed() / 100;
                 game_speed_index = 0;
             }
@@ -113,18 +113,18 @@ static int get_elapsed_ticks(void)
             game_speed_index = 3; // 70%, nice speed for flag animations
             break;
     }
-    if (building_construction_in_progress()) {
+    if (building_construction_in_progress())
         return 0;
-    }
-    if (scroll_in_progress() && !scroll_is_smooth()) {
+
+    if (scroll_in_progress() && !scroll_is_smooth())
         return 0;
-    }
+
 
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;
-    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2) {
+    if (diff < MILLIS_PER_TICK_PER_SPEED[game_speed_index] + 2)
         return 0;
-    }
+
     last_update = now;
     return ticks_per_frame;
 }
@@ -183,9 +183,9 @@ int game_init(void)
     int missing_fonts = 0;
     if (!image_load_fonts(encoding_get())) {
         errlog("unable to load font graphics");
-        if (encoding_get() == ENCODING_KOREAN) {
+        if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;
-        } else {
+ else {
             return 0;
         }
     }
@@ -204,16 +204,16 @@ int game_init(void)
 }
 int game_init_editor(void)
 {
-    if (!reload_language(1, 0)) {
+    if (!reload_language(1, 0))
         return 0;
-    }
+
 
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
 
-    if (city_view_is_sidebar_collapsed()) {
+    if (city_view_is_sidebar_collapsed())
         city_view_toggle_sidebar();
-    }
+
 
     editor_set_active(1);
     window_editor_map_show();

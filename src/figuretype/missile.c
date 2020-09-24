@@ -92,18 +92,18 @@ static int get_citizen_on_tile(int grid_offset) {
 }
 
 static int is_non_citizen(figure *f) {
-    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+    if (f->action_state == FIGURE_ACTION_149_CORPSE)
         return 0;
-    }
-    if (figure_is_enemy(f)) {
+
+    if (figure_is_enemy(f))
         return f->id;
-    }
-    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+
+    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
         return f->id;
-    }
-    if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) {
+
+    if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA)
         return f->id;
-    }
+
     return 0;
 }
 
@@ -114,9 +114,9 @@ static int get_non_citizen_on_tile(int grid_offset) {
 void figure_explosion_cloud_action(figure *f) {
     f->use_cross_country = 1;
     f->progress_on_tile++;
-    if (f->progress_on_tile > 44) {
+    if (f->progress_on_tile > 44)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_movement_move_ticks_cross_country(f, f->speed_multiplier);
     if (f->progress_on_tile < 48) {
         f->image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) +
@@ -134,16 +134,16 @@ static void missile_hit_target(figure *f, int target_id, int legionary_type) {
             figure_properties_for_type(f->type)->missile_attack_value -
             target_props->missile_defense_value;
     formation *m = formation_get(target->formation_id);
-    if (damage_inflicted < 0) {
+    if (damage_inflicted < 0)
         damage_inflicted = 0;
-    }
-    if (target->type == legionary_type && m->is_halted && m->layout == FORMATION_COLUMN) {
+
+    if (target->type == legionary_type && m->is_halted && m->layout == FORMATION_COLUMN)
         damage_inflicted = 1;
-    }
+
     int target_damage = damage_inflicted + target->damage;
-    if (target_damage <= max_damage) {
+    if (target_damage <= max_damage)
         target->damage = target_damage;
-    } else { // kill target
+ else { // kill target
         target->damage = max_damage + 1;
         target->action_state = FIGURE_ACTION_149_CORPSE;
         target->wait_ticks = 0;
@@ -159,17 +159,17 @@ static void missile_hit_target(figure *f, int target_id, int legionary_type) {
 void figure_arrow_action(figure *f) {
     f->use_cross_country = 1;
     f->progress_on_tile++;
-    if (f->progress_on_tile > 120) {
+    if (f->progress_on_tile > 120)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
-    } else if (should_die) {
+    } else if (should_die)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
@@ -177,17 +177,17 @@ void figure_arrow_action(figure *f) {
 void figure_spear_action(figure *f) {
     f->use_cross_country = 1;
     f->progress_on_tile++;
-    if (f->progress_on_tile > 120) {
+    if (f->progress_on_tile > 120)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
-    } else if (should_die) {
+    } else if (should_die)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
@@ -195,17 +195,17 @@ void figure_spear_action(figure *f) {
 void figure_javelin_action(figure *f) {
     f->use_cross_country = 1;
     f->progress_on_tile++;
-    if (f->progress_on_tile > 120) {
+    if (f->progress_on_tile > 120)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_non_citizen_on_tile(f->grid_offset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
-    } else if (should_die) {
+    } else if (should_die)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
@@ -213,9 +213,9 @@ void figure_javelin_action(figure *f) {
 void figure_bolt_action(figure *f) {
     f->use_cross_country = 1;
     f->progress_on_tile++;
-    if (f->progress_on_tile > 120) {
+    if (f->progress_on_tile > 120)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_non_citizen_on_tile(f->grid_offset);
     if (target_id) {
@@ -225,13 +225,13 @@ void figure_bolt_action(figure *f) {
         int damage_inflicted =
                 figure_properties_for_type(f->type)->missile_attack_value -
                 target_props->missile_defense_value;
-        if (damage_inflicted < 0) {
+        if (damage_inflicted < 0)
             damage_inflicted = 0;
-        }
+
         int target_damage = damage_inflicted + target->damage;
-        if (target_damage <= max_damage) {
+        if (target_damage <= max_damage)
             target->damage = target_damage;
-        } else { // kill target
+ else { // kill target
             target->damage = max_damage + 1;
             target->action_state = FIGURE_ACTION_149_CORPSE;
             target->wait_ticks = 0;

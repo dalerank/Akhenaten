@@ -19,9 +19,9 @@ int building_market_get_max_food_stock(building *market)
     if (market->id > 0 && market->type == BUILDING_MARKET) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             int stock = market->data.market.inventory[i];
-            if (stock > max_stock) {
+            if (stock > max_stock)
                 max_stock = stock;
-            }
+
         }
     }
     return max_stock;
@@ -33,9 +33,9 @@ int building_market_get_max_goods_stock(building *market)
     if (market->id > 0 && market->type == BUILDING_MARKET) {
         for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
             int stock = market->data.market.inventory[i];
-            if (stock > max_stock) {
+            if (stock > max_stock)
                 max_stock = stock;
-            }
+
         }
     }
     return max_stock;
@@ -87,27 +87,27 @@ int building_market_get_storage_destination(building *market)
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
+        if (b->state != BUILDING_STATE_IN_USE)
             continue;
-        }
-        if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
+
+        if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE)
             continue;
-        }
+
         if (!b->has_road_access || b->distance_from_entry <= 0 ||
             b->road_network_id != market->road_network_id) {
             continue;
         }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET,b)) {
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET,b))
             continue;
-        }
+
         int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);
-        if (distance >= 40) {
+        if (distance >= 40)
             continue;
-        }
+
         if (b->type == BUILDING_GRANARY) {
-            if (scenario_property_rome_supplies_wheat()) {
+            if (scenario_property_rome_supplies_wheat())
                 continue;
-            }
+
             update_food_resource(&resources[INVENTORY_WHEAT], RESOURCE_WHEAT, b, distance);
             update_food_resource(&resources[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b, distance);
             update_food_resource(&resources[INVENTORY_FRUIT], RESOURCE_FRUIT, b, distance);
@@ -122,24 +122,24 @@ int building_market_get_storage_destination(building *market)
     }
 
     // update demands
-    if (market->data.market.pottery_demand) {
+    if (market->data.market.pottery_demand)
         market->data.market.pottery_demand--;
-    } else {
+ else {
         resources[INVENTORY_POTTERY].num_buildings = 0;
     }
-    if (market->data.market.furniture_demand) {
+    if (market->data.market.furniture_demand)
         market->data.market.furniture_demand--;
-    } else {
+ else {
         resources[INVENTORY_FURNITURE].num_buildings = 0;
     }
-    if (market->data.market.oil_demand) {
+    if (market->data.market.oil_demand)
         market->data.market.oil_demand--;
-    } else {
+ else {
         resources[INVENTORY_OIL].num_buildings = 0;
     }
-    if (market->data.market.wine_demand) {
+    if (market->data.market.wine_demand)
         market->data.market.wine_demand--;
-    } else {
+ else {
         resources[INVENTORY_WINE].num_buildings = 0;
     }
 
@@ -150,9 +150,9 @@ int building_market_get_storage_destination(building *market)
             break;
         }
     }
-    if (!can_go) {
+    if (!can_go)
         return 0;
-    }
+
     // prefer food if we don't have it
     if (!market->data.market.inventory[INVENTORY_WHEAT] && resources[INVENTORY_WHEAT].num_buildings && is_good_accepted(INVENTORY_WHEAT, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_WHEAT;
@@ -255,9 +255,9 @@ int building_market_get_storage_destination(building *market)
             fetch_inventory = INVENTORY_MEAT;
         }
     }
-    if (fetch_inventory < 0) {
+    if (fetch_inventory < 0)
         return 0;
-    }
+
     market->data.market.fetch_inventory_id = fetch_inventory;
     return resources[fetch_inventory].building_id;
 }

@@ -71,9 +71,9 @@ static FILE *log_file = 0;
 static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
     if (log_file) {
-        if (priority == SDL_LOG_PRIORITY_ERROR) {
+        if (priority == SDL_LOG_PRIORITY_ERROR)
             fwrite("ERROR: ", sizeof(char), 7, log_file);
-        } else {
+ else {
             fwrite("INFO: ", sizeof(char), 6, log_file);
         }
         fwrite(message, sizeof(char), strlen(message), log_file);
@@ -88,9 +88,9 @@ static void setup_logging(void)
 }
 static void teardown_logging(void)
 {
-    if (log_file) {
+    if (log_file)
         file_close(log_file);
-    }
+
 }
 
 #else
@@ -207,9 +207,9 @@ static int pre_init(const char *custom_data_dir)
 
     // ...then from working directory...
     SDL_Log("Attempting to load game from working directory");
-    if (game_pre_init()) {
+    if (game_pre_init())
         return 1;
-    }
+
 
     // ...then from the executable base path...
     #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -346,16 +346,16 @@ static void run_and_draw(void)
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
 {
-    if (!SDL_GetRelativeMouseMode()) {
+    if (!SDL_GetRelativeMouseMode())
         mouse_set_position(event->x, event->y);
-    }
-    if (event->button == SDL_BUTTON_LEFT) {
+
+    if (event->button == SDL_BUTTON_LEFT)
         mouse_set_left_down(is_down);
-    } else if (event->button == SDL_BUTTON_MIDDLE) {
+ else if (event->button == SDL_BUTTON_MIDDLE)
         mouse_set_middle_down(is_down);
-    } else if (event->button == SDL_BUTTON_RIGHT) {
+ else if (event->button == SDL_BUTTON_RIGHT)
         mouse_set_right_down(is_down);
-    }
+
 }
 #ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
@@ -408,24 +408,24 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_handle_text(&event->text);
             break;
         case SDL_MOUSEMOTION:
-            if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
+            if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode())
                 mouse_set_position(event->motion.x, event->motion.y);
-            }
+
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if (event->button.which != SDL_TOUCH_MOUSEID) {
+            if (event->button.which != SDL_TOUCH_MOUSEID)
                 handle_mouse_button(&event->button, 1);
-            }
+
             break;
         case SDL_MOUSEBUTTONUP:
-            if (event->button.which != SDL_TOUCH_MOUSEID) {
+            if (event->button.which != SDL_TOUCH_MOUSEID)
                 handle_mouse_button(&event->button, 0);
-            }
+
             break;
         case SDL_MOUSEWHEEL:
-            if (event->wheel.which != SDL_TOUCH_MOUSEID) {
+            if (event->wheel.which != SDL_TOUCH_MOUSEID)
                 mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
-            }
+
             break;
 
         case SDL_FINGERDOWN:
@@ -443,17 +443,17 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
 
         case SDL_USEREVENT:
-            if (event->user.code == USER_EVENT_QUIT) {
+            if (event->user.code == USER_EVENT_QUIT)
                 *quit = 1;
-            } else if (event->user.code == USER_EVENT_RESIZE) {
+ else if (event->user.code == USER_EVENT_RESIZE)
                 platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
-            } else if (event->user.code == USER_EVENT_FULLSCREEN) {
+ else if (event->user.code == USER_EVENT_FULLSCREEN)
                 platform_screen_set_fullscreen();
-            } else if (event->user.code == USER_EVENT_WINDOWED) {
+ else if (event->user.code == USER_EVENT_WINDOWED)
                 platform_screen_set_windowed();
-            } else if (event->user.code == USER_EVENT_CENTER_WINDOW) {
+ else if (event->user.code == USER_EVENT_CENTER_WINDOW)
                 platform_screen_center_window();
-            }
+
             break;
 
         default:
@@ -483,9 +483,9 @@ static void main_loop(void)
             handle_event(&event, &active, &quit);
         }
         if (!quit) {
-            if (active) {
+            if (active)
                 run_and_draw();
-            } else {
+ else {
                 SDL_WaitEvent(NULL);
             }
         }

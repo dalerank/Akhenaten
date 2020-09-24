@@ -77,9 +77,9 @@ static int parse_integer(uint8_t * string, int * value){
 }
 void game_cheat_activate(void)
 {
-    if (window_is(WINDOW_BUILDING_INFO)) {
+    if (window_is(WINDOW_BUILDING_INFO))
         data.is_cheating = window_building_info_get_int() == BUILDING_WELL;
-    } else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
+ else if (data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
         data.is_cheating = 2;
         scenario_invasion_start_from_cheat();
     } else {
@@ -101,15 +101,17 @@ void game_cheat_money(void)
 
 void game_cheat_victory(void)
 {
-    if (data.is_cheating) {
+    if (data.is_cheating)
         city_victory_force_win();
-    }
+
 }
 
 void game_cheat_breakpoint(){
     if (data.is_cheating) {
+        //
     }
 }
+
 
 void game_cheat_console(){
     if (data.is_cheating) {
@@ -171,8 +173,8 @@ void game_cheat_parse_command(uint8_t * command){
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command,command_to_call);
     for (int i = 0; i < NUMBER_OF_COMMANDS; i++) {
-        if (string_compare_case_insensitive((char *)command_to_call, commands[i]) == 0) {
+        if (string_compare_case_insensitive((char *)command_to_call, commands[i]) == 0)
             (*execute_command[i])(command+next_arg);
-        }
+
     }
 }

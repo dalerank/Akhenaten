@@ -29,9 +29,9 @@ void traders_clear(void)
 int trader_create(void)
 {
     int trader_id = data.next_index++;
-    if (data.next_index >= MAX_TRADERS) {
+    if (data.next_index >= MAX_TRADERS)
         data.next_index = 0;
-    }
+
 
     memset(&data.traders[trader_id], 0, sizeof(struct trader));
     return trader_id;

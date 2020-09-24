@@ -138,9 +138,9 @@ static void draw_foreground(void)
 
     for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
         font_t font = FONT_NORMAL_GREEN;
-        if (data.focus_button_id == i + 1) {
+        if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_WHITE;
-        }
+
         encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], file, FILE_NAME_MAX);
         //file_remove_extension(file);
         text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);

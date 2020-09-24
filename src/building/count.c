@@ -24,26 +24,26 @@ static void clear_counters(void)
 static void increase_count(int type, int active)
 {
     ++data.buildings[type].total;
-    if (active) {
+    if (active)
         ++data.buildings[type].active;
-    }
+
 }
 static void increase_industry_count(int resource, int active)
 {
     ++data.industry[resource].total;
-    if (active) {
+    if (active)
         ++data.industry[resource].active;
-    }
+
 }
 
 static void limit_hippodrome(void)
 {
-    if (data.buildings[BUILDING_HIPPODROME].total > 1) {
+    if (data.buildings[BUILDING_HIPPODROME].total > 1)
         data.buildings[BUILDING_HIPPODROME].total = 1;
-    }
-    if (data.buildings[BUILDING_HIPPODROME].active > 1) {
+
+    if (data.buildings[BUILDING_HIPPODROME].active > 1)
         data.buildings[BUILDING_HIPPODROME].active = 1;
-    }
+
 }
 
 void building_count_update(void)
@@ -54,9 +54,9 @@ void building_count_update(void)
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->house_size) {
+        if (b->state != BUILDING_STATE_IN_USE || b->house_size)
             continue;
-        }
+
         int is_entertainment_venue = 0;
         int type = b->type;
         switch (type) {
@@ -173,23 +173,23 @@ void building_count_update(void)
 
             // water-side
             case BUILDING_WHARF:
-                if (b->num_workers > 0) {
+                if (b->num_workers > 0)
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
-                }
+
                 break;
             case BUILDING_DOCK:
-                if (b->num_workers > 0 && b->has_water_access) {
+                if (b->num_workers > 0 && b->has_water_access)
                     city_buildings_add_working_dock(i);
-                }
+
                 break;
             default:
                 continue;
         }
         if (b->immigrant_figure_id) {
             figure *f = figure_get(b->immigrant_figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i)
                 b->immigrant_figure_id = 0;
-            }
+
         }
         if (is_entertainment_venue) {
             // update number of shows

@@ -94,9 +94,9 @@ void building_house_change_to(building *house, int type)
     int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].group);
     if (house->house_is_merged) {
         image_id += 4;
-        if (HOUSE_IMAGE[house->subtype.house_level].offset) {
+        if (HOUSE_IMAGE[house->subtype.house_level].offset)
             image_id += 1;
-        }
+
     } else {
         image_id += HOUSE_IMAGE[house->subtype.house_level].offset;
         image_id += map_random_get(house->grid_offset) & (HOUSE_IMAGE[house->subtype.house_level].num_types - 1);
@@ -117,9 +117,8 @@ void building_house_change_to_vacant_lot(building *house)
         create_vacant_lot(house->x + 1, house->y, image_id);
         create_vacant_lot(house->x, house->y + 1, image_id);
         create_vacant_lot(house->x + 1, house->y + 1, image_id);
-    } else {
+    } else
         map_image_set(house->grid_offset, image_id);
-    }
 }
 
 static void prepare_for_merge(int building_id, int num_tiles)
@@ -154,9 +153,9 @@ static void merge(building *b)
         b->data.house.inventory[i] += merge_data.inventory[i];
     }
     int image_id = image_id_from_group(HOUSE_IMAGE[b->subtype.house_level].group) + 4;
-    if (HOUSE_IMAGE[b->subtype.house_level].offset) {
+    if (HOUSE_IMAGE[b->subtype.house_level].offset)
         image_id += 1;
-    }
+
 
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
@@ -179,9 +178,9 @@ void building_house_merge(building *house)
         int tile_offset = house->grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
             building *other_house = building_get(map_building_at(tile_offset));
-            if (other_house->id == house->id) {
+            if (other_house->id == house->id)
                 num_house_tiles++;
-            } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size &&
+ else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size &&
                     other_house->subtype.house_level == house->subtype.house_level &&
                     !other_house->house_is_merged) {
                 num_house_tiles++;
@@ -204,12 +203,12 @@ int building_house_can_expand(building *house, int num_tiles)
             int tile_offset = base_offset + house_tile_offsets(i);
             if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 building *other_house = building_get(map_building_at(tile_offset));
-                if (other_house->id == house->id) {
+                if (other_house->id == house->id)
                     ok_tiles++;
-                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
-                    if (other_house->subtype.house_level <= house->subtype.house_level) {
+ else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
+                    if (other_house->subtype.house_level <= house->subtype.house_level)
                         ok_tiles++;
-                    }
+
                 }
             }
         }
@@ -225,16 +224,16 @@ int building_house_can_expand(building *house, int num_tiles)
         int ok_tiles = 0;
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
-            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
+            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
                 ok_tiles++;
-            } else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+ else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 building *other_house = building_get(map_building_at(tile_offset));
-                if (other_house->id == house->id) {
+                if (other_house->id == house->id)
                     ok_tiles++;
-                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
-                    if (other_house->subtype.house_level <= house->subtype.house_level) {
+ else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
+                    if (other_house->subtype.house_level <= house->subtype.house_level)
                         ok_tiles++;
-                    }
+
                 }
             }
         }
@@ -250,20 +249,20 @@ int building_house_can_expand(building *house, int num_tiles)
         int ok_tiles = 0;
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
-            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
+            if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
                 ok_tiles++;
-            } else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
+ else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 building *other_house = building_get(map_building_at(tile_offset));
-                if (other_house->id == house->id) {
+                if (other_house->id == house->id)
                     ok_tiles++;
-                } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
-                    if (other_house->subtype.house_level <= house->subtype.house_level) {
+ else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size) {
+                    if (other_house->subtype.house_level <= house->subtype.house_level)
                         ok_tiles++;
-                    }
+
                 }
-            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS)) {
+            } else if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !config_get(CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS))
                 ok_tiles++;
-            }
+
         }
         if (ok_tiles == num_tiles) {
             merge_data.x = house->x + expand_delta(dir).x;
@@ -369,13 +368,13 @@ static void split(building *house, int num_tiles)
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
             building *other_house = building_get(map_building_at(tile_offset));
             if (other_house->id != house->id && other_house->house_size) {
-                if (other_house->house_is_merged == 1) {
+                if (other_house->house_is_merged == 1)
                     split_size2(other_house, other_house->type);
-                } else if (other_house->house_size == 2) {
+ else if (other_house->house_size == 2)
                     split_size2(other_house, BUILDING_HOUSE_MEDIUM_INSULA);
-                } else if (other_house->house_size == 3) {
+ else if (other_house->house_size == 3)
                     split_size3(other_house);
-                }
+
             }
         }
     }

@@ -90,18 +90,18 @@ static void draw_foreground(void)
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
         text_draw_number(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE);
         font_t font = FONT_NORMAL_WHITE;
-        if (cat->workers_needed != cat->workers_allocated) {
+        if (cat->workers_needed != cat->workers_allocated)
             font = FONT_NORMAL_RED;
-        }
+
         text_draw_number(cat->workers_allocated, '@', " ", 510, y_offset, font);
     }
 }
 
 static int handle_mouse(const mouse *m)
 {
-    if (generic_buttons_handle_mouse(m, 0, 0, category_buttons, 9, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, 0, 0, category_buttons, 9, &focus_button_id))
         return 1;
-    }
+
     return arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2, &arrow_button_focus);
 }
 
@@ -120,11 +120,11 @@ static void button_priority(int category, int param2)
 
 static int get_tooltip_text(void)
 {
-    if (focus_button_id) {
+    if (focus_button_id)
         return 90;
-    } else if (arrow_button_focus) {
+ else if (arrow_button_focus)
         return 91;
-    } else {
+ else {
         return 0;
     }
 }

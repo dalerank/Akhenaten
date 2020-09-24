@@ -126,23 +126,23 @@ static void enable_if_allowed(int *enabled, int menu_int, int type)
 {
     if (menu_int == type && scenario_building_allowed(type)) {
         *enabled = 1;
-        if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
+        if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES)
             enable_cycling_temples_if_allowed(type);
-        }
+
     }
 }
 
 static void disable_raw(int *enabled, int menu_int, int type, int resource)
 {
-    if (type == menu_int && !empire_can_produce_resource(resource)) {
+    if (type == menu_int && !empire_can_produce_resource(resource))
         *enabled = 0;
-    }
+
 }
 static void disable_finished(int *enabled, int menu_int, int type, int resource)
 {
-    if (type == menu_int && !empire_can_produce_resource_potentially(resource)) {
+    if (type == menu_int && !empire_can_produce_resource_potentially(resource))
         *enabled = 0;
-    }
+
 }
 static void enable_normal(int *enabled, int type)
 {
@@ -201,9 +201,9 @@ static void enable_normal(int *enabled, int type)
     enable_if_allowed(enabled, type, BUILDING_LOW_BRIDGE);
     enable_if_allowed(enabled, type, BUILDING_SHIP_BRIDGE);
     if (type == BUILDING_TRIUMPHAL_ARCH) {
-        if (city_buildings_triumphal_arch_available()) {
+        if (city_buildings_triumphal_arch_available())
             *enabled = 1;
-        }
+
     }
     enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
 }
@@ -345,21 +345,21 @@ int building_menu_count_items(int submenu)
 {
     int count = 0;
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-        if (menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0) {
+        if (menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0)
             count++;
-        }
+
     }
     return count;
 }
 int building_menu_next_index(int submenu, int current_index)
 {
     for (int i = current_index + 1; i < BUILD_MENU_ITEM_MAX; i++) {
-        if (MENU_int[GAME_ENV][submenu][i] <= 0) {
+        if (MENU_int[GAME_ENV][submenu][i] <= 0)
             return 0;
-        }
-        if (menu_enabled[submenu][i]) {
+
+        if (menu_enabled[submenu][i])
             return i;
-        }
+
     }
     return 0;
 }

@@ -31,9 +31,9 @@ figure *figure_create(int type, int x, int y, int dir)
             break;
         }
     }
-    if (!id) {
+    if (!id)
         return &data.figures[0];
-    }
+
     figure *f = &data.figures[id];
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
@@ -51,9 +51,9 @@ figure *figure_create(int type, int x, int y, int dir)
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     map_figure_add(f);
-    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP) {
+    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP)
         f->trader_id = trader_create();
-    }
+
     return f;
 }
 
@@ -63,18 +63,18 @@ void figure_delete(figure *f)
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:
-            if (f->building_id) {
+            if (f->building_id)
                 b->figure_id2 = 0;
-            }
+
             break;
         case FIGURE_BALLISTA:
             b->figure_id4 = 0;
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
-                if (b->data.dock.docker_ids[i] == f->id) {
+                if (b->data.dock.docker_ids[i] == f->id)
                     b->data.dock.docker_ids[i] = 0;
-                }
+
             }
             break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
@@ -95,17 +95,17 @@ void figure_delete(figure *f)
             // nothing to do here
             break;
         default:
-            if (f->building_id) {
+            if (f->building_id)
                 b->figure_id = 0;
-            }
+
             break;
     }
-    if (f->empire_city_id) {
+    if (f->empire_city_id)
         empire_city_remove_trader(f->empire_city_id, f->id);
-    }
-    if (f->immigrant_building_id) {
+
+    if (f->immigrant_building_id)
         b->immigrant_figure_id = 0;
-    }
+
     figure_route_remove(f);
     map_figure_delete(f);
 

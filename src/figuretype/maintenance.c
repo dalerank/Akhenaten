@@ -21,9 +21,9 @@ void figure_engineer_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_image_increase_offset(f, 12);
 
     switch (f->action_state) {
@@ -83,9 +83,9 @@ void figure_engineer_action(figure *f) {
                 f->action_state = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
                 figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roam_length = 0;
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
     }
     figure_image_update(f, image_id_from_group(GROUP_FIGURE_ENGINEER));
@@ -98,19 +98,19 @@ static int get_nearest_enemy(int x, int y, int *distance) {
     int min_dist = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id) {
+        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id)
             continue;
-        }
+
         int dist;
-        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
+        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
             dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+ else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
             dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (figure_is_enemy(f)) {
+ else if (figure_is_enemy(f))
             dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_WOLF) {
+ else if (f->type == FIGURE_WOLF)
             dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
-        } else {
+ else {
             continue;
         }
         if (dist < min_dist) {
@@ -123,9 +123,9 @@ static int get_nearest_enemy(int x, int y, int *distance) {
 }
 
 static int fight_enemy(figure *f) {
-    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
+    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
         return 0;
-    }
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
         case FIGURE_ACTION_149_CORPSE:
@@ -138,9 +138,9 @@ static int fight_enemy(figure *f) {
             return 0;
     }
     f->wait_ticks_next_target++;
-    if (f->wait_ticks_next_target < 10) {
+    if (f->wait_ticks_next_target < 10)
         return 0;
-    }
+
     f->wait_ticks_next_target = 0;
     int distance;
     int enemy_id = get_nearest_enemy(f->x, f->y, &distance);
@@ -160,9 +160,9 @@ static int fight_enemy(figure *f) {
 }
 
 static int fight_fire(figure *f) {
-    if (building_list_burning_size() <= 0) {
+    if (building_list_burning_size() <= 0)
         return 0;
-    }
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
         case FIGURE_ACTION_149_CORPSE:
@@ -175,9 +175,9 @@ static int fight_fire(figure *f) {
             return 0;
     }
     f->wait_ticks_missile++;
-    if (f->wait_ticks_missile < 20) {
+    if (f->wait_ticks_missile < 20)
         return 0;
-    }
+
     int distance;
     int ruin_id = building_maintenance_get_closest_burning_ruin(f->x, f->y, &distance);
     if (ruin_id > 0 && distance <= 25) {
@@ -205,9 +205,9 @@ static void extinguish_fire(figure *f) {
         f->wait_ticks = 1;
     }
     f->attack_direction = calc_general_direction(f->x, f->y, burn->x, burn->y);
-    if (f->attack_direction >= 8) {
+    if (f->attack_direction >= 8)
         f->attack_direction = 0;
-    }
+
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
         f->wait_ticks_missile = 20;
@@ -227,13 +227,13 @@ static void extinguish_fire(figure *f) {
 }
 
 static int target_is_alive(figure *f) {
-    if (f->target_figure_id <= 0) {
+    if (f->target_figure_id <= 0)
         return 0;
-    }
+
     figure *target = figure_get(f->target_figure_id);
-    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence) {
+    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence)
         return 1;
-    }
+
     return 0;
 }
 
@@ -243,15 +243,15 @@ void figure_prefect_action(figure *f) {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_image_increase_offset(f, 12);
 
     // special actions
-    if (!fight_enemy(f)) {
+    if (!fight_enemy(f))
         fight_fire(f);
-    }
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -310,9 +310,9 @@ void figure_prefect_action(figure *f) {
                 f->action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
                 figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roam_length = 0;
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
             f->terrain_usage = TERRAIN_USAGE_ANY;
@@ -322,9 +322,9 @@ void figure_prefect_action(figure *f) {
                 figure_route_remove(f);
                 f->roam_length = 0;
                 f->wait_ticks = 50;
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
             extinguish_fire(f);
@@ -349,9 +349,9 @@ void figure_prefect_action(figure *f) {
                 f->destination_x = target->x;
                 f->destination_y = target->y;
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
     }
     // graphic id
@@ -359,9 +359,9 @@ void figure_prefect_action(figure *f) {
     if (f->action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
         f->action_state == FIGURE_ACTION_150_ATTACK) {
         dir = f->attack_direction;
-    } else if (f->direction < 8) {
+    } else if (f->direction < 8)
         dir = f->direction;
-    } else {
+ else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
@@ -398,7 +398,7 @@ void figure_worker_action(figure *f) {
     f->use_cross_country = 0;
     f->max_roam_length = 384;
     building *b = building_get(f->building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
 }

@@ -42,9 +42,9 @@ static void close_smk(void)
 static int load_smk(const char *filename)
 {
     const char *path = dir_get_file(filename, MAY_BE_LOCALIZED);
-    if (!path) {
+    if (!path)
         return 0;
-    }
+
     FILE *fp = file_open(path, "rb");
     data.s = smacker_open(fp);
     if (!data.s) {
@@ -131,9 +131,9 @@ int video_is_finished(void)
 void video_stop(void)
 {
     if (data.is_playing) {
-        if (!data.is_ended) {
+        if (!data.is_ended)
             end_video();
-        }
+
         close_smk();
         data.is_playing = 0;
     }
@@ -168,9 +168,9 @@ void video_draw(int x_offset, int y_offset)
 
         if (data.audio.has_audio) {
             int audio_len = smacker_get_frame_audio_size(data.s, 0);
-            if (audio_len > 0) {
+            if (audio_len > 0)
                 sound_device_write_custom_music_data(smacker_get_frame_audio(data.s, 0), audio_len);
-            }
+
         }
     }
     if (!draw_frame)

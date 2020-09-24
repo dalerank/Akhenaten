@@ -49,9 +49,9 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
 {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
-    if (distance <= 0 || distance >= 998) {
+    if (distance <= 0 || distance >= 998)
         return 0;
-    }
+
 
     int num_tiles = 0;
     int last_direction = -1;
@@ -79,16 +79,16 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
                 }
             }
         }
-        if (direction == -1) {
+        if (direction == -1)
             return 0;
-        }
+
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
-        if (num_tiles >= MAX_PATH) {
+        if (num_tiles >= MAX_PATH)
             return 0;
-        }
+
     }
     for (int i = 0; i < num_tiles; i++) {
         path[i] = direction_path[num_tiles - i - 1];
@@ -100,9 +100,9 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
 {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
-    if (distance <= 0 || distance >= 998) {
+    if (distance <= 0 || distance >= 998)
         return 0;
-    }
+
 
     int num_tiles = 0;
     int last_direction = -1;
@@ -115,9 +115,9 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
         distance = map_routing_distance(grid_offset);
         *out_x = x;
         *out_y = y;
-        if (distance <= range) {
+        if (distance <= range)
             return 1;
-        }
+
         int direction = -1;
         int general_direction = calc_general_direction(x, y, src_x, src_y);
         for (int d = 0; d < 8; d += step) {
@@ -135,16 +135,16 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
                 }
             }
         }
-        if (direction == -1) {
+        if (direction == -1)
             return 0;
-        }
+
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
-        if (num_tiles >= MAX_PATH) {
+        if (num_tiles >= MAX_PATH)
             return 0;
-        }
+
     }
     return 0;
 }
@@ -154,9 +154,9 @@ int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_fl
     int rand = random_byte() & 3;
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
-    if (distance <= 0 || distance >= 998) {
+    if (distance <= 0 || distance >= 998)
         return 0;
-    }
+
 
     int num_tiles = 0;
     int last_direction = -1;
@@ -166,9 +166,9 @@ int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_fl
     while (distance > 1) {
         int current_rand = rand;
         distance = map_routing_distance(grid_offset);
-        if (is_flotsam) {
+        if (is_flotsam)
             current_rand = map_random_get(grid_offset) & 3;
-        }
+
         int direction = -1;
         for (int d = 0; d < 8; d++) {
             if (d != last_direction) {
@@ -186,16 +186,16 @@ int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_fl
                 }
             }
         }
-        if (direction == -1) {
+        if (direction == -1)
             return 0;
-        }
+
         adjust_tile_in_direction(direction, &x, &y, &grid_offset);
         int forward_direction = (direction + 4) % 8;
         direction_path[num_tiles++] = forward_direction;
         last_direction = forward_direction;
-        if (num_tiles >= MAX_PATH) {
+        if (num_tiles >= MAX_PATH)
             return 0;
-        }
+
     }
     for (int i = 0; i < num_tiles; i++) {
         path[i] = direction_path[num_tiles - i - 1];

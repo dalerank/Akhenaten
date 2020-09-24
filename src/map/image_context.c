@@ -317,9 +317,9 @@ void map_image_context_reset_elevation(void)
 static int context_matches_tiles(const struct terrain_image_context *context, const int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {
-        if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {
+        if (context->tiles[i] != 2 && tiles[i] != context->tiles[i])
             return 0;
-        }
+
     }
     return 1;
 }
@@ -334,9 +334,9 @@ static const terrain_image *get_image(int group, int tiles[MAX_TILES])
     for (int i = 0; i < size; i++) {
         if (context_matches_tiles(&context[i], tiles)) {
             context[i].current_item_offset++;
-            if (context[i].current_item_offset >= context[i].max_item_offset) {
+            if (context[i].current_item_offset >= context[i].max_item_offset)
                 context[i].current_item_offset = 0;
-            }
+
             result.is_valid = 1;
             result.group_offset = context[i].offset_for_orientation[city_view_orientation() / 2];
             result.item_offset = context[i].current_item_offset;
@@ -408,9 +408,9 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
                 tiles[i] = 1;
             }
-        } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP)) {
+        } else if (map_terrain_is(offset, TERRAIN_ACCESS_RAMP))
             tiles[i] = 1;
-        } else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
+ else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building *b = building_get(map_building_at(offset));
             if (b->type == BUILDING_GRANARY) {
                 tiles[i]  = (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
@@ -438,9 +438,9 @@ const terrain_image *map_image_context_get_paved_road(int grid_offset)
 
 static int is_reservoir_construction_entrance(int grid_offset)
 {
-    if (!map_property_is_constructing(grid_offset)) {
+    if (!map_property_is_constructing(grid_offset))
         return 0;
-    }
+
     if (map_property_is_constructing(grid_offset + map_grid_direction_delta(0)) &&
         map_property_is_constructing(grid_offset + map_grid_direction_delta(4))) {
         return !map_property_is_constructing(grid_offset + 2 * map_grid_direction_delta(0)) ||
@@ -464,9 +464,9 @@ static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile
             return;
         }
     }
-    if (include_construction && is_reservoir_construction_entrance(offset)) {
+    if (include_construction && is_reservoir_construction_entrance(offset))
         tiles[direction] = 1;
-    }
+
 }
 
 const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include_construction)
@@ -477,9 +477,9 @@ const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_AQUEDUCT)) {
             if (has_road) {
-                if (!map_terrain_is(offset, TERRAIN_ROAD)) {
+                if (!map_terrain_is(offset, TERRAIN_ROAD))
                     tiles[i] = 1;
-                }
+
             } else {
                 tiles[i] = 1;
             }

@@ -18,9 +18,9 @@ void map_bookmarks_clear(void)
 
 void map_bookmark_save(int number)
 {
-    if (number >= 0 && number < MAX_BOOKMARKS) {
+    if (number >= 0 && number < MAX_BOOKMARKS)
         city_view_get_camera(&bookmarks[number].x, &bookmarks[number].y);
-    }
+
 }
 
 int map_bookmark_go_to(int number)

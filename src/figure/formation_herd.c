@@ -27,17 +27,17 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
             if (!map_terrain_is(grid_offset, disallowed_terrain)) {
-                if (map_soldier_strength_get(grid_offset)) {
+                if (map_soldier_strength_get(grid_offset))
                     return 0;
-                }
+
                 int desirability = map_desirability_get(grid_offset);
                 if (allow_negative_desirability) {
-                    if (desirability > 1) {
+                    if (desirability > 1)
                         return 0;
-                    }
-                } else if (desirability) {
+
+                } else if (desirability)
                     return 0;
-                }
+
                 tile_found = 1;
                 x_found = xx;
                 y_found = yy;
@@ -95,22 +95,22 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
             default:
                 continue;
         }
-        if (x_target <= 0) {
+        if (x_target <= 0)
             x_target = 1;
-        } else if (y_target <= 0) {
+ else if (y_target <= 0)
             y_target = 1;
-        } else if (x_target >= map_grid_width() - 1) {
+ else if (x_target >= map_grid_width() - 1)
             x_target = map_grid_width() - 2;
-        } else if (y_target >= map_grid_height() - 1) {
+ else if (y_target >= map_grid_height() - 1)
             y_target = map_grid_height() - 2;
-        }
-        if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile)) {
+
+        if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile))
             return 1;
-        }
+
         target_direction += 2;
-        if (target_direction > 6) {
+        if (target_direction > 6)
             target_direction = 0;
-        }
+
     }
     return 0;
 }
@@ -171,18 +171,18 @@ static void update_herd_formation(formation *m)
     int attacking_animals = 0;
     for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
         int figure_id = m->figures[fig];
-        if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK)
             attacking_animals++;
-        }
+
     }
-    if (m->missile_attack_timeout) {
+    if (m->missile_attack_timeout)
         attacking_animals = 1;
-    }
+
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
-        if (f->state == FIGURE_STATE_ALIVE) {
+        if (f->state == FIGURE_STATE_ALIVE)
             formation_set_home(m, f->x, f->y);
-        }
+
     }
     int roam_distance;
     int roam_delay;
@@ -220,9 +220,9 @@ static void update_herd_formation(formation *m)
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
-                    if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf()) {
+                    if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf())
                         sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
-                    }
+
                     move_animals(m, attacking_animals);
                 }
             }
@@ -236,8 +236,8 @@ void formation_herd_update(void)
             return;
     for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0) {
+        if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0)
             update_herd_formation(m);
-        }
+
     }
 }

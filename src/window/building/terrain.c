@@ -26,30 +26,30 @@ void window_building_draw_terrain(building_info_context *c)
         default: c->help_id = 0; break;
     }
 
-    if (c->terrain_type == TERRAIN_INFO_AQUEDUCT) {
+    if (c->terrain_type == TERRAIN_INFO_AQUEDUCT)
         window_building_draw_aqueduct(c);
-    } else if (c->terrain_type == TERRAIN_INFO_RUBBLE) {
+ else if (c->terrain_type == TERRAIN_INFO_RUBBLE)
         window_building_draw_rubble(c);
-    } else if (c->terrain_type == TERRAIN_INFO_WALL) {
+ else if (c->terrain_type == TERRAIN_INFO_WALL)
         window_building_draw_wall(c);
-    } else if (c->terrain_type == TERRAIN_INFO_GARDEN) {
+ else if (c->terrain_type == TERRAIN_INFO_GARDEN)
         window_building_draw_garden(c);
-    } else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0) {
+ else if (c->terrain_type == TERRAIN_INFO_PLAZA && c->figure.count <= 0)
         window_building_draw_plaza(c);
-    } else {
+ else {
         if (c->can_play_sound) {
             c->can_play_sound = 0;
-            if (c->figure.count > 0) {
+            if (c->figure.count > 0)
                 window_building_play_figure_phrase(c);
-            } else {
+ else {
                 sound_speech_play_file("wavs/empty_land.wav");
             }
         }
         if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {
             figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
-            if (f->type < FIGURE_SHIPWRECK) {
+            if (f->type < FIGURE_SHIPWRECK)
                 c->help_id = 42;
-            } else {
+ else {
                 c->help_id = 330;
             }
         }

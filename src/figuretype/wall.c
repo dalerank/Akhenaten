@@ -48,12 +48,12 @@ void figure_ballista_action(figure *f) {
     f->height_adjusted_ticks = 10;
     f->current_height = 45;
 
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
-    if (b->num_workers <= 0 || b->figure_id <= 0) {
+
+    if (b->num_workers <= 0 || b->figure_id <= 0)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     map_figure_delete(f);
     switch (city_view_orientation()) {
         case DIR_0_TOP:
@@ -181,9 +181,9 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
                 break;
         }
         map_grid_bound(&x, &y);
-        if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
+        if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile))
             return 1;
-        }
+
     }
     return 0;
 }
@@ -195,9 +195,9 @@ void figure_tower_sentry_action(figure *f) {
     f->is_ghost = 1;
     f->height_adjusted_ticks = 10;
     f->max_roam_length = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
         f->state = FIGURE_STATE_DEAD;
-    }
+
     figure_image_increase_offset(f, 12);
 
     tower_sentry_pick_target(f);
@@ -229,9 +229,9 @@ void figure_tower_sentry_action(figure *f) {
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-            }
+
             break;
         case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
             figure_movement_move_ticks_tower_sentry(f, 1);
@@ -252,17 +252,17 @@ void figure_tower_sentry_action(figure *f) {
             break;
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+ else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
             f->terrain_usage = TERRAIN_USAGE_ROADS;
-            if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD)) {
+            if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-            }
+
 
             f->is_ghost = 0;
             f->height_adjusted_ticks = 0;
@@ -275,16 +275,16 @@ void figure_tower_sentry_action(figure *f) {
                 map_figure_add(f);
                 f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
     }
-    if (map_terrain_is(f->grid_offset, TERRAIN_WALL)) {
+    if (map_terrain_is(f->grid_offset, TERRAIN_WALL))
         f->current_height = 18;
-    } else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE)) {
+ else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE))
         f->in_building_wait_ticks = 24;
-    }
+
     if (f->in_building_wait_ticks) {
         f->in_building_wait_ticks--;
         f->height_adjusted_ticks = 0;
@@ -298,9 +298,9 @@ void figure_tower_sentry_action(figure *f) {
                       dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         int image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY);
-        if (f->attack_image_offset < 16) {
+        if (f->attack_image_offset < 16)
             f->image_id = image_id + 96 + dir;
-        } else {
+ else {
             f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
         }
     } else {
@@ -312,9 +312,9 @@ void figure_tower_sentry_action(figure *f) {
 void figure_tower_sentry_reroute(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset)) {
+        if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset))
             continue;
-        }
+
         // tower sentry got off wall due to rotation
         int x_tile, y_tile;
         if (map_routing_wall_tile_in_radius(f->x, f->y, 2, &x_tile, &y_tile)) {
@@ -348,9 +348,9 @@ void figure_kill_tower_sentries_at(int x, int y) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (!figure_is_dead(f) && f->type == FIGURE_TOWER_SENTRY) {
-            if (calc_maximum_distance(f->x, f->y, x, y) <= 1) {
+            if (calc_maximum_distance(f->x, f->y, x, y) <= 1)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
         }
     }
 }

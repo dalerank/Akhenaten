@@ -53,9 +53,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_editor_starting_conditions_show();
-    }
+
 }
 
 static void button_era(int param1, int param2)
@@ -65,9 +65,9 @@ static void button_era(int param1, int param2)
 
 static void set_year(int value)
 {
-    if (scenario_property_start_year() < 0) {
+    if (scenario_property_start_year() < 0)
         value = -value;
-    }
+
     scenario_editor_set_start_year(value);
 }
 

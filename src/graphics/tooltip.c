@@ -60,9 +60,9 @@ static int should_draw_tooltip(tooltip_context *c)
 
 static void reset_tooltip(tooltip_context *c)
 {
-    if (c->type != TOOLTIP_NONE) {
+    if (c->type != TOOLTIP_NONE)
         c->type = TOOLTIP_NONE;
-    }
+
 }
 
 static void restore_window_under_tooltip_from_buffer(void)
@@ -110,9 +110,9 @@ static void draw_button_tooltip(tooltip_context *c)
 
     int x, y;
     if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
-        if (window_is(WINDOW_ADVISORS)) {
+        if (window_is(WINDOW_ADVISORS))
             x = c->mouse_x + 50;
-        } else {
+ else {
             x = c->mouse_x + 20;
         }
     } else {
@@ -141,16 +141,16 @@ static void draw_button_tooltip(tooltip_context *c)
             break;
         case WINDOW_LABOR_PRIORITY:
             x = c->mouse_x - width / 2 - 10;
-            if (c->mouse_y < screen_dialog_offset_y() + 200) {
+            if (c->mouse_y < screen_dialog_offset_y() + 200)
                 y = c->mouse_y + 40;
-            } else {
+ else {
                 y = c->mouse_y - 72;
             }
             break;
         default:
-            if (c->mouse_y < screen_dialog_offset_y() + 200) {
+            if (c->mouse_y < screen_dialog_offset_y() + 200)
                 y = c->mouse_y + 40;
-            } else {
+ else {
                 y = c->mouse_y - 62;
             }
             break;
@@ -196,16 +196,16 @@ static void draw_overlay_tooltip(tooltip_context *c)
     int height = 16 * lines + 10;
 
     int x, y;
-    if (c->mouse_x < width + 20) {
+    if (c->mouse_x < width + 20)
         x = c->mouse_x + 20;
-    } else {
+ else {
         x = c->mouse_x - width - 20;
     }
-    if (c->mouse_y < 200) {
+    if (c->mouse_y < 200)
         y = c->mouse_y + 50;
-    } else if (c->mouse_y + height - 72 > screen_height()) {
+ else if (c->mouse_y + height - 72 > screen_height())
         y = screen_height() - height;
-    } else {
+ else {
         y = c->mouse_y - 72;
     }
 
@@ -221,16 +221,16 @@ static void draw_senate_tooltip(tooltip_context *c)
     int x, y;
     int width = 220;
     int height = 80;
-    if (c->mouse_x < width + 20) {
+    if (c->mouse_x < width + 20)
         x = c->mouse_x + 20;
-    } else {
+ else {
         x = c->mouse_x - width - 20;
     }
-    if (c->mouse_y < 200) {
+    if (c->mouse_y < 200)
         y = c->mouse_y + 10;
-    } else if (c->mouse_y + height - 32 > screen_height()) {
+ else if (c->mouse_y + height - 32 > screen_height())
         y = screen_height() - height;
-    } else {
+ else {
         y = c->mouse_y - 32;
     }
 
@@ -291,16 +291,16 @@ static void draw_tile_tooltip(tooltip_context * c){
         int x, y;
         int width = 60;
         int height = 40;
-        if (c->mouse_x < width + 20) {
+        if (c->mouse_x < width + 20)
             x = c->mouse_x + 20;
-        } else {
+ else {
             x = c->mouse_x - width - 20;
         }
-        if (c->mouse_y < 40) {
+        if (c->mouse_y < 40)
             y = c->mouse_y + 10;
-        } else if (c->mouse_y + height - 32 > screen_height()) {
+ else if (c->mouse_y + height - 32 > screen_height())
             y = screen_height() - height;
-        } else {
+ else {
             y = c->mouse_y - 32;
         }
 
@@ -315,15 +315,15 @@ static void draw_tile_tooltip(tooltip_context * c){
 
 static void draw_tooltip(tooltip_context *c)
 {
-    if (c->type == TOOLTIP_BUTTON) {
+    if (c->type == TOOLTIP_BUTTON)
         draw_button_tooltip(c);
-    } else if (c->type == TOOLTIP_OVERLAY) {
+ else if (c->type == TOOLTIP_OVERLAY)
         draw_overlay_tooltip(c);
-    } else if(c->type == TOOLTIP_TILES) {
+ else if(c->type == TOOLTIP_TILES) {
         draw_tile_tooltip(c);
-    } else if (c->type == TOOLTIP_SENATE) {
+    } else if (c->type == TOOLTIP_SENATE)
         draw_senate_tooltip(c);
-    }
+
 
 }
 
@@ -340,9 +340,9 @@ void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
     }
     tooltip_context context = {m->x, m->y, 0, 0, 0, 0, 0, 0};
     context.text_group = DEFAULT_TEXT_GROUP;
-    if (setting_tooltips() && func) {
+    if (setting_tooltips() && func)
         func(&context);
-    }
+
     if (should_draw_tooltip(&context)) {
         draw_tooltip(&context);
         reset_tooltip(&context);

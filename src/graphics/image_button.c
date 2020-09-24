@@ -14,11 +14,11 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons) {
         image_button *btn = &buttons[i];
         if (btn->pressed) {
             if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
-                if (btn->button_type == IB_NORMAL) {
+                if (btn->button_type == IB_NORMAL)
                     btn->pressed = 0;
-                } else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down) {
+ else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down)
                     btn->pressed = 0;
-                }
+
             }
         }
     }
@@ -27,9 +27,9 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons) {
 static void remove_pressed_effect_build(image_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
-        if (btn->pressed && btn->button_type == IB_BUILD) {
+        if (btn->pressed && btn->button_type == IB_BUILD)
             btn->pressed = 0;
-        }
+
     }
 }
 
@@ -63,38 +63,38 @@ image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, 
     fade_pressed_effect(buttons, num_buttons);
     remove_pressed_effect_build(buttons, num_buttons);
     image_button *hit_button = 0;
-    if (focus_button_id) {
+    if (focus_button_id)
         *focus_button_id = 0;
-    }
+
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
-        if (btn->focused) {
+        if (btn->focused)
             btn->focused--;
-        }
+
         if (x + btn->x_offset <= m->x &&
             x + btn->x_offset + btn->width > m->x &&
             y + btn->y_offset <= m->y &&
             y + btn->y_offset + btn->height > m->y) {
-            if (focus_button_id) {
+            if (focus_button_id)
                 *focus_button_id = i + 1;
-            }
+
             if (btn->enabled) {
                 btn->focused = 2;
                 hit_button = btn;
             }
         }
     }
-    if (!hit_button) {
+    if (!hit_button)
         return 0;
-    }
+
     if (hit_button->button_type == IB_SCROLL) {
-        if (!m->left.went_down && !m->left.is_down) {
+        if (!m->left.went_down && !m->left.is_down)
             return 0;
-        }
+
     } else if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_NORMAL) {
-        if (!m->left.went_up && !m->right.went_up) {
+        if (!m->left.went_up && !m->right.went_up)
             return 0;
-        }
+
     }
     if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);

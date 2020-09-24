@@ -47,9 +47,9 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
     int next_offset;
     int size = 1;
     do {
-        if (++guard >= grid_total_size[GAME_ENV]) {
+        if (++guard >= grid_total_size[GAME_ENV])
             break;
-        }
+
         map_grid_set(&network, grid_offset, network_id);
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
@@ -58,25 +58,25 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
                 if (map_routing_citizen_is_road(new_offset) || map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP)) {
                     map_grid_set(&network, new_offset, network_id);
                     size++;
-                    if (next_offset == -1) {
+                    if (next_offset == -1)
                         next_offset = new_offset;
-                    } else {
+ else {
                         queue.items[queue.tail++] = new_offset;
-                        if (queue.tail >= MAX_QUEUE) {
+                        if (queue.tail >= MAX_QUEUE)
                             queue.tail = 0;
-                        }
+
                     }
                 }
             }
         }
         if (next_offset == -1) {
-            if (queue.head == queue.tail) {
+            if (queue.head == queue.tail)
                 return size;
-            }
+
             next_offset = queue.items[queue.head++];
-            if (queue.head >= MAX_QUEUE) {
+            if (queue.head >= MAX_QUEUE)
                 queue.head = 0;
-            }
+
         }
         grid_offset = next_offset;
     } while (next_offset > -1);

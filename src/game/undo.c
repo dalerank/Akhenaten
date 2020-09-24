@@ -51,12 +51,12 @@ void game_undo_add_building(building *b)
     data.num_buildings = 0;
     int is_on_list = 0;
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
-        if (data.buildings[i].id) {
+        if (data.buildings[i].id)
             data.num_buildings++;
-        }
-        if (data.buildings[i].id == b->id) {
+
+        if (data.buildings[i].id == b->id)
             is_on_list = 1;
-        }
+
     }
     if (!is_on_list) {
         for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
@@ -81,16 +81,16 @@ void game_undo_adjust_building(building * b){
 
 int game_undo_contains_building(int building_id)
 {
-    if (building_id <= 0 || !game_can_undo()) {
+    if (building_id <= 0 || !game_can_undo())
         return 0;
-    }
-    if (data.num_buildings <= 0) {
+
+    if (data.num_buildings <= 0)
         return 0;
-    }
+
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
-        if (data.buildings[i].id == building_id) {
+        if (data.buildings[i].id == building_id)
             return 1;
-        }
+
     }
     return 0;
 }
@@ -115,9 +115,9 @@ int game_undo_start_build(int type)
             data.available = 0;
             return 0;
         }
-        if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+        if (b->state == BUILDING_STATE_DELETED_BY_PLAYER)
             data.available = 0;
-        }
+
     }
 
     map_image_backup();
@@ -134,9 +134,9 @@ void game_undo_restore_building_state(void)
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
-            if (b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            if (b->state == BUILDING_STATE_DELETED_BY_PLAYER)
                 b->state = BUILDING_STATE_IN_USE;
-            }
+
             b->is_deleted = 0;
         }
     }
@@ -150,9 +150,9 @@ static void restore_map_images(void)
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (!map_building_at(grid_offset)) {
+            if (!map_building_at(grid_offset))
                 map_image_restore_at(grid_offset);
-            }
+
         }
     }
 }
@@ -161,9 +161,9 @@ void game_undo_restore_map(int include_properties)
 {
     map_terrain_restore();
     map_aqueduct_restore();
-    if (include_properties) {
+    if (include_properties)
         map_property_restore();
-    }
+
     restore_map_images();
 }
 
@@ -195,9 +195,9 @@ static void add_building_to_terrain(building *b)
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
-        if (b->type == BUILDING_WHARF) {
+        if (b->type == BUILDING_WHARF)
             b->data.industry.fishing_boat_id = 0;
-        }
+
     }
     b->state = BUILDING_STATE_IN_USE;
 }
@@ -214,9 +214,9 @@ void game_undo_perform(void)
                 building *b = building_get(data.buildings[i].id);
                 memcpy(b, &data.buildings[i], sizeof(building));
                 if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
-                    if (!building_storage_restore(b->storage_id)) {
+                    if (!building_storage_restore(b->storage_id))
                         building_storage_reset_building_ids();
-                    }
+
                 }
                 add_building_to_terrain(b);
             }
@@ -250,9 +250,9 @@ void game_undo_perform(void)
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
-                if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
+                if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
                     building_warehouses_add_resource(RESOURCE_MARBLE, 2);
-                }
+
                 b->state = BUILDING_STATE_UNDO;
             }
         }

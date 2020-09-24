@@ -105,9 +105,9 @@ static void draw_trader(building_info_context *c, figure *f)
                 text_id = 10;
                 break;
             case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-                if (trader_has_traded(trader_id)) {
+                if (trader_has_traded(trader_id))
                     text_id = 11;
-                } else {
+ else {
                     text_id = 13;
                 }
                 break;
@@ -264,9 +264,9 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     if (f->action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
         int x_base = c->x_offset + 40;
         int y_base = c->y_offset + 216;
-        if (phrase_height > 60) {
+        if (phrase_height > 60)
             y_base += 8;
-        }
+
         if (is_returning) {
             width = lang_text_draw(129, 16, x_base, y_base, FONT_SMALL_BLACK);
             width += lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_SMALL_BLACK);
@@ -331,17 +331,17 @@ static void draw_figure_info(building_info_context *c, int figure_id)
 
     figure *f = figure_get(figure_id);
     int type = f->type;
-    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP) {
+    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP)
         draw_trader(c, f);
-    } else if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE) {
+ else if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE)
         draw_enemy(c, f);
-    } else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || figure_is_herd(f)) {
+ else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK || figure_is_herd(f))
         draw_animal(c, f);
-    } else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
+ else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER)
         draw_cartpusher(c, f);
-    } else if (type == FIGURE_MARKET_BUYER) {
+ else if (type == FIGURE_MARKET_BUYER)
         draw_market_buyer(c, f);
-    } else {
+ else {
         draw_normal_figure(c, f);
     }
 }
@@ -349,9 +349,9 @@ static void draw_figure_info(building_info_context *c, int figure_id)
 void window_building_draw_figure_list(building_info_context *c)
 {
     inner_panel_draw(c->x_offset + 16, c->y_offset + 40, c->width_blocks - 2, 13);
-    if (c->figure.count <= 0) {
+    if (c->figure.count <= 0)
         lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120, 16 * c->width_blocks, FONT_SMALL_BLACK);
-    } else {
+ else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
             graphics_draw_from_buffer(c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48, data.figure_images[i]);
@@ -381,9 +381,9 @@ void window_building_prepare_figure_list(building_info_context *c)
 {
     if (c->figure.count > 0) {
         pixel_coordinate coord = {0, 0};
-        if (config_get(CONFIG_UI_ZOOM)) {
+        if (config_get(CONFIG_UI_ZOOM))
             graphics_set_active_canvas(CANVAS_CITY);
-        }
+
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figure_ids[i], &coord);
             graphics_save_to_buffer(coord.x, coord.y, 48, 48, data.figure_images[i]);

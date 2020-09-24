@@ -102,11 +102,11 @@ static int draw_background(void)
 
 static void draw_foreground(void)
 {
-    if (focus_button_id == 0) {
+    if (focus_button_id == 0)
         button_border_draw(545, 260, 60, 51, 0);
-    } else if (focus_button_id == 1) {
+ else if (focus_button_id == 1)
         button_border_draw(545, 260, 60, 51, 1);
-    }
+
 }
 
 static int handle_mouse(const mouse *m)

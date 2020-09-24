@@ -22,9 +22,9 @@ static struct warning warnings[MAX_WARNINGS];
 static struct warning *new_warning(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (!warnings[i].in_use) {
+        if (!warnings[i].in_use)
             return &warnings[i];
-        }
+
     }
     return 0;
 }
@@ -39,9 +39,9 @@ void city_warning_show(int type)
     w->in_use = 1;
     w->time = time_get_millis();
     const uint8_t *text;
-    if (type == WARNING_ORIENTATION) {
+    if (type == WARNING_ORIENTATION)
         text = lang_get_string(17, city_view_orientation());
-    } else {
+ else {
         text = lang_get_string(19, type - 2);
     }
     string_copy(text, w->text, MAX_TEXT);
@@ -50,18 +50,18 @@ void city_warning_show(int type)
 int city_has_warnings(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (warnings[i].in_use) {
+        if (warnings[i].in_use)
             return 1;
-        }
+
     }
     return 0;
 }
 
 const uint8_t *city_warning_get(int id)
 {
-    if (warnings[id].in_use) {
+    if (warnings[id].in_use)
         return warnings[id].text;
-    }
+
     return 0;
 }
 

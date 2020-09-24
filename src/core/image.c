@@ -319,9 +319,9 @@ static const color_t *load_external_data(const image *img) {
 //    color_t *dst = (color_t *) &data.tmp_data[4000000];
 
     // NB: isometric images are never external
-    if (img->draw.is_fully_compressed) {
+    if (img->draw.is_fully_compressed)
         convert_compressed(buf, img->draw.data_length, data.tmp_image_data);
-    } else {
+ else {
         convert_uncompressed(buf, img->draw.data_length, data.tmp_image_data);
     }
     return data.tmp_image_data;
@@ -437,9 +437,9 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     for (int i = 1; i < entries_num; i++) {
         image *img = &images[i];
         if (img->draw.is_external) {
-            if (!img->draw.offset) {
+            if (!img->draw.offset)
                 img->draw.offset = 1;
-            }
+
         } else {
             img->draw.offset = offset;
             offset += img->draw.data_length;
@@ -458,14 +458,14 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     dst++; // make sure img->offset > 0
     for (int i = 0; i < entries_num; i++) {
         image *img = &images[i];
-        if (img->draw.is_external) {
+        if (img->draw.is_external)
             continue;
-        }
+
         buf->set_offset(img->draw.offset);
         int img_offset = (int) (dst - start_dst);
-        if (img->draw.is_fully_compressed) {
+        if (img->draw.is_fully_compressed)
             dst += convert_compressed(buf, img->draw.data_length, dst);
-        } else if (img->draw.has_compressed_part) { // isometric tile
+ else if (img->draw.has_compressed_part) { // isometric tile
             dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
             dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
         } else {
@@ -500,9 +500,9 @@ const image *imagepak::get_image(int id, bool relative)
 #include "window/city.h"
 
 int image_groupid_translation(int table[], int group) {
-    if (group == 246) {
+    if (group == 246)
         int a = 2;
-    }
+
 
     if (group > 99999)
         group -= 99999;
@@ -559,13 +559,13 @@ const image *image_get(int id, int mode) {
     return &DUMMY_IMAGE;
 }
 const image *image_letter(int letter_id) {
-    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
+    if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
         return data.font->get_image(data.font_base_offset + letter_id);
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
+ else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
         return data.font->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
-    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
+ else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET)
         return image_get(image_id_from_group(GROUP_FONT) + letter_id);
-    } else {
+ else {
         return &DUMMY_IMAGE;
     }
 }
@@ -640,15 +640,15 @@ int image_load_enemy(int enemy_id) {
     return 1;
 }
 int image_load_fonts(encoding_type encoding) {
-    if (encoding == ENCODING_CYRILLIC) {
+    if (encoding == ENCODING_CYRILLIC)
         return 0;
-    } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
+ else if (encoding == ENCODING_TRADITIONAL_CHINESE)
         return 0;
-    } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
+ else if (encoding == ENCODING_SIMPLIFIED_CHINESE)
         return 0;
-    } else if (encoding == ENCODING_KOREAN) {
+ else if (encoding == ENCODING_KOREAN)
         return 0;
-    } else {
+ else {
 //        free(data.font);
 //        free(data.font_data);
 //        data.font = 0;

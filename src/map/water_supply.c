@@ -38,9 +38,9 @@ static void mark_well_access(int well_id, int radius)
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int building_id = map_building_at(map_grid_offset(xx, yy));
-            if (building_id) {
+            if (building_id)
                 building_get(building_id)->has_well_access = 1;
-            }
+
         }
     }
 }
@@ -50,12 +50,12 @@ void map_water_supply_update_houses(void)
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
+        if (b->state != BUILDING_STATE_IN_USE)
             continue;
-        }
-        if (b->type == BUILDING_WELL) {
+
+        if (b->type == BUILDING_WELL)
             building_list_small_add(i);
-        } else if (b->house_size) {
+ else if (b->house_size) {
             b->has_water_access = 0;
             b->has_well_access = 0;
             if (map_terrain_exists_tile_in_area_with_type(
@@ -80,9 +80,9 @@ static void set_all_aqueducts_to_no_water(void)
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
-                if (image_id < image_without_water) {
+                if (image_id < image_without_water)
                     map_image_set(grid_offset, image_id + 15);
-                }
+
             }
         }
     }
@@ -97,14 +97,14 @@ static void fill_aqueducts_from_offset(int grid_offset)
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + 15;
     do {
-        if (++guard >= grid_total_size[GAME_ENV]) {
+        if (++guard >= grid_total_size[GAME_ENV])
             break;
-        }
+
         map_aqueduct_set(grid_offset, 1);
         int image_id = map_image_at(grid_offset);
-        if (image_id >= image_without_water) {
+        if (image_id >= image_without_water)
             map_image_set(grid_offset, image_id - 15);
-        }
+
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
             const int ADJACENT_OFFSETS[] = {-grid_size[GAME_ENV], 1, grid_size[GAME_ENV], -1};
@@ -114,19 +114,19 @@ static void fill_aqueducts_from_offset(int grid_offset)
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
                 if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
-                    if (!b->has_water_access) {
+                    if (!b->has_water_access)
                         b->has_water_access = 2;
-                    }
+
                 }
             } else if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
                 if (!map_aqueduct_at(new_offset)) {
-                    if (next_offset == -1) {
+                    if (next_offset == -1)
                         next_offset = new_offset;
-                    } else {
+ else {
                         queue.items[queue.tail++] = new_offset;
-                        if (queue.tail >= MAX_QUEUE) {
+                        if (queue.tail >= MAX_QUEUE)
                             queue.tail = 0;
-                        }
+
                     }
                 }
             }
@@ -135,9 +135,9 @@ static void fill_aqueducts_from_offset(int grid_offset)
             if (queue.head == queue.tail)
             return;
             next_offset = queue.items[queue.head++];
-            if (queue.head >= MAX_QUEUE) {
+            if (queue.head >= MAX_QUEUE)
                 queue.head = 0;
-            }
+
         }
         grid_offset = next_offset;
     } while (next_offset > -1);
@@ -166,9 +166,9 @@ void map_water_supply_update_reservoir_fountain(void)
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
-            if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
+            if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER))
                 b->has_water_access = 2;
-            } else {
+ else {
                 b->has_water_access = 0;
             }
         }
@@ -194,25 +194,25 @@ void map_water_supply_update_reservoir_fountain(void)
     // mark reservoir ranges
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
-        if (b->has_water_access) {
+        if (b->has_water_access)
             map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
-        }
+
     }
     // fountains
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN)
             continue;
-        }
+
         int des = map_desirability_get(b->grid_offset);
         int image_id;
-        if (des > 60) {
+        if (des > 60)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_4);
-        } else if (des > 40) {
+ else if (des > 40)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_3);
-        } else if (des > 20) {
+ else if (des > 20)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_2);
-        } else {
+ else {
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
         }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
@@ -240,9 +240,9 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size) {
                 num_houses++;
-                if (!map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+                if (!map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
                     return WELL_NECESSARY;
-                }
+
             }
         }
     }

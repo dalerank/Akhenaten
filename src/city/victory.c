@@ -41,38 +41,38 @@ static int determine_victory_state(void)
 
     if (scenario_criteria_culture_enabled()) {
         has_criteria = 1;
-        if (city_data.ratings.culture < scenario_criteria_culture()) {
+        if (city_data.ratings.culture < scenario_criteria_culture())
             state = VICTORY_STATE_NONE;
-        }
+
     }
     if (scenario_criteria_prosperity_enabled()) {
         has_criteria = 1;
-        if (city_data.ratings.prosperity < scenario_criteria_prosperity()) {
+        if (city_data.ratings.prosperity < scenario_criteria_prosperity())
             state = VICTORY_STATE_NONE;
-        }
+
     }
     if (scenario_criteria_peace_enabled()) {
         has_criteria = 1;
-        if (city_data.ratings.peace < scenario_criteria_peace()) {
+        if (city_data.ratings.peace < scenario_criteria_peace())
             state = VICTORY_STATE_NONE;
-        }
+
     }
     if (scenario_criteria_favor_enabled()) {
         has_criteria = 1;
-        if (city_data.ratings.favor < scenario_criteria_favor()) {
+        if (city_data.ratings.favor < scenario_criteria_favor())
             state = VICTORY_STATE_NONE;
-        }
+
     }
     if (scenario_criteria_population_enabled()) {
         has_criteria = 1;
-        if (city_data.population.population < scenario_criteria_population()) {
+        if (city_data.population.population < scenario_criteria_population())
             state = VICTORY_STATE_NONE;
-        }
+
     }
 
-    if (!has_criteria) {
+    if (!has_criteria)
         state = VICTORY_STATE_NONE;
-    }
+
     if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS)) {
         // More sensible options for surival time:
         // require the user to play to the end, even if other win criteria have been set and are met.
@@ -82,9 +82,9 @@ static int determine_victory_state(void)
                 // Lose game automatically when you go over the time limit
                 state = VICTORY_STATE_LOST;
             } else if (scenario_criteria_survival_enabled()) {
-                if (!has_criteria) {
+                if (!has_criteria)
                     state = VICTORY_STATE_WON;
-                } else if (state != VICTORY_STATE_WON) {
+ else if (state != VICTORY_STATE_WON) {
                     // Lose game if you do not meet the criteria at the end of the road
                     state = VICTORY_STATE_LOST;
                 }
@@ -93,39 +93,39 @@ static int determine_victory_state(void)
             // Do not win the game when other criteria are met when survival time is enabled
             state = VICTORY_STATE_NONE;
         }
-        if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled()) {
+        if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled())
             has_criteria = 1;
-        }
+
     } else {
         // Original buggy code for survival time and time limit:
         // the survival time only works if no other criteria have been set
         if (!has_criteria) {
-            if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled()) {
+            if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled())
                 has_criteria = 1;
-            }
+
         }
         if (game_time_year() >= scenario_criteria_max_year()) {
-            if (scenario_criteria_time_limit_enabled()) {
+            if (scenario_criteria_time_limit_enabled())
                 state = VICTORY_STATE_LOST;
-            } else if (scenario_criteria_survival_enabled()) {
+ else if (scenario_criteria_survival_enabled())
                 state = VICTORY_STATE_WON;
-            }
+
         }
     }
 
     if (city_figures_total_invading_enemies() > 2 + city_data.figure.soldiers) {
-        if (city_data.population.population < city_data.population.highest_ever / 4) {
+        if (city_data.population.population < city_data.population.highest_ever / 4)
             state = VICTORY_STATE_LOST;
-        }
+
     }
     if (city_figures_total_invading_enemies() > 0) {
-        if (city_data.population.population <= 0) {
+        if (city_data.population.population <= 0)
             state = VICTORY_STATE_LOST;
-        }
+
     }
-    if (!has_criteria) {
+    if (!has_criteria)
         state = VICTORY_STATE_NONE;
-    }
+
     return state;
 }
 
@@ -135,18 +135,18 @@ void city_victory_check(void)
             return;
     data.state = determine_victory_state();
 
-    if (city_data.mission.has_won) {
+    if (city_data.mission.has_won)
         data.state = city_data.mission.continue_months_left <= 0 ? VICTORY_STATE_WON : VICTORY_STATE_NONE;
-    }
-    if (data.force_win) {
+
+    if (data.force_win)
         data.state = VICTORY_STATE_WON;
-    }
+
     if (data.state != VICTORY_STATE_NONE) {
         building_construction_clear_type();
         if (data.state == VICTORY_STATE_LOST) {
-            if (city_data.mission.fired_message_shown) {
+            if (city_data.mission.fired_message_shown)
                 window_mission_end_show_fired();
-            } else {
+ else {
                 city_data.mission.fired_message_shown = 1;
                 city_message_post(1, MESSAGE_FIRED, 0, 0);
             }
@@ -166,9 +166,9 @@ void city_victory_check(void)
 
 void city_victory_update_months_to_govern(void)
 {
-    if (city_data.mission.has_won) {
+    if (city_data.mission.has_won)
         city_data.mission.continue_months_left--;
-    }
+
 }
 
 void city_victory_continue_governing(int months)

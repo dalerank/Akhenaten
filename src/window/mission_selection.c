@@ -54,9 +54,9 @@ static void draw_background(void)
     graphics_in_dialog();
     image_draw(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
-    if (data.choice) {
+    if (data.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
-    } else {
+ else {
         lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
@@ -71,9 +71,9 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    if (data.choice > 0) {
+    if (data.choice > 0)
         image_buttons_draw(580, 410, &image_button_start_mission, 1);
-    }
+
 
     int rank = scenario_campaign_rank();
     int x_peaceful = CAMPAIGN_SELECTION[rank].x_peaceful - 4;
@@ -104,12 +104,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     data.focus_button = 0;
-    if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
+    if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44))
         data.focus_button = 1;
-    }
-    if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
+
+    if (is_mouse_hit(m_dialog, x_military, y_military, 44))
         data.focus_button = 2;
-    }
+
 
     if (data.choice > 0) {
         if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0))
@@ -118,9 +118,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
             data.choice = 0;
             window_invalidate();
         }
-    } else if (h->escape_pressed) {
+    } else if (h->escape_pressed)
         hotkey_handle_escape();
-    }
+
     
     if (m_dialog->left.went_up) {
         if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {

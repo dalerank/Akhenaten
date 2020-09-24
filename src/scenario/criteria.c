@@ -74,11 +74,11 @@ int scenario_criteria_milestone_year(int percentage) {
 }
 
 void scenario_criteria_init_max_year(void) {
-    if (scenario.win_criteria.time_limit.enabled) {
+    if (scenario.win_criteria.time_limit.enabled)
         max_game_year = scenario.start_year + scenario.win_criteria.time_limit.years;
-    } else if (scenario.win_criteria.survival_time.enabled) {
+ else if (scenario.win_criteria.survival_time.enabled)
         max_game_year = scenario.start_year + scenario.win_criteria.survival_time.years;
-    } else {
+ else {
         max_game_year = 1000000 + scenario.start_year;
     }
 }

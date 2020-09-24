@@ -79,9 +79,9 @@ static void recalculate_population(void)
     for (int i = 0; i < 100; i++) {
         city_data.population.population += city_data.population.at_age[i];
     }
-    if (city_data.population.population > city_data.population.highest_ever) {
+    if (city_data.population.population > city_data.population.highest_ever)
         city_data.population.highest_ever = city_data.population.population;
-    }
+
 }
 
 static void add_to_census(int num_people)
@@ -90,11 +90,11 @@ static void add_to_census(int num_people)
     int index = 0;
     for (int i = 0; i < num_people; i++, odd = 1 - odd) {
         int age = random_from_pool(index++) & 0x3f; // 63
-        if (age > 50) {
+        if (age > 50)
             age -= 30;
-        } else if (age < 10 && odd) {
+ else if (age < 10 && odd)
             age += 20;
-        }
+
         city_data.population.at_age[age]++;
     }
 }
@@ -106,9 +106,9 @@ static void remove_from_census(int num_people)
     // remove people randomly up to age 63
     while (num_people > 0 && empty_buckets < 100) {
         int age = random_from_pool(index++) & 0x3f;
-        if (city_data.population.at_age[age] <= 0) {
+        if (city_data.population.at_age[age] <= 0)
             empty_buckets++;
-        } else {
+ else {
             city_data.population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
@@ -118,17 +118,17 @@ static void remove_from_census(int num_people)
     empty_buckets = 0;
     int age = 10;
     while (num_people > 0 && empty_buckets < 100) {
-        if (city_data.population.at_age[age] <= 0) {
+        if (city_data.population.at_age[age] <= 0)
             empty_buckets++;
-        } else {
+ else {
             city_data.population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
         }
         age++;
-        if (age >= 100) {
+        if (age >= 100)
             age = 0;
-        }
+
     }
 }
 
@@ -137,17 +137,17 @@ static void remove_from_census_in_age_decennium(int decennium, int num_people)
     int empty_buckets = 0;
     int age = 0;
     while (num_people > 0 && empty_buckets < 10) {
-        if (city_data.population.at_age[10 * decennium + age] <= 0) {
+        if (city_data.population.at_age[10 * decennium + age] <= 0)
             empty_buckets++;
-        } else {
+ else {
             city_data.population.at_age[10 * decennium + age]--;
             num_people--;
             empty_buckets = 0;
         }
         age++;
-        if (age >= 10) {
+        if (age >= 10)
             age = 0;
-        }
+
     }
 }
 
@@ -163,9 +163,9 @@ static int get_people_in_age_decennium(int decennium)
 int city_population_average_age(void)
 {
     recalculate_population();
-    if (!city_data.population.population) {
+    if (!city_data.population.population)
         return 0;
-    }
+
 
     int age_sum = 0;
     for (int i = 0; i < 100; i++) {
@@ -234,13 +234,13 @@ int city_population_people_of_working_age(void)
 }
 
 int city_population_percent_in_workforce(void) {
-    if (!city_data.population.population) {
+    if (!city_data.population.population)
         return 0;
-    }
 
-    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {
+
+    if (config_get(CONFIG_GP_CH_FIXED_WORKERS))
         return 38;
-    }
+
     return calc_percentage(city_data.labor.workers_available, city_data.population.population);
 }
 
@@ -262,9 +262,9 @@ void city_population_calculate_educational_age(void)
 void city_population_record_monthly(void)
 {
     city_data.population.monthly.values[city_data.population.monthly.next_index++] = city_data.population.population;
-    if (city_data.population.monthly.next_index >= 2400) {
+    if (city_data.population.monthly.next_index >= 2400)
         city_data.population.monthly.next_index = 0;
-    }
+
     ++city_data.population.monthly.count;
 }
 
@@ -276,9 +276,9 @@ int city_population_monthly_count(void)
 int city_population_at_month(int max_months, int month)
 {
     int start_offset = 0;
-    if (city_data.population.monthly.count > max_months) {
+    if (city_data.population.monthly.count > max_months)
         start_offset = city_data.population.monthly.count + 2400 - max_months;
-    }
+
     int index = (start_offset + month) % 2400;
     return city_data.population.monthly.values[index];
 }
@@ -306,9 +306,9 @@ static void yearly_advance_ages_and_calculate_deaths(void)
         int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
         int removed = house_population_remove_from_city(deaths + aged100);
-        if (config_get(CONFIG_GP_FIX_100_YEAR_GHOSTS)) {
+        if (config_get(CONFIG_GP_FIX_100_YEAR_GHOSTS))
             remove_from_census_in_age_decennium(decennium, deaths);
-        } else {
+ else {
             // Original C3 removes both deaths and aged100, which creates "ghosts".
             // It should be deaths only; now aged100 are removed from census while
             // they weren't *in* the census anymore
@@ -354,9 +354,9 @@ int calculate_total_housing_buildings(void)
             b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
-        if (building_is_house(b->type) && b->house_population > 0) {
+        if (building_is_house(b->type) && b->house_population > 0)
             total += 1;
-        }
+
     }
 
     return total;
@@ -378,9 +378,9 @@ int * calculate_number_of_each_housing_type(void) {
             b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
             continue;
         }
-        if (b->house_size) {
+        if (b->house_size)
             housing_type_counts[b->subtype.house_level] +=1;
-        }
+
     }
 
    return housing_type_counts;
@@ -396,21 +396,21 @@ int * calculate_houses_demanding_goods(int * housing_type_counts) {
 
     for(int i=0; i<=19; i++) {
         model = model_get_house(i);
-        if (model->pottery) {
+        if (model->pottery)
             houses_demanding_goods[0] += housing_type_counts[i];
-        }
 
-        if (model->furniture) {
+
+        if (model->furniture)
             houses_demanding_goods[1] += housing_type_counts[i];
-        }
 
-        if (model->oil) {
+
+        if (model->oil)
             houses_demanding_goods[2] += housing_type_counts[i];
-        }
 
-        if (model->wine) {
+
+        if (model->wine)
             houses_demanding_goods[3] += housing_type_counts[i];
-        }
+
     }
 
     return houses_demanding_goods;
@@ -434,18 +434,18 @@ static int calculate_people_per_house_type(void)
         if (b->house_size) {
             int pop = b->house_population;
             total += pop;
-            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+            if (b->subtype.house_level <= HOUSE_LARGE_TENT)
                 city_data.population.people_in_tents += pop;
-            }
-            if (b->subtype.house_level <= HOUSE_LARGE_SHACK) {
+
+            if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
                 city_data.population.people_in_tents_shacks += pop;
-            }
-            if (b->subtype.house_level >= HOUSE_LARGE_INSULA) {
+
+            if (b->subtype.house_level >= HOUSE_LARGE_INSULA)
                 city_data.population.people_in_large_insula_and_above += pop;
-            }
-            if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
+
+            if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
                 city_data.population.people_in_villas_palaces += pop;
-            }
+
         }
     }
     return total;
@@ -469,9 +469,9 @@ void city_population_yearly_update(void)
 void city_population_check_consistency(void)
 {
     int people_in_houses = calculate_people_per_house_type();
-    if (people_in_houses < city_data.population.population) {
+    if (people_in_houses < city_data.population.population)
         remove_from_census(city_data.population.population - people_in_houses);
-    }
+
 }
 
 int city_population_graph_order(void)
@@ -501,17 +501,17 @@ int city_population_yearly_births(void) {
 }
 
 int percentage_city_population_in_tents_shacks(void) {
-    if (!city_data.population.population) {
+    if (!city_data.population.population)
         return 0;
-    }
+
 
     return calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
 }
 
 int percentage_city_population_in_villas_palaces(void) {
-    if (!city_data.population.population) {
+    if (!city_data.population.population)
         return 0;
-    }
+
 
     return calc_percentage(city_data.population.people_in_villas_palaces, city_data.population.population);
 }

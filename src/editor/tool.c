@@ -87,9 +87,9 @@ void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int 
         for (int dy = -data.brush_size + 1; dy < data.brush_size; dy++) {
             for (int dx = -data.brush_size + 1; dx < data.brush_size; dx++) {
                 int steps = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
-                if (steps < data.brush_size) {
+                if (steps < data.brush_size)
                     callback(user_data, dx, dy);
-                }
+
             }
         }
     }
@@ -157,9 +157,9 @@ static int lower_land_tile(int x, int y, int grid_offset, int terrain)
         map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
     }
     int elevation = map_elevation_at(grid_offset);
-    if (elevation <= 0) {
+    if (elevation <= 0)
         terrain &= ~(TERRAIN_ELEVATION);
-    } else if (elevation == data.start_elevation) {
+ else if (elevation == data.start_elevation) {
         terrain &= ~(TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
         map_elevation_set(grid_offset, elevation - 1);
     }
@@ -298,9 +298,9 @@ static void place_earthquake_flag(const map_tile *tile)
 {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
-        if (scenario_editor_earthquake_severity()) {
+        if (scenario_editor_earthquake_severity())
             scenario_editor_set_earthquake_point(tile->x, tile->y);
-        } else {
+ else {
             city_warning_show(WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED);
         }
     } else {
@@ -311,9 +311,9 @@ static void place_earthquake_flag(const map_tile *tile)
 static void place_flag(const map_tile *tile, void (*update)(int x, int y))
 {
     int warning = 0;
-    if (editor_tool_can_place_flag(data.type, tile, &warning)) {
+    if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(tile->x, tile->y);
-    } else {
+ else {
         city_warning_show(warning);
     }
 }
@@ -321,9 +321,9 @@ static void place_flag(const map_tile *tile, void (*update)(int x, int y))
 static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int x, int y))
 {
     int warning = 0;
-    if (editor_tool_can_place_flag(data.type, tile, &warning)) {
+    if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(data.id, tile->x, tile->y);
-    } else {
+ else {
         city_warning_show(warning);
     }
 }
@@ -398,9 +398,9 @@ static void place_access_ramp(const map_tile *tile)
 
 static void place_road(const map_tile *start_tile, const map_tile *end_tile)
 {
-    if (building_construction_place_road(0, start_tile->x, start_tile->y, end_tile->x, end_tile->y)) {
+    if (building_construction_place_road(0, start_tile->x, start_tile->y, end_tile->x, end_tile->y))
         scenario_editor_updated_terrain();
-    }
+
 }
 
 void editor_tool_end_use(const map_tile *tile)

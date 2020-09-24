@@ -91,16 +91,16 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_advisors_show();
-    }
+
 }
 
 static void button_set_gift(int gift_id, int param2)
 {
-    if (city_emperor_set_gift_size(gift_id - 1)) {
+    if (city_emperor_set_gift_size(gift_id - 1))
         window_invalidate();
-    }
+
 }
 
 static void button_send_gift(int param1, int param2)

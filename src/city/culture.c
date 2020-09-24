@@ -100,9 +100,9 @@ void city_culture_update_coverage(void)
     coverage.theater = top(calc_percentage(500 * building_count_active(BUILDING_THEATER), population));
     coverage.amphitheater = top(calc_percentage(800 * building_count_active(BUILDING_AMPHITHEATER), population));
     coverage.colosseum = top(calc_percentage(1500 * building_count_active(BUILDING_COLOSSEUM), population));
-    if (building_count_active(BUILDING_HIPPODROME) <= 0) {
+    if (building_count_active(BUILDING_HIPPODROME) <= 0)
         coverage.hippodrome = 0;
-    } else {
+ else {
         coverage.hippodrome = 100;
     }
 

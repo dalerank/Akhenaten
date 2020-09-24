@@ -202,16 +202,16 @@ static int apply_changed_configs(void)
 {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         if (config_changed(i)) {
-            if (!data.config_values[i].change_action(i)) {
+            if (!data.config_values[i].change_action(i))
                 return 0;
-            }
+
         }
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
         if (config_string_changed(i)) {
-            if (!data.config_string_values[i].change_action(i)) {
+            if (!data.config_string_values[i].change_action(i))
                 return 0;
-            }
+
         }
     }
     return 1;
@@ -246,23 +246,23 @@ static void button_close(int save, int param2)
         window_main_menu_show(0);
         return;
     }
-    if (apply_changed_configs()) {
+    if (apply_changed_configs())
         window_main_menu_show(0);
-    }
+
 }
 static void button_page(int param1, int param2)
 {
     if (param1) {
         data.page++;
-        if (data.page >= CONFIG_PAGES) {
+        if (data.page >= CONFIG_PAGES)
             data.page = 0;
-        }
+
     }
     else {
         data.page--;
-        if (data.page < 0) {
+        if (data.page < 0)
             data.page = CONFIG_PAGES - 1;
-        }
+
     }
     data.starting_option = 0;
     for (int i = 0; i < data.page; i++) {
@@ -279,9 +279,9 @@ static void handle_input(const mouse* m, const hotkeys* h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, sizeof(bottom_buttons) / sizeof(*bottom_buttons), &data.bottom_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons), &data.page_focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || h->escape_pressed)) {
+    if (!handled && (m->right.went_up || h->escape_pressed))
         window_main_menu_show(0);
-    }
+
 }
 static void toggle_switch(int key, int param2)
 {
@@ -317,9 +317,9 @@ static void init(void)
             strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
             encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value, subdirs->files[i]) == 0) {
+            if (strcmp(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value, subdirs->files[i]) == 0)
                 data.selected_language_option = opt_id;
-            }
+
             data.num_language_options++;
         }
     }
@@ -346,9 +346,9 @@ static void draw_background(void)
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
         generic_button* btn = &checkbox_buttons[value];
-        if (data.config_values[btn->parameter1].new_value) {
+        if (data.config_values[btn->parameter1].new_value)
             text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
-        }
+
     }
 
     for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {

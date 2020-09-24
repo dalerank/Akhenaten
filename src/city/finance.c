@@ -149,9 +149,9 @@ void city_finance_estimate_taxes(void)
             int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
             int trm = difficulty_adjust_money(
                 model_get_house(b->subtype.house_level)->tax_multiplier);
-            if (is_patrician) {
+            if (is_patrician)
                 city_data.taxes.monthly.collected_patricians += b->house_population * trm;
-            } else {
+ else {
                 city_data.taxes.monthly.collected_plebs += b->house_population * trm;
             }
         }
@@ -184,9 +184,9 @@ static void collect_monthly_taxes(void)
     }
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->house_size)
             continue;
-        }
+
 
         int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
         int population = b->house_population;
@@ -288,9 +288,9 @@ static void reset_taxes(void)
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size)
             b->tax_income_or_storage = 0;
-        }
+
     }
 }
 
@@ -358,33 +358,33 @@ static void pay_tribute(void)
     } else if (income <= expenses) {
         // city made a loss: fixed tribute based on population
         city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.population > 2000) {
+        if (city_data.population.population > 2000)
             last_year->expenses.tribute = 200;
-        } else if (city_data.population.population > 1000) {
+ else if (city_data.population.population > 1000)
             last_year->expenses.tribute = 100;
-        } else {
+ else {
             last_year->expenses.tribute = 0;
         }
     } else {
         // city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
         city_data.finance.tribute_not_paid_total_years = 0;
-        if (city_data.population.population > 5000) {
+        if (city_data.population.population > 5000)
             last_year->expenses.tribute = 500;
-        } else if (city_data.population.population > 3000) {
+ else if (city_data.population.population > 3000)
             last_year->expenses.tribute = 400;
-        } else if (city_data.population.population > 2000) {
+ else if (city_data.population.population > 2000)
             last_year->expenses.tribute = 300;
-        } else if (city_data.population.population > 1000) {
+ else if (city_data.population.population > 1000)
             last_year->expenses.tribute = 225;
-        } else if (city_data.population.population > 500) {
+ else if (city_data.population.population > 500)
             last_year->expenses.tribute = 150;
-        } else {
+ else {
             last_year->expenses.tribute = 50;
         }
         int pct_profit = calc_adjust_with_percentage(income - expenses, 25);
-        if (pct_profit > last_year->expenses.tribute) {
+        if (pct_profit > last_year->expenses.tribute)
             last_year->expenses.tribute = pct_profit;
-        }
+
     }
 
     city_data.finance.treasury -= last_year->expenses.tribute;

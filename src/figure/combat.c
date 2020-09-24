@@ -17,9 +17,9 @@ static int is_attacking_native(const figure *f)
 
 void figure_combat_handle_corpse(figure *f)
 {
-    if (f->wait_ticks < 0) {
+    if (f->wait_ticks < 0)
         f->wait_ticks = 0;
-    }
+
     f->wait_ticks++;
     if (f->wait_ticks >= 128) {
         f->wait_ticks = 127;
@@ -29,17 +29,17 @@ void figure_combat_handle_corpse(figure *f)
 
 static int attack_is_same_direction(int dir1, int dir2)
 {
-    if (dir1 == dir2) {
+    if (dir1 == dir2)
         return 1;
-    }
+
     int dir2_off = dir2 <= 0 ? 7 : dir2 - 1;
-    if (dir1 == dir2_off) {
+    if (dir1 == dir2_off)
         return 1;
-    }
+
     dir2_off = dir2 >= 7 ? 0 : dir2 + 1;
-    if (dir1 == dir2_off) {
+    if (dir1 == dir2_off)
         return 1;
-    }
+
     return 0;
 }
 
@@ -62,18 +62,18 @@ static void hit_opponent(figure *f)
     const figure_properties *props = figure_properties_for_type(f->type);
     const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
     int cat = opponent_props->category;
-    if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL) {
+    if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL)
         f->attack_image_offset = 12;
-    } else {
+ else {
         f->attack_image_offset = 0;
     }
     int figure_attack = props->attack_value;
     int opponent_defense = opponent_props->defense_value;
 
     // attack modifiers
-    if (f->type == FIGURE_WOLF) {
+    if (f->type == FIGURE_WOLF)
         figure_attack = difficulty_adjust_wolf_attack(figure_attack);
-    }
+
     if (opponent->opponent_id != f->id && m->figure_type != FIGURE_FORT_LEGIONARY &&
             attack_is_same_direction(f->attack_direction, opponent->attack_direction)) {
         figure_attack += 4; // attack opponent on the (exposed) back
@@ -87,11 +87,11 @@ static void hit_opponent(figure *f)
     if (opponent_formation->is_halted &&
             (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY ||
              opponent_formation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
-        if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction)) {
+        if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction))
             opponent_defense -= 4; // opponent not attacking in coordinated formation
-        } else if (opponent_formation->layout == FORMATION_COLUMN) {
+ else if (opponent_formation->layout == FORMATION_COLUMN)
             opponent_defense += 7;
-        } else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1 ||
+ else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1 ||
                    opponent_formation->layout == FORMATION_DOUBLE_LINE_2) {
             opponent_defense += 4;
         }
@@ -99,13 +99,13 @@ static void hit_opponent(figure *f)
 
     int max_damage = opponent_props->max_damage;
     int net_attack = figure_attack - opponent_defense;
-    if (net_attack < 0) {
+    if (net_attack < 0)
         net_attack = 0;
-    }
+
     opponent->damage += net_attack;
-    if (opponent->damage <= max_damage) {
+    if (opponent->damage <= max_damage)
         figure_play_hit_sound(f->type);
-    } else {
+ else {
         opponent->action_state = FIGURE_ACTION_149_CORPSE;
         opponent->wait_ticks = 0;
         figure_play_die_sound(opponent);
@@ -128,11 +128,11 @@ void figure_combat_handle_attack(figure *f)
         }
     } else if (f->num_attackers == 2) {
         if (figure_is_dead(figure_get(f->opponent_id))) {
-            if (f->opponent_id == f->attacker_id1) {
+            if (f->opponent_id == f->attacker_id1)
                 f->opponent_id = f->attacker_id2;
-            } else if (f->opponent_id == f->attacker_id2) {
+ else if (f->opponent_id == f->attacker_id2)
                 f->opponent_id = f->attacker_id1;
-            }
+
             if (figure_is_dead(figure_get(f->opponent_id))) {
                 resume_activity_after_attack(f);
                 return;
@@ -143,9 +143,9 @@ void figure_combat_handle_attack(figure *f)
         }
     }
     f->attack_image_offset++;
-    if (f->attack_image_offset >= 24) {
+    if (f->attack_image_offset >= 24)
         hit_opponent(f);
-    }
+
 }
 
 int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
@@ -154,15 +154,15 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f))
             continue;
-        }
+
         if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance <= max_distance) {
-                if (f->targeted_by_figure_id) {
+                if (f->targeted_by_figure_id)
                     distance *= 2; // penalty
-                }
+
                 if (distance < min_distance) {
                     min_distance = distance;
                     min_figure_id = i;
@@ -170,17 +170,17 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
             }
         }
     }
-    if (min_figure_id) {
+    if (min_figure_id)
         return min_figure_id;
-    }
+
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f))
             continue;
-        }
-        if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f)) {
+
+        if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f))
             return i;
-        }
+
     }
     return 0;
 }
@@ -191,9 +191,9 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f) || !f->type) {
+        if (figure_is_dead(f) || !f->type)
             continue;
-        }
+
         switch (f->type) {
             case FIGURE_EXPLOSION:
             case FIGURE_FORT_STANDARD:
@@ -212,24 +212,24 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
             case FIGURE_CREATURE:
                 continue;
         }
-        if (figure_is_enemy(f) || figure_is_herd(f)) {
+        if (figure_is_enemy(f) || figure_is_herd(f))
             continue;
-        }
-        if (figure_is_legion(f) && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+
+        if (figure_is_legion(f) && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST)
             continue;
-        }
+
         int distance = calc_maximum_distance(x, y, f->x, f->y);
-        if (f->targeted_by_figure_id) {
+        if (f->targeted_by_figure_id)
             distance *= 2;
-        }
+
         if (distance < min_distance) {
             min_distance = distance;
             min_figure_id = i;
         }
     }
-    if (min_distance <= max_distance && min_figure_id) {
+    if (min_distance <= max_distance && min_figure_id)
         return min_figure_id;
-    }
+
     return 0;
 }
 
@@ -239,9 +239,9 @@ int figure_combat_get_target_for_enemy(int x, int y)
     int min_distance = 10000;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f))
             continue;
-        }
+
         if (!f->targeted_by_figure_id && figure_is_legion(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance < min_distance) {
@@ -250,18 +250,18 @@ int figure_combat_get_target_for_enemy(int x, int y)
             }
         }
     }
-    if (min_figure_id) {
+    if (min_figure_id)
         return min_figure_id;
-    }
+
     // no 'free' soldier found, take first one
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f))
             continue;
-        }
-        if (figure_is_legion(f)) {
+
+        if (figure_is_legion(f))
             return i;
-        }
+
     }
     return 0;
 }
@@ -275,9 +275,9 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
     figure *min_figure = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f))
             continue;
-        }
+
         if (figure_is_enemy(f) || figure_is_herd(f) || is_attacking_native(f)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
             if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
@@ -303,9 +303,9 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
     int min_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f) || !f->type) {
+        if (figure_is_dead(f) || !f->type)
             continue;
-        }
+
         switch (f->type) {
             case FIGURE_EXPLOSION:
             case FIGURE_FORT_STANDARD:
@@ -327,11 +327,11 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
                 continue;
         }
         int distance;
-        if (figure_is_legion(f)) {
+        if (figure_is_legion(f))
             distance = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (attack_citizens && f->is_friendly) {
+ else if (attack_citizens && f->is_friendly)
             distance = calc_maximum_distance(x, y, f->x, f->y) + 5;
-        } else {
+ else {
             continue;
         }
         if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
@@ -355,9 +355,9 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
     int guard = 0;
     int opponent_id = map_figure_at(grid_offset);
     while (1) {
-        if (++guard >= MAX_FIGURES[GAME_ENV] || opponent_id <= 0) {
+        if (++guard >= MAX_FIGURES[GAME_ENV] || opponent_id <= 0)
             break;
-        }
+
         figure *opponent = figure_get(opponent_id);
         if (opponent_id == f->id) {
             opponent_id = opponent->next_figure_id_on_same_tile;
@@ -366,32 +366,32 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
 
         int opponent_category = figure_properties_for_type(opponent->type)->category;
         int attack = 0;
-        if (opponent->state != FIGURE_STATE_ALIVE) {
+        if (opponent->state != FIGURE_STATE_ALIVE)
             attack = 0;
-        } else if (opponent->action_state == FIGURE_ACTION_149_CORPSE) {
+ else if (opponent->action_state == FIGURE_ACTION_149_CORPSE)
             attack = 0;
-        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_NATIVE) {
-            if (opponent->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+ else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_NATIVE) {
+            if (opponent->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
                 attack = 1;
-            }
-        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_CRIMINAL) {
+
+        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_CRIMINAL)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_HOSTILE) {
+ else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_HOSTILE)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CITIZEN) {
+ else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CITIZEN)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ARMED) {
+ else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ARMED)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CRIMINAL) {
+ else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CRIMINAL)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_ANIMAL) {
+ else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_ANIMAL)
             attack = 1;
-        } else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ANIMAL) {
+ else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ANIMAL)
             attack = 1;
-        }
-        if (attack && opponent->action_state == FIGURE_ACTION_150_ATTACK && opponent->num_attackers >= 2) {
+
+        if (attack && opponent->action_state == FIGURE_ACTION_150_ATTACK && opponent->num_attackers >= 2)
             attack = 0;
-        }
+
         if (attack) {
             f->action_state_before_attack = f->action_state;
             f->action_state = FIGURE_ACTION_150_ATTACK;
@@ -406,9 +406,9 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
                 f->attack_direction = calc_general_direction(f->previous_tile_x, f->previous_tile_y,
                     opponent->x, opponent->y);
             }
-            if (f->attack_direction >= 8) {
+            if (f->attack_direction >= 8)
                 f->attack_direction = 0;
-            }
+
             if (opponent->action_state != FIGURE_ACTION_150_ATTACK) {
                 opponent->action_state_before_attack = opponent->action_state;
                 opponent->action_state = FIGURE_ACTION_150_ATTACK;

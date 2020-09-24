@@ -73,9 +73,9 @@ static struct {
 
 static void start(void)
 {
-    if (data.is_paused) {
+    if (data.is_paused)
         input_box_resume(&scenario_description_input);
-    } else {
+ else {
         string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
         input_box_start(&scenario_description_input, data.brief_description, BRIEF_DESC_LENGTH, 1);
     }
@@ -83,9 +83,9 @@ static void start(void)
 
 static void stop(int paused)
 {
-    if (paused) {
+    if (paused)
         input_box_pause(&scenario_description_input);
-    } else {
+ else {
         input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;

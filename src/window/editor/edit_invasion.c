@@ -91,9 +91,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 7, &data.focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         button_save(0, 0);
-    }
+
 }
 
 static void set_year(int value)
@@ -133,9 +133,9 @@ static void set_from(int value)
 
 static void button_from(int param1, int param2)
 {
-    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
+    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(screen_dialog_offset_x() + 330, screen_dialog_offset_y() + 50, 35, 9, set_from);
-    }
+
 }
 
 static void set_attack(int value)
@@ -145,9 +145,9 @@ static void set_attack(int value)
 
 static void button_attack(int param1, int param2)
 {
-    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
+    if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 120, 36, 5, set_attack);
-    }
+
 }
 
 static void button_delete(int param1, int param2)

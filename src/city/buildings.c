@@ -127,9 +127,9 @@ void city_buildings_build_triumphal_arch(void)
 
 void city_buildings_remove_triumphal_arch(void)
 {
-    if (city_data.building.triumphal_arches_placed > 0) {
+    if (city_data.building.triumphal_arches_placed > 0)
         city_data.building.triumphal_arches_placed--;
-    }
+
 }
 
 void city_buildings_earn_triumphal_arch(void)
@@ -160,16 +160,16 @@ void city_buildings_reset_dock_wharf_counters(void)
 void city_buildings_add_working_wharf(int needs_fishing_boat)
 {
     ++city_data.building.working_wharfs;
-    if (needs_fishing_boat) {
+    if (needs_fishing_boat)
         ++city_data.building.shipyard_boats_requested;
-    }
+
 }
 
 void city_buildings_add_working_dock(int building_id)
 {
-    if (city_data.building.working_docks < 10) {
+    if (city_data.building.working_docks < 10)
         city_data.building.working_dock_ids[city_data.building.working_docks] = building_id;
-    }
+
     ++city_data.building.working_docks;
 }
 

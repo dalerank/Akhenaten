@@ -162,17 +162,17 @@ void figure_action_handle(void)
         if (f->state) {
             if (f->targeted_by_figure_id) {
                 figure *attacker = figure_get(f->targeted_by_figure_id);
-                if (attacker->state != FIGURE_STATE_ALIVE) {
+                if (attacker->state != FIGURE_STATE_ALIVE)
                     f->targeted_by_figure_id = 0;
-                }
-                if (attacker->target_figure_id != i) {
+
+                if (attacker->target_figure_id != i)
                     f->targeted_by_figure_id = 0;
-                }
+
             }
             figure_action_callbacks[f->type](f);
-            if (f->state == FIGURE_STATE_DEAD) {
+            if (f->state == FIGURE_STATE_DEAD)
                 figure_delete(f);
-            }
+
         }
     }
 }

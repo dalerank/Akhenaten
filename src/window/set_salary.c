@@ -67,9 +67,9 @@ static void draw_foreground(void)
     }
 
     if (!city_victory_has_won()) {
-        if (city_emperor_salary_rank() <= city_emperor_rank()) {
+        if (city_emperor_salary_rank() <= city_emperor_rank())
             lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK);
-        } else {
+ else {
             lang_text_draw_multiline(52, 71, 152, 336, 336, FONT_NORMAL_BLACK);
         }
     } else {
@@ -85,9 +85,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 12, &focus_button_id))
             return;
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_advisors_show();
-    }
+
 }
 
 static void button_cancel(int param1, int param2)

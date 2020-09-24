@@ -12,18 +12,18 @@ void city_trade_update(void)
     city_data.trade.num_land_routes = 0;
     // Wine types
     city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
-    if (city_data.resource.trade_status[RESOURCE_WINE] == TRADE_STATUS_IMPORT || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE)) {
+    if (city_data.resource.trade_status[RESOURCE_WINE] == TRADE_STATUS_IMPORT || config_get(CONFIG_GP_CH_WINE_COUNTS_IF_OPEN_TRADE_ROUTE))
         city_data.resource.wine_types_available += empire_city_count_wine_sources();
-    }
+
     // Update trade problems
-    if (city_data.trade.land_trade_problem_duration > 0) {
+    if (city_data.trade.land_trade_problem_duration > 0)
         city_data.trade.land_trade_problem_duration--;
-    } else {
+ else {
         city_data.trade.land_trade_problem_duration = 0;
     }
-    if (city_data.trade.sea_trade_problem_duration > 0) {
+    if (city_data.trade.sea_trade_problem_duration > 0)
         city_data.trade.sea_trade_problem_duration--;
-    } else {
+ else {
         city_data.trade.sea_trade_problem_duration = 0;
     }
     empire_city_generate_trader();
@@ -77,35 +77,35 @@ int city_trade_current_caravan_import_resource(void)
 int city_trade_next_caravan_import_resource(void)
 {
     city_data.trade.caravan_import_resource++;
-    if (city_data.trade.caravan_import_resource >= RESOURCE_MAX) {
+    if (city_data.trade.caravan_import_resource >= RESOURCE_MAX)
         city_data.trade.caravan_import_resource = RESOURCE_MIN;
-    }
+
     return city_data.trade.caravan_import_resource;
 }
 
 int city_trade_next_caravan_backup_import_resource(void)
 {
     city_data.trade.caravan_backup_import_resource++;
-    if (city_data.trade.caravan_backup_import_resource >= RESOURCE_MAX) {
+    if (city_data.trade.caravan_backup_import_resource >= RESOURCE_MAX)
         city_data.trade.caravan_backup_import_resource = RESOURCE_MIN;
-    }
+
     return city_data.trade.caravan_backup_import_resource;
 }
 
 int city_trade_next_docker_import_resource(void)
 {
     city_data.trade.docker_import_resource++;
-    if (city_data.trade.docker_import_resource >= RESOURCE_MAX) {
+    if (city_data.trade.docker_import_resource >= RESOURCE_MAX)
         city_data.trade.docker_import_resource = RESOURCE_MIN;
-    }
+
     return city_data.trade.docker_import_resource;
 }
 
 int city_trade_next_docker_export_resource(void)
 {
     city_data.trade.docker_export_resource++;
-    if (city_data.trade.docker_export_resource >= RESOURCE_MAX) {
+    if (city_data.trade.docker_export_resource >= RESOURCE_MAX)
         city_data.trade.docker_export_resource = RESOURCE_MIN;
-    }
+
     return city_data.trade.docker_export_resource;
 }

@@ -36,9 +36,9 @@ void map_elevation_remove_cliffs(void)
         int grid_offset = map_data.start_offset;
         for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
             for (int x = 0; x < map_data.width; x++, grid_offset++) {
-                if (map_grid_get(&elevation, grid_offset) > 0) {
+                if (map_grid_get(&elevation, grid_offset) > 0)
                     fix_cliff_tiles(grid_offset);
-                }
+
             }
         }
     }

@@ -19,17 +19,17 @@
 
 static int try_import_resource(int building_id, int resource, int city_id) {
     building *warehouse = building_get(building_id);
-    if (warehouse->type != BUILDING_WAREHOUSE) {
+    if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
-    }
 
-    if (building_warehouse_is_not_accepting(resource, warehouse)) {
-        return 0;
-    }
 
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse)) {
+    if (building_warehouse_is_not_accepting(resource, warehouse))
         return 0;
-    }
+
+
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
+        return 0;
+
 
     int route_id = empire_city_get_route_id(city_id);
     // try existing storage bay with the same resource
@@ -61,13 +61,13 @@ static int try_import_resource(int building_id, int resource, int city_id) {
 
 static int try_export_resource(int building_id, int resource, int city_id) {
     building *warehouse = building_get(building_id);
-    if (warehouse->type != BUILDING_WAREHOUSE) {
+    if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
-    }
 
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse)) {
+
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
         return 0;
-    }
+
 
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
@@ -94,37 +94,37 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[resource]; i++) {
         resource = city_trade_next_docker_import_resource();
     }
-    if (!importable[resource]) {
+    if (!importable[resource])
         return 0;
-    }
+
     int min_distance = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
             continue;
-        }
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
+
+        if (!b->has_road_access || b->distance_from_entry <= 0)
             continue;
-        }
-        if (b->road_network_id != road_network_id) {
+
+        if (b->road_network_id != road_network_id)
             continue;
-        }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b)) {
+
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b))
             continue;
-        }
+
         const building_storage *storage = building_storage_get(b->storage_id);
         if (!building_warehouse_is_not_accepting(resource, b) && !storage->empty_all) {
             int distance_penalty = 32;
             building *space = b;
             for (int s = 0; s < 8; s++) {
                 space = building_next(space);
-                if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE) {
+                if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE)
                     distance_penalty -= 8;
-                }
-                if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored < 4) {
+
+                if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored < 4)
                     distance_penalty -= 4;
-                }
+
             }
             if (distance_penalty < 32) {
                 int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry,
@@ -138,15 +138,15 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             }
         }
     }
-    if (!min_building_id) {
+    if (!min_building_id)
         return 0;
-    }
+
     building *min = building_get(min_building_id);
-    if (min->has_road_access == 1) {
+    if (min->has_road_access == 1)
         map_point_store_result(min->x, min->y, warehouse);
-    } else if (!map_has_road_access(min->x, min->y, 3, warehouse)) {
+ else if (!map_has_road_access(min->x, min->y, 3, warehouse))
         return 0;
-    }
+
     *import_resource = resource;
     return min_building_id;
 }
@@ -162,32 +162,32 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[resource]; i++) {
         resource = city_trade_next_docker_export_resource();
     }
-    if (!exportable[resource]) {
+    if (!exportable[resource])
         return 0;
-    }
+
     int min_distance = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE) {
+        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
             continue;
-        }
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
+
+        if (!b->has_road_access || b->distance_from_entry <= 0)
             continue;
-        }
-        if (b->road_network_id != road_network_id) {
+
+        if (b->road_network_id != road_network_id)
             continue;
-        }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b)) {
+
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b))
             continue;
-        }
+
         int distance_penalty = 32;
         building *space = b;
         for (int s = 0; s < 8; s++) {
             space = building_next(space);
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0) {
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0)
                 distance_penalty--;
-            }
+
         }
         if (distance_penalty < 32) {
             int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
@@ -199,15 +199,15 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
             }
         }
     }
-    if (!min_building_id) {
+    if (!min_building_id)
         return 0;
-    }
+
     building *min = building_get(min_building_id);
-    if (min->has_road_access == 1) {
+    if (min->has_road_access == 1)
         map_point_store_result(min->x, min->y, warehouse);
-    } else if (!map_has_road_access(min->x, min->y, 3, warehouse)) {
+ else if (!map_has_road_access(min->x, min->y, 3, warehouse))
         return 0;
-    }
+
     *export_resource = resource;
     return min_building_id;
 }
@@ -226,13 +226,13 @@ static void get_trade_center_location(const figure *f, int *x, int *y) {
 
 static int deliver_import_resource(figure *f, building *dock) {
     int ship_id = dock->data.dock.trade_ship_id;
-    if (!ship_id) {
+    if (!ship_id)
         return 0;
-    }
+
     figure *ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->loads_sold_or_carrying <= 0) {
+    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->loads_sold_or_carrying <= 0)
         return 0;
-    }
+
     int x, y;
     get_trade_center_location(f, &x, &y);
     map_point tile;
@@ -240,9 +240,9 @@ static int deliver_import_resource(figure *f, building *dock) {
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empire_city_id,
                                                         dock->distance_from_entry, dock->road_network_id, &tile,
                                                         &resource);
-    if (!warehouse_id) {
+    if (!warehouse_id)
         return 0;
-    }
+
     ship->loads_sold_or_carrying--;
     f->destination_building_id = warehouse_id;
     f->wait_ticks = 0;
@@ -255,13 +255,13 @@ static int deliver_import_resource(figure *f, building *dock) {
 
 static int fetch_export_resource(figure *f, building *dock) {
     int ship_id = dock->data.dock.trade_ship_id;
-    if (!ship_id) {
+    if (!ship_id)
         return 0;
-    }
+
     figure *ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= 12) {
+    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= 12)
         return 0;
-    }
+
     int x, y;
     get_trade_center_location(f, &x, &y);
     map_point tile;
@@ -269,9 +269,9 @@ static int fetch_export_resource(figure *f, building *dock) {
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empire_city_id,
                                                         dock->distance_from_entry, dock->road_network_id, &tile,
                                                         &resource);
-    if (!warehouse_id) {
+    if (!warehouse_id)
         return 0;
-    }
+
     ship->trader_amount_bought++;
     f->destination_building_id = warehouse_id;
     f->action_state = FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE;
@@ -291,24 +291,24 @@ void figure_docker_action(figure *f) {
     building *b = building_get(f->building_id);
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
-    if (b->state != BUILDING_STATE_IN_USE) {
+    if (b->state != BUILDING_STATE_IN_USE)
         f->state = FIGURE_STATE_DEAD;
-    }
-    if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
+
+    if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF)
         f->state = FIGURE_STATE_DEAD;
-    }
-    if (b->data.dock.num_ships) {
+
+    if (b->data.dock.num_ships)
         b->data.dock.num_ships--;
-    }
+
     if (b->data.dock.trade_ship_id) {
         figure *ship = figure_get(b->data.dock.trade_ship_id);
-        if (ship->state != FIGURE_STATE_ALIVE || ship->type != FIGURE_TRADE_SHIP) {
+        if (ship->state != FIGURE_STATE_ALIVE || ship->type != FIGURE_TRADE_SHIP)
             b->data.dock.trade_ship_id = 0;
-        } else if (trader_has_traded_max(ship->trader_id)) {
+ else if (trader_has_traded_max(ship->trader_id))
             b->data.dock.trade_ship_id = 0;
-        } else if (ship->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
+ else if (ship->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING)
             b->data.dock.trade_ship_id = 0;
-        }
+
     }
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     switch (f->action_state) {
@@ -321,9 +321,9 @@ void figure_docker_action(figure *f) {
         case FIGURE_ACTION_132_DOCKER_IDLING:
             f->resource_id = 0;
             f->cart_image_id = 0;
-            if (!deliver_import_resource(f, b)) {
+            if (!deliver_import_resource(f, b))
                 fetch_export_resource(f, b);
-            }
+
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
@@ -355,9 +355,9 @@ void figure_docker_action(figure *f) {
                         }
                     }
                 }
-                if (!has_queued_docker) {
+                if (!has_queued_docker)
                     b->data.dock.queued_docker_id = 0;
-                }
+
             }
             break;
         case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
@@ -387,30 +387,30 @@ void figure_docker_action(figure *f) {
         case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
             set_cart_graphic(f);
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+ else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_LOST) {
+ else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
-            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE) {
+
+            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
             f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+ else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_LOST) {
+ else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
-            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE) {
+
+            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
             set_cart_graphic(f);
@@ -418,34 +418,34 @@ void figure_docker_action(figure *f) {
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE;
                 f->wait_ticks = 0;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+            } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_LOST) {
+ else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
-            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE) {
+
+            if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
             set_cart_graphic(f);
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
+ else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_LOST) {
+ else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
-            }
+
             break;
         case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
             set_cart_graphic(f);
             f->wait_ticks++;
             if (f->wait_ticks > 10) {
                 int trade_city_id;
-                if (b->data.dock.trade_ship_id) {
+                if (b->data.dock.trade_ship_id)
                     trade_city_id = figure_get(b->data.dock.trade_ship_id)->empire_city_id;
-                } else {
+ else {
                     trade_city_id = 0;
                 }
                 if (try_import_resource(f->destination_building_id, f->resource_id, trade_city_id)) {
@@ -471,9 +471,9 @@ void figure_docker_action(figure *f) {
             f->wait_ticks++;
             if (f->wait_ticks > 10) {
                 int trade_city_id;
-                if (b->data.dock.trade_ship_id) {
+                if (b->data.dock.trade_ship_id)
                     trade_city_id = figure_get(b->data.dock.trade_ship_id)->empire_city_id;
-                } else {
+ else {
                     trade_city_id = 0;
                 }
                 f->action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;

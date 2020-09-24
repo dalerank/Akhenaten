@@ -69,23 +69,23 @@ static int draw_background(void)
     lang_text_draw(138, 36, 274, 58, FONT_SMALL_PLAIN);
 
     int enemy_text_id;
-    if (city_figures_enemies()) {
+    if (city_figures_enemies())
         enemy_text_id = 10;
-    } else if (city_figures_imperial_soldiers()) {
+ else if (city_figures_imperial_soldiers())
         enemy_text_id = 11;
-    } else if (scenario_invasion_exists_upcoming()) {
+ else if (scenario_invasion_exists_upcoming())
         enemy_text_id = 9;
-    } else {
+ else {
         enemy_text_id = 8;
     }
     int distant_battle_text_id;
-    if (city_military_distant_battle_roman_army_is_traveling_back()) {
+    if (city_military_distant_battle_roman_army_is_traveling_back())
         distant_battle_text_id = 15;
-    } else if (city_military_distant_battle_roman_army_is_traveling_forth()) {
+ else if (city_military_distant_battle_roman_army_is_traveling_forth())
         distant_battle_text_id = 14;
-    } else if (city_military_months_until_distant_battle() > 0) {
+ else if (city_military_months_until_distant_battle() > 0)
         distant_battle_text_id = 13;
-    } else {
+ else {
         distant_battle_text_id = 12;
     }
     int bullet_x = 60;
@@ -139,16 +139,16 @@ static int draw_background(void)
         image_draw(image_id, 387, 86 + 44 * i);
 
         button_border_draw(464, 83 + 44 * i, 30, 30, 0);
-        if (m->is_at_fort) {
+        if (m->is_at_fort)
             image_draw(image_id + 2, 467, 86 + 44 * i);
-        } else {
+ else {
             image_draw(image_id + 1, 467, 86 + 44 * i);
         }
 
         button_border_draw(544, 83 + 44 * i, 30, 30, 0);
-        if (m->empire_service) {
+        if (m->empire_service)
             image_draw(image_id + 3, 547, 86 + 44 * i);
-        } else {
+ else {
             image_draw(image_id + 4, 547, 86 + 44 * i);
         }
     }
@@ -169,9 +169,9 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    if (scrollbar_handle_mouse(&scrollbar, m)) {
+    if (scrollbar_handle_mouse(&scrollbar, m))
         return 1;
-    }
+
     return generic_buttons_handle_mouse(m, 0, 0, fort_buttons, 3 * num_legions, &focus_button_id);
 }
 

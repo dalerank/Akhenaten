@@ -84,9 +84,9 @@ int map_property_is_multi_tile_xy(int grid_offset, int x, int y)
 }
 void map_property_set_multi_tile_xy(int grid_offset, int x, int y, int is_draw_tile)
 {
-    if (is_draw_tile) {
+    if (is_draw_tile)
         map_grid_set(&edge_grid, grid_offset, edge_for(x, y) | EDGE_LEFTMOST_TILE);
-    } else {
+ else {
         map_grid_set(&edge_grid, grid_offset, edge_for(x, y));
     }
 }
@@ -123,9 +123,9 @@ void map_property_init_alternate_terrain(void)
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (map_random_get(grid_offset) & 1) {
+            if (map_random_get(grid_offset) & 1)
                 map_property_set_alternate_terrain(grid_offset);
-            }
+
         }
     }
 }

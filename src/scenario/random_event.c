@@ -35,17 +35,17 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
 
 static void raise_wages(void) {
     if (scenario.random_events.raise_wages) {
-        if (city_labor_raise_wages_rome()) {
+        if (city_labor_raise_wages_rome())
             city_message_post(1, MESSAGE_ROME_RAISES_WAGES, 0, 0);
-        }
+
     }
 }
 
 static void lower_wages(void) {
     if (scenario.random_events.lower_wages) {
-        if (city_labor_lower_wages_rome()) {
+        if (city_labor_lower_wages_rome())
             city_message_post(1, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
-        }
+
     }
 }
 
@@ -53,9 +53,9 @@ static void disrupt_land_trade(void) {
     if (scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
-            if (scenario_property_climate() == CLIMATE_DESERT) {
+            if (scenario_property_climate() == CLIMATE_DESERT)
                 city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
-            } else {
+ else {
                 city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);
             }
         }
@@ -76,11 +76,11 @@ static void contaminate_water(void) {
         if (city_population() > 200) {
             int change;
             int health_rate = city_health();
-            if (health_rate > 80) {
+            if (health_rate > 80)
                 change = -50;
-            } else if (health_rate > 60) {
+ else if (health_rate > 60)
                 change = -40;
-            } else {
+ else {
                 change = -25;
             }
             city_health_change(change);
@@ -98,9 +98,9 @@ static void destroy_iron_mine(void) {
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
-            if (grid_offset) {
+            if (grid_offset)
                 city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
-            }
+
         }
     }
 }
@@ -114,9 +114,9 @@ static void destroy_clay_pit(void) {
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
-            if (grid_offset) {
+            if (grid_offset)
                 city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
-            }
+
         }
     }
 }

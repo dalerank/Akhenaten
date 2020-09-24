@@ -75,39 +75,39 @@ static int get_tooltip_education(tooltip_context *c, const building *b)
 
 static int get_tooltip_school(tooltip_context *c, const building *b)
 {
-    if (b->data.house.school <= 0) {
+    if (b->data.house.school <= 0)
         return 19;
-    } else if (b->data.house.school >= 80) {
+ else if (b->data.house.school >= 80)
         return 20;
-    } else if (b->data.house.school >= 20) {
+ else if (b->data.house.school >= 20)
         return 21;
-    } else {
+ else {
         return 22;
     }
 }
 
 static int get_tooltip_library(tooltip_context *c, const building *b)
 {
-    if (b->data.house.library <= 0) {
+    if (b->data.house.library <= 0)
         return 23;
-    } else if (b->data.house.library >= 80) {
+ else if (b->data.house.library >= 80)
         return 24;
-    } else if (b->data.house.library >= 20) {
+ else if (b->data.house.library >= 20)
         return 25;
-    } else {
+ else {
         return 26;
     }
 }
 
 static int get_tooltip_academy(tooltip_context *c, const building *b)
 {
-    if (b->data.house.academy <= 0) {
+    if (b->data.house.academy <= 0)
         return 27;
-    } else if (b->data.house.academy >= 80) {
+ else if (b->data.house.academy >= 80)
         return 28;
-    } else if (b->data.house.academy >= 20) {
+ else if (b->data.house.academy >= 20)
         return 29;
-    } else {
+ else {
         return 30;
     }
 }

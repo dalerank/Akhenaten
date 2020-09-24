@@ -13,19 +13,19 @@ static int get_religion_advice(void)
 {
     int least_happy = city_god_least_happy();
     const house_demands *demands = city_houses_demands();
-    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4) {
+    if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4)
         return 6 + least_happy;
-    } else if (demands->religion == 1) {
+ else if (demands->religion == 1)
         return demands->requiring.religion ? 1 : 0;
-    } else if (demands->religion == 2) {
+ else if (demands->religion == 2)
         return 2;
-    } else if (demands->religion == 3) {
+ else if (demands->religion == 3)
         return 3;
-    } else if (!demands->requiring.religion) {
+ else if (!demands->requiring.religion)
         return 4;
-    } else if (least_happy >= 0) {
+ else if (least_happy >= 0)
         return 6 + least_happy;
-    } else {
+ else {
         return 5;
     }
 }

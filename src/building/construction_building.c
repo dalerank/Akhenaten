@@ -31,13 +31,13 @@ static void add_fort(int type, building *fort)
 {
     fort->prev_part_building_id = 0;
     map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
-    if (type == BUILDING_FORT_LEGIONARIES) {
+    if (type == BUILDING_FORT_LEGIONARIES)
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
-    } else if (type == BUILDING_FORT_JAVELIN) {
+ else if (type == BUILDING_FORT_JAVELIN)
         fort->subtype.fort_figure_type = FIGURE_FORT_JAVELIN;
-    } else if (type == BUILDING_FORT_MOUNTED) {
+ else if (type == BUILDING_FORT_MOUNTED)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
-    }
+
 
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
@@ -145,9 +145,9 @@ static void add_warehouse(building *b)
     int corner = building_rotation_get_corner(2*building_rotation_get_rotation());
 
     b->storage_id = building_storage_create();
-    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
         building_storage_accept_none(b->storage_id);
-    }
+
     b->prev_part_building_id = 0;
     map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1,
                            image_id_from_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);

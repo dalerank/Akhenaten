@@ -14,38 +14,38 @@
 static int get_education_advice(void)
 {
     const house_demands *demands = city_houses_demands();
-    if (demands->education == 1) {
+    if (demands->education == 1)
         return demands->requiring.school ? 1 : 0;
-    } else if (demands->education == 2) {
+ else if (demands->education == 2)
         return demands->requiring.library ? 3 : 2;
-    } else if (demands->education == 3) {
+ else if (demands->education == 3)
         return 4;
-    }
+
     int advice_id;
     int coverage_school = city_culture_coverage_school();
     int coverage_academy = city_culture_coverage_academy();
     int coverage_library = city_culture_coverage_library();
-    if (!demands->requiring.school) {
+    if (!demands->requiring.school)
         advice_id = 5; // no demands yet
-    } else if (!demands->requiring.library) {
-        if (coverage_school >= 100 && coverage_academy >= 100) {
+ else if (!demands->requiring.library) {
+        if (coverage_school >= 100 && coverage_academy >= 100)
             advice_id = 6; // education is perfect
-        } else if (coverage_school <= coverage_academy) {
+ else if (coverage_school <= coverage_academy)
             advice_id = 7; // build more schools
-        } else {
+ else {
             advice_id = 8; // build more academies
         }
     } else {
         // all education needed
-        if (coverage_school >= 100 && coverage_academy >= 100 && coverage_library >= 100) {
+        if (coverage_school >= 100 && coverage_academy >= 100 && coverage_library >= 100)
             advice_id = 6;
-        } else if (coverage_school <= coverage_academy && coverage_school <= coverage_library) {
+ else if (coverage_school <= coverage_academy && coverage_school <= coverage_library)
             advice_id = 7; // build more schools
-        } else if (coverage_academy <= coverage_school && coverage_academy <= coverage_library) {
+ else if (coverage_academy <= coverage_school && coverage_academy <= coverage_library)
             advice_id = 8; // build more academies
-        } else if (coverage_library <= coverage_school && coverage_library <= coverage_academy) {
+ else if (coverage_library <= coverage_school && coverage_library <= coverage_academy)
             advice_id = 9; // build more libraries
-        } else {
+ else {
             advice_id = 6; // unlikely event that all coverages are equal
         }
     }
@@ -81,11 +81,11 @@ static int draw_background(void)
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE);
 
     int pct_school = city_culture_coverage_school();
-    if (pct_school == 0) {
+    if (pct_school == 0)
         lang_text_draw_centered(57, 10, 420, 105, 200, FONT_NORMAL_WHITE);
-    } else if (pct_school < 100) {
+ else if (pct_school < 100)
         lang_text_draw_centered(57, pct_school / 10 + 11, 420, 105, 200, FONT_NORMAL_WHITE);
-    } else {
+ else {
         lang_text_draw_centered(57, 21, 420, 105, 200, FONT_NORMAL_WHITE);
     }
 
@@ -97,11 +97,11 @@ static int draw_background(void)
     lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE);
 
     int pct_academy = city_culture_coverage_academy();
-    if (pct_academy == 0) {
+    if (pct_academy == 0)
         lang_text_draw_centered(57, 10, 420, 125, 200, FONT_NORMAL_WHITE);
-    } else if (pct_academy < 100) {
+ else if (pct_academy < 100)
         lang_text_draw_centered(57, pct_academy / 10 + 11, 420, 125, 200, FONT_NORMAL_WHITE);
-    } else {
+ else {
         lang_text_draw_centered(57, 21, 420, 125, 200, FONT_NORMAL_WHITE);
     }
 
@@ -113,11 +113,11 @@ static int draw_background(void)
     lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE);
 
     int pct_library = city_culture_coverage_library();
-    if (pct_library == 0) {
+    if (pct_library == 0)
         lang_text_draw_centered(57, 10, 420, 145, 200, FONT_NORMAL_WHITE);
-    } else if (pct_library < 100) {
+ else if (pct_library < 100)
         lang_text_draw_centered(57, pct_library / 10 + 11, 420, 145, 200, FONT_NORMAL_WHITE);
-    } else {
+ else {
         lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE);
     }
 

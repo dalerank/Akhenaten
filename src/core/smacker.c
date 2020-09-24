@@ -132,9 +132,9 @@ static const int CHAIN_SIZE[64] = {
 static inline void *clear_malloc(size_t s)
 {
     void *buf = malloc(s);
-    if (buf) {
+    if (buf)
         memset(buf, 0, s);
-    }
+
     return buf;
 }
 
@@ -156,9 +156,9 @@ static bitstream *bitstream_init(bitstream *bs, const uint8_t *data, int len)
 
 static inline int read_bit(bitstream *bs)
 {
-    if (bs->index >= bs->length) {
+    if (bs->index >= bs->length)
         return 0;
-    }
+
     int result = bs->data[bs->index] & (1 << bs->bit_index);
     if (++bs->bit_index >= 8) {
         bs->index++;
@@ -171,15 +171,15 @@ static inline uint8_t read_byte(bitstream *bs)
 {
     if (bs->bit_index == 0) {
         // special case: on exact byte boundary
-        if (bs->index < bs->length) {
+        if (bs->index < bs->length)
             return bs->data[bs->index++];
-        } else {
+ else {
             return 0;
         }
     }
-    if (bs->index + 1 >= bs->length) {
+    if (bs->index + 1 >= bs->length)
         return 0;
-    }
+
     uint8_t value = bs->data[bs->index] >> bs->bit_index;
     bs->index++;
     value |= (bs->data[bs->index] & BIT_MASKS[bs->bit_index]) << (8 - bs->bit_index);
@@ -294,9 +294,9 @@ static huffnode16 *build_tree16_nodes(bitstream *bs, hufftree16 *tree)
         node->value = leaf_value;
 
         for (int i = 0; i < 3; i++) {
-            if (leaf_value == tree->escape_codes[i]) {
+            if (leaf_value == tree->escape_codes[i])
                 tree->escape_nodes[i] = node;
-            }
+
         }
     }
     return node;
@@ -348,9 +348,9 @@ static void reset_escape16(hufftree16 *tree)
 
 static uint16_t lookup_tree16(bitstream *bs, hufftree16 *tree)
 {
-    if (!tree) {
+    if (!tree)
         return 0;
-    }
+
     huffnode16 *node = tree->root;
     while (!node->is_leaf) {
         node = node->b[read_bit(bs)];
@@ -556,28 +556,28 @@ void smacker_close(smacker s)
 
 void smacker_get_frames_info(const smacker s, int *frame_count, int *usf)
 {
-    if (frame_count) {
+    if (frame_count)
         *frame_count = s->frames;
-    }
-    if (usf) {
+
+    if (usf)
         *usf = s->us_per_frame;
-    }
+
 }
 
 void smacker_get_video_info(const smacker s, int *width, int *height, int *y_scale_mode)
 {
-    if (width) {
+    if (width)
         *width = s->width;
-    }
-    if (height) {
+
+    if (height)
         *height = s->height;
-    }
+
     if (y_scale_mode) {
-        if (s->flags & FLAG_Y_INTERLACE) {
+        if (s->flags & FLAG_Y_INTERLACE)
             *y_scale_mode = SMACKER_Y_SCALE_INTERLACE;
-        } else if (s->flags & FLAG_Y_DOUBLE) {
+ else if (s->flags & FLAG_Y_DOUBLE)
             *y_scale_mode = SMACKER_Y_SCALE_DOUBLE;
-        } else {
+ else {
             *y_scale_mode = SMACKER_Y_SCALE_NONE;
         }
     }
@@ -586,26 +586,26 @@ void smacker_get_video_info(const smacker s, int *width, int *height, int *y_sca
 void smacker_get_audio_info(const smacker s, int track, int *enabled, int *channels, int *bitdepth, int *audio_rate)
 {
     int has_track = (s->audio_rate[track] & AUDIO_FLAG_HAS_TRACK) ? 1 : 0;
-    if (enabled) {
+    if (enabled)
         *enabled = has_track;
-    }
+
     if (channels) {
-        if (has_track) {
+        if (has_track)
             *channels = (s->audio_rate[track] & AUDIO_FLAG_STEREO) ? 2 : 1;
-        } else {
+ else {
             *channels = 0;
         }
     }
     if (bitdepth) {
-        if (has_track) {
+        if (has_track)
             *bitdepth = (s->audio_rate[track] & AUDIO_FLAG_16BIT) ? 16 : 8;
-        } else {
+ else {
             *bitdepth = 0;
         }
     }
-    if (audio_rate) {
+    if (audio_rate)
         *audio_rate = s->audio_rate[track] & AUDIO_MASK_RATE;
-    }
+
 }
 
 // Smacker decoding functions
@@ -830,14 +830,14 @@ static void free_frame_data(const smacker s, uint8_t *frame_data)
 static smacker_frame_status decode_frame(smacker s)
 {
     int frame_id = s->current_frame;
-    if (frame_id >= s->frames) {
+    if (frame_id >= s->frames)
         return SMACKER_FRAME_DONE;
-    }
+
 
     uint8_t *frame_data = read_frame_data(s, frame_id);
-    if (!frame_data) {
+    if (!frame_data)
         return SMACKER_FRAME_ERROR;
-    }
+
 
     uint8_t frame_type = s->frame_types[frame_id];
     int data_index = 0;

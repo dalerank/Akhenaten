@@ -73,9 +73,9 @@ int64_t map_grid_get(grid_xx *grid, uint32_t at)
     if (!grid->initialized)
         map_grid_init(grid);
 
-    if (at >= grid_total_size[GAME_ENV]) {
+    if (at >= grid_total_size[GAME_ENV])
         return 0;
-    }
+
 //    assert(at < grid_total_size[GAME_ENV]);
     int64_t res = 0;
     switch (grid->datatype[GAME_ENV]) {
@@ -358,33 +358,33 @@ int map_grid_height(void)
 }
 void map_grid_bound(int *x, int *y)
 {
-    if (*x < 0) {
+    if (*x < 0)
         *x = 0;
-    }
-    if (*y < 0) {
+
+    if (*y < 0)
         *y = 0;
-    }
-    if (*x >= map_data.width) {
+
+    if (*x >= map_data.width)
         *x = map_data.width - 1;
-    }
-    if (*y >= map_data.height) {
+
+    if (*y >= map_data.height)
         *y = map_data.height - 1;
-    }
+
 }
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max)
 {
-    if (*x_min < 0) {
+    if (*x_min < 0)
         *x_min = 0;
-    }
-    if (*y_min < 0) {
+
+    if (*y_min < 0)
         *y_min = 0;
-    }
-    if (*x_max >= map_data.width) {
+
+    if (*x_max >= map_data.width)
         *x_max = map_data.width - 1;
-    }
-    if (*y_max >= map_data.height) {
+
+    if (*y_max >= map_data.height)
         *y_max = map_data.height - 1;
-    }
+
 }
 void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_min, int *x_max, int *y_max)
 {

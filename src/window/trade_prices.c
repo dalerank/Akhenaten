@@ -35,9 +35,9 @@ static void draw_background(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h))
         window_advisors_show();
-    }
+
 }
 
 static int get_tooltip_resource(tooltip_context *c)
@@ -49,9 +49,9 @@ static int get_tooltip_resource(tooltip_context *c)
 
     for (int i = 1; i < 16; i++) {
         int x = x_base + 30 * i;
-        if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse) {
+        if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse)
             return i;
-        }
+
     }
     return 0;
 }

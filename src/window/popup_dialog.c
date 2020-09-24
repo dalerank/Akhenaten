@@ -54,9 +54,9 @@ static void draw_background(void)
     outer_panel_draw(80, 80, 30, 10);
     if (data.type >= 0) {
         lang_text_draw_centered(GROUP, data.type, 80, 100, 480, FONT_LARGE_BLACK);
-        if (lang_text_get_width(GROUP, data.type + 1, FONT_NORMAL_BLACK) >= 420) {
+        if (lang_text_get_width(GROUP, data.type + 1, FONT_NORMAL_BLACK) >= 420)
             lang_text_draw_multiline(GROUP, data.type + 1, 110, 140, 420, FONT_NORMAL_BLACK);
-        } else {
+ else {
             lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
         }
     } else {
@@ -68,9 +68,9 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    if (data.has_buttons) {
+    if (data.has_buttons)
         image_buttons_draw(80, 80, buttons, 2);
-    } else {
+ else {
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
@@ -84,9 +84,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.close_func(0);
         window_go_back();
     }
-    if (h->enter_pressed) {
+    if (h->enter_pressed)
         confirm();
-    }
+
 }
 static void button_ok(int param1, int param2)
 {

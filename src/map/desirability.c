@@ -14,12 +14,12 @@ static grid_xx desirability_grid = {0, {FS_INT8, FS_INT8}};
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability)
 {
     int partially_outside_map = 0;
-    if (x - distance < -1 || x + distance + size - 1 > map_data.width) {
+    if (x - distance < -1 || x + distance + size - 1 > map_data.width)
         partially_outside_map = 1;
-    }
-    if (y - distance < -1 || y + distance + size - 1 > map_data.height) {
+
+    if (y - distance < -1 || y + distance + size - 1 > map_data.height)
         partially_outside_map = 1;
-    }
+
     int base_offset = map_grid_offset(x, y);
     int start = map_ring_start(size, distance);
     int end = map_ring_end(size, distance);
@@ -83,9 +83,9 @@ static void update_terrain(void)
             int terrain = map_terrain_get(grid_offset);
             if (map_property_is_plaza_or_earthquake(grid_offset)) {
                 int type;
-                if (terrain & TERRAIN_ROAD) {
+                if (terrain & TERRAIN_ROAD)
                     type = BUILDING_PLAZA;
-                } else if (terrain & TERRAIN_ROCK) {
+ else if (terrain & TERRAIN_ROCK) {
                     // earthquake fault line: slight negative
                     type = BUILDING_HOUSE_VACANT_LOT;
                 } else {
@@ -106,9 +106,9 @@ static void update_terrain(void)
                     model->desirability_step,
                     model->desirability_step_size,
                     model->desirability_range);
-            } else if (terrain & TERRAIN_RUBBLE) {
+            } else if (terrain & TERRAIN_RUBBLE)
                 add_to_terrain(x, y, 1, -2, 1, 1, 2);
-            }
+
         }
     }
 }
@@ -129,16 +129,16 @@ int map_desirability_get(int grid_offset)
 }
 int map_desirability_get_max(int x, int y, int size)
 {
-    if (size == 1) {
+    if (size == 1)
         return map_grid_get(&desirability_grid, map_grid_offset(x, y));
-    }
+
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            if (map_grid_get(&desirability_grid, grid_offset) > max) {
+            if (map_grid_get(&desirability_grid, grid_offset) > max)
                 max = map_grid_get(&desirability_grid, grid_offset);
-            }
+
         }
     }
     return max;

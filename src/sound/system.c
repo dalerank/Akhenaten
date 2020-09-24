@@ -338,11 +338,11 @@ static void correct_channel_filenames(void)
         strcat_s(str, CHANNEL_FILENAME_MAX, channel_filenames[GAME_ENV][i]);
 
         const char *corrected = dir_get_file(str, MAY_BE_LOCALIZED);
-        if (!corrected) {
+        if (!corrected)
             channel_filenames[GAME_ENV][i][0] = 0;
-        } else if (corrected != original) {
+ else if (corrected != original)
             strncpy(original, corrected, CHANNEL_FILENAME_MAX);
-        }
+
     }
 }
 void sound_system_init(void)

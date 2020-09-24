@@ -113,9 +113,9 @@ static int advisor_height;
 
 static void set_advisor_window(void)
 {
-    if (sub_advisors[current_advisor]) {
+    if (sub_advisors[current_advisor])
         current_advisor_window = sub_advisors[current_advisor]();
-    } else {
+ else {
         current_advisor_window = 0;
     }
 }
@@ -158,9 +158,9 @@ void window_advisors_draw_dialog_background(void)
 
     for (int i = 0; i < 13; i++) {
         int selected_offset = 0;
-        if (current_advisor && i == (current_advisor % 13) - 1) {
+        if (current_advisor && i == (current_advisor % 13) - 1)
             selected_offset = 13;
-        }
+
         image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
     }
     graphics_reset_dialog();
@@ -190,9 +190,9 @@ static void draw_foreground(void)
 static void handle_hotkeys(const hotkeys *h)
 {
     if (h->show_advisor) {
-        if (current_advisor == h->show_advisor) {
+        if (current_advisor == h->show_advisor)
             window_city_show();
-        } else {
+ else {
             window_advisors_show_advisor(h->show_advisor);
         }
     }
@@ -206,9 +206,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
             return;
     int button_id;
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
-    if (button_id) {
+    if (button_id)
         focus_button_id = -1;
-    }
+
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog))
             return;
     if (input_go_back_requested(m, h)) {
@@ -229,26 +229,26 @@ static void button_change_advisor(int advisor, int param2)
 
 static void button_help(int param1, int param2)
 {
-    if (current_advisor > 0) {
+    if (current_advisor > 0)
         window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
-    }
+
 }
 
 static void get_tooltip(tooltip_context *c)
 {
     if (focus_button_id) {
         c->type = TOOLTIP_BUTTON;
-        if (focus_button_id == -1) {
+        if (focus_button_id == -1)
             c->text_id = 1; // help button
-        } else {
+ else {
             c->text_id = 69 + focus_button_id;
         }
         return;
     }
     int text_id = 0;
-    if (current_advisor_window->get_tooltip_text) {
+    if (current_advisor_window->get_tooltip_text)
         text_id = current_advisor_window->get_tooltip_text();
-    }
+
     if (text_id) {
         c->text_id = text_id;
         c->type = TOOLTIP_BUTTON;

@@ -188,9 +188,9 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
 }
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
-    if (!file_exists(scenario_file, NOT_LOCALIZED)) {
+    if (!file_exists(scenario_file, NOT_LOCALIZED))
         return 0;
-    }
+
 
     clear_scenario_data();
     game_file_load_scenario_data(scenario_file);
@@ -324,9 +324,9 @@ static const char *get_scenario_filename(const uint8_t *scenario_name, int decom
 {
     static char filename[FILE_NAME_MAX];
     encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
-    if (!file_has_extension(filename, "map")) {
+    if (!file_has_extension(filename, "map"))
         file_append_extension(filename, "map");
-    }
+
     return filename;
 }
 int game_file_start_scenario_by_name(const uint8_t *scenario_name)
@@ -345,9 +345,9 @@ int game_file_start_scenario(const char *scenario_file)
 }
 int game_file_load_scenario_data(const char *scenario_file)
 {
-    if (!game_file_io_read_scenario(scenario_file)) {
+    if (!game_file_io_read_scenario(scenario_file))
         return 0;
-    }
+
 
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
@@ -355,9 +355,9 @@ int game_file_load_scenario_data(const char *scenario_file)
 }
 int game_file_load_saved_game(const char *filename)
 {
-    if (!game_file_io_read_saved_game(filename, 0)) {
+    if (!game_file_io_read_saved_game(filename, 0))
         return 0;
-    }
+
     check_backward_compatibility();
     initialize_saved_game();
     building_storage_reset_building_ids();
@@ -376,11 +376,11 @@ int game_file_delete_saved_game(const char *filename)
 void game_file_write_mission_saved_game(void)
 {
     int rank = scenario_campaign_rank();
-    if (rank < 0) {
+    if (rank < 0)
         rank = 0;
-    } else if (rank > 11) {
+ else if (rank > 11)
         rank = 11;
-    }
+
     const char *filename = MISSION_SAVED_GAMES[rank];
     if (locale_translate_rank_autosaves()) {
         char localized_filename[FILE_NAME_MAX];
@@ -389,7 +389,7 @@ void game_file_write_mission_saved_game(void)
         strcat(localized_filename, ".svx");
         filename = localized_filename;
     }
-    if (city_mission_should_save_start() && !file_exists(filename, NOT_LOCALIZED)) {
+    if (city_mission_should_save_start() && !file_exists(filename, NOT_LOCALIZED))
         game_file_io_write_saved_game(filename);
-    }
+
 }

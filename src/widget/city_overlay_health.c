@@ -64,52 +64,52 @@ static int get_column_height_hospital(const building *b)
 
 static int get_tooltip_barber(tooltip_context *c, const building *b)
 {
-    if (b->data.house.barber <= 0) {
+    if (b->data.house.barber <= 0)
         return 31;
-    } else if (b->data.house.barber >= 80) {
+ else if (b->data.house.barber >= 80)
         return 32;
-    } else if (b->data.house.barber < 20) {
+ else if (b->data.house.barber < 20)
         return 33;
-    } else {
+ else {
         return 34;
     }
 }
 
 static int get_tooltip_bathhouse(tooltip_context *c, const building *b)
 {
-    if (b->data.house.bathhouse <= 0) {
+    if (b->data.house.bathhouse <= 0)
         return 8;
-    } else if (b->data.house.bathhouse >= 80) {
+ else if (b->data.house.bathhouse >= 80)
         return 9;
-    } else if (b->data.house.bathhouse >= 20) {
+ else if (b->data.house.bathhouse >= 20)
         return 10;
-    } else {
+ else {
         return 11;
     }
 }
 
 static int get_tooltip_clinic(tooltip_context *c, const building *b)
 {
-    if (b->data.house.clinic <= 0) {
+    if (b->data.house.clinic <= 0)
         return 35;
-    } else if (b->data.house.clinic >= 80) {
+ else if (b->data.house.clinic >= 80)
         return 36;
-    } else if (b->data.house.clinic >= 20) {
+ else if (b->data.house.clinic >= 20)
         return 37;
-    } else {
+ else {
         return 38;
     }
 }
 
 static int get_tooltip_hospital(tooltip_context *c, const building *b)
 {
-    if (b->data.house.hospital <= 0) {
+    if (b->data.house.hospital <= 0)
         return 39;
-    } else if (b->data.house.hospital >= 80) {
+ else if (b->data.house.hospital >= 80)
         return 40;
-    } else if (b->data.house.hospital >= 20) {
+ else if (b->data.house.hospital >= 20)
         return 41;
-    } else {
+ else {
         return 42;
     }
 }

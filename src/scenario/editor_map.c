@@ -74,9 +74,9 @@ void scenario_editor_set_fishing_point(int id, int x, int y) {
 int scenario_editor_count_invasion_points(void) {
     int points = 0;
     for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++) {
-        if (scenario.invasion_points[i].x != -1) {
+        if (scenario.invasion_points[i].x != -1)
             points++;
-        }
+
     }
     return points;
 }

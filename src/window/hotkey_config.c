@@ -202,9 +202,9 @@ static void draw_background(void)
     for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget *widget = &hotkey_widgets[i + scrollbar.scroll_position];
         int text_offset = y_base + 6 + 24 * i;
-        if (widget->action == HOTKEY_HEADER) {
+        if (widget->action == HOTKEY_HEADER)
             text_draw(translation_for(widget->name_translation), 32, text_offset, FONT_NORMAL_WHITE, 0);
-        } else {
+ else {
             if (widget->name_translation != TR_NONE) {
                 text_draw(translation_for(widget->name_translation),
                     32, text_offset, FONT_NORMAL_GREEN, 0);
@@ -273,9 +273,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
-    if (!handled && (m->right.went_up || h->escape_pressed)) {
+    if (!handled && (m->right.went_up || h->escape_pressed))
         window_config_show();
-    }
+
 }
 
 static void set_hotkey(int action, int index, int key, int modifiers)
@@ -316,9 +316,9 @@ static void button_close(int save, int param2)
     hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
         for (int index = 0; index < 2; index++) {
-            if (data.mappings[action][index].key != KEY_NONE) {
+            if (data.mappings[action][index].key != KEY_NONE)
                 hotkey_config_add_mapping(&data.mappings[action][index]);
-            }
+
         }
     }
     hotkey_config_save();

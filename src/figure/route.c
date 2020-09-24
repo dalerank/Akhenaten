@@ -29,9 +29,9 @@ void figure_route_clean(void)
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES[GAME_ENV]) {
             const figure *f = figure_get(figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i)
                 data.figure_ids[i] = 0;
-            }
+
         }
     }
 }
@@ -39,9 +39,9 @@ void figure_route_clean(void)
 static int get_first_available(void)
 {
     for (int i = 1; i < MAX_ROUTES; i++) {
-        if (data.figure_ids[i] == 0) {
+        if (data.figure_ids[i] == 0)
             return i;
-        }
+
     }
     return 0;
 }
@@ -132,9 +132,9 @@ void figure_route_add(figure *f)
 void figure_route_remove(figure *f)
 {
     if (f->routing_path_id > 0) {
-        if (data.figure_ids[f->routing_path_id] == f->id) {
+        if (data.figure_ids[f->routing_path_id] == f->id)
             data.figure_ids[f->routing_path_id] = 0;
-        }
+
         f->routing_path_id = 0;
     }
 }

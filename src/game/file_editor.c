@@ -139,9 +139,9 @@ void game_file_editor_create_scenario(int size)
 int game_file_editor_load_scenario(const char *scenario_file)
 {
     clear_map_data();
-    if (!game_file_io_read_scenario(scenario_file)) {
+    if (!game_file_io_read_scenario(scenario_file))
         return 0;
-    }
+
     scenario_map_init();
 
     prepare_map_for_editing();

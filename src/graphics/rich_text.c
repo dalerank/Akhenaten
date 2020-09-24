@@ -55,9 +55,9 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
         scrollbar.y = data.y_text;
         scrollbar.height = 16 * data.text_height_blocks;
         scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
-        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
+        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll)
             data.text_width_blocks += 2;
-        }
+
         window_invalidate();
     }
     return data.text_width_blocks;
@@ -150,16 +150,16 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
         }
         int num_bytes = 1;
         if (*str == ' ') {
-            if (word_char_seen) {
+            if (word_char_seen)
                 break;
-            }
+
             width += 4;
         } else if (*str > ' ') {
             // normal char
             int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
-            if (letter_id >= 0) {
+            if (letter_id >= 0)
                 width += 1 + image_letter(letter_id)->width;
-            }
+
             word_char_seen = 1;
             if (num_bytes > 1) {
                 if (start_link) {
@@ -195,15 +195,15 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
         }
         if (*str >= ' ') {
             const font_definition *def = normal_font_def;
-            if (num_link_chars > 0) {
+            if (num_link_chars > 0)
                 def = link_font_def;
-            }
+
 
             int num_bytes = 1;
             int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id < 0) {
+            if (letter_id < 0)
                 x += def->space_width;
-            } else {
+ else {
                 if (num_bytes > 1 && start_link) {
                     // add space before links in multibyte charsets
                     x += def->space_width;
@@ -216,9 +216,9 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                 }
                 x += img->width + def->letter_spacing;
             }
-            if (num_link_chars > 0) {
+            if (num_link_chars > 0)
                 num_link_chars -= num_bytes;
-            }
+
             str += num_bytes;
         } else {
             str++;
@@ -239,9 +239,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
     int line = 0;
     int num_lines = 0;
     while (has_more_characters || image_height_lines) {
-        if (++guard >= 1000) {
+        if (++guard >= 1000)
             break;
-        }
+
         // clear line
         for (int i = 0; i < 200; i++) {
             tmp_line[i] = 0;
@@ -258,9 +258,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             int word_num_chars;
             current_width += get_word_width(text, 0, &word_num_chars);
             if (current_width >= box_width) {
-                if (current_width == 0) {
+                if (current_width == 0)
                     has_more_characters = 0;
-                }
+
             } else {
                 for (int i = 0; i < word_num_chars; i++) {
                     char c = *text++;
@@ -275,9 +275,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                             current_width = box_width;
                             break;
                         } else if (*text == 'G') {
-                            if (line_index) {
+                            if (line_index)
                                 num_lines++;
-                            }
+
                             text++; // skip 'G'
                             current_width = box_width;
                             image_id = string_to_int(text);
@@ -287,9 +287,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                             }
                             image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
                             image_height_lines = image_get(image_id)->height / 16 + 2;
-                            if (line > 0) {
+                            if (line > 0)
                                 lines_before_image = 1;
-                            }
+
                             break;
                         }
                     }
@@ -297,33 +297,33 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                         tmp_line[line_index++] = c;
                     }
                 }
-                if (!*text) {
+                if (!*text)
                     has_more_characters = 0;
-                }
+
             }
         }
 
         int outside_viewport = 0;
         if (!measure_only) {
-            if (line < scrollbar.scroll_position || line >= scrollbar.scroll_position + height_lines) {
+            if (line < scrollbar.scroll_position || line >= scrollbar.scroll_position + height_lines)
                 outside_viewport = 1;
-            }
+
         }
-        if (!outside_viewport) {
+        if (!outside_viewport)
             draw_line(tmp_line, x_line_offset + x_offset, y, color, measure_only);
-        }
+
         if (!measure_only) {
             if (image_id) {
-                if (lines_before_image) {
+                if (lines_before_image)
                     lines_before_image--;
-                } else {
+ else {
                     const image *img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
-                        if (line >= scrollbar.scroll_position) {
+                        if (line >= scrollbar.scroll_position)
                             image_draw(image_id, image_offset_x, y + 8);
-                        } else {
+ else {
                             image_draw(image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
                         }
                     }
@@ -333,9 +333,9 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
         }
         line++;
         num_lines++;
-        if (!outside_viewport) {
+        if (!outside_viewport)
             y += 16;
-        }
+
     }
     return num_lines;
 }
