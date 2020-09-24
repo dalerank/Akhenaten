@@ -95,9 +95,8 @@ static void init(void)
 
 static void draw_foreground(void)
 {
-    if (!data.open_sub_menu) {
-        return;
-    }
+    if (!data.open_sub_menu)
+            return;
     window_editor_map_draw_all();
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }

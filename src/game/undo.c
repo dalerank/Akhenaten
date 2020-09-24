@@ -46,9 +46,8 @@ void game_undo_disable(void)
 
 void game_undo_add_building(building *b)
 {
-    if (b->id <= 0) {
-        return;
-    }
+    if (b->id <= 0)
+            return;
     data.num_buildings = 0;
     int is_on_list = 0;
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
@@ -178,9 +177,8 @@ void game_undo_finish_build(int cost)
 
 static void add_building_to_terrain(building *b)
 {
-    if (b->id <= 0) {
-        return;
-    }
+    if (b->id <= 0)
+            return;
     if (building_is_farm(b->type)) {
         int image_offset;
         switch (b->type) {
@@ -206,9 +204,8 @@ static void add_building_to_terrain(building *b)
 
 void game_undo_perform(void)
 {
-    if (!game_can_undo()) {
-        return;
-    }
+    if (!game_can_undo())
+            return;
     data.available = 0;
     city_finance_process_construction(-data.building_cost);
     if (data.type == BUILDING_CLEAR_LAND) {
@@ -267,9 +264,8 @@ void game_undo_perform(void)
 
 void game_undo_reduce_time_available(void)
 {
-    if (!game_can_undo()) {
-        return;
-    }
+    if (!game_can_undo())
+            return;
     if (data.timeout_ticks <= 0 || scenario_earthquake_is_in_progress()) {
         data.available = 0;
         clear_buildings();

@@ -420,9 +420,8 @@ static int phrase_based_on_city_state(figure *f)
 }
 void figure_phrase_determine(figure *f)
 {
-    if (f->id <= 0) {
-        return;
-    }
+    if (f->id <= 0)
+            return;
     f->phrase_id = 0;
 
     if (figure_is_enemy(f) || f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_NATIVE_TRADER) {

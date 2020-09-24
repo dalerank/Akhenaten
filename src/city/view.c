@@ -54,30 +54,35 @@ int VIEW_X_MAX() {
     return grid_size[GAME_ENV] + 3;
 }
 int VIEW_Y_MAX() {
-//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//        return grid_size[GAME_ENV] + 3;
-//    else
-        return grid_size[GAME_ENV] * 2 + 1;
+    return grid_size[GAME_ENV] * 2 + 1;
 }
 
 static void check_camera_boundaries(void)
 {
-    int x_min = (VIEW_X_MAX() - map_grid_width()) / 2;
-    int y_min = (VIEW_Y_MAX() - 2 * map_grid_height()) / 2;
+    int x_min;
+    int y_min;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        x_min = (VIEW_X_MAX() - map_grid_width()) / 2;
+        y_min = (VIEW_Y_MAX() - 2 * map_grid_height()) / 2;
+    }
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        x_min = (VIEW_X_MAX() - map_grid_width() / 2) / 2 + 2;
+        y_min = (VIEW_Y_MAX() - map_grid_height()) / 2 + 2;
+    }
     if (data.camera.tile.x < x_min - 1) {
         data.camera.tile.x = x_min - 1;
         data.camera.pixel.x = 0;
     }
-    if (data.camera.tile.x >= VIEW_X_MAX() - x_min - data.viewport.width_tiles) {
-        data.camera.tile.x = VIEW_X_MAX() - x_min - data.viewport.width_tiles;
+    if (data.camera.tile.x >= VIEW_X_MAX() - x_min - data.viewport.width_tiles - 2) {
+        data.camera.tile.x = VIEW_X_MAX() - x_min - data.viewport.width_tiles - 2;
         data.camera.pixel.x = 0;
     }
     if (data.camera.tile.y < y_min - 2) {
         data.camera.tile.y = y_min - 1;
         data.camera.pixel.y = 0;
     }
-    if (data.camera.tile.y >= ((VIEW_Y_MAX() - y_min - data.viewport.height_tiles) & ~1)) {
-        data.camera.tile.y = VIEW_Y_MAX() - y_min - data.viewport.height_tiles;
+    if (data.camera.tile.y >= ((VIEW_Y_MAX() - y_min - data.viewport.height_tiles - 1) & ~1)) {
+        data.camera.tile.y = VIEW_Y_MAX() - y_min - data.viewport.height_tiles - 1;
         data.camera.pixel.y = 0;
     }
     data.camera.tile.y &= ~1;

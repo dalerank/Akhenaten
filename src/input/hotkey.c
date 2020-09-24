@@ -348,9 +348,8 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
             total_definitions++;
         }
     }
-    if (!allocate_mapping_memory(total_definitions, total_arrows)) {
-        return;
-    }
+    if (!allocate_mapping_memory(total_definitions, total_arrows))
+            return;
 
     // Fixed keys: Escape and Enter
     data.definitions[0].action = &data.hotkey_state.enter_pressed;
@@ -395,9 +394,8 @@ void hotkey_key_pressed(int key, int modifiers, int repeat)
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
-    if (key == KEY_NONE) {
-        return;
-    }
+    if (key == KEY_NONE)
+            return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key) {
@@ -418,9 +416,8 @@ void hotkey_key_released(int key, int modifiers)
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }
-    if (key == KEY_NONE) {
-        return;
-    }
+    if (key == KEY_NONE)
+            return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key) {

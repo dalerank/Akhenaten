@@ -131,9 +131,8 @@ static int determine_victory_state(void)
 
 void city_victory_check(void)
 {
-    if (scenario_is_open_play()) {
-        return;
-    }
+    if (scenario_is_open_play())
+            return;
     data.state = determine_victory_state();
 
     if (city_data.mission.has_won) {

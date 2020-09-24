@@ -283,9 +283,8 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
 void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset)
 {
     int building_id = map_building_at(grid_offset);
-    if (!building_id) {
-        return;
-    }
+    if (!building_id)
+            return;
     building *b = building_get(building_id);
     if (overlay->show_building(b)) {
         if (building_is_farm(b->type)) {
@@ -559,9 +558,8 @@ static void deletion_draw_animations(int x, int y, int grid_offset)
 
 void city_with_overlay_draw(const map_tile *tile)
 {
-    if (!select_city_overlay()) {
-        return;
-    }
+    if (!select_city_overlay())
+            return;
 
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);

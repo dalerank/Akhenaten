@@ -144,18 +144,16 @@ static void button_close(int param1, int param2)
 
 static void button_hold_festival(int param1, int param2)
 {
-    if (city_finance_out_of_money()) {
-        return;
-    }
+    if (city_finance_out_of_money())
+            return;
     city_festival_schedule();
     window_advisors_show();
 }
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5)) {
-        return;
-    }
+    if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
+            return;
     c->type = TOOLTIP_BUTTON;
     // image buttons
     switch (focus_image_button_id) {

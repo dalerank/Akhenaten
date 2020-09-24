@@ -29,9 +29,8 @@ static double adjust_speed_for_frame_time(double delta, int adjust_for_time, tim
 void speed_set_target(speed_type *speed, double new_speed, time_millis total_time, int adjust_for_time)
 {
     speed->adjust_for_time = adjust_for_time;
-    if (new_speed == speed->desired_speed) {
-        return;
-    }
+    if (new_speed == speed->desired_speed)
+            return;
     if (total_time == SPEED_CHANGE_IMMEDIATE) {
         speed->desired_speed = new_speed;
         speed->current_speed = new_speed;

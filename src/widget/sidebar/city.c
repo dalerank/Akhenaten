@@ -364,11 +364,10 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
 }
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)
 {
-    if (city_view_is_sidebar_collapsed()) {
+    if (city_view_is_sidebar_collapsed())
         return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24, buttons_build_collapsed[GAME_ENV], 12, 0);
-    } else {
+    else
         return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24, buttons_build_expanded[GAME_ENV], 15, 0);
-    }
 }
 int widget_sidebar_city_get_tooltip_text(void)
 {

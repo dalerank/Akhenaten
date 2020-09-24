@@ -391,9 +391,8 @@ static void xml_start_layer_element(const char **attributes)
     int offset_x = 0;
     int offset_y = 0;
     modded_image *img = data.xml.current_image;
-    if (img->num_layers == MAX_LAYERS) {
-        return;
-    }
+    if (img->num_layers == MAX_LAYERS)
+            return;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
         data.xml.error = 1;
@@ -428,9 +427,8 @@ static void xml_start_layer_element(const char **attributes)
 static void xml_start_animation_element(const char **attributes)
 {
     modded_image *img = data.xml.current_image;
-    if (img->img.num_animation_sprites) {
-        return;
-    }
+    if (img->img.num_animation_sprites)
+            return;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes % 2) {
         data.xml.error = 1;
@@ -471,9 +469,8 @@ static void xml_end_image_element(void)
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
-    if (!data.xml.current_image->num_layers || !img->draw.data_length) {
-        return;
-    }
+    if (!data.xml.current_image->num_layers || !img->draw.data_length)
+            return;
     img->draw.type = IMAGE_TYPE_MOD;
     data.xml.current_image->active = 1;
     if (img->draw.data_length < IMAGE_PRELOAD_MAX_SIZE) {
@@ -504,9 +501,8 @@ static int get_element_index(const char *name)
 
 static void XMLCALL xml_start_element(void *unused, const char *name, const char **attributes)
 {
-    if (data.xml.error) {
-        return;
-    }
+    if (data.xml.error)
+            return;
     if (data.xml.finished || data.xml.depth == XML_MAX_DEPTH) {
         data.xml.error = 1;
         log_error("Invalid XML parameter", name, 0);
@@ -524,9 +520,8 @@ static void XMLCALL xml_start_element(void *unused, const char *name, const char
 
 static void XMLCALL xml_end_element(void *unused, const char *name)
 {
-    if (data.xml.error) {
-        return;
-    }
+    if (data.xml.error)
+            return;
     data.xml.depth--;
     int index = get_element_index(name);
     if (index == -1) {

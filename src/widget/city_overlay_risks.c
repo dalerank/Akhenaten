@@ -21,9 +21,8 @@ static int is_problem_cartpusher(int figure_id)
 
 void overlay_problems_prepare_building(building *b)
 {
-    if (b->house_size) {
-        return;
-    }
+    if (b->house_size)
+            return;
     if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
         if (!b->has_water_access) {
             b->show_on_problem_overlay = 1;
@@ -255,9 +254,8 @@ static int terrain_on_native_overlay(void)
 
 static void draw_footprint_native(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
+    if (!map_property_is_draw_tile(grid_offset))
+            return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
@@ -281,9 +279,8 @@ static void draw_footprint_native(int x, int y, int grid_offset)
 
 static void draw_top_native(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
+    if (!map_property_is_draw_tile(grid_offset))
+            return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             color_t color_mask = 0;

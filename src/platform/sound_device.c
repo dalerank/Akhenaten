@@ -170,9 +170,8 @@ void sound_device_set_channel_volume(int channel, int volume_pct) {
 static void load_music_for_vita(const char *filename)
 {
     if (vita_music_data.buffer) {
-        if (strcmp(filename, vita_music_data.filename) == 0) {
+        if (strcmp(filename, vita_music_data.filename) == 0)
             return;
-        }
         free(vita_music_data.buffer);
         vita_music_data.buffer = 0;
     }
@@ -180,9 +179,8 @@ static void load_music_for_vita(const char *filename)
     char *resolved_filename = vita_prepend_path(filename);
     SceUID fd = sceIoOpen(resolved_filename, SCE_O_RDONLY, 0777);
     free(resolved_filename);
-    if (fd < 0) {
-        return;
-    }
+    if (fd < 0)
+            return;
     vita_music_data.size = sceIoLseek(fd, 0, SCE_SEEK_END);
     sceIoLseek(fd, 0, SCE_SEEK_SET);
     vita_music_data.buffer = malloc(sizeof(char) * vita_music_data.size);
@@ -446,9 +444,8 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
             format, num_channels, rate,
             device_format, device_channels, device_rate
     );
-    if (!result) {
-        return;
-    }
+    if (!result)
+            return;
 
     sound_device_write_custom_music_data(audio_data, len);
 
@@ -456,14 +453,12 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
 }
 
 void sound_device_write_custom_music_data(const unsigned char *audio_data, int len) {
-    if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
-        return;
-    }
+    if (!audio_data || len <= 0 || !custom_audio_stream_active())
+            return;
     // Mix audio to sound effect volume
     Uint8 *mix_buffer = (Uint8 *) malloc(len);
-    if (!mix_buffer) {
-        return;
-    }
+    if (!mix_buffer)
+            return;
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
     SDL_MixAudioFormat(mix_buffer, audio_data,
                        custom_music.format, len,

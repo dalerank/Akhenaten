@@ -166,9 +166,8 @@ void city_message_apply_sound_interval(int category)
 void city_message_post(int use_popup, int message_type, int param1, int param2)
 {
     int id = new_message_id();
-    if (id < 0) {
-        return;
-    }
+    if (id < 0)
+            return;
     data.total_messages++;
     data.current_message_id = id;
 
@@ -243,14 +242,12 @@ void city_message_process_queue(void)
             break;
         }
     }
-    if (sequence == 0) {
-        return;
-    }
+    if (sequence == 0)
+            return;
     int message_id = -1;
     for (int i = 0; i < 999; i++) {
-        if (!data.messages[i].message_type) {
+        if (!data.messages[i].message_type)
             return;
-        }
         if (data.messages[i].sequence == sequence) {
             message_id = i;
             break;

@@ -206,14 +206,12 @@ void city_emperor_calculate_gift_costs(void)
 void city_emperor_send_gift(void)
 {
     int size = city_data.emperor.selected_gift_size;
-    if (size < GIFT_MODEST || size > GIFT_LAVISH) {
-        return;
-    }
+    if (size < GIFT_MODEST || size > GIFT_LAVISH)
+            return;
     int cost = city_data.emperor.gifts[size].cost;
 
-    if (cost > city_data.emperor.personal_savings) {
-        return;
-    }
+    if (cost > city_data.emperor.personal_savings)
+            return;
 
     if (city_data.emperor.gift_overdose_penalty <= 0) {
         city_data.emperor.gift_overdose_penalty = 1;

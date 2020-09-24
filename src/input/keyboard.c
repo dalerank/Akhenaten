@@ -55,9 +55,8 @@ static void include_cursor_in_viewport(void)
     // first check if we can keep the viewport
     int new_start = data.viewport_start;
     int new_end = text_get_max_length_for_width(data.text, data.length - new_start, data.font, data.box_width, 0);
-    if (data.cursor_position >= new_start && data.cursor_position < new_end && new_start + new_end < data.length) {
-        return;
-    }
+    if (data.cursor_position >= new_start && data.cursor_position < new_end && new_start + new_end < data.length)
+            return;
     if (data.cursor_position <= data.viewport_cursor_position) {
         // move toward start
         int maxlen = text_get_max_length_for_width(
@@ -232,9 +231,8 @@ static void move_cursor_right(void)
 
 static void insert_char(const uint8_t *value, int bytes)
 {
-    if (data.length + bytes == data.max_length) {
-        return;
-    }
+    if (data.length + bytes == data.max_length)
+            return;
     for (int i = 0; i < bytes; i++) {
         move_right(&data.text[data.cursor_position], &data.text[data.length]);
         data.text[data.cursor_position] = value[i];
@@ -358,9 +356,8 @@ void keyboard_text(const char *text_utf8)
         }
         return;
     }
-    if (!data.capture) {
-        return;
-    }
+    if (!data.capture)
+            return;
 
     uint8_t internal_char[100];
     encoding_from_utf8(text_utf8, internal_char, 100);

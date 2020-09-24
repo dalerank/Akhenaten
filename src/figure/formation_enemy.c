@@ -345,9 +345,8 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
 static void mars_kill_enemies(void)
 {
     int to_kill = city_god_spirit_of_mars_power();
-    if (to_kill <= 0) {
-        return;
-    }
+    if (to_kill <= 0)
+            return;
     int grid_offset = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV] && to_kill > 0; i++) {
         figure *f = figure_get(i);

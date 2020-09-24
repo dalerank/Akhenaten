@@ -52,9 +52,8 @@ void figure_route_add(figure *f)
     f->routing_path_current_tile = 0;
     f->routing_path_length = 0;
     int path_id = get_first_available();
-    if (!path_id) {
-        return;
-    }
+    if (!path_id)
+            return;
     int path_length;
     if (f->is_boat) {
         if (f->is_boat == 2) { // flotsam

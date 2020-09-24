@@ -58,9 +58,8 @@ void formation_legion_update_recruit_status(building *fort)
 {
     formation *m = formation_get(fort->formation_id);
     m->legion_recruit_type = LEGION_RECRUIT_NONE;
-    if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
-        return;
-    }
+    if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures)
+            return;
     if (m->num_figures < m->max_figures) {
         int type = fort->subtype.fort_figure_type;
         if (type == FIGURE_FORT_LEGIONARY) {
@@ -117,9 +116,8 @@ void formation_legion_move_to(formation *m, int x, int y)
     if (x == m->x_home && y == m->y_home) {
         return; // use formation_legion_return_home
     }
-    if (m->cursed_by_mars) {
-        return;
-    }
+    if (m->cursed_by_mars)
+            return;
     m->standard_x = x;
     m->standard_y = y;
     m->is_at_fort = 0;
@@ -147,9 +145,8 @@ void formation_legion_return_home(formation *m)
     if (map_routing_distance(map_grid_offset(m->x, m->y)) <= 0) {
         return; // unable to route home
     }
-    if (m->cursed_by_mars) {
-        return;
-    }
+    if (m->cursed_by_mars)
+            return;
     m->is_at_fort = 1;
     formation_legion_restore_layout(m);
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {

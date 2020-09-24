@@ -112,9 +112,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 
     if (data.choice > 0) {
-        if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0)) {
+        if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0))
             return;
-        }
         if (m_dialog->right.went_up || h->escape_pressed) {
             data.choice = 0;
             window_invalidate();

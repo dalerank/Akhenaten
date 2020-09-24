@@ -30,13 +30,11 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
     int guard = 0;
     // reverse routing
     while (1) {
-        if (++guard >= 400) {
+        if (++guard >= 400)
             return 0;
-        }
         int distance = map_routing_distance(grid_offset);
-        if (distance <= 0) {
+        if (distance <= 0)
             return 0;
-        }
         switch (type) {
             default:
             case ROUTED_BUILDING_ROAD:
@@ -69,9 +67,8 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
                 break;
             }
         }
-        if (!routed) {
+        if (!routed)
             return 0;
-        }
     }
 }
 
@@ -81,16 +78,14 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
-    int forbidden_terrain_mask =
+    int forbidden_terrain_mask = // todo: ore rock/inundable lands
         TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
         TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
         TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask)) {
+    if (map_terrain_is(start_offset, forbidden_terrain_mask))
         return 0;
-    }
-    if (map_terrain_is(end_offset, forbidden_terrain_mask)) {
+    if (map_terrain_is(end_offset, forbidden_terrain_mask))
         return 0;
-    }
 
     int items_placed = 0;
     if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, x_start, y_start) &&
@@ -102,7 +97,6 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
     }
     return items_placed;
 }
-
 int building_construction_place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
     game_undo_restore_map(0);
@@ -129,7 +123,6 @@ int building_construction_place_wall(int measure_only, int x_start, int y_start,
     }
     return items_placed;
 }
-
 int building_construction_place_aqueduct(int x_start, int y_start, int x_end, int y_end, int *cost)
 {
     game_undo_restore_map(0);
@@ -164,7 +157,6 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     *cost = item_cost * num_items;
     return 1;
 }
-
 int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end, int *items)
 {
     routed_int type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;

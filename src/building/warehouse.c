@@ -139,9 +139,8 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
 
 void building_warehouse_remove_resource_curse(building *warehouse, int amount)
 {
-    if (warehouse->type != BUILDING_WAREHOUSE) {
-        return;
-    }
+    if (warehouse->type != BUILDING_WAREHOUSE)
+            return;
     building *space = warehouse;
     for (int i = 0; i < 8 && amount > 0; i++) {
         space = building_next(space);

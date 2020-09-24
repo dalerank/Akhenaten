@@ -39,9 +39,8 @@ static void check_labor_problem(building *b)
 
 static void generate_labor_seeker(building *b, int x, int y)
 {
-    if (city_population() <= 0) {
-        return;
-    }
+    if (city_population() <= 0)
+            return;
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
 	// If it can access Rome
         if (b->distance_from_entry) {
@@ -157,9 +156,8 @@ static void spawn_figure_warehouse(building *b)
     if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, &road) ||
         map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN))
             return;
-        }
         int resource;
         int task = building_warehouse_determine_worker_task(b, &resource);
         if (task != WAREHOUSE_TASK_NONE) {
@@ -183,9 +181,8 @@ static void spawn_figure_granary(building *b)
     map_point road;
     if (map_has_road_access_granary(b->x, b->y, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN))
             return;
-        }
         int task = building_granary_determine_worker_task(b);
         if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM);
@@ -203,9 +200,8 @@ static void spawn_figure_tower(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
-        if (b->num_workers <= 0) {
+        if (b->num_workers <= 0)
             return;
-        }
         if (!b->figure_id4 && b->figure_id) { // has sentry but no ballista -> create
             figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
             b->figure_id4 = f->id;
@@ -222,9 +218,8 @@ static void spawn_figure_tower(building *b)
 static void spawn_figure_engineers_post(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_ENGINEER)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_ENGINEER))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
@@ -240,9 +235,8 @@ static void spawn_figure_engineers_post(building *b)
             spawn_delay = 7;
         } else if (pct_workers >= 1) {
             spawn_delay = 15;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -257,9 +251,8 @@ static void spawn_figure_engineers_post(building *b)
 static void spawn_figure_prefecture(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_PREFECT)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_PREFECT))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
@@ -275,9 +268,8 @@ static void spawn_figure_prefecture(building *b)
             spawn_delay = 7;
         } else if (pct_workers >= 1) {
             spawn_delay = 15;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -296,9 +288,8 @@ static void spawn_figure_actor_colony(building *b)
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -317,9 +308,8 @@ static void spawn_figure_gladiator_school(building *b)
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -349,9 +339,8 @@ static void spawn_figure_lion_house(building *b)
             spawn_delay = 35;
         } else if (pct_workers >= 1) {
             spawn_delay = 60;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -381,9 +370,8 @@ static void spawn_figure_chariot_maker(building *b)
             spawn_delay = 60;
         } else if (pct_workers >= 1) {
             spawn_delay = 90;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -398,9 +386,8 @@ static void spawn_figure_chariot_maker(building *b)
 static void spawn_figure_amphitheater(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_types(b, FIGURE_ACTOR, FIGURE_GLADIATOR)) {
-        return;
-    }
+    if (has_figure_of_types(b, FIGURE_ACTOR, FIGURE_GLADIATOR))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (b->houses_covered <= 50 ||
@@ -419,9 +406,8 @@ static void spawn_figure_amphitheater(building *b)
             spawn_delay = 29;
         } else if (pct_workers >= 1) {
             spawn_delay = 44;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -442,18 +428,16 @@ static void spawn_figure_amphitheater(building *b)
 static void spawn_figure_theater(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_ACTOR)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_ACTOR))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -469,9 +453,8 @@ static void spawn_figure_theater(building *b)
 static void spawn_figure_hippodrome(building *b)
 {
     check_labor_problem(b);
-    if (b->prev_part_building_id) {
-        return;
-    }
+    if (b->prev_part_building_id)
+            return;
     building *part = b;
     for (int i = 0; i < 2; i++) {
         part = building_next(part);
@@ -479,9 +462,8 @@ static void spawn_figure_hippodrome(building *b)
             part->show_on_problem_overlay = b->show_on_problem_overlay;
         }
     }
-    if (has_figure_of_type(b, FIGURE_CHARIOTEER)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_CHARIOTEER))
+            return;
     map_point road;
     if (map_has_road_access_hippodrome_rotation(b->x, b->y, &road, b->subtype.orientation)) {
         if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
@@ -499,9 +481,8 @@ static void spawn_figure_hippodrome(building *b)
             spawn_delay = 50;
         } else if (pct_workers >= 1) {
             spawn_delay = 80;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -538,9 +519,8 @@ static void spawn_figure_hippodrome(building *b)
 static void spawn_figure_colosseum(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_types(b, FIGURE_GLADIATOR, FIGURE_LION_TAMER)) {
-        return;
-    }
+    if (has_figure_of_types(b, FIGURE_GLADIATOR, FIGURE_LION_TAMER))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (b->houses_covered <= 50 ||
@@ -559,9 +539,8 @@ static void spawn_figure_colosseum(building *b)
             spawn_delay = 40;
         } else if (pct_workers >= 1) {
             spawn_delay = 70;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -586,9 +565,8 @@ static void spawn_figure_colosseum(building *b)
 
 static void set_market_graphic(building *b)
 {
-    if (b->state != BUILDING_STATE_IN_USE) {
-        return;
-    }
+    if (b->state != BUILDING_STATE_IN_USE)
+            return;
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
                                image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
@@ -617,15 +595,13 @@ static void spawn_figure_market(building *b)
             spawn_delay = 20;
         } else if (pct_workers >= 1) {
             spawn_delay = 30;
-        } else {
+        } else
             return;
-        }
         // market trader
         if (!has_figure_of_type(b, FIGURE_MARKET_TRADER)) {
             b->figure_spawn_delay++;
-            if (b->figure_spawn_delay <= spawn_delay) {
-                return;
-            }
+            if (b->figure_spawn_delay <= spawn_delay)
+            return;
             b->figure_spawn_delay = 0;
             create_roaming_figure(b, road.x, road.y, FIGURE_MARKET_TRADER);
         }
@@ -662,9 +638,8 @@ static void spawn_figure_market(building *b)
 
 static void set_bathhouse_graphic(building *b)
 {
-    if (b->state != BUILDING_STATE_IN_USE) {
-        return;
-    }
+    if (b->state != BUILDING_STATE_IN_USE)
+            return;
     if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
         b->has_water_access = 1;
     } else {
@@ -696,16 +671,14 @@ static void spawn_figure_bathhouse(building *b)
     if (!b->has_water_access) {
         b->show_on_problem_overlay = 2;
     }
-    if (has_figure_of_type(b, FIGURE_BATHHOUSE_WORKER)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_BATHHOUSE_WORKER))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road) && b->has_water_access) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -717,16 +690,14 @@ static void spawn_figure_bathhouse(building *b)
 static void spawn_figure_school(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_SCHOOL_CHILD)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_SCHOOL_CHILD))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -758,16 +729,14 @@ static void spawn_figure_school(building *b)
 static void spawn_figure_library(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_LIBRARIAN)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_LIBRARIAN))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -779,16 +748,14 @@ static void spawn_figure_library(building *b)
 static void spawn_figure_academy(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_TEACHER)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_TEACHER))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -800,16 +767,14 @@ static void spawn_figure_academy(building *b)
 static void spawn_figure_barber(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_BARBER)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_BARBER))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -821,16 +786,14 @@ static void spawn_figure_barber(building *b)
 static void spawn_figure_doctor(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_DOCTOR)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_DOCTOR))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -842,16 +805,14 @@ static void spawn_figure_doctor(building *b)
 static void spawn_figure_hospital(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_SURGEON)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_SURGEON))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
-        if (!spawn_delay) {
+        if (!spawn_delay)
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -863,9 +824,8 @@ static void spawn_figure_hospital(building *b)
 static void spawn_figure_temple(building *b)
 {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_PRIEST)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_PRIEST))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
@@ -883,9 +843,8 @@ static void spawn_figure_temple(building *b)
             spawn_delay = 15;
         } else if (pct_workers >= 1) {
             spawn_delay = 20;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -896,9 +855,8 @@ static void spawn_figure_temple(building *b)
 
 static void set_senate_graphic(building *b)
 {
-    if (b->state != BUILDING_STATE_IN_USE) {
-        return;
-    }
+    if (b->state != BUILDING_STATE_IN_USE)
+            return;
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
                                image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
@@ -914,9 +872,8 @@ static void spawn_figure_senate_forum(building *b)
         set_senate_graphic(b);
     }
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_TAX_COLLECTOR)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_TAX_COLLECTOR))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
@@ -932,9 +889,8 @@ static void spawn_figure_senate_forum(building *b)
             spawn_delay = 7;
         } else if (pct_workers >= 1) {
             spawn_delay = 15;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -948,9 +904,8 @@ static void spawn_figure_senate_forum(building *b)
 
 static void spawn_figure_mission_post(building *b)
 {
-    if (has_figure_of_type(b, FIGURE_MISSIONARY)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_MISSIONARY))
+            return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (city_population() > 0) {
@@ -970,9 +925,8 @@ static void spawn_figure_industry(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
-        if (has_figure_of_type(b, FIGURE_CART_PUSHER)) {
+        if (has_figure_of_type(b, FIGURE_CART_PUSHER))
             return;
-        }
         if (building_industry_has_produced_resource(b)) {
             building_industry_start_new_production(b);
             figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
@@ -997,9 +951,8 @@ static void spawn_figure_wharf(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
-        if (has_figure_of_type(b, FIGURE_CART_PUSHER)) {
+        if (has_figure_of_type(b, FIGURE_CART_PUSHER))
             return;
-        }
         if (b->figure_spawn_delay) {
             b->figure_spawn_delay = 0;
             b->data.industry.has_fish = 0;
@@ -1020,9 +973,8 @@ static void spawn_figure_shipyard(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
-        if (has_figure_of_type(b, FIGURE_FISHING_BOAT)) {
+        if (has_figure_of_type(b, FIGURE_FISHING_BOAT))
             return;
-        }
         int pct_workers = worker_percentage(b);
         if (pct_workers >= 100) {
             b->data.industry.progress += 10;
@@ -1101,9 +1053,8 @@ static void spawn_figure_dock(building *b)
 static void spawn_figure_native_hut(building *b)
 {
     map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->grid_offset) & 1));
-    if (has_figure_of_type(b, FIGURE_INDIGENOUS_NATIVE)) {
-        return;
-    }
+    if (has_figure_of_type(b, FIGURE_INDIGENOUS_NATIVE))
+            return;
     int x_out, y_out;
     if (b->subtype.native_meeting_center_id > 0 && map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {
         b->figure_spawn_delay++;
@@ -1154,9 +1105,8 @@ static void spawn_figure_barracks(building *b)
             spawn_delay = 32;
         } else if (pct_workers >= 1) {
             spawn_delay = 48;
-        } else {
+        } else
             return;
-        }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;

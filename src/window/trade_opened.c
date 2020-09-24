@@ -48,9 +48,8 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0)) {
-        return;
-    }
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, image_buttons, 2, 0))
+            return;
     if (input_go_back_requested(m, h)) {
         window_empire_show();
     }

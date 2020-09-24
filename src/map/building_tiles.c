@@ -56,9 +56,8 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
 {
-    if (!map_grid_is_inside(x, y, size)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, size))
+            return;
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
         case DIR_0_TOP:
@@ -94,9 +93,8 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
 }
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_id, int progress)
 {
-    if (!map_grid_is_inside(x, y, 3)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, 3))
+            return;
     // farmhouse
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
@@ -173,16 +171,14 @@ int map_building_tiles_add_aqueduct(int x, int y)
 }
 void map_building_tiles_remove(int building_id, int x, int y)
 {
-    if (!map_grid_is_inside(x, y, 1)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, 1))
+            return;
     int size;
     int base_grid_offset = north_tile_grid_offset(x, y, &size);
     x = map_grid_offset_to_x(base_grid_offset);
     y = map_grid_offset_to_y(base_grid_offset);
-    if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK) {
-        return;
-    }
+    if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK)
+            return;
     building *b = building_get(building_id);
     if (building_id && building_is_farm(b->type)) {
         size = 3;
@@ -221,9 +217,8 @@ void map_building_tiles_remove(int building_id, int x, int y)
 }
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
 {
-    if (!map_grid_is_inside(x, y, size)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, size))
+            return;
     building *b = building_get(building_id);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {

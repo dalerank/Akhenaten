@@ -22,9 +22,8 @@ static struct {
 
 static void start_touch(const touch *first, const touch *last, int scale)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
+    if (!config_get(CONFIG_UI_ZOOM))
+            return;
     data.restore = 0;
     data.touch.active = 1;
     data.input_offset.x = first->current_point.x;
@@ -35,9 +34,8 @@ static void start_touch(const touch *first, const touch *last, int scale)
 
 void zoom_update_touch(const touch *first, const touch *last, int scale)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
+    if (!config_get(CONFIG_UI_ZOOM))
+            return;
     if (!data.touch.active) {
         start_touch(first, last, scale);
         return;
@@ -62,18 +60,16 @@ void zoom_update_touch(const touch *first, const touch *last, int scale)
 
 void zoom_end_touch(void)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
+    if (!config_get(CONFIG_UI_ZOOM))
+            return;
     data.touch.active = 0;
 }
 
 void zoom_map(const mouse *m)
 {
-    if (!config_get(CONFIG_UI_ZOOM) || data.touch.active || m->is_touch) {
-        return;
-    }
-    if (m->middle.went_up) {
+    if (!config_get(CONFIG_UI_ZOOM) || data.touch.active || m->is_touch)
+            return;
+    if (m->middle.went_up) { // todo: panning with middle mouse
         data.restore = 1;
         data.input_offset.x = m->x;
         data.input_offset.y = m->y - TOP_MENU_HEIGHT[GAME_ENV];
@@ -92,26 +88,24 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position)
     if (!data.touch.active) {
         if (data.restore) {
             data.delta = 100 - *zoom;
-            data.restore = 0;
+            if (*zoom == 100)
+                data.restore = 0;
         }
-        if (data.delta == 0) {
+        if (data.delta == 0)
             return 0;
-        }
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             step = (data.delta > 0) ? ZOOM_STEP : -ZOOM_STEP;
-            if (*zoom > 100) {
+            if (*zoom > 100)
                 step *= 2;
-            }
-        } else {
+        } else
             step = data.delta;
-        }
         data.delta = calc_absolute_decrement(data.delta, step);
     } else {
         data.restore = 0;
         step = data.touch.current_zoom - *zoom;
     }
 
-    int result = calc_bound(*zoom + step, 50, 200);
+    int result = calc_bound(*zoom + step, 50, 200); // todo: bind camera to max window size... or find a way to mask the borders
     if (*zoom == result) {
         data.delta = 0;
         return 0;
@@ -129,12 +123,10 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position)
     if (!config_get(CONFIG_UI_SMOOTH_SCROLLING) && !data.touch.active) {
         int remaining_x = camera_position->x & 60;
         int remaining_y = camera_position->y & 15;
-        if (remaining_x >= 30) {
+        if (remaining_x >= 30)
             remaining_x -= 60;
-        }
-        if (remaining_y >= 8) {
+        if (remaining_y >= 8)
             remaining_y -= 15;
-        }
         camera_position->x -= remaining_x;
         camera_position->y -= remaining_y;
     }

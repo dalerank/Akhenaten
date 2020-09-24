@@ -190,9 +190,8 @@ static void draw_foreground(void)
 
 static void button_select_item(int index, int param2)
 {
-    if (index >= data.scenarios->num_files) {
-        return;
-    }
+    if (index >= data.scenarios->num_files)
+            return;
     data.selected_item = scrollbar.scroll_position + index;
     strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
     game_file_load_scenario_data(data.selected_scenario_filename);
@@ -215,15 +214,12 @@ static void on_scroll(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
-        return;
-    }
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0)) {
-        return;
-    }
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
-        return;
-    }
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+            return;
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0))
+            return;
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id))
+            return;
     if (h->enter_pressed) {
         button_start_scenario(0, 0);
         return;

@@ -79,9 +79,8 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
 {
     if (button_tooltip_info.is_active &&
         x == button_tooltip_info.x && y == button_tooltip_info.y &&
-        width == button_tooltip_info.width && height == button_tooltip_info.height) {
-        return;
-    }
+        width == button_tooltip_info.width && height == button_tooltip_info.height)
+            return;
     restore_window_under_tooltip_from_buffer();
     button_tooltip_info.is_active = 1;
     button_tooltip_info.x = x;

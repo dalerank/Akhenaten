@@ -173,9 +173,8 @@ static void draw_background(void)
 }
 static void draw_foreground(void)
 {
-    if (!data.open_sub_menu) {
-        return;
-    }
+    if (!data.open_sub_menu)
+            return;
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
@@ -234,9 +233,8 @@ void widget_top_menu_draw(int force)
 {
     if (!force && drawn.treasury == city_finance_treasury() &&
         drawn.population == city_population() &&
-        drawn.month == game_time_month()) {
-        return;
-    }
+        drawn.month == game_time_month())
+            return;
 
     refresh_background();
     menu_bar_draw(menu, 4);

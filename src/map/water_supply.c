@@ -90,9 +90,8 @@ static void set_all_aqueducts_to_no_water(void)
 
 static void fill_aqueducts_from_offset(int grid_offset)
 {
-    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-        return;
-    }
+    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+            return;
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
@@ -133,9 +132,8 @@ static void fill_aqueducts_from_offset(int grid_offset)
             }
         }
         if (next_offset == -1) {
-            if (queue.head == queue.tail) {
-                return;
-            }
+            if (queue.head == queue.tail)
+            return;
             next_offset = queue.items[queue.head++];
             if (queue.head >= MAX_QUEUE) {
                 queue.head = 0;

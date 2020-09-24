@@ -94,9 +94,8 @@ static void set_mapping(int key, int modifiers, int action)
     if (mapping->key) {
         mapping = &data.default_mappings[action][1];
     }
-    if (mapping->key) {
-        return;
-    }
+    if (mapping->key)
+            return;
     mapping->key = key;
     mapping->modifiers = modifiers;
     mapping->action = action;
@@ -233,9 +232,8 @@ static void load_file(void)
 {
     hotkey_config_clear();
     FILE *fp = file_open(INI_FILENAME, "rt");
-    if (!fp) {
-        return;
-    }
+    if (!fp)
+            return;
     char line_buffer[MAX_LINE];
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {

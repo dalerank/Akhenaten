@@ -674,9 +674,8 @@ static int zip_input_func(uint8_t *buffer, int length, struct pk_token *token)
 }
 static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
 {
-    if (token->stop) {
-        return;
-    }
+    if (token->stop)
+            return;
     if (token->output_ptr >= token->output_length) {
         log_error("COMP2 Out of buffer space.", 0, 0);
         token->stop = 1;

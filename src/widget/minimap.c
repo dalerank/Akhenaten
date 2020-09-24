@@ -141,9 +141,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         return;
     }
 
-    if (draw_figure(x_view, y_view, grid_offset)) {
-        return;
-    }
+    if (draw_figure(x_view, y_view, grid_offset))
+            return;
 
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land

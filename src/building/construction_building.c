@@ -416,6 +416,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_id_from_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
+            add_building(b, image_id_from_group(98+66+99999));
 //            add_building(b, mods_get_group_id("Keriew", "Roadblocks"));
 //            map_terrain_add_roadblock_road(b->x, b->y, orientation);
 //            map_tiles_update_area_roads(b->x, b->y, 5);
@@ -453,6 +454,7 @@ static void add_to_map(int type, building *b, int size,
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             map_tiles_update_area_walls(b->x, b->y, 5);
             break;
+        case BUILDING_GATEHOUSE_PH:
         case BUILDING_GATEHOUSE:
             map_building_tiles_add(b->id, b->x, b->y, size,
                                    image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
@@ -507,6 +509,10 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
             city_buildings_add_distribution_center(b);
             break;
+        default:
+            auto p = building_properties_for_type(type);
+            add_building(b, image_id_from_group(p->image_group) + p->image_offset);
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();
@@ -515,44 +521,39 @@ static void add_to_map(int type, building *b, int size,
 int building_construction_place_building(int type, int x, int y)
 {
     int terrain_mask = TERRAIN_ALL;
-    if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_ROADBLOCK) {
+    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_ROADBLOCK)
         terrain_mask = ~TERRAIN_ROAD;
-    } else if (type == BUILDING_TOWER) {
+    else if (type == BUILDING_TOWER)
         terrain_mask = ~TERRAIN_WALL;
-    }
     int size = building_properties_for_type(type)->size;
-    if (type == BUILDING_WAREHOUSE) {
+    if (type == BUILDING_WAREHOUSE)
         size = 3;
-    }
     int building_orientation = 0;
-    if (type == BUILDING_GATEHOUSE) {
+    if (type == BUILDING_GATEHOUSE)
         building_orientation = map_orientation_for_gatehouse(x, y);
-    } else if (type == BUILDING_TRIUMPHAL_ARCH) {
+    else if (type == BUILDING_TRIUMPHAL_ARCH)
         building_orientation = map_orientation_for_triumphal_arch(x, y);
-    }
     switch (city_view_orientation()) {
         case DIR_2_RIGHT: x = x - size + 1; break;
         case DIR_4_BOTTOM: x = x - size + 1; y = y - size + 1; break;
         case DIR_6_LEFT: y = y - size + 1; break;
     }
     // extra checks
-    if (type == BUILDING_GATEHOUSE) {
+    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH) {
         if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return 0;
         }
         if (!building_orientation) {
-            if (building_rotation_get_road_orientation() == 1) {
+            if (building_rotation_get_road_orientation() == 1)
                 building_orientation = 1;
-            } else {
+            else
                 building_orientation = 2;
-            }
         }
     }
     if (type == BUILDING_ROADBLOCK) {
-        if (map_tiles_are_clear(x, y, size, TERRAIN_ROAD)) {
+        if (map_tiles_are_clear(x, y, size, TERRAIN_ROAD))
             return 0;
-        }
     }
     if (type == BUILDING_TRIUMPHAL_ARCH) {
         if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
@@ -560,11 +561,10 @@ int building_construction_place_building(int type, int x, int y)
             return 0;
         }
         if (!building_orientation) {
-            if (building_rotation_get_road_orientation() == 1) {
+            if (building_rotation_get_road_orientation() == 1)
                 building_orientation = 1;
-            } else {
+            else
                 building_orientation = 3;
-            }
         }
     }
     int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
@@ -638,15 +638,13 @@ int building_construction_place_building(int type, int x, int y)
 
     // phew, checks done!
     building *b;
-    if (building_is_fort(type)) {
+    if (building_is_fort(type))
         b = building_create(BUILDING_FORT, x, y);
-    } else {
+    else
         b = building_create(type, x, y);
-    }
     game_undo_add_building(b);
-    if (b->id <= 0) {
+    if (b->id <= 0)
         return 0;
-    }
     add_to_map(type, b, size, building_orientation, waterside_orientation_abs, waterside_orientation_rel);
     return 1;
 }

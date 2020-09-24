@@ -347,9 +347,8 @@ static int switch_keyboard_get(char *title, char *buffer, int max_len)
 
 static void switch_start_text_input(void)
 {
-    if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length)) {
-        return;
-    }
+    if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length))
+            return;
     for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
@@ -381,9 +380,8 @@ static void switch_rescale_analog(int *x, int *y, int dead)
     //where a reported maximum axis value corresponds to 80% of the full range
     //of motion of the analog stick
 
-    if (dead == 0) {
-        return;
-    }
+    if (dead == 0)
+            return;
     if (dead >= 32767) {
         *x = 0;
         *y = 0;

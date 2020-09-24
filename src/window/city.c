@@ -90,9 +90,8 @@ static void draw_paused_and_time_left(void)
 }
 static void draw_cancel_construction(void)
 {
-    if (!mouse_get()->is_touch || !building_construction_type()) {
-        return;
-    }
+    if (!mouse_get()->is_touch || !building_construction_type())
+            return;
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
@@ -245,12 +244,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
     if (!building_construction_in_progress()) {
-        if (widget_top_menu_handle_input(m, h)) {
+        if (widget_top_menu_handle_input(m, h))
             return;
-        }
-        if (widget_sidebar_city_handle_mouse(m)) {
+        if (widget_sidebar_city_handle_mouse(m))
             return;
-        }
     }
     widget_city_handle_input(m, h);
 }

@@ -103,9 +103,8 @@ void scenario_invasion_init(void) {
     scenario_invasion_clear();
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
-    if (path_max == 0) {
-        return;
-    }
+    if (path_max == 0)
+            return;
     invasion_warning *warning = &data.warnings[1];
     for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
         random_generate_next();

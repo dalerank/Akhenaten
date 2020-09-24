@@ -462,9 +462,8 @@ void city_labor_update(void)
 void city_labor_set_priority(int category, int new_priority)
 {
     int old_priority = city_data.labor.categories[category].priority;
-    if (old_priority == new_priority) {
-        return;
-    }
+    if (old_priority == new_priority)
+            return;
     int shift;
     int from_prio;
     int to_prio;

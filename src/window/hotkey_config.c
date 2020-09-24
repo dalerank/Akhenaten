@@ -267,9 +267,8 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
-        return;
-    }
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+            return;
 
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2, &data.focus_button);
@@ -288,9 +287,8 @@ static void set_hotkey(int action, int index, int key, int modifiers)
 static void button_hotkey(int row, int is_alternative)
 {
     hotkey_widget *widget = &hotkey_widgets[row + scrollbar.scroll_position];
-    if (widget->action == HOTKEY_HEADER) {
-        return;
-    }
+    if (widget->action == HOTKEY_HEADER)
+            return;
     window_hotkey_editor_show(widget->action, is_alternative, set_hotkey);
 }
 

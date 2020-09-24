@@ -222,9 +222,8 @@ static void create_window_screenshot(void)
 
 static void create_full_city_screenshot(void)
 {
-    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
-        return;
-    }
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))
+            return;
     pixel_offset original_camera_pixels;
     city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
     int width = screen_width();

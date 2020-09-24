@@ -32,9 +32,8 @@ static const int FLOTSAM_TYPE_3[] = {
 };
 
 void figure_create_flotsam(void) {
-    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
-        return;
-    }
+    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam())
+            return;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state && f->type == FIGURE_FLOTSAM) {
@@ -53,9 +52,8 @@ void figure_create_flotsam(void) {
 
 void figure_flotsam_action(figure *f) {
     f->is_boat = 2;
-    if (!scenario_map_has_river_exit()) {
-        return;
-    }
+    if (!scenario_map_has_river_exit())
+            return;
     f->is_ghost = 0;
     f->cart_image_id = 0;
     f->terrain_usage = TERRAIN_USAGE_ANY;

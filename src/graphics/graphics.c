@@ -223,9 +223,8 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height)
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer)
 {
     const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
-    if (!current_clip->is_visible) {
-        return;
-    }
+    if (!current_clip->is_visible)
+            return;
     int min_x = x + current_clip->clipped_pixels_left;
     int min_dy = current_clip->clipped_pixels_top;
     int max_dy = height - current_clip->clipped_pixels_bottom;
@@ -237,9 +236,8 @@ void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffe
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer)
 {
     const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
-    if (!current_clip->is_visible) {
-        return;
-    }
+    if (!current_clip->is_visible)
+            return;
     int min_x = x + current_clip->clipped_pixels_left;
     int min_dy = current_clip->clipped_pixels_top;
     int max_dy = height - current_clip->clipped_pixels_bottom;
@@ -282,9 +280,8 @@ void graphics_clear_screens(void)
 
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)
 {
-    if (x < clip_rectangle.x_start || x >= clip_rectangle.x_end) {
-        return;
-    }
+    if (x < clip_rectangle.x_start || x >= clip_rectangle.x_end)
+            return;
     int y_min = y1 < y2 ? y1 : y2;
     int y_max = y1 < y2 ? y2 : y1;
     y_min = y_min < clip_rectangle.y_start ? clip_rectangle.y_start : y_min;
@@ -299,9 +296,8 @@ void graphics_draw_vertical_line(int x, int y1, int y2, color_t color)
 
 void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color)
 {
-    if (y < clip_rectangle.y_start || y >= clip_rectangle.y_end) {
-        return;
-    }
+    if (y < clip_rectangle.y_start || y >= clip_rectangle.y_end)
+            return;
     int x_min = x1 < x2 ? x1 : x2;
     int x_max = x1 < x2 ? x2 : x1;
     x_min = x_min < clip_rectangle.x_start ? clip_rectangle.x_start : x_min;
@@ -340,9 +336,8 @@ void graphics_fill_rect(int x, int y, int width, int height, color_t color)
 void graphics_shade_rect(int x, int y, int width, int height, int darkness)
 {
     const clip_info *cur_clip = graphics_get_clip_info(x, y, width, height);
-    if (!cur_clip->is_visible) {
-        return;
-    }
+    if (!cur_clip->is_visible)
+            return;
     for (int yy = y + cur_clip->clipped_pixels_top; yy < y + height - cur_clip->clipped_pixels_bottom; yy++) {
         for (int xx = x + cur_clip->clipped_pixels_left; xx < x + width - cur_clip->clipped_pixels_right; xx++) {
             color_t *pixel = graphics_get_pixel(xx, yy);

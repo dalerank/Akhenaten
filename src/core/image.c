@@ -504,7 +504,9 @@ int image_groupid_translation(int table[], int group) {
         int a = 2;
     }
 
-    for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
+    if (group > 99999)
+        group -= 99999;
+    else for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
         if (table[i] == group)
             return table[i + 1];
     }

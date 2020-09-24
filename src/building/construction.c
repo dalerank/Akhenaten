@@ -55,11 +55,12 @@ static struct {
     map_tile end;
     int cost;
     struct {
-        int meadow;
-        int rock;
-        int tree;
-        int water;
-        int wall;
+        bool meadow;
+        bool rock;
+        bool ore;
+        bool tree;
+        bool water;
+        bool wall;
     } required_terrain;
     int draw_as_constructing;
     int start_offset_x_view;
@@ -293,12 +294,13 @@ void building_construction_set_type(int type)
     data.end.y = 0;
 
     if (type != BUILDING_NONE) {
-        data.required_terrain.wall = 0;
-        data.required_terrain.water = 0;
-        data.required_terrain.tree = 0;
-        data.required_terrain.rock = 0;
-        data.required_terrain.meadow = 0;
-        data.start.grid_offset = 0;
+        data.required_terrain.wall = false;
+        data.required_terrain.water = false;
+        data.required_terrain.tree = false;
+        data.required_terrain.rock = false;
+        data.required_terrain.ore = false;
+        data.required_terrain.meadow = false;
+        data.start.grid_offset = false;
 
         switch (type) {
             case BUILDING_WHEAT_FARM:
@@ -307,20 +309,28 @@ void building_construction_set_type(int type)
             case BUILDING_OLIVE_FARM:
             case BUILDING_VINES_FARM:
             case BUILDING_PIG_FARM:
-                data.required_terrain.meadow = 1;
+            case BUILDING_FIGS_FARM:
+                data.required_terrain.meadow = true;
                 break;
             case BUILDING_MARBLE_QUARRY:
             case BUILDING_IRON_MINE:
-                data.required_terrain.rock = 1;
+            case BUILDING_GRANITE_QUARRY:
+            case BUILDING_SANDSTONE_QUARRY:
+                data.required_terrain.rock = true;
+                break;
+            case BUILDING_GOLD_MINE:
+            case BUILDING_GEMSTONE_MINE:
+            case BUILDING_COPPER_MINE:
+                data.required_terrain.ore = true;
                 break;
             case BUILDING_TIMBER_YARD:
-                data.required_terrain.tree = 1;
+                data.required_terrain.tree = true;
                 break;
             case BUILDING_CLAY_PIT:
-                data.required_terrain.water = 1;
+                data.required_terrain.water = true;
                 break;
             case BUILDING_TOWER:
-                data.required_terrain.wall = 1;
+                data.required_terrain.wall = true;
                 break;
             case BUILDING_MENU_SMALL_TEMPLES:
                 data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
@@ -395,9 +405,8 @@ void building_construction_start(int x, int y, int grid_offset)
             default:
                 break;
         }
-        if (!can_start) {
+        if (!can_start)
             building_construction_cancel();
-        }
     }
 }
 int building_construction_is_updatable(void)
@@ -478,7 +487,7 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         int items_placed = place_houses(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (type == BUILDING_GATEHOUSE) {
+    } else if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH) {
         mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_ROADBLOCK) {
         // Don't show the footprint for roadblocks
@@ -533,9 +542,8 @@ void building_construction_place(void)
     int y_end = data.end.y;
     int type = data.sub_type ? data.sub_type : data.type;
     building_construction_warning_reset();
-    if (!type) {
-        return;
-    }
+    if (!type)
+            return;
     if (city_finance_out_of_money()) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_OUT_OF_MONEY);
@@ -636,9 +644,8 @@ void building_construction_place(void)
         map_routing_update_land();
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
-    } else if (!building_construction_place_building(type, x_end, y_end)) {
-        return;
-    }
+    } else if (!building_construction_place_building(type, x_end, y_end))
+            return;
     if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE) {
         building_warehouses_remove_resource(RESOURCE_MARBLE, 2);
     }
@@ -669,12 +676,12 @@ static void set_warning(int *warning_id, int warning)
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
 {
     if (data.required_terrain.meadow) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) { // todo: add inundable lands
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
             return 0;
         }
     } else if (data.required_terrain.rock) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) { // todo: add ore rock
             set_warning(warning_id, WARNING_ROCK_NEEDED);
             return 0;
         }
@@ -684,7 +691,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
             return 0;
         }
     } else if (data.required_terrain.water) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) { // todo: add inundable lands check
             set_warning(warning_id, WARNING_WATER_NEEDED);
             return 0;
         }

@@ -307,9 +307,8 @@ void building_maintenance_check_rome_access(void)
     const map_tile *exit_point = city_map_exit_point();
     if (!map_routing_distance(exit_point->grid_offset)) {
         // no route through city
-        if (city_population() <= 0) {
+        if (city_population() <= 0)
             return;
-        }
         for (int i = 0; i < 15; i++) {
             map_routing_delete_first_wall_or_aqueduct(entry_point->x, entry_point->y);
             map_routing_delete_first_wall_or_aqueduct(exit_point->x, exit_point->y);

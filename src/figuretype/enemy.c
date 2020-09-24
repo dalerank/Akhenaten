@@ -412,9 +412,8 @@ void figure_enemy49_fast_sword_action(figure *f) {
         attack_id = 545;
         corpse_id = 593;
         normal_id = 449;
-    } else {
-        return;
-    }
+    } else
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset >= 12) {
             f->image_id = attack_id + dir + 8 * ((f->attack_image_offset - 12) / 2);
@@ -441,9 +440,8 @@ void figure_enemy50_sword_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT) {
-        return;
-    }
+    if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT)
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset >= 12) {
             f->image_id = 545 + dir + 8 * ((f->attack_image_offset - 12) / 2);
@@ -470,9 +468,8 @@ void figure_enemy51_spear_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_1_NUMIDIAN) {
-        return;
-    }
+    if (m->enemy_type != ENEMY_1_NUMIDIAN)
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset >= 12) {
             f->image_id = 593 + dir + 8 * ((f->attack_image_offset - 12) / 2);
@@ -525,9 +522,8 @@ void figure_enemy53_axe_action(figure *f) {
 
     f->is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_2_GAUL) {
-        return;
-    }
+    if (m->enemy_type != ENEMY_2_GAUL)
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset >= 12) {
             f->image_id = 697 + dir + 8 * ((f->attack_image_offset - 12) / 2);

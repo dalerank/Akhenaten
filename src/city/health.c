@@ -21,23 +21,20 @@ void city_health_change(int amount)
 
 static void cause_disease(int total_people)
 {
-    if (city_data.health.value >= 40) {
-        return;
-    }
+    if (city_data.health.value >= 40)
+            return;
     int chance_value = random_byte() & 0x3f;
     if (city_data.religion.venus_curse_active) {
         // force plague
         chance_value = 0;
         city_data.religion.venus_curse_active = 0;
     }
-    if (chance_value > 40 - city_data.health.value) {
-        return;
-    }
+    if (chance_value > 40 - city_data.health.value)
+            return;
 
     int sick_people = calc_adjust_with_percentage(total_people, 7 + (random_byte() & 3));
-    if (sick_people <= 0) {
-        return;
-    }
+    if (sick_people <= 0)
+            return;
     city_health_change(10);
     int people_to_kill = sick_people - city_data.health.num_hospital_workers;
     if (people_to_kill <= 0) {
@@ -57,9 +54,8 @@ static void cause_disease(int total_people)
             if (!b->data.house.clinic) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
-                if (people_to_kill <= 0) {
-                    return;
-                }
+                if (people_to_kill <= 0)
+            return;
             }
         }
     }
@@ -70,9 +66,8 @@ static void cause_disease(int total_people)
             if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
-                if (people_to_kill <= 0) {
-                    return;
-                }
+                if (people_to_kill <= 0)
+            return;
             }
         }
     }
@@ -82,9 +77,8 @@ static void cause_disease(int total_people)
         if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
             people_to_kill -= b->house_population;
             building_destroy_by_plague(b);
-            if (people_to_kill <= 0) {
-                return;
-            }
+            if (people_to_kill <= 0)
+            return;
         }
     }
 }

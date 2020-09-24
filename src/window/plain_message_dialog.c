@@ -54,9 +54,8 @@ static void close(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0)) {
-        return;
-    }
+    if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0))
+            return;
     if (input_go_back_requested(m, h) || h->enter_pressed) {
         close();
     }

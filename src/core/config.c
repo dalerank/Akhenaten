@@ -180,9 +180,8 @@ void config_load(void)
 {
     config_set_defaults();
     FILE *fp = file_open(INI_FILENAME, "rt");
-    if (!fp) {
-        return;
-    }
+    if (!fp)
+            return;
     char line_buffer[MAX_LINE];
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {

@@ -74,9 +74,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &player_name_input) ||
-        image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0)) {
-        return;
-    }
+        image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0))
+            return;
     if (input_box_is_accepted(&player_name_input)) {
         start_mission(0, 0);
         return;

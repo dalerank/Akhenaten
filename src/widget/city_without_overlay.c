@@ -307,9 +307,8 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
 
 static void draw_top(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
+    if (!map_property_is_draw_tile(grid_offset))
+            return;
     building *b = building_get(map_building_at(grid_offset));
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;

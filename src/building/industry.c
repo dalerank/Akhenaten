@@ -75,9 +75,8 @@ void building_industry_update_production(void)
 
 void building_industry_update_wheat_production(void)
 {
-    if (scenario_property_climate() == CLIMATE_NORTHERN) {
-        return;
-    }
+    if (scenario_property_climate() == CLIMATE_NORTHERN)
+            return;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {

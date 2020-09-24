@@ -14,9 +14,8 @@
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id)
 {
-    if (!map_grid_is_inside(x, y, size)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, size))
+            return;
     map_point leftmost;
     switch (city_view_orientation()) {
         case DIR_0_TOP:

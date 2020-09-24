@@ -190,9 +190,8 @@ static void update_god_moods(void)
             god->wrath_bolts = 50;
         }
     }
-    if (game_time_day() != 0) {
-        return;
-    }
+    if (game_time_day() != 0)
+            return;
 
     // handle blessings, curses, etc every month
     for (int i = 0; i < MAX_GODS; i++) {
@@ -203,9 +202,8 @@ static void update_god_moods(void)
             god_id = city_data.religion.least_happy_god - 1;
         }
     }
-    if (!setting_gods_enabled()) {
-        return;
-    }
+    if (!setting_gods_enabled())
+            return;
     if (god_id < MAX_GODS) {
         god_status *god = &city_data.religion.gods[god_id];
         if (god->happiness >= 100 && !god->blessing_done) {
@@ -224,9 +222,8 @@ static void update_god_moods(void)
             }
             god->wrath_bolts = 0;
             god->happiness += 30;
-            if (!perform_large_curse(god_id)) {
-                return;
-            }
+            if (!perform_large_curse(god_id))
+            return;
         }
     }
 

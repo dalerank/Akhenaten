@@ -90,9 +90,8 @@ void enemy_army_calculate_roman_influence(void)
     totals.days_since_roman_influence_calculation++;
     if (totals.days_since_roman_influence_calculation > 4) {
         totals.days_since_roman_influence_calculation = 0;
-    } else {
-        return;
-    }
+    } else
+            return;
     map_soldier_strength_clear();
     for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
         const formation *m = formation_get(i);

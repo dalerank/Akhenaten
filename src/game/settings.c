@@ -119,9 +119,8 @@ void settings_load(void)
     load_default_settings();
 
     int size = io_read_file_into_buffer("c3.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
-    if (!size) {
-        return;
-    }
+    if (!size)
+            return;
     load_settings(data.inf_file);
 
     if (data.window_width + data.window_height < 500) {

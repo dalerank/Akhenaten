@@ -320,9 +320,8 @@ static void draw_background(void)
 static void draw_empire_object(const empire_object *obj)
 {
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-        if (!empire_city_is_trade_route_open(obj->trade_route_id)) {
+        if (!empire_city_is_trade_route_open(obj->trade_route_id))
             return;
-        }
     }
     int x, y, image_id;
     if (scenario_empire_is_expanded()) {
@@ -350,20 +349,16 @@ static void draw_empire_object(const empire_object *obj)
         return;
     }
     if (obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        if (city_military_months_until_distant_battle() <= 0) {
+        if (city_military_months_until_distant_battle() <= 0)
             return;
-        }
-        if (city_military_distant_battle_enemy_months_traveled() != obj->distant_battle_travel_months) {
+        if (city_military_distant_battle_enemy_months_traveled() != obj->distant_battle_travel_months)
             return;
-        }
     }
     if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY) {
-        if (!city_military_distant_battle_roman_army_is_traveling()) {
+        if (!city_military_distant_battle_roman_army_is_traveling())
             return;
-        }
-        if (city_military_distant_battle_roman_months_traveled() != obj->distant_battle_travel_months) {
+        if (city_military_distant_battle_roman_months_traveled() != obj->distant_battle_travel_months)
             return;
-        }
     }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
     const image *img = image_get(image_id);
@@ -586,15 +581,13 @@ static int get_tooltip_resource(tooltip_context *c)
 static void get_tooltip_trade_route_type(tooltip_context *c)
 {
     int selected_object = empire_selected_object();
-    if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY) {
-        return;
-    }
+    if (!selected_object || empire_object_get(selected_object - 1)->type != EMPIRE_OBJECT_CITY)
+            return;
 
     data.selected_city = empire_city_get_for_object(selected_object - 1);
     const empire_city *city = empire_city_get(data.selected_city);
-    if (city->type != EMPIRE_CITY_TRADE || city->is_open) {
-        return;
-    }
+    if (city->type != EMPIRE_CITY_TRADE || city->is_open)
+            return;
 
     int x_offset = (data.x_min + data.x_max + 300) / 2;
     int y_offset = data.y_max - 41;

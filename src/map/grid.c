@@ -104,9 +104,8 @@ void map_grid_set(grid_xx *grid, uint32_t at, int64_t value)
 {
     if (!grid->initialized)
         map_grid_init(grid);
-    if (at >= grid_total_size[GAME_ENV]) {
-        return;
-    }
+    if (at >= grid_total_size[GAME_ENV])
+            return;
 //    assert(at < grid_total_size[GAME_ENV]);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
@@ -346,24 +345,15 @@ int map_grid_direction_delta(int direction)
 }
 void map_grid_size(int *width, int *height)
 {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        *width = map_data.width;
-        *height = map_data.height;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        *width = map_data.width / 2;
-        *height = map_data.height / 2;
-    }
+    *width = map_data.width;
+    *height = map_data.height;
 }
 int map_grid_width(void)
 {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return map_data.width / 2;
     return map_data.width;
 }
 int map_grid_height(void)
 {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return map_data.height / 2;
     return map_data.height;
 }
 void map_grid_bound(int *x, int *y)

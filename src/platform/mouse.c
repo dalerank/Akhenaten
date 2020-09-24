@@ -17,9 +17,8 @@ void system_mouse_get_relative_state(int *x, int *y)
 
 void system_mouse_set_relative_mode(int enabled)
 {
-    if (enabled == data.enabled) {
-        return;
-    }
+    if (enabled == data.enabled)
+            return;
     if (enabled) {
         SDL_GetMouseState(&data.x, &data.y);
         SDL_SetRelativeMouseMode(SDL_TRUE);

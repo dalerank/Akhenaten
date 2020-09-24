@@ -260,9 +260,8 @@ static int get_x_bridge_tiles(int grid_offset)
 
 void map_bridge_remove(int grid_offset, int mark_deleted)
 {
-    if (!map_is_bridge(grid_offset)) {
-        return;
-    }
+    if (!map_is_bridge(grid_offset))
+            return;
 
     int tiles_x = get_x_bridge_tiles(grid_offset);
     int tiles_y = get_y_bridge_tiles(grid_offset);

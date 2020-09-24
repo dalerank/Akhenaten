@@ -221,9 +221,8 @@ int game_init_editor(void)
 }
 void game_exit_editor(void)
 {
-    if (!reload_language(0, 0)) {
-        return;
-    }
+    if (!reload_language(0, 0))
+            return;
     editor_set_active(0);
     window_main_menu_show(1);
 }

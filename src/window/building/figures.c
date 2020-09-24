@@ -245,9 +245,8 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
         c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_SMALL_BLACK);
 
-    if (!f->building_id) {
-        return;
-    }
+    if (!f->building_id)
+            return;
     building *source_building = building_get(f->building_id);
     building *target_building = building_get(f->destination_building_id);
     int is_returning = 0;

@@ -7,8 +7,6 @@
 	- goals text
 	- messages
 - wrong tooltips
-- wrong build button functions
-- wrong build panel graphics
 
 
 

@@ -12,7 +12,7 @@ static int groupid_translation_table_ph[] = {
     14, 308, // data/Pharaoh_Unloaded.sg3 title.bmp
     15, 81, // data/Pharaoh_General.sg3 paneling.bmp
     16, 333, // data/Pharaoh_Fonts.sg3 fonts.bmp
-    17, 9, // irrigation ditch
+    19, 9, // irrigation ditch
     20, 20, // data/Pharaoh_Terrain.sg3 Land2a.bmp
     21, 21, // data/Pharaoh_Terrain.sg3 Land2a.bmp
     22, 88, // data/Pharaoh_General.sg3 Commerce.bmp
@@ -43,7 +43,7 @@ static int groupid_translation_table_ph[] = {
     49, 51+66, // conservatory
     50, 52+66, // dance school
     51, 46+66, // juggler school
-    52, 118, // data/Pharaoh_General.sg3 entertainment.BMP
+    52, 120+66, // chariot maker
     58, 168+66, // plaza
     59, 59+66, // gardens
     61, 61+66, // statues
@@ -58,10 +58,10 @@ static int groupid_translation_table_ph[] = {
     72, 21+66, // temple ra
     73, 20+66, // temple ptah
     74, 19+66, // temple seth
-    75, 72+66, // temple bast
-    77, 23, // data/Pharaoh_Terrain.sg3 transport.BMP
-    78, 18, // data/Pharaoh_Terrain.sg3 transport.BMP
-    79,18, // fishing wharf
+    75, 76+66, // temple bast
+    77, 26, // shipwright
+    78, 49, // dock
+    79, 18, // fishing wharf
     80, 316, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
     81, 81+66, // architect post
     82, 148, // data/Pharaoh_General.sg3 Warehouse.bmp
@@ -119,7 +119,7 @@ static int groupid_translation_table_ph[] = {
     162, 301, // data/Pharaoh_Unloaded.sg3 C3title.BMP
     164, 63, // bridge
     166, 166+66, // recruiter
-    168, 28, // data/Pharaoh_Terrain.sg3 transport.BMP
+    168, 65, // dock (2)
     169, 50, // data/Pharaoh_Terrain.sg3 transport.BMP
     170, 63, // data/Pharaoh_Terrain.sg3 transport.BMP
     172, 238, // data/Pharaoh_General.sg3 empire_panels.bmp

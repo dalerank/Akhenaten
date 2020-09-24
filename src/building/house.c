@@ -168,13 +168,11 @@ static void merge(building *b)
 
 void building_house_merge(building *house)
 {
-    if (house->house_is_merged) {
-        return;
-    }
-    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {    
-        if ((map_random_get(house->grid_offset) & 7) >= 5) {
+    if (house->house_is_merged)
             return;
-        }
+    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {    
+        if ((map_random_get(house->grid_offset) & 7) >= 5)
+            return;
     }
     int num_house_tiles = 0;
     for (int i = 0; i < 4; i++) {

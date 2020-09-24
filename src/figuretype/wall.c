@@ -116,16 +116,13 @@ void figure_ballista_action(figure *f) {
 }
 
 static void tower_sentry_pick_target(figure *f) {
-    if (enemy_army_total_enemy_formations() <= 0) {
-        return;
-    }
+    if (enemy_army_total_enemy_formations() <= 0)
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK ||
-        f->action_state == FIGURE_ACTION_149_CORPSE) {
-        return;
-    }
-    if (f->in_building_wait_ticks) {
-        return;
-    }
+        f->action_state == FIGURE_ACTION_149_CORPSE)
+            return;
+    if (f->in_building_wait_ticks)
+            return;
     f->wait_ticks_next_target++;
     if (f->wait_ticks_next_target >= 40) {
         f->wait_ticks_next_target = 0;

@@ -59,9 +59,8 @@ static int get_tooltip_resource(tooltip_context *c)
 static void get_tooltip(tooltip_context *c)
 {
     int resource = get_tooltip_resource(c);
-    if (!resource) {
-        return;
-    }
+    if (!resource)
+            return;
     c->type = TOOLTIP_BUTTON;
     c->text_id = 131 + resource;
 }

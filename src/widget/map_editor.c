@@ -70,9 +70,8 @@ static void draw_footprint(int x, int y, int grid_offset)
 
 static void draw_top(int x, int y, int grid_offset)
 {
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
+    if (!map_property_is_draw_tile(grid_offset))
+            return;
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
@@ -173,18 +172,16 @@ static void handle_touch_scroll(const touch *t)
     }
     scroll_restore_margins();
 
-    if (!data.capture_input) {
-        return;
-    }
+    if (!data.capture_input)
+            return;
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
         return;
     }
 
-    if (!touch_not_click(t)) {
-        return;
-    }
+    if (!touch_not_click(t))
+            return;
 
     if (t->has_ended) {
         scroll_drag_end();
@@ -204,9 +201,8 @@ static void handle_touch_zoom(const touch *first, const touch *last)
 static void handle_last_touch(void)
 {
     const touch *last = get_latest_touch();
-    if (!last->in_use) {
-        return;
-    }
+    if (!last->in_use)
+            return;
     if (touch_was_click(last)) {
         editor_tool_deactivate();
         return;
@@ -239,16 +235,14 @@ static void handle_first_touch(map_tile *tile)
     const touch *first = get_earliest_touch();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first)) {
+        if (handle_cancel_construction_button(first))
             return;
-        }
     }
 
     handle_touch_scroll(first);
 
-    if (!input_coords_in_map(first->current_point.x, first->current_point.y)) {
-        return;
-    }
+    if (!input_coords_in_map(first->current_point.x, first->current_point.y))
+            return;
 
     if (editor_tool_is_updatable()) {
         if (!editor_tool_is_in_use()) {
@@ -368,9 +362,8 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
 
-    if (!tile->grid_offset) {
-        return;
-    }
+    if (!tile->grid_offset)
+            return;
 
     if (m->left.went_down) {
         if (!editor_tool_is_in_use()) {

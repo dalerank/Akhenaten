@@ -608,9 +608,8 @@ static void set_wall_gatehouse_image_manually(int grid_offset)
 static void set_wall_image(int x, int y, int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_WALL) ||
-        map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        return;
-    }
+        map_terrain_is(grid_offset, TERRAIN_BUILDING))
+            return;
     const terrain_image *img = map_image_context_get_wall(grid_offset);
     map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_WALL) +
                                img->group_offset + img->item_offset);
@@ -701,16 +700,14 @@ static void set_road_with_aqueduct_image(int grid_offset)
 static void set_road_image(int x, int y, int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-        map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING)) {
-        return;
-    }
+        map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING))
+            return;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
         set_road_with_aqueduct_image(grid_offset);
         return;
     }
-    if (map_property_is_plaza_or_earthquake(grid_offset)) {
-        return;
-    }
+    if (map_property_is_plaza_or_earthquake(grid_offset))
+            return;
     if (map_tiles_is_paved_road(grid_offset)) {
         const terrain_image *img = map_image_context_get_paved_road(grid_offset);
         map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) +
@@ -759,9 +756,8 @@ static void clear_empty_land_image(int x, int y, int grid_offset)
 
 static void set_empty_land_image(int x, int y, int size, int image_id)
 {
-    if (!map_grid_is_inside(x, y, size)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, size))
+            return;
     int index = 0;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {

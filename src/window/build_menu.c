@@ -195,9 +195,8 @@ static int handle_build_submenu(const mouse *m)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (handle_build_submenu(m) ||
-        widget_sidebar_city_handle_mouse_build_menu(m)) {
-        return;
-    }
+        widget_sidebar_city_handle_mouse_build_menu(m))
+            return;
     if (input_go_back_requested(m, h)) {
         window_city_show();
         return;

@@ -181,9 +181,8 @@ static void set_next_route_tile_direction(figure *f)
 
 static void advance_route_tile(figure *f, int roaming_enabled)
 {
-    if (f->direction >= 8) {
-        return;
-    }
+    if (f->direction >= 8)
+            return;
     int target_grid_offset = f->grid_offset + map_grid_direction_delta(f->direction);
     if (f->is_boat) {
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER)) {
@@ -410,9 +409,8 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
         if (f->roam_choose_destination) {
             f->roam_ticks_until_next_turn = 100;
             f->direction = f->previous_tile_direction;
-        } else {
+        } else
             return;
-        }
     }
     // no destination: walk to end of tile and pick a direction
     while (num_ticks > 0) {
@@ -424,9 +422,8 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
             f->progress_on_tile = 15;
             f->roam_random_counter++;
             int came_from_direction = (f->previous_tile_direction + 4) % 8;
-            if (figure_service_provide_coverage(f)) {
-                return;
-            }
+            if (figure_service_provide_coverage(f))
+            return;
             int road_tiles[8];
             int permission = get_permission_for_int(f);
             int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(f->grid_offset, road_tiles, permission);

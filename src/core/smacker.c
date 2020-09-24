@@ -241,9 +241,8 @@ static uint8_t lookup_tree8(bitstream *bs, hufftree8 *tree)
 
 static void free_node16(huffnode16 *node)
 {
-    if (!node) {
-        return;
-    }
+    if (!node)
+            return;
     if (!node->is_leaf) {
         free_node16(node->b[0]);
         free_node16(node->b[1]);
@@ -253,9 +252,8 @@ static void free_node16(huffnode16 *node)
 
 static void free_tree16(hufftree16 *tree)
 {
-    if (!tree) {
-        return;
-    }
+    if (!tree)
+            return;
     for (int i = 0; i < 3; i++) {
         if (!tree->escape_nodes[i]->is_leaf) {
             // Free manually allocated node because it's not in the tree

@@ -491,9 +491,8 @@ void building_granary_warehouse_curse(int big)
             max_building = b;
         }
     }
-    if (!max_building) {
-        return;
-    }
+    if (!max_building)
+            return;
     if (big) {
         city_message_disable_sound_for_next_message();
         city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->grid_offset);

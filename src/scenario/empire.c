@@ -14,12 +14,10 @@ int scenario_empire_is_expanded(void) {
 }
 
 void scenario_empire_process_expansion(void) {
-    if (scenario.empire.is_expanded || scenario.empire.expansion_year <= 0) {
-        return;
-    }
-    if (game_time_year() < scenario.empire.expansion_year + scenario.start_year) {
-        return;
-    }
+    if (scenario.empire.is_expanded || scenario.empire.expansion_year <= 0)
+            return;
+    if (game_time_year() < scenario.empire.expansion_year + scenario.start_year)
+            return;
 
     empire_city_expand_empire();
 

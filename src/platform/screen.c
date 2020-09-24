@@ -228,9 +228,8 @@ void platform_screen_set_fullscreen(void) {
 }
 
 void platform_screen_set_windowed(void) {
-    if (system_is_fullscreen_only()) {
-        return;
-    }
+    if (system_is_fullscreen_only())
+            return;
     int logical_width, logical_height;
     setting_window(&logical_width, &logical_height);
     int pixel_width = scale_logical_to_pixels(logical_width);
@@ -248,9 +247,8 @@ void platform_screen_set_windowed(void) {
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height) {
-    if (system_is_fullscreen_only()) {
-        return;
-    }
+    if (system_is_fullscreen_only())
+            return;
     int pixel_width = scale_logical_to_pixels(logical_width);
     int pixel_height = scale_logical_to_pixels(logical_height);
     if (setting_fullscreen()) {

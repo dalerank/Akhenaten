@@ -352,9 +352,8 @@ void window_building_handle_mouse_market_orders(const mouse* m, building_info_co
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
         orders_resource_buttons, INVENTORY_MAX,
-        &data.resource_focus_button_id)) {
-        return;
-    }
+        &data.resource_focus_button_id))
+            return;
     generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
 }
 

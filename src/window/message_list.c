@@ -217,9 +217,8 @@ static void get_tooltip(tooltip_context *c)
         c->text_id = 1;
     } else if (data.focus_button_id == 12) {
         c->text_id = 2;
-    } else {
-        return;
-    }
+    } else
+            return;
     c->type = TOOLTIP_BUTTON;
 }
 

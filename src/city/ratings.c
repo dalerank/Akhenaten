@@ -307,9 +307,8 @@ static void update_culture_rating(void)
 {
     city_data.ratings.culture = 0;
     city_data.ratings.culture_explanation = 0;
-    if (city_data.population.population <= 0) {
-        return;
-    }
+    if (city_data.population.population <= 0)
+            return;
 
     int pct_theater = city_culture_coverage_theater();
     if (pct_theater >= 100) {

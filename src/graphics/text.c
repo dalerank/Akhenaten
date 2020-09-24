@@ -54,9 +54,8 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end)
 
 void text_draw_cursor(int x_offset, int y_offset, int is_insert)
 {
-    if (!input_cursor.capture) {
-        return;
-    }
+    if (!input_cursor.capture)
+            return;
     input_cursor.capture = 0;
     time_millis curr = time_get_millis();
     time_millis diff = curr - input_cursor.updated;

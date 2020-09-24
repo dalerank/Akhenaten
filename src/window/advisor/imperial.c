@@ -51,9 +51,8 @@ static int selected_request_id;
 
 static void draw_request(int index, const scenario_request *request)
 {
-    if (index >= 5) {
-        return;
-    }
+    if (index >= 5)
+            return;
 
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
     text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);

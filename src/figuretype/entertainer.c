@@ -112,9 +112,8 @@ static void update_image(figure *f) {
             image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER_WHIP);
         }
         f->cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
-    } else {
-        return;
-    }
+    } else
+            return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->type == FIGURE_GLADIATOR) {
             f->image_id = image_id + 104 + dir + 8 * (f->image_offset / 2);

@@ -132,9 +132,8 @@ static void draw_empire_object(const empire_object *obj)
     if (!data.show_battle_objects && (
         obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
         obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
-        obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
-        return;
-    }
+        obj->type == EMPIRE_OBJECT_ENEMY_ARMY))
+            return;
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||

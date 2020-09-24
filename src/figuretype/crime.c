@@ -27,9 +27,8 @@ static const int CRIMINAL_OFFSETS[] = {
 
 static void generate_rioter(building *b) {
     int x_road, y_road;
-    if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
-        return;
-    }
+    if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road))
+            return;
     city_sentiment_add_criminal();
     int people_in_mob;
     int population = city_population();
@@ -120,9 +119,8 @@ void figure_generate_criminals(void) {
         }
     }
     if (min_building) {
-        if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+        if (scenario_is_tutorial_1() || scenario_is_tutorial_2())
             return;
-        }
         int sentiment = city_sentiment();
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {

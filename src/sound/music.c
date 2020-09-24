@@ -141,9 +141,8 @@ static const char ph_mp3[][32] = {
 static void play_track(int track)
 {
     sound_device_stop_music();
-    if (track <= TRACK_NONE || track >= TRACK_MAX) {
-        return;
-    }
+    if (track <= TRACK_NONE || track >= TRACK_MAX)
+            return;
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
     switch (GAME_ENV) {
@@ -183,9 +182,8 @@ void sound_music_update(int force)
         --data.next_check;
         return;
     }
-    if (!setting_sound(SOUND_MUSIC)->enabled) {
-        return;
-    }
+    if (!setting_sound(SOUND_MUSIC)->enabled)
+            return;
     int track;
     int population = city_population();
     int total_enemies = city_figures_total_invading_enemies();
@@ -205,9 +203,8 @@ void sound_music_update(int force)
         track = TRACK_CITY_5;
     }
 
-    if (track == data.current_track) {
-        return;
-    }
+    if (track == data.current_track)
+            return;
 
     play_track(track);
     data.next_check = 10;

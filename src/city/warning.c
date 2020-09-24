@@ -31,13 +31,11 @@ static struct warning *new_warning(void)
 
 void city_warning_show(int type)
 {
-    if (!setting_warnings()) {
-        return;
-    }
+    if (!setting_warnings())
+            return;
     struct warning *w = new_warning();
-    if (!w) {
-        return;
-    }
+    if (!w)
+            return;
     w->in_use = 1;
     w->time = time_get_millis();
     const uint8_t *text;
@@ -86,9 +84,8 @@ void city_warning_clear_outdated(void)
 
 void city_warning_show_console(uint8_t* warning_text){
     struct warning *w = new_warning();
-    if (!w) {
-        return;
-    }
+    if (!w)
+            return;
     w->in_use = 1;
     w->time = time_get_millis();
     string_copy(warning_text, w->text, MAX_TEXT);

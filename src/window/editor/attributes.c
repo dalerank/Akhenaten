@@ -171,9 +171,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (input_box_handle_mouse(m_dialog, &scenario_description_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 10, &data.focus_button_id) ||
         arrow_buttons_handle_mouse(m_dialog, 0, 0, image_arrows, 2, 0) ||
-        widget_sidebar_editor_handle_mouse_attributes(m)) {
-        return;
-    }
+        widget_sidebar_editor_handle_mouse_attributes(m))
+            return;
     if (input_go_back_requested(m, h)) {
         stop(0);
         window_editor_map_show();

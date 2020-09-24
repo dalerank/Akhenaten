@@ -96,12 +96,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     data.focus_arrow_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &data.focus_button_id)) {
-        return;
-    }
-    if (arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &data.focus_arrow_button_id)) {
-        return;
-    }
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &data.focus_button_id))
+            return;
+    if (arrow_buttons_handle_mouse(m_dialog, 0, 0, arrow_buttons, 2, &data.focus_arrow_button_id))
+            return;
     if (input_go_back_requested(m, h)) {
         window_advisors_show();
     }
@@ -141,9 +139,8 @@ static void arrow_button_amount(int is_down, int param2)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!data.focus_button_id && !data.focus_arrow_button_id) {
-        return;
-    }
+    if (!data.focus_button_id && !data.focus_arrow_button_id)
+            return;
     c->type = TOOLTIP_BUTTON;
     if (data.focus_button_id == 1) {
         c->text_id = 98;

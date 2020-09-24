@@ -41,7 +41,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
-		    type != BUILDING_ROADBLOCK
+		            type != BUILDING_ROADBLOCK
 		    ) {
                     return 1;
                 }
@@ -62,9 +62,8 @@ static void determine_meeting_center(void)
         }
     }
     int total_meetings = building_list_small_size();
-    if (total_meetings <= 0) {
-        return;
-    }
+    if (total_meetings <= 0)
+            return;
     const int *meetings = building_list_small_items();
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS; i++) {

@@ -149,9 +149,8 @@ void video_shutdown(void)
 
 void video_draw(int x_offset, int y_offset)
 {
-    if (!data.s) {
-        return;
-    }
+    if (!data.s)
+            return;
     time_millis now_millis = time_get_millis();
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
@@ -174,13 +173,11 @@ void video_draw(int x_offset, int y_offset)
             }
         }
     }
-    if (!draw_frame) {
-        return;
-    }
+    if (!draw_frame)
+            return;
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
-    if (!clip->is_visible) {
-        return;
-    }
+    if (!clip->is_visible)
+            return;
     const unsigned char *frame = smacker_get_frame_video(data.s);
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {

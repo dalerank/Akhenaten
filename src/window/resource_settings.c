@@ -174,19 +174,16 @@ static void draw_foreground(void)
 static void handle_input(const mouse* m, const hotkeys* h)
 {
     const mouse* m_dialog = mouse_in_dialog(m);
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0)) {
-        return;
-    }
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0))
+            return;
     if ((city_int(data.resource) == TRADE_STATUS_EXPORT || city_int(data.resource) == TRADE_STATUS_IMPORT)) {
         int button = 0;
         arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2, &button);
-        if (button) {
+        if (button)
             return;
-        }
     }
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id)) {
-        return;
-    }
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id))
+            return;
     if (input_go_back_requested(m, h)) {
         window_go_back();
     }

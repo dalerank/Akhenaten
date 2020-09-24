@@ -296,9 +296,8 @@ void window_building_draw_legion_info(building_info_context *c)
 void window_building_draw_legion_info_foreground(building_info_context *c)
 {
     const formation *m = formation_get(c->formation_id);
-    if (!m->num_figures) {
-        return;
-    }
+    if (!m->num_figures)
+            return;
     for (int i = 5 - c->formation_types; i < 5; i++) {
         int has_focus = 0;
         if (data.focus_button_id) {
@@ -444,15 +443,12 @@ static void button_return_to_fort(int param1, int param2)
 static void button_layout(int index, int param2)
 {
     formation *m = formation_get(data.context_for_callback->formation_id);
-    if (m->in_distant_battle) {
-        return;
-    }
-    if (index == 0 && data.context_for_callback->formation_types < 5) {
-        return;
-    }
-    if (index == 1 && data.context_for_callback->formation_types < 4) {
-        return;
-    }
+    if (m->in_distant_battle)
+            return;
+    if (index == 0 && data.context_for_callback->formation_types < 5)
+            return;
+    if (index == 1 && data.context_for_callback->formation_types < 4)
+            return;
     // store layout in case of mop up
     int new_layout = m->layout;
     if (m->figure_type == FIGURE_FORT_LEGIONARY) {

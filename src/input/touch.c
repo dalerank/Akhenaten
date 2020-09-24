@@ -164,9 +164,8 @@ int touch_in_use(int index)
 
 void touch_move(int index, touch_coords current_coords, time_millis current_time)
 {
-    if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use) {
-        return;
-    }
+    if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
+            return;
     touch *t = &data.finger[index];
     t->last_change_time = current_time;
     t->current_point = current_coords;
@@ -177,9 +176,8 @@ void touch_move(int index, touch_coords current_coords, time_millis current_time
 
 void touch_end(int index, time_millis current_time)
 {
-    if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use) {
-        return;
-    }
+    if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
+            return;
     touch *t = &data.finger[index];
     t->has_ended = 1;
     // This is needed because sometimes SDL waits for up to three frames to register the touch end
@@ -249,15 +247,13 @@ static int handle_emulated_mouse_clicks(void)
 
 static void handle_mouse_touchpad(void)
 {
-    if (handle_emulated_mouse_clicks()) {
-        return;
-    }
+    if (handle_emulated_mouse_clicks())
+            return;
 
     int num_fingers = get_total_active_touches();
 
-    if (!num_fingers) {
-        return;
-    }
+    if (!num_fingers)
+            return;
 
     if (any_touch_went_up()) {
         if (num_fingers == 1 && touch_was_click(get_earliest_touch())) {
@@ -272,9 +268,8 @@ static void handle_mouse_touchpad(void)
         }
     } else {
         const touch *t = get_earliest_touch();
-        if (!t->has_moved) {
+        if (!t->has_moved)
             return;
-        }
         system_move_mouse_cursor(t->frame_movement.x, t->frame_movement.y);
     }
 }

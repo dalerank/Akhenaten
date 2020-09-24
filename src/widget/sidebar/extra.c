@@ -107,9 +107,8 @@ static void set_extra_info_objectives(void)
     data.favor.target = 0;
     data.population.target = 0;
 
-    if (scenario_is_open_play()) {
-        return;
-    }
+    if (scenario_is_open_play())
+            return;
     if (scenario_criteria_culture_enabled()) {
         data.culture.target = scenario_criteria_culture();
     }

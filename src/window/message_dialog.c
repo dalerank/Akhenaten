@@ -240,9 +240,8 @@ static int get_message_image_id(const lang_message *msg)
 
 static void draw_title(const lang_message *msg)
 {
-    if (!msg->title.text) {
-        return;
-    }
+    if (!msg->title.text)
+            return;
     int image_id = get_message_image_id(msg);
     const image *img = image_id ? image_get(image_id) : 0;
     // title
@@ -283,9 +282,8 @@ static void draw_subtitle(const lang_message *msg)
 
 static void draw_content(const lang_message *msg)
 {
-    if (!msg->content.text) {
-        return;
-    }
+    if (!msg->content.text)
+            return;
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
     data.text_width_blocks = rich_text_init(msg->content.text,

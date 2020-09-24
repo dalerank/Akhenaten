@@ -123,9 +123,8 @@ static int is_arrow_active(const key* arrow)
 
 static void restart_active_arrow(key* arrow, const key* exception)
 {
-    if (arrow == exception) {
-        return;
-    }
+    if (arrow == exception)
+            return;
     if (arrow->state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_AXIS) {
         arrow->state = KEY_STATE_PRESSED;
         arrow->last_change = time_get_millis();
@@ -155,9 +154,8 @@ static key_state get_key_state_for_value(int value)
 static void set_arrow_key(key* arrow, int value)
 {
     key_state state = get_key_state_for_value(value);
-    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
-        return;
-    }
+    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED)
+            return;
     // Key should retain axis state even if its value is zero
     if (arrow->state != KEY_STATE_AXIS || state != KEY_STATE_UNPRESSED) {
         arrow->state = state;
@@ -247,9 +245,8 @@ void scroll_restore_margins(void)
 
 void scroll_drag_start(int is_touch)
 {
-    if (data.drag.active) {
-        return;
-    }
+    if (data.drag.active)
+            return;
     data.drag.active = 1;
     data.drag.is_touch = is_touch;
     data.drag.delta.x = 0;

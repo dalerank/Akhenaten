@@ -184,9 +184,8 @@ static void build_start(const map_tile *tile)
 }
 static void build_move(const map_tile *tile)
 {
-    if (!building_construction_in_progress()) {
-        return;
-    }
+    if (!building_construction_in_progress())
+            return;
     building_construction_update(tile->x, tile->y, tile->grid_offset);
 }
 static void build_end(void)
@@ -285,17 +284,15 @@ static void handle_touch_scroll(const touch *t)
     }
     scroll_restore_margins();
 
-    if (!data.capture_input) {
-        return;
-    }
+    if (!data.capture_input)
+            return;
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
         return;
     }
-    if (!touch_not_click(t)) {
-        return;
-    }
+    if (!touch_not_click(t))
+            return;
     if (t->has_ended) {
         scroll_drag_end();
     }
@@ -315,9 +312,8 @@ static void handle_first_touch(map_tile *tile)
     int type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+        if (handle_cancel_construction_button(first) || handle_legion_click(tile))
             return;
-        }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
             scroll_drag_end();
             data.capture_input = 0;
@@ -328,9 +324,8 @@ static void handle_first_touch(map_tile *tile)
 
     handle_touch_scroll(first);
 
-    if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE) {
-        return;
-    }
+    if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
+            return;
 
     if (building_construction_is_updatable()) {
         if (!building_construction_in_progress()) {
@@ -385,9 +380,8 @@ static void handle_first_touch(map_tile *tile)
 static void handle_last_touch(void)
 {
     const touch *last = get_latest_touch();
-    if (!last->in_use) {
-        return;
-    }
+    if (!last->in_use)
+            return;
     if (touch_was_click(last)) {
         building_construction_cancel();
         return;
@@ -434,9 +428,8 @@ static void handle_mouse(const mouse *m)
     zoom_map(m);    
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
-        if (handle_legion_click(tile)) {
+        if (handle_legion_click(tile))
             return;
-        }
         if (!building_construction_in_progress()) {
             build_start(tile);
         }
@@ -468,9 +461,8 @@ static void military_map_click(int legion_formation_id, const map_tile *tile)
         return;
     }
     formation *m = formation_get(legion_formation_id);
-    if (m->in_distant_battle || m->cursed_by_mars) {
-        return;
-    }
+    if (m->in_distant_battle || m->cursed_by_mars)
+            return;
     int other_formation_id = formation_legion_at_building(tile->grid_offset);
     if (other_formation_id && other_formation_id == legion_formation_id) {
         formation_legion_return_home(m);
@@ -502,14 +494,12 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
-    if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
-        return;
-    }
+    if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m))
+            return;
     if (m->is_touch) {
         const touch *t = get_earliest_touch();
-        if (!t->in_use) {
+        if (!t->in_use)
             return;
-        }
         if (t->has_started) {
             data.capture_input = 1;
         }
@@ -533,15 +523,12 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
 
 void widget_city_get_tooltip(tooltip_context *c)
 {
-    if (setting_tooltips() == TOOLTIPS_NONE) {
-        return;
-    }
-    if (!window_is(WINDOW_CITY)) {
-        return;
-    }
-    if (data.current_tile.grid_offset == 0) {
-        return;
-    }
+    if (setting_tooltips() == TOOLTIPS_NONE)
+            return;
+    if (!window_is(WINDOW_CITY))
+            return;
+    if (data.current_tile.grid_offset == 0)
+            return;
     int grid_offset = data.current_tile.grid_offset;
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();

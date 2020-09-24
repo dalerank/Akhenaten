@@ -131,9 +131,8 @@ static void draw_map_flag(int x, int y, int is_ok)
 
 void map_editor_tool_draw(const map_tile *tile)
 {
-    if (!tile->grid_offset || scroll_in_progress() || !editor_tool_is_active()) {
-        return;
-    }
+    if (!tile->grid_offset || scroll_in_progress() || !editor_tool_is_active())
+            return;
 
     int type = editor_tool_type();
     int x, y;

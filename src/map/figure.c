@@ -30,9 +30,8 @@ int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
 }
 void map_figure_add(figure *f)
 {
-    if (!map_grid_is_valid_offset(f->grid_offset)) {
-        return;
-    }
+    if (!map_grid_is_valid_offset(f->grid_offset))
+            return;
     f->figures_on_same_tile_index = 0;
     f->next_figure_id_on_same_tile = 0;
 
@@ -53,16 +52,14 @@ void map_figure_add(figure *f)
 }
 void map_figure_update(figure *f)
 {
-    if (!map_grid_is_valid_offset(f->grid_offset)) {
-        return;
-    }
+    if (!map_grid_is_valid_offset(f->grid_offset))
+            return;
     f->figures_on_same_tile_index = 0;
 
     figure *next = figure_get(map_grid_get(&figures, f->grid_offset));
     while (next->id) {
-        if (next->id == f->id) {
+        if (next->id == f->id)
             return;
-        }
         f->figures_on_same_tile_index++;
         next = figure_get(next->next_figure_id_on_same_tile);
     }

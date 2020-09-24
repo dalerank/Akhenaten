@@ -109,18 +109,30 @@ static const int int_TO_CHANNEL_ID[] = {
     56, 57, 58, 59, 60, 0, 0, 0, 0, 0, //110-119
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
-    0, 0, 0, 0, 0, 0 //140-145
-};
+    25, 26, 27, 28, 29, 0, //140-145
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //146-155
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //156-165
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //166-175
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //176-185
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //186-195
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //196-205
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //206-215
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //216-225
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //226-235
+    0, //236
+
+}; // todo: add additional channels
 
 static time_millis last_update_time;
+
+#include <assert.h>
 
 void sound_city_init(void)
 {
     last_update_time = time_get_millis();
     memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
-    for (int i = 0; i < MAX_CHANNELS; i++) {
+    for (int i = 0; i < MAX_CHANNELS; i++)
         channels[i].last_played_time = last_update_time;
-    }
     for (int i = 1; i < 63; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
@@ -190,43 +202,36 @@ void sound_city_init(void)
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
 }
-
 void sound_city_set_volume(int percentage)
 {
-    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
+    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
         sound_device_set_channel_volume(i, percentage);
-    }
 }
-
 void sound_city_mark_building_view(building *b, int direction)
 {
-    if (b->state == BUILDING_STATE_UNUSED) {
+    if (b->state == BUILDING_STATE_UNUSED)
         return;
-    }
     int type = b->type;
+    assert(type <= 236);
     int channel = int_TO_CHANNEL_ID[type];
-    if (!channel) {
+    if (!channel)
         return;
-    }
     if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
         type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
         // entertainment is shut off when caesar invades
-        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
+        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0)
             return;
-        }
     }
 
     channels[channel].available = 1;
     ++channels[channel].total_views;
     ++channels[channel].direction_views[direction];
 }
-
 void sound_city_decay_views(void)
 {
     for (int i = 0; i < MAX_CHANNELS; i++) {
-        for (int d = 0; d < 5; d++) {
+        for (int d = 0; d < 5; d++)
             channels[i].direction_views[d] = 0;
-        }
         channels[i].total_views /= 2;
     }
 }
@@ -234,12 +239,10 @@ void sound_city_decay_views(void)
 static void play_channel(int channel, int direction)
 {
     channel += CITY_CHANNEL_OFFSET;
-    if (!setting_sound(SOUND_CITY)->enabled) {
-        return;
-    }
-    if (sound_device_is_channel_playing(channel)) {
-        return;
-    }
+    if (!setting_sound(SOUND_CITY)->enabled)
+            return;
+    if (sound_device_is_channel_playing(channel))
+            return;
     int left_pan;
     int right_pan;
     switch (direction) {
@@ -260,7 +263,6 @@ static void play_channel(int channel, int direction)
     }
     sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
-
 void sound_city_play(void)
 {
     time_millis now = time_get_millis();
@@ -269,22 +271,19 @@ void sound_city_play(void)
         if (channels[i].available) {
             channels[i].available = 0;
             if (channels[i].total_views >= channels[i].views_threshold) {
-                if (now - channels[i].last_played_time >= channels[i].delay_millis) {
+                if (now - channels[i].last_played_time >= channels[i].delay_millis)
                     channels[i].should_play = 1;
-                }
             }
         } else {
             channels[i].total_views = 0;
-            for (int d = 0; d < 5; d++) {
+            for (int d = 0; d < 5; d++)
                 channels[i].direction_views[d] = 0;
-            }
         }
     }
 
-    if (now - last_update_time < 2000) {
+    if (now - last_update_time < 2000)
         // Only play 1 sound every 2 seconds
         return;
-    }
     time_millis max_delay = 0;
     int max_sound_id = 0;
     for (int i = 1; i < MAX_CHANNELS; i++) {
@@ -295,30 +294,27 @@ void sound_city_play(void)
             }
         }
     }
-    if (!max_sound_id) {
-        return;
-    }
+    if (!max_sound_id)
+            return;
 
     // always only one channel available... use it
     int channel = channels[max_sound_id].channel;
     int direction;
-    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10) {
+    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10)
         direction = SOUND_DIRECTION_CENTER;
-    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10) {
+    else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10)
         direction = SOUND_DIRECTION_LEFT;
-    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10) {
+    else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10)
         direction = SOUND_DIRECTION_RIGHT;
-    } else {
+    else
         direction = SOUND_DIRECTION_CENTER;
-    }
 
     play_channel(channel, direction);
     last_update_time = now;
     channels[max_sound_id].last_played_time = now;
     channels[max_sound_id].total_views = 0;
-    for (int d = 0; d < 5; d++) {
+    for (int d = 0; d < 5; d++)
         channels[max_sound_id].direction_views[d] = 0;
-    }
     channels[max_sound_id].times_played++;
 }
 
@@ -329,26 +325,22 @@ void sound_city_save_state(buffer *buf)
         buf->write_i32(ch->available);
         buf->write_i32(ch->total_views);
         buf->write_i32(ch->views_threshold);
-        for (int d = 0; d < 5; d++) {
+        for (int d = 0; d < 5; d++)
             buf->write_i32(ch->direction_views[d]);
-        }
         buf->write_i32(0); // current channel, always 0
         buf->write_i32(ch->in_use ? 1 : 0); // num channels, max 1
         buf->write_i32(ch->channel);
-        for (int c = 1; c < 8; c++) {
+        for (int c = 1; c < 8; c++)
             buf->write_i32(0); // channels 1-7: never used
-        }
         buf->write_i32(ch->in_use);
         buf->write_i32(ch->times_played);
         buf->write_u32(ch->last_played_time);
         buf->write_u32(ch->delay_millis);
         buf->write_i32(ch->should_play);
-        for (int x = 0; x < 9; x++) {
+        for (int x = 0; x < 9; x++)
             buf->write_i32(0);
-        }
     }
 }
-
 void sound_city_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_CHANNELS; i++) {
@@ -356,9 +348,8 @@ void sound_city_load_state(buffer *buf)
         ch->available = buf->read_i32();
         ch->total_views = buf->read_i32();
         ch->views_threshold = buf->read_i32();
-        for (int d = 0; d < 5; d++) {
+        for (int d = 0; d < 5; d++)
             ch->direction_views[d] = buf->read_i32();
-        }
         buf->skip(4); // current channel
         buf->skip(4); // num channels
         ch->channel = buf->read_i32();

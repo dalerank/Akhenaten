@@ -159,13 +159,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
-        return;
-    }
-    if (!data.is_review && game_mission_has_choice()) {
-        if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0))
             return;
-        }
+    if (!data.is_review && game_mission_has_choice()) {
+        if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0))
+            return;
     }
     rich_text_handle_mouse(m_dialog);
 }

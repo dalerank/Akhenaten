@@ -30,9 +30,8 @@ static void draw_background(void)
 
 static void draw_cancel_construction(void)
 {
-    if (!mouse_get()->is_touch || !editor_tool_is_active()) {
-        return;
-    }
+    if (!mouse_get()->is_touch || !editor_tool_is_active())
+            return;
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
@@ -72,12 +71,10 @@ static void handle_hotkeys(const hotkeys *h)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
-    if (widget_top_menu_editor_handle_input(m, h)) {
-        return;
-    }
-    if (widget_sidebar_editor_handle_mouse(m)) {
-        return;
-    }
+    if (widget_top_menu_editor_handle_input(m, h))
+            return;
+    if (widget_sidebar_editor_handle_mouse(m))
+            return;
     widget_map_editor_handle_input(m, h);
 }
 

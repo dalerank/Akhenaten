@@ -350,9 +350,8 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
 {
     int figure_category = figure_properties_for_type(f->type)->category;
     if (figure_category <= FIGURE_CATEGORY_INACTIVE || figure_category >= FIGURE_CATEGORY_CRIMINAL ||
-            f->action_state == FIGURE_ACTION_150_ATTACK) {
-        return;
-    }
+            f->action_state == FIGURE_ACTION_150_ATTACK)
+            return;
     int guard = 0;
     int opponent_id = map_figure_at(grid_offset);
     while (1) {

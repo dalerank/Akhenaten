@@ -202,17 +202,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id)) {
-        return;
-    }
+    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id))
+            return;
     int button_id;
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id) {
         focus_button_id = -1;
     }
-    if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
-        return;
-    }
+    if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog))
+            return;
     if (input_go_back_requested(m, h)) {
         window_city_show();
         return;

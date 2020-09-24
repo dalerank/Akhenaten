@@ -36,14 +36,12 @@ void platform_touch_start(SDL_TouchFingerEvent *event)
     if (!trackpad_id) {
         trackpad_id = SDL_GetTouchDevice(0);
     }
-    if (event->touchId == trackpad_id) {
-        return;
-    }
+    if (event->touchId == trackpad_id)
+            return;
 #elif defined(__vita__)
     // Only use main screen for vita
-    if (event->touchId == 1) {
-        return;
-    }
+    if (event->touchId == 1)
+            return;
 #endif
     int index = touch_create(get_touch_coordinates(event->x, event->y), event->timestamp);
     if (index != MAX_ACTIVE_TOUCHES) {

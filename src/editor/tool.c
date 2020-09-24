@@ -107,9 +107,8 @@ int editor_tool_is_in_use(void)
 
 void editor_tool_start_use(const map_tile *tile)
 {
-    if (!data.active) {
-        return;
-    }
+    if (!data.active)
+            return;
     data.build_in_progress = 1;
     data.start_elevation = map_elevation_at(tile->grid_offset);
     data.start_tile = *tile;
@@ -172,9 +171,8 @@ static void add_terrain(const void *tile_data, int dx, int dy)
     const map_tile *tile = (const map_tile *) tile_data;
     int x = tile->x + dx;
     int y = tile->y + dy;
-    if (!map_grid_is_inside(x, y, 1)) {
-        return;
-    }
+    if (!map_grid_is_inside(x, y, 1))
+            return;
     int grid_offset = tile->grid_offset + map_grid_delta(dx, dy);
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_BUILDING) {
@@ -229,16 +227,14 @@ static void add_terrain(const void *tile_data, int dx, int dy)
 
 void editor_tool_update_use(const map_tile *tile)
 {
-    if (!data.build_in_progress) {
-        return;
-    }
+    if (!data.build_in_progress)
+            return;
     if (data.type == TOOL_ROAD) {
         building_construction_place_road(1, data.start_tile.x, data.start_tile.y, tile->x, tile->y);
         return;
     }
-    if (!editor_tool_is_brush()) {
-        return;
-    }
+    if (!editor_tool_is_brush())
+            return;
 
     editor_tool_foreach_brush_tile(add_terrain, tile);
 
@@ -409,9 +405,8 @@ static void place_road(const map_tile *start_tile, const map_tile *end_tile)
 
 void editor_tool_end_use(const map_tile *tile)
 {
-    if (!data.build_in_progress) {
-        return;
-    }
+    if (!data.build_in_progress)
+            return;
     data.build_in_progress = 0;
     switch (data.type) {
         case TOOL_EARTHQUAKE_POINT:
