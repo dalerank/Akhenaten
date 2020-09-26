@@ -488,39 +488,24 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
 {
     int grid_offset = tile->grid_offset;
     int blocked = 0;
-    if (building_construction_in_progress()) {
-        if (!building_construction_cost())
+    if (building_construction_in_progress()) { // already dragging aqueduct
+        if (!building_construction_cost()) // ???
             blocked = 1;
     } else {
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            blocked = !map_is_straight_road_for_aqueduct(grid_offset);
-            if (map_property_is_plaza_or_earthquake(grid_offset))
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) { // starting new aqueduct line
+            blocked = !map_is_straight_road_for_aqueduct(grid_offset); // can't start over a road curve!
+            if (map_property_is_plaza_or_earthquake(grid_offset)) // todo: plaza not allowing aqueducts? maybe?
                 blocked = 1;
-        } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
+        } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) // terrain is not clear!
             blocked = 1;
     }
-    if (city_finance_out_of_money())
+    if (city_finance_out_of_money()) // check sufficient funds to continue
         blocked = 1;
-    if (blocked)
+    if (blocked) // cannot draw!
         draw_flat_tile(x, y, COLOR_MASK_RED);
     else {
-        int image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1);
-        if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            int group_offset = img->group_offset;
-            if (!img->aqueduct_offset) {
-                if (map_terrain_is(grid_offset + map_grid_delta(0,-1), TERRAIN_ROAD))
-                    group_offset = 3;
-                else
-                    group_offset = 2;
-            }
-            if (map_tiles_is_paved_road(grid_offset))
-                image_id += group_offset + 13;
-            else
-                image_id += group_offset + 21;
-        } else
-            image_id += img->group_offset + 15;
-        draw_building(image_id, x, y);
+        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1); // get starting tile
+        draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), x, y);
     }
 }
 static void draw_fountain(const map_tile *tile, int x, int y)
@@ -749,15 +734,14 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
 }
 static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type)
 {
-    int dir_absolute, dir_relative;
+    int dir_absolute, dir_relative; // todo: water lift
     int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute, &dir_relative);
     if (city_finance_out_of_money())
-        blocked = 999;
+        blocked = 999; // ????
 
     if (blocked) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-        }
     } else {
         const building_properties *props = building_properties_for_type(type);
         int image_id = image_id_from_group(props->image_group) + props->image_offset + dir_relative;
@@ -844,7 +828,11 @@ void city_building_ghost_draw(const map_tile *tile)
     building_rotation_update_road_orientation();
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:
-            draw_draggable_reservoir(tile, x, y);
+            if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//                draw_draggable_waterlift(tile, x, y);
+                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
+            else
+                draw_draggable_reservoir(tile, x, y);
             break;
         case BUILDING_AQUEDUCT:
             draw_aqueduct(tile, x, y);
@@ -881,14 +869,14 @@ void city_building_ghost_draw(const map_tile *tile)
         case BUILDING_BANDSTAND:
         case BUILDING_PAVILLION:
         case BUILDING_FESTIVAL_SQUARE:
-//            draw_square(type, tile, x, y);
+//            draw_square(tile, x, y, type);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
-//            draw_temple_complex(type, tile, x, y);
+//            draw_temple_complex(tile, x, y, type);
             break;
         case BUILDING_PYRAMID:
         case BUILDING_SPHYNX:
@@ -901,7 +889,7 @@ void city_building_ghost_draw(const map_tile *tile)
         case BUILDING_MEDIUM_ROYAL_TOMB:
         case BUILDING_LARGE_ROYAL_TOMB:
         case BUILDING_GRAND_ROYAL_TOMB:
-//            draw_monument_blueprint(type, tile, x, y);
+//            draw_monument_blueprint(tile, x, y, type);
             break;
         default:
             draw_default(tile, x, y, type);

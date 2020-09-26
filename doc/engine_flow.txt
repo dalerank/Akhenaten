@@ -39,3 +39,82 @@ main (julius.c)
           show window (window.c)
   main loop
   clear & exit
+​
+road start at x,y (construction.c)
+  map_routing_calculate_distances_for_building (routing.c)
+    clear_distances
+      empty &routing_distances
+    source = offset(x, y)
+    if can't place:
+      return 0
+    route_queue
+      head = tail = 0
+      enqueue(source, 1)
+        set_distances(source, dist)
+        queue[tail] = source
+        tail++
+      while (head != tail)
+        offset = queue[head]
+        if offset == dest
+          break
+        dist = distances[offset] + 1
+        
+        // figured it out so
+        // I'm leaving this half done
+        // ¯\_(:3)_/¯      
+      
+  if failed:
+    cancel
+​
+building_construction_update (construction.c)
+  building_construction_place_x (construction_routed.c)
+    game_undo_restore_map(0) (undo.c)
+    cost = get_cost(building)
+    [check if start is blocked]
+    [check if end is blocked]
+    if blocked or failed to calculate distances
+      return 0
+    place_routed_building
+      // a buncha stuff
+      place_aqueduct_tiles
+    cost *= tiles
+    return 1
+  map_tiles_update_all_aqueducts (tiles.c)
+    for each map tile :
+      update_aqueduct_tile
+        set_aqueduct
+          if road, clear plaza
+          set_aqueduct_image
+            // actual image calculation
+            
+          map_aqueduct_set (aqueduct.c)
+​
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

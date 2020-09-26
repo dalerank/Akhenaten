@@ -1,6 +1,8 @@
 #ifndef MAP_TILES_H
 #define MAP_TILES_H
 
+#include "image_context.h"
+
 void map_tiles_update_all_rocks(void);
 
 void map_tiles_update_region_trees(int x_min, int y_min, int x_max, int y_max);
@@ -30,6 +32,7 @@ void map_tiles_update_all_water(void);
 void map_tiles_update_region_water(int x_min, int y_min, int x_max, int y_max);
 void map_tiles_set_water(int x, int y);
 
+int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image * img);
 void map_tiles_update_all_aqueducts(int include_construction);
 void map_tiles_update_region_aqueducts(int x_min, int y_min, int x_max, int y_max);
 

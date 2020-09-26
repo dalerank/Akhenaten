@@ -1,0 +1,63 @@
+======= C3 ========
+
+
+
+
+
+119 base
+  119 pavedroad left
+  120 pavedroad right
+  121 straight left
+  122 straight right
+  123-126 corners (4)
+  127 normalroad left
+  128 normalroad right
+  129-132 T-shaped (4)
+  133 cross
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+134 no water (+15)
+  135 pavedroad left
+  136 pavedroad right
+  137 straight left
+  138 straight right
+  139-142 corners (4)
+  143 normalroad left
+  144 normalroad right
+  145-148 T-shaped (4)
+  159 cross
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

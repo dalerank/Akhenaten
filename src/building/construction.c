@@ -60,6 +60,7 @@ static struct {
         bool ore;
         bool tree;
         bool water;
+        bool grass;
         bool wall;
     } required_terrain;
     int draw_as_constructing;
@@ -283,7 +284,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     return 1;
 }
 
-void building_construction_set_type(int type)
+void building_construction_set_type(int type) // select building for construction, set up main terrain restrictions/requirements
 {
     data.type = type;
     data.sub_type = BUILDING_NONE;
@@ -296,6 +297,7 @@ void building_construction_set_type(int type)
     if (type != BUILDING_NONE) {
         data.required_terrain.wall = false;
         data.required_terrain.water = false;
+        data.required_terrain.grass = false;
         data.required_terrain.tree = false;
         data.required_terrain.rock = false;
         data.required_terrain.ore = false;
@@ -337,6 +339,11 @@ void building_construction_set_type(int type)
                 break;
             case BUILDING_MENU_LARGE_TEMPLES:
                 data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
+                break;
+            case BUILDING_WELL:
+            case BUILDING_WATER_SUPPLY:
+                if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                    data.required_terrain.grass = true;
                 break;
             default:
                 break;
@@ -438,7 +445,7 @@ void building_construction_cancel(void)
     }
     building_rotation_reset_rotation();
 }
-void building_construction_update(int x, int y, int grid_offset)
+void building_construction_update(int x, int y, int grid_offset) // update ghost placement (constructing e.g. roads)
 {
     int type = data.sub_type ? data.sub_type : data.type;
     if (grid_offset) {
@@ -533,7 +540,7 @@ void building_construction_update(int x, int y, int grid_offset)
     }
     data.cost = current_cost;
 }
-void building_construction_place(void)
+void building_construction_place(void) // confirm final placement
 {
     data.in_progress = 0;
     int x_start = data.start.x;
@@ -543,7 +550,7 @@ void building_construction_place(void)
     int type = data.sub_type ? data.sub_type : data.type;
     building_construction_warning_reset();
     if (!type)
-            return;
+        return;
     if (city_finance_out_of_money()) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_OUT_OF_MONEY);
@@ -562,104 +569,124 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT)
             game_undo_restore_map(0);
- else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS)
+        else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS)
             game_undo_restore_map(1);
- else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE)
+        else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE)
             map_bridge_reset_building_length();
- else {
+        else
             map_property_clear_constructing_and_deleted();
-        }
         city_warning_show(WARNING_ENEMY_NEARBY);
         return;
     }
 
     int placement_cost = model_get_building(type)->cost;
-    if (type == BUILDING_CLEAR_LAND) {
-        // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
-        // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
-        // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
-        // here when the user says yes.
-        int items_placed = building_construction_clear_land(0, x_start, y_start, x_end, y_end);
-        if (items_placed < 0)
-            items_placed = last_items_cleared;
+    int length = 1;
 
-        placement_cost *= items_placed;
-        map_property_clear_constructing_and_deleted();
-    } else if (type == BUILDING_WALL)
-        placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
- else if (type == BUILDING_ROAD)
-        placement_cost *= building_construction_place_road(0, x_start, y_start, x_end, y_end);
- else if (type == BUILDING_PLAZA)
-        placement_cost *= place_plaza(x_start, y_start, x_end, y_end);
- else if (type == BUILDING_GARDENS) {
-        placement_cost *= place_garden(x_start, y_start, x_end, y_end);
-        map_routing_update_land();
-    } else if (type == BUILDING_LOW_BRIDGE) {
-        int length = map_bridge_add(x_end, y_end, 0);
-        if (length <= 1) {
-            city_warning_show(WARNING_SHORE_NEEDED);
-            return;
-        }
-        placement_cost *= length;
-    } else if (type == BUILDING_SHIP_BRIDGE) {
-        int length = map_bridge_add(x_end, y_end, 1);
-        if (length <= 1) {
-            city_warning_show(WARNING_SHORE_NEEDED);
-            return;
-        }
-        placement_cost *= length;
-    } else if (type == BUILDING_AQUEDUCT) {
-        int cost;
-        if (!building_construction_place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
-            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-            return;
-        }
-        placement_cost = cost;
-        map_tiles_update_all_aqueducts(0);
-        map_routing_update_land();
-    } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
-        struct reservoir_info info;
-        if (!place_reservoir_and_aqueducts(0, x_start, y_start, x_end, y_end, &info)) {
+    switch (type) {
+        case BUILDING_CLEAR_LAND: {
+            // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
+            // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
+            // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
+            // here when the user says yes.
+            int items_placed = building_construction_clear_land(0, x_start, y_start, x_end, y_end);
+            if (items_placed < 0)
+                items_placed = last_items_cleared;
+            placement_cost *= items_placed;
             map_property_clear_constructing_and_deleted();
-            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-            return;
+            break;
         }
-        if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
-            building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
-            game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3, image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-            map_aqueduct_set(map_grid_offset(x_start-1, y_start-1), 0);
+        case BUILDING_WALL:
+            placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
+            break;
+        case BUILDING_ROAD:
+            placement_cost *= building_construction_place_road(0, x_start, y_start, x_end, y_end);
+            break;
+        case BUILDING_PLAZA:
+            placement_cost *= place_plaza(x_start, y_start, x_end, y_end);
+            break;
+        case BUILDING_GARDENS:
+            placement_cost *= place_garden(x_start, y_start, x_end, y_end);
+            map_routing_update_land();
+            break;
+        case BUILDING_LOW_BRIDGE:
+            length = map_bridge_add(x_end, y_end, 0);
+            if (length <= 1) {
+                city_warning_show(WARNING_SHORE_NEEDED);
+                return;
+            }
+            break;
+        case BUILDING_SHIP_BRIDGE:
+            length = map_bridge_add(x_end, y_end, 1);
+            if (length <= 1) {
+                city_warning_show(WARNING_SHORE_NEEDED);
+                return;
+            }
+            break;
+        case BUILDING_AQUEDUCT:
+            int cost;
+            if (!building_construction_place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
+                city_warning_show(WARNING_CLEAR_LAND_NEEDED);
+                return;
+            }
+            placement_cost = cost;
+            map_tiles_update_all_aqueducts(0);
+            map_routing_update_land();
+            break;
+        case BUILDING_DRAGGABLE_RESERVOIR: {
+            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                if (!building_construction_place_building(type, x_end, y_end))
+                    return;
+                break;
+            }
+            struct reservoir_info info;
+            if (!place_reservoir_and_aqueducts(0, x_start, y_start, x_end, y_end, &info)) {
+                map_property_clear_constructing_and_deleted();
+                city_warning_show(WARNING_CLEAR_LAND_NEEDED);
+                return;
+            }
+            if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
+                building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
+                game_undo_add_building(reservoir);
+                map_building_tiles_add(reservoir->id, x_start - 1, y_start - 1, 3,
+                                       image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+                map_aqueduct_set(map_grid_offset(x_start - 1, y_start - 1), 0);
+            }
+            if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
+                building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
+                game_undo_add_building(reservoir);
+                map_building_tiles_add(reservoir->id, x_end - 1, y_end - 1, 3,
+                                       image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+                map_aqueduct_set(map_grid_offset(x_end - 1, y_end - 1), 0);
+                if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) &&
+                    info.place_reservoir_at_start == PLACE_RESERVOIR_NO)
+                    building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
+            }
+            placement_cost = info.cost;
+            map_tiles_update_all_aqueducts(0);
+            map_routing_update_land();
+            break;
         }
-        if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
-            building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
-            game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3, image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-            map_aqueduct_set(map_grid_offset(x_end-1, y_end-1), 0);
-            if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) && info.place_reservoir_at_start == PLACE_RESERVOIR_NO)
-                building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
+        case BUILDING_HOUSE_VACANT_LOT:
+            placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
+            break;
+        default:
+            if (!building_construction_place_building(type, x_end, y_end))
+                return;
+            break;
+    }
+    placement_cost *= length;
 
-        }
-        placement_cost = info.cost;
-        map_tiles_update_all_aqueducts(0);
-        map_routing_update_land();
-    } else if (type == BUILDING_HOUSE_VACANT_LOT)
-        placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
- else if (!building_construction_place_building(type, x_end, y_end))
-            return;
     if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE)
         building_warehouses_remove_resource(RESOURCE_MARBLE, 2);
-
     if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
         data.sub_type++;
         if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS)
             data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
-
     }
     if (data.type == BUILDING_MENU_LARGE_TEMPLES) {
         data.sub_type++;
         if (data.sub_type > BUILDING_LARGE_TEMPLE_VENUS)
             data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
-
     }
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);

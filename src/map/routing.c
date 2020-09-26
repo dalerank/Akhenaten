@@ -12,7 +12,10 @@
 #define MAX_QUEUE 162 * 162//grid_total_size[GAME_ENV]
 #define GUARD 50000
 
-static const int ROUTE_OFFSETS[] = {-162, 1, 162, -1, -161, 163, 161, -163};
+static const int ROUTE_OFFSETS[2][8] = {
+    {-162, 1, 162, -1, -161, 163, 161, -163},
+    {-228, 1, 228, -1, -227, 229, 227, -229}
+};
 
 static grid_xx routing_distance = {0, {FS_INT16, FS_INT16}};
 
@@ -42,16 +45,16 @@ static int valid_offset(int grid_offset)
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0;
 }
 
-static void enqueue(int next_offset, int dist)
+static void enqueue(int offset, int dist)
 {
-    map_grid_set(&routing_distance, next_offset, dist);
-    queue.items[queue.tail++] = next_offset;
+    map_grid_set(&routing_distance, offset, dist);
+    queue.items[queue.tail++] = offset;
     if (queue.tail >= MAX_QUEUE)
         queue.tail = 0;
 }
 static void route_queue(int source, int dest, void (*callback)(int next_offset, int dist))
 {
-    clear_distances();
+//    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     while (queue.head != queue.tail) {
@@ -60,8 +63,8 @@ static void route_queue(int source, int dest, void (*callback)(int next_offset, 
             break;
         int dist = 1 + map_grid_get(&routing_distance, offset);
         for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[i]))
-                callback(offset + ROUTE_OFFSETS[i], dist);
+            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
+                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
         }
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
@@ -76,8 +79,8 @@ static void route_queue_until(int source, int (*callback)(int next_offset, int d
         int offset = queue.items[queue.head];
         int dist = 1 + map_grid_get(&routing_distance, offset);
         for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[i])) {
-                if (!callback(offset + ROUTE_OFFSETS[i], dist))
+            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i])) {
+                if (!callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist))
                     break;
 
             }
@@ -99,13 +102,11 @@ static void route_queue_max(int source, int dest, int max_tiles, void (*callback
         if (++tiles > max_tiles) break;
         int dist = 1 + map_grid_get(&routing_distance, offset);
         for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[i]))
-                callback(offset + ROUTE_OFFSETS[i], dist);
-
+            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
+                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
         }
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
-
     }
 }
 static void route_queue_boat(int source, void (*callback)(int, int))
@@ -126,19 +127,16 @@ static void route_queue_boat(int source, void (*callback)(int, int))
             queue.items[queue.tail++] = offset;
             if (queue.tail >= MAX_QUEUE)
                 queue.tail = 0;
-
         } else {
             int dist = 1 + map_grid_get(&routing_distance, offset);
             for (int i = 0; i < 4; i++) {
-                if (valid_offset(offset + ROUTE_OFFSETS[i]))
-                    callback(offset + ROUTE_OFFSETS[i], dist);
-
+                if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
+                    callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
             }
         }
         map_grid_set(&water_drag, offset, v + 1);
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
-
     }
 }
 static void route_queue_dir8(int source, void (*callback)(int, int))
@@ -150,17 +148,14 @@ static void route_queue_dir8(int source, void (*callback)(int, int))
     while (queue.head != queue.tail) {
         if (++tiles > GUARD)
             break;
-
         int offset = queue.items[queue.head];
         int dist = 1 + map_grid_get(&routing_distance, offset);
         for (int i = 0; i < 8; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[i]))
-                callback(offset + ROUTE_OFFSETS[i], dist);
-
+            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
+                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
         }
         if (++queue.head >= MAX_QUEUE)
             queue.head = 0;
-
     }
 }
 
@@ -168,7 +163,6 @@ static void callback_calc_distance(int next_offset, int dist)
 {
     if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
-
 }
 void map_routing_calculate_distances(int x, int y)
 {
@@ -192,30 +186,26 @@ void map_routing_calculate_distances_water_boat(int x, int y)
     int grid_offset = map_grid_offset(x, y);
     if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
         clear_distances();
- else {
+    else
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
-    }
 }
 static void callback_calc_distance_water_flotsam(int next_offset, int dist)
 {
     if (map_grid_get(&terrain_water, next_offset) != WATER_N1_BLOCKED)
         enqueue(next_offset, dist);
-
 }
 void map_routing_calculate_distances_water_flotsam(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
     if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
         clear_distances();
- else {
+    else
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
-    }
 }
 static void callback_calc_distance_build_wall(int next_offset, int dist)
 {
     if (map_grid_get(&terrain_land_citizen, next_offset) == CITIZEN_4_CLEAR_TERRAIN)
         enqueue(next_offset, dist);
-
 }
 static void callback_calc_distance_build_road(int next_offset, int dist)
 {
@@ -252,7 +242,6 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist)
             if (map_terrain_is(next_offset, TERRAIN_BUILDING)) {
                 if (map_grid_get(&terrain_land_citizen, next_offset) != CITIZEN_N4_RESERVOIR_CONNECTOR)
                     blocked = 1;
-
             }
             break;
     }
@@ -262,7 +251,6 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist)
     }
     if (!blocked)
         enqueue(next_offset, dist);
-
 }
 static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct)
 {
@@ -272,14 +260,11 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
         // - land is a reservoir building OR an aqueduct
         if (!is_aqueduct)
             return 0;
-
         if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
             return 1;
-
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             if (building_get(map_building_at(grid_offset))->type == BUILDING_RESERVOIR)
                 return 1;
-
         }
         return 0;
     } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_2_PASSABLE_TERRAIN) {
@@ -288,14 +273,11 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
     } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N3_AQUEDUCT) {
         if (is_aqueduct)
             return 0;
-
         if (map_can_place_road_under_aqueduct(grid_offset))
             return 1;
-
         return 0;
-    } else {
+    } else
         return 1;
-    }
 }
 int map_routing_calculate_distances_for_building(routed_int type, int x, int y)
 {
@@ -324,9 +306,8 @@ static int callback_delete_wall_aqueduct(int next_offset, int dist)
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
             return 1;
         }
-    } else {
+    } else
         enqueue(next_offset, dist);
-    }
     return 0;
 }
 void map_routing_delete_first_wall_or_aqueduct(int x, int y)
@@ -356,7 +337,6 @@ static void callback_travel_citizen_land(int next_offset, int dist)
 {
     if (map_grid_get(&terrain_land_citizen, next_offset) >= 0 && !has_fighting_friendly(next_offset))
         enqueue(next_offset, dist);
-
 }
 int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y)
 {

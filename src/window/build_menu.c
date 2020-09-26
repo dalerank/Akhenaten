@@ -110,6 +110,7 @@ static int set_submenu_for_type(int type)
         case BUILDING_MENU_RAW_MATERIALS:
             data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
             break;
+//        case BUILDING_MENU_GUILDS:
         case BUILDING_MENU_WORKSHOPS:
             data.selected_submenu = BUILD_MENU_WORKSHOPS;
             break;
@@ -122,14 +123,23 @@ static int set_submenu_for_type(int type)
         case BUILDING_FORT:
             data.selected_submenu = BUILD_MENU_FORTS;
             break;
+        case BUILDING_MENU_MONUMENTS:
+            if (GAME_ENV == ENGINE_ENV_C3)
+                return 0;
+            data.selected_submenu = BUILD_MENU_MONUMENTS;
+            break;
+        case BUILDING_MENU_WATER_CROSSINGS:
+            if (GAME_ENV == ENGINE_ENV_C3)
+                return 0;
+            data.selected_submenu = BUILD_MENU_WATER_CROSSINGS;
+            break;
         case BUILDING_MENU_BEAUTIFICATION:
+            if (GAME_ENV == ENGINE_ENV_C3)
+                return 0;
             data.selected_submenu = BUILD_MENU_BEAUTIFICATION;
             break;
         case BUILDING_MENU_DEFENCES:
             data.selected_submenu = BUILD_MENU_DEFENCES;
-            break;
-        case BUILDING_MENU_WATER_CROSSINGS:
-            data.selected_submenu = BUILD_MENU_WATER_CROSSINGS;
             break;
         case BUILDING_MENU_SHRINES:
             data.selected_submenu = BUILD_MENU_SHRINES;
