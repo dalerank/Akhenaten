@@ -260,7 +260,7 @@ static void distribute_market_resources(building *b, building *market)
     }
     if (model->pottery) {
         market->data.market.pottery_demand = 10;
-        distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
+        distribute_good(b, market, 8 * model->pottery, INVENTORY_GOOD1);
     }
     int goods_no = 4;
     if (config_get(CONFIG_GP_CH_MORE_STOCKPILE))
@@ -269,15 +269,15 @@ static void distribute_market_resources(building *b, building *market)
     
     if (model->furniture) {
         market->data.market.furniture_demand = 10;
-        distribute_good(b, market, goods_no * model->furniture, INVENTORY_FURNITURE);
+        distribute_good(b, market, goods_no * model->furniture, INVENTORY_GOOD2);
     }
     if (model->oil) {
         market->data.market.oil_demand = 10;
-        distribute_good(b, market, goods_no * model->oil, INVENTORY_OIL);
+        distribute_good(b, market, goods_no * model->oil, INVENTORY_GOOD3);
     }
     if (model->wine) {
         market->data.market.wine_demand = 10;
-        distribute_good(b, market, goods_no * model->wine, INVENTORY_WINE);
+        distribute_good(b, market, goods_no * model->wine, INVENTORY_GOOD4);
     }
 }
 

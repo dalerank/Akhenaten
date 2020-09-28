@@ -242,52 +242,52 @@ void window_building_draw_market(building_info_context *c)
         window_building_draw_description(c, 97, 2);
  else {
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS);
-        if (b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
-            b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
+        if (b->data.market.inventory[INVENTORY_FOOD1] || b->data.market.inventory[INVENTORY_FOOD2] ||
+            b->data.market.inventory[INVENTORY_FOOD3] || b->data.market.inventory[INVENTORY_FOOD4]) {
             // food stocks
-	        font = is_good_accepted(INVENTORY_WHEAT,b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+	        font = is_good_accepted(INVENTORY_FOOD1, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 64);
-            text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
+            text_draw_number(b->data.market.inventory[INVENTORY_FOOD1], '@', " ",
                 c->x_offset + 64, c->y_offset + 70, font);
 
-	        font = is_good_accepted(INVENTORY_VEGETABLES,b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+	        font = is_good_accepted(INVENTORY_FOOD2, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 64);
-            text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
+            text_draw_number(b->data.market.inventory[INVENTORY_FOOD2], '@', " ",
                 c->x_offset + 174, c->y_offset + 70, font);
 
-            font = is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+            font = is_good_accepted(INVENTORY_FOOD3, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 64);
-            text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
+            text_draw_number(b->data.market.inventory[INVENTORY_FOOD3], '@', " ",
                 c->x_offset + 284, c->y_offset + 70, font);
 
-            font = is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+            font = is_good_accepted(INVENTORY_FOOD4, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
             image_draw(image_id + RESOURCE_MEAT_C3 +
                        resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
                 c->x_offset + 362, c->y_offset + 64);
-            text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
+            text_draw_number(b->data.market.inventory[INVENTORY_FOOD4], '@', " ",
                 c->x_offset + 394, c->y_offset + 70, font);
         } else {
             window_building_draw_description_at(c, 48, 97, 4);
         }
         // good stocks
-        font = is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+        font = is_good_accepted(INVENTORY_GOOD1, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_POTTERY_C3, c->x_offset + 32, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
+        text_draw_number(b->data.market.inventory[INVENTORY_GOOD1], '@', " ",
             c->x_offset + 64, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+        font = is_good_accepted(INVENTORY_GOOD2, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
+        text_draw_number(b->data.market.inventory[INVENTORY_GOOD2], '@', " ",
             c->x_offset + 174, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+        font = is_good_accepted(INVENTORY_GOOD3, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_OIL_C3, c->x_offset + 252, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
+        text_draw_number(b->data.market.inventory[INVENTORY_GOOD3], '@', " ",
             c->x_offset + 284, c->y_offset + 110, font);
 
-        font = is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
+        font = is_good_accepted(INVENTORY_GOOD4, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 104);
-        text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
+        text_draw_number(b->data.market.inventory[INVENTORY_GOOD4], '@', " ",
             c->x_offset + 394, c->y_offset + 110, font);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
@@ -318,7 +318,7 @@ void window_building_draw_market_orders_foreground(building_info_context* c)
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
-    for (int i = INVENTORY_WHEAT; i < INVENTORY_MAX; i++) {
+    for (int i = INVENTORY_FOOD1; i < INVENTORY_MAX; i++) {
         int resource = resources[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
@@ -578,11 +578,11 @@ void window_building_draw_warehouse(building_info_context *c)
                    resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 32, c->y_offset + 220);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 223,
-            16 * (c->width_blocks - 6), FONT_SMALL_BLACK);
+            16 * (c->width_blocks - 6), FONT_NORMAL_GREEN);
     } else if (b->num_workers) {
         // cartpusher is waiting for orders
         lang_text_draw_multiline(99, 15, c->x_offset + 32, c->y_offset + 223,
-            16 * (c->width_blocks - 4), FONT_SMALL_BLACK);
+            16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
     }
 
     //if (c->warehouse_space_text == 1) { // full

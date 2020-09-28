@@ -301,7 +301,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void)
         for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
             building *b = building_get(i);
             if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MARKET)
-                b->data.market.inventory[INVENTORY_WHEAT] = 200;
+                b->data.market.inventory[INVENTORY_FOOD1] = 200;
 
         }
     }
@@ -350,7 +350,7 @@ void city_resource_consume_food(void)
             if (scenario_property_rome_supplies_wheat()) {
                 city_data.resource.food_types_eaten = 1;
                 city_data.resource.food_types_available = 1;
-                b->data.house.inventory[INVENTORY_WHEAT] = amount_per_type;
+                b->data.house.inventory[INVENTORY_FOOD1] = amount_per_type;
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
                 for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {

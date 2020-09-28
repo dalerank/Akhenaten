@@ -144,17 +144,17 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
         return 0;
     }
     // goods
-    if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery)
+    if (house->data.house.inventory[INVENTORY_GOOD1] < model->pottery)
         return 0;
 
-    if (house->data.house.inventory[INVENTORY_OIL] < model->oil)
+    if (house->data.house.inventory[INVENTORY_GOOD3] < model->oil)
         return 0;
 
-    if (house->data.house.inventory[INVENTORY_FURNITURE] < model->furniture)
+    if (house->data.house.inventory[INVENTORY_GOOD2] < model->furniture)
         return 0;
 
     int wine = model->wine;
-    if (wine && house->data.house.inventory[INVENTORY_WINE] <= 0)
+    if (wine && house->data.house.inventory[INVENTORY_GOOD4] <= 0)
         return 0;
 
     if (wine > 1 && !city_resource_multiple_wine_available()) {
@@ -482,10 +482,10 @@ static void consume_resource(building *b, int inventory, int amount)
 static void consume_resources(building *b)
 {
     const model_house *model = model_get_house(b->subtype.house_level);
-    consume_resource(b, INVENTORY_POTTERY, model->pottery);
-    consume_resource(b, INVENTORY_FURNITURE, model->furniture);
-    consume_resource(b, INVENTORY_OIL, model->oil);
-    consume_resource(b, INVENTORY_WINE, model->wine);
+    consume_resource(b, INVENTORY_GOOD1, model->pottery);
+    consume_resource(b, INVENTORY_GOOD2, model->furniture);
+    consume_resource(b, INVENTORY_GOOD3, model->oil);
+    consume_resource(b, INVENTORY_GOOD4, model->wine);
 }
 
 static int (*evolve_callback[])(building *, house_demands *) = {
@@ -601,7 +601,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // pottery
-    if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
+    if (house->data.house.inventory[INVENTORY_GOOD1] < model->pottery) {
         house->data.house.evolve_text_id = 19;
         return;
     }
@@ -637,18 +637,18 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // oil
-    if (house->data.house.inventory[INVENTORY_OIL] < model->oil) {
+    if (house->data.house.inventory[INVENTORY_GOOD3] < model->oil) {
         house->data.house.evolve_text_id = 27;
         return;
     }
     // furniture
-    if (house->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
+    if (house->data.house.inventory[INVENTORY_GOOD2] < model->furniture) {
         house->data.house.evolve_text_id = 28;
         return;
     }
     // wine
     int wine = model->wine;
-    if (house->data.house.inventory[INVENTORY_WINE] < wine) {
+    if (house->data.house.inventory[INVENTORY_GOOD4] < wine) {
         house->data.house.evolve_text_id = 29;
         return;
     }
@@ -740,7 +740,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // pottery
-    if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
+    if (house->data.house.inventory[INVENTORY_GOOD1] < model->pottery) {
         house->data.house.evolve_text_id = 49;
         return;
     }
@@ -776,18 +776,18 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // oil
-    if (house->data.house.inventory[INVENTORY_OIL] < model->oil) {
+    if (house->data.house.inventory[INVENTORY_GOOD3] < model->oil) {
         house->data.house.evolve_text_id = 57;
         return;
     }
     // furniture
-    if (house->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
+    if (house->data.house.inventory[INVENTORY_GOOD2] < model->furniture) {
         house->data.house.evolve_text_id = 58;
         return;
     }
     // wine
     wine = model->wine;
-    if (house->data.house.inventory[INVENTORY_WINE] < wine) {
+    if (house->data.house.inventory[INVENTORY_GOOD4] < wine) {
         house->data.house.evolve_text_id = 59;
         return;
     }

@@ -22,16 +22,16 @@ static int create_delivery_boy(int leader_id, figure *f) {
 static int take_food_from_granary(figure *f, int market_id, int granary_id) {
     int resource;
     switch (f->collecting_item_id) {
-        case INVENTORY_WHEAT:
+        case INVENTORY_FOOD1:
             resource = RESOURCE_WHEAT;
             break;
-        case INVENTORY_VEGETABLES:
+        case INVENTORY_FOOD2:
             resource = RESOURCE_VEGETABLES;
             break;
-        case INVENTORY_FRUIT:
+        case INVENTORY_FOOD3:
             resource = RESOURCE_FRUIT;
             break;
-        case INVENTORY_MEAT:
+        case INVENTORY_FOOD4:
             resource = RESOURCE_MEAT_C3;
             break;
         default:
@@ -39,7 +39,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id) {
     }
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
-    int max_units = (f->collecting_item_id == INVENTORY_WHEAT ? 800 : 600) - market_units;
+    int max_units = (f->collecting_item_id == INVENTORY_FOOD1 ? 800 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
     if (granary_units >= 800)
@@ -79,16 +79,16 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id) {
 static int take_resource_from_warehouse(figure *f, int warehouse_id) {
     int resource;
     switch (f->collecting_item_id) {
-        case INVENTORY_POTTERY:
+        case INVENTORY_GOOD1:
             resource = RESOURCE_POTTERY_C3;
             break;
-        case INVENTORY_FURNITURE:
+        case INVENTORY_GOOD2:
             resource = RESOURCE_FURNITURE;
             break;
-        case INVENTORY_OIL:
+        case INVENTORY_GOOD3:
             resource = RESOURCE_OIL_C3;
             break;
-        case INVENTORY_WINE:
+        case INVENTORY_GOOD4:
             resource = RESOURCE_WINE;
             break;
         default:
