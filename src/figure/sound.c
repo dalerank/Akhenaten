@@ -5,8 +5,7 @@
 #include "sound/effect.h"
 #include "sound/speech.h"
 
-void figure_play_die_sound(const figure *f)
-{
+void figure_play_die_sound(const figure *f) {
     int is_soldier = 0;
     int is_citizen = 0;
     switch (f->type) {
@@ -62,7 +61,7 @@ void figure_play_die_sound(const figure *f)
     }
     if (is_soldier)
         sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
- else if (is_citizen)
+    else if (is_citizen)
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
 
     if (figure_is_enemy(f)) {
@@ -76,8 +75,7 @@ void figure_play_die_sound(const figure *f)
     }
 }
 
-void figure_play_hit_sound(int type)
-{
+void figure_play_hit_sound(int type) {
     switch (type) {
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
@@ -123,7 +121,7 @@ void figure_play_hit_sound(int type)
         case FIGURE_ENEMY47_ELEPHANT:
             if (city_sound_update_hit_elephant())
                 sound_effect_play(SOUND_EFFECT_ELEPHANT);
- else {
+            else {
                 sound_effect_play(SOUND_EFFECT_ELEPHANT_HIT);
             }
             break;

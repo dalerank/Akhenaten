@@ -9,29 +9,27 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-static int get_religion_advice(void)
-{
+static int get_religion_advice(void) {
     int least_happy = city_god_least_happy();
     const house_demands *demands = city_houses_demands();
     if (least_happy >= 0 && city_god_wrath_bolts(least_happy) > 4)
         return 6 + least_happy;
- else if (demands->religion == 1)
+    else if (demands->religion == 1)
         return demands->requiring.religion ? 1 : 0;
- else if (demands->religion == 2)
+    else if (demands->religion == 2)
         return 2;
- else if (demands->religion == 3)
+    else if (demands->religion == 3)
         return 3;
- else if (!demands->requiring.religion)
+    else if (!demands->requiring.religion)
         return 4;
- else if (least_happy >= 0)
+    else if (least_happy >= 0)
         return 6 + least_happy;
- else {
+    else {
         return 5;
     }
 }
 
-static void draw_god_row(int god, int y_offset, int small_temple, int large_temple)
-{
+static void draw_god_row(int god, int y_offset, int small_temple, int large_temple) {
     lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
     text_draw_number_centered(building_count_total(small_temple), 230, y_offset, 50, FONT_NORMAL_WHITE);
@@ -44,8 +42,7 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
     }
 }
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     int height_blocks;
     if (setting_gods_enabled()) {
         height_blocks = 17;
@@ -89,13 +86,12 @@ static int draw_background(void)
     return height_blocks;
 }
 
-const advisor_window_type *window_advisor_religion(void)
-{
+const advisor_window_type *window_advisor_religion(void) {
     static const advisor_window_type window = {
-        draw_background,
-        0,
-        0,
-        0
+            draw_background,
+            0,
+            0,
+            0
     };
     return &window;
 }

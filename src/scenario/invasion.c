@@ -104,7 +104,7 @@ void scenario_invasion_init(void) {
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
     if (path_max == 0)
-            return;
+        return;
     invasion_warning *warning = &data.warnings[1];
     for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
         random_generate_next();
@@ -238,9 +238,9 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         if (invasion_point == env_sizes().MAX_INVASION_POINTS) { // random
             if (num_points <= 2)
                 invasion_point = random_byte() & 1;
- else if (num_points <= 4)
+            else if (num_points <= 4)
                 invasion_point = random_byte() & 3;
- else {
+            else {
                 invasion_point = random_byte() & 7;
             }
         }
@@ -263,13 +263,13 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     // determine orientation
     if (y == 0)
         orientation = DIR_4_BOTTOM;
- else if (y >= scenario.map.height - 1)
+    else if (y >= scenario.map.height - 1)
         orientation = DIR_0_TOP;
- else if (x == 0)
+    else if (x == 0)
         orientation = DIR_2_RIGHT;
- else if (x >= scenario.map.width - 1)
+    else if (x >= scenario.map.width - 1)
         orientation = DIR_6_LEFT;
- else {
+    else {
         orientation = DIR_4_BOTTOM;
     }
     // check terrain
@@ -331,9 +331,9 @@ void scenario_invasion_process(void) {
                 warning->month_notified = game_time_month();
                 if (warning->warning_years > 2)
                     city_message_post(0, MESSAGE_DISTANT_BATTLE, 0, 0);
- else if (warning->warning_years > 1)
+                else if (warning->warning_years > 1)
                     city_message_post(0, MESSAGE_ENEMIES_CLOSING, 0, 0);
- else {
+                else {
                     city_message_post(0, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
                 }
             }
@@ -356,7 +356,7 @@ void scenario_invasion_process(void) {
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
                         city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
- else {
+                    else {
                         city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
                     }
                 }
@@ -424,7 +424,7 @@ void scenario_invasion_start_from_cheat(void) {
     if (grid_offset) {
         if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
             city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
- else {
+        else {
             city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
         }
     }
@@ -440,7 +440,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
             if (grid_offset) {
                 if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
                     city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
- else {
+                else {
                     city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
                 }
             }

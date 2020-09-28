@@ -7,8 +7,7 @@
 #include "graphics/image.h"
 #include "graphics/text.h"
 
-static void draw_figure_with_cart(const figure *f, int x, int y)
-{
+static void draw_figure_with_cart(const figure *f, int x, int y) {
     if (f->y_offset_cart >= 0) {
         image_draw(f->image_id, x, y);
         image_draw(f->cart_image_id, x + f->x_offset_cart, y + f->y_offset_cart);
@@ -18,8 +17,7 @@ static void draw_figure_with_cart(const figure *f, int x, int y)
     }
 }
 
-static void draw_hippodrome_horse(const figure *f, int x, int y)
-{
+static void draw_hippodrome_horse(const figure *f, int x, int y) {
     int val = f->wait_ticks_missile;
     switch (city_view_orientation()) {
         case DIR_0_TOP:
@@ -97,8 +95,7 @@ static void draw_hippodrome_horse(const figure *f, int x, int y)
     draw_figure_with_cart(f, x, y);
 }
 
-static void draw_fort_standard(const figure *f, int x, int y)
-{
+static void draw_fort_standard(const figure *f, int x, int y) {
     if (!formation_get(f->formation_id)->in_distant_battle) {
         // base
         image_draw(f->image_id, x, y);
@@ -112,8 +109,7 @@ static void draw_fort_standard(const figure *f, int x, int y)
     }
 }
 
-static void draw_map_flag(const figure *f, int x, int y)
-{
+static void draw_map_flag(const figure *f, int x, int y) {
     // base
     image_draw(f->image_id, x, y);
     // flag
@@ -123,9 +119,9 @@ static void draw_map_flag(const figure *f, int x, int y)
     int id = f->resource_id;
     if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX)
         number = id - MAP_FLAG_INVASION_MIN + 1;
- else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
+    else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
         number = id - MAP_FLAG_FISHING_MIN + 1;
- else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
+    else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
         number = id - MAP_FLAG_HERD_MIN + 1;
 
     if (number > 0)
@@ -134,8 +130,7 @@ static void draw_map_flag(const figure *f, int x, int y)
 }
 
 static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y,
-                                                      int *pixel_x, int *pixel_y)
-{
+                                                      int *pixel_x, int *pixel_y) {
     int dir = city_view_orientation();
     if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
         int base_pixel_x = 2 * cross_country_x - 2 * cross_country_y;
@@ -150,8 +145,7 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
     }
 }
 
-static int tile_progress_to_pixel_offset_x(int direction, int progress)
-{
+static int tile_progress_to_pixel_offset_x(int direction, int progress) {
     if (progress >= 15)
         return 0;
 
@@ -171,8 +165,7 @@ static int tile_progress_to_pixel_offset_x(int direction, int progress)
     }
 }
 
-static int tile_progress_to_pixel_offset_y(int direction, int progress)
-{
+static int tile_progress_to_pixel_offset_y(int direction, int progress) {
     if (progress >= 15)
         return 0;
 
@@ -192,19 +185,18 @@ static int tile_progress_to_pixel_offset_y(int direction, int progress)
     }
 }
 
-static void tile_progress_to_pixel_offset(int direction, int progress, int *pixel_x, int *pixel_y)
-{
+static void tile_progress_to_pixel_offset(int direction, int progress, int *pixel_x, int *pixel_y) {
     *pixel_x = tile_progress_to_pixel_offset_x(direction, progress);
     *pixel_y = tile_progress_to_pixel_offset_y(direction, progress);
 }
 
-static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y)
-{
+static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
     // determining x/y offset on tile
     int x_offset = 0;
     int y_offset = 0;
     if (f->use_cross_country) {
-        tile_cross_country_offset_to_pixel_offset(f->cross_country_x % 15, f->cross_country_y % 15, &x_offset, &y_offset);
+        tile_cross_country_offset_to_pixel_offset(f->cross_country_x % 15, f->cross_country_y % 15, &x_offset,
+                                                  &y_offset);
         y_offset -= f->missile_damage;
     } else {
         int direction = figure_image_normalize_direction(f->direction);
@@ -213,10 +205,10 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y)
         if (f->figures_on_same_tile_index && f->type != FIGURE_BALLISTA) {
             // an attempt to not let people walk through each other
             static const int BUSY_ROAD_X_OFFSETS[] = {
-                0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
+                    0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
             };
             static const int BUSY_ROAD_Y_OFFSETS[] = {
-                0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
+                    0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
             };
             x_offset += BUSY_ROAD_X_OFFSETS[f->figures_on_same_tile_index];
             y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_on_same_tile_index];
@@ -231,8 +223,7 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y)
     *pixel_y += y_offset - img->sprite_offset_y;
 }
 
-static void draw_figure(const figure *f, int x, int y, int highlight)
-{
+static void draw_figure(const figure *f, int x, int y, int highlight) {
     if (f->cart_image_id) {
         switch (f->type) {
             case FIGURE_CART_PUSHER:
@@ -260,7 +251,7 @@ static void draw_figure(const figure *f, int x, int y, int highlight)
     } else {
         if (f->is_enemy_image)
             image_draw_enemy(f->image_id, x, y);
- else {
+        else {
             image_draw(f->image_id, x, y);
             if (highlight)
                 image_draw_blend_alpha(f->image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
@@ -269,14 +260,12 @@ static void draw_figure(const figure *f, int x, int y, int highlight)
     }
 }
 
-void city_draw_figure(const figure *f, int x, int y, int highlight)
-{
+void city_draw_figure(const figure *f, int x, int y, int highlight) {
     adjust_pixel_offset(f, &x, &y);
     draw_figure(f, x, y, highlight);
 }
 
-void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord)
-{
+void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord) {
     adjust_pixel_offset(f, &x, &y);
     draw_figure(f, x, y, 0);
     coord->x = x;

@@ -11,8 +11,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
-{
+static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -28,21 +27,21 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
- else if (city_resource_is_mothballed(resource))
+    else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 70, group_id, 4);
- else if (b->data.industry.curse_days_left > 4)
+    else if (b->data.industry.curse_days_left > 4)
         window_building_draw_description_at(c, 70, group_id, 11);
- else if (b->num_workers <= 0)
+    else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 70, group_id, 5);
- else if (c->worker_percentage >= 100)
+    else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 70, group_id, 6);
- else if (c->worker_percentage >= 75)
+    else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 70, group_id, 7);
- else if (c->worker_percentage >= 50)
+    else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 70, group_id, 8);
- else if (c->worker_percentage >= 25)
+    else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 70, group_id, 9);
- else {
+    else {
         window_building_draw_description_at(c, 70, group_id, 10);
     }
 
@@ -51,38 +50,32 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
 
-void window_building_draw_wheat_farm(building_info_context *c)
-{
+void window_building_draw_wheat_farm(building_info_context *c) {
     draw_farm(c, 89, "wavs/wheat_farm.wav", 112, RESOURCE_WHEAT);
 }
 
-void window_building_draw_vegetable_farm(building_info_context *c)
-{
+void window_building_draw_vegetable_farm(building_info_context *c) {
     draw_farm(c, 90, "wavs/veg_farm.wav", 113, RESOURCE_VEGETABLES);
 }
 
-void window_building_draw_fruit_farm(building_info_context *c)
-{
+void window_building_draw_fruit_farm(building_info_context *c) {
     draw_farm(c, 90, "wavs/figs_farm.wav", 114, RESOURCE_FRUIT);
 }
 
-void window_building_draw_olive_farm(building_info_context *c)
-{
+void window_building_draw_olive_farm(building_info_context *c) {
     draw_farm(c, 91, "wavs/olives_farm.wav", 115, RESOURCE_OLIVES);
 }
 
-void window_building_draw_vines_farm(building_info_context *c)
-{
+void window_building_draw_vines_farm(building_info_context *c) {
     draw_farm(c, 91, "wavs/vines_farm.wav", 116, RESOURCE_VINES);
 }
 
-void window_building_draw_pig_farm(building_info_context *c)
-{
+void window_building_draw_pig_farm(building_info_context *c) {
     draw_farm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT_C3);
 }
 
-static void draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
-{
+static void
+draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -98,19 +91,19 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
- else if (city_resource_is_mothballed(resource))
+    else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 70, group_id, 4);
- else if (b->num_workers <= 0)
+    else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 70, group_id, 5);
- else if (c->worker_percentage >= 100)
+    else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 70, group_id, 6);
- else if (c->worker_percentage >= 75)
+    else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 70, group_id, 7);
- else if (c->worker_percentage >= 50)
+    else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 70, group_id, 8);
- else if (c->worker_percentage >= 25)
+    else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 70, group_id, 9);
- else {
+    else {
         window_building_draw_description_at(c, 70, group_id, 10);
     }
 
@@ -119,28 +112,24 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
     window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
 }
 
-void window_building_draw_marble_quarry(building_info_context *c)
-{
+void window_building_draw_marble_quarry(building_info_context *c) {
     draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE_C3);
 }
 
-void window_building_draw_iron_mine(building_info_context *c)
-{
+void window_building_draw_iron_mine(building_info_context *c) {
     draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_IRON);
 }
 
-void window_building_draw_timber_yard(building_info_context *c)
-{
+void window_building_draw_timber_yard(building_info_context *c) {
     draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER_C3);
 }
 
-void window_building_draw_clay_pit(building_info_context *c)
-{
+void window_building_draw_clay_pit(building_info_context *c) {
     draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY_C3);
 }
 
-static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource, int input_resource)
-{
+static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource,
+                          int input_resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -158,27 +147,27 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
     width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
     if (b->loads_stored < 1)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
- else {
+    else {
         lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
     }
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
- else if (city_resource_is_mothballed(resource))
+    else if (city_resource_is_mothballed(resource))
         window_building_draw_description_at(c, 86, group_id, 4);
- else if (b->num_workers <= 0)
+    else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
- else if (b->loads_stored <= 0)
+    else if (b->loads_stored <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
- else if (c->worker_percentage >= 100)
+    else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);
- else if (c->worker_percentage >= 75)
+    else if (c->worker_percentage >= 75)
         window_building_draw_description_at(c, 86, group_id, 7);
- else if (c->worker_percentage >= 50)
+    else if (c->worker_percentage >= 50)
         window_building_draw_description_at(c, 86, group_id, 8);
- else if (c->worker_percentage >= 25)
+    else if (c->worker_percentage >= 25)
         window_building_draw_description_at(c, 86, group_id, 9);
- else {
+    else {
         window_building_draw_description_at(c, 86, group_id, 10);
     }
 
@@ -186,33 +175,27 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_wine_workshop(building_info_context *c)
-{
+void window_building_draw_wine_workshop(building_info_context *c) {
     draw_workshop(c, 96, "wavs/wine_workshop.wav", 122, RESOURCE_WINE, RESOURCE_VINES);
 }
 
-void window_building_draw_oil_workshop(building_info_context *c)
-{
+void window_building_draw_oil_workshop(building_info_context *c) {
     draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, RESOURCE_OIL_C3, RESOURCE_OLIVES);
 }
 
-void window_building_draw_weapons_workshop(building_info_context *c)
-{
+void window_building_draw_weapons_workshop(building_info_context *c) {
     draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, RESOURCE_WEAPONS_C3, RESOURCE_IRON);
 }
 
-void window_building_draw_furniture_workshop(building_info_context *c)
-{
+void window_building_draw_furniture_workshop(building_info_context *c) {
     draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, RESOURCE_FURNITURE, RESOURCE_TIMBER_C3);
 }
 
-void window_building_draw_pottery_workshop(building_info_context *c)
-{
+void window_building_draw_pottery_workshop(building_info_context *c) {
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY_C3, RESOURCE_CLAY_C3);
 }
 
-void window_building_draw_shipyard(building_info_context *c)
-{
+void window_building_draw_shipyard(building_info_context *c) {
     c->help_id = 82;
     window_building_play_sound(c, "wavs/shipyard.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -222,15 +205,17 @@ void window_building_draw_shipyard(building_info_context *c)
 
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
- else {
+    else {
         int pct_done = calc_percentage(b->data.industry.progress, 160);
         int width = lang_text_draw(100, 2, c->x_offset + 32, c->y_offset + 56, FONT_NORMAL_BLACK);
         width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         lang_text_draw(100, 3, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         if (city_buildings_shipyard_boats_requested())
-            lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
- else {
-            lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6),
+                                     FONT_NORMAL_BLACK);
+        else {
+            lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80, 16 * (c->width_blocks - 6),
+                                     FONT_NORMAL_BLACK);
         }
     }
 
@@ -238,31 +223,42 @@ void window_building_draw_shipyard(building_info_context *c)
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_wharf(building_info_context *c)
-{
+void window_building_draw_wharf(building_info_context *c) {
     c->help_id = 84;
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT_C3 +
                resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
-        c->x_offset + 10, c->y_offset + 10);
+               c->x_offset + 10, c->y_offset + 10);
 
     building *b = building_get(c->building_id);
 
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
- else if (!b->data.industry.fishing_boat_id)
+    else if (!b->data.industry.fishing_boat_id)
         window_building_draw_description(c, 102, 2);
- else {
+    else {
         int text_id;
         switch (figure_get(b->data.industry.fishing_boat_id)->action_state) {
-            case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: text_id = 3; break;
-            case FIGURE_ACTION_192_FISHING_BOAT_FISHING: text_id = 4; break;
-            case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: text_id = 5; break;
-            case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: text_id = 6; break;
-            case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: text_id = 7; break;
-            default: text_id = 8; break;
+            case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
+                text_id = 3;
+                break;
+            case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
+                text_id = 4;
+                break;
+            case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
+                text_id = 5;
+                break;
+            case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF:
+                text_id = 6;
+                break;
+            case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
+                text_id = 7;
+                break;
+            default:
+                text_id = 8;
+                break;
         }
         window_building_draw_description(c, 102, text_id);
     }

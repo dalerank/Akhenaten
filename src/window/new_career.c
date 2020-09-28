@@ -21,31 +21,28 @@ static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
 
 static image_button image_buttons[] = {
-    {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,     8, button_back,   button_none, 0, 0, 1},
-    {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, start_mission, button_none, 1, 0, 1}
+        {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,       8, button_back,   button_none, 0, 0, 1},
+        {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, start_mission, button_none, 1, 0, 1}
 };
 
-static input_box player_name_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE };
+static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE};
 
 static uint8_t player_name[32];
 
-static void init(void)
-{
+static void init(void) {
     setting_clear_personal_savings();
     scenario_settings_init();
     string_copy(lang_get_string(9, 5), player_name, 32);
     input_box_start(&player_name_input, player_name, 32, 1);
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_clear_screens();
     graphics_in_dialog();
     image_draw(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();
 }
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     outer_panel_draw(128, 160, 24, 8);
     lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK);
@@ -58,24 +55,21 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void button_back(int param1, int param2)
-{
+static void button_back(int param1, int param2) {
     input_box_stop(&player_name_input);
     window_go_back();
 }
-static void start_mission(int param1, int param2)
-{
+static void start_mission(int param1, int param2) {
     input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
     window_mission_selection_show();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &player_name_input) ||
         image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0))
-            return;
+        return;
     if (input_box_is_accepted(&player_name_input)) {
         start_mission(0, 0);
         return;
@@ -84,13 +78,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
         button_back(0, 0);
 
 }
-void window_new_career_show(void)
-{
+void window_new_career_show(void) {
     window_type window = {
-        WINDOW_NEW_CAREER,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_NEW_CAREER,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init();
     window_show(&window);

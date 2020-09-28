@@ -31,32 +31,58 @@
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 static const int ADJACENT_OFFSETS_C3[2][4][7] = {
-    {
-        { OFFSET_C3(-1, 0), OFFSET_C3(-1, -1),  OFFSET_C3(-1, -2), OFFSET_C3(0, -2), OFFSET_C3(1, -2) },
-        { OFFSET_C3(0, -1), OFFSET_C3(1, -1),  OFFSET_C3(2, -1), OFFSET_C3(2, 0), OFFSET_C3(2, 1) },
-        { OFFSET_C3(1, 0), OFFSET_C3(1, 1),  OFFSET_C3(1, 2), OFFSET_C3(0, 2), OFFSET_C3(-1, 2)},
-        { OFFSET_C3(0, 1), OFFSET_C3(-1, 1),  OFFSET_C3(-2, 1), OFFSET_C3(-2, 0), OFFSET_C3(-2, -1) }
-    },
-    {
-        { OFFSET_C3(-1, 0), OFFSET_C3(-1, -1),  OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3),  OFFSET_C3(1, -3), OFFSET_C3(2, -3) },
-        { OFFSET_C3(0, -1), OFFSET_C3(1, -1),  OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(3, 0),  OFFSET_C3(3, 1), OFFSET_C3(3, 2) },
-        { OFFSET_C3(1, 0), OFFSET_C3(1, 1),  OFFSET_C3(1, 2), OFFSET_C3(1, 3), OFFSET_C3(0, 3),  OFFSET_C3(-1, 3), OFFSET_C3(-2, 3) },
-        { OFFSET_C3(0, 1), OFFSET_C3(-1, 1),  OFFSET_C3(-2, 1), OFFSET_C3(-3, 1), OFFSET_C3(-3, 0),  OFFSET_C3(-3, -1), OFFSET_C3(-3, -2) }
-    }
+        {
+                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2),  OFFSET_C3(1, -2)},
+                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1)},
+                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(0, 2), OFFSET_C3(-1, 2)},
+                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-2, 0), OFFSET_C3(-2, -1)}
+        },
+        {
+                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3), OFFSET_C3(
+                                                                                                                      1,
+                                                                                                                      -3), OFFSET_C3(
+                                                                                                                                   2,
+                                                                                                                                   -3)},
+                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(3, 0), OFFSET_C3(3,
+                                                                                                                    1), OFFSET_C3(
+                                                                                                                                3,
+                                                                                                                                2)},
+                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(1, 3), OFFSET_C3(0, 3), OFFSET_C3(-1,
+                                                                                                                3), OFFSET_C3(
+                                                                                                                            -2,
+                                                                                                                            3)},
+                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-3, 1), OFFSET_C3(-3, 0), OFFSET_C3(-3,
+                                                                                                                    -1), OFFSET_C3(
+                                                                                                                                 -3,
+                                                                                                                                 -2)}
+        }
 };
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
-    {
-        { OFFSET_PH(-1, 0), OFFSET_PH(-1, -1),  OFFSET_PH(-1, -2), OFFSET_PH(0, -2), OFFSET_PH(1, -2) },
-        { OFFSET_PH(0, -1), OFFSET_PH(1, -1),  OFFSET_PH(2, -1), OFFSET_PH(2, 0), OFFSET_PH(2, 1) },
-        { OFFSET_PH(1, 0), OFFSET_PH(1, 1),  OFFSET_PH(1, 2), OFFSET_PH(0, 2), OFFSET_PH(-1, 2)},
-        { OFFSET_PH(0, 1), OFFSET_PH(-1, 1),  OFFSET_PH(-2, 1), OFFSET_PH(-2, 0), OFFSET_PH(-2, -1) }
-    },
-    {
-        { OFFSET_PH(-1, 0), OFFSET_PH(-1, -1),  OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3),  OFFSET_PH(1, -3), OFFSET_PH(2, -3) },
-        { OFFSET_PH(0, -1), OFFSET_PH(1, -1),  OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(3, 0),  OFFSET_PH(3, 1), OFFSET_PH(3, 2) },
-        { OFFSET_PH(1, 0), OFFSET_PH(1, 1),  OFFSET_PH(1, 2), OFFSET_PH(1, 3), OFFSET_PH(0, 3),  OFFSET_PH(-1, 3), OFFSET_PH(-2, 3) },
-        { OFFSET_PH(0, 1), OFFSET_PH(-1, 1),  OFFSET_PH(-2, 1), OFFSET_PH(-3, 1), OFFSET_PH(-3, 0),  OFFSET_PH(-3, -1), OFFSET_PH(-3, -2) }
-    }
+        {
+                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2),  OFFSET_PH(1, -2)},
+                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1)},
+                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(0, 2), OFFSET_PH(-1, 2)},
+                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-2, 0), OFFSET_PH(-2, -1)}
+        },
+        {
+                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3), OFFSET_PH(
+                                                                                                                      1,
+                                                                                                                      -3), OFFSET_PH(
+                                                                                                                                   2,
+                                                                                                                                   -3)},
+                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(3, 0), OFFSET_PH(3,
+                                                                                                                    1), OFFSET_PH(
+                                                                                                                                3,
+                                                                                                                                2)},
+                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(1, 3), OFFSET_PH(0, 3), OFFSET_PH(-1,
+                                                                                                                3), OFFSET_PH(
+                                                                                                                            -2,
+                                                                                                                            3)},
+                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-3, 1), OFFSET_PH(-3, 0), OFFSET_PH(-3,
+                                                                                                                    -1), OFFSET_PH(
+                                                                                                                                 -3,
+                                                                                                                                 -2)}
+        }
 };
 
 static struct {
@@ -70,8 +96,7 @@ static struct {
     pixel_coordinate *selected_figure_coord;
 } draw_context;
 
-static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation)
-{
+static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation) {
     draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
         time_millis now = time_get_millis();
@@ -87,19 +112,16 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.highlighted_formation = highlighted_formation;
 }
 
-static int draw_building_as_deleted(building *b)
-{
+static int draw_building_as_deleted(building *b) {
     b = building_main(b);
     return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
 }
 
-static int is_multi_tile_terrain(int grid_offset)
-{
+static int is_multi_tile_terrain(int grid_offset) {
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
 
-static int has_adjacent_deletion(int grid_offset)
-{
+static int has_adjacent_deletion(int grid_offset) {
     int size = map_property_multi_tile_size(grid_offset);
     int total_adjacent_offsets = size * 2 + 1;
     const int *adjacent_offset;// = ADJACENT_OFFSETS[size - 2][city_view_orientation() / 2];
@@ -120,11 +142,9 @@ static int has_adjacent_deletion(int grid_offset)
     return 0;
 }
 
-static void draw_footprint(int x, int y, int grid_offset)
-{
+static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset == 26791)
         int a = 3245;
-
 
 
     building_construction_record_view_position(x, y, grid_offset);
@@ -144,9 +164,9 @@ static void draw_footprint(int x, int y, int grid_offset)
             city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
             if (x < view_x + 100)
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
- else if (x > view_x + view_width - 100)
+            else if (x > view_x + view_width - 100)
                 sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
- else {
+            else {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
             }
         }
@@ -172,20 +192,19 @@ static void draw_footprint(int x, int y, int grid_offset)
     }
 }
 
-static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask)
-{
+static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask) {
     // get which part of the hippodrome is getting checked
     int building_part;
-    if(b->prev_part_building_id == 0){
+    if (b->prev_part_building_id == 0) {
         building_part = 0; // part 1, no previous building
-    } else if(b->next_part_building_id == 0){
+    } else if (b->next_part_building_id == 0) {
         building_part = 2; // part 3, no next building
     } else {
         building_part = 1; // part 2
     }
-    int orientation =  building_rotation_get_building_orientation(b->subtype.orientation);
+    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
     int population = city_population();
-    if ((building_part == 0 ) && population > 2000) {
+    if ((building_part == 0) && population > 2000) {
         // first building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -211,7 +230,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
         }
-    } else if ((building_part == 2 ) && population > 1000) {
+    } else if ((building_part == 2) && population > 1000) {
         // last building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -230,8 +249,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
     }
 }
 
-static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask)
-{
+static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask) {
     if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
         image_draw_masked(image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
 
@@ -246,8 +264,7 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
 
 }
 
-static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask)
-{
+static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask) {
     if (b->type == BUILDING_WINE_WORKSHOP) {
         if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
             image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23, color_mask);
@@ -255,28 +272,31 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
     }
     if (b->type == BUILDING_OIL_WORKSHOP) {
         if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15, color_mask);
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15,
+                              color_mask);
 
     }
     if (b->type == BUILDING_WEAPONS_WORKSHOP) {
         if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24, color_mask);
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24,
+                              color_mask);
 
     }
     if (b->type == BUILDING_FURNITURE_WORKSHOP) {
         if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19, color_mask);
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19,
+                              color_mask);
 
     }
     if (b->type == BUILDING_POTTERY_WORKSHOP) {
         if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24, color_mask);
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24,
+                              color_mask);
 
     }
 }
 
-static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask)
-{
+static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask) {
     if (b->type == BUILDING_SENATE_UPGRADED) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
@@ -305,10 +325,9 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     }
 }
 
-static void draw_top(int x, int y, int grid_offset)
-{
+static void draw_top(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
-            return;
+        return;
     building *b = building_get(map_building_at(grid_offset));
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
@@ -322,8 +341,7 @@ static void draw_top(int x, int y, int grid_offset)
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
 
-static void draw_figures(int x, int y, int grid_offset)
-{
+static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -342,24 +360,23 @@ static void draw_figures(int x, int y, int grid_offset)
     }
 }
 
-static void draw_dock_workers(const building *b, int x, int y, color_t color_mask)
-{
+static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->grid_offset);
         int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
         if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_1))
             image_dockers += 0;
- else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
             image_dockers += 3;
- else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
             image_dockers += 6;
- else {
+        else {
             image_dockers += 9;
         }
         if (num_dockers == 2)
             image_dockers += 1;
- else if (num_dockers == 3)
+        else if (num_dockers == 3)
             image_dockers += 2;
 
         const image *img = image_get(image_dockers);
@@ -367,16 +384,14 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
     }
 }
 
-static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask)
-{
+static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
     image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center())
         image_draw_masked(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 
 }
 
-static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask)
-{
+static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask) {
     image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 1,
                       x + img->sprite_offset_x,
                       y + 60 + img->sprite_offset_y - img->height,
@@ -395,8 +410,7 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
 
 }
 
-static void draw_animation(int x, int y, int grid_offset)
-{
+static void draw_animation(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
     if (img->num_animation_sprites) {
@@ -409,11 +423,11 @@ static void draw_animation(int x, int y, int grid_offset)
 
             if (b->type == BUILDING_DOCK)
                 draw_dock_workers(b, x, y, color_mask);
- else if (b->type == BUILDING_WAREHOUSE)
+            else if (b->type == BUILDING_WAREHOUSE)
                 draw_warehouse_ornaments(b, x, y, color_mask);
- else if (b->type == BUILDING_GRANARY)
+            else if (b->type == BUILDING_GRANARY)
                 draw_granary_stores(img, b, x, y, color_mask);
- else if (b->type == BUILDING_BURNING_RUIN && b->ruin_has_plague)
+            else if (b->type == BUILDING_BURNING_RUIN && b->ruin_has_plague)
                 image_draw_masked(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
 
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
@@ -423,14 +437,24 @@ static void draw_animation(int x, int y, int grid_offset)
 
                 if (b->type == BUILDING_GRANARY)
                     image_draw_masked(image_id + animation_offset + 5, x + 77, y - 49, color_mask);
- else {
+                else {
                     int ydiff = 0;
                     switch (map_property_multi_tile_size(grid_offset)) {
-                        case 1: ydiff = 30; break;
-                        case 2: ydiff = 45; break;
-                        case 3: ydiff = 60; break;
-                        case 4: ydiff = 75; break;
-                        case 5: ydiff = 90; break;
+                        case 1:
+                            ydiff = 30;
+                            break;
+                        case 2:
+                            ydiff = 45;
+                            break;
+                        case 3:
+                            ydiff = 60;
+                            break;
+                        case 4:
+                            ydiff = 75;
+                            break;
+                        case 5:
+                            ydiff = 90;
+                            break;
                     }
                     image_draw_masked(image_id + animation_offset,
                                       x + img->sprite_offset_x,
@@ -441,17 +465,24 @@ static void draw_animation(int x, int y, int grid_offset)
         }
     } else if (map_sprite_bridge_at(grid_offset))
         city_draw_bridge(x, y, grid_offset);
- else if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT) {
+    else if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *fort = building_get(map_building_at(grid_offset));
             int offset = 0;
             switch (fort->subtype.fort_figure_type) {
-                case FIGURE_FORT_LEGIONARY: offset = 4; break;
-                case FIGURE_FORT_MOUNTED: offset = 3; break;
-                case FIGURE_FORT_JAVELIN: offset = 2; break;
+                case FIGURE_FORT_LEGIONARY:
+                    offset = 4;
+                    break;
+                case FIGURE_FORT_MOUNTED:
+                    offset = 3;
+                    break;
+                case FIGURE_FORT_JAVELIN:
+                    offset = 2;
+                    break;
             }
             if (offset)
-                image_draw_masked(image_id_from_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5, draw_building_as_deleted(fort) ? COLOR_MASK_RED : 0);
+                image_draw_masked(image_id_from_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5,
+                                  draw_building_as_deleted(fort) ? COLOR_MASK_RED : 0);
 
         }
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_GATEHOUSE) {
@@ -467,13 +498,13 @@ static void draw_animation(int x, int y, int grid_offset)
             if (gate->subtype.orientation == 1) {
                 if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM)
                     image_draw_masked(image_id, x - 22, y - 80, color_mask);
- else {
+                else {
                     image_draw_masked(image_id + 1, x - 18, y - 81, color_mask);
                 }
             } else if (gate->subtype.orientation == 2) {
                 if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM)
                     image_draw_masked(image_id + 1, x - 18, y - 81, color_mask);
- else {
+                else {
                     image_draw_masked(image_id, x - 22, y - 80, color_mask);
                 }
             }
@@ -481,8 +512,7 @@ static void draw_animation(int x, int y, int grid_offset)
     }
 }
 
-static void draw_elevated_figures(int x, int y, int grid_offset)
-{
+static void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
@@ -496,8 +526,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     }
 }
 
-static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
-{
+static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
     building *b = building_get(map_building_at(grid_offset));
@@ -505,26 +534,23 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
         image_draw_masked(image_id + 1,
-            x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
-            draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
+                          x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
+                          draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
         );
     }
 }
 
-static int should_draw_top_before_deletion(int grid_offset)
-{
+static int should_draw_top_before_deletion(int grid_offset) {
     return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
 }
 
-static void deletion_draw_terrain_top(int x, int y, int grid_offset)
-{
+static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
     if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
 
 }
 
-static void deletion_draw_figures_animations(int x, int y, int grid_offset)
-{
+static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
         image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
@@ -535,14 +561,12 @@ static void deletion_draw_figures_animations(int x, int y, int grid_offset)
     draw_animation(x, y, grid_offset);
 }
 
-static void deletion_draw_remaining(int x, int y, int grid_offset)
-{
+static void deletion_draw_remaining(int x, int y, int grid_offset) {
     draw_elevated_figures(x, y, grid_offset);
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
-void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
-{
+void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
@@ -555,17 +579,17 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     city_view_foreach_map_tile(draw_footprint);
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile(
-            draw_top,
-            draw_figures,
-            draw_animation
+                draw_top,
+                draw_figures,
+                draw_animation
         );
         if (!selected_figure_id)
             city_building_ghost_draw(tile);
 
         city_view_foreach_valid_map_tile(
-            draw_elevated_figures,
-            draw_hippodrome_ornaments,
-            0
+                draw_elevated_figures,
+                draw_hippodrome_ornaments,
+                0
         );
     } else {
         city_view_foreach_map_tile(deletion_draw_terrain_top);

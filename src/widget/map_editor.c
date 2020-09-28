@@ -34,8 +34,7 @@ static struct {
     int image_id_water_last;
 } draw_context;
 
-static void init_draw_context(void)
-{
+static void init_draw_context(void) {
     draw_context.advance_water_animation = 0;
     time_millis now = time_get_millis();
     if (now - draw_context.last_water_animation_time > 60) {
@@ -46,8 +45,7 @@ static void init_draw_context(void)
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
 }
 
-static void draw_footprint(int x, int y, int grid_offset)
-{
+static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
@@ -68,17 +66,15 @@ static void draw_footprint(int x, int y, int grid_offset)
     }
 }
 
-static void draw_top(int x, int y, int grid_offset)
-{
+static void draw_top(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
-            return;
+        return;
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
 }
 
-static void draw_flags(int x, int y, int grid_offset)
-{
+static void draw_flags(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -92,15 +88,13 @@ static void draw_flags(int x, int y, int grid_offset)
     }
 }
 
-static void set_city_scaled_clip_rectangle(void)
-{
+static void set_city_scaled_clip_rectangle(void) {
     int x, y, width, height;
     city_view_get_scaled_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
-static void update_zoom_level(void)
-{
+static void update_zoom_level(void) {
     int zoom = city_view_get_scale();
     pixel_offset offset;
     city_view_get_camera_in_pixels(&offset.x, &offset.y);
@@ -111,8 +105,7 @@ static void update_zoom_level(void)
     }
 }
 
-void widget_map_editor_draw(void)
-{
+void widget_map_editor_draw(void) {
     if (config_get(CONFIG_UI_ZOOM)) {
         update_zoom_level();
         graphics_set_active_canvas(CANVAS_CITY);
@@ -127,8 +120,7 @@ void widget_map_editor_draw(void)
     graphics_set_active_canvas(CANVAS_UI);
 }
 
-static void update_city_view_coords(int x, int y, map_tile *tile)
-{
+static void update_city_view_coords(int x, int y, map_tile *tile) {
     view_tile view;
     if (city_view_pixels_to_view_tile(x, y, &view)) {
         tile->grid_offset = city_view_tile_to_grid_offset(&view);
@@ -140,8 +132,7 @@ static void update_city_view_coords(int x, int y, map_tile *tile)
     }
 }
 
-static void scroll_map(const mouse *m)
-{
+static void scroll_map(const mouse *m) {
     pixel_offset delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         city_view_scroll(delta.x, delta.y);
@@ -149,19 +140,17 @@ static void scroll_map(const mouse *m)
     }
 }
 
-static int input_coords_in_map(int x, int y)
-{
+static int input_coords_in_map(int x, int y) {
     int x_offset, y_offset, width, height;
     city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
 
     x -= x_offset;
     y -= y_offset;
 
-    return (x >= 0 && x < width &&y >= 0 && y < height);
+    return (x >= 0 && x < width && y >= 0 && y < height);
 }
 
-static void handle_touch_scroll(const touch *t)
-{
+static void handle_touch_scroll(const touch *t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
@@ -176,7 +165,7 @@ static void handle_touch_scroll(const touch *t)
     scroll_restore_margins();
 
     if (!data.capture_input)
-            return;
+        return;
     int was_click = touch_was_click(get_latest_touch());
     if (t->has_started || was_click) {
         scroll_drag_start(1);
@@ -184,15 +173,14 @@ static void handle_touch_scroll(const touch *t)
     }
 
     if (!touch_not_click(t))
-            return;
+        return;
 
     if (t->has_ended)
         scroll_drag_end();
 
 }
 
-static void handle_touch_zoom(const touch *first, const touch *last)
-{
+static void handle_touch_zoom(const touch *first, const touch *last) {
     if (touch_not_click(first))
         zoom_update_touch(first, last, city_view_get_scale());
 
@@ -201,11 +189,10 @@ static void handle_touch_zoom(const touch *first, const touch *last)
 
 }
 
-static void handle_last_touch(void)
-{
+static void handle_last_touch(void) {
     const touch *last = get_latest_touch();
     if (!last->in_use)
-            return;
+        return;
     if (touch_was_click(last)) {
         editor_tool_deactivate();
         return;
@@ -215,8 +202,7 @@ static void handle_last_touch(void)
 
 }
 
-static int handle_cancel_construction_button(const touch *t)
-{
+static int handle_cancel_construction_button(const touch *t) {
     if (!editor_tool_is_active())
         return 0;
 
@@ -233,8 +219,7 @@ static int handle_cancel_construction_button(const touch *t)
     return 1;
 }
 
-static void handle_first_touch(map_tile *tile)
-{
+static void handle_first_touch(map_tile *tile) {
     const touch *first = get_earliest_touch();
 
     if (touch_was_click(first)) {
@@ -245,7 +230,7 @@ static void handle_first_touch(map_tile *tile)
     handle_touch_scroll(first);
 
     if (!input_coords_in_map(first->current_point.x, first->current_point.y))
-            return;
+        return;
 
     if (editor_tool_is_updatable()) {
         if (!editor_tool_is_in_use()) {
@@ -304,8 +289,7 @@ static void handle_first_touch(map_tile *tile)
 
 }
 
-static void handle_touch(void)
-{
+static void handle_touch(void) {
     const touch *first = get_earliest_touch();
     if (!first->in_use) {
         scroll_restore_margins();
@@ -330,8 +314,7 @@ static void handle_touch(void)
 
 }
 
-void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
-{
+void widget_map_editor_handle_input(const mouse *m, const hotkeys *h) {
     scroll_map(m);
 
     if (m->is_touch) {
@@ -356,7 +339,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     if (h->escape_pressed) {
         if (editor_tool_is_active())
             editor_tool_deactivate();
- else {
+        else {
             hotkey_handle_escape();
         }
         return;
@@ -366,7 +349,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     update_city_view_coords(m->x, m->y, tile);
 
     if (!tile->grid_offset)
-            return;
+        return;
 
     if (m->left.went_down) {
         if (!editor_tool_is_in_use())
@@ -382,8 +365,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void widget_map_editor_clear_current_tile(void)
-{
+void widget_map_editor_clear_current_tile(void) {
     data.selected_grid_offset = 0;
     data.current_tile.grid_offset = 0;
 }

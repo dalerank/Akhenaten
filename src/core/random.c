@@ -15,15 +15,13 @@ static struct {
     int32_t pool[MAX_RANDOM];
 } data;
 
-void random_init(void)
-{
+void random_init(void) {
     memset(&data, 0, sizeof(data));
     data.iv1 = 0x54657687;
     data.iv2 = 0x72641663;
 }
 
-void random_generate_next(void)
-{
+void random_generate_next(void) {
     data.pool[data.pool_index++] = data.random1_7bit;
     if (data.pool_index >= MAX_RANDOM)
         data.pool_index = 0;
@@ -46,42 +44,35 @@ void random_generate_next(void)
     data.random2_15bit = data.iv2 & 0x7fff;
 }
 
-void random_generate_pool(void)
-{
+void random_generate_pool(void) {
     data.pool_index = 0;
     for (int i = 0; i < MAX_RANDOM; i++) {
         random_generate_next();
     }
 }
 
-int8_t random_byte(void)
-{
+int8_t random_byte(void) {
     return data.random1_7bit;
 }
 
-int8_t random_byte_alt(void)
-{
+int8_t random_byte_alt(void) {
     return data.random2_7bit;
 }
 
-int16_t random_short(void)
-{
+int16_t random_short(void) {
     return data.random1_15bit;
 }
 
-int32_t random_from_pool(int index)
-{
+int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-void random_load_state(buffer *buf)
-{
+void random_load_state(buffer *buf) {
     data.iv1 = buf->read_u32();
     data.iv2 = buf->read_u32();
 }
 
-void random_save_state(buffer *buf)
-{
+void random_save_state(buffer *buf) {
     buf->write_u32(data.iv1);
     buf->write_u32(data.iv2);
 }

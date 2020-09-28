@@ -4,17 +4,15 @@
 #include "city/culture.h"
 #include "core/game_environment.h"
 
-static void decay(unsigned char *value)
-{
+static void decay(unsigned char *value) {
     if (*value > 0)
         *value = *value - 1;
- else {
+    else {
         *value = 0;
     }
 }
 
-void house_service_decay_culture(void)
-{
+void house_service_decay_culture(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size)
@@ -41,8 +39,7 @@ void house_service_decay_culture(void)
     }
 }
 
-void house_service_decay_tax_collector(void)
-{
+void house_service_decay_tax_collector(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_tax_coverage)
@@ -51,22 +48,20 @@ void house_service_decay_tax_collector(void)
     }
 }
 
-void house_service_decay_houses_covered(void)
-{
+void house_service_decay_houses_covered(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
             if (b->houses_covered <= 1)
                 b->houses_covered = 0;
- else {
+            else {
                 b->houses_covered--;
             }
         }
     }
 }
 
-void house_service_calculate_culture_aggregates(void)
-{
+void house_service_calculate_culture_aggregates(void) {
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
@@ -82,14 +77,14 @@ void house_service_calculate_culture_aggregates(void)
         if (b->data.house.amphitheater_actor) {
             if (b->data.house.amphitheater_gladiator)
                 b->data.house.entertainment += 15;
- else {
+            else {
                 b->data.house.entertainment += 10;
             }
         }
         if (b->data.house.colosseum_gladiator) {
             if (b->data.house.colosseum_lion)
                 b->data.house.entertainment += 25;
- else {
+            else {
                 b->data.house.entertainment += 15;
             }
         }

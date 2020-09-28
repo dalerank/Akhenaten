@@ -18,8 +18,7 @@
 
 #include <string.h>
 
-static void destroy_on_fire(building *b, int plagued)
-{
+static void destroy_on_fire(building *b, int plagued) {
     game_undo_disable();
     b->fire_risk = 0;
     b->damage_risk = 0;
@@ -40,13 +39,13 @@ static void destroy_on_fire(building *b, int plagued)
     int num_tiles;
     if (b->size >= 2 && b->size <= 5)
         num_tiles = b->size * b->size;
- else {
+    else {
         num_tiles = 0;
     }
     map_building_tiles_remove(b->id, b->x, b->y);
     if (map_terrain_is(b->grid_offset, TERRAIN_WATER))
         b->state = BUILDING_STATE_DELETED_BY_GAME;
- else {
+    else {
         b->type = BUILDING_BURNING_RUIN;
         b->figure_id4 = 0;
         b->tax_income_or_storage = 0;
@@ -58,14 +57,16 @@ static void destroy_on_fire(building *b, int plagued)
         int image_id;
         if (was_tent)
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
- else {
+        else {
             int random = map_random_get(b->grid_offset) & 3;
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
-    static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
-    static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
+    static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5,
+                                  5, 5, 4, 3, 2, 1, 0};
+    static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3,
+                                  4, 5, 5, 5, 5, 5, 5};
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->x;
         int y = y_tiles[tile] + b->y;
@@ -76,7 +77,7 @@ static void destroy_on_fire(building *b, int plagued)
         int image_id;
         if (was_tent)
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
- else {
+        else {
             int random = map_random_get(ruin->grid_offset) & 3;
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         }
@@ -90,8 +91,7 @@ static void destroy_on_fire(building *b, int plagued)
         map_routing_update_water();
 
 }
-static void destroy_linked_parts(building *b, int on_fire)
-{
+static void destroy_linked_parts(building *b, int on_fire) {
     building *part = b;
     for (int i = 0; i < 9; i++) {
         if (part->prev_part_building_id <= 0)
@@ -101,7 +101,7 @@ static void destroy_linked_parts(building *b, int on_fire)
         part = building_get(part_id);
         if (on_fire)
             destroy_on_fire(part, 0);
- else {
+        else {
             map_building_tiles_set_rubble(part_id, part->x, part->y, part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
@@ -115,39 +115,34 @@ static void destroy_linked_parts(building *b, int on_fire)
 
         if (on_fire)
             destroy_on_fire(part, 0);
- else {
+        else {
             map_building_tiles_set_rubble(part->id, part->x, part->y, part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
 }
 
-void building_destroy_by_collapse(building *b)
-{
+void building_destroy_by_collapse(building *b) {
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
     figure_create_explosion_cloud(b->x, b->y, b->size);
     destroy_linked_parts(b, 0);
 }
-void building_destroy_by_fire(building *b)
-{
+void building_destroy_by_fire(building *b) {
     destroy_on_fire(b, 0);
     destroy_linked_parts(b, 1);
 }
-void building_destroy_by_plague(building *b)
-{
+void building_destroy_by_plague(building *b) {
     destroy_on_fire(b, 1);
 }
-void building_destroy_by_rioter(building *b)
-{
+void building_destroy_by_rioter(building *b) {
     destroy_on_fire(b, 0);
 }
 
-int building_destroy_first_of_type(int type)
-{
+int building_destroy_first_of_type(int type) {
     int i = building_find(type);
     if (i < MAX_BUILDINGS[GAME_ENV]) {
-        building* b = building_get(i);
+        building *b = building_get(i);
         int grid_offset = b->grid_offset;
         game_undo_disable();
         b->state = BUILDING_STATE_RUBBLE;
@@ -158,8 +153,7 @@ int building_destroy_first_of_type(int type)
     }
     return 0;
 }
-void building_destroy_last_placed(void)
-{
+void building_destroy_last_placed(void) {
     int highest_sequence = 0;
     building *last_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -178,15 +172,13 @@ void building_destroy_last_placed(void)
         map_routing_update_land();
     }
 }
-void building_destroy_increase_enemy_damage(int grid_offset, int max_damage)
-{
+void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     if (map_building_damage_increase(grid_offset) > max_damage) {
         building_destroy_by_enemy(map_grid_offset_to_x(grid_offset),
-            map_grid_offset_to_y(grid_offset), grid_offset);
+                                  map_grid_offset_to_y(grid_offset), grid_offset);
     }
 }
-void building_destroy_by_enemy(int x, int y, int grid_offset)
-{
+void building_destroy_by_enemy(int x, int y, int grid_offset) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);

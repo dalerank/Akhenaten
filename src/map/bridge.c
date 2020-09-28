@@ -17,18 +17,15 @@ static struct {
     int direction_grid_delta;
 } bridge;
 
-int map_bridge_building_length(void)
-{
+int map_bridge_building_length(void) {
     return bridge.length;
 }
 
-void map_bridge_reset_building_length(void)
-{
+void map_bridge_reset_building_length(void) {
     bridge.length = 0;
 }
 
-int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction)
-{
+int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction) {
     int grid_offset = map_grid_offset(x, y);
     bridge.end_grid_offset = 0;
     bridge.direction_grid_delta = 0;
@@ -88,10 +85,9 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     return 0;
 }
 
-static int get_pillar_distance(int length)
-{
+static int get_pillar_distance(int length) {
     switch (bridge.length) {
-        case  9:
+        case 9:
         case 10:
             return 4;
         case 11:
@@ -108,8 +104,7 @@ static int get_pillar_distance(int length)
     }
 }
 
-int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge)
-{
+int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge) {
     if (is_ship_bridge) {
         int pillar_distance = get_pillar_distance(length);
         if (index == 1 || index == length - 2) {
@@ -142,14 +137,14 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
         } else if (index == pillar_distance) {
             if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 14;
- else {
+            else {
                 return 15;
             }
         } else {
             // middle of the bridge
             if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 11;
- else {
+            else {
                 return 12;
             }
         }
@@ -182,7 +177,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
             // middle part
             if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM)
                 return 5;
- else {
+            else {
                 return 6;
             }
         }
@@ -190,8 +185,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
     return 0;
 }
 
-int map_bridge_add(int x, int y, int is_ship_bridge)
-{
+int map_bridge_add(int x, int y, int is_ship_bridge) {
     int min_length = is_ship_bridge ? 5 : 2;
     if (bridge.end_grid_offset <= 0 || bridge.length < min_length) {
         bridge.length = 0;
@@ -217,13 +211,11 @@ int map_bridge_add(int x, int y, int is_ship_bridge)
     return bridge.length;
 }
 
-int map_is_bridge(int grid_offset)
-{
+int map_is_bridge(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_WATER) && map_sprite_bridge_at(grid_offset);
 }
 
-static int get_y_bridge_tiles(int grid_offset)
-{
+static int get_y_bridge_tiles(int grid_offset) {
     int tiles = 0;
     if (map_is_bridge(grid_offset + map_grid_delta(0, -1)))
         tiles++;
@@ -240,8 +232,7 @@ static int get_y_bridge_tiles(int grid_offset)
     return tiles;
 }
 
-static int get_x_bridge_tiles(int grid_offset)
-{
+static int get_x_bridge_tiles(int grid_offset) {
     int tiles = 0;
     if (map_is_bridge(grid_offset + map_grid_delta(-1, 0)))
         tiles++;
@@ -258,10 +249,9 @@ static int get_x_bridge_tiles(int grid_offset)
     return tiles;
 }
 
-void map_bridge_remove(int grid_offset, int mark_deleted)
-{
+void map_bridge_remove(int grid_offset, int mark_deleted) {
     if (!map_is_bridge(grid_offset))
-            return;
+        return;
 
     int tiles_x = get_x_bridge_tiles(grid_offset);
     int tiles_y = get_y_bridge_tiles(grid_offset);
@@ -274,7 +264,7 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
 
     if (mark_deleted)
         map_property_mark_deleted(grid_offset);
- else {
+    else {
         map_sprite_clear_tile(grid_offset);
         map_terrain_remove(grid_offset, TERRAIN_ROAD);
     }
@@ -282,15 +272,14 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
         grid_offset += offset_up;
         if (mark_deleted)
             map_property_mark_deleted(grid_offset);
- else {
+        else {
             map_sprite_clear_tile(grid_offset);
             map_terrain_remove(grid_offset, TERRAIN_ROAD);
         }
     }
 }
 
-int map_bridge_count_figures(int grid_offset)
-{
+int map_bridge_count_figures(int grid_offset) {
     if (!map_is_bridge(grid_offset))
         return 0;
 
@@ -316,30 +305,60 @@ int map_bridge_count_figures(int grid_offset)
     return figures;
 }
 
-void map_bridge_update_after_rotate(int counter_clockwise)
-{
+void map_bridge_update_after_rotate(int counter_clockwise) {
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_bridge_at(grid_offset)) {
-                    case 1: new_value = counter_clockwise ? 2 : 4; break;
-                    case 2: new_value = counter_clockwise ? 3 : 1; break;
-                    case 3: new_value = counter_clockwise ? 4 : 2; break;
-                    case 4: new_value = counter_clockwise ? 1 : 3; break;
-                    case 5: new_value = 6; break;
-                    case 6: new_value = 5; break;
-                    case 7: new_value = counter_clockwise ? 8 : 10; break;
-                    case 8: new_value = counter_clockwise ? 9 : 7; break;
-                    case 9: new_value = counter_clockwise ? 10 : 8; break;
-                    case 10: new_value = counter_clockwise ? 7 : 9; break;
-                    case 11: new_value = 12; break;
-                    case 12: new_value = 11; break;
-                    case 13: new_value = 13; break;
-                    case 14: new_value = 15; break;
-                    case 15: new_value = 14; break;
-                    default: new_value = map_sprite_bridge_at(grid_offset);
+                    case 1:
+                        new_value = counter_clockwise ? 2 : 4;
+                        break;
+                    case 2:
+                        new_value = counter_clockwise ? 3 : 1;
+                        break;
+                    case 3:
+                        new_value = counter_clockwise ? 4 : 2;
+                        break;
+                    case 4:
+                        new_value = counter_clockwise ? 1 : 3;
+                        break;
+                    case 5:
+                        new_value = 6;
+                        break;
+                    case 6:
+                        new_value = 5;
+                        break;
+                    case 7:
+                        new_value = counter_clockwise ? 8 : 10;
+                        break;
+                    case 8:
+                        new_value = counter_clockwise ? 9 : 7;
+                        break;
+                    case 9:
+                        new_value = counter_clockwise ? 10 : 8;
+                        break;
+                    case 10:
+                        new_value = counter_clockwise ? 7 : 9;
+                        break;
+                    case 11:
+                        new_value = 12;
+                        break;
+                    case 12:
+                        new_value = 11;
+                        break;
+                    case 13:
+                        new_value = 13;
+                        break;
+                    case 14:
+                        new_value = 15;
+                        break;
+                    case 15:
+                        new_value = 14;
+                        break;
+                    default:
+                        new_value = map_sprite_bridge_at(grid_offset);
                 }
                 map_sprite_bridge_set(grid_offset, new_value);
             }
@@ -347,8 +366,7 @@ void map_bridge_update_after_rotate(int counter_clockwise)
     }
 }
 
-int map_bridge_height(int grid_offset)
-{
+int map_bridge_height(int grid_offset) {
     int sprite = map_sprite_bridge_at(grid_offset);
     if (sprite <= 6) {
         // low bridge

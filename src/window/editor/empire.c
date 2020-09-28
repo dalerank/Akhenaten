@@ -28,11 +28,11 @@ static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
 
 static arrow_button arrow_buttons_empire[] = {
-    {8, 48, 17, 24, button_change_empire, 1, 0},
-    {32, 48, 15, 24, button_change_empire, 0, 0}
+        {8,  48, 17, 24, button_change_empire, 1, 0},
+        {32, 48, 15, 24, button_change_empire, 0, 0}
 };
 static generic_button generic_button_ok[] = {
-    {84, 48, 100, 24, button_ok, button_none, 0, 0}
+        {84, 48, 100, 24, button_ok, button_none, 0, 0}
 };
 
 static struct {
@@ -46,30 +46,26 @@ static struct {
     int show_battle_objects;
 } data;
 
-static void init(void)
-{
+static void init(void) {
     data.selected_button = 0;
     int selected_object = empire_selected_object();
     if (selected_object)
         data.selected_city = empire_city_get_for_object(selected_object - 1);
- else {
+    else {
         data.selected_city = 0;
     }
     data.focus_button_id = 0;
 }
 
-static int map_viewport_width(void)
-{
+static int map_viewport_width(void) {
     return data.x_max - data.x_min - 32;
 }
 
-static int map_viewport_height(void)
-{
+static int map_viewport_height(void) {
     return data.y_max - data.y_min - 136;
 }
 
-static void draw_paneling(void)
-{
+static void draw_paneling(void) {
     int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
@@ -103,8 +99,7 @@ static void draw_paneling(void)
     graphics_reset_clip_rectangle();
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     int s_width = screen_width();
     int s_height = screen_height();
     data.x_min = s_width <= MAX_WIDTH ? 0 : (s_width - MAX_WIDTH) / 2;
@@ -118,23 +113,21 @@ static void draw_background(void)
     draw_paneling();
 }
 
-static void draw_shadowed_number(int value, int x, int y, color_t color)
-{
+static void draw_shadowed_number(int value, int x, int y, color_t color) {
     text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
     text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
 }
 
-static void draw_empire_object(const empire_object *obj)
-{
+static void draw_empire_object(const empire_object *obj) {
     int x = obj->x;
     int y = obj->y;
     int image_id = obj->image_id;
 
     if (!data.show_battle_objects && (
-        obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
-        obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
-        obj->type == EMPIRE_OBJECT_ENEMY_ARMY))
-            return;
+            obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
+            obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
+            obj->type == EMPIRE_OBJECT_ENEMY_ARMY))
+        return;
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
@@ -142,25 +135,26 @@ static void draw_empire_object(const empire_object *obj)
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
-        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9, COLOR_WHITE);
-        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9, COLOR_FONT_RED);
+        draw_shadowed_number(obj->invasion_path_id, data.x_draw_offset + x - 9, data.y_draw_offset + y - 9,
+                             COLOR_WHITE);
+        draw_shadowed_number(obj->invasion_years, data.x_draw_offset + x + 15, data.y_draw_offset + y - 9,
+                             COLOR_FONT_RED);
     } else if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY || obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
         draw_shadowed_number(obj->distant_battle_travel_months,
-            data.x_draw_offset + x + 7, data.y_draw_offset + y - 9,
-            obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
+                             data.x_draw_offset + x + 7, data.y_draw_offset + y - 9,
+                             obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
     const image *img = image_get(image_id);
     if (img->animation_speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
         image_draw(image_id + new_animation,
-            data.x_draw_offset + x + img->sprite_offset_x,
-            data.y_draw_offset + y + img->sprite_offset_y);
+                   data.x_draw_offset + x + img->sprite_offset_x,
+                   data.y_draw_offset + y + img->sprite_offset_y);
     }
 }
 
-static void draw_map(void)
-{
+static void draw_map(void) {
     int viewport_width = map_viewport_width();
     int viewport_height = map_viewport_height();
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, viewport_width, viewport_height);
@@ -177,8 +171,7 @@ static void draw_map(void)
     graphics_reset_clip_rectangle();
 }
 
-static void draw_resource(int resource, int trade_max, int x_offset, int y_offset)
-{
+static void draw_resource(int resource, int trade_max, int x_offset, int y_offset) {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
@@ -196,8 +189,7 @@ static void draw_resource(int resource, int trade_max, int x_offset, int y_offse
     }
 }
 
-static void draw_city_info(const empire_city *city)
-{
+static void draw_city_info(const empire_city *city) {
     int x_offset = data.x_min + 28;
     int y_offset = data.y_max - 85;
 
@@ -247,14 +239,14 @@ static void draw_city_info(const empire_city *city)
     }
 }
 
-static void draw_panel_buttons(const empire_city *city)
-{
+static void draw_panel_buttons(const empire_city *city) {
     arrow_buttons_draw(data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2);
 
     if (city)
         draw_city_info(city);
- else {
-        lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+    else {
+        lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min,
+                                FONT_NORMAL_GREEN);
     }
     lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
 
@@ -262,8 +254,7 @@ static void draw_panel_buttons(const empire_city *city)
     lang_text_draw_centered(44, 7, data.x_min + 104, data.y_max - 45, 100, FONT_NORMAL_GREEN);
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     draw_map();
 
     const empire_city *city = 0;
@@ -278,14 +269,12 @@ static void draw_foreground(void)
     draw_panel_buttons(city);
 }
 
-static int is_outside_map(int x, int y)
-{
+static int is_outside_map(int x, int y) {
     return (x < data.x_min + 16 || x >= data.x_max - 16 ||
             y < data.y_min + 16 || y >= data.y_max - 120);
 }
 
-static void determine_selected_object(const mouse *m)
-{
+static void determine_selected_object(const mouse *m) {
     if (!m->left.went_up || data.finished_scroll || is_outside_map(m->x, m->y)) {
         data.finished_scroll = 0;
         return;
@@ -294,8 +283,7 @@ static void determine_selected_object(const mouse *m)
     window_invalidate();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     pixel_offset position;
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE))
         empire_scroll_map(position.x, position.y);
@@ -319,7 +307,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     data.focus_button_id = 0;
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
-        if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1, &data.focus_button_id)) {
+        if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, generic_button_ok, 1,
+                                          &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = empire_selected_object();
             if (selected_object) {
@@ -333,25 +322,22 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_change_empire(int is_down, int param2)
-{
+static void button_change_empire(int is_down, int param2) {
     scenario_editor_change_empire(is_down ? -1 : 1);
     empire_load_editor(scenario_empire_id(), map_viewport_width(), map_viewport_height());
     window_request_refresh();
 }
 
-static void button_ok(int param1, int param2)
-{
+static void button_ok(int param1, int param2) {
     window_editor_map_show();
 }
 
-void window_editor_empire_show(void)
-{
+void window_editor_empire_show(void) {
     window_type window = {
-        WINDOW_EDITOR_EMPIRE,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_EDITOR_EMPIRE,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init();
     window_show(&window);

@@ -17,8 +17,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
-static void determine_leftmost_tile(void)
-{
+static void determine_leftmost_tile(void) {
     int orientation = city_view_orientation();
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
@@ -38,8 +37,7 @@ static void determine_leftmost_tile(void)
     }
 }
 
-void map_orientation_change(int counter_clockwise)
-{
+void map_orientation_change(int counter_clockwise) {
     map_tiles_remove_entry_exit_flags();
     game_undo_disable();
     determine_leftmost_tile();
@@ -68,12 +66,18 @@ void map_orientation_change(int counter_clockwise)
     figure_hippodrome_horse_reroute();
 }
 
-int map_orientation_for_gatehouse(int x, int y)
-{
+int map_orientation_for_gatehouse(int x, int y) {
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT: x--; break;
-        case DIR_4_BOTTOM: x--; y--; break;
-        case DIR_6_LEFT: y--; break;
+        case DIR_2_RIGHT:
+            x--;
+            break;
+        case DIR_4_BOTTOM:
+            x--;
+            y--;
+            break;
+        case DIR_6_LEFT:
+            y--;
+            break;
     }
     int grid_offset = map_grid_offset(x, y);
     int num_road_tiles_within = 0;
@@ -158,12 +162,18 @@ int map_orientation_for_gatehouse(int x, int y)
     return 0;
 }
 
-int map_orientation_for_triumphal_arch(int x, int y)
-{
+int map_orientation_for_triumphal_arch(int x, int y) {
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT: x -= 2; break;
-        case DIR_4_BOTTOM: x -= 2; y -= 2; break;
-        case DIR_6_LEFT: y -= 2; break;
+        case DIR_2_RIGHT:
+            x -= 2;
+            break;
+        case DIR_4_BOTTOM:
+            x -= 2;
+            y -= 2;
+            break;
+        case DIR_6_LEFT:
+            y -= 2;
+            break;
     }
     int num_road_tiles_top_bottom = 0;
     int num_road_tiles_left_right = 0;
@@ -187,26 +197,26 @@ int map_orientation_for_triumphal_arch(int x, int y)
     int top_offset = grid_offset + map_grid_delta(1, 0);
     if ((map_terrain_get(top_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_top_bottom++;
- else if (map_terrain_is(top_offset, TERRAIN_NOT_CLEAR))
+    else if (map_terrain_is(top_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
 
     int bottom_offset = grid_offset + map_grid_delta(1, 2);
     if ((map_terrain_get(bottom_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_top_bottom++;
- else if (map_terrain_is(bottom_offset, TERRAIN_NOT_CLEAR))
+    else if (map_terrain_is(bottom_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
 
     // road tiles left to right
     int left_offset = grid_offset + map_grid_delta(0, 1);
     if ((map_terrain_get(left_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_left_right++;
- else if (map_terrain_is(left_offset, TERRAIN_NOT_CLEAR))
+    else if (map_terrain_is(left_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
 
     int right_offset = grid_offset + map_grid_delta(2, 1);
     if ((map_terrain_get(right_offset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD)
         num_road_tiles_left_right++;
- else if (map_terrain_is(right_offset, TERRAIN_NOT_CLEAR))
+    else if (map_terrain_is(right_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;
 
     // center tile
@@ -232,8 +242,7 @@ int map_orientation_for_triumphal_arch(int x, int y)
     return 0;
 }
 
-void map_orientation_update_buildings(void)
-{
+void map_orientation_update_buildings(void) {
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -248,13 +257,13 @@ void map_orientation_update_buildings(void)
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
- else {
+                    else {
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
                     }
                 } else {
                     if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 2;
- else {
+                    else {
                         image_id = image_id_from_group(GROUP_BUILDING_TOWER) + 1;
                     }
                 }
@@ -265,27 +274,26 @@ void map_orientation_update_buildings(void)
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
- else {
+                    else {
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
                     }
                 } else {
                     if (orientation_is_top_bottom)
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
- else {
+                    else {
                         image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
-            case BUILDING_HIPPODROME:
-            {
+            case BUILDING_HIPPODROME: {
                 // get which part of the hippodrome is getting checked
 
                 int building_part;
-                if(b->prev_part_building_id == 0){
+                if (b->prev_part_building_id == 0) {
                     building_part = 0; // part 1, no previous building
-                } else if(b->next_part_building_id == 0){
+                } else if (b->next_part_building_id == 0) {
                     building_part = 2; // part 3, no next building
                 } else {
                     building_part = 1; // part 2
@@ -294,30 +302,54 @@ void map_orientation_update_buildings(void)
                 if (map_orientation == DIR_0_TOP) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
-                        case 0: image_id += 0; break; // part 1
-                        case 1: image_id += 2; break; // part 2
-                        case 2: image_id += 4; break; // part 3, same for switch cases below
+                        case 0:
+                            image_id += 0;
+                            break; // part 1
+                        case 1:
+                            image_id += 2;
+                            break; // part 2
+                        case 2:
+                            image_id += 4;
+                            break; // part 3, same for switch cases below
                     }
                 } else if (map_orientation == DIR_4_BOTTOM) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
+                        case 0:
+                            image_id += 4;
+                            break;
+                        case 1:
+                            image_id += 2;
+                            break;
+                        case 2:
+                            image_id += 0;
+                            break;
                     }
                 } else if (map_orientation == DIR_6_LEFT) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
-                        case 0: image_id += 0; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 4; break;
+                        case 0:
+                            image_id += 0;
+                            break;
+                        case 1:
+                            image_id += 2;
+                            break;
+                        case 2:
+                            image_id += 4;
+                            break;
                     }
                 } else { // DIR_2_RIGHT
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
+                        case 0:
+                            image_id += 4;
+                            break;
+                        case 1:
+                            image_id += 2;
+                            break;
+                        case 2:
+                            image_id += 0;
+                            break;
                     }
                 }
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
@@ -336,10 +368,18 @@ void map_orientation_update_buildings(void)
             case BUILDING_DOCK:
                 image_offset = (4 + b->data.dock.orientation - map_orientation / 2) % 4;
                 switch (image_offset) {
-                    case 0: image_id = image_id_from_group(GROUP_BUILDING_DOCK_1); break;
-                    case 1: image_id = image_id_from_group(GROUP_BUILDING_DOCK_2); break;
-                    case 2: image_id = image_id_from_group(GROUP_BUILDING_DOCK_3); break;
-                    default:image_id = image_id_from_group(GROUP_BUILDING_DOCK_4); break;
+                    case 0:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_1);
+                        break;
+                    case 1:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_2);
+                        break;
+                    case 2:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_3);
+                        break;
+                    default:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_4);
+                        break;
                 }
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;

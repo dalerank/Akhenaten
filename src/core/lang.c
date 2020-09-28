@@ -51,7 +51,8 @@ lang_files_collection lfcs[] = {
                 "c3_mm.rus",
                 "c3_map.eng",
                 "c3_map_mm.eng"
-        }, {
+        },
+        {
                 "Pharaoh_Text.eng",
                 "Pharaoh_MM.eng",
                 "Pharaoh_Text.rus",
@@ -61,8 +62,7 @@ lang_files_collection lfcs[] = {
         }
 };
 
-static int file_exists_in_dir(const char *dir, const char *file)
-{
+static int file_exists_in_dir(const char *dir, const char *file) {
     char path[2 * FILE_NAME_MAX];
     path[2 * FILE_NAME_MAX - 1] = 0;
     strncpy(path, dir, 2 * FILE_NAME_MAX - 1);
@@ -70,8 +70,7 @@ static int file_exists_in_dir(const char *dir, const char *file)
     strncat(path, file, 2 * FILE_NAME_MAX - 1);
     return file_exists(path, NOT_LOCALIZED);
 }
-int lang_dir_is_valid(const char *dir)
-{
+int lang_dir_is_valid(const char *dir) {
     lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG))
         return 1;
@@ -81,15 +80,13 @@ int lang_dir_is_valid(const char *dir)
 
     return 0;
 }
-static uint8_t *get_message_text(int32_t offset)
-{
+static uint8_t *get_message_text(int32_t offset) {
     if (!offset)
         return 0;
 
     return &data.message_data[offset];
 }
-static void parse_MM_file(buffer *buf)
-{
+static void parse_MM_file(buffer *buf) {
     buf->skip(24); // header
     for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
         lang_message *m = &data.message_entries[i];
@@ -131,8 +128,7 @@ static void parse_MM_file(buffer *buf)
             break;
     }
 }
-static int load_files(const char *text_filename, const char *message_filename, int localizable)
-{
+static int load_files(const char *text_filename, const char *message_filename, int localizable) {
     // load text into buffer
     buffer *buf = new buffer(BUFFER_SIZE);
     buf->init(BUFFER_SIZE);
@@ -162,21 +158,19 @@ static int load_files(const char *text_filename, const char *message_filename, i
 
     return 1;
 }
-int lang_load(int is_editor)
-{
+int lang_load(int is_editor) {
     lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (is_editor)
         return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
 
     // Prefer language files from localized dir, fall back to main dir
     return
-        load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, MUST_BE_LOCALIZED) ||
-        load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, MUST_BE_LOCALIZED) ||
-        load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, NOT_LOCALIZED) ||
-        load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, NOT_LOCALIZED);
+            load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, MUST_BE_LOCALIZED) ||
+            load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, MUST_BE_LOCALIZED) ||
+            load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, NOT_LOCALIZED) ||
+            load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, NOT_LOCALIZED);
 }
-const uint8_t *lang_get_string(int group, int index)
-{
+const uint8_t *lang_get_string(int group, int index) {
     // Add new strings
     if (GAME_ENV == ENGINE_ENV_C3) {
         if ((group == 28) && (index == 115))
@@ -197,7 +191,6 @@ const uint8_t *lang_get_string(int group, int index)
         ++str;
     return str;
 }
-const lang_message *lang_get_message(int id)
-{
+const lang_message *lang_get_message(int id) {
     return &data.message_entries[id];
 }

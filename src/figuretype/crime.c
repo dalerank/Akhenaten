@@ -28,21 +28,21 @@ static const int CRIMINAL_OFFSETS[] = {
 static void generate_rioter(building *b) {
     int x_road, y_road;
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road))
-            return;
+        return;
     city_sentiment_add_criminal();
     int people_in_mob;
     int population = city_population();
     if (population <= 150)
         people_in_mob = 1;
- else if (population <= 300)
+    else if (population <= 300)
         people_in_mob = 2;
- else if (population <= 800)
+    else if (population <= 800)
         people_in_mob = 3;
- else if (population <= 1200)
+    else if (population <= 1200)
         people_in_mob = 4;
- else if (population <= 2000)
+    else if (population <= 2000)
         people_in_mob = 5;
- else {
+    else {
         people_in_mob = 6;
     }
     int x_target, y_target;
@@ -112,7 +112,7 @@ void figure_generate_criminals(void) {
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             if (b->sentiment.house_happiness >= 50)
                 b->house_criminal_active = 0;
- else if (b->sentiment.house_happiness < min_happiness) {
+            else if (b->sentiment.house_happiness < min_happiness) {
                 min_happiness = b->sentiment.house_happiness;
                 min_building = b;
             }
@@ -126,9 +126,9 @@ void figure_generate_criminals(void) {
             if (random_byte() >= sentiment + 50) {
                 if (min_happiness <= 10)
                     generate_rioter(min_building);
- else if (min_happiness < 30)
+                else if (min_happiness < 30)
                     generate_mugger(min_building);
- else if (min_happiness < 50)
+                else if (min_happiness < 50)
                     generate_protestor(min_building);
 
             }
@@ -136,7 +136,7 @@ void figure_generate_criminals(void) {
             if (random_byte() >= sentiment + 40) {
                 if (min_happiness < 30)
                     generate_mugger(min_building);
- else if (min_happiness < 50)
+                else if (min_happiness < 50)
                     generate_protestor(min_building);
 
             }
@@ -164,7 +164,7 @@ void figure_protestor_action(figure *f) {
     }
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 4] + 104;
     }
 }
@@ -183,7 +183,7 @@ void figure_criminal_action(figure *f) {
     }
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->image_offset / 2] + 104;
     }
 }
@@ -245,20 +245,20 @@ void figure_rioter_action(figure *f) {
     int dir;
     if (f->direction == DIR_FIGURE_ATTACK)
         dir = f->attack_direction;
- else if (f->direction < 8)
+    else if (f->direction < 8)
         dir = f->direction;
- else {
+    else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
 
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
- else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset % 16];
- else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING)
+    else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING)
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * f->image_offset;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset / 2];
     }
 }

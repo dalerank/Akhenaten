@@ -29,8 +29,7 @@ static struct {
     int tail;
 } queue;
 
-static void mark_well_access(int well_id, int radius)
-{
+static void mark_well_access(int well_id, int radius) {
     building *well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
@@ -45,8 +44,7 @@ static void mark_well_access(int well_id, int radius)
     }
 }
 
-void map_water_supply_update_houses(void)
-{
+void map_water_supply_update_houses(void) {
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
@@ -55,11 +53,11 @@ void map_water_supply_update_houses(void)
 
         if (b->type == BUILDING_WELL)
             building_list_small_add(i);
- else if (b->house_size) {
+        else if (b->house_size) {
             b->has_water_access = 0;
             b->has_well_access = 0;
             if (map_terrain_exists_tile_in_area_with_type(
-                b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
+                    b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = 1;
             }
         }
@@ -71,8 +69,7 @@ void map_water_supply_update_houses(void)
     }
 }
 
-static void set_all_aqueducts_to_no_water(void)
-{
+static void set_all_aqueducts_to_no_water(void) {
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + 15;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
@@ -88,10 +85,9 @@ static void set_all_aqueducts_to_no_water(void)
     }
 }
 
-static void fill_aqueducts_from_offset(int grid_offset)
-{
+static void fill_aqueducts_from_offset(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
-            return;
+        return;
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
@@ -122,7 +118,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
                 if (!map_aqueduct_at(new_offset)) {
                     if (next_offset == -1)
                         next_offset = new_offset;
- else {
+                    else {
                         queue.items[queue.tail++] = new_offset;
                         if (queue.tail >= MAX_QUEUE)
                             queue.tail = 0;
@@ -133,7 +129,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
         }
         if (next_offset == -1) {
             if (queue.head == queue.tail)
-            return;
+                return;
             next_offset = queue.items[queue.head++];
             if (queue.head >= MAX_QUEUE)
                 queue.head = 0;
@@ -143,8 +139,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
     } while (next_offset > -1);
 }
 
-static int OFFSET(int x, int y)
-{
+static int OFFSET(int x, int y) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             return OFFSET_C3(x, y);
@@ -155,8 +150,7 @@ static int OFFSET(int x, int y)
     }
 }
 
-void map_water_supply_update_reservoir_fountain(void)
-{
+void map_water_supply_update_reservoir_fountain(void) {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
     // reservoirs
     set_all_aqueducts_to_no_water();
@@ -168,7 +162,7 @@ void map_water_supply_update_reservoir_fountain(void)
             building_list_large_add(i);
             if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER))
                 b->has_water_access = 2;
- else {
+            else {
                 b->has_water_access = 0;
             }
         }
@@ -177,7 +171,7 @@ void map_water_supply_update_reservoir_fountain(void)
     const int *reservoirs = building_list_large_items();
     // fill reservoirs from full ones
     int changed = 1;
-    const int CONNECTOR_OFFSETS[] = {OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1)};
+    const int CONNECTOR_OFFSETS[] = {OFFSET(1, -1), OFFSET(3, 1), OFFSET(1, 3), OFFSET(-1, 1)};
     while (changed == 1) {
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {
@@ -208,27 +202,26 @@ void map_water_supply_update_reservoir_fountain(void)
         int image_id;
         if (des > 60)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_4);
- else if (des > 40)
+        else if (des > 40)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_3);
- else if (des > 20)
+        else if (des > 20)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_2);
- else {
+        else {
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
         }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
-                scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-                TERRAIN_FOUNTAIN_RANGE);
+                                        scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
+                                        TERRAIN_FOUNTAIN_RANGE);
         } else {
             b->has_water_access = 0;
         }
     }
 }
 
-int map_water_supply_is_well_unnecessary(int well_id, int radius)
-{
+int map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building *well = building_get(well_id);
     int num_houses = 0;
     int x_min, y_min, x_max, y_max;

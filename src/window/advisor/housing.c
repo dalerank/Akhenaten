@@ -21,19 +21,19 @@
 static void go_back(int param1, int param2);
 
 static generic_button back_button[] = {
-    {545, 260, 60, 51, go_back, button_none, 0, 1}
+        {545, 260, 60, 51, go_back, button_none, 0, 1}
 };
 
 static int focus_button_id;
 
-static void draw_housing_table()
-{
+static void draw_housing_table() {
     int *housing_type_counts;
     int *houses_demanding_goods;
     int width;
     int y_offset = 68;
     int rows = 0;
-    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
+    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE,
+                                   TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
     int goods_icons[4] = {RESOURCE_POTTERY_C3, RESOURCE_FURNITURE, RESOURCE_OIL_C3, RESOURCE_WINE};
 
     housing_type_counts = calculate_number_of_each_housing_type();
@@ -41,8 +41,8 @@ static void draw_housing_table()
 
     for (int i = 0; i <= 11; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 70, y_offset + (20*rows), FONT_NORMAL_GREEN);
-            text_draw_number(housing_type_counts[i], '@', " ", 215, y_offset + (20*rows), FONT_NORMAL_WHITE);
+            width = lang_text_draw(29, i, 70, y_offset + (20 * rows), FONT_NORMAL_GREEN);
+            text_draw_number(housing_type_counts[i], '@', " ", 215, y_offset + (20 * rows), FONT_NORMAL_WHITE);
             rows += 1;
         }
     }
@@ -51,31 +51,30 @@ static void draw_housing_table()
 
     for (int i = 12; i <= 19; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 270, y_offset + (20*rows), FONT_NORMAL_GREEN);
-            text_draw_number(housing_type_counts[i], '@', " ", 450, y_offset + (20*rows), FONT_NORMAL_WHITE);
+            width = lang_text_draw(29, i, 270, y_offset + (20 * rows), FONT_NORMAL_GREEN);
+            text_draw_number(housing_type_counts[i], '@', " ", 450, y_offset + (20 * rows), FONT_NORMAL_WHITE);
             rows += 1;
         }
     }
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset+180, FONT_NORMAL_GREEN, 0);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset + 180, FONT_NORMAL_GREEN, 0);
     text_draw_number(calculate_total_housing_buildings(), '@', " ", 450, y_offset + 180, FONT_NORMAL_WHITE);
 
-    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset+200, FONT_NORMAL_GREEN, 0);
+    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_GREEN, 0);
     text_draw_number(city_population_open_housing_capacity(), '@', " ", 450, y_offset + 200, FONT_NORMAL_WHITE);
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset+220, FONT_NORMAL_GREEN, 0);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_GREEN, 0);
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE);
 
     for (int i = 0; i <= 3; i++) {
         image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
-        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset+263+ (23*i), FONT_NORMAL_BLACK, 0);
-        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23*i), FONT_NORMAL_BLACK);
+        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
+        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK);
     }
 
 }
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     int val;
     int width;
 
@@ -85,10 +84,10 @@ static int draw_background(void)
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 555, 265);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450+width, 25, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
 
     for (int i = 0; i < 58; i++) {
-        val = i/2;
+        val = i / 2;
         graphics_draw_vertical_line(545 + i, 260 + 50 - val, 260 + 50, COLOR_RED);
     }
 
@@ -100,8 +99,7 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     if (focus_button_id == 0)
         button_border_draw(545, 260, 60, 51, 0);
     else if (focus_button_id == 1)
@@ -109,13 +107,11 @@ static void draw_foreground(void)
 
 }
 
-static int handle_mouse(const mouse *m)
-{
+static int handle_mouse(const mouse *m) {
     return generic_buttons_handle_mouse(m, 0, 0, back_button, 1, &focus_button_id);
 }
 
-static void go_back(int param1, int param2)
-{
+static void go_back(int param1, int param2) {
     window_advisors_show_advisor(6);
     window_invalidate();
 }
@@ -124,13 +120,12 @@ static int get_tooltip_text(void) {
     return 0;
 }
 
-const advisor_window_type *window_advisor_housing(void)
-{
+const advisor_window_type *window_advisor_housing(void) {
     static const advisor_window_type window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
+            draw_background,
+            draw_foreground,
+            handle_mouse,
+            get_tooltip_text
     };
     return &window;
 }

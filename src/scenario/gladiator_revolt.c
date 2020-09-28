@@ -22,7 +22,7 @@ void scenario_gladiator_revolt_init(void) {
 
 void scenario_gladiator_revolt_process(void) {
     if (!scenario.gladiator_revolt.enabled)
-            return;
+        return;
     if (data.state == EVENT_NOT_STARTED) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0) {

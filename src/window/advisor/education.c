@@ -11,14 +11,13 @@
 
 #define ADVISOR_HEIGHT 16
 
-static int get_education_advice(void)
-{
+static int get_education_advice(void) {
     const house_demands *demands = city_houses_demands();
     if (demands->education == 1)
         return demands->requiring.school ? 1 : 0;
- else if (demands->education == 2)
+    else if (demands->education == 2)
         return demands->requiring.library ? 3 : 2;
- else if (demands->education == 3)
+    else if (demands->education == 3)
         return 4;
 
     int advice_id;
@@ -27,33 +26,32 @@ static int get_education_advice(void)
     int coverage_library = city_culture_coverage_library();
     if (!demands->requiring.school)
         advice_id = 5; // no demands yet
- else if (!demands->requiring.library) {
+    else if (!demands->requiring.library) {
         if (coverage_school >= 100 && coverage_academy >= 100)
             advice_id = 6; // education is perfect
- else if (coverage_school <= coverage_academy)
+        else if (coverage_school <= coverage_academy)
             advice_id = 7; // build more schools
- else {
+        else {
             advice_id = 8; // build more academies
         }
     } else {
         // all education needed
         if (coverage_school >= 100 && coverage_academy >= 100 && coverage_library >= 100)
             advice_id = 6;
- else if (coverage_school <= coverage_academy && coverage_school <= coverage_library)
+        else if (coverage_school <= coverage_academy && coverage_school <= coverage_library)
             advice_id = 7; // build more schools
- else if (coverage_academy <= coverage_school && coverage_academy <= coverage_library)
+        else if (coverage_academy <= coverage_school && coverage_academy <= coverage_library)
             advice_id = 8; // build more academies
- else if (coverage_library <= coverage_school && coverage_library <= coverage_academy)
+        else if (coverage_library <= coverage_school && coverage_library <= coverage_academy)
             advice_id = 9; // build more libraries
- else {
+        else {
             advice_id = 6; // unlikely event that all coverages are equal
         }
     }
     return advice_id;
 }
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 7, 10, 10);
     lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK);
@@ -83,9 +81,9 @@ static int draw_background(void)
     int pct_school = city_culture_coverage_school();
     if (pct_school == 0)
         lang_text_draw_centered(57, 10, 420, 105, 200, FONT_NORMAL_WHITE);
- else if (pct_school < 100)
+    else if (pct_school < 100)
         lang_text_draw_centered(57, pct_school / 10 + 11, 420, 105, 200, FONT_NORMAL_WHITE);
- else {
+    else {
         lang_text_draw_centered(57, 21, 420, 105, 200, FONT_NORMAL_WHITE);
     }
 
@@ -99,9 +97,9 @@ static int draw_background(void)
     int pct_academy = city_culture_coverage_academy();
     if (pct_academy == 0)
         lang_text_draw_centered(57, 10, 420, 125, 200, FONT_NORMAL_WHITE);
- else if (pct_academy < 100)
+    else if (pct_academy < 100)
         lang_text_draw_centered(57, pct_academy / 10 + 11, 420, 125, 200, FONT_NORMAL_WHITE);
- else {
+    else {
         lang_text_draw_centered(57, 21, 420, 125, 200, FONT_NORMAL_WHITE);
     }
 
@@ -115,9 +113,9 @@ static int draw_background(void)
     int pct_library = city_culture_coverage_library();
     if (pct_library == 0)
         lang_text_draw_centered(57, 10, 420, 145, 200, FONT_NORMAL_WHITE);
- else if (pct_library < 100)
+    else if (pct_library < 100)
         lang_text_draw_centered(57, pct_library / 10 + 11, 420, 145, 200, FONT_NORMAL_WHITE);
- else {
+    else {
         lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE);
     }
 
@@ -126,13 +124,12 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-const advisor_window_type *window_advisor_education(void)
-{
+const advisor_window_type *window_advisor_education(void) {
     static const advisor_window_type window = {
-        draw_background,
-        0,
-        0,
-        0
+            draw_background,
+            0,
+            0,
+            0
     };
     return &window;
 }

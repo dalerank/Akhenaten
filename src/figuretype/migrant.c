@@ -26,7 +26,7 @@ void figure_create_emigrant(building *house, int num_people) {
     city_population_remove(num_people);
     if (num_people < house->house_population)
         house->house_population -= num_people;
- else {
+    else {
         house->house_population = 0;
         building_house_change_to_vacant_lot(house);
     }
@@ -298,7 +298,7 @@ void figure_homeless_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
 
             f->wait_ticks++;

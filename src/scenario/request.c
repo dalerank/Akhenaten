@@ -72,7 +72,7 @@ void scenario_request_process(void) {
                 // request is not visible
                 int year = scenario.start_year;
                 if (!tutorial_adjust_request_year(&year))
-            return;
+                    return;
                 if (game_time_year() == year + scenario.requests[i].year &&
                     game_time_month() == scenario.requests[i].month) {
                     scenario.requests[i].visible = 1;
@@ -81,9 +81,9 @@ void scenario_request_process(void) {
 
                     if (scenario.requests[i].resource == RESOURCE_DENARII)
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
- else if (scenario.requests[i].resource == RESOURCE_TROOPS)
+                    else if (scenario.requests[i].resource == RESOURCE_TROOPS)
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
- else {
+                    else {
                         city_message_post(1, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
                     }
                 }
@@ -95,7 +95,7 @@ void scenario_request_process(void) {
 void scenario_request_dispatch(int id) {
     if (scenario.requests[id].state == REQUEST_STATE_NORMAL)
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED;
- else {
+    else {
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED_LATE;
     }
     scenario.requests[id].months_to_comply = (random_byte() & 3) + 1;
@@ -103,7 +103,7 @@ void scenario_request_dispatch(int id) {
     int amount = scenario.requests[id].amount;
     if (scenario.requests[id].resource == RESOURCE_DENARII)
         city_finance_process_sundry(amount);
- else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
+    else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS_C3, amount);
     } else {

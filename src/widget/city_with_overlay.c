@@ -33,36 +33,61 @@ static const city_overlay *overlay = 0;
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
 static const int ADJACENT_OFFSETS_C3[2][4][7] = {
-    {
-        { OFFSET_C3(-1, 0), OFFSET_C3(-1, -1),  OFFSET_C3(-1, -2), OFFSET_C3(0, -2), OFFSET_C3(1, -2) },
-        { OFFSET_C3(0, -1), OFFSET_C3(1, -1),  OFFSET_C3(2, -1), OFFSET_C3(2, 0), OFFSET_C3(2, 1) },
-        { OFFSET_C3(1, 0), OFFSET_C3(1, 1),  OFFSET_C3(1, 2), OFFSET_C3(0, 2), OFFSET_C3(-1, 2)},
-        { OFFSET_C3(0, 1), OFFSET_C3(-1, 1),  OFFSET_C3(-2, 1), OFFSET_C3(-2, 0), OFFSET_C3(-2, -1) }
-    },
-    {
-        { OFFSET_C3(-1, 0), OFFSET_C3(-1, -1),  OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3),  OFFSET_C3(1, -3), OFFSET_C3(2, -3) },
-        { OFFSET_C3(0, -1), OFFSET_C3(1, -1),  OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(3, 0),  OFFSET_C3(3, 1), OFFSET_C3(3, 2) },
-        { OFFSET_C3(1, 0), OFFSET_C3(1, 1),  OFFSET_C3(1, 2), OFFSET_C3(1, 3), OFFSET_C3(0, 3),  OFFSET_C3(-1, 3), OFFSET_C3(-2, 3) },
-        { OFFSET_C3(0, 1), OFFSET_C3(-1, 1),  OFFSET_C3(-2, 1), OFFSET_C3(-3, 1), OFFSET_C3(-3, 0),  OFFSET_C3(-3, -1), OFFSET_C3(-3, -2) }
-    }
+        {
+                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2),  OFFSET_C3(1, -2)},
+                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1)},
+                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(0, 2), OFFSET_C3(-1, 2)},
+                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-2, 0), OFFSET_C3(-2, -1)}
+        },
+        {
+                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3), OFFSET_C3(
+                                                                                                                      1,
+                                                                                                                      -3), OFFSET_C3(
+                                                                                                                                   2,
+                                                                                                                                   -3)},
+                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(3, 0), OFFSET_C3(3,
+                                                                                                                    1), OFFSET_C3(
+                                                                                                                                3,
+                                                                                                                                2)},
+                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(1, 3), OFFSET_C3(0, 3), OFFSET_C3(-1,
+                                                                                                                3), OFFSET_C3(
+                                                                                                                            -2,
+                                                                                                                            3)},
+                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-3, 1), OFFSET_C3(-3, 0), OFFSET_C3(-3,
+                                                                                                                    -1), OFFSET_C3(
+                                                                                                                                 -3,
+                                                                                                                                 -2)}
+        }
 };
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
-    {
-        { OFFSET_PH(-1, 0), OFFSET_PH(-1, -1),  OFFSET_PH(-1, -2), OFFSET_PH(0, -2), OFFSET_PH(1, -2) },
-        { OFFSET_PH(0, -1), OFFSET_PH(1, -1),  OFFSET_PH(2, -1), OFFSET_PH(2, 0), OFFSET_PH(2, 1) },
-        { OFFSET_PH(1, 0), OFFSET_PH(1, 1),  OFFSET_PH(1, 2), OFFSET_PH(0, 2), OFFSET_PH(-1, 2)},
-        { OFFSET_PH(0, 1), OFFSET_PH(-1, 1),  OFFSET_PH(-2, 1), OFFSET_PH(-2, 0), OFFSET_PH(-2, -1) }
-    },
-    {
-        { OFFSET_PH(-1, 0), OFFSET_PH(-1, -1),  OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3),  OFFSET_PH(1, -3), OFFSET_PH(2, -3) },
-        { OFFSET_PH(0, -1), OFFSET_PH(1, -1),  OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(3, 0),  OFFSET_PH(3, 1), OFFSET_PH(3, 2) },
-        { OFFSET_PH(1, 0), OFFSET_PH(1, 1),  OFFSET_PH(1, 2), OFFSET_PH(1, 3), OFFSET_PH(0, 3),  OFFSET_PH(-1, 3), OFFSET_PH(-2, 3) },
-        { OFFSET_PH(0, 1), OFFSET_PH(-1, 1),  OFFSET_PH(-2, 1), OFFSET_PH(-3, 1), OFFSET_PH(-3, 0),  OFFSET_PH(-3, -1), OFFSET_PH(-3, -2) }
-    }
+        {
+                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2),  OFFSET_PH(1, -2)},
+                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1)},
+                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(0, 2), OFFSET_PH(-1, 2)},
+                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-2, 0), OFFSET_PH(-2, -1)}
+        },
+        {
+                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3), OFFSET_PH(
+                                                                                                                      1,
+                                                                                                                      -3), OFFSET_PH(
+                                                                                                                                   2,
+                                                                                                                                   -3)},
+                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(3, 0), OFFSET_PH(3,
+                                                                                                                    1), OFFSET_PH(
+                                                                                                                                3,
+                                                                                                                                2)},
+                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(1, 3), OFFSET_PH(0, 3), OFFSET_PH(-1,
+                                                                                                                3), OFFSET_PH(
+                                                                                                                            -2,
+                                                                                                                            3)},
+                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-3, 1), OFFSET_PH(-3, 0), OFFSET_PH(-3,
+                                                                                                                    -1), OFFSET_PH(
+                                                                                                                                 -3,
+                                                                                                                                 -2)}
+        }
 };
 
-static const city_overlay *get_city_overlay(void)
-{
+static const city_overlay *get_city_overlay(void) {
     switch (game_state_overlay()) {
         case OVERLAY_FIRE:
             return city_overlay_for_fire();
@@ -115,21 +140,18 @@ static const city_overlay *get_city_overlay(void)
     }
 }
 
-static int select_city_overlay(void)
-{
+static int select_city_overlay(void) {
     if (!overlay || overlay->type != game_state_overlay())
         overlay = get_city_overlay();
 
     return overlay != 0;
 }
 
-void city_with_overlay_update(void)
-{
+void city_with_overlay_update(void) {
     select_city_overlay();
 }
 
-static int is_drawable_farmhouse(int grid_offset, int map_orientation)
-{
+static int is_drawable_farmhouse(int grid_offset, int map_orientation) {
     if (!map_property_is_draw_tile(grid_offset))
         return 0;
 
@@ -149,8 +171,7 @@ static int is_drawable_farmhouse(int grid_offset, int map_orientation)
     return 0;
 }
 
-static int is_drawable_farm_corner(int grid_offset)
-{
+static int is_drawable_farm_corner(int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         return 0;
 
@@ -159,18 +180,17 @@ static int is_drawable_farm_corner(int grid_offset)
     int xy = map_property_multi_tile_xy(grid_offset);
     if (map_orientation == DIR_0_TOP && xy == EDGE_X0Y2)
         return 1;
- else if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0)
+    else if (map_orientation == DIR_2_RIGHT && xy == EDGE_X0Y0)
         return 1;
- else if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X2Y0)
+    else if (map_orientation == DIR_4_BOTTOM && xy == EDGE_X2Y0)
         return 1;
- else if (map_orientation == DIR_6_LEFT && xy == EDGE_X2Y2)
+    else if (map_orientation == DIR_6_LEFT && xy == EDGE_X2Y2)
         return 1;
 
     return 0;
 }
 
-static int draw_building_as_deleted(building *b)
-{
+static int draw_building_as_deleted(building *b) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
@@ -178,13 +198,11 @@ static int draw_building_as_deleted(building *b)
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
 
-static int is_multi_tile_terrain(int grid_offset)
-{
+static int is_multi_tile_terrain(int grid_offset) {
     return !map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1;
 }
 
-static int has_adjacent_deletion(int grid_offset)
-{
+static int has_adjacent_deletion(int grid_offset) {
     int size = map_property_multi_tile_size(grid_offset);
     int total_adjacent_offsets = size * 2 + 1;
     const int *adjacent_offset;
@@ -206,91 +224,93 @@ static int has_adjacent_deletion(int grid_offset)
     return 0;
 }
 
-static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset, color_t color_mask)
-{
+static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset, color_t color_mask) {
     int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY) + image_offset;
     if (b->house_size)
         image_base += 4;
 
     if (b->size == 1)
         image_draw_isometric_footprint_from_draw_tile(image_base, x, y, color_mask);
- else if (b->size == 2) {
+    else if (b->size == 2) {
         const int x_tile_offset[] = {30, 0, 60, 30};
         const int y_tile_offset[] = {-15, 0, 0, 15};
         for (int i = 0; i < 4; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
+            image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i],
+                                                          color_mask);
         }
     } else if (b->size == 3) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
         const int x_tile_offset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
         const int y_tile_offset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
         for (int i = 0; i < 9; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                          y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 4) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
         const int x_tile_offset[] = {
-            90,
-            60, 120,
-            30, 90, 150,
-            0, 60, 120, 180,
-            30, 90, 150,
-            60, 120,
-            90
+                90,
+                60, 120,
+                30, 90, 150,
+                0, 60, 120, 180,
+                30, 90, 150,
+                60, 120,
+                90
         };
         const int y_tile_offset[] = {
-            -45,
-            -30, -30,
-            -15, -15, -15,
-            0, 0, 0, 0,
-            15, 15, 15,
-            30, 30,
-            45
+                -45,
+                -30, -30,
+                -15, -15, -15,
+                0, 0, 0, 0,
+                15, 15, 15,
+                30, 30,
+                45
         };
         for (int i = 0; i < 16; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                          y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 5) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
         const int x_tile_offset[] = {
-            120,
-            90, 150,
-            60, 120, 180,
-            30, 90, 150, 210,
-            0, 60, 120, 180, 240,
-            30, 90, 150, 210,
-            60, 120, 180,
-            90, 150,
-            120
+                120,
+                90, 150,
+                60, 120, 180,
+                30, 90, 150, 210,
+                0, 60, 120, 180, 240,
+                30, 90, 150, 210,
+                60, 120, 180,
+                90, 150,
+                120
         };
         const int y_tile_offset[] = {
-            -60,
-            -45, -45,
-            -30, -30, -30,
-            -15, -15, -15, -15,
-            0, 0, 0, 0, 0,
-            15, 15, 15, 15,
-            30, 30, 30,
-            45, 45,
-            60
+                -60,
+                -45, -45,
+                -30, -30, -30,
+                -15, -15, -15, -15,
+                0, 0, 0, 0, 0,
+                15, 15, 15, 15,
+                30, 30, 30,
+                45, 45,
+                60
         };
         for (int i = 0; i < 25; i++) {
-            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i], y + y_tile_offset[i], color_mask);
+            image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                          y + y_tile_offset[i], color_mask);
         }
     }
 }
 
-void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset)
-{
+void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset) {
     int building_id = map_building_at(grid_offset);
     if (!building_id)
-            return;
+        return;
     building *b = building_get(building_id);
     if (overlay->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
                 image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
- else if (map_property_is_draw_tile(grid_offset))
+            else if (map_property_is_draw_tile(grid_offset))
                 image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
 
         } else {
@@ -307,33 +327,32 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     }
 }
 
-static void draw_footprint(int x, int y, int grid_offset)
-{
+static void draw_footprint(int x, int y, int grid_offset) {
     building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (overlay->draw_custom_footprint)
         overlay->draw_custom_footprint(x, y, grid_offset);
- else if (map_property_is_draw_tile(grid_offset)) {
+    else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             // display grass
             int image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-            image_draw_isometric_footprint_from_draw_tile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            image_draw_isometric_footprint_from_draw_tile(image_id, x, y,
+                                                          map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 
+            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y,
                                                           map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         } else if (terrain & TERRAIN_BUILDING)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
- else {
+        else {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
         }
     }
 }
 
-static void draw_overlay_column(int x, int y, int height, int is_red)
-{
+static void draw_overlay_column(int x, int y, int height, int is_red) {
     int image_id = image_id_from_group(GROUP_OVERLAY_COLUMN);
     if (is_red)
         image_id += 9;
@@ -354,20 +373,20 @@ static void draw_overlay_column(int x, int y, int height, int is_red)
     }
 }
 
-static void draw_building_top(int grid_offset, building *b, int x, int y)
-{
+static void draw_building_top(int grid_offset, building *b, int x, int y) {
     color_t color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
     if (building_is_farm(b->type)) {
         if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
             image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
- else if (map_property_is_draw_tile(grid_offset))
+        else if (map_property_is_draw_tile(grid_offset))
             image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
 
         return;
     }
     if (b->type == BUILDING_GRANARY) {
         const image *img = image_get(map_image_at(grid_offset));
-        image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 30 - (img->height - 90));
+        image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x,
+                   y + img->sprite_offset_y - 30 - (img->height - 90));
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400) {
             image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60);
             if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
@@ -388,15 +407,14 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
     image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
 }
 
-void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
-{
+void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
     building *b = building_get(map_building_at(grid_offset));
     if (overlay->type == OVERLAY_PROBLEMS)
         overlay_problems_prepare_building(b);
 
     if (overlay->show_building(b))
         draw_building_top(grid_offset, b, x, y);
- else {
+    else {
         int column_height = overlay->get_column_height(b);
         if (column_height != NO_COLUMN) {
             int draw = 1;
@@ -410,15 +428,14 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
     }
 }
 
-static void draw_top(int x, int y, int grid_offset)
-{
+static void draw_top(int x, int y, int grid_offset) {
     if (overlay->draw_custom_top)
         overlay->draw_custom_top(x, y, grid_offset);
- else if (map_property_is_draw_tile(grid_offset)) {
+    else if (map_property_is_draw_tile(grid_offset)) {
         if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset))
                 city_with_overlay_draw_building_top(x, y, grid_offset);
- else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+            else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 color_t color_mask = 0;
                 if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset))
                     color_mask = COLOR_MASK_RED;
@@ -430,8 +447,7 @@ static void draw_top(int x, int y, int grid_offset)
     }
 }
 
-static void draw_animation(int x, int y, int grid_offset)
-{
+static void draw_animation(int x, int y, int grid_offset) {
     int draw = 0;
     if (map_building_at(grid_offset)) {
         int btype = building_get(map_building_at(grid_offset))->type;
@@ -491,11 +507,21 @@ static void draw_animation(int x, int y, int grid_offset)
 
                     int ydiff = 0;
                     switch (map_property_multi_tile_size(grid_offset)) {
-                        case 1: ydiff = 30; break;
-                        case 2: ydiff = 45; break;
-                        case 3: ydiff = 60; break;
-                        case 4: ydiff = 75; break;
-                        case 5: ydiff = 90; break;
+                        case 1:
+                            ydiff = 30;
+                            break;
+                        case 2:
+                            ydiff = 45;
+                            break;
+                        case 3:
+                            ydiff = 60;
+                            break;
+                        case 4:
+                            ydiff = 75;
+                            break;
+                        case 5:
+                            ydiff = 90;
+                            break;
                     }
                     image_draw_masked(image_id + animation_offset,
                                       x + img->sprite_offset_x,
@@ -509,8 +535,7 @@ static void draw_animation(int x, int y, int grid_offset)
 
 }
 
-static void draw_figures(int x, int y, int grid_offset)
-{
+static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -524,8 +549,7 @@ static void draw_figures(int x, int y, int grid_offset)
     }
 }
 
-static void draw_elevated_figures(int x, int y, int grid_offset)
-{
+static void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
@@ -539,20 +563,17 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     }
 }
 
-static int should_draw_top_before_deletion(int grid_offset)
-{
+static int should_draw_top_before_deletion(int grid_offset) {
     return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
 }
 
-static void deletion_draw_terrain_top(int x, int y, int grid_offset)
-{
+static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
     if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
 
 }
 
-static void deletion_draw_animations(int x, int y, int grid_offset)
-{
+static void deletion_draw_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
         image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
@@ -562,18 +583,17 @@ static void deletion_draw_animations(int x, int y, int grid_offset)
     draw_animation(x, y, grid_offset);
 }
 
-void city_with_overlay_draw(const map_tile *tile)
-{
+void city_with_overlay_draw(const map_tile *tile) {
     if (!select_city_overlay())
-            return;
+        return;
 
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile(
-            draw_figures,
-            draw_top,
-            draw_animation
+                draw_figures,
+                draw_top,
+                draw_animation
         );
         city_building_ghost_draw(tile);
         city_view_foreach_map_tile(draw_elevated_figures);
@@ -585,23 +605,22 @@ void city_with_overlay_draw(const map_tile *tile)
     }
 }
 
-int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
-{
+int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset) {
     int overlay_type = overlay->type;
     int building_id = map_building_at(grid_offset);
     if (overlay->get_tooltip_for_building && !building_id)
         return 0;
 
     int overlay_requires_house =
-        overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE &&
-        overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY;
+            overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE &&
+            overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY;
     building *b = building_get(building_id);
     if (overlay_requires_house && !b->house_size)
         return 0;
 
     if (overlay->get_tooltip_for_building)
         return overlay->get_tooltip_for_building(c, b);
- else if (overlay->get_tooltip_for_grid_offset)
+    else if (overlay->get_tooltip_for_grid_offset)
         return overlay->get_tooltip_for_grid_offset(c, grid_offset);
 
     return 0;

@@ -31,20 +31,17 @@ static struct {
     int build_in_progress;
     int start_elevation;
     map_tile start_tile;
-} data = { 0, TOOL_GRASS, 0, 3, 0 };
+} data = {0, TOOL_GRASS, 0, 3, 0};
 
-int editor_tool_type(void)
-{
+int editor_tool_type(void) {
     return data.type;
 }
 
-int editor_tool_is_active(void)
-{
+int editor_tool_is_active(void) {
     return data.active;
 }
 
-void editor_tool_deactivate(void)
-{
+void editor_tool_deactivate(void) {
     if (editor_tool_is_updatable() && data.build_in_progress) {
         game_undo_restore_map(1);
         data.build_in_progress = 0;
@@ -53,30 +50,25 @@ void editor_tool_deactivate(void)
     }
 }
 
-void editor_tool_set_type(int type)
-{
+void editor_tool_set_type(int type) {
     editor_tool_set_with_id(type, 0);
 }
 
-void editor_tool_set_with_id(int type, int id)
-{
+void editor_tool_set_with_id(int type, int id) {
     data.active = 1;
     data.type = type;
     data.id = id;
 }
 
-int editor_tool_brush_size(void)
-{
+int editor_tool_brush_size(void) {
     return data.brush_size;
 }
 
-void editor_tool_set_brush_size(int size)
-{
+void editor_tool_set_brush_size(int size) {
     data.brush_size = size;
 }
 
-void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int dx, int dy), const void *user_data)
-{
+void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int dx, int dy), const void *user_data) {
     if (data.type == TOOL_RAISE_LAND || data.type == TOOL_LOWER_LAND) {
         for (int dy = -1; dy <= 1; dy++) {
             for (int dx = -1; dx <= 1; dx++) {
@@ -95,20 +87,17 @@ void editor_tool_foreach_brush_tile(void (*callback)(const void *user_data, int 
     }
 }
 
-int editor_tool_is_updatable(void)
-{
+int editor_tool_is_updatable(void) {
     return data.type == TOOL_ROAD;
 }
 
-int editor_tool_is_in_use(void)
-{
+int editor_tool_is_in_use(void) {
     return data.build_in_progress;
 }
 
-void editor_tool_start_use(const map_tile *tile)
-{
+void editor_tool_start_use(const map_tile *tile) {
     if (!data.active)
-            return;
+        return;
     data.build_in_progress = 1;
     data.start_elevation = map_elevation_at(tile->grid_offset);
     data.start_tile = *tile;
@@ -118,8 +107,7 @@ void editor_tool_start_use(const map_tile *tile)
     }
 }
 
-int editor_tool_is_brush(void)
-{
+int editor_tool_is_brush(void) {
     switch (data.type) {
         case TOOL_GRASS:
         case TOOL_TREES:
@@ -135,8 +123,7 @@ int editor_tool_is_brush(void)
     }
 }
 
-static int raise_land_tile(int x, int y, int grid_offset, int terrain)
-{
+static int raise_land_tile(int x, int y, int grid_offset, int terrain) {
     int elevation = map_elevation_at(grid_offset);
     if (elevation < 5 && elevation == data.start_elevation) {
         if (!(terrain & (TERRAIN_ACCESS_RAMP | TERRAIN_ELEVATION))) {
@@ -148,8 +135,7 @@ static int raise_land_tile(int x, int y, int grid_offset, int terrain)
     return terrain;
 }
 
-static int lower_land_tile(int x, int y, int grid_offset, int terrain)
-{
+static int lower_land_tile(int x, int y, int grid_offset, int terrain) {
     if (terrain & TERRAIN_ACCESS_RAMP) {
         terrain |= TERRAIN_ELEVATION;
         terrain &= ~(TERRAIN_ACCESS_RAMP);
@@ -159,20 +145,19 @@ static int lower_land_tile(int x, int y, int grid_offset, int terrain)
     int elevation = map_elevation_at(grid_offset);
     if (elevation <= 0)
         terrain &= ~(TERRAIN_ELEVATION);
- else if (elevation == data.start_elevation) {
+    else if (elevation == data.start_elevation) {
         terrain &= ~(TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
         map_elevation_set(grid_offset, elevation - 1);
     }
     return terrain;
 }
 
-static void add_terrain(const void *tile_data, int dx, int dy)
-{
+static void add_terrain(const void *tile_data, int dx, int dy) {
     const map_tile *tile = (const map_tile *) tile_data;
     int x = tile->x + dx;
     int y = tile->y + dy;
     if (!map_grid_is_inside(x, y, 1))
-            return;
+        return;
     int grid_offset = tile->grid_offset + map_grid_delta(dx, dy);
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_BUILDING) {
@@ -225,16 +210,15 @@ static void add_terrain(const void *tile_data, int dx, int dy)
     map_terrain_set(grid_offset, terrain);
 }
 
-void editor_tool_update_use(const map_tile *tile)
-{
+void editor_tool_update_use(const map_tile *tile) {
     if (!data.build_in_progress)
-            return;
+        return;
     if (data.type == TOOL_ROAD) {
         building_construction_place_road(1, data.start_tile.x, data.start_tile.y, tile->x, tile->y);
         return;
     }
     if (!editor_tool_is_brush())
-            return;
+        return;
 
     editor_tool_foreach_brush_tile(add_terrain, tile);
 
@@ -294,13 +278,12 @@ void editor_tool_update_use(const map_tile *tile)
     widget_minimap_invalidate();
 }
 
-static void place_earthquake_flag(const map_tile *tile)
-{
+static void place_earthquake_flag(const map_tile *tile) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
         if (scenario_editor_earthquake_severity())
             scenario_editor_set_earthquake_point(tile->x, tile->y);
- else {
+        else {
             city_warning_show(WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED);
         }
     } else {
@@ -308,28 +291,25 @@ static void place_earthquake_flag(const map_tile *tile)
     }
 }
 
-static void place_flag(const map_tile *tile, void (*update)(int x, int y))
-{
+static void place_flag(const map_tile *tile, void (*update)(int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(tile->x, tile->y);
- else {
+    else {
         city_warning_show(warning);
     }
 }
 
-static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int x, int y))
-{
+static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(data.id, tile->x, tile->y);
- else {
+    else {
         city_warning_show(warning);
     }
 }
 
-static void place_building(const map_tile *tile)
-{
+static void place_building(const map_tile *tile) {
     int image_id;
     int size;
     int type;
@@ -362,8 +342,7 @@ static void place_building(const map_tile *tile)
     }
 }
 
-static void update_terrain_after_elevation_changes(void)
-{
+static void update_terrain_after_elevation_changes(void) {
     map_elevation_remove_cliffs();
 
     map_image_context_reset_water();
@@ -376,8 +355,7 @@ static void update_terrain_after_elevation_changes(void)
     scenario_editor_updated_terrain();
 }
 
-static void place_access_ramp(const map_tile *tile)
-{
+static void place_access_ramp(const map_tile *tile) {
     int orientation = 0;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_AQUEDUCT);
@@ -387,7 +365,8 @@ static void place_access_ramp(const map_tile *tile)
                 map_terrain_set(grid_offset, map_terrain_get(grid_offset) & terrain_mask);
             }
         }
-        map_building_tiles_add(0, tile->x, tile->y, 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation, TERRAIN_ACCESS_RAMP);
+        map_building_tiles_add(0, tile->x, tile->y, 2, image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation,
+                               TERRAIN_ACCESS_RAMP);
 
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();
@@ -396,17 +375,15 @@ static void place_access_ramp(const map_tile *tile)
     }
 }
 
-static void place_road(const map_tile *start_tile, const map_tile *end_tile)
-{
+static void place_road(const map_tile *start_tile, const map_tile *end_tile) {
     if (building_construction_place_road(0, start_tile->x, start_tile->y, end_tile->x, end_tile->y))
         scenario_editor_updated_terrain();
 
 }
 
-void editor_tool_end_use(const map_tile *tile)
-{
+void editor_tool_end_use(const map_tile *tile) {
     if (!data.build_in_progress)
-            return;
+        return;
     data.build_in_progress = 0;
     switch (data.type) {
         case TOOL_EARTHQUAKE_POINT:

@@ -3,14 +3,12 @@
 #include "game/resource.h"
 #include "core/game_environment.h"
 
-static int is_industry_type(const building *b)
-{
+static int is_industry_type(const building *b) {
     return b->output_resource_id || b->type == BUILDING_NATIVE_CROPS
-        || b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF;
+           || b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF;
 }
 
-static void write_type_data(buffer *buf, const building *b)
-{
+static void write_type_data(buffer *buf, const building *b) {
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
             buf->write_i16(b->data.house.inventory[i]);
@@ -112,8 +110,7 @@ static void write_type_data(buffer *buf, const building *b)
     }
 }
 
-void building_state_save_to_buffer(buffer *buf, const building *b)
-{
+void building_state_save_to_buffer(buffer *buf, const building *b) {
     buf->write_u8(b->state);
     buf->write_u8(b->faction_id);
     buf->write_u8(b->unknown_value);
@@ -177,8 +174,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buf->write_u8(b->show_on_problem_overlay);
 }
 
-static void read_type_data(buffer *buf, building *b)
-{
+static void read_type_data(buffer *buf, building *b) {
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
             b->data.house.inventory[i] = buf->read_i16();
@@ -262,8 +258,7 @@ static void read_type_data(buffer *buf, building *b)
 
 #include <assert.h>
 
-void building_state_load_from_buffer(buffer *buf, building *b)
-{
+void building_state_load_from_buffer(buffer *buf, building *b) {
     int sind = buf->get_offset();
     b->state = buf->read_u8();
     b->faction_id = buf->read_u8();

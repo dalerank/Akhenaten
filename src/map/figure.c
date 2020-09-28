@@ -4,17 +4,14 @@
 
 static grid_xx figures = {0, {FS_UINT16, FS_UINT16}};
 
-int map_has_figure_at(int grid_offset)
-{
+int map_has_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&figures, grid_offset) > 0;
 }
-int map_figure_at(int grid_offset)
-{
+int map_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(&figures, grid_offset) : 0;
 }
 
-int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
-{
+int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f)) {
     if (map_grid_get(&figures, grid_offset) > 0) {
         int figure_id = map_grid_get(&figures, grid_offset);
         while (figure_id) {
@@ -24,17 +21,16 @@ int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
                 return result;
 
             if (figure_id != f->next_figure_id_on_same_tile)
-            figure_id = f->next_figure_id_on_same_tile;
-        else
-            figure_id = 0;
+                figure_id = f->next_figure_id_on_same_tile;
+            else
+                figure_id = 0;
         }
     }
     return 0;
 }
-void map_figure_add(figure *f)
-{
+void map_figure_add(figure *f) {
     if (!map_grid_is_valid_offset(f->grid_offset))
-            return;
+        return;
     f->figures_on_same_tile_index = 0;
     f->next_figure_id_on_same_tile = 0;
 
@@ -56,10 +52,9 @@ void map_figure_add(figure *f)
         map_grid_set(&figures, f->grid_offset, f->id);
     }
 }
-void map_figure_update(figure *f)
-{
+void map_figure_update(figure *f) {
     if (!map_grid_is_valid_offset(f->grid_offset))
-            return;
+        return;
     f->figures_on_same_tile_index = 0;
 
     figure *next = figure_get(map_grid_get(&figures, f->grid_offset));
@@ -73,8 +68,7 @@ void map_figure_update(figure *f)
         f->figures_on_same_tile_index = 20;
 
 }
-void map_figure_delete(figure *f)
-{
+void map_figure_delete(figure *f) {
     if (!map_grid_is_valid_offset(f->grid_offset) || !map_grid_get(&figures, f->grid_offset)) {
         f->next_figure_id_on_same_tile = 0;
         return;
@@ -93,15 +87,13 @@ void map_figure_delete(figure *f)
     }
     f->next_figure_id_on_same_tile = 0;
 }
-void map_figure_clear(void)
-{
-    map_grid_clear(&figures);}
+void map_figure_clear(void) {
+    map_grid_clear(&figures);
+}
 
-void map_figure_save_state(buffer *buf)
-{
+void map_figure_save_state(buffer *buf) {
     map_grid_save_state(&figures, buf);
 }
-void map_figure_load_state(buffer *buf)
-{
+void map_figure_load_state(buffer *buf) {
     map_grid_load_state(&figures, buf);
 }

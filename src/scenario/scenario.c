@@ -349,7 +349,7 @@ void scenario_load_state(scenario_data_buffers *data) {
         scenario.earthquake.severity = data->win_criteria->read_i32(); // 4
         if (GAME_ENV == ENGINE_ENV_C3)
             scenario.earthquake.year = data->win_criteria->read_i32(); // 4
- else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             data->win_criteria->skip(2); // 2
         scenario.win_criteria.population.enabled = data->win_criteria->read_i32(); // 4
         scenario.win_criteria.population.goal = data->win_criteria->read_i32(); // 4
@@ -511,8 +511,8 @@ void scenario_fix_patch_trade(int mission_id) { // todo: only C3
         trade_route_init(1, RESOURCE_MARBLE_C3, 15);
 }
 
-void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
-{
+void
+scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             part1->write_i32(scenario.settings.campaign_mission);
@@ -534,8 +534,8 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, b
     player_name->write_raw(scenario.settings.player_name, env_sizes().MAX_PLAYER_NAME);
     scenario_name->write_raw(scenario.scenario_name, env_sizes().MAX_SCENARIO_NAME);
 }
-void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
-{
+void
+scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             scenario.settings.campaign_mission = part1->read_i32();

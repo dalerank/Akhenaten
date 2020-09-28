@@ -17,8 +17,7 @@
 #include "map/terrain.h"
 #include "scenario/building.h"
 
-static void mark_native_land(int x, int y, int size, int radius)
-{
+static void mark_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -28,8 +27,7 @@ static void mark_native_land(int x, int y, int size, int radius)
     }
 }
 
-static int has_building_on_native_land(int x, int y, int size, int radius)
-{
+static int has_building_on_native_land(int x, int y, int size, int radius) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -41,8 +39,8 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
-		            type != BUILDING_ROADBLOCK
-		    ) {
+                    type != BUILDING_ROADBLOCK
+                        ) {
                     return 1;
                 }
             }
@@ -51,8 +49,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
     return 0;
 }
 
-static void determine_meeting_center(void)
-{
+static void determine_meeting_center(void) {
     // gather list of meeting centers
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -63,7 +60,7 @@ static void determine_meeting_center(void)
     }
     int total_meetings = building_list_small_size();
     if (total_meetings <= 0)
-            return;
+        return;
     const int *meetings = building_list_small_items();
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -84,8 +81,7 @@ static void determine_meeting_center(void)
     }
 }
 
-void map_natives_init(void)
-{
+void map_natives_init(void) {
     int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
@@ -149,8 +145,7 @@ void map_natives_init(void)
     determine_meeting_center();
 }
 
-void map_natives_init_editor(void)
-{
+void map_natives_init_editor(void) {
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
@@ -195,8 +190,7 @@ void map_natives_init_editor(void)
     }
 }
 
-void map_natives_check_land(void)
-{
+void map_natives_check_land(void) {
     map_property_clear_all_native_land();
     city_military_decrease_native_attack_duration();
 

@@ -39,8 +39,7 @@ static generic_button buttons[] = {
         {192, 300, 256, 25, button_click, button_none, 6, 0},
 };
 
-static void draw_version_string(void)
-{
+static void draw_version_string(void) {
     uint8_t version_string[100] = "Ramesses v";
     int version_prefix_length = string_length(version_string);
     int text_y = screen_height() - 30;
@@ -57,8 +56,7 @@ static void draw_version_string(void)
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 }
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_clear_screens();
     graphics_in_dialog();
     image_draw(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
@@ -67,8 +65,7 @@ static void draw_background(void)
         draw_version_string();
 
 }
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     switch (GAME_ENV) {
@@ -98,14 +95,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void confirm_exit(int accepted)
-{
+static void confirm_exit(int accepted) {
     if (accepted)
         system_exit();
 
 }
-static void button_click(int type, int param2)
-{
+static void button_click(int type, int param2) {
     if (type == 1)
         switch (GAME_ENV) {
             case ENGINE_ENV_C3:
@@ -132,7 +127,7 @@ static void button_click(int type, int param2)
     else if (type == 4)
         if (!editor_is_present() || !game_init_editor())
             window_plain_message_dialog_show(
-                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+                    TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
         else
             sound_music_play_editor();
     else if (type == 5)
@@ -141,11 +136,10 @@ static void button_click(int type, int param2)
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id))
-            return;
+        return;
     if (h->escape_pressed)
         hotkey_handle_escape();
 
@@ -153,15 +147,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 
 }
-void window_main_menu_show(int restart_music)
-{
+void window_main_menu_show(int restart_music) {
     if (restart_music)
         sound_music_play_intro();
     window_type window = {
-        WINDOW_MAIN_MENU,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_MAIN_MENU,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     window_show(&window);
 }

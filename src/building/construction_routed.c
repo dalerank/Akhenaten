@@ -13,17 +13,16 @@
 #include "map/tiles.h"
 #include "graphics/window.h"
 
-static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_int type, int *items)
-{
+static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_int type, int *items) {
     static const int direction_indices[8][4] = {
-        {0, 2, 6, 4},
-        {0, 2, 6, 4},
-        {2, 4, 0, 6},
-        {2, 4, 0, 6},
-        {4, 6, 2, 0},
-        {4, 6, 2, 0},
-        {6, 0, 4, 2},
-        {6, 0, 4, 2}
+            {0, 2, 6, 4},
+            {0, 2, 6, 4},
+            {2, 4, 0, 6},
+            {2, 4, 0, 6},
+            {4, 6, 2, 0},
+            {4, 6, 2, 0},
+            {6, 0, 4, 2},
+            {6, 0, 4, 2}
     };
     *items = 0;
     int grid_offset = map_grid_offset(x_end, y_end);
@@ -72,16 +71,15 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
     }
 }
 
-int building_construction_place_road(int measure_only, int x_start, int y_start, int x_end, int y_end)
-{
+int building_construction_place_road(int measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
     int forbidden_terrain_mask = // todo: ore rock/inundable lands
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
-        TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
-        TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
+            TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
+            TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
+            TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
     if (map_terrain_is(start_offset, forbidden_terrain_mask))
         return 0;
     if (map_terrain_is(end_offset, forbidden_terrain_mask))
@@ -89,7 +87,7 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
 
     int items_placed = 0;
     if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, x_start, y_start) &&
-            place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_ROAD, &items_placed)) {
+        place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_ROAD, &items_placed)) {
         if (!measure_only) {
             map_routing_update_land();
             window_invalidate();
@@ -97,16 +95,15 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
     }
     return items_placed;
 }
-int building_construction_place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end)
-{
+int building_construction_place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
     int forbidden_terrain_mask =
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |
-        TERRAIN_SHRUB | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
-        TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
+            TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |
+            TERRAIN_SHRUB | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
+            TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
     if (map_terrain_is(start_offset, forbidden_terrain_mask))
         return 0;
 
@@ -123,8 +120,7 @@ int building_construction_place_wall(int measure_only, int x_start, int y_start,
     }
     return items_placed;
 }
-int building_construction_place_aqueduct(int x_start, int y_start, int x_end, int y_end, int *cost)
-{
+int building_construction_place_aqueduct(int x_start, int y_start, int x_end, int y_end, int *cost) {
     game_undo_restore_map(0);
 
     int item_cost = model_get_building(BUILDING_AQUEDUCT)->cost;
@@ -150,8 +146,8 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     *cost = item_cost * num_items;
     return 1;
 }
-int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end, int *items)
-{
+int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end,
+                                                       int *items) {
     routed_int type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
     return place_routed_building(x_start, y_start, x_end, y_end, type, items);
 }

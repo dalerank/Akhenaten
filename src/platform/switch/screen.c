@@ -31,8 +31,7 @@ static struct {
     int y;
 } window_pos;
 
-int platform_screen_create(const char *title, int display_scale_percentage)
-{
+int platform_screen_create(const char *title, int display_scale_percentage) {
     int width, height;
     int fullscreen = 1;
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
@@ -54,8 +53,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
     SDL.window = SDL_CreateWindow(title,
-        0, 0,
-        width, height, flags);
+                                  0, 0,
+                                  width, height, flags);
     if (!SDL.window) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window: %s", SDL_GetError());
         return 0;
@@ -75,8 +74,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     return platform_screen_resize(SWITCH_DISPLAY_WIDTH, SWITCH_DISPLAY_HEIGHT);
 }
 
-static int create_textures(int width, int height)
-{
+static int create_textures(int width, int height) {
     if (SDL.texture_ui) {
         SDL_DestroyTexture(SDL.texture_ui);
         SDL.texture_ui = 0;
@@ -87,15 +85,15 @@ static int create_textures(int width, int height)
     }
 
     SDL.texture_ui = SDL_CreateTexture(SDL.renderer,
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-        width, height);
+                                       SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
+                                       width, height);
 
     int city_texture_error;
 
     if (config_get(CONFIG_UI_ZOOM)) {
         SDL.texture_city = SDL_CreateTexture(SDL.renderer,
-            SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-            width * 2, height * 2);
+                                             SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
+                                             width * 2, height * 2);
         city_texture_position.renderer.x = 0;
         city_texture_position.renderer.y = TOP_MENU_HEIGHT;
         city_texture_position.renderer.h = height * 2 - TOP_MENU_HEIGHT;
@@ -115,8 +113,7 @@ static int create_textures(int width, int height)
     }
 }
 
-void platform_screen_destroy(void)
-{
+void platform_screen_destroy(void) {
     if (SDL.texture_ui) {
         SDL_DestroyTexture(SDL.texture_ui);
         SDL.texture_ui = 0;
@@ -135,8 +132,7 @@ void platform_screen_destroy(void)
     }
 }
 
-int platform_screen_resize(int width, int height)
-{
+int platform_screen_resize(int width, int height) {
     setting_set_display(setting_fullscreen(), width, height);
     if (create_textures(width, height)) {
         screen_set_resolution(width, height);
@@ -146,8 +142,7 @@ int platform_screen_resize(int width, int height)
     }
 }
 
-void platform_screen_set_fullscreen(void)
-{
+void platform_screen_set_fullscreen(void) {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     int orig_w, orig_h;
     SDL_GetWindowSize(SDL.window, &orig_w, &orig_h);
@@ -162,8 +157,7 @@ void platform_screen_set_fullscreen(void)
     setting_set_display(1, mode.w, mode.h);
 }
 
-void platform_screen_set_windowed(void)
-{
+void platform_screen_set_windowed(void) {
     int width, height;
     setting_window(&width, &height);
     SDL_Log("User to windowed %d x %d\n", width, height);
@@ -173,8 +167,7 @@ void platform_screen_set_windowed(void)
     setting_set_display(0, width, height);
 }
 
-void platform_screen_set_window_size(int width, int height)
-{
+void platform_screen_set_window_size(int width, int height) {
     if (setting_fullscreen()) {
         SDL_SetWindowFullscreen(SDL.window, 0);
     }
@@ -184,21 +177,20 @@ void platform_screen_set_window_size(int width, int height)
     setting_set_display(0, width, height);
 }
 
-void platform_screen_center_window(void)
-{
+void platform_screen_center_window(void) {
     SDL_SetWindowPosition(SDL.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 }
 
-void platform_screen_render(void)
-{
+void platform_screen_render(void) {
     if (config_get(CONFIG_UI_ZOOM)) {
         SDL_RenderClear(SDL.renderer);
         city_view_get_unscaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-            &city_texture_position.renderer.w, &city_texture_position.offset.h);
+                                        &city_texture_position.renderer.w, &city_texture_position.offset.h);
         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-            &city_texture_position.offset.w, &city_texture_position.offset.h);
+                                      &city_texture_position.offset.w, &city_texture_position.offset.h);
         city_texture_position.renderer.w = city_texture_position.renderer.w * 2 + 1;
-        SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY), screen_width() * 4 * 2);
+        SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY),
+                          screen_width() * 4 * 2);
         SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
     }
     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
@@ -217,27 +209,24 @@ void platform_screen_render(void)
     SDL_RenderPresent(SDL.renderer);
 }
 
-void system_set_mouse_position(int *x, int *y)
-{
+void system_set_mouse_position(int *x, int *y) {
     *x = calc_bound(*x, 0, SWITCH_DISPLAY_WIDTH - 1);
     *y = calc_bound(*y, 0, SWITCH_DISPLAY_HEIGHT - 1);
     SDL_WarpMouseInWindow(SDL.window, *x, *y);
 }
 
-int system_is_fullscreen_only(void)
-{
+int system_is_fullscreen_only(void) {
     return 1;
 }
 
-void system_reload_textures(void)
-{
+void system_reload_textures(void) {
     int width = screen_width();
     int height = screen_height();
     create_textures(width, height);
     screen_set_resolution(width, height);
 }
 
-int system_save_screen_buffer(void *pixels)
-{
-    return SDL_RenderReadPixels(SDL.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, pixels, screen_width() * sizeof(color_t)) == 0;
+int system_save_screen_buffer(void *pixels) {
+    return SDL_RenderReadPixels(SDL.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, pixels,
+                                screen_width() * sizeof(color_t)) == 0;
 }

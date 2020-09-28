@@ -117,12 +117,12 @@ void figure_ballista_action(figure *f) {
 
 static void tower_sentry_pick_target(figure *f) {
     if (enemy_army_total_enemy_formations() <= 0)
-            return;
+        return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK ||
         f->action_state == FIGURE_ACTION_149_CORPSE)
-            return;
+        return;
     if (f->in_building_wait_ticks)
-            return;
+        return;
     f->wait_ticks_next_target++;
     if (f->wait_ticks_next_target >= 40) {
         f->wait_ticks_next_target = 0;
@@ -254,7 +254,7 @@ void figure_tower_sentry_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
- else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -282,7 +282,7 @@ void figure_tower_sentry_action(figure *f) {
     }
     if (map_terrain_is(f->grid_offset, TERRAIN_WALL))
         f->current_height = 18;
- else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE))
+    else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE))
         f->in_building_wait_ticks = 24;
 
     if (f->in_building_wait_ticks) {
@@ -300,7 +300,7 @@ void figure_tower_sentry_action(figure *f) {
         int image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY);
         if (f->attack_image_offset < 16)
             f->image_id = image_id + 96 + dir;
- else {
+        else {
             f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
         }
     } else {

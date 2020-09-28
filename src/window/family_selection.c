@@ -56,7 +56,7 @@ static image_button image_buttons[] = {
 //        {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 //};
 
-static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
+static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
 
 typedef struct {
     char extension[4];
@@ -77,8 +77,7 @@ static struct {
 
 static int double_click = 0;
 
-static void init()
-{
+static void init() {
 //    data.type = type;
 //    data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
 //    if (strlen(data.file_data->last_loaded_file) == 0) {
@@ -116,8 +115,7 @@ static void init()
 //    input_box_start(&file_name_input, data.typed_name, FILE_NAME_MAX, 0);
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     uint8_t file[FILE_NAME_MAX];
 
@@ -153,8 +151,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static const char *get_chosen_filename(void)
-{
+static const char *get_chosen_filename(void) {
     // Check if we should work with the selected file
     uint8_t selected_name[FILE_NAME_MAX];
     encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
@@ -169,8 +166,7 @@ static const char *get_chosen_filename(void)
     encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
     return typed_file;
 }
-static void button_ok_cancel(int is_ok, int param2)
-{
+static void button_ok_cancel(int is_ok, int param2) {
 //    if (!is_ok) {
 //        input_box_stop(&file_name_input);
 //        window_go_back();
@@ -236,8 +232,7 @@ static void button_ok_cancel(int is_ok, int param2)
 
 //    strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX - 1);
 }
-static void button_select_family(int index, int param2)
-{
+static void button_select_family(int index, int param2) {
 //    if (index < data.file_list->num_files) {
 //        strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);
 //        encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
@@ -250,12 +245,10 @@ static void button_select_family(int index, int param2)
 //    }
 }
 
-static void on_scroll(void)
-{
+static void on_scroll(void) {
 //    data.message_not_exist_start_time = 0;
 }
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
 //    double_click = m->left.double_click;
 //
 //    if (input_box_is_accepted(&file_name_input)) {
@@ -276,8 +269,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 //    }
 }
 
-void window_family_selection_show(void)
-{
+void window_family_selection_show(void) {
 //    window_type window = {
 //            WINDOW_FILE_DIALOG,
 //            window_draw_underlying_window,

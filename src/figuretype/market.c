@@ -44,21 +44,21 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id) {
     int num_loads;
     if (granary_units >= 800)
         num_loads = 8;
- else if (granary_units >= 700)
+    else if (granary_units >= 700)
         num_loads = 7;
- else if (granary_units >= 600)
+    else if (granary_units >= 600)
         num_loads = 6;
- else if (granary_units >= 500)
+    else if (granary_units >= 500)
         num_loads = 5;
- else if (granary_units >= 400)
+    else if (granary_units >= 400)
         num_loads = 4;
- else if (granary_units >= 300)
+    else if (granary_units >= 300)
         num_loads = 3;
- else if (granary_units >= 200)
+    else if (granary_units >= 200)
         num_loads = 2;
- else if (granary_units >= 100)
+    else if (granary_units >= 100)
         num_loads = 1;
- else {
+    else {
         num_loads = 0;
     }
     if (num_loads > max_units / 100)
@@ -99,7 +99,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id) {
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored < 2)
         num_loads = stored;
- else {
+    else {
         num_loads = 2;
     }
     if (num_loads <= 0)
@@ -158,7 +158,7 @@ void figure_market_buyer_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
 
             break;
@@ -175,11 +175,11 @@ void figure_delivery_boy_action(figure *f) {
     figure *leader = figure_get(f->leading_figure_id);
     if (f->leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
         f->state = FIGURE_STATE_DEAD;
- else {
+    else {
         if (leader->state == FIGURE_STATE_ALIVE) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
                 figure_movement_follow_ticks(f, 1);
- else {
+            else {
                 f->state = FIGURE_STATE_DEAD;
             }
         } else { // leader arrived at market, drop resource at market

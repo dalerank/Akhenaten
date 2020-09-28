@@ -55,7 +55,7 @@ static void disrupt_land_trade(void) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
                 city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
- else {
+            else {
                 city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);
             }
         }
@@ -78,9 +78,9 @@ static void contaminate_water(void) {
             int health_rate = city_health();
             if (health_rate > 80)
                 change = -50;
- else if (health_rate > 60)
+            else if (health_rate > 60)
                 change = -40;
- else {
+            else {
                 change = -25;
             }
             city_health_change(change);

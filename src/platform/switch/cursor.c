@@ -18,11 +18,11 @@ extern struct {
     SDL_Texture *texture;
 } SDL;
 
-static SDL_Texture *init_cursor(const cursor *c)
-{
-    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, CURSOR_SIZE, CURSOR_SIZE);
+static SDL_Texture *init_cursor(const cursor *c) {
+    SDL_Texture *tex = SDL_CreateTexture(SDL.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, CURSOR_SIZE,
+                                         CURSOR_SIZE);
 
-    uint32_t pixels[CURSOR_SIZE * CURSOR_SIZE] = { 0 };
+    uint32_t pixels[CURSOR_SIZE * CURSOR_SIZE] = {0};
 
     for (int y = 0; y < c->height; y++) {
         for (int x = 0; x < c->width; x++) {
@@ -46,8 +46,7 @@ static SDL_Texture *init_cursor(const cursor *c)
     return tex;
 }
 
-void platform_init_cursors(int scale_percentage)
-{
+void platform_init_cursors(int scale_percentage) {
     for (int i = 0; i < CURSOR_MAX; i++) {
         const cursor *c = input_cursor_data(i, CURSOR_SCALE_1);
         cursors[i].texture = init_cursor(c);
@@ -57,7 +56,6 @@ void platform_init_cursors(int scale_percentage)
     system_set_cursor(CURSOR_ARROW);
 }
 
-void system_set_cursor(int cursor_id)
-{
+void system_set_cursor(int cursor_id) {
     current_cursor = &cursors[cursor_id];
 }

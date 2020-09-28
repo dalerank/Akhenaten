@@ -33,8 +33,8 @@ enum {
 };
 
 static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
-    "full city %Y-%m-%d %H.%M.%S.png",
-    "city %Y-%m-%d %H.%M.%S.png",
+        "full city %Y-%m-%d %H.%M.%S.png",
+        "city %Y-%m-%d %H.%M.%S.png",
 };
 
 static struct {
@@ -50,8 +50,7 @@ static struct {
     png_infop info_ptr;
 } image;
 
-static void image_free(void)
-{
+static void image_free(void) {
     image.width = 0;
     image.height = 0;
     image.row_size = 0;
@@ -65,8 +64,7 @@ static void image_free(void)
     png_destroy_write_struct(&image.png_ptr, &image.info_ptr);
 }
 
-static int image_create(int width, int height, int rows_in_memory)
-{
+static int image_create(int width, int height, int rows_in_memory) {
     image_free();
     if (!width || !height || !rows_in_memory) {
         return 0;
@@ -94,8 +92,7 @@ static int image_create(int width, int height, int rows_in_memory)
     return 1;
 }
 
-static const char *generate_filename(int city_screenshot)
-{
+static const char *generate_filename(int city_screenshot) {
     static char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
@@ -103,8 +100,7 @@ static const char *generate_filename(int city_screenshot)
     return filename;
 }
 
-int image_begin_io(const char *filename)
-{
+int image_begin_io(const char *filename) {
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
         return 0;
@@ -114,26 +110,23 @@ int image_begin_io(const char *filename)
     return 1;
 }
 
-static int image_write_header(void)
-{
+static int image_write_header(void) {
     if (setjmp(png_jmpbuf(image.png_ptr))) {
         return 0;
     }
     png_set_IHDR(image.png_ptr, image.info_ptr, image.width, image.height, 8, PNG_COLOR_TYPE_RGB,
-                    PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_write_info(image.png_ptr, image.info_ptr);
     return 1;
 }
 
-static int image_set_loop_height_limits(int min, int max)
-{
+static int image_set_loop_height_limits(int min, int max) {
     image.current_y = min;
     image.final_y = max;
     return image.current_y;
 }
 
-static int image_request_rows(void)
-{
+static int image_request_rows(void) {
     if (image.current_y != image.final_y) {
         image.current_y += image.rows_in_memory;
         return image.rows_in_memory;
@@ -141,8 +134,7 @@ static int image_request_rows(void)
     return 0;
 }
 
-static int image_write_rows(const color_t *canvas, int canvas_width)
-{
+static int image_write_rows(const color_t *canvas, int canvas_width) {
     if (setjmp(png_jmpbuf(image.png_ptr))) {
         return 0;
     }
@@ -150,9 +142,9 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
         uint8_t *pixel = image.pixels;
         for (int x = 0; x < image.width; x++) {
             color_t input = canvas[y * canvas_width + x];
-            *(pixel + 0) = (uint8_t) ((input & 0xff0000) >> 16);
-            *(pixel + 1) = (uint8_t) ((input & 0x00ff00) >> 8);
-            *(pixel + 2) = (uint8_t) ((input & 0x0000ff) >> 0);
+            *(pixel + 0) = (uint8_t)((input & 0xff0000) >> 16);
+            *(pixel + 1) = (uint8_t)((input & 0x00ff00) >> 8);
+            *(pixel + 2) = (uint8_t)((input & 0x0000ff) >> 0);
             pixel += 3;
         }
         png_write_row(image.png_ptr, image.pixels);
@@ -160,19 +152,18 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
     return 1;
 }
 
-static int image_write_canvas(void)
-{
+static int image_write_canvas(void) {
     const color_t *canvas;
     color_t *screen_buffer = 0;
     if (config_get(CONFIG_UI_ZOOM)) {
-        screen_buffer = (color_t*)malloc(image.width * image.height * sizeof(color_t));
+        screen_buffer = (color_t *) malloc(image.width * image.height * sizeof(color_t));
         if (!system_save_screen_buffer(screen_buffer)) {
             free(screen_buffer);
             return 0;
         }
         canvas = screen_buffer;
     } else {
-        canvas = (const color_t*)graphics_canvas(CANVAS_UI);
+        canvas = (const color_t *) graphics_canvas(CANVAS_UI);
     }
     int current_height = image_set_loop_height_limits(0, image.height);
     int size;
@@ -187,13 +178,11 @@ static int image_write_canvas(void)
     return 1;
 }
 
-static void image_finish(void)
-{
+static void image_finish(void) {
     png_write_end(image.png_ptr, image.info_ptr);
 }
 
-static void create_window_screenshot(void)
-{
+static void create_window_screenshot(void) {
     int width = screen_width();
     int height = screen_height();
 
@@ -220,10 +209,9 @@ static void create_window_screenshot(void)
     image_free();
 }
 
-static void create_full_city_screenshot(void)
-{
+static void create_full_city_screenshot(void) {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))
-            return;
+        return;
     pixel_offset original_camera_pixels;
     city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
     int width = screen_width();
@@ -257,7 +245,7 @@ static void create_full_city_screenshot(void)
     int base_width = (grid_size[GAME_ENV] * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (grid_size[GAME_ENV] * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
-    map_tile dummy_tile = { 0, 0, 0 };
+    map_tile dummy_tile = {0, 0, 0};
     int error = 0;
     int current_height = image_set_loop_height_limits(min_height, max_height);
     int size;
@@ -285,8 +273,7 @@ static void create_full_city_screenshot(void)
     image_free();
 }
 
-void graphics_save_screenshot(int full_city)
-{
+void graphics_save_screenshot(int full_city) {
     if (full_city) {
         create_full_city_screenshot();
     } else {

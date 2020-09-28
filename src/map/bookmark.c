@@ -8,23 +8,20 @@
 
 static map_point bookmarks[MAX_BOOKMARKS];
 
-void map_bookmarks_clear(void)
-{
+void map_bookmarks_clear(void) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
         bookmarks[i].x = -1;
         bookmarks[i].y = -1;
     }
 }
 
-void map_bookmark_save(int number)
-{
+void map_bookmark_save(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS)
         city_view_get_camera(&bookmarks[number].x, &bookmarks[number].y);
 
 }
 
-int map_bookmark_go_to(int number)
-{
+int map_bookmark_go_to(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS) {
         int x = bookmarks[number].x;
         int y = bookmarks[number].y;
@@ -36,16 +33,14 @@ int map_bookmark_go_to(int number)
     return 0;
 }
 
-void map_bookmark_save_state(buffer *buf)
-{
+void map_bookmark_save_state(buffer *buf) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
         buf->write_i32(bookmarks[i].x);
         buf->write_i32(bookmarks[i].y);
     }
 }
 
-void map_bookmark_load_state(buffer *buf)
-{
+void map_bookmark_load_state(buffer *buf) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
         bookmarks[i].x = buf->read_i32();
         bookmarks[i].y = buf->read_i32();

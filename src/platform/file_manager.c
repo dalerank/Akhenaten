@@ -97,7 +97,7 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
 
     if (!dir || !*dir || strcmp(dir, ".") == 0)
         current_dir = CURRENT_DIR;
- else {
+    else {
         current_dir = set_dir_name(dir);
     }
     fs_dir_type *d = fs_dir_open(current_dir);

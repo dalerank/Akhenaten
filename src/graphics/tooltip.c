@@ -37,13 +37,11 @@ static struct {
     color_t *buffer;
 } button_tooltip_info;
 
-static void reset_timer(void)
-{
+static void reset_timer(void) {
     last_update = time_get_millis();
 }
 
-static int should_draw_tooltip(tooltip_context *c)
-{
+static int should_draw_tooltip(tooltip_context *c) {
     if (c->type == TOOLTIP_NONE) {
         reset_timer();
         return 0;
@@ -58,29 +56,26 @@ static int should_draw_tooltip(tooltip_context *c)
     return 1;
 }
 
-static void reset_tooltip(tooltip_context *c)
-{
+static void reset_tooltip(tooltip_context *c) {
     if (c->type != TOOLTIP_NONE)
         c->type = TOOLTIP_NONE;
 
 }
 
-static void restore_window_under_tooltip_from_buffer(void)
-{
+static void restore_window_under_tooltip_from_buffer(void) {
     if (button_tooltip_info.is_active) {
         graphics_draw_from_buffer(
-            button_tooltip_info.x, button_tooltip_info.y,
-            button_tooltip_info.width, button_tooltip_info.height,
-            button_tooltip_info.buffer);
+                button_tooltip_info.x, button_tooltip_info.y,
+                button_tooltip_info.width, button_tooltip_info.height,
+                button_tooltip_info.buffer);
     }
 }
 
-static void save_window_under_tooltip_to_buffer(int x, int y, int width, int height)
-{
+static void save_window_under_tooltip_to_buffer(int x, int y, int width, int height) {
     if (button_tooltip_info.is_active &&
         x == button_tooltip_info.x && y == button_tooltip_info.y &&
         width == button_tooltip_info.width && height == button_tooltip_info.height)
-            return;
+        return;
     restore_window_under_tooltip_from_buffer();
     button_tooltip_info.is_active = 1;
     button_tooltip_info.x = x;
@@ -91,13 +86,12 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
     if (buffer_size > button_tooltip_info.buffer_size) {
         button_tooltip_info.buffer_size = buffer_size;
         free(button_tooltip_info.buffer);
-        button_tooltip_info.buffer = (color_t *)malloc(buffer_size * sizeof(color_t));
+        button_tooltip_info.buffer = (color_t *) malloc(buffer_size * sizeof(color_t));
     }
     graphics_save_to_buffer(x, y, width, height, button_tooltip_info.buffer);
 }
 
-static void draw_button_tooltip(tooltip_context *c)
-{
+static void draw_button_tooltip(tooltip_context *c) {
     const uint8_t *text = lang_get_string(c->text_group, c->text_id);
 
     int width = 200;
@@ -112,7 +106,7 @@ static void draw_button_tooltip(tooltip_context *c)
     if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
         if (window_is(WINDOW_ADVISORS))
             x = c->mouse_x + 50;
- else {
+        else {
             x = c->mouse_x + 20;
         }
     } else {
@@ -124,10 +118,18 @@ static void draw_button_tooltip(tooltip_context *c)
             if (c->mouse_y < screen_dialog_offset_y() + 432) {
                 y = c->mouse_y;
                 switch (window_advisors_get_advisor()) {
-                    case ADVISOR_LABOR: y -= 74; break;
-                    case ADVISOR_TRADE: y -= 54; break;
-                    case ADVISOR_POPULATION: y -= 58; break;
-                    default: y -= 64; break;
+                    case ADVISOR_LABOR:
+                        y -= 74;
+                        break;
+                    case ADVISOR_TRADE:
+                        y -= 54;
+                        break;
+                    case ADVISOR_POPULATION:
+                        y -= 58;
+                        break;
+                    default:
+                        y -= 64;
+                        break;
                 }
             } else {
                 y = screen_dialog_offset_y() + 432;
@@ -143,14 +145,14 @@ static void draw_button_tooltip(tooltip_context *c)
             x = c->mouse_x - width / 2 - 10;
             if (c->mouse_y < screen_dialog_offset_y() + 200)
                 y = c->mouse_y + 40;
- else {
+            else {
                 y = c->mouse_y - 72;
             }
             break;
         default:
             if (c->mouse_y < screen_dialog_offset_y() + 200)
                 y = c->mouse_y + 40;
- else {
+            else {
                 y = c->mouse_y - 62;
             }
             break;
@@ -163,8 +165,7 @@ static void draw_button_tooltip(tooltip_context *c)
     text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
-static void draw_overlay_tooltip(tooltip_context *c)
-{
+static void draw_overlay_tooltip(tooltip_context *c) {
     const uint8_t *text = lang_get_string(c->text_group, c->text_id);
     if (c->has_numeric_prefix) {
         int offset = string_from_int(overlay_string, c->numeric_prefix, 0);
@@ -198,14 +199,14 @@ static void draw_overlay_tooltip(tooltip_context *c)
     int x, y;
     if (c->mouse_x < width + 20)
         x = c->mouse_x + 20;
- else {
+    else {
         x = c->mouse_x - width - 20;
     }
     if (c->mouse_y < 200)
         y = c->mouse_y + 50;
- else if (c->mouse_y + height - 72 > screen_height())
+    else if (c->mouse_y + height - 72 > screen_height())
         y = screen_height() - height;
- else {
+    else {
         y = c->mouse_y - 72;
     }
 
@@ -216,21 +217,20 @@ static void draw_overlay_tooltip(tooltip_context *c)
     text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
-static void draw_senate_tooltip(tooltip_context *c)
-{
+static void draw_senate_tooltip(tooltip_context *c) {
     int x, y;
     int width = 220;
     int height = 80;
     if (c->mouse_x < width + 20)
         x = c->mouse_x + 20;
- else {
+    else {
         x = c->mouse_x - width - 20;
     }
     if (c->mouse_y < 200)
         y = c->mouse_y + 10;
- else if (c->mouse_y + height - 32 > screen_height())
+    else if (c->mouse_y + height - 32 > screen_height())
         y = screen_height() - height;
- else {
+    else {
         y = c->mouse_y - 32;
     }
 
@@ -242,45 +242,45 @@ static void draw_senate_tooltip(tooltip_context *c)
     // unemployment
     lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     width = text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
-        x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                     x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
-        x + 140 + width, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140 + width, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     // ratings
     lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_culture(), '@', " ",
-        x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_culture_enabled()) {
         text_draw_number_colored(scenario_criteria_culture(), '(', ")",
-            x + 140 + width, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_prosperity(), '@', " ",
-        x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_prosperity_enabled()) {
         text_draw_number_colored(scenario_criteria_prosperity(), '(', ")",
-            x + 140 + width, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_peace(), '@', " ",
-        x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_peace_enabled()) {
         text_draw_number_colored(scenario_criteria_peace(), '(', ")",
-            x + 140 + width, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_favor(), '@', " ",
-        x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_favor_enabled()) {
         text_draw_number_colored(scenario_criteria_favor(), '(', ")",
-            x + 140 + width, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 }
 
-static void draw_tile_tooltip(tooltip_context * c){
+static void draw_tile_tooltip(tooltip_context *c) {
     view_tile view;
     if (city_view_pixels_to_view_tile(c->mouse_x, c->mouse_y, &view)) {
         int grid_offset = city_view_tile_to_grid_offset(&view);
@@ -293,14 +293,14 @@ static void draw_tile_tooltip(tooltip_context * c){
         int height = 40;
         if (c->mouse_x < width + 20)
             x = c->mouse_x + 20;
- else {
+        else {
             x = c->mouse_x - width - 20;
         }
         if (c->mouse_y < 40)
             y = c->mouse_y + 10;
- else if (c->mouse_y + height - 32 > screen_height())
+        else if (c->mouse_y + height - 32 > screen_height())
             y = screen_height() - height;
- else {
+        else {
             y = c->mouse_y - 32;
         }
 
@@ -309,17 +309,16 @@ static void draw_tile_tooltip(tooltip_context * c){
         graphics_draw_rect(x, y, width, height, COLOR_BLACK);
         graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
         text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-        text_draw_label_and_number("y: ", y_tile, " ", x + 2 , y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+        text_draw_label_and_number("y: ", y_tile, " ", x + 2, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 }
 
-static void draw_tooltip(tooltip_context *c)
-{
+static void draw_tooltip(tooltip_context *c) {
     if (c->type == TOOLTIP_BUTTON)
         draw_button_tooltip(c);
- else if (c->type == TOOLTIP_OVERLAY)
+    else if (c->type == TOOLTIP_OVERLAY)
         draw_overlay_tooltip(c);
- else if(c->type == TOOLTIP_TILES) {
+    else if (c->type == TOOLTIP_TILES) {
         draw_tile_tooltip(c);
     } else if (c->type == TOOLTIP_SENATE)
         draw_senate_tooltip(c);
@@ -327,13 +326,11 @@ static void draw_tooltip(tooltip_context *c)
 
 }
 
-void tooltip_invalidate(void)
-{
+void tooltip_invalidate(void) {
     button_tooltip_info.is_active = 0;
 }
 
-void tooltip_handle(const mouse *m, void (*func)(tooltip_context *))
-{
+void tooltip_handle(const mouse *m, void (*func)(tooltip_context *)) {
     if (m->is_touch && !m->left.is_down) {
         reset_timer();
         return;

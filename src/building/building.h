@@ -164,8 +164,8 @@ void building_update_highest_id(void);
 void building_update_state(void);
 void building_update_desirability(void);
 
-int building_mothball_toggle(building* b);
-int building_mothball_set(building* b, int value);
+int building_mothball_toggle(building *b);
+int building_mothball_set(building *b, int value);
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever);
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever);

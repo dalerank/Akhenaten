@@ -4,12 +4,12 @@
 #include "input/mouse.h"
 
 static int TOP_MENU_HEIGHT[] = {
-    24,
-    30
+        24,
+        30
 };
 static int SIDEBAR_EXPANDED_WIDTH[] = {
-    162,
-    162 + 24
+        162,
+        162 + 24
 };
 
 typedef struct {

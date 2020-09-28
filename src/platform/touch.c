@@ -11,16 +11,14 @@ static SDL_FingerID touch_id[MAX_ACTIVE_TOUCHES];
 static SDL_TouchID trackpad_id;
 #endif
 
-static touch_coords get_touch_coordinates(float x, float y)
-{
+static touch_coords get_touch_coordinates(float x, float y) {
     touch_coords coords;
-    coords.x = (int)(x * screen_width());
-    coords.y = (int)(y * screen_height());
+    coords.x = (int) (x * screen_width());
+    coords.y = (int) (y * screen_height());
     return coords;
 }
 
-static int get_touch_index(SDL_FingerID id)
-{
+static int get_touch_index(SDL_FingerID id) {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (touch_id[i] == id && touch_in_use(i))
             return i;
@@ -29,8 +27,7 @@ static int get_touch_index(SDL_FingerID id)
     return MAX_ACTIVE_TOUCHES;
 }
 
-void platform_touch_start(SDL_TouchFingerEvent *event)
-{
+void platform_touch_start(SDL_TouchFingerEvent *event) {
 #ifdef __APPLE__
     // Attempt to disable trackpad touches on MacOS
     if (!trackpad_id)
@@ -49,12 +46,10 @@ void platform_touch_start(SDL_TouchFingerEvent *event)
 
 }
 
-void platform_touch_move(SDL_TouchFingerEvent *event)
-{
+void platform_touch_move(SDL_TouchFingerEvent *event) {
     touch_move(get_touch_index(event->fingerId), get_touch_coordinates(event->x, event->y), event->timestamp);
 }
 
-void platform_touch_end(SDL_TouchFingerEvent *event)
-{
+void platform_touch_end(SDL_TouchFingerEvent *event) {
     touch_end(get_touch_index(event->fingerId), event->timestamp);
 }

@@ -18,27 +18,23 @@ static struct {
     struct record industry[36];
 } data;
 
-static void clear_counters(void)
-{
+static void clear_counters(void) {
     memset(&data, 0, sizeof(data));
 }
-static void increase_count(int type, int active)
-{
+static void increase_count(int type, int active) {
     ++data.buildings[type].total;
     if (active)
         ++data.buildings[type].active;
 
 }
-static void increase_industry_count(int resource, int active)
-{
+static void increase_industry_count(int resource, int active) {
     ++data.industry[resource].total;
     if (active)
         ++data.industry[resource].active;
 
 }
 
-static void limit_hippodrome(void)
-{
+static void limit_hippodrome(void) {
     if (data.buildings[BUILDING_HIPPODROME].total > 1)
         data.buildings[BUILDING_HIPPODROME].total = 1;
 
@@ -47,8 +43,7 @@ static void limit_hippodrome(void)
 
 }
 
-void building_count_update(void)
-{
+void building_count_update(void) {
     clear_counters();
     city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();
@@ -81,36 +76,36 @@ void building_count_update(void)
                 city_health_add_hospital_workers(b->num_workers);
                 break;
 
-            // water
+                // water
             case BUILDING_RESERVOIR:
             case BUILDING_FOUNTAIN:
                 increase_count(type, b->has_water_access);
                 break;
 
-            // DEFAULT TREATMENT
-            // education
+                // DEFAULT TREATMENT
+                // education
             case BUILDING_SCHOOL:
             case BUILDING_LIBRARY:
             case BUILDING_ACADEMY:
-            // health
+                // health
             case BUILDING_BARBER:
             case BUILDING_BATHHOUSE:
             case BUILDING_DOCTOR:
-            // government
+                // government
             case BUILDING_FORUM:
             case BUILDING_FORUM_UPGRADED:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
-            // entertainment schools
+                // entertainment schools
             case BUILDING_ACTOR_COLONY:
             case BUILDING_GLADIATOR_SCHOOL:
             case BUILDING_LION_HOUSE:
             case BUILDING_CHARIOT_MAKER:
-            // distribution
+                // distribution
             case BUILDING_MARKET:
-            // military
+                // military
             case BUILDING_MILITARY_ACADEMY:
-            // religion
+                // religion
             case BUILDING_SMALL_TEMPLE_CERES:
             case BUILDING_SMALL_TEMPLE_NEPTUNE:
             case BUILDING_SMALL_TEMPLE_MERCURY:
@@ -125,7 +120,7 @@ void building_count_update(void)
                 increase_count(type, b->num_workers > 0);
                 break;
 
-            // industry
+                // industry
             case BUILDING_WHEAT_FARM:
                 increase_industry_count(RESOURCE_WHEAT, b->num_workers > 0);
                 break;
@@ -172,7 +167,7 @@ void building_count_update(void)
                 increase_industry_count(RESOURCE_POTTERY_C3, b->num_workers > 0);
                 break;
 
-            // water-side
+                // water-side
             case BUILDING_WHARF:
                 if (b->num_workers > 0)
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
@@ -208,24 +203,20 @@ void building_count_update(void)
     }
     limit_hippodrome();
 }
-int building_count_active(int type)
-{
+int building_count_active(int type) {
     return data.buildings[type].active;
 }
-int building_count_total(int type)
-{
+int building_count_total(int type) {
     return data.buildings[type].total;
 }
-int building_count_industry_active(int resource)
-{
+int building_count_industry_active(int resource) {
     return data.industry[resource].active;
 }
-int building_count_industry_total(int resource)
-{
+int building_count_industry_total(int resource) {
     return data.industry[resource].total;
 }
-void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
-{
+void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military,
+                               buffer *support) {
     // industry
     for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         industry->write_i32(data.industry[i].total);
@@ -305,8 +296,8 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     support->write_i32(data.buildings[BUILDING_FOUNTAIN].total);
     support->write_i32(data.buildings[BUILDING_FOUNTAIN].active);
 }
-void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
-{
+void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military,
+                               buffer *support) {
     // industry
     for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         data.industry[i].total = industry->read_i32();

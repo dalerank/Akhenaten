@@ -6,24 +6,21 @@
 #include "map/orientation.h"
 #include "widget/minimap.h"
 
-void game_orientation_rotate_left(void)
-{
+void game_orientation_rotate_left(void) {
     city_view_rotate_left();
     map_orientation_change(0);
     widget_minimap_invalidate();
     city_warning_show(WARNING_ORIENTATION);
 }
 
-void game_orientation_rotate_right(void)
-{
+void game_orientation_rotate_right(void) {
     city_view_rotate_right();
     map_orientation_change(1);
     widget_minimap_invalidate();
     city_warning_show(WARNING_ORIENTATION);
 }
 
-void game_orientation_rotate_north(void)
-{
+void game_orientation_rotate_north(void) {
     switch (city_view_orientation()) {
         case DIR_2_RIGHT:
             city_view_rotate_right();

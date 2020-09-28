@@ -25,8 +25,7 @@ static uint16_t ime_initial_text_utf16[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 static uint16_t ime_input_text_utf16[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 static char ime_input_text_utf8[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 
-static int init_ime_dialog(const char *title, const char *initial_text, int max_text_length, int type, int option)
-{
+static int init_ime_dialog(const char *title, const char *initial_text, int max_text_length, int type, int option) {
     if (ime_dialog_running) {
         return -1;
     }
@@ -77,7 +76,8 @@ static int update_ime_dialog(void) {
         sceImeDialogGetResult(&result);
 
         if ((ime_dialog_option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) ||
-        (ime_dialog_option != SCE_IME_OPTION_MULTILINE && (result.button == SCE_IME_DIALOG_BUTTON_ENTER || result.button == SCE_IME_DIALOG_BUTTON_CLOSE))) {
+            (ime_dialog_option != SCE_IME_OPTION_MULTILINE &&
+             (result.button == SCE_IME_DIALOG_BUTTON_ENTER || result.button == SCE_IME_DIALOG_BUTTON_CLOSE))) {
             // Convert UTF16 to UTF8
             encoding_utf16_to_utf8(ime_input_text_utf16, ime_input_text_utf8);
         } else {
@@ -92,13 +92,12 @@ static int update_ime_dialog(void) {
     return status;
 }
 
-char *vita_keyboard_get(const char *title, const char *initial_text, int max_len)
-{
+char *vita_keyboard_get(const char *title, const char *initial_text, int max_len) {
     char *name = NULL;
 
     if (ime_init_apputils == 0) {
-        sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
-        sceCommonDialogSetConfigParam(&(SceCommonDialogConfigParam){});
+        sceAppUtilInit(&(SceAppUtilInitParam) {}, &(SceAppUtilBootParam) {});
+        sceCommonDialogSetConfigParam(&(SceCommonDialogConfigParam) {});
         ime_init_apputils = 1;
     }
     init_ime_dialog(title, initial_text, max_len, SCE_IME_TYPE_BASIC_LATIN, 0);

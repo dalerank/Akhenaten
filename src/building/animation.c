@@ -7,8 +7,7 @@
 #include "game/animation.h"
 #include "map/sprite.h"
 
-int building_animation_offset(building *b, int image_id, int grid_offset)
-{
+int building_animation_offset(building *b, int image_id, int grid_offset) {
     if (b->type == BUILDING_FOUNTAIN && (b->num_workers <= 0 || !b->has_water_access))
         return 0;
 
@@ -37,7 +36,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         map_sprite_animation_set(grid_offset, 1);
         return 1;
     } else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
-        b->type == BUILDING_TIMBER_YARD) && b->num_workers <= 0) {
+                b->type == BUILDING_TIMBER_YARD) && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_GLADIATOR_SCHOOL) {
@@ -46,7 +45,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
             return 1;
         }
     } else if (b->type >= BUILDING_THEATER && b->type <= BUILDING_CHARIOT_MAKER &&
-        b->type != BUILDING_HIPPODROME && b->num_workers <= 0) {
+               b->type != BUILDING_HIPPODROME && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers)
@@ -65,16 +64,16 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         int pct_done = calc_percentage(b->data.industry.progress, 400);
         if (pct_done <= 0)
             new_sprite = 0;
- else if (pct_done < 4)
+        else if (pct_done < 4)
             new_sprite = 1;
- else if (pct_done < 8)
+        else if (pct_done < 8)
             new_sprite = 2;
- else if (pct_done < 12)
+        else if (pct_done < 12)
             new_sprite = 3;
- else if (pct_done < 96) {
+        else if (pct_done < 96) {
             if (map_sprite_animation_at(grid_offset) < 4)
                 new_sprite = 4;
- else {
+            else {
                 new_sprite = map_sprite_animation_at(grid_offset) + 1;
                 if (new_sprite > 8)
                     new_sprite = 4;
@@ -84,7 +83,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
             // close to done
             if (map_sprite_animation_at(grid_offset) < 9)
                 new_sprite = 9;
- else {
+            else {
                 new_sprite = map_sprite_animation_at(grid_offset) + 1;
                 if (new_sprite > 12)
                     new_sprite = 12;

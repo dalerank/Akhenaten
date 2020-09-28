@@ -55,8 +55,7 @@
 #include "sound/music.h"
 #include "widget/minimap.h"
 
-static void advance_year(void)
-{
+static void advance_year(void) {
     scenario_empire_process_expansion();
     game_undo_disable();
     game_time_advance_year();
@@ -68,8 +67,7 @@ static void advance_year(void)
     city_gods_reset_neptune_blessing();
 }
 
-static void advance_month(void)
-{
+static void advance_month(void) {
     city_migration_reset_newcomers();
     city_health_update();
     scenario_random_event_process();
@@ -91,7 +89,7 @@ static void advance_month(void)
 
     if (game_time_advance_month())
         advance_year();
- else {
+    else {
         city_ratings_update(0);
     }
 
@@ -103,8 +101,7 @@ static void advance_month(void)
 
 }
 
-static void advance_day(void)
-{
+static void advance_day(void) {
     if (game_time_advance_day())
         advance_month();
 
@@ -114,59 +111,138 @@ static void advance_day(void)
     tutorial_on_day_tick();
 }
 
-static void advance_tick(void)
-{
+static void advance_tick(void) {
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
     switch (game_time_tick()) {
-        case 1: city_gods_calculate_moods(1); break;
-        case 2: sound_music_update(0); break;
-        case 3: widget_minimap_invalidate(); break;
-        case 4: city_emperor_update(); break;
-        case 5: formation_update_all(0); break;
-        case 6: map_natives_check_land(); break;
-        case 7: map_road_network_update(); break;
-        case 8: building_granaries_calculate_stocks(); break;
-        case 10: building_update_highest_id(); break;
-        case 12: house_service_decay_houses_covered(); break;
-        case 16: city_resource_calculate_warehouse_stocks(); break;
-        case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;
-        case 18: city_resource_calculate_workshop_stocks(); break;
-        case 19: building_dock_update_open_water_access(); break;
-        case 20: building_industry_update_production(); break;
-        case 21: building_maintenance_check_rome_access(); break;
-        case 22: house_population_update_room(); break;
-        case 23: house_population_update_migration(); break;
-        case 24: house_population_evict_overcrowded(); break;
-        case 25: city_labor_update(); break;
-        case 27: map_water_supply_update_reservoir_fountain(); break;
-        case 28: map_water_supply_update_houses(); break;
-        case 29: formation_update_all(1); break;
-        case 30: widget_minimap_invalidate(); break;
-        case 31: building_figure_generate(); break;
-        case 32: city_trade_update(); break;
-        case 33: building_count_update(); city_culture_update_coverage(); break;
-        case 34: building_government_distribute_treasury(); break;
-        case 35: house_service_decay_culture(); break;
-        case 36: house_service_calculate_culture_aggregates(); break;
-        case 37: map_desirability_update(); break;
-        case 38: building_update_desirability(); break;
-        case 39: building_house_process_evolve_and_consume_goods(); break;
-        case 40: building_update_state(); break;
-        case 43: building_maintenance_update_burning_ruins(); break;
-        case 44: building_maintenance_check_fire_collapse(); break;
-        case 45: figure_generate_criminals(); break;
-        case 46: building_industry_update_wheat_production(); break;
-        case 48: house_service_decay_tax_collector(); break;
-        case 49: city_culture_calculate(); break;
+        case 1:
+            city_gods_calculate_moods(1);
+            break;
+        case 2:
+            sound_music_update(0);
+            break;
+        case 3:
+            widget_minimap_invalidate();
+            break;
+        case 4:
+            city_emperor_update();
+            break;
+        case 5:
+            formation_update_all(0);
+            break;
+        case 6:
+            map_natives_check_land();
+            break;
+        case 7:
+            map_road_network_update();
+            break;
+        case 8:
+            building_granaries_calculate_stocks();
+            break;
+        case 10:
+            building_update_highest_id();
+            break;
+        case 12:
+            house_service_decay_houses_covered();
+            break;
+        case 16:
+            city_resource_calculate_warehouse_stocks();
+            break;
+        case 17:
+            city_resource_calculate_food_stocks_and_supply_wheat();
+            break;
+        case 18:
+            city_resource_calculate_workshop_stocks();
+            break;
+        case 19:
+            building_dock_update_open_water_access();
+            break;
+        case 20:
+            building_industry_update_production();
+            break;
+        case 21:
+            building_maintenance_check_rome_access();
+            break;
+        case 22:
+            house_population_update_room();
+            break;
+        case 23:
+            house_population_update_migration();
+            break;
+        case 24:
+            house_population_evict_overcrowded();
+            break;
+        case 25:
+            city_labor_update();
+            break;
+        case 27:
+            map_water_supply_update_reservoir_fountain();
+            break;
+        case 28:
+            map_water_supply_update_houses();
+            break;
+        case 29:
+            formation_update_all(1);
+            break;
+        case 30:
+            widget_minimap_invalidate();
+            break;
+        case 31:
+            building_figure_generate();
+            break;
+        case 32:
+            city_trade_update();
+            break;
+        case 33:
+            building_count_update();
+            city_culture_update_coverage();
+            break;
+        case 34:
+            building_government_distribute_treasury();
+            break;
+        case 35:
+            house_service_decay_culture();
+            break;
+        case 36:
+            house_service_calculate_culture_aggregates();
+            break;
+        case 37:
+            map_desirability_update();
+            break;
+        case 38:
+            building_update_desirability();
+            break;
+        case 39:
+            building_house_process_evolve_and_consume_goods();
+            break;
+        case 40:
+            building_update_state();
+            break;
+        case 43:
+            building_maintenance_update_burning_ruins();
+            break;
+        case 44:
+            building_maintenance_check_fire_collapse();
+            break;
+        case 45:
+            figure_generate_criminals();
+            break;
+        case 46:
+            building_industry_update_wheat_production();
+            break;
+        case 48:
+            house_service_decay_tax_collector();
+            break;
+        case 49:
+            city_culture_calculate();
+            break;
     }
     if (game_time_advance_tick())
         advance_day();
 
 }
 
-void game_tick_run(void)
-{
+void game_tick_run(void) {
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
         figure_action_handle(); // just update the flag figures
@@ -182,6 +258,6 @@ void game_tick_run(void)
     city_victory_check();
 }
 
-void game_tick_cheat_year(void){
+void game_tick_cheat_year(void) {
     advance_year();
 }

@@ -39,70 +39,70 @@ static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
 
 static image_button help_button = {
-    11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
+        11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
 };
 
 static generic_button advisor_buttons[] = {
-    {12, 1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR, 0},
-    {60, 1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
-    {108, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
-    {156, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RATINGS, 0},
-    {204, 1, 40, 40, button_change_advisor, button_none, ADVISOR_TRADE, 0},
-    {252, 1, 40, 40, button_change_advisor, button_none, ADVISOR_POPULATION, 0},
-    {300, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HEALTH, 0},
-    {348, 1, 40, 40, button_change_advisor, button_none, ADVISOR_EDUCATION, 0},
-    {396, 1, 40, 40, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
-    {444, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RELIGION, 0},
-    {492, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL, 0},
-    {540, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
-    {588, 1, 40, 40, button_change_advisor, button_none, 0, 0},
+        {12,  1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR,         0},
+        {60,  1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY,      0},
+        {108, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL,      0},
+        {156, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RATINGS,       0},
+        {204, 1, 40, 40, button_change_advisor, button_none, ADVISOR_TRADE,         0},
+        {252, 1, 40, 40, button_change_advisor, button_none, ADVISOR_POPULATION,    0},
+        {300, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HEALTH,        0},
+        {348, 1, 40, 40, button_change_advisor, button_none, ADVISOR_EDUCATION,     0},
+        {396, 1, 40, 40, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
+        {444, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RELIGION,      0},
+        {492, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL,     0},
+        {540, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF,         0},
+        {588, 1, 40, 40, button_change_advisor, button_none, 0,                     0},
 };
 
 static const advisor_window_type *(*sub_advisors[])(void) = {
-    0,
-    window_advisor_labor,
-    window_advisor_military,
-    window_advisor_imperial,
-    window_advisor_ratings,
-    window_advisor_trade,
-    window_advisor_population,
-    window_advisor_health,
-    window_advisor_education,
-    window_advisor_entertainment,
-    window_advisor_religion,
-    window_advisor_financial,
-    window_advisor_chief,
-    0,
-    // sub-advisors begin here
-    0,
-    0,
-    0,
-    0,
-    0,
-    window_advisor_housing //population sub-advisor
+        0,
+        window_advisor_labor,
+        window_advisor_military,
+        window_advisor_imperial,
+        window_advisor_ratings,
+        window_advisor_trade,
+        window_advisor_population,
+        window_advisor_health,
+        window_advisor_education,
+        window_advisor_entertainment,
+        window_advisor_religion,
+        window_advisor_financial,
+        window_advisor_chief,
+        0,
+        // sub-advisors begin here
+        0,
+        0,
+        0,
+        0,
+        0,
+        window_advisor_housing //population sub-advisor
 };
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ADVISOR_LABOR,
-    MESSAGE_DIALOG_ADVISOR_MILITARY,
-    MESSAGE_DIALOG_ADVISOR_IMPERIAL,
-    MESSAGE_DIALOG_ADVISOR_RATINGS,
-    MESSAGE_DIALOG_ADVISOR_TRADE,
-    MESSAGE_DIALOG_ADVISOR_POPULATION,
-    MESSAGE_DIALOG_ADVISOR_HEALTH,
-    MESSAGE_DIALOG_ADVISOR_EDUCATION,
-    MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT,
-    MESSAGE_DIALOG_ADVISOR_RELIGION,
-    MESSAGE_DIALOG_ADVISOR_FINANCIAL,
-    MESSAGE_DIALOG_ADVISOR_CHIEF,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ADVISOR_POPULATION,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ADVISOR_LABOR,
+        MESSAGE_DIALOG_ADVISOR_MILITARY,
+        MESSAGE_DIALOG_ADVISOR_IMPERIAL,
+        MESSAGE_DIALOG_ADVISOR_RATINGS,
+        MESSAGE_DIALOG_ADVISOR_TRADE,
+        MESSAGE_DIALOG_ADVISOR_POPULATION,
+        MESSAGE_DIALOG_ADVISOR_HEALTH,
+        MESSAGE_DIALOG_ADVISOR_EDUCATION,
+        MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT,
+        MESSAGE_DIALOG_ADVISOR_RELIGION,
+        MESSAGE_DIALOG_ADVISOR_FINANCIAL,
+        MESSAGE_DIALOG_ADVISOR_CHIEF,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ABOUT,
+        MESSAGE_DIALOG_ADVISOR_POPULATION,
 };
 
 static const advisor_window_type *current_advisor_window = 0;
@@ -111,24 +111,21 @@ static int current_advisor = ADVISOR_NONE;
 static int focus_button_id;
 static int advisor_height;
 
-static void set_advisor_window(void)
-{
+static void set_advisor_window(void) {
     if (sub_advisors[current_advisor])
         current_advisor_window = sub_advisors[current_advisor]();
- else {
+    else {
         current_advisor_window = 0;
     }
 }
 
-static void set_advisor(int advisor)
-{
+static void set_advisor(int advisor) {
     current_advisor = advisor;
     setting_set_last_advisor(advisor);
     set_advisor_window();
 }
 
-static void init(void)
-{
+static void init(void) {
     city_labor_allocate_workers();
 
     city_finance_estimate_taxes();
@@ -150,8 +147,7 @@ static void init(void)
     set_advisor_window();
 }
 
-void window_advisors_draw_dialog_background(void)
-{
+void window_advisors_draw_dialog_background(void) {
     image_draw_fullscreen_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
     image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
@@ -166,16 +162,14 @@ void window_advisors_draw_dialog_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_advisors_draw_dialog_background();
     graphics_in_dialog();
     advisor_height = current_advisor_window->draw_background();
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
     graphics_reset_dialog();
@@ -187,38 +181,35 @@ static void draw_foreground(void)
     }
 }
 
-static void handle_hotkeys(const hotkeys *h)
-{
+static void handle_hotkeys(const hotkeys *h) {
     if (h->show_advisor) {
         if (current_advisor == h->show_advisor)
             window_city_show();
- else {
+        else {
             window_advisors_show_advisor(h->show_advisor);
         }
     }
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     handle_hotkeys(h);
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id))
-            return;
+        return;
     int button_id;
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id)
         focus_button_id = -1;
 
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog))
-            return;
+        return;
     if (input_go_back_requested(m, h)) {
         window_city_show();
         return;
     }
 }
 
-static void button_change_advisor(int advisor, int param2)
-{
+static void button_change_advisor(int advisor, int param2) {
     if (advisor) {
         set_advisor(advisor);
         window_invalidate();
@@ -227,20 +218,18 @@ static void button_change_advisor(int advisor, int param2)
     }
 }
 
-static void button_help(int param1, int param2)
-{
+static void button_help(int param1, int param2) {
     if (current_advisor > 0)
         window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
 
 }
 
-static void get_tooltip(tooltip_context *c)
-{
+static void get_tooltip(tooltip_context *c) {
     if (focus_button_id) {
         c->type = TOOLTIP_BUTTON;
         if (focus_button_id == -1)
             c->text_id = 1; // help button
- else {
+        else {
             c->text_id = 69 + focus_button_id;
         }
         return;
@@ -255,26 +244,23 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-int window_advisors_get_advisor(void)
-{
+int window_advisors_get_advisor(void) {
     return current_advisor;
 }
 
-void window_advisors_show(void)
-{
+void window_advisors_show(void) {
     window_type window = {
-        WINDOW_ADVISORS,
-        draw_background,
-        draw_foreground,
-        handle_input,
-        get_tooltip
+            WINDOW_ADVISORS,
+            draw_background,
+            draw_foreground,
+            handle_input,
+            get_tooltip
     };
     init();
     window_show(&window);
 }
 
-void window_advisors_show_checked(void)
-{
+void window_advisors_show_checked(void) {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {
         set_advisor(setting_last_advisor());
@@ -284,8 +270,7 @@ void window_advisors_show_checked(void)
     }
 }
 
-int window_advisors_show_advisor(int advisor)
-{
+int window_advisors_show_advisor(int advisor) {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);

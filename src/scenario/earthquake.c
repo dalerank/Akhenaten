@@ -60,7 +60,7 @@ void scenario_earthquake_init(void) {
 static int can_advance_earthquake_to_tile(int x, int y) {
     if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
         return 0;
- else {
+    else {
         return 1;
     }
 }
@@ -92,7 +92,7 @@ static void advance_earthquake_to_tile(int x, int y) {
 void scenario_earthquake_process(void) {
     if (scenario.earthquake.severity == EARTHQUAKE_NONE ||
         scenario.earthquake_point.x == -1 || scenario.earthquake_point.y == -1)
-            return;
+        return;
     if (data.state == EVENT_NOT_STARTED) {
         if (game_time_year() == data.game_year &&
             game_time_month() == data.month) {

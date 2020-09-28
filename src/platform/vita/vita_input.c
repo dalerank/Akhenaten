@@ -13,19 +13,19 @@
 #define MAX_VKBD_TEXT_SIZE 600
 
 enum {
-    VITA_PAD_TRIANGLE   = 0,
-    VITA_PAD_CIRCLE     = 1,
-    VITA_PAD_CROSS      = 2,
-    VITA_PAD_SQUARE     = 3,
-    VITA_PAD_L          = 4,
-    VITA_PAD_R          = 5,
-    VITA_PAD_DOWN       = 6,
-    VITA_PAD_LEFT       = 7,
-    VITA_PAD_UP         = 8,
-    VITA_PAD_RIGHT      = 9,
-    VITA_PAD_SELECT     = 10,
-    VITA_PAD_START      = 11,
-    VITA_NUM_BUTTONS    = 12
+    VITA_PAD_TRIANGLE = 0,
+    VITA_PAD_CIRCLE = 1,
+    VITA_PAD_CROSS = 2,
+    VITA_PAD_SQUARE = 3,
+    VITA_PAD_L = 4,
+    VITA_PAD_R = 5,
+    VITA_PAD_DOWN = 6,
+    VITA_PAD_LEFT = 7,
+    VITA_PAD_UP = 8,
+    VITA_PAD_RIGHT = 9,
+    VITA_PAD_SELECT = 10,
+    VITA_PAD_START = 11,
+    VITA_NUM_BUTTONS = 12
 };
 
 enum {
@@ -51,37 +51,37 @@ static int hires_dy = 0;
 static int pressed_buttons[VITA_NUM_BUTTONS];
 static int right_analog_state[ANALOG_MAX];
 static SDL_Keycode map_vita_button_to_sdlkey[VITA_NUM_BUTTONS] =
-{
-    SDLK_PAGEUP,    // VITA_PAD_TRIANGLE
-    NO_MAPPING,     // VITA_PAD_CIRCLE
-    NO_MAPPING,     // VITA_PAD_CROSS
-    SDLK_PAGEDOWN,  // VITA_PAD_SQUARE
-    NO_MAPPING,     // VITA_PAD_L
-    NO_MAPPING,     // VITA_PAD_R
-    SDLK_DOWN,      // VITA_PAD_DOWN
-    SDLK_LEFT,      // VITA_PAD_LEFT
-    SDLK_UP,        // VITA_PAD_UP
-    SDLK_RIGHT,     // VITA_PAD_RIGHT
-    NO_MAPPING,     // VITA_SELECT
-    NO_MAPPING      // VITA_START
-};
+        {
+                SDLK_PAGEUP,    // VITA_PAD_TRIANGLE
+                NO_MAPPING,     // VITA_PAD_CIRCLE
+                NO_MAPPING,     // VITA_PAD_CROSS
+                SDLK_PAGEDOWN,  // VITA_PAD_SQUARE
+                NO_MAPPING,     // VITA_PAD_L
+                NO_MAPPING,     // VITA_PAD_R
+                SDLK_DOWN,      // VITA_PAD_DOWN
+                SDLK_LEFT,      // VITA_PAD_LEFT
+                SDLK_UP,        // VITA_PAD_UP
+                SDLK_RIGHT,     // VITA_PAD_RIGHT
+                NO_MAPPING,     // VITA_SELECT
+                NO_MAPPING      // VITA_START
+        };
 #define ANALOG_DIRECTION_TO_SDLKEY_OFFSET 6
 
 static uint8_t map_vita_button_to_sdlmousebutton[VITA_NUM_BUTTONS] =
-{
-    NO_MAPPING,          // VITA_PAD_TRIANGLE
-    SDL_BUTTON_RIGHT,    // VITA_PAD_CIRCLE
-    SDL_BUTTON_LEFT,     // VITA_PAD_CROSS
-    NO_MAPPING,          // VITA_PAD_SQUARE
-    SDL_BUTTON_RIGHT,    // VITA_PAD_L
-    SDL_BUTTON_LEFT,     // VITA_PAD_R
-    NO_MAPPING,          // VITA_PAD_DOWN
-    NO_MAPPING,          // VITA_PAD_LEFT
-    NO_MAPPING,          // VITA_PAD_UP
-    NO_MAPPING,          // VITA_PAD_RIGHT
-    NO_MAPPING,          // VITA_SELECT
-    NO_MAPPING           // VITA_START
-};
+        {
+                NO_MAPPING,          // VITA_PAD_TRIANGLE
+                SDL_BUTTON_RIGHT,    // VITA_PAD_CIRCLE
+                SDL_BUTTON_LEFT,     // VITA_PAD_CROSS
+                NO_MAPPING,          // VITA_PAD_SQUARE
+                SDL_BUTTON_RIGHT,    // VITA_PAD_L
+                SDL_BUTTON_LEFT,     // VITA_PAD_R
+                NO_MAPPING,          // VITA_PAD_DOWN
+                NO_MAPPING,          // VITA_PAD_LEFT
+                NO_MAPPING,          // VITA_PAD_UP
+                NO_MAPPING,          // VITA_PAD_RIGHT
+                NO_MAPPING,          // VITA_SELECT
+                NO_MAPPING           // VITA_START
+        };
 
 static void vita_start_text_input(void);
 static void vita_rescale_analog(int *x, int *y, int dead);
@@ -91,8 +91,7 @@ static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uin
 static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void vita_create_key_event_for_direction(int direction, int key_pressed);
 
-void platform_per_frame_callback(void)
-{
+void platform_per_frame_callback(void) {
     if (vkbd.requested) {
         vita_start_text_input();
         vkbd.requested = 0;
@@ -100,18 +99,15 @@ void platform_per_frame_callback(void)
     vita_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
-{
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
     vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
     encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
     vkbd.requested = 1;
 }
 
-void platform_hide_virtual_keyboard(void)
-{}
+void platform_hide_virtual_keyboard(void) {}
 
-int vita_poll_event(SDL_Event *event)
-{
+int vita_poll_event(SDL_Event *event) {
     int ret = SDL_PollEvent(event);
     if (event != NULL) {
         switch (event->type) {
@@ -179,8 +175,7 @@ int vita_poll_event(SDL_Event *event)
     return ret;
 }
 
-void vita_handle_analog_sticks(void)
-{
+void vita_handle_analog_sticks(void) {
     if (!joy) {
         joy = SDL_JoystickOpen(0);
     }
@@ -232,18 +227,18 @@ void vita_handle_analog_sticks(void)
     // map right stick to cursor keys
     float right_x = SDL_JoystickGetAxis(joy, 2);
     float right_y = -1 * SDL_JoystickGetAxis(joy, 3);
-    float right_joy_dead_zone_squared = 10240.0*10240.0;
+    float right_joy_dead_zone_squared = 10240.0 * 10240.0;
     float slope = 0.414214f; // tangent of 22.5 degrees for size of angular zones
 
-    int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
+    int direction_states[ANALOG_MAX] = {0, 0, 0, 0};
 
     if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
         if (right_y > 0 && right_x > 0) {
             // upper right quadrant
-            if (right_y > slope *right_x) {
+            if (right_y > slope * right_x) {
                 direction_states[ANALOG_UP] = 1;
             }
-            if (right_x > slope *right_y) {
+            if (right_x > slope * right_y) {
                 direction_states[ANALOG_RIGHT] = 1;
             }
         } else if (right_y > 0 && right_x <= 0) {
@@ -251,12 +246,12 @@ void vita_handle_analog_sticks(void)
             if (right_y > slope * -right_x) {
                 direction_states[ANALOG_UP] = 1;
             }
-            if (-right_x > slope *right_y) {
+            if (-right_x > slope * right_y) {
                 direction_states[ANALOG_LEFT] = 1;
             }
         } else if (right_y <= 0 && right_x > 0) {
             // lower right quadrant
-            if (-right_y > slope *right_x) {
+            if (-right_y > slope * right_x) {
                 direction_states[ANALOG_DOWN] = 1;
             }
             if (right_x > slope * -right_y) {
@@ -281,11 +276,10 @@ void vita_handle_analog_sticks(void)
     }
 }
 
-static void vita_start_text_input(void)
-{
+static void vita_start_text_input(void) {
     char *text = vita_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length);
     if (text == NULL)
-            return;
+        return;
     for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
@@ -307,8 +301,7 @@ static void vita_start_text_input(void)
     }
 }
 
-static void vita_rescale_analog(int *x, int *y, int dead)
-{
+static void vita_rescale_analog(int *x, int *y, int dead) {
     //radial and scaled dead_zone
     //http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
     //input and output values go from -32767...+32767;
@@ -318,7 +311,7 @@ static void vita_rescale_analog(int *x, int *y, int dead)
     //of motion of the analog stick
 
     if (dead == 0)
-            return;
+        return;
     if (dead >= 32767) {
         *x = 0;
         *y = 0;
@@ -357,7 +350,7 @@ static void vita_rescale_analog(int *x, int *y, int dead)
         float clamping_factor = 1.0f;
         abs_analog_x = fabs(analog_x);
         abs_analog_y = fabs(analog_y);
-        if (abs_analog_x > max_axis || abs_analog_y > max_axis){
+        if (abs_analog_x > max_axis || abs_analog_y > max_axis) {
             if (abs_analog_x > abs_analog_y) {
                 clamping_factor = max_axis / abs_analog_x;
             } else {
@@ -372,8 +365,7 @@ static void vita_rescale_analog(int *x, int *y, int dead)
     }
 }
 
-static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint32_t event_type)
-{
+static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint32_t event_type) {
     event->type = event_type;
     event->key.keysym.sym = map_vita_button_to_sdlkey[vita_button];
     event->key.keysym.mod = 0;
@@ -387,8 +379,7 @@ static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint3
     }
 }
 
-static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uint32_t event_type)
-{
+static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uint32_t event_type) {
     event->type = event_type;
     event->button.button = map_vita_button_to_sdlmousebutton[vita_button];
     if (event_type == SDL_MOUSEBUTTONDOWN) {
@@ -403,8 +394,7 @@ static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uin
     event->button.y = mouse_get()->y;
 }
 
-static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key)
-{
+static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key) {
     SDL_Event event;
     event.type = event_type;
     event.key.keysym.scancode = scan;
@@ -413,8 +403,7 @@ static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode 
     SDL_PushEvent(&event);
 }
 
-static void vita_create_key_event_for_direction(int direction, int key_pressed)
-{
+static void vita_create_key_event_for_direction(int direction, int key_pressed) {
     uint32_t event_type = key_pressed ? SDL_KEYDOWN : SDL_KEYUP;
     switch (direction) {
         case ANALOG_UP:

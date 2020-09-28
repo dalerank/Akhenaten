@@ -19,8 +19,7 @@ struct warning {
 
 static struct warning warnings[MAX_WARNINGS];
 
-static struct warning *new_warning(void)
-{
+static struct warning *new_warning(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (!warnings[i].in_use)
             return &warnings[i];
@@ -29,26 +28,24 @@ static struct warning *new_warning(void)
     return 0;
 }
 
-void city_warning_show(int type)
-{
+void city_warning_show(int type) {
     if (!setting_warnings())
-            return;
+        return;
     struct warning *w = new_warning();
     if (!w)
-            return;
+        return;
     w->in_use = 1;
     w->time = time_get_millis();
     const uint8_t *text;
     if (type == WARNING_ORIENTATION)
         text = lang_get_string(17, city_view_orientation());
- else {
+    else {
         text = lang_get_string(19, type - 2);
     }
     string_copy(text, w->text, MAX_TEXT);
 }
 
-int city_has_warnings(void)
-{
+int city_has_warnings(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (warnings[i].in_use)
             return 1;
@@ -57,23 +54,20 @@ int city_has_warnings(void)
     return 0;
 }
 
-const uint8_t *city_warning_get(int id)
-{
+const uint8_t *city_warning_get(int id) {
     if (warnings[id].in_use)
         return warnings[id].text;
 
     return 0;
 }
 
-void city_warning_clear_all(void)
-{
+void city_warning_clear_all(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         warnings[i].in_use = 0;
     }
 }
 
-void city_warning_clear_outdated(void)
-{
+void city_warning_clear_outdated(void) {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (warnings[i].in_use && time_get_millis() - warnings[i].time > TIMEOUT_MS) {
             warnings[i].in_use = 0;
@@ -82,10 +76,10 @@ void city_warning_clear_outdated(void)
     }
 }
 
-void city_warning_show_console(uint8_t* warning_text){
+void city_warning_show_console(uint8_t *warning_text) {
     struct warning *w = new_warning();
     if (!w)
-            return;
+        return;
     w->in_use = 1;
     w->time = time_get_millis();
     string_copy(warning_text, w->text, MAX_TEXT);

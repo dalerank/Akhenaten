@@ -31,16 +31,14 @@ static struct {
     } audio;
 } data;
 
-static void close_smk(void)
-{
+static void close_smk(void) {
     if (data.s) {
         smacker_close(data.s);
         data.s = 0;
     }
 }
 
-static int load_smk(const char *filename)
-{
+static int load_smk(const char *filename) {
     const char *path = dir_get_file(filename, MAY_BE_LOCALIZED);
     if (!path)
         return 0;
@@ -81,14 +79,12 @@ static int load_smk(const char *filename)
     return 1;
 }
 
-static void end_video(void)
-{
+static void end_video(void) {
     sound_device_use_default_music_player();
     sound_music_update(1);
 }
 
-int video_start(const char *filename)
-{
+int video_start(const char *filename) {
     data.is_playing = 0;
     data.is_ended = 0;
 
@@ -102,34 +98,30 @@ int video_start(const char *filename)
     }
 }
 
-void video_size(int *width, int *height)
-{
+void video_size(int *width, int *height) {
     *width = data.video.width;
     *height = data.video.y_scale == SMACKER_Y_SCALE_NONE ? data.video.height : 2 * data.video.height;
 }
 
-void video_init(void)
-{
+void video_init(void) {
     data.video.start_render_millis = time_get_millis();
 
     if (data.audio.has_audio) {
         int audio_len = smacker_get_frame_audio_size(data.s, 0);
         if (audio_len > 0) {
             sound_device_use_custom_music_player(
-                data.audio.bitdepth, data.audio.channels, data.audio.rate,
-                smacker_get_frame_audio(data.s, 0), audio_len
+                    data.audio.bitdepth, data.audio.channels, data.audio.rate,
+                    smacker_get_frame_audio(data.s, 0), audio_len
             );
         }
     }
 }
 
-int video_is_finished(void)
-{
+int video_is_finished(void) {
     return data.is_ended;
 }
 
-void video_stop(void)
-{
+void video_stop(void) {
     if (data.is_playing) {
         if (!data.is_ended)
             end_video();
@@ -139,18 +131,16 @@ void video_stop(void)
     }
 }
 
-void video_shutdown(void)
-{
+void video_shutdown(void) {
     if (data.is_playing) {
         close_smk();
         data.is_playing = 0;
     }
 }
 
-void video_draw(int x_offset, int y_offset)
-{
+void video_draw(int x_offset, int y_offset) {
     if (!data.s)
-            return;
+        return;
     time_millis now_millis = time_get_millis();
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
@@ -174,15 +164,16 @@ void video_draw(int x_offset, int y_offset)
         }
     }
     if (!draw_frame)
-            return;
+        return;
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
     if (!clip->is_visible)
-            return;
+        return;
     const unsigned char *frame = smacker_get_frame_video(data.s);
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
         for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
-            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
+            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left,
+                                                y + y_offset + clip->clipped_pixels_top);
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
             for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {

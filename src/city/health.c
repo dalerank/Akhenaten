@@ -9,20 +9,17 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-int city_health(void)
-{
+int city_health(void) {
     return city_data.health.value;
 }
 
-void city_health_change(int amount)
-{
+void city_health_change(int amount) {
     city_data.health.value = calc_bound(city_data.health.value + amount, 0, 100);
 }
 
-static void cause_disease(int total_people)
-{
+static void cause_disease(int total_people) {
     if (city_data.health.value >= 40)
-            return;
+        return;
     int chance_value = random_byte() & 0x3f;
     if (city_data.religion.venus_curse_active) {
         // force plague
@@ -30,11 +27,11 @@ static void cause_disease(int total_people)
         city_data.religion.venus_curse_active = 0;
     }
     if (chance_value > 40 - city_data.health.value)
-            return;
+        return;
 
     int sick_people = calc_adjust_with_percentage(total_people, 7 + (random_byte() & 3));
     if (sick_people <= 0)
-            return;
+        return;
     city_health_change(10);
     int people_to_kill = sick_people - city_data.health.num_hospital_workers;
     if (people_to_kill <= 0) {
@@ -43,7 +40,7 @@ static void cause_disease(int total_people)
     }
     if (city_data.health.num_hospital_workers > 0)
         city_message_post(1, MESSAGE_HEALTH_DISEASE, 0, 0);
- else {
+    else {
         city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
     }
     tutorial_on_disease();
@@ -55,7 +52,7 @@ static void cause_disease(int total_people)
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
                 if (people_to_kill <= 0)
-            return;
+                    return;
             }
         }
     }
@@ -67,7 +64,7 @@ static void cause_disease(int total_people)
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
                 if (people_to_kill <= 0)
-            return;
+                    return;
             }
         }
     }
@@ -78,13 +75,12 @@ static void cause_disease(int total_people)
             people_to_kill -= b->house_population;
             building_destroy_by_plague(b);
             if (people_to_kill <= 0)
-            return;
+                return;
         }
     }
 }
 
-void city_health_update(void)
-{
+void city_health_update(void) {
     if (city_data.population.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
         city_data.health.value = 50;
         city_data.health.target_value = 50;
@@ -101,13 +97,13 @@ void city_health_update(void)
         if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
             if (b->data.house.clinic)
                 healthy_population += b->house_population;
- else {
+            else {
                 healthy_population += b->house_population / 4;
             }
         } else if (b->data.house.clinic) {
             if (b->house_days_without_food == 0)
                 healthy_population += b->house_population;
- else {
+            else {
                 healthy_population += b->house_population / 4;
             }
         } else if (b->house_days_without_food == 0)
@@ -131,12 +127,10 @@ void city_health_update(void)
     cause_disease(total_population);
 }
 
-void city_health_reset_hospital_workers(void)
-{
+void city_health_reset_hospital_workers(void) {
     city_data.health.num_hospital_workers = 0;
 }
 
-void city_health_add_hospital_workers(int amount)
-{
+void city_health_add_hospital_workers(int amount) {
     city_data.health.num_hospital_workers += amount;
 }

@@ -40,8 +40,7 @@ static struct {
     buffer *inf_file = new buffer(INF_SIZE);
 } data;
 
-static void load_default_settings(void)
-{
+static void load_default_settings(void) {
     data.fullscreen = 1;
     data.window_width = 800;
     data.window_height = 600;
@@ -67,8 +66,7 @@ static void load_default_settings(void)
 
     setting_clear_personal_savings();
 }
-static void load_settings(buffer *buf)
-{
+static void load_settings(buffer *buf) {
     buf->skip(4);
     data.fullscreen = buf->read_i32();
     buf->skip(3);
@@ -114,13 +112,12 @@ static void load_settings(buffer *buf)
     }
 }
 
-void settings_load(void)
-{
+void settings_load(void) {
     load_default_settings();
 
     int size = io_read_file_into_buffer("c3.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
     if (!size)
-            return;
+        return;
     load_settings(data.inf_file);
 
     if (data.window_width + data.window_height < 500) {
@@ -129,8 +126,7 @@ void settings_load(void)
         data.window_height = 600;
     }
 }
-void settings_save(void)
-{
+void settings_save(void) {
     buffer *buf = data.inf_file;
 
     buf->skip(4);
@@ -172,17 +168,14 @@ void settings_save(void)
 
     io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
-int setting_fullscreen(void)
-{
+int setting_fullscreen(void) {
     return data.fullscreen;
 }
-void setting_window(int *width, int *height)
-{
+void setting_window(int *width, int *height) {
     *width = data.window_width;
     *height = data.window_height;
 }
-void setting_set_display(int fullscreen, int width, int height)
-{
+void setting_set_display(int fullscreen, int width, int height) {
     data.fullscreen = fullscreen;
     if (!fullscreen) {
         data.window_width = width;
@@ -190,52 +183,48 @@ void setting_set_display(int fullscreen, int width, int height)
     }
 }
 
-static set_sound *get_sound(int type)
-{
+static set_sound *get_sound(int type) {
     switch (type) {
-    case SOUND_MUSIC: return &data.sound_music;
-    case SOUND_EFFECTS: return &data.sound_effects;
-    case SOUND_SPEECH: return &data.sound_speech;
-    case SOUND_CITY: return &data.sound_city;
-    default: return 0;
+        case SOUND_MUSIC:
+            return &data.sound_music;
+        case SOUND_EFFECTS:
+            return &data.sound_effects;
+        case SOUND_SPEECH:
+            return &data.sound_speech;
+        case SOUND_CITY:
+            return &data.sound_city;
+        default:
+            return 0;
     }
 }
-const set_sound *setting_sound(int type)
-{
+const set_sound *setting_sound(int type) {
     return get_sound(type);
 }
 
-int setting_sound_is_enabled(int type)
-{
+int setting_sound_is_enabled(int type) {
     return get_sound(type)->enabled;
 }
-void setting_toggle_sound_enabled(int type)
-{
+void setting_toggle_sound_enabled(int type) {
     set_sound *sound = get_sound(type);
     sound->enabled = sound->enabled ? 0 : 1;
 }
-void setting_increase_sound_volume(int type)
-{
+void setting_increase_sound_volume(int type) {
     set_sound *sound = get_sound(type);
     sound->volume = calc_bound(sound->volume + 1, 0, 100);
 }
-void setting_decrease_sound_volume(int type)
-{
+void setting_decrease_sound_volume(int type) {
     set_sound *sound = get_sound(type);
     sound->volume = calc_bound(sound->volume - 1, 0, 100);
 }
-void setting_reset_sound(int type, int enabled, int volume)
-{
+void setting_reset_sound(int type, int enabled, int volume) {
     set_sound *sound = get_sound(type);
     sound->enabled = enabled;
     sound->volume = calc_bound(volume, 0, 100);
 }
-int setting_game_speed(void)
-{
+int setting_game_speed(void) {
     return data.game_speed;
 }
-void setting_increase_game_speed(void)
-{
+void setting_increase_game_speed(void) {
     if (data.game_speed >= 100) {
         if (data.game_speed < 500)
             data.game_speed += 100;
@@ -244,128 +233,110 @@ void setting_increase_game_speed(void)
         data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
     }
 }
-void setting_decrease_game_speed(void)
-{
+void setting_decrease_game_speed(void) {
     if (data.game_speed > 100)
         data.game_speed -= 100;
- else {
+    else {
         data.game_speed = calc_bound(data.game_speed - 10, 10, 100);
     }
 }
 
-int setting_scroll_speed(void)
-{
+int setting_scroll_speed(void) {
     return data.scroll_speed;
 }
-void setting_increase_scroll_speed(void)
-{
+void setting_increase_scroll_speed(void) {
     data.scroll_speed = calc_bound(data.scroll_speed + 10, 0, 100);
 }
-void setting_decrease_scroll_speed(void)
-{
+void setting_decrease_scroll_speed(void) {
     data.scroll_speed = calc_bound(data.scroll_speed - 10, 0, 100);
 }
-void setting_reset_speeds(int game_speed, int scroll_speed)
-{
+void setting_reset_speeds(int game_speed, int scroll_speed) {
     data.game_speed = game_speed;
     data.scroll_speed = scroll_speed;
 }
 
-int setting_tooltips(void)
-{
+int setting_tooltips(void) {
     return data.tooltips;
 }
-void setting_cycle_tooltips(void)
-{
+void setting_cycle_tooltips(void) {
     switch (data.tooltips) {
-    case TOOLTIPS_NONE: data.tooltips = TOOLTIPS_SOME; break;
-    case TOOLTIPS_SOME: data.tooltips = TOOLTIPS_FULL; break;
-    default: data.tooltips = TOOLTIPS_NONE; break;
+        case TOOLTIPS_NONE:
+            data.tooltips = TOOLTIPS_SOME;
+            break;
+        case TOOLTIPS_SOME:
+            data.tooltips = TOOLTIPS_FULL;
+            break;
+        default:
+            data.tooltips = TOOLTIPS_NONE;
+            break;
     }
 }
 
-int setting_warnings(void)
-{
+int setting_warnings(void) {
     return data.warnings;
 }
-void setting_toggle_warnings(void)
-{
+void setting_toggle_warnings(void) {
     data.warnings = data.warnings ? 0 : 1;
 }
 
-int setting_monthly_autosave(void)
-{
+int setting_monthly_autosave(void) {
     return data.monthly_autosave;
 }
-void setting_toggle_monthly_autosave(void)
-{
+void setting_toggle_monthly_autosave(void) {
     data.monthly_autosave = data.monthly_autosave ? 0 : 1;
 }
 
-int setting_gods_enabled(void)
-{
+int setting_gods_enabled(void) {
     return data.gods_enabled;
 }
-void setting_toggle_gods_enabled(void)
-{
+void setting_toggle_gods_enabled(void) {
     data.gods_enabled = data.gods_enabled ? 0 : 1;
 }
 
-int setting_difficulty(void)
-{
+int setting_difficulty(void) {
     return data.difficulty;
 }
-void setting_increase_difficulty(void)
-{
+void setting_increase_difficulty(void) {
     if (data.difficulty >= DIFFICULTY_VERY_HARD)
         data.difficulty = DIFFICULTY_VERY_HARD;
- else {
+    else {
         data.difficulty++;
     }
 }
-void setting_decrease_difficulty(void)
-{
+void setting_decrease_difficulty(void) {
     if (data.difficulty <= DIFFICULTY_VERY_EASY)
         data.difficulty = DIFFICULTY_VERY_EASY;
- else {
+    else {
         data.difficulty--;
     }
 }
 
-int setting_victory_video(void)
-{
+int setting_victory_video(void) {
     data.victory_video = data.victory_video ? 0 : 1;
     return data.victory_video;
 }
 
-int setting_last_advisor(void)
-{
+int setting_last_advisor(void) {
     return data.last_advisor;
 }
-void setting_set_last_advisor(int advisor)
-{
+void setting_set_last_advisor(int advisor) {
     data.last_advisor = advisor;
 }
 
-const uint8_t *setting_player_name(void)
-{
+const uint8_t *setting_player_name(void) {
     return data.player_name;
 }
-void setting_set_player_name(const uint8_t *player_name)
-{
+void setting_set_player_name(const uint8_t *player_name) {
     string_copy(player_name, data.player_name, env_sizes().MAX_PLAYER_NAME);
 }
 
-int setting_personal_savings_for_mission(int mission_id)
-{
+int setting_personal_savings_for_mission(int mission_id) {
     return data.personal_savings[mission_id];
 }
-void setting_set_personal_savings_for_mission(int mission_id, int savings)
-{
+void setting_set_personal_savings_for_mission(int mission_id, int savings) {
     data.personal_savings[mission_id] = savings;
 }
-void setting_clear_personal_savings(void)
-{
+void setting_clear_personal_savings(void) {
     for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
         data.personal_savings[i] = 0;
     }

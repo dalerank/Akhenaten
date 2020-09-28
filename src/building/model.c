@@ -19,8 +19,7 @@ static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E'
 static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
 static model_house houses[20];
 
-static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
-{
+static int strings_equal(const uint8_t *a, const uint8_t *b, int len) {
     for (int i = 0; i < len; i++, a++, b++) {
         if (*a != *b)
             return 0;
@@ -28,8 +27,7 @@ static int strings_equal(const uint8_t *a, const uint8_t *b, int len)
     }
     return 1;
 }
-static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length)
-{
+static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
     int needle_length = string_length(needle);
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
@@ -38,8 +36,7 @@ static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int h
     }
     return 0;
 }
-static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length)
-{
+static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle)
             return i + 1;
@@ -48,8 +45,7 @@ static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length
     return 0;
 }
 
-static const uint8_t *skip_non_digits(const uint8_t *str)
-{
+static const uint8_t *skip_non_digits(const uint8_t *str) {
     int safeguard = 0;
     while (1) {
         if (++safeguard >= 1000)
@@ -62,16 +58,14 @@ static const uint8_t *skip_non_digits(const uint8_t *str)
     }
     return str;
 }
-static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value)
-{
+static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int *value) {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);
     ptr += index_of(ptr, ',', (int) (end_ptr - ptr));
     return ptr;
 }
 
-int model_load(void)
-{
+int model_load(void) {
     // allocate buffer for file data & read file into it
 //    uint8_t *buffer = (uint8_t *) malloc(TMP_BUFFER_SIZE);
 //    if (!buffer) {
@@ -103,7 +97,7 @@ int model_load(void)
     int num_lines = 0;
     int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
-    const uint8_t *haystack = (uint8_t*) buf->data_const();
+    const uint8_t *haystack = (uint8_t *) buf->data_const();
     const uint8_t *ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
     do {
         guard--;
@@ -168,15 +162,13 @@ int model_load(void)
     return 1;
 }
 
-const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
-const model_building *model_get_building(int type)
-{
-    if(type == BUILDING_ROADBLOCK) {
+const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};
+const model_building *model_get_building(int type) {
+    if (type == BUILDING_ROADBLOCK) {
         return &MODEL_ROADBLOCK;
     }
     return &buildings[type];
 }
-const model_house *model_get_house(int level)
-{
+const model_house *model_get_house(int level) {
     return &houses[level];
 }

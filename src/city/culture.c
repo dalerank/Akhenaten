@@ -22,78 +22,63 @@ static struct {
     int oracle;
 } coverage;
 
-int city_culture_coverage_theater(void)
-{
+int city_culture_coverage_theater(void) {
     return coverage.theater;
 }
 
-int city_culture_coverage_amphitheater(void)
-{
+int city_culture_coverage_amphitheater(void) {
     return coverage.amphitheater;
 }
 
-int city_culture_coverage_colosseum(void)
-{
+int city_culture_coverage_colosseum(void) {
     return coverage.colosseum;
 }
 
-int city_culture_coverage_hippodrome(void)
-{
+int city_culture_coverage_hippodrome(void) {
     return coverage.hippodrome;
 }
 
-int city_culture_coverage_average_entertainment(void)
-{
+int city_culture_coverage_average_entertainment(void) {
     return (coverage.hippodrome + coverage.colosseum + coverage.amphitheater + coverage.theater) / 4;
 }
 
-int city_culture_coverage_religion(int god)
-{
+int city_culture_coverage_religion(int god) {
     return coverage.religion[god];
 }
 
-int city_culture_coverage_school(void)
-{
+int city_culture_coverage_school(void) {
     return coverage.school;
 }
 
-int city_culture_coverage_library(void)
-{
+int city_culture_coverage_library(void) {
     return coverage.library;
 }
 
-int city_culture_coverage_academy(void)
-{
+int city_culture_coverage_academy(void) {
     return coverage.academy;
 }
 
-int city_culture_coverage_hospital(void)
-{
+int city_culture_coverage_hospital(void) {
     return coverage.hospital;
 }
 
-int city_culture_average_education(void)
-{
+int city_culture_average_education(void) {
     return city_data.culture.average_education;
 }
 
-int city_culture_average_entertainment(void)
-{
+int city_culture_average_entertainment(void) {
     return city_data.culture.average_entertainment;
 }
 
-int city_culture_average_health(void)
-{
+int city_culture_average_health(void) {
     return city_data.culture.average_health;
 }
 
-static int top(int input)
-{
+static int top(int input) {
     return input > 100 ? 100 : input;
 }
 
-void city_culture_update_coverage(void)
-{
+void city_culture_update_coverage(void) {
     int population = city_data.population.population;
 
     // entertainment
@@ -102,7 +87,7 @@ void city_culture_update_coverage(void)
     coverage.colosseum = top(calc_percentage(1500 * building_count_active(BUILDING_COLOSSEUM), population));
     if (building_count_active(BUILDING_HIPPODROME) <= 0)
         coverage.hippodrome = 0;
- else {
+    else {
         coverage.hippodrome = 100;
     }
 
@@ -112,54 +97,53 @@ void city_culture_update_coverage(void)
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES),
-        population));
+            population));
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE),
-        population));
+            population));
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY),
-        population));
+            population));
     coverage.religion[GOD_MARS] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS),
-        population));
+            population));
     coverage.religion[GOD_VENUS] = top(calc_percentage(
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS),
-        population));
+            population));
     coverage.oracle = top(calc_percentage(500 * oracles, population));
 
     city_data.culture.religion_coverage =
-        coverage.religion[GOD_CERES] +
-        coverage.religion[GOD_NEPTUNE] +
-        coverage.religion[GOD_MERCURY] +
-        coverage.religion[GOD_MARS] +
-        coverage.religion[GOD_VENUS];
+            coverage.religion[GOD_CERES] +
+            coverage.religion[GOD_NEPTUNE] +
+            coverage.religion[GOD_MERCURY] +
+            coverage.religion[GOD_MARS] +
+            coverage.religion[GOD_VENUS];
     city_data.culture.religion_coverage /= 5;
 
     // education
     city_population_calculate_educational_age();
 
     coverage.school = top(calc_percentage(
-        75 * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
+            75 * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
     coverage.library = top(calc_percentage(
-        800 * building_count_active(BUILDING_LIBRARY), population));
+            800 * building_count_active(BUILDING_LIBRARY), population));
     coverage.academy = top(calc_percentage(
-        100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
+            100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
 
     // health
     coverage.hospital = top(calc_percentage(
-        1000 * building_count_active(BUILDING_HOSPITAL), population));
+            1000 * building_count_active(BUILDING_HOSPITAL), population));
 }
 
-void city_culture_calculate(void)
-{
+void city_culture_calculate(void) {
     city_data.culture.average_entertainment = 0;
     city_data.culture.average_religion = 0;
     city_data.culture.average_education = 0;
@@ -187,8 +171,7 @@ void city_culture_calculate(void)
     city_festival_calculate_costs();
 }
 
-void city_culture_save_state(buffer *buf)
-{
+void city_culture_save_state(buffer *buf) {
     // Yes, hospital is saved twice
     buf->write_i32(coverage.theater);
     buf->write_i32(coverage.amphitheater);
@@ -205,8 +188,7 @@ void city_culture_save_state(buffer *buf)
     buf->write_i32(coverage.hospital);
 }
 
-void city_culture_load_state(buffer *buf)
-{
+void city_culture_load_state(buffer *buf) {
     // Yes, hospital is saved twice
     coverage.theater = buf->read_i32();
     coverage.amphitheater = buf->read_i32();

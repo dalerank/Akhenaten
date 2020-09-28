@@ -76,22 +76,21 @@
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
 static const char MISSION_SAVED_GAMES[][32] = {
-    "Citizen.sav",
-    "Clerk.sav",
-    "Engineer.sav",
-    "Architect.sav",
-    "Quaestor.sav",
-    "Procurator.sav",
-    "Aedile.sav",
-    "Praetor.sav",
-    "Consul.sav",
-    "Proconsul.sav",
-    "Caesar.sav",
-    "Caesar2.sav"
+        "Citizen.sav",
+        "Clerk.sav",
+        "Engineer.sav",
+        "Architect.sav",
+        "Quaestor.sav",
+        "Procurator.sav",
+        "Aedile.sav",
+        "Praetor.sav",
+        "Consul.sav",
+        "Proconsul.sav",
+        "Caesar.sav",
+        "Caesar2.sav"
 };
 
-static void clear_scenario_data(void)
-{
+static void clear_scenario_data(void) {
     // clear data
     city_victory_reset();
     building_construction_clear_type();
@@ -128,8 +127,7 @@ static void clear_scenario_data(void)
     map_image_context_init();
     map_random_init();
 }
-static void initialize_scenario_data(const uint8_t *scenario_name)
-{
+static void initialize_scenario_data(const uint8_t *scenario_name) {
     scenario_set_name(scenario_name);
     scenario_map_init();
 
@@ -186,8 +184,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     city_data_init_scenario();
     game_state_unpause();
 }
-static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
-{
+static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file) {
     if (!file_exists(scenario_file, NOT_LOCALIZED))
         return 0;
 
@@ -197,8 +194,7 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
     initialize_scenario_data(scenario_name);
     return 1;
 }
-static void load_empire_data(int is_custom_scenario, int empire_id)
-{
+static void load_empire_data(int is_custom_scenario, int empire_id) {
     empire_load(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
@@ -207,30 +203,30 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
 /**
  * search for hippodrome buildings, all three pieces should have the same subtype.orientation 
  */
-static void check_hippodrome_compatibility(building *b){
+static void check_hippodrome_compatibility(building *b) {
     // if we got the middle part of the hippodrome
-    if(b->next_part_building_id && b->prev_part_building_id){
-        building * next = building_get(b->next_part_building_id);
-        building * prev = building_get(b->prev_part_building_id);
+    if (b->next_part_building_id && b->prev_part_building_id) {
+        building *next = building_get(b->next_part_building_id);
+        building *prev = building_get(b->prev_part_building_id);
         // if orientation is different, it means that rotation was not available yet in augustus, so it should be set to 0
-        if(b->subtype.orientation != next->subtype.orientation || b->subtype.orientation != prev->subtype.orientation){
+        if (b->subtype.orientation != next->subtype.orientation ||
+            b->subtype.orientation != prev->subtype.orientation) {
             prev->subtype.orientation = 0;
             b->subtype.orientation = 0;
             next->subtype.orientation = 0;
         }
     }
 }
-static void check_backward_compatibility(void){
+static void check_backward_compatibility(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if(b->type == BUILDING_HIPPODROME){
+        if (b->type == BUILDING_HIPPODROME) {
             check_hippodrome_compatibility(b);
         }
     }
 }
 
-static void initialize_saved_game(void)
-{
+static void initialize_saved_game(void) {
     load_empire_data(scenario_is_custom(), scenario_empire_id());
 
     scenario_map_init();
@@ -265,16 +261,14 @@ static void initialize_saved_game(void)
 
     game_state_unpause();
 }
-static int get_campaign_mission_offset(int mission_id)
-{
+static int get_campaign_mission_offset(int mission_id) {
     // init 4-byte buffer and read from file header corresponding to mission index (i.e. mission 20 = offset 20*4 = 80)
     buffer *buf = new buffer(4);
     if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, buf, 4, 4 * mission_id))
         return 0;
     return buf->read_i32();
 }
-static int load_campaign_mission(int mission_id)
-{
+static int load_campaign_mission(int mission_id) {
     int offset = get_campaign_mission_offset(mission_id);
     if (offset <= 0)
         return 0;
@@ -292,8 +286,7 @@ static int load_campaign_mission(int mission_id)
     return 1;
 }
 
-static int start_scenario(const uint8_t *scenario_name, const char *scenario_file)
-{
+static int start_scenario(const uint8_t *scenario_name, const char *scenario_file) {
     int mission = scenario_campaign_mission();
     int rank = scenario_campaign_rank();
     map_bookmarks_clear();
@@ -320,8 +313,7 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     return 1;
 }
 
-static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed)
-{
+static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed) {
     static char filename[FILE_NAME_MAX];
     encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
     if (!file_has_extension(filename, "map"))
@@ -329,22 +321,19 @@ static const char *get_scenario_filename(const uint8_t *scenario_name, int decom
 
     return filename;
 }
-int game_file_start_scenario_by_name(const uint8_t *scenario_name)
-{
+int game_file_start_scenario_by_name(const uint8_t *scenario_name) {
     if (start_scenario(scenario_name, get_scenario_filename(scenario_name, 0)))
         return 1;
     else
         return start_scenario(scenario_name, get_scenario_filename(scenario_name, 1));
 }
-int game_file_start_scenario(const char *scenario_file)
-{
+int game_file_start_scenario(const char *scenario_file) {
     uint8_t scenario_name[FILE_NAME_MAX];
     encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
     file_remove_extension(scenario_name);
     return start_scenario(scenario_name, scenario_file);
 }
-int game_file_load_scenario_data(const char *scenario_file)
-{
+int game_file_load_scenario_data(const char *scenario_file) {
     if (!game_file_io_read_scenario(scenario_file))
         return 0;
 
@@ -353,8 +342,7 @@ int game_file_load_scenario_data(const char *scenario_file)
     load_empire_data(1, scenario_empire_id());
     return 1;
 }
-int game_file_load_saved_game(const char *filename)
-{
+int game_file_load_saved_game(const char *filename) {
     if (!game_file_io_read_saved_game(filename, 0))
         return 0;
 
@@ -365,27 +353,24 @@ int game_file_load_saved_game(const char *filename)
     sound_music_update(1);
     return 1;
 }
-int game_file_write_saved_game(const char *filename)
-{
+int game_file_write_saved_game(const char *filename) {
     return game_file_io_write_saved_game(filename);
 }
-int game_file_delete_saved_game(const char *filename)
-{
+int game_file_delete_saved_game(const char *filename) {
     return game_file_io_delete_saved_game(filename);
 }
-void game_file_write_mission_saved_game(void)
-{
+void game_file_write_mission_saved_game(void) {
     int rank = scenario_campaign_rank();
     if (rank < 0)
         rank = 0;
- else if (rank > 11)
+    else if (rank > 11)
         rank = 11;
 
     const char *filename = MISSION_SAVED_GAMES[rank];
     if (locale_translate_rank_autosaves()) {
         char localized_filename[FILE_NAME_MAX];
         encoding_to_utf8(lang_get_string(32, rank), localized_filename, FILE_NAME_MAX,
-            encoding_system_uses_decomposed());
+                         encoding_system_uses_decomposed());
         strcat(localized_filename, ".svx");
         filename = localized_filename;
     }

@@ -12,7 +12,7 @@
 static void button_ok(int param1, int param2);
 
 static image_button buttons[] = {
-    {223, 140, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
+        {223, 140, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok, button_none, 1, 0, 1},
 };
 
 static struct {
@@ -20,8 +20,7 @@ static struct {
     const uint8_t *message;
 } data;
 
-static int init(int title, int message)
-{
+static int init(int title, int message) {
     if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
         // don't show popup over popup
         return 0;
@@ -31,8 +30,7 @@ static int init(int title, int message)
     return 1;
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK, 0);
@@ -40,40 +38,35 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     image_buttons_draw(80, 80, buttons, 1);
     graphics_reset_dialog();
 }
 
-static void close(void)
-{
+static void close(void) {
     window_go_back();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 1, 0))
-            return;
+        return;
     if (input_go_back_requested(m, h) || h->enter_pressed)
         close();
 
 }
 
-static void button_ok(int param1, int param2)
-{
+static void button_ok(int param1, int param2) {
     close();
 }
 
-void window_plain_message_dialog_show(int title, int message)
-{
+void window_plain_message_dialog_show(int title, int message) {
     if (init(title, message)) {
         window_type window = {
-            WINDOW_PLAIN_MESSAGE_DIALOG,
-            draw_background,
-            draw_foreground,
-            handle_input
+                WINDOW_PLAIN_MESSAGE_DIALOG,
+                draw_background,
+                draw_foreground,
+                handle_input
         };
         window_show(&window);
     }

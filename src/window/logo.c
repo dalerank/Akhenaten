@@ -10,12 +10,10 @@
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 
-static void init(void)
-{
+static void init(void) {
     sound_music_play_intro();
 }
-static void draw_logo(void)
-{
+static void draw_logo(void) {
     graphics_clear_screens();
 
     graphics_in_dialog();
@@ -23,8 +21,7 @@ static void draw_logo(void)
     lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
         return;
@@ -33,13 +30,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
         hotkey_handle_escape();
 
 }
-void window_logo_show(int show_patch_message)
-{
+void window_logo_show(int show_patch_message) {
     window_type window = {
-        WINDOW_LOGO,
-        draw_logo,
-        0,
-        handle_input
+            WINDOW_LOGO,
+            draw_logo,
+            0,
+            handle_input
     };
     init(); // play menu track
     window_show(&window);

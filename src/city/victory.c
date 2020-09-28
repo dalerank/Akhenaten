@@ -18,24 +18,20 @@ static struct {
     int force_win;
 } data;
 
-void city_victory_reset(void)
-{
+void city_victory_reset(void) {
     data.state = VICTORY_STATE_NONE;
     data.force_win = 0;
 }
 
-void city_victory_force_win(void)
-{
+void city_victory_force_win(void) {
     data.force_win = 1;
 }
 
-int city_victory_state(void)
-{
+int city_victory_state(void) {
     return data.state;
 }
 
-static int determine_victory_state(void)
-{
+static int determine_victory_state(void) {
     int state = VICTORY_STATE_WON;
     int has_criteria = 0;
 
@@ -84,7 +80,7 @@ static int determine_victory_state(void)
             } else if (scenario_criteria_survival_enabled()) {
                 if (!has_criteria)
                     state = VICTORY_STATE_WON;
- else if (state != VICTORY_STATE_WON) {
+                else if (state != VICTORY_STATE_WON) {
                     // Lose game if you do not meet the criteria at the end of the road
                     state = VICTORY_STATE_LOST;
                 }
@@ -107,7 +103,7 @@ static int determine_victory_state(void)
         if (game_time_year() >= scenario_criteria_max_year()) {
             if (scenario_criteria_time_limit_enabled())
                 state = VICTORY_STATE_LOST;
- else if (scenario_criteria_survival_enabled())
+            else if (scenario_criteria_survival_enabled())
                 state = VICTORY_STATE_WON;
 
         }
@@ -129,10 +125,9 @@ static int determine_victory_state(void)
     return state;
 }
 
-void city_victory_check(void)
-{
+void city_victory_check(void) {
     if (scenario_is_open_play())
-            return;
+        return;
     data.state = determine_victory_state();
 
     if (city_data.mission.has_won)
@@ -146,7 +141,7 @@ void city_victory_check(void)
         if (data.state == VICTORY_STATE_LOST) {
             if (city_data.mission.fired_message_shown)
                 window_mission_end_show_fired();
- else {
+            else {
                 city_data.mission.fired_message_shown = 1;
                 city_message_post(1, MESSAGE_FIRED, 0, 0);
             }
@@ -164,15 +159,13 @@ void city_victory_check(void)
     }
 }
 
-void city_victory_update_months_to_govern(void)
-{
+void city_victory_update_months_to_govern(void) {
     if (city_data.mission.has_won)
         city_data.mission.continue_months_left--;
 
 }
 
-void city_victory_continue_governing(int months)
-{
+void city_victory_continue_governing(int months) {
     city_data.mission.has_won = 1;
     city_data.mission.continue_months_left += months;
     city_data.mission.continue_months_chosen = months;
@@ -181,14 +174,12 @@ void city_victory_continue_governing(int months)
     city_finance_update_salary();
 }
 
-void city_victory_stop_governing(void)
-{
+void city_victory_stop_governing(void) {
     city_data.mission.has_won = 0;
     city_data.mission.continue_months_left = 0;
     city_data.mission.continue_months_chosen = 0;
 }
 
-int city_victory_has_won(void)
-{
+int city_victory_has_won(void) {
     return city_data.mission.has_won;
 }

@@ -44,8 +44,8 @@ public:
     bool is_valid(size_t s, int i = -1);
     void force_validate_unsafe_pls_use_carefully();
 
-    const uint8_t* data_const();
-    void* data_unsafe_pls_use_carefully();
+    const uint8_t *data_const();
+    void *data_unsafe_pls_use_carefully();
 
     uint8_t read_u8(bool force = false);
     uint16_t read_u16(bool force = false);
@@ -64,8 +64,8 @@ public:
     void write_i32(int32_t value);
     void write_raw(const void *value, size_t s);
 
-    size_t from_file(size_t s, size_t c, FILE * __restrict__ fp);
-    size_t to_file(size_t s, size_t c, FILE * __restrict__ fp);
+    size_t from_file(size_t s, size_t c, FILE *__restrict__ fp);
+    size_t to_file(size_t s, size_t c, FILE *__restrict__ fp);
 };
 
 #endif // CORE_BUFFER_H

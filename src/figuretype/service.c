@@ -69,7 +69,7 @@ void figure_school_child_action(figure *f) {
     f->use_cross_country = 0;
     if (config_get(CONFIG_GP_CH_SCHOOL_WALKERS))
         f->max_roam_length = 192;
- else {
+    else {
         f->max_roam_length = 96;
     }
     building *b = building_get(f->building_id);

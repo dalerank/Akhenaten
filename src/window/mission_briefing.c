@@ -28,10 +28,10 @@ static const int GOAL_OFFSETS_X[] = {32, 288, 32, 288, 288, 288};
 static const int GOAL_OFFSETS_Y[] = {95, 95, 117, 117, 73, 135};
 
 static image_button image_button_back = {
-    0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1
+        0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1
 };
 static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1
+        0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_mission, button_none, 1, 0, 1
 };
 
 static struct {
@@ -40,8 +40,7 @@ static struct {
     int campaign_mission_loaded;
 } data;
 
-static void init(void)
-{
+static void init(void) {
     data.focus_button = 0;
     rich_text_reset(0);
 
@@ -55,8 +54,7 @@ static void init(void)
     }
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
 //    if (!data.campaign_mission_loaded) {
 //        data.campaign_mission_loaded = 1;
 //        if (!game_file_start_scenario_by_name(scenario_name())) {
@@ -142,8 +140,7 @@ static void draw_background(void)
 
     graphics_reset_dialog();
 }
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     rich_text_draw_scrollbar();
@@ -155,52 +152,46 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
 
     if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0))
-            return;
+        return;
     if (!data.is_review && game_mission_has_choice()) {
         if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0))
             return;
     }
     rich_text_handle_mouse(m_dialog);
 }
-static void button_back(int param1, int param2)
-{
+static void button_back(int param1, int param2) {
     if (!data.is_review) {
         sound_speech_stop();
         window_mission_selection_show();
     }
 }
-static void button_start_mission(int param1, int param2)
-{
+static void button_start_mission(int param1, int param2) {
     sound_speech_stop();
     sound_music_update(1);
     window_city_show();
     city_mission_reset_save_start();
 }
 
-static void show(void)
-{
+static void show(void) {
     window_type window = {
-        WINDOW_MISSION_BRIEFING,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_MISSION_BRIEFING,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init();
     window_show(&window);
 }
-void window_mission_briefing_show(void)
-{
+void window_mission_briefing_show(void) {
     data.is_review = 0;
     data.campaign_mission_loaded = 0;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
-void window_mission_briefing_show_review(void)
-{
+void window_mission_briefing_show_review(void) {
     data.is_review = 1;
     data.campaign_mission_loaded = 1;
     window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);

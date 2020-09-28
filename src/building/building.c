@@ -32,8 +32,7 @@ static struct {
 //    int unfixable_houses;
 } extra = {0, 0, 0};
 
-int building_find(int type)
-{
+int building_find(int type) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; ++i) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == type)
@@ -42,12 +41,10 @@ int building_find(int type)
     }
     return MAX_BUILDINGS[GAME_ENV];
 }
-building *building_get(int id)
-{
+building *building_get(int id) {
     return &all_buildings[id];
 }
-building *building_main(building *b)
-{
+building *building_main(building *b) {
     for (int guard = 0; guard < 9; guard++) {
         if (b->prev_part_building_id <= 0)
             return b;
@@ -56,12 +53,10 @@ building *building_main(building *b)
     }
     return &all_buildings[0];
 }
-building *building_next(building *b)
-{
+building *building_next(building *b) {
     return &all_buildings[b->next_part_building_id];
 }
-building *building_create(int type, int x, int y)
-{
+building *building_create(int type, int x, int y) {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
@@ -166,9 +161,9 @@ building *building_create(int type, int x, int y)
     if (type == BUILDING_MARKET) // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
 
-    if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME)
+    if (type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME)
         b->subtype.orientation = building_rotation_get_rotation();
-    
+
     b->x = x;
     b->y = y;
     b->grid_offset = map_grid_offset(x, y);
@@ -179,15 +174,13 @@ building *building_create(int type, int x, int y)
     return b;
 }
 
-static void building_delete(building *b)
-{
+static void building_delete(building *b) {
     building_clear_related_data(b);
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
 }
-void building_clear_related_data(building *b)
-{
+void building_clear_related_data(building *b) {
     if (b->storage_id)
         building_storage_delete(b->storage_id);
 
@@ -214,8 +207,7 @@ void building_clear_related_data(building *b)
         building_menu_update();
     }
 }
-void building_clear_all(void)
-{
+void building_clear_all(void) {
     for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         memset(&all_buildings[i], 0, sizeof(building));
         all_buildings[i].id = i;
@@ -234,23 +226,19 @@ void building_clear_all(void)
 //    }
 //}
 
-int building_is_house(int type)
-{
+int building_is_house(int type) {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
-int building_is_fort(int type)
-{
+int building_is_fort(int type) {
     return type == BUILDING_FORT_LEGIONARIES ||
-        type == BUILDING_FORT_JAVELIN ||
-        type == BUILDING_FORT_MOUNTED;
+           type == BUILDING_FORT_JAVELIN ||
+           type == BUILDING_FORT_MOUNTED;
 }
 
-int building_get_highest_id(void)
-{
+int building_get_highest_id(void) {
     return extra.highest_id_in_use;
 }
-void building_update_highest_id(void)
-{
+void building_update_highest_id(void) {
     extra.highest_id_in_use = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (all_buildings[i].state != BUILDING_STATE_UNUSED)
@@ -261,8 +249,7 @@ void building_update_highest_id(void)
         extra.highest_id_ever = extra.highest_id_in_use;
 
 }
-void building_update_state(void)
-{
+void building_update_state(void) {
     int land_recalc = 0;
     int wall_recalc = 0;
     int road_recalc = 0;
@@ -285,7 +272,7 @@ void building_update_state(void)
                 map_building_tiles_remove(i, b->x, b->y);
                 if (b->type == BUILDING_ROADBLOCK) {
                     // Leave the road behind the deleted roadblock
-                    map_terrain_add_roadblock_road(b->x,b->y,0);
+                    map_terrain_add_roadblock_road(b->x, b->y, 0);
                     road_recalc = 1;
                 }
                 land_recalc = 1;
@@ -313,8 +300,7 @@ void building_update_state(void)
         map_tiles_update_all_roads();
 
 }
-void building_update_desirability(void)
-{
+void building_update_desirability(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
         if (b->state != BUILDING_STATE_IN_USE)
@@ -325,19 +311,29 @@ void building_update_desirability(void)
             b->desirability += 10;
 
         switch (map_elevation_at(b->grid_offset)) {
-            case 0: break;
-            case 1: b->desirability += 10; break;
-            case 2: b->desirability += 12; break;
-            case 3: b->desirability += 14; break;
-            case 4: b->desirability += 16; break;
-            default: b->desirability += 18; break;
+            case 0:
+                break;
+            case 1:
+                b->desirability += 10;
+                break;
+            case 2:
+                b->desirability += 12;
+                break;
+            case 3:
+                b->desirability += 14;
+                break;
+            case 4:
+                b->desirability += 16;
+                break;
+            default:
+                b->desirability += 18;
+                break;
         }
     }
 }
 
-int building_mothball_toggle(building *b)
-{
-    if (b->state == BUILDING_STATE_IN_USE ) {
+int building_mothball_toggle(building *b) {
+    if (b->state == BUILDING_STATE_IN_USE) {
         b->state = BUILDING_STATE_MOTHBALLED;
         b->num_workers = 0;
     } else if (b->state == BUILDING_STATE_MOTHBALLED)
@@ -346,8 +342,7 @@ int building_mothball_toggle(building *b)
     return b->state;
 
 }
-int building_mothball_set(building* b, int mothball)
-{
+int building_mothball_set(building *b, int mothball) {
     if (mothball) {
         if (b->state == BUILDING_STATE_IN_USE) {
             b->state = BUILDING_STATE_MOTHBALLED;
@@ -360,8 +355,7 @@ int building_mothball_set(building* b, int mothball)
 
 }
 
-void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
-{
+void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
     for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building_state_save_to_buffer(buf, &all_buildings[i]);
     }
@@ -373,8 +367,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 //    corrupt_houses->write_i32(extra.incorrect_houses);
 //    corrupt_houses->write_i32(extra.unfixable_houses);
 }
-void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
-{
+void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever) {
     for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (!buf->is_valid(1))
             break;

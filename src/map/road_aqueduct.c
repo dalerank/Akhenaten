@@ -11,8 +11,7 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
-int map_can_place_road_under_aqueduct(int grid_offset)
-{
+int map_can_place_road_under_aqueduct(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     int check_y;
     switch (image_id) {
@@ -26,10 +25,20 @@ int map_can_place_road_under_aqueduct(int grid_offset)
             break;
         case 1:
         case 3:
-        case 9: case 10: case 11: case 12: case 13: case 14:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
         case 16:
         case 18:
-        case 24: case 25: case 26: case 27: case 28: case 29:
+        case 24:
+        case 25:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
             check_y = 0;
             break;
         default: // not a straight aqueduct
@@ -64,8 +73,7 @@ int map_can_place_road_under_aqueduct(int grid_offset)
     return 1;
 }
 
-int map_can_place_aqueduct_on_road(int grid_offset)
-{
+int map_can_place_aqueduct_on_road(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_TERRAIN_ROAD);
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50)
         return 0;
@@ -88,8 +96,7 @@ int map_can_place_aqueduct_on_road(int grid_offset)
     return 1;
 }
 
-int map_get_aqueduct_with_road_image(int grid_offset)
-{
+int map_get_aqueduct_with_road_image(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     switch (image_id) {
         case 2:
@@ -116,8 +123,7 @@ int map_get_aqueduct_with_road_image(int grid_offset)
     }
 }
 
-static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
-{
+static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation) {
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
@@ -134,20 +140,19 @@ static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
     return is_road;
 }
 
-int map_is_straight_road_for_aqueduct(int grid_offset)
-{
+int map_is_straight_road_for_aqueduct(int grid_offset) {
     int road_tiles_x =
-        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2) +
-        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2) +
+            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
     int road_tiles_y =
-        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1) +
-        is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
+            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1) +
+            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
 
     if (road_tiles_x == 2 && road_tiles_y == 0)
         return 1;
- else if (road_tiles_y == 2 && road_tiles_x == 0)
+    else if (road_tiles_y == 2 && road_tiles_x == 0)
         return 1;
- else {
+    else {
         return 0;
     }
 }

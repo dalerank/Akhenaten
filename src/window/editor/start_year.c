@@ -19,19 +19,17 @@ static void button_era(int param1, int param2);
 static void button_year(int param1, int param2);
 
 static generic_button buttons[] = {
-    {158, 100, 100, 30, button_era, button_none},
-    {278, 100, 120, 30, button_year, button_none},
+        {158, 100, 100, 30, button_era,  button_none},
+        {278, 100, 120, 30, button_year, button_none},
 };
 
 static int focus_button_id;
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(128, 44, 20, 10);
@@ -49,41 +47,36 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 2, &focus_button_id))
-            return;
+        return;
     if (input_go_back_requested(m, h))
         window_editor_starting_conditions_show();
 
 }
 
-static void button_era(int param1, int param2)
-{
+static void button_era(int param1, int param2) {
     scenario_editor_set_start_year(-scenario_property_start_year());
 }
 
-static void set_year(int value)
-{
+static void set_year(int value) {
     if (scenario_property_start_year() < 0)
         value = -value;
 
     scenario_editor_set_start_year(value);
 }
 
-static void button_year(int param1, int param2)
-{
+static void button_year(int param1, int param2) {
     window_numeric_input_show(screen_dialog_offset_x() + 140, screen_dialog_offset_y() + 80,
                               4, 9999, set_year);
 }
 
-void window_editor_start_year_show(void)
-{
+void window_editor_start_year_show(void) {
     window_type window = {
-        WINDOW_EDITOR_START_YEAR,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_EDITOR_START_YEAR,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     window_show(&window);
 }

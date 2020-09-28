@@ -20,124 +20,123 @@
 #include "map/terrain.h"
 
 static const int ENEMY_ATTACK_PRIORITY[4][100] = {
-    {
-        BUILDING_GRANARY, BUILDING_WAREHOUSE, BUILDING_MARKET,
-        BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
-        BUILDING_OLIVE_FARM, BUILDING_VINES_FARM, BUILDING_PIG_FARM, 0
-    },
-    {
-        BUILDING_SENATE_UPGRADED, BUILDING_SENATE,
-        BUILDING_FORUM_UPGRADED, BUILDING_FORUM, 0
-    },
-    {
-        BUILDING_GOVERNORS_PALACE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_HOUSE,
-        BUILDING_HOUSE_LUXURY_PALACE, BUILDING_HOUSE_LARGE_PALACE,
-        BUILDING_HOUSE_MEDIUM_PALACE, BUILDING_HOUSE_SMALL_PALACE,
-        BUILDING_HOUSE_GRAND_VILLA, BUILDING_HOUSE_LARGE_VILLA,
-        BUILDING_HOUSE_MEDIUM_VILLA, BUILDING_HOUSE_SMALL_VILLA,
-        BUILDING_HOUSE_GRAND_INSULA, BUILDING_HOUSE_LARGE_INSULA,
-        BUILDING_HOUSE_MEDIUM_INSULA, BUILDING_HOUSE_SMALL_INSULA,
-        BUILDING_HOUSE_LARGE_CASA, BUILDING_HOUSE_SMALL_CASA,
-        BUILDING_HOUSE_LARGE_HOVEL, BUILDING_HOUSE_SMALL_HOVEL,
-        BUILDING_HOUSE_LARGE_SHACK, BUILDING_HOUSE_SMALL_SHACK,
-        BUILDING_HOUSE_LARGE_TENT, BUILDING_HOUSE_SMALL_TENT, 0
-    },
-    {
-        BUILDING_MILITARY_ACADEMY, BUILDING_PREFECTURE, 0
-    }
+        {
+                BUILDING_GRANARY,          BUILDING_WAREHOUSE,       BUILDING_MARKET,
+                                                                                              BUILDING_WHEAT_FARM,          BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
+                                                                                                                                                                                   BUILDING_OLIVE_FARM, BUILDING_VINES_FARM,        BUILDING_PIG_FARM, 0
+        },
+        {
+                BUILDING_SENATE_UPGRADED,  BUILDING_SENATE,
+                                                                     BUILDING_FORUM_UPGRADED, BUILDING_FORUM,               0
+        },
+        {
+                BUILDING_GOVERNORS_PALACE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_HOUSE,
+                                                                                              BUILDING_HOUSE_LUXURY_PALACE, BUILDING_HOUSE_LARGE_PALACE,
+                                                                                                                                                     BUILDING_HOUSE_MEDIUM_PALACE, BUILDING_HOUSE_SMALL_PALACE,
+                                                                                                                                                                                                        BUILDING_HOUSE_GRAND_VILLA, BUILDING_HOUSE_LARGE_VILLA,
+                                                                                                                                                                                                                                                       BUILDING_HOUSE_MEDIUM_VILLA, BUILDING_HOUSE_SMALL_VILLA,
+                BUILDING_HOUSE_GRAND_INSULA, BUILDING_HOUSE_LARGE_INSULA,
+                BUILDING_HOUSE_MEDIUM_INSULA, BUILDING_HOUSE_SMALL_INSULA,
+                BUILDING_HOUSE_LARGE_CASA, BUILDING_HOUSE_SMALL_CASA,
+                BUILDING_HOUSE_LARGE_HOVEL, BUILDING_HOUSE_SMALL_HOVEL,
+                BUILDING_HOUSE_LARGE_SHACK, BUILDING_HOUSE_SMALL_SHACK,
+                BUILDING_HOUSE_LARGE_TENT, BUILDING_HOUSE_SMALL_TENT, 0
+        },
+        {
+                BUILDING_MILITARY_ACADEMY, BUILDING_PREFECTURE,      0
+        }
 };
 
 static const int RIOTER_ATTACK_PRIORITY[100] = {
-    79, 78, 77, 29, 28, 27, 26, 25, 85, 84, 32, 33, 98, 65, 66, 67,
-    68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
-    20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
-    62, 63, 64, 34, 36, 37, 35, 94, 19, 18, 17, 16, 15, 49, 106, 107,
-    109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10, 0
+        79, 78, 77, 29, 28, 27, 26, 25, 85, 84, 32, 33, 98, 65, 66, 67,
+        68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
+        20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
+        62, 63, 64, 34, 36, 37, 35, 94, 19, 18, 17, 16, 15, 49, 106, 107,
+        109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10, 0
 };
 
 static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40] = {
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -4, 0, 4, 0, -12, 0, 12, 0, -4, 12, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -4, 0, 4, 0, -12, 0, 12, 12, -4, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -4, 0, 4, 0, -12, 0, 12, 0, -4, -12, 4, -12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -4, 0, 4, 0, -12, 0, 12, -12, -4, -12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    },
-    {
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    }
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -6, 0, 6, 0, -6,  2, 6,  2, -2, 4,  4, 6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, 2, -6,  2, 6,  4,  -2, 6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -6, 0, 6, 0, -6,  -2, 6,  -2, -4, -6,  4, -6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, -2, -6,  -2, 6,  -6,  -4, -6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -6, 0, 6, 0, -6,  2, 6,  2, -2, 4,  4, 6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, 2, -6,  2, 6,  4,  -2, 6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -6, 0, 6, 0, -6,  -2, 6,  -2, -4, -6,  4, -6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, -2, -6,  -2, 6,  -6,  -4, -6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -6, 0, 6, 0, -6,  2, 6,  2, -2, 4,  4, 6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, 2, -6,  2, 6,  4,  -2, 6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -6, 0, 6, 0, -6,  -2, 6,  -2, -4, -6,  4, -6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, -2, -6,  -2, 6,  -6,  -4, -6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -6, 0, 6, 0, -6,  2, 6,  2, -2, 4,  4, 6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, 2, -6,  2, 6,  4,  -2, 6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -6, 0, 6, 0, -6,  -2, 6,  -2, -4, -6,  4, -6,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -6, 0, 6, -2, -6,  -2, 6,  -6,  -4, -6,  4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -4, 0, 4, 0, -12, 0, 12, 0, -4, 12, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -4, 0, 4, 0, -12, 0, 12, 12, -4, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -4, 0, 4, 0, -12, 0,  12, 0,  -4, -12, 4, -12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -4, 0, 4, 0,  -12, 0,  12, -12, -4, -12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        },
+        {
+                {0, 0, -3, 0, 3, 0, -8,  0, 8,  0, -3, 8,  3, 8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0, -8,  0, 8,  8,  -3, 8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, -3, 0, 3, 0, -8,  0,  8,  0,  -3, -8,  3, -8,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, -3, 0, 3, 0,  -8,  0,  8,  -8,  -3, -8,  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        }
 };
 
-int formation_rioter_get_target_building(int *x_tile, int *y_tile)
-{
+int formation_rioter_get_target_building(int *x_tile, int *y_tile) {
     int best_type_index = 100;
     building *best_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -169,8 +168,7 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
     }
 }
 
-static void set_enemy_target_building(formation *m)
-{
+static void set_enemy_target_building(formation *m) {
     int attack = m->attack_type;
     if (attack == FORMATION_ATTACK_RANDOM)
         attack = random_byte() & 3;
@@ -224,14 +222,13 @@ static void set_enemy_target_building(formation *m)
     if (best_building) {
         if (best_building->type == BUILDING_WAREHOUSE)
             formation_set_destination_building(m, best_building->x + 1, best_building->y, best_building->id + 1);
- else {
+        else {
             formation_set_destination_building(m, best_building->x, best_building->y, best_building->id);
         }
     }
 }
 
-static void set_native_target_building(formation *m)
-{
+static void set_native_target_building(formation *m) {
     int meeting_x, meeting_y;
     city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
     building *min_building = 0;
@@ -264,22 +261,21 @@ static void set_native_target_building(formation *m)
 
 }
 
-static void approach_target(formation *m)
-{
+static void approach_target(formation *m) {
     if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
-            m->destination_x, m->destination_y, m->destination_building_id, 400) ||
+                                                    m->destination_x, m->destination_y, m->destination_building_id,
+                                                    400) ||
         map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
-            m->destination_x, m->destination_y)) {
+                                                             m->destination_x, m->destination_y)) {
         int x_tile, y_tile;
         if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
-                m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
+                                                      m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
             formation_set_destination(m, x_tile, y_tile);
         }
     }
 }
 
-static void set_figures_to_initial(const formation *m)
-{
+static void set_figures_to_initial(const formation *m) {
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] > 0) {
             figure *f = figure_get(m->figures[i]);
@@ -292,17 +288,16 @@ static void set_figures_to_initial(const formation *m)
     }
 }
 
-int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_tile, int *y_tile)
-{
+int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_tile, int *y_tile) {
     int base_offset = map_grid_offset(
-        formation_layout_position_x(m->layout, 0),
-        formation_layout_position_y(m->layout, 0));
+            formation_layout_position_x(m->layout, 0),
+            formation_layout_position_y(m->layout, 0));
     int figure_offsets[50];
     figure_offsets[0] = 0;
     for (int i = 1; i < m->num_figures; i++) {
         figure_offsets[i] = map_grid_offset(
-            formation_layout_position_x(m->layout, i),
-            formation_layout_position_y(m->layout, i)) - base_offset;
+                formation_layout_position_x(m->layout, i),
+                formation_layout_position_y(m->layout, i)) - base_offset;
     }
     map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
     for (int r = 0; r <= 10; r++) {
@@ -342,11 +337,10 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
     return 0;
 }
 
-static void mars_kill_enemies(void)
-{
+static void mars_kill_enemies(void) {
     int to_kill = city_god_spirit_of_mars_power();
     if (to_kill <= 0)
-            return;
+        return;
     int grid_offset = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV] && to_kill > 0; i++) {
         figure *f = figure_get(i);
@@ -365,8 +359,7 @@ static void mars_kill_enemies(void)
     city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
 }
 
-static void update_enemy_movement(formation *m, int roman_distance)
-{
+static void update_enemy_movement(formation *m, int roman_distance) {
     const enemy_army *army = enemy_army_get(m->invasion_id);
     formation_state *state = &m->enemy_state;
     int regroup = 0;
@@ -376,7 +369,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
     int target_formation_id = 0;
     if (m->missile_fired)
         halt = 1;
- else if (m->missile_attack_timeout) {
+    else if (m->missile_attack_timeout) {
         pursue_target = 1;
         target_formation_id = m->missile_attack_formation_id;
     } else if (m->wait_ticks < 32) {
@@ -465,7 +458,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
 
     if (halt)
         formation_set_destination(m, m->x_home, m->y_home);
- else if (pursue_target) {
+    else if (pursue_target) {
         if (target_formation_id > 0) {
             const formation *target = formation_get(target_formation_id);
             if (target->num_figures > 0)
@@ -477,9 +470,9 @@ static void update_enemy_movement(formation *m, int roman_distance)
     } else if (regroup) {
         int layout = army->layout;
         int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] +
-            army->home_x;
+                       army->home_x;
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
-            army->home_y;
+                       army->home_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile))
             formation_set_destination(m, x_tile, y_tile);
@@ -487,9 +480,9 @@ static void update_enemy_movement(formation *m, int roman_distance)
     } else if (advance) {
         int layout = army->layout;
         int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] +
-            army->destination_x;
+                       army->destination_x;
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
-            army->destination_y;
+                       army->destination_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile))
             formation_set_destination(m, x_tile, y_tile);
@@ -497,8 +490,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
     }
 }
 
-static void update_enemy_formation(formation *m, int *roman_distance)
-{
+static void update_enemy_formation(formation *m, int *roman_distance) {
     enemy_army *army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_legions()) {
         if (m->figure_type != FIGURE_FORT_JAVELIN)
@@ -546,7 +538,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         int x_tile, y_tile;
         if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &x_tile, &y_tile))
             *roman_distance = 1;
- else if (map_soldier_strength_get_max(m->x_home, m->y_home, 32, &x_tile, &y_tile))
+        else if (map_soldier_strength_get_max(m->x_home, m->y_home, 32, &x_tile, &y_tile))
             *roman_distance = 2;
 
         if (army->ignore_roman_soldiers)
@@ -568,17 +560,16 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     m->enemy_legion_index = army->num_legions++;
     m->wait_ticks++;
     formation_set_destination_building(m,
-        army->destination_x, army->destination_y, army->destination_building_id
+                                       army->destination_x, army->destination_y, army->destination_building_id
     );
 
     update_enemy_movement(m, *roman_distance);
 }
 
-void formation_enemy_update(void)
-{
+void formation_enemy_update(void) {
     if (enemy_army_total_enemy_formations() <= 0)
         enemy_armies_clear_ignore_roman_soldiers();
- else {
+    else {
         enemy_army_calculate_roman_influence();
         enemy_armies_clear_formations();
         int roman_distance = 0;

@@ -278,7 +278,7 @@ void figure_wolf_action(figure *f) {
                 }
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST) {
+            else if (f->direction == DIR_FIGURE_LOST) {
                 f->direction = f->previous_tile_direction;
                 f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 f->wait_ticks = f->id & 0x1f;
@@ -288,12 +288,12 @@ void figure_wolf_action(figure *f) {
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset(f);
- else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         f->image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 +
                       dir + 8 * (f->attack_image_offset / 4);
     } else if (f->action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
         f->image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * f->image_offset;
     }
 }
@@ -339,9 +339,9 @@ void figure_zebra_action(figure *f) {
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + 96 + figure_image_corpse_offset(f);
- else if (f->action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
+    else if (f->action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
         f->image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + dir;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + dir + 8 * f->image_offset;
     }
 }
@@ -475,13 +475,13 @@ void figure_hippodrome_horse_action(figure *f) {
                     }
                     if ((f->id + random_byte()) & 1)
                         f->speed_multiplier = 3;
- else {
+                    else {
                         f->speed_multiplier = 4;
                     }
                 } else if (f->wait_ticks_missile == 11) {
                     if ((f->id + random_byte()) & 1)
                         f->speed_multiplier = 3;
- else {
+                    else {
                         f->speed_multiplier = 4;
                     }
                 }
@@ -533,7 +533,7 @@ void figure_hippodrome_horse_action(figure *f) {
 
 void figure_hippodrome_horse_reroute(void) {
     if (!city_entertainment_hippodrome_has_race())
-            return;
+        return;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_HIPPODROME_HORSES) {

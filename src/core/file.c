@@ -6,18 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-FILE *file_open(const char *filename, const char *mode)
-{
+FILE *file_open(const char *filename, const char *mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
-int file_close(FILE *stream)
-{
+int file_close(FILE *stream) {
     return fclose(stream);
 }
 
-int file_has_extension(const char *filename, const char *extension)
-{
+int file_has_extension(const char *filename, const char *extension) {
     if (!extension || !*extension)
         return 1;
 
@@ -32,8 +29,7 @@ int file_has_extension(const char *filename, const char *extension)
     return string_compare_case_insensitive(filename, extension) == 0;
 }
 
-void file_change_extension(char *filename, const char *new_extension)
-{
+void file_change_extension(char *filename, const char *new_extension) {
     char c;
     do {
         c = *filename;
@@ -47,8 +43,7 @@ void file_change_extension(char *filename, const char *new_extension)
     }
 }
 
-void file_append_extension(char *filename, const char *extension)
-{
+void file_append_extension(char *filename, const char *extension) {
     char c;
     do {
         c = *filename;
@@ -62,8 +57,7 @@ void file_append_extension(char *filename, const char *extension)
     filename[4] = 0;
 }
 
-void file_remove_extension(uint8_t *filename)
-{
+void file_remove_extension(uint8_t *filename) {
     uint8_t c;
     do {
         c = *filename;
@@ -75,12 +69,10 @@ void file_remove_extension(uint8_t *filename)
     }
 }
 
-int file_exists(const char *filename, int localizable)
-{
+int file_exists(const char *filename, int localizable) {
     return NULL != dir_get_file(filename, localizable);
 }
 
-int file_remove(const char *filename)
-{
+int file_remove(const char *filename) {
     return platform_file_manager_remove_file(filename);
 }

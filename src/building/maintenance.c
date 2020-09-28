@@ -29,19 +29,18 @@
 
 static int fire_spread_direction = 0;
 
-void building_maintenance_update_fire_direction(void)
-{
+void building_maintenance_update_fire_direction(void) {
     fire_spread_direction = random_byte() & 7;
 }
 
-void building_maintenance_update_burning_ruins(void)
-{
+void building_maintenance_update_burning_ruins(void) {
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->type != BUILDING_BURNING_RUIN )
+        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) ||
+            b->type != BUILDING_BURNING_RUIN)
             continue;
 
         if (b->fire_duration < 0)
@@ -101,8 +100,7 @@ void building_maintenance_update_burning_ruins(void)
 
 }
 
-int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
-{
+int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
     int min_free_building_id = 0;
     int min_occupied_building_id = 0;
     int min_occupied_dist = *distance = 10000;
@@ -112,7 +110,8 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     for (int i = 0; i < burning_size; i++) {
         int building_id = burning[i];
         building *b = building_get(building_id);
-        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) && b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
+        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) &&
+            b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figure_id4) {
                 if (dist < min_occupied_dist) {
@@ -132,8 +131,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     return min_free_building_id;
 }
 
-static void collapse_building(building *b)
-{
+static void collapse_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse())
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
@@ -142,8 +140,7 @@ static void collapse_building(building *b)
     building_destroy_by_collapse(b);
 }
 
-static void fire_building(building *b)
-{
+static void fire_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire())
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
@@ -152,8 +149,7 @@ static void fire_building(building *b)
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-void building_maintenance_check_fire_collapse(void)
-{
+void building_maintenance_check_fire_collapse(void) {
     city_sentiment_reset_protesters_criminals();
 
     int climate = scenario_property_climate();
@@ -208,8 +204,7 @@ void building_maintenance_check_fire_collapse(void)
         map_routing_update_land();
 }
 
-void building_maintenance_check_rome_access(void)
-{
+void building_maintenance_check_rome_access(void) {
     const map_tile *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);
     int problem_grid_offset = 0;
@@ -257,7 +252,8 @@ void building_maintenance_check_rome_access(void)
 
             b->distance_from_entry = 0;
             int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);
+            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road,
+                                                                        &y_road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);

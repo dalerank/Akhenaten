@@ -10,15 +10,13 @@ static struct {
     int enabled;
 } data;
 
-void system_mouse_get_relative_state(int *x, int *y)
-{
+void system_mouse_get_relative_state(int *x, int *y) {
     SDL_GetRelativeMouseState(x, y);
 }
 
-void system_mouse_set_relative_mode(int enabled)
-{
+void system_mouse_set_relative_mode(int enabled) {
     if (enabled == data.enabled)
-            return;
+        return;
     if (enabled) {
         SDL_GetMouseState(&data.x, &data.y);
         SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -33,8 +31,7 @@ void system_mouse_set_relative_mode(int enabled)
     data.enabled = enabled;
 }
 
-void system_move_mouse_cursor(int delta_x, int delta_y)
-{
+void system_move_mouse_cursor(int delta_x, int delta_y) {
     int x = mouse_get()->x + delta_x;
     int y = mouse_get()->y + delta_y;
     system_set_mouse_position(&x, &y);

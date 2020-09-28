@@ -16,16 +16,15 @@
 static void button_rating(int rating, int param2);
 
 static generic_button rating_buttons[] = {
-    { 80, 286, 110, 66, button_rating, button_none, SELECTED_RATING_CULTURE, 0},
-    {200, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
-    {320, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PEACE, 0},
-    {440, 286, 110, 66, button_rating, button_none, SELECTED_RATING_FAVOR, 0},
+        {80,  286, 110, 66, button_rating, button_none, SELECTED_RATING_CULTURE,    0},
+        {200, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
+        {320, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PEACE,      0},
+        {440, 286, 110, 66, button_rating, button_none, SELECTED_RATING_FAVOR,      0},
 };
 
 static int focus_button_id;
 
-static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
-{
+static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached) {
     int image_base = image_id_from_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
     int value_to_draw = value;
@@ -33,8 +32,7 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
         if (has_reached && value < 25)
             value_to_draw = 25;
 
-    }
-    else {
+    } else {
         // Default behaviour: not completing too small columns
         if (value < 30)
             has_reached = 0;
@@ -49,14 +47,13 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 
 }
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
     if (!scenario_criteria_population_enabled() || scenario_is_open_play())
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
- else {
+    else {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
         text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }
@@ -72,7 +69,7 @@ static int draw_background(void)
     lang_text_draw_centered(53, 1, 80, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(culture, 80, 309, 100, FONT_LARGE_BLACK);
     width = text_draw_number(has_culture_goal ? scenario_criteria_culture() : 0,
-            '@', " ", 85, 334, FONT_NORMAL_BLACK);
+                             '@', " ", 85, 334, FONT_NORMAL_BLACK);
     lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
     int has_reached = !has_culture_goal || culture >= scenario_criteria_culture();
     draw_rating_column(110, 274, culture, has_reached);
@@ -84,7 +81,7 @@ static int draw_background(void)
     lang_text_draw_centered(53, 2, 200, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(prosperity, 200, 309, 100, FONT_LARGE_BLACK);
     width = text_draw_number(has_prosperity_goal ? scenario_criteria_prosperity() : 0,
-            '@', " ", 205, 334, FONT_NORMAL_BLACK);
+                             '@', " ", 205, 334, FONT_NORMAL_BLACK);
     lang_text_draw(53, 5, 205 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !has_prosperity_goal || prosperity >= scenario_criteria_prosperity();
     draw_rating_column(230, 274, prosperity, has_reached);
@@ -96,7 +93,7 @@ static int draw_background(void)
     lang_text_draw_centered(53, 3, 320, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(peace, 320, 309, 100, FONT_LARGE_BLACK);
     width = text_draw_number(has_peace_goal ? scenario_criteria_peace() : 0,
-            '@', " ", 325, 334, FONT_NORMAL_BLACK);
+                             '@', " ", 325, 334, FONT_NORMAL_BLACK);
     lang_text_draw(53, 5, 325 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !has_peace_goal || peace >= scenario_criteria_peace();
     draw_rating_column(350, 274, peace, has_reached);
@@ -108,7 +105,7 @@ static int draw_background(void)
     lang_text_draw_centered(53, 4, 440, 294, 110, FONT_NORMAL_BLACK);
     text_draw_number_centered(favor, 440, 309, 100, FONT_LARGE_BLACK);
     width = text_draw_number(has_favor_goal ? scenario_criteria_favor() : 0,
-            '@', " ", 445, 334, FONT_NORMAL_BLACK);
+                             '@', " ", 445, 334, FONT_NORMAL_BLACK);
     lang_text_draw(53, 5, 445 + width, 334, FONT_NORMAL_BLACK);
     has_reached = !has_favor_goal || favor >= scenario_criteria_favor();
     draw_rating_column(470, 274, favor, has_reached);
@@ -120,7 +117,7 @@ static int draw_background(void)
             lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
             if (culture <= 90) {
                 lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(),
-                    72, 374, 496, FONT_NORMAL_WHITE);
+                                         72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 50, 72, 374, 496, FONT_NORMAL_WHITE);
             }
@@ -129,7 +126,7 @@ static int draw_background(void)
             lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
             if (prosperity <= 90) {
                 lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
-                    72, 374, 496, FONT_NORMAL_WHITE);
+                                         72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
             }
@@ -138,7 +135,7 @@ static int draw_background(void)
             lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
             if (peace <= 90) {
                 lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
-                    72, 374, 496, FONT_NORMAL_WHITE);
+                                         72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 52, 72, 374, 496, FONT_NORMAL_WHITE);
             }
@@ -147,7 +144,7 @@ static int draw_background(void)
             lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
             if (favor <= 90) {
                 lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
-                    72, 374, 496, FONT_NORMAL_WHITE);
+                                         72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 53, 72, 374, 496, FONT_NORMAL_WHITE);
             }
@@ -160,43 +157,43 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
     button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
     button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
     button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
 }
 
-static int handle_mouse(const mouse *m)
-{
+static int handle_mouse(const mouse *m) {
     return generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &focus_button_id);
 }
 
-static void button_rating(int rating, int param2)
-{
+static void button_rating(int rating, int param2) {
     city_rating_select(rating);
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
-{
+static int get_tooltip_text(void) {
     switch (focus_button_id) {
-        case SELECTED_RATING_CULTURE: return 102;
-        case SELECTED_RATING_PROSPERITY: return 103;
-        case SELECTED_RATING_PEACE: return 104;
-        case SELECTED_RATING_FAVOR: return 105;
-        default: return 0;
+        case SELECTED_RATING_CULTURE:
+            return 102;
+        case SELECTED_RATING_PROSPERITY:
+            return 103;
+        case SELECTED_RATING_PEACE:
+            return 104;
+        case SELECTED_RATING_FAVOR:
+            return 105;
+        default:
+            return 0;
     }
 }
 
-const advisor_window_type *window_advisor_ratings(void)
-{
+const advisor_window_type *window_advisor_ratings(void) {
     static const advisor_window_type window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
+            draw_background,
+            draw_foreground,
+            handle_mouse,
+            get_tooltip_text
     };
     return &window;
 }

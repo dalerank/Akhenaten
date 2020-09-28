@@ -17,22 +17,20 @@ static void button_send_gift(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
 static generic_button buttons[] = {
-    {208, 213, 300, 20, button_set_gift, button_none, 1, 0},
-    {208, 233, 300, 20, button_set_gift, button_none, 2, 0},
-    {208, 253, 300, 20, button_set_gift, button_none, 3, 0},
-    {118, 336, 260, 20, button_send_gift, button_none, 0, 0},
-    {400, 336, 160, 20, button_cancel, button_none, 0, 0},
+        {208, 213, 300, 20, button_set_gift,  button_none, 1, 0},
+        {208, 233, 300, 20, button_set_gift,  button_none, 2, 0},
+        {208, 253, 300, 20, button_set_gift,  button_none, 3, 0},
+        {118, 336, 260, 20, button_send_gift, button_none, 0, 0},
+        {400, 336, 160, 20, button_cancel,    button_none, 0, 0},
 };
 
 static int focus_button_id;
 
-static void init(void)
-{
+static void init(void) {
     city_emperor_init_selected_gift();
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
     graphics_in_dialog();
@@ -48,8 +46,7 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     inner_panel_draw(112, 208, 28, 5);
@@ -87,42 +84,37 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 5, &focus_button_id))
-            return;
+        return;
     if (input_go_back_requested(m, h))
         window_advisors_show();
 
 }
 
-static void button_set_gift(int gift_id, int param2)
-{
+static void button_set_gift(int gift_id, int param2) {
     if (city_emperor_set_gift_size(gift_id - 1))
         window_invalidate();
 
 }
 
-static void button_send_gift(int param1, int param2)
-{
+static void button_send_gift(int param1, int param2) {
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
         city_emperor_send_gift();
         window_advisors_show();
     }
 }
 
-static void button_cancel(int param1, int param2)
-{
+static void button_cancel(int param1, int param2) {
     window_advisors_show();
 }
 
-void window_gift_to_emperor_show(void)
-{
+void window_gift_to_emperor_show(void) {
     window_type window = {
-        WINDOW_GIFT_TO_EMPEROR,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_GIFT_TO_EMPEROR,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init();
     window_show(&window);

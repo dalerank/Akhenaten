@@ -21,7 +21,7 @@ void scenario_emperor_change_init(void) {
 
 void scenario_emperor_change_process(void) {
     if (!scenario.emperor_change.enabled)
-            return;
+        return;
     if (data.state == 0) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             data.state = 1; // done

@@ -82,9 +82,9 @@ void figure_indigenous_native_action(figure *f) {
     int dir;
     if (f->action_state == FIGURE_ACTION_150_ATTACK || f->direction == DIR_FIGURE_ATTACK)
         dir = f->attack_direction;
- else if (f->direction < 8)
+    else if (f->direction < 8)
         dir = f->direction;
- else {
+    else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);
@@ -93,16 +93,16 @@ void figure_indigenous_native_action(figure *f) {
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->attack_image_offset >= 12)
             f->image_id = 393 + dir + 8 * ((f->attack_image_offset - 12) / 2);
- else {
+        else {
             f->image_id = 393 + dir;
         }
     } else if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = 441 + figure_image_corpse_offset(f);
- else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DIR_FIGURE_ATTACK)
         f->image_id = 393 + dir + 8 * (f->image_offset / 2);
- else if (f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+    else if (f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
         f->image_id = 297 + dir + 8 * f->image_offset;
- else {
+    else {
         f->image_id = 201 + dir + 8 * f->image_offset;
     }
 }

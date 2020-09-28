@@ -143,7 +143,7 @@ static void missile_hit_target(figure *f, int target_id, int legionary_type) {
     int target_damage = damage_inflicted + target->damage;
     if (target_damage <= max_damage)
         target->damage = target_damage;
- else { // kill target
+    else { // kill target
         target->damage = max_damage + 1;
         target->action_state = FIGURE_ACTION_149_CORPSE;
         target->wait_ticks = 0;
@@ -231,7 +231,7 @@ void figure_bolt_action(figure *f) {
         int target_damage = damage_inflicted + target->damage;
         if (target_damage <= max_damage)
             target->damage = target_damage;
- else { // kill target
+        else { // kill target
             target->damage = max_damage + 1;
             target->action_state = FIGURE_ACTION_149_CORPSE;
             target->wait_ticks = 0;

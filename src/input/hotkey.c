@@ -46,8 +46,7 @@ static struct {
     int num_arrows;
 } data;
 
-static void add_definition(const hotkey_mapping *mapping)
-{
+static void add_definition(const hotkey_mapping *mapping) {
     hotkey_definition *def = &data.definitions[data.num_definitions];
     def->key = mapping->key;
     def->modifiers = mapping->modifiers;
@@ -293,8 +292,7 @@ static void add_definition(const hotkey_mapping *mapping)
 
 }
 
-static void add_arrow(const hotkey_mapping *mapping)
-{
+static void add_arrow(const hotkey_mapping *mapping) {
     arrow_definition *arrow = &data.arrows[data.num_arrows];
     arrow->key = mapping->key;
     switch (mapping->action) {
@@ -319,14 +317,13 @@ static void add_arrow(const hotkey_mapping *mapping)
 
 }
 
-static int allocate_mapping_memory(int total_definitions, int total_arrows)
-{
+static int allocate_mapping_memory(int total_definitions, int total_arrows) {
     free(data.definitions);
     free(data.arrows);
     data.num_definitions = 0;
     data.num_arrows = 0;
-    data.definitions = (hotkey_definition*)malloc(sizeof(hotkey_definition) * total_definitions);
-    data.arrows = (arrow_definition*)malloc(sizeof(arrow_definition) * total_arrows);
+    data.definitions = (hotkey_definition *) malloc(sizeof(hotkey_definition) * total_definitions);
+    data.arrows = (arrow_definition *) malloc(sizeof(arrow_definition) * total_arrows);
     if (!data.definitions || !data.arrows) {
         free(data.definitions);
         free(data.arrows);
@@ -335,8 +332,7 @@ static int allocate_mapping_memory(int total_definitions, int total_arrows)
     return 1;
 }
 
-void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
-{
+void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings) {
     int total_definitions = 2; // Enter and ESC are fixed hotkeys
     int total_arrows = 0;
     for (int i = 0; i < num_mappings; i++) {
@@ -349,7 +345,7 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
         }
     }
     if (!allocate_mapping_memory(total_definitions, total_arrows))
-            return;
+        return;
 
     // Fixed keys: Escape and Enter
     data.definitions[0].action = &data.hotkey_state.enter_pressed;
@@ -377,25 +373,22 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
     }
 }
 
-const hotkeys *hotkey_state(void)
-{
+const hotkeys *hotkey_state(void) {
     return &data.hotkey_state;
 }
 
-void hotkey_reset_state(void)
-{
+void hotkey_reset_state(void) {
     memset(&data.hotkey_state, 0, sizeof(data.hotkey_state));
     memset(&data.global_hotkey_state, 0, sizeof(data.global_hotkey_state));
 }
 
-void hotkey_key_pressed(int key, int modifiers, int repeat)
-{
+void hotkey_key_pressed(int key, int modifiers, int repeat) {
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
     if (key == KEY_NONE)
-            return;
+        return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key)
@@ -410,14 +403,13 @@ void hotkey_key_pressed(int key, int modifiers, int repeat)
     }
 }
 
-void hotkey_key_released(int key, int modifiers)
-{
+void hotkey_key_released(int key, int modifiers) {
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }
     if (key == KEY_NONE)
-            return;
+        return;
     for (int i = 0; i < data.num_arrows; i++) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key)
@@ -426,29 +418,32 @@ void hotkey_key_released(int key, int modifiers)
     }
 }
 
-static void confirm_exit(int accepted)
-{
+static void confirm_exit(int accepted) {
     if (accepted)
         system_exit();
 
 }
 
-void hotkey_handle_escape(void)
-{
+void hotkey_handle_escape(void) {
     video_stop();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
 }
 
-void hotkey_handle_global_keys(void)
-{
+void hotkey_handle_global_keys(void) {
     if (data.global_hotkey_state.center_screen)
         system_center();
 
     if (data.global_hotkey_state.resize_to) {
         switch (data.global_hotkey_state.resize_to) {
-            case 640: system_resize(640, 480); break;
-            case 800: system_resize(800, 600); break;
-            case 1024: system_resize(1024, 768); break;
+            case 640:
+                system_resize(640, 480);
+                break;
+            case 800:
+                system_resize(800, 600);
+                break;
+            case 1024:
+                system_resize(1024, 768);
+                break;
         }
     }
     if (data.global_hotkey_state.toggle_fullscreen)

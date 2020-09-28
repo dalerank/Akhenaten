@@ -231,7 +231,7 @@ static struct {
         new imagepak,
         new imagepak,
 
-        new color_t[SCRATCH_DATA_SIZE-4000000]
+        new color_t[SCRATCH_DATA_SIZE - 4000000]
 };
 
 int terrain_ph_offset = 0;
@@ -321,7 +321,7 @@ static const color_t *load_external_data(const image *img) {
     // NB: isometric images are never external
     if (img->draw.is_fully_compressed)
         convert_compressed(buf, img->draw.data_length, data.tmp_image_data);
- else {
+    else {
         convert_uncompressed(buf, img->draw.data_length, data.tmp_image_data);
     }
     return data.tmp_image_data;
@@ -329,23 +329,21 @@ static const color_t *load_external_data(const image *img) {
 
 #include <cassert>
 
-imagepak::imagepak()
-{
+imagepak::imagepak() {
     initialized = false;
     images = nullptr;
     data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
 }
-bool imagepak::check_initialized()
-{
+bool imagepak::check_initialized() {
     return initialized == 0;
 }
-int imagepak::load_555(const char *filename_555, const char *filename_sgx, int shift)
-{
+int imagepak::load_555(const char *filename_555, const char *filename_sgx, int shift) {
     // prepare sgx data
     buffer *buf = new buffer(SCRATCH_DATA_SIZE);
-    if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
+    if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, buf,
+                                  SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
     int HEADER_SIZE = 0;
     if (file_has_extension(filename_sgx, "sg2"))
@@ -383,7 +381,8 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     // parse bitmap names
     int num_bmp_names = (int) header_data[5];
     char bmp_names[num_bmp_names][200];
-    buf->read_raw(bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
+    buf->read_raw(bmp_names, 200 *
+                             num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
     // move on to the rest of the content
     buf->set_offset(HEADER_SIZE);
@@ -465,7 +464,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
         int img_offset = (int) (dst - start_dst);
         if (img->draw.is_fully_compressed)
             dst += convert_compressed(buf, img->draw.data_length, dst);
- else if (img->draw.has_compressed_part) { // isometric tile
+        else if (img->draw.has_compressed_part) { // isometric tile
             dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
             dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
         } else {
@@ -480,16 +479,13 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     return 1;
 }
 
-int imagepak::get_entry_count()
-{
+int imagepak::get_entry_count() {
     return entries_num;
 }
-int imagepak::get_id(int group)
-{
+int imagepak::get_id(int group) {
     return group_image_ids[group] + id_shift_overall;
 }
-const image *imagepak::get_image(int id, bool relative)
-{
+const image *imagepak::get_image(int id, bool relative) {
     if (!relative)
         id -= id_shift_overall;
     if (id < 0 || id >= entries_num)
@@ -506,10 +502,11 @@ int image_groupid_translation(int table[], int group) {
 
     if (group > 99999)
         group -= 99999;
-    else for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
-        if (table[i] == group)
-            return table[i + 1];
-    }
+    else
+        for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
+            if (table[i] == group)
+                return table[i + 1];
+        }
 
     // missing entry!!!!
     return group;
@@ -547,12 +544,18 @@ const image *image_get(int id, int mode) {
                 return &DUMMY_IMAGE;
         case ENGINE_ENV_PHARAOH: // todo: mods
             const image *img;
-            img = data.ph_expansion->get_image(id); if (img != &DUMMY_IMAGE) return img;
-            img = data.ph_sprmain->get_image(id); if (img != &DUMMY_IMAGE) return img;
-            img = data.ph_unloaded->get_image(id); if (img != &DUMMY_IMAGE) return img;
-            img = data.main->get_image(id); if (img != &DUMMY_IMAGE) return img;
-            img = data.ph_terrain->get_image(id); if (img != &DUMMY_IMAGE) return img;
-            img = data.font->get_image(id); if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_expansion->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_sprmain->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_unloaded->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.main->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_terrain->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.font->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
             return data.ph_terrain->get_image(615, true);
     }
 //    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
@@ -561,11 +564,11 @@ const image *image_get(int id, int mode) {
 const image *image_letter(int letter_id) {
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT)
         return data.font->get_image(data.font_base_offset + letter_id);
- else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
+    else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET)
         return data.font->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
- else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET)
+    else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET)
         return image_get(image_id_from_group(GROUP_FONT) + letter_id);
- else {
+    else {
         return &DUMMY_IMAGE;
     }
 }
@@ -614,7 +617,7 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
             if (!data.main->load_555(filename_555, filename_sgx, 11706)) return 0;
             // ???? 539-long gap?
             if (!data.ph_terrain->load_555(gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3, 14252)) return 0;
-            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 15766 )) return 0;
+            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 15766)) return 0;
             break;
     }
 
@@ -642,13 +645,13 @@ int image_load_enemy(int enemy_id) {
 int image_load_fonts(encoding_type encoding) {
     if (encoding == ENCODING_CYRILLIC)
         return 0;
- else if (encoding == ENCODING_TRADITIONAL_CHINESE)
+    else if (encoding == ENCODING_TRADITIONAL_CHINESE)
         return 0;
- else if (encoding == ENCODING_SIMPLIFIED_CHINESE)
+    else if (encoding == ENCODING_SIMPLIFIED_CHINESE)
         return 0;
- else if (encoding == ENCODING_KOREAN)
+    else if (encoding == ENCODING_KOREAN)
         return 0;
- else {
+    else {
 //        free(data.font);
 //        free(data.font_data);
 //        data.font = 0;

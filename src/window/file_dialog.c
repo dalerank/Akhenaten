@@ -37,27 +37,27 @@ static void button_select_file(int index, int param2);
 static void on_scroll(void);
 
 static image_button image_buttons[] = {
-    {344, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok_cancel, button_none, 1, 0, 1},
-    {392, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_ok_cancel, button_none, 0, 0, 1},
+        {344, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_ok_cancel, button_none, 1, 0, 1},
+        {392, 335, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_ok_cancel, button_none, 0, 0, 1},
 };
 static generic_button file_buttons[] = {
-    {160, 128, 288, 16, button_select_file, button_none, 0, 0},
-    {160, 144, 288, 16, button_select_file, button_none, 1, 0},
-    {160, 160, 288, 16, button_select_file, button_none, 2, 0},
-    {160, 176, 288, 16, button_select_file, button_none, 3, 0},
-    {160, 192, 288, 16, button_select_file, button_none, 4, 0},
-    {160, 208, 288, 16, button_select_file, button_none, 5, 0},
-    {160, 224, 288, 16, button_select_file, button_none, 6, 0},
-    {160, 240, 288, 16, button_select_file, button_none, 7, 0},
-    {160, 256, 288, 16, button_select_file, button_none, 8, 0},
-    {160, 272, 288, 16, button_select_file, button_none, 9, 0},
-    {160, 288, 288, 16, button_select_file, button_none, 10, 0},
-    {160, 304, 288, 16, button_select_file, button_none, 11, 0},
+        {160, 128, 288, 16, button_select_file, button_none, 0,  0},
+        {160, 144, 288, 16, button_select_file, button_none, 1,  0},
+        {160, 160, 288, 16, button_select_file, button_none, 2,  0},
+        {160, 176, 288, 16, button_select_file, button_none, 3,  0},
+        {160, 192, 288, 16, button_select_file, button_none, 4,  0},
+        {160, 208, 288, 16, button_select_file, button_none, 5,  0},
+        {160, 224, 288, 16, button_select_file, button_none, 6,  0},
+        {160, 240, 288, 16, button_select_file, button_none, 7,  0},
+        {160, 256, 288, 16, button_select_file, button_none, 8,  0},
+        {160, 272, 288, 16, button_select_file, button_none, 9,  0},
+        {160, 288, 288, 16, button_select_file, button_none, 10, 0},
+        {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
-static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
+static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
 
-static input_box file_name_input = { 144, 80, 20, 2, FONT_NORMAL_WHITE };
+static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE};
 
 typedef struct {
     char extension[4];
@@ -82,8 +82,7 @@ static file_type_data scenario_data = {"map"};
 
 static int double_click = 0;
 
-static void init(file_type type, file_dialog_type dialog_type)
-{
+static void init(file_type type, file_dialog_type dialog_type) {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
 
@@ -126,8 +125,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     input_box_start(&file_name_input, data.typed_name, FILE_NAME_MAX, 0);
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     uint8_t file[FILE_NAME_MAX];
 
@@ -136,11 +134,12 @@ static void draw_foreground(void)
     inner_panel_draw(144, 120, 20, 13);
 
     // title
-    if (data.message_not_exist_start_time && time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT)
+    if (data.message_not_exist_start_time &&
+        time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT)
         lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK);
- else if (data.dialog_type == FILE_DIALOG_DELETE)
+    else if (data.dialog_type == FILE_DIALOG_DELETE)
         lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK);
- else {
+    else {
         int text_id = data.dialog_type + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
         lang_text_draw_centered(43, text_id, 160, 50, 304, FONT_LARGE_BLACK);
     }
@@ -163,8 +162,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static const char *get_chosen_filename(void)
-{
+static const char *get_chosen_filename(void) {
     // Check if we should work with the selected file
     uint8_t selected_name[FILE_NAME_MAX];
     encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
@@ -179,8 +177,7 @@ static const char *get_chosen_filename(void)
     encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
     return typed_file;
 }
-static void button_ok_cancel(int is_ok, int param2)
-{
+static void button_ok_cancel(int is_ok, int param2) {
     if (!is_ok) {
         input_box_stop(&file_name_input);
         window_go_back();
@@ -248,8 +245,7 @@ static void button_ok_cancel(int is_ok, int param2)
 
     strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX - 1);
 }
-static void button_select_file(int index, int param2)
-{
+static void button_select_file(int index, int param2) {
     if (index < data.file_list->num_files) {
         strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
@@ -262,12 +258,10 @@ static void button_select_file(int index, int param2)
     }
 }
 
-static void on_scroll(void)
-{
+static void on_scroll(void) {
     data.message_not_exist_start_time = 0;
 }
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     double_click = m->left.double_click;
 
     if (input_box_is_accepted(&file_name_input)) {
@@ -280,19 +274,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
         generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
         scrollbar_handle_mouse(&scrollbar, m_dialog))
-            return;
+        return;
     if (input_go_back_requested(m, h)) {
         input_box_stop(&file_name_input);
         window_go_back();
     }
 }
-void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
-{
+void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
     window_type window = {
-        WINDOW_FILE_DIALOG,
-        window_draw_underlying_window,
-        draw_foreground,
-        handle_input
+            WINDOW_FILE_DIALOG,
+            window_draw_underlying_window,
+            draw_foreground,
+            handle_input
     };
     init(type, dialog_type);
     window_show(&window);

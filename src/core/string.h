@@ -15,7 +15,7 @@
  * @param maxlength Maximum length of the destination string
  * @return Position of the last copied character (null-terminator in dst)
  */
-uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
+uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
 uint8_t *string_copy(const char *src, uint8_t *dst, int maxlength);
 
 /**

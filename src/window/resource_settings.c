@@ -28,19 +28,19 @@ static void button_toggle_trade(int param1, int param2);
 static void button_toggle_stockpile(int param1, int param2);
 
 static image_button resource_image_buttons[] = {
-    {58, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-    {558, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok, button_none, 0, 0, 1}
+        {58,  332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+        {558, 335, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_ok,   button_none, 0, 0, 1}
 };
 
 static arrow_button resource_arrow_buttons[] = {
-    {314, 215, 17, 24, button_export_up_down, 1, 0},
-    {338, 215, 15, 24, button_export_up_down, 0, 0}
+        {314, 215, 17, 24, button_export_up_down, 1, 0},
+        {338, 215, 15, 24, button_export_up_down, 0, 0}
 };
 
 static generic_button resource_generic_buttons[] = {
-    {98, 250, 432, 30, button_toggle_industry, button_none, 0, 0},
-    {98, 212, 432, 30, button_toggle_trade, button_none, 0, 0},
-    {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
+        {98, 250, 432, 30, button_toggle_industry,  button_none, 0, 0},
+        {98, 212, 432, 30, button_toggle_trade,     button_none, 0, 0},
+        {98, 288, 432, 50, button_toggle_stockpile, button_none, 0, 0},
 };
 
 static struct {
@@ -48,18 +48,15 @@ static struct {
     int focus_button_id;
 } data;
 
-static void init(int resource)
-{
+static void init(int resource) {
     data.resource = resource;
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_draw_underlying_window();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(48, 128, 34, 15);
@@ -82,8 +79,7 @@ static void draw_foreground(void)
             else {
                 lang_text_draw(54, 11, 98 + width, 172, FONT_NORMAL_BLACK);
             }
-        }
-        else if (total_buildings == active_buildings) {
+        } else if (total_buildings == active_buildings) {
             // not mothballed, all working
             int width = text_draw_number(total_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
             if (total_buildings == 1)
@@ -92,8 +88,7 @@ static void draw_foreground(void)
             else {
                 lang_text_draw(54, 9, 98 + width, 172, FONT_NORMAL_BLACK);
             }
-        }
-        else {
+        } else {
             // not mothballed, some working
             int width = text_draw_number(active_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
             width += lang_text_draw(54, 12, 98 + width, 172, FONT_NORMAL_BLACK);
@@ -105,8 +100,7 @@ static void draw_foreground(void)
                 lang_text_draw(54, 14, 98 + width, 172, FONT_NORMAL_BLACK);
             }
         }
-    }
-    else if (data.resource != RESOURCE_MEAT_C3 || !scenario_building_allowed(BUILDING_WHARF)) {
+    } else if (data.resource != RESOURCE_MEAT_C3 || !scenario_building_allowed(BUILDING_WHARF)) {
         // we cannot produce this good
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK);
     }
@@ -128,15 +122,15 @@ static void draw_foreground(void)
     else {
         button_border_draw(98, 212, 432, 30, data.focus_button_id == 2);
         switch (trade_status) {
-        case TRADE_STATUS_NONE:
-            lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK);
-            break;
-        case TRADE_STATUS_IMPORT:
-            lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK);
-            break;
-        case TRADE_STATUS_EXPORT:
-            lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK);
-            break;
+            case TRADE_STATUS_NONE:
+                lang_text_draw_centered(54, 18, 114, 221, 400, FONT_NORMAL_BLACK);
+                break;
+            case TRADE_STATUS_IMPORT:
+                lang_text_draw_centered(54, 19, 114, 221, 200, FONT_NORMAL_BLACK);
+                break;
+            case TRADE_STATUS_EXPORT:
+                lang_text_draw_centered(54, 20, 114, 221, 200, FONT_NORMAL_BLACK);
+                break;
         }
     }
 
@@ -158,8 +152,7 @@ static void draw_foreground(void)
     if (city_resource_is_stockpiled(data.resource)) {
         lang_text_draw_centered(54, 26, 114, 296, 400, FONT_NORMAL_BLACK);
         lang_text_draw_centered(54, 27, 114, 316, 400, FONT_NORMAL_BLACK);
-    }
-    else {
+    } else {
         lang_text_draw_centered(54, 28, 114, 296, 400, FONT_NORMAL_BLACK);
         lang_text_draw_centered(54, 29, 114, 316, 400, FONT_NORMAL_BLACK);
     }
@@ -171,11 +164,10 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h)
-{
-    const mouse* m_dialog = mouse_in_dialog(m);
+static void handle_input(const mouse *m, const hotkeys *h) {
+    const mouse *m_dialog = mouse_in_dialog(m);
     if (image_buttons_handle_mouse(m_dialog, 0, 0, resource_image_buttons, 2, 0))
-            return;
+        return;
     if ((city_int(data.resource) == TRADE_STATUS_EXPORT || city_int(data.resource) == TRADE_STATUS_IMPORT)) {
         int button = 0;
         arrow_buttons_handle_mouse(m_dialog, 0, 0, resource_arrow_buttons, 2, &button);
@@ -183,51 +175,44 @@ static void handle_input(const mouse* m, const hotkeys* h)
             return;
     }
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, resource_generic_buttons, 3, &data.focus_button_id))
-            return;
+        return;
     if (input_go_back_requested(m, h))
         window_go_back();
 
 }
 
-static void button_help(int param1, int param2)
-{
+static void button_help(int param1, int param2) {
     window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, 0);
 }
 
-static void button_ok(int param1, int param2)
-{
+static void button_ok(int param1, int param2) {
     window_go_back();
 }
 
-static void button_export_up_down(int is_down, int param2)
-{
+static void button_export_up_down(int is_down, int param2) {
     city_resource_change_export_over(data.resource, is_down ? -1 : 1);
 }
 
-static void button_toggle_industry(int param1, int param2)
-{
+static void button_toggle_industry(int param1, int param2) {
     if (building_count_industry_total(data.resource) > 0)
         city_resource_toggle_mothballed(data.resource);
 
 }
 
-static void button_toggle_trade(int param1, int param2)
-{
+static void button_toggle_trade(int param1, int param2) {
     city_resource_cycle_trade_status(data.resource);
 }
 
-static void button_toggle_stockpile(int param1, int param2)
-{
+static void button_toggle_stockpile(int param1, int param2) {
     city_resource_toggle_stockpiled(data.resource);
 }
 
-void window_resource_settings_show(int resource)
-{
+void window_resource_settings_show(int resource) {
     window_type window = {
-        WINDOW_RESOURCE_SETTINGS,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_RESOURCE_SETTINGS,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init(resource);
     window_show(&window);

@@ -9,8 +9,7 @@
 #define MENU_BASE_TEXT_Y_OFFSET 6
 #define MENU_ITEM_HEIGHT 20
 
-void menu_bar_draw(menu_bar_item *items, int num_items)
-{
+void menu_bar_draw(menu_bar_item *items, int num_items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
     for (int i = 0; i < num_items; i++) {
         items[i].x_start = x_offset;
@@ -20,8 +19,7 @@ void menu_bar_draw(menu_bar_item *items, int num_items)
     }
 }
 
-static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items)
-{
+static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items) {
     for (int i = 0; i < num_items; i++) {
         if (items[i].x_start <= m->x &&
             items[i].x_end > m->x &&
@@ -33,8 +31,7 @@ static int get_menu_bar_item(const mouse *m, menu_bar_item *items, int num_items
     return 0;
 }
 
-int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id)
-{
+int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id) {
     int menu_id = get_menu_bar_item(m, items, num_items);
     if (focus_menu_id)
         *focus_menu_id = menu_id;
@@ -42,8 +39,7 @@ int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, i
     return menu_id;
 }
 
-static void calculate_menu_dimensions(menu_bar_item *menu)
-{
+static void calculate_menu_dimensions(menu_bar_item *menu) {
     int max_width = 0;
     int height_pixels = MENU_ITEM_HEIGHT;
     for (int i = 0; i < menu->num_items; i++) {
@@ -52,7 +48,7 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
             continue;
 
         int width_pixels = lang_text_get_width(
-            sub->text_group, sub->text_number, FONT_NORMAL_BLACK);
+                sub->text_group, sub->text_number, FONT_NORMAL_BLACK);
         if (width_pixels > max_width)
             max_width = width_pixels;
 
@@ -63,13 +59,12 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
     menu->calculated_height_blocks = height_pixels / 16;
 }
 
-void menu_draw(menu_bar_item *menu, int focus_item_id)
-{
+void menu_draw(menu_bar_item *menu, int focus_item_id) {
     if (menu->calculated_width_blocks == 0 || menu->calculated_height_blocks == 0)
         calculate_menu_dimensions(menu);
 
     unbordered_panel_draw(menu->x_start, TOP_MENU_HEIGHT[GAME_ENV],
-        menu->calculated_width_blocks, menu->calculated_height_blocks);
+                          menu->calculated_width_blocks, menu->calculated_height_blocks);
     int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
@@ -78,19 +73,18 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
 
         if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 4,
-                16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
+                               16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
             lang_text_draw_colored(sub->text_group, sub->text_number,
-                menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE);
+                                   menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE);
         } else {
             lang_text_draw(sub->text_group, sub->text_number,
-                menu->x_start + 8, y_offset, FONT_NORMAL_BLACK);
+                           menu->x_start + 8, y_offset, FONT_NORMAL_BLACK);
         }
         y_offset += MENU_ITEM_HEIGHT;
     }
 }
 
-static int get_menu_item(const mouse *m, menu_bar_item *menu)
-{
+static int get_menu_item(const mouse *m, menu_bar_item *menu) {
     int y_offset = TOP_MENU_HEIGHT[GAME_ENV] + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         if (menu->items[i].hidden)
@@ -107,8 +101,7 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
     return 0;
 }
 
-int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
-{
+int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id) {
     int item_id = get_menu_item(m, menu);
     if (focus_item_id)
         *focus_item_id = item_id;
@@ -117,18 +110,17 @@ int menu_handle_mouse(const mouse *m, menu_bar_item *menu, int *focus_item_id)
         return 0;
 
     if (m->left.went_up) {
-        menu_item *item = &menu->items[item_id -1];
+        menu_item *item = &menu->items[item_id - 1];
         item->left_click_handler(item->parameter);
     }
     return item_id;
 }
 
-void menu_update_text(menu_bar_item *menu, int index, int text_number)
-{
+void menu_update_text(menu_bar_item *menu, int index, int text_number) {
     menu->items[index].text_number = text_number;
     if (menu->calculated_width_blocks > 0) {
         int item_width = lang_text_get_width(
-            menu->items[index].text_group, text_number, FONT_NORMAL_BLACK);
+                menu->items[index].text_group, text_number, FONT_NORMAL_BLACK);
         int blocks = (item_width + 8) / 16 + 1;
         if (blocks > menu->calculated_width_blocks)
             menu->calculated_width_blocks = blocks;

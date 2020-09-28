@@ -2,8 +2,7 @@
 
 #include <ctype.h>
 
-uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
-{
+uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
     int length = 0;
     while (length < maxlength && *src) {
         *dst = *src;
@@ -17,12 +16,10 @@ uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
     *dst = 0;
     return dst;
 }
-uint8_t *string_copy(const char *src, uint8_t *dst, int maxlength)
-{
-    return string_copy((const char*)src, dst, maxlength);
+uint8_t *string_copy(const char *src, uint8_t *dst, int maxlength) {
+    return string_copy((const char *) src, dst, maxlength);
 }
-int string_length(const uint8_t *str)
-{
+int string_length(const uint8_t *str) {
     int length = 0;
     while (*str) {
         length++;
@@ -30,8 +27,7 @@ int string_length(const uint8_t *str)
     }
     return length;
 }
-const uint8_t *string_from_ascii(const char *str)
-{
+const uint8_t *string_from_ascii(const char *str) {
     const char *s = str;
     while (*s) {
         if (*s & 0x80)
@@ -41,8 +37,7 @@ const uint8_t *string_from_ascii(const char *str)
     }
     return (const uint8_t *) str;
 }
-int string_to_int(const uint8_t *str)
-{
+int string_to_int(const uint8_t *str) {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
     const uint8_t *ptr = str;
     int negative = 0;
@@ -74,8 +69,7 @@ int string_to_int(const uint8_t *str)
 
     return result;
 }
-int string_from_int(uint8_t *dst, int value, int force_plus_sign)
-{
+int string_from_int(uint8_t *dst, int value, int force_plus_sign) {
     int total_chars = 0;
     if (value >= 0) {
         if (force_plus_sign) {
@@ -92,23 +86,23 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     int num_digits;
     if (value < 10)
         num_digits = 1;
- else if (value < 100)
+    else if (value < 100)
         num_digits = 2;
- else if (value < 1000)
+    else if (value < 1000)
         num_digits = 3;
- else if (value < 10000)
+    else if (value < 10000)
         num_digits = 4;
- else if (value < 100000)
+    else if (value < 100000)
         num_digits = 5;
- else if (value < 1000000)
+    else if (value < 1000000)
         num_digits = 6;
- else if (value < 10000000)
+    else if (value < 10000000)
         num_digits = 7;
- else if (value < 100000000)
+    else if (value < 100000000)
         num_digits = 8;
- else if (value < 1000000000)
+    else if (value < 1000000000)
         num_digits = 9;
- else {
+    else {
         num_digits = 0;
     }
 
@@ -122,8 +116,7 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
 
     return total_chars;
 }
-int string_compare_case_insensitive(const char *a, const char *b)
-{
+int string_compare_case_insensitive(const char *a, const char *b) {
     while (*a && *b) {
         int aa = tolower(*a);
         int bb = tolower(*b);
@@ -141,18 +134,16 @@ int string_compare_case_insensitive(const char *a, const char *b)
 
     return 0;
 }
-int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive)
-{
+int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive) {
     while (*a && *b &&
-        ((case_sentitive == 1 && *a == *b) ||
-        (case_sentitive == 0 && tolower(*a) == tolower(*b))))
-    {
+           ((case_sentitive == 1 && *a == *b) ||
+            (case_sentitive == 0 && tolower(*a) == tolower(*b)))) {
         ++a;
         ++b;
     }
     if (*a == 0 && *b == 0)
         return 1;
- else {
+    else {
         return 0;
     }
 }

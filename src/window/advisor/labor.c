@@ -18,27 +18,26 @@ static void arrow_button_wages(int is_down, int param2);
 static void button_priority(int category, int param2);
 
 static generic_button category_buttons[] = {
-    {40, 77, 560, 22, button_priority, button_none, 0, 0},
-    {40, 102, 560, 22, button_priority, button_none, 1, 0},
-    {40, 127, 560, 22, button_priority, button_none, 2, 0},
-    {40, 152, 560, 22, button_priority, button_none, 3, 0},
-    {40, 177, 560, 22, button_priority, button_none, 4, 0},
-    {40, 202, 560, 22, button_priority, button_none, 5, 0},
-    {40, 227, 560, 22, button_priority, button_none, 6, 0},
-    {40, 252, 560, 22, button_priority, button_none, 7, 0},
-    {40, 277, 560, 22, button_priority, button_none, 8, 0},
+        {40, 77,  560, 22, button_priority, button_none, 0, 0},
+        {40, 102, 560, 22, button_priority, button_none, 1, 0},
+        {40, 127, 560, 22, button_priority, button_none, 2, 0},
+        {40, 152, 560, 22, button_priority, button_none, 3, 0},
+        {40, 177, 560, 22, button_priority, button_none, 4, 0},
+        {40, 202, 560, 22, button_priority, button_none, 5, 0},
+        {40, 227, 560, 22, button_priority, button_none, 6, 0},
+        {40, 252, 560, 22, button_priority, button_none, 7, 0},
+        {40, 277, 560, 22, button_priority, button_none, 8, 0},
 };
 
 static arrow_button wage_buttons[] = {
-    {158, 354, 17, 24, arrow_button_wages, 1, 0},
-    {182, 354, 15, 24, arrow_button_wages, 0, 0}
+        {158, 354, 17, 24, arrow_button_wages, 1, 0},
+        {182, 354, 15, 24, arrow_button_wages, 0, 0}
 };
 
 static int focus_button_id;
 static int arrow_button_focus;
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS), 10, 10);
 
@@ -72,8 +71,7 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     arrow_buttons_draw(0, 0, wage_buttons, 2);
 
     inner_panel_draw(32, 70, 36, 15);
@@ -97,45 +95,40 @@ static void draw_foreground(void)
     }
 }
 
-static int handle_mouse(const mouse *m)
-{
+static int handle_mouse(const mouse *m) {
     if (generic_buttons_handle_mouse(m, 0, 0, category_buttons, 9, &focus_button_id))
         return 1;
 
     return arrow_buttons_handle_mouse(m, 0, 0, wage_buttons, 2, &arrow_button_focus);
 }
 
-static void arrow_button_wages(int is_down, int param2)
-{
+static void arrow_button_wages(int is_down, int param2) {
     city_labor_change_wages(is_down ? -1 : 1);
     city_finance_estimate_wages();
     city_finance_calculate_totals();
     window_invalidate();
 }
 
-static void button_priority(int category, int param2)
-{
+static void button_priority(int category, int param2) {
     window_labor_priority_show(category);
 }
 
-static int get_tooltip_text(void)
-{
+static int get_tooltip_text(void) {
     if (focus_button_id)
         return 90;
- else if (arrow_button_focus)
+    else if (arrow_button_focus)
         return 91;
- else {
+    else {
         return 0;
     }
 }
 
-const advisor_window_type *window_advisor_labor(void)
-{
+const advisor_window_type *window_advisor_labor(void) {
     static const advisor_window_type window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
+            draw_background,
+            draw_foreground,
+            handle_mouse,
+            get_tooltip_text
     };
     return &window;
 }

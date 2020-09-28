@@ -12,27 +12,26 @@
 #define MAX_VKBD_TEXT_SIZE 600
 
 enum {
-    SWITCH_PAD_A        = 0,
-    SWITCH_PAD_B        = 1,
-    SWITCH_PAD_X        = 2,
-    SWITCH_PAD_Y        = 3,
-    SWITCH_LSTICK       = 4,
-    SWITCH_RSTICK       = 5,
-    SWITCH_PAD_L        = 6,
-    SWITCH_PAD_R        = 7,
-    SWITCH_PAD_ZL       = 8,
-    SWITCH_PAD_ZR       = 9,
-    SWITCH_PAD_PLUS     = 10,
-    SWITCH_PAD_MINUS    = 11,
-    SWITCH_PAD_LEFT     = 12,
-    SWITCH_PAD_UP       = 13,
-    SWITCH_PAD_RIGHT    = 14,
-    SWITCH_PAD_DOWN     = 15,
-    SWITCH_NUM_BUTTONS  = 16
+    SWITCH_PAD_A = 0,
+    SWITCH_PAD_B = 1,
+    SWITCH_PAD_X = 2,
+    SWITCH_PAD_Y = 3,
+    SWITCH_LSTICK = 4,
+    SWITCH_RSTICK = 5,
+    SWITCH_PAD_L = 6,
+    SWITCH_PAD_R = 7,
+    SWITCH_PAD_ZL = 8,
+    SWITCH_PAD_ZR = 9,
+    SWITCH_PAD_PLUS = 10,
+    SWITCH_PAD_MINUS = 11,
+    SWITCH_PAD_LEFT = 12,
+    SWITCH_PAD_UP = 13,
+    SWITCH_PAD_RIGHT = 14,
+    SWITCH_PAD_DOWN = 15,
+    SWITCH_NUM_BUTTONS = 16
 };
 
-enum
-{
+enum {
     ANALOG_LEFT = 0,
     ANALOG_UP = 1,
     ANALOG_RIGHT = 2,
@@ -57,45 +56,45 @@ static int slow_mouse = 0;
 static int pressed_buttons[SWITCH_NUM_BUTTONS];
 static int right_analog_state[ANALOG_MAX];
 static SDL_Keycode map_switch_button_to_sdlkey[SWITCH_NUM_BUTTONS] =
-{
-    NO_MAPPING,     // SWITCH_PAD_A
-    NO_MAPPING,     // SWITCH_PAD_B
-    SDLK_PAGEUP,    // SWITCH_PAD_X
-    SDLK_PAGEDOWN,  // SWITCH_PAD_Y
-    NO_MAPPING,     // SWITCH_PAD_LSTICK
-    NO_MAPPING,     // SWITCH_PAD_RSTICK
-    NO_MAPPING,     // SWITCH_PAD_L
-    NO_MAPPING,     // SWITCH_PAD_R
-    NO_MAPPING,     // SWITCH_PAD_ZL
-    NO_MAPPING,     // SWITCH_PAD_ZR
-    NO_MAPPING,     // SWITCH_PAD_PLUS
-    NO_MAPPING,     // SWITCH_PAD_MINUS
-    SDLK_LEFT,      // SWITCH_PAD_LEFT
-    SDLK_UP,        // SWITCH_PAD_UP
-    SDLK_RIGHT,     // SWITCH_PAD_RIGHT
-    SDLK_DOWN       // SWITCH_PAD_DOWN
-};
+        {
+                NO_MAPPING,     // SWITCH_PAD_A
+                NO_MAPPING,     // SWITCH_PAD_B
+                SDLK_PAGEUP,    // SWITCH_PAD_X
+                SDLK_PAGEDOWN,  // SWITCH_PAD_Y
+                NO_MAPPING,     // SWITCH_PAD_LSTICK
+                NO_MAPPING,     // SWITCH_PAD_RSTICK
+                NO_MAPPING,     // SWITCH_PAD_L
+                NO_MAPPING,     // SWITCH_PAD_R
+                NO_MAPPING,     // SWITCH_PAD_ZL
+                NO_MAPPING,     // SWITCH_PAD_ZR
+                NO_MAPPING,     // SWITCH_PAD_PLUS
+                NO_MAPPING,     // SWITCH_PAD_MINUS
+                SDLK_LEFT,      // SWITCH_PAD_LEFT
+                SDLK_UP,        // SWITCH_PAD_UP
+                SDLK_RIGHT,     // SWITCH_PAD_RIGHT
+                SDLK_DOWN       // SWITCH_PAD_DOWN
+        };
 #define ANALOG_DIRECTION_TO_SDLKEY_OFFSET 12
 
 static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
-{
-    SDL_BUTTON_LEFT,    // SWITCH_PAD_A
-    SDL_BUTTON_RIGHT,   // SWITCH_PAD_B
-    NO_MAPPING,         // SWITCH_PAD_X
-    NO_MAPPING,         // SWITCH_PAD_Y
-    NO_MAPPING,         // SWITCH_PAD_LSTICK
-    NO_MAPPING,         // SWITCH_PAD_RSTICK
-    SDL_BUTTON_RIGHT,   // SWITCH_PAD_L
-    SDL_BUTTON_LEFT,    // SWITCH_PAD_R
-    NO_MAPPING,         // SWITCH_PAD_ZL
-    NO_MAPPING,         // SWITCH_PAD_ZR
-    NO_MAPPING,         // SWITCH_PAD_PLUS
-    NO_MAPPING,         // SWITCH_PAD_MINUS
-    NO_MAPPING,         // SWITCH_PAD_LEFT
-    NO_MAPPING,         // SWITCH_PAD_UP
-    NO_MAPPING,         // SWITCH_PAD_RIGHT
-    NO_MAPPING          // SWITCH_PAD_DOWN
-};
+        {
+                SDL_BUTTON_LEFT,    // SWITCH_PAD_A
+                SDL_BUTTON_RIGHT,   // SWITCH_PAD_B
+                NO_MAPPING,         // SWITCH_PAD_X
+                NO_MAPPING,         // SWITCH_PAD_Y
+                NO_MAPPING,         // SWITCH_PAD_LSTICK
+                NO_MAPPING,         // SWITCH_PAD_RSTICK
+                SDL_BUTTON_RIGHT,   // SWITCH_PAD_L
+                SDL_BUTTON_LEFT,    // SWITCH_PAD_R
+                NO_MAPPING,         // SWITCH_PAD_ZL
+                NO_MAPPING,         // SWITCH_PAD_ZR
+                NO_MAPPING,         // SWITCH_PAD_PLUS
+                NO_MAPPING,         // SWITCH_PAD_MINUS
+                NO_MAPPING,         // SWITCH_PAD_LEFT
+                NO_MAPPING,         // SWITCH_PAD_UP
+                NO_MAPPING,         // SWITCH_PAD_RIGHT
+                NO_MAPPING          // SWITCH_PAD_DOWN
+        };
 
 static void switch_start_text_input(void);
 static void switch_rescale_analog(int *x, int *y, int dead);
@@ -105,13 +104,11 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
-void platform_init_callback(void)
-{
+void platform_init_callback(void) {
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
 }
 
-void platform_per_frame_callback(void)
-{
+void platform_per_frame_callback(void) {
     if (vkbd.requested) {
         switch_start_text_input();
         vkbd.requested = 0;
@@ -119,18 +116,15 @@ void platform_per_frame_callback(void)
     switch_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
-{
+void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
     vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
     encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
     vkbd.requested = 1;
 }
 
-void platform_hide_virtual_keyboard(void)
-{}
+void platform_hide_virtual_keyboard(void) {}
 
-int switch_poll_event(SDL_Event *event)
-{
+int switch_poll_event(SDL_Event *event) {
     int ret = SDL_PollEvent(event);
     if (event != NULL) {
         switch (event->type) {
@@ -218,8 +212,7 @@ int switch_poll_event(SDL_Event *event)
     return ret;
 }
 
-void switch_handle_analog_sticks(void)
-{
+void switch_handle_analog_sticks(void) {
     if (!joy) {
         joy = SDL_JoystickOpen(0);
     }
@@ -279,18 +272,18 @@ void switch_handle_analog_sticks(void)
     // map right stick to cursor keys
     float right_x = SDL_JoystickGetAxis(joy, 2);
     float right_y = -1 * SDL_JoystickGetAxis(joy, 3);
-    float right_joy_dead_zone_squared = 10240.0*10240.0;
+    float right_joy_dead_zone_squared = 10240.0 * 10240.0;
     float slope = 0.414214f; // tangent of 22.5 degrees for size of angular zones
 
-    int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
+    int direction_states[ANALOG_MAX] = {0, 0, 0, 0};
 
     if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
         if (right_y > 0 && right_x > 0) {
             // upper right quadrant
-            if (right_y > slope *right_x) {
+            if (right_y > slope * right_x) {
                 direction_states[ANALOG_UP] = 1;
             }
-            if (right_x > slope *right_y) {
+            if (right_x > slope * right_y) {
                 direction_states[ANALOG_RIGHT] = 1;
             }
         } else if (right_y > 0 && right_x <= 0) {
@@ -298,12 +291,12 @@ void switch_handle_analog_sticks(void)
             if (right_y > slope * -right_x) {
                 direction_states[ANALOG_UP] = 1;
             }
-            if (-right_x > slope *right_y) {
+            if (-right_x > slope * right_y) {
                 direction_states[ANALOG_LEFT] = 1;
             }
         } else if (right_y <= 0 && right_x > 0) {
             // lower right quadrant
-            if (-right_y > slope *right_x) {
+            if (-right_y > slope * right_x) {
                 direction_states[ANALOG_DOWN] = 1;
             }
             if (right_x > slope * -right_y) {
@@ -328,8 +321,7 @@ void switch_handle_analog_sticks(void)
     }
 }
 
-static int switch_keyboard_get(char *title, char *buffer, int max_len)
-{
+static int switch_keyboard_get(char *title, char *buffer, int max_len) {
     Result rc = 0;
 
     SwkbdConfig kbd;
@@ -345,10 +337,9 @@ static int switch_keyboard_get(char *title, char *buffer, int max_len)
     return R_SUCCEEDED(rc);
 }
 
-static void switch_start_text_input(void)
-{
+static void switch_start_text_input(void) {
     if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length))
-            return;
+        return;
     for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
@@ -370,8 +361,7 @@ static void switch_start_text_input(void)
     }
 }
 
-static void switch_rescale_analog(int *x, int *y, int dead)
-{
+static void switch_rescale_analog(int *x, int *y, int dead) {
     //radial and scaled dead_zone
     //http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
     //input and output values go from -32767...+32767;
@@ -381,7 +371,7 @@ static void switch_rescale_analog(int *x, int *y, int dead)
     //of motion of the analog stick
 
     if (dead == 0)
-            return;
+        return;
     if (dead >= 32767) {
         *x = 0;
         *y = 0;
@@ -420,7 +410,7 @@ static void switch_rescale_analog(int *x, int *y, int dead)
         float clamping_factor = 1.0f;
         abs_analog_x = fabs(analog_x);
         abs_analog_y = fabs(analog_y);
-        if (abs_analog_x > max_axis || abs_analog_y > max_axis){
+        if (abs_analog_x > max_axis || abs_analog_y > max_axis) {
             if (abs_analog_x > abs_analog_y) {
                 clamping_factor = max_axis / abs_analog_x;
             } else {
@@ -435,8 +425,7 @@ static void switch_rescale_analog(int *x, int *y, int dead)
     }
 }
 
-static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type)
-{
+static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type) {
     event->type = event_type;
     event->key.keysym.sym = map_switch_button_to_sdlkey[switch_button];
     event->key.keysym.mod = 0;
@@ -450,8 +439,7 @@ static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, u
     }
 }
 
-static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type)
-{
+static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type) {
     event->type = event_type;
     event->button.button = map_switch_button_to_sdlmousebutton[switch_button];
     if (event_type == SDL_MOUSEBUTTONDOWN) {
@@ -466,8 +454,7 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
     event->button.y = mouse_get()->y;
 }
 
-static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key)
-{
+static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key) {
     SDL_Event event;
     event.type = event_type;
     event.key.keysym.scancode = scan;
@@ -476,8 +463,7 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancod
     SDL_PushEvent(&event);
 }
 
-static void switch_create_key_event_for_direction(int direction, int key_pressed)
-{
+static void switch_create_key_event_for_direction(int direction, int key_pressed) {
     uint32_t event_type = key_pressed ? SDL_KEYDOWN : SDL_KEYUP;
     switch (direction) {
         case ANALOG_UP:

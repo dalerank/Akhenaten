@@ -104,13 +104,13 @@ static int get_nearest_enemy(int x, int y, int *distance) {
         int dist;
         if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
             dist = calc_maximum_distance(x, y, f->x, f->y);
- else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
             dist = calc_maximum_distance(x, y, f->x, f->y);
- else if (figure_is_enemy(f))
+        else if (figure_is_enemy(f))
             dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
- else if (f->type == FIGURE_WOLF)
+        else if (f->type == FIGURE_WOLF)
             dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
- else {
+        else {
             continue;
         }
         if (dist < min_dist) {
@@ -361,7 +361,7 @@ void figure_prefect_action(figure *f) {
         dir = f->attack_direction;
     } else if (f->direction < 8)
         dir = f->direction;
- else {
+    else {
         dir = f->previous_tile_direction;
     }
     dir = figure_image_normalize_direction(dir);

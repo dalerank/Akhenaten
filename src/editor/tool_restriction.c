@@ -8,24 +8,23 @@
 
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
-static const int TILE_GRID_OFFSETS_C3[] = { 0, GRID_SIZE_C3, 1, GRID_SIZE_C3 + 1 };
-static const int TILE_GRID_OFFSETS_PH[] = { 0, GRID_SIZE_PH, 1, GRID_SIZE_PH + 1 };
+static const int TILE_GRID_OFFSETS_C3[] = {0, GRID_SIZE_C3, 1, GRID_SIZE_C3 + 1};
+static const int TILE_GRID_OFFSETS_PH[] = {0, GRID_SIZE_PH, 1, GRID_SIZE_PH + 1};
 
 static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_C3[4][6] = {
-    {OFFSET_C3(0,1), OFFSET_C3(1,1), OFFSET_C3(0,2), OFFSET_C3(1,2), OFFSET_C3(0,0), OFFSET_C3(1,0)},
-    {OFFSET_C3(0,0), OFFSET_C3(0,1), OFFSET_C3(-1,0), OFFSET_C3(-1,1), OFFSET_C3(1,0), OFFSET_C3(1,1)},
-    {OFFSET_C3(0,0), OFFSET_C3(1,0), OFFSET_C3(0,-1), OFFSET_C3(1,-1), OFFSET_C3(0,1), OFFSET_C3(1,1)},
-    {OFFSET_C3(1,0), OFFSET_C3(1,1), OFFSET_C3(2,0), OFFSET_C3(2,1), OFFSET_C3(0,0), OFFSET_C3(0,1)},
+        {OFFSET_C3(0, 1), OFFSET_C3(1, 1), OFFSET_C3(0, 2),  OFFSET_C3(1, 2),  OFFSET_C3(0, 0), OFFSET_C3(1, 0)},
+        {OFFSET_C3(0, 0), OFFSET_C3(0, 1), OFFSET_C3(-1, 0), OFFSET_C3(-1, 1), OFFSET_C3(1, 0), OFFSET_C3(1, 1)},
+        {OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(0, 1), OFFSET_C3(1, 1)},
+        {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1),  OFFSET_C3(0, 0), OFFSET_C3(0, 1)},
 };
 static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
-    {OFFSET_PH(0,1), OFFSET_PH(1,1), OFFSET_PH(0,2), OFFSET_PH(1,2), OFFSET_PH(0,0), OFFSET_PH(1,0)},
-    {OFFSET_PH(0,0), OFFSET_PH(0,1), OFFSET_PH(-1,0), OFFSET_PH(-1,1), OFFSET_PH(1,0), OFFSET_PH(1,1)},
-    {OFFSET_PH(0,0), OFFSET_PH(1,0), OFFSET_PH(0,-1), OFFSET_PH(1,-1), OFFSET_PH(0,1), OFFSET_PH(1,1)},
-    {OFFSET_PH(1,0), OFFSET_PH(1,1), OFFSET_PH(2,0), OFFSET_PH(2,1), OFFSET_PH(0,0), OFFSET_PH(0,1)},
+        {OFFSET_PH(0, 1), OFFSET_PH(1, 1), OFFSET_PH(0, 2),  OFFSET_PH(1, 2),  OFFSET_PH(0, 0), OFFSET_PH(1, 0)},
+        {OFFSET_PH(0, 0), OFFSET_PH(0, 1), OFFSET_PH(-1, 0), OFFSET_PH(-1, 1), OFFSET_PH(1, 0), OFFSET_PH(1, 1)},
+        {OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(0, 1), OFFSET_PH(1, 1)},
+        {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1),  OFFSET_PH(0, 0), OFFSET_PH(0, 1)},
 };
 
-static int is_clear_terrain(const map_tile *tile, int *warning)
-{
+static int is_clear_terrain(const map_tile *tile, int *warning) {
     int result = !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
     if (!result && warning)
         *warning = WARNING_EDITOR_CANNOT_PLACE;
@@ -33,8 +32,7 @@ static int is_clear_terrain(const map_tile *tile, int *warning)
     return result;
 }
 
-static int is_edge(const map_tile *tile, int *warning)
-{
+static int is_edge(const map_tile *tile, int *warning) {
     int result = tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_MAP_EDGE;
@@ -42,8 +40,7 @@ static int is_edge(const map_tile *tile, int *warning)
     return result;
 }
 
-static int is_water(const map_tile *tile, int *warning)
-{
+static int is_water(const map_tile *tile, int *warning) {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER);
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
@@ -51,18 +48,16 @@ static int is_water(const map_tile *tile, int *warning)
     return result;
 }
 
-static int is_deep_water(const map_tile *tile, int *warning)
-{
+static int is_deep_water(const map_tile *tile, int *warning) {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
-        map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
+                 map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
 
     return result;
 }
 
-int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning)
-{
+int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning) {
     switch (type) {
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
@@ -85,8 +80,7 @@ int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning)
     }
 }
 
-int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_index)
-{
+int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_index) {
     if (!map_grid_is_inside(tile->x, tile->y, 2))
         return 0;
 
@@ -108,7 +102,7 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
             if (index < 2) {
                 if (map_terrain_is(tile_offset, TERRAIN_ELEVATION))
                     right_tiles++;
- else {
+                else {
                     wrong_tiles++;
                 }
                 top_elevation = elevation;
@@ -116,20 +110,20 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
                 if (map_terrain_is(tile_offset, TERRAIN_ELEVATION)) {
                     if (elevation == top_elevation)
                         wrong_tiles++;
- else {
+                    else {
                         right_tiles++;
                     }
                 } else if (elevation >= top_elevation)
                     right_tiles++;
- else {
+                else {
                     wrong_tiles++;
                 }
             } else {
                 if (map_terrain_is(tile_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP))
                     wrong_tiles++;
- else if (elevation >= top_elevation)
+                else if (elevation >= top_elevation)
                     wrong_tiles++;
- else {
+                else {
                     right_tiles++;
                 }
             }
@@ -144,8 +138,7 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
     return 0;
 }
 
-int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blocked_tiles)
-{
+int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blocked_tiles) {
     int blocked = 0;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile->grid_offset;// + TILE_GRID_OFFSETS[i];

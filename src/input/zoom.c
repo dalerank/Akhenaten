@@ -20,10 +20,9 @@ static struct {
     } touch;
 } data;
 
-static void start_touch(const touch *first, const touch *last, int scale)
-{
+static void start_touch(const touch *first, const touch *last, int scale) {
     if (!config_get(CONFIG_UI_ZOOM))
-            return;
+        return;
     data.restore = 0;
     data.touch.active = 1;
     data.input_offset.x = first->current_point.x;
@@ -32,10 +31,9 @@ static void start_touch(const touch *first, const touch *last, int scale)
     data.touch.current_zoom = scale;
 }
 
-void zoom_update_touch(const touch *first, const touch *last, int scale)
-{
+void zoom_update_touch(const touch *first, const touch *last, int scale) {
     if (!config_get(CONFIG_UI_ZOOM))
-            return;
+        return;
     if (!data.touch.active) {
         start_touch(first, last, scale);
         return;
@@ -58,17 +56,15 @@ void zoom_update_touch(const touch *first, const touch *last, int scale)
     data.touch.current_zoom = calc_percentage(data.touch.start_zoom, finger_distance_percentage);
 }
 
-void zoom_end_touch(void)
-{
+void zoom_end_touch(void) {
     if (!config_get(CONFIG_UI_ZOOM))
-            return;
+        return;
     data.touch.active = 0;
 }
 
-void zoom_map(const mouse *m)
-{
+void zoom_map(const mouse *m) {
     if (!config_get(CONFIG_UI_ZOOM) || data.touch.active || m->is_touch)
-            return;
+        return;
     if (m->middle.went_up) { // todo: panning with middle mouse
         data.restore = 1;
         data.input_offset.x = m->x;
@@ -82,8 +78,7 @@ void zoom_map(const mouse *m)
     }
 }
 
-int zoom_update_value(int *zoom, pixel_offset *camera_position)
-{
+int zoom_update_value(int *zoom, pixel_offset *camera_position) {
     int step;
     if (!data.touch.active) {
         if (data.restore) {
@@ -105,7 +100,8 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position)
         step = data.touch.current_zoom - *zoom;
     }
 
-    int result = calc_bound(*zoom + step, 50, 200); // todo: bind camera to max window size... or find a way to mask the borders
+    int result = calc_bound(*zoom + step, 50,
+                            200); // todo: bind camera to max window size... or find a way to mask the borders
     if (*zoom == result) {
         data.delta = 0;
         return 0;

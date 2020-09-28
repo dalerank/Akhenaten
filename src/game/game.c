@@ -34,17 +34,15 @@
 #include "window/main_menu.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
-    0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
+        0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
 };
 
 static time_millis last_update;
 
-static void errlog(const char *msg)
-{
+static void errlog(const char *msg) {
     log_error(msg, 0, 0);
 }
-static int is_unpatched(void)
-{
+static int is_unpatched(void) {
     const uint8_t *delete_game = lang_get_string(1, 6);
     const uint8_t *option_menu = lang_get_string(2, 0);
     const uint8_t *difficulty_option = lang_get_string(2, 6);
@@ -54,8 +52,7 @@ static int is_unpatched(void)
     // languages (pt_BR): delete game falls through to option menu
     return difficulty_option == help_menu || delete_game == option_menu;
 }
-static encoding_type update_encoding(void)
-{
+static encoding_type update_encoding(void) {
     int language = locale_determine_language();
     encoding_type encoding = encoding_determine(language);
     log_info("Detected encoding:", 0, encoding);
@@ -63,12 +60,11 @@ static encoding_type update_encoding(void)
     translation_load(language);
     return encoding;
 }
-static int reload_language(int is_editor, int reload_images)
-{
+static int reload_language(int is_editor, int reload_images) {
     if (!lang_load(is_editor)) {
         if (is_editor)
             errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
- else {
+        else {
             errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         }
         return 0;
@@ -86,8 +82,7 @@ static int reload_language(int is_editor, int reload_images)
     return 1;
 }
 
-static int get_elapsed_ticks(void)
-{
+static int get_elapsed_ticks(void) {
     if (game_state_is_paused())
         return 0;
 
@@ -104,7 +99,7 @@ static int get_elapsed_ticks(void)
             game_speed_index = (100 - setting_game_speed()) / 10;
             if (game_speed_index >= 10)
                 return 0;
- else if (game_speed_index < 0) {
+            else if (game_speed_index < 0) {
                 ticks_per_frame = setting_game_speed() / 100;
                 game_speed_index = 0;
             }
@@ -129,8 +124,7 @@ static int get_elapsed_ticks(void)
     return ticks_per_frame;
 }
 
-int game_pre_init(void)
-{
+int game_pre_init(void) {
     if (!lang_load(0))
         return 0;
     update_encoding();
@@ -143,8 +137,7 @@ int game_pre_init(void)
     game_state_unpause();
     return 1;
 }
-int game_init(void)
-{
+int game_init(void) {
 //    if (!image_init()) {
 //        errlog("unable to init graphics");
 //        return 0;
@@ -185,7 +178,7 @@ int game_init(void)
         errlog("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;
- else {
+        else {
             return 0;
         }
     }
@@ -202,8 +195,7 @@ int game_init(void)
 
     return 1;
 }
-int game_init_editor(void)
-{
+int game_init_editor(void) {
     if (!reload_language(1, 0))
         return 0;
 
@@ -219,23 +211,19 @@ int game_init_editor(void)
     window_editor_map_show();
     return 1;
 }
-void game_exit_editor(void)
-{
+void game_exit_editor(void) {
     if (!reload_language(0, 0))
-            return;
+        return;
     editor_set_active(0);
     window_main_menu_show(1);
 }
-int game_reload_language(void)
-{
+int game_reload_language(void) {
     return reload_language(0, 1);
 }
-void game_run(void)
-{
+void game_run(void) {
     game_animation_update();
     int num_ticks = get_elapsed_ticks();
-    for (int i = 0; i < num_ticks; i++)
-    {
+    for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
         game_file_write_mission_saved_game();
 
@@ -243,13 +231,11 @@ void game_run(void)
             break;
     }
 }
-void game_draw(void)
-{
+void game_draw(void) {
     window_draw(0);
     sound_city_play();
 }
-void game_exit(void)
-{
+void game_exit(void) {
     video_shutdown();
     settings_save();
     config_save();

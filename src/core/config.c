@@ -12,48 +12,48 @@ static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the ints in config.h
 static const char *ini_keys[] = {
-    "gameplay_fix_immigration",
-    "gameplay_fix_100y_ghosts",
-    "gameplay_fix_editor_events",
-    "ui_sidebar_info",
-    "ui_show_intro_video",
-    "ui_smooth_scrolling",
-    "ui_walker_waypoints",
-    "ui_visual_feedback_on_delete",
-    "ui_show_water_structure_range",
-    "ui_show_construction_size",
-    "ui_zoom",
-    "ui_complete_ratings_columns",
-    "ui_highlight_legions",
-    "ui_rotate_manually",
-    "gameplay_change_grandfestival",
-    "gameplay_change_jealous_gods",
-    "gameplay_change_global_labour",
-    "gameplay_change_school_walkers",
-    "gameplay_change_retire_at_60",
-    "gameplay_change_fixed_workers",
-    "gameplay_enable_extra_forts",
-    "gameplay_wolves_block",
-    "gameplay_dynamic_granaries",
-    "gameplay_houses_stockpile_more",
-    "gameplay_buyers_dont_distribute",
-    "gameplay_change_immediate_delete",
-    "gameplay_change_getting_granaries_go_offroad",
-    "gameplay_change_granaries_get_double",
-    "gameplay_change_tower_sentries_go_offroad",
-    "gameplay_change_farms_deliver_close",
-    "gameplay_change_only_deliver_to_accepting_granaries",
-    "gameplay_change_all_houses_merge",
-    "gameplay_change_wine_open_trade_route_counts",
-    "gameplay_change_random_mine_or_pit_collapses_take_money",
-    "gameplay_change_multiple_barracks",
-    "gameplay_change_warehouses_dont_accept",
-    "gameplay_change_houses_dont_expand_into_gardens",
+        "gameplay_fix_immigration",
+        "gameplay_fix_100y_ghosts",
+        "gameplay_fix_editor_events",
+        "ui_sidebar_info",
+        "ui_show_intro_video",
+        "ui_smooth_scrolling",
+        "ui_walker_waypoints",
+        "ui_visual_feedback_on_delete",
+        "ui_show_water_structure_range",
+        "ui_show_construction_size",
+        "ui_zoom",
+        "ui_complete_ratings_columns",
+        "ui_highlight_legions",
+        "ui_rotate_manually",
+        "gameplay_change_grandfestival",
+        "gameplay_change_jealous_gods",
+        "gameplay_change_global_labour",
+        "gameplay_change_school_walkers",
+        "gameplay_change_retire_at_60",
+        "gameplay_change_fixed_workers",
+        "gameplay_enable_extra_forts",
+        "gameplay_wolves_block",
+        "gameplay_dynamic_granaries",
+        "gameplay_houses_stockpile_more",
+        "gameplay_buyers_dont_distribute",
+        "gameplay_change_immediate_delete",
+        "gameplay_change_getting_granaries_go_offroad",
+        "gameplay_change_granaries_get_double",
+        "gameplay_change_tower_sentries_go_offroad",
+        "gameplay_change_farms_deliver_close",
+        "gameplay_change_only_deliver_to_accepting_granaries",
+        "gameplay_change_all_houses_merge",
+        "gameplay_change_wine_open_trade_route_counts",
+        "gameplay_change_random_mine_or_pit_collapses_take_money",
+        "gameplay_change_multiple_barracks",
+        "gameplay_change_warehouses_dont_accept",
+        "gameplay_change_houses_dont_expand_into_gardens",
 
 };
 
 static const char *ini_string_keys[] = {
-    "ui_language_dir"
+        "ui_language_dir"
 };
 
 static int values[CONFIG_MAX_ENTRIES];
@@ -139,55 +139,48 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
 
 static char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
-int config_get(int key)
-{
+int config_get(int key) {
     return values[key];
 }
-void config_set(int key, int value)
-{
+void config_set(int key, int value) {
     values[key] = value;
 }
 
-const char *config_get_string(int key)
-{
+const char *config_get_string(int key) {
     return string_values[key];
 }
-void config_set_string(int key, const char *value)
-{
+void config_set_string(int key, const char *value) {
     if (!value)
         string_values[key][0] = 0;
- else {
+    else {
         strncpy(string_values[key], value, CONFIG_STRING_VALUE_MAX - 1);
     }
 }
-int config_get_default_value(int key)
-{
+int config_get_default_value(int key) {
     return default_values[key];
 }
-const char *config_get_default_string_value(int key)
-{
+const char *config_get_default_string_value(int key) {
     return default_string_values[key];
 }
 
-void config_set_defaults(void)
-{
+void config_set_defaults(void) {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         values[i] = default_values[i];
     }
-    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR], CONFIG_STRING_VALUE_MAX);
+    strncpy(string_values[CONFIG_STRING_UI_LANGUAGE_DIR], default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR],
+            CONFIG_STRING_VALUE_MAX);
 }
-void config_load(void)
-{
+void config_load(void) {
     config_set_defaults();
     FILE *fp = file_open(INI_FILENAME, "rt");
     if (!fp)
-            return;
+        return;
     char line_buffer[MAX_LINE];
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
-        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');
@@ -214,8 +207,7 @@ void config_load(void)
     }
     file_close(fp);
 }
-void config_save(void)
-{
+void config_save(void) {
     FILE *fp = file_open(INI_FILENAME, "wt");
     if (!fp) {
         log_error("Unable to write configuration file", INI_FILENAME, 0);

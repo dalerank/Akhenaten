@@ -34,20 +34,17 @@ static struct {
     building buildings[MAX_UNDO_BUILDINGS];
 } data;
 
-int game_can_undo(void)
-{
+int game_can_undo(void) {
     return data.ready && data.available;
 }
 
-void game_undo_disable(void)
-{
+void game_undo_disable(void) {
     data.available = 0;
 }
 
-void game_undo_add_building(building *b)
-{
+void game_undo_add_building(building *b) {
     if (b->id <= 0)
-            return;
+        return;
     data.num_buildings = 0;
     int is_on_list = 0;
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
@@ -70,17 +67,16 @@ void game_undo_add_building(building *b)
     }
 }
 
-void game_undo_adjust_building(building * b){
+void game_undo_adjust_building(building *b) {
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
-        if(data.buildings[i].id == b->id){
+        if (data.buildings[i].id == b->id) {
             // found! update the building now
             memcpy(&data.buildings[i], b, sizeof(building));
         }
     }
 }
 
-int game_undo_contains_building(int building_id)
-{
+int game_undo_contains_building(int building_id) {
     if (building_id <= 0 || !game_can_undo())
         return 0;
 
@@ -95,14 +91,12 @@ int game_undo_contains_building(int building_id)
     return 0;
 }
 
-static void clear_buildings(void)
-{
+static void clear_buildings(void) {
     data.num_buildings = 0;
     memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(building));
 }
 
-int game_undo_start_build(int type)
-{
+int game_undo_start_build(int type) {
     data.ready = 0;
     data.available = 1;
     data.timeout_ticks = 0;
@@ -129,8 +123,7 @@ int game_undo_start_build(int type)
     return 1;
 }
 
-void game_undo_restore_building_state(void)
-{
+void game_undo_restore_building_state(void) {
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
@@ -143,8 +136,7 @@ void game_undo_restore_building_state(void)
     clear_buildings();
 }
 
-static void restore_map_images(void)
-{
+static void restore_map_images(void) {
     int map_width, map_height;
     map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
@@ -157,8 +149,7 @@ static void restore_map_images(void)
     }
 }
 
-void game_undo_restore_map(int include_properties)
-{
+void game_undo_restore_map(int include_properties) {
     map_terrain_restore();
     map_aqueduct_restore();
     if (include_properties)
@@ -167,28 +158,38 @@ void game_undo_restore_map(int include_properties)
     restore_map_images();
 }
 
-void game_undo_finish_build(int cost)
-{
+void game_undo_finish_build(int cost) {
     data.ready = 1;
     data.timeout_ticks = 500;
     data.building_cost = cost;
     window_invalidate();
 }
 
-static void add_building_to_terrain(building *b)
-{
+static void add_building_to_terrain(building *b) {
     if (b->id <= 0)
-            return;
+        return;
     if (building_is_farm(b->type)) {
         int image_offset;
         switch (b->type) {
             default:
-            case BUILDING_WHEAT_FARM: image_offset = 0; break;
-            case BUILDING_VEGETABLE_FARM: image_offset = 5; break;
-            case BUILDING_FRUIT_FARM: image_offset = 10; break;
-            case BUILDING_OLIVE_FARM: image_offset = 15; break;
-            case BUILDING_VINES_FARM: image_offset = 20; break;
-            case BUILDING_PIG_FARM: image_offset = 25; break;
+            case BUILDING_WHEAT_FARM:
+                image_offset = 0;
+                break;
+            case BUILDING_VEGETABLE_FARM:
+                image_offset = 5;
+                break;
+            case BUILDING_FRUIT_FARM:
+                image_offset = 10;
+                break;
+            case BUILDING_OLIVE_FARM:
+                image_offset = 15;
+                break;
+            case BUILDING_VINES_FARM:
+                image_offset = 20;
+                break;
+            case BUILDING_PIG_FARM:
+                image_offset = 25;
+                break;
         }
         map_building_tiles_add_farm(b->id, b->x, b->y,
                                     image_id_from_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
@@ -202,10 +203,9 @@ static void add_building_to_terrain(building *b)
     b->state = BUILDING_STATE_IN_USE;
 }
 
-void game_undo_perform(void)
-{
+void game_undo_perform(void) {
     if (!game_can_undo())
-            return;
+        return;
     data.available = 0;
     city_finance_process_construction(-data.building_cost);
     if (data.type == BUILDING_CLEAR_LAND) {
@@ -228,7 +228,7 @@ void game_undo_perform(void)
         map_property_restore();
         map_property_clear_constructing_and_deleted();
     } else if (data.type == BUILDING_AQUEDUCT || data.type == BUILDING_ROAD ||
-            data.type == BUILDING_WALL) {
+               data.type == BUILDING_WALL) {
         map_terrain_restore();
         map_aqueduct_restore();
         restore_map_images();
@@ -250,7 +250,8 @@ void game_undo_perform(void)
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
-                if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
+                if (b->type == BUILDING_ORACLE ||
+                    (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
                     building_warehouses_add_resource(RESOURCE_MARBLE_C3, 2);
 
                 b->state = BUILDING_STATE_UNDO;
@@ -262,10 +263,9 @@ void game_undo_perform(void)
     data.num_buildings = 0;
 }
 
-void game_undo_reduce_time_available(void)
-{
+void game_undo_reduce_time_available(void) {
     if (!game_can_undo())
-            return;
+        return;
     if (data.timeout_ticks <= 0 || scenario_earthquake_is_in_progress()) {
         data.available = 0;
         clear_buildings();
@@ -283,7 +283,8 @@ void game_undo_reduce_time_available(void)
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
             return;
-        default: break;
+        default:
+            break;
     }
     if (data.num_buildings <= 0) {
         data.available = 0;

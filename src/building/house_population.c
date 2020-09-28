@@ -11,8 +11,7 @@
 #include "figuretype/migrant.h"
 #include "core/game_environment.h"
 
-int house_population_add_to_city(int num_people)
-{
+int house_population_add_to_city(int num_people) {
     int added = 0;
     int building_id = city_population_last_used_house_add();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV] && added < num_people; i++) {
@@ -20,7 +19,8 @@ int house_population_add_to_city(int num_people)
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 && b->house_population > 0) {
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 &&
+            b->house_population > 0) {
             city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(b->subtype.house_level)->max_people;
             if (b->house_is_merged)
@@ -36,8 +36,7 @@ int house_population_add_to_city(int num_people)
     return added;
 }
 
-int house_population_remove_from_city(int num_people)
-{
+int house_population_remove_from_city(int num_people) {
     int removed = 0;
     int building_id = city_population_last_used_house_remove();
     for (int i = 1; i < 4 * MAX_BUILDINGS[GAME_ENV] && removed < num_people; i++) {
@@ -56,8 +55,7 @@ int house_population_remove_from_city(int num_people)
     return removed;
 }
 
-static void fill_building_list_with_houses(void)
-{
+static void fill_building_list_with_houses(void) {
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
@@ -67,8 +65,7 @@ static void fill_building_list_with_houses(void)
     }
 }
 
-void house_population_update_room(void)
-{
+void house_population_update_room(void) {
     city_population_clear_capacity();
 
     fill_building_list_with_houses();
@@ -94,8 +91,7 @@ void house_population_update_room(void)
     }
 }
 
-int house_population_create_immigrants(int num_people)
-{
+int house_population_create_immigrants(int num_people) {
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
     int to_immigrate = num_people;
@@ -135,8 +131,7 @@ int house_population_create_immigrants(int num_people)
     return num_people - to_immigrate;
 }
 
-int house_population_create_emigrants(int num_people)
-{
+int house_population_create_emigrants(int num_people) {
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
     int to_emigrate = num_people;
@@ -147,7 +142,7 @@ int house_population_create_emigrants(int num_people)
                 int current_people;
                 if (b->house_population >= 4)
                     current_people = 4;
- else {
+                else {
                     current_people = b->house_population;
                 }
                 if (to_emigrate <= current_people) {
@@ -163,8 +158,7 @@ int house_population_create_emigrants(int num_people)
     return num_people - to_emigrate;
 }
 
-static void calculate_working_population(void)
-{
+static void calculate_working_population(void) {
     int num_plebs = 0;
     int num_patricians = 0;
     int total_houses = building_list_large_size();
@@ -174,7 +168,7 @@ static void calculate_working_population(void)
         if (b->house_population > 0) {
             if (b->subtype.house_level >= HOUSE_SMALL_VILLA)
                 num_patricians += b->house_population;
- else {
+            else {
                 num_plebs += b->house_population;
             }
         }
@@ -182,8 +176,7 @@ static void calculate_working_population(void)
     city_labor_calculate_workers(num_plebs, num_patricians);
 }
 
-void house_population_update_migration(void)
-{
+void house_population_update_migration(void) {
     city_migration_update();
 
     city_population_yearly_update();
@@ -219,8 +212,7 @@ void house_population_update_migration(void)
 
 }
 
-void house_population_evict_overcrowded(void)
-{
+void house_population_evict_overcrowded(void) {
     int size = building_list_large_size();
     const int *items = building_list_large_items();
     for (int i = 0; i < size; i++) {

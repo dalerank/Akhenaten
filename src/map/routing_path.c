@@ -10,8 +10,7 @@
 
 static int direction_path[MAX_PATH];
 
-static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_offset)
-{
+static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_offset) {
     switch (direction) {
         case DIR_0_TOP:
             --*y;
@@ -45,8 +44,7 @@ static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_of
     *grid_offset += map_grid_direction_delta(direction);
 }
 
-int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst_y, int num_directions)
-{
+int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst_y, int num_directions) {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
     if (distance <= 0 || distance >= 998)
@@ -96,8 +94,8 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
     return num_tiles;
 }
 
-int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range, int *out_x, int *out_y)
-{
+int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range,
+                                              int *out_x, int *out_y) {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
     if (distance <= 0 || distance >= 998)
@@ -149,8 +147,7 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
     return 0;
 }
 
-int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_flotsam)
-{
+int map_routing_get_path_on_water(uint8_t *path, int dst_x, int dst_y, int is_flotsam) {
     int rand = random_byte() & 3;
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);

@@ -5,14 +5,13 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 
-void city_draw_bridge(int x, int y, int grid_offset)
-{
+void city_draw_bridge(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
         map_sprite_clear_tile(grid_offset);
         return;
     }
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-            return;
+        return;
     color_t color_mask = 0;
     if (map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
@@ -20,8 +19,7 @@ void city_draw_bridge(int x, int y, int grid_offset)
     city_draw_bridge_tile(x, y, map_sprite_bridge_at(grid_offset), color_mask);
 }
 
-void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color_t color_mask)
-{
+void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color_t color_mask) {
     int image_id = image_id_from_group(GROUP_BUILDING_BRIDGE);
     switch (bridge_sprite_id) {
         case 1:
@@ -37,7 +35,7 @@ void city_draw_bridge_tile(int x, int y, int bridge_sprite_id, color_t color_mas
             image_draw_masked(image_id + 2, x + 7, y - 20, color_mask);
             break;
         case 5:
-            image_draw_masked(image_id + 4, x , y - 21, color_mask);
+            image_draw_masked(image_id + 4, x, y - 21, color_mask);
             break;
         case 6:
             image_draw_masked(image_id + 1, x + 5, y - 21, color_mask);

@@ -70,9 +70,9 @@ int city_population_open_housing_capacity(void);
 
 int city_population_total_housing_capacity(void);
 
-int * calculate_number_of_each_housing_type(void);
+int *calculate_number_of_each_housing_type(void);
 
-int * calculate_houses_demanding_goods(int * housing_type_counts);
+int *calculate_houses_demanding_goods(int *housing_type_counts);
 
 int city_population_yearly_deaths(void);
 

@@ -16,13 +16,13 @@
 static void button_close(int save, int param2);
 
 static generic_button bottom_buttons[] = {
-    { 192, 228, 120, 24, button_close, button_none, 0 },
-    { 328, 228, 120, 24, button_close, button_none, 1 },
+        {192, 228, 120, 24, button_close, button_none, 0},
+        {328, 228, 120, 24, button_close, button_none, 1},
 };
 
 static int bottom_button_texts[] = {
-    TR_BUTTON_CANCEL,
-    TR_BUTTON_OK
+        TR_BUTTON_CANCEL,
+        TR_BUTTON_OK
 };
 
 static struct {
@@ -35,8 +35,7 @@ static struct {
 } data;
 
 static void init(int action, int index,
-    void (*callback)(int, int, int, int))
-{
+                 void (*callback)(int, int, int, int)) {
     data.action = action;
     data.index = index;
     data.callback = callback;
@@ -45,8 +44,7 @@ static void init(int action, int index,
     data.focus_button = 0;
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_in_dialog();
     outer_panel_draw(168, 128, 19, 9);
 
@@ -55,20 +53,19 @@ static void draw_background(void)
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button *btn = &bottom_buttons[i];
         text_draw_centered(translation_for(bottom_button_texts[i]),
-            btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
+                           btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
     }
 
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     inner_panel_draw(192, 184, 16, 2);
 
     text_draw_centered(key_combination_display_name(data.key, data.modifiers),
-        192, 193, 256, FONT_NORMAL_WHITE, 0);
+                       192, 193, 256, FONT_NORMAL_WHITE, 0);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button *btn = &bottom_buttons[i];
@@ -77,8 +74,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
 
     int handled = 0;
@@ -88,21 +84,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 }
 
-static void button_close(int ok, int param2)
-{
+static void button_close(int ok, int param2) {
     if (ok)
         data.callback(data.action, data.index, data.key, data.modifiers);
 
     window_go_back();
 }
 
-void window_hotkey_editor_key_pressed(int key, int modifiers)
-{
+void window_hotkey_editor_key_pressed(int key, int modifiers) {
     if (key == KEY_ENTER && modifiers == KEY_MOD_NONE)
         button_close(1, 0);
- else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE)
+    else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE)
         button_close(0, 0);
- else {
+    else {
         if (key != KEY_NONE)
             data.key = key;
 
@@ -110,8 +104,7 @@ void window_hotkey_editor_key_pressed(int key, int modifiers)
     }
 }
 
-void window_hotkey_editor_key_released(int key, int modifiers)
-{
+void window_hotkey_editor_key_released(int key, int modifiers) {
     // update modifiers as long as we don't have a proper keypress
     if (data.key == KEY_NONE && key == KEY_NONE)
         data.modifiers = modifiers;
@@ -119,13 +112,12 @@ void window_hotkey_editor_key_released(int key, int modifiers)
 }
 
 void window_hotkey_editor_show(int action, int index,
-    void (*callback)(int, int, int, int))
-{
+                               void (*callback)(int, int, int, int)) {
     window_type window = {
-        WINDOW_HOTKEY_EDITOR,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_HOTKEY_EDITOR,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     init(action, index, callback);
     window_show(&window);

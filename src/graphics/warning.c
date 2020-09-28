@@ -10,22 +10,20 @@
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
-static int determine_width(const uint8_t *text)
-{
+static int determine_width(const uint8_t *text) {
     int width = text_get_width(text, FONT_NORMAL_BLACK);
     if (width <= 100)
         return 200;
- else if (width <= 200)
+    else if (width <= 200)
         return 300;
- else if (width <= 300)
+    else if (width <= 300)
         return 400;
- else {
+    else {
         return 460;
     }
 }
 
-void warning_draw(void)
-{
+void warning_draw(void) {
     if (!window_is(WINDOW_CITY) && !window_is(WINDOW_EDITOR_MAP)) {
         city_warning_clear_all();
         return;

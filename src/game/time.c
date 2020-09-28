@@ -8,8 +8,7 @@ static struct {
     int total_days;
 } data;
 
-void game_time_init(int year)
-{
+void game_time_init(int year) {
     data.tick = 0;
     data.day = 0;
     data.month = 0;
@@ -17,28 +16,23 @@ void game_time_init(int year)
     data.year = year;
 }
 
-int game_time_tick(void)
-{
+int game_time_tick(void) {
     return data.tick;
 }
 
-int game_time_day(void)
-{
+int game_time_day(void) {
     return data.day;
 }
 
-int game_time_month(void)
-{
+int game_time_month(void) {
     return data.month;
 }
 
-int game_time_year(void)
-{
+int game_time_year(void) {
     return data.year;
 }
 
-int game_time_advance_tick(void)
-{
+int game_time_advance_tick(void) {
     if (++data.tick >= 50) {
         data.tick = 0;
         return 1;
@@ -46,8 +40,7 @@ int game_time_advance_tick(void)
     return 0;
 }
 
-int game_time_advance_day(void)
-{
+int game_time_advance_day(void) {
     data.total_days++;
     if (++data.day >= 16) {
         data.day = 0;
@@ -56,8 +49,7 @@ int game_time_advance_day(void)
     return 0;
 }
 
-int game_time_advance_month(void)
-{
+int game_time_advance_month(void) {
     if (++data.month >= 12) {
         data.month = 0;
         return 1;
@@ -65,13 +57,11 @@ int game_time_advance_month(void)
     return 0;
 }
 
-void game_time_advance_year(void)
-{
+void game_time_advance_year(void) {
     ++data.year;
 }
 
-void game_time_save_state(buffer *buf)
-{
+void game_time_save_state(buffer *buf) {
     buf->write_i32(data.tick);
     buf->write_i32(data.day);
     buf->write_i32(data.month);
@@ -79,8 +69,7 @@ void game_time_save_state(buffer *buf)
     buf->write_i32(data.total_days);
 }
 
-void game_time_load_state(buffer *buf)
-{
+void game_time_load_state(buffer *buf) {
     data.tick = buf->read_i32();
     data.day = buf->read_i32();
     data.month = buf->read_i32();

@@ -61,15 +61,15 @@ static struct {
 } data = {TRACK_NONE, 0};
 
 static const char c3_wav[][32] = {
-    "",
-    "wavs/setup.wav",
-    "wavs/Combat_Short.wav",
-    "wavs/Combat_Long.wav",
-    "wavs/ROME1.WAV",
-    "wavs/ROME2.WAV",
-    "wavs/ROME3.WAV",
-    "wavs/ROME4.WAV",
-    "wavs/ROME5.WAV"
+        "",
+        "wavs/setup.wav",
+        "wavs/Combat_Short.wav",
+        "wavs/Combat_Long.wav",
+        "wavs/ROME1.WAV",
+        "wavs/ROME2.WAV",
+        "wavs/ROME3.WAV",
+        "wavs/ROME4.WAV",
+        "wavs/ROME5.WAV"
 };
 
 static const char c3_mp3[][32] = {
@@ -138,11 +138,10 @@ static const char ph_mp3[][32] = {
         "AUDIO/Music/Ra.mp3" // M
 };
 
-static void play_track(int track)
-{
+static void play_track(int track) {
     sound_device_stop_music();
     if (track <= TRACK_NONE || track >= TRACK_MAX)
-            return;
+        return;
     int volume = setting_sound(SOUND_MUSIC)->volume;
 
     switch (GAME_ENV) {
@@ -160,57 +159,52 @@ static void play_track(int track)
     data.current_track = track;
 }
 
-void sound_music_set_volume(int percentage)
-{
+void sound_music_set_volume(int percentage) {
     sound_device_set_music_volume(percentage);
 }
-void sound_music_play_intro(void)
-{
+void sound_music_play_intro(void) {
     if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_MENU);
 
 }
-void sound_music_play_editor(void)
-{
+void sound_music_play_editor(void) {
     if (setting_sound(SOUND_MUSIC)->enabled)
         play_track(TRACK_CITY_1);
 
 }
-void sound_music_update(int force)
-{
+void sound_music_update(int force) {
     if (data.next_check && !force) {
         --data.next_check;
         return;
     }
     if (!setting_sound(SOUND_MUSIC)->enabled)
-            return;
+        return;
     int track;
     int population = city_population();
     int total_enemies = city_figures_total_invading_enemies();
     if (total_enemies >= 32)
         track = TRACK_COMBAT_LONG;
- else if (total_enemies > 0)
+    else if (total_enemies > 0)
         track = TRACK_COMBAT_SHORT;
- else if (population < 1000)
+    else if (population < 1000)
         track = TRACK_CITY_1;
- else if (population < 2000)
+    else if (population < 2000)
         track = TRACK_CITY_2;
- else if (population < 5000)
+    else if (population < 5000)
         track = TRACK_CITY_3;
- else if (population < 7000)
+    else if (population < 7000)
         track = TRACK_CITY_4;
- else {
+    else {
         track = TRACK_CITY_5;
     }
 
     if (track == data.current_track)
-            return;
+        return;
 
     play_track(track);
     data.next_check = 10;
 }
-void sound_music_stop(void)
-{
+void sound_music_stop(void) {
     sound_device_stop_music();
     data.current_track = TRACK_NONE;
     data.next_check = 0;

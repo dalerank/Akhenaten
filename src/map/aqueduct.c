@@ -11,16 +11,13 @@
 static grid_xx aqueduct = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx aqueduct_backup = {0, {FS_UINT8, FS_UINT8}};
 
-int map_aqueduct_at(int grid_offset)
-{
+int map_aqueduct_at(int grid_offset) {
     return map_grid_get(&aqueduct, grid_offset);
 }
-void map_aqueduct_set(int grid_offset, int value)
-{
+void map_aqueduct_set(int grid_offset, int value) {
     map_grid_set(&aqueduct, grid_offset, value);
 }
-void map_aqueduct_remove(int grid_offset)
-{
+void map_aqueduct_remove(int grid_offset) {
     map_grid_set(&aqueduct, grid_offset, 0);
     if (map_grid_get(&aqueduct, grid_offset + map_grid_delta(0, -1)) == 5)
         map_grid_set(&aqueduct, grid_offset + map_grid_delta(0, -1), 1);
@@ -35,16 +32,16 @@ void map_aqueduct_remove(int grid_offset)
         map_grid_set(&aqueduct, grid_offset + map_grid_delta(-1, 0), 4);
 
 }
-void map_aqueduct_clear(void)
-{
+void map_aqueduct_clear(void) {
     map_grid_clear(&aqueduct);
 }
+
 #include <stdlib.h>
-void map_aqueduct_backup(void)
-{
+
+void map_aqueduct_backup(void) {
 
     void *t = malloc(12);
-    uint16_t *x = (uint16_t*)t;
+    uint16_t *x = (uint16_t *) t;
 
     uint16_t g = x[2];
     x[4] = 1;
@@ -52,18 +49,15 @@ void map_aqueduct_backup(void)
 
     map_grid_copy(&aqueduct, &aqueduct_backup);
 }
-void map_aqueduct_restore(void)
-{
+void map_aqueduct_restore(void) {
     map_grid_copy(&aqueduct_backup, &aqueduct);
 }
 
-void map_aqueduct_save_state(buffer *buf, buffer *backup)
-{
+void map_aqueduct_save_state(buffer *buf, buffer *backup) {
     map_grid_save_state(&aqueduct, buf);
     map_grid_save_state(&aqueduct_backup, backup);
 }
-void map_aqueduct_load_state(buffer *buf, buffer *backup)
-{
+void map_aqueduct_load_state(buffer *buf, buffer *backup) {
     map_grid_load_state(&aqueduct, buf);
     map_grid_load_state(&aqueduct_backup, backup);
 }

@@ -7,12 +7,10 @@
 
 static grid_xx strength = {0, {FS_UINT8, FS_UINT8}};
 
-void map_soldier_strength_clear(void)
-{
+void map_soldier_strength_clear(void) {
     map_grid_clear(&strength);
 }
-void map_soldier_strength_add(int x, int y, int radius, int amount)
-{
+void map_soldier_strength_add(int x, int y, int radius, int amount) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -30,12 +28,10 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
     }
 }
 
-int map_soldier_strength_get(int grid_offset)
-{
+int map_soldier_strength_get(int grid_offset) {
     return map_grid_get(&strength, grid_offset);
 }
-int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_y)
-{
+int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_y) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
 

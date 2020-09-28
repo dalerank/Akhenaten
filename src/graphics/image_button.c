@@ -16,7 +16,7 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons) {
             if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
                 if (btn->button_type == IB_NORMAL)
                     btn->pressed = 0;
- else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down)
+                else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down)
                     btn->pressed = 0;
 
             }

@@ -21,8 +21,7 @@ static struct {
     int tail;
 } queue;
 
-int adjacent_offsets(int i)
-{
+int adjacent_offsets(int i) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             return ADJACENT_OFFSETS_C3[i];
@@ -31,17 +30,14 @@ int adjacent_offsets(int i)
     }
 }
 
-void map_road_network_clear(void)
-{
+void map_road_network_clear(void) {
     map_grid_clear(&network);
 }
-int map_road_network_get(int grid_offset)
-{
+int map_road_network_get(int grid_offset) {
     return map_grid_get(&network, grid_offset);
 }
 
-static int mark_road_network(int grid_offset, uint8_t network_id)
-{
+static int mark_road_network(int grid_offset, uint8_t network_id) {
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
@@ -60,7 +56,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
                     size++;
                     if (next_offset == -1)
                         next_offset = new_offset;
- else {
+                    else {
                         queue.items[queue.tail++] = new_offset;
                         if (queue.tail >= MAX_QUEUE)
                             queue.tail = 0;
@@ -83,8 +79,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
     return size;
 }
 
-void map_road_network_update(void)
-{
+void map_road_network_update(void) {
     city_map_clear_largest_road_networks();
     map_grid_clear(&network);
     int network_id = 1;

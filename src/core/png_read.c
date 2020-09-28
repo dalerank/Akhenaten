@@ -13,16 +13,14 @@ static struct {
     FILE *fp;
 } data;
 
-static void unload_png(void)
-{
+static void unload_png(void) {
     png_destroy_read_struct(&data.png_ptr, &data.info_ptr, 0);
     if (data.fp) {
         fclose(data.fp);
     }
 }
 
-static int load_png(const char *path)
-{
+static int load_png(const char *path) {
     unload_png();
     png_byte header[8];
     data.fp = fopen(path, "rb");
@@ -61,8 +59,7 @@ static int load_png(const char *path)
     return 1;
 }
 
-int png_get_image_size(const char *path, int *width, int *height)
-{
+int png_get_image_size(const char *path, int *width, int *height) {
     *width = 0;
     *height = 0;
     if (!load_png(path)) {
@@ -75,8 +72,7 @@ int png_get_image_size(const char *path, int *width, int *height)
     return 1;
 }
 
-int png_read(const char *path, uint8_t *pixels)
-{
+int png_read(const char *path, uint8_t *pixels) {
     if (!load_png(path)) {
         return 0;
     }
@@ -89,7 +85,7 @@ int png_read(const char *path, uint8_t *pixels)
     png_set_filler(data.png_ptr, 0xFF, PNG_FILLER_AFTER);
     png_set_expand(data.png_ptr);
     png_set_strip_16(data.png_ptr);
-   // png_set_swap_alpha(data.png_ptr);
+    // png_set_swap_alpha(data.png_ptr);
     png_set_bgr(data.png_ptr);
 
     png_set_interlace_handling(data.png_ptr);
@@ -97,7 +93,7 @@ int png_read(const char *path, uint8_t *pixels)
 
     int width = png_get_image_width(data.png_ptr, data.info_ptr);
     int height = png_get_image_height(data.png_ptr, data.info_ptr);
-    png_bytep *row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
+    png_bytep *row_pointers = (png_bytep *) malloc(sizeof(png_bytep) * height);
     for (int y = 0; y < height; ++y) {
         row_pointers[y] = pixels + y * width * sizeof(color_t);
     }

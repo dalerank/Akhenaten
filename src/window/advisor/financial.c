@@ -15,21 +15,19 @@
 static void button_change_taxes(int is_down, int param2);
 
 static arrow_button arrow_buttons_taxes[] = {
-    {180, 75, 17, 24, button_change_taxes, 1, 0},
-    {204, 75, 15, 24, button_change_taxes, 0, 0}
+        {180, 75, 17, 24, button_change_taxes, 1, 0},
+        {204, 75, 15, 24, button_change_taxes, 0, 0}
 };
 
 static int arrow_button_focus;
 
-static void draw_row(int group, int number, int y, int value_last_year, int value_this_year)
-{
+static void draw_row(int group, int number, int y, int value_last_year, int value_this_year) {
     lang_text_draw(group, number, 80, y, FONT_NORMAL_BLACK);
     text_draw_number(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
     text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
 
-static int draw_background(void)
-{
+static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
@@ -98,40 +96,35 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     arrow_buttons_draw(0, 0, arrow_buttons_taxes, 2);
 }
 
-static int handle_mouse(const mouse *m)
-{
+static int handle_mouse(const mouse *m) {
     return arrow_buttons_handle_mouse(m, 0, 0, arrow_buttons_taxes, 2, &arrow_button_focus);
 }
 
-static void button_change_taxes(int is_down, int param2)
-{
+static void button_change_taxes(int is_down, int param2) {
     city_finance_change_tax_percentage(is_down ? -1 : 1);
     city_finance_estimate_taxes();
     city_finance_calculate_totals();
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
-{
+static int get_tooltip_text(void) {
     if (arrow_button_focus)
         return 120;
- else {
+    else {
         return 0;
     }
 }
 
-const advisor_window_type *window_advisor_financial(void)
-{
+const advisor_window_type *window_advisor_financial(void) {
     static const advisor_window_type window = {
-        draw_background,
-        draw_foreground,
-        handle_mouse,
-        get_tooltip_text
+            draw_background,
+            draw_foreground,
+            handle_mouse,
+            get_tooltip_text
     };
     return &window;
 }

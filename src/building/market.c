@@ -13,8 +13,7 @@ struct resource_data {
     int num_buildings;
 };
 
-int building_market_get_max_food_stock(building *market)
-{
+int building_market_get_max_food_stock(building *market) {
     int max_stock = 0;
     if (market->id > 0 && market->type == BUILDING_MARKET) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -27,8 +26,7 @@ int building_market_get_max_food_stock(building *market)
     return max_stock;
 }
 
-int building_market_get_max_goods_stock(building *market)
-{
+int building_market_get_max_goods_stock(building *market) {
     int max_stock = 0;
     if (market->id > 0 && market->type == BUILDING_MARKET) {
         for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
@@ -41,8 +39,7 @@ int building_market_get_max_goods_stock(building *market)
     return max_stock;
 }
 
-static void update_food_resource(struct resource_data *data, int resource, const building *b, int distance)
-{
+static void update_food_resource(struct resource_data *data, int resource, const building *b, int distance) {
     if (b->data.granary.resource_stored[resource]) {
         data->num_buildings++;
         if (distance < data->distance) {
@@ -52,8 +49,7 @@ static void update_food_resource(struct resource_data *data, int resource, const
     }
 }
 
-static void update_good_resource(struct resource_data *data, int resource, building *b, int distance)
-{
+static void update_good_resource(struct resource_data *data, int resource, building *b, int distance) {
     if (!city_resource_is_stockpiled(resource) && building_warehouse_get_amount(b, resource) > 0) {
         data->num_buildings++;
         if (distance < data->distance) {
@@ -74,11 +70,10 @@ void toggle_good_accepted(int resource, building *market) {
 }
 
 void unaccept_all_goods(building *market) {
-    market->subtype.market_goods=0xFFFF;
+    market->subtype.market_goods = 0xFFFF;
 }
 
-int building_market_get_storage_destination(building *market)
-{
+int building_market_get_storage_destination(building *market) {
     struct resource_data resources[INVENTORY_MAX];
     for (int i = 0; i < INVENTORY_MAX; i++) {
         resources[i].building_id = 0;
@@ -97,7 +92,7 @@ int building_market_get_storage_destination(building *market)
             b->road_network_id != market->road_network_id) {
             continue;
         }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET,b))
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET, b))
             continue;
 
         int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);
@@ -124,22 +119,22 @@ int building_market_get_storage_destination(building *market)
     // update demands
     if (market->data.market.pottery_demand)
         market->data.market.pottery_demand--;
- else {
+    else {
         resources[INVENTORY_GOOD1].num_buildings = 0;
     }
     if (market->data.market.furniture_demand)
         market->data.market.furniture_demand--;
- else {
+    else {
         resources[INVENTORY_GOOD2].num_buildings = 0;
     }
     if (market->data.market.oil_demand)
         market->data.market.oil_demand--;
- else {
+    else {
         resources[INVENTORY_GOOD3].num_buildings = 0;
     }
     if (market->data.market.wine_demand)
         market->data.market.wine_demand--;
- else {
+    else {
         resources[INVENTORY_GOOD4].num_buildings = 0;
     }
 
@@ -154,30 +149,38 @@ int building_market_get_storage_destination(building *market)
         return 0;
 
     // prefer food if we don't have it
-    if (!market->data.market.inventory[INVENTORY_FOOD1] && resources[INVENTORY_FOOD1].num_buildings && is_good_accepted(INVENTORY_FOOD1, market)) {
+    if (!market->data.market.inventory[INVENTORY_FOOD1] && resources[INVENTORY_FOOD1].num_buildings &&
+        is_good_accepted(INVENTORY_FOOD1, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FOOD1;
         return resources[INVENTORY_FOOD1].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_FOOD2] && resources[INVENTORY_FOOD2].num_buildings && is_good_accepted(INVENTORY_FOOD2, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_FOOD2] && resources[INVENTORY_FOOD2].num_buildings &&
+               is_good_accepted(INVENTORY_FOOD2, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FOOD2;
         return resources[INVENTORY_FOOD2].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_FOOD3] && resources[INVENTORY_FOOD3].num_buildings && is_good_accepted(INVENTORY_FOOD3, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_FOOD3] && resources[INVENTORY_FOOD3].num_buildings &&
+               is_good_accepted(INVENTORY_FOOD3, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FOOD3;
         return resources[INVENTORY_FOOD3].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_FOOD4] && resources[INVENTORY_FOOD4].num_buildings && is_good_accepted(INVENTORY_FOOD4, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_FOOD4] && resources[INVENTORY_FOOD4].num_buildings &&
+               is_good_accepted(INVENTORY_FOOD4, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_FOOD4;
         return resources[INVENTORY_FOOD4].building_id;
     }
     // then prefer resource if we don't have it
-    if (!market->data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings && is_good_accepted(INVENTORY_GOOD1, market)) {
+    if (!market->data.market.inventory[INVENTORY_GOOD1] && resources[INVENTORY_GOOD1].num_buildings &&
+        is_good_accepted(INVENTORY_GOOD1, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD1;
         return resources[INVENTORY_GOOD1].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings && is_good_accepted(INVENTORY_GOOD2, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD2] && resources[INVENTORY_GOOD2].num_buildings &&
+               is_good_accepted(INVENTORY_GOOD2, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD2;
         return resources[INVENTORY_GOOD2].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings && is_good_accepted(INVENTORY_GOOD3, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD3] && resources[INVENTORY_GOOD3].num_buildings &&
+               is_good_accepted(INVENTORY_GOOD3, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD3;
         return resources[INVENTORY_GOOD3].building_id;
-    } else if (!market->data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings && is_good_accepted(INVENTORY_GOOD4, market)) {
+    } else if (!market->data.market.inventory[INVENTORY_GOOD4] && resources[INVENTORY_GOOD4].num_buildings &&
+               is_good_accepted(INVENTORY_GOOD4, market)) {
         market->data.market.fetch_inventory_id = INVENTORY_GOOD4;
         return resources[INVENTORY_GOOD4].building_id;
     }

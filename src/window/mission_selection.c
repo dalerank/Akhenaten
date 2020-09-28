@@ -14,7 +14,7 @@
 static void button_start(int param1, int param2);
 
 static const int BACKGROUND_IMAGE_OFFSET[] = {
-    0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0
+        0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0
 };
 
 static const struct {
@@ -23,22 +23,22 @@ static const struct {
     int x_military;
     int y_military;
 } CAMPAIGN_SELECTION[12] = {
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {292, 182, 353, 232},
-    {118, 202, 324, 286},
-    {549, 285, 224, 121},
-    {173, 109, 240, 292},
-    {576, 283, 19, 316},
-    {97, 240, 156, 59},
-    {127, 300, 579, 327},
-    {103, 35, 410, 109},
-    {191, 153, 86, 8},
-    {200, 300, 400, 300},
+        {0,   0,   0,   0},
+        {0,   0,   0,   0},
+        {292, 182, 353, 232},
+        {118, 202, 324, 286},
+        {549, 285, 224, 121},
+        {173, 109, 240, 292},
+        {576, 283, 19,  316},
+        {97,  240, 156, 59},
+        {127, 300, 579, 327},
+        {103, 35,  410, 109},
+        {191, 153, 86,  8},
+        {200, 300, 400, 300},
 };
 
 static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start, button_none, 1, 0, 1
+        0, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start, button_none, 1, 0, 1
 };
 
 static struct {
@@ -46,8 +46,7 @@ static struct {
     int focus_button;
 } data;
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     int rank = scenario_campaign_rank();
 
     image_draw_fullscreen_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
@@ -56,19 +55,17 @@ static void draw_background(void)
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
     if (data.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
- else {
+    else {
         lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);
     }
     graphics_reset_dialog();
 }
 
-static int is_mouse_hit(const mouse *m, int x, int y, int size)
-{
+static int is_mouse_hit(const mouse *m, int x, int y, int size) {
     return x <= m->x && m->x < x + size && y <= m->y && m->y < y + size;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     if (data.choice > 0)
@@ -94,8 +91,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
 
     int rank = scenario_campaign_rank();
@@ -121,7 +117,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     } else if (h->escape_pressed)
         hotkey_handle_escape();
 
-    
+
     if (m_dialog->left.went_up) {
         if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
             scenario_set_campaign_mission(game_mission_peaceful());
@@ -146,22 +142,20 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_start(int param1, int param2)
-{
+static void button_start(int param1, int param2) {
     window_mission_briefing_show();
 }
 
-void window_mission_selection_show(void)
-{
+void window_mission_selection_show(void) {
     if (!game_mission_has_choice()) {
         window_mission_briefing_show();
         return;
     }
     window_type window = {
-        WINDOW_MISSION_SELECTION,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_MISSION_SELECTION,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     data.choice = 0;
     data.focus_button = 0;

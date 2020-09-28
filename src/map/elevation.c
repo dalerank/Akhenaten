@@ -5,21 +5,17 @@
 
 static grid_xx elevation = {0, {FS_UINT8, FS_UINT8}};
 
-int map_elevation_at(int grid_offset)
-{
+int map_elevation_at(int grid_offset) {
     return map_grid_get(&elevation, grid_offset);
 }
-void map_elevation_set(int grid_offset, int value)
-{
+void map_elevation_set(int grid_offset, int value) {
     map_grid_set(&elevation, grid_offset, value);
 }
 
-void map_elevation_clear(void)
-{
+void map_elevation_clear(void) {
     map_grid_clear(&elevation);
 }
-static void fix_cliff_tiles(int grid_offset)
-{
+static void fix_cliff_tiles(int grid_offset) {
     // reduce elevation when the surrounding tiles are at least 2 lower
     int max = map_grid_get(&elevation, grid_offset) - 1;
     if (map_grid_get(&elevation, grid_offset + map_grid_delta(-1, 0)) < max ||
@@ -29,8 +25,7 @@ static void fix_cliff_tiles(int grid_offset)
         map_grid_set(&elevation, grid_offset, max);
     }
 }
-void map_elevation_remove_cliffs(void)
-{
+void map_elevation_remove_cliffs(void) {
     // elevation is max 5, so we need 4 passes to fix the lot
     for (int level = 0; level < 4; level++) {
         int grid_offset = map_data.start_offset;
@@ -44,11 +39,9 @@ void map_elevation_remove_cliffs(void)
     }
 }
 
-void map_elevation_save_state(buffer *buf)
-{
+void map_elevation_save_state(buffer *buf) {
     map_grid_save_state(&elevation, buf);
 }
-void map_elevation_load_state(buffer *buf)
-{
+void map_elevation_load_state(buffer *buf) {
     map_grid_load_state(&elevation, buf);
 }

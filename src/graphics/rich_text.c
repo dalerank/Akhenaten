@@ -13,7 +13,7 @@
 
 static void on_scroll(void);
 
-static scrollbar_type scrollbar = { 0, 0, 0, on_scroll};
+static scrollbar_type scrollbar = {0, 0, 0, on_scroll};
 
 static struct {
     int message_id;
@@ -39,8 +39,8 @@ static struct {
     int max_scroll_position;
 } data;
 
-int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks, int adjust_width_on_no_scroll)
-{
+int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks, int height_blocks,
+                   int adjust_width_on_no_scroll) {
     data.x_text = x_text;
     data.y_text = y_text;
     if (!data.num_lines) {
@@ -49,8 +49,8 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
         data.text_width_blocks = width_blocks;
 
         data.num_lines = rich_text_draw(text,
-            data.x_text + 8, data.y_text + 6,
-            16 * data.text_width_blocks - 16, data.text_height_lines, 1);
+                                        data.x_text + 8, data.y_text + 6,
+                                        16 * data.text_width_blocks - 16, data.text_height_lines, 1);
         scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
         scrollbar.y = data.y_text;
         scrollbar.height = 16 * data.text_height_blocks;
@@ -63,21 +63,18 @@ int rich_text_init(const uint8_t *text, int x_text, int y_text, int width_blocks
     return data.text_width_blocks;
 }
 
-void rich_text_set_fonts(font_t normal_font, font_t link_font)
-{
+void rich_text_set_fonts(font_t normal_font, font_t link_font) {
     normal_font_def = font_definition_for(normal_font);
     link_font_def = font_definition_for(link_font);
 }
 
-void rich_text_reset(int scroll_position)
-{
+void rich_text_reset(int scroll_position) {
     scrollbar_reset(&scrollbar, scroll_position);
     data.num_lines = 0;
     rich_text_clear_links();
 }
 
-void rich_text_clear_links(void)
-{
+void rich_text_clear_links(void) {
     for (int i = 0; i < MAX_LINKS; i++) {
         links[i].message_id = 0;
         links[i].x_min = 0;
@@ -88,8 +85,7 @@ void rich_text_clear_links(void)
     num_links = 0;
 }
 
-int rich_text_get_clicked_link(const mouse *m)
-{
+int rich_text_get_clicked_link(const mouse *m) {
     if (m->left.went_up) {
         for (int i = 0; i < num_links; i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max &&
@@ -101,8 +97,7 @@ int rich_text_get_clicked_link(const mouse *m)
     return -1;
 }
 
-static void add_link(int message_id, int x_start, int x_end, int y)
-{
+static void add_link(int message_id, int x_start, int x_end, int y) {
     if (num_links < MAX_LINKS) {
         links[num_links].message_id = message_id;
         links[num_links].x_min = x_start - 2;
@@ -113,8 +108,7 @@ static void add_link(int message_id, int x_start, int x_end, int y)
     }
 }
 
-static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
-{
+static int get_word_width(const uint8_t *str, int in_link, int *num_chars) {
     int width = 0;
     int guard = 0;
     int word_char_seen = 0;
@@ -179,8 +173,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
     return width;
 }
 
-static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
-{
+static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
     while (*str) {
@@ -203,7 +196,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id < 0)
                 x += def->space_width;
- else {
+            else {
                 if (num_bytes > 1 && start_link) {
                     // add space before links in multibyte charsets
                     x += def->space_width;
@@ -227,8 +220,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
 }
 
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,
-                     int box_width, int height_lines, color_t color, int measure_only)
-{
+                     int box_width, int height_lines, color_t color, int measure_only) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -316,14 +308,14 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             if (image_id) {
                 if (lines_before_image)
                     lines_before_image--;
- else {
+                else {
                     const image *img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
                         if (line >= scrollbar.scroll_position)
                             image_draw(image_id, image_offset_x, y + 8);
- else {
+                        else {
                             image_draw(image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
                         }
                     }
@@ -340,33 +332,28 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines, int measure_only)
-{
+int rich_text_draw(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines, int measure_only) {
     return draw_text(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
 }
 
-int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines, color_t color)
-{
+int rich_text_draw_colored(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines,
+                           color_t color) {
     return draw_text(text, x_offset, y_offset, box_width, height_lines, color, 0);
 }
 
-void rich_text_draw_scrollbar(void)
-{
+void rich_text_draw_scrollbar(void) {
     scrollbar_draw(&scrollbar);
 }
 
-int rich_text_handle_mouse(const mouse *m)
-{
+int rich_text_handle_mouse(const mouse *m) {
     return scrollbar_handle_mouse(&scrollbar, m);
 }
 
-static void on_scroll(void)
-{
+static void on_scroll(void) {
     rich_text_clear_links();
     window_invalidate();
 }
 
-int rich_text_scroll_position(void)
-{
+int rich_text_scroll_position(void) {
     return scrollbar.scroll_position;
 }

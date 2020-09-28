@@ -13,11 +13,10 @@ static struct {
     int current_video;
 } data;
 
-static const char *C3_INTRO_VIDEOS[] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
-static const char *PH_INTRO_VIDEOS[] = { "BINKS/high/Intro_big.bik"};
+static const char *C3_INTRO_VIDEOS[] = {"smk/logo.smk", "smk/intro.smk", "smk/credits.smk"};
+static const char *PH_INTRO_VIDEOS[] = {"BINKS/high/Intro_big.bik"};
 
-static int start_next_video(void)
-{
+static int start_next_video(void) {
     int videos_num = 0;
     const char **videos;
     switch (GAME_ENV) {
@@ -39,21 +38,17 @@ static int start_next_video(void)
     }
     return 0;
 }
-static int init(void)
-{
+static int init(void) {
     data.current_video = 0;
     return start_next_video();
 }
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_clear_screens();
 }
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter_pressed) {
         sound_music_stop();
         video_stop();
@@ -64,14 +59,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void window_intro_video_show(void)
-{
+void window_intro_video_show(void) {
     if (init()) {
         window_type window = {
-            WINDOW_INTRO_VIDEO,
-            draw_background,
-            draw_foreground,
-            handle_input
+                WINDOW_INTRO_VIDEO,
+                draw_background,
+                draw_foreground,
+                handle_input
         };
         window_show(&window);
     }

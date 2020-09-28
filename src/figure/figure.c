@@ -17,13 +17,11 @@ static struct {
     figure figures[5000];
 } data = {0};
 
-figure *figure_get(int id)
-{
+figure *figure_get(int id) {
     return &data.figures[id];
 }
 
-figure *figure_create(int type, int x, int y, int dir)
-{
+figure *figure_create(int type, int x, int y, int dir) {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         if (!data.figures[i].state) {
@@ -57,8 +55,7 @@ figure *figure_create(int type, int x, int y, int dir)
     return f;
 }
 
-void figure_delete(figure *f)
-{
+void figure_delete(figure *f) {
     building *b = building_get(f->building_id);
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
@@ -114,28 +111,23 @@ void figure_delete(figure *f)
     f->id = figure_id;
 }
 
-int figure_is_dead(const figure *f)
-{
+int figure_is_dead(const figure *f) {
     return f->state != FIGURE_STATE_ALIVE || f->action_state == FIGURE_ACTION_149_CORPSE;
 }
 
-int figure_is_enemy(const figure *f)
-{
+int figure_is_enemy(const figure *f) {
     return f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
 
-int figure_is_legion(const figure *f)
-{
+int figure_is_legion(const figure *f) {
     return f->type >= FIGURE_FORT_JAVELIN && f->type <= FIGURE_FORT_LEGIONARY;
 }
 
-int figure_is_herd(const figure *f)
-{
+int figure_is_herd(const figure *f) {
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
-void figure_init_scenario(void)
-{
+void figure_init_scenario(void) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         memset(&data.figures[i], 0, sizeof(figure));
         data.figures[i].id = i;
@@ -143,15 +135,13 @@ void figure_init_scenario(void)
     data.created_sequence = 0;
 }
 
-void figure_kill_all()
-{
+void figure_kill_all() {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         data.figures[i].state = FIGURE_STATE_DEAD;
     }
 }
 
-static void figure_save(buffer *buf, const figure *f)
-{
+static void figure_save(buffer *buf, const figure *f) {
     buf->write_u8(f->alternative_location_index);
     buf->write_u8(f->image_offset);
     buf->write_u8(f->is_enemy_image);
@@ -250,8 +240,7 @@ static void figure_save(buffer *buf, const figure *f)
     buf->write_i16(f->opponent_id);
 }
 
-static void figure_load(buffer *buf, figure *f)
-{
+static void figure_load(buffer *buf, figure *f) {
     f->alternative_location_index = buf->read_u8();
     f->image_offset = buf->read_u8();
     f->is_enemy_image = buf->read_u8();
@@ -352,8 +341,7 @@ static void figure_load(buffer *buf, figure *f)
         buf->skip(260);
 }
 
-void figure_save_state(buffer *list, buffer *seq)
-{
+void figure_save_state(buffer *list, buffer *seq) {
     seq->write_i32(data.created_sequence);
 
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -361,8 +349,7 @@ void figure_save_state(buffer *list, buffer *seq)
     }
 }
 
-void figure_load_state(buffer *list, buffer *seq)
-{
+void figure_load_state(buffer *list, buffer *seq) {
     data.created_sequence = seq->read_i32();
 
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {

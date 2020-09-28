@@ -30,8 +30,7 @@ static struct {
     int viewport_height;
 } data;
 
-void empire_load(int is_custom_scenario, int empire_id)
-{
+void empire_load(int is_custom_scenario, int empire_id) {
     buffer *buf = new buffer(EMPIRE_DATA_SIZE);
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
 
@@ -53,8 +52,7 @@ void empire_load(int is_custom_scenario, int empire_id)
     empire_object_load(buf);
 }
 
-static void check_scroll_boundaries(void)
-{
+static void check_scroll_boundaries(void) {
     int max_x = EMPIRE_WIDTH - data.viewport_width;
     int max_y = EMPIRE_HEIGHT - data.viewport_height;
 
@@ -62,8 +60,7 @@ static void check_scroll_boundaries(void)
     data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
 }
 
-void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
-{
+void empire_load_editor(int empire_id, int viewport_width, int viewport_height) {
     empire_load(1, empire_id);
     empire_object_init_cities();
 
@@ -81,8 +78,7 @@ void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
     check_scroll_boundaries();
 }
 
-void empire_init_scenario(void)
-{
+void empire_init_scenario(void) {
     data.scroll_x = data.initial_scroll_x;
     data.scroll_y = data.initial_scroll_y;
     data.viewport_width = EMPIRE_WIDTH;
@@ -91,59 +87,50 @@ void empire_init_scenario(void)
     empire_object_init_cities();
 }
 
-void empire_set_viewport(int width, int height)
-{
+void empire_set_viewport(int width, int height) {
     data.viewport_width = width;
     data.viewport_height = height;
     check_scroll_boundaries();
 }
 
-void empire_get_scroll(int *x_scroll, int *y_scroll)
-{
+void empire_get_scroll(int *x_scroll, int *y_scroll) {
     *x_scroll = data.scroll_x;
     *y_scroll = data.scroll_y;
 }
 
-void empire_adjust_scroll(int *x_offset, int *y_offset)
-{
+void empire_adjust_scroll(int *x_offset, int *y_offset) {
     *x_offset = *x_offset - data.scroll_x;
     *y_offset = *y_offset - data.scroll_y;
 }
 
-void empire_set_scroll(int x, int y)
-{
+void empire_set_scroll(int x, int y) {
     data.scroll_x = x;
     data.scroll_y = y;
     check_scroll_boundaries();
 }
 
-void empire_scroll_map(int x, int y)
-{
+void empire_scroll_map(int x, int y) {
     data.scroll_x += x;
     data.scroll_y += y;
     check_scroll_boundaries();
 }
 
-int empire_selected_object(void)
-{
+int empire_selected_object(void) {
     return data.selected_object;
 }
 
-void empire_clear_selected_object(void)
-{
+void empire_clear_selected_object(void) {
     data.selected_object = 0;
 }
 
-void empire_select_object(int x, int y)
-{
+void empire_select_object(int x, int y) {
     int map_x = x + data.scroll_x;
     int map_y = y + data.scroll_y;
 
     data.selected_object = empire_object_get_closest(map_x, map_y);
 }
 
-int empire_can_export_resource_to_city(int city_id, int resource)
-{
+int empire_can_export_resource_to_city(int city_id, int resource) {
     empire_city *city = empire_city_get(city_id);
     if (city_id && trade_route_limit_reached(city->route_id, resource)) {
         // quota reached
@@ -155,27 +142,25 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
     if (city_id == 0 || city->buys_resource[resource])
         return city_int(resource) == TRADE_STATUS_EXPORT;
- else {
+    else {
         return 0;
     }
 }
 
-static int get_max_stock_for_population(void)
-{
+static int get_max_stock_for_population(void) {
     int population = city_population();
     if (population < 2000)
         return 10;
- else if (population < 4000)
+    else if (population < 4000)
         return 20;
- else if (population < 6000)
+    else if (population < 6000)
         return 30;
- else {
+    else {
         return 40;
     }
 }
 
-int empire_can_import_resource_from_city(int city_id, int resource)
-{
+int empire_can_import_resource_from_city(int city_id, int resource) {
     empire_city *city = empire_city_get(city_id);
     if (!city->sells_resource[resource])
         return 0;
@@ -231,15 +216,13 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-void empire_save_state(buffer *buf)
-{
+void empire_save_state(buffer *buf) {
     buf->write_i32(data.scroll_x);
     buf->write_i32(data.scroll_y);
     buf->write_i32(data.selected_object);
 }
 
-void empire_load_state(buffer *buf)
-{
+void empire_load_state(buffer *buf) {
     data.scroll_x = buf->read_i32();
     data.scroll_y = buf->read_i32();
     data.selected_object = buf->read_i32();

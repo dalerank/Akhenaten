@@ -4,16 +4,15 @@
 #include "graphics/image.h"
 
 static const int REPEATS[] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
-    0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
-    1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+        1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
 };
 
 static const time_millis REPEAT_MILLIS = 30;
 static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 
-void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons)
-{
+void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         int image_id = buttons[i].image_id;
         if (buttons[i].pressed)
@@ -23,8 +22,7 @@ void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons)
     }
 }
 
-static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons)
-{
+static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         if (x + buttons[i].x_offset <= m->x &&
             x + buttons[i].x_offset + buttons[i].size > m->x &&
@@ -36,8 +34,8 @@ static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int n
     return 0;
 }
 
-int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id)
-{
+int
+arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id) {
     static time_millis last_time = 0;
 
     time_millis curr_time = time_get_millis();
@@ -64,7 +62,7 @@ int arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *butto
     if (!button_id)
         return 0;
 
-    arrow_button *btn = &buttons[button_id -1];
+    arrow_button *btn = &buttons[button_id - 1];
     if (m->left.went_down) {
         btn->pressed = BUTTON_PRESSED_FRAMES;
         btn->repeats = 0;

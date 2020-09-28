@@ -21,17 +21,15 @@
 
 static int city_view_dirty;
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     graphics_clear_screens();
     widget_sidebar_editor_draw_background();
     widget_top_menu_editor_draw();
 }
 
-static void draw_cancel_construction(void)
-{
+static void draw_cancel_construction(void) {
     if (!mouse_get()->is_touch || !editor_tool_is_active())
-            return;
+        return;
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
@@ -40,16 +38,14 @@ static void draw_cancel_construction(void)
     city_view_dirty = 1;
 }
 
-static void clear_city_view(void)
-{
+static void clear_city_view(void) {
     if (config_get(CONFIG_UI_ZOOM) && city_view_dirty)
         graphics_clear_city_viewport();
 
     city_view_dirty = 0;
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     clear_city_view();
     widget_sidebar_editor_draw_foreground();
     widget_map_editor_draw();
@@ -58,8 +54,7 @@ static void draw_foreground(void)
 
 }
 
-static void handle_hotkeys(const hotkeys *h)
-{
+static void handle_hotkeys(const hotkeys *h) {
     if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
 
@@ -68,39 +63,34 @@ static void handle_hotkeys(const hotkeys *h)
 
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     handle_hotkeys(h);
     if (widget_top_menu_editor_handle_input(m, h))
-            return;
+        return;
     if (widget_sidebar_editor_handle_mouse(m))
-            return;
+        return;
     widget_map_editor_handle_input(m, h);
 }
 
-void window_editor_map_draw_all(void)
-{
+void window_editor_map_draw_all(void) {
     draw_background();
     draw_foreground();
 }
 
-void window_editor_map_draw_panels(void)
-{
+void window_editor_map_draw_panels(void) {
     draw_background();
 }
 
-void window_editor_map_draw(void)
-{
+void window_editor_map_draw(void) {
     widget_map_editor_draw();
 }
 
-void window_editor_map_show(void)
-{
+void window_editor_map_show(void) {
     window_type window = {
-        WINDOW_EDITOR_MAP,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_EDITOR_MAP,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     window_show(&window);
 }

@@ -45,9 +45,9 @@ static int determine_destination(int x, int y, int type1, int type2) {
         int days_left;
         if (b->type == type1)
             days_left = b->data.entertainment.days1;
- else if (b->type == type2)
+        else if (b->type == type2)
             days_left = b->data.entertainment.days2;
- else {
+        else {
             days_left = 0;
         }
         int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
@@ -69,14 +69,14 @@ static void update_shows(figure *f) {
 
             if (b->type == BUILDING_THEATER)
                 b->data.entertainment.days1 = 32;
- else {
+            else {
                 b->data.entertainment.days2 = 32;
             }
             break;
         case FIGURE_GLADIATOR:
             if (b->type == BUILDING_AMPHITHEATER)
                 b->data.entertainment.days1 = 32;
- else {
+            else {
                 b->data.entertainment.days2 = 32;
             }
             break;
@@ -104,20 +104,20 @@ static void update_image(figure *f) {
     int image_id;
     if (f->type == FIGURE_ACTOR)
         image_id = image_id_from_group(GROUP_FIGURE_ACTOR);
- else if (f->type == FIGURE_GLADIATOR)
+    else if (f->type == FIGURE_GLADIATOR)
         image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR);
- else if (f->type == FIGURE_LION_TAMER) {
+    else if (f->type == FIGURE_LION_TAMER) {
         image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER);
         if (f->wait_ticks_missile >= 96)
             image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER_WHIP);
 
         f->cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
     } else
-            return;
+        return;
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->type == FIGURE_GLADIATOR)
             f->image_id = image_id + 104 + dir + 8 * (f->image_offset / 2);
- else {
+        else {
             f->image_id = image_id + dir;
         }
     } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
@@ -228,7 +228,7 @@ void figure_entertainer_action(figure *f) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;

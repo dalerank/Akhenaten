@@ -62,7 +62,7 @@ typedef struct {
     } figure;
 } building_info_context;
 
-void window_building_set_possible_position(int * x_offset, int * y_offset, int width_blocks, int height_blocks);
+void window_building_set_possible_position(int *x_offset, int *y_offset, int width_blocks, int height_blocks);
 
 int window_building_get_vertical_offset(building_info_context *c, int new_window_height);
 

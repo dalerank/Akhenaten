@@ -37,7 +37,7 @@ void scenario_demand_change_process(void) {
             if (trade_route_decrease_limit(route, resource) && empire_city_is_trade_route_open(route)) {
                 if (trade_route_limit(route, resource) > 0)
                     city_message_post(1, MESSAGE_DECREASED_TRADING, city_id, resource);
- else {
+                else {
                     city_message_post(1, MESSAGE_TRADE_STOPPED, city_id, resource);
                 }
             }

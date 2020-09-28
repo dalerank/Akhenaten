@@ -27,12 +27,14 @@
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
 static const char *MODS_FOLDER = "mods";
-static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "mod" }, { "image" }, { "layer", "animation" } };
+static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = {{"mod"},
+                                                                                                      {"image"},
+                                                                                                      {"layer", "animation"}};
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
-    { { "author", "name" } }, // mod
-    { { "id", "src", "width", "height", "group", "image" } }, // image
-    { { "src", "group", "image", "x", "y" }, // layer
-    { "frames", "speed", "reversible", "x", "y" } } // animation
+        {{"author", "name"}}, // mod
+        {{"id",     "src",   "width", "height", "group", "image"}}, // image
+        {{"src",    "group", "image", "x",      "y"}, // layer
+                {"frames", "speed", "reversible", "x", "y"}} // animation
 };
 static color_t DUMMY_IMAGE_DATA = COLOR_BLACK;
 
@@ -46,11 +48,15 @@ static void xml_end_layer_element(void);
 static void xml_end_animation_element(void);
 
 static void (*xml_start_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(const char **attributes) = {
-    { xml_start_mod_element }, { xml_start_image_element }, { xml_start_layer_element, xml_start_animation_element }
+        {xml_start_mod_element},
+        {xml_start_image_element},
+        {xml_start_layer_element, xml_start_animation_element}
 };
 
 static void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(void) = {
-    { xml_end_mod_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
+        {xml_end_mod_element},
+        {xml_end_image_element},
+        {xml_end_layer_element, xml_end_animation_element}
 };
 
 typedef struct {
@@ -97,23 +103,21 @@ static struct {
     int total_images;
 } data;
 
-static const char *get_full_image_path(const char *path)
-{
-    strncpy(data.xml.image_base_path + data.xml.image_base_path_position, path, FILE_NAME_MAX - data.xml.image_base_path_position - 1);
+static const char *get_full_image_path(const char *path) {
+    strncpy(data.xml.image_base_path + data.xml.image_base_path_position, path,
+            FILE_NAME_MAX - data.xml.image_base_path_position - 1);
     return data.xml.image_base_path;
 }
 
-static void load_dummy_layer(layer *l)
-{
+static void load_dummy_layer(layer *l) {
     l->data = &DUMMY_IMAGE_DATA;
     l->width = 1;
     l->height = 1;
 }
 
-static void load_layer(layer *l)
-{
+static void load_layer(layer *l) {
     int size = l->width * l->height * sizeof(color_t);
-    l->data = (color_t*)malloc(size);
+    l->data = (color_t *) malloc(size);
     if (!l->data) {
         log_error("Problem loading layer", l->modded_image_path, 0);
         load_dummy_layer(l);
@@ -153,8 +157,7 @@ static void load_layer(layer *l)
     graphics_set_active_canvas(type);
 }
 
-static void unload_layer(layer *l)
-{
+static void unload_layer(layer *l) {
     free(l->modded_image_path);
     l->modded_image_path = 0;
     const image *layer_image = image_get(l->original_image_id);
@@ -164,8 +167,7 @@ static void unload_layer(layer *l)
     l->data = 0;
 }
 
-static color_t layer_get_color_for_image_position(layer *l, int x, int y)
-{
+static color_t layer_get_color_for_image_position(layer *l, int x, int y) {
     x -= l->x_offset;
     y -= l->y_offset;
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
@@ -174,8 +176,7 @@ static color_t layer_get_color_for_image_position(layer *l, int x, int y)
     return l->data[y * l->width + x];
 }
 
-static int load_modded_image(modded_image *img)
-{
+static int load_modded_image(modded_image *img) {
     if (img->loaded) {
         return 1;
     }
@@ -184,7 +185,7 @@ static int load_modded_image(modded_image *img)
         load_layer(&img->layers[i]);
     }
 
-    img->data = (color_t*)malloc(img->img.draw.data_length);
+    img->data = (color_t *) malloc(img->img.draw.data_length);
     memset(img->data, 0, img->img.draw.data_length);
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
@@ -229,8 +230,7 @@ static int load_modded_image(modded_image *img)
     return 1;
 }
 
-static void set_modded_image_base_path(const char *author, const char *name)
-{
+static void set_modded_image_base_path(const char *author, const char *name) {
     size_t position = data.xml.file_name_position;
     char *dst = data.xml.image_base_path;
     memset(dst + position, 0, FILE_NAME_MAX - position);
@@ -243,15 +243,15 @@ static void set_modded_image_base_path(const char *author, const char *name)
     data.xml.image_base_path_position = position;
 }
 
-static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y)
-{
+static int add_layer_from_image_path(modded_image *img, const char *path, int offset_x, int offset_y) {
     layer *current_layer = &img->layers[img->num_layers];
     size_t path_size = strlen(path);
-    current_layer->modded_image_path = (char*)malloc((path_size + 5) * sizeof(char));
+    current_layer->modded_image_path = (char *) malloc((path_size + 5) * sizeof(char));
     strncpy(current_layer->modded_image_path, path, path_size);
     strncpy(current_layer->modded_image_path + path_size, ".png", 5);
 
-    if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &current_layer->width, &current_layer->height)) {
+    if (!png_get_image_size(get_full_image_path(current_layer->modded_image_path), &current_layer->width,
+                            &current_layer->height)) {
         log_info("Unable to load image", path, 0);
         unload_layer(current_layer);
         return 0;
@@ -268,8 +268,8 @@ static int add_layer_from_image_path(modded_image *img, const char *path, int of
     return 1;
 }
 
-static int add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y)
-{
+static int
+add_layer_from_image_id(modded_image *img, const char *group_id, const char *image_id, int offset_x, int offset_y) {
     layer *current_layer = &img->layers[img->num_layers];
     current_layer->width = 0;
     current_layer->height = 0;
@@ -309,8 +309,7 @@ static int add_layer_from_image_id(modded_image *img, const char *group_id, cons
     return 1;
 }
 
-static int count_xml_attributes(const char **attributes)
-{
+static int count_xml_attributes(const char **attributes) {
     int total = 0;
     while (attributes[total]) {
         ++total;
@@ -318,8 +317,7 @@ static int count_xml_attributes(const char **attributes)
     return total;
 }
 
-static void xml_start_mod_element(const char **attributes)
-{
+static void xml_start_mod_element(const char **attributes) {
     if (count_xml_attributes(attributes) != 4) {
         data.xml.error = 1;
         return;
@@ -342,8 +340,7 @@ static void xml_start_mod_element(const char **attributes)
     set_modded_image_base_path(group->author, group->name);
 }
 
-static void xml_start_image_element(const char **attributes)
-{
+static void xml_start_image_element(const char **attributes) {
     data.xml.current_image = &data.images[data.total_images];
     modded_image *img = data.xml.current_image;
     const char *path = 0;
@@ -383,8 +380,7 @@ static void xml_start_image_element(const char **attributes)
     }
 }
 
-static void xml_start_layer_element(const char **attributes)
-{
+static void xml_start_layer_element(const char **attributes) {
     const char *path = 0;
     const char *group = 0;
     const char *id = 0;
@@ -392,7 +388,7 @@ static void xml_start_layer_element(const char **attributes)
     int offset_y = 0;
     modded_image *img = data.xml.current_image;
     if (img->num_layers == MAX_LAYERS)
-            return;
+        return;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes < 2 || total_attributes > 8 || total_attributes % 2) {
         data.xml.error = 1;
@@ -424,17 +420,16 @@ static void xml_start_layer_element(const char **attributes)
     }
 }
 
-static void xml_start_animation_element(const char **attributes)
-{
+static void xml_start_animation_element(const char **attributes) {
     modded_image *img = data.xml.current_image;
     if (img->img.num_animation_sprites)
-            return;
+        return;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes % 2) {
         data.xml.error = 1;
         return;
     }
-   
+
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][0]) == 0) {
             img->img.num_animation_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
@@ -458,19 +453,17 @@ static void xml_start_animation_element(const char **attributes)
     }
 }
 
-static void xml_end_mod_element(void)
-{
+static void xml_end_mod_element(void) {
     data.total_groups++;
     data.xml.finished = 1;
 }
 
-static void xml_end_image_element(void)
-{
+static void xml_end_image_element(void) {
     image *img = &data.xml.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
     if (!data.xml.current_image->num_layers || !img->draw.data_length)
-            return;
+        return;
     img->draw.type = IMAGE_TYPE_MOD;
     data.xml.current_image->active = 1;
     if (img->draw.data_length < IMAGE_PRELOAD_MAX_SIZE) {
@@ -480,14 +473,11 @@ static void xml_end_image_element(void)
     data.groups[data.total_groups].images++;
 }
 
-static void xml_end_layer_element(void)
-{}
+static void xml_end_layer_element(void) {}
 
-static void xml_end_animation_element(void)
-{}
+static void xml_end_animation_element(void) {}
 
-static int get_element_index(const char *name)
-{
+static int get_element_index(const char *name) {
     for (int i = 0; i < XML_MAX_ELEMENTS_PER_DEPTH; ++i) {
         if (XML_FILE_ELEMENTS[data.xml.depth][i][0] == 0) {
             continue;
@@ -499,17 +489,17 @@ static int get_element_index(const char *name)
     return -1;
 }
 
-static void XMLCALL xml_start_element(void *unused, const char *name, const char **attributes)
-{
+static void XMLCALL
+xml_start_element(void *unused, const char *name, const char **attributes) {
     if (data.xml.error)
-            return;
+        return;
     if (data.xml.finished || data.xml.depth == XML_MAX_DEPTH) {
         data.xml.error = 1;
         log_error("Invalid XML parameter", name, 0);
         return;
     }
     int index = get_element_index(name);
-    if(index == -1) {
+    if (index == -1) {
         data.xml.error = 1;
         log_error("Invalid XML parameter", name, 0);
         return;
@@ -518,10 +508,10 @@ static void XMLCALL xml_start_element(void *unused, const char *name, const char
     data.xml.depth++;
 }
 
-static void XMLCALL xml_end_element(void *unused, const char *name)
-{
+static void XMLCALL
+xml_end_element(void *unused, const char *name) {
     if (data.xml.error)
-            return;
+        return;
     data.xml.depth--;
     int index = get_element_index(name);
     if (index == -1) {
@@ -532,21 +522,19 @@ static void XMLCALL xml_end_element(void *unused, const char *name)
     (*xml_end_element_callback[data.xml.depth][index])();
 }
 
-static const char *append_file_to_mods_folder(const char *file_name)
-{
-    strncpy(&data.xml.file_name[data.xml.file_name_position], file_name, FILE_NAME_MAX - data.xml.file_name_position - 1);
+static const char *append_file_to_mods_folder(const char *file_name) {
+    strncpy(&data.xml.file_name[data.xml.file_name_position], file_name,
+            FILE_NAME_MAX - data.xml.file_name_position - 1);
     return data.xml.file_name;
 }
 
-static void clear_xml_info(void)
-{
+static void clear_xml_info(void) {
     data.xml.error = 0;
     data.xml.depth = 0;
     data.xml.finished = 0;
 }
 
-static void process_mod_file(const char *xml_file_name)
-{
+static void process_mod_file(const char *xml_file_name) {
     xml_file_name = append_file_to_mods_folder(xml_file_name);
     log_info("Loading mod file", xml_file_name, 0);
 
@@ -592,8 +580,7 @@ static void process_mod_file(const char *xml_file_name)
     file_close(xml_file);
 }
 
-static void setup_mods_folder_string(void)
-{
+static void setup_mods_folder_string(void) {
     size_t mods_folder_length = strlen(MODS_FOLDER);
     strncpy(data.xml.file_name, MODS_FOLDER, FILE_NAME_MAX - 1);
     data.xml.file_name[mods_folder_length] = '/';
@@ -601,8 +588,7 @@ static void setup_mods_folder_string(void)
     strncpy(data.xml.image_base_path, data.xml.file_name, FILE_NAME_MAX - 1);
 }
 
-void mods_init(void)
-{
+void mods_init(void) {
     setup_mods_folder_string();
 
     const dir_listing *xml_files = dir_find_files_with_extension(MODS_FOLDER, "xml");
@@ -612,8 +598,7 @@ void mods_init(void)
     }
 }
 
-int mods_get_group_id(const char *mod_author, const char *mod_name)
-{
+int mods_get_group_id(const char *mod_author, const char *mod_name) {
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
         if (strcmp(group->author, mod_author) == 0 &&
@@ -624,8 +609,7 @@ int mods_get_group_id(const char *mod_author, const char *mod_name)
     return 0;
 }
 
-int mods_get_image_id(int mod_group_id, const char *image_name)
-{
+int mods_get_image_id(int mod_group_id, const char *image_name) {
     if (!image_name || !*image_name) {
         return 0;
     }
@@ -647,8 +631,7 @@ int mods_get_image_id(int mod_group_id, const char *image_name)
     return 0;
 }
 
-const image *mods_get_image(int image_id)
-{
+const image *mods_get_image(int image_id) {
     modded_image *img = &data.images[image_id - get_main_entries_num()];
     if (!img->active) {
         return image_get(0);
@@ -656,8 +639,7 @@ const image *mods_get_image(int image_id)
     return &img->img;
 }
 
-const color_t *mods_get_image_data(int image_id)
-{
+const color_t *mods_get_image_data(int image_id) {
     modded_image *img = &data.images[image_id - get_main_entries_num()];
     if (!img->active) {
         return image_data(0);

@@ -219,9 +219,9 @@ void figure_cartpusher_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 reroute_cartpusher(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
@@ -233,9 +233,9 @@ void figure_cartpusher_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 reroute_cartpusher(f);
- else if (f->direction == DIR_FIGURE_LOST) {
+            else if (f->direction == DIR_FIGURE_LOST) {
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->wait_ticks = 0;
             }
@@ -248,9 +248,9 @@ void figure_cartpusher_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 reroute_cartpusher(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -303,7 +303,7 @@ void figure_cartpusher_action(figure *f) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -430,7 +430,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id) {
     if (dst_building_id && empty_warehouse) {
         if (dst_building_id == f->building_id)
             f->state = FIGURE_STATE_DEAD;
- else {
+        else {
             set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
             remove_resource_from_warehouse(f);
         }
@@ -470,7 +470,7 @@ void figure_warehouseman_action(figure *f) {
             if (f->wait_ticks > 2) {
                 if (building_get(f->building_id)->type == BUILDING_GRANARY)
                     determine_granaryman_destination(f, road_network_id);
- else {
+                else {
                     determine_warehouseman_destination(f, road_network_id);
                 }
             }
@@ -488,9 +488,9 @@ void figure_warehouseman_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -526,7 +526,7 @@ void figure_warehouseman_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
 
             break;
@@ -538,9 +538,9 @@ void figure_warehouseman_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -569,9 +569,9 @@ void figure_warehouseman_action(figure *f) {
 
             if (f->loads_sold_or_carrying <= 0)
                 f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
- else if (f->loads_sold_or_carrying == 1)
+            else if (f->loads_sold_or_carrying == 1)
                 set_cart_graphic(f);
- else {
+            else {
                 if (f->loads_sold_or_carrying >= 8) {
                     f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                        CART_OFFSET_8_LOADS_FOOD[f->resource_id];
@@ -589,7 +589,7 @@ void figure_warehouseman_action(figure *f) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -599,9 +599,9 @@ void figure_warehouseman_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -628,9 +628,9 @@ void figure_warehouseman_action(figure *f) {
             // update graphic
             if (f->loads_sold_or_carrying <= 0)
                 f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
- else if (f->loads_sold_or_carrying == 1)
+            else if (f->loads_sold_or_carrying == 1)
                 set_cart_graphic(f);
- else {
+            else {
                 if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
                     f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT_C3) {
                     f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
@@ -649,7 +649,7 @@ void figure_warehouseman_action(figure *f) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;

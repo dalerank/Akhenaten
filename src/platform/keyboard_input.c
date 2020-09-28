@@ -400,7 +400,7 @@ static int get_modifier(int mod) {
     if (mod & KMOD_GUI)
         key_mod |= KEY_MOD_GUI;
 
-    return (int)key_mod;
+    return (int) key_mod;
 }
 
 void platform_handle_key_down(SDL_KeyboardEvent *event) {

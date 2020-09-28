@@ -33,7 +33,7 @@ static const int FLOTSAM_TYPE_3[] = {
 
 void figure_create_flotsam(void) {
     if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam())
-            return;
+        return;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state && f->type == FIGURE_FLOTSAM)
@@ -53,7 +53,7 @@ void figure_create_flotsam(void) {
 void figure_flotsam_action(figure *f) {
     f->is_boat = 2;
     if (!scenario_map_has_river_exit())
-            return;
+        return;
     f->is_ghost = 0;
     f->cart_image_id = 0;
     f->terrain_usage = TERRAIN_USAGE_ANY;
@@ -75,7 +75,7 @@ void figure_flotsam_action(figure *f) {
         case FIGURE_ACTION_129_FLOTSAM_FLOATING:
             if (f->flotsam_visible)
                 f->flotsam_visible = 0;
- else {
+            else {
                 f->flotsam_visible = 1;
                 f->wait_ticks++;
                 figure_movement_move_ticks(f, 1);
@@ -93,13 +93,13 @@ void figure_flotsam_action(figure *f) {
             f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
             if (f->wait_ticks >= 400)
                 f->wait_ticks = random_byte() & 7;
- else if (f->wait_ticks >= 200)
+            else if (f->wait_ticks >= 200)
                 f->wait_ticks = 50 + (random_byte() & 0xf);
- else if (f->wait_ticks >= 100)
+            else if (f->wait_ticks >= 100)
                 f->wait_ticks = 100 + (random_byte() & 0x1f);
- else if (f->wait_ticks >= 50)
+            else if (f->wait_ticks >= 50)
                 f->wait_ticks = 200 + (random_byte() & 0x3f);
- else {
+            else {
                 f->wait_ticks = 300 + random_byte();
             }
             map_figure_delete(f);
@@ -115,7 +115,7 @@ void figure_flotsam_action(figure *f) {
         figure_image_increase_offset(f, 12);
         if (f->min_max_seen)
             f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[f->image_offset];
- else {
+        else {
             f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[f->image_offset];
         }
     } else if (f->resource_id == 1) {
@@ -128,7 +128,7 @@ void figure_flotsam_action(figure *f) {
         figure_image_increase_offset(f, 24);
         if (FLOTSAM_TYPE_3[f->image_offset] == -1)
             f->image_id = 0;
- else {
+        else {
             f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[f->image_offset];
         }
     }
@@ -242,7 +242,7 @@ void figure_fishing_boat_action(figure *f) {
                 f->wait_ticks = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST) {
+            else if (f->direction == DIR_FIGURE_LOST) {
                 // cannot reach grounds
                 city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
                 f->state = FIGURE_STATE_DEAD;
@@ -279,7 +279,7 @@ void figure_fishing_boat_action(figure *f) {
                 b->data.industry.has_fish++;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -288,7 +288,7 @@ void figure_fishing_boat_action(figure *f) {
 
     if (f->action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING)
         f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
- else {
+    else {
         f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
     }
 }
@@ -301,9 +301,9 @@ void figure_sink_all_ships(void) {
 
         if (f->type == FIGURE_TRADE_SHIP)
             building_get(f->destination_building_id)->data.dock.trade_ship_id = 0;
- else if (f->type == FIGURE_FISHING_BOAT)
+        else if (f->type == FIGURE_FISHING_BOAT)
             building_get(f->building_id)->data.industry.fishing_boat_id = 0;
- else {
+        else {
             continue;
         }
         f->building_id = 0;

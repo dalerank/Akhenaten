@@ -11,8 +11,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_draw_underlying_window();
 
     graphics_in_dialog();
@@ -33,15 +32,13 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (input_go_back_requested(m, h))
         window_advisors_show();
 
 }
 
-static int get_tooltip_resource(tooltip_context *c)
-{
+static int get_tooltip_resource(tooltip_context *c) {
     int x_base = screen_dialog_offset_x() + 124;
     int y = screen_dialog_offset_y() + 192;
     int x_mouse = c->mouse_x;
@@ -56,23 +53,21 @@ static int get_tooltip_resource(tooltip_context *c)
     return 0;
 }
 
-static void get_tooltip(tooltip_context *c)
-{
+static void get_tooltip(tooltip_context *c) {
     int resource = get_tooltip_resource(c);
     if (!resource)
-            return;
+        return;
     c->type = TOOLTIP_BUTTON;
     c->text_id = 131 + resource;
 }
 
-void window_trade_prices_show(void)
-{
+void window_trade_prices_show(void) {
     window_type window = {
-        WINDOW_TRADE_PRICES,
-        draw_background,
-        0,
-        handle_input,
-        get_tooltip
+            WINDOW_TRADE_PRICES,
+            draw_background,
+            0,
+            handle_input,
+            get_tooltip
     };
     window_show(&window);
 }

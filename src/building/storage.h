@@ -114,7 +114,6 @@ void building_storage_save_state(buffer *buf);
 void building_storage_load_state(buffer *buf);
 
 
-
 void building_storage_set_permission(int p, building *b);
 int building_storage_get_permission(int p, building *b);
 

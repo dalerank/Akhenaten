@@ -8,8 +8,7 @@ static struct {
     int index[6][7];
 } data;
 
-void map_ring_init(void)
-{
+void map_ring_init(void) {
     int index = 0;
     int x, y;
     for (int size = 1; size <= 5; size++) {
@@ -47,23 +46,19 @@ void map_ring_init(void)
     }
 }
 
-int map_ring_start(int size, int distance)
-{
+int map_ring_start(int size, int distance) {
     return data.index[size][distance];
 }
 
-int map_ring_end(int size, int distance)
-{
+int map_ring_end(int size, int distance) {
     return map_ring_start(size, distance) + 4 * (size - 1) + 8 * distance;
 }
 
-int map_ring_is_inside_map(int x, int y)
-{
+int map_ring_is_inside_map(int x, int y) {
     return x >= -1 && x <= map_data.width &&
-        y >= -1 && y <= map_data.height;
+           y >= -1 && y <= map_data.height;
 }
 
-const ring_tile *map_ring_tile(int index)
-{
+const ring_tile *map_ring_tile(int index) {
     return &data.tiles[index];
 }

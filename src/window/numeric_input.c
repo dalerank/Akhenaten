@@ -19,18 +19,18 @@ static void input_number(int number);
 static void input_accept(void);
 
 static generic_button buttons[] = {
-    {21, 51, 25, 25, button_number, button_none, 1, 0},
-    {51, 51, 25, 25, button_number, button_none, 2, 0},
-    {81, 51, 25, 25, button_number, button_none, 3, 0},
-    {21, 81, 25, 25, button_number, button_none, 4, 0},
-    {51, 81, 25, 25, button_number, button_none, 5, 0},
-    {81, 81, 25, 25, button_number, button_none, 6, 0},
-    {21, 111, 25, 25, button_number, button_none, 7, 0},
-    {51, 111, 25, 25, button_number, button_none, 8, 0},
-    {81, 111, 25, 25, button_number, button_none, 9, 0},
-    {21, 141, 25, 25, button_number, button_none, 0, 0},
-    {51, 141, 55, 25, button_accept, button_none, 1, 0},
-    {21, 171, 85, 25, button_cancel, button_none, 1, 0}
+        {21, 51,  25, 25, button_number, button_none, 1, 0},
+        {51, 51,  25, 25, button_number, button_none, 2, 0},
+        {81, 51,  25, 25, button_number, button_none, 3, 0},
+        {21, 81,  25, 25, button_number, button_none, 4, 0},
+        {51, 81,  25, 25, button_number, button_none, 5, 0},
+        {81, 81,  25, 25, button_number, button_none, 6, 0},
+        {21, 111, 25, 25, button_number, button_none, 7, 0},
+        {51, 111, 25, 25, button_number, button_none, 8, 0},
+        {81, 111, 25, 25, button_number, button_none, 9, 0},
+        {21, 141, 25, 25, button_number, button_none, 0, 0},
+        {51, 141, 55, 25, button_accept, button_none, 1, 0},
+        {21, 171, 85, 25, button_cancel, button_none, 1, 0}
 };
 
 static struct {
@@ -45,8 +45,7 @@ static struct {
     int focus_button_id;
 } data;
 
-static void init(int x, int y, int max_digits, int max_value, void (*callback)(int))
-{
+static void init(int x, int y, int max_digits, int max_value, void (*callback)(int)) {
     data.x = x;
     data.y = y;
     data.max_digits = max_digits;
@@ -58,14 +57,12 @@ static void init(int x, int y, int max_digits, int max_value, void (*callback)(i
     keyboard_start_capture_numeric(input_number);
 }
 
-static void close(void)
-{
+static void close(void) {
     keyboard_stop_capture_numeric();
     window_go_back();
 }
 
-static void draw_number_button(int x, int y, int number, int is_selected)
-{
+static void draw_number_button(int x, int y, int number, int is_selected) {
     color_t color = is_selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     graphics_draw_rect(x, y, 25, 25, color);
     uint8_t number_string[2];
@@ -74,8 +71,7 @@ static void draw_number_button(int x, int y, int number, int is_selected)
     text_draw_centered(number_string, x, y, 25, FONT_LARGE_PLAIN, color);
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     outer_panel_draw(data.x, data.y, 8, 14);
 
     graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
@@ -96,17 +92,16 @@ static void draw_foreground(void)
 
     graphics_draw_rect(data.x + 51, data.y + 141, 55, 25, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 16, data.x + 51, data.y + 147, 55, FONT_NORMAL_PLAIN,
-            data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+                                    data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
     graphics_draw_rect(data.x + 21, data.y + 171, 85, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 17, data.x + 21, data.y + 177, 85, FONT_NORMAL_PLAIN,
-            data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
+                                    data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 12, &data.focus_button_id))
-            return;
+        return;
     if (input_go_back_requested(m, h))
         close();
 
@@ -115,23 +110,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 }
 
-static void button_number(int number, int param2)
-{
+static void button_number(int number, int param2) {
     input_number(number);
 }
 
-static void button_accept(int param1, int param2)
-{
+static void button_accept(int param1, int param2) {
     input_accept();
 }
 
-static void button_cancel(int param1, int param2)
-{
+static void button_cancel(int param1, int param2) {
     close();
 }
 
-static void input_number(int number)
-{
+static void input_number(int number) {
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
         data.num_digits++;
@@ -139,8 +130,7 @@ static void input_number(int number)
     }
 }
 
-static void input_accept(void)
-{
+static void input_accept(void) {
     close();
     if (data.value > data.max_value)
         data.value = data.max_value;
@@ -148,13 +138,12 @@ static void input_accept(void)
     data.callback(data.value);
 }
 
-void window_numeric_input_show(int x, int y, int max_digits, int max_value, void (*callback)(int))
-{
+void window_numeric_input_show(int x, int y, int max_digits, int max_value, void (*callback)(int)) {
     window_type window = {
-        WINDOW_NUMERIC_INPUT,
-        0,
-        draw_foreground,
-        handle_input,
+            WINDOW_NUMERIC_INPUT,
+            0,
+            draw_foreground,
+            handle_input,
     };
     init(x, y, max_digits, max_value, callback);
     window_show(&window);

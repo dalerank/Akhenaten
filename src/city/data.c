@@ -8,8 +8,7 @@
 
 #include <string.h>
 
-void city_data_init(void)
-{
+void city_data_init(void) {
     memset(&city_data, 0, sizeof(struct city_data_t));
 
     city_data.unused.faction_bytes[0] = 0;
@@ -35,8 +34,7 @@ void city_data_init(void)
     city_gods_reset();
 }
 
-void city_data_init_scenario(void)
-{
+void city_data_init_scenario(void) {
     city_data.unused.faction_id = 1;
     city_data.unused.unknown_00a2 = 1;
     city_data.unused.unknown_00a3 = 1;
@@ -44,13 +42,11 @@ void city_data_init_scenario(void)
     city_data.finance.last_year.balance = city_data.finance.treasury;
 }
 
-void city_data_init_campaign_mission(void)
-{
+void city_data_init_campaign_mission(void) {
     city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }
 
-static void save_main_data(buffer *main)
-{
+static void save_main_data(buffer *main) {
     main->write_raw(city_data.unused.other_player, 18068);
     main->write_i8(city_data.unused.unknown_00a0);
     main->write_i8(city_data.unused.unknown_00a1);
@@ -528,12 +524,11 @@ static void save_main_data(buffer *main)
 
 #include "core/game_environment.h"
 
-static void load_main_data(buffer *main)
-{
+static void load_main_data(buffer *main) {
     if (GAME_ENV == ENGINE_ENV_C3)
         main->read_raw(city_data.unused.other_player, 18068);
     else
-        main->read_raw(city_data.unused.other_player, 18068+836);
+        main->read_raw(city_data.unused.other_player, 18068 + 836);
     city_data.unused.unknown_00a0 = main->read_i8();
     city_data.unused.unknown_00a1 = main->read_i8();
     city_data.unused.unknown_00a2 = main->read_i8();
@@ -604,7 +599,7 @@ static void load_main_data(buffer *main)
         city_data.building.senate_x = main->read_u8();
         city_data.building.senate_y = main->read_u8();
         city_data.building.senate_grid_offset = main->read_i16();
-    } else  {
+    } else {
         city_data.map.entry_point.x = main->read_u16();
         city_data.map.entry_point.y = main->read_u16();
         city_data.map.entry_point.grid_offset = main->read_i32();
@@ -728,8 +723,9 @@ static void load_main_data(buffer *main)
     city_data.ratings.favor = main->read_i32();
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         main->skip(8);
-    else for (int i = 0; i < 4; i++)
-        city_data.unused.unknown_4238[i] = main->read_i32();
+    else
+        for (int i = 0; i < 4; i++)
+            city_data.unused.unknown_4238[i] = main->read_i32();
     city_data.ratings.prosperity_treasury_last_year = main->read_i32();
     city_data.ratings.culture_points.theater = main->read_i32();
     city_data.ratings.culture_points.religion = main->read_i32();
@@ -1010,8 +1006,7 @@ static void load_main_data(buffer *main)
         main->skip(452); // unknown bytes ??????
 }
 
-static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
-{
+static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
     entry_exit_xy->write_i32(city_data.map.entry_flag.x);
     entry_exit_xy->write_i32(city_data.map.entry_flag.y);
     entry_exit_xy->write_i32(city_data.map.exit_flag.x);
@@ -1023,15 +1018,13 @@ static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
 
 #include "core/game_environment.h"
 
-static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
-{
+static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         city_data.map.entry_flag.x = entry_exit_xy->read_i32();
         city_data.map.entry_flag.y = entry_exit_xy->read_i32();
         city_data.map.exit_flag.x = entry_exit_xy->read_i32();
         city_data.map.exit_flag.y = entry_exit_xy->read_i32();
-    }
-    else {
+    } else {
         city_data.map.entry_flag.x = entry_exit_xy->read_i16();
         city_data.map.entry_flag.y = entry_exit_xy->read_i16();
         city_data.map.exit_flag.x = entry_exit_xy->read_i16();
@@ -1044,8 +1037,7 @@ static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
 }
 
 void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
-{
+                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
     save_main_data(main);
 
     faction->write_i32(city_data.unused.faction_id);
@@ -1058,8 +1050,7 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 }
 
 void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
-{
+                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
     load_main_data(main);
 
     city_data.unused.faction_id = faction->read_i32();

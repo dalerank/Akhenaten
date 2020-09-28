@@ -7,29 +7,30 @@
 #include <string.h>
 
 static const char *key_names[KEY_MAX_ITEMS] = {
-    "", "A", "B", "C", "D", "E", "F", "G", "H", "I",
-    "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-    "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
-    "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
-    "Esc", "Backspace", "Tab", "Space", "[", "]", "\\", ";", "'", "`",
-    ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
-    "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
-    "PageDown", "Right", "Left", "Down", "Up",
-    "Kp1", "Kp2", "Kp3", "Kp4", "Kp5", "Kp6", "Kp7", "Kp8", "Kp9", "Kp0",
-    "Kp.", "Kp+", "Kp-", "Kp*", "Kp/", "NonUS"
+        "", "A", "B", "C", "D", "E", "F", "G", "H", "I",
+        "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+        "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
+        "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
+        "Esc", "Backspace", "Tab", "Space", "[", "]", "\\", ";", "'", "`",
+        ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
+        "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
+        "PageDown", "Right", "Left", "Down", "Up",
+        "Kp1", "Kp2", "Kp3", "Kp4", "Kp5", "Kp6", "Kp7", "Kp8", "Kp9", "Kp0",
+        "Kp.", "Kp+", "Kp-", "Kp*", "Kp/", "NonUS"
 };
 
 static const char *key_display_names[KEY_MAX_ITEMS] = {
-    "", "A", "B", "C", "D", "E", "F", "G", "H", "I",
-    "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-    "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
-    "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
-    "Esc", "Backspace", "Tab", "Space", "Left bracket", "Right bracket", "Backslash", ";", "'", "Backtick",
-    ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
-    "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
-    "PageDown", "Right", "Left", "Down", "Up",
-    "Keypad 1", "Keypad 2", "Keypad 3", "Keypad 4", "Keypad 5", "Keypad 6", "Keypad 7", "Keypad 8", "Keypad 9", "Keypad 0",
-    "Keypad .", "Keypad +", "Keypad -", "Keypad *", "Keypad /", "NonUS"
+        "", "A", "B", "C", "D", "E", "F", "G", "H", "I",
+        "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+        "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
+        "4", "5", "6", "7", "8", "9", "0", "-", "=", "Enter",
+        "Esc", "Backspace", "Tab", "Space", "Left bracket", "Right bracket", "Backslash", ";", "'", "Backtick",
+        ",", ".", "/", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
+        "F8", "F9", "F10", "F11", "F12", "Insert", "Delete", "Home", "End", "PageUp",
+        "PageDown", "Right", "Left", "Down", "Up",
+        "Keypad 1", "Keypad 2", "Keypad 3", "Keypad 4", "Keypad 5", "Keypad 6", "Keypad 7", "Keypad 8", "Keypad 9",
+        "Keypad 0",
+        "Keypad .", "Keypad +", "Keypad -", "Keypad *", "Keypad /", "NonUS"
 };
 
 typedef struct {
@@ -38,15 +39,14 @@ typedef struct {
 } modifier_name;
 
 static const modifier_name modifier_names[] = {
-    { KEY_MOD_CTRL, "Ctrl" },
-    { KEY_MOD_ALT, "Alt" },
-    { KEY_MOD_GUI, "Gui" },
-    { KEY_MOD_SHIFT, "Shift" },
-    { KEY_MOD_NONE }
+        {KEY_MOD_CTRL,  "Ctrl"},
+        {KEY_MOD_ALT,   "Alt"},
+        {KEY_MOD_GUI,   "Gui"},
+        {KEY_MOD_SHIFT, "Shift"},
+        {KEY_MOD_NONE}
 };
 
-const char *key_combination_name(int key, int modifiers)
-{
+const char *key_combination_name(int key, int modifiers) {
     static char name[100];
     name[0] = 0;
     for (const modifier_name *modname = modifier_names; modname->modifier; modname++) {
@@ -59,8 +59,7 @@ const char *key_combination_name(int key, int modifiers)
     return name;
 }
 
-static int parse_modifier(const char *name)
-{
+static int parse_modifier(const char *name) {
     for (const modifier_name *modname = modifier_names; modname->modifier; modname++) {
         if (strcmp(modname->name, name) == 0)
             return modname->modifier;
@@ -69,8 +68,7 @@ static int parse_modifier(const char *name)
     return KEY_MOD_NONE;
 }
 
-static int parse_key(const char *name)
-{
+static int parse_key(const char *name) {
     for (int i = 1; i < KEY_MAX_ITEMS; i++) {
         if (strcmp(key_names[i], name) == 0)
             return i;
@@ -79,8 +77,7 @@ static int parse_key(const char *name)
     return KEY_NONE;
 }
 
-int key_combination_from_name(const char *name, int *key, int *modifiers)
-{
+int key_combination_from_name(const char *name, int *key, int *modifiers) {
     char editable_name[100] = {0};
     strncpy(editable_name, name, 99);
 
@@ -93,7 +90,7 @@ int key_combination_from_name(const char *name, int *key, int *modifiers)
             int mod = parse_modifier(token);
             if (mod != KEY_MOD_NONE)
                 *modifiers |= mod;
- else {
+            else {
                 *key = parse_key(token);
                 if (*key == KEY_NONE)
                     return 0;
@@ -108,8 +105,7 @@ int key_combination_from_name(const char *name, int *key, int *modifiers)
     return 1;
 }
 
-static int can_display(const char *key_name)
-{
+static int can_display(const char *key_name) {
     if (!encoding_can_display(key_name))
         return 0;
 
@@ -118,8 +114,7 @@ static int can_display(const char *key_name)
     return font_can_display(internal_name);
 }
 
-const uint8_t *key_combination_display_name(int key, int modifiers)
-{
+const uint8_t *key_combination_display_name(int key, int modifiers) {
     static char result[100];
     static uint8_t str_result[100];
 
@@ -146,28 +141,61 @@ const uint8_t *key_combination_display_name(int key, int modifiers)
     if ((key_name[0] & 0x80) == 0) {
         // Special cases where we know the key is not displayable using the internal font
         switch (key_name[0]) {
-            case '[': key_name = "Left bracket"; break;
-            case ']': key_name = "Right bracket"; break;
-            case '\\': key_name = "Backslash"; break;
-            case '`': key_name = "Backtick"; break;
-            case '~': key_name = "Tilde"; break;
-            case '#': key_name = "Hash"; break;
-            case '$': key_name = "Dollar"; break;
-            case '&': key_name = "Ampersand"; break;
-            case '<': key_name = "Less than"; break;
-            case '>': key_name = "Greater than"; break;
-            case '@': key_name = "At-sign"; break;
-            case '^': key_name = "Caret"; break;
-            case '_': key_name = "Underscore"; break;
-            case '|': key_name = "Pipe"; break;
-            case '{': key_name = "Left curly brace"; break;
-            case '}': key_name = "Right curly brace"; break;
-            case '\0': key_name = key_display_names[key];
+            case '[':
+                key_name = "Left bracket";
+                break;
+            case ']':
+                key_name = "Right bracket";
+                break;
+            case '\\':
+                key_name = "Backslash";
+                break;
+            case '`':
+                key_name = "Backtick";
+                break;
+            case '~':
+                key_name = "Tilde";
+                break;
+            case '#':
+                key_name = "Hash";
+                break;
+            case '$':
+                key_name = "Dollar";
+                break;
+            case '&':
+                key_name = "Ampersand";
+                break;
+            case '<':
+                key_name = "Less than";
+                break;
+            case '>':
+                key_name = "Greater than";
+                break;
+            case '@':
+                key_name = "At-sign";
+                break;
+            case '^':
+                key_name = "Caret";
+                break;
+            case '_':
+                key_name = "Underscore";
+                break;
+            case '|':
+                key_name = "Pipe";
+                break;
+            case '{':
+                key_name = "Left curly brace";
+                break;
+            case '}':
+                key_name = "Right curly brace";
+                break;
+            case '\0':
+                key_name = key_display_names[key];
         }
         strcat(result, key_name);
     } else if (can_display(key_name))
         strcat(result, key_name);
- else {
+    else {
         strcat(result, "? (");
         strcat(result, key_display_names[key]);
         strcat(result, ")");

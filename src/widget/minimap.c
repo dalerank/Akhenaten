@@ -24,9 +24,9 @@ enum {
 };
 
 static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
-    COLOR_MINIMAP_ENEMY_CENTRAL,
-    COLOR_MINIMAP_ENEMY_NORTHERN,
-    COLOR_MINIMAP_ENEMY_DESERT
+        COLOR_MINIMAP_ENEMY_CENTRAL,
+        COLOR_MINIMAP_ENEMY_NORTHERN,
+        COLOR_MINIMAP_ENEMY_DESERT
 };
 
 static struct {
@@ -48,19 +48,16 @@ static struct {
     int refresh_requested;
 } data;
 
-void widget_minimap_invalidate(void)
-{
+void widget_minimap_invalidate(void) {
     data.refresh_requested = 1;
 }
-static void foreach_map_tile(map_callback *callback)
-{
+static void foreach_map_tile(map_callback *callback) {
     city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
                                    data.absolute_x, data.absolute_y,
                                    data.width_tiles, data.height_tiles,
                                    callback);
 }
-static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles)
-{
+static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     data.width_tiles = width_tiles;
     data.height_tiles = height_tiles;
     data.x_offset = x_offset;
@@ -78,14 +75,14 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     if ((map_grid_width() - width_tiles) / 2 > 0) {
         if (camera_x < data.absolute_x)
             data.absolute_x = camera_x;
- else if (camera_x > width_tiles + data.absolute_x - view_width_tiles)
+        else if (camera_x > width_tiles + data.absolute_x - view_width_tiles)
             data.absolute_x = view_width_tiles + camera_x - width_tiles;
 
     }
     if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
         if (camera_y < data.absolute_y)
             data.absolute_y = camera_y;
- else if (camera_y > height_tiles + data.absolute_y - view_height_tiles)
+        else if (camera_y > height_tiles + data.absolute_y - view_height_tiles)
             data.absolute_y = view_height_tiles + camera_y - height_tiles;
 
     }
@@ -93,16 +90,14 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_y &= ~1;
 }
 
-static int is_in_minimap(const mouse *m)
-{
+static int is_in_minimap(const mouse *m) {
     if (m->x >= data.x_offset && m->x < data.x_offset + data.width &&
         m->y >= data.y_offset && m->y < data.y_offset + data.height) {
         return 1;
     }
     return 0;
 }
-static int has_figure_color(figure *f)
-{
+static int has_figure_color(figure *f) {
     int type = f->type;
     if (figure_is_legion(f))
         return FIGURE_COLOR_SOLDIER;
@@ -119,8 +114,7 @@ static int has_figure_color(figure *f)
 
     return FIGURE_COLOR_NONE;
 }
-static int draw_figure(int x_view, int y_view, int grid_offset)
-{
+static int draw_figure(int x_view, int y_view, int grid_offset) {
     int color_type = map_figure_foreach_until(grid_offset, has_figure_color);
     if (color_type == FIGURE_COLOR_NONE)
         return 0;
@@ -128,21 +122,20 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     color_t color = COLOR_MINIMAP_WOLF;
     if (color_type == FIGURE_COLOR_SOLDIER)
         color = COLOR_MINIMAP_SOLDIER;
- else if (color_type == FIGURE_COLOR_ENEMY)
+    else if (color_type == FIGURE_COLOR_ENEMY)
         color = data.enemy_color;
 
-    graphics_draw_horizontal_line(x_view, x_view +1, y_view, color);
+    graphics_draw_horizontal_line(x_view, x_view + 1, y_view, color);
     return 1;
 }
-static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
-{
+static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
     if (grid_offset < 0) {
         image_draw(image_id_from_group(GROUP_MINIMAP_BLACK), x_view, y_view);
         return;
     }
 
     if (draw_figure(x_view, y_view, grid_offset))
-            return;
+        return;
 
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land
@@ -158,17 +151,27 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             building *b = building_get(map_building_at(grid_offset));
             if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
- else if (b->type == BUILDING_RESERVOIR)
+            else if (b->type == BUILDING_RESERVOIR)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT) - 1;
- else {
+            else {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING);
             }
             switch (map_property_multi_tile_size(grid_offset)) {
-                case 1: image_draw(image_id, x_view, y_view); break;
-                case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
-                case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
-                case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
-                case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
+                case 1:
+                    image_draw(image_id, x_view, y_view);
+                    break;
+                case 2:
+                    image_draw(image_id + 1, x_view, y_view - 1);
+                    break;
+                case 3:
+                    image_draw(image_id + 2, x_view, y_view - 2);
+                    break;
+                case 4:
+                    image_draw(image_id + 3, x_view, y_view - 3);
+                    break;
+                case 5:
+                    image_draw(image_id + 4, x_view, y_view - 4);
+                    break;
             }
         }
     } else {
@@ -176,30 +179,29 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         int image_id;
         if (terrain & TERRAIN_WATER)
             image_id = image_id_from_group(GROUP_MINIMAP_WATER) + (rand & 3);
- else if (terrain & TERRAIN_SHRUB)
+        else if (terrain & TERRAIN_SHRUB)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
- else if (terrain & TERRAIN_TREE)
+        else if (terrain & TERRAIN_TREE)
             image_id = image_id_from_group(GROUP_MINIMAP_TREE) + (rand & 3);
- else if (terrain & TERRAIN_ROCK)
+        else if (terrain & TERRAIN_ROCK)
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
- else if (terrain & TERRAIN_ELEVATION)
+        else if (terrain & TERRAIN_ELEVATION)
             image_id = image_id_from_group(GROUP_MINIMAP_ROCK) + (rand & 3);
- else if (terrain & TERRAIN_ROAD)
+        else if (terrain & TERRAIN_ROAD)
             image_id = image_id_from_group(GROUP_MINIMAP_ROAD);
- else if (terrain & TERRAIN_AQUEDUCT)
+        else if (terrain & TERRAIN_AQUEDUCT)
             image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
- else if (terrain & TERRAIN_WALL)
+        else if (terrain & TERRAIN_WALL)
             image_id = image_id_from_group(GROUP_MINIMAP_WALL);
- else if (terrain & TERRAIN_MEADOW)
+        else if (terrain & TERRAIN_MEADOW)
             image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
- else {
+        else {
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
         }
         image_draw(image_id, x_view, y_view);
     }
 }
-static void draw_viewport_rectangle(void)
-{
+static void draw_viewport_rectangle(void) {
     int camera_x, camera_y;
     int camera_pixels_x, camera_pixels_y;
     city_view_get_camera(&camera_x, &camera_y);
@@ -216,40 +218,35 @@ static void draw_viewport_rectangle(void)
 
     int y_offset = data.y_offset + camera_y - data.absolute_y + 2;
     graphics_draw_rect(x_offset, y_offset,
-        view_width_tiles * 2 + 4,
-        view_height_tiles - 4,
-        COLOR_MINIMAP_VIEWPORT);
+                       view_width_tiles * 2 + 4,
+                       view_height_tiles - 4,
+                       COLOR_MINIMAP_VIEWPORT);
 }
 
-static void prepare_minimap_cache(int width, int height)
-{
+static void prepare_minimap_cache(int width, int height) {
     if (width != data.width || height != data.height) {
         free(data.cache);
-        data.cache = (color_t *)malloc(sizeof(color_t) * width * height);
+        data.cache = (color_t *) malloc(sizeof(color_t) * width * height);
     }
 }
-static void cache_minimap(void)
-{
+static void cache_minimap(void) {
     graphics_save_to_buffer(data.x_offset, data.y_offset, data.width, data.height, data.cache);
 }
 
-static void draw_minimap(void)
-{
+static void draw_minimap(void) {
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     foreach_map_tile(draw_minimap_tile);
     cache_minimap();
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
-static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles)
-{
+static void draw_uncached(int x_offset, int y_offset, int width_tiles, int height_tiles) {
     data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
     prepare_minimap_cache(2 * width_tiles, height_tiles);
     set_bounds(x_offset, y_offset, width_tiles, height_tiles);
     draw_minimap();
 }
-void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling)
-{
+void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_tiles, int is_scrolling) {
     if (width_tiles * 2 != data.width || height_tiles != data.height || x_offset != data.x_offset) {
         draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
         return;
@@ -271,8 +268,7 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     graphics_reset_clip_rectangle();
 }
 
-void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force)
-{
+void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
     if (data.refresh_requested || scroll_in_progress() || force) {
         if (data.refresh_requested) {
             draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
@@ -281,29 +277,28 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
             draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
         }
         if (GAME_ENV == ENGINE_ENV_C3) {
-            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1, COLOR_MINIMAP_DARK);
+            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
+                                          COLOR_MINIMAP_DARK);
             graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles, COLOR_MINIMAP_LIGHT);
+            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
+                                        COLOR_MINIMAP_LIGHT);
         }
     }
 }
 
-static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
-{
+static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset) {
     if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1))
         data.mouse.grid_offset = grid_offset < 0 ? 0 : grid_offset;
 
 }
-static int get_mouse_grid_offset(const mouse *m)
-{
+static int get_mouse_grid_offset(const mouse *m) {
     data.mouse.x = m->x;
     data.mouse.y = m->y;
     data.mouse.grid_offset = 0;
     foreach_map_tile(update_mouse_grid_offset);
     return data.mouse.grid_offset;
 }
-int widget_minimap_handle_mouse(const mouse *m)
-{
+int widget_minimap_handle_mouse(const mouse *m) {
     if ((m->left.went_down || m->right.went_down) && is_in_minimap(m)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {

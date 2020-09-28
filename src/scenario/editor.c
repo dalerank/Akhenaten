@@ -31,7 +31,8 @@ void scenario_editor_create(int map_size) {
     scenario.map.width = MAP_SIZES[map_size].width;
     scenario.map.height = MAP_SIZES[map_size].height;
     scenario.map.grid_border_size = grid_size[GAME_ENV] - scenario.map.width;
-    scenario.map.grid_start = (grid_size[GAME_ENV] - scenario.map.height) / 2 * grid_size[GAME_ENV] + (grid_size[GAME_ENV] - scenario.map.width) / 2;
+    scenario.map.grid_start = (grid_size[GAME_ENV] - scenario.map.height) / 2 * grid_size[GAME_ENV] +
+                              (grid_size[GAME_ENV] - scenario.map.width) / 2;
 
     string_copy(lang_get_string(44, 37), scenario.brief_description, env_sizes().MAX_BRIEF_DESCRIPTION);
     string_copy(lang_get_string(44, 38), scenario.briefing, env_sizes().MAX_BRIEFING);
@@ -275,7 +276,7 @@ void scenario_editor_demand_change_save(int index, editor_demand_change *demand_
 void scenario_editor_cycle_image(int forward) {
     if (forward)
         scenario.image_id++;
- else {
+    else {
         scenario.image_id--;
     }
     if (scenario.image_id < 0)
@@ -319,7 +320,7 @@ void scenario_editor_change_empire(int change) {
     scenario.empire.id += change;
     if (scenario.empire.id < 0)
         scenario.empire.id = 39;
- else if (scenario.empire.id >= 40)
+    else if (scenario.empire.id >= 40)
         scenario.empire.id = 0;
 
     scenario.is_saved = 0;

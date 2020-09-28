@@ -16,12 +16,12 @@ static int grid_size[] = {
         GRID_SIZE_PH
 };
 static int grid_total_size[] = {
-    GRID_SIZE_C3 * GRID_SIZE_C3,
-    GRID_SIZE_PH * GRID_SIZE_PH
+        GRID_SIZE_C3 * GRID_SIZE_C3,
+        GRID_SIZE_PH * GRID_SIZE_PH
 };
 
-#define OFFSET_C3(x,y) (x + GRID_SIZE_C3 * y)
-#define OFFSET_PH(x,y) (x + GRID_SIZE_PH * y)
+#define OFFSET_C3(x, y) (x + GRID_SIZE_C3 * y)
+#define OFFSET_PH(x, y) (x + GRID_SIZE_PH * y)
 
 #define MAX_GRID_ITEMS 300 * 300
 
@@ -88,7 +88,8 @@ int map_grid_height(void);
 void map_grid_bound(int *x, int *y);
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max);
 void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_min, int *x_max, int *y_max);
-void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max, int *y_max);
+void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max,
+                                int *y_max);
 int map_grid_is_inside(int x, int y, int size);
 const int *map_grid_adjacent_offsets(int size);
 

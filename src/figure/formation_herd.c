@@ -14,8 +14,7 @@
 #include "map/terrain.h"
 #include "sound/effect.h"
 
-static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile)
-{
+static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile) {
     unsigned short disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
     int tile_found = 0;
     int x_found = 0, y_found = 0;
@@ -50,8 +49,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
 }
 
 static int get_roaming_destination(int formation_id, int allow_negative_desirability,
-                                   int x, int y, int distance, int direction, int *x_tile, int *y_tile)
-{
+                                   int x, int y, int distance, int direction, int *x_tile, int *y_tile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
@@ -97,11 +95,11 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
         }
         if (x_target <= 0)
             x_target = 1;
- else if (y_target <= 0)
+        else if (y_target <= 0)
             y_target = 1;
- else if (x_target >= map_grid_width() - 1)
+        else if (x_target >= map_grid_width() - 1)
             x_target = map_grid_width() - 2;
- else if (y_target >= map_grid_height() - 1)
+        else if (y_target >= map_grid_height() - 1)
             y_target = map_grid_height() - 2;
 
         if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile))
@@ -115,8 +113,7 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
     return 0;
 }
 
-static void move_animals(const formation *m, int attacking_animals)
-{
+static void move_animals(const formation *m, int attacking_animals) {
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
         if (m->figures[i] <= 0) continue;
         figure *f = figure_get(m->figures[i]);
@@ -145,8 +142,7 @@ static void move_animals(const formation *m, int attacking_animals)
     }
 }
 
-static int can_spawn_wolf(formation *m)
-{
+static int can_spawn_wolf(formation *m) {
     if (m->num_figures < m->max_figures && m->figure_type == FIGURE_WOLF) {
         m->herd_wolf_spawn_delay++;
         if (m->herd_wolf_spawn_delay > 32) {
@@ -157,8 +153,7 @@ static int can_spawn_wolf(formation *m)
     return 0;
 }
 
-static void update_herd_formation(formation *m)
-{
+static void update_herd_formation(formation *m) {
     if (can_spawn_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
@@ -216,7 +211,8 @@ static void update_herd_formation(formation *m)
             move_animals(m, attacking_animals);
         } else {
             int x_tile, y_tile;
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance, m->herd_direction, &x_tile, &y_tile)) {
+            if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance,
+                                        m->herd_direction, &x_tile, &y_tile)) {
                 m->herd_direction = 0;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
@@ -230,10 +226,9 @@ static void update_herd_formation(formation *m)
     }
 }
 
-void formation_herd_update(void)
-{
+void formation_herd_update(void) {
     if (city_figures_animals() <= 0)
-            return;
+        return;
     for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0)

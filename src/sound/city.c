@@ -95,31 +95,31 @@ typedef struct {
 static city_channel channels[MAX_CHANNELS];
 
 static const int int_TO_CHANNEL_ID[] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
-    1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
-    3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
-    6, 7, 8, 9, 10, 11, 12, 13, 0, 14, //30-39
-    0, 0, 0, 0, 0, 0, 15, 16, 17, 18, //40-49
-    0, 19, 20, 21, 0, 22, 0, 23, 24, 24, //50-59
-    25, 26, 27, 28, 29, 25, 26, 27, 28, 29, //60-69
-    30, 31, 32, 0, 33, 34, 35, 36, 36, 36, //70-79
-    63, 37, 0, 0, 38, 38, 39, 39, 0, 0, // 80-89
-    40, 0, 0, 0, 43, 0, 0, 0, 44, 45, //90-99
-    46, 47, 48, 49, 50, 51, 52, 53, 54, 55, //100-109
-    56, 57, 58, 59, 60, 0, 0, 0, 0, 0, //110-119
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
-    25, 26, 27, 28, 29, 0, //140-145
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //146-155
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //156-165
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //166-175
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //176-185
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //186-195
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //196-205
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //206-215
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //216-225
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //226-235
-    0, //236
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
+        1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
+        3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
+        6, 7, 8, 9, 10, 11, 12, 13, 0, 14, //30-39
+        0, 0, 0, 0, 0, 0, 15, 16, 17, 18, //40-49
+        0, 19, 20, 21, 0, 22, 0, 23, 24, 24, //50-59
+        25, 26, 27, 28, 29, 25, 26, 27, 28, 29, //60-69
+        30, 31, 32, 0, 33, 34, 35, 36, 36, 36, //70-79
+        63, 37, 0, 0, 38, 38, 39, 39, 0, 0, // 80-89
+        40, 0, 0, 0, 43, 0, 0, 0, 44, 45, //90-99
+        46, 47, 48, 49, 50, 51, 52, 53, 54, 55, //100-109
+        56, 57, 58, 59, 60, 0, 0, 0, 0, 0, //110-119
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
+        25, 26, 27, 28, 29, 0, //140-145
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //146-155
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //156-165
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //166-175
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //176-185
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //186-195
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //196-205
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //206-215
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //216-225
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //226-235
+        0, //236
 
 }; // todo: add additional channels
 
@@ -127,8 +127,7 @@ static time_millis last_update_time;
 
 #include <assert.h>
 
-void sound_city_init(void)
-{
+void sound_city_init(void) {
     last_update_time = time_get_millis();
     memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
     for (int i = 0; i < MAX_CHANNELS; i++)
@@ -202,13 +201,11 @@ void sound_city_init(void)
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
 }
-void sound_city_set_volume(int percentage)
-{
+void sound_city_set_volume(int percentage) {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
         sound_device_set_channel_volume(i, percentage);
 }
-void sound_city_mark_building_view(building *b, int direction)
-{
+void sound_city_mark_building_view(building *b, int direction) {
     if (b->state == BUILDING_STATE_UNUSED)
         return;
     int type = b->type;
@@ -227,8 +224,7 @@ void sound_city_mark_building_view(building *b, int direction)
     ++channels[channel].total_views;
     ++channels[channel].direction_views[direction];
 }
-void sound_city_decay_views(void)
-{
+void sound_city_decay_views(void) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         for (int d = 0; d < 5; d++)
             channels[i].direction_views[d] = 0;
@@ -236,13 +232,12 @@ void sound_city_decay_views(void)
     }
 }
 
-static void play_channel(int channel, int direction)
-{
+static void play_channel(int channel, int direction) {
     channel += CITY_CHANNEL_OFFSET;
     if (!setting_sound(SOUND_CITY)->enabled)
-            return;
+        return;
     if (sound_device_is_channel_playing(channel))
-            return;
+        return;
     int left_pan;
     int right_pan;
     switch (direction) {
@@ -263,8 +258,7 @@ static void play_channel(int channel, int direction)
     }
     sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
 }
-void sound_city_play(void)
-{
+void sound_city_play(void) {
     time_millis now = time_get_millis();
     for (int i = 1; i < MAX_CHANNELS; i++) {
         channels[i].should_play = 0;
@@ -295,7 +289,7 @@ void sound_city_play(void)
         }
     }
     if (!max_sound_id)
-            return;
+        return;
 
     // always only one channel available... use it
     int channel = channels[max_sound_id].channel;
@@ -318,8 +312,7 @@ void sound_city_play(void)
     channels[max_sound_id].times_played++;
 }
 
-void sound_city_save_state(buffer *buf)
-{
+void sound_city_save_state(buffer *buf) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         const city_channel *ch = &channels[i];
         buf->write_i32(ch->available);
@@ -341,8 +334,7 @@ void sound_city_save_state(buffer *buf)
             buf->write_i32(0);
     }
 }
-void sound_city_load_state(buffer *buf)
-{
+void sound_city_load_state(buffer *buf) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         city_channel *ch = &channels[i];
         ch->available = buf->read_i32();

@@ -36,6 +36,7 @@
 #endif
 
 #if defined(_WIN32)
+
 #include <string.h>
 #include <bits/exception_defines.h>
 
@@ -57,8 +58,7 @@ enum {
     USER_EVENT_CENTER_WINDOW,
 };
 
-static void handler(int sig)
-{
+static void handler(int sig) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
     backtrace_print();
     exit(1);
@@ -68,12 +68,11 @@ static void handler(int sig)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
-static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
-{
+static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message) {
     if (log_file) {
         if (priority == SDL_LOG_PRIORITY_ERROR)
             fwrite("ERROR: ", sizeof(char), 7, log_file);
- else {
+        else {
             fwrite("INFO: ", sizeof(char), 6, log_file);
         }
         fwrite(message, sizeof(char), strlen(message), log_file);
@@ -81,13 +80,11 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
         fflush(log_file);
     }
 }
-static void setup_logging(void)
-{
+static void setup_logging(void) {
     log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
-static void teardown_logging(void)
-{
+static void teardown_logging(void) {
     if (log_file)
         file_close(log_file);
 
@@ -98,20 +95,17 @@ static void setup_logging(void) {}
 static void teardown_logging(void) {}
 #endif
 
-static void post_event(int code)
-{
+static void post_event(int code) {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
     event.user.code = code;
     SDL_PushEvent(&event);
 }
 
-void system_exit(void)
-{
+void system_exit(void) {
     post_event(USER_EVENT_QUIT);
 }
-void system_resize(int width, int height)
-{
+void system_resize(int width, int height) {
     static int s_width;
     static int s_height;
 
@@ -124,29 +118,27 @@ void system_resize(int width, int height)
     event.user.data2 = &s_height;
     SDL_PushEvent(&event);
 }
-void system_center(void)
-{
+void system_center(void) {
     post_event(USER_EVENT_CENTER_WINDOW);
 }
-void system_set_fullscreen(int fullscreen)
-{
+void system_set_fullscreen(int fullscreen) {
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
     if (fullscreen == 0)
-        system_resize(1200,800);
+        system_resize(1200, 800);
 }
 
 #ifdef USE_TINYFILEDIALOGS
-static const char *ask_for_data_dir(int again)
-{
+static const char *ask_for_data_dir(int again) {
     const char *title = get_game_title();
     const char *form_1 = "Augustus requires the original files from %s to run.\n\nThe selected folder is not a proper %s folder.\n\nPress OK to select another folder or Cancel to exit.";
     const char *form_2 = "Please select your %s folder";
 
     // size of buffer is 200 initially - resized to (excess discarded) size of format + size of arg (game title) - 2 (%s) + 1 (null terminator)
-    char *buf = (char*)malloc(200);
+    char *buf = (char *) malloc(200);
     if (again) {
         snprintf(buf, strlen(form_1) + 2 * strlen(title) - 3, form_1, title, title);
-        if (!tinyfd_messageBox("Wrong folder selected", buf, "okcancel", "warning", 1)) // hitting cancel will return "0"
+        if (!tinyfd_messageBox("Wrong folder selected", buf, "okcancel", "warning",
+                               1)) // hitting cancel will return "0"
         {
             free(buf);
             return NULL;
@@ -161,8 +153,7 @@ static const char *ask_for_data_dir(int again)
 }
 #endif
 
-static int init_sdl(void)
-{
+static int init_sdl(void) {
     SDL_Log("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_AUDIO;
 
@@ -186,8 +177,7 @@ static int init_sdl(void)
     SDL_Log("SDL initialized");
     return 1;
 }
-int pre_init_dir_attempt(const char *data_dir, const char *lmsg)
-{
+int pre_init_dir_attempt(const char *data_dir, const char *lmsg) {
     SDL_Log(lmsg, data_dir);
     if (!platform_file_manager_set_base_path(data_dir))
         SDL_Log("%s: directory not found", data_dir);
@@ -195,8 +185,7 @@ int pre_init_dir_attempt(const char *data_dir, const char *lmsg)
         return 1;
     return 0;
 }
-static int pre_init(const char *custom_data_dir)
-{
+static int pre_init(const char *custom_data_dir) {
     // first attempt loading game from custom path passed as argument...
     if (custom_data_dir) {
         if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s"))
@@ -212,44 +201,44 @@ static int pre_init(const char *custom_data_dir)
 
 
     // ...then from the executable base path...
-    #if SDL_VERSION_ATLEAST(2, 0, 1)
-        if (platform_sdl_version_at_least(2, 0, 1)) {
-            char *base_path = SDL_GetBasePath();
-            if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
-                SDL_free(base_path);
-                return 1;
-            }
+#if SDL_VERSION_ATLEAST(2, 0, 1)
+    if (platform_sdl_version_at_least(2, 0, 1)) {
+        char *base_path = SDL_GetBasePath();
+        if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
+            SDL_free(base_path);
+            return 1;
         }
-    #endif
+    }
+#endif
 
     // ...then finally from the user-defined path (saved in pref file)
-    #ifdef USE_TINYFILEDIALOGS
-        const char *user_dir = pref_get_gamepath();
-        if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s"))
-            return 1;
+#ifdef USE_TINYFILEDIALOGS
+    const char *user_dir = pref_get_gamepath();
+    if (user_dir && pre_init_dir_attempt(user_dir, "Attempting to load game from user pref %s"))
+        return 1;
 
-        // if the saved path fails, ask the user for one
-        user_dir = ask_for_data_dir(0);
-        while (user_dir) {
-            if (pre_init_dir_attempt(user_dir, "Attempting to load game from user-selected dir %s")) {
-                pref_save_gamepath(user_dir); // save new accepted dir to pref
-                return 1;
-            }
-            user_dir = ask_for_data_dir(1); // if not hitting "cancel" it will continue check the selected path (because the selection fills user_dir)
+    // if the saved path fails, ask the user for one
+    user_dir = ask_for_data_dir(0);
+    while (user_dir) {
+        if (pre_init_dir_attempt(user_dir, "Attempting to load game from user-selected dir %s")) {
+            pref_save_gamepath(user_dir); // save new accepted dir to pref
+            return 1;
         }
-    #else
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Julius requires the original files from Caesar 3 to run.",
-            "Move the Julius executable to the directory containing an existing "
-            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
-            NULL);
-    #endif
+        user_dir = ask_for_data_dir(
+                1); // if not hitting "cancel" it will continue check the selected path (because the selection fills user_dir)
+    }
+#else
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+        "Julius requires the original files from Caesar 3 to run.",
+        "Move the Julius executable to the directory containing an existing "
+        "Caesar 3 installation, or run:\njulius path-to-c3-directory",
+        NULL);
+#endif
 
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "'*.eng' or '*_mm.eng' files not found or too large.");
     return 0;
 }
-static void setup(const julius_args *args)
-{
+static void setup(const julius_args *args) {
     // init SDL and some other stuff
     signal(SIGSEGV, handler);
     setup_logging();
@@ -258,9 +247,9 @@ static void setup(const julius_args *args)
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
     }
-    #ifdef PLATFORM_ENABLE_INIT_CALLBACK
-        platform_init_callback();
-    #endif
+#ifdef PLATFORM_ENABLE_INIT_CALLBACK
+    platform_init_callback();
+#endif
 
     // pre-init engine: assert game directory, pref files, etc.
     init_game_environment(args->game_engine_env);
@@ -269,9 +258,9 @@ static void setup(const julius_args *args)
         exit(1);
     }
 
-    #ifdef DEBUG
-        goto skip;
-    #endif
+#ifdef DEBUG
+    goto skip;
+#endif
     // set up game display
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
@@ -279,7 +268,8 @@ static void setup(const julius_args *args)
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
-    platform_init_cursors(args->cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+    platform_init_cursors(
+            args->cursor_scale_percentage); // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
 
     skip:
     // init game!
@@ -289,8 +279,7 @@ static void setup(const julius_args *args)
         exit(2);
     }
 }
-static void teardown(void)
-{
+static void teardown(void) {
     SDL_Log("Exiting game");
     game_exit();
     platform_screen_destroy();
@@ -333,8 +322,7 @@ static void run_and_draw(void)
     platform_screen_render();
 }
 #else
-static void run_and_draw(void)
-{
+static void run_and_draw(void) {
     time_set_millis(SDL_GetTicks());
 
     game_run();
@@ -344,22 +332,20 @@ static void run_and_draw(void)
 }
 #endif
 
-static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
-{
+static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down) {
     if (!SDL_GetRelativeMouseMode())
         mouse_set_position(event->x, event->y);
 
     if (event->button == SDL_BUTTON_LEFT)
         mouse_set_left_down(is_down);
- else if (event->button == SDL_BUTTON_MIDDLE)
+    else if (event->button == SDL_BUTTON_MIDDLE)
         mouse_set_middle_down(is_down);
- else if (event->button == SDL_BUTTON_RIGHT)
+    else if (event->button == SDL_BUTTON_RIGHT)
         mouse_set_right_down(is_down);
 
 }
 #ifndef __SWITCH__
-static void handle_window_event(SDL_WindowEvent *event, int *window_active)
-{
+static void handle_window_event(SDL_WindowEvent *event, int *window_active) {
     switch (event->event) {
         case SDL_WINDOWEVENT_ENTER:
             mouse_set_inside_window(1);
@@ -390,8 +376,7 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
     }
 }
 #endif
-static void handle_event(SDL_Event *event, int *active, int *quit)
-{
+static void handle_event(SDL_Event *event, int *active, int *quit) {
     switch (event->type) {
 #ifndef __SWITCH__
         case SDL_WINDOWEVENT:
@@ -445,13 +430,13 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
         case SDL_USEREVENT:
             if (event->user.code == USER_EVENT_QUIT)
                 *quit = 1;
- else if (event->user.code == USER_EVENT_RESIZE)
+            else if (event->user.code == USER_EVENT_RESIZE)
                 platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
- else if (event->user.code == USER_EVENT_FULLSCREEN)
+            else if (event->user.code == USER_EVENT_FULLSCREEN)
                 platform_screen_set_fullscreen();
- else if (event->user.code == USER_EVENT_WINDOWED)
+            else if (event->user.code == USER_EVENT_WINDOWED)
                 platform_screen_set_windowed();
- else if (event->user.code == USER_EVENT_CENTER_WINDOW)
+            else if (event->user.code == USER_EVENT_CENTER_WINDOW)
                 platform_screen_center_window();
 
             break;
@@ -460,8 +445,7 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
     }
 }
-static void main_loop(void)
-{
+static void main_loop(void) {
     mouse_set_inside_window(1);
 
     run_and_draw();
@@ -485,15 +469,14 @@ static void main_loop(void)
         if (!quit) {
             if (active)
                 run_and_draw();
- else {
+            else {
                 SDL_WaitEvent(NULL);
             }
         }
     }
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     julius_args args;
     platform_parse_arguments(argc, argv, &args);
 

@@ -24,28 +24,27 @@ static void button_close(int param1, int param2);
 static void button_hold_festival(int param1, int param2);
 
 static image_button image_buttons_bottom[] = {
-    {58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-    {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
-    {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
-    {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
+        {58,  316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS,            0, button_help,          button_none, 0, 0, 1},
+        {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS,            4, button_close,         button_none, 0, 0, 1},
+        {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
+        {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close,         button_none, 0, 0, 1},
 };
 
 static generic_button buttons_gods_size[] = {
-    {70, 96, 80, 90, button_god, button_none, 0, 0},
-    {170, 96, 80, 90, button_god, button_none, 1, 0},
-    {270, 96, 80, 90, button_god, button_none, 2, 0},
-    {370, 96, 80, 90, button_god, button_none, 3, 0},
-    {470, 96, 80, 90, button_god, button_none, 4, 0},
-    {102, 216, 430, 26, button_size, button_none, 1, 0},
-    {102, 246, 430, 26, button_size, button_none, 2, 0},
-    {102, 276, 430, 26, button_size, button_none, 3, 0},
+        {70,  96,  80,  90, button_god,  button_none, 0, 0},
+        {170, 96,  80,  90, button_god,  button_none, 1, 0},
+        {270, 96,  80,  90, button_god,  button_none, 2, 0},
+        {370, 96,  80,  90, button_god,  button_none, 3, 0},
+        {470, 96,  80,  90, button_god,  button_none, 4, 0},
+        {102, 216, 430, 26, button_size, button_none, 1, 0},
+        {102, 246, 430, 26, button_size, button_none, 2, 0},
+        {102, 276, 430, 26, button_size, button_none, 3, 0},
 };
 
 static int focus_button_id;
 static int focus_image_button_id;
 
-static void draw_buttons(void)
-{
+static void draw_buttons(void) {
     // small festival
     button_border_draw(102, 216, 430, 26, focus_button_id == 6);
     int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK);
@@ -73,8 +72,7 @@ static void draw_buttons(void)
 
 }
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
     graphics_in_dialog();
@@ -95,16 +93,14 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
     draw_buttons();
     image_buttons_draw(0, 0, image_buttons_bottom, 4);
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 4, &focus_image_button_id);
@@ -117,14 +113,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 }
 
-static void button_god(int god, int param2)
-{
+static void button_god(int god, int param2) {
     city_festival_select_god(god);
     window_invalidate();
 }
 
-static void button_size(int size, int param2)
-{
+static void button_size(int size, int param2) {
     if (!city_finance_out_of_money()) {
         if (city_festival_select_size(size))
             window_invalidate();
@@ -132,54 +126,67 @@ static void button_size(int size, int param2)
     }
 }
 
-static void button_help(int param1, int param2)
-{
+static void button_help(int param1, int param2) {
     window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, 0);
 }
 
-static void button_close(int param1, int param2)
-{
+static void button_close(int param1, int param2) {
     window_advisors_show();
 }
 
-static void button_hold_festival(int param1, int param2)
-{
+static void button_hold_festival(int param1, int param2) {
     if (city_finance_out_of_money())
-            return;
+        return;
     city_festival_schedule();
     window_advisors_show();
 }
 
-static void get_tooltip(tooltip_context *c)
-{
+static void get_tooltip(tooltip_context *c) {
     if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5))
-            return;
+        return;
     c->type = TOOLTIP_BUTTON;
     // image buttons
     switch (focus_image_button_id) {
-        case 1: c->text_id = 1; break;
-        case 2: c->text_id = 2; break;
-        case 3: c->text_id = 113; break;
-        case 4: c->text_id = 114; break;
+        case 1:
+            c->text_id = 1;
+            break;
+        case 2:
+            c->text_id = 2;
+            break;
+        case 3:
+            c->text_id = 113;
+            break;
+        case 4:
+            c->text_id = 114;
+            break;
     }
     // gods
     switch (focus_button_id) {
-        case 1: c->text_id = 115; break;
-        case 2: c->text_id = 116; break;
-        case 3: c->text_id = 117; break;
-        case 4: c->text_id = 118; break;
-        case 5: c->text_id = 119; break;
+        case 1:
+            c->text_id = 115;
+            break;
+        case 2:
+            c->text_id = 116;
+            break;
+        case 3:
+            c->text_id = 117;
+            break;
+        case 4:
+            c->text_id = 118;
+            break;
+        case 5:
+            c->text_id = 119;
+            break;
     }
 }
 
-void window_hold_festival_show(void)
-{
+void window_hold_festival_show(void) {
     window_type window = {
-        WINDOW_HOLD_FESTIVAL,
-        draw_background,
-        draw_foreground,
-        handle_input,
-        get_tooltip
+            WINDOW_HOLD_FESTIVAL,
+            draw_background,
+            draw_foreground,
+            handle_input,
+            get_tooltip
     };
     window_show(&window);
 }

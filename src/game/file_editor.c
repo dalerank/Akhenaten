@@ -48,8 +48,7 @@
 #include "sound/city.h"
 #include "sound/music.h"
 
-void game_file_editor_clear_data(void)
-{
+void game_file_editor_clear_data(void) {
     city_victory_reset();
     building_construction_clear_type();
     city_data_init();
@@ -71,8 +70,7 @@ void game_file_editor_clear_data(void)
     scenario_invasion_clear();
 }
 
-static void clear_map_data(void)
-{
+static void clear_map_data(void) {
     map_image_clear();
     map_building_clear();
     map_terrain_clear();
@@ -92,8 +90,7 @@ static void clear_map_data(void)
     map_property_init_alternate_terrain();
 }
 
-static void create_blank_map(int size)
-{
+static void create_blank_map(int size) {
     scenario_editor_create(size);
     scenario_map_init();
     clear_map_data();
@@ -102,8 +99,7 @@ static void create_blank_map(int size)
     city_view_reset_orientation();
 }
 
-static void prepare_map_for_editing(void)
-{
+static void prepare_map_for_editing(void) {
     image_load_main(scenario_property_climate(), 1, 0);
 
     empire_load(1, scenario_empire_id());
@@ -130,14 +126,12 @@ static void prepare_map_for_editing(void)
     game_state_unpause();
 }
 
-void game_file_editor_create_scenario(int size)
-{
+void game_file_editor_create_scenario(int size) {
     create_blank_map(size);
     prepare_map_for_editing();
 }
 
-int game_file_editor_load_scenario(const char *scenario_file)
-{
+int game_file_editor_load_scenario(const char *scenario_file) {
     clear_map_data();
     if (!game_file_io_read_scenario(scenario_file))
         return 0;
@@ -148,8 +142,7 @@ int game_file_editor_load_scenario(const char *scenario_file)
     return 1;
 }
 
-int game_file_editor_write_scenario(const char *scenario_file)
-{
+int game_file_editor_write_scenario(const char *scenario_file) {
     scenario_editor_set_native_images(
             image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
             image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,

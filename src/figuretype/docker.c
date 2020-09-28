@@ -145,7 +145,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     building *min = building_get(min_building_id);
     if (min->has_road_access == 1)
         map_point_store_result(min->x, min->y, warehouse);
- else if (!map_has_road_access(min->x, min->y, 3, warehouse))
+    else if (!map_has_road_access(min->x, min->y, 3, warehouse))
         return 0;
 
     *import_resource = resource;
@@ -206,7 +206,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     building *min = building_get(min_building_id);
     if (min->has_road_access == 1)
         map_point_store_result(min->x, min->y, warehouse);
- else if (!map_has_road_access(min->x, min->y, 3, warehouse))
+    else if (!map_has_road_access(min->x, min->y, 3, warehouse))
         return 0;
 
     *export_resource = resource;
@@ -305,9 +305,9 @@ void figure_docker_action(figure *f) {
         figure *ship = figure_get(b->data.dock.trade_ship_id);
         if (ship->state != FIGURE_STATE_ALIVE || ship->type != FIGURE_TRADE_SHIP)
             b->data.dock.trade_ship_id = 0;
- else if (trader_has_traded_max(ship->trader_id))
+        else if (trader_has_traded_max(ship->trader_id))
             b->data.dock.trade_ship_id = 0;
- else if (ship->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING)
+        else if (ship->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING)
             b->data.dock.trade_ship_id = 0;
 
     }
@@ -390,9 +390,9 @@ void figure_docker_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
@@ -404,9 +404,9 @@ void figure_docker_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
@@ -421,7 +421,7 @@ void figure_docker_action(figure *f) {
                 f->wait_ticks = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE)
@@ -433,9 +433,9 @@ void figure_docker_action(figure *f) {
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION)
                 f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
- else if (f->direction == DIR_FIGURE_REROUTE)
+            else if (f->direction == DIR_FIGURE_REROUTE)
                 figure_route_remove(f);
- else if (f->direction == DIR_FIGURE_LOST)
+            else if (f->direction == DIR_FIGURE_LOST)
                 f->state = FIGURE_STATE_DEAD;
 
             break;
@@ -446,7 +446,7 @@ void figure_docker_action(figure *f) {
                 int trade_city_id;
                 if (b->data.dock.trade_ship_id)
                     trade_city_id = figure_get(b->data.dock.trade_ship_id)->empire_city_id;
- else {
+                else {
                     trade_city_id = 0;
                 }
                 if (try_import_resource(f->destination_building_id, f->resource_id, trade_city_id)) {
@@ -474,7 +474,7 @@ void figure_docker_action(figure *f) {
                 int trade_city_id;
                 if (b->data.dock.trade_ship_id)
                     trade_city_id = figure_get(b->data.dock.trade_ship_id)->empire_city_id;
- else {
+                else {
                     trade_city_id = 0;
                 }
                 f->action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;

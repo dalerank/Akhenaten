@@ -24,13 +24,12 @@ static struct {
     int touchpad_mode_click_type;
 } data;
 
-static int start_delayed(const touch *t)
-{
-    return (t->has_started && !t->has_moved && !t->has_ended && ((time_get_millis() - t->start_time) < (time_millis) (CLICK_TIME / 2)));
+static int start_delayed(const touch *t) {
+    return (t->has_started && !t->has_moved && !t->has_ended &&
+            ((time_get_millis() - t->start_time) < (time_millis) (CLICK_TIME / 2)));
 }
 
-const touch *get_earliest_touch(void)
-{
+const touch *get_earliest_touch(void) {
     time_millis timestamp = -1;
     int touch_index = MAX_ACTIVE_TOUCHES;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
@@ -42,8 +41,7 @@ const touch *get_earliest_touch(void)
     return &data.finger[touch_index];
 }
 
-const touch *get_latest_touch(void)
-{
+const touch *get_latest_touch(void) {
     int active_touches = 0;
     time_millis timestamp = 0;
     int touch_index = MAX_ACTIVE_TOUCHES;
@@ -59,8 +57,7 @@ const touch *get_latest_touch(void)
     return (active_touches > 1) ? &data.finger[touch_index] : &data.finger[MAX_ACTIVE_TOUCHES];
 }
 
-int get_total_active_touches(void)
-{
+int get_total_active_touches(void) {
     int active_touches = 0;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].in_use)
@@ -70,26 +67,22 @@ int get_total_active_touches(void)
     return active_touches;
 }
 
-int touch_not_click(const touch *t)
-{
+int touch_not_click(const touch *t) {
     return (t->has_moved || (!t->has_ended && (time_get_millis() - t->start_time) >= CLICK_TIME) ||
-        (t->has_ended && (t->last_change_time - t->start_time) >= CLICK_TIME));
+            (t->has_ended && (t->last_change_time - t->start_time) >= CLICK_TIME));
 }
 
-int touch_was_click(const touch *t)
-{
+int touch_was_click(const touch *t) {
     return (t->has_ended && !t->has_moved && (t->last_change_time - t->start_time) < CLICK_TIME);
 }
 
-int touch_was_double_click(const touch *t)
-{
+int touch_was_double_click(const touch *t) {
     return (touch_was_click(t) && touch_was_click(&data.old_touch) &&
-        (t->start_time > data.old_touch.last_change_time) &&
-        (t->start_time - data.old_touch.last_change_time) < CLICK_TIME);
+            (t->start_time > data.old_touch.last_change_time) &&
+            (t->start_time - data.old_touch.last_change_time) < CLICK_TIME);
 }
 
-int touch_is_scroll(void)
-{
+int touch_is_scroll(void) {
     int num_touches = get_total_active_touches();
     if (num_touches > 2)
         return 0;
@@ -102,8 +95,7 @@ int touch_is_scroll(void)
     return first->in_use && start_delayed(first);
 }
 
-int touch_get_scroll(void)
-{
+int touch_get_scroll(void) {
     const touch *first = get_earliest_touch();
     const touch *last = get_latest_touch();
     if (!touch_is_scroll() || !first->has_moved || !last->has_moved)
@@ -125,8 +117,7 @@ int touch_get_scroll(void)
     return (delta > 0) ? SCROLL_UP : SCROLL_DOWN;
 }
 
-static int get_unused_touch_index(void)
-{
+static int get_unused_touch_index(void) {
     int i = 0;
     while (i < MAX_ACTIVE_TOUCHES) {
         if (!data.finger[i].in_use)
@@ -137,8 +128,7 @@ static int get_unused_touch_index(void)
     return i;
 }
 
-int touch_create(touch_coords start_coords, time_millis start_time)
-{
+int touch_create(touch_coords start_coords, time_millis start_time) {
     int index = get_unused_touch_index();
     if (index != MAX_ACTIVE_TOUCHES) {
         touch *t = &data.finger[index];
@@ -157,27 +147,25 @@ int touch_create(touch_coords start_coords, time_millis start_time)
     return index;
 }
 
-int touch_in_use(int index)
-{
+int touch_in_use(int index) {
     return index >= 0 && index < MAX_ACTIVE_TOUCHES && data.finger[index].in_use;
 }
 
-void touch_move(int index, touch_coords current_coords, time_millis current_time)
-{
+void touch_move(int index, touch_coords current_coords, time_millis current_time) {
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
-            return;
+        return;
     touch *t = &data.finger[index];
     t->last_change_time = current_time;
     t->current_point = current_coords;
-    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) || (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE))
+    if ((abs(current_coords.x - t->start_point.x) > NOT_MOVING_RANGE) ||
+        (abs(current_coords.y - t->start_point.y) > NOT_MOVING_RANGE))
         t->has_moved = 1;
 
 }
 
-void touch_end(int index, time_millis current_time)
-{
+void touch_end(int index, time_millis current_time) {
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
-            return;
+        return;
     touch *t = &data.finger[index];
     t->has_ended = 1;
     // This is needed because sometimes SDL waits for up to three frames to register the touch end
@@ -186,8 +174,7 @@ void touch_end(int index, time_millis current_time)
 
 }
 
-void reset_touches(int reset_old_touch)
-{
+void reset_touches(int reset_old_touch) {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         touch *t = &data.finger[i];
         if (!t->in_use)
@@ -197,7 +184,7 @@ void reset_touches(int reset_old_touch)
             t->in_use = 0;
             if (!reset_old_touch)
                 data.old_touch = *t;
- else {
+            else {
                 data.old_touch.last_change_time = 0;
             }
             t->has_started = 0;
@@ -216,8 +203,7 @@ void reset_touches(int reset_old_touch)
     }
 }
 
-static int any_touch_went_up(void)
-{
+static int any_touch_went_up(void) {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].has_ended)
             return 1;
@@ -226,8 +212,7 @@ static int any_touch_went_up(void)
     return 0;
 }
 
-static int handle_emulated_mouse_clicks(void)
-{
+static int handle_emulated_mouse_clicks(void) {
     mouse_reset_scroll();
     switch (data.touchpad_mode_click_type) {
         case EMULATED_MOUSE_CLICK_LEFT:
@@ -245,15 +230,14 @@ static int handle_emulated_mouse_clicks(void)
     return 1;
 }
 
-static void handle_mouse_touchpad(void)
-{
+static void handle_mouse_touchpad(void) {
     if (handle_emulated_mouse_clicks())
-            return;
+        return;
 
     int num_fingers = get_total_active_touches();
 
     if (!num_fingers)
-            return;
+        return;
 
     if (any_touch_went_up()) {
         if (num_fingers == 1 && touch_was_click(get_earliest_touch())) {
@@ -261,7 +245,7 @@ static void handle_mouse_touchpad(void)
             mouse_determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_LEFT;
         } else if (num_fingers == 2 &&
-            (touch_was_click(get_earliest_touch()) || touch_was_click(get_latest_touch()))) {
+                   (touch_was_click(get_earliest_touch()) || touch_was_click(get_latest_touch()))) {
             mouse_set_right_down(1);
             mouse_determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_RIGHT;
@@ -274,8 +258,7 @@ static void handle_mouse_touchpad(void)
     }
 }
 
-static void handle_mouse_direct(void)
-{
+static void handle_mouse_direct(void) {
     mouse_reset_scroll();
     mouse_reset_button_state();
 
@@ -286,8 +269,7 @@ static void handle_mouse_direct(void)
     mouse_set_position(x, y);
 }
 
-int touch_to_mouse(void)
-{
+int touch_to_mouse(void) {
     const touch *first = get_earliest_touch();
     if (!first->in_use) {
         if (mouse_get()->is_touch) {
@@ -313,12 +295,10 @@ int touch_to_mouse(void)
     return 1;
 }
 
-void touch_set_mode(int mode)
-{
+void touch_set_mode(int mode) {
     data.mode = mode;
 }
 
-void touch_cycle_mode(void)
-{
+void touch_cycle_mode(void) {
     data.mode = (data.mode + 1) % TOUCH_MODE_MAX;
 }

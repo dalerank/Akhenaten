@@ -27,35 +27,36 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
-static void add_fort(int type, building *fort)
-{
+static void add_fort(int type, building *fort) {
     fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
+    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT),
+                           TERRAIN_BUILDING);
     if (type == BUILDING_FORT_LEGIONARIES)
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
- else if (type == BUILDING_FORT_JAVELIN)
+    else if (type == BUILDING_FORT_JAVELIN)
         fort->subtype.fort_figure_type = FIGURE_FORT_JAVELIN;
- else if (type == BUILDING_FORT_MOUNTED)
+    else if (type == BUILDING_FORT_MOUNTED)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
 
 
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
-    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[building_rotation_get_rotation()], fort->y + offsets_y[building_rotation_get_rotation()]);
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[building_rotation_get_rotation()],
+                                       fort->y + offsets_y[building_rotation_get_rotation()]);
     game_undo_add_building(ground);
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->x + offsets_x[building_rotation_get_rotation()], fort->y + offsets_y[building_rotation_get_rotation()], 4,
+    map_building_tiles_add(ground->id, fort->x + offsets_x[building_rotation_get_rotation()],
+                           fort->y + offsets_y[building_rotation_get_rotation()], 4,
                            image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     fort->formation_id = formation_legion_create_for_fort(fort);
     ground->formation_id = fort->formation_id;
 }
 
-static void add_hippodrome(building *b)
-{
+static void add_hippodrome(building *b) {
     int image1 = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
     int image2 = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
     city_buildings_add_hippodrome();
@@ -127,8 +128,7 @@ static void add_hippodrome(building *b)
     map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
 }
 
-static building *add_warehouse_space(int x, int y, building *prev)
-{
+static building *add_warehouse_space(int x, int y, building *prev) {
     building *b = building_create(BUILDING_WAREHOUSE_SPACE, x, y);
     game_undo_add_building(b);
     b->prev_part_building_id = prev->id;
@@ -138,11 +138,10 @@ static building *add_warehouse_space(int x, int y, building *prev)
     return b;
 }
 
-static void add_warehouse(building *b)
-{
-    int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2}; 
-    int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2}; 
-    int corner = building_rotation_get_corner(2*building_rotation_get_rotation());
+static void add_warehouse(building *b) {
+    int x_offset[9] = {0, 0, 1, 1, 0, 2, 1, 2, 2};
+    int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
+    int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
 
     b->storage_id = building_storage_create();
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
@@ -153,8 +152,8 @@ static void add_warehouse(building *b)
                            image_id_from_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
-    for(int i = 0; i < 9; i++){
-        if(i == corner){
+    for (int i = 0; i < 9; i++) {
+        if (i == corner) {
             continue;
         }
         prev = add_warehouse_space(b->x + x_offset[i], b->y + y_offset[i], prev);
@@ -168,14 +167,12 @@ static void add_warehouse(building *b)
     prev->next_part_building_id = 0;
 }
 
-static void add_building(building *b, int image_id)
-{
+static void add_building(building *b, int image_id) {
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
 
 static void add_to_map(int type, building *b, int size,
-    int orientation, int waterside_orientation_abs, int waterside_orientation_rel)
-{
+                       int orientation, int waterside_orientation_abs, int waterside_orientation_rel) {
     switch (type) {
         // houses
         case BUILDING_HOUSE_LARGE_TENT:
@@ -235,7 +232,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_HOUSE_LUXURY_PALACE:
             add_building(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1);
             break;
-        // entertainment
+            // entertainment
         case BUILDING_AMPHITHEATER:
             add_building(b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
             break;
@@ -257,7 +254,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_CHARIOT_MAKER:
             add_building(b, image_id_from_group(GROUP_BUILDING_CHARIOT_MAKER));
             break;
-        // statues
+            // statues
         case BUILDING_SMALL_STATUE:
             add_building(b, image_id_from_group(GROUP_BUILDING_STATUE));
             break;
@@ -267,7 +264,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_LARGE_STATUE:
             add_building(b, image_id_from_group(GROUP_BUILDING_STATUE) + 2);
             break;
-        // health
+            // health
         case BUILDING_DOCTOR:
             add_building(b, image_id_from_group(GROUP_BUILDING_DOCTOR));
             break;
@@ -280,7 +277,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_BARBER:
             add_building(b, image_id_from_group(GROUP_BUILDING_BARBER));
             break;
-        // education
+            // education
         case BUILDING_SCHOOL:
             add_building(b, image_id_from_group(GROUP_BUILDING_SCHOOL));
             break;
@@ -290,11 +287,11 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_LIBRARY:
             add_building(b, image_id_from_group(GROUP_BUILDING_LIBRARY));
             break;
-        // security
+            // security
         case BUILDING_PREFECTURE:
             add_building(b, image_id_from_group(GROUP_BUILDING_PREFECTURE));
             break;
-        // farms
+            // farms
         case BUILDING_WHEAT_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS), 0);
             break;
@@ -313,7 +310,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_PIG_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 25, 0);
             break;
-        // industry
+            // industry
         case BUILDING_MARBLE_QUARRY:
             add_building(b, image_id_from_group(GROUP_BUILDING_MARBLE_QUARRY));
             break;
@@ -326,7 +323,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_CLAY_PIT:
             add_building(b, image_id_from_group(GROUP_BUILDING_CLAY_PIT));
             break;
-        // workshops
+            // workshops
         case BUILDING_WINE_WORKSHOP:
             add_building(b, image_id_from_group(GROUP_BUILDING_WINE_WORKSHOP));
             break;
@@ -342,7 +339,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_POTTERY_WORKSHOP:
             add_building(b, image_id_from_group(GROUP_BUILDING_POTTERY_WORKSHOP));
             break;
-        // distribution
+            // distribution
         case BUILDING_GRANARY:
             b->storage_id = building_storage_create();
             add_building(b, image_id_from_group(GROUP_BUILDING_GRANARY));
@@ -351,7 +348,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_MARKET:
             add_building(b, image_id_from_group(GROUP_BUILDING_MARKET));
             break;
-        // government
+            // government
         case BUILDING_GOVERNORS_HOUSE:
             add_building(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_HOUSE));
             break;
@@ -370,18 +367,18 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_FORUM:
             add_building(b, image_id_from_group(GROUP_BUILDING_FORUM));
             break;
-        // water
+            // water
         case BUILDING_FOUNTAIN:
             add_building(b, image_id_from_group(GROUP_BUILDING_FOUNTAIN_1));
             break;
         case BUILDING_WELL:
             add_building(b, image_id_from_group(GROUP_BUILDING_WELL));
             break;
-        // military
+            // military
         case BUILDING_MILITARY_ACADEMY:
             add_building(b, image_id_from_group(GROUP_BUILDING_MILITARY_ACADEMY));
             break;
-        // religion
+            // religion
         case BUILDING_SMALL_TEMPLE_CERES:
             add_building(b, image_id_from_group(GROUP_BUILDING_TEMPLE_CERES));
             break;
@@ -422,14 +419,16 @@ static void add_to_map(int type, building *b, int size,
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
             break;
-        // ships
+            // ships
         case BUILDING_SHIPYARD:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2,
+                                   image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
             break;
         case BUILDING_WHARF:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2,
+                                   image_id_from_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
             break;
         case BUILDING_DOCK:
             city_buildings_add_dock();
@@ -437,24 +436,34 @@ static void add_to_map(int type, building *b, int size,
             {
                 int image_id;
                 switch (waterside_orientation_rel) {
-                    case 0: image_id = image_id_from_group(GROUP_BUILDING_DOCK_1); break;
-                    case 1: image_id = image_id_from_group(GROUP_BUILDING_DOCK_2); break;
-                    case 2: image_id = image_id_from_group(GROUP_BUILDING_DOCK_3); break;
-                    default:image_id = image_id_from_group(GROUP_BUILDING_DOCK_4); break;
+                    case 0:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_1);
+                        break;
+                    case 1:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_2);
+                        break;
+                    case 2:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_3);
+                        break;
+                    default:
+                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_4);
+                        break;
                 }
                 map_water_add_building(b->id, b->x, b->y, size, image_id);
             }
             break;
-        // defense
+            // defense
         case BUILDING_TOWER:
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
-            map_building_tiles_add(b->id, b->x, b->y, size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
+            map_building_tiles_add(b->id, b->x, b->y, size, image_id_from_group(GROUP_BUILDING_TOWER),
+                                   TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             map_tiles_update_area_walls(b->x, b->y, 5);
             break;
         case BUILDING_GATEHOUSE_PH:
         case BUILDING_GATEHOUSE:
             map_building_tiles_add(b->id, b->x, b->y, size,
-                                   image_id_from_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
+                                   image_id_from_group(GROUP_BUILDING_TOWER) + orientation,
+                                   TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             b->subtype.orientation = orientation;
             map_orientation_update_buildings();
             map_terrain_add_gatehouse_roads(b->x, b->y, orientation);
@@ -492,7 +501,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_FORT_MOUNTED:
             add_fort(type, b);
             break;
-        // native buildings (unused, I think)
+            // native buildings (unused, I think)
         case BUILDING_NATIVE_HUT:
             add_building(b, image_id_from_group(GROUP_BUILDING_NATIVE) + (random_byte() & 1));
             break;
@@ -502,7 +511,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_NATIVE_CROPS:
             add_building(b, image_id_from_group(GROUP_BUILDING_FARM_CROPS));
             break;
-        // distribution center (also unused)
+            // distribution center (also unused)
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
             city_buildings_add_distribution_center(b);
             break;
@@ -510,7 +519,8 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_RESERVOIR:
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 b->data.industry.orientation = waterside_orientation_abs;
-                map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_RESERVOIR) + waterside_orientation_rel);
+                map_water_add_building(b->id, b->x, b->y, 2,
+                                       image_id_from_group(GROUP_BUILDING_RESERVOIR) + waterside_orientation_rel);
                 break;
             }
         default:
@@ -522,10 +532,10 @@ static void add_to_map(int type, building *b, int size,
     map_routing_update_walls();
 }
 
-int building_construction_place_building(int type, int x, int y)
-{
+int building_construction_place_building(int type, int x, int y) {
     int terrain_mask = TERRAIN_ALL;
-    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_ROADBLOCK)
+    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
+        type == BUILDING_ROADBLOCK)
         terrain_mask = ~TERRAIN_ROAD;
     else if (type == BUILDING_TOWER)
         terrain_mask = ~TERRAIN_WALL;
@@ -538,9 +548,16 @@ int building_construction_place_building(int type, int x, int y)
     else if (type == BUILDING_TRIUMPHAL_ARCH)
         building_orientation = map_orientation_for_triumphal_arch(x, y);
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT: x = x - size + 1; break;
-        case DIR_4_BOTTOM: x = x - size + 1; y = y - size + 1; break;
-        case DIR_6_LEFT: y = y - size + 1; break;
+        case DIR_2_RIGHT:
+            x = x - size + 1;
+            break;
+        case DIR_4_BOTTOM:
+            x = x - size + 1;
+            y = y - size + 1;
+            break;
+        case DIR_6_LEFT:
+            y = y - size + 1;
+            break;
     }
     // extra checks
     if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH) {
@@ -572,7 +589,8 @@ int building_construction_place_building(int type, int x, int y)
         }
     }
     int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
-    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF || type == BUILDING_WATER_LIFT && GAME_ENV == ENGINE_ENV_PHARAOH) {
+    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF ||
+        type == BUILDING_WATER_LIFT && GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (map_water_determine_orientation_size2(
                 x, y, 0, &waterside_orientation_abs, &waterside_orientation_rel)) {
             city_warning_show(WARNING_SHORE_NEEDED);
@@ -638,7 +656,7 @@ int building_construction_place_building(int type, int x, int y)
         return 0;
     }
     building_construction_warning_check_all(type, x, y, size);
-    
+
 
     // phew, checks done!
     building *b;

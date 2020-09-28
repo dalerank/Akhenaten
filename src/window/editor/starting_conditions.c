@@ -27,26 +27,24 @@ static void button_flotsam(int param1, int param2);
 static void button_milestone(int milestone_pct, int param2);
 
 static generic_button buttons[] = {
-    {262, 76, 200, 30, button_rank, button_none},
-    {262, 116, 200, 30, button_start_year, button_none},
-    {262, 156, 200, 30, button_initial_funds,button_none},
-    {262, 196, 200, 30, button_rescue_loan,button_none},
-    {262, 236, 200, 30, button_wheat,button_none},
-    {262, 276, 200, 30, button_flotsam, button_none, 0},
-    {262, 316, 200, 30, button_milestone, button_none, 25},
-    {262, 356, 200, 30, button_milestone, button_none, 50},
-    {262, 396, 200, 30, button_milestone, button_none, 75}
+        {262, 76,  200, 30, button_rank,          button_none},
+        {262, 116, 200, 30, button_start_year,    button_none},
+        {262, 156, 200, 30, button_initial_funds, button_none},
+        {262, 196, 200, 30, button_rescue_loan,   button_none},
+        {262, 236, 200, 30, button_wheat,         button_none},
+        {262, 276, 200, 30, button_flotsam,       button_none, 0},
+        {262, 316, 200, 30, button_milestone,     button_none, 25},
+        {262, 356, 200, 30, button_milestone,     button_none, 50},
+        {262, 396, 200, 30, button_milestone,     button_none, 75}
 };
 
 static int focus_button_id;
 
-static void draw_background(void)
-{
+static void draw_background(void) {
     window_editor_map_draw_all();
 }
 
-static void draw_foreground(void)
-{
+static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(0, 28, 30, 28);
@@ -81,83 +79,76 @@ static void draw_foreground(void)
     lang_text_draw(44, 91, 32, 325, FONT_NORMAL_BLACK);
     button_border_draw(262, 316, 200, 30, focus_button_id == 7);
     int width = text_draw_number(scenario_editor_milestone_year(25), '+', " ", 297, 327, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(25), 307 + width, 327, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(25), 307 + width, 327,
+                        FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 92, 32, 365, FONT_NORMAL_BLACK);
     button_border_draw(262, 356, 200, 30, focus_button_id == 8);
     width = text_draw_number(scenario_editor_milestone_year(50), '+', " ", 297, 367, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(50), 307 + width, 367, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(50), 307 + width, 367,
+                        FONT_SMALL_PLAIN);
 
     lang_text_draw(44, 93, 32, 405, FONT_NORMAL_BLACK);
     button_border_draw(262, 396, 200, 30, focus_button_id == 9);
     width = text_draw_number(scenario_editor_milestone_year(75), '+', " ", 297, 407, FONT_NORMAL_BLACK);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(75), 307 + width, 407, FONT_SMALL_PLAIN);
+    lang_text_draw_year(scenario_property_start_year() + scenario_editor_milestone_year(75), 307 + width, 407,
+                        FONT_SMALL_PLAIN);
 
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse *m, const hotkeys *h)
-{
+static void handle_input(const mouse *m, const hotkeys *h) {
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 9, &focus_button_id))
-            return;
+        return;
     if (input_go_back_requested(m, h))
         window_editor_attributes_show();
 
 }
 
-static void button_rank(int param1, int param2)
-{
+static void button_rank(int param1, int param2) {
     window_select_list_show(screen_dialog_offset_x() + 40, screen_dialog_offset_y() + 56,
                             32, 10, scenario_editor_set_player_rank);
 }
 
-static void button_start_year(int param1, int param2)
-{
+static void button_start_year(int param1, int param2) {
     window_editor_start_year_show();
 }
 
-static void button_initial_funds(int param1, int param2)
-{
+static void button_initial_funds(int param1, int param2) {
     window_numeric_input_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 56,
                               5, 99999, scenario_editor_set_initial_funds);
 }
 
-static void button_rescue_loan(int param1, int param2)
-{
+static void button_rescue_loan(int param1, int param2) {
     window_numeric_input_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 56,
                               5, 99999, scenario_editor_set_rescue_loan);
 }
 
-static void button_wheat(int param1, int param2)
-{
+static void button_wheat(int param1, int param2) {
     scenario_editor_toggle_rome_supplies_wheat();
 }
 
-static void button_flotsam(int param1, int param2)
-{
+static void button_flotsam(int param1, int param2) {
     scenario_editor_toggle_flotsam();
 }
 
 static int dialog_milestone_pct;
-static void set_milestone_year(int value)
-{
+static void set_milestone_year(int value) {
     scenario_editor_set_milestone_year(dialog_milestone_pct, value);
 }
 
-static void button_milestone(int milestone_pct, int param2)
-{
+static void button_milestone(int milestone_pct, int param2) {
     dialog_milestone_pct = milestone_pct;
     window_numeric_input_show(screen_dialog_offset_x() + 120, screen_dialog_offset_y() + 210,
                               3, 999, set_milestone_year);
 }
 
-void window_editor_starting_conditions_show(void)
-{
+void window_editor_starting_conditions_show(void) {
     window_type window = {
-        WINDOW_EDITOR_STARTING_CONDITIONS,
-        draw_background,
-        draw_foreground,
-        handle_input
+            WINDOW_EDITOR_STARTING_CONDITIONS,
+            draw_background,
+            draw_foreground,
+            handle_input
     };
     window_show(&window);
 }

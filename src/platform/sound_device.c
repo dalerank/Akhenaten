@@ -322,7 +322,7 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
     custom_music.buffer_size = dst_rate * dst_channels * 2 * 2;
-    custom_music.buffer = (unsigned char*)malloc(custom_music.buffer_size);
+    custom_music.buffer = (unsigned char *) malloc(custom_music.buffer_size);
     if (!custom_music.buffer)
         return 0;
 
@@ -364,7 +364,7 @@ static int put_custom_audio_stream(Uint8 *audio_data, int len) {
     // Copy data to circular buffer
     if (converted_len + custom_music.cur_write <= custom_music.buffer_size)
         memcpy(&custom_music.buffer[custom_music.cur_write], custom_music.cvt.buf, converted_len);
- else {
+    else {
         int end_len = custom_music.buffer_size - custom_music.cur_write;
         memcpy(&custom_music.buffer[custom_music.cur_write], custom_music.cvt.buf, end_len);
         memcpy(custom_music.buffer, &custom_music.cvt.buf[end_len], converted_len - end_len);
@@ -428,9 +428,9 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
     SDL_AudioFormat format;
     if (bitdepth == 8)
         format = AUDIO_U8;
- else if (bitdepth == 16)
+    else if (bitdepth == 16)
         format = AUDIO_S16;
- else {
+    else {
         log_error("Custom music bitdepth not supported:", 0, bitdepth);
         return;
     }
@@ -445,7 +445,7 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
             device_format, device_channels, device_rate
     );
     if (!result)
-            return;
+        return;
 
     sound_device_write_custom_music_data(audio_data, len);
 
@@ -454,11 +454,11 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
 
 void sound_device_write_custom_music_data(const unsigned char *audio_data, int len) {
     if (!audio_data || len <= 0 || !custom_audio_stream_active())
-            return;
+        return;
     // Mix audio to sound effect volume
     Uint8 *mix_buffer = (Uint8 *) malloc(len);
     if (!mix_buffer)
-            return;
+        return;
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
     SDL_MixAudioFormat(mix_buffer, audio_data,
                        custom_music.format, len,
