@@ -39,7 +39,7 @@ void building_maintenance_update_burning_ruins(void)
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
     building_list_burning_clear();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->type != BUILDING_BURNING_RUIN )
             continue;
@@ -60,13 +60,11 @@ void building_maintenance_update_burning_ruins(void)
 
         building_list_burning_add(i);
         if (climate == CLIMATE_DESERT) {
-            if (b->fire_duration & 3) { // check spread every 4 ticks
+            if (b->fire_duration & 3) // check spread every 4 ticks
                 continue;
-            }
         } else {
-            if (b->fire_duration & 7) { // check spread every 8 ticks
+            if (b->fire_duration & 7) // check spread every 8 ticks
                 continue;
-            }
         }
         if ((b->house_figure_generation_delay & 3) != (random_byte() & 3))
             continue;
@@ -140,7 +138,6 @@ static void collapse_building(building *b)
     if (!tutorial_handle_collapse())
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
 
-
     game_undo_disable();
     building_destroy_by_collapse(b);
 }
@@ -150,7 +147,6 @@ static void fire_building(building *b)
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire())
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
-
 
     building_destroy_by_fire(b);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -168,10 +164,8 @@ void building_maintenance_check_fire_collapse(void)
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->fire_proof)
             continue;
-
         if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
             continue;
-
         int random_building = (i + map_random_get(b->grid_offset)) & 7;
         // damage
         b->damage_risk += random_building == random_global ? 3 : 1;
@@ -190,33 +184,28 @@ void building_maintenance_check_fire_collapse(void)
         if (random_building == random_global) {
             if (!b->house_size)
                 b->fire_risk += 5;
- else if (b->house_population <= 0)
+            else if (b->house_population <= 0)
                 b->fire_risk = 0;
- else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
+            else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
                 b->fire_risk += 10;
- else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
+            else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
                 b->fire_risk += 5;
- else {
+            else
                 b->fire_risk += 2;
-            }
             if (tutorial_extra_fire_risk())
                 b->fire_risk += 5;
-
             if (climate == CLIMATE_NORTHERN)
                 b->fire_risk = 0;
- else if (climate == CLIMATE_DESERT)
+            else if (climate == CLIMATE_DESERT)
                 b->fire_risk += 3;
-
         }
         if (b->fire_risk > 100) {
             fire_building(b);
             recalculate_terrain = 1;
         }
     }
-
     if (recalculate_terrain)
         map_routing_update_land();
-
 }
 
 void building_maintenance_check_rome_access(void)
@@ -224,7 +213,7 @@ void building_maintenance_check_rome_access(void)
     const map_tile *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);
     int problem_grid_offset = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;

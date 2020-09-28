@@ -221,7 +221,7 @@ static void check_hippodrome_compatibility(building *b){
     }
 }
 static void check_backward_compatibility(void){
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if(b->type == BUILDING_HIPPODROME){
             check_hippodrome_compatibility(b);

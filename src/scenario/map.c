@@ -5,8 +5,8 @@
 #include "scenario/data.h"
 
 void scenario_map_init(void) {
-    map_data_init(scenario.map.width, scenario.map.height,
-                  scenario.map.grid_start, scenario.map.grid_border_size);
+    map_grid_data_init(scenario.map.width, scenario.map.height,
+                       scenario.map.grid_start, scenario.map.grid_border_size);
 }
 
 int scenario_map_size(void) {

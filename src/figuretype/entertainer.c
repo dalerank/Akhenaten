@@ -18,7 +18,7 @@ static int determine_destination(int x, int y, int type1, int type2) {
 
     building_list_small_clear();
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;

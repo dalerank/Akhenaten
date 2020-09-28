@@ -632,7 +632,7 @@ void figure_warehouseman_action(figure *f) {
                 set_cart_graphic(f);
  else {
                 if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
-                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT_C3) {
                     f->cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                        CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
                 } else {

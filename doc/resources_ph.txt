@@ -1,0 +1,37 @@
+0:None
+1:Grain
+2:Meat
+3:Lettuce
+4:Chickpeas
+5:Pomegranates
+6:Figs
+7:Fish
+8:Game meat
+9:Straw
+10:Weapons
+11:Clay
+12:Bricks
+13:Pottery
+14:Barley
+15:Beer
+16:Flax
+17:Linen
+18:Gems
+19:Luxury goods
+20:Wood
+21:Gold
+22:Reeds
+23:Papyrus
+24:Stone
+25:Limestone
+26:Granite
+27:[Unused12]
+28:Chariots
+29:Copper
+30:Sandstone
+31:Oil
+32:Henna
+33:Paint
+34:Lamps
+35:Marble
+36:[????]

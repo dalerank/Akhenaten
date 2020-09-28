@@ -1,4 +1,5 @@
 #include "trade_route.h"
+#include "core/game_environment.h"
 
 #define MAX_ROUTES 20
 
@@ -7,7 +8,7 @@ struct route_resource {
     int traded;
 };
 
-static struct route_resource data[MAX_ROUTES][RESOURCE_MAX];
+static struct route_resource data[MAX_ROUTES][36];
 
 void trade_route_init(int route_id, int resource, int limit)
 {
@@ -54,7 +55,7 @@ void trade_route_increase_traded(int route_id, int resource)
 
 void trade_route_reset_traded(int route_id)
 {
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         data[route_id][r].traded = 0;
     }
 }
@@ -67,7 +68,7 @@ int trade_route_limit_reached(int route_id, int resource)
 void trade_routes_save_state(buffer *limit, buffer *traded)
 {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             limit->write_i32(data[route_id][r].limit);
             traded->write_i32(data[route_id][r].traded);
         }
@@ -77,7 +78,7 @@ void trade_routes_save_state(buffer *limit, buffer *traded)
 void trade_routes_load_state(buffer *limit, buffer *traded)
 {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             data[route_id][r].limit = limit->read_i32();
             data[route_id][r].traded = traded->read_i32();
         }

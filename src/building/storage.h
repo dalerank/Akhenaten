@@ -41,7 +41,7 @@ enum {
  */
 typedef struct {
     int empty_all;
-    int resource_state[RESOURCE_MAX];
+    int resource_state[36];
     int permissions;
 } building_storage;
 

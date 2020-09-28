@@ -3,10 +3,11 @@
 
 #include "city/constants.h"
 #include "game/resource.h"
+#include "core/game_environment.h"
 
 typedef struct {
     int size;
-    int items[RESOURCE_MAX];
+    int items[36];
 } resources_list;
 
 int city_resource_count(int resource);

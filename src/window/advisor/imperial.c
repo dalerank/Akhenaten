@@ -106,7 +106,7 @@ static int draw_background(void)
     if (city_military_months_until_distant_battle() > 0 && !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
+        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS_C3, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102, FONT_NORMAL_WHITE);
         int strength_text_id;

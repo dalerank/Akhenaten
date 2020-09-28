@@ -58,11 +58,11 @@ static int inventory_to_resource_id(int value)
         case INVENTORY_WHEAT: return RESOURCE_WHEAT;
         case INVENTORY_VEGETABLES: return RESOURCE_VEGETABLES;
         case INVENTORY_FRUIT: return RESOURCE_FRUIT;
-        case INVENTORY_MEAT: return RESOURCE_MEAT;
+        case INVENTORY_MEAT: return RESOURCE_MEAT_C3;
         case INVENTORY_WINE: return RESOURCE_WINE;
-        case INVENTORY_OIL: return RESOURCE_OIL;
+        case INVENTORY_OIL: return RESOURCE_OIL_C3;
         case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
-        case INVENTORY_POTTERY: return RESOURCE_POTTERY;
+        case INVENTORY_POTTERY: return RESOURCE_POTTERY_C3;
         default: return RESOURCE_NONE;
     }
 }
@@ -121,7 +121,7 @@ static void draw_trader(building_info_context *c, figure *f)
         // bought
         int y_base = c->y_offset + 180;
         width = lang_text_draw(129, 4, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
             if (trader_bought_resources(trader_id, r)) {
                 width += text_draw_number(trader_bought_resources(trader_id, r),
                     '@', " ", c->x_offset + 40 + width, y_base, FONT_SMALL_BLACK);
@@ -134,7 +134,7 @@ static void draw_trader(building_info_context *c, figure *f)
         // sold
         y_base = c->y_offset + 210;
         width = lang_text_draw(129, 5, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
             if (trader_sold_resources(trader_id, r)) {
                 width += text_draw_number(trader_sold_resources(trader_id, r),
                     '@', " ", c->x_offset + 40 + width, y_base, FONT_SMALL_BLACK);
@@ -148,7 +148,7 @@ static void draw_trader(building_info_context *c, figure *f)
         // buying
         int y_base = c->y_offset + 180;
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
             if (city->buys_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -159,7 +159,7 @@ static void draw_trader(building_info_context *c, figure *f)
         // selling
         y_base = c->y_offset + 210;
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
             if (city->sells_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);

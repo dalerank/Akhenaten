@@ -15,11 +15,15 @@ const map_tile *city_map_exit_point(void)
 
 const map_tile *city_map_entry_flag(void)
 {
+    if (city_data.map.entry_flag.grid_offset == 0)
+        city_data.map.entry_flag.grid_offset = map_grid_offset(city_data.map.entry_flag.x, city_data.map.entry_flag.y);
     return &city_data.map.entry_flag;
 }
 
 const map_tile *city_map_exit_flag(void)
 {
+    if (city_data.map.exit_flag.grid_offset == 0)
+        city_data.map.exit_flag.grid_offset = map_grid_offset(city_data.map.exit_flag.x, city_data.map.exit_flag.y);
     return &city_data.map.exit_flag;
 }
 

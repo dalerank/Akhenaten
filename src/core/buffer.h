@@ -35,6 +35,7 @@ public:
     void init(size_t s);
     void clear();
 
+    int get_offset();
     void set_offset(size_t offset);
     void reset_offset();
     void skip(size_t s);

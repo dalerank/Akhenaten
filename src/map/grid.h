@@ -68,7 +68,7 @@ void map_grid_and_all(grid_xx *grid, int mask);
 void map_grid_save_state(grid_xx *grid, buffer *buf);
 void map_grid_load_state(grid_xx *grid, buffer *buf);
 
-void map_data_init(int width, int height, int start_offset, int border_size);
+void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
 int map_grid_is_valid_offset(int grid_offset);
 int map_grid_offset(int x, int y);

@@ -204,9 +204,9 @@ void building_warehouse_space_remove_export(building *space, int resource)
 void building_warehouses_add_resource(int resource, int amount)
 {
     int building_id = city_resource_last_used_warehouse();
-    for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV] && amount > 0; i++) {
         building_id++;
-        if (building_id >= MAX_BUILDINGS)
+        if (building_id >= MAX_BUILDINGS[GAME_ENV])
             building_id = 1;
 
         building *b = building_get(building_id);
@@ -300,9 +300,9 @@ int building_warehouses_remove_resource(int resource, int amount)
     int amount_left = amount;
     int building_id = city_resource_last_used_warehouse();
     // first go for non-getting warehouses
-    for (int i = 1; i < MAX_BUILDINGS && amount_left > 0; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV] && amount_left > 0; i++) {
         building_id++;
-        if (building_id >= MAX_BUILDINGS)
+        if (building_id >= MAX_BUILDINGS[GAME_ENV])
             building_id = 1;
 
         building *b = building_get(building_id);
@@ -314,9 +314,9 @@ int building_warehouses_remove_resource(int resource, int amount)
         }
     }
     // if that doesn't work, take it anyway
-    for (int i = 1; i < MAX_BUILDINGS && amount_left > 0; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV] && amount_left > 0; i++) {
         building_id++;
-        if (building_id >= MAX_BUILDINGS)
+        if (building_id >= MAX_BUILDINGS[GAME_ENV])
             building_id = 1;
 
         building *b = building_get(building_id);
@@ -334,7 +334,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
 {
     int min_dist = 10000;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE)
             continue;
@@ -383,7 +383,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
 {
     int min_dist = 10000;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
             continue;
@@ -422,16 +422,16 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
     }
 }
 
-static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD], int road_network)
+static int determine_granary_accept_foods(int resources[8], int road_network)
 {
     if (scenario_property_rome_supplies_wheat())
         return 0;
 
-    for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
+    for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
         resources[i] = 0;
     }
     int can_accept = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->has_road_access)
             continue;
@@ -443,7 +443,7 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD], int 
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] >= 1200) {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
-                for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
+                for (int r = 0; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++) {
                     if (!building_granary_is_not_accepting(r,b)) {
                         resources[r]++;
                         can_accept = 1;
@@ -455,16 +455,16 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD], int 
     return can_accept;
 }
 
-static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD], int road_network)
+static int determine_granary_get_foods(int resources[8], int road_network)
 {
     if (scenario_property_rome_supplies_wheat())
         return 0;
 
-    for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
+    for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
         resources[i] = 0;
     }
     int can_get = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->has_road_access)
             continue;
@@ -476,7 +476,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD], int roa
         if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
-                for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
+                for (int r = 0; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++) {
                     if (building_granary_is_getting(r,b)) {
                         resources[r]++;
                         can_get = 1;
@@ -501,7 +501,7 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
         return 0;
 
     if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
-        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT) {
+        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3) {
         if (resources[resource] > 0)
             return 1;
 
@@ -518,7 +518,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     const building_storage *s = building_storage_get(warehouse->storage_id);
     building *space;
     // get resources
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         if (!building_warehouse_is_getting(r,warehouse) || city_resource_is_stockpiled(r))
             continue;
 
@@ -555,16 +555,16 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     }
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
-        !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x,warehouse->y,RESOURCE_WEAPONS,warehouse->road_network_id,warehouse->distance_from_entry,0));
+        !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3, warehouse->road_network_id, warehouse->distance_from_entry, 0));
         if (barracks->loads_stored < MAX_WEAPONS_BARRACKS &&
                 warehouse->road_network_id == barracks->road_network_id) {
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = building_next(space);
                 if (space->id > 0 && space->loads_stored > 0 &&
-                    space->subtype.warehouse_resource_id == RESOURCE_WEAPONS) {
-                    *resource = RESOURCE_WEAPONS;
+                    space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
+                    *resource = RESOURCE_WEAPONS_C3;
                     return WAREHOUSE_TASK_DELIVERING;
                 }
             }
@@ -585,7 +585,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
         }
     }
     // deliver food to getting granary
-    int granary_resources[RESOURCE_MAX_FOOD];
+    int granary_resources[RESOURCE_MAX_FOOD[GAME_ENV]];
     if (determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {

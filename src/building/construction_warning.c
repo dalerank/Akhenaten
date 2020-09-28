@@ -115,7 +115,7 @@ static void check_barracks(int type)
 static void check_weapons_access(int type)
 {
     if (!has_warning && type == BUILDING_BARRACKS) {
-        if (city_resource_count(RESOURCE_WEAPONS) <= 0)
+        if (city_resource_count(RESOURCE_WEAPONS_C3) <= 0)
             show(WARNING_WEAPONS_NEEDED);
 
     }
@@ -170,7 +170,7 @@ static void check_iron_access(int type)
 {
     if (type == BUILDING_WEAPONS_WORKSHOP &&
         building_count_industry_active(RESOURCE_IRON) <= 0) {
-        if (city_resource_count(RESOURCE_WEAPONS) <= 0 && city_resource_count(RESOURCE_IRON) <= 0) {
+        if (city_resource_count(RESOURCE_WEAPONS_C3) <= 0 && city_resource_count(RESOURCE_IRON) <= 0) {
             show(WARNING_IRON_NEEDED);
             if (empire_can_produce_resource(RESOURCE_IRON))
                 show(WARNING_BUILD_IRON_MINE);
@@ -204,7 +204,7 @@ static void check_olives_access(int type)
 {
     if (type == BUILDING_OIL_WORKSHOP &&
         building_count_industry_active(RESOURCE_OLIVES) <= 0) {
-        if (city_resource_count(RESOURCE_OIL) <= 0 && city_resource_count(RESOURCE_OLIVES) <= 0) {
+        if (city_resource_count(RESOURCE_OIL_C3) <= 0 && city_resource_count(RESOURCE_OLIVES) <= 0) {
             show(WARNING_OLIVES_NEEDED);
             if (empire_can_produce_resource(RESOURCE_OLIVES))
                 show(WARNING_BUILD_OLIVE_FARM);
@@ -220,14 +220,14 @@ static void check_olives_access(int type)
 static void check_timber_access(int type)
 {
     if (type == BUILDING_FURNITURE_WORKSHOP &&
-        building_count_industry_active(RESOURCE_TIMBER) <= 0) {
-        if (city_resource_count(RESOURCE_FURNITURE) <= 0 && city_resource_count(RESOURCE_TIMBER) <= 0) {
+        building_count_industry_active(RESOURCE_TIMBER_C3) <= 0) {
+        if (city_resource_count(RESOURCE_FURNITURE) <= 0 && city_resource_count(RESOURCE_TIMBER_C3) <= 0) {
             show(WARNING_TIMBER_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_TIMBER))
+            if (empire_can_produce_resource(RESOURCE_TIMBER_C3))
                 show(WARNING_BUILD_TIMBER_YARD);
- else if (!empire_can_import_resource(RESOURCE_TIMBER))
+ else if (!empire_can_import_resource(RESOURCE_TIMBER_C3))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
- else if (city_int(RESOURCE_TIMBER) != TRADE_STATUS_IMPORT)
+ else if (city_int(RESOURCE_TIMBER_C3) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
 
         }
@@ -237,14 +237,14 @@ static void check_timber_access(int type)
 static void check_clay_access(int type)
 {
     if (type == BUILDING_POTTERY_WORKSHOP &&
-        building_count_industry_active(RESOURCE_CLAY) <= 0) {
-        if (city_resource_count(RESOURCE_POTTERY) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
+        building_count_industry_active(RESOURCE_CLAY_C3) <= 0) {
+        if (city_resource_count(RESOURCE_POTTERY_C3) <= 0 && city_resource_count(RESOURCE_CLAY_C3) <= 0) {
             show(WARNING_CLAY_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_CLAY))
+            if (empire_can_produce_resource(RESOURCE_CLAY_C3))
                 show(WARNING_BUILD_CLAY_PIT);
- else if (!empire_can_import_resource(RESOURCE_CLAY))
+ else if (!empire_can_import_resource(RESOURCE_CLAY_C3))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
- else if (city_int(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
+ else if (city_int(RESOURCE_CLAY_C3) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
 
         }

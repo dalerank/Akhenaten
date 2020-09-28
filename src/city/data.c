@@ -128,23 +128,23 @@ static void save_main_data(buffer *main)
     main->write_i16(city_data.building.senate_grid_offset);
     main->write_i32(city_data.building.senate_building_id);
     main->write_i16(city_data.unused.unknown_2828);
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i16(city_data.resource.space_in_warehouses[i]);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i16(city_data.resource.stored_in_warehouses[i]);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i16(city_data.resource.trade_status[i]);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i16(city_data.resource.export_over[i]);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i16(city_data.resource.mothballed[i]);
     }
     main->write_i16(city_data.unused.unused_28ca);
-    for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
+    for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
         main->write_i32(city_data.resource.granary_food_stored[i]);
     }
     for (int i = 0; i < 6; i++) {
@@ -159,7 +159,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 272; i++) {
         main->write_i8(city_data.unused.unknown_2924[i]);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         main->write_i32(city_data.resource.stockpiled[i]);
     }
     main->write_i32(city_data.resource.food_supply_months);
@@ -526,9 +526,14 @@ static void save_main_data(buffer *main)
     }
 }
 
+#include "core/game_environment.h"
+
 static void load_main_data(buffer *main)
 {
-    main->read_raw(city_data.unused.other_player, 18068);
+    if (GAME_ENV == ENGINE_ENV_C3)
+        main->read_raw(city_data.unused.other_player, 18068);
+    else
+        main->read_raw(city_data.unused.other_player, 18068+836);
     city_data.unused.unknown_00a0 = main->read_i8();
     city_data.unused.unknown_00a1 = main->read_i8();
     city_data.unused.unknown_00a2 = main->read_i8();
@@ -550,17 +555,14 @@ static void load_main_data(buffer *main)
     city_data.population.academy_age = main->read_i32();
     city_data.population.total_capacity = main->read_i32();
     city_data.population.room_in_houses = main->read_i32();
-    for (int i = 0; i < 2400; i++) {
+    for (int i = 0; i < 2400; i++)
         city_data.population.monthly.values[i] = main->read_i32();
-    }
     city_data.population.monthly.next_index = main->read_i32();
     city_data.population.monthly.count = main->read_i32();
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++)
         city_data.population.at_age[i] = main->read_i16();
-    }
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++)
         city_data.population.at_level[i] = main->read_i32();
-    }
     city_data.population.yearly_births = main->read_i32();
     city_data.population.yearly_deaths = main->read_i32();
     city_data.population.lost_removal = main->read_i32();
@@ -586,58 +588,69 @@ static void load_main_data(buffer *main)
     city_data.migration.immigration_duration = main->read_i32();
     city_data.migration.emigration_duration = main->read_i32();
     city_data.migration.newcomers = main->read_i32();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
         city_data.unused.unknown_27e0[i] = main->read_i32();
-    }
     city_data.unused.unknown_27f0 = main->read_i16();
     city_data.resource.last_used_warehouse = main->read_i16();
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 18; i++)
         city_data.unused.unknown_27f4[i] = main->read_i16();
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        city_data.map.entry_point.x = main->read_u8();
+        city_data.map.entry_point.y = main->read_u8();
+        city_data.map.entry_point.grid_offset = main->read_i16();
+        city_data.map.exit_point.x = main->read_u8();
+        city_data.map.exit_point.y = main->read_u8();
+        city_data.map.exit_point.grid_offset = main->read_i16();
+        city_data.building.senate_x = main->read_u8();
+        city_data.building.senate_y = main->read_u8();
+        city_data.building.senate_grid_offset = main->read_i16();
+    } else  {
+        city_data.map.entry_point.x = main->read_u16();
+        city_data.map.entry_point.y = main->read_u16();
+        city_data.map.entry_point.grid_offset = main->read_i32();
+        city_data.map.exit_point.x = main->read_u16();
+        city_data.map.exit_point.y = main->read_u16();
+        city_data.map.exit_point.grid_offset = main->read_i32();
+        city_data.building.senate_x = main->read_u16();
+        city_data.building.senate_y = main->read_u16();
+        city_data.building.senate_grid_offset = main->read_i32();
     }
-    city_data.map.entry_point.x = main->read_u8();
-    city_data.map.entry_point.y = main->read_u8();
-    city_data.map.entry_point.grid_offset = main->read_i16();
-    city_data.map.exit_point.x = main->read_u8();
-    city_data.map.exit_point.y = main->read_u8();
-    city_data.map.exit_point.grid_offset = main->read_i16();
-    city_data.building.senate_x = main->read_u8();
-    city_data.building.senate_y = main->read_u8();
-    city_data.building.senate_grid_offset = main->read_i16();
     city_data.building.senate_building_id = main->read_i32();
     city_data.unused.unknown_2828 = main->read_i16();
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(2);
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         city_data.resource.space_in_warehouses[i] = main->read_i16();
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         city_data.resource.stored_in_warehouses[i] = main->read_i16();
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         city_data.resource.trade_status[i] = main->read_i16();
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         city_data.resource.export_over[i] = main->read_i16();
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         city_data.resource.mothballed[i] = main->read_i16();
-    }
     city_data.unused.unused_28ca = main->read_i16();
-    for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
-        city_data.resource.granary_food_stored[i] = main->read_i32();
-    }
-    for (int i = 0; i < 6; i++) {
-        city_data.resource.stored_in_workshops[i] = main->read_i32();
-    }
-    for (int i = 0; i < 6; i++) {
-        city_data.resource.space_in_workshops[i] = main->read_i32();
-    }
-    city_data.resource.granary_total_stored = main->read_i32();
-    city_data.resource.food_types_available = main->read_i32();
-    city_data.resource.food_types_eaten = main->read_i32();
-    for (int i = 0; i < 272; i++) {
-        city_data.unused.unknown_2924[i] = main->read_i8();
-    }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.stockpiled[i] = main->read_i32();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        main->skip(22);
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+            main->skip(2);
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+            city_data.resource.granary_food_stored[i] = main->read_i16();
+        main->skip(424); // temp
+    } else {
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+            city_data.resource.granary_food_stored[i] = main->read_i32();
+        for (int i = 0; i < 6; i++)
+            city_data.resource.stored_in_workshops[i] = main->read_i32();
+        for (int i = 0; i < 6; i++)
+            city_data.resource.space_in_workshops[i] = main->read_i32();
+        city_data.resource.granary_total_stored = main->read_i32();
+        city_data.resource.food_types_available = main->read_i32();
+        city_data.resource.food_types_eaten = main->read_i32();
+        for (int i = 0; i < 272; i++)
+            city_data.unused.unknown_2924[i] = main->read_i8();
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+            city_data.resource.stockpiled[i] = main->read_i32();
     }
     city_data.resource.food_supply_months = main->read_i32();
     city_data.resource.granaries.operating = main->read_i32();
@@ -703,21 +716,20 @@ static void load_main_data(buffer *main)
     city_data.finance.this_year.net_in_out = main->read_i32();
     city_data.finance.last_year.balance = main->read_i32();
     city_data.finance.this_year.balance = main->read_i32();
-    for (int i = 0; i < 1400; i++) {
+    for (int i = 0; i < 1400; i++)
         city_data.unused.unknown_2c20[i] = main->read_i32();
-    }
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++)
         city_data.unused.houses_requiring_unknown_to_evolve[i] = main->read_i32();
-    }
     city_data.trade.caravan_import_resource = main->read_i32();
     city_data.trade.caravan_backup_import_resource = main->read_i32();
     city_data.ratings.culture = main->read_i32();
     city_data.ratings.prosperity = main->read_i32();
     city_data.ratings.peace = main->read_i32();
     city_data.ratings.favor = main->read_i32();
-    for (int i = 0; i < 4; i++) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(8);
+    else for (int i = 0; i < 4; i++)
         city_data.unused.unknown_4238[i] = main->read_i32();
-    }
     city_data.ratings.prosperity_treasury_last_year = main->read_i32();
     city_data.ratings.culture_points.theater = main->read_i32();
     city_data.ratings.culture_points.religion = main->read_i32();
@@ -737,9 +749,8 @@ static void load_main_data(buffer *main)
     city_data.houses.missing.barber = main->read_i32();
     city_data.houses.missing.bathhouse = main->read_i32();
     city_data.houses.missing.food = main->read_i32();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
         city_data.unused.unknown_4294[i] = main->read_i32();
-    }
     city_data.building.hippodrome_placed = main->read_i32();
     city_data.houses.missing.clinic = main->read_i32();
     city_data.houses.missing.hospital = main->read_i32();
@@ -761,34 +772,30 @@ static void load_main_data(buffer *main)
     city_data.entertainment.venue_needing_shows = main->read_i32();
     city_data.culture.average_entertainment = main->read_i32();
     city_data.houses.missing.entertainment = main->read_i32();
-    city_data.festival.months_since_festival = main->read_i32();
-    for (int i = 0; i < MAX_GODS; i++) {
+    city_data.festival.months_since_festival = main->read_i32(); // ok
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].target_happiness = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(5);
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].happiness = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].wrath_bolts = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].blessing_done = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].small_curse_done = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].unused1 = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].unused2 = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].unused3 = main->read_i8();
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
+    main->skip(15);
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(35);
+//    for (int i = 0; i < MAX_GODS; i++)
+//        city_data.religion.gods[i].unused1 = main->read_i8();
+//    for (int i = 0; i < MAX_GODS; i++)
+//        city_data.religion.gods[i].unused2 = main->read_i8();
+//    for (int i = 0; i < MAX_GODS; i++)
+//        city_data.religion.gods[i].unused3 = main->read_i8();
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].months_since_festival = main->read_i32();
-    }
     city_data.religion.least_happy_god = main->read_i32();
     city_data.unused.unknown_4334 = main->read_i32();
     city_data.migration.no_immigration_cause = main->read_i32();
@@ -799,25 +806,26 @@ static void load_main_data(buffer *main)
     city_data.houses.education = main->read_i32();
     city_data.houses.entertainment = main->read_i32();
     city_data.figure.rioters = main->read_i32();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(20);
     city_data.ratings.selected = main->read_i32();
     city_data.ratings.culture_explanation = main->read_i32();
     city_data.ratings.prosperity_explanation = main->read_i32();
     city_data.ratings.peace_explanation = main->read_i32();
     city_data.ratings.favor_explanation = main->read_i32();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(8);
     city_data.emperor.player_rank = main->read_i32();
-    city_data.emperor.personal_savings = main->read_i32();
-    for (int i = 0; i < 2; i++) {
+    city_data.emperor.personal_savings = main->read_i32(); // ok
+    for (int i = 0; i < 2; i++)
         city_data.unused.unknown_4374[i] = main->read_i32();
-    }
     city_data.finance.last_year.income.donated = main->read_i32();
     city_data.finance.this_year.income.donated = main->read_i32();
     city_data.emperor.donate_amount = main->read_i32();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
         city_data.building.working_dock_ids[i] = main->read_i16();
-    }
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++)
         city_data.unused.unknown_439c[i] = main->read_i16();
-    }
     city_data.figure.animals = main->read_i16();
     city_data.trade.num_sea_routes = main->read_i16();
     city_data.trade.num_land_routes = main->read_i16();
@@ -826,9 +834,8 @@ static void load_main_data(buffer *main)
     city_data.building.working_docks = main->read_i16();
     city_data.building.senate_placed = main->read_i16();
     city_data.building.working_wharfs = main->read_i16();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
         city_data.unused.padding_43b2[i] = main->read_i8();
-    }
     city_data.finance.stolen_this_year = main->read_i16();
     city_data.finance.stolen_last_year = main->read_i16();
     city_data.trade.docker_import_resource = main->read_i32();
@@ -841,19 +848,19 @@ static void load_main_data(buffer *main)
     city_data.building.barracks_grid_offset = main->read_i16();
     city_data.building.barracks_building_id = main->read_i32();
     city_data.building.barracks_placed = main->read_i32();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
         city_data.unused.unknown_43d8[i] = main->read_i32();
-    }
     city_data.population.lost_troop_request = main->read_i32();
     city_data.unused.unknown_43f0 = main->read_i32();
     city_data.mission.has_won = main->read_i32();
     city_data.mission.continue_months_left = main->read_i32();
     city_data.mission.continue_months_chosen = main->read_i32();
     city_data.finance.wage_rate_paid_this_year = main->read_i32();
-    city_data.finance.this_year.expenses.tribute = main->read_i32();
+    city_data.finance.this_year.expenses.tribute = main->read_i32(); // ok
     city_data.finance.last_year.expenses.tribute = main->read_i32();
     city_data.finance.tribute_not_paid_last_year = main->read_i32();
-    city_data.finance.tribute_not_paid_total_years = main->read_i32();
+    if (GAME_ENV == ENGINE_ENV_C3)
+        city_data.finance.tribute_not_paid_total_years = main->read_i32();
     city_data.festival.selected.god = main->read_i32();
     city_data.festival.selected.size = main->read_i32();
     city_data.festival.planned.size = main->read_i32();
@@ -876,11 +883,10 @@ static void load_main_data(buffer *main)
     city_data.sentiment.message_delay = main->read_i32();
     city_data.sentiment.low_mood_cause = main->read_i32();
     city_data.figure.security_breach_duration = main->read_i32();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
         city_data.unused.unknown_446c[i] = main->read_i32();
-    }
     city_data.emperor.selected_gift_size = main->read_i32();
-    city_data.emperor.months_since_gift = main->read_i32();
+    city_data.emperor.months_since_gift = main->read_i32(); // ok
     city_data.emperor.gift_overdose_penalty = main->read_i32();
     city_data.unused.unused_4488 = main->read_i32();
     city_data.emperor.gifts[GIFT_MODEST].id = main->read_i32();
@@ -904,9 +910,8 @@ static void load_main_data(buffer *main)
     city_data.resource.granaries.understaffed = main->read_i32();
     city_data.resource.granaries.not_operating = main->read_i32();
     city_data.resource.granaries.not_operating_with_food = main->read_i32();
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
         city_data.unused.unused_44e0[i] = main->read_i32();
-    }
     city_data.religion.venus_curse_active = main->read_i32();
     city_data.unused.unused_44ec = main->read_i32();
     city_data.religion.neptune_double_trade_active = main->read_i32();
@@ -918,15 +923,14 @@ static void load_main_data(buffer *main)
     city_data.resource.food_produced_this_month = main->read_i32();
     city_data.ratings.peace_riot_cause = main->read_i32();
     city_data.finance.estimated_tax_income = main->read_i32();
-    city_data.mission.tutorial_senate_built = main->read_i32();
+    city_data.mission.tutorial_senate_built = main->read_i32(); // ok
     city_data.building.distribution_center_x = main->read_i8();
     city_data.building.distribution_center_y = main->read_i8();
     city_data.building.distribution_center_grid_offset = main->read_i16();
     city_data.building.distribution_center_building_id = main->read_i32();
     city_data.building.distribution_center_placed = main->read_i32();
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 11; i++)
         city_data.unused.unused_4524[i] = main->read_i32();
-    }
     city_data.building.shipyard_boats_requested = main->read_i32();
     city_data.figure.enemies = main->read_i32();
     city_data.sentiment.wages = main->read_i32();
@@ -970,9 +974,11 @@ static void load_main_data(buffer *main)
     city_data.sound.hit_axe = main->read_i8();
     city_data.sound.hit_wolf = main->read_i8();
     city_data.sound.march_wolf = main->read_i8();
-    for (int i = 0; i < 6; i++) {
-        city_data.unused.unused_45a5[i] = main->read_i8();
-    }
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        main->skip(10);
+    else
+        for (int i = 0; i < 6; i++)
+            city_data.unused.unused_45a5[i] = main->read_i8();
     city_data.sentiment.include_tents = main->read_i8();
     city_data.emperor.invasion.count = main->read_i32();
     city_data.emperor.invasion.size = main->read_i32();
@@ -998,9 +1004,10 @@ static void load_main_data(buffer *main)
     city_data.mission.tutorial_fire_message_shown = main->read_i32();
     city_data.mission.tutorial_disease_message_shown = main->read_i32();
     city_data.figure.attacking_natives = main->read_i32();
-    for (int i = 0; i < 232; i++) {
+    for (int i = 0; i < 232; i++)
         city_data.unused.unknown_464c[i] = main->read_i8();
-    }
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) // todo: fill in missing data?
+        main->skip(452); // unknown bytes ??????
 }
 
 static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
@@ -1014,15 +1021,26 @@ static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
     entry_exit_grid_offset->write_i32(city_data.map.exit_flag.grid_offset);
 }
 
+#include "core/game_environment.h"
+
 static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
 {
-    city_data.map.entry_flag.x = entry_exit_xy->read_i32();
-    city_data.map.entry_flag.y = entry_exit_xy->read_i32();
-    city_data.map.exit_flag.x = entry_exit_xy->read_i32();
-    city_data.map.exit_flag.y = entry_exit_xy->read_i32();
-
-    city_data.map.entry_flag.grid_offset = entry_exit_grid_offset->read_i32();
-    city_data.map.exit_flag.grid_offset = entry_exit_grid_offset->read_i32();
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        city_data.map.entry_flag.x = entry_exit_xy->read_i32();
+        city_data.map.entry_flag.y = entry_exit_xy->read_i32();
+        city_data.map.exit_flag.x = entry_exit_xy->read_i32();
+        city_data.map.exit_flag.y = entry_exit_xy->read_i32();
+    }
+    else {
+        city_data.map.entry_flag.x = entry_exit_xy->read_i16();
+        city_data.map.entry_flag.y = entry_exit_xy->read_i16();
+        city_data.map.exit_flag.x = entry_exit_xy->read_i16();
+        city_data.map.exit_flag.y = entry_exit_xy->read_i16();
+    }
+//    city_data.map.entry_flag.grid_offset = entry_exit_grid_offset->read_i32();
+//    city_data.map.exit_flag.grid_offset = entry_exit_grid_offset->read_i32();
+    city_data.map.entry_flag.grid_offset = 0;
+    city_data.map.exit_flag.grid_offset = 0;
 }
 
 void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,

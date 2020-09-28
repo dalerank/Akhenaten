@@ -508,7 +508,7 @@ void scenario_settings_init_mission(void) {
 void scenario_fix_patch_trade(int mission_id) { // todo: only C3
     // Damascus, allow import of marble
     if (mission_id == 15)
-        trade_route_init(1, RESOURCE_MARBLE, 15);
+        trade_route_init(1, RESOURCE_MARBLE_C3, 15);
 }
 
 void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)

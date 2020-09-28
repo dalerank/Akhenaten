@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-static building all_buildings[MAX_BUILDINGS];
+static building all_buildings[5000];
 
 static struct {
     int highest_id_in_use;
@@ -34,13 +34,13 @@ static struct {
 
 int building_find(int type)
 {
-    for (int i = 1; i < MAX_BUILDINGS; ++i) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; ++i) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == type)
             return i;
 
     }
-    return MAX_BUILDINGS;
+    return MAX_BUILDINGS[GAME_ENV];
 }
 building *building_get(int id)
 {
@@ -63,7 +63,7 @@ building *building_next(building *b)
 building *building_create(int type, int x, int y)
 {
     building *b = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
             b = &all_buildings[i];
             break;
@@ -91,20 +91,18 @@ building *building_create(int type, int x, int y)
     b->house_size = 0;
     if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA)
         b->house_size = 1;
- else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA)
+    else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA)
         b->house_size = 2;
- else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE)
+    else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE)
         b->house_size = 3;
- else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE)
+    else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE)
         b->house_size = 4;
-
 
     // subtype
     if (building_is_house(type))
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
- else {
+    else
         b->subtype.house_level = 0;
-    }
 
     // input/output resources
     switch (type) {
@@ -124,30 +122,30 @@ building *building_create(int type, int x, int y)
             b->output_resource_id = RESOURCE_VINES;
             break;
         case BUILDING_PIG_FARM:
-            b->output_resource_id = RESOURCE_MEAT;
+            b->output_resource_id = RESOURCE_MEAT_C3;
             break;
         case BUILDING_MARBLE_QUARRY:
-            b->output_resource_id = RESOURCE_MARBLE;
+            b->output_resource_id = RESOURCE_MARBLE_C3;
             break;
         case BUILDING_IRON_MINE:
             b->output_resource_id = RESOURCE_IRON;
             break;
         case BUILDING_TIMBER_YARD:
-            b->output_resource_id = RESOURCE_TIMBER;
+            b->output_resource_id = RESOURCE_TIMBER_C3;
             break;
         case BUILDING_CLAY_PIT:
-            b->output_resource_id = RESOURCE_CLAY;
+            b->output_resource_id = RESOURCE_CLAY_C3;
             break;
         case BUILDING_WINE_WORKSHOP:
             b->output_resource_id = RESOURCE_WINE;
             b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE;
             break;
         case BUILDING_OIL_WORKSHOP:
-            b->output_resource_id = RESOURCE_OIL;
+            b->output_resource_id = RESOURCE_OIL_C3;
             b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL;
             break;
         case BUILDING_WEAPONS_WORKSHOP:
-            b->output_resource_id = RESOURCE_WEAPONS;
+            b->output_resource_id = RESOURCE_WEAPONS_C3;
             b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS;
             break;
         case BUILDING_FURNITURE_WORKSHOP:
@@ -155,7 +153,7 @@ building *building_create(int type, int x, int y)
             b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE;
             break;
         case BUILDING_POTTERY_WORKSHOP:
-            b->output_resource_id = RESOURCE_POTTERY;
+            b->output_resource_id = RESOURCE_POTTERY_C3;
             b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
             break;
         default:
@@ -165,16 +163,11 @@ building *building_create(int type, int x, int y)
 
     if (type == BUILDING_GRANARY)
         b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
-
-    
-    if (type == BUILDING_MARKET) {
-	// Set it as accepting all goods
+    if (type == BUILDING_MARKET) // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
-    }
 
-    if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
+    if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME)
         b->subtype.orientation = building_rotation_get_rotation();
-    }
     
     b->x = x;
     b->y = y;
@@ -223,7 +216,7 @@ void building_clear_related_data(building *b)
 }
 void building_clear_all(void)
 {
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
+    for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         memset(&all_buildings[i], 0, sizeof(building));
         all_buildings[i].id = i;
     }
@@ -259,7 +252,7 @@ int building_get_highest_id(void)
 void building_update_highest_id(void)
 {
     extra.highest_id_in_use = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
 
@@ -274,7 +267,7 @@ void building_update_state(void)
     int wall_recalc = 0;
     int road_recalc = 0;
     int aqueduct_recalc = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED)
             b->state = BUILDING_STATE_IN_USE;
@@ -286,7 +279,7 @@ void building_update_state(void)
                     road_recalc = 1;
                 } else if (b->type == BUILDING_RESERVOIR)
                     aqueduct_recalc = 1;
- else if (b->type == BUILDING_GRANARY)
+                else if (b->type == BUILDING_GRANARY)
                     road_recalc = 1;
 
                 map_building_tiles_remove(i, b->x, b->y);
@@ -322,7 +315,7 @@ void building_update_state(void)
 }
 void building_update_desirability(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
@@ -369,7 +362,7 @@ int building_mothball_set(building* b, int mothball)
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
+    for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building_state_save_to_buffer(buf, &all_buildings[i]);
     }
     highest_id->write_i32(extra.highest_id_in_use);
@@ -382,7 +375,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 }
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever)
 {
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
+    for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (!buf->is_valid(1))
             break;
         building_state_load_from_buffer(buf, &all_buildings[i]);

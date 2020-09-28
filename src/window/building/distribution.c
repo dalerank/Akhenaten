@@ -261,8 +261,8 @@ void window_building_draw_market(building_info_context *c)
                 c->x_offset + 284, c->y_offset + 70, font);
 
             font = is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-            image_draw(image_id + RESOURCE_MEAT +
-                resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+            image_draw(image_id + RESOURCE_MEAT_C3 +
+                       resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
                 c->x_offset + 362, c->y_offset + 64);
             text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
                 c->x_offset + 394, c->y_offset + 70, font);
@@ -271,7 +271,7 @@ void window_building_draw_market(building_info_context *c)
         }
         // good stocks
         font = is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_POTTERY_C3, c->x_offset + 32, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
             c->x_offset + 64, c->y_offset + 110, font);
 
@@ -281,7 +281,7 @@ void window_building_draw_market(building_info_context *c)
             c->x_offset + 174, c->y_offset + 110, font);
 
         font = is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_OIL_C3, c->x_offset + 252, c->y_offset + 104);
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
             c->x_offset + 284, c->y_offset + 110, font);
 
@@ -314,7 +314,7 @@ void window_building_draw_market_orders(building_info_context* c)
 void window_building_draw_market_orders_foreground(building_info_context* c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int resources[] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
+    int resources[] = {RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_MEAT_C3, RESOURCE_WINE, RESOURCE_OIL_C3, RESOURCE_FURNITURE, RESOURCE_POTTERY_C3 };
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
@@ -372,7 +372,7 @@ void window_building_draw_granary(building_info_context *c)
         window_building_draw_description_at(c, 40, 98, 4);
  else {
         int total_stored = 0;
-        for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
+        for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
             total_stored += b->data.granary.resource_stored[i];
         }
         int width = lang_text_draw(98, 2, c->x_offset + 34, c->y_offset + 40, FONT_NORMAL_BLACK);
@@ -402,10 +402,10 @@ void window_building_draw_granary(building_info_context *c)
         lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // meat/fish
-        image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 240, c->y_offset + 92);
-        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT], '@', " ",
+        image_draw(image_id + RESOURCE_MEAT_C3 + resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON), c->x_offset + 240, c->y_offset + 92);
+        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT_C3], '@', " ",
             c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
-        lang_text_draw(23, RESOURCE_MEAT, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
+        lang_text_draw(23, RESOURCE_MEAT_C3, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
@@ -549,7 +549,7 @@ void window_building_draw_warehouse(building_info_context *c)
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
  else {
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
             int x, y;
             if (r <= 5) {
                 x = c->x_offset + 20;

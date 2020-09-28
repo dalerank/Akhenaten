@@ -556,12 +556,12 @@ void building_construction_place(void) // confirm final placement
         city_warning_show(WARNING_OUT_OF_MONEY);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && city_resource_count(RESOURCE_MARBLE) < 2) {
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && city_resource_count(RESOURCE_MARBLE_C3) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
         return;
     }
-    if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE) < 2) {
+    if (type == BUILDING_ORACLE && city_resource_count(RESOURCE_MARBLE_C3) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
         return;
@@ -677,7 +677,7 @@ void building_construction_place(void) // confirm final placement
     placement_cost *= length;
 
     if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE)
-        building_warehouses_remove_resource(RESOURCE_MARBLE, 2);
+        building_warehouses_remove_resource(RESOURCE_MARBLE_C3, 2);
     if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
         data.sub_type++;
         if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS)

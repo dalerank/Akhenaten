@@ -85,7 +85,7 @@ int building_market_get_storage_destination(building *market)
         resources[i].num_buildings = 0;
         resources[i].distance = 40;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
@@ -111,12 +111,12 @@ int building_market_get_storage_destination(building *market)
             update_food_resource(&resources[INVENTORY_WHEAT], RESOURCE_WHEAT, b, distance);
             update_food_resource(&resources[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b, distance);
             update_food_resource(&resources[INVENTORY_FRUIT], RESOURCE_FRUIT, b, distance);
-            update_food_resource(&resources[INVENTORY_MEAT], RESOURCE_MEAT, b, distance);
+            update_food_resource(&resources[INVENTORY_MEAT], RESOURCE_MEAT_C3, b, distance);
         } else if (b->type == BUILDING_WAREHOUSE) {
             // goods
             update_good_resource(&resources[INVENTORY_WINE], RESOURCE_WINE, b, distance);
-            update_good_resource(&resources[INVENTORY_OIL], RESOURCE_OIL, b, distance);
-            update_good_resource(&resources[INVENTORY_POTTERY], RESOURCE_POTTERY, b, distance);
+            update_good_resource(&resources[INVENTORY_OIL], RESOURCE_OIL_C3, b, distance);
+            update_good_resource(&resources[INVENTORY_POTTERY], RESOURCE_POTTERY_C3, b, distance);
             update_good_resource(&resources[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b, distance);
         }
     }

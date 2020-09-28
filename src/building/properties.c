@@ -157,7 +157,7 @@ static building_properties properties[2][400] = {
                 {0, 0, 0, 0},
         {1, 0, 112, 0}, // road
                 {1, 0, 24, 26}, // wall (unused)
-        {1, 0, 0, 0}, // ??????? water lift ???????
+        {2, 1, 25, 0}, // ??????? water lift ???????
         {1, 0, 19, 2},
                 {0, 0, 0, 0}, // clear land
         {1, 0, 0, 0},

@@ -28,7 +28,7 @@ void building_storage_reset_building_ids(void)
         data.storages[i].building_id = 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED)
             continue;
@@ -137,7 +137,7 @@ void building_storage_cycle_partial_resource_state(int storage_id, int resource_
 }
 void building_storage_accept_none(int storage_id)
 {
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         data.storages[storage_id].storage.resource_state[r] = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
     }
 }
@@ -149,7 +149,7 @@ void building_storage_save_state(buffer *buf)
         buf->write_i32(data.storages[i].building_id);
         buf->write_u8((uint8_t) data.storages[i].in_use);
         buf->write_u8((uint8_t) data.storages[i].storage.empty_all);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             buf->write_u8(data.storages[i].storage.resource_state[r]);
         }
         for (int r = 0; r < 6; r++) {
@@ -165,7 +165,7 @@ void building_storage_load_state(buffer *buf)
         data.storages[i].building_id = buf->read_i32();
         data.storages[i].in_use = buf->read_u8();
         data.storages[i].storage.empty_all = buf->read_u8();
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             data.storages[i].storage.resource_state[r] = buf->read_u8();
         }
         buf->skip(6); // unused resource states

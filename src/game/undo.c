@@ -109,7 +109,7 @@ int game_undo_start_build(int type)
     data.building_cost = 0;
     data.type = type;
     clear_buildings();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNDO) {
             data.available = 0;
@@ -251,7 +251,7 @@ void game_undo_perform(void)
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
                 if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
-                    building_warehouses_add_resource(RESOURCE_MARBLE, 2);
+                    building_warehouses_add_resource(RESOURCE_MARBLE_C3, 2);
 
                 b->state = BUILDING_STATE_UNDO;
             }

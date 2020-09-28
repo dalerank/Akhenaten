@@ -335,7 +335,10 @@ static void draw_figures(int x, int y, int grid_offset)
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
 
         }
-        figure_id = f->next_figure_id_on_same_tile;
+        if (figure_id != f->next_figure_id_on_same_tile)
+            figure_id = f->next_figure_id_on_same_tile;
+        else
+            figure_id = 0;
     }
 }
 
@@ -486,7 +489,10 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
         if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks)
             city_draw_figure(f, x, y, 0);
 
-        figure_id = f->next_figure_id_on_same_tile;
+        if (figure_id != f->next_figure_id_on_same_tile)
+            figure_id = f->next_figure_id_on_same_tile;
+        else
+            figure_id = 0;
     }
 }
 

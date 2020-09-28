@@ -109,7 +109,7 @@ void window_building_draw_house(building_info_context *c)
         image_draw(resource_image + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 234);
         text_draw_number(b->data.house.inventory[INVENTORY_FRUIT], '@', " ", c->x_offset + 284, c->y_offset + 238, FONT_SMALL_BLACK);
         // meat/fish
-        image_draw(resource_image + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+        image_draw(resource_image + RESOURCE_MEAT_C3 + resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
             c->x_offset + 362, c->y_offset + 234);
         text_draw_number(b->data.house.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 394, c->y_offset + 238, FONT_SMALL_BLACK);
     } else {
@@ -118,13 +118,13 @@ void window_building_draw_house(building_info_context *c)
     }
     // goods inventory
     // pottery
-    image_draw(resource_image + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_POTTERY_C3, c->x_offset + 32, c->y_offset + 274);
     text_draw_number(b->data.house.inventory[INVENTORY_POTTERY], '@', " ", c->x_offset + 64, c->y_offset + 278, FONT_SMALL_BLACK);
     // furniture
     image_draw(resource_image + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 274);
     text_draw_number(b->data.house.inventory[INVENTORY_FURNITURE], '@', " ", c->x_offset + 174, c->y_offset + 278, FONT_SMALL_BLACK);
     // oil
-    image_draw(resource_image + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 274);
+    image_draw(resource_image + RESOURCE_OIL_C3, c->x_offset + 252, c->y_offset + 274);
     text_draw_number(b->data.house.inventory[INVENTORY_OIL], '@', " ", c->x_offset + 284, c->y_offset + 278, FONT_SMALL_BLACK);
     // wine
     image_draw(resource_image + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 274);

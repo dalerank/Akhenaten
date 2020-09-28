@@ -23,7 +23,10 @@ int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
             if (result)
                 return result;
 
+            if (figure_id != f->next_figure_id_on_same_tile)
             figure_id = f->next_figure_id_on_same_tile;
+        else
+            figure_id = 0;
         }
     }
     return 0;
@@ -46,6 +49,9 @@ void map_figure_add(figure *f)
             f->figures_on_same_tile_index = 20;
 
         next->next_figure_id_on_same_tile = f->id;
+        if (next->id == next->next_figure_id_on_same_tile)
+            next->next_figure_id_on_same_tile = 0;
+
     } else {
         map_grid_set(&figures, f->grid_offset, f->id);
     }
@@ -76,12 +82,14 @@ void map_figure_delete(figure *f)
 
     if (map_grid_get(&figures, f->grid_offset) == f->id)
         map_grid_set(&figures, f->grid_offset, f->next_figure_id_on_same_tile);
- else {
+    else {
         figure *prev = figure_get(map_grid_get(&figures, f->grid_offset));
         while (prev->id && prev->next_figure_id_on_same_tile != f->id) {
             prev = figure_get(prev->next_figure_id_on_same_tile);
         }
         prev->next_figure_id_on_same_tile = f->next_figure_id_on_same_tile;
+        if (prev->id == prev->next_figure_id_on_same_tile)
+            prev->next_figure_id_on_same_tile = 0;
     }
     f->next_figure_id_on_same_tile = 0;
 }

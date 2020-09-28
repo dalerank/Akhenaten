@@ -513,18 +513,23 @@ static void init_savegame_data(int expanded)
 
                 state->scenario_data.win_criteria = create_savegame_piece(60, 0, "scenario_data.win_criteria");
 
-        // 52 bytes     FF FF FF FF (non cyclic) ???
+        // 4 bytes     FF FF FF FF ???
+        state->junk3 = create_savegame_piece(4, 0, "junk3"); // unknown bytes
+
+                state->city_entry_exit_xy = create_savegame_piece(8, 0, "city_entry_exit_xy");
+
+        // 40 bytes     FF FF FF FF (non cyclic?) ???
         // 4  bytes     B8 0B 00 00 ???
         // 12 bytes     0A 00 00 00 (3x4) ???
         // 12 bytes     CB 32 00 00 (3x4) ??? (n, n+2, n+1497)
         // 14 bytes     01 00 00 00 ???
         // 34 bytes     FF FF 2C 00 (....non cyclic?) ???
-        state->junk3 = create_savegame_piece(52+4+12+12+14+34, 0, "junk3"); // unknown bytes
+        state->junk4 = create_savegame_piece(40+4+12+12+14+34, 0, "junk4"); // unknown bytes
 
                 state->scenario_data.allowed_builds = create_savegame_piece(228, 0, "scenario_data.allowed_builds");
 
         // 24 bytes     FF FF FF FF (cyclic) ???
-        state->junk4 = create_savegame_piece(24, 0, "junk4"); // unknown bytes
+        state->junk5 = create_savegame_piece(24, 0, "junk5"); // unknown bytes
 
                 state->scenario_data.monuments = create_savegame_piece(10, 0, "scenario_data.monuments"); // 4 bytes + 3 x 2-byte
 
@@ -533,7 +538,7 @@ static void init_savegame_data(int expanded)
         // 4 bytes      00 00 00 00 ???
         // 4 bytes      00 00 00 00 ???
         // 4 bytes      00 00 00 00 ???
-        state->junk5 = create_savegame_piece(290+4+4+4, 0, "junk5"); // unknown bytes
+        state->junk6 = create_savegame_piece(290+4+4+4, 0, "junk6"); // unknown bytes
 
                 /////////////////////
 
@@ -572,7 +577,7 @@ static void init_savegame_data(int expanded)
 
         // 24 bytes     00 00 00 00 ???
         // 39200 bytes  00 00 00 00 ??? 200 x 196-byte chunk
-        state->junk6 = create_savegame_piece(39224, 0, "junk6"); // 39224 bytes
+        state->junk7 = create_savegame_piece(39224, 0, "junk7"); // unknown bytes
 
                     state->trade_route_limit = create_savegame_piece(2880, 1, "trade_route_limit"); // ok
                     state->trade_route_traded = create_savegame_piece(2880, 1, "trade_route_traded"); // ok
@@ -584,32 +589,30 @@ static void init_savegame_data(int expanded)
 //                state->enemy_armies = create_savegame_piece(900, 0, "");
 
         // 12 bytes     00 00 00 00 ???
-        state->junk7 = create_savegame_piece(12, 0, "junk7"); // 12 bytes
-
-                state->city_entry_exit_xy = create_savegame_piece(16, 0, "city_entry_exit_xy"); // ok ?????
+        // 16 bytes     00 00 00 00 ???
+        // 22 bytes     00 00 00 00 ???
+        state->junk8 = create_savegame_piece(12+16+22, 0, "junk8"); // unknown bytes
 
 //                state->last_invasion_id = create_savegame_piece(2, 0, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, 0, "");
 
-        // 22 bytes     00 00 00 00 ???
-        state->junk8 = create_savegame_piece(22, 0, "junk8"); // 22 bytes
-
                 state->scenario_name = create_savegame_piece(65, 0, "scenario_name"); // ok
                 state->bookmarks = create_savegame_piece(32, 0, "bookmarks"); // ok
                 state->tutorial_part3 = create_savegame_piece(4, 0, "tutorial_part3"); // ok ????
-                state->city_entry_exit_grid_offset = create_savegame_piece(8, 0, "city_entry_exit_grid_offset"); // ok ????
+//                state->city_entry_exit_grid_offset = create_savegame_piece(8, 0, "city_entry_exit_grid_offset"); // ok ????
 
 //                state->end_marker = create_savegame_piece(284, 0, ""); // 71x 4-bytes emptiness 150684
 
+        // 8 bytes      00 00 00 00 ???
         // 52370 bytes  00 00 00 00 ???
         // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
         // 38 bytes     2F 01 00 00 ???
         // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
         // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
         if (expanded)
-            state->junk9 = create_savegame_piece(52370+18600+38+13416+8200, 0, "junk9");
+            state->junk9 = create_savegame_piece(8+52370+18600+38+13416+8200, 0, "junk9");
         else
-            state->junk9 = create_savegame_piece(52370+18600+38+13216+8200, 0, "junk9");
+            state->junk9 = create_savegame_piece(8+52370+18600+38+13216+8200, 0, "junk9");
 
         state->junk10 = create_savegame_piece(1280, 1, "junk10"); // unknown compressed data
         if (expanded)
@@ -915,7 +918,7 @@ static int savegame_read_from_file(FILE *fp)
 
         auto offs = ftell(fp);
 
-        if (i == 76)
+        if (i == 49)
             int a = 24;
 
 

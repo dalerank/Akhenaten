@@ -416,22 +416,20 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_id_from_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, image_id_from_group(98+66+99999));
+            add_building(b, image_id_from_group(GROUP_BUILDING_ROADBLOCK));
 //            add_building(b, mods_get_group_id("Keriew", "Roadblocks"));
-//            map_terrain_add_roadblock_road(b->x, b->y, orientation);
-//            map_tiles_update_area_roads(b->x, b->y, 5);
-//            map_tiles_update_all_plazas();
+            map_terrain_add_roadblock_road(b->x, b->y, orientation);
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            map_tiles_update_all_plazas();
             break;
         // ships
         case BUILDING_SHIPYARD:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2,
-                                   image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
             break;
         case BUILDING_WHARF:
             b->data.industry.orientation = waterside_orientation_abs;
-            map_water_add_building(b->id, b->x, b->y, 2,
-                                   image_id_from_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
+            map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
             break;
         case BUILDING_DOCK:
             city_buildings_add_dock();
@@ -450,8 +448,7 @@ static void add_to_map(int type, building *b, int size,
         // defense
         case BUILDING_TOWER:
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
-            map_building_tiles_add(b->id, b->x, b->y, size, image_id_from_group(GROUP_BUILDING_TOWER),
-                TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
+            map_building_tiles_add(b->id, b->x, b->y, size, image_id_from_group(GROUP_BUILDING_TOWER), TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             map_tiles_update_area_walls(b->x, b->y, 5);
             break;
         case BUILDING_GATEHOUSE_PH:
@@ -509,6 +506,13 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
             city_buildings_add_distribution_center(b);
             break;
+        case BUILDING_DRAGGABLE_RESERVOIR:
+        case BUILDING_RESERVOIR:
+            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                b->data.industry.orientation = waterside_orientation_abs;
+                map_water_add_building(b->id, b->x, b->y, 2, image_id_from_group(GROUP_BUILDING_RESERVOIR) + waterside_orientation_rel);
+                break;
+            }
         default:
             auto p = building_properties_for_type(type);
             add_building(b, image_id_from_group(p->image_group) + p->image_offset);
@@ -568,7 +572,7 @@ int building_construction_place_building(int type, int x, int y)
         }
     }
     int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
-    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
+    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF || type == BUILDING_WATER_LIFT && GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (map_water_determine_orientation_size2(
                 x, y, 0, &waterside_orientation_abs, &waterside_orientation_rel)) {
             city_warning_show(WARNING_SHORE_NEEDED);

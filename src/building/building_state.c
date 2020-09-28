@@ -1,6 +1,7 @@
 #include "building_state.h"
 
 #include "game/resource.h"
+#include "core/game_environment.h"
 
 static int is_industry_type(const building *b)
 {
@@ -58,7 +59,7 @@ static void write_type_data(buffer *buf, const building *b)
         }
     } else if (b->type == BUILDING_GRANARY) {
         buf->write_i16(0);
-        for (int i = 0; i < RESOURCE_MAX; i++) {
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
             buf->write_i16(b->data.granary.resource_stored[i]);
         }
         buf->write_i32(0);
@@ -222,7 +223,7 @@ static void read_type_data(buffer *buf, building *b)
         buf->skip(9);
     } else if (b->type == BUILDING_GRANARY) {
         buf->skip(2);
-        for (int i = 0; i < RESOURCE_MAX; i++) {
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
             b->data.granary.resource_stored[i] = buf->read_i16();
         }
         buf->skip(8);
@@ -259,10 +260,11 @@ static void read_type_data(buffer *buf, building *b)
     }
 }
 
-#include "core/game_environment.h"
+#include <assert.h>
 
 void building_state_load_from_buffer(buffer *buf, building *b)
 {
+    int sind = buf->get_offset();
     b->state = buf->read_u8();
     b->faction_id = buf->read_u8();
     b->unknown_value = buf->read_u8();
@@ -314,15 +316,14 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         buf->skip(3);
     b->has_well_access = buf->read_u8();
-    b->num_workers = buf->read_i16();
 
+    b->num_workers = buf->read_i16();
     b->labor_category = buf->read_u8(); // FF
     b->output_resource_id = buf->read_u8();
     b->has_road_access = buf->read_u8();
     b->house_criminal_active = buf->read_u8();
 
     b->damage_risk = buf->read_i16();
-
     b->fire_risk = buf->read_i16();
     b->fire_duration = buf->read_i16();
     b->fire_proof = buf->read_u8();
@@ -333,8 +334,11 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->formation_id = buf->read_i16();
 
     read_type_data(buf, b); // 42 bytes for C3, 102 for PH
+
+    int currind = buf->get_offset() - sind;
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(60);
+        buf->skip(184 - currind);
+
     b->tax_income_or_storage = buf->read_i32();
     b->house_days_without_food = buf->read_u8();
     b->ruin_has_plague = buf->read_u8(); // 6
@@ -342,8 +346,8 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->desirability = buf->read_i8();
     b->is_deleted = buf->read_u8();
     b->is_adjacent_to_water = buf->read_u8();
-    b->storage_id = buf->read_u8(); // 4
 
+    b->storage_id = buf->read_u8();
     b->sentiment.house_happiness = buf->read_i8(); // which union field we use does not matter // 90 for house, 50 for wells
     b->show_on_problem_overlay = buf->read_u8(); // 4
 
@@ -351,4 +355,6 @@ void building_state_load_from_buffer(buffer *buf, building *b)
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         buf->skip(68); // temp for debugging
+
+    assert(buf->get_offset() - sind == 264);
 }

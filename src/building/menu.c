@@ -271,18 +271,18 @@ static void disable_resources(int *enabled, int type)
     disable_raw(enabled, type, BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
     disable_raw(enabled, type, BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
     disable_raw(enabled, type, BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
-    disable_raw(enabled, type, BUILDING_PIG_FARM, RESOURCE_MEAT);
+    disable_raw(enabled, type, BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
     disable_raw(enabled, type, BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
     disable_raw(enabled, type, BUILDING_VINES_FARM, RESOURCE_VINES);
-    disable_raw(enabled, type, BUILDING_CLAY_PIT, RESOURCE_CLAY);
-    disable_raw(enabled, type, BUILDING_TIMBER_YARD, RESOURCE_TIMBER);
+    disable_raw(enabled, type, BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
+    disable_raw(enabled, type, BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
     disable_raw(enabled, type, BUILDING_IRON_MINE, RESOURCE_IRON);
-    disable_raw(enabled, type, BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE);
-    disable_finished(enabled, type, BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
+    disable_raw(enabled, type, BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
+    disable_finished(enabled, type, BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_C3);
     disable_finished(enabled, type, BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
-    disable_finished(enabled, type, BUILDING_OIL_WORKSHOP, RESOURCE_OIL);
+    disable_finished(enabled, type, BUILDING_OIL_WORKSHOP, RESOURCE_OIL_C3);
     disable_finished(enabled, type, BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
-    disable_finished(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS);
+    disable_finished(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_C3);
 }
 
 #include "core/game_environment.h"

@@ -48,7 +48,7 @@ static void mark_well_access(int well_id, int radius)
 void map_water_supply_update_houses(void)
 {
     building_list_small_clear();
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
@@ -162,7 +162,7 @@ void map_water_supply_update_reservoir_fountain(void)
     set_all_aqueducts_to_no_water();
     building_list_large_clear(1);
     // mark reservoirs next to water
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
@@ -199,7 +199,7 @@ void map_water_supply_update_reservoir_fountain(void)
 
     }
     // fountains
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN)
             continue;

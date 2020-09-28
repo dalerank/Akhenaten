@@ -262,9 +262,8 @@ static void init(int grid_offset)
     if (!context.building_id && map_sprite_bridge_at(grid_offset) > 0) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER))
             context.terrain_type = TERRAIN_INFO_BRIDGE;
- else {
+        else
             context.terrain_type = TERRAIN_INFO_EMPTY;
-        }
     } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD))
             context.terrain_type = TERRAIN_INFO_PLAZA;
@@ -274,31 +273,30 @@ static void init(int grid_offset)
 
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE))
         context.terrain_type = TERRAIN_INFO_TREE;
- else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
+    else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
         if (grid_offset == city_map_entry_flag()->grid_offset)
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
- else if (grid_offset == city_map_exit_flag()->grid_offset)
+        else if (grid_offset == city_map_exit_flag()->grid_offset)
             context.terrain_type = TERRAIN_INFO_EXIT_FLAG;
- else {
+        else
             context.terrain_type = TERRAIN_INFO_ROCK;
-        }
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_WATER|TERRAIN_BUILDING)) == TERRAIN_WATER)
         context.terrain_type = TERRAIN_INFO_WATER;
- else if (map_terrain_is(grid_offset, TERRAIN_SHRUB))
+    else if (map_terrain_is(grid_offset, TERRAIN_SHRUB))
         context.terrain_type = TERRAIN_INFO_SHRUB;
- else if (map_terrain_is(grid_offset, TERRAIN_GARDEN))
+    else if (map_terrain_is(grid_offset, TERRAIN_GARDEN))
         context.terrain_type = TERRAIN_INFO_GARDEN;
- else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD|TERRAIN_BUILDING)) == TERRAIN_ROAD)
+    else if ((map_terrain_get(grid_offset) & (TERRAIN_ROAD|TERRAIN_BUILDING)) == TERRAIN_ROAD)
         context.terrain_type = TERRAIN_INFO_ROAD;
- else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+    else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
         context.terrain_type = TERRAIN_INFO_AQUEDUCT;
- else if (map_terrain_is(grid_offset, TERRAIN_RUBBLE))
+    else if (map_terrain_is(grid_offset, TERRAIN_RUBBLE))
         context.terrain_type = TERRAIN_INFO_RUBBLE;
- else if (map_terrain_is(grid_offset, TERRAIN_WALL))
+    else if (map_terrain_is(grid_offset, TERRAIN_WALL))
         context.terrain_type = TERRAIN_INFO_WALL;
- else if (!context.building_id)
+    else if (!context.building_id)
         context.terrain_type = TERRAIN_INFO_EMPTY;
- else {
+    else {
         building *b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
         context.worker_percentage = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -388,7 +386,10 @@ static void init(int grid_offset)
                         break;
                 }
             }
+            if (figure_id != f->next_figure_id_on_same_tile)
             figure_id = f->next_figure_id_on_same_tile;
+        else
+            figure_id = 0;
         }
     }
     // check for legion figures

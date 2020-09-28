@@ -1,6 +1,7 @@
 #include "figure/trader.h"
 
 #include "empire/trade_prices.h"
+#include "core/game_environment.h"
 
 #include <string.h>
 
@@ -9,11 +10,11 @@
 struct trader {
     int32_t bought_amount;
     int32_t bought_value;
-    uint8_t bought_resources[RESOURCE_MAX];
+    uint8_t bought_resources[36];
 
     int32_t sold_amount;
     int32_t sold_value;
-    uint8_t sold_resources[RESOURCE_MAX];
+    uint8_t sold_resources[36];
 };
 
 static struct {
@@ -77,10 +78,10 @@ void traders_save_state(buffer *buf)
         struct trader *t = &data.traders[i];
         buf->write_i32(t->bought_amount);
         buf->write_i32(t->sold_amount);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             buf->write_u8(t->bought_resources[r]);
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             buf->write_u8(t->sold_resources[r]);
         }
         buf->write_i32(t->bought_value);
@@ -95,10 +96,10 @@ void traders_load_state(buffer *buf)
         struct trader *t = &data.traders[i];
         t->bought_amount = buf->read_i32();
         t->sold_amount = buf->read_i32();
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             t->bought_resources[r] = buf->read_u8();
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             t->sold_resources[r] = buf->read_u8();
         }
         t->bought_value = buf->read_i32();

@@ -1132,28 +1132,26 @@ void map_tiles_add_entry_exit_flags(void)
     map_point entry_point = scenario_map_entry();
     if (entry_point.x == 0)
         entry_orientation = DIR_2_RIGHT;
- else if (entry_point.x == map_data.width - 1)
+    else if (entry_point.x == map_data.width - 1)
         entry_orientation = DIR_6_LEFT;
- else if (entry_point.y == 0)
+    else if (entry_point.y == 0)
         entry_orientation = DIR_0_TOP;
- else if (entry_point.y == map_data.height - 1)
+    else if (entry_point.y == map_data.height - 1)
         entry_orientation = DIR_4_BOTTOM;
- else {
+    else
         entry_orientation = -1;
-    }
     int exit_orientation;
     map_point exit_point = scenario_map_exit();
     if (exit_point.x == 0)
         exit_orientation = DIR_2_RIGHT;
- else if (exit_point.x == map_data.width - 1)
+     else if (exit_point.x == map_data.width - 1)
         exit_orientation = DIR_6_LEFT;
- else if (exit_point.y == 0)
+    else if (exit_point.y == 0)
         exit_orientation = DIR_0_TOP;
- else if (exit_point.y == map_data.height - 1)
+    else if (exit_point.y == map_data.height - 1)
         exit_orientation = DIR_4_BOTTOM;
- else {
+    else
         exit_orientation = -1;
-    }
     if (entry_orientation >= 0) {
         int grid_offset = map_grid_offset(entry_point.x, entry_point.y);
         int x_tile, y_tile;

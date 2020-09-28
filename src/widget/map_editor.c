@@ -85,7 +85,10 @@ static void draw_flags(int x, int y, int grid_offset)
         if (!f->is_ghost)
             city_draw_figure(f, x, y, 0);
 
-        figure_id = f->next_figure_id_on_same_tile;
+        if (figure_id != f->next_figure_id_on_same_tile)
+            figure_id = f->next_figure_id_on_same_tile;
+        else
+            figure_id = 0;
     }
 }
 

@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/finance.h"
+#include "core/game_environment.h"
 
 void building_government_distribute_treasury(void)
 {
@@ -22,7 +23,7 @@ void building_government_distribute_treasury(void)
         remainder = 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->house_size)
             continue;

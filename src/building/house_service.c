@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/culture.h"
+#include "core/game_environment.h"
 
 static void decay(unsigned char *value)
 {
@@ -14,7 +15,7 @@ static void decay(unsigned char *value)
 
 void house_service_decay_culture(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size)
             continue;
@@ -42,7 +43,7 @@ void house_service_decay_culture(void)
 
 void house_service_decay_tax_collector(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_tax_coverage)
             b->house_tax_coverage--;
@@ -52,7 +53,7 @@ void house_service_decay_tax_collector(void)
 
 void house_service_decay_houses_covered(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
             if (b->houses_covered <= 1)
@@ -67,7 +68,7 @@ void house_service_decay_houses_covered(void)
 void house_service_calculate_culture_aggregates(void)
 {
     int base_entertainment = city_culture_coverage_average_entertainment() / 5;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size)
             continue;

@@ -7,6 +7,7 @@
 #include "empire/type.h"
 #include "game/animation.h"
 #include "scenario/empire.h"
+#include "core/game_environment.h"
 
 #define MAX_OBJECTS 200
 
@@ -125,7 +126,7 @@ void empire_object_init_cities(void)
         city->cost_to_open = obj->trade_route_cost;
         city->is_sea_trade = is_sea_trade_route(obj->obj.trade_route_id);
 
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
             city->sells_resource[resource] = 0;
             city->buys_resource[resource] = 0;
             if (city->type == EMPIRE_CITY_DISTANT_ROMAN

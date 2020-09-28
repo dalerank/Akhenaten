@@ -62,6 +62,10 @@ bool buffer::at_end()
     check_initialized();
     return index >= datasize;
 }
+int buffer::get_offset()
+{
+    return index;
+}
 void buffer::set_offset(size_t offset)
 {
     check_initialized();

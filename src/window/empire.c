@@ -28,6 +28,7 @@
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
 #include "window/trade_opened.h"
+#include "core/game_environment.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -48,21 +49,21 @@ static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
 static generic_button generic_button_trade_resource[] = {
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WHEAT, 0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WHEAT,       0},
     {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VEGETABLES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FRUIT , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OLIVES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VINES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MEAT, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WINE , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OIL , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_IRON , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_TIMBER, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_CLAY, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MARBLE, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WEAPONS, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FURNITURE, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_POTTERY, 0}
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FRUIT ,      0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OLIVES ,     0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VINES ,      0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MEAT_C3,     0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WINE ,       0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OIL_C3 ,     0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_IRON ,       0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_TIMBER_C3,   0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_CLAY_C3,     0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MARBLE_C3,   0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WEAPONS_C3,  0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FURNITURE,   0},
+    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_POTTERY_C3, 0}
 };
 static generic_button generic_button_open_trade[] = {
     {30, 56, 440, 26, button_open_trade, button_none, 0, 0}
@@ -159,7 +160,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // city sells
         lang_text_draw(47, 10, x_offset + 44, y_offset + 40, FONT_NORMAL_GREEN);
         int index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
@@ -177,7 +178,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // city buys
         lang_text_draw(47, 9, x_offset + 44, y_offset + 71, FONT_NORMAL_GREEN);
         index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
@@ -197,7 +198,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         }
     } else { // trade is closed
         int index = lang_text_draw(47, 5, x_offset + 50, y_offset + 42, FONT_NORMAL_GREEN);
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
@@ -206,7 +207,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             index += 32;
         }
         index += lang_text_draw(47, 4, x_offset + index + 100, y_offset + 42, FONT_NORMAL_GREEN);
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
@@ -502,7 +503,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
                     int index_buy = 0;
 
                     // we only want to handle resource buttons that the selected city trades
-                    for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+                    for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 104 * index_sell, y_offset + 31,
                                 generic_button_trade_resource + resource - 1, 1, &button_id);
@@ -557,7 +558,7 @@ static int get_tooltip_resource(tooltip_context *c)
     int y_offset = data.y_max - 113;
     
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26))
                 return r;
@@ -566,7 +567,7 @@ static int get_tooltip_resource(tooltip_context *c)
         }
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
-    for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r <= RESOURCE_MAX[GAME_ENV]; r++) {
         if (empire_object_city_buys_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26))
                 return r;

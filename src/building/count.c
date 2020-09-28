@@ -4,6 +4,7 @@
 #include "city/buildings.h"
 #include "city/health.h"
 #include "figure/figure.h"
+#include "core/game_environment.h"
 
 #include <string.h>
 
@@ -14,7 +15,7 @@ struct record {
 
 static struct {
     struct record buildings[int_MAX];
-    struct record industry[RESOURCE_MAX];
+    struct record industry[36];
 } data;
 
 static void clear_counters(void)
@@ -52,7 +53,7 @@ void building_count_update(void)
     city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || b->house_size)
             continue;
@@ -141,34 +142,34 @@ void building_count_update(void)
                 increase_industry_count(RESOURCE_VINES, b->num_workers > 0);
                 break;
             case BUILDING_PIG_FARM:
-                increase_industry_count(RESOURCE_MEAT, b->num_workers > 0);
+                increase_industry_count(RESOURCE_MEAT_C3, b->num_workers > 0);
                 break;
             case BUILDING_MARBLE_QUARRY:
-                increase_industry_count(RESOURCE_MARBLE, b->num_workers > 0);
+                increase_industry_count(RESOURCE_MARBLE_C3, b->num_workers > 0);
                 break;
             case BUILDING_IRON_MINE:
                 increase_industry_count(RESOURCE_IRON, b->num_workers > 0);
                 break;
             case BUILDING_TIMBER_YARD:
-                increase_industry_count(RESOURCE_TIMBER, b->num_workers > 0);
+                increase_industry_count(RESOURCE_TIMBER_C3, b->num_workers > 0);
                 break;
             case BUILDING_CLAY_PIT:
-                increase_industry_count(RESOURCE_CLAY, b->num_workers > 0);
+                increase_industry_count(RESOURCE_CLAY_C3, b->num_workers > 0);
                 break;
             case BUILDING_WINE_WORKSHOP:
                 increase_industry_count(RESOURCE_WINE, b->num_workers > 0);
                 break;
             case BUILDING_OIL_WORKSHOP:
-                increase_industry_count(RESOURCE_OIL, b->num_workers > 0);
+                increase_industry_count(RESOURCE_OIL_C3, b->num_workers > 0);
                 break;
             case BUILDING_WEAPONS_WORKSHOP:
-                increase_industry_count(RESOURCE_WEAPONS, b->num_workers > 0);
+                increase_industry_count(RESOURCE_WEAPONS_C3, b->num_workers > 0);
                 break;
             case BUILDING_FURNITURE_WORKSHOP:
                 increase_industry_count(RESOURCE_FURNITURE, b->num_workers > 0);
                 break;
             case BUILDING_POTTERY_WORKSHOP:
-                increase_industry_count(RESOURCE_POTTERY, b->num_workers > 0);
+                increase_industry_count(RESOURCE_POTTERY_C3, b->num_workers > 0);
                 break;
 
             // water-side
@@ -226,10 +227,10 @@ int building_count_industry_total(int resource)
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
 {
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         industry->write_i32(data.industry[i].total);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         industry->write_i32(data.industry[i].active);
     }
 
@@ -307,9 +308,9 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support)
 {
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++)
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         data.industry[i].total = industry->read_i32();
-    for (int i = 0; i < RESOURCE_MAX; i++)
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         data.industry[i].active = industry->read_i32();
 
     // culture 1

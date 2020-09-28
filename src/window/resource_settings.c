@@ -106,7 +106,7 @@ static void draw_foreground(void)
             }
         }
     }
-    else if (data.resource != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
+    else if (data.resource != RESOURCE_MEAT_C3 || !scenario_building_allowed(BUILDING_WHARF)) {
         // we cannot produce this good
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK);
     }

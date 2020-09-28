@@ -32,7 +32,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id) {
             resource = RESOURCE_FRUIT;
             break;
         case INVENTORY_MEAT:
-            resource = RESOURCE_MEAT;
+            resource = RESOURCE_MEAT_C3;
             break;
         default:
             return 0;
@@ -80,13 +80,13 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id) {
     int resource;
     switch (f->collecting_item_id) {
         case INVENTORY_POTTERY:
-            resource = RESOURCE_POTTERY;
+            resource = RESOURCE_POTTERY_C3;
             break;
         case INVENTORY_FURNITURE:
             resource = RESOURCE_FURNITURE;
             break;
         case INVENTORY_OIL:
-            resource = RESOURCE_OIL;
+            resource = RESOURCE_OIL_C3;
             break;
         case INVENTORY_WINE:
             resource = RESOURCE_WINE;

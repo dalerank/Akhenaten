@@ -5,7 +5,7 @@
 
 int resource_image_offset(int resource, int type)
 {
-    if (resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+    if (resource == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF)) {
         switch (type) {
             case RESOURCE_IMAGE_STORAGE: return 40;
             case RESOURCE_IMAGE_CART: return 648;
@@ -21,7 +21,7 @@ int resource_image_offset(int resource, int type)
 int resource_is_food(int resource)
 {
     return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
-        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT;
+        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3;
 }
 
 int resource_to_workshop_type(int resource)
@@ -33,9 +33,9 @@ int resource_to_workshop_type(int resource)
             return WORKSHOP_VINES_TO_WINE;
         case RESOURCE_IRON:
             return WORKSHOP_IRON_TO_WEAPONS;
-        case RESOURCE_TIMBER:
+        case RESOURCE_TIMBER_C3:
             return WORKSHOP_TIMBER_TO_FURNITURE;
-        case RESOURCE_CLAY:
+        case RESOURCE_CLAY_C3:
             return WORKSHOP_CLAY_TO_POTTERY;
         default:
             return WORKSHOP_NONE;

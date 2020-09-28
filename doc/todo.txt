@@ -1,14 +1,26 @@
+
 ===== task for today: =====
 
-- fix objectives/tutorial goals/scenario goals
-- fix messages
-- fix UI
-	- menu buttons
-	- goals text
-	- messages
-- wrong tooltips
 
 
+
+
+===== generic fixes: =====
+
+- messages/text
+  - objectives/tutorial goals/scenario goals
+  - buildings panel text
+  - figures text
+  - panel tooltips
+- UI
+	- messages crashing
+
+
+
+
+
+
+====== crashes??? ======
 
 19958 15543
 

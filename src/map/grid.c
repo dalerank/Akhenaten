@@ -284,7 +284,7 @@ void map_grid_load_state(grid_xx *grid, buffer *buf)
     return;
 }
 
-void map_data_init(int width, int height, int start_offset, int border_size)
+void map_grid_data_init(int width, int height, int start_offset, int border_size)
 {
     if (0) {
         map_data.width = grid_size[GAME_ENV];

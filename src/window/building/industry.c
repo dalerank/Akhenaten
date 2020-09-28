@@ -78,7 +78,7 @@ void window_building_draw_vines_farm(building_info_context *c)
 
 void window_building_draw_pig_farm(building_info_context *c)
 {
-    draw_farm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT);
+    draw_farm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT_C3);
 }
 
 static void draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
@@ -121,7 +121,7 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
 
 void window_building_draw_marble_quarry(building_info_context *c)
 {
-    draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE);
+    draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE_C3);
 }
 
 void window_building_draw_iron_mine(building_info_context *c)
@@ -131,12 +131,12 @@ void window_building_draw_iron_mine(building_info_context *c)
 
 void window_building_draw_timber_yard(building_info_context *c)
 {
-    draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER);
+    draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER_C3);
 }
 
 void window_building_draw_clay_pit(building_info_context *c)
 {
-    draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);
+    draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY_C3);
 }
 
 static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource, int input_resource)
@@ -193,22 +193,22 @@ void window_building_draw_wine_workshop(building_info_context *c)
 
 void window_building_draw_oil_workshop(building_info_context *c)
 {
-    draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, RESOURCE_OIL, RESOURCE_OLIVES);
+    draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, RESOURCE_OIL_C3, RESOURCE_OLIVES);
 }
 
 void window_building_draw_weapons_workshop(building_info_context *c)
 {
-    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, RESOURCE_WEAPONS, RESOURCE_IRON);
+    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, RESOURCE_WEAPONS_C3, RESOURCE_IRON);
 }
 
 void window_building_draw_furniture_workshop(building_info_context *c)
 {
-    draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, RESOURCE_FURNITURE, RESOURCE_TIMBER);
+    draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, RESOURCE_FURNITURE, RESOURCE_TIMBER_C3);
 }
 
 void window_building_draw_pottery_workshop(building_info_context *c)
 {
-    draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY, RESOURCE_CLAY);
+    draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY_C3, RESOURCE_CLAY_C3);
 }
 
 void window_building_draw_shipyard(building_info_context *c)
@@ -244,8 +244,8 @@ void window_building_draw_wharf(building_info_context *c)
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-               resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT_C3 +
+               resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
         c->x_offset + 10, c->y_offset + 10);
 
     building *b = building_get(c->building_id);

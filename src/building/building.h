@@ -4,7 +4,11 @@
 #include "building/type.h"
 #include "core/buffer.h"
 
-#define MAX_BUILDINGS 10000
+//#define MAX_BUILDINGS[GAME_ENV] 10000
+static const int MAX_BUILDINGS[2] = {
+        2000,
+        4000
+};
 
 typedef struct {
     int id;

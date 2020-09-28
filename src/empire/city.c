@@ -10,6 +10,7 @@
 #include "empire/type.h"
 #include "figuretype/trader.h"
 #include "scenario/map.h"
+#include "core/game_environment.h"
 
 #include <string.h>
 
@@ -89,15 +90,15 @@ static int can_produce_resource(int resource)
 static int get_raw_resource(int resource)
 {
     switch (resource) {
-        case RESOURCE_POTTERY:
-            return RESOURCE_CLAY;
+        case RESOURCE_POTTERY_C3:
+            return RESOURCE_CLAY_C3;
         case RESOURCE_FURNITURE:
-            return RESOURCE_TIMBER;
-        case RESOURCE_OIL:
+            return RESOURCE_TIMBER_C3;
+        case RESOURCE_OIL_C3:
             return RESOURCE_OLIVES;
         case RESOURCE_WINE:
             return RESOURCE_VINES;
-        case RESOURCE_WEAPONS:
+        case RESOURCE_WEAPONS_C3:
             return RESOURCE_IRON;
         default:
             return resource;
@@ -212,7 +213,7 @@ static int generate_trader(int city_id, empire_city *city)
 {
     int max_traders = 0;
     int num_resources = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         if (city->buys_resource[r] || city->sells_resource[r]) {
             ++num_resources;
             switch (trade_route_limit(city->route_id, r)) {
@@ -346,10 +347,10 @@ void empire_city_save_state(buffer *buf)
         buf->write_u8(city->name_id);
         buf->write_u8(city->route_id);
         buf->write_u8(city->is_open);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             buf->write_u8(city->buys_resource[r]);
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             buf->write_u8(city->sells_resource[r]);
         }
         buf->write_i16(city->cost_to_open);
@@ -378,10 +379,10 @@ void empire_city_load_state(buffer *buf)
         city->name_id = buf->read_u8();
         city->route_id = buf->read_u8();
         city->is_open = buf->read_u8();
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             city->buys_resource[r] = buf->read_u8();
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
             city->sells_resource[r] = buf->read_u8();
         }
         city->cost_to_open = buf->read_i16();

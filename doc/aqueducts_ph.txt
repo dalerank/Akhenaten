@@ -60,4 +60,28 @@
 194 inund roads
   194 normalroad right
   195 normalroad left
+  196 normalroad right
+  197 normalroad left
+  198-201 corners (4)
+  202-205 cutoffs (4)
+  206 center
+  207-210 T-shaped (4)
+  211 cross
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
