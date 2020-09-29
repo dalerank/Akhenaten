@@ -16,6 +16,8 @@
   - panel tooltips
 - UI
 	- messages crashing
+- figures
+  - figure icons (bigpeople)
 
 
 

@@ -20,7 +20,6 @@ static struct {
 figure *figure_get(int id) {
     return &data.figures[id];
 }
-
 figure *figure_create(int type, int x, int y, int dir) {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -54,7 +53,6 @@ figure *figure_create(int type, int x, int y, int dir) {
 
     return f;
 }
-
 void figure_delete(figure *f) {
     building *b = building_get(f->building_id);
     switch (f->type) {
@@ -114,15 +112,12 @@ void figure_delete(figure *f) {
 int figure_is_dead(const figure *f) {
     return f->state != FIGURE_STATE_ALIVE || f->action_state == FIGURE_ACTION_149_CORPSE;
 }
-
 int figure_is_enemy(const figure *f) {
     return f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
 }
-
 int figure_is_legion(const figure *f) {
     return f->type >= FIGURE_FORT_JAVELIN && f->type <= FIGURE_FORT_LEGIONARY;
 }
-
 int figure_is_herd(const figure *f) {
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
@@ -134,13 +129,10 @@ void figure_init_scenario(void) {
     }
     data.created_sequence = 0;
 }
-
 void figure_kill_all() {
-    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
         data.figures[i].state = FIGURE_STATE_DEAD;
-    }
 }
-
 static void figure_save(buffer *buf, const figure *f) {
     buf->write_u8(f->alternative_location_index);
     buf->write_u8(f->image_offset);
@@ -239,7 +231,6 @@ static void figure_save(buffer *buf, const figure *f) {
     buf->write_i16(f->attacker_id2);
     buf->write_i16(f->opponent_id);
 }
-
 static void figure_load(buffer *buf, figure *f) {
     f->alternative_location_index = buf->read_u8();
     f->image_offset = buf->read_u8();
@@ -340,7 +331,6 @@ static void figure_load(buffer *buf, figure *f) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         buf->skip(260);
 }
-
 void figure_save_state(buffer *list, buffer *seq) {
     seq->write_i32(data.created_sequence);
 
@@ -348,7 +338,6 @@ void figure_save_state(buffer *list, buffer *seq) {
         figure_save(list, &data.figures[i]);
     }
 }
-
 void figure_load_state(buffer *list, buffer *seq) {
     data.created_sequence = seq->read_i32();
 

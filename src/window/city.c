@@ -160,7 +160,7 @@ static void toggle_pause(void) {
     city_warning_clear_all();
 }
 
-int debug_range_1 = 120;
+int debug_range_1 = 0;
 
 static void handle_hotkeys(const hotkeys *h) {
     if (h->decrease_game_speed)

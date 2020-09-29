@@ -43,7 +43,7 @@ void graphics_reset_dialog(void);
 
 void graphics_set_clip_rectangle(int x, int y, int width, int height);
 void graphics_reset_clip_rectangle(void);
-const clip_info *graphics_get_clip_info(int x, int y, int width, int height);
+const clip_info *graphics_get_clip_info(int x, int y, int width, int height, bool mirrored = false);
 
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer);
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer);

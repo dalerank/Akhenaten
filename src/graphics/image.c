@@ -40,6 +40,10 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
     }
 }
 
+#include "SDL.h"
+
+int lm = 0;
+
 static void draw_modded_footprint(int image_id, int x_offset, int y_offset, color_t color) {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -216,8 +220,7 @@ static void draw_modded_image(const image *img, const color_t *data, int x_offse
         data += clip->clipped_pixels_right;
     }
 }
-static void
-draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type) {
+static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type) {
     if (img->draw.type == IMAGE_TYPE_MOD) {
         draw_modded_image(img, data, x_offset, y_offset, color);
         return;
@@ -283,7 +286,8 @@ draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_off
     }
 }
 static void draw_compressed(const image *img, const color_t *data, int x_offset, int y_offset, int height) {
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
+    bool mirr = (img->offset_mirror != 0);
+    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height, mirr);
     if (!clip->is_visible)
         return;
     int unclipped = clip->clip_x == CLIP_NONE;
@@ -304,11 +308,24 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
                 // number of concrete pixels
                 const color_t *pixels = data;
                 data += b;
-                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
+                color_t *dst;
+                if (mirr)
+                    dst = graphics_get_pixel(x_offset + img->width - x - b, y_offset + y);
+                else
+                    dst = graphics_get_pixel(x_offset + x, y_offset + y);
                 if (unclipped) {
                     x += b;
-                    memcpy(dst, pixels, b * sizeof(color_t));
+                    if (mirr)
+                        for (int px = 0; px < b; px++) {
+                            int pcorr = b - px - 1;
+                            memcpy(dst + px, pixels + pcorr, sizeof(color_t));
+                        }
+                    else
+                        memcpy(dst, pixels, b * sizeof(color_t));
                 } else {
+                    if (mirr)
+                        int a = 3565;
+
                     while (b) {
                         if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right)
                             *dst = *pixels;
@@ -323,8 +340,7 @@ static void draw_compressed(const image *img, const color_t *data, int x_offset,
         }
     }
 }
-static void
-draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible)
         return;
@@ -366,8 +382,7 @@ draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_o
         }
     }
 }
-static void
-draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible)
         return;
@@ -413,8 +428,7 @@ draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_o
         }
     }
 }
-static void
-draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
+static void draw_compressed_blend(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
     if (!clip->is_visible)
         return;

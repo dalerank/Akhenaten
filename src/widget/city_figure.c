@@ -164,7 +164,6 @@ static int tile_progress_to_pixel_offset_x(int direction, int progress) {
             return 0;
     }
 }
-
 static int tile_progress_to_pixel_offset_y(int direction, int progress) {
     if (progress >= 15)
         return 0;
@@ -184,7 +183,6 @@ static int tile_progress_to_pixel_offset_y(int direction, int progress) {
             return 0;
     }
 }
-
 static void tile_progress_to_pixel_offset(int direction, int progress, int *pixel_x, int *pixel_y) {
     *pixel_x = tile_progress_to_pixel_offset_x(direction, progress);
     *pixel_y = tile_progress_to_pixel_offset_y(direction, progress);
@@ -210,8 +208,8 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
             static const int BUSY_ROAD_Y_OFFSETS[] = {
                     0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
             };
-            x_offset += BUSY_ROAD_X_OFFSETS[f->figures_on_same_tile_index];
-            y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_on_same_tile_index];
+//            x_offset += BUSY_ROAD_X_OFFSETS[f->figures_on_same_tile_index];
+//            y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_on_same_tile_index];
         }
     }
 
@@ -223,7 +221,8 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
     *pixel_y += y_offset - img->sprite_offset_y;
 }
 
-static void draw_figure(const figure *f, int x, int y, int highlight) {
+static void draw_figure(const figure *f, int x, int y, int highlight)
+{
     if (f->cart_image_id) {
         switch (f->type) {
             case FIGURE_CART_PUSHER:
@@ -259,13 +258,13 @@ static void draw_figure(const figure *f, int x, int y, int highlight) {
         }
     }
 }
-
-void city_draw_figure(const figure *f, int x, int y, int highlight) {
+void city_draw_figure(const figure *f, int x, int y, int highlight)
+{
     adjust_pixel_offset(f, &x, &y);
     draw_figure(f, x, y, highlight);
 }
-
-void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord) {
+void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord)
+{
     adjust_pixel_offset(f, &x, &y);
     draw_figure(f, x, y, 0);
     coord->x = x;

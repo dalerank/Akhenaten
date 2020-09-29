@@ -1,0 +1,218 @@
+1 arroworange
+33 arrowblack
+65 cart with foods?
+161 cart ded
+169 architect
+265 architect ded
+273 fireman
+369 fireman ded
+377 fireman extinguish
+673 deliveryboy
+768 deliveryboy ded
+777 arrow3
+782 homeless
+878 homeless ded
+886 immigrant
+982 immigrant ded
+990 marketlady
+1086 marketfetch ded
+1094 marketlady
+1190 marketlady ded
+1198 policeman
+1294 policeman ded
+1302 policeman attack
+1374 crocodile
+1534 crocodile swimming
+1622 crocodile drinking
+1710 pharaoh????
+1806 rioters????? guy with torch
+1902 rioters ded
+1910 rioters attack
+1974 thief
+2070 thief ded
+2078 ship
+2110 ship splode
+2121 ship waiting
+2129 reedgatherer
+2225 reedgatherer ded
+2233 reedgatherer gathering
+2353 reedgatherer returning
+2449 taxcollector
+2545 taxcollector ded
+2553 cartpusher
+2649 cartpusher ded
+2657 hunter
+2753 hunter ded
+2761 hunter hunting
+2857 hunter collecting
+2953 hunter attacking while carrying?
+3049 hunter pickup
+3193 hunter returning
+3289 donkey
+3385 donkey ded
+3393 archer
+3489 archer ded
+3497 archer attacking
+3593 teacher
+3689 teacher ded
+3697 waterguy
+3793 waterguy ded
+3801 archer2
+3897 archer2 ded
+3905 archer2 attacking
+4001 infantry
+4097 infantry ded
+4105 infantry attacking
+4169 charioteer
+4265 charioteer ded
+4273 charioteer attacking
+4369 charioteer ???
+4377 physician
+4473 physician ded
+4481 woodcutter
+4577 woodcutter ded
+4585 woodcutter gathering
+4681 woodcutter returning
+4777 cart
+4785 cart grain
+4809 cart grain (more)
+4833 ...
+....you can assume the rest
+5377 cart2 (stone blocks)
+5385 cart copper
+5417 bricklayer 
+5513 bricklayer ded
+5521 bricklayer unloading
+5705 bricklayer waiting
+5777 chariothorses
+5873 seagulls
+5898 seagulls ded??????
+5923 workman
+6019 workman ded
+6027 workman tiling
+6131 workman seeding
+6235 workman gathering
+6355 workman cartpulling
+6451 workman cartpulling2 ???
+6547 merchantship
+6579 merchantship splode
+6590 merchantship returning
+6598 dockwork cartpuller
+6694 dockwork cartpuller
+6702 dancer
+6798 dancer ded
+6806 juggler
+6902 juggler ded
+6910 senetmaster
+7006 senetmaster ded
+7014 fishship
+7046 fishship gathering
+7118 fishship ded
+7129 fishship waiting
+7137 ferry
+7169 ferry ded
+7180 ferry waiting
+7188 warship
+7220 warship ded
+7231 warship waiting
+7239 warship oarsup
+7247 carpenter
+7343 carpenter ded
+7351 bricklayer sculptingdown
+7407 bricklayer sculptingup
+7463 bricklayer ladder??
+7487 stonemason
+7583 stonemason ded
+7591 stonemason sculptingdown
+7647 stonemason sculptingup
+7703 stonemason ladder??
+7727 stonemason waiting
+7823 ostrich
+7919 ostrich ded
+7927 ostrich ??
+7983 ostrich yumgrass
+8047 ostrich waiting
+8111 hyena
+8207 hyena attacking
+8255 hyena ded
+8261 hyena ??
+8309 hyena waiting
+8357 cartload
+8365 cartload stone
+8373 cartload limestone
+8381 cartload granite
+8389 cartload unused12 (marble)
+8397 cartload sandstone
+8405 cartload bricks
+8413 cartload uphill
+8421 cartload uphill stone
+8429 cartload uphill limestone
+8437 cartload uphill granite
+8445 cartload uphill unused12 (marble)
+8453 cartload uphill sandstone
+8461 cartload uphill bricks
+8469 apothecary
+8565 apothecary ded
+8573 dentist
+8669 dentist ded
+8677 ??? (guy with fishcart?)
+8773 ??? ded
+8781 ??? (guy with flail?)
+8877 priestptah
+8973 priestptah ded
+8981 ??? (old magistrate?)
+9077 ??? ded
+9085 musician
+9181 musician ded
+9189 priestseth
+9285 priestseth ded
+9293 mortuary
+9389 mortuary ded
+9397 priestosiris
+9493 priestosiris ded
+9501 ???
+9597 ??? ded
+9605 librarian
+9701 librarian ded
+9709 carpenter hammering
+9805 carpenter unloading
+9901 carpenter ded
+9909 laborseeker
+10005 laborseeker ded
+10013 priestbast
+10109 priestbast ded
+10117 priestra
+10213 priestra ded
+10221 magistrate
+10317 magistrate ded
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

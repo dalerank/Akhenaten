@@ -340,7 +340,9 @@ static void draw_top(int x, int y, int grid_offset) {
     draw_entertainment_spectators(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
-
+int o = 0;
+int d = 7;
+#include "window/city.h"
 static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
@@ -358,6 +360,17 @@ static void draw_figures(int x, int y, int grid_offset) {
         else
             figure_id = 0;
     }
+//    static int o = 0;
+    const int l = 6400;
+    d = debug_range_1;
+    image_draw(886 + 700 + d + 8*(o/l),-10,0);
+    o++;
+    if (o >= 12*l) {
+        o = 0;
+//        d++;
+    }
+//    if (d >= 8)
+//        d = 0;
 }
 
 static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {

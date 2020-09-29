@@ -30,23 +30,18 @@ static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 void figure_image_update(figure *f, int image_base) {
     if (f->action_state == FIGURE_ACTION_149_CORPSE)
         f->image_id = image_base + CORPSE_IMAGE_OFFSETS[f->wait_ticks / 2] + 96;
-    else {
+    else
         f->image_id = image_base + figure_image_direction(f) + 8 * f->image_offset;
-    }
 }
-
 void figure_image_increase_offset(figure *f, int max) {
     f->image_offset++;
     if (f->image_offset >= max)
         f->image_offset = 0;
-
 }
-
 void figure_image_set_cart_offset(figure *f, int direction) {
     f->x_offset_cart = CART_OFFSETS_X[direction];
     f->y_offset_cart = CART_OFFSETS_Y[direction];
 }
-
 int figure_image_corpse_offset(figure *f) {
     return CORPSE_IMAGE_OFFSETS[f->wait_ticks / 2];
 }
@@ -62,7 +57,6 @@ int figure_image_direction(figure *f) {
 
     return dir;
 }
-
 int figure_image_normalize_direction(int direction) {
     int normalized_direction = direction - city_view_orientation();
     if (normalized_direction < 0)

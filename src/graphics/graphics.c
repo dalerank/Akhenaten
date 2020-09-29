@@ -196,8 +196,11 @@ static void set_clip_y(int y_offset, int height) {
     clip.visible_pixels_y = height - clip.clipped_pixels_top - clip.clipped_pixels_bottom;
 }
 
-const clip_info *graphics_get_clip_info(int x, int y, int width, int height) {
-    set_clip_x(x, width);
+const clip_info *graphics_get_clip_info(int x, int y, int width, int height, bool mirrored) {
+    if (mirrored)
+        set_clip_x(clip_rectangle.x_end + x - width, width);
+    else
+        set_clip_x(x, width);
     set_clip_y(y, height);
     if (clip.clip_x == CLIP_INVISIBLE || clip.clip_y == CLIP_INVISIBLE)
         clip.is_visible = 0;

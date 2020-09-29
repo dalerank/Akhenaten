@@ -32,6 +32,7 @@ typedef struct {
     int sprite_offset_y;
     int animation_can_reverse;
     int animation_speed_id;
+    int offset_mirror;
     struct {
         int type;
         int is_fully_compressed;
@@ -41,7 +42,6 @@ typedef struct {
         int bmp_index;
         color_t *data;
         int offset;
-        int offset_mirror;
         int data_length;
         int uncompressed_length;
     } draw;

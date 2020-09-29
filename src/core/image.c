@@ -202,16 +202,19 @@ static struct {
     int is_editor;
     int fonts_enabled;
     int font_base_offset;
-//    int terrain_ph_offset;
 
     imagepak *ph_expansion;
     imagepak *ph_sprmain;
     imagepak *ph_unloaded;
     imagepak *main;
     imagepak *ph_terrain;
+
+    imagepak *ph_sprmain2;
+    imagepak *ph_sprambient;
+    imagepak *ph_mastaba;
+
     imagepak *enemy;
     imagepak *empire;
-//    imagepak *ph_fonts;
     imagepak *font;
 
     color_t *tmp_image_data;
@@ -220,8 +223,10 @@ static struct {
         0,
         0,
         0,
-//        14252,
 
+        new imagepak,
+        new imagepak,
+        new imagepak,
         new imagepak,
         new imagepak,
         new imagepak,
@@ -396,7 +401,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
         img.draw.data_length = buf->read_i32();
         img.draw.uncompressed_length = buf->read_i32();
         buf->skip(4);
-        img.draw.offset_mirror = buf->read_i32(); // .sg3 only
+        img.offset_mirror = buf->read_i32(); // .sg3 only
         img.width = buf->read_u16();
         img.height = buf->read_u16();
         buf->skip(6);
@@ -438,7 +443,6 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
         if (img->draw.is_external) {
             if (!img->draw.offset)
                 img->draw.offset = 1;
-
         } else {
             img->draw.offset = offset;
             offset += img->draw.data_length;
@@ -452,24 +456,24 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
         return 0;
 
     // convert bitmap data for image pool
+    color_t *start_dst = data;
     color_t *dst = data;
-    color_t *start_dst = dst;
     dst++; // make sure img->offset > 0
     for (int i = 0; i < entries_num; i++) {
         image *img = &images[i];
         if (img->draw.is_external)
             continue;
-
         buf->set_offset(img->draw.offset);
         int img_offset = (int) (dst - start_dst);
+
         if (img->draw.is_fully_compressed)
             dst += convert_compressed(buf, img->draw.data_length, dst);
         else if (img->draw.has_compressed_part) { // isometric tile
             dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
             dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
-        } else {
+        } else
             dst += convert_uncompressed(buf, img->draw.data_length, dst);
-        }
+
         img->draw.offset = img_offset;
         img->draw.uncompressed_length /= 2;
         img->draw.data = &data[img_offset];
@@ -576,7 +580,8 @@ const image *image_get_enemy(int id) {
     return data.enemy->get_image(id);
 }
 const color_t *image_data(int id) {
-    const image *img = image_get(id);
+    const image *lookup = image_get(id);
+    const image *img = image_get(id + lookup->offset_mirror);
     if (img->draw.is_external)
         return load_external_data(img);
     else
@@ -586,7 +591,9 @@ const color_t *image_data_letter(int letter_id) {
     return image_letter(letter_id)->draw.data;
 }
 const color_t *image_data_enemy(int id) {
-    const image *img = image_get_enemy(id);
+    const image *lookup = image_get(id);
+    const image *img = image_get(id + lookup->offset_mirror);
+    id += img->offset_mirror;
     if (img->draw.offset > 0)
         return img->draw.data;
     return NULL;
