@@ -7,130 +7,8 @@
 #include "graphics/image.h"
 #include "graphics/text.h"
 
-static void draw_figure_with_cart(const figure *f, int x, int y) {
-    if (f->y_offset_cart >= 0) {
-        image_draw(f->image_id, x, y);
-        image_draw(f->cart_image_id, x + f->x_offset_cart, y + f->y_offset_cart);
-    } else {
-        image_draw(f->cart_image_id, x + f->x_offset_cart, y + f->y_offset_cart);
-        image_draw(f->image_id, x, y);
-    }
-}
 
-static void draw_hippodrome_horse(const figure *f, int x, int y) {
-    int val = f->wait_ticks_missile;
-    switch (city_view_orientation()) {
-        case DIR_0_TOP:
-            x += 10;
-            if (val <= 10)
-                y -= 2;
-            else if (val <= 11)
-                y -= 10;
-            else if (val <= 12)
-                y -= 18;
-            else if (val <= 13)
-                y -= 16;
-            else if (val <= 20)
-                y -= 14;
-            else if (val <= 21)
-                y -= 10;
-            else
-                y -= 2;
-            break;
-        case DIR_2_RIGHT:
-            x -= 10;
-            if (val <= 9)
-                y -= 12;
-            else if (val <= 10)
-                y += 4;
-            else if (val <= 11) {
-                x -= 5;
-                y += 2;
-            } else if (val <= 13)
-                x -= 5;
-            else if (val <= 20)
-                y -= 2;
-            else if (val <= 21)
-                y -= 6;
-            else
-                y -= 12;
-        case DIR_4_BOTTOM:
-            x += 20;
-            if (val <= 9)
-                y += 4;
-            else if (val <= 10) {
-                x += 10;
-                y += 4;
-            } else if (val <= 11) {
-                x += 10;
-                y -= 4;
-            } else if (val <= 13)
-                y -= 6;
-            else if (val <= 20)
-                y -= 12;
-            else if (val <= 21)
-                y -= 10;
-            else {
-                y -= 2;
-            }
-            break;
-        case DIR_6_LEFT:
-            x -= 10;
-            if (val <= 9)
-                y -= 12;
-            else if (val <= 10)
-                y += 4;
-            else if (val <= 11)
-                y += 2;
-            else if (val <= 13) {
-                // no change
-            } else if (val <= 20)
-                y -= 2;
-            else if (val <= 21)
-                y -= 6;
-            else
-                y -= 12;
-            break;
-    }
-    draw_figure_with_cart(f, x, y);
-}
-
-static void draw_fort_standard(const figure *f, int x, int y) {
-    if (!formation_get(f->formation_id)->in_distant_battle) {
-        // base
-        image_draw(f->image_id, x, y);
-        // flag
-        int flag_height = image_get(f->cart_image_id)->height;
-        image_draw(f->cart_image_id, x, y - flag_height);
-        // top icon
-        int icon_image_id =
-                image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + formation_get(f->formation_id)->legion_id;
-        image_draw(icon_image_id, x, y - image_get(icon_image_id)->height - flag_height);
-    }
-}
-
-static void draw_map_flag(const figure *f, int x, int y) {
-    // base
-    image_draw(f->image_id, x, y);
-    // flag
-    image_draw(f->cart_image_id, x, y - image_get(f->cart_image_id)->height);
-    // flag number
-    int number = 0;
-    int id = f->resource_id;
-    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX)
-        number = id - MAP_FLAG_INVASION_MIN + 1;
-    else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
-        number = id - MAP_FLAG_FISHING_MIN + 1;
-    else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
-        number = id - MAP_FLAG_HERD_MIN + 1;
-
-    if (number > 0)
-        text_draw_number_colored(number, '@', " ", x + 6, y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE);
-
-}
-
-static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y,
-                                                      int *pixel_x, int *pixel_y) {
+static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y, int *pixel_x, int *pixel_y) {
     int dir = city_view_orientation();
     if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
         int base_pixel_x = 2 * cross_country_x - 2 * cross_country_y;
@@ -144,7 +22,6 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
         *pixel_y = dir == DIR_6_LEFT ? base_pixel_y : -base_pixel_y;
     }
 }
-
 static int tile_progress_to_pixel_offset_x(int direction, int progress) {
     if (progress >= 15)
         return 0;
@@ -188,19 +65,34 @@ static void tile_progress_to_pixel_offset(int direction, int progress, int *pixe
     *pixel_y = tile_progress_to_pixel_offset_y(direction, progress);
 }
 
-static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
+#include "widget/city_building_ghost.h"
+#include "building/properties.h"
+
+void figure::draw_debug() {
+    building *b = building_get(building_id);
+    building *bdest = building_get(destination_building_id);
+
+    const building_properties *props = building_properties_for_type(b->type);
+    int image_id = image_id_from_group(props->image_group) + props->image_offset;
+
+    int pixel_x, pixel_y;
+    city_view_grid_offset_to_xy_view(b->grid_offset, &pixel_x, &pixel_y);
+    draw_building(image_id, pixel_x, pixel_y);
+
+}
+void figure::adjust_pixel_offset(int *pixel_x, int *pixel_y) {
     // determining x/y offset on tile
     int x_offset = 0;
     int y_offset = 0;
-    if (f->use_cross_country) {
-        tile_cross_country_offset_to_pixel_offset(f->cross_country_x % 15, f->cross_country_y % 15, &x_offset, &y_offset);
-        y_offset -= f->missile_damage;
+    if (use_cross_country) {
+        tile_cross_country_offset_to_pixel_offset(cross_country_x % 15, cross_country_y % 15, &x_offset, &y_offset);
+        y_offset -= missile_damage;
     } else {
-        int direction = figure_image_normalize_direction(f->direction);
-        tile_progress_to_pixel_offset(direction, f->progress_on_tile, &x_offset, &y_offset);
-        y_offset -= f->current_height;
+        int direction = figure_image_normalize_direction(direction);
+        tile_progress_to_pixel_offset(direction, progress_on_tile, &x_offset, &y_offset);
+        y_offset -= current_height;
 
-//        if (f->next_figure && f->type != FIGURE_BALLISTA) {
+//        if (next_figure && type != FIGURE_BALLISTA) {
 //            // an attempt to not let people walk through each other
 //            static const int BUSY_ROAD_X_OFFSETS[] = {
 //                    0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
@@ -208,23 +100,22 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
 //            static const int BUSY_ROAD_Y_OFFSETS[] = {
 //                    0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
 //            };
-//            x_offset += BUSY_ROAD_X_OFFSETS[f->figures_sametile_num];
-//            y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_sametile_num];
+//            x_offset += BUSY_ROAD_X_OFFSETS[figures_sametile_num];
+//            y_offset += BUSY_ROAD_Y_OFFSETS[figures_sametile_num];
 //        }
     }
 
     x_offset += 29;
     y_offset += 15 + 8;
 
-    const image *img = f->is_enemy_image ? image_get_enemy(f->image_id) : image_get(f->image_id);
+    const image *img = is_enemy_image ? image_get_enemy(image_id) : image_get(image_id);
     *pixel_x += x_offset - img->sprite_offset_x;
     *pixel_y += y_offset - img->sprite_offset_y;
 }
-
-static void draw_figure(const figure *f, int x, int y, int highlight)
+void figure::draw_figure(int pixel_x, int pixel_y, int highlight)
 {
-    if (f->cart_image_id) {
-        switch (f->type) {
+    if (cart_image_id) {
+        switch (type) {
             case FIGURE_CART_PUSHER:
             case FIGURE_WAREHOUSEMAN:
 //            case FIGURE_LION_TAMER:
@@ -232,41 +123,160 @@ static void draw_figure(const figure *f, int x, int y, int highlight)
             case FIGURE_NATIVE_TRADER:
 //            case FIGURE_IMMIGRANT:
 //            case FIGURE_EMIGRANT:
-                draw_figure_with_cart(f, x, y);
+                draw_figure_with_cart(pixel_x, pixel_y);
                 break;
             case FIGURE_HIPPODROME_HORSES:
-                draw_hippodrome_horse(f, x, y);
+                draw_hippodrome_horse(pixel_x, pixel_y);
                 break;
             case FIGURE_FORT_STANDARD:
-                draw_fort_standard(f, x, y);
+                draw_fort_standard(pixel_x, pixel_y);
                 break;
             case FIGURE_MAP_FLAG:
-                draw_map_flag(f, x, y);
+                draw_map_flag(pixel_x, pixel_y);
                 break;
             default:
-                image_draw(f->image_id, x, y);
+                image_draw(image_id, pixel_x, pixel_y);
                 break;
         }
     } else {
-        if (f->is_enemy_image)
-            image_draw_enemy(f->image_id, x, y);
+        if (is_enemy_image)
+            image_draw_enemy(image_id, pixel_x, pixel_y);
         else {
-            image_draw(f->image_id, x, y);
+            image_draw(image_id, pixel_x, pixel_y);
             if (highlight)
-                image_draw_blend_alpha(f->image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
-
+                image_draw_blend_alpha(image_id, pixel_x, pixel_y, COLOR_MASK_LEGION_HIGHLIGHT);
         }
     }
+    draw_debug();
 }
-void city_draw_figure(const figure *f, int x, int y, int highlight)
+void figure::city_draw_figure(int pixel_x, int pixel_y, int highlight)
 {
-    adjust_pixel_offset(f, &x, &y);
-    draw_figure(f, x, y, highlight);
+    adjust_pixel_offset(&pixel_x, &pixel_y);
+    draw_figure(pixel_x, pixel_y, highlight);
 }
-void city_draw_selected_figure(const figure *f, int x, int y, pixel_coordinate *coord)
+void figure::city_draw_selected_figure(int pixel_x, int pixel_y, pixel_coordinate *coord)
 {
-    adjust_pixel_offset(f, &x, &y);
-    draw_figure(f, x, y, 0);
-    coord->x = x;
-    coord->y = y;
+    adjust_pixel_offset(&pixel_x, &pixel_y);
+    draw_figure(pixel_x, pixel_y, 0);
+    coord->x = pixel_x;
+    coord->y = pixel_y;
+}
+
+void figure::draw_figure_with_cart(int pixel_x, int pixel_y) {
+    if (y_offset_cart >= 0) {
+        image_draw(image_id, pixel_x, pixel_y);
+        image_draw(cart_image_id, pixel_x + x_offset_cart, pixel_y + y_offset_cart);
+    } else {
+        image_draw(cart_image_id, pixel_x + x_offset_cart, pixel_y + y_offset_cart);
+        image_draw(image_id, pixel_x, pixel_y);
+    }
+}
+void figure::draw_hippodrome_horse(int pixel_x, int pixel_y) {
+    int val = wait_ticks_missile;
+    switch (city_view_orientation()) {
+        case DIR_0_TOP:
+            pixel_x += 10;
+            if (val <= 10)
+                pixel_y -= 2;
+            else if (val <= 11)
+                pixel_y -= 10;
+            else if (val <= 12)
+                pixel_y -= 18;
+            else if (val <= 13)
+                pixel_y -= 16;
+            else if (val <= 20)
+                pixel_y -= 14;
+            else if (val <= 21)
+                pixel_y -= 10;
+            else
+                pixel_y -= 2;
+            break;
+        case DIR_2_RIGHT:
+            pixel_x -= 10;
+            if (val <= 9)
+                pixel_y -= 12;
+            else if (val <= 10)
+                pixel_y += 4;
+            else if (val <= 11) {
+                pixel_x -= 5;
+                pixel_y += 2;
+            } else if (val <= 13)
+                pixel_x -= 5;
+            else if (val <= 20)
+                pixel_y -= 2;
+            else if (val <= 21)
+                pixel_y -= 6;
+            else
+                pixel_y -= 12;
+        case DIR_4_BOTTOM:
+            pixel_x += 20;
+            if (val <= 9)
+                pixel_y += 4;
+            else if (val <= 10) {
+                pixel_x += 10;
+                pixel_y += 4;
+            } else if (val <= 11) {
+                pixel_x += 10;
+                pixel_y -= 4;
+            } else if (val <= 13)
+                pixel_y -= 6;
+            else if (val <= 20)
+                pixel_y -= 12;
+            else if (val <= 21)
+                pixel_y -= 10;
+            else {
+                pixel_y -= 2;
+            }
+            break;
+        case DIR_6_LEFT:
+            pixel_x -= 10;
+            if (val <= 9)
+                pixel_y -= 12;
+            else if (val <= 10)
+                pixel_y += 4;
+            else if (val <= 11)
+                pixel_y += 2;
+            else if (val <= 13) {
+                // no change
+            } else if (val <= 20)
+                pixel_y -= 2;
+            else if (val <= 21)
+                pixel_y -= 6;
+            else
+                pixel_y -= 12;
+            break;
+    }
+    draw_figure_with_cart(pixel_x, pixel_y);
+}
+void figure::draw_fort_standard(int pixel_x, int pixel_y) {
+    if (!formation_get(formation_id)->in_distant_battle) {
+        // base
+        image_draw(image_id, pixel_x, pixel_y);
+        // flag
+        int flag_height = image_get(cart_image_id)->height;
+        image_draw(cart_image_id, pixel_x, pixel_y - flag_height);
+        // top icon
+        int icon_image_id =
+                image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + formation_get(formation_id)->legion_id;
+        image_draw(icon_image_id, pixel_x, pixel_y - image_get(icon_image_id)->height - flag_height);
+    }
+}
+void figure::draw_map_flag(int pixel_x, int pixel_y) {
+    // base
+    image_draw(image_id, pixel_x, pixel_y);
+    // flag
+    image_draw(cart_image_id, pixel_x, pixel_y - image_get(cart_image_id)->height);
+    // flag number
+    int number = 0;
+    int id = resource_id;
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX)
+        number = id - MAP_FLAG_INVASION_MIN + 1;
+    else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX)
+        number = id - MAP_FLAG_FISHING_MIN + 1;
+    else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX)
+        number = id - MAP_FLAG_HERD_MIN + 1;
+
+    if (number > 0)
+        text_draw_number_colored(number, '@', " ", pixel_x + 6, pixel_y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE);
+
 }

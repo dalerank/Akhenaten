@@ -51,6 +51,7 @@ static int provide_entertainment(int x, int y, int shows, void (*callback)(build
 }
 
 static void labor_seeker_coverage(building *b) {
+
 }
 
 static void theater_coverage(building *b) {
@@ -286,8 +287,8 @@ building *figure::get_entertainment_building() {
 }
 int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
-    int x = x;
-    int y = y;
+//    int x = x;
+//    int y = y;
     building *b;
     switch (type) {
         case FIGURE_PATRICIAN:

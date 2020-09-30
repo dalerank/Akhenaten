@@ -3,6 +3,8 @@
 
 #include "map/point.h"
 
+void draw_building(int image_id, int x, int y);
+
 int city_building_ghost_mark_deleting(const map_tile *tile);
 void city_building_ghost_draw(const map_tile *tile);
 

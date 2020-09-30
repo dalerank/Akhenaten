@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "map/point.h"
 #include "window/building/common.h"
+#include "widget/city.h"
 
 static int MAX_FIGURES[] = {5000, 2000};
 
@@ -152,14 +153,6 @@ public:
     void load(buffer *buf);
     void save(buffer *buf);
 
-    // image.c
-    void figure_image_update(int image_base);
-    void figure_image_increase_offset(int max);
-    void figure_image_set_cart_offset(int direction);
-    int figure_image_corpse_offset();
-    int figure_image_missile_launcher_offset();
-    int figure_image_direction();
-
     // figure/figure.c
     void figure_delete();
 
@@ -169,6 +162,25 @@ public:
     void map_figure_remove();
     void figure_route_add();
     void route_remove();
+
+    // image.c
+    void figure_image_update(int image_base);
+    void figure_image_increase_offset(int max);
+    void figure_image_set_cart_offset(int direction);
+    int figure_image_corpse_offset();
+    int figure_image_missile_launcher_offset();
+    int figure_image_direction();
+
+    // city_figure.c
+    void draw_debug();
+    void adjust_pixel_offset(int *pixel_x, int *pixel_y);
+    void draw_figure(int pixel_x, int pixel_y, int highlight);
+    void city_draw_figure(int pixel_x, int pixel_y, int highlight);
+    void city_draw_selected_figure(int pixel_x, int pixel_y, pixel_coordinate *coord);
+    void draw_figure_with_cart(int pixel_x, int pixel_y);
+    void draw_hippodrome_horse(int pixel_x, int pixel_y);
+    void draw_fort_standard(int pixel_x, int pixel_y);
+    void draw_map_flag(int pixel_x, int pixel_y);
 
     // movement.c
     void advance_tick();

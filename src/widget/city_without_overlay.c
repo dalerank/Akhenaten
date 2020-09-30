@@ -348,9 +348,9 @@ static void draw_figures(int x, int y, int grid_offset) {
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
                 int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                city_draw_figure(f, x, y, highlight);
+                f->city_draw_figure(x, y, highlight);
             } else if (figure_id == draw_context.selected_figure_id)
-                city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
+                f->city_draw_selected_figure(x, y, draw_context.selected_figure_coord);
         }
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
@@ -529,7 +529,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset) {
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
         if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks)
-            city_draw_figure(f, x, y, 0);
+            f->city_draw_figure(x, y, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;

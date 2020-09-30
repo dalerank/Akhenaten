@@ -48,145 +48,227 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {
 
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
-static const int TILE_GRID_OFFSETS_C3[4][MAX_TILES] = {
-        {OFFSET_C3(0, 0),
-                OFFSET_C3(0, 1),  OFFSET_C3(1, 0),  OFFSET_C3(1, 1),
-                OFFSET_C3(0, 2),  OFFSET_C3(2, 0),  OFFSET_C3(1, 2),   OFFSET_C3(2, 1),   OFFSET_C3(2, 2),
-                OFFSET_C3(0, 3),  OFFSET_C3(3, 0),  OFFSET_C3(1, 3),   OFFSET_C3(3, 1),   OFFSET_C3(2, 3),   OFFSET_C3(
-                                                                                                                     3,
-                                                                                                                     2),  OFFSET_C3(
-                                                                                                                                  3,
-                                                                                                                                  3),
-                OFFSET_C3(0, 4),  OFFSET_C3(4, 0),  OFFSET_C3(1, 4),   OFFSET_C3(4, 1),   OFFSET_C3(2, 4),   OFFSET_C3(
-                                                                                                                     4,
-                                                                                                                     2),  OFFSET_C3(
-                                                                                                                                  3,
-                                                                                                                                  4),  OFFSET_C3(
-                                                                                                                                               4,
-                                                                                                                                               3),  OFFSET_C3(
-                                                                                                                                                            4,
-                                                                                                                                                            4)},
-        {OFFSET_C3(0, 0),
-                OFFSET_C3(-1, 0), OFFSET_C3(0, 1),  OFFSET_C3(-1, 1),
-                OFFSET_C3(-2, 0), OFFSET_C3(0, 2),  OFFSET_C3(-2, 1),  OFFSET_C3(-1, 2),  OFFSET_C3(-2, 2),
-                OFFSET_C3(-3, 0), OFFSET_C3(0, 3),  OFFSET_C3(-3, 1),  OFFSET_C3(-1, 3),  OFFSET_C3(-3, 2),  OFFSET_C3(
-                                                                                                                     -2,
-                                                                                                                     3),  OFFSET_C3(
-                                                                                                                                  -3,
-                                                                                                                                  3),
-                OFFSET_C3(-4, 0), OFFSET_C3(0, 4),  OFFSET_C3(-4, 1),  OFFSET_C3(-1, 4),  OFFSET_C3(-4, 2),  OFFSET_C3(
-                                                                                                                     -2,
-                                                                                                                     4),  OFFSET_C3(
-                                                                                                                                  -4,
-                                                                                                                                  3),  OFFSET_C3(
-                                                                                                                                               -3,
-                                                                                                                                               4),  OFFSET_C3(
-                                                                                                                                                            -4,
-                                                                                                                                                            4)},
-        {OFFSET_C3(0, 0),
-                OFFSET_C3(0, -1), OFFSET_C3(-1, 0), OFFSET_C3(-1, -1),
-                OFFSET_C3(0, -2), OFFSET_C3(-2, 0), OFFSET_C3(-1, -2), OFFSET_C3(-2, -1), OFFSET_C3(-2, -2),
-                OFFSET_C3(0, -3), OFFSET_C3(-3, 0), OFFSET_C3(-1, -3), OFFSET_C3(-3, -1), OFFSET_C3(-2, -3), OFFSET_C3(
-                                                                                                                     -3,
-                                                                                                                     -2), OFFSET_C3(
-                                                                                                                                  -3,
-                                                                                                                                  -3),
-                OFFSET_C3(0, -4), OFFSET_C3(-4, 0), OFFSET_C3(-1, -4), OFFSET_C3(-4, -1), OFFSET_C3(-2, -4), OFFSET_C3(
-                                                                                                                     -4,
-                                                                                                                     -2), OFFSET_C3(
-                                                                                                                                  -3,
-                                                                                                                                  -4), OFFSET_C3(
-                                                                                                                                               -4,
-                                                                                                                                               -3), OFFSET_C3(
-                                                                                                                                                            -4,
-                                                                                                                                                            -4)},
-        {OFFSET_C3(0, 0),
-                OFFSET_C3(1, 0),  OFFSET_C3(0, -1), OFFSET_C3(1, -1),
-                OFFSET_C3(2, 0),  OFFSET_C3(0, -2), OFFSET_C3(2, -1),  OFFSET_C3(1, -2),  OFFSET_C3(2, -2),
-                OFFSET_C3(3, 0),  OFFSET_C3(0, -3), OFFSET_C3(3, -1),  OFFSET_C3(1, -3),  OFFSET_C3(3, -2),  OFFSET_C3(
-                                                                                                                     2,
-                                                                                                                     -3), OFFSET_C3(
-                                                                                                                                  3,
-                                                                                                                                  -3),
-                OFFSET_C3(4, 0),  OFFSET_C3(0, -4), OFFSET_C3(4, -1),  OFFSET_C3(1, -4),  OFFSET_C3(4, -2),  OFFSET_C3(
-                                                                                                                     2,
-                                                                                                                     -4), OFFSET_C3(
-                                                                                                                                  4,
-                                                                                                                                  -3), OFFSET_C3(
-                                                                                                                                               3,
-                                                                                                                                               -4), OFFSET_C3(
-                                                                                                                                                            4,
-                                                                                                                                                            -4)},
+static
+const int TILE_GRID_OFFSETS_C3[4][MAX_TILES] = {
+    {
+        OFFSET_C3(0, 0),
+        OFFSET_C3(0, 1),
+        OFFSET_C3(1, 0),
+        OFFSET_C3(1, 1),
+        OFFSET_C3(0, 2),
+        OFFSET_C3(2, 0),
+        OFFSET_C3(1, 2),
+        OFFSET_C3(2, 1),
+        OFFSET_C3(2, 2),
+        OFFSET_C3(0, 3),
+        OFFSET_C3(3, 0),
+        OFFSET_C3(1, 3),
+        OFFSET_C3(3, 1),
+        OFFSET_C3(2, 3),
+        OFFSET_C3(3, 2),
+        OFFSET_C3(3, 3),
+        OFFSET_C3(0, 4),
+        OFFSET_C3(4, 0),
+        OFFSET_C3(1, 4),
+        OFFSET_C3(4, 1),
+        OFFSET_C3(2, 4),
+        OFFSET_C3(4, 2),
+        OFFSET_C3(3, 4),
+        OFFSET_C3(4, 3),
+        OFFSET_C3(4, 4)
+    },
+    {
+        OFFSET_C3(0, 0),
+        OFFSET_C3(-1, 0),
+        OFFSET_C3(0, 1),
+        OFFSET_C3(-1, 1),
+        OFFSET_C3(-2, 0),
+        OFFSET_C3(0, 2),
+        OFFSET_C3(-2, 1),
+        OFFSET_C3(-1, 2),
+        OFFSET_C3(-2, 2),
+        OFFSET_C3(-3, 0),
+        OFFSET_C3(0, 3),
+        OFFSET_C3(-3, 1),
+        OFFSET_C3(-1, 3),
+        OFFSET_C3(-3, 2),
+        OFFSET_C3(-2, 3),
+        OFFSET_C3(-3, 3),
+        OFFSET_C3(-4, 0),
+        OFFSET_C3(0, 4),
+        OFFSET_C3(-4, 1),
+        OFFSET_C3(-1, 4),
+        OFFSET_C3(-4, 2),
+        OFFSET_C3(-2, 4),
+        OFFSET_C3(-4, 3),
+        OFFSET_C3(-3, 4),
+        OFFSET_C3(-4, 4)
+    },
+    {
+        OFFSET_C3(0, 0),
+        OFFSET_C3(0, -1),
+        OFFSET_C3(-1, 0),
+        OFFSET_C3(-1, -1),
+        OFFSET_C3(0, -2),
+        OFFSET_C3(-2, 0),
+        OFFSET_C3(-1, -2),
+        OFFSET_C3(-2, -1),
+        OFFSET_C3(-2, -2),
+        OFFSET_C3(0, -3),
+        OFFSET_C3(-3, 0),
+        OFFSET_C3(-1, -3),
+        OFFSET_C3(-3, -1),
+        OFFSET_C3(-2, -3),
+        OFFSET_C3(-3, -2),
+        OFFSET_C3(-3, -3),
+        OFFSET_C3(0, -4),
+        OFFSET_C3(-4, 0),
+        OFFSET_C3(-1, -4),
+        OFFSET_C3(-4, -1),
+        OFFSET_C3(-2, -4),
+        OFFSET_C3(-4, -2),
+        OFFSET_C3(-3, -4),
+        OFFSET_C3(-4, -3),
+        OFFSET_C3(-4, -4)
+    },
+    {
+        OFFSET_C3(0, 0),
+        OFFSET_C3(1, 0),
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, -1),
+        OFFSET_C3(2, 0),
+        OFFSET_C3(0, -2),
+        OFFSET_C3(2, -1),
+        OFFSET_C3(1, -2),
+        OFFSET_C3(2, -2),
+        OFFSET_C3(3, 0),
+        OFFSET_C3(0, -3),
+        OFFSET_C3(3, -1),
+        OFFSET_C3(1, -3),
+        OFFSET_C3(3, -2),
+        OFFSET_C3(2, -3),
+        OFFSET_C3(3, -3),
+        OFFSET_C3(4, 0),
+        OFFSET_C3(0, -4),
+        OFFSET_C3(4, -1),
+        OFFSET_C3(1, -4),
+        OFFSET_C3(4, -2),
+        OFFSET_C3(2, -4),
+        OFFSET_C3(4, -3),
+        OFFSET_C3(3, -4),
+        OFFSET_C3(4, -4)
+    },
 };
-static const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
-        {OFFSET_PH(0, 0),
-                OFFSET_PH(0, 1),  OFFSET_PH(1, 0),  OFFSET_PH(1, 1),
-                OFFSET_PH(0, 2),  OFFSET_PH(2, 0),  OFFSET_PH(1, 2),   OFFSET_PH(2, 1),   OFFSET_PH(2, 2),
-                OFFSET_PH(0, 3),  OFFSET_PH(3, 0),  OFFSET_PH(1, 3),   OFFSET_PH(3, 1),   OFFSET_PH(2, 3),   OFFSET_PH(
-                                                                                                                     3,
-                                                                                                                     2),  OFFSET_PH(
-                                                                                                                                  3,
-                                                                                                                                  3),
-                OFFSET_PH(0, 4),  OFFSET_PH(4, 0),  OFFSET_PH(1, 4),   OFFSET_PH(4, 1),   OFFSET_PH(2, 4),   OFFSET_PH(
-                                                                                                                     4,
-                                                                                                                     2),  OFFSET_PH(
-                                                                                                                                  3,
-                                                                                                                                  4),  OFFSET_PH(
-                                                                                                                                               4,
-                                                                                                                                               3),  OFFSET_PH(
-                                                                                                                                                            4,
-                                                                                                                                                            4)},
-        {OFFSET_PH(0, 0),
-                OFFSET_PH(-1, 0), OFFSET_PH(0, 1),  OFFSET_PH(-1, 1),
-                OFFSET_PH(-2, 0), OFFSET_PH(0, 2),  OFFSET_PH(-2, 1),  OFFSET_PH(-1, 2),  OFFSET_PH(-2, 2),
-                OFFSET_PH(-3, 0), OFFSET_PH(0, 3),  OFFSET_PH(-3, 1),  OFFSET_PH(-1, 3),  OFFSET_PH(-3, 2),  OFFSET_PH(
-                                                                                                                     -2,
-                                                                                                                     3),  OFFSET_PH(
-                                                                                                                                  -3,
-                                                                                                                                  3),
-                OFFSET_PH(-4, 0), OFFSET_PH(0, 4),  OFFSET_PH(-4, 1),  OFFSET_PH(-1, 4),  OFFSET_PH(-4, 2),  OFFSET_PH(
-                                                                                                                     -2,
-                                                                                                                     4),  OFFSET_PH(
-                                                                                                                                  -4,
-                                                                                                                                  3),  OFFSET_PH(
-                                                                                                                                               -3,
-                                                                                                                                               4),  OFFSET_PH(
-                                                                                                                                                            -4,
-                                                                                                                                                            4)},
-        {OFFSET_PH(0, 0),
-                OFFSET_PH(0, -1), OFFSET_PH(-1, 0), OFFSET_PH(-1, -1),
-                OFFSET_PH(0, -2), OFFSET_PH(-2, 0), OFFSET_PH(-1, -2), OFFSET_PH(-2, -1), OFFSET_PH(-2, -2),
-                OFFSET_PH(0, -3), OFFSET_PH(-3, 0), OFFSET_PH(-1, -3), OFFSET_PH(-3, -1), OFFSET_PH(-2, -3), OFFSET_PH(
-                                                                                                                     -3,
-                                                                                                                     -2), OFFSET_PH(
-                                                                                                                                  -3,
-                                                                                                                                  -3),
-                OFFSET_PH(0, -4), OFFSET_PH(-4, 0), OFFSET_PH(-1, -4), OFFSET_PH(-4, -1), OFFSET_PH(-2, -4), OFFSET_PH(
-                                                                                                                     -4,
-                                                                                                                     -2), OFFSET_PH(
-                                                                                                                                  -3,
-                                                                                                                                  -4), OFFSET_PH(
-                                                                                                                                               -4,
-                                                                                                                                               -3), OFFSET_PH(
-                                                                                                                                                            -4,
-                                                                                                                                                            -4)},
-        {OFFSET_PH(0, 0),
-                OFFSET_PH(1, 0),  OFFSET_PH(0, -1), OFFSET_PH(1, -1),
-                OFFSET_PH(2, 0),  OFFSET_PH(0, -2), OFFSET_PH(2, -1),  OFFSET_PH(1, -2),  OFFSET_PH(2, -2),
-                OFFSET_PH(3, 0),  OFFSET_PH(0, -3), OFFSET_PH(3, -1),  OFFSET_PH(1, -3),  OFFSET_PH(3, -2),  OFFSET_PH(
-                                                                                                                     2,
-                                                                                                                     -3), OFFSET_PH(
-                                                                                                                                  3,
-                                                                                                                                  -3),
-                OFFSET_PH(4, 0),  OFFSET_PH(0, -4), OFFSET_PH(4, -1),  OFFSET_PH(1, -4),  OFFSET_PH(4, -2),  OFFSET_PH(
-                                                                                                                     2,
-                                                                                                                     -4), OFFSET_PH(
-                                                                                                                                  4,
-                                                                                                                                  -3), OFFSET_PH(
-                                                                                                                                               3,
-                                                                                                                                               -4), OFFSET_PH(
-                                                                                                                                                            4,
-                                                                                                                                                            -4)},
+static
+const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
+    {
+        OFFSET_PH(0, 0),
+        OFFSET_PH(0, 1),
+        OFFSET_PH(1, 0),
+        OFFSET_PH(1, 1),
+        OFFSET_PH(0, 2),
+        OFFSET_PH(2, 0),
+        OFFSET_PH(1, 2),
+        OFFSET_PH(2, 1),
+        OFFSET_PH(2, 2),
+        OFFSET_PH(0, 3),
+        OFFSET_PH(3, 0),
+        OFFSET_PH(1, 3),
+        OFFSET_PH(3, 1),
+        OFFSET_PH(2, 3),
+        OFFSET_PH(3, 2),
+        OFFSET_PH(3, 3),
+        OFFSET_PH(0, 4),
+        OFFSET_PH(4, 0),
+        OFFSET_PH(1, 4),
+        OFFSET_PH(4, 1),
+        OFFSET_PH(2, 4),
+        OFFSET_PH(4, 2),
+        OFFSET_PH(3, 4),
+        OFFSET_PH(4, 3),
+        OFFSET_PH(4, 4)
+    },
+    {
+        OFFSET_PH(0, 0),
+        OFFSET_PH(-1, 0),
+        OFFSET_PH(0, 1),
+        OFFSET_PH(-1, 1),
+        OFFSET_PH(-2, 0),
+        OFFSET_PH(0, 2),
+        OFFSET_PH(-2, 1),
+        OFFSET_PH(-1, 2),
+        OFFSET_PH(-2, 2),
+        OFFSET_PH(-3, 0),
+        OFFSET_PH(0, 3),
+        OFFSET_PH(-3, 1),
+        OFFSET_PH(-1, 3),
+        OFFSET_PH(-3, 2),
+        OFFSET_PH(-2, 3),
+        OFFSET_PH(-3, 3),
+        OFFSET_PH(-4, 0),
+        OFFSET_PH(0, 4),
+        OFFSET_PH(-4, 1),
+        OFFSET_PH(-1, 4),
+        OFFSET_PH(-4, 2),
+        OFFSET_PH(-2, 4),
+        OFFSET_PH(-4, 3),
+        OFFSET_PH(-3, 4),
+        OFFSET_PH(-4, 4)
+    },
+    {
+        OFFSET_PH(0, 0),
+        OFFSET_PH(0, -1),
+        OFFSET_PH(-1, 0),
+        OFFSET_PH(-1, -1),
+        OFFSET_PH(0, -2),
+        OFFSET_PH(-2, 0),
+        OFFSET_PH(-1, -2),
+        OFFSET_PH(-2, -1),
+        OFFSET_PH(-2, -2),
+        OFFSET_PH(0, -3),
+        OFFSET_PH(-3, 0),
+        OFFSET_PH(-1, -3),
+        OFFSET_PH(-3, -1),
+        OFFSET_PH(-2, -3),
+        OFFSET_PH(-3, -2),
+        OFFSET_PH(-3, -3),
+        OFFSET_PH(0, -4),
+        OFFSET_PH(-4, 0),
+        OFFSET_PH(-1, -4),
+        OFFSET_PH(-4, -1),
+        OFFSET_PH(-2, -4),
+        OFFSET_PH(-4, -2),
+        OFFSET_PH(-3, -4),
+        OFFSET_PH(-4, -3),
+        OFFSET_PH(-4, -4)
+    },
+    {
+        OFFSET_PH(0, 0),
+        OFFSET_PH(1, 0),
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, -1),
+        OFFSET_PH(2, 0),
+        OFFSET_PH(0, -2),
+        OFFSET_PH(2, -1),
+        OFFSET_PH(1, -2),
+        OFFSET_PH(2, -2),
+        OFFSET_PH(3, 0),
+        OFFSET_PH(0, -3),
+        OFFSET_PH(3, -1),
+        OFFSET_PH(1, -3),
+        OFFSET_PH(3, -2),
+        OFFSET_PH(2, -3),
+        OFFSET_PH(3, -3),
+        OFFSET_PH(4, 0),
+        OFFSET_PH(0, -4),
+        OFFSET_PH(4, -1),
+        OFFSET_PH(1, -4),
+        OFFSET_PH(4, -2),
+        OFFSET_PH(2, -4),
+        OFFSET_PH(4, -3),
+        OFFSET_PH(3, -4),
+        OFFSET_PH(4, -4)
+    },
 };
 
 static const int FORT_GROUND_GRID_OFFSETS_C3[4][4] = {
@@ -338,7 +420,7 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
         }
     }
 }
-static void draw_building(int image_id, int x, int y) {
+void draw_building(int image_id, int x, int y) {
     image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
     image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN);
 }
@@ -382,20 +464,15 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         draw_building(image_id, x, y);
         const image *img = image_get(image_id + 1);
         if (image_id == image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH))
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51,
-                              COLOR_MASK_GREEN);
-        else {
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56,
-                              COLOR_MASK_GREEN);
-        }
+            image_draw_masked(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51, COLOR_MASK_GREEN);
+        else
+            image_draw_masked(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
     } else if (type == BUILDING_WELL) {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
             city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
-
         draw_building(image_id, x, y);
     } else if (type != BUILDING_CLEAR_LAND)
         draw_building(image_id, x, y);
-
 }
 static void draw_default(const map_tile *tile, int x_view, int y_view, int type) {
     const building_properties *props = building_properties_for_type(type);

@@ -105,7 +105,8 @@ void figure::figure_delete() {
     map_figure_remove();
 
     int figure_id = id;
-//    memset(f, 0, sizeof(figure));
+    state = FIGURE_STATE_NONE;
+    memset(this, 0, sizeof(figure));
     id = figure_id;
 }
 

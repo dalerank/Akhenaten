@@ -63,12 +63,8 @@ static int try_export_resource(int building_id, int resource, int city_id) {
     building *warehouse = building_get(building_id);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
-
-
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
         return 0;
-
-
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
