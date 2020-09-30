@@ -276,21 +276,20 @@ static int provide_market_goods(int market_building_id, int x, int y) {
     return serviced;
 }
 
-static building *get_entertainment_building(const figure *f) {
-    if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
-        f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-        return building_get(f->building_id);
+building *figure::get_entertainment_building() {
+    if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
+        action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
+        return building_get(building_id);
     } else { // going to venue
-        return building_get(f->destination_building_id);
+        return building_get(destination_building_id);
     }
 }
-
-int figure_service_provide_coverage(figure *f) {
+int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
-    int x = f->x;
-    int y = f->y;
+    int x = x;
+    int y = y;
     building *b;
-    switch (f->type) {
+    switch (type) {
         case FIGURE_PATRICIAN:
             return 0;
         case FIGURE_LABOR_SEEKER:
@@ -299,15 +298,15 @@ int figure_service_provide_coverage(figure *f) {
         case FIGURE_TAX_COLLECTOR: {
             int max_tax_rate = 0;
             houses_serviced = provide_service(x, y, &max_tax_rate, tax_collector_coverage);
-            f->min_max_seen = max_tax_rate;
+            min_max_seen = max_tax_rate;
             break;
         }
         case FIGURE_MARKET_TRADER:
-            houses_serviced = provide_market_goods(f->building_id, x, y);
+            houses_serviced = provide_market_goods(building_id, x, y);
             break;
         case FIGURE_MARKET_BUYER:
             if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
-                houses_serviced = provide_market_goods(f->building_id, x, y);
+                houses_serviced = provide_market_goods(building_id, x, y);
 
             break;
         case FIGURE_BATHHOUSE_WORKER:
@@ -335,7 +334,7 @@ int figure_service_provide_coverage(figure *f) {
             houses_serviced = provide_missionary_coverage(x, y);
             break;
         case FIGURE_PRIEST:
-            switch (building_get(f->building_id)->type) {
+            switch (building_get(building_id)->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
                 case BUILDING_LARGE_TEMPLE_CERES:
                     houses_serviced = provide_culture(x, y, religion_coverage_ceres);
@@ -361,7 +360,7 @@ int figure_service_provide_coverage(figure *f) {
             }
             break;
         case FIGURE_ACTOR:
-            b = get_entertainment_building(f);
+            b = get_entertainment_building();
             if (b->type == BUILDING_THEATER)
                 houses_serviced = provide_culture(x, y, theater_coverage);
             else if (b->type == BUILDING_AMPHITHEATER) {
@@ -370,7 +369,7 @@ int figure_service_provide_coverage(figure *f) {
             }
             break;
         case FIGURE_GLADIATOR:
-            b = get_entertainment_building(f);
+            b = get_entertainment_building();
             if (b->type == BUILDING_AMPHITHEATER) {
                 houses_serviced = provide_entertainment(x, y,
                                                         b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
@@ -380,7 +379,7 @@ int figure_service_provide_coverage(figure *f) {
             }
             break;
         case FIGURE_LION_TAMER:
-            b = get_entertainment_building(f);
+            b = get_entertainment_building();
             houses_serviced = provide_entertainment(x, y,
                                                     b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
             break;
@@ -390,33 +389,30 @@ int figure_service_provide_coverage(figure *f) {
         case FIGURE_ENGINEER: {
             int max_damage = 0;
             houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
-            if (max_damage > f->min_max_seen)
-                f->min_max_seen = max_damage;
-            else if (f->min_max_seen <= 10)
-                f->min_max_seen = 0;
-            else {
-                f->min_max_seen -= 10;
-            }
+            if (max_damage > min_max_seen)
+                min_max_seen = max_damage;
+            else if (min_max_seen <= 10)
+                min_max_seen = 0;
+            else
+                min_max_seen -= 10;
             break;
         }
         case FIGURE_PREFECT: {
             int min_happiness = 100;
             houses_serviced = provide_service(x, y, &min_happiness, prefect_coverage);
-            f->min_max_seen = min_happiness;
+            min_max_seen = min_happiness;
             break;
         }
         case FIGURE_RIOTER:
-            if (figure_rioter_collapse_building(f) == 1)
+            if (figure_rioter_collapse_building() == 1)
                 return 1;
-
             break;
     }
-    if (f->building_id) {
-        b = building_get(f->building_id);
+    if (building_id) {
+        b = building_get(building_id);
         b->houses_covered += houses_serviced;
         if (b->houses_covered > 300)
             b->houses_covered = 300;
-
     }
     return 0;
 }

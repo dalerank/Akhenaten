@@ -450,7 +450,7 @@ void formation_calculate_figures(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (!figure_is_legion(f) && !figure_is_enemy(f) && !figure_is_herd(f))
+        if (!f->is_legion() && !f->is_enemy() && !f->is_herd())
             continue;
 
         if (f->type == FIGURE_ENEMY54_GLADIATOR)

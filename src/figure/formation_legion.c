@@ -33,7 +33,7 @@ void formation_legion_delete_for_fort(building *fort) {
         formation *m = formation_get(fort->formation_id);
         if (m->in_use) {
             if (m->standard_figure_id)
-                figure_delete(figure_get(m->standard_figure_id));
+                figure_get(m->standard_figure_id)->figure_delete();
 
             formation_clear(fort->formation_id);
             formation_calculate_legion_totals();
@@ -126,7 +126,7 @@ void formation_legion_move_to(formation *m, int x, int y) {
         if (prepare_to_move(m)) {
             f->alternative_location_index = 0;
             f->action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
-            figure_route_remove(f);
+            f->route_remove();
         }
     }
 }
@@ -148,7 +148,7 @@ void formation_legion_return_home(formation *m) {
         }
         if (prepare_to_move(m)) {
             f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
-            figure_route_remove(f);
+            f->route_remove();
         }
     }
 }
@@ -159,7 +159,7 @@ static int dispatch_soldiers(formation *m) {
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (!figure_is_dead(f))
+            if (!f->is_dead())
                 f->action_state = FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE;
 
         }
@@ -198,7 +198,7 @@ static void kill_soldiers(formation *m, int kill_percentage) {
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (!figure_is_dead(f))
+            if (!f->is_dead())
                 soldiers_total++;
 
         }
@@ -211,7 +211,7 @@ static void kill_soldiers(formation *m, int kill_percentage) {
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (!figure_is_dead(f)) {
+            if (!f->is_dead()) {
                 if (soldiers_to_kill) {
                     soldiers_to_kill--;
                     f->state = FIGURE_STATE_DEAD;
@@ -235,7 +235,7 @@ static void return_soldiers(formation *m) {
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (!figure_is_dead(f)) {
+            if (!f->is_dead()) {
                 f->action_state = FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
                 f->formation_at_rest = 1;
             }
@@ -281,15 +281,15 @@ int formation_legion_curse(void) {
     return 1;
 }
 
-static int is_legion(figure *f) {
-    if (figure_is_legion(f) || f->type == FIGURE_FORT_STANDARD)
-        return f->formation_id;
+bool figure::is_formation() {
+    if (is_legion() || type == FIGURE_FORT_STANDARD)
+        return formation_id;
 
     return 0;
 }
 
 int formation_legion_at_grid_offset(int grid_offset) {
-    return map_figure_foreach_until(grid_offset, is_legion);
+    return map_figure_foreach_until(grid_offset, TEST_SEARCH_FORMATION);
 }
 
 int formation_legion_at_building(int grid_offset) {
@@ -326,7 +326,7 @@ void formation_legion_update(void) {
                     f->action_state != FIGURE_ACTION_149_CORPSE &&
                     f->action_state != FIGURE_ACTION_148_FLEEING) {
                     f->action_state = FIGURE_ACTION_148_FLEEING;
-                    figure_route_remove(f);
+                    f->route_remove();
                 }
             }
         } else if (m->layout == FORMATION_MOP_UP) {
@@ -352,7 +352,7 @@ void formation_legion_update(void) {
 void formation_legion_decrease_damage(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->state == FIGURE_STATE_ALIVE && figure_is_legion(f)) {
+        if (f->state == FIGURE_STATE_ALIVE && f->is_legion()) {
             if (f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
                 if (f->damage)
                     f->damage--;

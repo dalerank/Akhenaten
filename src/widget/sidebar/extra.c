@@ -25,8 +25,8 @@
 static void button_game_speed(int is_down, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
-        {11, 30, 17, 24, button_game_speed, 1, 0},
-        {35, 30, 15, 24, button_game_speed, 0, 0},
+        {11, 30, 17+11025, 24, button_game_speed, 1, 0},
+        {35, 30, 15+11025, 24, button_game_speed, 0, 0},
 };
 
 typedef struct {

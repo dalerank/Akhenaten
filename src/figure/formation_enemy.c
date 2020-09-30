@@ -262,16 +262,11 @@ static void set_native_target_building(formation *m) {
 }
 
 static void approach_target(formation *m) {
-    if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
-                                                    m->destination_x, m->destination_y, m->destination_building_id,
-                                                    400) ||
-        map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
-                                                             m->destination_x, m->destination_y)) {
+    if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, m->destination_x, m->destination_y, m->destination_building_id, 400) ||
+        map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home, m->destination_x, m->destination_y)) {
         int x_tile, y_tile;
-        if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
-                                                      m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
+        if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home, m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile))
             formation_set_destination(m, x_tile, y_tile);
-        }
     }
 }
 
@@ -321,7 +316,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
                         break;
                     }
                     if (map_has_figure_at(grid_offset) &&
-                        figure_get(map_figure_at(grid_offset))->formation_id != m->id) {
+                            figure_get(map_figure_at(grid_offset))->formation_id != m->id) {
                         can_move = 0;
                         break;
                     }
@@ -347,7 +342,7 @@ static void mars_kill_enemies(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (figure_is_enemy(f) && f->type != FIGURE_ENEMY54_GLADIATOR) {
+        if (f->is_enemy() && f->type != FIGURE_ENEMY54_GLADIATOR) {
             f->action_state = FIGURE_ACTION_149_CORPSE;
             to_kill--;
             if (!grid_offset)
@@ -505,7 +500,7 @@ static void update_enemy_formation(formation *m, int *roman_distance) {
         figure *f = figure_get(m->figures[n]);
         if (f->action_state == FIGURE_ACTION_150_ATTACK) {
             figure *opponent = figure_get(f->opponent_id);
-            if (!figure_is_dead(opponent) && figure_is_legion(opponent))
+            if (!opponent->is_dead() && opponent->is_legion())
                 formation_record_fight(m);
 
         }
@@ -517,7 +512,7 @@ static void update_enemy_formation(formation *m, int *roman_distance) {
                 f->action_state != FIGURE_ACTION_149_CORPSE &&
                 f->action_state != FIGURE_ACTION_148_FLEEING) {
                 f->action_state = FIGURE_ACTION_148_FLEEING;
-                figure_route_remove(f);
+                f->route_remove();
             }
         }
         return;

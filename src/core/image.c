@@ -618,7 +618,7 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
         case ENGINE_ENV_PHARAOH:
             filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_555;
             filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_SG3;
-            if (!data.ph_expansion->load_555(gfc.PH_EXPANSION_555, gfc.PH_EXPANSION_SG3)) return 0;
+            if (!data.ph_expansion->load_555(gfc.PH_EXPANSION_555, gfc.PH_EXPANSION_SG3, -200)) return 0;
             if (!data.ph_sprmain->load_555(gfc.PH_SPRMAIN_555, gfc.PH_SPRMAIN_SG3, 700)) return 0;
             if (!data.ph_unloaded->load_555(gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3, 11025)) return 0;
             if (!data.main->load_555(filename_555, filename_sgx, 11706)) return 0;

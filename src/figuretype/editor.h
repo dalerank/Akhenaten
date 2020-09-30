@@ -22,6 +22,6 @@ enum {
 
 void figure_create_editor_flags(void);
 
-void figure_editor_flag_action(figure *f);
+//void figure_editor_flag_action();
 
 #endif // FIGURETYPE_EDITOR_H

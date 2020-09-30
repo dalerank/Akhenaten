@@ -291,8 +291,13 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->house_highest_population = buf->read_i16();
 
     b->house_unreachable_ticks = buf->read_i16();
-    b->road_access_x = buf->read_u8();
-    b->road_access_y = buf->read_u8();
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        b->road_access_x = buf->read_u8();
+        b->road_access_y = buf->read_u8();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        b->road_access_x = buf->read_u16();
+        b->road_access_y = buf->read_u16();
+    }
     b->figure_id = buf->read_i16();
     b->figure_id2 = buf->read_i16();
     b->immigrant_figure_id = buf->read_i16();
@@ -306,10 +311,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->prev_part_building_id = buf->read_i16();
     b->next_part_building_id = buf->read_i16();
     b->loads_stored = buf->read_i16();
-    if (GAME_ENV == ENGINE_ENV_C3)
-        buf->skip(1);
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(3);
+    buf->skip(1);
     b->has_well_access = buf->read_u8();
 
     b->num_workers = buf->read_i16();
@@ -348,8 +350,8 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
 
     // 68 additional bytes
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         buf->skip(68); // temp for debugging
-
-    assert(buf->get_offset() - sind == 264);
+        assert(buf->get_offset() - sind == 264);
+    }
 }

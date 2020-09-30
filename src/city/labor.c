@@ -25,7 +25,7 @@ typedef enum {
     LABOR_CATEGORY_GOVERNANCE_RELIGION = 8
 } labor_category;
 
-static int CATEGORY_FOR_int[] = {
+static int CATEGORY_FOR_int_arr[] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
@@ -38,8 +38,26 @@ static int CATEGORY_FOR_int[] = {
         -1, 3, -1, -1, 5, 5, -1, -1, 8, -1, // 90
         1, 1, 1, 0, 0, 1, 0, 0, 0, 0, // 100
         0, 0, 0, 0, 0, -1, -1, -1, -1, -1, // 110
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 //120
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //120
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //130
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //140
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //150
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //160
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //170
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //180
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //190
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //200
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //210
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //220
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //230
 };
+
+const int CATEGORY_FOR_int(int type)
+{
+    if (type < 0 || type >= 240 - 1)
+        type = 0;
+    return CATEGORY_FOR_int_arr[type];
+}
 
 static struct {
     labor_category category;
@@ -172,7 +190,7 @@ static void calculate_workers_needed_per_category(void) {
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
 
-        int category = CATEGORY_FOR_int[b->type];
+        int category = CATEGORY_FOR_int(b->type);
         b->labor_category = category;
         if (!should_have_workers(b, category, 1))
             continue;
@@ -283,7 +301,7 @@ static void set_building_worker_weight(void) {
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
 
-        int cat = CATEGORY_FOR_int[b->type];
+        int cat = CATEGORY_FOR_int(b->type);
         if (cat == LABOR_CATEGORY_WATER)
             b->percentage_houses_covered = water_per_10k_per_building;
         else if (cat >= 0) {
@@ -318,7 +336,7 @@ static void allocate_workers_to_water(void) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_int[b->type] != LABOR_CATEGORY_WATER)
+        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_int(b->type) != LABOR_CATEGORY_WATER)
             continue;
 
         b->num_workers = 0;
@@ -357,7 +375,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
 
-        int cat = CATEGORY_FOR_int[b->type];
+        int cat = CATEGORY_FOR_int(b->type);
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
             // water is handled by allocate_workers_to_water(void)
             continue;
@@ -399,7 +417,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
 
-        int cat = CATEGORY_FOR_int[b->type];
+        int cat = CATEGORY_FOR_int(b->type);
         if (cat < 0 || cat == LABOR_CATEGORY_WATER || cat == LABOR_CATEGORY_MILITARY)
             continue;
 

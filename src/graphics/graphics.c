@@ -198,7 +198,7 @@ static void set_clip_y(int y_offset, int height) {
 
 const clip_info *graphics_get_clip_info(int x, int y, int width, int height, bool mirrored) {
     if (mirrored)
-        set_clip_x(clip_rectangle.x_end + x - width, width);
+        set_clip_x(clip_rectangle.x_end - x - width, width);
     else
         set_clip_x(x, width);
     set_clip_y(y, height);

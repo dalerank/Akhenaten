@@ -4,6 +4,20 @@
 #include "core/buffer.h"
 #include "figure/figure.h"
 
+enum {
+    TEST_SEARCH_DEAD,
+    TEST_SEARCH_ENEMY,
+    TEST_SEARCH_HERD,
+    TEST_SEARCH_FORMATION,
+    TEST_SEARCH_ATTACKING_NATIVE,
+    TEST_SEARCH_CITIZEN,
+    TEST_SEARCH_NON_CITIZEN,
+    TEST_SEARCH_FIGHTING_FRIENDLY,
+    TEST_SEARCH_FIGHTING_ENEMY,
+    TEST_SEARCH_HAS_COLOR,
+
+};
+
 /**
  * Returns the first figure at the given offset
  * @param grid_offset Map offset
@@ -18,13 +32,13 @@ int map_figure_at(int grid_offset);
  */
 int map_has_figure_at(int grid_offset);
 
-void map_figure_add(figure *f);
+//void map_figure_add();
+//
+//void map_figure_update();
 
-void map_figure_update(figure *f);
+//void map_figure *f->map_figure_remove();
 
-void map_figure_delete(figure *f);
-
-int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f));
+bool map_figure_foreach_until(int grid_offset, int test);
 
 /**
  * Clears the map

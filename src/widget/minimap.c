@@ -97,16 +97,16 @@ static int is_in_minimap(const mouse *m) {
     }
     return 0;
 }
-static int has_figure_color(figure *f) {
-    int type = f->type;
-    if (figure_is_legion(f))
+bool figure::has_figure_color() {
+    int type = type;
+    if (is_legion())
         return FIGURE_COLOR_SOLDIER;
 
-    if (figure_is_enemy(f))
+    if (is_enemy())
         return FIGURE_COLOR_ENEMY;
 
-    if (f->type == FIGURE_INDIGENOUS_NATIVE &&
-        f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+    if (type == FIGURE_INDIGENOUS_NATIVE &&
+        action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
     if (type == FIGURE_WOLF)
@@ -115,7 +115,7 @@ static int has_figure_color(figure *f) {
     return FIGURE_COLOR_NONE;
 }
 static int draw_figure(int x_view, int y_view, int grid_offset) {
-    int color_type = map_figure_foreach_until(grid_offset, has_figure_color);
+    int color_type = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
     if (color_type == FIGURE_COLOR_NONE)
         return 0;
 

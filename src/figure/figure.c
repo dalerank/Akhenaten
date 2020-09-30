@@ -14,24 +14,25 @@
 
 static struct {
     int created_sequence;
-    figure figures[5000];
-} data = {0};
+    bool initialized;
+    figure *figures[5000];
+} data = {0, false};
 
 figure *figure_get(int id) {
-    return &data.figures[id];
+    return data.figures[id];
 }
 figure *figure_create(int type, int x, int y, int dir) {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
-        if (!data.figures[i].state) {
+        if (figure_get(i)->available()) {
             id = i;
             break;
         }
     }
     if (!id)
-        return &data.figures[0];
+        return figure_get(0);
 
-    figure *f = &data.figures[id];
+    figure *f = figure_get(id);
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
@@ -47,18 +48,18 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->progress_on_tile = 15;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
-    map_figure_add(f);
+    f->map_figure_add();
     if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP)
         f->trader_id = trader_create();
 
     return f;
 }
-void figure_delete(figure *f) {
-    building *b = building_get(f->building_id);
-    switch (f->type) {
+void figure::figure_delete() {
+    building *b = building_get(building_id);
+    switch (type) {
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:
-            if (f->building_id)
+            if (building_id)
                 b->figure_id2 = 0;
 
             break;
@@ -67,7 +68,7 @@ void figure_delete(figure *f) {
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
-                if (b->data.dock.docker_ids[i] == f->id)
+                if (b->data.dock.docker_ids[i] == id)
                     b->data.dock.docker_ids[i] = 0;
 
             }
@@ -90,57 +91,64 @@ void figure_delete(figure *f) {
             // nothing to do here
             break;
         default:
-            if (f->building_id)
+            if (building_id)
                 b->figure_id = 0;
-
             break;
     }
-    if (f->empire_city_id)
-        empire_city_remove_trader(f->empire_city_id, f->id);
+    if (empire_city_id)
+        empire_city_remove_trader(empire_city_id, id);
 
-    if (f->immigrant_building_id)
+    if (immigrant_building_id)
         b->immigrant_figure_id = 0;
 
-    figure_route_remove(f);
-    map_figure_delete(f);
+    route_remove();
+    map_figure_remove();
 
-    int figure_id = f->id;
-    memset(f, 0, sizeof(figure));
-    f->id = figure_id;
-}
-
-int figure_is_dead(const figure *f) {
-    return f->state != FIGURE_STATE_ALIVE || f->action_state == FIGURE_ACTION_149_CORPSE;
-}
-int figure_is_enemy(const figure *f) {
-    return f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
-}
-int figure_is_legion(const figure *f) {
-    return f->type >= FIGURE_FORT_JAVELIN && f->type <= FIGURE_FORT_LEGIONARY;
-}
-int figure_is_herd(const figure *f) {
-    return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
+    int figure_id = id;
+//    memset(f, 0, sizeof(figure));
+    id = figure_id;
 }
 
-void figure_init_scenario(void) {
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        memset(&data.figures[i], 0, sizeof(figure));
-        data.figures[i].id = i;
+bool figure::is_dead() {
+    return state != FIGURE_STATE_ALIVE || action_state == FIGURE_ACTION_149_CORPSE;
+}
+bool figure::is_enemy() {
+    return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
+}
+bool figure::is_legion() {
+    return type >= FIGURE_FORT_JAVELIN && type <= FIGURE_FORT_LEGIONARY;
+}
+bool figure::is_herd() {
+    return type >= FIGURE_SHEEP && type <= FIGURE_ZEBRA;
+}
+
+void init_figures() {
+    if (!data.initialized) {
+        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+            data.figures[i] = new figure(i);
+//        memset(&data.figures[i], 0, sizeof(figure));
+//        data.figures[i].id = i;
+        }
+        data.initialized = true;
     }
+}
+void figure_init_scenario(void) {
+    init_figures();
     data.created_sequence = 0;
 }
 void figure_kill_all() {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
-        data.figures[i].state = FIGURE_STATE_DEAD;
+        figure_get(i)->kill();
 }
-static void figure_save(buffer *buf, const figure *f) {
+void figure::save(buffer *buf) {
+    figure *f = this;
     buf->write_u8(f->alternative_location_index);
     buf->write_u8(f->image_offset);
     buf->write_u8(f->is_enemy_image);
     buf->write_u8(f->flotsam_visible);
     buf->write_i16(f->image_id);
     buf->write_i16(f->cart_image_id);
-    buf->write_i16(f->next_figure_id_on_same_tile);
+    buf->write_i16(f->next_figure);
     buf->write_u8(f->type);
     buf->write_u8(f->resource_id);
     buf->write_u8(f->use_cross_country);
@@ -225,20 +233,21 @@ static void figure_save(buffer *buf, const figure *f) {
     buf->write_i16(f->targeted_by_figure_id);
     buf->write_u16(f->created_sequence);
     buf->write_u16(f->target_figure_created_sequence);
-    buf->write_u8(f->figures_on_same_tile_index);
+    buf->write_u8(0);
     buf->write_u8(f->num_attackers);
     buf->write_i16(f->attacker_id1);
     buf->write_i16(f->attacker_id2);
     buf->write_i16(f->opponent_id);
 }
-static void figure_load(buffer *buf, figure *f) {
+void figure::load(buffer *buf) {
+    figure *f = this;
     f->alternative_location_index = buf->read_u8();
     f->image_offset = buf->read_u8();
     f->is_enemy_image = buf->read_u8();
     f->flotsam_visible = buf->read_u8();
     f->image_id = buf->read_i16();
     f->cart_image_id = buf->read_i16();
-    f->next_figure_id_on_same_tile = buf->read_i16();
+    f->next_figure = buf->read_i16();
     f->type = buf->read_u8();
     f->resource_id = buf->read_u8();
     f->use_cross_country = buf->read_u8();
@@ -249,35 +258,55 @@ static void figure_load(buffer *buf, figure *f) {
     f->direction = buf->read_i8();
     f->previous_tile_direction = buf->read_i8();
     f->attack_direction = buf->read_i8();
-    f->x = buf->read_u8();
-    f->y = buf->read_u8();
-    f->previous_tile_x = buf->read_u8();
-    f->previous_tile_y = buf->read_u8();
-    f->missile_damage = buf->read_u8();
-    f->damage = buf->read_u8();
-    f->grid_offset = buf->read_i16();
-    f->destination_x = buf->read_u8();
-    f->destination_y = buf->read_u8();
-    f->destination_grid_offset = buf->read_i16();
-    f->source_x = buf->read_u8();
-    f->source_y = buf->read_u8();
-    f->formation_position_x.soldier = buf->read_u8();
-    f->formation_position_y.soldier = buf->read_u8();
-    f->__unused_24 = buf->read_i16();
-    f->wait_ticks = buf->read_i16();
-    f->action_state = buf->read_u8();
-    f->progress_on_tile = buf->read_u8();
-    f->routing_path_id = buf->read_i16();
-    f->routing_path_current_tile = buf->read_i16();
-    f->routing_path_length = buf->read_i16();
-    f->in_building_wait_ticks = buf->read_u8();
-    f->is_on_road = buf->read_u8();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        f->x = buf->read_u16();
+        f->y = buf->read_u16();
+        f->previous_tile_x = buf->read_u16();
+        f->previous_tile_y = buf->read_u16();
+        f->missile_damage = buf->read_u16();
+        f->damage = buf->read_u16();
+    } else {
+        f->x = buf->read_u8();
+        f->y = buf->read_u8();
+        f->previous_tile_x = buf->read_u8();
+        f->previous_tile_y = buf->read_u8();
+        f->missile_damage = buf->read_u8();
+        f->damage = buf->read_u8();
+    }
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        f->grid_offset = buf->read_i32();
+        f->destination_x = buf->read_u16();
+        f->destination_y = buf->read_u16();
+        f->destination_grid_offset = buf->read_i32();
+        f->source_x = buf->read_u16();
+        f->source_y = buf->read_u16();
+        f->formation_position_x.soldier = buf->read_u16();
+        f->formation_position_y.soldier = buf->read_u16();
+    } else {
+        f->grid_offset = buf->read_i16();
+        f->destination_x = buf->read_u8();
+        f->destination_y = buf->read_u8();
+        f->destination_grid_offset = buf->read_i16();
+        f->source_x = buf->read_u8();
+        f->source_y = buf->read_u8();
+        f->formation_position_x.soldier = buf->read_u8();
+        f->formation_position_y.soldier = buf->read_u8();
+    }
+    f->__unused_24 = buf->read_i16(); // 0
+    f->wait_ticks = buf->read_i16(); // 0
+    f->action_state = buf->read_u8(); // 9
+    f->progress_on_tile = buf->read_u8(); // 11
+    f->routing_path_id = buf->read_i16(); // 12
+    f->routing_path_current_tile = buf->read_i16(); // 4
+    f->routing_path_length = buf->read_i16(); // 28
+    f->in_building_wait_ticks = buf->read_u8(); // 0
+    f->is_on_road = buf->read_u8(); // 1
     f->max_roam_length = buf->read_i16();
     f->roam_length = buf->read_i16();
     f->roam_choose_destination = buf->read_u8();
     f->roam_random_counter = buf->read_u8();
     f->roam_turn_direction = buf->read_i8();
-    f->roam_ticks_until_next_turn = buf->read_i8();
+    f->roam_ticks_until_next_turn = buf->read_i8(); // 0 ^^^^
     f->cross_country_x = buf->read_i16();
     f->cross_country_y = buf->read_i16();
     f->cc_destination_x = buf->read_i16();
@@ -323,26 +352,26 @@ static void figure_load(buffer *buf, figure *f) {
     f->targeted_by_figure_id = buf->read_i16();
     f->created_sequence = buf->read_u16();
     f->target_figure_created_sequence = buf->read_u16();
-    f->figures_on_same_tile_index = buf->read_u8();
+//    f->figures_sametile_num = buf->read_u8();
+    buf->skip(1);
     f->num_attackers = buf->read_u8();
     f->attacker_id1 = buf->read_i16();
     f->attacker_id2 = buf->read_i16();
     f->opponent_id = buf->read_i16();
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(260);
+        buf->skip(244);
 }
 void figure_save_state(buffer *list, buffer *seq) {
     seq->write_i32(data.created_sequence);
-
-    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure_save(list, &data.figures[i]);
-    }
+    init_figures();
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++)
+        figure_get(i)->save(list);
 }
 void figure_load_state(buffer *list, buffer *seq) {
     data.created_sequence = seq->read_i32();
-
+    init_figures();
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
-        figure_load(list, &data.figures[i]);
-        data.figures[i].id = i;
+        figure_get(i)->load(list);
+        figure_get(i)->id = i;
     }
 }

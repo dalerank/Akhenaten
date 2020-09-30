@@ -37,7 +37,7 @@ void figure_create_flotsam(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state && f->type == FIGURE_FLOTSAM)
-            figure_delete(f);
+            f->figure_delete();
 
     }
 
@@ -49,250 +49,6 @@ void figure_create_flotsam(void) {
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
     }
 }
-
-void figure_flotsam_action(figure *f) {
-    f->is_boat = 2;
-    if (!scenario_map_has_river_exit())
-        return;
-    f->is_ghost = 0;
-    f->cart_image_id = 0;
-    f->terrain_usage = TERRAIN_USAGE_ANY;
-    switch (f->action_state) {
-        case FIGURE_ACTION_128_FLOTSAM_CREATED:
-            f->is_ghost = 1;
-            f->wait_ticks--;
-            if (f->wait_ticks <= 0) {
-                f->action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
-                f->wait_ticks = 0;
-                if (!f->resource_id && city_god_neptune_create_shipwreck_flotsam())
-                    f->min_max_seen = 1;
-
-                map_point river_exit = scenario_map_river_exit();
-                f->destination_x = river_exit.x;
-                f->destination_y = river_exit.y;
-            }
-            break;
-        case FIGURE_ACTION_129_FLOTSAM_FLOATING:
-            if (f->flotsam_visible)
-                f->flotsam_visible = 0;
-            else {
-                f->flotsam_visible = 1;
-                f->wait_ticks++;
-                figure_movement_move_ticks(f, 1);
-                f->is_ghost = 0;
-                f->height_adjusted_ticks = 0;
-                if (f->direction == DIR_FIGURE_AT_DESTINATION ||
-                    f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                    f->action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
-                }
-            }
-            break;
-        case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
-            f->is_ghost = 1;
-            f->min_max_seen = 0;
-            f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
-            if (f->wait_ticks >= 400)
-                f->wait_ticks = random_byte() & 7;
-            else if (f->wait_ticks >= 200)
-                f->wait_ticks = 50 + (random_byte() & 0xf);
-            else if (f->wait_ticks >= 100)
-                f->wait_ticks = 100 + (random_byte() & 0x1f);
-            else if (f->wait_ticks >= 50)
-                f->wait_ticks = 200 + (random_byte() & 0x3f);
-            else {
-                f->wait_ticks = 300 + random_byte();
-            }
-            map_figure_delete(f);
-            map_point river_entry = scenario_map_river_entry();
-            f->x = river_entry.x;
-            f->y = river_entry.y;
-            f->grid_offset = map_grid_offset(f->x, f->y);
-            f->cross_country_x = 15 * f->x;
-            f->cross_country_y = 15 * f->y;
-            break;
-    }
-    if (f->resource_id == 0) {
-        figure_image_increase_offset(f, 12);
-        if (f->min_max_seen)
-            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[f->image_offset];
-        else {
-            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[f->image_offset];
-        }
-    } else if (f->resource_id == 1) {
-        figure_image_increase_offset(f, 24);
-        f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[f->image_offset];
-    } else if (f->resource_id == 2) {
-        figure_image_increase_offset(f, 24);
-        f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[f->image_offset];
-    } else if (f->resource_id == 3) {
-        figure_image_increase_offset(f, 24);
-        if (FLOTSAM_TYPE_3[f->image_offset] == -1)
-            f->image_id = 0;
-        else {
-            f->image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[f->image_offset];
-        }
-    }
-}
-
-void figure_shipwreck_action(figure *f) {
-    f->is_ghost = 0;
-    f->height_adjusted_ticks = 0;
-    f->is_boat = 1;
-    figure_image_increase_offset(f, 128);
-    if (f->wait_ticks < 1000) {
-        map_figure_delete(f);
-        map_point tile;
-        if (map_water_find_shipwreck_tile(f, &tile)) {
-            f->x = tile.x;
-            f->y = tile.y;
-            f->grid_offset = map_grid_offset(f->x, f->y);
-            f->cross_country_x = 15 * f->x + 7;
-            f->cross_country_y = 15 * f->y + 7;
-        }
-        map_figure_add(f);
-        f->wait_ticks = 1000;
-    }
-    f->wait_ticks++;
-    if (f->wait_ticks > 2000)
-        f->state = FIGURE_STATE_DEAD;
-
-    f->image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + f->image_offset / 16;
-}
-
-void figure_fishing_boat_action(figure *f) {
-    building *b = building_get(f->building_id);
-    if (b->state != BUILDING_STATE_IN_USE)
-        f->state = FIGURE_STATE_DEAD;
-
-    if (f->action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != f->id) {
-        map_point tile;
-        b = building_get(map_water_get_wharf_for_new_fishing_boat(f, &tile));
-        if (b->id) {
-            f->building_id = b->id;
-            b->data.industry.fishing_boat_id = f->id;
-            f->action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-            f->destination_x = tile.x;
-            f->destination_y = tile.y;
-            f->source_x = tile.x;
-            f->source_y = tile.y;
-            figure_route_remove(f);
-        } else {
-            f->state = FIGURE_STATE_DEAD;
-        }
-    }
-    f->is_ghost = 0;
-    f->is_boat = 1;
-    figure_image_increase_offset(f, 12);
-    f->cart_image_id = 0;
-    switch (f->action_state) {
-        case FIGURE_ACTION_190_FISHING_BOAT_CREATED:
-            f->wait_ticks++;
-            if (f->wait_ticks >= 50) {
-                f->wait_ticks = 0;
-                map_point tile;
-                int wharf_id = map_water_get_wharf_for_new_fishing_boat(f, &tile);
-                if (wharf_id) {
-                    b->figure_id = 0; // remove from original building
-                    f->building_id = wharf_id;
-                    building_get(wharf_id)->data.industry.fishing_boat_id = f->id;
-                    f->action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-                    f->destination_x = tile.x;
-                    f->destination_y = tile.y;
-                    f->source_x = tile.x;
-                    f->source_y = tile.y;
-                    figure_route_remove(f);
-                }
-            }
-            break;
-        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
-            figure_movement_move_ticks(f, 1);
-            f->height_adjusted_ticks = 0;
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                map_point tile;
-                if (map_water_find_alternative_fishing_boat_tile(f, &tile)) {
-                    figure_route_remove(f);
-                    f->destination_x = tile.x;
-                    f->destination_y = tile.y;
-                    f->direction = f->previous_tile_direction;
-                } else {
-                    f->action_state = FIGURE_ACTION_192_FISHING_BOAT_FISHING;
-                    f->wait_ticks = 0;
-                }
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
-                f->destination_x = f->source_x;
-                f->destination_y = f->source_y;
-            }
-            break;
-        case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
-            f->wait_ticks++;
-            if (f->wait_ticks >= 200) {
-                f->wait_ticks = 0;
-                f->action_state = FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH;
-                f->destination_x = f->source_x;
-                f->destination_y = f->source_y;
-                figure_route_remove(f);
-            }
-            break;
-        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
-            figure_movement_move_ticks(f, 1);
-            f->height_adjusted_ticks = 0;
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
-                f->wait_ticks = 0;
-            } else if (f->direction == DIR_FIGURE_REROUTE)
-                figure_route_remove(f);
-            else if (f->direction == DIR_FIGURE_LOST) {
-                // cannot reach grounds
-                city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
-                f->state = FIGURE_STATE_DEAD;
-            }
-            break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            int max_wait_ticks = 5 * (102 - pct_workers);
-            if (b->data.industry.has_fish > 0)
-                pct_workers = 0;
-
-            if (pct_workers > 0) {
-                f->wait_ticks++;
-                if (f->wait_ticks >= max_wait_ticks) {
-                    f->wait_ticks = 0;
-                    map_point tile;
-                    if (scenario_map_closest_fishing_point(f->x, f->y, &tile)) {
-                        f->action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
-                        f->destination_x = tile.x;
-                        f->destination_y = tile.y;
-                        figure_route_remove(f);
-                    }
-                }
-            }
-        }
-            break;
-        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
-            figure_movement_move_ticks(f, 1);
-            f->height_adjusted_ticks = 0;
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
-                f->wait_ticks = 0;
-                b->figure_spawn_delay = 1;
-                b->data.industry.has_fish++;
-            } else if (f->direction == DIR_FIGURE_REROUTE)
-                figure_route_remove(f);
-            else if (f->direction == DIR_FIGURE_LOST)
-                f->state = FIGURE_STATE_DEAD;
-
-            break;
-    }
-    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
-
-    if (f->action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING)
-        f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
-    else {
-        f->image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
-    }
-}
-
 void figure_sink_all_ships(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
@@ -309,5 +65,246 @@ void figure_sink_all_ships(void) {
         f->building_id = 0;
         f->type = FIGURE_SHIPWRECK;
         f->wait_ticks = 0;
+    }
+}
+
+void figure::flotsam_action() {
+    is_boat = 2;
+    if (!scenario_map_has_river_exit())
+        return;
+    is_ghost = 0;
+    cart_image_id = 0;
+    terrain_usage = TERRAIN_USAGE_ANY;
+    switch (action_state) {
+        case FIGURE_ACTION_128_FLOTSAM_CREATED:
+            is_ghost = 1;
+            wait_ticks--;
+            if (wait_ticks <= 0) {
+                action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
+                wait_ticks = 0;
+                if (!resource_id && city_god_neptune_create_shipwreck_flotsam())
+                    min_max_seen = 1;
+
+                map_point river_exit = scenario_map_river_exit();
+                destination_x = river_exit.x;
+                destination_y = river_exit.y;
+            }
+            break;
+        case FIGURE_ACTION_129_FLOTSAM_FLOATING:
+            if (flotsam_visible)
+                flotsam_visible = 0;
+            else {
+                flotsam_visible = 1;
+                wait_ticks++;
+                move_ticks(1);
+                is_ghost = 0;
+                height_adjusted_ticks = 0;
+                if (direction == DIR_FIGURE_AT_DESTINATION ||
+                    direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+                    action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
+                }
+            }
+            break;
+        case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
+            is_ghost = 1;
+            min_max_seen = 0;
+            action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
+            if (wait_ticks >= 400)
+                wait_ticks = random_byte() & 7;
+            else if (wait_ticks >= 200)
+                wait_ticks = 50 + (random_byte() & 0xf);
+            else if (wait_ticks >= 100)
+                wait_ticks = 100 + (random_byte() & 0x1f);
+            else if (wait_ticks >= 50)
+                wait_ticks = 200 + (random_byte() & 0x3f);
+            else {
+                wait_ticks = 300 + random_byte();
+            }
+            map_figure_remove();
+            map_point river_entry = scenario_map_river_entry();
+            x = river_entry.x;
+            y = river_entry.y;
+            grid_offset = map_grid_offset(x, y);
+            cross_country_x = 15 * x;
+            cross_country_y = 15 * y;
+            break;
+    }
+    if (resource_id == 0) {
+        figure_image_increase_offset(12);
+        if (min_max_seen)
+            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[image_offset];
+        else {
+            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[image_offset];
+        }
+    } else if (resource_id == 1) {
+        figure_image_increase_offset(24);
+        image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[image_offset];
+    } else if (resource_id == 2) {
+        figure_image_increase_offset(24);
+        image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[image_offset];
+    } else if (resource_id == 3) {
+        figure_image_increase_offset(24);
+        if (FLOTSAM_TYPE_3[image_offset] == -1)
+            image_id = 0;
+        else {
+            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[image_offset];
+        }
+    }
+}
+void figure::shipwreck_action() {
+    is_ghost = 0;
+    height_adjusted_ticks = 0;
+    is_boat = 1;
+    figure_image_increase_offset(128);
+    if (wait_ticks < 1000) {
+        map_figure_remove();
+        map_point tile;
+        if (map_water_find_shipwreck_tile(this, &tile)) {
+            x = tile.x;
+            y = tile.y;
+            grid_offset = map_grid_offset(x, y);
+            cross_country_x = 15 * x + 7;
+            cross_country_y = 15 * y + 7;
+        }
+        map_figure_add();
+        wait_ticks = 1000;
+    }
+    wait_ticks++;
+    if (wait_ticks > 2000)
+        state = FIGURE_STATE_DEAD;
+
+    image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + image_offset / 16;
+}
+void figure::fishing_boat_action() {
+    building *b = building_get(building_id);
+    if (b->state != BUILDING_STATE_IN_USE)
+        state = FIGURE_STATE_DEAD;
+
+    if (action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id) {
+        map_point tile;
+        b = building_get(map_water_get_wharf_for_new_fishing_boat(this, &tile));
+        if (b->id) {
+            building_id = b->id;
+            b->data.industry.fishing_boat_id = id;
+            action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
+            destination_x = tile.x;
+            destination_y = tile.y;
+            source_x = tile.x;
+            source_y = tile.y;
+            route_remove();
+        } else {
+            state = FIGURE_STATE_DEAD;
+        }
+    }
+    is_ghost = 0;
+    is_boat = 1;
+    figure_image_increase_offset(12);
+    cart_image_id = 0;
+    switch (action_state) {
+        case FIGURE_ACTION_190_FISHING_BOAT_CREATED:
+            wait_ticks++;
+            if (wait_ticks >= 50) {
+                wait_ticks = 0;
+                map_point tile;
+                int wharf_id = map_water_get_wharf_for_new_fishing_boat(this, &tile);
+                if (wharf_id) {
+                    b->figure_id = 0; // remove from original building
+                    building_id = wharf_id;
+                    building_get(wharf_id)->data.industry.fishing_boat_id = id;
+                    action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
+                    destination_x = tile.x;
+                    destination_y = tile.y;
+                    source_x = tile.x;
+                    source_y = tile.y;
+                    route_remove();
+                }
+            }
+            break;
+        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
+            move_ticks(1);
+            height_adjusted_ticks = 0;
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                map_point tile;
+                if (map_water_find_alternative_fishing_boat_tile(this, &tile)) {
+                    route_remove();
+                    destination_x = tile.x;
+                    destination_y = tile.y;
+                    direction = previous_tile_direction;
+                } else {
+                    action_state = FIGURE_ACTION_192_FISHING_BOAT_FISHING;
+                    wait_ticks = 0;
+                }
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+                action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
+                destination_x = source_x;
+                destination_y = source_y;
+            }
+            break;
+        case FIGURE_ACTION_192_FISHING_BOAT_FISHING:
+            wait_ticks++;
+            if (wait_ticks >= 200) {
+                wait_ticks = 0;
+                action_state = FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH;
+                destination_x = source_x;
+                destination_y = source_y;
+                route_remove();
+            }
+            break;
+        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
+            move_ticks(1);
+            height_adjusted_ticks = 0;
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
+                wait_ticks = 0;
+            } else if (direction == DIR_FIGURE_REROUTE)
+                route_remove();
+            else if (direction == DIR_FIGURE_LOST) {
+                // cannot reach grounds
+                city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
+                state = FIGURE_STATE_DEAD;
+            }
+            break;
+        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            int max_wait_ticks = 5 * (102 - pct_workers);
+            if (b->data.industry.has_fish > 0)
+                pct_workers = 0;
+
+            if (pct_workers > 0) {
+                wait_ticks++;
+                if (wait_ticks >= max_wait_ticks) {
+                    wait_ticks = 0;
+                    map_point tile;
+                    if (scenario_map_closest_fishing_point(x, y, &tile)) {
+                        action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
+                        destination_x = tile.x;
+                        destination_y = tile.y;
+                        route_remove();
+                    }
+                }
+            }
+        }
+            break;
+        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
+            move_ticks(1);
+            height_adjusted_ticks = 0;
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
+                wait_ticks = 0;
+                b->figure_spawn_delay = 1;
+                b->data.industry.has_fish++;
+            } else if (direction == DIR_FIGURE_REROUTE)
+                route_remove();
+            else if (direction == DIR_FIGURE_LOST)
+                state = FIGURE_STATE_DEAD;
+
+            break;
+    }
+    int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
+
+    if (action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING)
+        image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
+    else {
+        image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
     }
 }

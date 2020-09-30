@@ -168,8 +168,8 @@ static int groupid_translation_table_ph[] = {
 //        230, 230+340, // missionary
         231, 201 + 340, // librarian
         232, 66 + 66, // fort, mounted
-        233, 156 + 340, // sheep (ostrich)
-        234, 23 + 340, // wolf (crocodile)
+        233, 23 + 340, // sheep (crocodile)
+        234, 156 + 340, // wolf (ostrich)
 //        235, 235+340, // zebra
 //        236, 236+340, // legionary
 //        237, 237+340, // cartpusher cart, multiple food

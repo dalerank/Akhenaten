@@ -132,7 +132,7 @@ static void move_animals(const formation *m, int attacking_animals) {
                 f->target_figure_id = target_id;
                 target->targeted_by_figure_id = f->id;
                 f->target_figure_created_sequence = target->created_sequence;
-                figure_route_remove(f);
+                f->route_remove();
             } else {
                 f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             }

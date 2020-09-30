@@ -1,11 +1,12 @@
-#include "sound.h"
+#include "figure/figure.h"
 
 #include "city/figures.h"
 #include "city/sound.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
 
-void figure_play_die_sound(const figure *f) {
+void figure::play_die_sound() {
+    figure *f = this;
     int is_soldier = 0;
     int is_citizen = 0;
     switch (f->type) {
@@ -64,18 +65,18 @@ void figure_play_die_sound(const figure *f) {
     else if (is_citizen)
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
 
-    if (figure_is_enemy(f)) {
+    if (f->is_enemy()) {
         if (city_figures_enemies() == 1)
             sound_speech_play_file("wavs/army_war_cry.wav");
 
-    } else if (figure_is_legion(f)) {
+    } else if (f->is_legion()) {
         if (city_figures_soldiers() == 1)
             sound_speech_play_file("wavs/barbarian_war_cry.wav");
 
     }
 }
-
-void figure_play_hit_sound(int type) {
+void figure::play_hit_sound() {
+    figure *f = this;
     switch (type) {
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:

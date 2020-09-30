@@ -9,7 +9,7 @@
 /**
  * Figure types
  */
-enum {
+typedef enum figure_type {
     FIGURE_NONE = 0,
     FIGURE_IMMIGRANT = 1,
     FIGURE_EMIGRANT = 2,
@@ -83,7 +83,7 @@ enum {
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72
-};
+} figure_type;
 
 enum {
     ENEMY_0_BARBARIAN = 0,
@@ -100,10 +100,12 @@ enum {
     ENEMY_11_CAESAR = 11
 };
 
-enum {
+typedef enum figure_state {
+    FIGURE_STATE_NONE = 0,
     FIGURE_STATE_ALIVE = 1,
+
     FIGURE_STATE_DEAD = 2
-};
+} figure_state;
 
 enum {
     TERRAIN_USAGE_ANY = 0,

@@ -295,17 +295,17 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
 }
 
-static int is_fighting_friendly(figure *f) {
-    return f->is_friendly && f->action_state == FIGURE_ACTION_150_ATTACK;
+bool figure::is_fighting_friendly() {
+    return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+}
+bool figure::is_fighting_enemy() {
+    return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
 }
 static int has_fighting_friendly(int grid_offset) {
-    return map_figure_foreach_until(grid_offset, is_fighting_friendly);
-}
-static int is_fighting_enemy(figure *f) {
-    return !f->is_friendly && f->action_state == FIGURE_ACTION_150_ATTACK;
+    return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_FRIENDLY);
 }
 static int has_fighting_enemy(int grid_offset) {
-    return map_figure_foreach_until(grid_offset, is_fighting_enemy);
+    return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_ENEMY);
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist) {
@@ -325,7 +325,8 @@ static void callback_travel_citizen_road_garden(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y) {
+int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y)
+{
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -363,9 +364,7 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
         }
     }
 }
-int
-map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id,
-                                            int max_tiles) {
+int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;

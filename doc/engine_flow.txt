@@ -90,8 +90,12 @@ building_construction_update (construction.c)
           map_aqueduct_set (aqueduct.c)
 ​
 
-
-
+figure_homeless_action (migrant.c)
+  ....
+  FIGURE_ACTION_10_HOMELESS_LEAVING:
+  if dir = DIR_FIGURE_REROUTE:
+    route_remove (route.c)
+​
 
 
 

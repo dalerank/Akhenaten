@@ -57,7 +57,7 @@ static void generate_labor_seeker(building *b, int x, int y) {
         f->action_state = FIGURE_ACTION_125_ROAMING;
         f->building_id = b->id;
         b->figure_id2 = f->id;
-        figure_movement_init_roaming(f);
+        f->init_roaming();
     }
 }
 
@@ -114,7 +114,7 @@ static void create_roaming_figure(building *b, int x, int y, int type) {
     f->action_state = FIGURE_ACTION_125_ROAMING;
     f->building_id = b->id;
     b->figure_id = f->id;
-    figure_movement_init_roaming(f);
+    f->init_roaming();
 }
 
 static int spawn_patrician(building *b, int spawned) {
@@ -126,7 +126,7 @@ static int spawn_patrician(building *b, int spawned) {
             figure *f = figure_create(FIGURE_PATRICIAN, road.x, road.y, DIR_4_BOTTOM);
             f->action_state = FIGURE_ACTION_125_ROAMING;
             f->building_id = b->id;
-            figure_movement_init_roaming(f);
+            f->init_roaming();
             return 1;
         }
     }
@@ -401,7 +401,7 @@ static void spawn_figure_amphitheater(building *b) {
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
-            figure_movement_init_roaming(f);
+            f->init_roaming();
         }
     }
 }
@@ -425,7 +425,7 @@ static void spawn_figure_theater(building *b) {
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
-            figure_movement_init_roaming(f);
+            f->init_roaming();
         }
     }
 }
@@ -469,7 +469,7 @@ static void spawn_figure_hippodrome(building *b) {
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
-            figure_movement_init_roaming(f);
+            f->init_roaming();
 
             if (!city_entertainment_hippodrome_has_race()) {
                 // create mini-horses
@@ -531,7 +531,7 @@ static void spawn_figure_colosseum(building *b) {
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
-            figure_movement_init_roaming(f);
+            f->init_roaming();
             if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
                 if (city_entertainment_show_message_colosseum())
                     city_message_post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
@@ -679,22 +679,22 @@ static void spawn_figure_school(building *b) {
             child1->action_state = FIGURE_ACTION_125_ROAMING;
             child1->building_id = b->id;
             b->figure_id = child1->id;
-            figure_movement_init_roaming(child1);
+            child1->init_roaming();
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP);
             child2->action_state = FIGURE_ACTION_125_ROAMING;
             child2->building_id = b->id;
-            figure_movement_init_roaming(child2);
+            child2->init_roaming();
 
             figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP);
             child3->action_state = FIGURE_ACTION_125_ROAMING;
             child3->building_id = b->id;
-            figure_movement_init_roaming(child3);
+            child3->init_roaming();
 
             figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP);
             child4->action_state = FIGURE_ACTION_125_ROAMING;
             child4->building_id = b->id;
-            figure_movement_init_roaming(child4);
+            child4->init_roaming();
         }
     }
 }

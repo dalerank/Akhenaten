@@ -5,10 +5,15 @@
 #include "core/direction.h"
 #include "figure/action.h"
 #include "figure/type.h"
+#include "building/building.h"
+#include "figure/formation.h"
+#include "map/point.h"
+#include "window/building/common.h"
 
 static int MAX_FIGURES[] = {5000, 2000};
 
-typedef struct {
+class figure {
+public:
     int id;
 
     short image_id;
@@ -18,7 +23,7 @@ typedef struct {
 
     unsigned char alternative_location_index;
     unsigned char flotsam_visible;
-    short next_figure_id_on_same_tile;
+    short next_figure;
     unsigned char type;
     unsigned char resource_id;
     unsigned char use_cross_country;
@@ -109,12 +114,256 @@ typedef struct {
     short targeted_by_figure_id;
     unsigned short created_sequence;
     unsigned short target_figure_created_sequence;
-    unsigned char figures_on_same_tile_index;
     unsigned char num_attackers;
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
-} figure;
+
+    //
+
+    figure(int _id) {
+        id = _id;
+    };
+
+    // map search tests
+    bool is_dead(); // figure.c
+    bool is_enemy();
+    bool is_herd();
+    bool is_legion();
+    bool is_formation(); // formation_legion.c
+    bool is_attacking_native(); // combat.c
+    bool is_citizen(); // missile.c
+    bool is_non_citizen();
+    bool is_fighting_friendly(); // routing.c
+    bool is_fighting_enemy();
+    bool has_figure_color(); // minimap.c
+
+    void kill() {
+        set_state(FIGURE_STATE_DEAD);
+    };
+    bool available() {
+        return state == FIGURE_STATE_NONE;
+    };
+    bool is(figure_type value);
+    bool is(figure_state value);
+    void set_state(figure_state s) {
+        state = s;
+    };
+    void load(buffer *buf);
+    void save(buffer *buf);
+
+    // image.c
+    void figure_image_update(int image_base);
+    void figure_image_increase_offset(int max);
+    void figure_image_set_cart_offset(int direction);
+    int figure_image_corpse_offset();
+    int figure_image_missile_launcher_offset();
+    int figure_image_direction();
+
+    // figure/figure.c
+    void figure_delete();
+
+    // map/figure.c
+    void map_figure_add();
+    void map_figure_update();
+    void map_figure_remove();
+    void figure_route_add();
+    void route_remove();
+
+    // movement.c
+    void advance_tick();
+    void set_target_height_bridge();
+    int get_permission_for_int();
+    void move_to_next_tile();
+    void set_next_route_tile_direction();
+    void advance_route_tile(int roaming_enabled);
+    void walk_ticks(int num_ticks, int roaming_enabled);
+    void init_roaming();
+    void roam_set_direction();
+    void move_ticks(int num_ticks);
+    void move_ticks_tower_sentry(int num_ticks);
+    void roam_ticks(int num_ticks);
+    void follow_ticks(int num_ticks);
+    void advance_attack();
+    void set_cross_country_direction(int x_src, int y_src, int x_dst, int y_dst, int is_missile);
+    void set_cross_country_destination(int x_dst, int y_dst);
+    int move_ticks_cross_country(int num_ticks);
+
+    void cross_country_update_delta();
+    void cross_country_advance_x();
+    void cross_country_advance_y();
+    void cross_country_advance();
+
+    // actions.c
+    void action_perform();
+    void roamer_action(int num_ticks);
+    void culture_action(int gorup);
+
+    void immigrant_action();
+    void emigrant_action();
+    void homeless_action();
+    void cartpusher_action();
+    void labor_seeker_action();
+    void explosion_cloud_action();
+    void tax_collector_action();
+    void engineer_action();
+    void warehouseman_action();
+    void prefect_action(); //10
+    void soldier_action();
+    void military_standard_action();
+    void entertainer_action();
+    void trade_caravan_action();
+    void trade_ship_action(); //20
+    void trade_caravan_donkey_action();
+    void protestor_action();
+    void criminal_action();
+    void rioter_action();
+    void fishing_boat_action();
+    void market_trader_action();
+    void priest_action();
+    void school_child_action();
+    void teacher_action();
+    void librarian_action(); //30
+    void barber_action();
+    void bathhouse_worker_action();
+    void doctor_action();
+    void worker_action();
+    void editor_flag_action();
+    void flotsam_action();
+    void docker_action();
+    void market_buyer_action();
+    void patrician_action(); //40
+    void indigenous_native_action();
+    void tower_sentry_action();
+    void enemy43_spear_action();
+    void enemy44_sword_action();
+    void enemy45_sword_action();
+    void enemy_camel_action();
+    void enemy_elephant_action();
+    void enemy_chariot_action();
+    void enemy49_fast_sword_action();
+    void enemy50_sword_action(); //50
+    void enemy51_spear_action();
+    void enemy52_mounted_archer_action();
+    void enemy53_axe_action();
+    void enemy_gladiator_action();
+    void enemy_caesar_legionary_action();
+    void native_trader_action();
+    void arrow_action();
+    void javelin_action();
+    void bolt_action();
+    void ballista_action();
+    void missionary_action();
+    void seagulls_action();
+    void delivery_boy_action();
+    void shipwreck_action();
+    void sheep_action();
+    void wolf_action();
+    void zebra_action();
+    void spear_action();
+    void hippodrome_horse_action();
+
+    // migrant.c
+    void update_direction_and_image();
+
+    // docker.c
+    void get_trade_center_location(int *_x, int *_y);
+    int deliver_import_resource(building *dock);
+    int fetch_export_resource(building *dock);
+    void set_cart_graphic();
+
+    // cartpusher.c
+    void set_destination(int action, int building_id, int x_dst, int y_dst);
+    void determine_cartpusher_destination(building *b, int road_network_id);
+    void determine_cartpusher_destination_food(int road_network_id);
+    void cart_update_image();
+    void reroute_cartpusher();
+    void determine_granaryman_destination(int road_network_id);
+    void remove_resource_from_warehouse();
+    void determine_warehouseman_destination(int road_network_id);
+    void set_cartpusher_graphic();
+
+    // market.c
+    int create_delivery_boy(int leader_id);
+    int take_food_from_granary(int market_id, int granary_id);
+    int take_resource_from_warehouse(int warehouse_id);
+    void figure_delivery_boy_action();
+
+    // trader.c
+    int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point *warehouse);
+    void go_to_next_warehouse(int x_src, int y_src, int distance_to_entry);
+    int trade_ship_lost_queue();
+    int trade_ship_done_trading();
+
+    // entertainer.c
+    void entertainer_update_shows();
+    void entertainer_update_image();
+
+    // maintenance.c
+    int fight_enemy();
+    int fight_fire();
+    void extinguish_fire();
+    int target_is_alive();
+
+    // crime.c
+    int figure_rioter_collapse_building();
+
+    // enemy.c
+    void enemy_initial(formation *m);
+    void enemy_marching(const formation *m);
+    void enemy_fighting(const formation *m);
+    void enemy_action(formation *m);
+    int get_direction();
+    int get_missile_direction(const formation *m);
+
+    // soldier.c
+    void javelin_launch_missile();
+    void legionary_attack_adjacent_enemy();
+    int find_mop_up_target();
+    void update_image_javelin(int dir);
+    void update_image_mounted(int dir);
+    void update_image_legionary(const formation *m, int dir);
+    void soldier_update_image(const formation *m);
+
+    // combat.c
+    void figure_combat_handle_corpse();
+    void resume_activity_after_attack();
+    void hit_opponent();
+    void figure_combat_handle_attack();
+//    int figure_combat_get_target_for_soldier(int x, int y, int max_distance);
+//    int figure_combat_get_target_for_wolf(int x, int y, int max_distance);
+//    int figure_combat_get_target_for_enemy(int x, int y);
+    void figure_combat_attack_figure_at(int grid_offset);
+
+    // missile.c
+    void missile_hit_target(int target_id, int legionary_type);
+
+    // wall.c
+    void tower_sentry_pick_target();
+
+    // sound.c
+    void play_die_sound();
+    void play_hit_sound();
+
+    // phrase.c
+    void figure_phrase_determine();
+    int figure_phrase_play();
+
+    // service.c
+    building *get_entertainment_building();
+    int figure_service_provide_coverage();
+
+    // window/building/figures.c
+    figure *get_head_of_caravan();
+    void draw_trader(building_info_context *c);
+    void draw_enemy(building_info_context *c);
+    void draw_animal(building_info_context *c);
+    void draw_cartpusher(building_info_context *c);
+    void draw_market_buyer(building_info_context *c);
+    void draw_normal_figure(building_info_context *c);
+
+
+};
 
 figure *figure_get(int id);
 
@@ -128,22 +377,20 @@ figure *figure_get(int id);
  */
 figure *figure_create(int type, int x, int y, int dir);
 
-void figure_delete(figure *f);
-
-int figure_is_dead(const figure *f);
-
-int figure_is_enemy(const figure *f);
-
-int figure_is_legion(const figure *f);
-
-int figure_is_herd(const figure *f);
+//void figure *f->map_figure_remove();
+//int figure_is_dead(const figure *f);
+//int const figure *f->is_enemy();
+//int const figure *f->is_legion();
+//int const figure *f->is_herd();
 
 void figure_init_scenario(void);
 
 void figure_kill_all();
-
 void figure_save_state(buffer *list, buffer *seq);
-
 void figure_load_state(buffer *list, buffer *seq);
+
+//
+
+int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x_dst, int y_dst);
 
 #endif // FIGURE_FIGURE_H

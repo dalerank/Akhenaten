@@ -1,7 +1,6 @@
 
 ===== task for today: =====
 
-- get figures to render correctly
 - get new figures to exit buildings (firemen)
 - implement figures internal state?
 

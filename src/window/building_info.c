@@ -383,12 +383,12 @@ static void init(int grid_offset) {
                         break;
                     default:
                         context.figure.figure_ids[context.figure.count++] = figure_id;
-                        figure_phrase_determine(f);
+//                        f->igure_phrase_determine();
                         break;
                 }
             }
-            if (figure_id != f->next_figure_id_on_same_tile)
-                figure_id = f->next_figure_id_on_same_tile;
+            if (figure_id != f->next_figure)
+                figure_id = f->next_figure;
             else
                 figure_id = 0;
         }
@@ -400,7 +400,7 @@ static void init(int grid_offset) {
             continue;
 
         figure *f = figure_get(figure_id);
-        if (f->type == FIGURE_FORT_STANDARD || figure_is_legion(f)) {
+        if (f->type == FIGURE_FORT_STANDARD || f->is_legion()) {
             context.type = BUILDING_INFO_LEGION;
             context.formation_id = f->formation_id;
             const formation *m = formation_get(context.formation_id);

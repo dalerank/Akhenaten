@@ -92,6 +92,7 @@ static void post_message(int message) {
 }
 
 int tutorial_get_population_cap(int current_cap) {
+    return current_cap; //temp
     if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire ||
             !data.tutorial1.collapse ||

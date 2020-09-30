@@ -340,9 +340,7 @@ static void draw_top(int x, int y, int grid_offset) {
     draw_entertainment_spectators(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
-int o = 0;
-int d = 7;
-#include "window/city.h"
+//#include "window/city.h"
 static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
@@ -353,24 +351,25 @@ static void draw_figures(int x, int y, int grid_offset) {
                 city_draw_figure(f, x, y, highlight);
             } else if (figure_id == draw_context.selected_figure_id)
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
-
         }
-        if (figure_id != f->next_figure_id_on_same_tile)
-            figure_id = f->next_figure_id_on_same_tile;
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
         else
             figure_id = 0;
     }
 //    static int o = 0;
-    const int l = 6400;
-    d = debug_range_1;
-    image_draw(886 + 700 + d + 8*(o/l),-10,0);
-    o++;
-    if (o >= 12*l) {
-        o = 0;
-//        d++;
-    }
-//    if (d >= 8)
-//        d = 0;
+//    const int l = 6400;
+//    int ff = 8*(o/l);
+//    image_draw(169 + 700 + debug_range_1 + ff,0,0);
+//    o++;
+//    if (o >= 12*l) {
+//        o = 0;
+////        d++;
+//    }
+//    if (debug_range_1 >= 8)
+//        debug_range_1 = 0;
+//    if (debug_range_1 < 0)
+//        debug_range_1 = 7;
 }
 
 static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
@@ -532,8 +531,8 @@ static void draw_elevated_figures(int x, int y, int grid_offset) {
         if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks)
             city_draw_figure(f, x, y, 0);
 
-        if (figure_id != f->next_figure_id_on_same_tile)
-            figure_id = f->next_figure_id_on_same_tile;
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
         else
             figure_id = 0;
     }

@@ -40,97 +40,97 @@ static const int TOWER_SENTRY_FIRING_OFFSETS[] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void figure_ballista_action(figure *f) {
-    building *b = building_get(f->building_id);
-    f->terrain_usage = TERRAIN_USAGE_WALLS;
-    f->use_cross_country = 0;
-    f->is_ghost = 1;
-    f->height_adjusted_ticks = 10;
-    f->current_height = 45;
+void figure::ballista_action() {
+    building *b = building_get(building_id);
+    terrain_usage = TERRAIN_USAGE_WALLS;
+    use_cross_country = 0;
+    is_ghost = 1;
+    height_adjusted_ticks = 10;
+    current_height = 45;
 
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id)
-        f->state = FIGURE_STATE_DEAD;
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != id)
+        state = FIGURE_STATE_DEAD;
 
     if (b->num_workers <= 0 || b->figure_id <= 0)
-        f->state = FIGURE_STATE_DEAD;
+        state = FIGURE_STATE_DEAD;
 
-    map_figure_delete(f);
+    map_figure_remove();
     switch (city_view_orientation()) {
         case DIR_0_TOP:
-            f->x = b->x;
-            f->y = b->y;
+            x = b->x;
+            y = b->y;
             break;
         case DIR_2_RIGHT:
-            f->x = b->x + 1;
-            f->y = b->y;
+            x = b->x + 1;
+            y = b->y;
             break;
         case DIR_4_BOTTOM:
-            f->x = b->x + 1;
-            f->y = b->y + 1;
+            x = b->x + 1;
+            y = b->y + 1;
             break;
         case DIR_6_LEFT:
-            f->x = b->x;
-            f->y = b->y + 1;
+            x = b->x;
+            y = b->y + 1;
             break;
     }
-    f->grid_offset = map_grid_offset(f->x, f->y);
-    map_figure_add(f);
+    grid_offset = map_grid_offset(x, y);
+    map_figure_add();
 
-    switch (f->action_state) {
+    switch (action_state) {
         case FIGURE_ACTION_149_CORPSE:
-            f->state = FIGURE_STATE_DEAD;
+            state = FIGURE_STATE_DEAD;
             break;
         case FIGURE_ACTION_180_BALLISTA_CREATED:
-            f->wait_ticks++;
-            if (f->wait_ticks > 20) {
-                f->wait_ticks = 0;
+            wait_ticks++;
+            if (wait_ticks > 20) {
+                wait_ticks = 0;
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
-                    f->action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
-                    f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
+                if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
+                    action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
+                    wait_ticks_missile = figure_properties_for_type(type)->missile_delay;
                 }
             }
             break;
         case FIGURE_ACTION_181_BALLISTA_FIRING:
-            f->wait_ticks_missile++;
-            if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+            wait_ticks_missile++;
+            if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
-                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
-                    f->wait_ticks_missile = 0;
-                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_BOLT);
+                if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
+                    direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+                    wait_ticks_missile = 0;
+                    figure_create_missile(id, x, y, tile.x, tile.y, FIGURE_BOLT);
                     sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
                 } else {
-                    f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
+                    action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
                 }
             }
             break;
     }
-    int dir = figure_image_direction(f);
-    if (f->action_state == FIGURE_ACTION_181_BALLISTA_FIRING) {
-        f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir +
-                      8 * BALLISTA_FIRING_OFFSETS[f->wait_ticks_missile / 4];
+    int dir = figure_image_direction();
+    if (action_state == FIGURE_ACTION_181_BALLISTA_FIRING) {
+        image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir +
+                      8 * BALLISTA_FIRING_OFFSETS[wait_ticks_missile / 4];
     } else {
-        f->image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
+        image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
     }
 }
 
-static void tower_sentry_pick_target(figure *f) {
+void figure::tower_sentry_pick_target() {
     if (enemy_army_total_enemy_formations() <= 0)
         return;
-    if (f->action_state == FIGURE_ACTION_150_ATTACK ||
-        f->action_state == FIGURE_ACTION_149_CORPSE)
+    if (action_state == FIGURE_ACTION_150_ATTACK ||
+        action_state == FIGURE_ACTION_149_CORPSE)
         return;
-    if (f->in_building_wait_ticks)
+    if (in_building_wait_ticks)
         return;
-    f->wait_ticks_next_target++;
-    if (f->wait_ticks_next_target >= 40) {
-        f->wait_ticks_next_target = 0;
+    wait_ticks_next_target++;
+    if (wait_ticks_next_target >= 40) {
+        wait_ticks_next_target = 0;
         map_point tile;
-        if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
-            f->action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
-            f->destination_x = f->x;
-            f->destination_y = f->y;
+        if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
+            action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
+            destination_x = x;
+            destination_y = y;
         }
     }
 }
@@ -188,124 +188,124 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
     return 0;
 }
 
-void figure_tower_sentry_action(figure *f) {
-    building *b = building_get(f->building_id);
-    f->terrain_usage = TERRAIN_USAGE_WALLS;
-    f->use_cross_country = 0;
-    f->is_ghost = 1;
-    f->height_adjusted_ticks = 10;
-    f->max_roam_length = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id)
-        f->state = FIGURE_STATE_DEAD;
+void figure::tower_sentry_action() {
+    building *b = building_get(building_id);
+    terrain_usage = TERRAIN_USAGE_WALLS;
+    use_cross_country = 0;
+    is_ghost = 1;
+    height_adjusted_ticks = 10;
+    max_roam_length = 800;
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+        state = FIGURE_STATE_DEAD;
 
-    figure_image_increase_offset(f, 12);
+    figure_image_increase_offset(12);
 
-    tower_sentry_pick_target(f);
-    switch (f->action_state) {
+    tower_sentry_pick_target();
+    switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack(f);
+            figure_combat_handle_attack();
             break;
         case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse(f);
+            figure_combat_handle_corpse();
             break;
         case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
-            f->image_offset = 0;
-            f->wait_ticks++;
-            if (f->wait_ticks > 40) {
-                f->wait_ticks = 0;
+            image_offset = 0;
+            wait_ticks++;
+            if (wait_ticks > 40) {
+                wait_ticks = 0;
                 int x_tile, y_tile;
                 if (tower_sentry_init_patrol(b, &x_tile, &y_tile)) {
-                    f->action_state = FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING;
-                    f->destination_x = x_tile;
-                    f->destination_y = y_tile;
-                    figure_route_remove(f);
+                    action_state = FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING;
+                    destination_x = x_tile;
+                    destination_y = y_tile;
+                    route_remove();
                 }
             }
             break;
         case FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING:
-            figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
-                f->destination_x = f->source_x;
-                f->destination_y = f->source_y;
-                figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
-                f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+            move_ticks(1);
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
+                destination_x = source_x;
+                destination_y = source_y;
+                route_remove();
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+                action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
 
             break;
         case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
-            figure_movement_move_ticks_tower_sentry(f, 1);
-            f->wait_ticks_missile++;
-            if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+            move_ticks_tower_sentry(1);
+            wait_ticks_missile++;
+            if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
-                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
-                    f->wait_ticks_missile = 0;
-                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
+                if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
+                    direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+                    wait_ticks_missile = 0;
+                    figure_create_missile(id, x, y, tile.x, tile.y, FIGURE_JAVELIN);
                 } else {
-                    f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
-                    f->destination_x = f->source_x;
-                    f->destination_y = f->source_y;
-                    figure_route_remove(f);
+                    action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
+                    destination_x = source_x;
+                    destination_y = source_y;
+                    route_remove();
                 }
             }
             break;
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
-            figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION)
-                f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-            else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
-                f->state = FIGURE_STATE_DEAD;
+            move_ticks(1);
+            if (direction == DIR_FIGURE_AT_DESTINATION)
+                action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+            else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+                state = FIGURE_STATE_DEAD;
 
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
-            f->terrain_usage = TERRAIN_USAGE_ROADS;
+            terrain_usage = TERRAIN_USAGE_ROADS;
             if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))
-                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+                terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
 
-            f->is_ghost = 0;
-            f->height_adjusted_ticks = 0;
-            figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                map_figure_delete(f);
-                f->source_x = f->x = b->x;
-                f->source_y = f->y = b->y;
-                f->grid_offset = map_grid_offset(f->x, f->y);
-                map_figure_add(f);
-                f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-                figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
-                f->state = FIGURE_STATE_DEAD;
+            is_ghost = 0;
+            height_adjusted_ticks = 0;
+            move_ticks(1);
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                map_figure_remove();
+                source_x = x = b->x;
+                source_y = y = b->y;
+                grid_offset = map_grid_offset(x, y);
+                map_figure_add();
+                action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+                route_remove();
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+                state = FIGURE_STATE_DEAD;
 
             break;
     }
-    if (map_terrain_is(f->grid_offset, TERRAIN_WALL))
-        f->current_height = 18;
-    else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE))
-        f->in_building_wait_ticks = 24;
+    if (map_terrain_is(grid_offset, TERRAIN_WALL))
+        current_height = 18;
+    else if (map_terrain_is(grid_offset, TERRAIN_GATEHOUSE))
+        in_building_wait_ticks = 24;
 
-    if (f->in_building_wait_ticks) {
-        f->in_building_wait_ticks--;
-        f->height_adjusted_ticks = 0;
+    if (in_building_wait_ticks) {
+        in_building_wait_ticks--;
+        height_adjusted_ticks = 0;
     }
-    int dir = figure_image_direction(f);
-    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
-                      136 + figure_image_corpse_offset(f);
-    } else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
-        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
-                      dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
-    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    int dir = figure_image_direction();
+    if (action_state == FIGURE_ACTION_149_CORPSE) {
+        image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      136 + figure_image_corpse_offset();
+    } else if (action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
+        image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[wait_ticks_missile / 2];
+    } else if (action_state == FIGURE_ACTION_150_ATTACK) {
         int image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY);
-        if (f->attack_image_offset < 16)
-            f->image_id = image_id + 96 + dir;
+        if (attack_image_offset < 16)
+            image_id = image_id + 96 + dir;
         else {
-            f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
+            image_id = image_id + 96 + dir + 8 * ((attack_image_offset - 16) / 2);
         }
     } else {
-        f->image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
-                      dir + 8 * f->image_offset;
+        image_id = image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) +
+                      dir + 8 * image_offset;
     }
 }
 
@@ -318,28 +318,28 @@ void figure_tower_sentry_reroute(void) {
         // tower sentry got off wall due to rotation
         int x_tile, y_tile;
         if (map_routing_wall_tile_in_radius(f->x, f->y, 2, &x_tile, &y_tile)) {
-            figure_route_remove(f);
+            f->route_remove();
             f->progress_on_tile = 0;
-            map_figure_delete(f);
+            f->map_figure_remove();
             f->previous_tile_x = f->x = x_tile;
             f->previous_tile_y = f->y = y_tile;
             f->cross_country_x = 15 * x_tile;
             f->cross_country_y = 15 * y_tile;
             f->grid_offset = map_grid_offset(x_tile, y_tile);
-            map_figure_add(f);
+            f->map_figure_add();
             f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
             f->destination_x = f->source_x;
             f->destination_y = f->source_y;
         } else {
             // Teleport back to tower
-            map_figure_delete(f);
+            f->map_figure_remove();
             building *b = building_get(f->building_id);
             f->source_x = f->x = b->x;
             f->source_y = f->y = b->y;
             f->grid_offset = map_grid_offset(f->x, f->y);
-            map_figure_add(f);
+            f->map_figure_add();
             f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-            figure_route_remove(f);
+            f->route_remove();
         }
     }
 }
@@ -347,7 +347,7 @@ void figure_tower_sentry_reroute(void) {
 void figure_kill_tower_sentries_at(int x, int y) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (!figure_is_dead(f) && f->type == FIGURE_TOWER_SENTRY) {
+        if (!f->is_dead() && f->type == FIGURE_TOWER_SENTRY) {
             if (calc_maximum_distance(f->x, f->y, x, y) <= 1)
                 f->state = FIGURE_STATE_DEAD;
 

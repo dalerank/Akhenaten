@@ -193,28 +193,28 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y) {
     int x_offset = 0;
     int y_offset = 0;
     if (f->use_cross_country) {
-        tile_cross_country_offset_to_pixel_offset(f->cross_country_x % 15, f->cross_country_y % 15, &x_offset,
-                                                  &y_offset);
+        tile_cross_country_offset_to_pixel_offset(f->cross_country_x % 15, f->cross_country_y % 15, &x_offset, &y_offset);
         y_offset -= f->missile_damage;
     } else {
         int direction = figure_image_normalize_direction(f->direction);
         tile_progress_to_pixel_offset(direction, f->progress_on_tile, &x_offset, &y_offset);
         y_offset -= f->current_height;
-        if (f->figures_on_same_tile_index && f->type != FIGURE_BALLISTA) {
-            // an attempt to not let people walk through each other
-            static const int BUSY_ROAD_X_OFFSETS[] = {
-                    0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
-            };
-            static const int BUSY_ROAD_Y_OFFSETS[] = {
-                    0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
-            };
-//            x_offset += BUSY_ROAD_X_OFFSETS[f->figures_on_same_tile_index];
-//            y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_on_same_tile_index];
-        }
+
+//        if (f->next_figure && f->type != FIGURE_BALLISTA) {
+//            // an attempt to not let people walk through each other
+//            static const int BUSY_ROAD_X_OFFSETS[] = {
+//                    0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
+//            };
+//            static const int BUSY_ROAD_Y_OFFSETS[] = {
+//                    0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
+//            };
+//            x_offset += BUSY_ROAD_X_OFFSETS[f->figures_sametile_num];
+//            y_offset += BUSY_ROAD_Y_OFFSETS[f->figures_sametile_num];
+//        }
     }
 
     x_offset += 29;
-    y_offset += 15;
+    y_offset += 15 + 8;
 
     const image *img = f->is_enemy_image ? image_get_enemy(f->image_id) : image_get(f->image_id);
     *pixel_x += x_offset - img->sprite_offset_x;
@@ -227,11 +227,11 @@ static void draw_figure(const figure *f, int x, int y, int highlight)
         switch (f->type) {
             case FIGURE_CART_PUSHER:
             case FIGURE_WAREHOUSEMAN:
-            case FIGURE_LION_TAMER:
+//            case FIGURE_LION_TAMER:
             case FIGURE_DOCKER:
             case FIGURE_NATIVE_TRADER:
-            case FIGURE_IMMIGRANT:
-            case FIGURE_EMIGRANT:
+//            case FIGURE_IMMIGRANT:
+//            case FIGURE_EMIGRANT:
                 draw_figure_with_cart(f, x, y);
                 break;
             case FIGURE_HIPPODROME_HORSES:
