@@ -523,6 +523,8 @@ int image_id_from_group(int group) {
             return data.main->get_id(group);
         case ENGINE_ENV_PHARAOH:
             group = image_groupid_translation(groupid_translation_table_ph, group);
+            if (group == GROUP_SYSTEM_GRAPHICS)
+                return 11026;
 //            if (group == 1)
 //                return 615 + data.ph_terrain->id_shift_overall;
             if (group < 67)

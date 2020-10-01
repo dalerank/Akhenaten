@@ -12,13 +12,13 @@
 
 void figure::indigenous_native_action() {
     building *b = building_get(building_id);
-    terrain_usage = TERRAIN_USAGE_ANY;
-    use_cross_country = 0;
-    max_roam_length = 800;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
+//    terrain_usage = TERRAIN_USAGE_ANY;
+//    use_cross_country = 0;
+//    max_roam_length = 800;
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
 
-    figure_image_increase_offset(12);
+//    figure_image_increase_offset(12);
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack();

@@ -372,6 +372,7 @@ void figure::cartpusher_action() {
             }
             image_offset = 0;
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
             move_ticks(1);

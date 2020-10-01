@@ -158,6 +158,14 @@ void building_maintenance_check_fire_collapse(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
+
+        // todo: collapse-proof/dynamic fire & collapse risk per building
+        // temp for debugging
+        b->damage_risk = 0;
+        b->fire_risk = 0;
+        continue;
+
+
         if (b->state != BUILDING_STATE_IN_USE || b->fire_proof)
             continue;
         if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
@@ -170,7 +178,19 @@ void building_maintenance_check_fire_collapse(void) {
 
         if (b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT)
             b->damage_risk = 0;
-
+        switch (b->type) {
+            case BUILDING_APOTHECARY:
+            case BUILDING_DENTIST:
+            case BUILDING_ROADBLOCK:
+            case BUILDING_BRICKS_WORKSHOP:
+            case BUILDING_CARPENTERS_GUILD:
+            case BUILDING_CATTLE_RANCH:
+            case BUILDING_CHARIOTS_WORKSHOP:
+            case BUILDING_CONSERVATORY:
+            case BUILDING_DANCE_SCHOOL:
+            case BUILDING_BARLEY_FARM:
+                b->damage_risk = 0;
+        }
         if (b->damage_risk > 200) {
             collapse_building(b);
             recalculate_terrain = 1;

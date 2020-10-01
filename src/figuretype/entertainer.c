@@ -221,6 +221,7 @@ void figure::entertainer_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
             break;
+        case FIGURE_ACTION_COMMON_ROAM:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -235,6 +236,7 @@ void figure::entertainer_action() {
             }
             roam_ticks(speed_factor);
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {

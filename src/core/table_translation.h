@@ -95,11 +95,11 @@ static int groupid_translation_table_ph[] = {
         114, 34, // rubble
         115, 32 + 340, // thief
         116, 182 + 340, // barber (dentist)
-        117, 20 + 340, // prefect (policeman)
+        117, 6 + 340, // prefect (fireman)
         118, 12 + 340, // homeless
         119, 35, // burning ruins (tent)
         120, 35, // burning ruins (generic)
-        121, 6 + 340, // prefect with water (fireman)
+        121, 8 + 340, // prefect with water (fireman)
         122, 122 + 66, // linen
         123, 123 + 66, // weapons
         124, 119 + 66, // jewels
@@ -133,7 +133,7 @@ static int groupid_translation_table_ph[] = {
         160, 303, // data/Pharaoh_Unloaded.sg3 scoreb.BMP
         161, 302, // data/Pharaoh_Unloaded.sg3 Briefing1a.bmp
         162, 301, // data/Pharaoh_Unloaded.sg3 C3title.BMP
-        163, 161 + 340, //lion (hyena)
+        163, 52 + 340, //lion (caravan cart/donkey)
         164, 63, // bridge
         165, 34 + 340, //ship
         166, 166 + 66, // recruiter
@@ -168,9 +168,9 @@ static int groupid_translation_table_ph[] = {
 //        230, 230+340, // missionary
         231, 201 + 340, // librarian
         232, 66 + 66, // fort, mounted
-        233, 23 + 340, // sheep (crocodile)
-        234, 156 + 340, // wolf (ostrich)
-//        235, 235+340, // zebra
+        233, 156 + 340, // sheep (ostrich)
+        234, 161 + 340, // wolf (hyena)
+        235, 23 + 340, // zebra (crocodile)
 //        236, 236+340, // legionary
 //        237, 237+340, // cartpusher cart, multiple food
         244, 306, // data/Pharaoh_Unloaded.sg3 Mapback.bmp

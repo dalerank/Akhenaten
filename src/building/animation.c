@@ -19,7 +19,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
             return 0;
 
     }
-    if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST) && b->num_workers <= 0)
+    if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FIREHOUSE) && b->num_workers <= 0)
         return 0;
 
     if (b->type == BUILDING_MARKET && b->num_workers <= 0)

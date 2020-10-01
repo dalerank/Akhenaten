@@ -1,3 +1,4 @@
+#include <core/string.h>
 #include "city_figure.h"
 
 #include "city/view.h"
@@ -69,16 +70,28 @@ static void tile_progress_to_pixel_offset(int direction, int progress, int *pixe
 #include "building/properties.h"
 #include "figure/route.h"
 
+
+
 void figure::draw_debug() {
     building *b = building_get(building_id);
     building *bdest = building_get(destination_building_id);
 
     pixel_offset coords;
+    coords = city_view_grid_offset_to_pixel(tile_x, tile_y);
 
-//    coords = city_view_grid_offset_to_pixel(destination_grid_offset);
-//    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords.x, coords.y);
+    uint8_t str[10];
+//    string_from_int(str, id, 0);
+    string_from_int(str, action_state, 0);
+    text_draw(str, coords.x, coords.y, FONT_LARGE_BLACK, COLOR_BLACK);
 
-    if (routing_path_id) {
+//    coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
+//    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
+//    text_draw(str, coords.x, coords.y, FONT_NORMAL_BLACK, 0);
+
+    if (false && routing_path_id && (roam_length == max_roam_length || roam_length == 0)) {
+        coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
+        draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
+        text_draw(str, coords.x, coords.y, FONT_LARGE_BLACK, COLOR_BLACK);
         int tx = tile_x;
         int ty = tile_y;
         coords = city_view_grid_offset_to_pixel(tx, ty);
@@ -121,17 +134,17 @@ void figure::draw_debug() {
         coords = city_view_grid_offset_to_pixel(tx, ty);
         draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords.x, coords.y);
     }
-    if (b->type) {
+    if (false && b->type) {
         const building_properties *props = building_properties_for_type(b->type);
         coords = city_view_grid_offset_to_pixel(b->grid_offset);
         draw_building(image_id_from_group(props->image_group) + props->image_offset, coords.x, coords.y);
 //        draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords.x, coords.y);
 //        image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
     }
-    if (bdest->type) {
+    if (false && bdest->type) {
         const building_properties *props = building_properties_for_type(bdest->type);
         coords = city_view_grid_offset_to_pixel(bdest->grid_offset);
-        draw_building(image_id_from_group(props->image_group) + props->image_offset, coords.x, coords.y);
+        draw_building(image_id_from_group(props->image_group) + props->image_offset, coords.x, coords.y, COLOR_MASK_RED);
     }
 }
 void figure::adjust_pixel_offset(int *x, int *y) {

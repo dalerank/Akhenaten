@@ -11,59 +11,6 @@
 #include "map/building.h"
 #include "map/road_access.h"
 
-void figure::roamer_action(int num_ticks)
-{
-    switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
-        case FIGURE_ACTION_125_ROAMING:
-            is_ghost = 0;
-            roam_length++;
-            if (roam_length >= max_roam_length) {
-                int x, y;
-                building *b = building_get(building_id);
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x, &y)) {
-                    action_state = FIGURE_ACTION_126_ROAMER_RETURNING;
-                    destination_x = x;
-                    destination_y = y;
-                    route_remove();
-                    roam_length = 0;
-                } else
-                    state = FIGURE_STATE_DEAD;
-            }
-            roam_ticks(num_ticks);
-            break;
-        case FIGURE_ACTION_126_ROAMER_RETURNING:
-            move_ticks(num_ticks);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
-                direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-                state = FIGURE_STATE_DEAD;
-            }
-            break;
-    }
-}
-void figure::culture_action(int group)
-{
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 384;
-    building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
-    roamer_action(1);
-    figure_image_update(image_id_from_group(group));
-}
-
-void figure::priest_action()
-{
-    culture_action(GROUP_FIGURE_PRIEST);
-}
 void figure::school_child_action()
 {
     terrain_usage = TERRAIN_USAGE_ROADS;
@@ -85,6 +32,7 @@ void figure::school_child_action()
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse();
             break;
+        case FIGURE_ACTION_COMMON_ROAM:
         case FIGURE_ACTION_125_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -96,26 +44,7 @@ void figure::school_child_action()
     }
     figure_image_update(image_id_from_group(GROUP_FIGURE_SCHOOL_CHILD));
 }
-void figure::teacher_action()
-{
-    culture_action(GROUP_FIGURE_TEACHER_LIBRARIAN);
-}
-void figure::librarian_action()
-{
-    culture_action(GROUP_FIGURE_TEACHER_LIBRARIAN);
-}
-void figure::barber_action()
-{
-    culture_action(GROUP_FIGURE_BARBER);
-}
-void figure::bathhouse_worker_action()
-{
-    culture_action(GROUP_FIGURE_BATHHOUSE_WORKER);
-}
-void figure::doctor_action()
-{
-    culture_action(GROUP_FIGURE_DOCTOR_SURGEON);
-}
+
 void figure::missionary_action()
 {
     terrain_usage = TERRAIN_USAGE_ROADS;
@@ -126,7 +55,7 @@ void figure::missionary_action()
         state = FIGURE_STATE_DEAD;
 
     figure_image_increase_offset(12);
-    roamer_action(1);
+//    roamer_action(1);
     figure_image_update(image_id_from_group(GROUP_FIGURE_MISSIONARY));
 }
 void figure::patrician_action()
@@ -138,21 +67,8 @@ void figure::patrician_action()
         state = FIGURE_STATE_DEAD;
 
     figure_image_increase_offset(12);
-    roamer_action(1);
+//    roamer_action(1);
     figure_image_update(image_id_from_group(GROUP_FIGURE_PATRICIAN));
-}
-void figure::labor_seeker_action()
-{
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 384;
-    building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
-    roamer_action(1);
-    figure_image_update(image_id_from_group(GROUP_FIGURE_LABOR_SEEKER));
 }
 void figure::market_trader_action()
 {
@@ -172,7 +88,7 @@ void figure::market_trader_action()
             roam_length = max_roam_length;
 
     }
-    roamer_action(1);
+//    roamer_action(1);
     figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 void figure::tax_collector_action()
@@ -223,6 +139,7 @@ void figure::tax_collector_action()
                 }
             }
             break;
+        case FIGURE_ACTION_COMMON_ROAM:
         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -238,6 +155,7 @@ void figure::tax_collector_action()
             }
             roam_ticks(1);
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {

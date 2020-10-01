@@ -14,7 +14,7 @@ static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 
 void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
-        int image_id = buttons[i].image_id;
+        int image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
         if (buttons[i].pressed)
             image_id += 1;
 

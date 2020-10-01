@@ -524,6 +524,7 @@ void figure::native_trader_action() {
                 state = FIGURE_STATE_DEAD;
 
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)

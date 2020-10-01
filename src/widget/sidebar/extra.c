@@ -6,6 +6,7 @@
 #include "core/config.h"
 #include "core/lang.h"
 #include "core/string.h"
+#include "core/image.h"
 #include "game/settings.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
@@ -25,8 +26,8 @@
 static void button_game_speed(int is_down, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
-        {11, 30, 17+11025, 24, button_game_speed, 1, 0},
-        {35, 30, 15+11025, 24, button_game_speed, 0, 0},
+        {11, 30, image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 17, 24, button_game_speed, 1, 0},
+        {35, 30, image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 15, 24, button_game_speed, 0, 0},
 };
 
 typedef struct {
@@ -171,9 +172,8 @@ static int draw_extra_info_objective(int x_offset, int y_offset, int text_group,
             }
         }
         text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
-    } else {
+    } else
         lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
-    }
     font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + EXTRA_INFO_LINE_SPACE, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font);

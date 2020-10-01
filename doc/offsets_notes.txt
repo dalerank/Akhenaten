@@ -65,6 +65,48 @@ BID IMID
 19 > 17
 20 > 18
 
+	5	5	8	 8	88	10	10
+	LAB	LAB* 	ENG	ENG*	POL	PRE*	FIR
+ROAM	1	125	10	62	10	72	10
+RET	2	126	11	63			11
+
+
+CULTURE:
+384
+
+ENTERTAINER
+512
+
+b->figure_id
+engineer
+prefect
+worker
+cartpusher
+native
+culture*
+missionary
+taxcollector
+tower sentry
+
+b->figure_id2
+marketbuyer
+laborseeker
+
+
+roads - 0 - 384
+laborseeker
+worker
+culture*
+
+roads - 0 - 800
+native
+marketbuyer
+
+roads - 0 - 640
+prefect
+engineer
+
+
 144 (36 resources; 72 : 2 bytes)
 
 2 12 (18) > 5 13 (19)

@@ -250,6 +250,7 @@ void figure::tower_sentry_action() {
                 }
             }
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)

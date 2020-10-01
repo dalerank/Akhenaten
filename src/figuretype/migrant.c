@@ -81,14 +81,14 @@ void figure::immigrant_action()
 {
     building *b = building_get(immigrant_building_id);
 
-    terrain_usage = TERRAIN_USAGE_ANY;
-    cart_image_id = 0;
-    if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != id || !b->house_size) {
-        state = FIGURE_STATE_DEAD;
-        return;
-    }
-
-    figure_image_increase_offset(12);
+//    terrain_usage = TERRAIN_USAGE_ANY;
+//    cart_image_id = 0;
+//    if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != id || !b->house_size) {
+//        state = FIGURE_STATE_DEAD;
+//        return;
+//    }
+//
+//    figure_image_increase_offset(12);
 
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:

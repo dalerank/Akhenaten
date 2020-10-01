@@ -50,6 +50,7 @@ void figure::market_buyer_action() {
                 route_remove();
             }
             break;
+        case FIGURE_ACTION_COMMON_RETURN:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)

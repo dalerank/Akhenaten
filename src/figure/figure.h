@@ -208,14 +208,15 @@ public:
 
     // actions.c
     void action_perform();
-    void roamer_action(int num_ticks);
-    void culture_action(int gorup);
+    void common_action(int max_roam_frames, int group);
+//    void roamer_action(int num_ticks);
+//    void culture_action(int gorup);
 
     void immigrant_action();
     void emigrant_action();
     void homeless_action();
     void cartpusher_action();
-    void labor_seeker_action();
+//    void labor_seeker_action();
     void explosion_cloud_action();
     void tax_collector_action();
     void engineer_action();
@@ -232,13 +233,13 @@ public:
     void rioter_action();
     void fishing_boat_action();
     void market_trader_action();
-    void priest_action();
+//    void priest_action();
     void school_child_action();
-    void teacher_action();
-    void librarian_action(); //30
-    void barber_action();
-    void bathhouse_worker_action();
-    void doctor_action();
+//    void teacher_action();
+//    void librarian_action(); //30
+//    void barber_action();
+//    void bathhouse_worker_action();
+//    void doctor_action();
     void worker_action();
     void editor_flag_action();
     void flotsam_action();
@@ -274,6 +275,8 @@ public:
     void zebra_action();
     void spear_action();
     void hippodrome_horse_action();
+    // pharaoh
+    void policeman_action();
 
     // migrant.c
     void update_direction_and_image();

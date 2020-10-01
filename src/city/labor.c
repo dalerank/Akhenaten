@@ -51,12 +51,41 @@ static int CATEGORY_FOR_int_arr[] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //220
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //230
 };
+static int CATEGORY_FOR_int_arr_PH[] = {
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
+        6, 6, 6, 6, 6, 6, 6, 6, -1, -1, // 30
+        -1, -1, -1, -1, -1, -1, 7, 7, 7, 7, // 40
+        0, 7, 7, 7, -1, 4, -1, 5, 5, 5, // 50
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, // 60
+        0, 1, 0, -1, 1, 0, 1, -1, -1, -1, // 70
+        7, 2, -1, -1, 8, 8, 8, 8, -1, -1, // 80
+        -1, 3, -1, -1, 5, 5, -1, -1, 8, -1, // 90
+        1, 1, 1, 0, 0, 1, 0, 0, 0, 0, // 100
+        0, 0, 0, 0, 0, -1, -1, -1, -1, -1, // 110
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //120
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //130
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //140
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //150
+        -1, -1, -1, -1, -1, -1, -1, 4, -1, -1, //160
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //170
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //180
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //190
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //200
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //210
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //220
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //230
+};
 
 const int CATEGORY_FOR_int(int type)
 {
     if (type < 0 || type >= 240 - 1)
         type = 0;
-    return CATEGORY_FOR_int_arr[type];
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return CATEGORY_FOR_int_arr[type];
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return CATEGORY_FOR_int_arr_PH[type];
 }
 
 static struct {
@@ -307,9 +336,7 @@ static void set_building_worker_weight(void) {
         else if (cat >= 0) {
             b->percentage_houses_covered = 0;
             if (b->houses_covered) {
-                b->percentage_houses_covered =
-                        calc_percentage(100 * b->houses_covered,
-                                        city_data.labor.categories[cat].total_houses_covered);
+                b->percentage_houses_covered = calc_percentage(100 * b->houses_covered, city_data.labor.categories[cat].total_houses_covered);
             }
         }
     }
@@ -374,7 +401,6 @@ static void allocate_workers_to_non_water_buildings(void) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
-
         int cat = CATEGORY_FOR_int(b->type);
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
             // water is handled by allocate_workers_to_water(void)
@@ -383,7 +409,6 @@ static void allocate_workers_to_non_water_buildings(void) {
         b->num_workers = 0;
         if (!should_have_workers(b, cat, 0))
             continue;
-
         if (b->percentage_houses_covered > 0) {
             int required_workers = model_get_building(b->type)->laborers;
             if (category_workers_needed[cat]) {
@@ -395,9 +420,8 @@ static void allocate_workers_to_non_water_buildings(void) {
 
                 b->num_workers = num_workers;
                 category_workers_allocated[cat] += num_workers;
-            } else {
+            } else
                 b->num_workers = required_workers;
-            }
         }
     }
     for (int i = 0; i < MAX_CATS; i++) {
@@ -406,24 +430,19 @@ static void allocate_workers_to_non_water_buildings(void) {
             if (category_workers_allocated[i] >= city_data.labor.categories[i].workers_allocated) {
                 category_workers_needed[i] = 0;
                 category_workers_allocated[i] = 0;
-            } else {
-                category_workers_needed[i] =
-                        city_data.labor.categories[i].workers_allocated - category_workers_allocated[i];
-            }
+            } else
+                category_workers_needed[i] = city_data.labor.categories[i].workers_allocated - category_workers_allocated[i];
         }
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE)
             continue;
-
         int cat = CATEGORY_FOR_int(b->type);
         if (cat < 0 || cat == LABOR_CATEGORY_WATER || cat == LABOR_CATEGORY_MILITARY)
             continue;
-
         if (!should_have_workers(b, cat, 0))
             continue;
-
         if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
             int required_workers = model_get_building(b->type)->laborers;
             if (b->num_workers < required_workers) {

@@ -50,7 +50,7 @@ static void enqueue(int offset, int dist) {
         queue.tail = 0;
 }
 static void route_queue(int source, int dest, void (*callback)(int next_offset, int dist)) {
-//    clear_distances();
+    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     while (queue.head != queue.tail) {
