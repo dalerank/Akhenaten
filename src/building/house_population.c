@@ -222,10 +222,9 @@ void house_population_evict_overcrowded(void) {
             figure_create_homeless(b->x, b->y, num_people_to_evict);
             if (num_people_to_evict < b->house_population)
                 b->house_population -= num_people_to_evict;
-            else {
+            else
                 // house has been removed
                 b->state = BUILDING_STATE_UNDO;
-            }
         }
     }
 }

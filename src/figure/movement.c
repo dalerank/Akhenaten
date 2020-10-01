@@ -108,39 +108,39 @@ int figure::get_permission_for_int() {
     }
 }
 void figure::move_to_next_tile() {
-    int old_x = x;
-    int old_y = y;
+    int old_x = tile_x;
+    int old_y = tile_y;
     map_figure_remove();
     switch (direction) {
         default:
             return;
         case DIR_0_TOP:
-            y--;
+            tile_y--;
             break;
         case DIR_1_TOP_RIGHT:
-            x++;
-            y--;
+            tile_x++;
+            tile_y--;
             break;
         case DIR_2_RIGHT:
-            x++;
+            tile_x++;
             break;
         case DIR_3_BOTTOM_RIGHT:
-            x++;
-            y++;
+            tile_x++;
+            tile_y++;
             break;
         case DIR_4_BOTTOM:
-            y++;
+            tile_y++;
             break;
         case DIR_5_BOTTOM_LEFT:
-            x--;
-            y++;
+            tile_x--;
+            tile_y++;
             break;
         case DIR_6_LEFT:
-            x--;
+            tile_x--;
             break;
         case DIR_7_TOP_LEFT:
-            x--;
-            y--;
+            tile_x--;
+            tile_y--;
             break;
     }
     grid_offset += map_grid_direction_delta(direction);
@@ -167,7 +167,7 @@ void figure::set_next_route_tile_direction() {
             direction = DIR_FIGURE_AT_DESTINATION;
         }
     } else { // should be at destination
-        direction = calc_general_direction(x, y, destination_x, destination_y);
+        direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
         if (direction != DIR_FIGURE_AT_DESTINATION)
             direction = DIR_FIGURE_LOST;
 
@@ -180,7 +180,6 @@ void figure::advance_route_tile(int roaming_enabled) {
     if (is_boat) {
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER))
             direction = DIR_FIGURE_REROUTE;
-
     } else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
         if (!map_routing_noncitizen_is_passable(target_grid_offset))
             direction = DIR_FIGURE_REROUTE;
@@ -194,9 +193,8 @@ void figure::advance_route_tile(int roaming_enabled) {
                 case DESTROYABLE_AQUEDUCT_GARDEN:
                     if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
                         cause_damage = 0;
-                    else {
+                    else
                         max_damage = 10;
-                    }
                     break;
                 case DESTROYABLE_WALL:
                     max_damage = 200;
@@ -210,13 +208,11 @@ void figure::advance_route_tile(int roaming_enabled) {
                 direction = DIR_FIGURE_ATTACK;
                 if (!(game_time_tick() & 3))
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
-
             }
         }
     } else if (terrain_usage == TERRAIN_USAGE_WALLS) {
         if (!map_routing_is_wall_passable(target_grid_offset))
             direction = DIR_FIGURE_REROUTE;
-
     } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
         if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building *b = building_get(map_building_at(target_grid_offset));
@@ -243,7 +239,6 @@ void figure::advance_route_tile(int roaming_enabled) {
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
         direction = DIR_FIGURE_REROUTE;
-
 }
 void figure::walk_ticks(int num_ticks, int roaming_enabled) {
     while (num_ticks > 0) {
@@ -308,8 +303,8 @@ void figure::init_roaming() {
     }
 }
 void figure::roam_set_direction() {
-    int grid_offset = map_grid_offset(x, y);
-    int direction = calc_general_direction(x, y, destination_x, destination_y);
+    int grid_offset = map_grid_offset(tile_x, tile_y);
+    int direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
     if (direction >= 8)
         direction = 0;
 
@@ -360,7 +355,7 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
 }
 void figure::follow_ticks(int num_ticks) {
     const figure *leader = figure_get(leading_figure_id);
-    if (x == source_x && y == source_y)
+    if (tile_x == source_x && tile_y == source_y)
         is_ghost = 1;
 
     while (num_ticks > 0) {
@@ -370,8 +365,8 @@ void figure::follow_ticks(int num_ticks) {
             advance_tick();
         else {
             progress_on_tile = 15;
-            direction = calc_general_direction(x, y,
-                                                  leader->previous_tile_x, leader->previous_tile_y);
+            direction = calc_general_direction(tile_x, tile_y,
+                                               leader->previous_tile_x, leader->previous_tile_y);
             if (direction >= 8)
                 break;
 
@@ -383,6 +378,7 @@ void figure::follow_ticks(int num_ticks) {
     }
 }
 void figure::roam_ticks(int num_ticks) {
+    routing_path_id = 0;
     if (roam_choose_destination == 0) {
         walk_ticks(num_ticks, 1);
         if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -615,9 +611,9 @@ int figure::move_ticks_cross_country(int num_ticks) {
         }
         cross_country_advance();
     }
-    x = cross_country_x / 15;
-    y = cross_country_y / 15;
-    grid_offset = map_grid_offset(x, y);
+    tile_x = cross_country_x / 15;
+    tile_y = cross_country_y / 15;
+    grid_offset = map_grid_offset(tile_x, tile_y);
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
         in_building_wait_ticks = 8;
     else if (in_building_wait_ticks)
@@ -643,12 +639,12 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
 
             f->cross_country_advance();
         }
-        f->x = f->cross_country_x / 15;
-        f->y = f->cross_country_y / 15;
+        f->tile_x = f->cross_country_x / 15;
+        f->tile_y = f->cross_country_y / 15;
         if (height)
             height--;
         else {
-            int grid_offset = map_grid_offset(f->x, f->y);
+            int grid_offset = map_grid_offset(f->tile_x, f->tile_y);
             if (map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_GATEHOUSE | TERRAIN_TREE))
                 break;
 

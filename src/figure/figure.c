@@ -40,8 +40,8 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->is_friendly = 1;
     f->created_sequence = data.created_sequence++;
     f->direction = dir;
-    f->source_x = f->destination_x = f->previous_tile_x = f->x = x;
-    f->source_y = f->destination_y = f->previous_tile_y = f->y = y;
+    f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
+    f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
     f->grid_offset = map_grid_offset(x, y);
     f->cross_country_x = 15 * x;
     f->cross_country_y = 15 * y;
@@ -160,8 +160,8 @@ void figure::save(buffer *buf) {
     buf->write_i8(f->direction);
     buf->write_i8(f->previous_tile_direction);
     buf->write_i8(f->attack_direction);
-    buf->write_u8(f->x);
-    buf->write_u8(f->y);
+    buf->write_u8(f->tile_x);
+    buf->write_u8(f->tile_y);
     buf->write_u8(f->previous_tile_x);
     buf->write_u8(f->previous_tile_y);
     buf->write_u8(f->missile_damage);
@@ -260,15 +260,15 @@ void figure::load(buffer *buf) {
     f->previous_tile_direction = buf->read_i8();
     f->attack_direction = buf->read_i8();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        f->x = buf->read_u16();
-        f->y = buf->read_u16();
+        f->tile_x = buf->read_u16();
+        f->tile_y = buf->read_u16();
         f->previous_tile_x = buf->read_u16();
         f->previous_tile_y = buf->read_u16();
         f->missile_damage = buf->read_u16();
         f->damage = buf->read_u16();
     } else {
-        f->x = buf->read_u8();
-        f->y = buf->read_u8();
+        f->tile_x = buf->read_u8();
+        f->tile_y = buf->read_u8();
         f->previous_tile_x = buf->read_u8();
         f->previous_tile_y = buf->read_u8();
         f->missile_damage = buf->read_u8();

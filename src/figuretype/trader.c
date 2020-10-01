@@ -392,8 +392,8 @@ void figure::trade_caravan_action() {
                     x_base = trade_center->x;
                     y_base = trade_center->y;
                 } else {
-                    x_base = x;
-                    y_base = y;
+                    x_base = tile_x;
+                    y_base = tile_y;
                 }
                 go_to_next_warehouse(x_base, y_base, 0);
             }
@@ -447,7 +447,7 @@ void figure::trade_caravan_action() {
                     move_on++;
                 }
                 if (move_on == 2)
-                    go_to_next_warehouse(x, y, -1);
+                    go_to_next_warehouse(tile_x, tile_y, -1);
 
             }
             image_offset = 0;
@@ -538,7 +538,7 @@ void figure::native_trader_action() {
             if (wait_ticks > 10) {
                 wait_ticks = 0;
                 map_point tile;
-                int building_id = get_closest_warehouse(x, y, 0, -1, &tile);
+                int building_id = get_closest_warehouse(tile_x, tile_y, 0, -1, &tile);
                 if (building_id) {
                     action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                     destination_building_id = building_id;
@@ -560,7 +560,7 @@ void figure::native_trader_action() {
                     trader_amount_bought += 3;
                 } else {
                     map_point tile;
-                    int building_id = get_closest_warehouse(x, y, 0, -1, &tile);
+                    int building_id = get_closest_warehouse(tile_x, tile_y, 0, -1, &tile);
                     if (building_id) {
                         action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
                         destination_building_id = building_id;

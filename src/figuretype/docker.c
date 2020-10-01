@@ -212,8 +212,8 @@ void figure::get_trade_center_location(int *_x, int *_y) {
         *_x = trade_center->x;
         *_y = trade_center->y;
     } else {
-        *_x = x;
-        *_y = y;
+        *_x = tile_x;
+        *_y = tile_y;
     }
 }
 int figure::deliver_import_resource(building *dock) {

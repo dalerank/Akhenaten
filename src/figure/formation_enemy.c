@@ -520,7 +520,7 @@ static void update_enemy_formation(formation *m, int *roman_distance) {
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->x, f->y);
+            formation_set_home(m, f->tile_x, f->tile_y);
 
     }
     if (!army->formation_id) {

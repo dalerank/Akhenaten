@@ -34,7 +34,7 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance) {
             continue;
 
         if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native()) {
-            int distance = calc_maximum_distance(x, y, f->x, f->y);
+            int distance = calc_maximum_distance(x, y, f->tile_x, f->tile_y);
             if (distance <= max_distance) {
                 if (f->targeted_by_figure_id)
                     distance *= 2; // penalty
@@ -93,7 +93,7 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
         if (f->is_legion() && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
-        int distance = calc_maximum_distance(x, y, f->x, f->y);
+        int distance = calc_maximum_distance(x, y, f->tile_x, f->tile_y);
         if (f->targeted_by_figure_id) {
             distance *= 2;
         }
@@ -116,7 +116,7 @@ int figure_combat_get_target_for_enemy(int x, int y) {
             continue;
 
         if (!f->targeted_by_figure_id && f->is_legion()) {
-            int distance = calc_maximum_distance(x, y, f->x, f->y);
+            int distance = calc_maximum_distance(x, y, f->tile_x, f->tile_y);
             if (distance < min_distance) {
                 min_distance = distance;
                 min_figure_id = i;
@@ -139,8 +139,8 @@ int figure_combat_get_target_for_enemy(int x, int y) {
     return 0;
 }
 int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distance, map_point *tile) {
-    int x = shooter->x;
-    int y = shooter->y;
+    int x = shooter->tile_x;
+    int y = shooter->tile_y;
 
     int min_distance = max_distance;
     figure *min_figure = 0;
@@ -158,14 +158,14 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
         }
     }
     if (min_figure) {
-        map_point_store_result(min_figure->x, min_figure->y, tile);
+        map_point_store_result(min_figure->tile_x, min_figure->tile_y, tile);
         return min_figure->id;
     }
     return 0;
 }
 int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, int attack_citizens, map_point *tile) {
-    int x = enemy->x;
-    int y = enemy->y;
+    int x = enemy->tile_x;
+    int y = enemy->tile_y;
 
     figure *min_figure = 0;
     int min_distance = max_distance;
@@ -196,19 +196,19 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
         }
         int distance;
         if (f->is_legion())
-            distance = calc_maximum_distance(x, y, f->x, f->y);
+            distance = calc_maximum_distance(x, y, f->tile_x, f->tile_y);
         else if (attack_citizens && f->is_friendly)
-            distance = calc_maximum_distance(x, y, f->x, f->y) + 5;
+            distance = calc_maximum_distance(x, y, f->tile_x, f->tile_y) + 5;
         else {
             continue;
         }
-        if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
+        if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->tile_x, f->tile_y)) {
             min_distance = distance;
             min_figure = f;
         }
     }
     if (min_figure) {
-        map_point_store_result(min_figure->x, min_figure->y, tile);
+        map_point_store_result(min_figure->tile_x, min_figure->tile_y, tile);
         return min_figure->id;
     }
     return 0;
@@ -380,12 +380,12 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             attacker_id1 = opponent_id;
             num_attackers = 1;
             attack_image_offset = 12;
-            if (opponent->x != opponent->destination_x || opponent->y != opponent->destination_y) {
+            if (opponent->tile_x != opponent->destination_x || opponent->tile_y != opponent->destination_y) {
                 attack_direction = calc_general_direction(previous_tile_x, previous_tile_y,
                                                           opponent->previous_tile_x, opponent->previous_tile_y);
             } else {
                 attack_direction = calc_general_direction(previous_tile_x, previous_tile_y,
-                                                          opponent->x, opponent->y);
+                                                          opponent->tile_x, opponent->tile_y);
             }
             if (attack_direction >= 8)
                 attack_direction = 0;

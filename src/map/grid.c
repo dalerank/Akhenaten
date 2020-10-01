@@ -11,187 +11,168 @@ static const int DIRECTION_DELTA_C3[] = {-OFFSET_C3(0, 1), OFFSET_C3(1, -1), 1, 
 static const int DIRECTION_DELTA_PH[] = {-OFFSET_PH(0, 1), OFFSET_PH(1, -1), 1, OFFSET_PH(1, 1), OFFSET_PH(0, 1),
                                          OFFSET_PH(-1, 1), -1, -OFFSET_PH(1, 1)};
 
-static const int ADJACENT_OFFSETS_C3[][21] = {
-        {0},
-        {OFFSET_C3(0, -1), OFFSET_C3(1, 0),  OFFSET_C3(0, 1),  OFFSET_C3(-1, 0), 0},
-        {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1),  OFFSET_C3(1, 2), OFFSET_C3(0,
-                                                                                                            2), OFFSET_C3(
-                                                                                                                        -1,
-                                                                                                                        1), OFFSET_C3(
-                                                                                                                                    -1,
-                                                                                                                                    0), 0},
-        {
-         OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1),
-                                                               OFFSET_C3(3, 0),  OFFSET_C3(3, 1), OFFSET_C3(3, 2),
-                                                                                                                OFFSET_C3(
-                                                                                                                        2,
-                                                                                                                        3), OFFSET_C3(
-                                                                                                                                    1,
-                                                                                                                                    3), OFFSET_C3(
-                                                                                                                                                0,
-                                                                                                                                                3),
-                                                                                                                                                    OFFSET_C3(
-                                                                                                                                                            -1,
-                                                                                                                                                            2), OFFSET_C3(
-                                                                                                                                                                        -1,
-                                                                                                                                                                        1), OFFSET_C3(
-                                                                                                                                                                                    -1,
-                                                                                                                                                                                    0), 0
-        },
-        {
-         OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(3, -1),
-                                                                                 OFFSET_C3(4, 0), OFFSET_C3(4,
-                                                                                                            1), OFFSET_C3(
-                                                                                                                        4,
-                                                                                                                        2), OFFSET_C3(
-                                                                                                                                    4,
-                                                                                                                                    3),
-                                                                                                                                        OFFSET_C3(
-                                                                                                                                                3,
-                                                                                                                                                4), OFFSET_C3(
-                                                                                                                                                            2,
-                                                                                                                                                            4), OFFSET_C3(
-                                                                                                                                                                        1,
-                                                                                                                                                                        4), OFFSET_C3(
-                                                                                                                                                                                    0,
-                                                                                                                                                                                    4),
-                                                                                                                                                                                        OFFSET_C3(
-                                                                                                                                                                                                -1,
-                                                                                                                                                                                                3), OFFSET_C3(
-                                                                                                                                                                                                            -1,
-                                                                                                                                                                                                            2), OFFSET_C3(
-                                                                                                                                                                                                                        -1,
-                                                                                                                                                                                                                        1), OFFSET_C3(
-                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                    0), 0
-        },
-        {
-         OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(4, -1),
-                                                                                                  OFFSET_C3(5,
-                                                                                                            0), OFFSET_C3(
-                                                                                                                        5,
-                                                                                                                        1), OFFSET_C3(
-                                                                                                                                    5,
-                                                                                                                                    2), OFFSET_C3(
-                                                                                                                                                5,
-                                                                                                                                                3), OFFSET_C3(
-                                                                                                                                                            5,
-                                                                                                                                                            4),
-                                                                                                                                                                OFFSET_C3(
-                                                                                                                                                                        4,
-                                                                                                                                                                        5), OFFSET_C3(
-                                                                                                                                                                                    3,
-                                                                                                                                                                                    5), OFFSET_C3(
-                                                                                                                                                                                                2,
-                                                                                                                                                                                                5), OFFSET_C3(
-                                                                                                                                                                                                            1,
-                                                                                                                                                                                                            5), OFFSET_C3(
-                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                        5),
-                                                                                                                                                                                                                            OFFSET_C3(
-                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                    4), OFFSET_C3(
-                                                                                                                                                                                                                                                -1,
-                                                                                                                                                                                                                                                3), OFFSET_C3(
-                                                                                                                                                                                                                                                            -1,
-                                                                                                                                                                                                                                                            2), OFFSET_C3(
-                                                                                                                                                                                                                                                                        -1,
-                                                                                                                                                                                                                                                                        1), OFFSET_C3(
-                                                                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                                                                    0), 0
-        },
+static
+const int ADJACENT_OFFSETS_C3[][21] = {
+    {
+        0
+    },
+    {
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, 0),
+        OFFSET_C3(0, 1),
+        OFFSET_C3(-1, 0),
+        0
+    },
+    {
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, -1),
+        OFFSET_C3(2, 0),
+        OFFSET_C3(2, 1),
+        OFFSET_C3(1, 2),
+        OFFSET_C3(0, 2),
+        OFFSET_C3(-1, 1),
+        OFFSET_C3(-1, 0),
+        0
+    },
+    {
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, -1),
+        OFFSET_C3(2, -1),
+        OFFSET_C3(3, 0),
+        OFFSET_C3(3, 1),
+        OFFSET_C3(3, 2),
+        OFFSET_C3(2, 3),
+        OFFSET_C3(1, 3),
+        OFFSET_C3(0, 3),
+        OFFSET_C3(-1, 2),
+        OFFSET_C3(-1, 1),
+        OFFSET_C3(-1, 0),
+        0
+    },
+    {
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, -1),
+        OFFSET_C3(2, -1),
+        OFFSET_C3(3, -1),
+        OFFSET_C3(4, 0),
+        OFFSET_C3(4, 1),
+        OFFSET_C3(4, 2),
+        OFFSET_C3(4, 3),
+        OFFSET_C3(3, 4),
+        OFFSET_C3(2, 4),
+        OFFSET_C3(1, 4),
+        OFFSET_C3(0, 4),
+        OFFSET_C3(-1, 3),
+        OFFSET_C3(-1, 2),
+        OFFSET_C3(-1, 1),
+        OFFSET_C3(-1, 0),
+        0
+    },
+    {
+        OFFSET_C3(0, -1),
+        OFFSET_C3(1, -1),
+        OFFSET_C3(2, -1),
+        OFFSET_C3(3, -1),
+        OFFSET_C3(4, -1),
+        OFFSET_C3(5, 0),
+        OFFSET_C3(5, 1),
+        OFFSET_C3(5, 2),
+        OFFSET_C3(5, 3),
+        OFFSET_C3(5, 4),
+        OFFSET_C3(4, 5),
+        OFFSET_C3(3, 5),
+        OFFSET_C3(2, 5),
+        OFFSET_C3(1, 5),
+        OFFSET_C3(0, 5),
+        OFFSET_C3(-1, 4),
+        OFFSET_C3(-1, 3),
+        OFFSET_C3(-1, 2),
+        OFFSET_C3(-1, 1),
+        OFFSET_C3(-1, 0),
+        0
+    },
 };
-static const int ADJACENT_OFFSETS_PH[][21] = {
-        {0},
-        {OFFSET_PH(0, -1), OFFSET_PH(1, 0),  OFFSET_PH(0, 1),  OFFSET_PH(-1, 0), 0},
-        {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1),  OFFSET_PH(1, 2), OFFSET_PH(0,
-                                                                                                            2), OFFSET_PH(
-                                                                                                                        -1,
-                                                                                                                        1), OFFSET_PH(
-                                                                                                                                    -1,
-                                                                                                                                    0), 0},
-        {
-         OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1),
-                                                               OFFSET_PH(3, 0),  OFFSET_PH(3, 1), OFFSET_PH(3, 2),
-                                                                                                                OFFSET_PH(
-                                                                                                                        2,
-                                                                                                                        3), OFFSET_PH(
-                                                                                                                                    1,
-                                                                                                                                    3), OFFSET_PH(
-                                                                                                                                                0,
-                                                                                                                                                3),
-                                                                                                                                                    OFFSET_PH(
-                                                                                                                                                            -1,
-                                                                                                                                                            2), OFFSET_PH(
-                                                                                                                                                                        -1,
-                                                                                                                                                                        1), OFFSET_PH(
-                                                                                                                                                                                    -1,
-                                                                                                                                                                                    0), 0
-        },
-        {
-         OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(3, -1),
-                                                                                 OFFSET_PH(4, 0), OFFSET_PH(4,
-                                                                                                            1), OFFSET_PH(
-                                                                                                                        4,
-                                                                                                                        2), OFFSET_PH(
-                                                                                                                                    4,
-                                                                                                                                    3),
-                                                                                                                                        OFFSET_PH(
-                                                                                                                                                3,
-                                                                                                                                                4), OFFSET_PH(
-                                                                                                                                                            2,
-                                                                                                                                                            4), OFFSET_PH(
-                                                                                                                                                                        1,
-                                                                                                                                                                        4), OFFSET_PH(
-                                                                                                                                                                                    0,
-                                                                                                                                                                                    4),
-                                                                                                                                                                                        OFFSET_PH(
-                                                                                                                                                                                                -1,
-                                                                                                                                                                                                3), OFFSET_PH(
-                                                                                                                                                                                                            -1,
-                                                                                                                                                                                                            2), OFFSET_PH(
-                                                                                                                                                                                                                        -1,
-                                                                                                                                                                                                                        1), OFFSET_PH(
-                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                    0), 0
-        },
-        {
-         OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(4, -1),
-                                                                                                  OFFSET_PH(5,
-                                                                                                            0), OFFSET_PH(
-                                                                                                                        5,
-                                                                                                                        1), OFFSET_PH(
-                                                                                                                                    5,
-                                                                                                                                    2), OFFSET_PH(
-                                                                                                                                                5,
-                                                                                                                                                3), OFFSET_PH(
-                                                                                                                                                            5,
-                                                                                                                                                            4),
-                                                                                                                                                                OFFSET_PH(
-                                                                                                                                                                        4,
-                                                                                                                                                                        5), OFFSET_PH(
-                                                                                                                                                                                    3,
-                                                                                                                                                                                    5), OFFSET_PH(
-                                                                                                                                                                                                2,
-                                                                                                                                                                                                5), OFFSET_PH(
-                                                                                                                                                                                                            1,
-                                                                                                                                                                                                            5), OFFSET_PH(
-                                                                                                                                                                                                                        0,
-                                                                                                                                                                                                                        5),
-                                                                                                                                                                                                                            OFFSET_PH(
-                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                    4), OFFSET_PH(
-                                                                                                                                                                                                                                                -1,
-                                                                                                                                                                                                                                                3), OFFSET_PH(
-                                                                                                                                                                                                                                                            -1,
-                                                                                                                                                                                                                                                            2), OFFSET_PH(
-                                                                                                                                                                                                                                                                        -1,
-                                                                                                                                                                                                                                                                        1), OFFSET_PH(
-                                                                                                                                                                                                                                                                                    -1,
-                                                                                                                                                                                                                                                                                    0), 0
-        },
+static
+const int ADJACENT_OFFSETS_PH[][21] = {
+    {
+        0
+    },
+    {
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, 0),
+        OFFSET_PH(0, 1),
+        OFFSET_PH(-1, 0),
+        0
+    },
+    {
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, -1),
+        OFFSET_PH(2, 0),
+        OFFSET_PH(2, 1),
+        OFFSET_PH(1, 2),
+        OFFSET_PH(0, 2),
+        OFFSET_PH(-1, 1),
+        OFFSET_PH(-1, 0),
+        0
+    },
+    {
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, -1),
+        OFFSET_PH(2, -1),
+        OFFSET_PH(3, 0),
+        OFFSET_PH(3, 1),
+        OFFSET_PH(3, 2),
+        OFFSET_PH(2, 3),
+        OFFSET_PH(1, 3),
+        OFFSET_PH(0, 3),
+        OFFSET_PH(-1, 2),
+        OFFSET_PH(-1, 1),
+        OFFSET_PH(-1, 0),
+        0
+    },
+    {
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, -1),
+        OFFSET_PH(2, -1),
+        OFFSET_PH(3, -1),
+        OFFSET_PH(4, 0),
+        OFFSET_PH(4, 1),
+        OFFSET_PH(4, 2),
+        OFFSET_PH(4, 3),
+        OFFSET_PH(3, 4),
+        OFFSET_PH(2, 4),
+        OFFSET_PH(1, 4),
+        OFFSET_PH(0, 4),
+        OFFSET_PH(-1, 3),
+        OFFSET_PH(-1, 2),
+        OFFSET_PH(-1, 1),
+        OFFSET_PH(-1, 0),
+        0
+    },
+    {
+        OFFSET_PH(0, -1),
+        OFFSET_PH(1, -1),
+        OFFSET_PH(2, -1),
+        OFFSET_PH(3, -1),
+        OFFSET_PH(4, -1),
+        OFFSET_PH(5, 0),
+        OFFSET_PH(5, 1),
+        OFFSET_PH(5, 2),
+        OFFSET_PH(5, 3),
+        OFFSET_PH(5, 4),
+        OFFSET_PH(4, 5),
+        OFFSET_PH(3, 5),
+        OFFSET_PH(2, 5),
+        OFFSET_PH(1, 5),
+        OFFSET_PH(0, 5),
+        OFFSET_PH(-1, 4),
+        OFFSET_PH(-1, 3),
+        OFFSET_PH(-1, 2),
+        OFFSET_PH(-1, 1),
+        OFFSET_PH(-1, 0),
+        0
+    },
 };
-
 
 #include <stdlib.h>
 #include "core/game_environment.h"

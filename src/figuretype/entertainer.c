@@ -178,16 +178,16 @@ void figure::entertainer_action() {
                 int dst_building_id = 0;
                 switch (type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_destination(x, y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
+                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_destination(x, y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
                         break;
                     case FIGURE_LION_TAMER:
-                        dst_building_id = determine_destination(x, y, BUILDING_COLOSSEUM, 0);
+                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_COLOSSEUM, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_destination(x, y, BUILDING_HIPPODROME, 0);
+                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_HIPPODROME, 0);
                         break;
                 }
                 if (dst_building_id) {

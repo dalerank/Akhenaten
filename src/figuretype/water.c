@@ -122,11 +122,11 @@ void figure::flotsam_action() {
             }
             map_figure_remove();
             map_point river_entry = scenario_map_river_entry();
-            x = river_entry.x;
-            y = river_entry.y;
-            grid_offset = map_grid_offset(x, y);
-            cross_country_x = 15 * x;
-            cross_country_y = 15 * y;
+            tile_x = river_entry.x;
+            tile_y = river_entry.y;
+            grid_offset = map_grid_offset(tile_x, tile_y);
+            cross_country_x = 15 * tile_x;
+            cross_country_y = 15 * tile_y;
             break;
     }
     if (resource_id == 0) {
@@ -160,11 +160,11 @@ void figure::shipwreck_action() {
         map_figure_remove();
         map_point tile;
         if (map_water_find_shipwreck_tile(this, &tile)) {
-            x = tile.x;
-            y = tile.y;
-            grid_offset = map_grid_offset(x, y);
-            cross_country_x = 15 * x + 7;
-            cross_country_y = 15 * y + 7;
+            tile_x = tile.x;
+            tile_y = tile.y;
+            grid_offset = map_grid_offset(tile_x, tile_y);
+            cross_country_x = 15 * tile_x + 7;
+            cross_country_y = 15 * tile_y + 7;
         }
         map_figure_add();
         wait_ticks = 1000;
@@ -275,7 +275,7 @@ void figure::fishing_boat_action() {
                 if (wait_ticks >= max_wait_ticks) {
                     wait_ticks = 0;
                     map_point tile;
-                    if (scenario_map_closest_fishing_point(x, y, &tile)) {
+                    if (scenario_map_closest_fishing_point(tile_x, tile_y, &tile)) {
                         action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
                         destination_x = tile.x;
                         destination_y = tile.y;

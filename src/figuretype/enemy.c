@@ -38,7 +38,7 @@ void figure::enemy_initial(formation *m) {
         else {
             destination_x = m->destination_x + formation_position_x.enemy;
             destination_y = m->destination_y + formation_position_y.enemy;
-            if (calc_general_direction(x, y, destination_x, destination_y) < 8)
+            if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) < 8)
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
 
         }
@@ -52,7 +52,7 @@ void figure::enemy_initial(formation *m) {
             wait_ticks_missile = 0;
             if (figure_combat_get_missile_target_for_enemy(this, 10, city_figures_soldiers() < 4, &tile)) {
                 attack_image_offset = 1;
-                direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+                direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
             } else
                 attack_image_offset = 0;
         }
@@ -73,7 +73,7 @@ void figure::enemy_initial(formation *m) {
                 if (tile.x == -1 || tile.y == -1)
                     map_point_get_last_result(&tile);
 
-                figure_create_missile(id, x, y, tile.x, tile.y, missile_type);
+                figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, missile_type);
                 formation_record_missile_fired(m);
             }
             if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())
@@ -92,7 +92,7 @@ void figure::enemy_marching(const formation *m) {
         wait_ticks = 50;
         destination_x = m->destination_x + formation_position_x.enemy;
         destination_y = m->destination_y + formation_position_y.enemy;
-        if (calc_general_direction(x, y, destination_x, destination_y) == DIR_FIGURE_AT_DESTINATION) {
+        if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) == DIR_FIGURE_AT_DESTINATION) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
         }
@@ -127,11 +127,11 @@ void figure::enemy_fighting(const formation *m) {
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = figure_combat_get_target_for_enemy(x, y);
+        target_id = figure_combat_get_target_for_enemy(tile_x, tile_y);
         if (target_id) {
             figure *target = figure_get(target_id);
-            destination_x = target->x;
-            destination_y = target->y;
+            destination_x = target->tile_x;
+            destination_y = target->tile_y;
             target_figure_id = target_id;
             target_figure_created_sequence = target->created_sequence;
             target->targeted_by_figure_id = id;
@@ -142,8 +142,8 @@ void figure::enemy_fighting(const formation *m) {
         move_ticks(speed_multiplier);
         if (direction == DIR_FIGURE_AT_DESTINATION) {
             figure *target = figure_get(target_figure_id);
-            destination_x = target->x;
-            destination_y = target->y;
+            destination_x = target->tile_x;
+            destination_y = target->tile_y;
             route_remove();
         } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;

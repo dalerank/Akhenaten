@@ -294,67 +294,67 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_PATRICIAN:
             return 0;
         case FIGURE_LABOR_SEEKER:
-            houses_serviced = provide_culture(x, y, labor_seeker_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, labor_seeker_coverage);
             break;
         case FIGURE_TAX_COLLECTOR: {
             int max_tax_rate = 0;
-            houses_serviced = provide_service(x, y, &max_tax_rate, tax_collector_coverage);
+            houses_serviced = provide_service(tile_x, tile_y, &max_tax_rate, tax_collector_coverage);
             min_max_seen = max_tax_rate;
             break;
         }
         case FIGURE_MARKET_TRADER:
-            houses_serviced = provide_market_goods(building_id, x, y);
+            houses_serviced = provide_market_goods(building_id, tile_x, tile_y);
             break;
         case FIGURE_MARKET_BUYER:
             if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
-                houses_serviced = provide_market_goods(building_id, x, y);
+                houses_serviced = provide_market_goods(building_id, tile_x, tile_y);
 
             break;
         case FIGURE_BATHHOUSE_WORKER:
-            houses_serviced = provide_culture(x, y, bathhouse_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, bathhouse_coverage);
             break;
         case FIGURE_SCHOOL_CHILD:
-            houses_serviced = provide_culture(x, y, school_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, school_coverage);
             break;
         case FIGURE_TEACHER:
-            houses_serviced = provide_culture(x, y, academy_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, academy_coverage);
             break;
         case FIGURE_LIBRARIAN:
-            houses_serviced = provide_culture(x, y, library_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, library_coverage);
             break;
         case FIGURE_BARBER:
-            houses_serviced = provide_culture(x, y, barber_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, barber_coverage);
             break;
         case FIGURE_DOCTOR:
-            houses_serviced = provide_culture(x, y, clinic_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, clinic_coverage);
             break;
         case FIGURE_SURGEON:
-            houses_serviced = provide_culture(x, y, hospital_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, hospital_coverage);
             break;
         case FIGURE_MISSIONARY:
-            houses_serviced = provide_missionary_coverage(x, y);
+            houses_serviced = provide_missionary_coverage(tile_x, tile_y);
             break;
         case FIGURE_PRIEST:
             switch (building_get(building_id)->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
                 case BUILDING_LARGE_TEMPLE_CERES:
-                    houses_serviced = provide_culture(x, y, religion_coverage_ceres);
+                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_ceres);
                     break;
                 case BUILDING_SMALL_TEMPLE_NEPTUNE:
                 case BUILDING_LARGE_TEMPLE_NEPTUNE:
-                    houses_serviced = provide_culture(x, y, religion_coverage_neptune);
+                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_neptune);
                     break;
                 case BUILDING_SMALL_TEMPLE_MERCURY:
                 case BUILDING_LARGE_TEMPLE_MERCURY:
-                    houses_serviced = provide_culture(x, y, religion_coverage_mercury);
+                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mercury);
                     break;
                 case BUILDING_SMALL_TEMPLE_MARS:
                 case BUILDING_LARGE_TEMPLE_MARS:
-                    houses_serviced = provide_culture(x, y, religion_coverage_mars);
+                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mars);
                     break;
                 case BUILDING_SMALL_TEMPLE_VENUS:
                 case BUILDING_LARGE_TEMPLE_VENUS:
-                    houses_serviced = provide_culture(x, y, religion_coverage_venus);
+                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_venus);
                     break;
                 default:
                     break;
@@ -363,33 +363,33 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_ACTOR:
             b = get_entertainment_building();
             if (b->type == BUILDING_THEATER)
-                houses_serviced = provide_culture(x, y, theater_coverage);
+                houses_serviced = provide_culture(tile_x, tile_y, theater_coverage);
             else if (b->type == BUILDING_AMPHITHEATER) {
-                houses_serviced = provide_entertainment(x, y,
+                houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
             }
             break;
         case FIGURE_GLADIATOR:
             b = get_entertainment_building();
             if (b->type == BUILDING_AMPHITHEATER) {
-                houses_serviced = provide_entertainment(x, y,
+                houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
             } else if (b->type == BUILDING_COLOSSEUM) {
-                houses_serviced = provide_entertainment(x, y,
+                houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
             }
             break;
         case FIGURE_LION_TAMER:
             b = get_entertainment_building();
-            houses_serviced = provide_entertainment(x, y,
+            houses_serviced = provide_entertainment(tile_x, tile_y,
                                                     b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
             break;
         case FIGURE_CHARIOTEER:
-            houses_serviced = provide_culture(x, y, hippodrome_coverage);
+            houses_serviced = provide_culture(tile_x, tile_y, hippodrome_coverage);
             break;
         case FIGURE_ENGINEER: {
             int max_damage = 0;
-            houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
+            houses_serviced = provide_service(tile_x, tile_y, &max_damage, engineer_coverage);
             if (max_damage > min_max_seen)
                 min_max_seen = max_damage;
             else if (min_max_seen <= 10)
@@ -400,7 +400,7 @@ int figure::figure_service_provide_coverage() {
         }
         case FIGURE_PREFECT: {
             int min_happiness = 100;
-            houses_serviced = provide_service(x, y, &min_happiness, prefect_coverage);
+            houses_serviced = provide_service(tile_x, tile_y, &min_happiness, prefect_coverage);
             min_max_seen = min_happiness;
             break;
         }

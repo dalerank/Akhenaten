@@ -35,8 +35,8 @@ public:
     signed char direction;
     signed char previous_tile_direction;
     signed char attack_direction;
-    unsigned char x;
-    unsigned char y;
+    unsigned char tile_x;
+    unsigned char tile_y;
     unsigned char previous_tile_x;
     unsigned char previous_tile_y;
     unsigned char missile_damage;
@@ -173,14 +173,14 @@ public:
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(int *pixel_x, int *pixel_y);
-    void draw_figure(int pixel_x, int pixel_y, int highlight);
-    void city_draw_figure(int pixel_x, int pixel_y, int highlight);
-    void city_draw_selected_figure(int pixel_x, int pixel_y, pixel_coordinate *coord);
-    void draw_figure_with_cart(int pixel_x, int pixel_y);
-    void draw_hippodrome_horse(int pixel_x, int pixel_y);
-    void draw_fort_standard(int pixel_x, int pixel_y);
-    void draw_map_flag(int pixel_x, int pixel_y);
+    void adjust_pixel_offset(int *x, int *y);
+    void draw_figure(int x, int y, int highlight);
+    void city_draw_figure(int x, int y, int highlight);
+    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
+    void draw_figure_with_cart(int x, int y);
+    void draw_hippodrome_horse(int x, int y);
+    void draw_fort_standard(int x, int y);
+    void draw_map_flag(int x, int y);
 
     // movement.c
     void advance_tick();

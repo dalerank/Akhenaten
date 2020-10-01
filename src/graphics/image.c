@@ -856,7 +856,6 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
             draw_modded_footprint(image_id, x, y, color_mask);
-
         return;
     }
     switch (img->width) {

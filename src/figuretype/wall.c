@@ -57,23 +57,23 @@ void figure::ballista_action() {
     map_figure_remove();
     switch (city_view_orientation()) {
         case DIR_0_TOP:
-            x = b->x;
-            y = b->y;
+            tile_x = b->x;
+            tile_y = b->y;
             break;
         case DIR_2_RIGHT:
-            x = b->x + 1;
-            y = b->y;
+            tile_x = b->x + 1;
+            tile_y = b->y;
             break;
         case DIR_4_BOTTOM:
-            x = b->x + 1;
-            y = b->y + 1;
+            tile_x = b->x + 1;
+            tile_y = b->y + 1;
             break;
         case DIR_6_LEFT:
-            x = b->x;
-            y = b->y + 1;
+            tile_x = b->x;
+            tile_y = b->y + 1;
             break;
     }
-    grid_offset = map_grid_offset(x, y);
+    grid_offset = map_grid_offset(tile_x, tile_y);
     map_figure_add();
 
     switch (action_state) {
@@ -96,9 +96,9 @@ void figure::ballista_action() {
             if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
                 if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
-                    direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
                     wait_ticks_missile = 0;
-                    figure_create_missile(id, x, y, tile.x, tile.y, FIGURE_BOLT);
+                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_BOLT);
                     sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
                 } else {
                     action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
@@ -129,8 +129,8 @@ void figure::tower_sentry_pick_target() {
         map_point tile;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
-            destination_x = x;
-            destination_y = y;
+            destination_x = tile_x;
+            destination_y = tile_y;
         }
     }
 }
@@ -239,9 +239,9 @@ void figure::tower_sentry_action() {
             if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
                 if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
-                    direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
                     wait_ticks_missile = 0;
-                    figure_create_missile(id, x, y, tile.x, tile.y, FIGURE_JAVELIN);
+                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
                 } else {
                     action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                     destination_x = source_x;
@@ -269,9 +269,9 @@ void figure::tower_sentry_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 map_figure_remove();
-                source_x = x = b->x;
-                source_y = y = b->y;
-                grid_offset = map_grid_offset(x, y);
+                source_x = tile_x = b->x;
+                source_y = tile_y = b->y;
+                grid_offset = map_grid_offset(tile_x, tile_y);
                 map_figure_add();
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 route_remove();
@@ -317,12 +317,12 @@ void figure_tower_sentry_reroute(void) {
 
         // tower sentry got off wall due to rotation
         int x_tile, y_tile;
-        if (map_routing_wall_tile_in_radius(f->x, f->y, 2, &x_tile, &y_tile)) {
+        if (map_routing_wall_tile_in_radius(f->tile_x, f->tile_y, 2, &x_tile, &y_tile)) {
             f->route_remove();
             f->progress_on_tile = 0;
             f->map_figure_remove();
-            f->previous_tile_x = f->x = x_tile;
-            f->previous_tile_y = f->y = y_tile;
+            f->previous_tile_x = f->tile_x = x_tile;
+            f->previous_tile_y = f->tile_y = y_tile;
             f->cross_country_x = 15 * x_tile;
             f->cross_country_y = 15 * y_tile;
             f->grid_offset = map_grid_offset(x_tile, y_tile);
@@ -334,9 +334,9 @@ void figure_tower_sentry_reroute(void) {
             // Teleport back to tower
             f->map_figure_remove();
             building *b = building_get(f->building_id);
-            f->source_x = f->x = b->x;
-            f->source_y = f->y = b->y;
-            f->grid_offset = map_grid_offset(f->x, f->y);
+            f->source_x = f->tile_x = b->x;
+            f->source_y = f->tile_y = b->y;
+            f->grid_offset = map_grid_offset(f->tile_x, f->tile_y);
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             f->route_remove();
@@ -348,7 +348,7 @@ void figure_kill_tower_sentries_at(int x, int y) {
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (!f->is_dead() && f->type == FIGURE_TOWER_SENTRY) {
-            if (calc_maximum_distance(f->x, f->y, x, y) <= 1)
+            if (calc_maximum_distance(f->tile_x, f->tile_y, x, y) <= 1)
                 f->state = FIGURE_STATE_DEAD;
 
         }

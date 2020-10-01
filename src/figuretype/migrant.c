@@ -182,7 +182,7 @@ void figure::emigrant_action()
             wait_ticks++;
             if (wait_ticks >= 5) {
                 int x_road, y_road;
-                if (!map_closest_road_within_radius(x, y, 1, 5, &x_road, &y_road))
+                if (!map_closest_road_within_radius(tile_x, tile_y, 1, 5, &x_road, &y_road))
                     state = FIGURE_STATE_DEAD;
 
                 action_state = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
@@ -232,7 +232,7 @@ void figure::homeless_action()
             image_offset = 0;
             wait_ticks++;
             if (wait_ticks > 51) {
-                int building_id = closest_house_with_room(x, y);
+                int building_id = closest_house_with_room(tile_x, tile_y);
                 if (building_id) {
                     building *b = building_get(building_id);
                     int x_road, y_road;
@@ -307,7 +307,7 @@ void figure::homeless_action()
             wait_ticks++;
             if (wait_ticks > 30) {
                 wait_ticks = 0;
-                int building_id = closest_house_with_room(x, y);
+                int building_id = closest_house_with_room(tile_x, tile_y);
                 if (building_id > 0) {
                     building *b = building_get(building_id);
                     int x_road, y_road;

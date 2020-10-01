@@ -94,13 +94,13 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
         } else if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())
             continue;
 
-        int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
-        int dy = (f->y > y_start) ? (f->y - y_start) : (y_start - f->y);
+        int dx = (f->tile_x > x_start) ? (f->tile_x - x_start) : (x_start - f->tile_x);
+        int dy = (f->tile_y > y_start) ? (f->tile_y - y_start) : (y_start - f->tile_y);
         if (dx <= 12 && dy <= 12)
             return 1;
 
-        dx = (f->x > x_end) ? (f->x - x_end) : (x_end - f->x);
-        dy = (f->y > y_end) ? (f->y - y_end) : (y_end - f->y);
+        dx = (f->tile_x > x_end) ? (f->tile_x - x_end) : (x_end - f->tile_x);
+        dy = (f->tile_y > y_end) ? (f->tile_y - y_end) : (y_end - f->tile_y);
         if (dx <= 12 && dy <= 12)
             return 1;
 

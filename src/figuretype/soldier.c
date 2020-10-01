@@ -194,15 +194,15 @@ void figure::military_standard_action() {
     figure_image_increase_offset(16);
     map_figure_remove();
     if (m->is_at_fort) {
-        x = m->x;
-        y = m->y;
+        tile_x = m->x;
+        tile_y = m->y;
     } else {
-        x = m->standard_x;
-        y = m->standard_y;
+        tile_x = m->standard_x;
+        tile_y = m->standard_y;
     }
-    grid_offset = map_grid_offset(x, y);
-    cross_country_x = 15 * x + 7;
-    cross_country_y = 15 * y + 7;
+    grid_offset = map_grid_offset(tile_x, tile_y);
+    cross_country_x = 15 * tile_x + 7;
+    cross_country_y = 15 * tile_y + 7;
     map_figure_add();
 
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
@@ -234,7 +234,7 @@ void figure::javelin_launch_missile() {
         wait_ticks_missile = 0;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             attack_image_offset = 1;
-            direction = calc_missile_shooter_direction(x, y, tile.x, tile.y);
+            direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
         } else
             attack_image_offset = 0;
     }
@@ -243,7 +243,7 @@ void figure::javelin_launch_missile() {
             if (tile.x == -1 || tile.y == -1)
                 map_point_get_last_result(&tile);
 
-            figure_create_missile(id, x, y, tile.x, tile.y, FIGURE_JAVELIN);
+            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(formation_id));
         }
         attack_image_offset++;
@@ -262,11 +262,11 @@ int figure::find_mop_up_target() {
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = figure_combat_get_target_for_soldier(x, y, 20);
+        target_id = figure_combat_get_target_for_soldier(tile_x, tile_y, 20);
         if (target_id) {
             figure *target = figure_get(target_id);
-            destination_x = target->x;
-            destination_y = target->y;
+            destination_x = target->tile_x;
+            destination_y = target->tile_y;
             target_figure_id = target_id;
             target->targeted_by_figure_id = id;
             target_figure_created_sequence = target->created_sequence;
@@ -388,7 +388,7 @@ void figure::soldier_action() {
             wait_ticks = 0;
             formation_at_rest = 1;
             image_offset = 0;
-            if (x != formation_position_x.soldier || y != formation_position_y.soldier)
+            if (tile_x != formation_position_x.soldier || tile_y != formation_position_y.soldier)
                 action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
 
             break;
@@ -452,7 +452,7 @@ void figure::soldier_action() {
                 destination_x += ALTERNATIVE_POINTS[alternative_location_index].x;
                 destination_y += ALTERNATIVE_POINTS[alternative_location_index].y;
             }
-            if (x != destination_x || y != destination_y) {
+            if (tile_x != destination_x || tile_y != destination_y) {
                 if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
                     action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
                     alternative_location_index = 0;
@@ -484,8 +484,8 @@ void figure::soldier_action() {
                 move_ticks(speed_factor);
                 if (direction == DIR_FIGURE_AT_DESTINATION) {
                     figure *target = figure_get(target_figure_id);
-                    destination_x = target->x;
-                    destination_y = target->y;
+                    destination_x = target->tile_x;
+                    destination_y = target->tile_y;
                     route_remove();
                 } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
                     action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;

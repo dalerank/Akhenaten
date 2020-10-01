@@ -245,11 +245,11 @@ void figure::wolf_action() {
         case FIGURE_ACTION_199_WOLF_ATTACKING:
             move_ticks(2);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
-                int target_id = figure_combat_get_target_for_wolf(x, y, 6);
+                int target_id = figure_combat_get_target_for_wolf(tile_x, tile_y, 6);
                 if (target_id) {
                     figure *target = figure_get(target_id);
-                    destination_x = target->x;
-                    destination_y = target->y;
+                    destination_x = target->tile_x;
+                    destination_y = target->tile_y;
                     target_figure_id = target_id;
                     target->targeted_by_figure_id = id;
                     target_figure_created_sequence = target->created_sequence;

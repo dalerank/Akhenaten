@@ -123,12 +123,12 @@ static void move_animals(const formation *m, int attacking_animals) {
         }
         f->wait_ticks = 401;
         if (attacking_animals) {
-            int target_id = figure_combat_get_target_for_wolf(f->x, f->y, 6);
+            int target_id = figure_combat_get_target_for_wolf(f->tile_x, f->tile_y, 6);
             if (target_id) {
                 figure *target = figure_get(target_id);
                 f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
-                f->destination_x = target->x;
-                f->destination_y = target->y;
+                f->destination_x = target->tile_x;
+                f->destination_y = target->tile_y;
                 f->target_figure_id = target_id;
                 target->targeted_by_figure_id = f->id;
                 f->target_figure_created_sequence = target->created_sequence;
@@ -176,7 +176,7 @@ static void update_herd_formation(formation *m) {
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->x, f->y);
+            formation_set_home(m, f->tile_x, f->tile_y);
 
     }
     int roam_distance;

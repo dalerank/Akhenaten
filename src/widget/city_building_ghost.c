@@ -420,9 +420,9 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
         }
     }
 }
-void draw_building(int image_id, int x, int y) {
-    image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
-    image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN);
+void draw_building(int image_id, int x, int y, color_t color_mask) {
+    image_draw_isometric_footprint(image_id, x, y, color_mask);
+    image_draw_isometric_top(image_id, x, y, color_mask);
 }
 static void draw_fountain_range(int x, int y, int grid_offset) {
     image_draw_blend_alpha(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
@@ -431,16 +431,13 @@ static void draw_fountain_range(int x, int y, int grid_offset) {
 static void image_draw_warehouse(int image_id, int x, int y) {
 
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-    int corner = building_rotation_get_corner(
-            building_rotation_get_building_orientation(building_rotation_get_rotation()));
+    int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
             draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4,
-                              y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
-        } else {
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4, y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
+        } else
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-        }
     }
 }
 
@@ -448,10 +445,8 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
     if (building_is_farm(type)) {
         draw_building(image_id, x, y);
         // fields
-        for (int i = 4; i < 9; i++) {
-            image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
-                                           COLOR_MASK_GREEN);
-        }
+        for (int i = 4; i < 9; i++)
+            image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
     } else if (type == BUILDING_WAREHOUSE)
         image_draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {

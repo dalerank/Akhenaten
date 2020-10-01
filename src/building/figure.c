@@ -604,8 +604,8 @@ static void spawn_figure_market(building *b) {
                     f->destination_y = road.y;
                 } else {
                     f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                    f->destination_x = f->x;
-                    f->destination_y = f->y;
+                    f->destination_x = f->tile_x;
+                    f->destination_y = f->tile_y;
                 }
             }
         }

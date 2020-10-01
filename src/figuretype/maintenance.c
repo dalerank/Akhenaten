@@ -141,13 +141,13 @@ int figure::fight_enemy() {
 
     wait_ticks_next_target = 0;
     int distance;
-    int enemy_id = get_nearest_enemy(x, y, &distance);
+    int enemy_id = get_nearest_enemy(tile_x, tile_y, &distance);
     if (enemy_id > 0 && distance <= 30) {
         figure *enemy = figure_get(enemy_id);
         wait_ticks_next_target = 0;
         action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
-        destination_x = enemy->x;
-        destination_y = enemy->y;
+        destination_x = enemy->tile_x;
+        destination_y = enemy->tile_y;
         target_figure_id = enemy_id;
         enemy->targeted_by_figure_id = id;
         target_figure_created_sequence = enemy->created_sequence;
@@ -176,7 +176,7 @@ int figure::fight_fire() {
         return 0;
 
     int distance;
-    int ruin_id = building_maintenance_get_closest_burning_ruin(x, y, &distance);
+    int ruin_id = building_maintenance_get_closest_burning_ruin(tile_x, tile_y, &distance);
     if (ruin_id > 0 && distance <= 25) {
         building *ruin = building_get(ruin_id);
         wait_ticks_missile = 0;
@@ -192,7 +192,7 @@ int figure::fight_fire() {
 }
 void figure::extinguish_fire() {
     building *burn = building_get(destination_building_id);
-    int distance = calc_maximum_distance(x, y, burn->x, burn->y);
+    int distance = calc_maximum_distance(tile_x, tile_y, burn->x, burn->y);
     if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) &&
         burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
@@ -200,7 +200,7 @@ void figure::extinguish_fire() {
     } else {
         wait_ticks = 1;
     }
-    attack_direction = calc_general_direction(x, y, burn->x, burn->y);
+    attack_direction = calc_general_direction(tile_x, tile_y, burn->x, burn->y);
     if (attack_direction >= 8)
         attack_direction = 0;
 
@@ -334,8 +334,8 @@ void figure::prefect_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 figure *target = figure_get(target_figure_id);
-                destination_x = target->x;
-                destination_y = target->y;
+                destination_x = target->tile_x;
+                destination_y = target->tile_y;
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
