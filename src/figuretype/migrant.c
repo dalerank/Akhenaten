@@ -47,7 +47,7 @@ void figure_create_homeless(int x, int y, int num_people)
 
 void figure::update_direction_and_image()
 {
-    figure_image_update(image_id_from_group(GROUP_FIGURE_MIGRANT));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_MIGRANT));
     if (action_state == FIGURE_ACTION_2_IMMIGRANT_ARRIVING ||
         action_state == FIGURE_ACTION_6_EMIGRANT_LEAVING) {
         int dir = figure_image_direction();
@@ -91,15 +91,9 @@ void figure::immigrant_action()
 //    figure_image_increase_offset(12);
 
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
@@ -164,21 +158,15 @@ void figure::immigrant_action()
 }
 void figure::emigrant_action()
 {
-    terrain_usage = TERRAIN_USAGE_ANY;
-    cart_image_id = 0;
-
-    figure_image_increase_offset(12);
+//    terrain_usage = TERRAIN_USAGE_ANY;
+//    cart_image_id = 0;
+//
+//    figure_image_increase_offset(12);
 
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks++;
             if (wait_ticks >= 5) {
                 int x_road, y_road;
@@ -218,18 +206,12 @@ void figure::emigrant_action()
 }
 void figure::homeless_action()
 {
-    figure_image_increase_offset(12);
-    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+//    figure_image_increase_offset(12);
+//    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_7_HOMELESS_CREATED:
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks++;
             if (wait_ticks > 51) {
                 int building_id = closest_house_with_room(tile_x, tile_y);
@@ -332,5 +314,5 @@ void figure::homeless_action()
             }
             break;
     }
-    figure_image_update(image_id_from_group(GROUP_FIGURE_HOMELESS));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_HOMELESS));
 }

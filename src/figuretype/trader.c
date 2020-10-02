@@ -369,17 +369,11 @@ int figure::trade_ship_done_trading() {
 }
 
 void figure::trade_caravan_action() {
-    is_ghost = 0;
-    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    is_ghost = 0;
+//    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
             is_ghost = 1;
             wait_ticks++;
@@ -397,7 +391,7 @@ void figure::trade_caravan_action() {
                 }
                 go_to_next_warehouse(x_base, y_base, 0);
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
             move_ticks(1);
@@ -450,7 +444,7 @@ void figure::trade_caravan_action() {
                     go_to_next_warehouse(tile_x, tile_y, -1);
 
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
             move_ticks(1);
@@ -469,18 +463,18 @@ void figure::trade_caravan_action() {
             break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * image_offset;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * anim_frame;
 }
 void figure::trade_caravan_donkey_action() {
-    is_ghost = 0;
-    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    is_ghost = 0;
+//    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
 
     figure *leader = figure_get(leading_figure_id);
-    if (leading_figure_id <= 0)
-        state = FIGURE_STATE_DEAD;
-    else {
+//    if (leading_figure_id <= 0)
+//        state = FIGURE_STATE_DEAD;
+//    else {
         if (leader->action_state == FIGURE_ACTION_149_CORPSE)
             state = FIGURE_STATE_DEAD;
         else if (leader->state != FIGURE_STATE_ALIVE)
@@ -490,26 +484,20 @@ void figure::trade_caravan_donkey_action() {
         else {
             follow_ticks(1);
         }
-    }
+//    }
 
-    if (leader->is_ghost)
-        is_ghost = 1;
+//    if (leader->is_ghost)
+//        is_ghost = 1;
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * image_offset;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * anim_frame;
 }
 void figure::native_trader_action() {
-    is_ghost = 0;
-    terrain_usage = TERRAIN_USAGE_ANY;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    is_ghost = 0;
+//    terrain_usage = TERRAIN_USAGE_ANY;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)
@@ -524,7 +512,7 @@ void figure::native_trader_action() {
                 state = FIGURE_STATE_DEAD;
 
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
@@ -549,7 +537,7 @@ void figure::native_trader_action() {
                     state = FIGURE_STATE_DEAD;
                 }
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE:
             wait_ticks++;
@@ -574,16 +562,16 @@ void figure::native_trader_action() {
                     }
                 }
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset();
         cart_image_id = 0;
     } else {
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * image_offset;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
     }
     cart_image_id = image_id_from_group(GROUP_FIGURE_MIGRANT_CART) +
                     8 + 8 * resource_id; // BUGFIX should be within else statement?
@@ -593,17 +581,11 @@ void figure::native_trader_action() {
     }
 }
 void figure::trade_ship_action() {
-    is_ghost = 0;
+//    is_ghost = 0;
     is_boat = 1;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
             loads_sold_or_carrying = 12;
             trader_amount_bought = 0;
@@ -626,7 +608,7 @@ void figure::trade_ship_action() {
                     state = FIGURE_STATE_DEAD;
                 }
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
             move_ticks(1);
@@ -683,7 +665,7 @@ void figure::trade_ship_action() {
                     direction = DIR_0_TOP;
                     break;
             }
-            image_offset = 0;
+            anim_frame = 0;
             city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             break;
         case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
@@ -715,7 +697,7 @@ void figure::trade_ship_action() {
                 }
                 wait_ticks = 0;
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:
             move_ticks(1);
@@ -731,5 +713,5 @@ void figure::trade_ship_action() {
             break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-    image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir;
 }

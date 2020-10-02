@@ -20,12 +20,6 @@ void figure::indigenous_native_action() {
 
 //    figure_image_increase_offset(12);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -45,7 +39,7 @@ void figure::indigenous_native_action() {
             }
             break;
         case FIGURE_ACTION_158_NATIVE_CREATED:
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks++;
             if (wait_ticks > 10 + (id & 3)) {
                 wait_ticks = 0;
@@ -92,17 +86,17 @@ void figure::indigenous_native_action() {
     is_enemy_image = 1;
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)
-            image_id = 393 + dir + 8 * ((attack_image_offset - 12) / 2);
+            sprite_image_id = 393 + dir + 8 * ((attack_image_offset - 12) / 2);
         else {
-            image_id = 393 + dir;
+            sprite_image_id = 393 + dir;
         }
     } else if (action_state == FIGURE_ACTION_149_CORPSE)
-        image_id = 441 + figure_image_corpse_offset();
+        sprite_image_id = 441 + figure_image_corpse_offset();
     else if (direction == DIR_FIGURE_ATTACK)
-        image_id = 393 + dir + 8 * (image_offset / 2);
+        sprite_image_id = 393 + dir + 8 * (anim_frame / 2);
     else if (action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-        image_id = 297 + dir + 8 * image_offset;
+        sprite_image_id = 297 + dir + 8 * anim_frame;
     else {
-        image_id = 201 + dir + 8 * image_offset;
+        sprite_image_id = 201 + dir + 8 * anim_frame;
     }
 }

@@ -372,6 +372,18 @@ static void draw_figures(int x, int y, int grid_offset) {
 //        debug_range_1 = 7;
 }
 
+static void draw_debug(int x, int y, int grid_offset) {
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
+        f->draw_debug();
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
+        else
+            figure_id = 0;
+    }
+}
+
 static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {

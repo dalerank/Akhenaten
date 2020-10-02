@@ -12,22 +12,16 @@
 #include "game/resource.h"
 
 void figure::market_buyer_action() {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 800;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 800;
+//
+//    building *b = building_get(building_id);
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != id)
+//        state = FIGURE_STATE_DEAD;
 
-    building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
+//    figure_image_increase_offset(12);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -50,7 +44,7 @@ void figure::market_buyer_action() {
                 route_remove();
             }
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
@@ -60,7 +54,7 @@ void figure::market_buyer_action() {
 
             break;
     }
-    figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
 int figure::create_delivery_boy(int leader_id) {
@@ -165,15 +159,15 @@ int figure::take_resource_from_warehouse(int warehouse_id) {
     return 1;
 }
 void figure::delivery_boy_action() {
-    is_ghost = 0;
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    is_ghost = 0;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
 
     figure *leader = figure_get(leading_figure_id);
-    if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
-        state = FIGURE_STATE_DEAD;
-    else {
+//    if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
+//        state = FIGURE_STATE_DEAD;
+//    else {
         if (leader->state == FIGURE_STATE_ALIVE) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
                 follow_ticks(1);
@@ -183,13 +177,13 @@ void figure::delivery_boy_action() {
             building_get(building_id)->data.market.inventory[collecting_item_id] += 100;
             state = FIGURE_STATE_DEAD;
         }
-    }
+//    }
     if (leader->is_ghost)
         is_ghost = 1;
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + 96 + figure_image_corpse_offset();
     } else
-        image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + dir + 8 * image_offset;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_DELIVERY_BOY) + dir + 8 * anim_frame;
 }

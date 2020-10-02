@@ -17,9 +17,13 @@ class figure {
 public:
     int id;
 
-    short image_id;
+    short sprite_image_id;
     short cart_image_id;
-    unsigned char image_offset;
+    short anim_base;
+    short anim_offset;
+    unsigned char anim_frame_duration;
+    unsigned char anim_max_frames;
+    unsigned char anim_frame;
     unsigned char is_enemy_image;
 
     unsigned char alternative_location_index;
@@ -164,8 +168,8 @@ public:
     void route_remove();
 
     // image.c
-    void figure_image_update(int image_base);
-    void figure_image_increase_offset(int max);
+    void image_set_animation(int group, int offset = 0, int max_frames = 12, int duration = 1);
+    void figure_image_update();
     void figure_image_set_cart_offset(int direction);
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
@@ -208,7 +212,7 @@ public:
 
     // actions.c
     void action_perform();
-    void common_action(int max_roam_frames, int group);
+//    void common_action(int max_roam_frames, int group);
 //    void roamer_action(int num_ticks);
 //    void culture_action(int gorup);
 
@@ -245,7 +249,7 @@ public:
     void flotsam_action();
     void docker_action();
     void market_buyer_action();
-    void patrician_action(); //40
+//    void patrician_action(); //40
     void indigenous_native_action();
     void tower_sentry_action();
     void enemy43_spear_action();
@@ -266,7 +270,7 @@ public:
     void javelin_action();
     void bolt_action();
     void ballista_action();
-    void missionary_action();
+//    void missionary_action();
     void seagulls_action();
     void delivery_boy_action();
     void shipwreck_action();

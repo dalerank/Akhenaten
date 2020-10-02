@@ -18,26 +18,20 @@
 #include "core/game_environment.h"
 
 void figure::engineer_action() {
+
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 640;
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
+
+//    figure_image_increase_offset(12);
+
     building *b = building_get(building_id);
-
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
-
     switch (action_state) {
-//        case FIGURE_ACTION_150_ATTACK:
-//            figure_combat_handle_attack();
-//            break;
-//        case FIGURE_ACTION_149_CORPSE:
-//            figure_combat_handle_corpse();
-//            break;
         case FIGURE_ACTION_60_ENGINEER_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
@@ -64,7 +58,7 @@ void figure::engineer_action() {
                 }
             }
             break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_62_ENGINEER_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -80,7 +74,7 @@ void figure::engineer_action() {
             }
             roam_ticks(1);
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_63_ENGINEER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -92,7 +86,7 @@ void figure::engineer_action() {
 
             break;
     }
-    figure_image_update(image_id_from_group(GROUP_FIGURE_ENGINEER));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_ENGINEER));
 }
 
 static int get_nearest_enemy(int x, int y, int *distance) {
@@ -234,29 +228,24 @@ int figure::target_is_alive() {
 }
 
 void figure::prefect_action() { // doubles as fireman! not as policeman!!!
-    building *b = building_get(building_id);
-
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-    figure_image_increase_offset(12);
+//    building *b = building_get(building_id);
+//
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 640;
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
+//    figure_image_increase_offset(12);
 
     // special actions
     if (!fight_enemy())
         fight_fire();
 
+    building *b = building_get(building_id);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_70_PREFECT_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
@@ -282,7 +271,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 }
             }
             break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -298,7 +287,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             }
             roam_ticks(1);
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -357,49 +346,44 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
     dir = figure_image_normalize_direction(dir);
     switch (action_state) {
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-            image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * image_offset;
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * anim_frame;
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-            image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (image_offset / 2);
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (anim_frame / 2);
             break;
         case FIGURE_ACTION_150_ATTACK:
             if (attack_image_offset >= 12) {
-                image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
+                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
             } else
-                image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
+                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
             break;
         case FIGURE_ACTION_149_CORPSE:
-            image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();
             break;
         default:
-            image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + dir + 8 * image_offset;
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + dir + 8 * anim_frame;
             break;
     }
 }
 void figure::policeman_action() {
-    building *b = building_get(building_id);
-
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 640;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-    figure_image_increase_offset(12);
+//    building *b = building_get(building_id);
+//
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 640;
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
+//    figure_image_increase_offset(12);
 
     // special actions
     if (!fight_enemy())
         fight_fire();
 
+    building *b = building_get(building_id);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_70_PREFECT_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
@@ -425,7 +409,7 @@ void figure::policeman_action() {
                 }
             }
             break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -441,7 +425,7 @@ void figure::policeman_action() {
             }
             roam_ticks(1);
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -487,15 +471,15 @@ void figure::policeman_action() {
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
             if (attack_image_offset >= 12) {
-                image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
+                sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
             } else
-                image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir;
+                sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 104 + dir;
             break;
         case FIGURE_ACTION_149_CORPSE:
-            image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 96 + figure_image_corpse_offset();
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + 96 + figure_image_corpse_offset();
             break;
         default:
-            image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + dir + 8 * image_offset;
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + dir + 8 * anim_frame;
             break;
     }
 }

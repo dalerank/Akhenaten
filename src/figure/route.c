@@ -92,7 +92,9 @@ void figure::figure_route_add()
                 path_length = map_routing_get_path(data.direction_paths[path_id], tile_x, tile_y, destination_x, destination_y, 4);
                 if (path_length <= 0)
                     path_length = map_routing_get_path(data.direction_paths[path_id], tile_x, tile_y, destination_x, destination_y, 8);
-            } else
+            } else if (terrain_usage == TERRAIN_USAGE_ROADS)
+                path_length = map_routing_get_path(data.direction_paths[path_id], tile_x, tile_y, destination_x, destination_y, 4);
+            else
                 path_length = map_routing_get_path(data.direction_paths[path_id], tile_x, tile_y, destination_x, destination_y, 8);
         } else // cannot travel
             path_length = 0;

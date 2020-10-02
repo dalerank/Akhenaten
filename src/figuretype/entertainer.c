@@ -93,9 +93,9 @@ void figure::entertainer_update_image() {
         cart_image_id = 0;
         if (action_state == FIGURE_ACTION_150_ATTACK ||
             action_state == FIGURE_ACTION_149_CORPSE) {
-            image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir;
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir;
         } else
-            image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir + 8 * image_offset;
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir + 8 * anim_frame;
         return;
     }
     int image_id;
@@ -112,30 +112,31 @@ void figure::entertainer_update_image() {
         return;
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (type == FIGURE_GLADIATOR)
-            image_id = image_id + 104 + dir + 8 * (image_offset / 2);
+            image_id = image_id + 104 + dir + 8 * (anim_frame / 2);
         else
             image_id = image_id + dir;
     } else if (action_state == FIGURE_ACTION_149_CORPSE) {
         image_id = image_id + 96 + figure_image_corpse_offset();
         cart_image_id = 0;
     } else
-        image_id = image_id + dir + 8 * image_offset;
+        image_id = image_id + dir + 8 * anim_frame;
     if (cart_image_id) {
-        cart_image_id += dir + 8 * image_offset;
+        cart_image_id += dir + 8 * anim_frame;
         figure_image_set_cart_offset(dir);
     }
 }
 void figure::entertainer_action() {
-    building *b = building_get(building_id);
-    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 512;
-    figure_image_increase_offset(12);
+//    building *b = building_get(building_id);
+//    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 512;
+//    figure_image_increase_offset(12);
     wait_ticks_missile++;
     if (wait_ticks_missile >= 120)
         wait_ticks_missile = 0;
 
+    building *b = building_get(building_id);
     if (scenario_gladiator_revolt_is_in_progress() && type == FIGURE_GLADIATOR) {
         if (action_state == FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE ||
             action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -151,14 +152,14 @@ void figure::entertainer_action() {
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack();
-            figure_image_increase_offset(32);
+//            figure_image_increase_offset(32);
             break;
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse();
             break;
         case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks_missile = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
@@ -221,7 +222,7 @@ void figure::entertainer_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
             break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -236,7 +237,7 @@ void figure::entertainer_action() {
             }
             roam_ticks(speed_factor);
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {

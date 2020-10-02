@@ -172,10 +172,10 @@ void figure_kill_all() {
 void figure::save(buffer *buf) {
     figure *f = this;
     buf->write_u8(f->alternative_location_index);
-    buf->write_u8(f->image_offset);
+    buf->write_u8(f->anim_frame);
     buf->write_u8(f->is_enemy_image);
     buf->write_u8(f->flotsam_visible);
-    buf->write_i16(f->image_id);
+    buf->write_i16(f->sprite_image_id);
     buf->write_i16(f->cart_image_id);
     buf->write_i16(f->next_figure);
     buf->write_u8(f->type);
@@ -271,10 +271,10 @@ void figure::save(buffer *buf) {
 void figure::load(buffer *buf) {
     figure *f = this;
     f->alternative_location_index = buf->read_u8();
-    f->image_offset = buf->read_u8();
+    f->anim_frame = buf->read_u8();
     f->is_enemy_image = buf->read_u8();
     f->flotsam_visible = buf->read_u8();
-    f->image_id = buf->read_i16();
+    f->sprite_image_id = buf->read_i16();
     f->cart_image_id = buf->read_i16();
     f->next_figure = buf->read_i16();
     f->type = figureid_translation(buf->read_u8());

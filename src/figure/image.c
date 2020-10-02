@@ -27,23 +27,90 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 static const int CART_OFFSETS_X[] = {13, 18, 12, 0, -13, -18, -13, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-void figure::figure_image_update(int image_base) {
-    if (action_state == FIGURE_ACTION_149_CORPSE)
-        image_id = image_base + CORPSE_IMAGE_OFFSETS[wait_ticks / 2] + 96;
-    else
-        image_id = image_base + figure_image_direction() + 8 * image_offset;
+#include "core/image.h"
+
+void figure::image_set_animation(int group, int offset, int max_frames, int duration) {
+    anim_base = image_id_from_group(group);
+    anim_offset = offset;
+    anim_max_frames = max_frames;
+    if (duration <= 0)
+        duration = 1;
+    anim_frame_duration = duration;
 }
-void figure::figure_image_increase_offset(int max) {
-    image_offset++;
-    if (image_offset >= max)
-        image_offset = 0;
+void figure::figure_image_update() {
+    // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
+    if (state == FIGURE_STATE_DYING)
+        sprite_image_id = anim_base + figure_image_corpse_offset();
+    else
+        sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * anim_frame / anim_frame_duration;
+
+    // null images
+    if (!anim_base)
+        sprite_image_id = 0;
+
+    // advance animation frame
+    anim_frame++;
+    if (anim_frame >= anim_max_frames)
+        anim_frame = 0;
+}
+void figure::cart_update_image() {
+    int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);
+
+    if (action_state == FIGURE_ACTION_149_CORPSE) {
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
+        cart_image_id = 0;
+    } else
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
+    if (cart_image_id) {
+        cart_image_id += dir;
+        figure_image_set_cart_offset(dir);
+        if (loads_sold_or_carrying >= 8)
+            y_offset_cart -= 40;
+    }
+}
+int figure::figure_image_corpse_offset() {
+    int type_offset = 96;
+    switch (type) {
+        case FIGURE_SHEEP:
+            type_offset = 104; break;
+        case FIGURE_INDIGENOUS_NATIVE:
+            type_offset = 441; break;
+        case FIGURE_TOWER_SENTRY:
+            type_offset = 136; break;
+        case FIGURE_JAVELIN:
+        case FIGURE_FORT_MOUNTED:
+            type_offset = 144; break;
+        case FIGURE_FORT_LEGIONARY:
+        case FIGURE_ENEMY_CAESAR_LEGIONARY:
+            type_offset = 152; break;
+        case FIGURE_ENEMY44_SWORD:
+        case FIGURE_ENEMY45_SWORD:
+        case FIGURE_ENEMY50_SWORD:
+            type_offset = 593; break;
+        case FIGURE_ENEMY47_ELEPHANT:
+            type_offset = 705; break;
+        case FIGURE_ENEMY46_CAMEL:
+        case FIGURE_ENEMY48_CHARIOT:
+        case FIGURE_ENEMY52_MOUNTED_ARCHER:
+        case FIGURE_ENEMY53_AXE:
+            type_offset = 745; break;
+        case FIGURE_ENEMY51_SPEAR:
+            type_offset = 641; break;
+        case FIGURE_ENEMY49_FAST_SWORD:
+            formation *m = formation_get(formation_id);
+            if (m->enemy_type == ENEMY_0_BARBARIAN)
+                type_offset = 441;
+            else if (m->enemy_type == ENEMY_1_NUMIDIAN)
+                type_offset = 641;
+            else if (m->enemy_type == ENEMY_4_GOTH)
+                type_offset = 593;
+            break;
+    }
+    return CORPSE_IMAGE_OFFSETS[wait_ticks / 2] + type_offset;
 }
 void figure::figure_image_set_cart_offset(int direction) {
     x_offset_cart = CART_OFFSETS_X[direction];
     y_offset_cart = CART_OFFSETS_Y[direction];
-}
-int figure::figure_image_corpse_offset() {
-    return CORPSE_IMAGE_OFFSETS[wait_ticks / 2];
 }
 int figure::figure_image_missile_launcher_offset() {
     return MISSILE_LAUNCHER_OFFSETS[attack_image_offset / 2];
@@ -52,7 +119,6 @@ int figure::figure_image_direction() {
     int dir = direction - city_view_orientation();
     if (dir < 0)
         dir += 8;
-
     return dir;
 }
 

@@ -130,32 +130,32 @@ void figure::flotsam_action() {
             break;
     }
     if (resource_id == 0) {
-        figure_image_increase_offset(12);
+//        figure_image_increase_offset(12);
         if (min_max_seen)
-            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[image_offset];
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_SHEEP) + FLOTSAM_TYPE_0[anim_frame];
         else {
-            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[image_offset];
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_0) + FLOTSAM_TYPE_0[anim_frame];
         }
     } else if (resource_id == 1) {
-        figure_image_increase_offset(24);
-        image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[image_offset];
+//        figure_image_increase_offset(24);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_1) + FLOTSAM_TYPE_12[anim_frame];
     } else if (resource_id == 2) {
-        figure_image_increase_offset(24);
-        image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[image_offset];
+//        figure_image_increase_offset(24);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_2) + FLOTSAM_TYPE_12[anim_frame];
     } else if (resource_id == 3) {
-        figure_image_increase_offset(24);
-        if (FLOTSAM_TYPE_3[image_offset] == -1)
-            image_id = 0;
+//        figure_image_increase_offset(24);
+        if (FLOTSAM_TYPE_3[anim_frame] == -1)
+            sprite_image_id = 0;
         else {
-            image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[image_offset];
+            sprite_image_id = image_id_from_group(GROUP_FIGURE_FLOTSAM_3) + FLOTSAM_TYPE_3[anim_frame];
         }
     }
 }
 void figure::shipwreck_action() {
-    is_ghost = 0;
+//    is_ghost = 0;
     height_adjusted_ticks = 0;
     is_boat = 1;
-    figure_image_increase_offset(128);
+//    figure_image_increase_offset(128);
     if (wait_ticks < 1000) {
         map_figure_remove();
         map_point tile;
@@ -173,12 +173,12 @@ void figure::shipwreck_action() {
     if (wait_ticks > 2000)
         state = FIGURE_STATE_DEAD;
 
-    image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + image_offset / 16;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + anim_frame / 16;
 }
 void figure::fishing_boat_action() {
     building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE)
-        state = FIGURE_STATE_DEAD;
+//    if (b->state != BUILDING_STATE_IN_USE)
+//        state = FIGURE_STATE_DEAD;
 
     if (action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id) {
         map_point tile;
@@ -196,10 +196,10 @@ void figure::fishing_boat_action() {
             state = FIGURE_STATE_DEAD;
         }
     }
-    is_ghost = 0;
+//    is_ghost = 0;
     is_boat = 1;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     switch (action_state) {
         case FIGURE_ACTION_190_FISHING_BOAT_CREATED:
             wait_ticks++;
@@ -303,8 +303,8 @@ void figure::fishing_boat_action() {
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_192_FISHING_BOAT_FISHING)
-        image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 16;
     else {
-        image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIP) + dir + 8;
     }
 }

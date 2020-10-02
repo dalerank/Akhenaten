@@ -151,56 +151,48 @@ void figure_generate_criminals(void) {
 }
 
 void figure::protestor_action() {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    figure_image_increase_offset(64);
-    cart_image_id = 0;
-    if (action_state == FIGURE_ACTION_149_CORPSE)
-        state = FIGURE_STATE_DEAD;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    figure_image_increase_offset(64);
+//    cart_image_id = 0;
+//    if (action_state == FIGURE_ACTION_149_CORPSE)
+//        state = FIGURE_STATE_DEAD;
 
     wait_ticks++;
     if (wait_ticks > 200) {
         state = FIGURE_STATE_DEAD;
-        image_offset = 0;
+        anim_frame = 0;
     }
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset() + 96;
-    else {
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[image_offset / 4] + 104;
-    }
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset();// + 96;
+    else
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[anim_frame / 4] + 104;
 }
 void figure::criminal_action() {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    figure_image_increase_offset(32);
-    cart_image_id = 0;
-    if (action_state == FIGURE_ACTION_149_CORPSE)
-        state = FIGURE_STATE_DEAD;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    figure_image_increase_offset(32);
+//    cart_image_id = 0;
+//    if (action_state == FIGURE_ACTION_149_CORPSE)
+//        state = FIGURE_STATE_DEAD;
 
     wait_ticks++;
     if (wait_ticks > 200) {
         state = FIGURE_STATE_DEAD;
-        image_offset = 0;
+        anim_frame = 0;
     }
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset() + 96;
-    else {
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[image_offset / 2] + 104;
-    }
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset() + 96;
+    else
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[anim_frame / 2] + 104;
 }
 void figure::rioter_action() {
     city_figures_add_rioter(!targeted_by_figure_id);
-    terrain_usage = TERRAIN_USAGE_ENEMY;
-    max_roam_length = 480;
-    cart_image_id = 0;
-    is_ghost = 0;
+//    terrain_usage = TERRAIN_USAGE_ENEMY;
+//    max_roam_length = 480;
+//    cart_image_id = 0;
+//    is_ghost = 0;
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_120_RIOTER_CREATED:
-            figure_image_increase_offset(32);
+//            figure_image_increase_offset(32);
             wait_ticks++;
             if (wait_ticks >= 160) {
                 action_state = FIGURE_ACTION_121_RIOTER_MOVING;
@@ -216,7 +208,7 @@ void figure::rioter_action() {
             }
             break;
         case FIGURE_ACTION_121_RIOTER_MOVING:
-            figure_image_increase_offset(12);
+//            figure_image_increase_offset(12);
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 int x_tile, y_tile;
@@ -233,8 +225,8 @@ void figure::rioter_action() {
                 action_state = FIGURE_ACTION_120_RIOTER_CREATED;
                 route_remove();
             } else if (direction == DIR_FIGURE_ATTACK) {
-                if (image_offset > 12)
-                    image_offset = 0;
+                if (anim_frame > 12)
+                    anim_frame = 0;
 
             }
             break;
@@ -244,19 +236,18 @@ void figure::rioter_action() {
         dir = attack_direction;
     else if (direction < 8)
         dir = direction;
-    else {
+    else
         dir = previous_tile_direction;
-    }
     dir = figure_image_normalize_direction(dir);
 
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset();
     else if (direction == DIR_FIGURE_ATTACK)
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[image_offset % 16];
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[anim_frame % 16];
     else if (action_state == FIGURE_ACTION_121_RIOTER_MOVING)
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * image_offset;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * anim_frame;
     else {
-        image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[image_offset / 2];
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[anim_frame / 2];
     }
 }
 

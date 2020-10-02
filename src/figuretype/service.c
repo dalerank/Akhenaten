@@ -13,26 +13,20 @@
 
 void figure::school_child_action()
 {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    if (config_get(CONFIG_GP_CH_SCHOOL_WALKERS))
-        max_roam_length = 192;
-    else {
-        max_roam_length = 96;
-    }
-    building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL)
-        state = FIGURE_STATE_DEAD;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    if (config_get(CONFIG_GP_CH_SCHOOL_WALKERS))
+//        max_roam_length = 192;
+//    else {
+//        max_roam_length = 96;
+//    }
+//    building *b = building_get(building_id);
+//    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL)
+//        state = FIGURE_STATE_DEAD;
 
-    figure_image_increase_offset(12);
+//    figure_image_increase_offset(12);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_125_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -42,44 +36,44 @@ void figure::school_child_action()
             roam_ticks(2);
             break;
     }
-    figure_image_update(image_id_from_group(GROUP_FIGURE_SCHOOL_CHILD));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_SCHOOL_CHILD));
 }
 
-void figure::missionary_action()
-{
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 192;
-    building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
-//    roamer_action(1);
-    figure_image_update(image_id_from_group(GROUP_FIGURE_MISSIONARY));
-}
-void figure::patrician_action()
-{
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 128;
-    if (building_get(building_id)->state != BUILDING_STATE_IN_USE)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
-//    roamer_action(1);
-    figure_image_update(image_id_from_group(GROUP_FIGURE_PATRICIAN));
-}
+//void figure::missionary_action()
+//{
+////    terrain_usage = TERRAIN_USAGE_ROADS;
+////    use_cross_country = 0;
+////    max_roam_length = 192;
+////    building *b = building_get(building_id);
+////    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+////        state = FIGURE_STATE_DEAD;
+//
+////    figure_image_increase_offset(12);
+////    roamer_action(1);
+////    figure_image_update(image_id_from_group(GROUP_FIGURE_MISSIONARY));
+//}
+//void figure::patrician_action()
+//{
+////    terrain_usage = TERRAIN_USAGE_ROADS;
+////    use_cross_country = 0;
+////    max_roam_length = 128;
+////    if (building_get(building_id)->state != BUILDING_STATE_IN_USE)
+////        state = FIGURE_STATE_DEAD;
+//
+////    figure_image_increase_offset(12);
+////    roamer_action(1);
+////    figure_image_update(image_id_from_group(GROUP_FIGURE_PATRICIAN));
+//}
 void figure::market_trader_action()
 {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 384;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 384;
     building *market = building_get(building_id);
-    if (market->state != BUILDING_STATE_IN_USE || market->figure_id != id)
-        state = FIGURE_STATE_DEAD;
+//    if (market->state != BUILDING_STATE_IN_USE || market->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
 
-    figure_image_increase_offset(12);
+//    figure_image_increase_offset(12);
     if (action_state == FIGURE_ACTION_125_ROAMING) {
         // force return on out of stock
         int stock = building_market_get_max_food_stock(market) +
@@ -89,30 +83,24 @@ void figure::market_trader_action()
 
     }
 //    roamer_action(1);
-    figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 void figure::tax_collector_action()
 {
     building *b = building_get(building_id);
 
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
-    max_roam_length = 512;
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
-        state = FIGURE_STATE_DEAD;
-
-    figure_image_increase_offset(12);
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    use_cross_country = 0;
+//    max_roam_length = 512;
+//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//        state = FIGURE_STATE_DEAD;
+//
+//    figure_image_increase_offset(12);
 
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
             is_ghost = 1;
-            image_offset = 0;
+            anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
@@ -139,7 +127,7 @@ void figure::tax_collector_action()
                 }
             }
             break;
-        case FIGURE_ACTION_COMMON_ROAM:
+        case ACTION_PROPER_ROAM:
         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -155,7 +143,7 @@ void figure::tax_collector_action()
             }
             roam_ticks(1);
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -167,5 +155,5 @@ void figure::tax_collector_action()
 
             break;
     }
-    figure_image_update(image_id_from_group(GROUP_FIGURE_TAX_COLLECTOR));
+//    figure_image_update(image_id_from_group(GROUP_FIGURE_TAX_COLLECTOR));
 }

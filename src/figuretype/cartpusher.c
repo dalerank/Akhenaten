@@ -128,22 +128,6 @@ void figure::determine_cartpusher_destination_food(int road_network_id) {
     // no one will accept, stand idle
     wait_ticks = 0;
 }
-void figure::cart_update_image() {
-    int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);
-
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
-        cart_image_id = 0;
-    } else
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * image_offset;
-    if (cart_image_id) {
-        cart_image_id += dir;
-        figure_image_set_cart_offset(dir);
-        if (loads_sold_or_carrying >= 8)
-            y_offset_cart -= 40;
-
-    }
-}
 void figure::reroute_cartpusher() {
     route_remove();
     if (!map_routing_citizen_is_passable_terrain(grid_offset))
@@ -269,19 +253,12 @@ void figure::determine_warehouseman_destination(int road_network_id) {
 }
 
 void figure::cartpusher_action() {
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
-    int road_network_id = map_road_network_get(grid_offset);
-    terrain_usage = TERRAIN_USAGE_ROADS;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(building_id);
-
+    int road_network_id = map_road_network_get(grid_offset);
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
             set_cart_graphic();
             if (!map_routing_citizen_is_passable(grid_offset))
@@ -292,7 +269,7 @@ void figure::cartpusher_action() {
             if (wait_ticks > 30)
                 determine_cartpusher_destination(b, road_network_id);
 
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
             set_cart_graphic();
@@ -346,7 +323,7 @@ void figure::cartpusher_action() {
                     wait_ticks = 0;
                 }
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
             wait_ticks++;
@@ -359,7 +336,7 @@ void figure::cartpusher_action() {
                 } else
                     determine_cartpusher_destination_food(road_network_id);
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
             wait_ticks++;
@@ -370,9 +347,9 @@ void figure::cartpusher_action() {
                 destination_x = source_x;
                 destination_y = source_y;
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
             move_ticks(1);
@@ -389,18 +366,11 @@ void figure::cartpusher_action() {
     cart_update_image();
 }
 void figure::warehouseman_action() {
-    terrain_usage = TERRAIN_USAGE_ROADS;
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
+//    terrain_usage = TERRAIN_USAGE_ROADS;
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     int road_network_id = map_road_network_get(grid_offset);
-
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(building_id);
             if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
@@ -412,7 +382,7 @@ void figure::warehouseman_action() {
                 else
                     determine_warehouseman_destination(road_network_id);
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         }
         case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
@@ -453,7 +423,7 @@ void figure::warehouseman_action() {
                 destination_x = source_x;
                 destination_y = source_y;
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
@@ -489,7 +459,7 @@ void figure::warehouseman_action() {
                 destination_y = source_y;
                 route_remove();
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
             // update graphic
@@ -541,7 +511,7 @@ void figure::warehouseman_action() {
                 destination_y = source_y;
                 route_remove();
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;

@@ -276,9 +276,9 @@ void figure::set_cart_graphic() {
 }
 
 void figure::docker_action() {
+//    figure_image_increase_offset(12);
+//    cart_image_id = 0;
     building *b = building_get(building_id);
-    figure_image_increase_offset(12);
-    cart_image_id = 0;
     if (b->state != BUILDING_STATE_IN_USE)
         state = FIGURE_STATE_DEAD;
 
@@ -300,23 +300,17 @@ void figure::docker_action() {
     }
     terrain_usage = TERRAIN_USAGE_ROADS;
     switch (action_state) {
-        case FIGURE_ACTION_150_ATTACK:
-            figure_combat_handle_attack();
-            break;
-        case FIGURE_ACTION_149_CORPSE:
-            figure_combat_handle_corpse();
-            break;
         case FIGURE_ACTION_132_DOCKER_IDLING:
             resource_id = 0;
             cart_image_id = 0;
             if (!deliver_import_resource(b))
                 fetch_export_resource(b);
 
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
             cart_image_id = 0;
-            image_offset = 0;
+            anim_frame = 0;
             if (b->data.dock.queued_docker_id <= 0) {
                 b->data.dock.queued_docker_id = id;
                 wait_ticks = 0;
@@ -360,7 +354,7 @@ void figure::docker_action() {
                 if (wait_ticks >= 80) {
                     action_state = FIGURE_ACTION_132_DOCKER_IDLING;
                     wait_ticks = 0;
-                    image_id = 0;
+                    sprite_image_id = 0;
                     cart_image_id = 0;
                     b->data.dock.queued_docker_id = 0;
                 }
@@ -370,7 +364,7 @@ void figure::docker_action() {
                 action_state = FIGURE_ACTION_132_DOCKER_IDLING;
                 wait_ticks = 0;
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
             set_cart_graphic();
@@ -452,7 +446,7 @@ void figure::docker_action() {
                 }
                 wait_ticks = 0;
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
         case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
@@ -476,22 +470,22 @@ void figure::docker_action() {
                     fetch_export_resource(b);
                 }
             }
-            image_offset = 0;
+            anim_frame = 0;
             break;
     }
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
         cart_image_id = 0;
     } else {
-        image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * image_offset;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
     }
     if (cart_image_id) {
         cart_image_id += dir;
         figure_image_set_cart_offset(dir);
     } else {
-        image_id = 0;
+        sprite_image_id = 0;
     }
 }

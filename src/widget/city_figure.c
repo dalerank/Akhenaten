@@ -82,7 +82,7 @@ void figure::draw_debug() {
     uint8_t str[10];
 //    string_from_int(str, id, 0);
     string_from_int(str, action_state, 0);
-    text_draw(str, coords.x, coords.y, FONT_LARGE_BLACK, COLOR_BLACK);
+    text_draw(str, coords.x, coords.y, FONT_NORMAL_BLACK, COLOR_BLACK);
 
 //    coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
 //    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
@@ -162,7 +162,7 @@ void figure::adjust_pixel_offset(int *x, int *y) {
     x_offset += 29;
     y_offset += 15 + 8;
 
-    const image *img = is_enemy_image ? image_get_enemy(image_id) : image_get(image_id);
+    const image *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     *x += x_offset - img->sprite_offset_x;
     *y += y_offset - img->sprite_offset_y;
 }
@@ -189,19 +189,18 @@ void figure::draw_figure(int x, int y, int highlight)
                 draw_map_flag(x, y);
                 break;
             default:
-                image_draw(image_id, x, y);
+                image_draw(sprite_image_id, x, y);
                 break;
         }
     } else {
         if (is_enemy_image)
-            image_draw_enemy(image_id, x, y);
+            image_draw_enemy(sprite_image_id, x, y);
         else {
-            image_draw(image_id, x, y);
+            image_draw(sprite_image_id, x, y);
             if (highlight)
-                image_draw_blend_alpha(image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
+                image_draw_blend_alpha(sprite_image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
         }
     }
-    draw_debug();
 }
 void figure::city_draw_figure(int x, int y, int highlight)
 {
@@ -218,11 +217,11 @@ void figure::city_draw_selected_figure(int x, int y, pixel_coordinate *coord)
 
 void figure::draw_figure_with_cart(int x, int y) {
     if (y_offset_cart >= 0) {
-        image_draw(image_id, x, y);
+        image_draw(sprite_image_id, x, y);
         image_draw(cart_image_id, x + x_offset_cart, y + y_offset_cart);
     } else {
         image_draw(cart_image_id, x + x_offset_cart, y + y_offset_cart);
-        image_draw(image_id, x, y);
+        image_draw(sprite_image_id, x, y);
     }
 }
 void figure::draw_hippodrome_horse(int x, int y) {
@@ -305,7 +304,7 @@ void figure::draw_hippodrome_horse(int x, int y) {
 void figure::draw_fort_standard(int x, int y) {
     if (!formation_get(formation_id)->in_distant_battle) {
         // base
-        image_draw(image_id, x, y);
+        image_draw(sprite_image_id, x, y);
         // flag
         int flag_height = image_get(cart_image_id)->height;
         image_draw(cart_image_id, x, y - flag_height);
@@ -317,7 +316,7 @@ void figure::draw_fort_standard(int x, int y) {
 }
 void figure::draw_map_flag(int x, int y) {
     // base
-    image_draw(image_id, x, y);
+    image_draw(sprite_image_id, x, y);
     // flag
     image_draw(cart_image_id, x, y - image_get(cart_image_id)->height);
     // flag number

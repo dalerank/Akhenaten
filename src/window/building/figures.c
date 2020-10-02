@@ -293,7 +293,7 @@ void figure::draw_cartpusher(building_info_context *c) {
     building *target_building = building_get(destination_building_id);
     int is_returning = 0;
     switch (action_state) {
-        case FIGURE_ACTION_COMMON_RETURN:
+        case ACTION_PROPER_RETURN:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
         case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
         case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:

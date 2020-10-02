@@ -15,7 +15,7 @@ void figure_create_editor_flags(void) {
 
 void figure::editor_flag_action() {
 //    figure_image_increase_offset(16);
-//    f->image_id = image_id_from_group(GROUP_FIGURE_MAP_FLAG_FLAGS) + f->image_offset / 2;
+//    f->sprite_image_id = image_id_from_group(GROUP_FIGURE_MAP_FLAG_FLAGS) + f->anim_frame / 2;
 //    map_f->map_figure_remove();
 //
 //    map_point point = {0, 0};

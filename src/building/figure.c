@@ -220,6 +220,37 @@ static void spawn_figure_police(building *b) {
         }
     }
 }
+static void spawn_figure_watersupply(building *b) {
+    check_labor_problem(b);
+    if (has_figure_of_type(b, FIGURE_WATER_CARRIER))
+        return;
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+        if (pct_workers >= 100)
+            spawn_delay = 0;
+        else if (pct_workers >= 75)
+            spawn_delay = 1;
+        else if (pct_workers >= 50)
+            spawn_delay = 3;
+        else if (pct_workers >= 25)
+            spawn_delay = 7;
+        else if (pct_workers >= 1)
+            spawn_delay = 15;
+        else
+            return;
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP);
+            f->action_state = ACTION_PROPER_ROAM1;
+            f->building_id = b->id;
+            b->figure_id = f->id;
+        }
+    }
+}
 
 static void spawn_figure_actor_colony(building *b) {
     check_labor_problem(b);
@@ -1145,6 +1176,9 @@ void building_figure_generate(void) {
                     break;
                 case BUILDING_FIREHOUSE:
                     spawn_figure_prefecture(b);
+                    break;
+                case BUILDING_WATER_SUPPLY:
+                    spawn_figure_watersupply(b);
                     break;
                 case BUILDING_ACTOR_COLONY:
                     spawn_figure_actor_colony(b);

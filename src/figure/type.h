@@ -86,6 +86,7 @@ typedef enum figure_type {
 
     // pharaoh
 
+    FIGURE_WATER_CARRIER = 87,
     FIGURE_POLICEMAN = 88,
 
     FIGURE_MAX
@@ -187,7 +188,8 @@ enum {
 typedef enum figure_state {
     FIGURE_STATE_NONE = 0,
     FIGURE_STATE_ALIVE = 1,
-    FIGURE_STATE_DEAD = 2
+    FIGURE_STATE_DEAD = 2,
+    FIGURE_STATE_DYING = 3,
 } figure_state;
 
 enum {

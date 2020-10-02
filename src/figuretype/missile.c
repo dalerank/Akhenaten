@@ -141,10 +141,10 @@ void figure::explosion_cloud_action() {
 
     move_ticks_cross_country(speed_multiplier);
     if (progress_on_tile < 48) {
-        image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) +
-                   CLOUD_IMAGE_OFFSETS[progress_on_tile / 2];
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) +
+                          CLOUD_IMAGE_OFFSETS[progress_on_tile / 2];
     } else {
-        image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) + 7;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_EXPLOSION) + 7;
     }
 }
 void figure::arrow_action() {
@@ -162,7 +162,7 @@ void figure::arrow_action() {
         state = FIGURE_STATE_DEAD;
 
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 16 + dir;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 void figure::spear_action() {
     use_cross_country = 1;
@@ -179,7 +179,7 @@ void figure::spear_action() {
         state = FIGURE_STATE_DEAD;
 
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 void figure::javelin_action() {
     use_cross_country = 1;
@@ -196,7 +196,7 @@ void figure::javelin_action() {
         state = FIGURE_STATE_DEAD;
 
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 void figure::bolt_action() {
     use_cross_country = 1;
@@ -233,5 +233,5 @@ void figure::bolt_action() {
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
     int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 32 + dir;
+    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }
