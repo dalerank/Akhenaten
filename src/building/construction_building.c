@@ -68,16 +68,16 @@ static void add_hippodrome(building *b) {
     part1->prev_part_building_id = 0;
     int image_id;
     switch (orientation) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             image_id = image2;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             image_id = image1 + 4;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             image_id = image2 + 4;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             image_id = image1;
             break;
         default:
@@ -93,12 +93,12 @@ static void add_hippodrome(building *b) {
     part1->next_part_building_id = part2->id;
     part2->next_part_building_id = 0;
     switch (orientation) {
-        case DIR_0_TOP:
-        case DIR_4_BOTTOM:
+        case DIR_0_TOP_RIGHT:
+        case DIR_4_BOTTOM_LEFT:
             image_id = image2 + 2;
             break;
-        case DIR_2_RIGHT:
-        case DIR_6_LEFT:
+        case DIR_2_BOTTOM_RIGHT:
+        case DIR_6_TOP_LEFT:
             image_id = image1 + 2;
             break;
     }
@@ -112,16 +112,16 @@ static void add_hippodrome(building *b) {
     part2->next_part_building_id = part3->id;
     part3->next_part_building_id = 0;
     switch (orientation) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             image_id = image2 + 4;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             image_id = image1;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             image_id = image2;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             image_id = image1 + 4;
             break;
     }
@@ -548,14 +548,14 @@ int building_construction_place_building(int type, int x, int y) {
     else if (type == BUILDING_TRIUMPHAL_ARCH)
         building_orientation = map_orientation_for_triumphal_arch(x, y);
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x = x - size + 1;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x = x - size + 1;
             y = y - size + 1;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             y = y - size + 1;
             break;
     }

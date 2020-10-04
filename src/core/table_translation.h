@@ -2,6 +2,7 @@
 #define GRAPHICS_TABLE_TRANSLATION_H
 
 static int groupid_translation_table_ph[] = {
+        0, 294,
         1, 1, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         2, 2, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         3, 3, // data/Pharaoh_Terrain.sg3 Land1a.bmp
@@ -70,8 +71,10 @@ static int groupid_translation_table_ph[] = {
         85, 85 + 66, // personal mansion
         86, 86 + 66, // family mansion
         87, 87 + 66, // dynasty mansion
+        88, 71 + 340, // bathhouse worker (physician)
         89, 155, // data/Pharaoh_General.sg3 paneling.bmp
         90, 156, // data/Pharaoh_General.sg3 paneling.bmp
+        91, 197 + 340,
         92, 136 + 66,
         93, 159, // data/Pharaoh_General.sg3 paneling.bmp
         94, 160, // data/Pharaoh_General.sg3 paneling.bmp
@@ -106,7 +109,7 @@ static int groupid_translation_table_ph[] = {
         125, 125 + 66, // pottery
         128, 194, // data/Pharaoh_General.sg3 paneling.bmp
         129, 195, // data/Pharaoh_General.sg3 paneling.bmp
-//        130, // merchant caravan - can't find him ;_;
+        130, 20 + 553, // merchant caravan
         131, 52 + 340, // migrant cart (donkey)
         132, 198, // data/Pharaoh_General.sg3 paneling.bmp
         133, 199, // data/Pharaoh_General.sg3 paneling.bmp
@@ -163,7 +166,7 @@ static int groupid_translation_table_ph[] = {
         209, 9 + 340, // delivery boy
         213, 17 + 66, // senet house
         227, 293, // data/Pharaoh_General.sg3 Sprites.bmp
-        228, 195 + 340, // surgeon (mortuary)
+        228, 180 + 340, // doctor (apothecary)
 //        229, 229+340, // patrician
 //        230, 230+340, // missionary
         231, 201 + 340, // librarian

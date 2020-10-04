@@ -42,7 +42,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->direction = dir;
     f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
     f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
-    f->grid_offset = map_grid_offset(x, y);
+    f->grid_offset_figure = map_grid_offset(x, y);
     f->cross_country_x = 15 * x;
     f->cross_country_y = 15 * y;
     f->progress_on_tile = 15;
@@ -194,7 +194,7 @@ void figure::save(buffer *buf) {
     buf->write_u8(f->previous_tile_y);
     buf->write_u8(f->missile_damage);
     buf->write_u8(f->damage);
-    buf->write_i16(f->grid_offset);
+    buf->write_i16(f->grid_offset_figure);
     buf->write_u8(f->destination_x);
     buf->write_u8(f->destination_y);
     buf->write_i16(f->destination_grid_offset);
@@ -303,7 +303,7 @@ void figure::load(buffer *buf) {
         f->damage = buf->read_u8();
     }
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        f->grid_offset = buf->read_i32();
+        f->grid_offset_figure = buf->read_i32();
         f->destination_x = buf->read_u16();
         f->destination_y = buf->read_u16();
         f->destination_grid_offset = buf->read_i32();
@@ -312,7 +312,7 @@ void figure::load(buffer *buf) {
         f->formation_position_x.soldier = buf->read_u16();
         f->formation_position_y.soldier = buf->read_u16();
     } else {
-        f->grid_offset = buf->read_i16();
+        f->grid_offset_figure = buf->read_i16();
         f->destination_x = buf->read_u8();
         f->destination_y = buf->read_u8();
         f->destination_grid_offset = buf->read_i16();

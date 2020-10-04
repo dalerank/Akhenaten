@@ -86,11 +86,11 @@ void building_rotation_get_offset_with_rotation(int offset, int rot, int *x, int
 
 int building_rotation_get_corner(int rot) {
     switch (rot) {
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             return 4; // left corner
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             return 8; // bottom corner
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             return 5; // right corner
         default:
             return 0; // top corner

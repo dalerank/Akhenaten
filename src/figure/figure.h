@@ -45,10 +45,10 @@ public:
     unsigned char previous_tile_y;
     unsigned char missile_damage;
     unsigned char damage;
-    short grid_offset;
+    int grid_offset_figure;
     unsigned char destination_x;
     unsigned char destination_y;
-    short destination_grid_offset; // only used for soldiers
+    int destination_grid_offset; // only used for soldiers
     unsigned char source_x;
     unsigned char source_y;
     union {
@@ -178,11 +178,12 @@ public:
     // city_figure.c
     void draw_debug();
     void adjust_pixel_offset(int *x, int *y);
-    void draw_figure(int x, int y, int highlight);
-    void city_draw_figure(int x, int y, int highlight);
-    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
+//    void draw_figure(int x, int y, int highlight);
+    void draw_figure_correct_sprite_offset(int x, int y);
+    void city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord = nullptr);
+//    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
     void draw_figure_with_cart(int x, int y);
-    void draw_hippodrome_horse(int x, int y);
+//    void draw_hippodrome_horse(int x, int y);
     void draw_fort_standard(int x, int y);
     void draw_map_flag(int x, int y);
 
@@ -237,7 +238,7 @@ public:
     void rioter_action();
     void fishing_boat_action();
     void market_trader_action();
-//    void priest_action();
+    void priest_action();
     void school_child_action();
 //    void teacher_action();
 //    void librarian_action(); //30

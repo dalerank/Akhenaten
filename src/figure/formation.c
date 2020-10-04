@@ -90,7 +90,7 @@ static int formation_create(int figure_type, int layout, int orientation, int x,
     f->legion_id = formation_id - 10;
     f->morale = 100;
     if (layout == FORMATION_ENEMY_DOUBLE_LINE) {
-        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM)
+        if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
             f->layout = FORMATION_DOUBLE_LINE_1;
         else {
             f->layout = FORMATION_DOUBLE_LINE_2;
@@ -510,30 +510,30 @@ static void update_direction(int formation_id, int first_figure_direction) {
         f->direction = first_figure_direction;
     else if (f->layout == FORMATION_DOUBLE_LINE_1 || f->layout == FORMATION_SINGLE_LINE_1) {
         if (f->y_home < f->prev.y_home)
-            f->direction = DIR_0_TOP;
+            f->direction = DIR_0_TOP_RIGHT;
         else if (f->y_home > f->prev.y_home)
-            f->direction = DIR_4_BOTTOM;
+            f->direction = DIR_4_BOTTOM_LEFT;
 
     } else if (f->layout == FORMATION_DOUBLE_LINE_2 || f->layout == FORMATION_SINGLE_LINE_2) {
         if (f->x_home < f->prev.x_home)
-            f->direction = DIR_6_LEFT;
+            f->direction = DIR_6_TOP_LEFT;
         else if (f->x_home > f->prev.x_home)
-            f->direction = DIR_2_RIGHT;
+            f->direction = DIR_2_BOTTOM_RIGHT;
 
     } else if (f->layout == FORMATION_TORTOISE || f->layout == FORMATION_COLUMN) {
         int dx = (f->x_home < f->prev.x_home) ? (f->prev.x_home - f->x_home) : (f->x_home - f->prev.x_home);
         int dy = (f->y_home < f->prev.y_home) ? (f->prev.y_home - f->y_home) : (f->y_home - f->prev.y_home);
         if (dx > dy) {
             if (f->x_home < f->prev.x_home)
-                f->direction = DIR_6_LEFT;
+                f->direction = DIR_6_TOP_LEFT;
             else if (f->x_home > f->prev.x_home)
-                f->direction = DIR_2_RIGHT;
+                f->direction = DIR_2_BOTTOM_RIGHT;
 
         } else {
             if (f->y_home < f->prev.y_home)
-                f->direction = DIR_0_TOP;
+                f->direction = DIR_0_TOP_RIGHT;
             else if (f->y_home > f->prev.y_home)
-                f->direction = DIR_4_BOTTOM;
+                f->direction = DIR_4_BOTTOM_LEFT;
 
         }
     }

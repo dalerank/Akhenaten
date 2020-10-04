@@ -43,7 +43,7 @@ void figure_create_flotsam(void) {
 
     map_point river_entry = scenario_map_river_entry();
     for (int i = 0; i < 20; i++) {
-        figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP);
+        figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP_RIGHT);
         f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
         f->resource_id = FLOTSAM_RESOURCE_IDS[i];
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
@@ -124,7 +124,7 @@ void figure::flotsam_action() {
             map_point river_entry = scenario_map_river_entry();
             tile_x = river_entry.x;
             tile_y = river_entry.y;
-            grid_offset = map_grid_offset(tile_x, tile_y);
+            grid_offset_figure = map_grid_offset(tile_x, tile_y);
             cross_country_x = 15 * tile_x;
             cross_country_y = 15 * tile_y;
             break;
@@ -162,7 +162,7 @@ void figure::shipwreck_action() {
         if (map_water_find_shipwreck_tile(this, &tile)) {
             tile_x = tile.x;
             tile_y = tile.y;
-            grid_offset = map_grid_offset(tile_x, tile_y);
+            grid_offset_figure = map_grid_offset(tile_x, tile_y);
             cross_country_x = 15 * tile_x + 7;
             cross_country_y = 15 * tile_y + 7;
         }

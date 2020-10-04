@@ -186,6 +186,37 @@
 10221 magistrate
 10317 magistrate ded
 
+// sprambient
+
+1: flotsam
+37: lift
+50: lift
+63: lift
+76: lift
+89: dust explosion
+104: dancers
+140: juggler
+166: fish
+191: musicians
+203: musicians
+215: fish????
+238: big explosion??
+
+670. merchant
+774: hippo
+1355: antilope
+1843: hunter (antilope version)
+2539: ship building
+2551: fish unloading
+2647: granary
+2671: mine
+2688: sculpting???
+2702: warehouse
+2718: big ship building
+2730: ferry ship building
+2742: fish ship building
+2754: docker waiting
+2854: docker unloading
 
 
 

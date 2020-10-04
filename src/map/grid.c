@@ -405,9 +405,11 @@ void map_grid_data_init(int width, int height, int start_offset, int border_size
 }
 
 int map_grid_is_valid_offset(int grid_offset) {
+    return true; // temp
     return grid_offset >= 0 && grid_offset < grid_total_size[GAME_ENV];
 }
 int map_grid_offset(int x, int y) {
+//    return x + y * grid_size[GAME_ENV];
     return map_data.start_offset + x + y * grid_size[GAME_ENV];
 }
 int map_grid_offset_to_x(int grid_offset) {

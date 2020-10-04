@@ -10,14 +10,14 @@
  * Direction constants
  */
 enum {
-    DIR_0_TOP = 0,
-    DIR_1_TOP_RIGHT = 1,
-    DIR_2_RIGHT = 2,
-    DIR_3_BOTTOM_RIGHT = 3,
-    DIR_4_BOTTOM = 4,
-    DIR_5_BOTTOM_LEFT = 5,
-    DIR_6_LEFT = 6,
-    DIR_7_TOP_LEFT = 7,
+    DIR_0_TOP_RIGHT = 0,
+    DIR_1_RIGHT = 1,
+    DIR_2_BOTTOM_RIGHT = 2,
+    DIR_3_BOTTOM = 3,
+    DIR_4_BOTTOM_LEFT = 4,
+    DIR_5_LEFT = 5,
+    DIR_6_TOP_LEFT = 6,
+    DIR_7_TOP = 7,
     DIR_8_NONE = 8,
     DIR_FIGURE_AT_DESTINATION = 8,
     DIR_FIGURE_REROUTE = 9,

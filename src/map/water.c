@@ -17,18 +17,18 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
         return;
     map_point leftmost;
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             leftmost.x = 0;
             leftmost.y = size - 1;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             leftmost.x = leftmost.y = 0;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             leftmost.x = size - 1;
             leftmost.y = 0;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             leftmost.x = leftmost.y = size - 1;
             break;
         default:
@@ -74,15 +74,15 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
                                           int *orientation_absolute, int *orientation_relative) {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
-            case DIR_0_TOP:
+            case DIR_0_TOP_RIGHT:
                 break;
-            case DIR_2_RIGHT:
+            case DIR_2_BOTTOM_RIGHT:
                 x--;
                 break;
-            case DIR_6_LEFT:
+            case DIR_6_TOP_LEFT:
                 y--;
                 break;
-            case DIR_4_BOTTOM:
+            case DIR_4_BOTTOM_LEFT:
                 x--;
                 y--;
                 break;
@@ -152,15 +152,15 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
                                           int *orientation_absolute, int *orientation_relative) {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
-            case DIR_0_TOP:
+            case DIR_0_TOP_RIGHT:
                 break;
-            case DIR_2_RIGHT:
+            case DIR_2_BOTTOM_RIGHT:
                 x -= 2;
                 break;
-            case DIR_6_LEFT:
+            case DIR_6_TOP_LEFT:
                 y -= 2;
                 break;
-            case DIR_4_BOTTOM:
+            case DIR_4_BOTTOM_LEFT:
                 x -= 2;
                 y -= 2;
                 break;
@@ -271,7 +271,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile) {
 }
 
 int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) {
-    if (map_figure_at(boat->grid_offset) == boat->id)
+    if (map_figure_at(boat->grid_offset_figure) == boat->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {
@@ -292,7 +292,7 @@ int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) 
 }
 
 int map_water_find_shipwreck_tile(figure *wreck, map_point *tile) {
-    if (map_terrain_is(wreck->grid_offset, TERRAIN_WATER) && map_figure_at(wreck->grid_offset) == wreck->id)
+    if (map_terrain_is(wreck->grid_offset_figure, TERRAIN_WATER) && map_figure_at(wreck->grid_offset_figure) == wreck->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {

@@ -12,7 +12,7 @@
 static struct {
     int delta;
     int restore;
-    pixel_offset input_offset;
+    pixel_coordinate input_offset;
     struct {
         int active;
         int start_zoom;
@@ -39,7 +39,7 @@ void zoom_update_touch(const touch *first, const touch *last, int scale) {
         return;
     }
     int original_distance, current_distance;
-    pixel_offset temp;
+    pixel_coordinate temp;
     temp.x = first->start_point.x - last->start_point.x;
     temp.y = first->start_point.y - last->start_point.y;
     original_distance = (int) sqrt(temp.x * temp.x + temp.y * temp.y);
@@ -78,7 +78,7 @@ void zoom_map(const mouse *m) {
     }
 }
 
-int zoom_update_value(int *zoom, pixel_offset *camera_position) {
+int zoom_update_value(int *zoom, pixel_coordinate *camera_position) {
     int step;
     if (!data.touch.active) {
         if (data.restore) {
@@ -106,7 +106,7 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position) {
         data.delta = 0;
         return 0;
     }
-    pixel_offset old_offset, new_offset;
+    pixel_coordinate old_offset, new_offset;
     old_offset.x = calc_adjust_with_percentage(data.input_offset.x, *zoom);
     old_offset.y = calc_adjust_with_percentage(data.input_offset.y, *zoom);
 

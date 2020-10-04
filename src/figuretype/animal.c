@@ -99,7 +99,7 @@ enum {
 
 static void create_fishing_point(int x, int y) {
     random_generate_next();
-    figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP);
+    figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP_RIGHT);
     fish->anim_frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
     fish->set_cross_country_direction(fish->cross_country_x, fish->cross_country_y, 15 * fish->destination_x, 15 * fish->destination_y, 0);
@@ -130,7 +130,7 @@ static void create_herd(int x, int y) {
     if (formation_id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
-            figure *f = figure_create(herd_type, x, y, DIR_0_TOP);
+            figure *f = figure_create(herd_type, x, y, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             f->formation_id = formation_id;
             f->wait_ticks = f->id & 0x1f;
@@ -314,7 +314,7 @@ static void set_horse_destination(int state) {
 //    if (state == HORSE_CREATED) {
 //        map_f->map_figure_remove();
 //        if (rotation == 0) {
-//            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
 //                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
@@ -322,7 +322,7 @@ static void set_horse_destination(int state) {
 //                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
-//            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
 //                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
@@ -337,11 +337,11 @@ static void set_horse_destination(int state) {
 //        f->y = f->destination_y;
 //        f->cross_country_x = 15 * f->x;
 //        f->cross_country_y = 15 * f->y;
-//        f->grid_offset = map_grid_offset(f->x, f->y);
+//        f->grid_offset_figure = map_grid_offset(f->x, f->y);
 //        map_figure_add();
 //    } else if (state == HORSE_RACING) {
 //        if (rotation == 0) {
-//            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
 //                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
@@ -349,7 +349,7 @@ static void set_horse_destination(int state) {
 //                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
-//            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
 //                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
@@ -359,7 +359,7 @@ static void set_horse_destination(int state) {
 //        }
 //    } else if (state == HORSE_FINISHED) {
 //        if (rotation == 0) {
-//            if (orientation == DIR_0_TOP || orientation == DIR_6_LEFT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
 //                if (f->resource_id) {
 //                    f->destination_x = b->x + 1;
 //                    f->destination_y = b->y + 2;
@@ -377,7 +377,7 @@ static void set_horse_destination(int state) {
 //                }
 //            }
 //        } else {
-//            if (orientation == DIR_0_TOP || orientation == DIR_2_RIGHT) {
+//            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
 //                if (f->resource_id) {
 //                    f->destination_x = b->x + 2;
 //                    f->destination_y = b->y + 1;

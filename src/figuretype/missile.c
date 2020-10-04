@@ -46,7 +46,7 @@ void figure_create_explosion_cloud(int x, int y, int size) {
     int tile_offset = CLOUD_TILE_OFFSETS[size];
     int cc_offset = CLOUD_CC_OFFSETS[size];
     for (int i = 0; i < 16; i++) {
-        figure *f = figure_create(FIGURE_EXPLOSION, x + tile_offset, y + tile_offset, DIR_0_TOP);
+        figure *f = figure_create(FIGURE_EXPLOSION, x + tile_offset, y + tile_offset, DIR_0_TOP_RIGHT);
         if (f->id) {
             f->cross_country_x += cc_offset;
             f->cross_country_y += cc_offset;
@@ -60,7 +60,7 @@ void figure_create_explosion_cloud(int x, int y, int size) {
 }
 
 void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, int type) {
-    figure *f = figure_create(type, x, y, DIR_0_TOP);
+    figure *f = figure_create(type, x, y, DIR_0_TOP_RIGHT);
     if (f->id) {
         f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
         f->building_id = building_id;
@@ -154,7 +154,7 @@ void figure::arrow_action() {
         state = FIGURE_STATE_DEAD;
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_citizen_on_tile(grid_offset);
+    int target_id = get_citizen_on_tile(grid_offset_figure);
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
@@ -171,7 +171,7 @@ void figure::spear_action() {
         state = FIGURE_STATE_DEAD;
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_citizen_on_tile(grid_offset);
+    int target_id = get_citizen_on_tile(grid_offset_figure);
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -188,7 +188,7 @@ void figure::javelin_action() {
         state = FIGURE_STATE_DEAD;
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile(grid_offset);
+    int target_id = get_non_citizen_on_tile(grid_offset_figure);
     if (target_id) {
         missile_hit_target(target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -205,7 +205,7 @@ void figure::bolt_action() {
         state = FIGURE_STATE_DEAD;
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile(grid_offset);
+    int target_id = get_non_citizen_on_tile(grid_offset_figure);
     if (target_id) {
         figure *target = figure_get(target_id);
         const figure_properties *target_props = figure_properties_for_type(target->type);

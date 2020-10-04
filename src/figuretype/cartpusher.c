@@ -24,6 +24,10 @@ static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0,
 void figure::set_cartpusher_graphic() {
     cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id + resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
 }
+void figure::set_cart_graphic() {
+    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
+    cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
+}
 
 void figure::set_destination(int action, int building_id, int x_dst, int y_dst) {
     destination_building_id = building_id;
@@ -130,7 +134,7 @@ void figure::determine_cartpusher_destination_food(int road_network_id) {
 }
 void figure::reroute_cartpusher() {
     route_remove();
-    if (!map_routing_citizen_is_passable_terrain(grid_offset))
+    if (!map_routing_citizen_is_passable_terrain(grid_offset_figure))
         action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
     wait_ticks = 0;
 }
@@ -257,11 +261,11 @@ void figure::cartpusher_action() {
 //    cart_image_id = 0;
 //    terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(building_id);
-    int road_network_id = map_road_network_get(grid_offset);
+    int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
             set_cart_graphic();
-            if (!map_routing_citizen_is_passable(grid_offset))
+            if (!map_routing_citizen_is_passable(grid_offset_figure))
                 state = FIGURE_STATE_DEAD;
             if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
                 state = FIGURE_STATE_DEAD;
@@ -369,7 +373,7 @@ void figure::warehouseman_action() {
 //    terrain_usage = TERRAIN_USAGE_ROADS;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
-    int road_network_id = map_road_network_get(grid_offset);
+    int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(building_id);

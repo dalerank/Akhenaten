@@ -1,7 +1,7 @@
 
 ===== task for today: =====
 
-- get new figures to exit buildings (firemen)
+- get all main buildings to work
 - implement figures internal state?
 
 

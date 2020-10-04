@@ -112,7 +112,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y) {
     int formation_id = get_closest_legion_needing_soldiers(barracks);
     if (formation_id > 0) {
         const formation *m = formation_get(formation_id);
-        figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP);
+        figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -157,7 +157,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
     if (!tower)
         return 0;
 
-    figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
+    figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {

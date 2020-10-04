@@ -17,7 +17,7 @@ int scroll_is_smooth(void);
 void scroll_set_custom_margins(int x, int y, int width, int height);
 void scroll_restore_margins(void);
 
-int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type);
+int scroll_get_delta(const mouse *m, pixel_coordinate *delta, scroll_type type);
 
 void scroll_drag_start(int is_touch);
 int scroll_drag_end(void);

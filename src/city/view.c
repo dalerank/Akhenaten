@@ -25,7 +25,7 @@ static struct {
     int scale;
     struct {
         view_tile tile;
-        pixel_offset pixel;
+        pixel_coordinate pixel;
     } camera;
     struct {
         int x;
@@ -49,7 +49,7 @@ static struct {
 #include "map/grid.h"
 
 static int view_to_grid_offset_lookup[500][500];
-static pixel_offset grid_offset_to_pixel_lookup[500][500];
+static pixel_coordinate grid_offset_to_pixel_lookup[500][500];
 
 int VIEW_X_MAX() {
     return grid_size[GAME_ENV] + 3;
@@ -105,7 +105,7 @@ static void calculate_lookup(void) {
     int x_view_step;
     switch (data.orientation) {
         default:
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             x_view_start = VIEW_X_MAX() - 1;
             x_view_skip = -1;
             x_view_step = 1;
@@ -113,7 +113,7 @@ static void calculate_lookup(void) {
             y_view_skip = 1;
             y_view_step = 1;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x_view_start = 3;
             x_view_skip = 1;
             x_view_step = 1;
@@ -121,7 +121,7 @@ static void calculate_lookup(void) {
             y_view_skip = 1;
             y_view_step = -1;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x_view_start = VIEW_X_MAX() - 1;
             x_view_skip = 1;
             x_view_step = -1;
@@ -129,7 +129,7 @@ static void calculate_lookup(void) {
             y_view_skip = -1;
             y_view_step = -1;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             x_view_start = VIEW_Y_MAX();
             x_view_skip = -1;
             x_view_step = -1;
@@ -153,11 +153,11 @@ static void calculate_lookup(void) {
         int y_view = y_view_start;
         for (int x = 0; x < grid_s; x++) {
             int grid_offset = x + grid_s * y;
+
             if (map_image_at(grid_offset) < 6)
                 view_to_grid_offset_lookup[x_view / 2][y_view] = -1;
-            else {
+            else
                 view_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
-            }
             x_view += x_view_step;
             y_view += y_view_step;
         }
@@ -235,10 +235,10 @@ void city_view_scroll(int x, int y) {
     check_camera_boundaries();
 }
 
-pixel_offset city_view_grid_offset_to_pixel(int grid_offset) {
+pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset) {
     return grid_offset_to_pixel_lookup[map_grid_offset_to_x(grid_offset)][map_grid_offset_to_y(grid_offset)];
 }
-pixel_offset city_view_grid_offset_to_pixel(int tile_x, int tile_y) {
+pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y) {
     return grid_offset_to_pixel_lookup[tile_x][tile_y];
 }
 
@@ -336,7 +336,7 @@ void city_view_rotate_left(void) {
 
     data.orientation += 2;
     if (data.orientation > 6)
-        data.orientation = DIR_0_TOP;
+        data.orientation = DIR_0_TOP_RIGHT;
 
 //    calculate_lookup();
     if (center_grid_offset >= 0) {
@@ -352,7 +352,7 @@ void city_view_rotate_right(void) {
 
     data.orientation -= 2;
     if (data.orientation < 0)
-        data.orientation = DIR_6_LEFT;
+        data.orientation = DIR_6_TOP_LEFT;
 
 //    calculate_lookup();
     if (center_grid_offset >= 0) {
@@ -486,14 +486,13 @@ void city_view_foreach_map_tile(map_callback *callback) {
             int x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
             if (odd)
                 x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
-            else {
+            else
                 x_graphic += data.viewport.x;
-            }
             int x_view = data.camera.tile.x - 4;
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (x_view >= 0 && x_view < VIEW_X_MAX()) {
                     int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
-                    grid_offset_to_pixel_lookup[map_grid_offset_to_x(grid_offset)][map_grid_offset_to_y(grid_offset)] = pixel_offset {
+                    grid_offset_to_pixel_lookup[map_grid_offset_to_x(grid_offset)][map_grid_offset_to_y(grid_offset)] = pixel_coordinate {
                             x_graphic,
                             y_graphic
                     };
@@ -538,16 +537,14 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
                 x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel.x;
                 if (odd)
                     x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
-                else {
+                else
                     x_graphic += data.viewport.x;
-                }
                 x_view = data.camera.tile.x - 4;
                 for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                     if (x_view >= 0 && x_view < VIEW_X_MAX()) {
                         int grid_offset = view_to_grid_offset_lookup[x_view][y_view];
                         if (grid_offset >= 0)
                             callback2(x_graphic, y_graphic, grid_offset);
-
                     }
                     x_graphic += TILE_WIDTH_PIXELS;
                     x_view++;
@@ -595,7 +592,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     int orientation_y = Y_DIRECTION_FOR_ORIENTATION[data.orientation / 2];
 
     // If we are rotated east or west, the pixel location needs to be rotated
-    // to match its corresponding grid_offset. Since for east and west
+    // to match its corresponding grid_offset_figure. Since for east and west
     // only one of the orientations is negative, we can get a negative value
     // which can then be used to properly offset the pixel positions
     int pixel_rotation = orientation_x * orientation_y;

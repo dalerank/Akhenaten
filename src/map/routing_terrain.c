@@ -133,22 +133,22 @@ static int is_wall_tile(int grid_offset) {
 static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, -1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(1, -1));
             adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));

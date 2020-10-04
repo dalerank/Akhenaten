@@ -270,10 +270,6 @@ int figure::fetch_export_resource(building *dock) {
     resource_id = resource;
     return 1;
 }
-void figure::set_cart_graphic() {
-    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
-    cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
-}
 
 void figure::docker_action() {
 //    figure_image_increase_offset(12);

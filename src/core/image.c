@@ -378,9 +378,10 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     groups_num = 0;
     for (int i = 0; i < 300; i++) {
         group_image_ids[i] = buf->read_u16();
-        if (group_image_ids[i] != 0)
+        if (group_image_ids[i] != 0) {
             groups_num++;
-//        SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+//            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+        }
     }
 
     // parse bitmap names
@@ -523,8 +524,8 @@ int image_id_from_group(int group) {
             return data.main->get_id(group);
         case ENGINE_ENV_PHARAOH:
             group = image_groupid_translation(groupid_translation_table_ph, group);
-            if (group == GROUP_SYSTEM_GRAPHICS)
-                return 11026;
+//            if (group == GROUP_SYSTEM_GRAPHICS)
+//                return 11026;
 //            if (group == 1)
 //                return 615 + data.ph_terrain->id_shift_overall;
             if (group < 67)
@@ -535,8 +536,10 @@ int image_id_from_group(int group) {
                 return data.ph_unloaded->get_id(group - 294);// + 5000;
             else if (group < 341)
                 return data.font->get_id(group - 332);// + 6000;
-            else
+            else if (group < 554)
                 return data.ph_sprmain->get_id(group - 340);// + 8000;
+            else
+                return data.ph_sprambient->get_id(group - 553);// + ????;
     }
     return -1;
 }
@@ -564,6 +567,10 @@ const image *image_get(int id, int mode) {
             if (img != &DUMMY_IMAGE) return img;
             img = data.font->get_image(id);
             if (img != &DUMMY_IMAGE) return img;
+            img = data.ph_sprambient->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+
+            // default
             return data.ph_terrain->get_image(615, true);
     }
 //    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
@@ -628,7 +635,9 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
             if (!data.main->load_555(filename_555, filename_sgx, 11706)) return 0;
             // ???? 539-long gap?
             if (!data.ph_terrain->load_555(gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3, 14252)) return 0;
-            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 15766)) return 0;
+            // ???? 64-long gap?
+            if (!data.ph_sprambient->load_555(gfc.PH_SPRAMBIENT_555, gfc.PH_SPRAMBIENT_SG3, 15766+64)) return 0;
+            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 18764)) return 0;
             break;
     }
 

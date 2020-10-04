@@ -429,6 +429,7 @@ static void play_sound_file(int sound_id, int phrase_id) {
     }
 }
 int figure::figure_phrase_play() {
+    return 0; // temp!
 //    if (f->id <= 0)
 //        return 0;
 //    int sound_id = int_TO_SOUND_TYPE[GAME_ENV][f->type];

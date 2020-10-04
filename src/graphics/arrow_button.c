@@ -50,10 +50,8 @@ arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, 
             btn->pressed--;
             if (!btn->pressed)
                 btn->repeats = 0;
-
-        } else {
+        } else
             btn->repeats = 0;
-        }
     }
     int button_id = get_button(m, x, y, buttons, num_buttons);
     if (focus_button_id)

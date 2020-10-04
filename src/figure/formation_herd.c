@@ -58,35 +58,35 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
     for (int i = 0; i < 4; i++) {
         int x_target, y_target;
         switch (target_direction) {
-            case DIR_0_TOP:
+            case DIR_0_TOP_RIGHT:
                 x_target = x;
                 y_target = y - distance;
                 break;
-            case DIR_1_TOP_RIGHT:
+            case DIR_1_RIGHT:
                 x_target = x + distance;
                 y_target = y - distance;
                 break;
-            case DIR_2_RIGHT:
+            case DIR_2_BOTTOM_RIGHT:
                 x_target = x + distance;
                 y_target = y;
                 break;
-            case DIR_3_BOTTOM_RIGHT:
+            case DIR_3_BOTTOM:
                 x_target = x + distance;
                 y_target = y + distance;
                 break;
-            case DIR_4_BOTTOM:
+            case DIR_4_BOTTOM_LEFT:
                 x_target = x;
                 y_target = y + distance;
                 break;
-            case DIR_5_BOTTOM_LEFT:
+            case DIR_5_LEFT:
                 x_target = x - distance;
                 y_target = y + distance;
                 break;
-            case DIR_6_LEFT:
+            case DIR_6_TOP_LEFT:
                 x_target = x - distance;
                 y_target = y;
                 break;
-            case DIR_7_TOP_LEFT:
+            case DIR_7_TOP:
                 x_target = x - distance;
                 y_target = y - distance;
                 break;
@@ -157,7 +157,7 @@ static void update_herd_formation(formation *m) {
     if (can_spawn_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
-            figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
+            figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wolf->formation_id = m->id;
             wolf->wait_ticks = wolf->id & 0x1f;

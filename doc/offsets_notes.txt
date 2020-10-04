@@ -24,9 +24,21 @@ sprmain 	10325	700
 unloaded 	200 	11025
 unloaded(2) 	481	11225
 general 	2546	11706
-???		539	14252
-terrain		1514	14791
-font		1340	16131
+(???		539	14252)
+terrain		1514	14252
+font		1340	15766
+
+sprambient	2934	???
+
+trader (19) action 11 (arriving)
+16540 > 710 + 
+donkey (21) action 8 (following trader)
+4003 > 3321 (3303??) + 700
+
+47 101
+-32385
+390 360 -> coords
+397 394 -> adjusted
 
 
 sprmain2 2352
@@ -65,10 +77,20 @@ BID IMID
 19 > 17
 20 > 18
 
+
+24074 PALACE
+25891 GRANARY1
+
+
 	5	5	8	 8	88	10	10
 	LAB	LAB* 	ENG	ENG*	POL	PRE*	FIR
 ROAM	1	125	10	62	10	72	10
 RET	2	126	11	63			11
+
+1	labor, water, physician
+2	
+10	engineer, police, fireman
+11	
 
 
 CULTURE:

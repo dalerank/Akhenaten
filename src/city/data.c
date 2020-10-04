@@ -1030,8 +1030,8 @@ static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
         city_data.map.exit_flag.x = entry_exit_xy->read_i16();
         city_data.map.exit_flag.y = entry_exit_xy->read_i16();
     }
-//    city_data.map.entry_flag.grid_offset = entry_exit_grid_offset->read_i32();
-//    city_data.map.exit_flag.grid_offset = entry_exit_grid_offset->read_i32();
+//    city_data.map.entry_flag.grid_offset_figure = entry_exit_grid_offset->read_i32();
+//    city_data.map.exit_flag.grid_offset_figure = entry_exit_grid_offset->read_i32();
     city_data.map.entry_flag.grid_offset = 0;
     city_data.map.exit_flag.grid_offset = 0;
 }

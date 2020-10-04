@@ -48,7 +48,7 @@ static void generate_rioter(building *b) {
     int x_target, y_target;
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
-        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
+        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_120_RIOTER_CREATED;
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
@@ -74,7 +74,7 @@ static void generate_mugger(building *b) {
         b->house_criminal_active = 2;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-            figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM);
+            figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->house_figure_generation_delay & 0xf);
             city_ratings_peace_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
@@ -83,7 +83,7 @@ static void generate_mugger(building *b) {
                 if (money_stolen > 400)
                     money_stolen = 400 - random_byte() / 2;
 
-                city_message_post(1, MESSAGE_THEFT, money_stolen, f->grid_offset);
+                city_message_post(1, MESSAGE_THEFT, money_stolen, f->grid_offset_figure);
                 city_finance_process_stolen(money_stolen);
             }
         }
@@ -96,7 +96,7 @@ static void generate_protestor(building *b) {
         b->house_criminal_active = 1;
         int x_road, y_road;
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-            figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM);
+            figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->house_figure_generation_delay & 0xf);
             city_ratings_peace_record_criminal();
         }

@@ -6,51 +6,66 @@
 #include "core/image.h"
 #include "game/animation.h"
 #include "map/sprite.h"
+#include "core/game_environment.h"
 
 int building_animation_offset(building *b, int image_id, int grid_offset) {
-    if (b->type == BUILDING_FOUNTAIN && (b->num_workers <= 0 || !b->has_water_access))
+    if (building_is_workshop(b->type) && (b->loads_stored <= 0 || b->num_workers <= 0))
         return 0;
 
-    if (b->type == BUILDING_RESERVOIR && !b->has_water_access)
-        return 0;
-
-    if (building_is_workshop(b->type)) {
-        if (b->loads_stored <= 0 || b->num_workers <= 0)
-            return 0;
-
+    switch (b->type) {
+        case BUILDING_FOUNTAIN:
+            if (b->num_workers <= 0 || !b->has_water_access)
+                return 0;
+            break;
+        case BUILDING_RESERVOIR:
+            if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                if (b->num_workers <= 0)
+                    return 0;
+            else if (!b->has_water_access)
+                return 0;
+            break;
+        case BUILDING_PREFECTURE: // police house
+        case BUILDING_ENGINEERS_POST:
+        case BUILDING_FIREHOUSE:
+        case BUILDING_WATER_SUPPLY:
+        case BUILDING_PHYSICIAN:
+        case BUILDING_APOTHECARY:
+        case BUILDING_DENTIST:
+        case BUILDING_MORTUARY:
+        case BUILDING_MARKET:
+        case BUILDING_WAREHOUSE: // b->num_workers < model_get_building(b->type)->laborers
+        case BUILDING_GRANARY: // b->num_workers < model_get_building(b->type)->laborers
+        case BUILDING_IRON_MINE:
+        case BUILDING_CLAY_PIT:
+        case BUILDING_TIMBER_YARD:
+        case BUILDING_THEATER:
+        case BUILDING_CHARIOT_MAKER:
+        case BUILDING_HIPPODROME:
+        case BUILDING_TEMPLE_OSIRIS:
+        case BUILDING_TEMPLE_RA:
+        case BUILDING_TEMPLE_SETH:
+        case BUILDING_TEMPLE_PTAH:
+        case BUILDING_TEMPLE_BAST:
+        case BUILDING_VILLAGE_PALACE:
+        case BUILDING_TOWN_PALACE:
+        case BUILDING_CITY_PALACE:
+            if (b->num_workers <= 0)
+                return 0;
+            break;
+        case BUILDING_MARBLE_QUARRY:
+        case BUILDING_GLADIATOR_SCHOOL:
+            if (b->num_workers <= 0) {
+                if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                    return 0;
+                map_sprite_animation_set(grid_offset, 1);
+                return 1;
+            } break;
+        case BUILDING_DOCK:
+            if (b->data.dock.num_ships <= 0) {
+                map_sprite_animation_set(grid_offset, 1);
+                return 1;
+            } break;
     }
-    if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_FIREHOUSE) && b->num_workers <= 0)
-        return 0;
-
-    if (b->type == BUILDING_MARKET && b->num_workers <= 0)
-        return 0;
-
-    if (b->type == BUILDING_WAREHOUSE && b->num_workers < model_get_building(b->type)->laborers)
-        return 0;
-
-    if (b->type == BUILDING_DOCK && b->data.dock.num_ships <= 0) {
-        map_sprite_animation_set(grid_offset, 1);
-        return 1;
-    }
-    if (b->type == BUILDING_MARBLE_QUARRY && b->num_workers <= 0) {
-        map_sprite_animation_set(grid_offset, 1);
-        return 1;
-    } else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
-                b->type == BUILDING_TIMBER_YARD) && b->num_workers <= 0) {
-        return 0;
-    }
-    if (b->type == BUILDING_GLADIATOR_SCHOOL) {
-        if (b->num_workers <= 0) {
-            map_sprite_animation_set(grid_offset, 1);
-            return 1;
-        }
-    } else if (b->type >= BUILDING_THEATER && b->type <= BUILDING_CHARIOT_MAKER &&
-               b->type != BUILDING_HIPPODROME && b->num_workers <= 0) {
-        return 0;
-    }
-    if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers)
-        return 0;
-
 
     const image *img = image_get(image_id);
     if (!game_animation_should_advance(img->animation_speed_id))
@@ -77,7 +92,6 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
                 new_sprite = map_sprite_animation_at(grid_offset) + 1;
                 if (new_sprite > 8)
                     new_sprite = 4;
-
             }
         } else {
             // close to done
@@ -87,7 +101,6 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
                 new_sprite = map_sprite_animation_at(grid_offset) + 1;
                 if (new_sprite > 12)
                     new_sprite = 12;
-
             }
         }
     } else if (img->animation_can_reverse) {
@@ -113,7 +126,6 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
         new_sprite = map_sprite_animation_at(grid_offset) + 1;
         if (new_sprite > img->num_animation_sprites)
             new_sprite = 1;
-
     }
 
     map_sprite_animation_set(grid_offset, is_reverse ? new_sprite | 0x80 : new_sprite);

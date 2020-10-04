@@ -346,7 +346,7 @@ static void mars_kill_enemies(void) {
             f->action_state = FIGURE_ACTION_149_CORPSE;
             to_kill--;
             if (!grid_offset)
-                grid_offset = f->grid_offset;
+                grid_offset = f->grid_offset_figure;
 
         }
     }

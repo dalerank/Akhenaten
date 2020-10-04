@@ -50,7 +50,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
         // Outside map: draw black tile
         image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset and leftmost tile -> draw
+        // Valid grid_offset_figure and leftmost tile -> draw
         color_t color_mask = 0;
         int image_id = map_image_at(grid_offset);
         if (draw_context.advance_water_animation &&
@@ -96,7 +96,7 @@ static void set_city_scaled_clip_rectangle(void) {
 
 static void update_zoom_level(void) {
     int zoom = city_view_get_scale();
-    pixel_offset offset;
+    pixel_coordinate offset;
     city_view_get_camera_in_pixels(&offset.x, &offset.y);
     if (zoom_update_value(&zoom, &offset)) {
         city_view_set_scale(zoom);
@@ -133,7 +133,7 @@ static void update_city_view_coords(int x, int y, map_tile *tile) {
 }
 
 static void scroll_map(const mouse *m) {
-    pixel_offset delta;
+    pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         city_view_scroll(delta.x, delta.y);
         sound_city_decay_views();

@@ -48,7 +48,7 @@ void figure::engineer_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset) == building_id) {
+                if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
                     state = FIGURE_STATE_DEAD;
                 } else {
@@ -261,7 +261,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset) == building_id) {
+                if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
                     state = FIGURE_STATE_DEAD;
                 } else {
@@ -399,7 +399,7 @@ void figure::policeman_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset) == building_id) {
+                if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
                     state = FIGURE_STATE_DEAD;
                 } else {

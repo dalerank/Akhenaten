@@ -316,7 +316,7 @@ static int get_building_image_id(int map_x, int map_y, int type, const building_
             image_offset = building_rotation_get_road_orientation() == 2 ? 1 : 0;
         }
         int map_orientation = city_view_orientation();
-        if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT)
+        if (map_orientation == DIR_6_TOP_LEFT || map_orientation == DIR_2_BOTTOM_RIGHT)
             image_offset = 1 - image_offset;
 
         image_id += image_offset;
@@ -331,7 +331,7 @@ static int get_building_image_id(int map_x, int map_y, int type, const building_
             image_offset = building_rotation_get_road_orientation() == 2 ? 2 : 0;
         }
         int map_orientation = city_view_orientation();
-        if (map_orientation == DIR_6_LEFT || map_orientation == DIR_2_RIGHT)
+        if (map_orientation == DIR_6_TOP_LEFT || map_orientation == DIR_2_BOTTOM_RIGHT)
             image_offset = 2 - image_offset;
 
         image_id += image_offset;
@@ -340,19 +340,19 @@ static int get_building_image_id(int map_x, int map_y, int type, const building_
 }
 static void get_building_base_xy(int map_x, int map_y, int building_size, int *x, int *y) {
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             *x = map_x;
             *y = map_y;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             *x = map_x - building_size + 1;
             *y = map_y;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             *x = map_x - building_size + 1;
             *y = map_y - building_size + 1;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             *x = map_x;
             *y = map_y - building_size + 1;
             break;
@@ -580,16 +580,16 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
                                                                       TERRAIN_WATER);
 
             switch (city_view_orientation()) {
-                case DIR_0_TOP:
+                case DIR_0_TOP_RIGHT:
                     draw_later = map_x_start > map_x || map_y_start > map_y;
                     break;
-                case DIR_2_RIGHT:
+                case DIR_2_BOTTOM_RIGHT:
                     draw_later = map_x_start < map_x || map_y_start > map_y;
                     break;
-                case DIR_4_BOTTOM:
+                case DIR_4_BOTTOM_LEFT:
                     draw_later = map_x_start < map_x || map_y_start < map_y;
                     break;
-                case DIR_6_LEFT:
+                case DIR_6_TOP_LEFT:
                     draw_later = map_x_start > map_x || map_y_start < map_y;
                     break;
             }
@@ -612,7 +612,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
                             break;
                     }
 //                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
-//                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+//                    city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
                 }
                 draw_single_reservoir(x_start, y_start, has_water);
             }
@@ -651,7 +651,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
 //            if (draw_later) {
 //                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
 //            }
-//            city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+//            city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
         }
         draw_single_reservoir(x, y, has_water);
         if (draw_later)
@@ -755,19 +755,19 @@ static void draw_bridge(const map_tile *tile, int x, int y, int type) {
 
     int x_delta, y_delta;
     switch (dir) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             x_delta = 29;
             y_delta = -15;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x_delta = 29;
             y_delta = 15;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x_delta = -29;
             y_delta = 15;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             x_delta = -29;
             y_delta = -15;
             break;
@@ -780,7 +780,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, int type) {
             draw_flat_tile(x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
 
     } else {
-        if (dir == DIR_0_TOP || dir == DIR_6_LEFT) {
+        if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
                 int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_SHIP_BRIDGE);
                 city_draw_bridge_tile(x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_GREEN);

@@ -13,6 +13,7 @@
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "core/image.h"
 
 static void button_toggle(int type, int param2);
 static void button_ok(int param1, int param2);

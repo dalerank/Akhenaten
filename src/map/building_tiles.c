@@ -20,23 +20,21 @@
 static int north_tile_grid_offset(int x, int y, int *size) {
     int grid_offset = map_grid_offset(x, y);
     *size = map_property_multi_tile_size(grid_offset);
-    for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++) {
+    for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++)
         grid_offset += map_grid_delta(-1, 0);
-    }
-    for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++) {
+    for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++)
         grid_offset += map_grid_delta(0, -1);
-    }
     return grid_offset;
 }
 static void adjust_to_absolute_xy(int *x, int *y, int size) {
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             *x = *x - size + 1;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             *x = *x - size + 1;
             // fall-through
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             *y = *y - size + 1;
             break;
     }
@@ -56,18 +54,18 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
         return;
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             x_leftmost = 0;
             y_leftmost = size - 1;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x_leftmost = y_leftmost = 0;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x_leftmost = size - 1;
             y_leftmost = 0;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             x_leftmost = y_leftmost = size - 1;
             break;
         default:
@@ -93,19 +91,19 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
     // farmhouse
     int x_leftmost, y_leftmost;
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             x_leftmost = 0;
             y_leftmost = 1;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x_leftmost = 0;
             y_leftmost = 0;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x_leftmost = 1;
             y_leftmost = 0;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             x_leftmost = 1;
             y_leftmost = 1;
             break;
@@ -166,7 +164,7 @@ int map_building_tiles_add_aqueduct(int x, int y) {
 void map_building_tiles_remove(int building_id, int x, int y) {
     if (!map_grid_is_inside(x, y, 1))
         return;
-    int size;
+    int size; // todo: monuments???
     int base_grid_offset = north_tile_grid_offset(x, y, &size);
     x = map_grid_offset_to_x(base_grid_offset);
     y = map_grid_offset_to_y(base_grid_offset);

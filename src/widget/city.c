@@ -52,7 +52,7 @@ static void set_city_unscaled_clip_rectangle(void) {
 
 static void update_zoom_level(void) {
     int zoom = city_view_get_scale();
-    pixel_offset offset;
+    pixel_coordinate offset;
     city_view_get_camera_in_pixels(&offset.x, &offset.y);
     if (zoom_update_value(&zoom, &offset)) {
         city_view_set_scale(zoom);
@@ -61,7 +61,7 @@ static void update_zoom_level(void) {
     }
 }
 static void scroll_map(const mouse *m) {
-    pixel_offset delta;
+    pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
         city_view_scroll(delta.x, delta.y);
         sound_city_decay_views();
@@ -89,11 +89,11 @@ static int input_coords_in_city(int x, int y) {
 }
 static int adjust_offset_for_orientation(int grid_offset, int size) {
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             return map_grid_add_delta(grid_offset, -size + 1, -size + 1);
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             return map_grid_add_delta(grid_offset, 0, -size + 1);
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             return map_grid_add_delta(grid_offset, -size + 1, 0);
         default:
             return grid_offset;

@@ -141,31 +141,31 @@ static int direction_path[MAX_PATH_LENGTH];
 
 static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_offset) {
     switch (direction) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             --*y;
             break;
-        case DIR_1_TOP_RIGHT:
+        case DIR_1_RIGHT:
             ++*x;
             --*y;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             ++*x;
             break;
-        case DIR_3_BOTTOM_RIGHT:
+        case DIR_3_BOTTOM:
             ++*x;
             ++*y;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             ++*y;
             break;
-        case DIR_5_BOTTOM_LEFT:
+        case DIR_5_LEFT:
             --*x;
             ++*y;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             --*x;
             break;
-        case DIR_7_TOP_LEFT:
+        case DIR_7_TOP:
             --*x;
             --*y;
             break;

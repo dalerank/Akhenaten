@@ -316,7 +316,7 @@ static int get_gatehouse_building_id(int grid_offset) {
 }
 static int get_gatehouse_position(int grid_offset, int direction, int building_id) {
     int result = 0;
-    if (direction == DIR_0_TOP) {
+    if (direction == DIR_0_TOP_RIGHT) {
         if (map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_GATEHOUSE) &&
             map_building_at(grid_offset + map_grid_delta(1, -1)) == building_id) {
             result = 1;
@@ -350,7 +350,7 @@ static int get_gatehouse_position(int grid_offset, int direction, int building_i
                 result = 0;
 
         }
-    } else if (direction == DIR_6_LEFT) {
+    } else if (direction == DIR_6_TOP_LEFT) {
         if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_GATEHOUSE) &&
             map_building_at(grid_offset + map_grid_delta(-1, 1)) == building_id) {
             result = 1;
@@ -384,7 +384,7 @@ static int get_gatehouse_position(int grid_offset, int direction, int building_i
                 result = 0;
 
         }
-    } else if (direction == DIR_4_BOTTOM) {
+    } else if (direction == DIR_4_BOTTOM_LEFT) {
         if (map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GATEHOUSE) &&
             map_building_at(grid_offset + map_grid_delta(1, 1)) == building_id) {
             result = 1;
@@ -418,7 +418,7 @@ static int get_gatehouse_position(int grid_offset, int direction, int building_i
                 result = 0;
 
         }
-    } else if (direction == DIR_2_RIGHT) {
+    } else if (direction == DIR_2_BOTTOM_RIGHT) {
         if (map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GATEHOUSE) &&
             map_building_at(grid_offset + map_grid_delta(1, 1)) == building_id) {
             result = 1;
@@ -462,9 +462,9 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
     int gatehouse_right = get_gatehouse_building_id(grid_offset + map_grid_delta(1, 0));
     int image_offset = 0;
     int map_orientation = city_view_orientation();
-    if (map_orientation == DIR_0_TOP) {
+    if (map_orientation == DIR_0_TOP_RIGHT) {
         if (gatehouse_up && !gatehouse_left) {
-            int pos = get_gatehouse_position(grid_offset, DIR_0_TOP, gatehouse_up);
+            int pos = get_gatehouse_position(grid_offset, DIR_0_TOP_RIGHT, gatehouse_up);
             if (pos > 0) {
                 if (pos <= 2)
                     image_offset = 29;
@@ -475,7 +475,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         } else if (gatehouse_left && !gatehouse_up) {
-            int pos = get_gatehouse_position(grid_offset, DIR_6_LEFT, gatehouse_left);
+            int pos = get_gatehouse_position(grid_offset, DIR_6_TOP_LEFT, gatehouse_left);
             if (pos > 0) {
                 if (pos <= 2)
                     image_offset = 30;
@@ -486,9 +486,9 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         }
-    } else if (map_orientation == DIR_2_RIGHT) {
+    } else if (map_orientation == DIR_2_BOTTOM_RIGHT) {
         if (gatehouse_up && !gatehouse_right) {
-            int pos = get_gatehouse_position(grid_offset, DIR_0_TOP, gatehouse_up);
+            int pos = get_gatehouse_position(grid_offset, DIR_0_TOP_RIGHT, gatehouse_up);
             if (pos > 0) {
                 if (pos == 1)
                     image_offset = 32;
@@ -499,7 +499,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         } else if (gatehouse_right && !gatehouse_up) {
-            int pos = get_gatehouse_position(grid_offset, DIR_2_RIGHT, gatehouse_right);
+            int pos = get_gatehouse_position(grid_offset, DIR_2_BOTTOM_RIGHT, gatehouse_right);
             if (pos > 0) {
                 if (pos <= 2)
                     image_offset = 29;
@@ -510,9 +510,9 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         }
-    } else if (map_orientation == DIR_4_BOTTOM) {
+    } else if (map_orientation == DIR_4_BOTTOM_LEFT) {
         if (gatehouse_down && !gatehouse_right) {
-            int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM, gatehouse_down);
+            int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM_LEFT, gatehouse_down);
             if (pos > 0) {
                 if (pos == 1)
                     image_offset = 31;
@@ -523,7 +523,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         } else if (gatehouse_right && !gatehouse_down) {
-            int pos = get_gatehouse_position(grid_offset, DIR_2_RIGHT, gatehouse_right);
+            int pos = get_gatehouse_position(grid_offset, DIR_2_BOTTOM_RIGHT, gatehouse_right);
             if (pos > 0) {
                 if (pos == 1)
                     image_offset = 32;
@@ -534,9 +534,9 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         }
-    } else if (map_orientation == DIR_6_LEFT) {
+    } else if (map_orientation == DIR_6_TOP_LEFT) {
         if (gatehouse_down && !gatehouse_left) {
-            int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM, gatehouse_down);
+            int pos = get_gatehouse_position(grid_offset, DIR_4_BOTTOM_LEFT, gatehouse_down);
             if (pos > 0) {
                 if (pos <= 2)
                     image_offset = 30;
@@ -547,7 +547,7 @@ static void set_wall_gatehouse_image_manually(int grid_offset) {
                 }
             }
         } else if (gatehouse_left && !gatehouse_down) {
-            int pos = get_gatehouse_position(grid_offset, DIR_6_LEFT, gatehouse_left);
+            int pos = get_gatehouse_position(grid_offset, DIR_6_TOP_LEFT, gatehouse_left);
             if (pos > 0) {
                 if (pos == 1)
                     image_offset = 31;
@@ -833,7 +833,7 @@ static void set_water_image(int x, int y, int grid_offset) {
     if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
         const terrain_image *img = map_image_context_get_shore(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_WATER) + img->group_offset + img->item_offset;
-        if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_BUILDING)) {
+        if (GAME_ENV == ENGINE_ENV_C3 && map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_BUILDING)) {
             // fortified shore
             int base = image_id_from_group(GROUP_TERRAIN_WATER_SHORE);
             switch (img->group_offset) {
@@ -1013,15 +1013,15 @@ static int get_access_ramp_image_offset(int x, int y) {
         return -1;
 
     switch (city_view_orientation()) {
-        case DIR_0_TOP:
+        case DIR_0_TOP_RIGHT:
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             image_offset += 1;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             image_offset += 2;
             break;
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             image_offset += 3;
             break;
     }
@@ -1099,25 +1099,25 @@ void map_tiles_add_entry_exit_flags(void) {
     int entry_orientation;
     map_point entry_point = scenario_map_entry();
     if (entry_point.x == 0)
-        entry_orientation = DIR_2_RIGHT;
+        entry_orientation = DIR_2_BOTTOM_RIGHT;
     else if (entry_point.x == map_data.width - 1)
-        entry_orientation = DIR_6_LEFT;
+        entry_orientation = DIR_6_TOP_LEFT;
     else if (entry_point.y == 0)
-        entry_orientation = DIR_0_TOP;
+        entry_orientation = DIR_0_TOP_RIGHT;
     else if (entry_point.y == map_data.height - 1)
-        entry_orientation = DIR_4_BOTTOM;
+        entry_orientation = DIR_4_BOTTOM_LEFT;
     else
         entry_orientation = -1;
     int exit_orientation;
     map_point exit_point = scenario_map_exit();
     if (exit_point.x == 0)
-        exit_orientation = DIR_2_RIGHT;
+        exit_orientation = DIR_2_BOTTOM_RIGHT;
     else if (exit_point.x == map_data.width - 1)
-        exit_orientation = DIR_6_LEFT;
+        exit_orientation = DIR_6_TOP_LEFT;
     else if (exit_point.y == 0)
-        exit_orientation = DIR_0_TOP;
+        exit_orientation = DIR_0_TOP_RIGHT;
     else if (exit_point.y == map_data.height - 1)
-        exit_orientation = DIR_4_BOTTOM;
+        exit_orientation = DIR_4_BOTTOM_LEFT;
     else
         exit_orientation = -1;
     if (entry_orientation >= 0) {
@@ -1150,7 +1150,7 @@ void map_tiles_add_entry_exit_flags(void) {
     }
 }
 static void remove_entry_exit_flag(const map_tile *tile) {
-    // re-calculate grid_offset because the stored offset might be invalid
+    // re-calculate grid_offset_figure because the stored offset might be invalid
     map_terrain_remove(map_grid_offset(tile->x, tile->y), TERRAIN_ROCK);
 }
 void map_tiles_remove_entry_exit_flags(void) {

@@ -8,6 +8,7 @@ typedef uint32_t color_t;
 #define COLOR_BLACK 0xff000000
 #define COLOR_BLUE 0xff0055ff
 #define COLOR_RED 0xffff0000
+#define COLOR_GREEN 0xff18ff18
 #define COLOR_WHITE 0xffffffff
 
 #define COLOR_SG2_TRANSPARENT 0xfff700ff

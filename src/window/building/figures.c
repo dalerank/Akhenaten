@@ -404,7 +404,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
     int x_cam, y_cam;
     city_view_get_camera(&x_cam, &y_cam);
 
-    int grid_offset = figure_get(figure_id)->grid_offset;
+    int grid_offset = figure_get(figure_id)->grid_offset_figure;
     int x, y;
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
 

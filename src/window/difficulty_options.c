@@ -7,6 +7,7 @@
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "core/image.h"
 
 static void arrow_button_difficulty(int is_down, int param2);
 static void arrow_button_gods(int param1, int param2);

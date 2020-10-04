@@ -57,7 +57,7 @@ static struct {
         int active;
         int is_touch;
         int has_started;
-        pixel_offset delta;
+        pixel_coordinate delta;
     } drag;
     struct {
         speed_type x;
@@ -188,29 +188,29 @@ static int should_scroll(void) {
 static int direction_from_sides(int top, int left, int bottom, int right) {
     // two sides
     if (left && top)
-        return DIR_7_TOP_LEFT;
+        return DIR_7_TOP;
 
     else if (left && bottom)
-        return DIR_5_BOTTOM_LEFT;
+        return DIR_5_LEFT;
 
     else if (right && top)
-        return DIR_1_TOP_RIGHT;
+        return DIR_1_RIGHT;
 
     else if (right && bottom)
-        return DIR_3_BOTTOM_RIGHT;
+        return DIR_3_BOTTOM;
 
     // one side
     if (left)
-        return DIR_6_LEFT;
+        return DIR_6_TOP_LEFT;
 
     else if (right)
-        return DIR_2_RIGHT;
+        return DIR_2_BOTTOM_RIGHT;
 
     else if (top)
-        return DIR_0_TOP;
+        return DIR_0_TOP_RIGHT;
 
     else if (bottom)
-        return DIR_4_BOTTOM;
+        return DIR_4_BOTTOM_LEFT;
 
     // none of them
     return DIR_8_NONE;
@@ -431,7 +431,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
         int align_x = 0;
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
-            pixel_offset camera_offset;
+            pixel_coordinate camera_offset;
             city_view_get_pixel_offset(&camera_offset.x, &camera_offset.y);
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_offset.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_offset.y);
@@ -465,7 +465,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
     return 1;
 }
 
-int scroll_get_delta(const mouse *m, pixel_offset *delta, scroll_type type) {
+int scroll_get_delta(const mouse *m, pixel_coordinate *delta, scroll_type type) {
     data.is_scrolling = set_scroll_speed_from_input(m, type);
     delta->x = speed_get_delta(&data.speed.x);
     delta->y = speed_get_delta(&data.speed.y);

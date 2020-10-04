@@ -83,7 +83,22 @@ void map_property_clear_multi_tile_xy(int grid_offset) {
     map_grid_and(&edge_grid, grid_offset, EDGE_NATIVE_LAND);
 }
 int map_property_multi_tile_size(int grid_offset) {
-    switch (map_grid_get(&bitfields_grid, grid_offset) & BIT_SIZES) {
+    auto bfield = map_grid_get(&bitfields_grid, grid_offset);
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        switch (bfield & BIT_SIZES) {
+            case 0x01:
+                return 2;
+            case 0x02:
+                return 3;
+            case 0x03:
+                return 4;
+            case 0x04:
+                return 5;
+            default:
+                return 1;
+        }
+    switch (bfield & BIT_SIZES) {
         case BIT_SIZE2:
             return 2;
         case BIT_SIZE3:

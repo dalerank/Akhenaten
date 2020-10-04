@@ -9,6 +9,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "core/image.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);

@@ -64,6 +64,28 @@ void figure::school_child_action()
 ////    roamer_action(1);
 ////    figure_image_update(image_id_from_group(GROUP_FIGURE_PATRICIAN));
 //}
+void figure::priest_action() {
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return;
+    building *temple = building_get(building_id);
+    switch (temple->type) {
+        case BUILDING_TEMPLE_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            image_set_animation(GROUP_PRIEST_OSIRIS); break;
+        case BUILDING_TEMPLE_RA:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+            image_set_animation(GROUP_PRIEST_RA); break;
+        case BUILDING_TEMPLE_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+            image_set_animation(GROUP_PRIEST_PTAH); break;
+        case BUILDING_TEMPLE_SETH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+            image_set_animation(GROUP_PRIEST_SETH); break;
+        case BUILDING_TEMPLE_BAST:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            image_set_animation(GROUP_PRIEST_BAST); break;
+    }
+}
 void figure::market_trader_action()
 {
 //    terrain_usage = TERRAIN_USAGE_ROADS;
@@ -117,7 +139,7 @@ void figure::tax_collector_action()
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset) == building_id) {
+                if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
                     state = FIGURE_STATE_DEAD;
                 } else {

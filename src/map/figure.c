@@ -56,12 +56,12 @@ bool map_figure_foreach_until(int grid_offset, int test) {
     return 0;
 }
 void figure::map_figure_add() {
-    if (!map_grid_is_valid_offset(grid_offset))
+    if (!map_grid_is_valid_offset(grid_offset_figure))
         return;
 
     // check for figures on new tile, update "next_figure" pointers accordingly
     next_figure = 0;
-    int on_tile = map_grid_get(&figures, grid_offset);
+    int on_tile = map_grid_get(&figures, grid_offset_figure);
     if (on_tile) {
         figure *checking = figure_get(on_tile); // get first figure (head) on the new tile, if any is present
 //        assert(checking->id != f->id); // hmmmm that'd be wrong
@@ -78,30 +78,30 @@ void figure::map_figure_add() {
         // last figure in the chain!
         checking->next_figure = id;
     } else
-        map_grid_set(&figures, grid_offset, id);
+        map_grid_set(&figures, grid_offset_figure, id);
 }
 void figure::map_figure_update() { // useless - but used temporarily for checking if figures are correct!
-    if (!map_grid_is_valid_offset(grid_offset))
+    if (!map_grid_is_valid_offset(grid_offset_figure))
         return;
 
     // traverse through chain of figures on this tile
-    int on_tile = map_grid_get(&figures, grid_offset);
+    int on_tile = map_grid_get(&figures, grid_offset_figure);
     figure *checking = figure_get(on_tile);
     while (checking->id) {
-        assert(checking->grid_offset == grid_offset);
+        assert(checking->grid_offset_figure == grid_offset_figure);
         checking = figure_get(checking->next_figure);
     }
 }
 void figure::map_figure_remove() {
-    if (!map_grid_is_valid_offset(grid_offset) || !map_grid_get(&figures, grid_offset)) {
+    if (!map_grid_is_valid_offset(grid_offset_figure) || !map_grid_get(&figures, grid_offset_figure)) {
         next_figure = 0;
         return;
     }
 
     // check for figures on new tile, update "next_figure" pointers accordingly
-    int on_tile = map_grid_get(&figures, grid_offset);
+    int on_tile = map_grid_get(&figures, grid_offset_figure);
     if (on_tile == id) // figure is the first (head) on its tile!
-        map_grid_set(&figures, grid_offset, next_figure); // remove from chain, set the head as the next one in chain (0 is fine)
+        map_grid_set(&figures, grid_offset_figure, next_figure); // remove from chain, set the head as the next one in chain (0 is fine)
     else {
         figure *checking = figure_get(on_tile); // traverse through the chain to find this figure...
         while (checking->id && checking->next_figure != id)

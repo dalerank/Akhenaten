@@ -200,7 +200,7 @@ void figure::military_standard_action() {
         tile_x = m->standard_x;
         tile_y = m->standard_y;
     }
-    grid_offset = map_grid_offset(tile_x, tile_y);
+    grid_offset_figure = map_grid_offset(tile_x, tile_y);
     cross_country_x = 15 * tile_x + 7;
     cross_country_y = 15 * tile_y + 7;
     map_figure_add();
@@ -253,7 +253,7 @@ void figure::javelin_launch_missile() {
 }
 void figure::legionary_attack_adjacent_enemy() {
     for (int i = 0; i < 8 && action_state != FIGURE_ACTION_150_ATTACK; i++)
-        figure_combat_attack_figure_at(grid_offset + map_grid_direction_delta(i));
+        figure_combat_attack_figure_at(grid_offset_figure + map_grid_direction_delta(i));
 }
 int figure::find_mop_up_target() {
     int target_id = target_figure_id;

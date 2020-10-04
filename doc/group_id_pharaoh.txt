@@ -41,84 +41,84 @@ INFO: data/Expansion.sg3 group 39 -> id 873
 INFO: data/Expansion.sg3 group 40 -> id 884
 INFO: data/Expansion.sg3 group 41 -> id 900
 
-INFO: data/SprMain.sg3 group 0 -> id 1
-INFO: data/SprMain.sg3 group 1 -> id 33
-INFO: data/SprMain.sg3 group 2 -> id 65
+INFO: data/SprMain.sg3 group 0 -> id 1 arroworange
+INFO: data/SprMain.sg3 group 1 -> id 33 arrowblack
+INFO: data/SprMain.sg3 group 2 -> id 65 cart with foods?
 INFO: data/SprMain.sg3 group 3 -> id 161
-INFO: data/SprMain.sg3 group 4 -> id 169
+INFO: data/SprMain.sg3 group 4 -> id 169 architect
 INFO: data/SprMain.sg3 group 5 -> id 265
-INFO: data/SprMain.sg3 group 6 -> id 273
+INFO: data/SprMain.sg3 group 6 -> id 273 fireman
 INFO: data/SprMain.sg3 group 7 -> id 369
-INFO: data/SprMain.sg3 group 8 -> id 377
-INFO: data/SprMain.sg3 group 9 -> id 673
+INFO: data/SprMain.sg3 group 8 -> id 377 fireman extinguish
+INFO: data/SprMain.sg3 group 9 -> id 673 deliveryboy
 INFO: data/SprMain.sg3 group 10 -> id 769
-INFO: data/SprMain.sg3 group 11 -> id 777
-INFO: data/SprMain.sg3 group 12 -> id 782
+INFO: data/SprMain.sg3 group 11 -> id 777 arrow3
+INFO: data/SprMain.sg3 group 12 -> id 782 homeless
 INFO: data/SprMain.sg3 group 13 -> id 878
-INFO: data/SprMain.sg3 group 14 -> id 886
+INFO: data/SprMain.sg3 group 14 -> id 886 immigrant
 INFO: data/SprMain.sg3 group 15 -> id 982
-INFO: data/SprMain.sg3 group 16 -> id 990
+INFO: data/SprMain.sg3 group 16 -> id 990 marketlady
 INFO: data/SprMain.sg3 group 17 -> id 1086
-INFO: data/SprMain.sg3 group 18 -> id 1094
+INFO: data/SprMain.sg3 group 18 -> id 1094 marketlady2
 INFO: data/SprMain.sg3 group 19 -> id 1190
-INFO: data/SprMain.sg3 group 20 -> id 1198
+INFO: data/SprMain.sg3 group 20 -> id 1198 policeman
 INFO: data/SprMain.sg3 group 21 -> id 1294
-INFO: data/SprMain.sg3 group 22 -> id 1302
-INFO: data/SprMain.sg3 group 23 -> id 1374
+INFO: data/SprMain.sg3 group 22 -> id 1302 policeman attack
+INFO: data/SprMain.sg3 group 23 -> id 1374 crocodile
 INFO: data/SprMain.sg3 group 24 -> id 1470
 INFO: data/SprMain.sg3 group 25 -> id 1478
-INFO: data/SprMain.sg3 group 26 -> id 1534
-INFO: data/SprMain.sg3 group 27 -> id 1622
-INFO: data/SprMain.sg3 group 28 -> id 1710
-INFO: data/SprMain.sg3 group 29 -> id 1806
+INFO: data/SprMain.sg3 group 26 -> id 1534 crocodile swimming
+INFO: data/SprMain.sg3 group 27 -> id 1622 crocodile drinking
+INFO: data/SprMain.sg3 group 28 -> id 1710 pharaoh
+INFO: data/SprMain.sg3 group 29 -> id 1806 rioters
 INFO: data/SprMain.sg3 group 30 -> id 1902
 INFO: data/SprMain.sg3 group 31 -> id 1910
-INFO: data/SprMain.sg3 group 32 -> id 1974
+INFO: data/SprMain.sg3 group 32 -> id 1974 thief
 INFO: data/SprMain.sg3 group 33 -> id 2070
-INFO: data/SprMain.sg3 group 34 -> id 2078
+INFO: data/SprMain.sg3 group 34 -> id 2078 ship
 INFO: data/SprMain.sg3 group 35 -> id 2110
 INFO: data/SprMain.sg3 group 36 -> id 2121
-INFO: data/SprMain.sg3 group 37 -> id 2129
+INFO: data/SprMain.sg3 group 37 -> id 2129 reedgatherer
 INFO: data/SprMain.sg3 group 38 -> id 2225
 INFO: data/SprMain.sg3 group 39 -> id 2233
 INFO: data/SprMain.sg3 group 40 -> id 2353
-INFO: data/SprMain.sg3 group 41 -> id 2449
+INFO: data/SprMain.sg3 group 41 -> id 2449 taxcollector
 INFO: data/SprMain.sg3 group 42 -> id 2545
-INFO: data/SprMain.sg3 group 43 -> id 2553
+INFO: data/SprMain.sg3 group 43 -> id 2553 cartpusher
 INFO: data/SprMain.sg3 group 44 -> id 2649
-INFO: data/SprMain.sg3 group 45 -> id 2657
+INFO: data/SprMain.sg3 group 45 -> id 2657 hunter
 INFO: data/SprMain.sg3 group 46 -> id 2753
-INFO: data/SprMain.sg3 group 47 -> id 2761
-INFO: data/SprMain.sg3 group 48 -> id 2857
-INFO: data/SprMain.sg3 group 49 -> id 2953
-INFO: data/SprMain.sg3 group 50 -> id 3049
-INFO: data/SprMain.sg3 group 51 -> id 3193
-INFO: data/SprMain.sg3 group 52 -> id 3289
+INFO: data/SprMain.sg3 group 47 -> id 2761 hunter hunting
+INFO: data/SprMain.sg3 group 48 -> id 2857 hunter collecting
+INFO: data/SprMain.sg3 group 49 -> id 2953 hunter attacking while carrying?
+INFO: data/SprMain.sg3 group 50 -> id 3049 hunter pickup
+INFO: data/SprMain.sg3 group 51 -> id 3193 hunter returning
+INFO: data/SprMain.sg3 group 52 -> id 3289 donkey
 INFO: data/SprMain.sg3 group 53 -> id 3385
-INFO: data/SprMain.sg3 group 54 -> id 3393
+INFO: data/SprMain.sg3 group 54 -> id 3393 archer
 INFO: data/SprMain.sg3 group 55 -> id 3489
 INFO: data/SprMain.sg3 group 56 -> id 3497
-INFO: data/SprMain.sg3 group 57 -> id 3593
+INFO: data/SprMain.sg3 group 57 -> id 3593 teacher
 INFO: data/SprMain.sg3 group 58 -> id 3689
-INFO: data/SprMain.sg3 group 59 -> id 3697
+INFO: data/SprMain.sg3 group 59 -> id 3697 waterguy
 INFO: data/SprMain.sg3 group 60 -> id 3793
-INFO: data/SprMain.sg3 group 61 -> id 3801
+INFO: data/SprMain.sg3 group 61 -> id 3801 archer2
 INFO: data/SprMain.sg3 group 62 -> id 3897
 INFO: data/SprMain.sg3 group 63 -> id 3905
-INFO: data/SprMain.sg3 group 64 -> id 4001
+INFO: data/SprMain.sg3 group 64 -> id 4001 infantry
 INFO: data/SprMain.sg3 group 65 -> id 4097
 INFO: data/SprMain.sg3 group 66 -> id 4105
-INFO: data/SprMain.sg3 group 67 -> id 4169
+INFO: data/SprMain.sg3 group 67 -> id 4169 charioteer
 INFO: data/SprMain.sg3 group 68 -> id 4265
 INFO: data/SprMain.sg3 group 69 -> id 4273
 INFO: data/SprMain.sg3 group 70 -> id 4369
-INFO: data/SprMain.sg3 group 71 -> id 4377
+INFO: data/SprMain.sg3 group 71 -> id 4377 physician
 INFO: data/SprMain.sg3 group 72 -> id 4473
-INFO: data/SprMain.sg3 group 73 -> id 4481
+INFO: data/SprMain.sg3 group 73 -> id 4481 woodcutter
 INFO: data/SprMain.sg3 group 74 -> id 4577
 INFO: data/SprMain.sg3 group 75 -> id 4585
 INFO: data/SprMain.sg3 group 76 -> id 4681
-INFO: data/SprMain.sg3 group 77 -> id 4777
+INFO: data/SprMain.sg3 group 77 -> id 4777 cart
 INFO: data/SprMain.sg3 group 78 -> id 4785
 INFO: data/SprMain.sg3 group 79 -> id 4809
 INFO: data/SprMain.sg3 group 80 -> id 4833
@@ -147,67 +147,67 @@ INFO: data/SprMain.sg3 group 102 -> id 5329
 INFO: data/SprMain.sg3 group 103 -> id 5337
 INFO: data/SprMain.sg3 group 104 -> id 5345
 INFO: data/SprMain.sg3 group 105 -> id 5353
-INFO: data/SprMain.sg3 group 106 -> id 5377
+INFO: data/SprMain.sg3 group 106 -> id 5377 cart2 (stone blocks)
 INFO: data/SprMain.sg3 group 107 -> id 5385
 INFO: data/SprMain.sg3 group 108 -> id 5409
-INFO: data/SprMain.sg3 group 109 -> id 5417
+INFO: data/SprMain.sg3 group 109 -> id 5417 bricklayer
 INFO: data/SprMain.sg3 group 110 -> id 5513
 INFO: data/SprMain.sg3 group 111 -> id 5521
 INFO: data/SprMain.sg3 group 112 -> id 5705
-INFO: data/SprMain.sg3 group 113 -> id 5777
-INFO: data/SprMain.sg3 group 114 -> id 5873
+INFO: data/SprMain.sg3 group 113 -> id 5777 chariothorses
+INFO: data/SprMain.sg3 group 114 -> id 5873 seagulls
 INFO: data/SprMain.sg3 group 115 -> id 5898
-INFO: data/SprMain.sg3 group 116 -> id 5923
+INFO: data/SprMain.sg3 group 116 -> id 5923 workman
 INFO: data/SprMain.sg3 group 117 -> id 6019
 INFO: data/SprMain.sg3 group 118 -> id 6027
 INFO: data/SprMain.sg3 group 119 -> id 6131
 INFO: data/SprMain.sg3 group 120 -> id 6235
 INFO: data/SprMain.sg3 group 121 -> id 6355
 INFO: data/SprMain.sg3 group 122 -> id 6451
-INFO: data/SprMain.sg3 group 123 -> id 6547
+INFO: data/SprMain.sg3 group 123 -> id 6547 merchantship
 INFO: data/SprMain.sg3 group 124 -> id 6579
 INFO: data/SprMain.sg3 group 125 -> id 6590
-INFO: data/SprMain.sg3 group 126 -> id 6598
+INFO: data/SprMain.sg3 group 126 -> id 6598 dockwork
 INFO: data/SprMain.sg3 group 127 -> id 6694
-INFO: data/SprMain.sg3 group 128 -> id 6702
+INFO: data/SprMain.sg3 group 128 -> id 6702 dancer
 INFO: data/SprMain.sg3 group 129 -> id 6798
-INFO: data/SprMain.sg3 group 130 -> id 6806
+INFO: data/SprMain.sg3 group 130 -> id 6806 juggler
 INFO: data/SprMain.sg3 group 131 -> id 6902
-INFO: data/SprMain.sg3 group 132 -> id 6910
+INFO: data/SprMain.sg3 group 132 -> id 6910 senetmaster
 INFO: data/SprMain.sg3 group 133 -> id 7006
-INFO: data/SprMain.sg3 group 134 -> id 7014
+INFO: data/SprMain.sg3 group 134 -> id 7014 fishship
 INFO: data/SprMain.sg3 group 135 -> id 7046
 INFO: data/SprMain.sg3 group 136 -> id 7118
 INFO: data/SprMain.sg3 group 137 -> id 7129
-INFO: data/SprMain.sg3 group 138 -> id 7137
+INFO: data/SprMain.sg3 group 138 -> id 7137 ferry
 INFO: data/SprMain.sg3 group 139 -> id 7169
 INFO: data/SprMain.sg3 group 140 -> id 7180
-INFO: data/SprMain.sg3 group 141 -> id 7188
+INFO: data/SprMain.sg3 group 141 -> id 7188 warship
 INFO: data/SprMain.sg3 group 142 -> id 7220
 INFO: data/SprMain.sg3 group 143 -> id 7231
 INFO: data/SprMain.sg3 group 144 -> id 7239
-INFO: data/SprMain.sg3 group 145 -> id 7247
+INFO: data/SprMain.sg3 group 145 -> id 7247 carpenter
 INFO: data/SprMain.sg3 group 146 -> id 7343
-INFO: data/SprMain.sg3 group 147 -> id 7351
+INFO: data/SprMain.sg3 group 147 -> id 7351 bricklayer sculptingdown
 INFO: data/SprMain.sg3 group 148 -> id 7407
 INFO: data/SprMain.sg3 group 149 -> id 7463
-INFO: data/SprMain.sg3 group 150 -> id 7487
+INFO: data/SprMain.sg3 group 150 -> id 7487 stonemason
 INFO: data/SprMain.sg3 group 151 -> id 7583
 INFO: data/SprMain.sg3 group 152 -> id 7591
 INFO: data/SprMain.sg3 group 153 -> id 7647
 INFO: data/SprMain.sg3 group 154 -> id 7703
 INFO: data/SprMain.sg3 group 155 -> id 7727
-INFO: data/SprMain.sg3 group 156 -> id 7823
+INFO: data/SprMain.sg3 group 156 -> id 7823 ostrich
 INFO: data/SprMain.sg3 group 157 -> id 7919
 INFO: data/SprMain.sg3 group 158 -> id 7927
 INFO: data/SprMain.sg3 group 159 -> id 7983
 INFO: data/SprMain.sg3 group 160 -> id 8047
-INFO: data/SprMain.sg3 group 161 -> id 8111
+INFO: data/SprMain.sg3 group 161 -> id 8111 hyena
 INFO: data/SprMain.sg3 group 162 -> id 8207
 INFO: data/SprMain.sg3 group 163 -> id 8255
 INFO: data/SprMain.sg3 group 164 -> id 8261
 INFO: data/SprMain.sg3 group 165 -> id 8309
-INFO: data/SprMain.sg3 group 166 -> id 8357
+INFO: data/SprMain.sg3 group 166 -> id 8357 cartload
 INFO: data/SprMain.sg3 group 167 -> id 8365
 INFO: data/SprMain.sg3 group 168 -> id 8373
 INFO: data/SprMain.sg3 group 169 -> id 8381
@@ -221,40 +221,98 @@ INFO: data/SprMain.sg3 group 176 -> id 8437
 INFO: data/SprMain.sg3 group 177 -> id 8445
 INFO: data/SprMain.sg3 group 178 -> id 8453
 INFO: data/SprMain.sg3 group 179 -> id 8461
-INFO: data/SprMain.sg3 group 180 -> id 8469
+INFO: data/SprMain.sg3 group 180 -> id 8469 apothecary
 INFO: data/SprMain.sg3 group 181 -> id 8565
-INFO: data/SprMain.sg3 group 182 -> id 8573
+INFO: data/SprMain.sg3 group 182 -> id 8573 dentist
 INFO: data/SprMain.sg3 group 183 -> id 8669
-INFO: data/SprMain.sg3 group 184 -> id 8677
+INFO: data/SprMain.sg3 group 184 -> id 8677 ??? (guy with fishcart?)
 INFO: data/SprMain.sg3 group 185 -> id 8773
 INFO: data/SprMain.sg3 group 186 -> id 8781
-INFO: data/SprMain.sg3 group 187 -> id 8877
+INFO: data/SprMain.sg3 group 187 -> id 8877 priest (ptah)
 INFO: data/SprMain.sg3 group 188 -> id 8973
-INFO: data/SprMain.sg3 group 189 -> id 8981
+INFO: data/SprMain.sg3 group 189 -> id 8981 ??? (old magistrate?)
 INFO: data/SprMain.sg3 group 190 -> id 9077
-INFO: data/SprMain.sg3 group 191 -> id 9085
+INFO: data/SprMain.sg3 group 191 -> id 9085 musician
 INFO: data/SprMain.sg3 group 192 -> id 9181
-INFO: data/SprMain.sg3 group 193 -> id 9189
+INFO: data/SprMain.sg3 group 193 -> id 9189 priest (seth)
 INFO: data/SprMain.sg3 group 194 -> id 9285
-INFO: data/SprMain.sg3 group 195 -> id 9293
+INFO: data/SprMain.sg3 group 195 -> id 9293 mortuary
 INFO: data/SprMain.sg3 group 196 -> id 9389
-INFO: data/SprMain.sg3 group 197 -> id 9397
+INFO: data/SprMain.sg3 group 197 -> id 9397 priest (osiris)
 INFO: data/SprMain.sg3 group 198 -> id 9493
-INFO: data/SprMain.sg3 group 199 -> id 9501
+INFO: data/SprMain.sg3 group 199 -> id 9501 ???
 INFO: data/SprMain.sg3 group 200 -> id 9597
-INFO: data/SprMain.sg3 group 201 -> id 9605
+INFO: data/SprMain.sg3 group 201 -> id 9605 librarian
 INFO: data/SprMain.sg3 group 202 -> id 9701
-INFO: data/SprMain.sg3 group 203 -> id 9709
+INFO: data/SprMain.sg3 group 203 -> id 9709 carpenter hammering
 INFO: data/SprMain.sg3 group 204 -> id 9805
 INFO: data/SprMain.sg3 group 205 -> id 9901
-INFO: data/SprMain.sg3 group 206 -> id 9909
+INFO: data/SprMain.sg3 group 206 -> id 9909 laborseeker
 INFO: data/SprMain.sg3 group 207 -> id 10005
-INFO: data/SprMain.sg3 group 208 -> id 10013
+INFO: data/SprMain.sg3 group 208 -> id 10013 priest (bast)
 INFO: data/SprMain.sg3 group 209 -> id 10109
-INFO: data/SprMain.sg3 group 210 -> id 10117
+INFO: data/SprMain.sg3 group 210 -> id 10117 priest (ra)
 INFO: data/SprMain.sg3 group 211 -> id 10213
-INFO: data/SprMain.sg3 group 212 -> id 10221
+INFO: data/SprMain.sg3 group 212 -> id 10221 magistrate
 INFO: data/SprMain.sg3 group 213 -> id 10317
+
+INFO: data/SprAmbient.sg3 group 0 -> id 1 flotsam
+INFO: data/SprAmbient.sg3 group 1 -> id 37 lift
+INFO: data/SprAmbient.sg3 group 2 -> id 50
+INFO: data/SprAmbient.sg3 group 3 -> id 63
+INFO: data/SprAmbient.sg3 group 4 -> id 76
+INFO: data/SprAmbient.sg3 group 5 -> id 89 dust explosion
+INFO: data/SprAmbient.sg3 group 6 -> id 104 dancers
+INFO: data/SprAmbient.sg3 group 7 -> id 140 juggler
+INFO: data/SprAmbient.sg3 group 8 -> id 166 fish
+INFO: data/SprAmbient.sg3 group 9 -> id 191 musicians
+INFO: data/SprAmbient.sg3 group 10 -> id 203
+INFO: data/SprAmbient.sg3 group 11 -> id 215 fish????
+INFO: data/SprAmbient.sg3 group 12 -> id 238 big explosion??
+INFO: data/SprAmbient.sg3 group 13 -> id 258
+INFO: data/SprAmbient.sg3 group 14 -> id 354
+INFO: data/SprAmbient.sg3 group 15 -> id 362
+INFO: data/SprAmbient.sg3 group 16 -> id 458
+INFO: data/SprAmbient.sg3 group 17 -> id 470
+INFO: data/SprAmbient.sg3 group 18 -> id 566
+INFO: data/SprAmbient.sg3 group 19 -> id 574
+INFO: data/SprAmbient.sg3 group 20 -> id 670 merchant
+INFO: data/SprAmbient.sg3 group 21 -> id 766
+INFO: data/SprAmbient.sg3 group 22 -> id 774 hippo
+INFO: data/SprAmbient.sg3 group 23 -> id 870
+INFO: data/SprAmbient.sg3 group 24 -> id 878
+INFO: data/SprAmbient.sg3 group 25 -> id 934
+INFO: data/SprAmbient.sg3 group 26 -> id 1030
+INFO: data/SprAmbient.sg3 group 27 -> id 1126
+INFO: data/SprAmbient.sg3 group 28 -> id 1222
+INFO: data/SprAmbient.sg3 group 29 -> id 1318
+INFO: data/SprAmbient.sg3 group 30 -> id 1355 antilope
+INFO: data/SprAmbient.sg3 group 31 -> id 1451
+INFO: data/SprAmbient.sg3 group 32 -> id 1459
+INFO: data/SprAmbient.sg3 group 33 -> id 1555
+INFO: data/SprAmbient.sg3 group 34 -> id 1683
+INFO: data/SprAmbient.sg3 group 35 -> id 1779
+INFO: data/SprAmbient.sg3 group 36 -> id 1843 hunter (antilope version)
+INFO: data/SprAmbient.sg3 group 37 -> id 1939
+INFO: data/SprAmbient.sg3 group 38 -> id 1947
+INFO: data/SprAmbient.sg3 group 39 -> id 2043
+INFO: data/SprAmbient.sg3 group 40 -> id 2139
+INFO: data/SprAmbient.sg3 group 41 -> id 2235
+INFO: data/SprAmbient.sg3 group 42 -> id 2379
+INFO: data/SprAmbient.sg3 group 43 -> id 2475
+INFO: data/SprAmbient.sg3 group 44 -> id 2507
+INFO: data/SprAmbient.sg3 group 45 -> id 2539 ship building
+INFO: data/SprAmbient.sg3 group 46 -> id 2551 fish unloading
+INFO: data/SprAmbient.sg3 group 47 -> id 2647 granary
+INFO: data/SprAmbient.sg3 group 48 -> id 2671 mine
+INFO: data/SprAmbient.sg3 group 49 -> id 2688 sculpting???
+INFO: data/SprAmbient.sg3 group 50 -> id 2695
+INFO: data/SprAmbient.sg3 group 51 -> id 2702 warehouse
+INFO: data/SprAmbient.sg3 group 52 -> id 2718 big ship building
+INFO: data/SprAmbient.sg3 group 53 -> id 2730 ferry ship building
+INFO: data/SprAmbient.sg3 group 54 -> id 2742 fish ship building
+INFO: data/SprAmbient.sg3 group 55 -> id 2754 docker waiting
+INFO: data/SprAmbient.sg3 group 56 -> id 2854 docker unloading
 
 INFO: data/Pharaoh_Terrain.sg3 group 1 -> id 201
 INFO: data/Pharaoh_Terrain.sg3 group 2 -> id 210

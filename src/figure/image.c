@@ -24,7 +24,7 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static const int CART_OFFSETS_X[] = {13, 18, 12, 0, -13, -18, -13, 0};
+static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
 #include "core/image.h"
@@ -45,8 +45,8 @@ void figure::figure_image_update() {
         sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * anim_frame / anim_frame_duration;
 
     // null images
-    if (!anim_base)
-        sprite_image_id = 0;
+    if (anim_base <= 0)
+        sprite_image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 3;
 
     // advance animation frame
     anim_frame++;

@@ -64,25 +64,25 @@ int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
 int calc_general_direction(int x_from, int y_from, int x_to, int y_to) {
     if (x_from < x_to) {
         if (y_from > y_to)
-            return DIR_1_TOP_RIGHT;
+            return DIR_1_RIGHT;
         else if (y_from == y_to)
-            return DIR_2_RIGHT;
+            return DIR_2_BOTTOM_RIGHT;
         else if (y_from < y_to)
-            return DIR_3_BOTTOM_RIGHT;
+            return DIR_3_BOTTOM;
 
     } else if (x_from == x_to) {
         if (y_from > y_to)
-            return DIR_0_TOP;
+            return DIR_0_TOP_RIGHT;
         else if (y_from < y_to)
-            return DIR_4_BOTTOM;
+            return DIR_4_BOTTOM_LEFT;
 
     } else if (x_from > x_to) {
         if (y_from > y_to)
-            return DIR_7_TOP_LEFT;
+            return DIR_7_TOP;
         else if (y_from == y_to)
-            return DIR_6_LEFT;
+            return DIR_6_TOP_LEFT;
         else if (y_from < y_to)
-            return DIR_5_BOTTOM_LEFT;
+            return DIR_5_LEFT;
 
     }
     return DIR_8_NONE;
@@ -101,48 +101,48 @@ int calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to) {
     }
     if (x_from == x_to) {
         if (y_from < y_to)
-            return DIR_4_BOTTOM;
+            return DIR_4_BOTTOM_LEFT;
         else {
-            return DIR_0_TOP;
+            return DIR_0_TOP_RIGHT;
         }
     } else if (x_from > x_to) {
         if (y_from == y_to)
-            return DIR_6_LEFT;
+            return DIR_6_TOP_LEFT;
         else if (y_from > y_to) {
             if (percentage >= 400)
-                return DIR_6_LEFT;
+                return DIR_6_TOP_LEFT;
             else if (percentage > -400)
-                return DIR_7_TOP_LEFT;
+                return DIR_7_TOP;
             else {
-                return DIR_0_TOP;
+                return DIR_0_TOP_RIGHT;
             }
         } else {
             if (percentage >= 400)
-                return DIR_6_LEFT;
+                return DIR_6_TOP_LEFT;
             else if (percentage > -400)
-                return DIR_5_BOTTOM_LEFT;
+                return DIR_5_LEFT;
             else {
-                return DIR_4_BOTTOM;
+                return DIR_4_BOTTOM_LEFT;
             }
         }
     } else { // x_from < x_to
         if (y_from == y_to)
-            return DIR_2_RIGHT;
+            return DIR_2_BOTTOM_RIGHT;
         else if (y_from > y_to) {
             if (percentage >= 400)
-                return DIR_2_RIGHT;
+                return DIR_2_BOTTOM_RIGHT;
             else if (percentage > -400)
-                return DIR_1_TOP_RIGHT;
+                return DIR_1_RIGHT;
             else {
-                return DIR_0_TOP;
+                return DIR_0_TOP_RIGHT;
             }
         } else {
             if (percentage >= 400)
-                return DIR_2_RIGHT;
+                return DIR_2_BOTTOM_RIGHT;
             else if (percentage > -400)
-                return DIR_3_BOTTOM_RIGHT;
+                return DIR_3_BOTTOM;
             else {
-                return DIR_4_BOTTOM;
+                return DIR_4_BOTTOM_LEFT;
             }
         }
     }

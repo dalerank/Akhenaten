@@ -49,7 +49,7 @@ void figure::editor_flag_action() {
 //    f->x = point.x;
 //    f->y = point.y;
 //
-//    f->grid_offset = map_grid_offset(f->x, f->y);
+//    f->grid_offset_figure = map_grid_offset(f->x, f->y);
 //    f->cross_country_x = 15 * f->x + 7;
 //    f->cross_country_y = 15 * f->y + 7;
 //    map_figure_add();

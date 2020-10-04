@@ -26,22 +26,22 @@
 #include "scenario/map.h"
 
 int figure_create_trade_caravan(int x, int y, int city_id) {
-    figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP);
+    figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP_RIGHT);
     caravan->empire_city_id = city_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     caravan->wait_ticks = 10;
     // donkey 1
-    figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
+    figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP_RIGHT);
     donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     donkey1->leading_figure_id = caravan->id;
     // donkey 2
-    figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
+    figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP_RIGHT);
     donkey2->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
     return caravan->id;
 }
 int figure_create_trade_ship(int x, int y, int city_id) {
-    figure *ship = figure_create(FIGURE_TRADE_SHIP, x, y, DIR_0_TOP);
+    figure *ship = figure_create(FIGURE_TRADE_SHIP, x, y, DIR_0_TOP_RIGHT);
     ship->empire_city_id = city_id;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
     ship->wait_ticks = 10;
@@ -653,16 +653,16 @@ void figure::trade_ship_action() {
             }
             switch (building_get(destination_building_id)->data.dock.orientation) {
                 case 0:
-                    direction = DIR_2_RIGHT;
+                    direction = DIR_2_BOTTOM_RIGHT;
                     break;
                 case 1:
-                    direction = DIR_4_BOTTOM;
+                    direction = DIR_4_BOTTOM_LEFT;
                     break;
                 case 2:
-                    direction = DIR_6_LEFT;
+                    direction = DIR_6_TOP_LEFT;
                     break;
                 default:
-                    direction = DIR_0_TOP;
+                    direction = DIR_0_TOP_RIGHT;
                     break;
             }
             anim_frame = 0;
@@ -689,7 +689,7 @@ void figure::trade_ship_action() {
                     action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     destination_x = tile.x;
                     destination_y = tile.y;
-                } else if (map_figure_at(grid_offset) != id &&
+                } else if (map_figure_at(grid_offset_figure) != id &&
                            building_dock_get_queue_destination(id, &tile)) {
                     action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     destination_x = tile.x;

@@ -9,7 +9,7 @@ int VIEW_Y_MAX();
 typedef struct {
     int x;
     int y;
-} view_tile, pixel_offset;
+} view_tile, pixel_coordinate;
 
 typedef void (map_callback)(int x, int y, int grid_offset);
 
@@ -32,8 +32,8 @@ void city_view_set_camera_from_pixel_position(int x, int y);
 
 void city_view_scroll(int x, int y);
 
-pixel_offset city_view_grid_offset_to_pixel(int grid_offset);
-pixel_offset city_view_grid_offset_to_pixel(int tile_x, int tile_y);
+pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset);
+pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y);
 
 int city_view_to_grid_offset(int x_view, int y_view);
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);

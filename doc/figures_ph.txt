@@ -5,5 +5,5 @@ grid of IDs ---> first figure (head) on each tile
 figure (head):
 	ID
 	(various figure stuff...)
-	grid_offset: offset on grid
+	grid_offset_figure: offset on grid
 	next_figure: next figure ID

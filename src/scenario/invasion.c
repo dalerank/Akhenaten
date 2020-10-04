@@ -262,15 +262,15 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     }
     // determine orientation
     if (y == 0)
-        orientation = DIR_4_BOTTOM;
+        orientation = DIR_4_BOTTOM_LEFT;
     else if (y >= scenario.map.height - 1)
-        orientation = DIR_0_TOP;
+        orientation = DIR_0_TOP_RIGHT;
     else if (x == 0)
-        orientation = DIR_2_RIGHT;
+        orientation = DIR_2_BOTTOM_RIGHT;
     else if (x >= scenario.map.width - 1)
-        orientation = DIR_6_LEFT;
+        orientation = DIR_6_TOP_LEFT;
     else {
-        orientation = DIR_4_BOTTOM;
+        orientation = DIR_4_BOTTOM_LEFT;
     }
     // check terrain
     int grid_offset = map_grid_offset(x, y);

@@ -28,8 +28,8 @@ static void determine_leftmost_tile(void) {
                 continue;
             }
             map_property_clear_draw_tile(grid_offset);
-            int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size - 1 : 0;
-            int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size - 1 : 0;
+            int dx = orientation == DIR_4_BOTTOM_LEFT || orientation == DIR_6_TOP_LEFT ? size - 1 : 0;
+            int dy = orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT ? size - 1 : 0;
             if (map_property_is_multi_tile_xy(grid_offset, dx, dy))
                 map_property_mark_draw_tile(grid_offset);
 
@@ -68,14 +68,14 @@ void map_orientation_change(int counter_clockwise) {
 
 int map_orientation_for_gatehouse(int x, int y) {
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x--;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x--;
             y--;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             y--;
             break;
     }
@@ -164,14 +164,14 @@ int map_orientation_for_gatehouse(int x, int y) {
 
 int map_orientation_for_triumphal_arch(int x, int y) {
     switch (city_view_orientation()) {
-        case DIR_2_RIGHT:
+        case DIR_2_BOTTOM_RIGHT:
             x -= 2;
             break;
-        case DIR_4_BOTTOM:
+        case DIR_4_BOTTOM_LEFT:
             x -= 2;
             y -= 2;
             break;
-        case DIR_6_LEFT:
+        case DIR_6_TOP_LEFT:
             y -= 2;
             break;
     }
@@ -244,7 +244,7 @@ int map_orientation_for_triumphal_arch(int x, int y) {
 
 void map_orientation_update_buildings(void) {
     int map_orientation = city_view_orientation();
-    int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
+    int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED)
@@ -299,7 +299,7 @@ void map_orientation_update_buildings(void) {
                     building_part = 1; // part 2
                 }
                 map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-                if (map_orientation == DIR_0_TOP) {
+                if (map_orientation == DIR_0_TOP_RIGHT) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0:
@@ -312,7 +312,7 @@ void map_orientation_update_buildings(void) {
                             image_id += 4;
                             break; // part 3, same for switch cases below
                     }
-                } else if (map_orientation == DIR_4_BOTTOM) {
+                } else if (map_orientation == DIR_4_BOTTOM_LEFT) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
                     switch (building_part) {
                         case 0:
@@ -325,7 +325,7 @@ void map_orientation_update_buildings(void) {
                             image_id += 0;
                             break;
                     }
-                } else if (map_orientation == DIR_6_LEFT) {
+                } else if (map_orientation == DIR_6_TOP_LEFT) {
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
                         case 0:
@@ -338,7 +338,7 @@ void map_orientation_update_buildings(void) {
                             image_id += 4;
                             break;
                     }
-                } else { // DIR_2_RIGHT
+                } else { // DIR_2_BOTTOM_RIGHT
                     image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
                     switch (building_part) {
                         case 0:
