@@ -177,7 +177,7 @@ void figure::shipwreck_action() {
 }
 void figure::fishing_boat_action() {
     building *b = building_get(building_id);
-//    if (b->state != BUILDING_STATE_IN_USE)
+//    if (b->state != BUILDING_STATE_VALID)
 //        state = FIGURE_STATE_DEAD;
 
     if (action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id) {

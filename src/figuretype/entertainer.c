@@ -20,7 +20,7 @@ static int determine_destination(int x, int y, int type1, int type2) {
 
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         if (b->type != type1 && b->type != type2)
@@ -222,7 +222,7 @@ void figure::entertainer_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
             break;
-        case ACTION_PROPER_ROAM:
+        case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -237,7 +237,7 @@ void figure::entertainer_action() {
             }
             roam_ticks(speed_factor);
             break;
-        case ACTION_PROPER_RETURN:
+        case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {

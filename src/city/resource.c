@@ -147,7 +147,7 @@ void city_resource_calculate_warehouse_stocks(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
             if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, 0))
                 b->has_road_access = 1;
@@ -158,7 +158,7 @@ void city_resource_calculate_warehouse_stocks(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
             continue;
 
         building *warehouse = building_main(b);
@@ -214,11 +214,11 @@ static void calculate_available_food(void) {
     city_data.resource.granaries.not_operating_with_food = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access_granary(b->x, b->y, 0)) {
+        if (map_has_road_access(b->x, b->y, b->size, 0)) { //map_has_road_access_granary(b->x, b->y, 0)
             b->has_road_access = 1;
             int pct_workers = calc_percentage(
                     b->num_workers, model_get_building(b->type)->laborers);
@@ -271,7 +271,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void) {
     if (scenario_property_rome_supplies_wheat()) {
         for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
             building *b = building_get(i);
-            if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_MARKET)
+            if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
                 b->data.market.inventory[INVENTORY_FOOD1] = 200;
 
         }
@@ -285,7 +285,7 @@ void city_resource_calculate_workshop_stocks(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type))
+        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;
 
         b->has_road_access = 0;
@@ -309,7 +309,7 @@ void city_resource_consume_food(void) {
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+        if (b->state == BUILDING_STATE_VALID && b->house_size) {
             int num_types = model_get_house(b->subtype.house_level)->food_types;
             int amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
             if (num_types > 1)

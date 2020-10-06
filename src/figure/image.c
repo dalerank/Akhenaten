@@ -54,6 +54,15 @@ void figure::figure_image_update() {
         anim_frame = 0;
 }
 void figure::cart_update_image() {
+
+
+    // to rework?????
+//    if (loads_sold_or_carrying == 1) {
+//        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
+//    } else
+//        set_cart_graphic();
+
+
     int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {

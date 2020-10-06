@@ -64,22 +64,24 @@ H1	R	H2	W
  5 38 25157 H2		85
  4 37 24928 EXIT	?
 
-BID IMID
-6  >  9
-9  > 10
-10 > 11
-11 > 12
-12 >  8
-13 > 13
-16 > 14
-17 > 15
-18 > 16
-19 > 17
-20 > 18
-
+65 fish
+82 crocodile
+85 worker
+95 fishing spot?
 
 24074 PALACE
 25891 GRANARY1
+
+getting
+delivering
+unloading
+returning
+
+
+
+
+
+
 
 
 	5	5	8	 8	88	10	10
@@ -87,11 +89,14 @@ BID IMID
 ROAM	1	125	10	62	10	72	10
 RET	2	126	11	63			11
 
-1	labor, water, physician
-2	
-10	engineer, police, fireman
-11	
+1	labor, water, physician (roamers)
+2	(roamers returning)
+8	cartpusher (waiting), trader donkey (following)
+9	immigrant (arriving), cartpusher (going to
+10	engineer, police, fireman, cartpusher, worker (going to place)
+11	(returning from destination?)
 
+15
 
 CULTURE:
 384

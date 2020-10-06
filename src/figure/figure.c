@@ -40,6 +40,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->is_friendly = 1;
     f->created_sequence = data.created_sequence++;
     f->direction = dir;
+    f->roam_length = 0;
     f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
     f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
     f->grid_offset_figure = map_grid_offset(x, y);
@@ -140,6 +141,8 @@ int figureid_translation(int id, bool reverse = true) {
 int actionid_translation(int id, bool reverse = true) {
     if (GAME_ENV == ENGINE_ENV_C3)
         return id;
+//    if (id != 0)
+//        id += 300;
     int *table = actionid_translation_table_ph;
     for (int i = 0; table[i] < FIGURE_ACTION_MAX; i += 2) {
         if (reverse)
@@ -323,7 +326,8 @@ void figure::load(buffer *buf) {
     }
     f->__unused_24 = buf->read_i16(); // 0
     f->wait_ticks = buf->read_i16(); // 0
-    f->action_state = actionid_translation(buf->read_u8()); // 9
+    f->action_state_untouched = buf->read_u8(); // 9
+    f->action_state = actionid_translation(f->action_state_untouched);
     f->progress_on_tile = buf->read_u8(); // 11
     f->routing_path_id = buf->read_i16(); // 12
     f->routing_path_current_tile = buf->read_i16(); // 4
@@ -365,7 +369,13 @@ void figure::load(buffer *buf) {
     f->name = buf->read_i16();
     f->terrain_usage = buf->read_u8();
     f->loads_sold_or_carrying = buf->read_u8();
-    f->is_boat = buf->read_u8();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        f->resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
+        f->is_boat = 0;
+    } else {
+        f->resource_quantity = 0;
+        f->is_boat = buf->read_u8();
+    }
     f->height_adjusted_ticks = buf->read_u8();
     f->current_height = buf->read_u8();
     f->target_height = buf->read_u8();
@@ -388,7 +398,7 @@ void figure::load(buffer *buf) {
     f->attacker_id2 = buf->read_i16();
     f->opponent_id = buf->read_i16();
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(244);
+        buf->skip(243);
 }
 void figure_save_state(buffer *list, buffer *seq) {
     seq->write_i32(data.created_sequence);

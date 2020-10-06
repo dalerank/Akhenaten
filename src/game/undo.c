@@ -128,7 +128,7 @@ void game_undo_restore_building_state(void) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
             if (b->state == BUILDING_STATE_DELETED_BY_PLAYER)
-                b->state = BUILDING_STATE_IN_USE;
+                b->state = BUILDING_STATE_VALID;
 
             b->is_deleted = 0;
         }
@@ -200,7 +200,7 @@ static void add_building_to_terrain(building *b) {
             b->data.industry.fishing_boat_id = 0;
 
     }
-    b->state = BUILDING_STATE_IN_USE;
+    b->state = BUILDING_STATE_VALID;
 }
 
 void game_undo_perform(void) {

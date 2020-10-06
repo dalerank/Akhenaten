@@ -250,7 +250,7 @@ static void spawn_figure_watersupply(building *b) {
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP_RIGHT);
-            f->action_state = ACTION_PROPER_ROAM1;
+            f->action_state = ACTION_1_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
         }
@@ -525,7 +525,7 @@ static void spawn_figure_colosseum(building *b) {
 }
 
 static void set_market_graphic(building *b) {
-    if (b->state != BUILDING_STATE_IN_USE)
+    if (b->state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
@@ -595,7 +595,7 @@ static void spawn_figure_market(building *b) {
 }
 
 static void set_bathhouse_graphic(building *b) {
-    if (b->state != BUILDING_STATE_IN_USE)
+    if (b->state != BUILDING_STATE_VALID)
         return;
     if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE))
         b->has_water_access = 1;
@@ -811,7 +811,7 @@ static void spawn_figure_temple(building *b) {
 }
 
 static void set_senate_graphic(building *b) {
-    if (b->state != BUILDING_STATE_IN_USE)
+    if (b->state != BUILDING_STATE_VALID)
         return;
     if (map_desirability_get(b->grid_offset) <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
@@ -872,6 +872,8 @@ static void spawn_figure_mission_post(building *b) {
 }
 
 static void spawn_figure_industry(building *b) {
+    if (true) // todo: floodplain farms
+        return;
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -1028,7 +1030,7 @@ static void spawn_figure_warehouse(building *b) {
 static void spawn_figure_granary(building *b) {
     check_labor_problem(b);
     map_point road;
-    if (map_has_road_access_granary(b->x, b->y, &road)) {
+    if (map_has_road_access(b->x, b->y, b->size, &road)) { //map_has_road_access_granary(b->x, b->y, &road)
         spawn_labor_seeker(b, road.x, road.y, 100);
         if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN))
             return;
@@ -1150,7 +1152,7 @@ void building_figure_generate(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id))

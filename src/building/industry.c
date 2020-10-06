@@ -33,7 +33,7 @@ static void update_farm_image(const building *b) {
 void building_industry_update_production(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id)
+        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
 
         b->data.industry.has_raw_materials = 0;
@@ -73,7 +73,7 @@ void building_industry_update_wheat_production(void) {
         return;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id)
+        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
 
         if (b->houses_covered <= 0 || b->num_workers <= 0)
@@ -114,7 +114,7 @@ void building_industry_start_new_production(building *b) {
 void building_bless_farms(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = MAX_PROGRESS_RAW;
             b->data.industry.curse_days_left = 0;
             b->data.industry.blessing_days_left = 16;
@@ -126,7 +126,7 @@ void building_bless_farms(void) {
 void building_curse_farms(int big_curse) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
+        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = 0;
             b->data.industry.blessing_days_left = 0;
             b->data.industry.curse_days_left = big_curse ? 48 : 4;
@@ -154,7 +154,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type))
+        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)
@@ -191,7 +191,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type))
+        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)

@@ -141,7 +141,7 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile) {
     building *best_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         for (int t = 0; t < 100 && t <= best_type_index && RIOTER_ATTACK_PRIORITY[t]; t++) {
@@ -178,7 +178,7 @@ static void set_enemy_target_building(formation *m) {
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || map_soldier_strength_get(b->grid_offset))
+        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
             continue;
 
         for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
@@ -200,7 +200,7 @@ static void set_enemy_target_building(formation *m) {
         // no target buildings left: take rioter attack priority
         for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
             building *b = building_get(i);
-            if (b->state != BUILDING_STATE_IN_USE || map_soldier_strength_get(b->grid_offset))
+            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
                 continue;
 
             for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
@@ -235,7 +235,7 @@ static void set_native_target_building(formation *m) {
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         switch (b->type) {

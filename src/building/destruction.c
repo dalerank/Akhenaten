@@ -158,7 +158,7 @@ void building_destroy_last_placed(void) {
     building *last_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_VALID) {
             if (b->creation_sequence_index > highest_sequence) {
                 highest_sequence = b->creation_sequence_index;
                 last_building = b;
@@ -182,7 +182,7 @@ void building_destroy_by_enemy(int x, int y, int grid_offset) {
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_VALID) {
             city_ratings_peace_building_destroyed(b->type);
             building_destroy_by_collapse(b);
         }

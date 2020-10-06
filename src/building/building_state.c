@@ -219,10 +219,14 @@ static void read_type_data(buffer *buf, building *b) {
         buf->skip(9);
     } else if (b->type == BUILDING_GRANARY) {
         buf->skip(2);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+        if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            buf->skip(2);
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
             b->data.granary.resource_stored[i] = buf->read_i16();
-        }
-        buf->skip(8);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            buf->skip(6);
+        else
+            buf->skip(8);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buf->read_i16();
         buf->skip(25);

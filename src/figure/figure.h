@@ -31,6 +31,7 @@ public:
     short next_figure;
     unsigned char type;
     unsigned char resource_id;
+    short resource_quantity;
     unsigned char use_cross_country;
     unsigned char is_friendly;
     unsigned char state;
@@ -61,7 +62,8 @@ public:
     } formation_position_y;
     short __unused_24;
     short wait_ticks;
-    unsigned char action_state;
+    unsigned short action_state;
+    unsigned short action_state_untouched;
     unsigned char progress_on_tile;
     short routing_path_id;
     short routing_path_current_tile;
@@ -194,10 +196,10 @@ public:
     void move_to_next_tile();
     void set_next_route_tile_direction();
     void advance_route_tile(int roaming_enabled);
-    void walk_ticks(int num_ticks, int roaming_enabled);
+//    void walk_ticks(int num_ticks, int roaming_enabled = false);
     void init_roaming();
     void roam_set_direction();
-    void move_ticks(int num_ticks);
+    void move_ticks(int num_ticks, int roaming_enabled = false);
     void move_ticks_tower_sentry(int num_ticks);
     void roam_ticks(int num_ticks);
     void follow_ticks(int num_ticks);
@@ -216,6 +218,14 @@ public:
 //    void common_action(int max_roam_frames, int group);
 //    void roamer_action(int num_ticks);
 //    void culture_action(int gorup);
+
+    void advance_action(short NEXT_ACTION);
+    bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
+    bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_gotobuilding(int destid, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0);
+    bool do_exitbuilding(bool invisible, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
 
     void immigrant_action();
     void emigrant_action();

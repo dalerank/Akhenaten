@@ -44,7 +44,7 @@ void city_entertainment_calculate_shows(void) {
 
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         switch (b->type) {

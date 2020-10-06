@@ -64,7 +64,7 @@ static void update_buildings(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_VALID) {
             const model_building *model = model_get_building(b->type);
             add_to_terrain(
                     b->x, b->y, b->size,

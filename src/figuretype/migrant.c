@@ -62,7 +62,7 @@ static int closest_house_with_room(int x, int y)
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 &&
+        if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0 &&
             b->house_population_room > 0) {
             if (!b->immigrant_figure_id) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
@@ -77,13 +77,34 @@ static int closest_house_with_room(int x, int y)
 
 }
 
+static void add_house_population(building *house, int num_people) {
+    int max_people = model_get_house(house->subtype.house_level)->max_people;
+    if (house->house_is_merged)
+        max_people *= 4;
+
+    int room = max_people - house->house_population;
+    if (room < 0)
+        room = 0;
+
+    if (room < num_people)
+        num_people = room;
+
+    if (!house->house_population)
+        building_house_change_to(house, BUILDING_HOUSE_SMALL_TENT);
+
+    house->house_population += num_people;
+    house->house_population_room = max_people - house->house_population;
+    city_population_add(num_people);
+    house->immigrant_figure_id = 0;
+}
+
 void figure::immigrant_action()
 {
     building *b = building_get(immigrant_building_id);
 
 //    terrain_usage = TERRAIN_USAGE_ANY;
 //    cart_image_id = 0;
-//    if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != id || !b->house_size) {
+//    if (b->state != BUILDING_STATE_VALID || b->immigrant_figure_id != id || !b->house_size) {
 //        state = FIGURE_STATE_DEAD;
 //        return;
 //    }
@@ -91,64 +112,23 @@ void figure::immigrant_action()
 //    figure_image_increase_offset(12);
 
     switch (action_state) {
+        case ACTION_8_WAITING:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
             is_ghost = 1;
             anim_frame = 0;
             wait_ticks--;
-            if (wait_ticks <= 0) {
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    action_state = FIGURE_ACTION_2_IMMIGRANT_ARRIVING;
-                    destination_x = x_road;
-                    destination_y = y_road;
-                    roam_length = 0;
-                } else
-                    state = FIGURE_STATE_DEAD;
-            }
+            if (wait_ticks <= 0)
+                advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
             break;
-        case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE: // pharaoh
+        case ACTION_9_IMMIGRANT_ARRIVING: // pharaoh
         case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
-            is_ghost = 0;
-            move_ticks(1);
-            switch (direction) {
-                case DIR_FIGURE_AT_DESTINATION:
-                    action_state = FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE;
-                    set_cross_country_destination(b->x, b->y);
-                    roam_length = 0;
-                    break;
-                case DIR_FIGURE_REROUTE:
-                    route_remove();
-                    break;
-                case DIR_FIGURE_LOST:
-                    b->immigrant_figure_id = 0;
-                    b->distance_from_entry = 0;
-                    state = FIGURE_STATE_DEAD;
-                    break;
-            }
+            do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-            use_cross_country = 1;
-            is_ghost = 1;
-            if (move_ticks_cross_country(1) == 1) {
-                state = FIGURE_STATE_DEAD;
-                int max_people = model_get_house(b->subtype.house_level)->max_people;
-                if (b->house_is_merged)
-                    max_people *= 4;
-
-                int room = max_people - b->house_population;
-                if (room < 0)
-                    room = 0;
-
-                if (room < migrant_num_people)
-                    migrant_num_people = room;
-
-                if (!b->house_population)
-                    building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-
-                b->house_population += migrant_num_people;
-                b->house_population_room = max_people - b->house_population;
-                city_population_add(migrant_num_people);
-                b->immigrant_figure_id = 0;
+//            use_cross_country = 1;
+            if (do_enterbuilding(true, immigrant_building_id)) {
+                add_house_population(b, migrant_num_people);
+//                figure_delete();
             }
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
@@ -169,37 +149,41 @@ void figure::emigrant_action()
             anim_frame = 0;
             wait_ticks++;
             if (wait_ticks >= 5) {
-                int x_road, y_road;
-                if (!map_closest_road_within_radius(tile_x, tile_y, 1, 5, &x_road, &y_road))
-                    state = FIGURE_STATE_DEAD;
-
-                action_state = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
-                set_cross_country_destination(x_road, y_road);
-                roam_length = 0;
+                advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
+//                int x_road, y_road;
+//                if (!map_closest_road_within_radius(tile_x, tile_y, 1, 5, &x_road, &y_road))
+//                    state = FIGURE_STATE_DEAD;
+//
+//                action_state = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
+//                set_cross_country_destination(x_road, y_road);
+//                roam_length = 0;
             }
             break;
         case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
-            use_cross_country = 1;
-            is_ghost = 1;
-            if (move_ticks_cross_country(1) == 1) {
-                const map_tile *entry = city_map_entry_point();
-                action_state = FIGURE_ACTION_6_EMIGRANT_LEAVING;
-                destination_x = entry->x;
-                destination_y = entry->y;
-                roam_length = 0;
-                progress_on_tile = 15;
-            }
+            do_exitbuilding(false, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+//            use_cross_country = 1;
+//            is_ghost = 1;
+//            if (move_ticks_cross_country(1) == 1) {
+//                const map_tile *entry = city_map_entry_point();
+//                action_state = FIGURE_ACTION_6_EMIGRANT_LEAVING;
+//                destination_x = entry->x;
+//                destination_y = entry->y;
+//                roam_length = 0;
+//                progress_on_tile = 15;
+//            }
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case FIGURE_ACTION_6_EMIGRANT_LEAVING:
-            use_cross_country = 0;
-            is_ghost = 0;
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
-                direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_LOST) {
-                state = FIGURE_STATE_DEAD;
-            }
+            const map_tile *exit = city_map_entry_point();
+            do_goto(exit->x, exit->y, TERRAIN_USAGE_ANY);
+//            use_cross_country = 0;
+//            is_ghost = 0;
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION ||
+//                direction == DIR_FIGURE_REROUTE ||
+//                direction == DIR_FIGURE_LOST) {
+//                state = FIGURE_STATE_DEAD;
+//            }
             break;
     }
     update_direction_and_image();
@@ -221,70 +205,76 @@ void figure::homeless_action()
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrant_figure_id = id;
                         immigrant_building_id = building_id;
-                        action_state = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
-                        destination_x = x_road;
-                        destination_y = y_road;
-                        roam_length = 0;
+                        advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
+//                        destination_x = x_road;
+//                        destination_y = y_road;
+//                        roam_length = 0;
                     } else
                         state = FIGURE_STATE_DEAD;
-
                 } else {
-                    const map_tile *exit = city_map_exit_point();
-                    action_state = FIGURE_ACTION_10_HOMELESS_LEAVING;
-                    destination_x = exit->x;
-                    destination_y = exit->y;
-                    roam_length = 0;
-                    wait_ticks = 0;
+                    advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
+//                    const map_tile *exit = city_map_exit_point();
+//                    action_state = FIGURE_ACTION_10_HOMELESS_LEAVING;
+//                    destination_x = exit->x;
+//                    destination_y = exit->y;
+//                    roam_length = 0;
+//                    wait_ticks = 0;
                 }
             }
             break;
         case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
-            is_ghost = 0;
-            move_ticks(1);
-            if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-                building_get(immigrant_building_id)->immigrant_figure_id = 0;
-                state = FIGURE_STATE_DEAD;
-            } else if (direction == DIR_FIGURE_AT_DESTINATION) {
-                building *b = building_get(immigrant_building_id);
-                action_state = FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE;
-                set_cross_country_destination(b->x, b->y);
-                roam_length = 0;
-            }
+            do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+//            is_ghost = 0;
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+//                building_get(immigrant_building_id)->immigrant_figure_id = 0;
+//                state = FIGURE_STATE_DEAD;
+//            } else if (direction == DIR_FIGURE_AT_DESTINATION) {
+//                building *b = building_get(immigrant_building_id);
+//                action_state = FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE;
+//                set_cross_country_destination(b->x, b->y);
+//                roam_length = 0;
+//            }
             break;
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-            use_cross_country = 1;
-            is_ghost = 1;
-            if (move_ticks_cross_country(1) == 1) {
-                state = FIGURE_STATE_DEAD;
-                building *b = building_get(immigrant_building_id);
-                if (immigrant_building_id && building_is_house(b->type)) {
-                    int max_people = model_get_house(b->subtype.house_level)->max_people;
-                    if (b->house_is_merged)
-                        max_people *= 4;
-
-                    int room = max_people - b->house_population;
-                    if (room < 0)
-                        room = 0;
-
-                    if (room < migrant_num_people)
-                        migrant_num_people = room;
-
-                    if (!b->house_population)
-                        building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-
-                    b->house_population += migrant_num_people;
-                    b->house_population_room = max_people - b->house_population;
-                    city_population_add_homeless(migrant_num_people);
-                    b->immigrant_figure_id = 0;
-                }
-            }
+            if (do_enterbuilding(true, immigrant_building_id))
+                add_house_population(building_get(immigrant_building_id), migrant_num_people);
+            is_ghost = in_building_wait_ticks ? 1 : 0;
+//            use_cross_country = 1;
+//            is_ghost = 1;
+//            if (move_ticks_cross_country(1) == 1) {
+//                state = FIGURE_STATE_DEAD;
+//                building *b = building_get(immigrant_building_id);
+//                if (immigrant_building_id && building_is_house(b->type)) {
+//                    int max_people = model_get_house(b->subtype.house_level)->max_people;
+//                    if (b->house_is_merged)
+//                        max_people *= 4;
+//
+//                    int room = max_people - b->house_population;
+//                    if (room < 0)
+//                        room = 0;
+//
+//                    if (room < migrant_num_people)
+//                        migrant_num_people = room;
+//
+//                    if (!b->house_population)
+//                        building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
+//
+//                    b->house_population += migrant_num_people;
+//                    b->house_population_room = max_people - b->house_population;
+//                    city_population_add_homeless(migrant_num_people);
+//                    b->immigrant_figure_id = 0;
+//                }
+//            }
             break;
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
+//                state = FIGURE_STATE_DEAD;
+//            else if (direction == DIR_FIGURE_REROUTE)
+//                route_remove();
+            const map_tile *exit = city_map_exit_point();
+            do_goto(exit->x, exit->y, TERRAIN_USAGE_ANY);
 
             wait_ticks++;
             if (wait_ticks > 30) {
@@ -296,11 +286,12 @@ void figure::homeless_action()
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrant_figure_id = id;
                         immigrant_building_id = building_id;
-                        action_state = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
-                        destination_x = x_road;
-                        destination_y = y_road;
-                        roam_length = 0;
-                        route_remove();
+                        advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
+//                        action_state = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
+//                        destination_x = x_road;
+//                        destination_y = y_road;
+//                        roam_length = 0;
+//                        route_remove();
                     }
                 }
 //                else {

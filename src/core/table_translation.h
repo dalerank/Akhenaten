@@ -143,6 +143,7 @@ static int groupid_translation_table_ph[] = {
         168, 65, // dock (2)
         169, 50, // data/Pharaoh_Terrain.sg3 transport.BMP
         170, 63, // data/Pharaoh_Terrain.sg3 transport.BMP
+        171, 55 + 553, // docker workers
         172, 238, // data/Pharaoh_General.sg3 empire_panels.bmp
         174, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
         177, 243, // data/Pharaoh_General.sg3 empire_bits.BMP

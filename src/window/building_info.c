@@ -167,7 +167,7 @@ static void get_tooltip(tooltip_context *c) {
         text_id = focus_image_button_id;
 
     else if (focus_generic_button_id) {
-        if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
+        if (building_get(context.building_id)->state == BUILDING_STATE_VALID) {
             text_id = 8;
             group_id = 54;
         } else {
@@ -328,11 +328,11 @@ static void init(int grid_offset) {
         }
         context.has_road_access = 0;
         switch (b->type) {
-            case BUILDING_GRANARY:
-                if (map_has_road_access_granary(b->x, b->y, 0))
-                    context.has_road_access = 1;
-
-                break;
+//            case BUILDING_GRANARY:
+//                if (map_has_road_access_granary(b->x, b->y, 0))
+//                    context.has_road_access = 1;
+//
+//                break;
             case BUILDING_HIPPODROME:
                 if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
                     context.has_road_access = 1;
@@ -454,7 +454,7 @@ static void draw_mothball_button(int x, int y, int focused) {
     uint8_t working_text[] = {'x', 0};
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     building *b = building_get(context.building_id);
-    if (b->state == BUILDING_STATE_IN_USE)
+    if (b->state == BUILDING_STATE_VALID)
         text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
 
 }

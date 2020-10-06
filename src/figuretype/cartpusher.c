@@ -31,7 +31,8 @@ void figure::set_cart_graphic() {
 
 void figure::set_destination(int action, int building_id, int x_dst, int y_dst) {
     destination_building_id = building_id;
-    action_state = action;
+//    action_state = action;
+//    action_state = ACTION_10_DELIVERING_FOOD;
     wait_ticks = 0;
     destination_x = x_dst;
     destination_y = y_dst;
@@ -114,22 +115,29 @@ void figure::determine_cartpusher_destination_food(int road_network_id) {
             dst_building_id = 0;
     }
     if (dst_building_id) {
-        set_destination(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY, dst_building_id, dst.x, dst.y);
-        return;
+        destination_building_id = dst_building_id;
+        return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
+//        set_destination(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY, dst_building_id, dst.x, dst.y);
+//        return;
     }
     // priority 2: warehouse
     dst_building_id = building_warehouse_for_storing(0, tile_x, tile_y, b->output_resource_id, b->distance_from_entry, road_network_id, 0, &dst);
     if (dst_building_id) {
-        set_destination(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE, dst_building_id, dst.x, dst.y);
-        return;
+        destination_building_id = dst_building_id;
+        return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
+//        set_destination(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE, dst_building_id, dst.x, dst.y);
+//        return;
     }
     // priority 3: granary
     dst_building_id = building_granary_for_storing(tile_x, tile_y, b->output_resource_id, b->distance_from_entry, road_network_id, 1, 0, &dst);
     if (dst_building_id) {
-        set_destination(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY, dst_building_id, dst.x, dst.y);
-        return;
+        destination_building_id = dst_building_id;
+        return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
+//        set_destination(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY, dst_building_id, dst.x, dst.y);
+//        return;
     }
     // no one will accept, stand idle
+    advance_action(ACTION_8_WAITING);
     wait_ticks = 0;
 }
 void figure::reroute_cartpusher() {
@@ -261,13 +269,18 @@ void figure::cartpusher_action() {
 //    cart_image_id = 0;
 //    terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(building_id);
+    building *dest = building_get(destination_building_id);
+    int is_produced = true;
+    if (type == BUILDING_WAREHOUSE)
+        is_produced = false;
+    bool delivery_check = false;
     int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
             set_cart_graphic();
             if (!map_routing_citizen_is_passable(grid_offset_figure))
                 state = FIGURE_STATE_DEAD;
-            if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+            if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
                 state = FIGURE_STATE_DEAD;
             wait_ticks++;
             if (wait_ticks > 30)
@@ -275,98 +288,210 @@ void figure::cartpusher_action() {
 
             anim_frame = 0;
             break;
+        case ACTION_8_WAITING:
+            direction = previous_tile_direction;
+            break;
+        case ACTION_9_DELIVERING_GOODS:
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, ACTION_12_UNLOADING1);
+        case ACTION_10_DELIVERING_FOOD:
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, ACTION_13_UNLOADING2);
+            break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-            set_cart_graphic();
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
-                action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
-            else if (direction == DIR_FIGURE_REROUTE)
-                reroute_cartpusher();
-            else if (direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
-
-            if (building_get(destination_building_id)->state != BUILDING_STATE_IN_USE)
-                state = FIGURE_STATE_DEAD;
-
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE);
             break;
         case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-            set_cart_graphic();
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
-                action_state = FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY;
-            else if (direction == DIR_FIGURE_REROUTE)
-                reroute_cartpusher();
-            else if (direction == DIR_FIGURE_LOST) {
-                action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                wait_ticks = 0;
-            }
-            if (building_get(destination_building_id)->state != BUILDING_STATE_IN_USE)
-                state = FIGURE_STATE_DEAD;
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY);
             break;
         case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
-            set_cart_graphic();
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
-                action_state = FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP;
-            else if (direction == DIR_FIGURE_REROUTE)
-                reroute_cartpusher();
-            else if (direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP);
             break;
+//            if (loads_sold_or_carrying == 1) {
+//                cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
+//            } else
+//                set_cart_graphic();
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION)
+//                action_state = ACTION_12_UNLOADING1;
+//            else if (direction == DIR_FIGURE_REROUTE)
+//                reroute_cartpusher();
+//            else if (direction == DIR_FIGURE_LOST) {
+//                action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+//                wait_ticks = 0;
+//            }
+            // reworked a lil bit -- originally it's just "DEAD" if dest is invalid (cartpusher)
+//            if (dest->state != BUILDING_STATE_VALID)
+//                if (b->state != BUILDING_STATE_VALID)
+//                    state = FIGURE_STATE_DEAD;
+//                else
+//                    direction == DIR_FIGURE_REROUTE;
+//            break;
+
+        case ACTION_12_UNLOADING1:
+        case ACTION_13_UNLOADING2:
         case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
-            wait_ticks++;
-            if (wait_ticks > 10) {
-                if (building_warehouse_add_resource(building_get(destination_building_id), resource_id)) {
-                    action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
-                    wait_ticks = 0;
-                    destination_x = source_x;
-                    destination_y = source_y;
-                } else {
-                    route_remove();
-                    action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                    wait_ticks = 0;
-                }
-            }
-            anim_frame = 0;
-            break;
         case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
-            wait_ticks++;
-            if (wait_ticks > 5) {
-                if (building_granary_add_resource(building_get(destination_building_id), resource_id, 1)) {
-                    action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
-                    wait_ticks = 0;
-                    destination_x = source_x;
-                    destination_y = source_y;
-                } else
-                    determine_cartpusher_destination_food(road_network_id);
-            }
-            anim_frame = 0;
-            break;
         case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
             wait_ticks++;
             if (wait_ticks > 5) {
-                building_workshop_add_raw_material(building_get(destination_building_id));
-                action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
-                wait_ticks = 0;
-                destination_x = source_x;
-                destination_y = source_y;
+                switch (dest->type) {
+                    case BUILDING_WAREHOUSE:
+                        delivery_check = building_warehouse_add_resource(dest, resource_id);
+                        if (!delivery_check && is_produced) {
+                            route_remove();
+                            action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+                            wait_ticks = 0;
+                        }
+                        break;
+                    case BUILDING_GRANARY:
+                        delivery_check = building_granary_add_resource(dest, resource_id, is_produced);
+                        if (!delivery_check && is_produced)
+                            determine_cartpusher_destination_food(road_network_id);
+                        break;
+                    case BUILDING_BARRACKS:
+                        building_barracks_add_weapon(dest); break;
+                    default:
+                        building_workshop_add_raw_material(dest); break;
+                }
+                if (delivery_check || !is_produced)
+                    advance_action(ACTION_15_RETURNING2);
             }
             anim_frame = 0;
             break;
-        case ACTION_PROPER_RETURN:
-        case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
-            cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
-                action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                state = FIGURE_STATE_DEAD;
-            } else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
 
+//            switch (dest->type) {
+//                case BUILDING_WAREHOUSE:
+////                case BUILDING_WAREHOUSE_SPACE:
+//                    if (wait_ticks > 10) {
+//                        if (building_warehouse_add_resource(dest, resource_id)) {
+//                            action_state = ACTION_11_RETURNING_EMPTY; //FIGURE_ACTION_27_CARTPUSHER_RETURNING;
+//                            wait_ticks = 0;
+//                            destination_x = source_x;
+//                            destination_y = source_y;
+//                        } else if (is_produced) {
+//                            route_remove();
+//                            action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+//                            wait_ticks = 0;
+//                        }
+//                    }
+//                    break;
+//                case BUILDING_GRANARY:
+//                    if (wait_ticks > 5) {
+//                        if (building_granary_add_resource(dest, resource_id, is_produced)) {
+//                            action_state = ACTION_11_RETURNING_EMPTY;
+//                            wait_ticks = 0;
+//                            destination_x = source_x;
+//                            destination_y = source_y;
+//                        } else if (is_produced)
+//                            determine_cartpusher_destination_food(road_network_id);
+//                    }
+//                    break;
+//                case BUILDING_BARRACKS:
+//                    building_barracks_add_weapon(dest);
+//                    break;
+//                default:
+//                    if (wait_ticks > 5) {
+//                        building_workshop_add_raw_material(dest);
+//                        action_state = ACTION_11_RETURNING_EMPTY;
+//                        wait_ticks = 0;
+//                        destination_x = source_x;
+//                        destination_y = source_y;
+//                    }
+//                    break;
+//            }
+//            anim_frame = 0;
+//            break;
+//
+//
+//            // WAREHOUSEMAN
+//            wait_ticks++;
+//            if (wait_ticks > 4) {
+//                building *b = building_get(destination_building_id);
+//                switch (b->type) {
+//                    case BUILDING_GRANARY:
+//                        building_granary_add_resource(b, resource_id, 0);
+//                        break;
+//                    case BUILDING_BARRACKS:
+//                        building_barracks_add_weapon(b);
+//                        break;
+//                    case BUILDING_WAREHOUSE:
+//                    case BUILDING_WAREHOUSE_SPACE:
+//                        building_warehouse_add_resource(b, resource_id);
+//                        break;
+//                    default: // workshop
+//                        building_workshop_add_raw_material(b);
+//                        break;
+//                }
+//                // BUG: what if warehouse/granary is full and returns false?
+//                action_state = FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY;
+//                wait_ticks = 0;
+//                destination_x = source_x;
+//                destination_y = source_y;
+//            }
+//            anim_frame = 0;
+//            break;
+
+
+
+
+
+//        case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
+//            wait_ticks++;
+//            if (wait_ticks > 10) {
+//                if (building_warehouse_add_resource(building_get(destination_building_id), resource_id)) {
+//                    action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
+//                    wait_ticks = 0;
+//                    destination_x = source_x;
+//                    destination_y = source_y;
+//                } else {
+//                    route_remove();
+//                    action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+//                    wait_ticks = 0;
+//                }
+//            }
+//            anim_frame = 0;
+//            break;
+//        case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
+//            wait_ticks++;
+//            if (wait_ticks > 5) {
+//                if (building_granary_add_resource(building_get(destination_building_id), resource_id, 1)) {
+//                    action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
+//                    wait_ticks = 0;
+//                    destination_x = source_x;
+//                    destination_y = source_y;
+//                } else
+//                    determine_cartpusher_destination_food(road_network_id);
+//            }
+//            anim_frame = 0;
+//            break;
+//        case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
+//            wait_ticks++;
+//            if (wait_ticks > 5) {
+//                building_workshop_add_raw_material(building_get(destination_building_id));
+//                action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
+//                wait_ticks = 0;
+//                destination_x = source_x;
+//                destination_y = source_y;
+//            }
+//            anim_frame = 0;
+//            break;
+        case ACTION_11_RETURNING_EMPTY:
+        case ACTION_15_RETURNING2:
+        case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
+            if (do_returnhome()) {
+                // has returned - get back goods that are left?
+            }
+//            cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION) {
+//                action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+//                state = FIGURE_STATE_DEAD;
+//            } else if (direction == DIR_FIGURE_REROUTE)
+//                route_remove();
+//            else if (direction == DIR_FIGURE_LOST)
+//                state = FIGURE_STATE_DEAD;
             break;
     }
+
     cart_update_image();
 }
 void figure::warehouseman_action() {
@@ -377,7 +502,7 @@ void figure::warehouseman_action() {
     switch (action_state) {
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(building_id);
-            if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+            if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
                 state = FIGURE_STATE_DEAD;
             wait_ticks++;
             if (wait_ticks > 2) {
@@ -389,10 +514,13 @@ void figure::warehouseman_action() {
             anim_frame = 0;
             break;
         }
+        case ACTION_8_WAITING:
+            direction = previous_tile_direction;
+            break;
         case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
-            if (loads_sold_or_carrying == 1) {
+            if (loads_sold_or_carrying == 1)
                 cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
-            } else
+            else
                 set_cart_graphic();
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)
@@ -543,5 +671,6 @@ void figure::warehouseman_action() {
                 state = FIGURE_STATE_DEAD;
             break;
     }
+
     cart_update_image();
 }

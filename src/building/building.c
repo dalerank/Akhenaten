@@ -35,7 +35,7 @@ static struct {
 int building_find(int type) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; ++i) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == type)
+        if (b->state == BUILDING_STATE_VALID && b->type == type)
             return i;
 
     }
@@ -257,9 +257,9 @@ void building_update_state(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED)
-            b->state = BUILDING_STATE_IN_USE;
+            b->state = BUILDING_STATE_VALID;
 
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+        if (b->state != BUILDING_STATE_VALID || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = 1;
@@ -303,7 +303,7 @@ void building_update_state(void) {
 void building_update_desirability(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         b->desirability = map_desirability_get_max(b->x, b->y, b->size);
@@ -333,23 +333,23 @@ void building_update_desirability(void) {
 }
 
 int building_mothball_toggle(building *b) {
-    if (b->state == BUILDING_STATE_IN_USE) {
+    if (b->state == BUILDING_STATE_VALID) {
         b->state = BUILDING_STATE_MOTHBALLED;
         b->num_workers = 0;
     } else if (b->state == BUILDING_STATE_MOTHBALLED)
-        b->state = BUILDING_STATE_IN_USE;
+        b->state = BUILDING_STATE_VALID;
 
     return b->state;
 
 }
 int building_mothball_set(building *b, int mothball) {
     if (mothball) {
-        if (b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_VALID) {
             b->state = BUILDING_STATE_MOTHBALLED;
             b->num_workers = 0;
         }
     } else if (b->state == BUILDING_STATE_MOTHBALLED)
-        b->state = BUILDING_STATE_IN_USE;
+        b->state = BUILDING_STATE_VALID;
 
     return b->state;
 

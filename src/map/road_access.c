@@ -56,7 +56,6 @@ int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point
     if (min_value < 12) {
         if (road)
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
-
         return 1;
     }
     return 0;
@@ -74,7 +73,6 @@ int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int r
     if (min_value < 12) {
         if (road)
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
-
         return 1;
     }
     return 0;
@@ -84,33 +82,32 @@ int map_has_road_access_hippodrome(int x, int y, map_point *road) {
     return map_has_road_access_hippodrome_rotation(x, y, road, building_rotation_get_rotation());
 }
 
-int map_has_road_access_granary(int x, int y, map_point *road) {
-    int rx = -1, ry = -1;
-    if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD) &&
-        (building_get(map_building_at(map_grid_offset(x + 1, y - 1)))->type != BUILDING_ROADBLOCK)) {
-        rx = x + 1;
-        ry = y - 1;
-    } else if (map_terrain_is(map_grid_offset(x + 3, y + 1), TERRAIN_ROAD) &&
-               (building_get(map_building_at(map_grid_offset(x + 3, y + 1)))->type != BUILDING_ROADBLOCK)) {
-        rx = x + 3;
-        ry = y + 1;
-    } else if (map_terrain_is(map_grid_offset(x + 1, y + 3), TERRAIN_ROAD) &&
-               (building_get(map_building_at(map_grid_offset(x + 1, y + 3)))->type != BUILDING_ROADBLOCK)) {
-        rx = x + 1;
-        ry = y + 3;
-    } else if (map_terrain_is(map_grid_offset(x - 1, y + 1), TERRAIN_ROAD) &&
-               (building_get(map_building_at(map_grid_offset(x - 1, y + 1)))->type != BUILDING_ROADBLOCK)) {
-        rx = x - 1;
-        ry = y + 1;
-    }
-    if (rx >= 0 && ry >= 0) {
-        if (road)
-            map_point_store_result(rx, ry, road);
-
-        return 1;
-    }
-    return 0;
-}
+//int map_has_road_access_granary(int x, int y, map_point *road) {
+//    int rx = -1, ry = -1;
+//    if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD) &&
+//        (building_get(map_building_at(map_grid_offset(x + 1, y - 1)))->type != BUILDING_ROADBLOCK)) {
+//        rx = x + 1;
+//        ry = y - 1;
+//    } else if (map_terrain_is(map_grid_offset(x + 3, y + 1), TERRAIN_ROAD) &&
+//               (building_get(map_building_at(map_grid_offset(x + 3, y + 1)))->type != BUILDING_ROADBLOCK)) {
+//        rx = x + 3;
+//        ry = y + 1;
+//    } else if (map_terrain_is(map_grid_offset(x + 1, y + 3), TERRAIN_ROAD) &&
+//               (building_get(map_building_at(map_grid_offset(x + 1, y + 3)))->type != BUILDING_ROADBLOCK)) {
+//        rx = x + 1;
+//        ry = y + 3;
+//    } else if (map_terrain_is(map_grid_offset(x - 1, y + 1), TERRAIN_ROAD) &&
+//               (building_get(map_building_at(map_grid_offset(x - 1, y + 1)))->type != BUILDING_ROADBLOCK)) {
+//        rx = x - 1;
+//        ry = y + 1;
+//    }
+//    if (rx >= 0 && ry >= 0) {
+//        if (road)
+//            map_point_store_result(rx, ry, road);
+//        return 1;
+//    }
+//    return 0;
+//}
 
 static int road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
     int x_min, y_min, x_max, y_max;
@@ -136,7 +133,6 @@ int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_ro
     for (int r = 1; r <= radius; r++) {
         if (road_within_radius(x, y, size, r, x_road, y_road))
             return 1;
-
     }
     return 0;
 }

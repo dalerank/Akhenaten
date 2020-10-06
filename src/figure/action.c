@@ -142,6 +142,146 @@ static figure_action_property action_lookup[] = {
 
 #include "core/image.h"
 
+
+void figure::advance_action(short NEXT_ACTION) {
+    if (NEXT_ACTION == 0)
+        state = FIGURE_STATE_DEAD;
+    else
+        action_state = NEXT_ACTION;
+}
+bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
+    terrain_usage = terrainchoice;
+    if (!roam_length)
+        init_roaming();
+    roam_length++;
+    if (roam_length >= max_roam_length) {
+        destination_x = 0;
+        destination_y = 0;
+        destination_building_id = 0;
+        roam_length = 0;
+        route_remove();
+        advance_action(NEXT_ACTION);
+        return true;
+    } else
+        roam_ticks(1);
+    return false;
+}
+bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+    terrain_usage = terrainchoice;
+    if (use_cross_country)
+        terrain_usage = TERRAIN_USAGE_ANY;
+
+    // refresh routing if destination is different
+    if (destination_x != x || destination_y != y)
+        route_remove();
+
+    // set up destination and move!!!
+    if (use_cross_country) {
+//        if (!destination_x && !destination_y) {
+            set_cross_country_destination(x, y);
+//            roam_length = 0;
+//            route_remove();
+//        }
+        if (move_ticks_cross_country(1) == 1) {
+            advance_action(NEXT_ACTION);
+            return true;
+        }
+    }
+    else {
+        destination_x = x;
+        destination_y = y;
+        move_ticks(1);
+    }
+
+    // check if destination is reached/figure is lost/etc.
+    if (direction == DIR_FIGURE_AT_DESTINATION) {
+        advance_action(NEXT_ACTION);
+        return true;
+    }
+    if (direction == DIR_FIGURE_REROUTE)
+        route_remove();
+    if (direction == DIR_FIGURE_LOST)
+        advance_action(FAIL_ACTION);
+    return false;
+}
+bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+    int x, y;
+    building *dest = building_get(destid);
+    if (stop_at_road)
+        if (map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y)) {
+//            if (destination_building_id == 0) {
+//                destination_building_id = destid;
+//                route_remove();
+//            }
+            return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
+        } else {
+            if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
+                advance_action(FAIL_ACTION); // kill dude?
+            else
+                advance_action(NEXT_ACTION); // don't kill if it's not *requiring* roads, was just looking for one
+        }
+    else {
+        if (dest->state != BUILDING_STATE_VALID)
+            advance_action(FAIL_ACTION);
+        else
+            return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
+    }
+}
+bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
+    return do_gotobuilding(building_id, true, terrainchoice, NEXT_ACTION);
+}
+bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
+    use_cross_country = 1;
+    if (invisible)
+        is_ghost = 1;
+    return do_gotobuilding(building_id, true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+}
+bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, short FAIL_ACTION) {
+    use_cross_country = 1;
+    if (invisible)
+        is_ghost = 1;
+    return do_gotobuilding(buildid, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+}
+
+
+//
+//figure::grab_goods() {
+//    // take foods
+//}
+//figure::deliver_goods(building *destination) {
+//    //
+//}
+//figure::load_goods(building *source) {
+//
+//}
+//figure::unload_goods(building *destination) {
+//
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void figure::action_perform() {
     if (state) {
         if (targeted_by_figure_id) {
@@ -176,7 +316,7 @@ void figure::action_perform() {
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:
-                if (b_imm->state != BUILDING_STATE_IN_USE || b_imm->immigrant_figure_id != id || !b_imm->house_size)
+                if (b_imm->state != BUILDING_STATE_VALID || b_imm->immigrant_figure_id != id || !b_imm->house_size)
                     return figure_delete();
                 break;
             case FIGURE_ENGINEER:
@@ -198,12 +338,12 @@ void figure::action_perform() {
             case FIGURE_BARBER:
             case FIGURE_WATER_CARRIER:
             case FIGURE_PRIEST:
-                if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
                     return figure_delete();
                 break;
             case FIGURE_LABOR_SEEKER:
             case FIGURE_MARKET_BUYER:
-                if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != id)
+                if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
                     return figure_delete();
                 break;
             case FIGURE_DELIVERY_BOY:
@@ -215,6 +355,19 @@ void figure::action_perform() {
                 break;
         }
 
+        // initial action substitution
+        switch (action_state) {
+            case FIGURE_ACTION_125_ROAMING:
+                action_state = ACTION_1_ROAMING; break;
+//            case ACTION_8_WAITING:
+//                break;
+//            case ACTION_10_DELIVERING_FOOD:
+//                break;
+            case FIGURE_ACTION_126_ROAMER_RETURNING:
+                action_state = ACTION_2_ROAMERS_RETURNING; break;
+        }
+
+
         //////////////// roamer_action()
         // common action states handling
         switch (action_state) {
@@ -222,33 +375,24 @@ void figure::action_perform() {
                 figure_combat_handle_attack(); break;
             case FIGURE_ACTION_149_CORPSE:
                 figure_combat_handle_corpse(); break;
-            case ACTION_PROPER_ROAM1:
-            case ACTION_PROPER_ROAM:
-            case FIGURE_ACTION_125_ROAMING:
-//                is_ghost = 0;
-                roam_length++;
-                if (roam_length >= max_roam_length) {
-                    int x, y;
-                    building *b = building_get(building_id);
-                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x, &y)) {
-                        action_state = FIGURE_ACTION_126_ROAMER_RETURNING;
-                        destination_x = x;
-                        destination_y = y;
-                        route_remove();
-                        roam_length = 0;
-                    } else
-                        return figure_delete();
-                }
-                roam_ticks(1);
+            case ACTION_1_ROAMING:
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
+                    break;
+                do_roam();
                 break;
-            case ACTION_PROPER_RETURN1:
-            case ACTION_PROPER_RETURN:
-            case FIGURE_ACTION_126_ROAMER_RETURNING:
-                move_ticks(1);
-                if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                    return figure_delete();
+//            case ACTION_8_WAITING:
+//                direction = previous_tile_direction;
+//                break;
+//            case ACTION_11_RETURNING_EMPTY:
+            case ACTION_2_ROAMERS_RETURNING:
+                if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
+                    break;
+                do_returnhome();
                 break;
         }
+
+//        if (state == FIGURE_STATE_NONE)
+//            return;
 
         ////////////
 
@@ -261,7 +405,7 @@ void figure::action_perform() {
             case 6: explosion_cloud_action();           break;
             case 7: tax_collector_action();             break;
             case 8: engineer_action();                  break;
-            case 9: warehouseman_action();              break;
+            case 9: cartpusher_action();              break; // warehouseman_action !!!!
             case 10: prefect_action();                  break; //10
             case 11: //soldier_action();                  break;
             case 12: //soldier_action();                  break;
@@ -338,6 +482,7 @@ void figure::action_perform() {
             return figure_delete();
 
         // advance sprite offset
+//        if (state != FIGURE_STATE_NONE)
         figure_image_update();
     }
 }

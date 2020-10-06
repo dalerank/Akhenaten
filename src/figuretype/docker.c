@@ -96,7 +96,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)
@@ -162,7 +162,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)
@@ -275,7 +275,7 @@ void figure::docker_action() {
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
     building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_IN_USE)
+    if (b->state != BUILDING_STATE_VALID)
         state = FIGURE_STATE_DEAD;
 
     if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF)
@@ -372,7 +372,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_IN_USE)
+            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
                 state = FIGURE_STATE_DEAD;
 
             break;
@@ -386,7 +386,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_IN_USE)
+            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
                 state = FIGURE_STATE_DEAD;
 
             break;
@@ -401,7 +401,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 state = FIGURE_STATE_DEAD;
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_IN_USE)
+            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
                 state = FIGURE_STATE_DEAD;
 
             break;

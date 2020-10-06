@@ -76,12 +76,12 @@ void figure::figure_route_add()
                 can_travel = map_routing_noncitizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y, -1, 5000);
                 break;
             case TERRAIN_USAGE_PREFER_ROADS:
-                can_travel = map_routing_citizen_can_travel_over_road_garden(tile_x, tile_y, destination_x, destination_y);
+                can_travel = map_routing_citizen_can_travel_over_road(tile_x, tile_y, destination_x, destination_y);
                 if (!can_travel)
                     can_travel = map_routing_citizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y);
                 break;
             case TERRAIN_USAGE_ROADS:
-                can_travel = map_routing_citizen_can_travel_over_road_garden(tile_x, tile_y, destination_x, destination_y);
+                can_travel = map_routing_citizen_can_travel_over_road(tile_x, tile_y, destination_x, destination_y);
                 break;
             default:
                 can_travel = map_routing_citizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y);

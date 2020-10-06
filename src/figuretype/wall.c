@@ -48,7 +48,7 @@ void figure::ballista_action() {
     height_adjusted_ticks = 10;
     current_height = 45;
 
-    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != id)
+    if (b->state != BUILDING_STATE_VALID || b->figure_id4 != id)
         state = FIGURE_STATE_DEAD;
 
     if (b->num_workers <= 0 || b->figure_id <= 0)
@@ -195,7 +195,7 @@ void figure::tower_sentry_action() {
     is_ghost = 1;
     height_adjusted_ticks = 10;
 //    max_roam_length = 800;
-//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
 //        state = FIGURE_STATE_DEAD;
 
 //    figure_image_increase_offset(12);
@@ -244,7 +244,7 @@ void figure::tower_sentry_action() {
                 }
             }
             break;
-        case ACTION_PROPER_RETURN:
+        case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)

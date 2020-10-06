@@ -19,7 +19,7 @@ int house_population_add_to_city(int num_people) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->distance_from_entry > 0 &&
+        if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0 &&
             b->house_population > 0) {
             city_population_set_last_used_house_add(building_id);
             int max_people = model_get_house(b->subtype.house_level)->max_people;
@@ -44,7 +44,7 @@ int house_population_remove_from_city(int num_people) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+        if (b->state == BUILDING_STATE_VALID && b->house_size) {
             city_population_set_last_used_house_remove(building_id);
             if (b->house_population > 0) {
                 ++removed;
@@ -59,7 +59,7 @@ static void fill_building_list_with_houses(void) {
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size)
+        if (b->state == BUILDING_STATE_VALID && b->house_size)
             building_list_large_add(i);
 
     }

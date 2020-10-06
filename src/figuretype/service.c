@@ -21,12 +21,12 @@ void figure::school_child_action()
 //        max_roam_length = 96;
 //    }
 //    building *b = building_get(building_id);
-//    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_SCHOOL)
+//    if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_SCHOOL)
 //        state = FIGURE_STATE_DEAD;
 
 //    figure_image_increase_offset(12);
     switch (action_state) {
-        case ACTION_PROPER_ROAM:
+        case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_125_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -45,7 +45,7 @@ void figure::school_child_action()
 ////    use_cross_country = 0;
 ////    max_roam_length = 192;
 ////    building *b = building_get(building_id);
-////    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+////    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
 ////        state = FIGURE_STATE_DEAD;
 //
 ////    figure_image_increase_offset(12);
@@ -57,7 +57,7 @@ void figure::school_child_action()
 ////    terrain_usage = TERRAIN_USAGE_ROADS;
 ////    use_cross_country = 0;
 ////    max_roam_length = 128;
-////    if (building_get(building_id)->state != BUILDING_STATE_IN_USE)
+////    if (building_get(building_id)->state != BUILDING_STATE_VALID)
 ////        state = FIGURE_STATE_DEAD;
 //
 ////    figure_image_increase_offset(12);
@@ -92,7 +92,7 @@ void figure::market_trader_action()
 //    use_cross_country = 0;
 //    max_roam_length = 384;
     building *market = building_get(building_id);
-//    if (market->state != BUILDING_STATE_IN_USE || market->figure_id != id)
+//    if (market->state != BUILDING_STATE_VALID || market->figure_id != id)
 //        state = FIGURE_STATE_DEAD;
 
 //    figure_image_increase_offset(12);
@@ -114,7 +114,7 @@ void figure::tax_collector_action()
 //    terrain_usage = TERRAIN_USAGE_ROADS;
 //    use_cross_country = 0;
 //    max_roam_length = 512;
-//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
 //        state = FIGURE_STATE_DEAD;
 //
 //    figure_image_increase_offset(12);
@@ -149,7 +149,7 @@ void figure::tax_collector_action()
                 }
             }
             break;
-        case ACTION_PROPER_ROAM:
+        case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -165,7 +165,7 @@ void figure::tax_collector_action()
             }
             roam_ticks(1);
             break;
-        case ACTION_PROPER_RETURN:
+        case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {

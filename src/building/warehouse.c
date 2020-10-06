@@ -201,7 +201,7 @@ void building_warehouses_add_resource(int resource, int amount) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             city_resource_set_last_used_warehouse(building_id);
             while (amount && building_warehouse_add_resource(b, resource)) {
                 amount--;
@@ -291,7 +291,7 @@ int building_warehouses_remove_resource(int resource, int amount) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             if (!building_warehouse_is_getting(resource, b)) {
                 city_resource_set_last_used_warehouse(building_id);
                 amount_left = building_warehouse_remove_resource(b, resource, amount_left);
@@ -305,7 +305,7 @@ int building_warehouses_remove_resource(int resource, int amount) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WAREHOUSE) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             city_resource_set_last_used_warehouse(building_id);
             amount_left = building_warehouse_remove_resource(b, resource, amount_left);
         }
@@ -320,7 +320,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
@@ -368,7 +368,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;
 
         if (i == src->id)
@@ -415,7 +415,7 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     int can_accept = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->has_road_access)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY || !b->has_road_access)
             continue;
 
         if (road_network != b->road_network_id)
@@ -447,7 +447,7 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
     int can_get = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY || !b->has_road_access)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY || !b->has_road_access)
             continue;
 
         if (road_network != b->road_network_id)

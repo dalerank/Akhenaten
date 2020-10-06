@@ -17,7 +17,7 @@ void figure::market_buyer_action() {
 //    max_roam_length = 800;
 //
 //    building *b = building_get(building_id);
-//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id2 != id)
+//    if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
 //        state = FIGURE_STATE_DEAD;
 
 //    figure_image_increase_offset(12);
@@ -44,7 +44,7 @@ void figure::market_buyer_action() {
                 route_remove();
             }
             break;
-        case ACTION_PROPER_RETURN:
+        case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)

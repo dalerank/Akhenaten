@@ -99,6 +99,9 @@ void figure::draw_debug() {
     string_from_int(str, type, 0);
     draw_text_shadow(str, coords.x, coords.y+10, COLOR_BLUE);
 
+//    string_from_int(str, action_state_untouched, 0);
+//    draw_text_shadow(str, coords.x-20, coords.y+20, COLOR_RED);
+//    draw_text_shadow((uint8_t*)string_from_ascii("   :"), coords.x, coords.y+20, COLOR_RED);
     string_from_int(str, action_state, 0);
     draw_text_shadow(str, coords.x, coords.y+20, COLOR_RED);
 
@@ -353,7 +356,7 @@ void figure::draw_figure_correct_sprite_offset(int x, int y) {
 
     switch (type) {
         case FIGURE_IMMIGRANT:
-            _y = -8;
+            _y = 10;
             break;
 //        case FIGURE_TRADE_CARAVAN:
 //        case FIGURE_TRADE_CARAVAN_DONKEY:

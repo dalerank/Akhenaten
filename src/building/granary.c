@@ -54,7 +54,6 @@ int building_granary_is_accepting(int resource, building *b) {
         return 0;
     }
 }
-
 int building_granary_is_getting(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_granary_get_amount(b, resource);
@@ -67,7 +66,6 @@ int building_granary_is_getting(int resource, building *b) {
         return 0;
     }
 }
-
 int building_granary_is_gettable(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
@@ -82,7 +80,6 @@ int building_granary_is_gettable(int resource, building *b) {
 int building_granary_is_not_accepting(int resource, building *b) {
     return !((building_granary_is_accepting(resource, b) || building_granary_is_getting(resource, b)));
 }
-
 
 int building_granary_add_resource(building *granary, int resource, int is_produced) {
     if (granary->id <= 0)
@@ -112,7 +109,6 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
     }
     return 1;
 }
-
 int building_granary_remove_resource(building *granary, int resource, int amount) {
     if (amount <= 0)
         return 0;
@@ -128,7 +124,6 @@ int building_granary_remove_resource(building *granary, int resource, int amount
     granary->data.granary.resource_stored[RESOURCE_NONE] += removed;
     return amount - removed;
 }
-
 int building_granary_remove_for_getting_deliveryman(building *src, building *dst, int *resource) {
     const building_storage *s_src = building_storage_get(src->storage_id);
     const building_storage *s_dst = building_storage_get(dst->storage_id);
@@ -211,7 +206,6 @@ int building_granary_determine_worker_task(building *granary) {
 
     return GRANARY_TASK_NONE;
 }
-
 void building_granaries_calculate_stocks(void) {
     non_getting_granaries.num_items = 0;
     for (int i = 0; i < MAX_GRANARIES; i++) {
@@ -224,7 +218,7 @@ void building_granaries_calculate_stocks(void) {
 
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0)
@@ -256,9 +250,7 @@ void building_granaries_calculate_stocks(void) {
         }
     }
 }
-
-int building_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                 int force_on_stockpile, int *understaffed, map_point *dst) {
+int building_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int *understaffed, map_point *dst) {
     if (scenario_property_rome_supplies_wheat())
         return 0;
 
@@ -272,7 +264,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
 
@@ -312,9 +304,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     map_point_store_result(min->x + 1, min->y + 1, dst);
     return min_building_id;
 }
-
-int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                         map_point *dst) {
+int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst) {
     if (scenario_property_rome_supplies_wheat())
         return 0;
 
@@ -328,7 +318,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
@@ -356,7 +346,6 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
     map_point_store_result(min->x + 1, min->y + 1, dst);
     return min_building_id;
 }
-
 int building_granary_for_getting(building *src, map_point *dst) {
     const building_storage *s_src = building_storage_get(src->storage_id);
     if (s_src->empty_all)
@@ -427,7 +416,7 @@ void building_granary_bless(void) {
     building *min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY)
+        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
         int total_stored = 0;
@@ -454,13 +443,12 @@ void building_granary_bless(void) {
         }
     }
 }
-
 void building_granary_warehouse_curse(int big) {
     int max_stored = 0;
     building *max_building = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         int total_stored = 0;

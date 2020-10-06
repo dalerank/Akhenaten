@@ -15,7 +15,7 @@ void figure::indigenous_native_action() {
 //    terrain_usage = TERRAIN_USAGE_ANY;
 //    use_cross_country = 0;
 //    max_roam_length = 800;
-//    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != id)
+//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
 //        state = FIGURE_STATE_DEAD;
 
 //    figure_image_increase_offset(12);

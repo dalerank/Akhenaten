@@ -82,7 +82,7 @@ int building_market_get_storage_destination(building *market) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE)

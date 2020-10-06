@@ -340,7 +340,6 @@ static void draw_top(int x, int y, int grid_offset) {
     draw_entertainment_spectators(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
-//#include "window/city.h"
 static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
@@ -361,21 +360,7 @@ static void draw_figures(int x, int y, int grid_offset) {
         else
             figure_id = 0;
     }
-//    static int o = 0;
-//    const int l = 6400;
-//    int ff = 8*(o/l);
-//    image_draw(169 + 700 + debug_range_1 + ff,0,0);
-//    o++;
-//    if (o >= 12*l) {
-//        o = 0;
-////        d++;
-//    }
-//    if (debug_range_1 >= 8)
-//        debug_range_1 = 0;
-//    if (debug_range_1 < 0)
-//        debug_range_1 = 7;
 }
-
 static void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
@@ -411,15 +396,12 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
         image_draw_masked(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
     }
 }
-
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
     image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         image_draw_masked(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
 
-#define GRANARY_PH_X_RES 18
-#define GRANARY_PH_Y_RES 9
 static int granary_offsets_ph[][2] = {
         {0, 0},
         {16, 9},
@@ -446,20 +428,14 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
         int ri = 0;
         int r_x = 0;
         int r_y = 0;
-        for (int r = 1; r < 9; r++) {
+        for (int r = 1; r < 8; r++) {
             if (b->data.granary.resource_stored[r] > 0) {
                 int rn = b->data.granary.resource_stored[r] / 400; // number of "spots" occupied by food
                 for (int rnn = ri; rnn < ri + rn; rnn++) {
                     // draw sprite on each granary "spot"
-//                    r_x = GRANARY_PH_X_RES * rnn;
-//                    r_y = GRANARY_PH_Y_RES * rnn;
-//                    if (rnn > 3) {
-//                        r_x -= GRANARY_PH_X_RES * 5;
-//                        r_y -= GRANARY_PH_Y_RES * 3;
-//                    }
                     r_x = granary_offsets_ph[rnn][0];
                     r_y = granary_offsets_ph[rnn][1];
-                    image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 111 + r_x, y - 74 + r_y, color_mask);
+                    image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + r_x, y - 74 + r_y, color_mask);
                 }
                 ri += rn;
             }

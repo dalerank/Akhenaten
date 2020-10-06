@@ -54,7 +54,7 @@ static void determine_meeting_center(void) {
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_MEETING)
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_MEETING)
             building_list_small_add(i);
 
     }
@@ -65,7 +65,7 @@ static void determine_meeting_center(void) {
     // determine closest meeting center for hut
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_HUT) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_HUT) {
             int min_dist = 1000;
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
@@ -118,7 +118,7 @@ void map_natives_init(void) {
             }
             building *b = building_create(type, x, y);
             map_building_set(grid_offset, b->id);
-            b->state = BUILDING_STATE_IN_USE;
+            b->state = BUILDING_STATE_VALID;
             switch (type) {
                 case BUILDING_NATIVE_CROPS:
                     b->data.industry.progress = random_bit;
@@ -179,7 +179,7 @@ void map_natives_init_editor(void) {
                 continue;
             }
             building *b = building_create(type, x, y);
-            b->state = BUILDING_STATE_IN_USE;
+            b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_NATIVE_MEETING) {
                 map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
@@ -196,7 +196,7 @@ void map_natives_check_land(void) {
 
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         int size, radius;

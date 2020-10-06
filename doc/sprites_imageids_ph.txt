@@ -202,7 +202,7 @@
 215: fish????
 238: big explosion??
 
-670. merchant
+670: merchant
 774: hippo
 1355: antilope
 1843: hunter (antilope version)

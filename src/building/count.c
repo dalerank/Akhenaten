@@ -50,7 +50,7 @@ void building_count_update(void) {
 
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->house_size)
+        if (b->state != BUILDING_STATE_VALID || b->house_size)
             continue;
 
         int is_entertainment_venue = 0;

@@ -29,7 +29,7 @@ void building_dock_update_open_water_access(void) {
     map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && !b->house_size && b->type == BUILDING_DOCK) {
+        if (b->state == BUILDING_STATE_VALID && !b->house_size && b->type == BUILDING_DOCK) {
             if (map_terrain_is_adjacent_to_open_water(b->x, b->y, 3))
                 b->has_water_access = 1;
             else {

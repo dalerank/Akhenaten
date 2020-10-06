@@ -240,7 +240,7 @@ void figure::advance_route_tile(int roaming_enabled) {
     } else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
         direction = DIR_FIGURE_REROUTE;
 }
-void figure::walk_ticks(int num_ticks, int roaming_enabled) {
+void figure::move_ticks(int num_ticks, int roaming_enabled) {
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
@@ -339,9 +339,6 @@ void figure::roam_set_direction() {
     }
     roam_ticks_until_next_turn = 5;
 }
-void figure::move_ticks(int num_ticks) {
-    walk_ticks(num_ticks, 0);
-}
 void figure::move_ticks_tower_sentry(int num_ticks) {
     while (num_ticks > 0) {
         num_ticks--;
@@ -380,10 +377,10 @@ void figure::follow_ticks(int num_ticks) {
 void figure::roam_ticks(int num_ticks) {
     routing_path_id = 0;
     if (roam_choose_destination == 0) {
-        walk_ticks(num_ticks, 1);
+        move_ticks(num_ticks, true);
         if (direction == DIR_FIGURE_AT_DESTINATION) {
             roam_choose_destination = 1;
-            roam_length = 0;
+//            roam_length = 0;
         } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
             roam_choose_destination = 1;
 

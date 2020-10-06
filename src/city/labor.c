@@ -206,7 +206,7 @@ static void calculate_workers_needed_per_category(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         int category = CATEGORY_FOR_int(b->type);
@@ -223,7 +223,7 @@ static void set_building_worker_weight(void) {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER_HEALTH].buildings);
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
 
         int cat = CATEGORY_FOR_int(b->type);
@@ -330,7 +330,7 @@ static void allocate_workers_to_water(void) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state != BUILDING_STATE_IN_USE || CATEGORY_FOR_int(b->type) != LABOR_CATEGORY_WATER_HEALTH)
+        if (b->state != BUILDING_STATE_VALID || CATEGORY_FOR_int(b->type) != LABOR_CATEGORY_WATER_HEALTH)
             continue;
 
         b->num_workers = 0;
@@ -364,7 +364,7 @@ static void allocate_workers_to_non_water_buildings(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
         int cat = CATEGORY_FOR_int(b->type);
         if (cat < 0)
@@ -401,7 +401,7 @@ static void allocate_workers_to_non_water_buildings(void) {
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE)
+        if (b->state != BUILDING_STATE_VALID)
             continue;
         int cat = CATEGORY_FOR_int(b->type);
         if (cat < 0)
