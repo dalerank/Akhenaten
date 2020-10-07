@@ -195,6 +195,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     if (direction == DIR_FIGURE_AT_DESTINATION) {
         advance_action(NEXT_ACTION);
         direction = previous_tile_direction;
+        destination_building_id = 0;
         return true;
     }
     if (direction == DIR_FIGURE_REROUTE)
@@ -245,24 +246,6 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
         is_ghost = 1;
     return do_gotobuilding(buildid, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
-
-
-//figure::grab_goods() {
-//    // take foods
-//}
-//figure::deliver_goods(building *destination) {
-//    //
-//}
-//figure::load_goods(building *source) {
-//
-//}
-//figure::unload_goods(building *destination) {
-//
-//}
-
-
-
-
 
 void figure::action_perform() {
     if (state) {
@@ -342,19 +325,6 @@ void figure::action_perform() {
                 break;
         }
 
-        // initial action substitution
-        switch (action_state) {
-            case FIGURE_ACTION_125_ROAMING:
-                action_state = ACTION_1_ROAMING; break;
-//            case ACTION_8_IDLE_RECALCULATE:
-//                break;
-//            case ACTION_10_DELIVERING_FOOD:
-//                break;
-            case FIGURE_ACTION_126_ROAMER_RETURNING:
-                action_state = ACTION_2_ROAMERS_RETURNING; break;
-        }
-
-
         //////////////// roamer_action()
         // common action states handling
         switch (action_state) {
@@ -362,15 +332,13 @@ void figure::action_perform() {
                 figure_combat_handle_attack(); break;
             case FIGURE_ACTION_149_CORPSE:
                 figure_combat_handle_corpse(); break;
+            case FIGURE_ACTION_125_ROAMING:
             case ACTION_1_ROAMING:
                 if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
                     break;
                 do_roam();
                 break;
-//            case ACTION_8_IDLE_RECALCULATE:
-//                direction = previous_tile_direction;
-//                break;
-//            case ACTION_11_RETURNING_EMPTY:
+            case FIGURE_ACTION_126_ROAMER_RETURNING:
             case ACTION_2_ROAMERS_RETURNING:
                 if (type == FIGURE_IMMIGRANT || type == FIGURE_EMIGRANT || type == FIGURE_HOMELESS)
                     break;
