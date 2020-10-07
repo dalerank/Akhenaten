@@ -170,6 +170,8 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 
     building_granary_remove_resource(src, max_resource, max_amount);
     *resource = max_resource;
+//    if (GAME_ENV = ENGINE_ENV_PHARAOH)
+//        return max_amount;
     return max_amount / UNITS_PER_LOAD;
 }
 

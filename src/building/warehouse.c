@@ -40,7 +40,6 @@ int building_warehouse_get_space_info(building *warehouse) {
         return WAREHOUSE_FULL;
     }
 }
-
 int building_warehouse_get_amount(building *warehouse, int resource) {
     int loads = 0;
     building *space = warehouse;
@@ -100,7 +99,6 @@ int building_warehouse_add_resource(building *b, int resource) {
     building_warehouse_space_set_image(b, resource);
     return 1;
 }
-
 int building_warehouse_remove_resource(building *warehouse, int resource, int amount) {
     // returns amount still needing removal
     if (warehouse->type != BUILDING_WAREHOUSE)
@@ -132,7 +130,6 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
     }
     return amount;
 }
-
 void building_warehouse_remove_resource_curse(building *warehouse, int amount) {
     if (warehouse->type != BUILDING_WAREHOUSE)
         return;
@@ -156,7 +153,6 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount) {
         building_warehouse_space_set_image(space, resource);
     }
 }
-
 void building_warehouse_space_set_image(building *space, int resource) {
     int image_id;
     if (space->loads_stored <= 0)
@@ -168,7 +164,6 @@ void building_warehouse_space_set_image(building *space, int resource) {
     }
     map_image_set(space->grid_offset, image_id);
 }
-
 void building_warehouse_space_add_import(building *space, int resource) {
     city_resource_add_to_warehouse(resource, 1);
     space->loads_stored++;
@@ -179,7 +174,6 @@ void building_warehouse_space_add_import(building *space, int resource) {
 
     building_warehouse_space_set_image(space, resource);
 }
-
 void building_warehouse_space_remove_export(building *space, int resource) {
     city_resource_remove_from_warehouse(resource, 1);
     space->loads_stored--;
@@ -192,7 +186,6 @@ void building_warehouse_space_remove_export(building *space, int resource) {
 
     building_warehouse_space_set_image(space, resource);
 }
-
 void building_warehouses_add_resource(int resource, int amount) {
     int building_id = city_resource_last_used_warehouse();
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV] && amount > 0; i++) {
@@ -203,9 +196,8 @@ void building_warehouses_add_resource(int resource, int amount) {
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             city_resource_set_last_used_warehouse(building_id);
-            while (amount && building_warehouse_add_resource(b, resource)) {
+            while (amount && building_warehouse_add_resource(b, resource))
                 amount--;
-            }
         }
     }
 }
@@ -226,7 +218,6 @@ int building_warehouse_is_accepting(int resource, building *b) {
         return 0;
     }
 }
-
 int building_warehouse_is_getting(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_warehouse_get_amount(b, resource);
@@ -239,7 +230,6 @@ int building_warehouse_is_getting(int resource, building *b) {
         return 0;
     }
 }
-
 int building_warehouse_is_gettable(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
@@ -251,11 +241,9 @@ int building_warehouse_is_gettable(int resource, building *b) {
         return 0;
     }
 }
-
 int building_warehouse_is_not_accepting(int resource, building *b) {
     return !((building_warehouse_is_accepting(resource, b) || building_warehouse_is_getting(resource, b)));
 }
-
 int building_warehouse_get_acceptable_quantity(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     switch (s->resource_state[resource]) {
@@ -279,7 +267,6 @@ int building_warehouse_get_acceptable_quantity(int resource, building *b) {
             return 0;
     }
 }
-
 
 int building_warehouses_remove_resource(int resource, int amount) {
     int amount_left = amount;
@@ -312,7 +299,6 @@ int building_warehouses_remove_resource(int resource, int amount) {
     }
     return amount - amount_left;
 }
-
 int building_warehouse_for_storing(int src_building_id, int x, int y, int resource, int distance_from_entry, int road_network_id, int *understaffed, map_point *dst) {
     int min_dist = 10000;
     int min_building_id = 0;
@@ -360,7 +346,6 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
 
     return min_building_id;
 }
-
 int building_warehouse_for_getting(building *src, int resource, map_point *dst) {
     int min_dist = 10000;
     building *min_building = 0;
@@ -434,7 +419,6 @@ static int determine_granary_accept_foods(int resources[8], int road_network) {
     }
     return can_accept;
 }
-
 static int determine_granary_get_foods(int resources[8], int road_network) {
     if (scenario_property_rome_supplies_wheat())
         return 0;
@@ -466,7 +450,6 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
     }
     return can_get;
 }
-
 static int contains_non_stockpiled_food(building *space, const int *resources) {
     if (space->id <= 0)
         return 0;
@@ -486,7 +469,6 @@ static int contains_non_stockpiled_food(building *space, const int *resources) {
     }
     return 0;
 }
-
 int building_warehouse_determine_worker_task(building *warehouse, int *resource) {
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50)
@@ -506,7 +488,6 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             if (space->id > 0 && space->loads_stored > 0) {
                 if (space->subtype.warehouse_resource_id == r)
                     loads_stored += space->loads_stored;
-
             }
         }
         int room = 0;
@@ -516,10 +497,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             if (space->id > 0) {
                 if (space->loads_stored <= 0)
                     room += 4;
-
                 if (space->subtype.warehouse_resource_id == r)
                     room += 4 - space->loads_stored;
-
             }
         }
         if (room >= 4 &&

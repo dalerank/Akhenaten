@@ -169,7 +169,7 @@ void figure::entertainer_action() {
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
                 } else
-                    state = FIGURE_STATE_DEAD;
+                    kill();
             }
             break;
         case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
@@ -201,9 +201,9 @@ void figure::entertainer_action() {
                         destination_y = y_road;
                         roam_length = 0;
                     } else
-                        state = FIGURE_STATE_DEAD;
+                        kill();
                 } else
-                    state = FIGURE_STATE_DEAD;
+                    kill();
             }
             is_ghost = 1;
             break;
@@ -211,16 +211,16 @@ void figure::entertainer_action() {
             is_ghost = 0;
             roam_length++;
             if (roam_length >= 3200)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 entertainer_update_shows();
-                state = FIGURE_STATE_DEAD;
+                kill();
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
             break;
         case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
@@ -233,7 +233,7 @@ void figure::entertainer_action() {
                     destination_x = x_road;
                     destination_y = y_road;
                 } else
-                    state = FIGURE_STATE_DEAD;
+                    kill();
             }
             roam_ticks(speed_factor);
             break;
@@ -241,7 +241,7 @@ void figure::entertainer_action() {
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-                state = FIGURE_STATE_DEAD;
+                kill();
             }
             break;
     }

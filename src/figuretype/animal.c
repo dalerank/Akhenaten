@@ -403,7 +403,7 @@ void figure::hippodrome_horse_action() {
 //    f->is_ghost = 0;
 //    figure_image_increase_offset(8);
 //    if (!(building_get(building_id)->state)) {
-//        f->state = FIGURE_STATE_DEAD;
+//        f->kill();
 //        return;
 //    }
 //    switch (f->action_state) {
@@ -472,7 +472,7 @@ void figure::hippodrome_horse_action() {
 //
 //            f->wait_ticks++;
 //            if (f->wait_ticks > 150)
-//                f->state = FIGURE_STATE_DEAD;
+//                f->kill();
 //
 //            break;
 //    }

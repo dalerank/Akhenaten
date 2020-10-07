@@ -147,7 +147,7 @@ static figure_action_property action_lookup[] = {
 
 void figure::advance_action(short NEXT_ACTION) {
     if (NEXT_ACTION == 0)
-        state = FIGURE_STATE_DEAD;
+        kill();
     else
         action_state = NEXT_ACTION;
 }
@@ -179,11 +179,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
 
     // set up destination and move!!!
     if (use_cross_country) {
-//        if (!destination_x && !destination_y) {
             set_cross_country_destination(x, y);
-//            roam_length = 0;
-//            route_remove();
-//        }
         if (move_ticks_cross_country(1) == 1) {
             advance_action(NEXT_ACTION);
             return true;
@@ -198,6 +194,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     // check if destination is reached/figure is lost/etc.
     if (direction == DIR_FIGURE_AT_DESTINATION) {
         advance_action(NEXT_ACTION);
+        direction = previous_tile_direction;
         return true;
     }
     if (direction == DIR_FIGURE_REROUTE)
@@ -213,43 +210,12 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         bool found_road = false;
         if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
             building *main = building_main(dest);
-            if (main->type == BUILDING_WAREHOUSE)
-                found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
-            else
-                found_road = false;
-//            building *top = building_top_xy(main);
-//            int top_x = main->x;
-//            int top_y = main->y;
-//            switch (main->subtype.orientation) {
-//                case 1:
-//                    top_y = top_y - 3 + 1;
-//                    break;
-//                case 2:
-//                    top_x = top_x - 3 + 1;
-//                    top_y = top_y - 3 + 1;
-//                    break;
-//                case 3:
-//                    top_x = top_x - 3 + 1;
-//                    break;
-//                default:
-//                    break;
-//            }
-//            found_road = map_closest_road_within_radius(top_x, top_y, 3, 2, &x, &y);
-//            if (main->road_access_x && main->road_access_y) {
-//                found_road = true;
-//                x = main->road_access_x;
-//                y = main->road_access_y;
-//            } else
-//                found_road = map_closest_road_within_radius(dest->x, dest->y, 3, 2, &x, &y);
+            found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
         } else
             found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
 
         // found any road...?
         if (found_road) {
-//            if (destination_building_id == 0) {
-//                destination_building_id = destid;
-//                route_remove();
-//            }
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
@@ -317,7 +283,6 @@ void figure::action_perform() {
         use_cross_country = 0;
         is_ghost = 0;
 
-
         // base lookup data
         auto action_props = action_lookup[type];
         if (action_props.terrain_usage != -1)
@@ -356,6 +321,13 @@ void figure::action_perform() {
                 if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
                     return figure_delete();
                 break;
+            case FIGURE_CART_PUSHER:
+            case FIGURE_WAREHOUSEMAN:
+                if (destination_building_id)
+                    break;
+                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+                    return figure_delete();
+                break;
             case FIGURE_LABOR_SEEKER:
             case FIGURE_MARKET_BUYER:
                 if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
@@ -374,7 +346,7 @@ void figure::action_perform() {
         switch (action_state) {
             case FIGURE_ACTION_125_ROAMING:
                 action_state = ACTION_1_ROAMING; break;
-//            case ACTION_8_WAITING:
+//            case ACTION_8_IDLE_RECALCULATE:
 //                break;
 //            case ACTION_10_DELIVERING_FOOD:
 //                break;
@@ -395,7 +367,7 @@ void figure::action_perform() {
                     break;
                 do_roam();
                 break;
-//            case ACTION_8_WAITING:
+//            case ACTION_8_IDLE_RECALCULATE:
 //                direction = previous_tile_direction;
 //                break;
 //            case ACTION_11_RETURNING_EMPTY:
@@ -406,8 +378,6 @@ void figure::action_perform() {
                 break;
         }
 
-//        if (state == FIGURE_STATE_NONE)
-//            return;
 
         ////////////
 
@@ -420,7 +390,7 @@ void figure::action_perform() {
             case 6: explosion_cloud_action();           break;
             case 7: tax_collector_action();             break;
             case 8: engineer_action();                  break;
-            case 9: cartpusher_action();              break; // warehouseman_action !!!!
+            case 9: warehouseman_action();              break; // warehouseman_action !!!!
             case 10: prefect_action();                  break; //10
             case 11: //soldier_action();                  break;
             case 12: //soldier_action();                  break;

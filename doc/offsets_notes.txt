@@ -79,16 +79,16 @@ unloading
 returning
 
 fire 10		1	11	fire marshal
-clay 4		2	9	 delivering
-clay 4		3	9	 delivering
-pott 4 *	4	15	returning empty from yard
-pott 4		5	9	 delivering
-pott 4		6	9	 delivering
+clay 4		2	9	 delivering clay
+clay 4		3	9	 delivering clay
+pott 4 *	4	15	returning empty from yard to pottery
+pott 4		5	9	 delivering clay
+pott 4		6	9	 delivering pottery
 ------		7	-	--
 labr 5		8	2	returning from patrol
 yard 9		9	8	waiting...
 ------		10	-	--
-???? 4		11	9	 delivering
+pott 4		11	9	 delivering pottery
 ------		12	-	--
 labr 5		13	1	patrol
 labr 5		14	1	patrol
@@ -163,8 +163,6 @@ size = 3
 65 .. __ __ __ .. ..
 66 .. __ __ __ .. ..
 67 .. .. .. .. .. ..
-
-
 
 
 ====================

@@ -374,7 +374,8 @@ void figure::follow_ticks(int num_ticks) {
     }
 }
 void figure::roam_ticks(int num_ticks) {
-    routing_path_id = 0;
+//    routing_path_id = 0;
+    route_remove();
     if (roam_choose_destination == 0) {
         move_ticks(num_ticks, true);
         if (direction == DIR_FIGURE_AT_DESTINATION) {

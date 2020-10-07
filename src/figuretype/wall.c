@@ -49,10 +49,10 @@ void figure::ballista_action() {
     current_height = 45;
 
     if (b->state != BUILDING_STATE_VALID || b->figure_id4 != id)
-        state = FIGURE_STATE_DEAD;
+        kill();
 
     if (b->num_workers <= 0 || b->figure_id <= 0)
-        state = FIGURE_STATE_DEAD;
+        kill();
 
     map_figure_remove();
     switch (city_view_orientation()) {
@@ -78,7 +78,7 @@ void figure::ballista_action() {
 
     switch (action_state) {
         case FIGURE_ACTION_149_CORPSE:
-            state = FIGURE_STATE_DEAD;
+            kill();
             break;
         case FIGURE_ACTION_180_BALLISTA_CREATED:
             wait_ticks++;
@@ -196,7 +196,7 @@ void figure::tower_sentry_action() {
     height_adjusted_ticks = 10;
 //    max_roam_length = 800;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
 //    figure_image_increase_offset(12);
 
@@ -250,7 +250,7 @@ void figure::tower_sentry_action() {
             if (direction == DIR_FIGURE_AT_DESTINATION)
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
@@ -271,7 +271,7 @@ void figure::tower_sentry_action() {
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             break;
     }
@@ -344,7 +344,7 @@ void figure_kill_tower_sentries_at(int x, int y) {
         figure *f = figure_get(i);
         if (!f->is_dead() && f->type == FIGURE_TOWER_SENTRY) {
             if (calc_maximum_distance(f->tile_x, f->tile_y, x, y) <= 1)
-                f->state = FIGURE_STATE_DEAD;
+                f->kill();
 
         }
     }

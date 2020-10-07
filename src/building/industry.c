@@ -138,7 +138,6 @@ void building_curse_farms(int big_curse) {
 void building_workshop_add_raw_material(building *b) {
     if (b->id > 0 && building_is_workshop(b->type))
         b->loads_stored++; // BUG: any raw material accepted
-
 }
 
 int building_get_workshop_for_raw_material_with_room(int x, int y, int resource, int distance_from_entry,

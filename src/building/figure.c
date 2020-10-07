@@ -888,6 +888,8 @@ static void spawn_figure_industry(building *b) {
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
+//            f->resource_quantity = 100;
+            f->loads_sold_or_carrying = 1;
         }
     }
 }
@@ -979,7 +981,7 @@ static void spawn_figure_dock(building *b) {
             // too many dockers, kill one of them
             for (int i = 2; i >= 0; i--) {
                 if (b->data.dock.docker_ids[i]) {
-                    figure_get(b->data.dock.docker_ids[i])->state = FIGURE_STATE_DEAD;
+                    figure_get(b->data.dock.docker_ids[i])->kill();
                     break;
                 }
             }
@@ -1003,7 +1005,6 @@ static void spawn_figure_warehouse(building *b) {
         space = building_next(space);
         if (space->id)
             space->show_on_problem_overlay = b->show_on_problem_overlay;
-
     }
     map_point road;
     if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, &road) ||
@@ -1021,6 +1022,8 @@ static void spawn_figure_warehouse(building *b) {
                 f->collecting_item_id = resource;
             } else {
                 f->resource_id = resource;
+//                f->resource_quantity = 100;
+                f->loads_sold_or_carrying = 1;
             }
             b->figure_id = f->id;
             f->building_id = b->id;

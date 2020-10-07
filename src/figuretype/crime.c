@@ -57,7 +57,7 @@ static void generate_rioter(building *b) {
             f->destination_y = y_target;
             f->destination_building_id = target_building_id;
         } else {
-            f->state = FIGURE_STATE_DEAD;
+            f->kill();
         }
     }
     building_destroy_by_rioter(b);
@@ -155,11 +155,11 @@ void figure::protestor_action() {
 //    figure_image_increase_offset(64);
 //    cart_image_id = 0;
 //    if (action_state == FIGURE_ACTION_149_CORPSE)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
     wait_ticks++;
     if (wait_ticks > 200) {
-        state = FIGURE_STATE_DEAD;
+        kill();
         anim_frame = 0;
     }
     if (action_state == FIGURE_ACTION_149_CORPSE)
@@ -172,11 +172,11 @@ void figure::criminal_action() {
 //    figure_image_increase_offset(32);
 //    cart_image_id = 0;
 //    if (action_state == FIGURE_ACTION_149_CORPSE)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
     wait_ticks++;
     if (wait_ticks > 200) {
-        state = FIGURE_STATE_DEAD;
+        kill();
         anim_frame = 0;
     }
     if (action_state == FIGURE_ACTION_149_CORPSE)
@@ -204,7 +204,7 @@ void figure::rioter_action() {
                     destination_building_id = building_id;
                     route_remove();
                 } else
-                    state = FIGURE_STATE_DEAD;
+                    kill();
             }
             break;
         case FIGURE_ACTION_121_RIOTER_MOVING:
@@ -219,7 +219,7 @@ void figure::rioter_action() {
                     destination_building_id = building_id;
                     route_remove();
                 } else {
-                    state = FIGURE_STATE_DEAD;
+                    kill();
                 }
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
                 action_state = FIGURE_ACTION_120_RIOTER_CREATED;

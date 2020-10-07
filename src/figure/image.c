@@ -56,13 +56,31 @@ void figure::figure_image_update() {
 }
 void figure::cart_update_image() {
 
-    // to rework?????
-    if (loads_sold_or_carrying == 1) {
-        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
+    // determine cart sprite
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
+        if (loads_sold_or_carrying > 0) {
+            short amount_offset = 2;
+            if (loads_sold_or_carrying <= 2)
+                amount_offset = 0;
+            else if (loads_sold_or_carrying <= 4)
+                amount_offset = 1;
+            cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
+
+            // adjust sprite for single-load resources
+            short res_single_load[] = {12, 24, 25, 26, 27, 28, 30, 35, 999};
+            for (int i = 0; res_single_load[i] < 999; i++)
+                if (resource_id > res_single_load[i])
+                    cart_image_id -= 16;
+        }
     } else {
-        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
-        cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
-//        set_cart_graphic();
+        if (loads_sold_or_carrying == 1) {
+            cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 +
+                            resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
+        } else {
+            cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
+            cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
+        }
     }
 
     int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);

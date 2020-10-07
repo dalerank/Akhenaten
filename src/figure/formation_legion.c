@@ -214,7 +214,7 @@ static void kill_soldiers(formation *m, int kill_percentage) {
             if (!f->is_dead()) {
                 if (soldiers_to_kill) {
                     soldiers_to_kill--;
-                    f->state = FIGURE_STATE_DEAD;
+                    f->kill();
                 }
             }
         }

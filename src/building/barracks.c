@@ -164,7 +164,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
         f->destination_x = road.x;
         f->destination_y = road.y;
     } else {
-        f->state = FIGURE_STATE_DEAD;
+        f->kill();
     }
     tower->figure_id = f->id;
     f->building_id = tower->id;

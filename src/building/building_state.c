@@ -314,7 +314,24 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     buf->skip(2);
     b->prev_part_building_id = buf->read_i16();
     b->next_part_building_id = buf->read_i16();
-    b->loads_stored = buf->read_i16();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        int resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
+
+        // ignore partial loads (for now....)
+        if (resource_quantity > 350)
+            resource_quantity = 400;
+        else if (resource_quantity > 250)
+            resource_quantity = 300;
+        else if (resource_quantity > 150)
+            resource_quantity = 200;
+        else if (resource_quantity > 50)
+            resource_quantity = 100;
+        else
+            resource_quantity = 0;
+
+        b->loads_stored = resource_quantity / 100;
+    } else
+        b->loads_stored = buf->read_i16();
     buf->skip(1);
     b->has_well_access = buf->read_u8();
 

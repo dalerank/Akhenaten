@@ -225,7 +225,7 @@ void figure::figure_combat_handle_corpse() {
     wait_ticks++;
     if (wait_ticks >= 128) {
         wait_ticks = 127;
-        state = FIGURE_STATE_DEAD;
+        kill();
     }
 }
 

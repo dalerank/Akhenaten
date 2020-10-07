@@ -171,14 +171,14 @@ void figure::shipwreck_action() {
     }
     wait_ticks++;
     if (wait_ticks > 2000)
-        state = FIGURE_STATE_DEAD;
+        kill();
 
     sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + anim_frame / 16;
 }
 void figure::fishing_boat_action() {
     building *b = building_get(building_id);
 //    if (b->state != BUILDING_STATE_VALID)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
     if (action_state != FIGURE_ACTION_190_FISHING_BOAT_CREATED && b->data.industry.fishing_boat_id != id) {
         map_point tile;
@@ -193,7 +193,7 @@ void figure::fishing_boat_action() {
             source_y = tile.y;
             route_remove();
         } else {
-            state = FIGURE_STATE_DEAD;
+            kill();
         }
     }
 //    is_ghost = 0;
@@ -261,7 +261,7 @@ void figure::fishing_boat_action() {
             else if (direction == DIR_FIGURE_LOST) {
                 // cannot reach grounds
                 city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
-                state = FIGURE_STATE_DEAD;
+                kill();
             }
             break;
         case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: {
@@ -296,7 +296,7 @@ void figure::fishing_boat_action() {
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             break;
     }

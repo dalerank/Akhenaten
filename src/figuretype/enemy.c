@@ -168,7 +168,7 @@ void figure::enemy_action(formation *m) {
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_LOST) {
-                state = FIGURE_STATE_DEAD;
+                kill();
             }
             break;
         case FIGURE_ACTION_151_ENEMY_INITIAL:
@@ -524,7 +524,7 @@ void figure::enemy_gladiator_action() {
                     destination_building_id = building_id;
                     route_remove();
                 } else {
-                    state = FIGURE_STATE_DEAD;
+                    kill();
                 }
             }
             break;

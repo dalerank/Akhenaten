@@ -18,7 +18,7 @@ void figure::market_buyer_action() {
 //
 //    building *b = building_get(building_id);
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
 //    figure_image_increase_offset(12);
     switch (action_state) {
@@ -27,11 +27,11 @@ void figure::market_buyer_action() {
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 if (collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(destination_building_id))
-                        state = FIGURE_STATE_DEAD;
+                        kill();
 
                 } else {
                     if (!take_food_from_granary(building_id, destination_building_id))
-                        state = FIGURE_STATE_DEAD;
+                        kill();
 
                 }
                 action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
@@ -48,7 +48,7 @@ void figure::market_buyer_action() {
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
 
@@ -166,16 +166,16 @@ void figure::delivery_boy_action() {
 
     figure *leader = figure_get(leading_figure_id);
 //    if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 //    else {
         if (leader->state == FIGURE_STATE_ALIVE) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
                 follow_ticks(1);
             else
-                state = FIGURE_STATE_DEAD;
+                kill();
         } else { // leader arrived at market, drop resource at market
             building_get(building_id)->data.market.inventory[collecting_item_id] += 100;
-            state = FIGURE_STATE_DEAD;
+            kill();
         }
 //    }
     if (leader->is_ghost)

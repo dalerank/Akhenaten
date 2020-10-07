@@ -22,7 +22,7 @@ void figure::school_child_action()
 //    }
 //    building *b = building_get(building_id);
 //    if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_SCHOOL)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
 //    figure_image_increase_offset(12);
     switch (action_state) {
@@ -31,7 +31,7 @@ void figure::school_child_action()
             is_ghost = 0;
             roam_length++;
             if (roam_length >= max_roam_length)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             roam_ticks(2);
             break;
@@ -46,7 +46,7 @@ void figure::school_child_action()
 ////    max_roam_length = 192;
 ////    building *b = building_get(building_id);
 ////    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-////        state = FIGURE_STATE_DEAD;
+////        kill();
 //
 ////    figure_image_increase_offset(12);
 ////    roamer_action(1);
@@ -58,7 +58,7 @@ void figure::school_child_action()
 ////    use_cross_country = 0;
 ////    max_roam_length = 128;
 ////    if (building_get(building_id)->state != BUILDING_STATE_VALID)
-////        state = FIGURE_STATE_DEAD;
+////        kill();
 //
 ////    figure_image_increase_offset(12);
 ////    roamer_action(1);
@@ -93,7 +93,7 @@ void figure::market_trader_action()
 //    max_roam_length = 384;
     building *market = building_get(building_id);
 //    if (market->state != BUILDING_STATE_VALID || market->figure_id != id)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 
 //    figure_image_increase_offset(12);
     if (action_state == FIGURE_ACTION_125_ROAMING) {
@@ -115,7 +115,7 @@ void figure::tax_collector_action()
 //    use_cross_country = 0;
 //    max_roam_length = 512;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        state = FIGURE_STATE_DEAD;
+//        kill();
 //
 //    figure_image_increase_offset(12);
 
@@ -131,7 +131,7 @@ void figure::tax_collector_action()
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
                 } else {
-                    state = FIGURE_STATE_DEAD;
+                    kill();
                 }
             }
             break;
@@ -141,7 +141,7 @@ void figure::tax_collector_action()
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
-                    state = FIGURE_STATE_DEAD;
+                    kill();
                 } else {
                     action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
                     init_roaming();
@@ -160,7 +160,7 @@ void figure::tax_collector_action()
                     destination_x = x_road;
                     destination_y = y_road;
                 } else {
-                    state = FIGURE_STATE_DEAD;
+                    kill();
                 }
             }
             roam_ticks(1);
@@ -173,7 +173,7 @@ void figure::tax_collector_action()
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                state = FIGURE_STATE_DEAD;
+                kill();
 
             break;
     }

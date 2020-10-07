@@ -10,7 +10,7 @@
 9:Straw
 10:Weapons
 11:Clay
-12:Bricks
+  12:Bricks
 13:Pottery
 14:Barley
 15:Beer
@@ -22,16 +22,16 @@
 21:Gold
 22:Reeds
 23:Papyrus
-24:Stone
-25:Limestone
-26:Granite
-27:[Unused12]
+  24:Stone
+  25:Limestone
+  26:Granite
+  27:[Unused12]
 28:Chariots
 29:Copper
-30:Sandstone
+  30:Sandstone
 31:Oil
 32:Henna
 33:Paint
 34:Lamps
-35:Marble
+  35:Marble
 36:[????]

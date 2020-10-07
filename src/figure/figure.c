@@ -368,12 +368,26 @@ void figure::load(buffer *buf) {
     f->trader_amount_bought = buf->read_u8();
     f->name = buf->read_i16();
     f->terrain_usage = buf->read_u8();
-    f->loads_sold_or_carrying = buf->read_u8();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        f->resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
-        f->is_boat = 0;
+        f->is_boat = buf->read_u8();
+
+        int resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
+
+        // ignore partial loads (for now....)
+        if (resource_quantity > 350)
+            resource_quantity = 400;
+        else if (resource_quantity > 250)
+            resource_quantity = 300;
+        else if (resource_quantity > 150)
+            resource_quantity = 200;
+        else if (resource_quantity > 50)
+            resource_quantity = 100;
+        else
+            resource_quantity = 0;
+
+        f->loads_sold_or_carrying = resource_quantity / 100;
     } else {
-        f->resource_quantity = 0;
+        f->loads_sold_or_carrying = buf->read_u8();
         f->is_boat = buf->read_u8();
     }
     f->height_adjusted_ticks = buf->read_u8();
