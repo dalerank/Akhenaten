@@ -36,20 +36,36 @@ int map_has_road_access(int x, int y, int size, map_point *road) {
 }
 
 int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road) {
-    switch (rotation) {
-        case 1:
-            x = x - size + 1;
-            break;
-        case 2:
-            x = x - size + 1;
-            y = y - size + 1;
-            break;
-        case 3:
-            y = y - size + 1;
-            break;
-        default:
-            break;
-    }
+//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//        switch (rotation) {
+//            case 1:
+//                y = y - size + 1;
+//                break;
+//            case 2:
+//                x = x - size + 1;
+//                y = y - size + 1;
+//                break;
+//            case 3:
+//                x = x - size + 1;
+//                break;
+//            default:
+//                break;
+//        }
+//    else
+        switch (rotation) {
+            case 1:
+                x = x - size + 1;
+                break;
+            case 2:
+                x = x - size + 1;
+                y = y - size + 1;
+                break;
+            case 3:
+                y = y - size + 1;
+                break;
+            default:
+                break;
+        }
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
     find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);

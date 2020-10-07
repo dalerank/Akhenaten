@@ -345,9 +345,8 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
         progress_on_tile++;
         if (progress_on_tile < 15)
             advance_tick();
-        else {
+        else
             progress_on_tile = 15;
-        }
     }
 }
 void figure::follow_ticks(int num_ticks) {

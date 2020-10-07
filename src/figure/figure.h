@@ -300,10 +300,10 @@ public:
     void get_trade_center_location(int *_x, int *_y);
     int deliver_import_resource(building *dock);
     int fetch_export_resource(building *dock);
-    void set_cart_graphic();
+//    void set_cart_graphic();
 
     // cartpusher.c
-    void set_destination(int action, int building_id, int x_dst, int y_dst);
+//    void set_destination(int action, int building_id, int x_dst, int y_dst);
     void determine_cartpusher_destination(building *b, int road_network_id);
     void determine_cartpusher_destination_food(int road_network_id);
     void cart_update_image();
@@ -311,7 +311,7 @@ public:
     void determine_granaryman_destination(int road_network_id);
     void remove_resource_from_warehouse();
     void determine_warehouseman_destination(int road_network_id);
-    void set_cartpusher_graphic();
+//    void set_cartpusher_graphic();
 
     // market.c
     int create_delivery_boy(int leader_id);

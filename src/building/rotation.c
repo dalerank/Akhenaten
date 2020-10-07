@@ -38,7 +38,8 @@ void building_rotation_force_two_orientations(void) { // for composite buildings
 }
 
 int building_rotation_get_rotation(void) {
-    return rotation;
+    return 0;
+//    return rotation;
 }
 
 void building_rotation_rotate_by_hotkey(void) {

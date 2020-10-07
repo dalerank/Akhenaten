@@ -150,6 +150,7 @@ int building_find(int type);
 building *building_get(int id);
 building *building_main(building *b);
 building *building_next(building *b);
+building *building_top_xy(building *b);
 building *building_create(int type, int x, int y);
 
 void building_clear_related_data(building *b);

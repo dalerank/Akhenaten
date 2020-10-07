@@ -48,10 +48,23 @@ building *building_main(building *b) {
     for (int guard = 0; guard < 9; guard++) {
         if (b->prev_part_building_id <= 0)
             return b;
-
         b = &all_buildings[b->prev_part_building_id];
     }
     return &all_buildings[0];
+}
+building *building_top_xy(building *b) {
+    b = building_main(b);
+    int x = b->x;
+    int y = b->y;
+    building *top = b;
+    while (b->next_part_building_id <= 0) {
+        b = building_next(b);
+        if (b->x < x)
+            top = b;
+        if (b->y < y)
+            top = b;
+    }
+    return top;
 }
 building *building_next(building *b) {
     return &all_buildings[b->next_part_building_id];

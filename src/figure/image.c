@@ -28,6 +28,7 @@ static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
 #include "core/image.h"
+#include "game/resource.h"
 
 void figure::image_set_animation(int group, int offset, int max_frames, int duration) {
     anim_base = image_id_from_group(group);
@@ -55,13 +56,14 @@ void figure::figure_image_update() {
 }
 void figure::cart_update_image() {
 
-
     // to rework?????
-//    if (loads_sold_or_carrying == 1) {
-//        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
-//    } else
+    if (loads_sold_or_carrying == 1) {
+        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
+    } else {
+        cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
+        cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
 //        set_cart_graphic();
-
+    }
 
     int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);
 

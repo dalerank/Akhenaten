@@ -872,8 +872,8 @@ static void spawn_figure_mission_post(building *b) {
 }
 
 static void spawn_figure_industry(building *b) {
-    if (true) // todo: floodplain farms
-        return;
+//    if (true) // todo: floodplain farms
+//        return;
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {

@@ -317,7 +317,7 @@ void figure::docker_action() {
                 if (wait_ticks >= 80) {
                     action_state = FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE;
                     wait_ticks = 0;
-                    set_cart_graphic();
+//                    set_cart_graphic();
                     b->data.dock.queued_docker_id = 0;
                 }
             } else {
@@ -339,7 +339,7 @@ void figure::docker_action() {
             }
             break;
         case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
-            set_cart_graphic();
+//            set_cart_graphic();
             if (b->data.dock.queued_docker_id <= 0) {
                 b->data.dock.queued_docker_id = id;
                 wait_ticks = 0;
@@ -363,7 +363,7 @@ void figure::docker_action() {
             anim_frame = 0;
             break;
         case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
-            set_cart_graphic();
+//            set_cart_graphic();
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)
                 action_state = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
@@ -391,7 +391,7 @@ void figure::docker_action() {
 
             break;
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
-            set_cart_graphic();
+//            set_cart_graphic();
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 action_state = FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE;
@@ -406,7 +406,7 @@ void figure::docker_action() {
 
             break;
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
-            set_cart_graphic();
+//            set_cart_graphic();
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)
                 action_state = FIGURE_ACTION_132_DOCKER_IDLING;
@@ -417,7 +417,7 @@ void figure::docker_action() {
 
             break;
         case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
-            set_cart_graphic();
+//            set_cart_graphic();
             wait_ticks++;
             if (wait_ticks > 10) {
                 int trade_city_id;

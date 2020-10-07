@@ -141,6 +141,8 @@ static figure_action_property action_lookup[] = {
 };
 
 #include "core/image.h"
+#include "map/building.h"
+#include "map/grid.h"
 
 
 void figure::advance_action(short NEXT_ACTION) {
@@ -207,8 +209,43 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
 bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     int x, y;
     building *dest = building_get(destid);
-    if (stop_at_road)
-        if (map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y)) {
+    if (stop_at_road) {
+        bool found_road = false;
+        if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
+            building *main = building_main(dest);
+            if (main->type == BUILDING_WAREHOUSE)
+                found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
+            else
+                found_road = false;
+//            building *top = building_top_xy(main);
+//            int top_x = main->x;
+//            int top_y = main->y;
+//            switch (main->subtype.orientation) {
+//                case 1:
+//                    top_y = top_y - 3 + 1;
+//                    break;
+//                case 2:
+//                    top_x = top_x - 3 + 1;
+//                    top_y = top_y - 3 + 1;
+//                    break;
+//                case 3:
+//                    top_x = top_x - 3 + 1;
+//                    break;
+//                default:
+//                    break;
+//            }
+//            found_road = map_closest_road_within_radius(top_x, top_y, 3, 2, &x, &y);
+//            if (main->road_access_x && main->road_access_y) {
+//                found_road = true;
+//                x = main->road_access_x;
+//                y = main->road_access_y;
+//            } else
+//                found_road = map_closest_road_within_radius(dest->x, dest->y, 3, 2, &x, &y);
+        } else
+            found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
+
+        // found any road...?
+        if (found_road) {
 //            if (destination_building_id == 0) {
 //                destination_building_id = destid;
 //                route_remove();
@@ -216,11 +253,11 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
-                advance_action(FAIL_ACTION); // kill dude?
+                advance_action(FAIL_ACTION); // kill dude!!!
             else
                 advance_action(NEXT_ACTION); // don't kill if it's not *requiring* roads, was just looking for one
         }
-    else {
+    } else {
         if (dest->state != BUILDING_STATE_VALID)
             advance_action(FAIL_ACTION);
         else
@@ -244,7 +281,6 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
 }
 
 
-//
 //figure::grab_goods() {
 //    // take foods
 //}
@@ -257,26 +293,6 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
 //figure::unload_goods(building *destination) {
 //
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -300,7 +316,6 @@ void figure::action_perform() {
         max_roam_length = 0;
         use_cross_country = 0;
         is_ghost = 0;
-
 
 
         // base lookup data
