@@ -468,7 +468,7 @@ static void draw_animation(int x, int y, int grid_offset) {
                 if (animation_offset > img->num_animation_sprites)
                     animation_offset = img->num_animation_sprites;
 
-                image *img;
+//                image *img;
                 switch (b->type) {
                     case BUILDING_GRANARY:
                         img = (image*)image_get(image_id_from_group(GROUP_GRANARY_ANIM_PH) + animation_offset - 1);

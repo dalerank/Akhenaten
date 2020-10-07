@@ -23,44 +23,6 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
         *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
     }
 }
-//static int tile_progress_to_pixel_offset_x(int direction, int progress) {
-//    if (progress >= 15)
-//        return 0;
-//
-//    switch (direction) {
-//        case DIR_0_TOP_RIGHT:
-//        case DIR_2_BOTTOM_RIGHT:
-//            return 2 * progress - 28;
-//        case DIR_1_RIGHT:
-//            return 4 * progress - 56;
-//        case DIR_4_BOTTOM_LEFT:
-//        case DIR_6_TOP_LEFT:
-//            return 28 - 2 * progress;
-//        case DIR_5_LEFT:
-//            return 56 - 4 * progress;
-//        default:
-//            return 0;
-//    }
-//}
-//static int tile_progress_to_pixel_offset_y(int direction, int progress) {
-//    if (progress >= 15)
-//        return 0;
-//
-//    switch (direction) {
-//        case DIR_0_TOP_RIGHT:
-//        case DIR_6_TOP_LEFT:
-//            return 14 - progress;
-//        case DIR_2_BOTTOM_RIGHT:
-//        case DIR_4_BOTTOM_LEFT:
-//            return progress - 14;
-//        case DIR_3_BOTTOM:
-//            return 2 * progress - 28;
-//        case DIR_7_TOP:
-//            return 28 - 2 * progress;
-//        default:
-//            return 0;
-//    }
-//}
 
 #include "widget/city_building_ghost.h"
 #include "building/properties.h"
