@@ -36,6 +36,11 @@ static void draw_text_shadow(uint8_t *str, int _x, int _y, color_t color) {
 }
 
 void figure::draw_debug() {
+
+//    if (id == 6)
+//        return;
+
+
     building *b = building_get(building_id);
     building *bdest = building_get(destination_building_id);
 
@@ -44,6 +49,8 @@ void figure::draw_debug() {
     coords = city_view_grid_offset_to_pixel(tile_x, tile_y);
     adjust_pixel_offset(&coords.x, &coords.y);
 
+    coords.x -= 10;
+
     string_from_int(str, coords.x, 0);
     text_draw(str, coords.x, coords.y, FONT_NORMAL_PLAIN, 0);
     string_from_int(str, coords.y, 0);
@@ -51,32 +58,34 @@ void figure::draw_debug() {
     string_from_int(str, grid_offset_figure, 0);
     text_draw(str, coords.x, coords.y+20, FONT_NORMAL_PLAIN, 0);
 
-    coords.x -= 10;
     coords.y -= 80;
 
+    // id
     string_from_int(str, id, 0);
-//    string_from_int(str, grid_offset_figure, 0);
     draw_text_shadow(str, coords.x, coords.y, COLOR_WHITE);
 
+    // type
     string_from_int(str, type, 0);
     draw_text_shadow(str, coords.x, coords.y+10, COLOR_BLUE);
 
-//    string_from_int(str, action_state_untouched, 0);
-//    draw_text_shadow(str, coords.x-20, coords.y+20, COLOR_RED);
-//    draw_text_shadow((uint8_t*)string_from_ascii("   :"), coords.x, coords.y+20, COLOR_RED);
+    // action state
     string_from_int(str, action_state, 0);
     draw_text_shadow(str, coords.x, coords.y+20, COLOR_RED);
 
+    // wait_ticks
+    string_from_int(str, wait_ticks, 0);
+    draw_text_shadow(str, coords.x, coords.y+30, COLOR_WHITE);
+
     if (cart_image_id && resource_id) {
         string_from_int(str, resource_id, 0);
-        draw_text_shadow(str, coords.x+40, coords.y+10, COLOR_GREEN);
-//        string_from_int(str, resource_id, 0);
-//        draw_text_shadow(str, coords.x+40, coords.y-30, COLOR_BLUE);
-        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
-    } else {
-        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+10, COLOR_GREEN);
-        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
+        draw_text_shadow(str, coords.x+25, coords.y+10, COLOR_GREEN);
+        string_from_int(str, loads_counter, 0);
+        draw_text_shadow(str, coords.x+25, coords.y+20, COLOR_GREEN);
     }
+//    else {
+//        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+10, COLOR_GREEN);
+//        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
+//    }
 
 //    coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
 //    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
@@ -252,6 +261,8 @@ void figure::draw_map_flag(int x, int y) {
 
 }
 
+#include "window/city.h"
+
 void figure::adjust_pixel_offset(int *x, int *y) {
     // determining x/y offset on tile
     int x_offset = 0;
@@ -311,10 +322,10 @@ void figure::adjust_pixel_offset(int *x, int *y) {
 //    *x += x_offset - img->sprite_offset_x;
 //    *y += y_offset - img->sprite_offset_y;
 }
-void figure::draw_figure_correct_sprite_offset(int x, int y) {
+void figure::draw_figure_main(int x, int y) {
 
     int _x = 0;
-    int _y = 0;
+    int _y = 3;
 
     switch (type) {
         case FIGURE_IMMIGRANT:
@@ -333,14 +344,21 @@ void figure::draw_figure_correct_sprite_offset(int x, int y) {
     else
         image_draw(sprite_image_id, x + _x - img->sprite_offset_x, y + _y - img->sprite_offset_y);
 }
-void figure::draw_figure_with_cart(int x, int y) {
+void figure::draw_figure_cart(int x, int y) {
     const image *img = image_get(cart_image_id);
+    image_draw(cart_image_id, x + x_offset_cart - img->sprite_offset_x, y + y_offset_cart - img->sprite_offset_y - 7);
+}
+void figure::draw_figure_with_cart(int x, int y) {
+    draw_figure_cart(x, y);
+    draw_figure_main(x, y);
+    return; // pharaoh doesn't draw carts on top - to rework maybe later..?
+
     if (y_offset_cart >= 0) {
-        draw_figure_correct_sprite_offset(x, y);
-        image_draw(cart_image_id, x + x_offset_cart - img->sprite_offset_x, y + y_offset_cart - img->sprite_offset_y - 5);
+        draw_figure_main(x, y);
+        draw_figure_cart(x, y);
     } else {
-        image_draw(cart_image_id, x + x_offset_cart - img->sprite_offset_x, y + y_offset_cart - img->sprite_offset_y - 5);
-        draw_figure_correct_sprite_offset(x, y);
+        draw_figure_cart(x, y);
+        draw_figure_main(x, y);
     }
 }
 void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord)
@@ -376,11 +394,11 @@ void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coo
                 draw_map_flag(x, y);
                 break;
             default:
-                draw_figure_correct_sprite_offset(x, y);
+                draw_figure_main(x, y);
                 break;
         }
     } else {
-        draw_figure_correct_sprite_offset(x, y);
+        draw_figure_main(x, y);
         if (!is_enemy_image && highlight)
             image_draw_blend_alpha(sprite_image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
     }

@@ -235,7 +235,7 @@ void figure::prefect_action()
     building *b = building_get(building_id);
     switch (action_state) {
         case FIGURE_ACTION_70_PREFECT_CREATED:
-            advance_action(ACTION_10_PATROL);
+            advance_action(ACTION_10_GOING);
             break;
         case ACTION_11_RETURNING_FROM_PATROL:
             do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
@@ -243,7 +243,7 @@ void figure::prefect_action()
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             do_enterbuilding(false, building_id);
             break;
-        case ACTION_10_PATROL:
+        case ACTION_10_GOING:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
             break;

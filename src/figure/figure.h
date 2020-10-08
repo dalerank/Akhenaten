@@ -104,7 +104,7 @@ public:
     unsigned char trader_amount_bought;
     short name;
     unsigned char terrain_usage;
-    unsigned char loads_sold_or_carrying;
+    unsigned char loads_counter;
     unsigned char is_boat; // 1 for boat, 2 for flotsam
     unsigned char height_adjusted_ticks;
     unsigned char current_height;
@@ -181,7 +181,8 @@ public:
     void draw_debug();
     void adjust_pixel_offset(int *x, int *y);
 //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_correct_sprite_offset(int x, int y);
+    void draw_figure_main(int x, int y);
+    void draw_figure_cart(int x, int y);
     void city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord = nullptr);
 //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
     void draw_figure_with_cart(int x, int y);
@@ -298,12 +299,11 @@ public:
     int fetch_export_resource(building *dock);
 
     // cartpusher.c
-    void determine_cartpusher_destination(building *b, int road_network_id);
-    void determine_cartpusher_destination_food(int road_network_id);
+    void determine_deliveryman_destination(building *b, int road_network_id);
+    void determine_deliveryman_destination_food(int road_network_id);
     void cart_update_image();
-    void reroute_cartpusher();
     void determine_granaryman_destination(int road_network_id);
-    void remove_resource_from_warehouse();
+//    void remove_resource_from_warehouse();
     void determine_warehouseman_destination(int road_network_id);
 
     // market.c

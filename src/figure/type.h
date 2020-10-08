@@ -86,9 +86,13 @@ typedef enum figure_type {
 
     // pharaoh
 
+    FIGURE_HUNTER = 73,
+    FIGURE_HUNTER_ARROW = 74,
+    FIGURE_CROCODILE = 82,
     FIGURE_WORKER_PH = 85,
     FIGURE_WATER_CARRIER = 87,
     FIGURE_POLICEMAN = 88,
+    FIGURE_FISHING_SPOT = 95,
 
     FIGURE_MAX
 } figure_type;
@@ -162,7 +166,7 @@ static int figureid_translation_table_ph[] {
 //    FIGURE_FISH_GULLS, 65,
 //    FIGURE_DELIVERY_BOY, 66,
 //    FIGURE_SHIPWRECK, 67,
-    FIGURE_SHEEP, 69,
+//    FIGURE_SHEEP, 68,
 //    FIGURE_WOLF, 69,
 //    FIGURE_ZEBRA, 70,
 //    FIGURE_SPEAR, 71,

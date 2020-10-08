@@ -199,13 +199,11 @@ void formation_calculate_legion_totals(void) {
                 data.num_legions++;
                 if (m->figure_type == FIGURE_FORT_LEGIONARY)
                     city_military_add_legionary_legion();
-
             }
-            if (m->missile_attack_timeout <= 0 && m->figures[0]) {
+            if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure *f = figure_get(m->figures[0]);
                 if (f->state == FIGURE_STATE_ALIVE)
                     formation_set_home(m, f->tile_x, f->tile_y);
-
             }
         }
     }
@@ -467,7 +465,7 @@ void formation_calculate_figures(void) {
     for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && !m->is_herd) {
-            if (m->is_legion) {
+            if (m->is_legion || m->is_herd) {
                 if (m->num_figures > 0) {
                     int was_halted = m->is_halted;
                     m->is_halted = 1;
@@ -647,67 +645,109 @@ void formations_load_state(buffer *buf, buffer *totals) {
     data.id_last_legion = totals->read_i32();
     data.num_legions = totals->read_i32();
     for (int i = 0; i < env_sizes().MAX_FORMATIONS; i++) {
+        if (i == 10) {
+            int a = 24;
+        }
         formation *f = &formations[i];
-        f->id = i;
-        f->in_use = buf->read_u8();
+        f->id = i;                                                      // 10
+        f->in_use = buf->read_u8();                                     // 1
         f->faction_id = buf->read_u8();
         f->legion_id = buf->read_u8();
         f->is_at_fort = buf->read_u8();
-        f->figure_type = buf->read_i16();
-        f->building_id = buf->read_i16(); // 8
-        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) { // 32
+        f->figure_type = buf->read_i16();                               // 69
+        f->building_id = buf->read_i16();
+        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++)
             f->figures[fig] = buf->read_i16();
+        f->num_figures = buf->read_u8();                                // --> 3
+        f->max_figures = buf->read_u8();                                // 7
+        f->layout = buf->read_i16();                                    // 9
+        f->morale = buf->read_i16();                                    // 100
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            f->x_home = buf->read_u8();
+            f->y_home = buf->read_u8();
+            f->standard_x = buf->read_u8();
+            f->standard_y = buf->read_u8();
+            f->x = buf->read_u8();
+            f->y = buf->read_u8();
+            f->destination_x = buf->read_u8();
+            f->destination_y = buf->read_u8();
         }
-        f->num_figures = buf->read_u8();
-        f->max_figures = buf->read_u8();
-        f->layout = buf->read_i16();
-        f->morale = buf->read_i16();
-        f->x_home = buf->read_u8();
-        f->y_home = buf->read_u8();
-        f->standard_x = buf->read_u8();
-        f->standard_y = buf->read_u8();
-        f->x = buf->read_u8();
-        f->y = buf->read_u8();
-        f->destination_x = buf->read_u8();
-        f->destination_y = buf->read_u8(); // 54
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            f->x_home = buf->read_u16();                                // 44
+            f->y_home = buf->read_u16();                                // 58
+            f->standard_x = buf->read_u16();                            //
+            f->standard_y = buf->read_u16();                            //
+            f->x = buf->read_u16();                                     // 44
+            f->y = buf->read_u16();                                     // 58
+            f->destination_x = buf->read_u16();                         // 49
+            f->destination_y = buf->read_u16();                         // 49
+        }
         f->destination_building_id = buf->read_i16();
         f->standard_figure_id = buf->read_i16();
         f->is_legion = buf->read_u8();
-        buf->skip(1); // 60
+        buf->skip(1);
         f->attack_type = buf->read_i16();
         f->legion_recruit_type = buf->read_i16();
         f->has_military_training = buf->read_i16();
-        f->total_damage = buf->read_i16();
-        f->max_total_damage = buf->read_i16();
-        f->wait_ticks = buf->read_i16();
-        f->recent_fight = buf->read_i16();
-        f->enemy_state.duration_advance = buf->read_i16();
-        f->enemy_state.duration_regroup = buf->read_i16();
-        f->enemy_state.duration_halt = buf->read_i16(); // 80
-        f->enemy_legion_index = buf->read_i16();
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            f->total_damage = buf->read_i16();                              //     vv 6 hp per ostich?
+            f->max_total_damage = buf->read_i16();                          // --> 18
+            f->wait_ticks = buf->read_i16();                                // 50
+            f->recent_fight = buf->read_i16();
+            f->enemy_state.duration_advance = buf->read_i16();
+            f->enemy_state.duration_regroup = buf->read_i16();              // --> 8 --> 0 ??????
+            f->enemy_state.duration_halt = buf->read_i16();
+            f->enemy_legion_index = buf->read_i16();
+        }
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            buf->skip(2);                                                //     vv 6 hp per ostich?
+            f->total_damage = buf->read_i16();                              // --> 18
+            f->max_total_damage = buf->read_i16();                          // 50
+            f->recent_fight = buf->read_i16();
+            buf->skip(2);
+            f->wait_ticks = buf->read_i16();                                // --> 8 --> 0 ??????
+            buf->skip(4);
+//            f->enemy_state.duration_advance = buf->read_i16();
+//            f->enemy_state.duration_regroup = buf->read_i16();
+//            f->enemy_state.duration_halt = buf->read_i16();
+//            f->enemy_legion_index = buf->read_i16();
+            f->enemy_state.duration_advance = 0;
+            f->enemy_state.duration_regroup = 0;
+            f->enemy_state.duration_halt = 0;
+            f->enemy_legion_index = 0;
+        }
         f->is_halted = buf->read_i16();
         f->missile_fired = buf->read_i16();
         f->missile_attack_timeout = buf->read_i16();
-        f->missile_attack_formation_id = buf->read_i16(); // 90
+        f->missile_attack_formation_id = buf->read_i16();
         f->prev.layout = buf->read_i16();
         f->cursed_by_mars = buf->read_i16();
         f->months_low_morale = buf->read_u8();
+        f->months_very_low_morale = 0;
         f->empire_service = buf->read_u8();
         f->in_distant_battle = buf->read_u8();
-        f->is_herd = buf->read_u8();
+        f->is_herd = buf->read_u8();                                    // 2
         f->enemy_type = buf->read_u8();
-        f->direction = buf->read_u8(); // 100
-        f->prev.x_home = buf->read_u8();
-        f->prev.y_home = buf->read_u8();
+        f->direction = buf->read_u8();
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            f->prev.x_home = buf->read_u8();
+            f->prev.y_home = buf->read_u8();
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            f->prev.x_home = buf->read_u16();
+            f->prev.y_home = buf->read_u16();
+        }
         f->unknown_fired = buf->read_u8();
         f->orientation = buf->read_u8();
         f->months_from_home = buf->read_u8();
         f->months_very_low_morale = buf->read_u8();
         f->invasion_id = buf->read_u8();
-        f->herd_wolf_spawn_delay = buf->read_u8(); // 108
-        f->herd_direction = buf->read_u8();
+        f->herd_wolf_spawn_delay = buf->read_u8();                      // --> 4
+        f->herd_direction = buf->read_u8();                             // 6
+        if (i == 10) {
+            int a = 24;
+        }
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            buf->skip(16);
+            buf->skip(6);
         buf->skip(17);
         f->invasion_sequence = buf->read_i16();
     }

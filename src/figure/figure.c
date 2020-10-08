@@ -248,7 +248,7 @@ void figure::save(buffer *buf) {
     buf->write_u8(f->trader_amount_bought);
     buf->write_i16(f->name);
     buf->write_u8(f->terrain_usage);
-    buf->write_u8(f->loads_sold_or_carrying);
+    buf->write_u8(f->loads_counter);
     buf->write_u8(f->is_boat);
     buf->write_u8(f->height_adjusted_ticks);
     buf->write_u8(f->current_height);
@@ -277,8 +277,11 @@ void figure::load(buffer *buf) {
     f->anim_frame = buf->read_u8();
     f->is_enemy_image = buf->read_u8();
     f->flotsam_visible = buf->read_u8();
-    f->sprite_image_id = buf->read_i16();
-    f->cart_image_id = buf->read_i16();
+    f->sprite_image_id = buf->read_i16() + 18;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(2);
+    else
+        f->cart_image_id = buf->read_i16();
     f->next_figure = buf->read_i16();
     f->type = figureid_translation(buf->read_u8());
     f->resource_id = buf->read_u8();
@@ -385,9 +388,9 @@ void figure::load(buffer *buf) {
         else
             resource_quantity = 0;
 
-        f->loads_sold_or_carrying = resource_quantity / 100;
+        f->loads_counter = resource_quantity / 100;
     } else {
-        f->loads_sold_or_carrying = buf->read_u8();
+        f->loads_counter = buf->read_u8();
         f->is_boat = buf->read_u8();
     }
     f->height_adjusted_ticks = buf->read_u8();
@@ -411,8 +414,11 @@ void figure::load(buffer *buf) {
     f->attacker_id1 = buf->read_i16();
     f->attacker_id2 = buf->read_i16();
     f->opponent_id = buf->read_i16();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(243);
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        buf->skip(239);
+        f->cart_image_id = buf->read_i16() + 18;
+        buf->skip(2);
+    }
 }
 void figure_save_state(buffer *list, buffer *seq) {
     seq->write_i32(data.created_sequence);

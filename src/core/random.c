@@ -1,6 +1,7 @@
 #include "core/random.h"
 
 #include <string.h>
+//#include <cmath>
 
 #define MAX_RANDOM 100
 
@@ -65,6 +66,34 @@ int16_t random_short(void) {
 
 int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
+}
+
+void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist)
+{
+    random_generate_next();
+    int det = 64/step;
+    int rand_x = random_byte() / det - step;
+    int rand_y = random_byte_alt() / det - step;
+    *dest_x = x + rand_x;
+    *dest_y = y + rand_y;
+    int dist_x = (x_home - *dest_x);
+    int dist_y = (y_home - *dest_y);
+    if (bias <= 1)
+        bias = 1;
+    *dest_x += dist_x / bias;
+    *dest_y += dist_y / bias;
+    if (max_dist > 0) {
+        dist_x = (x_home - *dest_x);
+        dist_y = (y_home - *dest_y);
+        if (dist_x > max_dist)
+            *dest_x = x_home + max_dist;
+        if (dist_x < -max_dist)
+            *dest_x = x_home - max_dist;
+        if (dist_y > max_dist)
+            *dest_y = y_home + max_dist;
+        if (dist_y < -max_dist)
+            *dest_y = y_home - max_dist;
+    }
 }
 
 void random_load_state(buffer *buf) {

@@ -424,11 +424,11 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
             image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
             image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
-    } else {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int ri = 0;
         int r_x = 0;
         int r_y = 0;
-        for (int r = 1; r < 8; r++) {
+        for (int r = 1; r < 9; r++) {
             if (b->data.granary.resource_stored[r] > 0) {
                 int rn = b->data.granary.resource_stored[r] / 400; // number of "spots" occupied by food
                 for (int rnn = ri; rnn < ri + rn; rnn++) {
@@ -468,7 +468,6 @@ static void draw_animation(int x, int y, int grid_offset) {
                 if (animation_offset > img->num_animation_sprites)
                     animation_offset = img->num_animation_sprites;
 
-//                image *img;
                 switch (b->type) {
                     case BUILDING_GRANARY:
                         img = (image*)image_get(image_id_from_group(GROUP_GRANARY_ANIM_PH) + animation_offset - 1);

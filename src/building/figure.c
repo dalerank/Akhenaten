@@ -889,7 +889,7 @@ static void spawn_figure_industry(building *b) {
             b->figure_id = f->id;
             f->wait_ticks = 30;
 //            f->resource_quantity = 100;
-            f->loads_sold_or_carrying = 1;
+            f->loads_counter = 1;
         }
     }
 }
@@ -1012,8 +1012,9 @@ static void spawn_figure_warehouse(building *b) {
         spawn_labor_seeker(b, road.x, road.y, 100);
         if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN))
             return;
-        int resource;
-        int task = building_warehouse_determine_worker_task(b, &resource);
+        int resource = 0;
+        int amount = 0;
+        int task = building_warehouse_determine_worker_task(b, &resource, &amount);
         if (task != WAREHOUSE_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
@@ -1022,8 +1023,13 @@ static void spawn_figure_warehouse(building *b) {
                 f->collecting_item_id = resource;
             } else {
                 f->resource_id = resource;
-//                f->resource_quantity = 100;
-                f->loads_sold_or_carrying = 1;
+                if (amount >= 0) { // delivering
+                    f->loads_counter = amount;
+                    building_warehouse_remove_resource(b, resource, amount);
+                }
+                else { // getting
+                    f->loads_counter = 0;
+                }
             }
             b->figure_id = f->id;
             f->building_id = b->id;

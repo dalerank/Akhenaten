@@ -65,11 +65,6 @@ H1	R	H2	W
  5 38 25157 H2		85
  4 37 24928 EXIT	?
 
-65 fish
-82 crocodile
-85 worker
-95 fishing spot?
-
 24074 PALACE
 25891 GRANARY1
 
@@ -77,6 +72,16 @@ getting
 delivering
 unloading
 returning
+
+ostriches
+8 -> 18
+14 (??) -> 19
+18 -> 18 (3+???)
+18 (83+) -> 10
+19 (77+) -> 
+10 -> 18 (???) 19 (???)
+
+184 - 283
 
 fire 10		1	11	fire marshal
 clay 4		2	9	 delivering clay

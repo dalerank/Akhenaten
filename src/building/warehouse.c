@@ -1,3 +1,4 @@
+#include <ntdef.h>
 #include "warehouse.h"
 
 #include "building/barracks.h"
@@ -469,64 +470,63 @@ static int contains_non_stockpiled_food(building *space, const int *resources) {
     }
     return 0;
 }
-int building_warehouse_determine_worker_task(building *warehouse, int *resource) {
+int building_warehouse_determine_worker_task(building *warehouse, int *resource, int *amount) {
+    // check workers - if less than enough, no task will be done today.
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50)
         return WAREHOUSE_TASK_NONE;
-
     const building_storage *s = building_storage_get(warehouse->storage_id);
     building *space;
+
     // get resources
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         if (!building_warehouse_is_getting(r, warehouse) || city_resource_is_stockpiled(r))
             continue;
-
-        int loads_stored = 0;
-        space = warehouse;
-        for (int i = 0; i < 8; i++) {
-            space = building_next(space);
-            if (space->id > 0 && space->loads_stored > 0) {
-                if (space->subtype.warehouse_resource_id == r)
-                    loads_stored += space->loads_stored;
-            }
-        }
-        int room = 0;
+        int loads_stored = 0; // total loads of resource in warehouse!
+        int room = 0; // total potential room for resource!
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = building_next(space);
             if (space->id > 0) {
-                if (space->loads_stored <= 0)
+                if (space->loads_stored <= 0) // this space (tile) is empty! FREE REAL ESTATE
                     room += 4;
-                if (space->subtype.warehouse_resource_id == r)
-                    room += 4 - space->loads_stored;
+                if (space->subtype.warehouse_resource_id == r) { // found a space (tile) with resource on it!
+                    loads_stored += space->loads_stored; // add loads to total, if any!
+                    room += 4 - space->loads_stored; // add room to total, if any!
+                }
             }
         }
-        if (room >= 4 &&
-            (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r, warehouse) - loads_stored) >= 4)) &&
-            city_resource_count(r) - loads_stored >= 4) {
-            if (!building_warehouse_for_getting(warehouse, r, 0))
-                continue;
 
+        int lacking = building_warehouse_get_acceptable_quantity(r, warehouse) - loads_stored;
+
+        // determine if there's enough room for more to accept, depending on "get up to..." settings!
+        if (room >= 0 && lacking > 0 && city_resource_count(r) - loads_stored > 0) {
+            if (!building_warehouse_for_getting(warehouse, r, 0)) // any other place contain this resource..?
+                continue;
             *resource = r;
+            *amount = -lacking;
             return WAREHOUSE_TASK_GETTING;
         }
     }
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
-        building *barracks = building_get(
-                building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3,
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3,
                                                  warehouse->road_network_id, warehouse->distance_from_entry, 0));
-        if (barracks->loads_stored < MAX_WEAPONS_BARRACKS &&
-            warehouse->road_network_id == barracks->road_network_id) {
+        int barracks_want = MAX_WEAPONS_BARRACKS - barracks->loads_stored;
+        if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
+            int available = 0;
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = building_next(space);
-                if (space->id > 0 && space->loads_stored > 0 &&
-                    space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
-                    *resource = RESOURCE_WEAPONS_C3;
-                    return WAREHOUSE_TASK_DELIVERING;
+                if (space->id > 0 && space->loads_stored > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
+                    available += space->loads_stored;
                 }
+            }
+            if (available > 0) {
+                *resource = RESOURCE_WEAPONS_C3;
+                *amount = min(available, barracks_want);
+                return WAREHOUSE_TASK_DELIVERING;
             }
         }
     }
@@ -539,6 +539,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
                 int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
                 if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
                     *resource = space->subtype.warehouse_resource_id;
+                    *amount = 1; // always one load only for industry!!
                     return WAREHOUSE_TASK_DELIVERING;
                 }
             }
@@ -552,6 +553,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             space = building_next(space);
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
+                *amount = 1; // always one load only for granaries?
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }
@@ -564,10 +566,12 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             space = building_next(space);
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
+                *amount = 1; // always one load only for granaries?
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }
     }
+    // todo: emptying only specific goods
     // move goods to other warehouses
     if (s->empty_all) {
         space = warehouse;
@@ -575,6 +579,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             space = building_next(space);
             if (space->id > 0 && space->loads_stored > 0) {
                 *resource = space->subtype.warehouse_resource_id;
+                *amount = space->loads_stored;
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }

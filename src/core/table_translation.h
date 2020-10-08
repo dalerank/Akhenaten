@@ -136,7 +136,7 @@ static int groupid_translation_table_ph[] = {
         160, 303, // data/Pharaoh_Unloaded.sg3 scoreb.BMP
         161, 302, // data/Pharaoh_Unloaded.sg3 Briefing1a.bmp
         162, 301, // data/Pharaoh_Unloaded.sg3 C3title.BMP
-        163, 52 + 340, //lion (caravan cart/donkey)
+        163, 161 + 340, //lion (hyena?)
         164, 63, // bridge
         165, 34 + 340, //ship
         166, 166 + 66, // recruiter
@@ -172,8 +172,8 @@ static int groupid_translation_table_ph[] = {
 //        230, 230+340, // missionary
         231, 201 + 340, // librarian
         232, 66 + 66, // fort, mounted
-        233, 156 + 340, // sheep (ostrich)
-        234, 161 + 340, // wolf (hyena)
+//        233, xxx + 340, // sheep (????)
+        234, 156 + 340, // wolf (ostrich)
         235, 23 + 340, // zebra (crocodile)
 //        236, 236+340, // legionary
 //        237, 237+340, // cartpusher cart, multiple food

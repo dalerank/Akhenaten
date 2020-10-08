@@ -119,6 +119,7 @@ void city_resource_toggle_mothballed(int resource) {
 }
 
 int city_resource_has_workshop_with_room(int workshop_type) {
+    // todo: prevent oversending goods from warehouses etc.
     return city_data.resource.space_in_workshops[workshop_type] > 0;
 }
 

@@ -73,7 +73,7 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
-    if (trader->loads_sold_or_carrying >= 8)
+    if (trader->loads_counter >= 8)
         return 0;
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse))
@@ -250,7 +250,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
         else { // exclude own city (id=0), shouldn't happen, but still..
             importable[r] = 0;
         }
-        if (loads_sold_or_carrying >= 8)
+        if (loads_counter >= 8)
             importable[r] = 0;
 
     }
@@ -433,7 +433,7 @@ void figure::trade_caravan_action() {
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_sold_resource(trader_id, resource);
-                        loads_sold_or_carrying++;
+                        loads_counter++;
                     } else {
                         move_on++;
                     }
@@ -587,7 +587,7 @@ void figure::trade_ship_action() {
 //    cart_image_id = 0;
     switch (action_state) {
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
-            loads_sold_or_carrying = 12;
+            loads_counter = 12;
             trader_amount_bought = 0;
             is_ghost = 1;
             wait_ticks++;

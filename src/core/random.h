@@ -62,4 +62,6 @@ void random_save_state(buffer *buf);
  */
 void random_load_state(buffer *buf);
 
+void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist);
+
 #endif // CORE_RANDOM_H

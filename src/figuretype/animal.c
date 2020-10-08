@@ -141,6 +141,9 @@ void figure_create_herds(void) {
     scenario_map_foreach_herd_point(create_herd);
 }
 
+#include "map/terrain.h"
+#include "map/building.h"
+
 void figure::seagulls_action() {
     terrain_usage = TERRAIN_USAGE_ANY;
     is_ghost = 0;
@@ -205,31 +208,62 @@ void figure::sheep_action() {
 }
 void figure::wolf_action() {
     const formation *m = formation_get(formation_id);
-//    terrain_usage = TERRAIN_USAGE_ANIMAL;
-//    use_cross_country = 0;
-//    is_ghost = 0;
     city_figures_add_animal();
-//    figure_image_increase_offset(12);
 
     switch (action_state) {
+        case ACTION_24_SPAWNING:
+        case ACTION_14_SCARED:
+        case ACTION_15_TERRIFIED:
+        case ACTION_18_ROOSTING:
+        case ACTION_19_AT_REST:
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-            wait_ticks++;
-            if (wait_ticks > 400) {
-                wait_ticks = id & 0x1f;
-                action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
-                destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
-                roam_length = 0;
+            wait_ticks--;
+            if (wait_ticks <= 0)
+                advance_action(ACTION_8_IDLE_RECALCULATE);
+            break;
+        case ACTION_8_IDLE_RECALCULATE:
+            wait_ticks--;
+            if (wait_ticks <= 0) {
+                int dx;
+                int dy;
+                random_around_point(m->x_home, m->y_home, tile_x, tile_y, &dx, &dy, 4, 8, 22);
+                int offset = map_grid_offset(dx, dy);
+                if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) {
+                    wait_ticks = 0;
+                    destination_x = dx;
+                    destination_y = dy;
+                    advance_action(ACTION_10_GOING);
+                } else {
+                    wait_ticks = 5;
+                    destination_x = 0;
+                    destination_y = 0;
+                }
             }
             break;
+        case ACTION_10_GOING:
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-            move_ticks(2);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
-                direction = previous_tile_direction;
-                action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-                wait_ticks = id & 0x1f;
-            } else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
+            {
+//                max_roam_length = random_byte() / 32 + 8;
+//                do_roam(TERRAIN_USAGE_ANY);
+//                if (max_roam_length) {
+//                    wait_ticks = 5;
+//                    advance_action(ACTION_18_ROOSTING + (random_byte() & 0x1));
+//                }
+                if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ANIMAL, ACTION_18_ROOSTING + (random_byte() & 0x1), ACTION_8_IDLE_RECALCULATE)) {
+                    wait_ticks = 50;
+                }
+
+//                move_ticks(2);
+//                if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
+//                    direction = previous_tile_direction;
+//                    action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+//                    wait_ticks = id & 0x1f;
+//                } else if (direction == DIR_FIGURE_REROUTE)
+//                    route_remove();
+                break;
+            }
+        case ACTION_16_FLEEING:
+            // scatter!!!!
             break;
         case FIGURE_ACTION_199_WOLF_ATTACKING:
             move_ticks(2);
@@ -257,15 +291,38 @@ void figure::wolf_action() {
             }
             break;
     }
-    int dir = figure_image_direction();
-    if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset();
-    else if (action_state == FIGURE_ACTION_150_ATTACK)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 + dir + 8 * (attack_image_offset / 4);
-    else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
-    else
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * anim_frame;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+//        int dir = figure_image_direction();
+//        if (action_state == FIGURE_ACTION_149_CORPSE)
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset();
+//        else if (action_state == FIGURE_ACTION_150_ATTACK)
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 + dir + 8 * (attack_image_offset / 4);
+//        else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
+//        else
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * anim_frame;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (action_state) {
+            case ACTION_8_IDLE_RECALCULATE:
+            case ACTION_19_AT_REST:
+                image_set_animation(GROUP_FIGURE_WOLF, 224, 8, 1);
+                break;
+            case ACTION_18_ROOSTING:
+                image_set_animation(GROUP_FIGURE_WOLF, 160, 8, 1);
+                break;
+            case ACTION_10_GOING:
+                image_set_animation(GROUP_FIGURE_WOLF, 0, 11, 1);
+                break;
+            case ACTION_15_TERRIFIED:
+            case ACTION_14_SCARED:
+                image_set_animation(GROUP_FIGURE_WOLF, 224, 8, 1);
+                anim_frame = 0;
+                break;
+            case ACTION_16_FLEEING:
+                image_set_animation(GROUP_FIGURE_WOLF, 104, 7, 1);
+                break;
+        }
+    }
 }
 void figure::zebra_action() {
     const formation *m = formation_get(formation_id);

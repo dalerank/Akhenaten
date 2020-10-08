@@ -39,6 +39,11 @@ void figure::image_set_animation(int group, int offset, int max_frames, int dura
     anim_frame_duration = duration;
 }
 void figure::figure_image_update() {
+    // advance animation frame
+    anim_frame++;
+    if (anim_frame >= anim_max_frames)
+        anim_frame = 0;
+
     // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
     if (state == FIGURE_STATE_DYING)
         sprite_image_id = anim_base + figure_image_corpse_offset();
@@ -48,22 +53,17 @@ void figure::figure_image_update() {
     // null images
     if (anim_base <= 0)
         sprite_image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 3;
-
-    // advance animation frame
-    anim_frame++;
-    if (anim_frame >= anim_max_frames)
-        anim_frame = 0;
 }
 void figure::cart_update_image() {
 
     // determine cart sprite
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-        if (loads_sold_or_carrying > 0) {
+        if (loads_counter > 0) {
             short amount_offset = 2;
-            if (loads_sold_or_carrying <= 2)
+            if (loads_counter <= 2)
                 amount_offset = 0;
-            else if (loads_sold_or_carrying <= 4)
+            else if (loads_counter <= 4)
                 amount_offset = 1;
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
 
@@ -74,7 +74,7 @@ void figure::cart_update_image() {
                     cart_image_id -= 16;
         }
     } else {
-        if (loads_sold_or_carrying == 1) {
+        if (loads_counter == 1) {
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 +
                             resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
         } else {
@@ -93,7 +93,7 @@ void figure::cart_update_image() {
     if (cart_image_id) {
         cart_image_id += dir;
         figure_image_set_cart_offset(dir);
-        if (loads_sold_or_carrying >= 8)
+        if (loads_counter >= 8)
             y_offset_cart -= 40;
     }
 }

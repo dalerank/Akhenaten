@@ -129,7 +129,7 @@
 7727 stonemason waiting
 7823 ostrich
 7919 ostrich ded
-7927 ostrich ??
+7927 ostrich runaway!!
 7983 ostrich yumgrass
 8047 ostrich waiting
 8111 hyena

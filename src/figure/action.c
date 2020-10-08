@@ -110,7 +110,7 @@ static figure_action_property action_lookup[] = {
 
         // PHARAOH
 
-        {TERRAIN_USAGE_ANY,     0,      0},  // 73
+        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HUNTER},  // 73
         {TERRAIN_USAGE_ANY,     0,      0},  // 74
         {TERRAIN_USAGE_ANY,     0,      0},  // 75
         {TERRAIN_USAGE_ANY,     0,      0},  // 76
@@ -195,7 +195,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     if (direction == DIR_FIGURE_AT_DESTINATION) {
         advance_action(NEXT_ACTION);
         direction = previous_tile_direction;
-        destination_building_id = 0;
+//        destination_building_id = 0;
         return true;
     }
     if (direction == DIR_FIGURE_REROUTE)
@@ -256,7 +256,6 @@ void figure::action_perform() {
             if (attacker->target_figure_id != id)
                 targeted_by_figure_id = 0;
         }
-
 
         //////////////
 
@@ -385,7 +384,7 @@ void figure::action_perform() {
 //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
             case 33: //doctor_action(); break;
 //            case 34: common_action(12, GROUP_FIGURE_DOCTOR_SURGEON); break;
-            case 35: worker_action();                   break;
+//            case 35: worker_action();                   break;
             case 36: editor_flag_action();              break;
             case 37: flotsam_action();                  break;
             case 38: docker_action();                   break;
@@ -424,8 +423,10 @@ void figure::action_perform() {
             case 71: spear_action();                    break;
             case 72: hippodrome_horse_action();         break;
             // PHARAOH vvvv
-            case 88:
-                policeman_action();                     break;
+//            case 73: hunter_action();                   break;
+            case 74: arrow_action();                    break;
+//            case 85: worker_action();                   break;
+            case 88: policeman_action();                break;
             default:
                 break;
         }
@@ -441,6 +442,7 @@ void figure::action_perform() {
 }
 
 void figure_action_handle(void) {
+//    return;
     city_figures_reset();
     city_entertainment_set_hippodrome_has_race(0);
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
