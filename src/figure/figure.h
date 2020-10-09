@@ -283,15 +283,21 @@ public:
     void delivery_boy_action();
     void shipwreck_action();
     void sheep_action();
-    void wolf_action();
+    void wolf_action(); // C3 only? hyena???
+    void ostrich_action();
     void zebra_action();
     void spear_action();
     void hippodrome_horse_action();
     // pharaoh
+    void hunter_action();
     void policeman_action();
 
     // migrant.c
     void update_direction_and_image();
+
+    // animal.c
+    int is_nearby(int category, int *distance, int max_distance = 10000, bool gang_on = true);
+    bool herd_roost(int step, int bias, int max_dist);
 
     // docker.c
     void get_trade_center_location(int *_x, int *_y);
@@ -323,7 +329,7 @@ public:
     void entertainer_update_image();
 
     // maintenance.c
-    int fight_enemy();
+    int fight_enemy(int category, int max_distance);
     int fight_fire();
     void extinguish_fire();
     int target_is_alive();
@@ -360,6 +366,7 @@ public:
 
     // missile.c
     void missile_hit_target(int target_id, int legionary_type);
+    void missile_fire_at(int target_id, int missile_type);
 
     // wall.c
     void tower_sentry_pick_target();

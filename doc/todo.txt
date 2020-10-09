@@ -1,10 +1,20 @@
 
-===== task for today: =====
+===== tasks: =====
 
-- get all main buildings to work
-- implement figures internal state?
-
-
+[x] Store Pharaoh path
+[x] Load Pharaoh files
+[x] Load main equivalent graphics
+[x] City building menus & panels
+[x] Map data
+[ ] City messages
+[ ] Fire-fighting
+[x] Ostriches
+[ ] Hunters
+[ ] Floodplain farms
+[ ] Workers
+[ ] Monuments
+[ ] Figure speeches
+[ ] Sound/music
 
 ===== generic fixes: =====
 
@@ -15,6 +25,7 @@
   - panel tooltips
 - UI
 	- messages crashing
+  - "File" drop down menu colors
 - figures
   - figure icons (bigpeople)
 

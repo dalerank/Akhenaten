@@ -38,7 +38,7 @@ int map_has_figure_at(int grid_offset);
 
 //void map_figure *f->map_figure_remove();
 
-bool map_figure_foreach_until(int grid_offset, int test);
+int map_figure_foreach_until(int grid_offset, int test);
 
 /**
  * Clears the map

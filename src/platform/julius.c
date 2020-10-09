@@ -294,8 +294,7 @@ static struct {
     Uint32 last_update_time;
 } fps = {0, 0, 0};
 
-static void run_and_draw(void)
-{
+static void run_and_draw(void) {
     time_millis time_before_run = SDL_GetTicks();
     time_set_millis(time_before_run);
 

@@ -68,8 +68,7 @@ int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist)
-{
+void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist) {
     random_generate_next();
     int det = 64/step;
     int rand_x = random_byte() / det - step;

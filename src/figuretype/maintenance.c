@@ -18,15 +18,6 @@
 #include "core/game_environment.h"
 
 void figure::engineer_action() {
-
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    use_cross_country = 0;
-//    max_roam_length = 640;
-//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        kill();
-
-//    figure_image_increase_offset(12);
-
     building *b = building_get(building_id);
     switch (action_state) {
         case FIGURE_ACTION_60_ENGINEER_CREATED:
@@ -58,7 +49,7 @@ void figure::engineer_action() {
                 }
             }
             break;
-        case ACTION_10_DELIVERING_FOOD:
+        case ACTION_10_GOING:
         case FIGURE_ACTION_62_ENGINEER_ROAMING:
             is_ghost = 0;
             roam_length++;
@@ -68,9 +59,8 @@ void figure::engineer_action() {
                     action_state = FIGURE_ACTION_63_ENGINEER_RETURNING;
                     destination_x = x_road;
                     destination_y = y_road;
-                } else {
+                } else
                     kill();
-                }
             }
             roam_ticks(1);
             break;
@@ -89,34 +79,99 @@ void figure::engineer_action() {
 //    figure_image_update(image_id_from_group(GROUP_FIGURE_ENGINEER));
 }
 
-static int get_nearest_enemy(int x, int y, int *distance) {
-    int min_enemy_id = 0;
-    int min_dist = 10000;
+#include "figure/properties.h"
+
+enum {
+    NEARBY_ANY,
+    NEARBY_ANIMAL,
+    NEARBY_HOSTILE
+};
+
+int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on) {
+    int figure_id = 0;
+    int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id)
+        if (f->is_dead())
+            continue;
+        if (!gang_on && f->targeted_by_figure_id)
             continue;
 
-        int dist;
-        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
-            dist = calc_maximum_distance(x, y, x, y);
-        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-            dist = calc_maximum_distance(x, y, x, y);
-        else if (f->is_enemy())
-            dist = 3 * calc_maximum_distance(x, y, x, y);
-        else if (f->type == FIGURE_WOLF)
-            dist = 4 * calc_maximum_distance(x, y, x, y);
-        else
-            continue;
-        if (dist < min_dist) {
-            min_dist = dist;
-            min_enemy_id = i;
+        bool category_check = false;
+        auto props = figure_properties_for_type(f->type);
+        switch (category) {
+            case NEARBY_ANY: // any dude
+                if (props->category != 0)
+                    category_check = true;
+                break;
+            case NEARBY_ANIMAL: // animal
+                if (props->category == 6 || f->is_herd())
+                    category_check = true;
+                break;
+            case NEARBY_HOSTILE: // hostile
+                if (f->is_enemy() || f->type == FIGURE_RIOTER || f->is_attacking_native())
+                    category_check = true;
+                break;
+        }
+
+        // pass on to inner distance check
+        if (category_check) {
+            int dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+            if (dist <= max_distance) {
+                if (f->targeted_by_figure_id)
+                    dist *= 2; // penalty
+                if (category == NEARBY_HOSTILE) {
+                    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
+                        dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                    else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+                        dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                    else if (f->is_enemy())
+                        dist = 3 * calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                    else if (f->type == FIGURE_WOLF)
+                        dist = 4 * calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+//                    else
+//                        continue;
+                }
+                if (dist < lowest_distance) {
+                    lowest_distance = dist;
+                    figure_id = i;
+//                    if (!gang_on)
+//                        return figure_id;
+                }
+            }
         }
     }
-    *distance = min_dist;
-    return min_enemy_id;
+    *distance = lowest_distance;
+    return figure_id;
 }
-int figure::fight_enemy() {
+//static int get_nearest_enemy(int x, int y, int *distance) {
+//    int min_enemy_id = 0;
+//    int min_dist = 10000;
+//    for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
+//        figure *f = figure_get(i);
+//        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id)
+//            continue;
+//
+//        int dist;
+//        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
+//            dist = calc_maximum_distance(x, y, f->x, f->y);
+//        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+//            dist = calc_maximum_distance(x, y, f->x, f->y);
+//        else if (f->is_enemy())
+//            dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
+//        else if (f->type == FIGURE_WOLF)
+//            dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
+//        else
+//            continue;
+//        if (dist < min_dist) {
+//            min_dist = dist;
+//            min_enemy_id = i;
+//        }
+//    }
+//    *distance = min_dist;
+//    return min_enemy_id;
+//}
+int figure::fight_enemy(int category, int max_distance) {
     if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
         return 0;
 
@@ -137,8 +192,8 @@ int figure::fight_enemy() {
 
     wait_ticks_next_target = 0;
     int distance;
-    int enemy_id = get_nearest_enemy(tile_x, tile_y, &distance);
-    if (enemy_id > 0 && distance <= 30) {
+    int enemy_id = is_nearby(2, &distance);
+    if (enemy_id > 0 && distance <= max_distance) {
         figure *enemy = figure_get(enemy_id);
         wait_ticks_next_target = 0;
         action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
@@ -227,9 +282,11 @@ int figure::target_is_alive() {
     return 0;
 }
 
-void figure::prefect_action()
-{ // doubles as fireman! not as policeman!!!
-    if (!fight_enemy())
+void figure::prefect_action() { // doubles as fireman! not as policeman!!!
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (!fight_enemy(2, 22))
+            fight_fire();
+    } else
         fight_fire();
 
     building *b = building_get(building_id);
@@ -316,18 +373,7 @@ void figure::prefect_action()
     }
 }
 void figure::policeman_action() {
-//    building *b = building_get(building_id);
-//
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    use_cross_country = 0;
-//    max_roam_length = 640;
-//    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        kill();
-//    figure_image_increase_offset(12);
-
-    // special actions
-    if (!fight_enemy())
-        fight_fire();
+    fight_enemy(2, 22);
 
     building *b = building_get(building_id);
     switch (action_state) {

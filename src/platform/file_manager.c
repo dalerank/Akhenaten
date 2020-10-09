@@ -156,16 +156,14 @@ int platform_file_manager_set_base_path(const char *path) {
 
 #if defined(__vita__)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
+FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     char *resolved_path = vita_prepend_path(filename);
     FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
     return fp;
 }
 
-int platform_file_manager_remove_file(const char *filename)
-{
+int platform_file_manager_remove_file(const char *filename) {
     char *resolved_path = vita_prepend_path(filename);
     int result = remove(resolved_path);
     free(resolved_path);
@@ -195,13 +193,11 @@ int platform_file_manager_remove_file(const char *filename) {
 
 #else
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
+FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     return fopen(filename, mode);
 }
 
-int platform_file_manager_remove_file(const char *filename)
-{
+int platform_file_manager_remove_file(const char *filename) {
     return remove(filename) == 0;
 }
 

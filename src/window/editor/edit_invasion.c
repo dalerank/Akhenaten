@@ -30,7 +30,7 @@ static generic_button buttons[] = {
         {200, 152, 80,  25, button_amount, button_none},
         {320, 152, 200, 25, button_type,   button_none},
         {130, 190, 190, 25, button_from,   button_none},
-        {340, 190, 220, 25, button_attack, button_none},
+        {341, 190, 220, 25, button_attack, button_none},
         {20,  230, 250, 25, button_delete, button_none},
         {310, 230, 100, 25, button_save,   button_none},
 };
@@ -71,8 +71,8 @@ static void draw_foreground(void) {
         button_border_draw(130, 190, 190, 25, data.focus_button_id == 4);
         lang_text_draw_centered(35, data.invasion.from, 130, 196, 190, FONT_NORMAL_BLACK);
 
-        button_border_draw(340, 190, 220, 25, data.focus_button_id == 5);
-        lang_text_draw_centered(36, data.invasion.attack_type, 340, 196, 220, FONT_NORMAL_BLACK);
+        button_border_draw(341, 190, 220, 25, data.focus_button_id == 5);
+        lang_text_draw_centered(36, data.invasion.attack_type, 341, 196, 220, FONT_NORMAL_BLACK);
     }
 
     button_border_draw(310, 230, 100, 25, data.focus_button_id == 7);

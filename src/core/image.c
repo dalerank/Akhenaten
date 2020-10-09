@@ -536,10 +536,10 @@ int image_id_from_group(int group) {
                 return data.ph_unloaded->get_id(group - 294);// + 5000;
             else if (group < 341)
                 return data.font->get_id(group - 332);// + 6000;
-            else if (group < 554)
-                return data.ph_sprmain->get_id(group - 340);// + 8000;
+            else if (group < 555)
+                return data.ph_sprmain->get_id(group - 341);// + 8000;
             else
-                return data.ph_sprambient->get_id(group - 553);// + ????;
+                return data.ph_sprambient->get_id(group - 555);// + ????;
     }
     return -1;
 }

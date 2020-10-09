@@ -248,7 +248,7 @@ void widget_top_menu_draw(int force) {
             data.offset_population = 453; // +5
             data.offset_date = 547;
 
-            int width = lang_text_draw_colored(6, 0, 340, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
             width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
@@ -265,7 +265,7 @@ void widget_top_menu_draw(int force) {
             data.offset_population = 458; // +2
             data.offset_date = 652;
 
-            int width = lang_text_draw_colored(6, 0, 340, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
             width = lang_text_draw_colored(6, 1, 460, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);

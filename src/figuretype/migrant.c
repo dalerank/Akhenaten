@@ -12,8 +12,7 @@
 #include "figure/route.h"
 #include "map/road_access.h"
 
-void figure_create_immigrant(building *house, int num_people)
-{
+void figure_create_immigrant(building *house, int num_people) {
     const map_tile *entry = city_map_entry_point();
     figure *f = figure_create(FIGURE_IMMIGRANT, entry->x, entry->y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
@@ -22,8 +21,7 @@ void figure_create_immigrant(building *house, int num_people)
     f->wait_ticks = 10 + (house->house_figure_generation_delay & 0x7f);
     f->migrant_num_people = num_people;
 }
-void figure_create_emigrant(building *house, int num_people)
-{
+void figure_create_emigrant(building *house, int num_people) {
     city_population_remove(num_people);
     if (num_people < house->house_population)
         house->house_population -= num_people;
@@ -36,8 +34,7 @@ void figure_create_emigrant(building *house, int num_people)
     f->wait_ticks = 0;
     f->migrant_num_people = num_people;
 }
-void figure_create_homeless(int x, int y, int num_people)
-{
+void figure_create_homeless(int x, int y, int num_people) {
     figure *f = figure_create(FIGURE_HOMELESS, x, y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->wait_ticks = 0;
@@ -45,8 +42,7 @@ void figure_create_homeless(int x, int y, int num_people)
     city_population_remove_homeless(num_people);
 }
 
-void figure::update_direction_and_image()
-{
+void figure::update_direction_and_image() {
 //    figure_image_update(image_id_from_group(GROUP_FIGURE_MIGRANT));
     if (action_state == FIGURE_ACTION_2_IMMIGRANT_ARRIVING ||
         action_state == FIGURE_ACTION_6_EMIGRANT_LEAVING) {
@@ -55,8 +51,7 @@ void figure::update_direction_and_image()
         figure_image_set_cart_offset((dir + 4) % 8);
     }
 }
-static int closest_house_with_room(int x, int y)
-{
+static int closest_house_with_room(int x, int y) {
     int min_dist = 1000;
     int min_building_id = 0;
     int max_id = building_get_highest_id();
@@ -98,11 +93,10 @@ static void add_house_population(building *house, int num_people) {
     house->immigrant_figure_id = 0;
 }
 
-void figure::immigrant_action()
-{
+void figure::immigrant_action() {
     building *b = building_get(immigrant_building_id);
     switch (action_state) {
-        case ACTION_8_IDLE_RECALCULATE:
+        case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
             is_ghost = 1;
             anim_frame = 0;
@@ -110,7 +104,7 @@ void figure::immigrant_action()
             if (wait_ticks <= 0)
                 advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
             break;
-        case ACTION_9_IMMIGRANT_ARRIVING: // pharaoh
+        case 9: // arriving
         case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
             do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
             break;
@@ -122,8 +116,7 @@ void figure::immigrant_action()
     }
     update_direction_and_image();
 }
-void figure::emigrant_action()
-{
+void figure::emigrant_action() {
     switch (action_state) {
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
             is_ghost = 1;
@@ -143,8 +136,7 @@ void figure::emigrant_action()
     }
     update_direction_and_image();
 }
-void figure::homeless_action()
-{
+void figure::homeless_action() {
     switch (action_state) {
         case FIGURE_ACTION_7_HOMELESS_CREATED:
             anim_frame = 0;
@@ -172,6 +164,7 @@ void figure::homeless_action()
                 add_house_population(building_get(immigrant_building_id), migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
+        case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
             const map_tile *exit = city_map_exit_point();
             do_goto(exit->x, exit->y, TERRAIN_USAGE_ANY);

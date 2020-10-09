@@ -40,8 +40,7 @@ static int get_first_available(void) {
     return 0;
 }
 
-void figure::figure_route_add()
-{
+void figure::figure_route_add() {
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;

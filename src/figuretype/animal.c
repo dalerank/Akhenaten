@@ -18,6 +18,8 @@
 #include "map/point.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
+#include "map/terrain.h"
+#include "map/building.h"
 
 static const map_point SEAGULL_OFFSETS[] = {
         {0,  0},
@@ -141,9 +143,24 @@ void figure_create_herds(void) {
     scenario_map_foreach_herd_point(create_herd);
 }
 
-#include "map/terrain.h"
-#include "map/building.h"
-
+bool figure::herd_roost(int step, int bias, int max_dist) {
+    if (!formation_id)
+        return false;
+    const formation *m = formation_get(formation_id);
+    int dx;
+    int dy;
+    random_around_point(m->x_home, m->y_home, tile_x, tile_y, &dx, &dy, step, bias, max_dist);
+    int offset = map_grid_offset(dx, dy);
+    if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) { // todo: fix gardens
+        destination_x = dx;
+        destination_y = dy;
+        return true;
+    } else {
+        destination_x = 0;
+        destination_y = 0;
+        return false;
+    }
+}
 void figure::seagulls_action() {
     terrain_usage = TERRAIN_USAGE_ANY;
     is_ghost = 0;
@@ -209,61 +226,25 @@ void figure::sheep_action() {
 void figure::wolf_action() {
     const formation *m = formation_get(formation_id);
     city_figures_add_animal();
-
     switch (action_state) {
-        case ACTION_24_SPAWNING:
-        case ACTION_14_SCARED:
-        case ACTION_15_TERRIFIED:
-        case ACTION_18_ROOSTING:
-        case ACTION_19_AT_REST:
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-            wait_ticks--;
-            if (wait_ticks <= 0)
-                advance_action(ACTION_8_IDLE_RECALCULATE);
-            break;
-        case ACTION_8_IDLE_RECALCULATE:
-            wait_ticks--;
-            if (wait_ticks <= 0) {
-                int dx;
-                int dy;
-                random_around_point(m->x_home, m->y_home, tile_x, tile_y, &dx, &dy, 4, 8, 22);
-                int offset = map_grid_offset(dx, dy);
-                if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) {
-                    wait_ticks = 0;
-                    destination_x = dx;
-                    destination_y = dy;
-                    advance_action(ACTION_10_GOING);
-                } else {
-                    wait_ticks = 5;
-                    destination_x = 0;
-                    destination_y = 0;
-                }
+            wait_ticks++;
+            if (wait_ticks > 400) {
+                wait_ticks = id & 0x1f;
+                action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
+                destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
+                destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
+                roam_length = 0;
             }
             break;
-        case ACTION_10_GOING:
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-            {
-//                max_roam_length = random_byte() / 32 + 8;
-//                do_roam(TERRAIN_USAGE_ANY);
-//                if (max_roam_length) {
-//                    wait_ticks = 5;
-//                    advance_action(ACTION_18_ROOSTING + (random_byte() & 0x1));
-//                }
-                if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ANIMAL, ACTION_18_ROOSTING + (random_byte() & 0x1), ACTION_8_IDLE_RECALCULATE)) {
-                    wait_ticks = 50;
-                }
-
-//                move_ticks(2);
-//                if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
-//                    direction = previous_tile_direction;
-//                    action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-//                    wait_ticks = id & 0x1f;
-//                } else if (direction == DIR_FIGURE_REROUTE)
-//                    route_remove();
-                break;
-            }
-        case ACTION_16_FLEEING:
-            // scatter!!!!
+            move_ticks(2);
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
+                direction = previous_tile_direction;
+                action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+                wait_ticks = id & 0x1f;
+            } else if (direction == DIR_FIGURE_REROUTE)
+                route_remove();
             break;
         case FIGURE_ACTION_199_WOLF_ATTACKING:
             move_ticks(2);
@@ -291,37 +272,75 @@ void figure::wolf_action() {
             }
             break;
     }
-    if (GAME_ENV == ENGINE_ENV_C3) {
-//        int dir = figure_image_direction();
-//        if (action_state == FIGURE_ACTION_149_CORPSE)
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset();
-//        else if (action_state == FIGURE_ACTION_150_ATTACK)
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 + dir + 8 * (attack_image_offset / 4);
-//        else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
-//        else
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * anim_frame;
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        switch (action_state) {
-            case ACTION_8_IDLE_RECALCULATE:
-            case ACTION_19_AT_REST:
-                image_set_animation(GROUP_FIGURE_WOLF, 224, 8, 1);
-                break;
-            case ACTION_18_ROOSTING:
-                image_set_animation(GROUP_FIGURE_WOLF, 160, 8, 1);
-                break;
-            case ACTION_10_GOING:
-                image_set_animation(GROUP_FIGURE_WOLF, 0, 11, 1);
-                break;
-            case ACTION_15_TERRIFIED:
-            case ACTION_14_SCARED:
-                image_set_animation(GROUP_FIGURE_WOLF, 224, 8, 1);
-                anim_frame = 0;
-                break;
-            case ACTION_16_FLEEING:
-                image_set_animation(GROUP_FIGURE_WOLF, 104, 7, 1);
-                break;
-        }
+    int dir = figure_image_direction();
+    if (action_state == FIGURE_ACTION_149_CORPSE)
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset();
+    else if (action_state == FIGURE_ACTION_150_ATTACK)
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 + dir + 8 * (attack_image_offset / 4);
+    else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
+    else
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * anim_frame;
+}
+void figure::ostrich_action() {
+    const formation *m = formation_get(formation_id);
+    city_figures_add_animal();
+
+    switch (action_state) {
+        case 24: // spawning
+        case 14: // scared
+        case 15: // terrified
+        case 18: // roosting
+        case 19: // idle
+        case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
+            wait_ticks--;
+//            if (wait_ticks % 5 == 0 && is_nearby(NEARBY_ANY, 6))
+//                advance_action(ACTION_16_FLEEING);
+            if (wait_ticks <= 0)
+                advance_action(ACTION_8_RECALCULATE);
+            break;
+        case 199:
+        case ACTION_8_RECALCULATE:
+            wait_ticks--;
+            if (wait_ticks <= 0) {
+                if (herd_roost(4, 8, 22)) {
+                    wait_ticks = 0;
+                    advance_action(ACTION_10_GOING);
+                } else
+                    wait_ticks = 5;
+            }
+            break;
+        case 16: // fleeing
+        case ACTION_10_GOING:
+        case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
+//            if (action_state == 16)
+//                while (destination_x == 0 || destination_y == 0)
+//                    herd_roost(4, 8, 22);
+            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ANIMAL,
+                18 + (random_byte() & 0x1), ACTION_8_RECALCULATE))
+                wait_ticks = 50;
+            break;
+    }
+    switch (action_state) {
+        case ACTION_8_RECALCULATE:
+        case 19: // idle
+            image_set_animation(GROUP_FIGURE_OSTRICH, 224, 8);
+            break;
+        case 18: // roosting
+            image_set_animation(GROUP_FIGURE_OSTRICH, 160, 8);
+            break;
+        case 16: // fleeing
+        case 10: // on the move
+            image_set_animation(GROUP_FIGURE_OSTRICH, 0, 11);
+            break;
+        case 15: // terrified
+        case 14: // scared
+            image_set_animation(GROUP_FIGURE_OSTRICH, 224, 8);
+            anim_frame = 0;
+            break;
+        case FIGURE_ACTION_150_ATTACK: // unused?
+            image_set_animation(GROUP_FIGURE_OSTRICH, 104, 7);
+            break;
     }
 }
 void figure::zebra_action() {
@@ -556,5 +575,91 @@ void figure_hippodrome_horse_reroute(void) {
             f->wait_ticks_missile = 0;
             set_horse_destination(HORSE_CREATED);
         }
+    }
+}
+
+#include "missile.h"
+#include "figure/properties.h"
+
+void figure::hunter_action() {
+    figure *prey = figure_get(target_figure_id);
+    int dist = 0;
+    switch (action_state) {
+        case ACTION_8_RECALCULATE:
+        case 14: // spawning
+            target_figure_id = is_nearby(1, &dist, 10000, false);
+            if (target_figure_id) {
+                figure_get(target_figure_id)->targeted_by_figure_id = id;
+                advance_action(9);
+            }
+            break;
+        case 13: // pitpat
+            wait_ticks--;
+            if (wait_ticks <= 0)
+                advance_action(9);
+            break;
+        case 9: // following prey
+            if (calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y) > 4)
+                do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANY, 15, 8);
+            else {
+                wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
+                advance_action(15);
+            }
+            break;
+//        case ??: // attacking enemy
+        case 15: // firing at prey
+            wait_ticks--;
+            if (wait_ticks <= 0) {
+                wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
+                if (prey->action_state == FIGURE_ACTION_149_CORPSE)
+                    advance_action(11);
+                else if (calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y) > 4) {
+                    advance_action(9);
+                    wait_ticks = 0;
+//                    wait_ticks = 30;
+//                    advance_action(13);
+                } else {
+                    direction = calc_missile_shooter_direction(tile_x, tile_y, prey->tile_x, prey->tile_y);
+                    missile_fire_at(target_figure_id, FIGURE_HUNTER_ARROW);
+                }
+            }
+            break;
+        case 11: // going to pick up prey
+            if (do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANY, 10, 11))
+                anim_offset = 0;
+            break;
+        case 10: // picking up prey
+            if (target_figure_id)
+                prey->figure_delete();
+            target_figure_id = 0;
+            if (anim_frame >= 17)
+                advance_action(12);
+            break;
+        case 12: // returning with prey
+            if (do_returnhome(TERRAIN_USAGE_ANY)) // add game meat to hunting lodge!
+                building_get(building_id)->loads_stored++;
+            break;
+    }
+    switch (action_state) {
+        case ACTION_8_RECALCULATE:
+        case 14:
+        case 13:
+        case 9:
+        case 11: // normal walk
+            image_set_animation(GROUP_FIGURE_HUNTER, 0, 12);
+            break;
+        case 15: // hunting
+            image_set_animation(GROUP_FIGURE_HUNTER, 104, 12);
+            break;
+//        case ??: // attacking
+//            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
+//        case ??: // attacking w/ prey on his back
+//            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
+        case 10:
+            image_set_animation(GROUP_FIGURE_HUNTER, 392, 18);
+            break;
+        case 12:
+            image_set_animation(GROUP_FIGURE_HUNTER, 536, 12);
+            break;
     }
 }

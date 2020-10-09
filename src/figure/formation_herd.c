@@ -121,20 +121,34 @@ static void move_animals(const formation *m, int attacking_animals) {
             f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
         }
-        f->wait_ticks = 401;
+        if (GAME_ENV == ENGINE_ENV_C3)
+            f->wait_ticks = 401;
         if (attacking_animals) {
             int target_id = figure_combat_get_target_for_wolf(f->tile_x, f->tile_y, 6);
             if (target_id) {
-                figure *target = figure_get(target_id);
-                f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
-                f->destination_x = target->tile_x;
-                f->destination_y = target->tile_y;
-                f->target_figure_id = target_id;
-                target->targeted_by_figure_id = f->id;
-                f->target_figure_created_sequence = target->created_sequence;
-                f->route_remove();
+                if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                    f->destination_x = 0;
+                    f->destination_y = 0;
+                    while (f->destination_x == 0 || f->destination_y == 0)
+                        f->herd_roost(4, 8, 22);
+                    f->advance_action(16);
+                } else {
+                    figure *target = figure_get(target_id);
+                    f->target_figure_id = target_id;
+                    f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
+                    f->destination_x = target->tile_x;
+                    f->destination_y = target->tile_y;
+                    target->targeted_by_figure_id = f->id;
+                    f->target_figure_created_sequence = target->created_sequence;
+                    f->route_remove();
+                }
             } else {
-                f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+                if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                    f->advance_action(14);
+                    f->destination_x = 0;
+                    f->destination_y = 0;
+                } else
+                    f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             }
         } else {
             f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -162,7 +176,9 @@ static void set_figures_to_initial(const formation *m) {
         if (m->figures[i] > 0) {
             figure *f = figure_get(m->figures[i]);
             if (f->action_state != FIGURE_ACTION_149_CORPSE &&
-                f->action_state != FIGURE_ACTION_150_ATTACK) {
+                f->action_state != FIGURE_ACTION_150_ATTACK &&
+                f->action_state != ACTION_16_FLEEING) {
+
                 f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 0;
 
@@ -170,8 +186,8 @@ static void set_figures_to_initial(const formation *m) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     random_generate_next();
                     f->wait_ticks = 255 + (random_byte()) - 64;
-                    if (f->type == FIGURE_WOLF)
-                        f->action_state = ACTION_18_ROOSTING + (random_byte() & 0x1);
+                    if (f->type == FIGURE_OSTRICH)
+                        f->action_state = 18 + (random_byte() & 0x1);
                 }
             }
         }
@@ -185,7 +201,7 @@ static void update_herd_formation(formation *m) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                wolf->action_state = ACTION_24_SPAWNING;
+                wolf->action_state = 24;
             wolf->formation_id = m->id;
             wolf->wait_ticks = wolf->id & 0x1f;
         }
@@ -196,8 +212,10 @@ static void update_herd_formation(formation *m) {
         if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK)
             attacking_animals++;
     }
-    if (m->missile_attack_timeout)
+    if (m->missile_attack_timeout) {
         attacking_animals = 1;
+        m->missile_attack_timeout--;
+    }
     if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)

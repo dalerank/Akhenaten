@@ -445,8 +445,7 @@ void building_construction_cancel(void) {
     }
     building_rotation_reset_rotation();
 }
-void building_construction_update(int x, int y, int grid_offset) // update ghost placement (constructing e.g. roads)
-{
+void building_construction_update(int x, int y, int grid_offset) {// update ghost placement (constructing e.g. roads)
     int type = data.sub_type ? data.sub_type : data.type;
     if (grid_offset) {
         data.end.x = x;

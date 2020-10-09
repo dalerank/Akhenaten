@@ -361,8 +361,7 @@ void figure::draw_figure_with_cart(int x, int y) {
         draw_figure_main(x, y);
     }
 }
-void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord)
-{
+void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord) {
     pixel_coordinate coords2 = city_view_grid_offset_to_pixel(tile_x, tile_y);
     adjust_pixel_offset(&x, &y);
     if (coord != nullptr) {

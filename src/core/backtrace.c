@@ -6,8 +6,7 @@
 
 #include <execinfo.h>
 
-void backtrace_print(void)
-{
+void backtrace_print(void) {
     void *array[100];
     int size = backtrace(array, 100);
 

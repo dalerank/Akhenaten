@@ -28,116 +28,117 @@
 //}
 
 typedef struct {
+    char speed_mult;
     char terrain_usage;
     short max_roam_length;
     int base_image_group;
 } figure_action_property;
 
 static figure_action_property action_lookup[] = {
-        {0,                     0,      0},  //FIGURE_NONE = 0,
-        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_MIGRANT},  //FIGURE_IMMIGRANT = 1,
-        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_EMIGRANT = 2,
-        {TERRAIN_USAGE_PREFER_ROADS,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_HOMELESS = 3,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_CART_PUSHER = 4,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_LABOR_SEEKER},  //FIGURE_LABOR_SEEKER = 5,
-        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_EXPLOSION},  //FIGURE_EXPLOSION = 6,
-        {TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_TAX_COLLECTOR},  //FIGURE_TAX_COLLECTOR = 7,
-        {TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_ENGINEER},  //FIGURE_ENGINEER = 8,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_WAREHOUSEMAN = 9,
-        {TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_PREFECT},  //FIGURE_PREFECT = 10,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_JAVELIN = 11,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_MOUNTED = 12,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_LEGIONARY = 13,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_STANDARD = 14,
-        {TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_ACTOR},  //FIGURE_ACTOR = 15,
-        {TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_GLADIATOR},  //FIGURE_GLADIATOR = 16,
-        {TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_LION_TAMER},  //FIGURE_LION_TAMER = 17,
-        {TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_CHARIOTEER},  //FIGURE_CHARIOTEER = 18,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN},  //FIGURE_TRADE_CARAVAN = 19,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_TRADE_SHIP = 20,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN_DONKEY},  //FIGURE_TRADE_CARAVAN_DONKEY = 21,
-        {TERRAIN_USAGE_ROADS,   0,      0},  //FIGURE_PROTESTER = 22,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CRIMINAL},  //FIGURE_CRIMINAL = 23,
-        {TERRAIN_USAGE_ENEMY,   480,    0},  //FIGURE_RIOTER = 24,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FISHING_BOAT = 25,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MARKET_LADY},  //FIGURE_MARKET_TRADER = 26,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_PRIEST},  //FIGURE_PRIEST = 27,
-        {TERRAIN_USAGE_ROADS,   192,    GROUP_FIGURE_SCHOOL_CHILD},   //FIGURE_SCHOOL_CHILD = 28,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_TEACHER_LIBRARIAN},  //FIGURE_TEACHER = 29,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_TEACHER_LIBRARIAN},  //FIGURE_LIBRARIAN = 30,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_BARBER},  //FIGURE_BARBER = 31,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_BATHHOUSE_WORKER},  //FIGURE_BATHHOUSE_WORKER = 32,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_DOCTOR_SURGEON},  //FIGURE_DOCTOR = 33,
-        {TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MORTUARY},   //FIGURE_SURGEON = 34,
-        {TERRAIN_USAGE_ROADS,   384,    0},   //FIGURE_WORKER = 35,
-        {TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_MAP_FLAG = 36,
-        {TERRAIN_USAGE_ANY,     0,      0}, //FIGURE_FLOTSAM = 37,
-        {TERRAIN_USAGE_ROADS,   0,      0},    //FIGURE_DOCKER = 38,
-        {TERRAIN_USAGE_ROADS,   800,    0},   //FIGURE_MARKET_BUYER = 39,
-        {TERRAIN_USAGE_ROADS,   128,    GROUP_FIGURE_PATRICIAN},   //FIGURE_PATRICIAN = 40,
-        {TERRAIN_USAGE_ANY,     800,    0},   //FIGURE_INDIGENOUS_NATIVE = 41,
-        {TERRAIN_USAGE_WALLS,   800,    0},   //FIGURE_TOWER_SENTRY = 42,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY43_SPEAR = 43,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY44_SWORD = 44,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY45_SWORD = 45,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY46_CAMEL = 46,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY47_ELEPHANT = 47,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY48_CHARIOT = 48,
-        {TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY49_FAST_SWORD = 49,
-        {TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY50_SWORD = 50,
-        {TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY51_SPEAR = 51,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY52_MOUNTED_ARCHER = 52,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY53_AXE = 53,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY54_GLADIATOR = 54,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_JAVELIN = 55,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_MOUNTED = 56,
-        {TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_LEGIONARY = 57,
-        {TERRAIN_USAGE_ROADS,   0,      0},   //FIGURE_NATIVE_TRADER = 58,
-        {TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_ARROW = 59,
-        {TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_JAVELIN = 60,
-        {TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_BOLT = 61,
-        {TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_BALLISTA = 62,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_CREATURE = 63,
-        {TERRAIN_USAGE_ROADS,   192,    GROUP_FIGURE_MISSIONARY},    //FIGURE_MISSIONARY = 64,
-        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_SEAGULLS},   //FIGURE_FISH_GULLS = 65,
-        {TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_DELIVERY_BOY},  //FIGURE_DELIVERY_BOY = 66,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_SHIPWRECK = 67,
-        {TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_SHEEP},  //FIGURE_SHEEP = 68,
-        {TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_WOLF},  //FIGURE_WOLF = 69,
-        {TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_ZEBRA},  //FIGURE_ZEBRA = 70,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_SPEAR = 71,
-        {TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_HIPPODROME_HORSES = 72,
+        {0, 0,                     0,      0},  //FIGURE_NONE = 0,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_MIGRANT},  //FIGURE_IMMIGRANT = 1,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_EMIGRANT = 2,
+        {1, TERRAIN_USAGE_PREFER_ROADS,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_HOMELESS = 3,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_CART_PUSHER = 4,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_LABOR_SEEKER},  //FIGURE_LABOR_SEEKER = 5,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_EXPLOSION},  //FIGURE_EXPLOSION = 6,
+        {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_TAX_COLLECTOR},  //FIGURE_TAX_COLLECTOR = 7,
+        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_ENGINEER},  //FIGURE_ENGINEER = 8,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_WAREHOUSEMAN = 9,
+        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_PREFECT},  //FIGURE_PREFECT = 10,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_JAVELIN = 11,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_MOUNTED = 12,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_LEGIONARY = 13,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_STANDARD = 14,
+        {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_ACTOR},  //FIGURE_ACTOR = 15,
+        {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_GLADIATOR},  //FIGURE_GLADIATOR = 16,
+        {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_LION_TAMER},  //FIGURE_LION_TAMER = 17,
+        {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_CHARIOTEER},  //FIGURE_CHARIOTEER = 18,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN},  //FIGURE_TRADE_CARAVAN = 19,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_TRADE_SHIP = 20,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN_DONKEY},  //FIGURE_TRADE_CARAVAN_DONKEY = 21,
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  //FIGURE_PROTESTER = 22,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CRIMINAL},  //FIGURE_CRIMINAL = 23,
+        {1, TERRAIN_USAGE_ENEMY,   480,    0},  //FIGURE_RIOTER = 24,
+        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FISHING_BOAT = 25,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MARKET_LADY},  //FIGURE_MARKET_TRADER = 26,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_PRIEST},  //FIGURE_PRIEST = 27,
+        {1, TERRAIN_USAGE_ROADS,   192,    GROUP_FIGURE_SCHOOL_CHILD},   //FIGURE_SCHOOL_CHILD = 28,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_TEACHER_LIBRARIAN},  //FIGURE_TEACHER = 29,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_TEACHER_LIBRARIAN},  //FIGURE_LIBRARIAN = 30,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_BARBER},  //FIGURE_BARBER = 31,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_BATHHOUSE_WORKER},  //FIGURE_BATHHOUSE_WORKER = 32,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_DOCTOR_SURGEON},  //FIGURE_DOCTOR = 33,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MORTUARY},   //FIGURE_SURGEON = 34,
+        {1, TERRAIN_USAGE_ROADS,   384,    0},   //FIGURE_WORKER = 35,
+        {1, TERRAIN_USAGE_ANY,     0,      0},   //FIGURE_MAP_FLAG = 36,
+        {1, TERRAIN_USAGE_ANY,     0,      0}, //FIGURE_FLOTSAM = 37,
+        {1, TERRAIN_USAGE_ROADS,   0,      0},    //FIGURE_DOCKER = 38,
+        {1, TERRAIN_USAGE_ROADS,   800,    0},   //FIGURE_MARKET_BUYER = 39,
+        {1, TERRAIN_USAGE_ROADS,   128,    GROUP_FIGURE_PATRICIAN},   //FIGURE_PATRICIAN = 40,
+        {1, TERRAIN_USAGE_ANY,     800,    0},   //FIGURE_INDIGENOUS_NATIVE = 41,
+        {1, TERRAIN_USAGE_WALLS,   800,    0},   //FIGURE_TOWER_SENTRY = 42,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY43_SPEAR = 43,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY44_SWORD = 44,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY45_SWORD = 45,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY46_CAMEL = 46,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY47_ELEPHANT = 47,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY48_CHARIOT = 48,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY49_FAST_SWORD = 49,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY50_SWORD = 50,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},  //FIGURE_ENEMY51_SPEAR = 51,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY52_MOUNTED_ARCHER = 52,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY53_AXE = 53,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY54_GLADIATOR = 54,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_JAVELIN = 55,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_MOUNTED = 56,
+        {1, TERRAIN_USAGE_ENEMY,     0,      0},   //FIGURE_ENEMY_CAESAR_LEGIONARY = 57,
+        {1, TERRAIN_USAGE_ROADS,   0,      0},   //FIGURE_NATIVE_TRADER = 58,
+        {1, TERRAIN_USAGE_ANY,     0,   0},   //FIGURE_ARROW = 59,
+        {1, TERRAIN_USAGE_ANY,     0,   0},   //FIGURE_JAVELIN = 60,
+        {1, TERRAIN_USAGE_ANY,     0,   0},   //FIGURE_BOLT = 61,
+        {1, TERRAIN_USAGE_ANY,     0,   0},   //FIGURE_BALLISTA = 62,
+        {1, TERRAIN_USAGE_ANY,     0,   0},  //FIGURE_CREATURE = 63,
+        {1, TERRAIN_USAGE_ROADS,   192, GROUP_FIGURE_MISSIONARY},    //FIGURE_MISSIONARY = 64,
+        {1, TERRAIN_USAGE_ANY,     0,   GROUP_FIGURE_SEAGULLS},   //FIGURE_FISH_GULLS = 65,
+        {1, TERRAIN_USAGE_ROADS,   0,   GROUP_FIGURE_DELIVERY_BOY},  //FIGURE_DELIVERY_BOY = 66,
+        {1, TERRAIN_USAGE_ANY,     0,   0},  //FIGURE_SHIPWRECK = 67,
+        {2, TERRAIN_USAGE_ANIMAL,  0,   GROUP_FIGURE_SHEEP},  //FIGURE_SHEEP = 68,
+        {2, TERRAIN_USAGE_ANIMAL,  0,   GROUP_FIGURE_OSTRICH},  //FIGURE_WOLF = 69,
+        {2, TERRAIN_USAGE_ANIMAL,  0,   GROUP_FIGURE_ZEBRA},  //FIGURE_ZEBRA = 70,
+        {1, TERRAIN_USAGE_ANY,     0,   0},  //FIGURE_SPEAR = 71,
+        {1, TERRAIN_USAGE_ANY,     0,   0},  //FIGURE_HIPPODROME_HORSES = 72,
 
         // PHARAOH
 
-        {TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HUNTER},  // 73
-        {TERRAIN_USAGE_ANY,     0,      0},  // 74
-        {TERRAIN_USAGE_ANY,     0,      0},  // 75
-        {TERRAIN_USAGE_ANY,     0,      0},  // 76
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 77
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 78
-        {TERRAIN_USAGE_ANY,     0,      0},  // 79
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 80
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 81
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 82
-        {TERRAIN_USAGE_ANY,     0,      0},  // 83
-        {TERRAIN_USAGE_ANY,     0,      0},  // 84
-        {TERRAIN_USAGE_ANY,     0,      0},  // 85
-        {TERRAIN_USAGE_ANY,     0,      0},  // 86
-        {TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_WATER_CARRIER},  // 87 water carrier
-        {TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_POLICEMAN},  // 88 policeman
-        {TERRAIN_USAGE_ANY,     0,      0},  // 89
-        {TERRAIN_USAGE_ANY,     0,      0},  // 90
-        {TERRAIN_USAGE_ANY,     0,      0},  // 91
-        {TERRAIN_USAGE_ANY,     0,      0},  // 92
-        {TERRAIN_USAGE_ANY,     0,      0},  // 93
-        {TERRAIN_USAGE_ANY,     0,      0},  // 94
-        {TERRAIN_USAGE_ANY,     0,      0},  // 95
-        {TERRAIN_USAGE_ANY,     0,      0},  // 96
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 97
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 98
-        {TERRAIN_USAGE_ANY,     0,      0},  // 99
-        {TERRAIN_USAGE_ROADS,   0,      0},  // 100
+        {1, TERRAIN_USAGE_ANY,     0,   GROUP_FIGURE_HUNTER},  // 73
+        {1, TERRAIN_USAGE_ANY,     0,   GROUP_FIGURE_HUNTER_ARROW},  // 74
+        {1, TERRAIN_USAGE_ANY,     0,   0},  // 75
+        {1, TERRAIN_USAGE_ANY,     0,   0},  // 76
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 77
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 78
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 79
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 80
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 81
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 82
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 83
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 84
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 85
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 86
+        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_WATER_CARRIER},  // 87 water carrier
+        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_POLICEMAN},  // 88 policeman
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 89
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 90
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 91
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 92
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 93
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 94
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 95
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 96
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 97
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 98
+        {1, TERRAIN_USAGE_ANY,     0,      0},  // 99
+        {1, TERRAIN_USAGE_ROADS,   0,      0},  // 100
 };
 
 #include "core/image.h"
@@ -165,7 +166,7 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
         advance_action(NEXT_ACTION);
         return true;
     } else
-        roam_ticks(1);
+        roam_ticks(speed_multiplier);
     return false;
 }
 bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
@@ -188,7 +189,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     else {
         destination_x = x;
         destination_y = y;
-        move_ticks(1);
+        move_ticks(speed_multiplier);
     }
 
     // check if destination is reached/figure is lost/etc.
@@ -270,6 +271,7 @@ void figure::action_perform() {
         if (action_props.terrain_usage != -1)
             terrain_usage = action_props.terrain_usage;
         max_roam_length = action_props.max_roam_length;
+        speed_multiplier = action_props.speed_mult;
         image_set_animation(action_props.base_image_group);
 
         // check for building being alive (at the start of the action)
@@ -301,6 +303,10 @@ void figure::action_perform() {
             case FIGURE_WATER_CARRIER:
             case FIGURE_PRIEST:
                 if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+                    return figure_delete();
+                break;
+            case FIGURE_HUNTER:
+                if (b->state != BUILDING_STATE_VALID)
                     return figure_delete();
                 break;
             case FIGURE_CART_PUSHER:
@@ -418,12 +424,16 @@ void figure::action_perform() {
             case 66: delivery_boy_action();             break;
             case 67: shipwreck_action();                break;
             case 68: sheep_action();                    break;
-            case 69: wolf_action();                     break;
+            case 69:
+                if (GAME_ENV == ENGINE_ENV_C3)
+                    wolf_action();
+                else
+                    ostrich_action();                   break;
             case 70: zebra_action();                    break; //70
             case 71: spear_action();                    break;
             case 72: hippodrome_horse_action();         break;
             // PHARAOH vvvv
-//            case 73: hunter_action();                   break;
+            case 73: hunter_action();                   break;
             case 74: arrow_action();                    break;
 //            case 85: worker_action();                   break;
             case 88: policeman_action();                break;

@@ -69,7 +69,10 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
         f->set_cross_country_direction(f->cross_country_x, f->cross_country_y, 15 * x_dst, 15 * y_dst, 1);
     }
 }
-
+void figure::missile_fire_at(int target_id, int missile_type) {
+    figure *f = figure_get(target_id);
+    figure_create_missile(id, tile_x, tile_y, f->tile_x, f->tile_y, missile_type);
+}
 
 bool figure::is_citizen() {
     if (action_state != FIGURE_ACTION_149_CORPSE) {
@@ -154,15 +157,12 @@ void figure::arrow_action() {
         kill();
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_citizen_on_tile(grid_offset_figure);
+    int target_id = get_non_citizen_on_tile(grid_offset_figure);
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
     } else if (should_die)
         kill();
-
-    int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 void figure::spear_action() {
     use_cross_country = 1;
@@ -194,9 +194,6 @@ void figure::javelin_action() {
         sound_effect_play(SOUND_EFFECT_JAVELIN);
     } else if (should_die)
         kill();
-
-    int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-    sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 void figure::bolt_action() {
     use_cross_country = 1;

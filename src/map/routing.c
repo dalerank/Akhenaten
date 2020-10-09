@@ -325,8 +325,7 @@ static void callback_travel_citizen_road(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, int dst_y)
-{
+int map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -339,8 +338,7 @@ static void callback_travel_citizen_road_garden(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y)
-{
+int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;

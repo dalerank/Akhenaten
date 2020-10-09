@@ -79,7 +79,7 @@ typedef enum figure_type {
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_SHEEP = 68,
-    FIGURE_WOLF = 69,
+    FIGURE_WOLF = 69, FIGURE_OSTRICH = 69,
     FIGURE_ZEBRA = 70,
     FIGURE_SPEAR = 71,
     FIGURE_HIPPODROME_HORSES = 72,
@@ -94,7 +94,7 @@ typedef enum figure_type {
     FIGURE_POLICEMAN = 88,
     FIGURE_FISHING_SPOT = 95,
 
-    FIGURE_MAX
+    FIGURE_MAX = 999
 } figure_type;
 
 static int figureid_translation_table_ph[] {

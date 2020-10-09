@@ -44,15 +44,26 @@ void figure::figure_image_update() {
     if (anim_frame >= anim_max_frames)
         anim_frame = 0;
 
-    // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
-    if (state == FIGURE_STATE_DYING)
-        sprite_image_id = anim_base + figure_image_corpse_offset();
-    else
-        sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * anim_frame / anim_frame_duration;
+    switch (type) {
+        case FIGURE_JAVELIN:
+        case FIGURE_ARROW:
+        case FIGURE_HUNTER_ARROW: {
+            int dir = (16 + direction - 2 * city_view_orientation()) % 16;
+            sprite_image_id = anim_base + 16 + dir;
+            break;
+        }
+        default:
+            // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
+            if (state == FIGURE_STATE_DYING)
+                sprite_image_id = anim_base + figure_image_corpse_offset();
+            else
+                sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * anim_frame / anim_frame_duration;
 
-    // null images
-    if (anim_base <= 0)
-        sprite_image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 3;
+            // null images
+            if (anim_base <= 0)
+                sprite_image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 3;
+            break;
+    }
 }
 void figure::cart_update_image() {
 

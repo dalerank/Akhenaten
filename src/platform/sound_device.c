@@ -167,8 +167,7 @@ void sound_device_set_channel_volume(int channel, int volume_pct) {
 }
 
 #ifdef __vita__
-static void load_music_for_vita(const char *filename)
-{
+static void load_music_for_vita(const char *filename) {
     if (vita_music_data.buffer) {
         if (strcmp(filename, vita_music_data.filename) == 0)
             return;

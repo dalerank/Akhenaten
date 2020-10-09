@@ -13,7 +13,7 @@ int map_figure_at(int grid_offset) {
 
 #include <assert.h>
 
-bool map_figure_foreach_until(int grid_offset, int test) {
+int map_figure_foreach_until(int grid_offset, int test) {
     if (map_grid_get(&figures, grid_offset) > 0) {
         int figure_id = map_grid_get(&figures, grid_offset);
         while (figure_id) {
@@ -45,7 +45,7 @@ bool map_figure_foreach_until(int grid_offset, int test) {
                     result = false;
             }
             if (result)
-                return result;
+                return figure_id;
 
             if (figure_id != f->next_figure)
                 figure_id = f->next_figure;

@@ -575,8 +575,7 @@ void figure::cross_country_advance_y() {
         cross_country_y--;
 
 }
-void figure::cross_country_advance()
-{
+void figure::cross_country_advance() {
     cross_country_update_delta();
     if (cc_direction == 2) { // y
         cross_country_advance_y();

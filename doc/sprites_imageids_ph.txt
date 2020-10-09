@@ -44,7 +44,7 @@
 2657 hunter
 2753 hunter ded
 2761 hunter hunting
-2857 hunter collecting
+2857 hunter attacking
 2953 hunter attacking while carrying?
 3049 hunter pickup
 3193 hunter returning
@@ -129,7 +129,7 @@
 7727 stonemason waiting
 7823 ostrich
 7919 ostrich ded
-7927 ostrich runaway!!
+7927 ostrich attack (unused?)
 7983 ostrich yumgrass
 8047 ostrich waiting
 8111 hyena

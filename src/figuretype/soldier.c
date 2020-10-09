@@ -243,7 +243,8 @@ void figure::javelin_launch_missile() {
             if (tile.x == -1 || tile.y == -1)
                 map_point_get_last_result(&tile);
 
-            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
+//            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
+            missile_fire_at(target_figure_id, FIGURE_JAVELIN);
             formation_record_missile_fired(formation_get(formation_id));
         }
         attack_image_offset++;
@@ -456,7 +457,6 @@ void figure::soldier_action() {
                     javelin_launch_missile();
                 else if (type == FIGURE_FORT_LEGIONARY)
                     legionary_attack_adjacent_enemy();
-
             }
             break;
         case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
