@@ -12,15 +12,7 @@
 #include "game/resource.h"
 
 void figure::market_buyer_action() {
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    use_cross_country = 0;
-//    max_roam_length = 800;
-//
-//    building *b = building_get(building_id);
-//    if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
-//        kill();
-
-//    figure_image_increase_offset(12);
+    image_set_animation(GROUP_FIGURE_MARKET_LADY);
     switch (action_state) {
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             move_ticks(1);
@@ -54,7 +46,6 @@ void figure::market_buyer_action() {
 
             break;
     }
-//    figure_image_update(image_id_from_group(GROUP_FIGURE_MARKET_LADY));
 }
 
 int figure::create_delivery_boy(int leader_id) {

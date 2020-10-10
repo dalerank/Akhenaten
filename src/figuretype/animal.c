@@ -584,6 +584,8 @@ void figure_hippodrome_horse_reroute(void) {
 void figure::hunter_action() {
     figure *prey = figure_get(target_figure_id);
     int dist = 0;
+    if (target_figure_id)
+        dist = calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y);
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case 14: // spawning
@@ -594,13 +596,15 @@ void figure::hunter_action() {
             }
             break;
         case 13: // pitpat
+            if (!target_figure_id) return advance_action(8);
             wait_ticks--;
             if (wait_ticks <= 0)
                 advance_action(9);
             break;
         case 9: // following prey
-            if (calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y) > 4)
-                do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANY, 15, 8);
+            if (!target_figure_id) return advance_action(8);
+            if (dist >= 2)
+                do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANIMAL, 15, 8);
             else {
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
                 advance_action(15);
@@ -610,14 +614,15 @@ void figure::hunter_action() {
         case 15: // firing at prey
             wait_ticks--;
             if (wait_ticks <= 0) {
+                if (!target_figure_id) return advance_action(8);
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
                 if (prey->action_state == FIGURE_ACTION_149_CORPSE)
                     advance_action(11);
-                else if (calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y) > 4) {
-                    advance_action(9);
-                    wait_ticks = 0;
-//                    wait_ticks = 30;
-//                    advance_action(13);
+                else if (dist >= 2) {
+//                    advance_action(9);
+//                    wait_ticks = 0;
+                    wait_ticks = 12;
+                    advance_action(13);
                 } else {
                     direction = calc_missile_shooter_direction(tile_x, tile_y, prey->tile_x, prey->tile_y);
                     missile_fire_at(target_figure_id, FIGURE_HUNTER_ARROW);
@@ -625,7 +630,8 @@ void figure::hunter_action() {
             }
             break;
         case 11: // going to pick up prey
-            if (do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANY, 10, 11))
+            if (!target_figure_id) return advance_action(8);
+            if (do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANIMAL, 10, 11))
                 anim_offset = 0;
             break;
         case 10: // picking up prey
@@ -636,7 +642,7 @@ void figure::hunter_action() {
                 advance_action(12);
             break;
         case 12: // returning with prey
-            if (do_returnhome(TERRAIN_USAGE_ANY)) // add game meat to hunting lodge!
+            if (do_returnhome(TERRAIN_USAGE_ANIMAL)) // add game meat to hunting lodge!
                 building_get(building_id)->loads_stored++;
             break;
     }

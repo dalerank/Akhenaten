@@ -107,11 +107,13 @@ uint8_t granary_quarter_button_text[] = "6";
 
 
 static void draw_accept_none_button(int x, int y, int focused) {
+    return; // temp - todo: fix buttons
     uint8_t refuse_button_text[] = {'x', 0};
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
 }
 static void draw_permissions_buttons(int x, int y, int buttons) {
+    return; // temp - todo: fix buttons
     uint8_t permission_button_text[] = {'x', 0};
     int offsets[] = {96, 132, 96};
     for (int i = 0; i < buttons; i++) {
@@ -332,14 +334,10 @@ void window_building_draw_market_orders_foreground(building_info_context *c) {
 
 int window_building_handle_mouse_granary(const mouse *m, building_info_context *c) {
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 82,
-                                     warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id)) {
-    }
-    return generic_buttons_handle_mouse(
-            m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+    generic_buttons_handle_mouse(m, c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 82,
+            warehouse_distribution_permissions_buttons, 1, &data.permission_focus_button_id);
+    generic_buttons_handle_mouse( m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
             go_to_orders_button, 1, &data.focus_button_id);
-
-
 }
 int window_building_handle_mouse_granary_orders(const mouse *m, building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
@@ -381,34 +379,44 @@ void window_building_draw_granary(building_info_context *c) {
         width = lang_text_draw(98, 3, c->x_offset + 220, c->y_offset + 40, FONT_NORMAL_BLACK);
         lang_text_draw_amount(8, 16, b->data.granary.resource_stored[RESOURCE_NONE], c->x_offset + 220 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
+        // todo: fetch map available foods?
+        int food1 = ALLOWED_FOODS[0];
+        int food2 = ALLOWED_FOODS[1];
+        int food3 = ALLOWED_FOODS[2];
+        int food4 = ALLOWED_FOODS[3];
+//        resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON);
+
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS);
-        // wheat
-        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 34, c->y_offset + 68);
-        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_WHEAT], '@', " ", c->x_offset + 68, c->y_offset + 75, FONT_NORMAL_BLACK);
-        lang_text_draw(23, RESOURCE_WHEAT, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
-
-        // vegetables
-        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 34, c->y_offset + 92);
-        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_VEGETABLES], '@', " ", c->x_offset + 68, c->y_offset + 99, FONT_NORMAL_BLACK);
-        lang_text_draw(23, RESOURCE_VEGETABLES, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
-
-        // fruit
-        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 240, c->y_offset + 68);
-        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_FRUIT], '@', " ",
-                                 c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK);
-        lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
-
-        // meat/fish
-        image_draw(image_id + RESOURCE_MEAT_C3 + resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
-                   c->x_offset + 240, c->y_offset + 92);
-        width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT_C3], '@', " ",
-                                 c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
-        lang_text_draw(23, RESOURCE_MEAT_C3, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
+        if (food1) { // wheat
+            image_draw(image_id + food1, c->x_offset + 34, c->y_offset + 68);
+            width = text_draw_number(b->data.granary.resource_stored[food1], '@', " ", c->x_offset + 68,
+                                     c->y_offset + 75, FONT_NORMAL_BLACK);
+            lang_text_draw(23, food1, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
+        }
+        if (food2) { // fruit
+            image_draw(image_id + food2, c->x_offset + 240, c->y_offset + 68);
+            width = text_draw_number(b->data.granary.resource_stored[food2], '@', " ",
+                                     c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK);
+            lang_text_draw(23, food2, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
+        }
+        if (food3) { // vegetables
+            image_draw(image_id + food3, c->x_offset + 34, c->y_offset + 92);
+            width = text_draw_number(b->data.granary.resource_stored[food3], '@', " ", c->x_offset + 68,
+                                     c->y_offset + 99, FONT_NORMAL_BLACK);
+            lang_text_draw(23, food3, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
+        }
+        if (food4) { // meat/fish
+            image_draw(image_id + food4,
+                       c->x_offset + 240, c->y_offset + 92);
+            width = text_draw_number(b->data.granary.resource_stored[food4], '@', " ",
+                                     c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
+            lang_text_draw(23, food4, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
+        }
     }
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 5);
     window_building_draw_employment(c, 142);
-    image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28,
-               c->y_offset + 19 * c->height_blocks - 93);
+//    image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28,
+//               c->y_offset + 19 * c->height_blocks - 93);
 
 }
 void window_building_draw_granary_foreground(building_info_context *c) {

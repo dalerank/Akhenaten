@@ -1,3 +1,4 @@
+#include <cmath>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -30,59 +31,147 @@
 
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
-static const int ADJACENT_OFFSETS_C3[2][4][7] = {
-        {
-                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2),  OFFSET_C3(1, -2)},
-                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1)},
-                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(0, 2), OFFSET_C3(-1, 2)},
-                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-2, 0), OFFSET_C3(-2, -1)}
-        },
-        {
-                {OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3), OFFSET_C3(
-                                                                                                                      1,
-                                                                                                                      -3), OFFSET_C3(
-                                                                                                                                   2,
-                                                                                                                                   -3)},
-                {OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(2, -1), OFFSET_C3(3, -1), OFFSET_C3(3, 0), OFFSET_C3(3,
-                                                                                                                    1), OFFSET_C3(
-                                                                                                                                3,
-                                                                                                                                2)},
-                {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(1, 2), OFFSET_C3(1, 3), OFFSET_C3(0, 3), OFFSET_C3(-1,
-                                                                                                                3), OFFSET_C3(
-                                                                                                                            -2,
-                                                                                                                            3)},
-                {OFFSET_C3(0, 1), OFFSET_C3(-1, 1), OFFSET_C3(-2, 1), OFFSET_C3(-3, 1), OFFSET_C3(-3, 0), OFFSET_C3(-3,
-                                                                                                                    -1), OFFSET_C3(
-                                                                                                                                 -3,
-                                                                                                                                 -2)}
-        }
+static
+const int ADJACENT_OFFSETS_C3[2][4][7] = {
+  {
+    {
+      OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2), OFFSET_C3(1, -2)
+    }, {
+      OFFSET_C3(0, -1),
+      OFFSET_C3(1, -1),
+      OFFSET_C3(2, -1),
+      OFFSET_C3(2, 0),
+      OFFSET_C3(2, 1)
+    }, {
+      OFFSET_C3(1, 0),
+      OFFSET_C3(1, 1),
+      OFFSET_C3(1, 2),
+      OFFSET_C3(0, 2),
+      OFFSET_C3(-1, 2)
+    }, {
+      OFFSET_C3(0, 1),
+      OFFSET_C3(-1, 1),
+      OFFSET_C3(-2, 1),
+      OFFSET_C3(-2, 0),
+      OFFSET_C3(-2, -1)
+    }
+  },
+  {
+    {
+      OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3), OFFSET_C3(
+        1,
+        -3), OFFSET_C3(
+        2,
+        -3)
+    },
+    {
+      OFFSET_C3(0, -1),
+      OFFSET_C3(1, -1),
+      OFFSET_C3(2, -1),
+      OFFSET_C3(3, -1),
+      OFFSET_C3(3, 0),
+      OFFSET_C3(3,
+        1),
+      OFFSET_C3(
+        3,
+        2)
+    },
+    {
+      OFFSET_C3(1, 0),
+      OFFSET_C3(1, 1),
+      OFFSET_C3(1, 2),
+      OFFSET_C3(1, 3),
+      OFFSET_C3(0, 3),
+      OFFSET_C3(-1,
+        3),
+      OFFSET_C3(
+        -2,
+        3)
+    },
+    {
+      OFFSET_C3(0, 1),
+      OFFSET_C3(-1, 1),
+      OFFSET_C3(-2, 1),
+      OFFSET_C3(-3, 1),
+      OFFSET_C3(-3, 0),
+      OFFSET_C3(-3,
+        -1),
+      OFFSET_C3(
+        -3,
+        -2)
+    }
+  }
 };
-static const int ADJACENT_OFFSETS_PH[2][4][7] = {
-        {
-                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2),  OFFSET_PH(1, -2)},
-                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1)},
-                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(0, 2), OFFSET_PH(-1, 2)},
-                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-2, 0), OFFSET_PH(-2, -1)}
-        },
-        {
-                {OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3), OFFSET_PH(
-                                                                                                                      1,
-                                                                                                                      -3), OFFSET_PH(
-                                                                                                                                   2,
-                                                                                                                                   -3)},
-                {OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(2, -1), OFFSET_PH(3, -1), OFFSET_PH(3, 0), OFFSET_PH(3,
-                                                                                                                    1), OFFSET_PH(
-                                                                                                                                3,
-                                                                                                                                2)},
-                {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(1, 2), OFFSET_PH(1, 3), OFFSET_PH(0, 3), OFFSET_PH(-1,
-                                                                                                                3), OFFSET_PH(
-                                                                                                                            -2,
-                                                                                                                            3)},
-                {OFFSET_PH(0, 1), OFFSET_PH(-1, 1), OFFSET_PH(-2, 1), OFFSET_PH(-3, 1), OFFSET_PH(-3, 0), OFFSET_PH(-3,
-                                                                                                                    -1), OFFSET_PH(
-                                                                                                                                 -3,
-                                                                                                                                 -2)}
-        }
+static
+const int ADJACENT_OFFSETS_PH[2][4][7] = {
+  {
+    {
+      OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2), OFFSET_PH(1, -2)
+    }, {
+      OFFSET_PH(0, -1),
+      OFFSET_PH(1, -1),
+      OFFSET_PH(2, -1),
+      OFFSET_PH(2, 0),
+      OFFSET_PH(2, 1)
+    }, {
+      OFFSET_PH(1, 0),
+      OFFSET_PH(1, 1),
+      OFFSET_PH(1, 2),
+      OFFSET_PH(0, 2),
+      OFFSET_PH(-1, 2)
+    }, {
+      OFFSET_PH(0, 1),
+      OFFSET_PH(-1, 1),
+      OFFSET_PH(-2, 1),
+      OFFSET_PH(-2, 0),
+      OFFSET_PH(-2, -1)
+    }
+  },
+  {
+    {
+      OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3), OFFSET_PH(
+        1,
+        -3), OFFSET_PH(
+        2,
+        -3)
+    },
+    {
+      OFFSET_PH(0, -1),
+      OFFSET_PH(1, -1),
+      OFFSET_PH(2, -1),
+      OFFSET_PH(3, -1),
+      OFFSET_PH(3, 0),
+      OFFSET_PH(3,
+        1),
+      OFFSET_PH(
+        3,
+        2)
+    },
+    {
+      OFFSET_PH(1, 0),
+      OFFSET_PH(1, 1),
+      OFFSET_PH(1, 2),
+      OFFSET_PH(1, 3),
+      OFFSET_PH(0, 3),
+      OFFSET_PH(-1,
+        3),
+      OFFSET_PH(
+        -2,
+        3)
+    },
+    {
+      OFFSET_PH(0, 1),
+      OFFSET_PH(-1, 1),
+      OFFSET_PH(-2, 1),
+      OFFSET_PH(-3, 1),
+      OFFSET_PH(-3, 0),
+      OFFSET_PH(-3,
+        -1),
+      OFFSET_PH(
+        -3,
+        -2)
+    }
+  }
 };
 
 static struct {
@@ -111,16 +200,13 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.selected_figure_coord = figure_coord;
     draw_context.highlighted_formation = highlighted_formation;
 }
-
 static int draw_building_as_deleted(building *b) {
     b = building_main(b);
     return (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)));
 }
-
 static int is_multi_tile_terrain(int grid_offset) {
     return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
 }
-
 static int has_adjacent_deletion(int grid_offset) {
     int size = map_property_multi_tile_size(grid_offset);
     int total_adjacent_offsets = size * 2 + 1;
@@ -142,56 +228,138 @@ static int has_adjacent_deletion(int grid_offset) {
     return 0;
 }
 
-static void draw_footprint(int x, int y, int grid_offset) {
-    if (grid_offset == 26791)
-        int a = 3245;
+static int granary_offsets_ph[][2] = {
+        {0, 0},
+        {16, 9},
+        {35, 18},
+        {51, 26},
+        {-16, 7},
+        {1, 16},
+        {20, 26},
+        {37, 35},
+};
 
+static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask) {
+    if (b->type == BUILDING_SENATE_UPGRADED) {
+        // rating flags
+        int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
+        image_draw_masked(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
+        image_draw_masked(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
+        image_draw_masked(image_id + 3, x + 198, y + 27 - city_rating_peace() / 2, color_mask);
+        image_draw_masked(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
+        // unemployed
+        image_id = image_id_from_group(GROUP_FIGURE_HOMELESS);
+        int unemployment_pct = city_labor_unemployment_percentage_for_senate();
+        if (unemployment_pct > 0)
+            image_draw_masked(image_id + 108, x + 80, y, color_mask);
 
-    building_construction_record_view_position(x, y, grid_offset);
-    if (grid_offset < 0) {
-        // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
-    } else if (map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset_figure and leftmost tile -> draw
-        int building_id = map_building_at(grid_offset);
-        color_t color_mask = 0;
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && draw_building_as_deleted(b))
-                color_mask = COLOR_MASK_RED;
+        if (unemployment_pct > 5)
+            image_draw_masked(image_id + 104, x + 230, y - 30, color_mask);
 
-            int view_x, view_y, view_width, view_height;
-            city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
-            if (x < view_x + 100)
-                sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
-            else if (x > view_x + view_width - 100)
-                sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
-            else {
-                sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-            }
-        }
-        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
-            building *b = building_get(0); // abuse empty building
-            b->type = BUILDING_GARDENS;
-            sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-        }
-        int image_id = map_image_at(grid_offset);
-        if (map_property_is_constructing(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
+        if (unemployment_pct > 10)
+            image_draw_masked(image_id + 107, x + 100, y + 20, color_mask);
 
-        if (draw_context.advance_water_animation &&
-            image_id >= draw_context.image_id_water_first &&
-            image_id <= draw_context.image_id_water_last) {
-            image_id++;
-            if (image_id > draw_context.image_id_water_last)
-                image_id = draw_context.image_id_water_first;
+        if (unemployment_pct > 15)
+            image_draw_masked(image_id + 106, x + 235, y - 10, color_mask);
 
-            map_image_set(grid_offset, image_id);
-        }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        if (unemployment_pct > 20)
+            image_draw_masked(image_id + 106, x + 66, y + 20, color_mask);
+
     }
 }
+static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask) {
+    int image_base = 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        image_base = image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL);
+        switch (b->type) {
+            case BUILDING_WINE_WORKSHOP:
+                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                    image_draw_masked(image_base, x + 45, y + 23, color_mask);
+                break;
+            case BUILDING_OIL_WORKSHOP:
+                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                    image_draw_masked(image_base + 1, x + 35, y + 15, color_mask);
+                break;
+            case BUILDING_WEAPONS_WORKSHOP:
+                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                    image_draw_masked(image_base + 3, x + 46, y + 24, color_mask);
+                break;
+            case BUILDING_FURNITURE_WORKSHOP:
+                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                    image_draw_masked(image_base + 2, x + 48, y + 19, color_mask);
+                break;
+            case BUILDING_POTTERY_WORKSHOP:
+                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                    image_draw_masked(image_base + 4, x + 47, y + 24, color_mask);
+                break;
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        image_base = image_id_from_group(GROUP_EMPIRE_RESOURCES);
+        switch (b->type) {
+            case BUILDING_HUNTING_LODGE:
+                if (b->loads_stored >= 0)
+                    image_draw_masked(image_base + b->loads_stored - 1, x + 61, y + 14, color_mask);
+                break;
+        }
+    }
+}
+static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
+    int num_dockers = building_dock_count_idle_dockers(b);
+    if (num_dockers > 0) {
+        int image_dock = map_image_at(b->grid_offset);
+        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
+        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_1))
+            image_dockers += 0;
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
+            image_dockers += 3;
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
+            image_dockers += 6;
+        else {
+            image_dockers += 9;
+        }
+        if (num_dockers == 2)
+            image_dockers += 1;
+        else if (num_dockers == 3)
+            image_dockers += 2;
 
+        const image *img = image_get(image_dockers);
+        image_draw_masked(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
+    }
+}
+static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
+    image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
+    if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
+        image_draw_masked(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
+}
+static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x, y + 60 + img->sprite_offset_y - img->height, color_mask);
+        if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
+        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
+        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
+        if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        int last_spot_filled = 0;
+        int spot_x = 0;
+        int spot_y = 0;
+        for (int r = 1; r < 9; r++) {
+            if (b->data.granary.resource_stored[r] > 0) {
+                int spots_filled = ceil((float)b->data.granary.resource_stored[r] / (float)400); // number of "spots" occupied by food
+                for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
+                    // draw sprite on each granary "spot"
+                    spot_x = granary_offsets_ph[spot][0];
+                    spot_y = granary_offsets_ph[spot][1];
+                    image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + spot_x, y - 74 + spot_y, color_mask);
+                }
+                last_spot_filled += spots_filled;
+            }
+        }
+    }
+}
 static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask) {
     // get which part of the hippodrome is getting checked
     int building_part;
@@ -248,7 +416,6 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
         }
     }
 }
-
 static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask) {
     if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
         image_draw_masked(image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
@@ -263,68 +430,69 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
         draw_hippodrome_spectators(b, x, y, color_mask);
 
 }
-
-static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask) {
-    if (b->type == BUILDING_WINE_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23, color_mask);
-
-    }
-    if (b->type == BUILDING_OIL_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15,
-                              color_mask);
-
-    }
-    if (b->type == BUILDING_WEAPONS_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24,
-                              color_mask);
-
-    }
-    if (b->type == BUILDING_FURNITURE_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19,
-                              color_mask);
-
-    }
-    if (b->type == BUILDING_POTTERY_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24,
-                              color_mask);
-
+static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
+    int image_id = map_image_at(grid_offset);
+    const image *img = image_get(image_id);
+    building *b = building_get(map_building_at(grid_offset));
+    if (img->num_animation_sprites
+        && map_property_is_draw_tile(grid_offset)
+        && b->type == BUILDING_HIPPODROME) {
+        image_draw_masked(image_id + 1,
+                          x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
+                          draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
+        );
     }
 }
 
-static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask) {
-    if (b->type == BUILDING_SENATE_UPGRADED) {
-        // rating flags
-        int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
-        image_draw_masked(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
-        image_draw_masked(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
-        image_draw_masked(image_id + 3, x + 198, y + 27 - city_rating_peace() / 2, color_mask);
-        image_draw_masked(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
-        // unemployed
-        image_id = image_id_from_group(GROUP_FIGURE_HOMELESS);
-        int unemployment_pct = city_labor_unemployment_percentage_for_senate();
-        if (unemployment_pct > 0)
-            image_draw_masked(image_id + 108, x + 80, y, color_mask);
+static void draw_footprint(int x, int y, int grid_offset) {
+    if (grid_offset == 26791)
+        int a = 3245;
 
-        if (unemployment_pct > 5)
-            image_draw_masked(image_id + 104, x + 230, y - 30, color_mask);
 
-        if (unemployment_pct > 10)
-            image_draw_masked(image_id + 107, x + 100, y + 20, color_mask);
+    building_construction_record_view_position(x, y, grid_offset);
+    if (grid_offset < 0) {
+        // Outside map: draw black tile
+        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+    } else if (map_property_is_draw_tile(grid_offset)) {
+        // Valid grid_offset_figure and leftmost tile -> draw
+        int building_id = map_building_at(grid_offset);
+        color_t color_mask = 0;
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && draw_building_as_deleted(b))
+                color_mask = COLOR_MASK_RED;
 
-        if (unemployment_pct > 15)
-            image_draw_masked(image_id + 106, x + 235, y - 10, color_mask);
+            int view_x, view_y, view_width, view_height;
+            city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
+            if (x < view_x + 100)
+                sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
+            else if (x > view_x + view_width - 100)
+                sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
+            else {
+                sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+            }
+        }
+        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+            building *b = building_get(0); // abuse empty building
+            b->type = BUILDING_GARDENS;
+            sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+        }
+        int image_id = map_image_at(grid_offset);
+        if (map_property_is_constructing(grid_offset))
+            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
 
-        if (unemployment_pct > 20)
-            image_draw_masked(image_id + 106, x + 66, y + 20, color_mask);
+        if (draw_context.advance_water_animation &&
+            image_id >= draw_context.image_id_water_first &&
+            image_id <= draw_context.image_id_water_last) {
+            image_id++;
+            if (image_id > draw_context.image_id_water_last)
+                image_id = draw_context.image_id_water_first;
 
+            map_image_set(grid_offset, image_id);
+        }
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     }
 }
-
 static void draw_top(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         return;
@@ -335,10 +503,6 @@ static void draw_top(int x, int y, int grid_offset) {
         color_mask = COLOR_MASK_RED;
 
     image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
-    // specific buildings
-    draw_senate_rating_flags(b, x, y, color_mask);
-    draw_entertainment_spectators(b, x, y, color_mask);
-    draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
 static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
@@ -370,76 +534,6 @@ static void draw_debug(int x, int y, int grid_offset) {
             figure_id = f->next_figure;
         else
             figure_id = 0;
-    }
-}
-
-static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
-    int num_dockers = building_dock_count_idle_dockers(b);
-    if (num_dockers > 0) {
-        int image_dock = map_image_at(b->grid_offset);
-        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_1))
-            image_dockers += 0;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
-            image_dockers += 3;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
-            image_dockers += 6;
-        else {
-            image_dockers += 9;
-        }
-        if (num_dockers == 2)
-            image_dockers += 1;
-        else if (num_dockers == 3)
-            image_dockers += 2;
-
-        const image *img = image_get(image_dockers);
-        image_draw_masked(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
-    }
-}
-static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
-    image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
-    if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
-        image_draw_masked(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
-}
-
-static int granary_offsets_ph[][2] = {
-        {0, 0},
-        {16, 9},
-        {35, 18},
-        {51, 26},
-        {-16, 7},
-        {1, 16},
-        {20, 26},
-        {37, 35},
-};
-
-static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x, y + 60 + img->sprite_offset_y - img->height, color_mask);
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
-        if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        int ri = 0;
-        int r_x = 0;
-        int r_y = 0;
-        for (int r = 1; r < 9; r++) {
-            if (b->data.granary.resource_stored[r] > 0) {
-                int rn = b->data.granary.resource_stored[r] / 400; // number of "spots" occupied by food
-                for (int rnn = ri; rnn < ri + rn; rnn++) {
-                    // draw sprite on each granary "spot"
-                    r_x = granary_offsets_ph[rnn][0];
-                    r_y = granary_offsets_ph[rnn][1];
-                    image_draw_masked(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + r_x, y - 74 + r_y, color_mask);
-                }
-                ri += rn;
-            }
-        }
     }
 }
 
@@ -510,6 +604,10 @@ static void draw_animation(int x, int y, int grid_offset) {
                                           color_mask);
                 }
             }
+            // specific buildings
+            draw_senate_rating_flags(b, x, y, color_mask);
+            draw_entertainment_spectators(b, x, y, color_mask);
+            draw_workshop_raw_material_storage(b, x, y, color_mask);
         }
     } else if (map_sprite_bridge_at(grid_offset))
         city_draw_bridge(x, y, grid_offset);
@@ -559,7 +657,14 @@ static void draw_animation(int x, int y, int grid_offset) {
         }
     }
 }
+static int should_draw_top_before_deletion(int grid_offset) {
+    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
+}
+static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
+    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
+        draw_top(x, y, grid_offset);
 
+}
 static void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
@@ -573,31 +678,6 @@ static void draw_elevated_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
-
-static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
-    int image_id = map_image_at(grid_offset);
-    const image *img = image_get(image_id);
-    building *b = building_get(map_building_at(grid_offset));
-    if (img->num_animation_sprites
-        && map_property_is_draw_tile(grid_offset)
-        && b->type == BUILDING_HIPPODROME) {
-        image_draw_masked(image_id + 1,
-                          x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
-                          draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
-        );
-    }
-}
-
-static int should_draw_top_before_deletion(int grid_offset) {
-    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
-}
-
-static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
-    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
-        draw_top(x, y, grid_offset);
-
-}
-
 static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
         image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
@@ -608,7 +688,6 @@ static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     draw_figures(x, y, grid_offset);
     draw_animation(x, y, grid_offset);
 }
-
 static void deletion_draw_remaining(int x, int y, int grid_offset) {
     draw_elevated_figures(x, y, grid_offset);
     draw_hippodrome_ornaments(x, y, grid_offset);

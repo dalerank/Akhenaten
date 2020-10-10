@@ -22,9 +22,17 @@ int resource_image_offset(int resource, int type) {
     }
 }
 
+#include "core/game_environment.h"
+
 int resource_is_food(int resource) {
-    return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
-           resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3;
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
+               resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT_PH ||
+               resource == RESOURCE_LETTUCE || resource == RESOURCE_CHICKPEAS ||
+               resource == RESOURCE_POMEGRANATES || resource == RESOURCE_FIGS ||
+               resource == RESOURCE_FISH || resource == RESOURCE_GAMEMEAT;
 }
 
 int resource_to_workshop_type(int resource) {

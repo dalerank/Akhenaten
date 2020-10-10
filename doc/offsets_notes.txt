@@ -18,12 +18,23 @@ terrain
 
 7823 - 8110
 
-6 -> 4 ostriches
-0 -> 3 hunters (10 11 12)
+expected changes:
+6  --->	4 ostriches
+0  --->	3 hunters (10 11 12)
 
-4 ->	0	464c[48]
-200 ->	0	464c[68]
-200 ->	100	464c[72]
+changed offsets...
+6  --->	5	line 824	36434 animals?
+...
+4  --->	0	464c[48]	37172 total available hunter slots?
+200 -->	0	464c[68]	37192 meat stores?
+200 -->	100	464c[72]	37196 meat stores?
+...
+2800 ->	0	final+40	37396 additional granary data..?
+400 --> 0	final+72	37428 granary space left?
+
+hunt. lodge (21) : 5544
+hunt. lodge (19) : 5016
+3 hunters out (0 left?)
 
 
 expansion 	700	0

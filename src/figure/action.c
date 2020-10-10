@@ -61,7 +61,7 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CRIMINAL},  //FIGURE_CRIMINAL = 23,
         {1, TERRAIN_USAGE_ENEMY,   480,    0},  //FIGURE_RIOTER = 24,
         {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FISHING_BOAT = 25,
-        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MARKET_LADY},  //FIGURE_MARKET_TRADER = 26,
+        {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MARKET_LADY_2},  //FIGURE_MARKET_TRADER = 26,
         {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_PRIEST},  //FIGURE_PRIEST = 27,
         {1, TERRAIN_USAGE_ROADS,   192,    GROUP_FIGURE_SCHOOL_CHILD},   //FIGURE_SCHOOL_CHILD = 28,
         {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_TEACHER_LIBRARIAN},  //FIGURE_TEACHER = 29,
@@ -111,7 +111,7 @@ static figure_action_property action_lookup[] = {
 
         // PHARAOH
 
-        {1, TERRAIN_USAGE_ANY,     0,   GROUP_FIGURE_HUNTER},  // 73
+        {1, TERRAIN_USAGE_ANIMAL,     0,   GROUP_FIGURE_HUNTER},  // 73
         {1, TERRAIN_USAGE_ANY,     0,   GROUP_FIGURE_HUNTER_ARROW},  // 74
         {1, TERRAIN_USAGE_ANY,     0,   0},  // 75
         {1, TERRAIN_USAGE_ANY,     0,   0},  // 76
@@ -208,6 +208,8 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
 bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     int x, y;
     building *dest = building_get(destid);
+    if (dest->state != BUILDING_STATE_VALID)
+        advance_action(FAIL_ACTION);
     if (stop_at_road) {
         bool found_road = false;
         if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
@@ -225,12 +227,10 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
             else
                 advance_action(NEXT_ACTION); // don't kill if it's not *requiring* roads, was just looking for one
         }
-    } else {
-        if (dest->state != BUILDING_STATE_VALID)
-            advance_action(FAIL_ACTION);
-        else
-            return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
-    }
+    } else
+        return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
+//        if (dest->state != BUILDING_STATE_VALID)
+//            advance_action(FAIL_ACTION);
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(building_id, true, terrainchoice, NEXT_ACTION);

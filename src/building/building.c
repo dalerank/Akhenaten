@@ -113,64 +113,176 @@ building *building_create(int type, int x, int y) {
         b->subtype.house_level = 0;
 
     // input/output resources
-    switch (type) {
-        case BUILDING_WHEAT_FARM:
-            b->output_resource_id = RESOURCE_WHEAT;
-            break;
-        case BUILDING_VEGETABLE_FARM:
-            b->output_resource_id = RESOURCE_VEGETABLES;
-            break;
-        case BUILDING_FRUIT_FARM:
-            b->output_resource_id = RESOURCE_FRUIT;
-            break;
-        case BUILDING_OLIVE_FARM:
-            b->output_resource_id = RESOURCE_OLIVES;
-            break;
-        case BUILDING_VINES_FARM:
-            b->output_resource_id = RESOURCE_VINES;
-            break;
-        case BUILDING_PIG_FARM:
-            b->output_resource_id = RESOURCE_MEAT_C3;
-            break;
-        case BUILDING_MARBLE_QUARRY:
-            b->output_resource_id = RESOURCE_MARBLE_C3;
-            break;
-        case BUILDING_IRON_MINE:
-            b->output_resource_id = RESOURCE_IRON;
-            break;
-        case BUILDING_TIMBER_YARD:
-            b->output_resource_id = RESOURCE_TIMBER_C3;
-            break;
-        case BUILDING_CLAY_PIT:
-            b->output_resource_id = RESOURCE_CLAY_C3;
-            break;
-        case BUILDING_WINE_WORKSHOP:
-            b->output_resource_id = RESOURCE_WINE;
-            b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE;
-            break;
-        case BUILDING_OIL_WORKSHOP:
-            b->output_resource_id = RESOURCE_OIL_C3;
-            b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL;
-            break;
-        case BUILDING_WEAPONS_WORKSHOP:
-            b->output_resource_id = RESOURCE_WEAPONS_C3;
-            b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS;
-            break;
-        case BUILDING_FURNITURE_WORKSHOP:
-            b->output_resource_id = RESOURCE_FURNITURE;
-            b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE;
-            break;
-        case BUILDING_POTTERY_WORKSHOP:
-            b->output_resource_id = RESOURCE_POTTERY_C3;
-            b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
-            break;
-        default:
-            b->output_resource_id = RESOURCE_NONE;
-            break;
-    }
+    if (GAME_ENV == ENGINE_ENV_C3)
+        switch (type) {
+            case BUILDING_WHEAT_FARM:
+                b->output_resource_id = RESOURCE_WHEAT;
+                break;
+            case BUILDING_VEGETABLE_FARM:
+                b->output_resource_id = RESOURCE_VEGETABLES;
+                break;
+            case BUILDING_FRUIT_FARM:
+                b->output_resource_id = RESOURCE_FRUIT;
+                break;
+            case BUILDING_OLIVE_FARM:
+                b->output_resource_id = RESOURCE_OLIVES;
+                break;
+            case BUILDING_VINES_FARM:
+                b->output_resource_id = RESOURCE_VINES;
+                break;
+            case BUILDING_PIG_FARM:
+                b->output_resource_id = RESOURCE_MEAT_C3;
+                break;
+            case BUILDING_MARBLE_QUARRY:
+                b->output_resource_id = RESOURCE_MARBLE_C3;
+                break;
+            case BUILDING_IRON_MINE:
+                b->output_resource_id = RESOURCE_IRON;
+                break;
+            case BUILDING_TIMBER_YARD:
+                b->output_resource_id = RESOURCE_TIMBER_C3;
+                break;
+            case BUILDING_CLAY_PIT:
+                b->output_resource_id = RESOURCE_CLAY_C3;
+                break;
+            case BUILDING_WINE_WORKSHOP:
+                b->output_resource_id = RESOURCE_WINE;
+                b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE;
+                break;
+            case BUILDING_OIL_WORKSHOP:
+                b->output_resource_id = RESOURCE_OIL_C3;
+                b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL;
+                break;
+            case BUILDING_WEAPONS_WORKSHOP:
+                b->output_resource_id = RESOURCE_WEAPONS_C3;
+                b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS;
+                break;
+            case BUILDING_FURNITURE_WORKSHOP:
+                b->output_resource_id = RESOURCE_FURNITURE;
+                b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE;
+                break;
+            case BUILDING_POTTERY_WORKSHOP:
+                b->output_resource_id = RESOURCE_POTTERY_C3;
+                b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
+                break;
+            default:
+                b->output_resource_id = RESOURCE_NONE;
+                break;
+        }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        switch (type) {
+            case BUILDING_BARLEY_FARM:
+                b->output_resource_id = RESOURCE_BARLEY;
+                break;
+            case BUILDING_FLAX_FARM:
+                b->output_resource_id = RESOURCE_FLAX;
+                break;
+            case BUILDING_GRAIN_FARM:
+                b->output_resource_id = RESOURCE_GRAIN;
+                break;
+            case BUILDING_LETTUCE_FARM:
+                b->output_resource_id = RESOURCE_LETTUCE;
+                break;
+            case BUILDING_POMEGRANATES_FARM:
+                b->output_resource_id = RESOURCE_POMEGRANATES;
+                break;
+            case BUILDING_CHICKPEAS_FARM:
+                b->output_resource_id = RESOURCE_CHICKPEAS;
+                break;
+            case BUILDING_STONE_QUARRY:
+                b->output_resource_id = RESOURCE_STONE;
+                break;
+            case BUILDING_LIMESTONE_QUARRY:
+                b->output_resource_id = RESOURCE_LIMESTONE;
+                break;
+            case BUILDING_TIMBER_YARD:
+                b->output_resource_id = RESOURCE_TIMBER_PH;
+                break;
+            case BUILDING_CLAY_PIT:
+                b->output_resource_id = RESOURCE_CLAY_PH;
+                break;
+            case BUILDING_BEER_WORKSHOP:
+                b->output_resource_id = RESOURCE_BEER;
+                b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE; // todo
+                break;
+            case BUILDING_LINEN_WORKSHOP:
+                b->output_resource_id = RESOURCE_LINEN;
+                b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL; // todo
+                break;
+            case BUILDING_WEAPONS_WORKSHOP:
+                b->output_resource_id = RESOURCE_WEAPONS_C3;
+                b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS; // todo
+                break;
+            case BUILDING_JEWELS_WORKSHOP:
+                b->output_resource_id = RESOURCE_LUXURY_GOODS;
+                b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE; // todo
+                break;
+            case BUILDING_POTTERY_WORKSHOP:
+                b->output_resource_id = RESOURCE_POTTERY_PH;
+                b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
+                break;
+            case BUILDING_HUNTING_LODGE:
+                b->output_resource_id = RESOURCE_GAMEMEAT;
+                break;
+            case BUILDING_REED_GATHERER:
+                b->output_resource_id = RESOURCE_REEDS;
+                break;
+            case BUILDING_GOLD_MINE:
+                b->output_resource_id = RESOURCE_GOLD;
+                break;
+            case BUILDING_GEMSTONE_MINE:
+                b->output_resource_id = RESOURCE_GEMS;
+                break;
+            case BUILDING_CATTLE_RANCH:
+                b->output_resource_id = RESOURCE_MEAT_PH;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            case BUILDING_FIGS_FARM:
+                b->output_resource_id = RESOURCE_FIGS;
+                break;
+            case BUILDING_PAPYRUS_WORKSHOP:
+                b->output_resource_id = RESOURCE_PAPYRUS;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            case BUILDING_BRICKS_WORKSHOP:
+                b->output_resource_id = RESOURCE_BRICKS;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            case BUILDING_CHARIOTS_WORKSHOP:
+                b->output_resource_id = RESOURCE_CHARIOTS;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            case BUILDING_GRANITE_QUARRY:
+                b->output_resource_id = RESOURCE_GRANITE;
+                break;
+            case BUILDING_COPPER_MINE:
+                b->output_resource_id = RESOURCE_COPPER;
+                break;
+            case BUILDING_SANDSTONE_QUARRY:
+                b->output_resource_id = RESOURCE_SANDSTONE;
+                break;
+            case BUILDING_HENNA_FARM:
+                b->output_resource_id = RESOURCE_HENNA;
+                break;
+            case BUILDING_LAMP_WORKSHOP:
+                b->output_resource_id = RESOURCE_LAMPS;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            case BUILDING_PAINT_WORKSHOP:
+                b->output_resource_id = RESOURCE_PAINT;
+//                b->subtype.workshop_type = ??? todo
+                break;
+            default:
+                b->output_resource_id = RESOURCE_NONE;
+                break;
+        }
 
-    if (type == BUILDING_GRANARY)
-        b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
+    if (type == BUILDING_GRANARY) {
+        if (GAME_ENV == ENGINE_ENV_C3)
+            b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
+    }
     if (type == BUILDING_MARKET) // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
 

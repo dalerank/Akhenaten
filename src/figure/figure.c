@@ -57,13 +57,14 @@ figure *figure_create(int type, int x, int y, int dir) {
 }
 void figure::figure_delete() {
     building *b = building_get(building_id);
-    switch (type) {
-        case FIGURE_LABOR_SEEKER:
-        case FIGURE_MARKET_BUYER:
-            if (building_id)
-                b->figure_id2 = 0;
+    if (building_id) {
+        if (id == b->figure_id)
+            b->figure_id = 0;
+        if (id == b->figure_id2)
+            b->figure_id2 = 0;
+    }
 
-            break;
+    switch (type) {
         case FIGURE_BALLISTA:
             b->figure_id4 = 0;
             break;
@@ -71,29 +72,10 @@ void figure::figure_delete() {
             for (int i = 0; i < 3; i++) {
                 if (b->data.dock.docker_ids[i] == id)
                     b->data.dock.docker_ids[i] = 0;
-
             }
             break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             city_emperor_mark_soldier_killed();
-            break;
-        case FIGURE_EXPLOSION:
-        case FIGURE_FORT_STANDARD:
-        case FIGURE_ARROW:
-        case FIGURE_JAVELIN:
-        case FIGURE_BOLT:
-        case FIGURE_SPEAR:
-        case FIGURE_FISH_GULLS:
-        case FIGURE_SHEEP:
-        case FIGURE_WOLF:
-        case FIGURE_ZEBRA:
-        case FIGURE_DELIVERY_BOY:
-        case FIGURE_PATRICIAN:
-            // nothing to do here
-            break;
-        default:
-            if (building_id)
-                b->figure_id = 0;
             break;
     }
     if (empire_city_id)
@@ -355,8 +337,8 @@ void figure::load(buffer *buf) {
     f->building_id = buf->read_i16();
     f->immigrant_building_id = buf->read_i16();
     f->destination_building_id = buf->read_i16();
-    f->formation_id = buf->read_i16();
-    f->index_in_formation = buf->read_u8();
+    f->formation_id = buf->read_i16(); // formation: 10
+    f->index_in_formation = buf->read_u8(); // 3
     f->formation_at_rest = buf->read_u8();
     f->migrant_num_people = buf->read_u8();
     f->is_ghost = buf->read_u8();
@@ -369,7 +351,7 @@ void figure::load(buffer *buf) {
     f->y_offset_cart = buf->read_i8();
     f->empire_city_id = buf->read_u8();
     f->trader_amount_bought = buf->read_u8();
-    f->name = buf->read_i16();
+    f->name = buf->read_i16(); // 6
     f->terrain_usage = buf->read_u8();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         f->is_boat = buf->read_u8();

@@ -90,6 +90,7 @@ void building_storage_cycle_resource_state(int storage_id, int resource_id) {
 }
 
 void building_storage_set_permission(int p, building *b) {
+    return; // temp - todo: fix buttons
     const building_storage *s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;
     int perms = s->permissions;

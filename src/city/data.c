@@ -626,7 +626,7 @@ static void load_main_data(buffer *buf) {
         city_data.resource.mothballed[i] = buf->read_i16();
     city_data.unused.unused_28ca = buf->read_i16();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        buf->skip(22);
+        buf->skip(20);
         for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
             buf->skip(2);
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)

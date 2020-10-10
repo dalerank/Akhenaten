@@ -16,7 +16,7 @@ const static int RESOURCE_MAX[2] = {
 };
 const static int RESOURCE_MAX_FOOD[2] = {
         7,
-        8,
+        9,
 };
 
 enum {
@@ -79,6 +79,13 @@ enum {
     INVENTORY_MIN_GOOD = 4,
     INVENTORY_MAX_GOOD = 8,
     INVENTORY_MAX = 8
+};
+
+static int ALLOWED_FOODS[4] = {
+        1,
+        4,
+        6,
+        8
 };
 
 enum {

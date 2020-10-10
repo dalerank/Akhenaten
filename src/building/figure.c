@@ -1,3 +1,4 @@
+#include <ntdef.h>
 #include "building/figure.h"
 
 #include "building/barracks.h"
@@ -1054,11 +1055,58 @@ static void spawn_figure_granary(building *b) {
 
 #include "city/data_private.h"
 
+static bool can_spawn_hunter(building *b) { // no cache because fuck the system (also I can't find the memory offset for this)
+    int lodges = 0;
+    int hunters_total = 0;
+    int hunters_this_lodge = 0;
+    int huntables = city_data.figure.animals;
+//    for (int b = 0; b < MAX_BUILDINGS[GAME_ENV]; b++) {
+//        if (building_get(b)->type == 115)
+//            lodges++;
+//    }
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure *f = figure_get(i);
+        if (f->type == 73) { // hunter
+            hunters_total++;
+            if (f->building_id == b->id) // belongs to this lodge
+                hunters_this_lodge++;
+        }
+        if (hunters_total >= huntables)
+            break;
+    }
+    if (hunters_total < huntables && hunters_this_lodge < 3 && hunters_this_lodge + b->loads_stored < 5)
+        return true;
+    return false;
+}
+
 static void spawn_figure_hunting_lodge(building *b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+        if (pct_workers >= 100)
+            spawn_delay = 0;
+        else if (pct_workers >= 75)
+            spawn_delay = 1;
+        else if (pct_workers >= 50)
+            spawn_delay = 3;
+        else if (pct_workers >= 25)
+            spawn_delay = 7;
+        else if (pct_workers >= 1)
+            spawn_delay = 15;
+        else
+            return;
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay && can_spawn_hunter(b)) {
+            b->figure_spawn_delay = 0;
+            figure *f = figure_create(FIGURE_HUNTER, road.x, road.y, DIR_4_BOTTOM_LEFT);
+            f->action_state = ACTION_8_RECALCULATE;
+            f->building_id = b->id;
+//            f->wait_ticks = 30;
+//            f->loads_counter = 1;
+        }
         if (has_figure_of_type(b, FIGURE_CART_PUSHER))
             return;
         if (b->loads_stored) {
@@ -1068,9 +1116,10 @@ static void spawn_figure_hunting_lodge(building *b) {
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
-            f->loads_counter = 1;
+            int loads_to_carry = min(b->loads_stored, 4);
+            f->loads_counter = loads_to_carry;
+            b->loads_stored -= loads_to_carry;
         }
-//        if (city_data.figure.animals > 0)
     }
 }
 
@@ -1181,6 +1230,8 @@ void building_figure_generate(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
+        if (b->type == 71)
+            int a =24;
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
@@ -1201,81 +1252,82 @@ void building_figure_generate(void) {
             // single building type
             switch (b->type) {
                 case BUILDING_WAREHOUSE:
-                    return spawn_figure_warehouse(b);
+                    spawn_figure_warehouse(b); break;
                 case BUILDING_GRANARY:
-                    return spawn_figure_granary(b);
+                    spawn_figure_granary(b); break;
                 case BUILDING_TOWER:
-                    return spawn_figure_tower(b);
+                    spawn_figure_tower(b); break;
                 case BUILDING_ENGINEERS_POST:
-                    return spawn_figure_engineers_post(b);
+                    spawn_figure_engineers_post(b); break;
                 case BUILDING_PREFECTURE:
                     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                        return spawn_figure_police(b);
+                        spawn_figure_police(b);
                     else
-                        return spawn_figure_prefecture(b);
+                        spawn_figure_prefecture(b);
+                    break;
                 case BUILDING_FIREHOUSE:
-                    return spawn_figure_prefecture(b);
+                    spawn_figure_prefecture(b); break;
                 case BUILDING_WATER_SUPPLY:
-                    return spawn_figure_watersupply(b);
+                    spawn_figure_watersupply(b); break;
                 case BUILDING_ACTOR_COLONY:
-                    return spawn_figure_actor_colony(b);
+                    spawn_figure_actor_colony(b); break;
                 case BUILDING_GLADIATOR_SCHOOL:
-                    return spawn_figure_gladiator_school(b);
+                    spawn_figure_gladiator_school(b); break;
                 case BUILDING_LION_HOUSE:
-                    return spawn_figure_lion_house(b);
+                    spawn_figure_lion_house(b); break;
                 case BUILDING_CHARIOT_MAKER:
-                    return spawn_figure_chariot_maker(b);
+                    spawn_figure_chariot_maker(b); break;
                 case BUILDING_AMPHITHEATER:
-                    return spawn_figure_amphitheater(b);
+                    spawn_figure_amphitheater(b); break;
                 case BUILDING_THEATER:
-                    return spawn_figure_theater(b);
+                    spawn_figure_theater(b); break;
                 case BUILDING_HIPPODROME:
-                    return spawn_figure_hippodrome(b);
+                    spawn_figure_hippodrome(b); break;
                 case BUILDING_COLOSSEUM:
-                    return spawn_figure_colosseum(b);
+                    spawn_figure_colosseum(b); break;
                 case BUILDING_MARKET:
-                    return spawn_figure_market(b);
+                    spawn_figure_market(b); break;
                 case BUILDING_PHYSICIAN:
-                    return spawn_figure_physician(b);
+                    spawn_figure_physician(b); break;
                 case BUILDING_BATHHOUSE:
-                    return spawn_figure_bathhouse(b);
+                    spawn_figure_bathhouse(b); break;
                 case BUILDING_SCHOOL:
-                    return spawn_figure_school(b);
+                    spawn_figure_school(b); break;
                 case BUILDING_LIBRARY:
-                    return spawn_figure_library(b);
+                    spawn_figure_library(b); break;
                 case BUILDING_ACADEMY:
-                    return spawn_figure_academy(b);
+                    spawn_figure_academy(b); break;
                 case BUILDING_BARBER:
-                    return spawn_figure_barber(b);
+                    spawn_figure_barber(b); break;
                 case BUILDING_DOCTOR:
-                    return spawn_figure_doctor(b);
+                    spawn_figure_doctor(b); break;
                 case BUILDING_HOSPITAL:
-                    return spawn_figure_hospital(b);
+                    spawn_figure_hospital(b); break;
                 case BUILDING_MISSION_POST:
-                    return spawn_figure_mission_post(b);
+                    spawn_figure_mission_post(b); break;
                 case BUILDING_DOCK:
-                    return spawn_figure_dock(b);
+                    spawn_figure_dock(b); break;
                 case BUILDING_WHARF:
-                    return spawn_figure_wharf(b);
+                    spawn_figure_wharf(b); break;
                 case BUILDING_SHIPYARD:
-                    return spawn_figure_shipyard(b);
+                    spawn_figure_shipyard(b); break;
                 case BUILDING_NATIVE_HUT:
-                    return spawn_figure_native_hut(b);
+                    spawn_figure_native_hut(b); break;
                 case BUILDING_NATIVE_MEETING:
-                    return spawn_figure_native_meeting(b);
+                    spawn_figure_native_meeting(b); break;
                 case BUILDING_NATIVE_CROPS:
-                    return update_native_crop_progress(b);
+                    update_native_crop_progress(b); break;
                 case BUILDING_FORT:
-                    return formation_legion_update_recruit_status(b);
+                    formation_legion_update_recruit_status(b); break;
                 case BUILDING_BARRACKS:
-                    return spawn_figure_barracks(b);
+                    spawn_figure_barracks(b); break;
                 case BUILDING_VILLAGE_PALACE:
                 case BUILDING_TOWN_PALACE:
                 case BUILDING_CITY_PALACE:
                 case BUILDING_MILITARY_ACADEMY:
-                    return spawn_figure_labor_seeker_common(b);
+                    spawn_figure_labor_seeker_common(b); break;
                 case BUILDING_HUNTING_LODGE:
-                    return spawn_figure_hunting_lodge(b);
+                    spawn_figure_hunting_lodge(b); break;
             }
         }
     }

@@ -303,7 +303,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
         b->road_access_y = buf->read_u16();
     }
     b->figure_id = buf->read_i16();
-    b->figure_id2 = buf->read_i16();
+    b->figure_id2 = buf->read_i16(); // laborseeker
     b->immigrant_figure_id = buf->read_i16();
     b->figure_id4 = buf->read_i16();
     b->figure_spawn_delay = buf->read_u8();

@@ -9,7 +9,7 @@
 [ ] City messages
 [ ] Fire-fighting
 [x] Ostriches
-[ ] Hunters
+[x] Hunters
 [ ] Floodplain farms
 [ ] Workers
 [ ] Monuments

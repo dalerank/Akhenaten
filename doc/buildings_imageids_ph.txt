@@ -72,6 +72,7 @@
 
 1353 storageyard post
 1371 storageyard space
+1492 resource icons
 
 2170 farm
 2178 work camp

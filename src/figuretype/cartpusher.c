@@ -212,9 +212,9 @@ void figure::cartpusher_action() {
 //        terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
     building *b = building_get(building_id);
-    int from_industry = true;
-    if (type == BUILDING_WAREHOUSE)
-        from_industry = false;
+//    int from_industry = true;
+//    if (type == BUILDING_WAREHOUSE)
+//        from_industry = false;
     int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case ACTION_8_RECALCULATE:
@@ -248,9 +248,10 @@ void figure::cartpusher_action() {
         case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
         case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
             wait_ticks++;
-            if (wait_ticks > 5) {
+            if (wait_ticks >= 10) {
+                wait_ticks = 0;
                 building *dest = building_get(destination_building_id);
-                if (dest->state != BUILDING_STATE_VALID || dest->figure_id != id)
+                if (dest->state != BUILDING_STATE_VALID)
                     advance_action(ACTION_8_RECALCULATE);
                 bool delivery_check = false;
                 switch (dest->type) {
@@ -259,7 +260,7 @@ void figure::cartpusher_action() {
                         delivery_check = building_warehouse_add_resource(dest, resource_id);
                         break;
                     case BUILDING_GRANARY:
-                        delivery_check = building_granary_add_resource(dest, resource_id, from_industry);
+                        delivery_check = building_granary_add_resource(dest, resource_id, true);
                         break;
                     case BUILDING_BARRACKS:
                         building_barracks_add_weapon(dest);
@@ -274,7 +275,6 @@ void figure::cartpusher_action() {
                     loads_counter -= 1;
                 if (!loads_counter) {
                     advance_action(ACTION_11_RETURNING_EMPTY);
-                    wait_ticks = 0;
                 } else if (!delivery_check)
                     advance_action(ACTION_8_RECALCULATE);
             }
@@ -283,7 +283,8 @@ void figure::cartpusher_action() {
         case ACTION_11_RETURNING_EMPTY:
         case ACTION_15_RETURNING2:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
-            kill(); // meh, useless?
+            do_returnhome();
+//            kill(); // meh, useless?
             break;
     }
     cart_update_image();

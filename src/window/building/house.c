@@ -132,10 +132,10 @@ void window_building_draw_house(building_info_context *c) {
     int resource_image = image_id_from_group(GROUP_RESOURCE_ICONS);
     // food inventory
     // todo: fetch map available foods?
-    int food1 = 4;
-    int food2 = 5;
-    int food3 = 6;
-    int food4 = 7;
+    int food1 = ALLOWED_FOODS[0];
+    int food2 = ALLOWED_FOODS[1];
+    int food3 = ALLOWED_FOODS[2];
+    int food4 = ALLOWED_FOODS[3];
     // wheat
     image_draw(resource_image + INV_RESOURCES[GAME_ENV][food1], c->x_offset + 32, c->y_offset + Y_FOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_FOOD1], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4,
@@ -149,8 +149,7 @@ void window_building_draw_house(building_info_context *c) {
     text_draw_number(b->data.house.inventory[INVENTORY_FOOD3], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4,
                      FONT_NORMAL_BLACK);
     // meat/fish
-    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food4] +
-               resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON), c->x_offset + 362, c->y_offset + Y_FOODS);
+    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food4], c->x_offset + 362, c->y_offset + Y_FOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_FOOD4], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4,
                      FONT_NORMAL_BLACK);
 

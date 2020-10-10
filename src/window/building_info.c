@@ -640,28 +640,34 @@ static void draw_foreground(void) {
                     window_building_draw_granary_orders_foreground(&context);
                 else
                     window_building_draw_granary_foreground(&context);
+                break;
             case BUILDING_WAREHOUSE:
                 if (context.storage_show_special_orders)
                     window_building_draw_warehouse_orders_foreground(&context);
                 else
                     window_building_draw_warehouse_foreground(&context);
+                break;
             case BUILDING_MARKET:
                 if (context.storage_show_special_orders)
                     window_building_draw_market_orders_foreground(&context);
                 else
                     window_building_draw_market_foreground(&context);
+                break;
             case BUILDING_ROADBLOCK:
                 if (context.storage_show_special_orders)
                     window_building_draw_roadblock_orders_foreground(&context);
                 else
                     window_building_draw_roadblock_foreground(&context);
+                break;
             case BUILDING_DOCK:
                 if (context.storage_show_special_orders)
                     window_building_draw_dock_orders_foreground(&context);
                 else
                     window_building_draw_dock_foreground(&context);
+                break;
             case BUILDING_BARRACKS:
                 window_building_draw_barracks_foreground(&context);
+                break;
         }
     } else if (context.type == BUILDING_INFO_LEGION)
         window_building_draw_legion_info_foreground(&context);

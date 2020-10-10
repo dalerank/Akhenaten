@@ -107,8 +107,8 @@ static int groupid_translation_table_ph[] = {
         123, 123 + 66, // weapons
         124, 119 + 66, // jewels
         125, 125 + 66, // pottery
-        128, 194, // data/Pharaoh_General.sg3 paneling.bmp
-        129, 195, // data/Pharaoh_General.sg3 paneling.bmp
+        128, 128 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        129, 129 + 66, // empire resources
         130, 20 + 555, // merchant caravan
         131, 52 + 341, // migrant cart (donkey)
         132, 198, // data/Pharaoh_General.sg3 paneling.bmp
@@ -145,6 +145,7 @@ static int groupid_translation_table_ph[] = {
         170, 63, // data/Pharaoh_Terrain.sg3 transport.BMP
         171, 55 + 555, // docker workers
         172, 238, // data/Pharaoh_General.sg3 empire_panels.bmp
+        173, 205 + 66, // empire resources
         174, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
         177, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
         178, 244, // data/Pharaoh_General.sg3 empire_bits.BMP
