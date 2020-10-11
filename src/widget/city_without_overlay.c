@@ -525,11 +525,41 @@ static void draw_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
+
+#include "map/terrain.h"
+#include "graphics/text.h"
+#include "core/string.h"
+
 static void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
+
+    uint32_t tile_data = map_terrain_get(grid_offset);
+    uint8_t str[10];
+    int flag_data = 0;
+    int bin_tile_data = 0;
+    int br = tile_data;
+    int i = 0;
+    while (br > 0) {
+
+        // storing remainder in binary
+        if (br % 2) {
+            bin_tile_data += (br % 2) * pow(10, i);
+            flag_data += i+1;
+        }
+
+        br = br / 2;
+        i++;
+    }
+
+    string_from_int(str, flag_data, 0);
+    draw_text_shadow(str, x+20, y+5, COLOR_WHITE);
+    string_from_int(str, tile_data, 0);
+    draw_text_shadow(str, x+20, y+15, COLOR_GREEN);
+//    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
+
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        f->draw_debug();
+//        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else

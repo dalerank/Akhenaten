@@ -317,8 +317,13 @@ extern struct city_data_t {
         int32_t stockpiled[36];
         int16_t mothballed[36];
         int32_t wine_types_available;
-        int32_t food_types_available;
-        int32_t food_types_eaten;
+//        int32_t food_types_available;
+//        int32_t food_types_eaten;
+        int8_t food_types_available_arr[9];
+        int8_t food_types_eaten_arr[9];
+        int8_t food_types_allowed[4];
+        int32_t food_types_available_num;
+        int32_t food_types_eaten_num;
         int32_t granary_food_stored[8];
         int32_t granary_total_stored;
         int32_t food_supply_months;

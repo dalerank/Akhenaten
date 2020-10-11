@@ -28,13 +28,6 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 #include "building/properties.h"
 #include "figure/route.h"
 
-static void draw_text_shadow(uint8_t *str, int _x, int _y, color_t color) {
-    for (int x = -1; x < 2; x++)
-        for (int y = -1; y < 2; y++)
-            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, 0);
-    text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
-}
-
 void figure::draw_debug() {
 
 //    if (id == 6)
@@ -76,7 +69,7 @@ void figure::draw_debug() {
     string_from_int(str, wait_ticks, 0);
     draw_text_shadow(str, coords.x, coords.y+30, COLOR_WHITE);
 
-    if (cart_image_id && resource_id) {
+    if (resource_id) {
         string_from_int(str, resource_id, 0);
         draw_text_shadow(str, coords.x+25, coords.y+10, COLOR_GREEN);
         string_from_int(str, loads_counter, 0);

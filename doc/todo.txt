@@ -10,6 +10,10 @@
 [ ] Fire-fighting
 [x] Ostriches
 [x] Hunters
+[x] Foods
+[ ] Proper map terrain data
+[ ] Water supply
+[ ] Entertainment
 [ ] Floodplain farms
 [ ] Workers
 [ ] Monuments
@@ -26,6 +30,7 @@
 - UI
 	- messages crashing
   - "File" drop down menu colors
+  - household "X has having negative effect" color
 - figures
   - figure icons (bigpeople)
 

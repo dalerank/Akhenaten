@@ -14,6 +14,7 @@
 void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_LADY);
     switch (action_state) {
+        case 8:
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -24,7 +25,6 @@ void figure::market_buyer_action() {
                 } else {
                     if (!take_food_from_granary(building_id, destination_building_id))
                         kill();
-
                 }
                 action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
                 destination_x = source_x;
@@ -36,6 +36,7 @@ void figure::market_buyer_action() {
                 route_remove();
             }
             break;
+        case 9:
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             move_ticks(1);
@@ -43,7 +44,6 @@ void figure::market_buyer_action() {
                 kill();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-
             break;
     }
 }
@@ -58,24 +58,24 @@ int figure::create_delivery_boy(int leader_id) {
 int figure::take_food_from_granary(int market_id, int granary_id) {
     int resource;
     switch (collecting_item_id) {
-        case INVENTORY_FOOD1:
-            resource = RESOURCE_WHEAT;
+        case 0:
+            resource = ALLOWED_FOODS(0);
             break;
-        case INVENTORY_FOOD2:
-            resource = RESOURCE_VEGETABLES;
+        case 1:
+            resource = ALLOWED_FOODS(1);
             break;
-        case INVENTORY_FOOD3:
-            resource = RESOURCE_FRUIT;
+        case 2:
+            resource = ALLOWED_FOODS(2);
             break;
-        case INVENTORY_FOOD4:
-            resource = RESOURCE_MEAT_C3;
+        case 3:
+            resource = ALLOWED_FOODS(3);
             break;
         default:
             return 0;
     }
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[collecting_item_id];
-    int max_units = (collecting_item_id == INVENTORY_FOOD1 ? 800 : 600) - market_units;
+    int max_units = (collecting_item_id == 0 ? 800 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
     if (granary_units >= 800)

@@ -106,7 +106,6 @@ bool figure::is_herd() {
     return type >= FIGURE_SHEEP && type <= FIGURE_ZEBRA;
 }
 
-
 int figureid_translation(int id, bool reverse = true) {
     if (GAME_ENV == ENGINE_ENV_C3)
         return id;

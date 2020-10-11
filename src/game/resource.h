@@ -65,10 +65,10 @@ enum {
 };
 
 enum {
-    INVENTORY_FOOD1 = 0,
-    INVENTORY_FOOD2 = 1,
-    INVENTORY_FOOD3 = 2,
-    INVENTORY_FOOD4 = 3,
+//    INVENTORY_FOOD1 = 0,
+//    INVENTORY_FOOD2 = 1,
+//    INVENTORY_FOOD3 = 2,
+//    INVENTORY_FOOD4 = 3,
     INVENTORY_GOOD4 = 4,
     INVENTORY_GOOD3 = 5,
     INVENTORY_GOOD2 = 6,
@@ -81,11 +81,40 @@ enum {
     INVENTORY_MAX = 8
 };
 
-static int ALLOWED_FOODS[4] = {
-        1,
-        4,
-        6,
-        8
+int ALLOWED_FOODS(int i);
+
+//static int ALLOWED_FOODS[4] = {
+//        1,
+//        4,
+//        6,
+//        8
+//};
+
+const int INV_RESOURCES[2][20] = {
+    {
+        RESOURCE_POTTERY_C3,
+        RESOURCE_FURNITURE,
+        RESOURCE_OIL_C3,
+        RESOURCE_WINE,
+        RESOURCE_WHEAT,
+        RESOURCE_VEGETABLES,
+        RESOURCE_FRUIT,
+        RESOURCE_MEAT_C3,
+    },
+    {
+        RESOURCE_POTTERY_PH,
+        RESOURCE_LUXURY_GOODS,
+        RESOURCE_LINEN,
+        RESOURCE_BEER,
+        RESOURCE_GRAIN,
+        RESOURCE_MEAT_PH,
+        RESOURCE_LETTUCE,
+        RESOURCE_CHICKPEAS,
+        RESOURCE_POMEGRANATES,
+        RESOURCE_FIGS,
+        RESOURCE_FISH,
+        RESOURCE_GAMEMEAT,
+    }
 };
 
 enum {

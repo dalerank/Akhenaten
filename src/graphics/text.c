@@ -231,6 +231,12 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
     text_draw(str, offset + x, y, font, color);
 }
 
+void draw_text_shadow(uint8_t *str, int _x, int _y, color_t color) {
+    for (int x = -1; x < 2; x++)
+        for (int y = -1; y < 2; y++)
+            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, 0);
+    text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
+}
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         y = y - 3;

@@ -156,8 +156,8 @@ static void update_prosperity_explanation(void) {
         change -= 1;
     }
     // food types: +1 for multiple foods
-    if (city_data.resource.food_types_eaten >= 2)
-        change += 1;
+//    if (city_data.resource.food_types_eaten >= 2) todo
+//        change += 1;
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;
@@ -388,8 +388,8 @@ static void update_prosperity_rating(void) {
     }
     city_data.ratings.prosperity_treasury_last_year = city_data.finance.treasury;
     // food types: +1 for multiple foods
-    if (city_data.resource.food_types_eaten >= 2)
-        change += 1;
+//    if (city_data.resource.food_types_eaten >= 2) todo
+//        change += 1;
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = city_data.finance.wage_rate_paid_last_year / 12;

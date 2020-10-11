@@ -33,7 +33,7 @@ int city_resource_multiple_wine_available(void) {
 }
 
 int city_resource_food_types_available(void) {
-    return city_data.resource.food_types_available;
+    return city_data.resource.food_types_available_num;
 }
 
 int city_resource_food_stored(void) {
@@ -207,7 +207,7 @@ static void calculate_available_food(void) {
         city_data.resource.granary_food_stored[i] = 0;
     }
     city_data.resource.granary_total_stored = 0;
-    city_data.resource.food_types_available = 0;
+    city_data.resource.food_types_available_num = 0;
     city_data.resource.food_supply_months = 0;
     city_data.resource.granaries.operating = 0;
     city_data.resource.granaries.understaffed = 0;
@@ -249,7 +249,7 @@ static void calculate_available_food(void) {
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
         if (city_data.resource.granary_food_stored[i]) {
             city_data.resource.granary_total_stored += city_data.resource.granary_food_stored[i];
-            city_data.resource.food_types_available++;
+            city_data.resource.food_types_available_num++;
         }
     }
     city_data.resource.food_needed_per_month =
@@ -262,7 +262,7 @@ static void calculate_available_food(void) {
                 city_data.resource.granary_total_stored > 0 ? 1 : 0;
     }
     if (scenario_property_rome_supplies_wheat()) {
-        city_data.resource.food_types_available = 1;
+//        city_data.resource.food_types_available = 1;
         city_data.resource.food_supply_months = 12;
     }
 }
@@ -273,7 +273,7 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void) {
         for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
             building *b = building_get(i);
             if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
-                b->data.market.inventory[INVENTORY_FOOD1] = 200;
+                b->data.market.inventory[0] = 200;
 
         }
     }
@@ -305,7 +305,7 @@ void city_resource_calculate_workshop_stocks(void) {
 
 void city_resource_consume_food(void) {
     calculate_available_food();
-    city_data.resource.food_types_eaten = 0;
+    city_data.resource.food_types_eaten_num = 0;
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -318,9 +318,9 @@ void city_resource_consume_food(void) {
 
             b->data.house.num_foods = 0;
             if (scenario_property_rome_supplies_wheat()) {
-                city_data.resource.food_types_eaten = 1;
-                city_data.resource.food_types_available = 1;
-                b->data.house.inventory[INVENTORY_FOOD1] = amount_per_type;
+                city_data.resource.food_types_eaten_num = 1;
+//                city_data.resource.food_types_available = 1;
+                b->data.house.inventory[0] = amount_per_type;
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
                 for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {
@@ -334,8 +334,8 @@ void city_resource_consume_food(void) {
                         b->data.house.num_foods++;
                         total_consumed += amount_per_type;
                     }
-                    if (b->data.house.num_foods > city_data.resource.food_types_eaten)
-                        city_data.resource.food_types_eaten = b->data.house.num_foods;
+                    if (b->data.house.num_foods > city_data.resource.food_types_eaten_num)
+                        city_data.resource.food_types_eaten_num = b->data.house.num_foods;
 
                 }
             }

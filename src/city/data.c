@@ -46,6 +46,10 @@ void city_data_init_campaign_mission(void) {
     city_data.finance.treasury = difficulty_adjust_money(city_data.finance.treasury);
 }
 
+int ALLOWED_FOODS(int i) {
+    return city_data.resource.food_types_allowed[i];
+}
+
 static void save_main_data(buffer *main) {
     main->write_raw(city_data.unused.other_player, 18068);
     main->write_i8(city_data.unused.unknown_00a0);
@@ -150,8 +154,8 @@ static void save_main_data(buffer *main) {
         main->write_i32(city_data.resource.space_in_workshops[i]);
     }
     main->write_i32(city_data.resource.granary_total_stored);
-    main->write_i32(city_data.resource.food_types_available);
-    main->write_i32(city_data.resource.food_types_eaten);
+//    main->write_i32(city_data.resource.food_types_available); todo
+//    main->write_i32(city_data.resource.food_types_eaten);
     for (int i = 0; i < 272; i++) {
         main->write_i8(city_data.unused.unknown_2924[i]);
     }
@@ -631,7 +635,23 @@ static void load_main_data(buffer *buf) {
             buf->skip(2);
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
             city_data.resource.granary_food_stored[i] = buf->read_i16();
-        buf->skip(424); // temp
+        buf->skip(28); // temp
+        int food_index = 0;
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+            city_data.resource.food_types_available_arr[i] = buf->read_u8();
+            if (city_data.resource.food_types_available_arr[i]) {
+                city_data.resource.food_types_allowed[food_index] = i;
+                food_index++;
+            }
+        }
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+            city_data.resource.food_types_eaten_arr[i] = buf->read_u8();
+
+
+        city_data.resource.food_types_available_num = 0; // temp todo
+        city_data.resource.food_types_eaten_num = 0;
+        buf->skip(378);
+//        buf->skip(424); // temp
     } else {
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
             city_data.resource.granary_food_stored[i] = buf->read_i32();
@@ -640,8 +660,12 @@ static void load_main_data(buffer *buf) {
         for (int i = 0; i < 6; i++)
             city_data.resource.space_in_workshops[i] = buf->read_i32();
         city_data.resource.granary_total_stored = buf->read_i32();
-        city_data.resource.food_types_available = buf->read_i32();
-        city_data.resource.food_types_eaten = buf->read_i32();
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+            city_data.resource.food_types_available_arr[i] = buf->read_u8();
+        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+            city_data.resource.food_types_eaten_arr[i] = buf->read_u8();
+//        city_data.resource.food_types_available = buf->read_i32();
+//        city_data.resource.food_types_eaten = buf->read_i32();
         for (int i = 0; i < 272; i++)
             city_data.unused.unknown_2924[i] = buf->read_i8();
         for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)

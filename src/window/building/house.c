@@ -74,34 +74,7 @@ static void draw_happiness_info(building_info_context *c, int y_offset) {
     lang_text_draw(127, text_id, c->x_offset + 36, y_offset, FONT_NORMAL_GREEN);
 }
 
-const int INV_RESOURCES[2][20] = {
-        {
-                RESOURCE_POTTERY_C3,
-                RESOURCE_FURNITURE,
-                RESOURCE_OIL_C3,
-                RESOURCE_WINE,
-                RESOURCE_WHEAT,
-                RESOURCE_VEGETABLES,
-                RESOURCE_FRUIT,
-                RESOURCE_MEAT_C3,
-        },
-        {
-                RESOURCE_POTTERY_PH,
-                RESOURCE_LUXURY_GOODS,
-                RESOURCE_LINEN,
-                RESOURCE_BEER,
-                RESOURCE_GRAIN,
-                RESOURCE_MEAT_PH,
-                RESOURCE_LETTUCE,
-                RESOURCE_CHICKPEAS,
-                RESOURCE_POMEGRANATES,
-                RESOURCE_FIGS,
-                RESOURCE_FISH,
-                RESOURCE_GAMEMEAT,
-        }
-};
-
-#define Y_FOODS 110 //234
+#define Y_FOODS 100 //234
 #define Y_GOODS Y_FOODS + 20 //174 //274
 
 void window_building_draw_house(building_info_context *c) {
@@ -126,32 +99,37 @@ void window_building_draw_house(building_info_context *c) {
         lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 76,
                                  16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     } else // needs something to evolve
-        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 70,
+        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60,
                                  16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 
     int resource_image = image_id_from_group(GROUP_RESOURCE_ICONS);
     // food inventory
     // todo: fetch map available foods?
-    int food1 = ALLOWED_FOODS[0];
-    int food2 = ALLOWED_FOODS[1];
-    int food3 = ALLOWED_FOODS[2];
-    int food4 = ALLOWED_FOODS[3];
-    // wheat
-    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food1], c->x_offset + 32, c->y_offset + Y_FOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_FOOD1], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4,
-                     FONT_NORMAL_BLACK);
-    // vegetables
-    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food2], c->x_offset + 142, c->y_offset + Y_FOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_FOOD2], '@', " ", c->x_offset + 174, c->y_offset + Y_FOODS + 4,
-                     FONT_NORMAL_BLACK);
-    // fruit
-    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food3], c->x_offset + 252, c->y_offset + Y_FOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_FOOD3], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4,
-                     FONT_NORMAL_BLACK);
-    // meat/fish
-    image_draw(resource_image + INV_RESOURCES[GAME_ENV][food4], c->x_offset + 362, c->y_offset + Y_FOODS);
-    text_draw_number(b->data.house.inventory[INVENTORY_FOOD4], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4,
-                     FONT_NORMAL_BLACK);
+    int food1 = ALLOWED_FOODS(0);
+    int food2 = ALLOWED_FOODS(1);
+    int food3 = ALLOWED_FOODS(2);
+    int food4 = ALLOWED_FOODS(3);
+
+    if (food1) { // wheat
+        image_draw(resource_image + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
+        text_draw_number(b->data.house.inventory[0], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4,
+                         FONT_NORMAL_BLACK);
+    }
+    if (food2) { // vegetables
+        image_draw(resource_image + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
+        text_draw_number(b->data.house.inventory[1], '@', " ", c->x_offset + 174, c->y_offset + Y_FOODS + 4,
+                         FONT_NORMAL_BLACK);
+    }
+    if (food3) { // fruit
+        image_draw(resource_image + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
+        text_draw_number(b->data.house.inventory[2], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4,
+                         FONT_NORMAL_BLACK);
+    }
+    if (food4) { // meat/fish
+        image_draw(resource_image + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
+        text_draw_number(b->data.house.inventory[3], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4,
+                         FONT_NORMAL_BLACK);
+    }
 
     // goods inventory
     // pottery

@@ -46,6 +46,7 @@ static void generate_labor_seeker(building *b, int x, int y) {
         return;
     }
     if (b->figure_id2) {
+        return;
         figure *f = figure_get(b->figure_id2);
         if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->building_id != b->id)
             b->figure_id2 = 0;
@@ -556,7 +557,7 @@ static void spawn_figure_market(building *b) {
         else
             return;
         // market trader
-        if (!has_figure_of_type(b, FIGURE_MARKET_TRADER)) {
+        if (!has_figure_of_type(b, FIGURE_MARKET_TRADER) && (!b->figure_id2 || figure_get(b->figure_id2)->type != FIGURE_MARKET_BUYER)) {
             b->figure_spawn_delay++;
             if (b->figure_spawn_delay <= spawn_delay)
                 return;
@@ -568,7 +569,6 @@ static void spawn_figure_market(building *b) {
             figure *f = figure_get(b->figure_id2);
             if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER))
                 b->figure_id2 = 0;
-
         } else {
             map_has_road_access(b->x, b->y, b->size, &road);
             int dst_building_id = building_market_get_storage_destination(b);

@@ -53,13 +53,13 @@ static int big_people_image(int type) {
 
 static int inventory_to_resource_id(int value) {
     switch (value) {
-        case INVENTORY_FOOD1:
+        case 0:
             return RESOURCE_WHEAT;
-        case INVENTORY_FOOD2:
+        case 1:
             return RESOURCE_VEGETABLES;
-        case INVENTORY_FOOD3:
+        case 2:
             return RESOURCE_FRUIT;
-        case INVENTORY_FOOD4:
+        case 3:
             return RESOURCE_MEAT_C3;
         case INVENTORY_GOOD4:
             return RESOURCE_WINE;

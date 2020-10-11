@@ -15,8 +15,9 @@ unsigned int
 text_get_max_length_for_width(const uint8_t *str, int length, font_t font, unsigned int requested_width, int invert);
 void text_ellipsize(uint8_t *str, font_t font, int requested_width);
 
-int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 
+void draw_text_shadow(uint8_t *str, int _x, int _y, color_t color);
+int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color);
 
 int text_draw_number(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font);
