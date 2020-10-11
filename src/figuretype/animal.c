@@ -303,7 +303,7 @@ void figure::ostrich_action() {
         case ACTION_8_RECALCULATE:
             wait_ticks--;
             if (wait_ticks <= 0) {
-                if (herd_roost(4, 8, 22)) {
+                if (herd_roost(4, 8, 32)) {
                     wait_ticks = 0;
                     advance_action(ACTION_10_GOING);
                 } else

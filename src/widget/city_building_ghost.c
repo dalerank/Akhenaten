@@ -450,9 +450,12 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
     } else if (type == BUILDING_WAREHOUSE)
         image_draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {
-        image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
-        const image *img = image_get(image_id + 1);
-        image_draw_masked(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64, COLOR_MASK_GREEN);
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
+            const image *img = image_get(image_id + 1);
+            image_draw_masked(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64, COLOR_MASK_GREEN);
+        } else
+            draw_building(image_id, x, y);
     } else if (type == BUILDING_HOUSE_VACANT_LOT)
         draw_building(image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), x, y);
     else if (type == BUILDING_TRIUMPHAL_ARCH) {
@@ -692,7 +695,7 @@ static void draw_fountain(const map_tile *tile, int x, int y) {
                                             draw_fountain_range);
 
         draw_building(image_id, x, y);
-        if (map_terrain_is(tile->grid_offset, TERRAIN_RESERVOIR_RANGE)) {
+        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER_RANGE)) {
             const image *img = image_get(image_id);
             image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
@@ -725,7 +728,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y) {
                     tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
                     break;
             }
-            if (map_terrain_is(tile_offset, TERRAIN_RESERVOIR_RANGE))
+            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER_RANGE))
                 has_water = 1;
 
         }

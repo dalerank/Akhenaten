@@ -253,7 +253,7 @@ static void init(int grid_offset) {
     context.can_go_to_advisor = 0;
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
-    context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
+    context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_GROUNDWATER_RANGE);
     context.aqueduct_has_water = map_aqueduct_at(grid_offset) && map_image_at(grid_offset) -
                                                                  image_id_from_group(GROUP_BUILDING_AQUEDUCT) < 15;
 

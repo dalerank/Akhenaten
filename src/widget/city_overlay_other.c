@@ -180,7 +180,7 @@ static int get_tooltip_tax_income(tooltip_context *c, const building *b) {
 }
 
 static int get_tooltip_water(tooltip_context *c, int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE)) {
+    if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER_RANGE)) {
         if (map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
             return 2;
         else {
@@ -284,11 +284,11 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
             terrain |= TERRAIN_FOUNTAIN_RANGE;
 
         int image_offset;
-        switch (terrain & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
-            case TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE:
+        switch (terrain & (TERRAIN_GROUNDWATER_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
+            case TERRAIN_GROUNDWATER_RANGE | TERRAIN_FOUNTAIN_RANGE:
                 image_offset = 24;
                 break;
-            case TERRAIN_RESERVOIR_RANGE:
+            case TERRAIN_GROUNDWATER_RANGE:
                 image_offset = 8;
                 break;
             case TERRAIN_FOUNTAIN_RANGE:
@@ -301,11 +301,11 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
         city_with_overlay_draw_building_footprint(x, y, grid_offset, image_offset);
     } else {
         int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
-        switch (map_terrain_get(grid_offset) & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
-            case TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE:
+        switch (map_terrain_get(grid_offset) & (TERRAIN_GROUNDWATER_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
+            case TERRAIN_GROUNDWATER_RANGE | TERRAIN_FOUNTAIN_RANGE:
                 image_id += 27;
                 break;
-            case TERRAIN_RESERVOIR_RANGE:
+            case TERRAIN_GROUNDWATER_RANGE:
                 image_id += 11;
                 break;
             case TERRAIN_FOUNTAIN_RANGE:

@@ -597,7 +597,7 @@ static void spawn_figure_market(building *b) {
 static void set_bathhouse_graphic(building *b) {
     if (b->state != BUILDING_STATE_VALID)
         return;
-    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE))
+    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_GROUNDWATER_RANGE))
         b->has_water_access = 1;
     else {
         b->has_water_access = 0;

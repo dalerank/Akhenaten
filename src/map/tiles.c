@@ -736,6 +736,7 @@ int map_tiles_set_road(int x, int y) {
 
 static void clear_empty_land_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+
         map_image_set(grid_offset, 0);
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
@@ -883,7 +884,6 @@ static void set_water_image(int x, int y, int grid_offset) {
 static void update_water_tile(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) && !map_terrain_is(grid_offset, TERRAIN_BUILDING))
         foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
-
 }
 void map_tiles_update_all_water(void) {
     foreach_map_tile(update_water_tile);

@@ -242,13 +242,12 @@ void window_building_draw_well(building_info_context *c) {
     lang_text_draw_centered(109, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     int well_necessity = map_water_supply_is_well_unnecessary(c->building_id, 2);
     int text_id = 0;
-    if (well_necessity == WELL_NECESSARY) { // well is OK
+    if (well_necessity == WELL_NECESSARY) // well is OK
         text_id = 1;
-    } else if (well_necessity == WELL_UNNECESSARY_FOUNTAIN) { // all houses have fountain
+    else if (well_necessity == WELL_UNNECESSARY_FOUNTAIN) // all houses have fountain
         text_id = 2;
-    } else if (well_necessity == WELL_UNNECESSARY_NO_HOUSES) { // no houses around
+    else if (well_necessity == WELL_UNNECESSARY_NO_HOUSES) // no houses around
         text_id = 3;
-    }
     if (text_id)
         window_building_draw_description_at(c, 16 * c->height_blocks - 160, 109, text_id);
 

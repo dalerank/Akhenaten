@@ -310,13 +310,12 @@ void map_image_context_reset_elevation(void) {
     clear_current_offset(context_pointers[CONTEXT_ELEVATION].context, context_pointers[CONTEXT_ELEVATION].size);
 }
 
-static int context_matches_tiles(const struct terrain_image_context *context, const int tiles[MAX_TILES]) {
+static bool context_matches_tiles(const struct terrain_image_context *context, const int tiles[MAX_TILES]) {
     for (int i = 0; i < MAX_TILES; i++) {
-        if (context->tiles[i] != 2 && tiles[i] != context->tiles[i])
-            return 0;
-
+        if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) // if pattern isn't "2", it must match!
+            return false;
     }
-    return 1;
+    return true;
 }
 
 static const terrain_image *get_image(int group, int tiles[MAX_TILES]) {
@@ -360,9 +359,8 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset) {
 }
 
 static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES]) {
-    for (int i = 0; i < MAX_TILES; i++) {
+    for (int i = 0; i < MAX_TILES; i++)
         tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
-    }
 }
 
 const terrain_image *map_image_context_get_shore(int grid_offset) {

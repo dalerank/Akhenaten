@@ -176,7 +176,10 @@ static void advance_tick(void) {
             city_labor_update();
             break;
         case 27:
-            map_water_supply_update_reservoir_fountain();
+            if (GAME_ENV == ENGINE_ENV_C3)
+                map_water_supply_update_reservoir_fountain_C3();
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                map_water_supply_update_wells_PH();
             break;
         case 28:
             map_water_supply_update_houses();

@@ -65,7 +65,10 @@ void map_water_supply_update_houses(void) {
     int total_wells = building_list_small_size();
     const int *wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        mark_well_access(wells[i], 2);
+        if (GAME_ENV == ENGINE_ENV_C3)
+            mark_well_access(wells[i], 2);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            mark_well_access(wells[i], 1);
     }
 }
 
@@ -150,8 +153,8 @@ static int OFFSET(int x, int y) {
     }
 }
 
-void map_water_supply_update_reservoir_fountain(void) {
-    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
+void map_water_supply_update_reservoir_fountain_C3(void) {
+    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_GROUNDWATER_RANGE);
     // reservoirs
     set_all_aqueducts_to_no_water();
     building_list_large_clear(1);
@@ -179,9 +182,8 @@ void map_water_supply_update_reservoir_fountain(void) {
             if (b->has_water_access == 2) {
                 b->has_water_access = 1;
                 changed = 1;
-                for (int d = 0; d < 4; d++) {
+                for (int d = 0; d < 4; d++)
                     fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[d]);
-                }
             }
         }
     }
@@ -189,8 +191,7 @@ void map_water_supply_update_reservoir_fountain(void) {
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
         if (b->has_water_access)
-            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
-
+            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_GROUNDWATER_RANGE);
     }
     // fountains
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -206,18 +207,26 @@ void map_water_supply_update_reservoir_fountain(void) {
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_3);
         else if (des > 20)
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_2);
-        else {
+        else
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
-        }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
+        if (map_terrain_is(b->grid_offset, TERRAIN_GROUNDWATER_RANGE) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
                                         scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
                                         TERRAIN_FOUNTAIN_RANGE);
-        } else {
+        } else
             b->has_water_access = 0;
-        }
+    }
+}
+void map_water_supply_update_wells_PH(void) {
+    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
+    int total_wells = building_list_small_size();
+    const int *wells = building_list_small_items();
+    for (int i = 0; i < total_wells; i++) {
+        building *b = building_get(wells[i]);
+        if (b->type == BUILDING_WELL)
+            map_terrain_add_with_radius(b->x, b->y, 1, 3, TERRAIN_FOUNTAIN_RANGE);
     }
 }
 
@@ -233,9 +242,8 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size) {
                 num_houses++;
-                if (!map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE))
+//                if (!building_get(building_id)->has_water_access) //todo: water carrier access
                     return WELL_NECESSARY;
-
             }
         }
     }
