@@ -83,7 +83,7 @@ static void advance_month(void) {
     city_message_decrease_delays();
 
     map_tiles_update_all_roads();
-    map_tiles_update_all_water();
+    map_tiles_refresh_river_tiles();
     map_routing_update_land_citizen();
     city_message_sort_and_compact();
 

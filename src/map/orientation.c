@@ -43,7 +43,7 @@ void map_orientation_change(int counter_clockwise) {
     determine_leftmost_tile();
 
     map_tiles_update_all_elevation();
-    map_tiles_update_all_water();
+    map_tiles_refresh_river_tiles();
     map_tiles_update_all_earthquake();
     map_tiles_update_all_rocks();
     map_tiles_update_all_gardens();

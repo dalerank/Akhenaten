@@ -8,6 +8,19 @@ terrain
 
 
 
+expansion 	700	0
+sprmain 	10325	700
+unloaded 	200 	11025
+unloaded(2) 	481	11225
+general 	2546	11706
+(???		539	14252)
+terrain		1514	14252
+font		1340	15766
+
+sprambient	2934	???
+sprmain2	2352	???
+
+==================
 
 4438 >>>>
 
@@ -36,19 +49,6 @@ hunt. lodge (21) : 5544
 hunt. lodge (19) : 5016
 3 hunters out (0 left?)
 
-
-expansion 	700	0
-sprmain 	10325	700
-unloaded 	200 	11025
-unloaded(2) 	481	11225
-general 	2546	11706
-(???		539	14252)
-terrain		1514	14252
-font		1340	15766
-
-sprambient	2934	???
-sprmain2	2352	???
-
 ======================
 
 trader (19) action 11 (arriving)
@@ -61,7 +61,50 @@ donkey (21) action 8 (following trader)
 390 360 -> coords
 397 394 -> adjusted
 
+================
 
+21305 <--
+[1][0][0]
+[1][ ][1]
+[1][1][1]
+
+deepwater river (reductive)
+       <--- y 
+W	  N  x
+ [1][1][ ]   |	edge
+ [ ][ ][0]   |
+ [1][1][ ]   v
+S	  E
+
+ [1][1][1]	smallcorners
+ [1][ ][0]
+ [1][0][ ]
+
+ [1][1][ ]	bigcorners
+ [1][ ][ ]
+ [ ][ ][0]
+
+ [0][ ][1]	oppositecornersWE
+ [ ][ ][ ]
+ [1][ ][0]
+
+ [1][ ][1]	full
+ [ ][ ][ ]
+ [1][ ][1]
+
+(skip?	=20)
+8: edge, smallcorners
+4: bigcorners
+6: full (anim)
+2: ???
+
+(6x 	=15*6=90)
+8: edge, smallcorners
+4: bigcorners
+2: oppositecorners
+1: full
+
+================
 
 
 +684

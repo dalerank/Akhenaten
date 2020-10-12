@@ -180,6 +180,10 @@ static struct {
 
     int image_id_water_first;
     int image_id_water_last;
+
+    int image_id_deepwater_first;
+    int image_id_deepwater_last;
+
     int selected_figure_id;
     int highlighted_formation;
     pixel_coordinate *selected_figure_coord;
@@ -196,6 +200,8 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     }
     draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
+    draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
+    draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
     draw_context.selected_figure_id = selected_figure_id;
     draw_context.selected_figure_coord = figure_coord;
     draw_context.highlighted_formation = highlighted_formation;
@@ -481,12 +487,17 @@ static void draw_footprint(int x, int y, int grid_offset) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
 
-        if (draw_context.advance_water_animation &&
-            image_id >= draw_context.image_id_water_first &&
-            image_id <= draw_context.image_id_water_last) {
-            image_id++;
-            if (image_id > draw_context.image_id_water_last)
-                image_id = draw_context.image_id_water_first;
+        if (draw_context.advance_water_animation) {
+            if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
+                image_id++;
+                if (image_id > draw_context.image_id_water_last)
+                    image_id = draw_context.image_id_water_first;
+            }
+            if (image_id >= draw_context.image_id_deepwater_first && image_id <= draw_context.image_id_deepwater_last) {
+                image_id += 15;
+                if (image_id > draw_context.image_id_deepwater_last)
+                    image_id -= 90;
+            }
 
             map_image_set(grid_offset, image_id);
         }
@@ -534,7 +545,7 @@ static void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
 
     // draw terrain data
-    if (true) {
+    if (false) {
         uint32_t tile_data = map_terrain_get(grid_offset);
         uint8_t str[10];
         int flag_data = 0;
@@ -554,8 +565,9 @@ static void draw_debug(int x, int y, int grid_offset) {
 
         string_from_int(str, flag_data, 0);
         draw_text_shadow(str, x + 20, y + 5, COLOR_WHITE);
-        string_from_int(str, tile_data, 0);
-        draw_text_shadow(str, x + 20, y + 15, COLOR_GREEN);
+//        string_from_int(str, tile_data, 0);
+//        string_from_int(str, grid_offset, 0);
+//        draw_text_shadow(str, x + 20, y + 15, COLOR_GREEN);
 //    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
     }
 

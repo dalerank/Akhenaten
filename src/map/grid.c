@@ -11,8 +11,11 @@ static const int DIRECTION_DELTA_C3[] = {-OFFSET_C3(0, 1), OFFSET_C3(1, -1), 1, 
 static const int DIRECTION_DELTA_PH[] = {-OFFSET_PH(0, 1), OFFSET_PH(1, -1), 1, OFFSET_PH(1, 1), OFFSET_PH(0, 1),
                                          OFFSET_PH(-1, 1), -1, -OFFSET_PH(1, 1)};
 
-static
-const int ADJACENT_OFFSETS_C3[][21] = {
+// [7][0][1]
+// [6]   [2]
+// [5][4][3]
+
+static const int ADJACENT_OFFSETS_C3[][21] = {
     {
         0
     },

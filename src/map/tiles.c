@@ -59,8 +59,7 @@ static void foreach_map_tile(void (*callback)(int x, int y, int grid_offset)) {
         }
     }
 }
-static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max,
-                                void (*callback)(int x, int y, int grid_offset)) {
+static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max, void (*callback)(int x, int y, int grid_offset)) {
     map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
     int grid_offset = map_grid_offset(x_min, y_min);
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -831,7 +830,7 @@ void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) 
 }
 
 static void set_water_image(int x, int y, int grid_offset) {
-    if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
+//    if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
         const terrain_image *img = map_image_context_get_shore(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_WATER) + img->group_offset + img->item_offset;
         if (GAME_ENV == ENGINE_ENV_C3 && map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_BUILDING)) {
@@ -879,21 +878,37 @@ static void set_water_image(int x, int y, int grid_offset) {
         map_image_set(grid_offset, image_id);
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
-    }
+//    }
 }
-static void update_water_tile(int x, int y, int grid_offset) {
+static void set_deepwater_image(int x, int y, int grid_offset) {
+    const terrain_image *img = map_image_context_get_river(grid_offset);
+    int image_id = image_id_from_group(GROUP_TERRAIN_DEEPWATER) + img->group_offset + img->item_offset;
+    if (!img->is_valid)
+        image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+//    if (grid_offset == 26814)
+//        image_id = image_id_from_group(GROUP_DEBUG_ARROWPOST);
+    map_image_set(grid_offset, image_id);
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
+}
+static void update_river_tile(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) && !map_terrain_is(grid_offset, TERRAIN_BUILDING))
-        foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
+        set_water_image(x, y, grid_offset);
+    if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER))
+        set_deepwater_image(x, y, grid_offset);
+
+//        foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image); // why? not sure
 }
-void map_tiles_update_all_water(void) {
-    foreach_map_tile(update_water_tile);
+void map_tiles_refresh_river_tiles(void) {
+    foreach_map_tile(update_river_tile);
 }
 void map_tiles_update_region_water(int x_min, int y_min, int x_max, int y_max) {
-    foreach_region_tile(x_min, y_min, x_max, y_max, update_water_tile);
+    foreach_region_tile(x_min, y_min, x_max, y_max, update_river_tile);
 }
 void map_tiles_set_water(int x, int y) {
     map_terrain_add(map_grid_offset(x, y), TERRAIN_WATER);
-    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
+    set_water_image(x, y, map_grid_offset(x, y));
+//    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
 }
 
 static void set_earthquake_image(int x, int y, int grid_offset) {

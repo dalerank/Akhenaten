@@ -133,7 +133,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
 
     // initialize grids
     map_tiles_update_all_elevation();
-    map_tiles_update_all_water();
+    map_tiles_refresh_river_tiles();
     map_tiles_update_all_earthquake();
     map_tiles_update_all_rocks();
     map_tiles_add_entry_exit_flags();

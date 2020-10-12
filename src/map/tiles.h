@@ -28,7 +28,7 @@ void map_tiles_update_region_empty_land(int x_min, int y_min, int x_max, int y_m
 void map_tiles_update_all_meadow(void);
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max);
 
-void map_tiles_update_all_water(void);
+void map_tiles_refresh_river_tiles(void);
 void map_tiles_update_region_water(int x_min, int y_min, int x_max, int y_max);
 void map_tiles_set_water(int x, int y);
 

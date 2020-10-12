@@ -12,12 +12,12 @@ enum {
 };
 
 static int grid_size[] = {
-        GRID_SIZE_C3,
-        GRID_SIZE_PH
+    GRID_SIZE_C3,
+    GRID_SIZE_PH
 };
 static int grid_total_size[] = {
-        GRID_SIZE_C3 * GRID_SIZE_C3,
-        GRID_SIZE_PH * GRID_SIZE_PH
+    GRID_SIZE_C3 * GRID_SIZE_C3,
+    GRID_SIZE_PH * GRID_SIZE_PH
 };
 
 #define OFFSET_C3(x, y) (x + GRID_SIZE_C3 * y)

@@ -264,6 +264,38 @@ static struct terrain_image_context terrain_images_aqueduct[16] = {
         {{2, 2, 2, 2, 2, 2, 2, 2}, {2,  2,  2,  2},  0,  1},
 };
 
+static struct terrain_image_context terrain_images_deepwater[19] = {
+        {{0, 2, 1, 1, 2, 1, 1, 2}, {0,  2,  4,  6},  0,  1},
+        {{1, 2, 0, 2, 1, 1, 2, 1}, {2,  4,  6,  0},  0,  1},
+        {{2, 1, 1, 2, 0, 2, 1, 1}, {4,  6,  0,  2},  0,  1},
+        {{1, 1, 2, 1, 1, 2, 0, 2}, {6,  0,  2,  4},  0,  1},
+
+        {{0, 2, 0, 1, 2, 1, 2, 1}, {1,  3,  5,  7},  0,  1},
+        {{2, 1, 0, 2, 0, 1, 2, 1}, {3,  5,  7,  1},  0,  1},
+        {{2, 1, 2, 1, 0, 2, 0, 1}, {5,  7,  1,  3},  0,  1},
+        {{0, 1, 2, 1, 2, 1, 0, 2}, {7,  1,  3,  5},  0,  1},
+
+        {{2, 0, 2, 1, 2, 1, 2, 1}, {8,  9,  10, 11}, 0,  1},
+        {{2, 1, 2, 0, 2, 1, 2, 1}, {9,  10, 11, 8}, 0,  1},
+        {{2, 1, 2, 1, 2, 0, 2, 1}, {10, 11, 8,  9},  0,  1},
+        {{2, 1, 2, 1, 2, 1, 2, 0}, {11, 8,  9,  10},  0,  1},
+
+        {{2, 0, 2, 2, 1, 1, 1, 2}, {1,  3,  5,  7},  0,  1},
+        {{1, 2, 2, 0, 2, 2, 1, 1}, {3,  5,  7,  1},  0,  1},
+        {{1, 1, 1, 2, 2, 0, 2, 2}, {5,  7,  1,  3},  0,  1},
+        {{2, 2, 1, 1, 1, 2, 2, 0}, {7,  1,  3,  5},  0,  1},
+
+        {{2, 0, 2, 1, 2, 0, 2, 1}, {12, 13, 12, 13}, 0,  1},
+        {{2, 1, 2, 0, 2, 1, 2, 0}, {13, 12, 13, 12}, 0,  1},
+
+//        {{0, 0, 0, 0, 0, 0, 0, 0}, {14, 14, 14, 14}, 0,  1},
+        {{1, 1, 1, 1, 1, 1, 1, 1}, {14, 14, 14, 14}, 0,  1},
+};
+
+// [5][6][7]
+// [4]   [0]
+// [3][2][1]
+
 enum {
     CONTEXT_WATER,
     CONTEXT_WALL,
@@ -273,6 +305,8 @@ enum {
     CONTEXT_DIRT_ROAD,
     CONTEXT_PAVED_ROAD,
     CONTEXT_AQUEDUCT,
+    CONTEXT_DEEPWATER,
+
     CONTEXT_MAX_ITEMS
 };
 
@@ -287,7 +321,8 @@ static struct {
         {terrain_images_earthquake,     17},
         {terrain_images_dirt_road,      17},
         {terrain_images_paved_road,     48},
-        {terrain_images_aqueduct,       16}
+        {terrain_images_aqueduct,       16},
+        {terrain_images_deepwater,      19}
 };
 
 static void clear_current_offset(struct terrain_image_context *items, int num_items) {
@@ -295,17 +330,14 @@ static void clear_current_offset(struct terrain_image_context *items, int num_it
         items[i].current_item_offset = 0;
     }
 }
-
 void map_image_context_init(void) {
     for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
         clear_current_offset(context_pointers[i].context, context_pointers[i].size);
     }
 }
-
 void map_image_context_reset_water(void) {
     clear_current_offset(context_pointers[CONTEXT_WATER].context, context_pointers[CONTEXT_WATER].size);
 }
-
 void map_image_context_reset_elevation(void) {
     clear_current_offset(context_pointers[CONTEXT_ELEVATION].context, context_pointers[CONTEXT_ELEVATION].size);
 }
@@ -316,6 +348,10 @@ static bool context_matches_tiles(const struct terrain_image_context *context, c
             return false;
     }
     return true;
+}
+static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES]) {
+    for (int i = 0; i < MAX_TILES; i++)
+        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
 }
 
 static const terrain_image *get_image(int group, int tiles[MAX_TILES]) {
@@ -347,7 +383,6 @@ const terrain_image *map_image_context_get_elevation(int grid_offset, int elevat
     }
     return get_image(CONTEXT_ELEVATION, tiles);
 }
-
 const terrain_image *map_image_context_get_earthquake(int grid_offset) {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
@@ -357,16 +392,17 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset) {
     }
     return get_image(CONTEXT_EARTHQUAKE, tiles);
 }
-
-static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES]) {
-    for (int i = 0; i < MAX_TILES; i++)
-        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
-}
-
 const terrain_image *map_image_context_get_shore(int grid_offset) {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WATER, 0, 1, tiles);
     return get_image(CONTEXT_WATER, tiles);
+}
+const terrain_image *map_image_context_get_river(int grid_offset) {
+    int tiles[MAX_TILES];
+    fill_matches(grid_offset, TERRAIN_DEEPWATER, 1, 0, tiles);
+    if (grid_offset == 26814)
+        int a = 24;
+    return get_image(CONTEXT_DEEPWATER, tiles);
 }
 
 const terrain_image *map_image_context_get_wall(int grid_offset) {

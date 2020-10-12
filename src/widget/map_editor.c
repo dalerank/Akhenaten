@@ -32,6 +32,9 @@ static struct {
 
     int image_id_water_first;
     int image_id_water_last;
+
+    int image_id_deepwater_first;
+    int image_id_deepwater_last;
 } draw_context;
 
 static void init_draw_context(void) {
@@ -43,6 +46,8 @@ static void init_draw_context(void) {
     }
     draw_context.image_id_water_first = image_id_from_group(GROUP_TERRAIN_WATER);
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
+    draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
+    draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
 }
 
 static void draw_footprint(int x, int y, int grid_offset) {
