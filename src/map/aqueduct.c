@@ -54,10 +54,10 @@ void map_aqueduct_restore(void) {
 }
 
 void map_aqueduct_save_state(buffer *buf, buffer *backup) {
-    map_grid_save_state(&aqueduct, buf);
-    map_grid_save_state(&aqueduct_backup, backup);
+    map_grid_save_buffer(&aqueduct, buf);
+    map_grid_save_buffer(&aqueduct_backup, backup);
 }
 void map_aqueduct_load_state(buffer *buf, buffer *backup) {
-    map_grid_load_state(&aqueduct, buf);
-    map_grid_load_state(&aqueduct_backup, backup);
+    map_grid_load_buffer(&aqueduct, buf);
+    map_grid_load_buffer(&aqueduct_backup, backup);
 }

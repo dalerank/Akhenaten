@@ -210,6 +210,7 @@ typedef struct {
     buffer *bookmarks = new buffer;
     buffer *tutorial_part3 = new buffer;
     buffer *city_entry_exit_grid_offset = new buffer;
+    buffer *moisture_grid = new buffer;
     buffer *end_marker = new buffer;
 
     buffer *ph_unk01 = new buffer;
@@ -243,6 +244,11 @@ typedef struct {
     buffer *junk18 = new buffer;
     buffer *junk19 = new buffer;
     buffer *junk20 = new buffer;
+
+    buffer *GRID01_8BIT = new buffer;
+    buffer *GRID02_8BIT = new buffer;
+    buffer *GRID03_32BIT = new buffer;
+    buffer *GRID04_8BIT = new buffer;
 } savegame_state;
 
 static struct {
@@ -603,47 +609,53 @@ static void init_savegame_data(int expanded) {
 //                state->end_marker = create_savegame_piece(284, 0, ""); // 71x 4-bytes emptiness 150684
 
             // 8 bytes      00 00 00 00 ???
+            state->junk9 = create_savegame_piece(8, 0, "junk9");
+
             // 52370 bytes  00 00 00 00 ???
+            state->GRID01_8BIT = create_savegame_piece(52370, 0, "GRID01_8BIT"); // todo: 1-byte grid
+
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
             // 38 bytes     2F 01 00 00 ???
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
             if (expanded)
-                state->junk9 = create_savegame_piece(8 + 52370 + 18600 + 38 + 13416 + 8200, 0, "junk9");
+                state->junk10 = create_savegame_piece(18600 + 38 + 13216 + 200 + 8200, 0, "junk10");
             else
-                state->junk9 = create_savegame_piece(8 + 52370 + 18600 + 38 + 13216 + 8200, 0, "junk9");
+                state->junk10 = create_savegame_piece(18600 + 38 + 13216 + 8200, 0, "junk10");
 
-            state->junk10 = create_savegame_piece(1280, 1, "junk10"); // unknown compressed data
+            state->junk11 = create_savegame_piece(1280, 1, "junk11"); // unknown compressed data
             if (expanded)
-                state->junk11 = create_savegame_piece(19600, 1, "junk11"); // unknown compressed data
+                state->junk12 = create_savegame_piece(19600, 1, "junk12"); // unknown compressed data
             else
-                state->junk11 = create_savegame_piece(15200, 1, "junk11"); // unknown compressed data
-            state->junk12 = create_savegame_piece(16200, 1, "junk12"); // unknown compressed data
+                state->junk12 = create_savegame_piece(15200, 1, "junk12"); // unknown compressed data
+            state->junk13 = create_savegame_piece(16200, 1, "junk13"); // unknown compressed data
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
+            state->GRID02_8BIT = create_savegame_piece(51984, 0, "GRID02_8BIT"); // todo: 1-byte grid
+
             // 20 bytes     19 00 00 00 ???
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
-            state->junk13 = create_savegame_piece(51984 + 20 + 528, 0, "junk13");
+            state->junk14 = create_savegame_piece(20 + 528, 0, "junk14");
 
-            state->junk14 = create_savegame_piece(36, 1, "junk14"); // unknown compressed data
-            state->junk15 = create_savegame_piece(207936, 1, "junk15"); // unknown compressed data
+            state->junk15 = create_savegame_piece(36, 1, "junk15"); // unknown compressed data
+            state->GRID03_32BIT = create_savegame_piece(207936, 1, "GRID03_32BIT"); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
             // 64 bytes     00 00 00 00 ???
             // 41 bytes     00 00 00 00 ??? 41 x 1-byte flag fields
             state->junk16 = create_savegame_piece(312 + 64 + 41, 0, "junk16"); // 71x 4-bytes emptiness
 
-            state->junk17 = create_savegame_piece(51984, 1, "junk17"); // unknown compressed data          // (228²) * 1
+            state->GRID04_8BIT = create_savegame_piece(51984, 1, "GRID04_8BIT"); // todo: 1-byte grid
 
             // lone byte ???
-            state->junk18 = create_savegame_piece(1, 0, "junk18");
+            state->junk17 = create_savegame_piece(1, 0, "junk17");
 
-            state->junk19 = create_savegame_piece(51984, 1, "junk19"); // unknown compressed data          // (228²) * 1
+            state->moisture_grid = create_savegame_piece(51984, 1, "moisture_grid"); // todo: 1-byte grid
 
             // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
             // 20 bytes     00 00 00 00 ???
             // 4800 bytes   00 00 00 00 ???
-            state->junk20 = create_savegame_piece(672 + 20, 0, "junk20");
+            state->junk18 = create_savegame_piece(672 + 20, 0, "junk18");
             state->end_marker = create_savegame_piece(4800, 0, "end_marker");
 
             break;
@@ -753,6 +765,13 @@ static void savegame_load_from_state(savegame_state *state) {
 //    enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 //    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_load_state(state->bookmarks);
+
+    map_temp_grid_load(state->GRID01_8BIT, 0);
+    map_temp_grid_load(state->GRID02_8BIT, 1);
+//    map_temp_grid_load(state->GRID03_32BIT, 2);
+    map_temp_grid_load(state->GRID04_8BIT, 2);
+    map_moisture_load_state(state->moisture_grid);
+    map_unk32_load_state(state->GRID03_32BIT);
 
 //    state->end_marker->skip(284);
 }

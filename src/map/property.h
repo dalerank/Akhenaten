@@ -59,4 +59,6 @@ void map_property_restore(void);
 void map_property_save_state(buffer *bitfields, buffer *edge);
 void map_property_load_state(buffer *bitfields, buffer *edge);
 
+uint8_t map_bitfield_get(int grid_offset);
+
 #endif // MAP_PROPERTY_H

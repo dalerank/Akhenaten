@@ -114,6 +114,7 @@ static void advance_day(void) {
 static void advance_tick(void) {
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
+    map_tiles_refresh_river_tiles(); // temp
     switch (game_time_tick()) {
         case 1:
             city_gods_calculate_moods(1);

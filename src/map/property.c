@@ -194,10 +194,14 @@ void map_property_restore(void) {
     map_grid_copy(&edge_backup, &edge_grid);
 }
 void map_property_save_state(buffer *bitfields, buffer *edge) {
-    map_grid_save_state(&bitfields_grid, bitfields);
-    map_grid_save_state(&edge_grid, edge);
+    map_grid_save_buffer(&bitfields_grid, bitfields);
+    map_grid_save_buffer(&edge_grid, edge);
 }
 void map_property_load_state(buffer *bitfields, buffer *edge) {
-    map_grid_load_state(&bitfields_grid, bitfields);
-    map_grid_load_state(&edge_grid, edge);
+    map_grid_load_buffer(&bitfields_grid, bitfields);
+    map_grid_load_buffer(&edge_grid, edge);
+}
+
+uint8_t map_bitfield_get(int grid_offset) {
+    return map_grid_get(&bitfields_grid, grid_offset);
 }

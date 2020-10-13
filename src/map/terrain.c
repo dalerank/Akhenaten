@@ -7,6 +7,21 @@
 
 static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
+static grid_xx terrain_moisture = {0, {FS_UINT8, FS_UINT8}};
+
+// originally a 32-bit grid?
+static grid_xx grid_unk32_1 = {0, {FS_INT8, FS_INT8}};
+static grid_xx grid_unk32_2 = {0, {FS_INT8, FS_INT8}};
+static grid_xx grid_unk32_3 = {0, {FS_INT8, FS_INT8}};
+static grid_xx grid_unk32_4 = {0, {FS_INT8, FS_INT8}};
+
+static grid_xx grid_unk_01 = {0, {FS_INT8, FS_INT8}}; // all 00
+static grid_xx grid_unk_02 = {0, {FS_INT8, FS_INT8}}; // all FF
+//static grid_xx grid_unk_03 = {0, {FS_INT8, FS_INT32}}; // ?? routing
+static grid_xx grid_unk_04 = {0, {FS_INT8, FS_INT8}}; // ?? terrain data
+
+static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 
 int map_terrain_is(int grid_offset, int terrain) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&terrain_grid, grid_offset) & terrain;
@@ -117,8 +132,19 @@ int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radi
     }
     return 0;
 }
-int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int *x_tile,
-                                            int *y_tile) {
+int map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (map_terrain_get(map_grid_offset(xx, yy)) == terrain)
+                return 1;
+        }
+    }
+    return 0;
+}
+int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset, int *x_tile, int *y_tile) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -302,8 +328,71 @@ void map_terrain_init_outside_map(void) {
 }
 
 void map_terrain_save_state(buffer *buf) {
-    map_grid_save_state(&terrain_grid, buf);
+    map_grid_save_buffer(&terrain_grid, buf);
 }
 void map_terrain_load_state(buffer *buf) {
-    map_grid_load_state(&terrain_grid, buf);
+    map_grid_load_buffer(&terrain_grid, buf);
 }
+
+void map_moisture_load_state(buffer *buf) {
+    map_grid_load_buffer(&terrain_moisture, buf);
+}
+uint8_t map_moisture_get(int grid_offset) {
+    return map_grid_get(&terrain_moisture, grid_offset);
+}
+
+void map_unk32_load_state(buffer *buf) {
+    if (!grid_unk32_1.initialized)
+        map_grid_init(&grid_unk32_1);
+    if (!grid_unk32_2.initialized)
+        map_grid_init(&grid_unk32_2);
+    if (!grid_unk32_3.initialized)
+        map_grid_init(&grid_unk32_3);
+    if (!grid_unk32_4.initialized)
+        map_grid_init(&grid_unk32_4);
+
+    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
+        ((int8_t*)grid_unk32_1.items_xx)[i] = buf->read_i8();
+        ((int8_t*)grid_unk32_2.items_xx)[i] = buf->read_i8();
+        ((int8_t*)grid_unk32_3.items_xx)[i] = buf->read_i8();
+        ((int8_t*)grid_unk32_4.items_xx)[i] = buf->read_i8();
+    }
+}
+int8_t map_unk32_get(int grid_offset, int a) {
+    switch (a) {
+        case 0:
+            return map_grid_get(&grid_unk32_1, grid_offset); break;
+        case 1:
+            return map_grid_get(&grid_unk32_2, grid_offset); break;
+        case 2:
+            return map_grid_get(&grid_unk32_3, grid_offset); break;
+        case 3:
+            return map_grid_get(&grid_unk32_4, grid_offset); break;
+    }
+}
+
+void map_temp_grid_load(buffer *buf, int g) {
+    switch (g) {
+        case 0:
+            map_grid_load_buffer(&grid_unk_01, buf); break;
+        case 1:
+            map_grid_load_buffer(&grid_unk_02, buf); break;
+//        case 2:
+//            map_grid_load_buffer(&grid_unk_03, buf); break;
+        case 2:
+            map_grid_load_buffer(&grid_unk_04, buf); break;
+    }
+}
+int64_t map_temp_grid_get(int grid_offset, int g) {
+    switch (g) {
+        case 0:
+            return map_grid_get(&grid_unk_01, grid_offset); break;
+        case 1:
+            return map_grid_get(&grid_unk_02, grid_offset); break;
+//        case 2:
+//            return map_grid_get(&grid_unk_03, grid_offset); break;
+        case 2:
+            return map_grid_get(&grid_unk_04, grid_offset); break;
+    }
+}
+

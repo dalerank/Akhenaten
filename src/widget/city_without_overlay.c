@@ -474,9 +474,8 @@ static void draw_footprint(int x, int y, int grid_offset) {
                 sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
             else if (x > view_x + view_width - 100)
                 sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
-            else {
+            else
                 sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
-            }
         }
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
             building *b = building_get(0); // abuse empty building
@@ -540,6 +539,7 @@ static void draw_figures(int x, int y, int grid_offset) {
 #include "map/terrain.h"
 #include "graphics/text.h"
 #include "core/string.h"
+#include "map/property.h"
 
 static void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
@@ -564,10 +564,45 @@ static void draw_debug(int x, int y, int grid_offset) {
         }
 
         string_from_int(str, flag_data, 0);
-        draw_text_shadow(str, x + 20, y + 5, COLOR_WHITE);
+        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+
+//        int d = map_bitfield_get(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+//        }
+
+//        int d = map_unk32_get(grid_offset, 0);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+//        }
+//        d = map_unk32_get(grid_offset, 1);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 25, y + 5, COLOR_RED);
+//        }
+//        d = map_unk32_get(grid_offset, 2);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 15, y + 15, COLOR_GREEN);
+//        }
+//        d = map_unk32_get(grid_offset, 3);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 25, y + 15, COLOR_BLUE);
+//        }
+
+//        string_from_int(str, map_moisture_get(grid_offset), 0);
+//        string_from_int(str, map_temp_grid_get(grid_offset, 0), 0);
+//        draw_text_shadow(str, x + 15, y + 15, COLOR_WHITE);
+//        string_from_int(str, map_temp_grid_get(grid_offset, 0), 0);
+//        draw_text_shadow(str, x + 15, y + 25, COLOR_WHITE);
+
+//        string_from_int(str, flag_data, 0);
 //        string_from_int(str, tile_data, 0);
 //        string_from_int(str, grid_offset, 0);
-//        draw_text_shadow(str, x + 20, y + 15, COLOR_GREEN);
+//        draw_text_shadow(str, x + 15, y + 15, COLOR_GREEN);
 //    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
     }
 

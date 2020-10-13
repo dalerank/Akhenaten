@@ -65,6 +65,7 @@ int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
 int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain);
 
 int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain);
+int map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);
 
 int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
                                             int *x_tile, int *y_tile);
@@ -96,7 +97,18 @@ void map_terrain_clear(void);
 void map_terrain_init_outside_map(void);
 
 void map_terrain_save_state(buffer *buf);
-
 void map_terrain_load_state(buffer *buf);
+
+void map_moisture_load_state(buffer *buf);
+uint8_t  map_moisture_get(int grid_offset);
+
+void map_unk32_load_state(buffer *buf);
+int8_t map_unk32_get(int grid_offset, int a);
+
+void map_temp_grid_load(buffer *buf, int g);
+int64_t map_temp_grid_get(int grid_offset, int g);
+
+uint8_t map_get_floodplain_growth(int grid_offset);
+uint8_t map_get_floodplain_fertility(int grid_offset);
 
 #endif // MAP_TERRAIN_H

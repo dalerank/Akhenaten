@@ -65,8 +65,8 @@ void map_grid_and(grid_xx *grid, uint32_t at, int mask);
 void map_grid_or(grid_xx *grid, uint32_t at, int mask);
 void map_grid_and_all(grid_xx *grid, int mask);
 
-void map_grid_save_state(grid_xx *grid, buffer *buf);
-void map_grid_load_state(grid_xx *grid, buffer *buf);
+void map_grid_save_buffer(grid_xx *grid, buffer *buf);
+void map_grid_load_buffer(grid_xx *grid, buffer *buf);
 
 void map_grid_data_init(int width, int height, int start_offset, int border_size);
 

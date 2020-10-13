@@ -38,11 +38,11 @@ void map_sprite_restore(void) {
 }
 
 void map_sprite_save_state(buffer *buf, buffer *backup) {
-    map_grid_save_state(&sprite, buf);
-    map_grid_save_state(&sprite_backup, backup);
+    map_grid_save_buffer(&sprite, buf);
+    map_grid_save_buffer(&sprite_backup, backup);
 }
 
 void map_sprite_load_state(buffer *buf, buffer *backup) {
-    map_grid_load_state(&sprite, buf);
-    map_grid_load_state(&sprite_backup, backup);
+    map_grid_load_buffer(&sprite, buf);
+    map_grid_load_buffer(&sprite_backup, backup);
 }

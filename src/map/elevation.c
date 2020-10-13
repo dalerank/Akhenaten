@@ -40,8 +40,8 @@ void map_elevation_remove_cliffs(void) {
 }
 
 void map_elevation_save_state(buffer *buf) {
-    map_grid_save_state(&elevation, buf);
+    map_grid_save_buffer(&elevation, buf);
 }
 void map_elevation_load_state(buffer *buf) {
-    map_grid_load_state(&elevation, buf);
+    map_grid_load_buffer(&elevation, buf);
 }

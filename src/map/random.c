@@ -23,8 +23,8 @@ int map_random_get(int grid_offset) {
 }
 
 void map_random_save_state(buffer *buf) {
-    map_grid_save_state(&random, buf);
+    map_grid_save_buffer(&random, buf);
 }
 void map_random_load_state(buffer *buf) {
-    map_grid_load_state(&random, buf);
+    map_grid_load_buffer(&random, buf);
 }

@@ -140,8 +140,8 @@ int map_desirability_get_max(int x, int y, int size) {
 }
 
 void map_desirability_save_state(buffer *buf) {
-    map_grid_save_state(&desirability_grid, buf);
+    map_grid_save_buffer(&desirability_grid, buf);
 }
 void map_desirability_load_state(buffer *buf) {
-    map_grid_load_state(&desirability_grid, buf);
+    map_grid_load_buffer(&desirability_grid, buf);
 }

@@ -327,7 +327,7 @@ void map_grid_and_all(grid_xx *grid, int mask) {
     }
 }
 
-void map_grid_save_state(grid_xx *grid, buffer *buf) {
+void map_grid_save_buffer(grid_xx *grid, buffer *buf) {
     if (!grid->initialized)
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
@@ -355,7 +355,7 @@ void map_grid_save_state(grid_xx *grid, buffer *buf) {
             break;
     }
 }
-void map_grid_load_state(grid_xx *grid, buffer *buf) {
+void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
     if (!grid->initialized)
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
@@ -521,5 +521,4 @@ const int *map_grid_adjacent_offsets(int size) {
             return ADJACENT_OFFSETS_PH[size];
     }
 }
-
 

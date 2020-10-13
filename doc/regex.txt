@@ -118,7 +118,7 @@ map_grid_save_state_u16(safe_u16(&images)->items, buf);
 (?=\);)
 (\);)
 
-map_grid_save_state($2, $4);
+map_grid_save_buffer($2, $4);
 
 
 
@@ -129,7 +129,7 @@ map_grid_save_state($2, $4);
 (map_grid_load_state_u16\(safe_u16\()(?<=map_grid_load_state_u16\(safe_u16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
 (map_grid_load_state_i16\(safe_i16\()(?<=map_grid_load_state_i16\(safe_i16\()(.*)(?=\)->items, )(\)->items, )(?<=\)->items, )(.*)(?=\);)(\);)
 
-map_grid_load_state($2, $4);
+map_grid_load_buffer($2, $4);
 
 
 

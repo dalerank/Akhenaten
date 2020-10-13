@@ -115,8 +115,8 @@ void map_figure_clear(void) {
 }
 
 void map_figure_save_state(buffer *buf) {
-    map_grid_save_state(&figures, buf);
+    map_grid_save_buffer(&figures, buf);
 }
 void map_figure_load_state(buffer *buf) {
-    map_grid_load_state(&figures, buf);
+    map_grid_load_buffer(&figures, buf);
 }

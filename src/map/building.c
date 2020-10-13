@@ -53,12 +53,12 @@ void map_clear_highlights(void) {
 }
 
 void map_building_save_state(buffer *buildings, buffer *damage) {
-    map_grid_save_state(&buildings_grid, buildings);
-    map_grid_save_state(&damage_grid, damage);
+    map_grid_save_buffer(&buildings_grid, buildings);
+    map_grid_save_buffer(&damage_grid, damage);
 }
 void map_building_load_state(buffer *buildings, buffer *damage) {
-    map_grid_load_state(&buildings_grid, buildings);
-    map_grid_load_state(&damage_grid, damage);
+    map_grid_load_buffer(&buildings_grid, buildings);
+    map_grid_load_buffer(&damage_grid, damage);
 }
 
 int map_building_is_reservoir(int x, int y) {

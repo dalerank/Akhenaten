@@ -63,10 +63,75 @@ donkey (21) action 8 (following trader)
 
 ================
 
-21305 <--
-[1][0][0]
-[1][ ][1]
-[1][1][1]
+..
+image_grid
+..
+figure_grid
+..
+figures 
+route_figures
+route_paths
+formations
+..
+game_time
+random_iv
+..
+junk8
+..
+unk32_grid
+..
+
+================
+
+(terrain.sg3)
+water: 380
+floodplain: 869
+floodplain shore: 917 (+48)
+floodplain hybrid: 929 (+48 +12)
+floodplain road: 953 (+48 +12 +24)
+
+lowest group base next: 957
+FloodSystem.BMP: 994 (+37)
+floodplain waterline: 1166 (+209)
+
+4: (4x) edges 1166 (0)
+4: (4x) bigcorners 1182 (16)
+2: (2x) oppositeedges 1198 (32)
+4: (1x) deadend 1202 (36)
+2: (1x) oppositecorners 1206 (40)
+4: (1x) smallcorners 1208 (42)
+4: (1x) big T-junction 1212 (46)
+4: (1x) big Y-junction 1216 (50)
+1: (1x) cross 1220 (54)
+4: 1-1-1 (1x) L-junction, L-junction, T-junction 1221 (55)
+4: (1x) L-corner 1233 (67)
+1: (1x) puddle 1237 (71)
+
+4: aqueduct 1238
+
+L = -W -F
+
+landplain_1-1
+[ L ][ W ][   ]
+[ L ][ W ][   ]
+[-L ][ W ][   ]
+[ ][ ][ ]
+[ ][W][ ]
+[ ][ ][ ]
+landplain_2-1
+[   ][ L ][   ]
+[ L ][ W ][-F ]
+[   ][ F ][   ]
+[ ][0][ ]
+[0][W][0]
+[ ][1][ ]
+floodplain_1-2	#1
+[   ][ W ][   ]
+[ L ][W+F][W+F]
+[   ][ F ][   ]
+[ ][ ][ ]
+[ ][W][ ]
+[ ][ ][ ]
 
 deepwater river (reductive)
        <--- y 
