@@ -946,6 +946,7 @@ static void load_main_data(buffer *buf) {
     city_data.unused.unused_44ec = buf->read_i32();
     city_data.religion.neptune_double_trade_active = buf->read_i32();
     city_data.religion.mars_spirit_power = buf->read_i32();
+    city_data.religion.osiris_fertility_modifier = 0; // todo
     city_data.unused.unused_44f8 = buf->read_i32();
     city_data.religion.angry_message_delay = buf->read_i32();
     city_data.resource.food_consumed_last_month = buf->read_i32();

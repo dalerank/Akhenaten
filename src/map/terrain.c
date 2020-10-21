@@ -1,3 +1,4 @@
+#include <ntdef.h>
 #include "terrain.h"
 
 #include "map/grid.h"
@@ -9,6 +10,15 @@ static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_moisture = {0, {FS_UINT8, FS_UINT8}};
 
+int all_river_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
+int all_river_tiles_x[GRID_SIZE_PH * GRID_SIZE_PH];
+int all_river_tiles_y[GRID_SIZE_PH * GRID_SIZE_PH];
+int river_total_tiles = 0;
+
+static grid_xx terrain_floodplain_shoreorder = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
+
 // originally a 32-bit grid?
 static grid_xx grid_unk32_1 = {0, {FS_INT8, FS_INT8}};
 static grid_xx grid_unk32_2 = {0, {FS_INT8, FS_INT8}};
@@ -19,9 +29,6 @@ static grid_xx grid_unk_01 = {0, {FS_INT8, FS_INT8}}; // all 00
 static grid_xx grid_unk_02 = {0, {FS_INT8, FS_INT8}}; // all FF
 //static grid_xx grid_unk_03 = {0, {FS_INT8, FS_INT32}}; // ?? routing
 static grid_xx grid_unk_04 = {0, {FS_INT8, FS_INT8}}; // ?? terrain data
-
-static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 
 int map_terrain_is(int grid_offset, int terrain) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&terrain_grid, grid_offset) & terrain;
@@ -302,6 +309,122 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
         map_terrain_remove(map_grid_offset(x + 2, y + 2), TERRAIN_ROAD);
     }
 }
+
+////
+
+#include "map/data.h"
+#include <stdlib.h>
+#include <city/data_private.h>
+
+floodplain_order floodplain_offsets[12];
+
+void map_floodplain_rebuild() {
+    map_grid_fill(&terrain_floodplain_shoreorder, 0);
+    map_grid_fill(&terrain_floodplain_growth, 0);
+    map_grid_fill(&terrain_floodplain_fertility, 0);
+
+    // fill in all water/river tiles
+    int tile = 0;
+    int grid_offset = map_data.start_offset;
+    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
+        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
+                all_river_tiles[tile] = grid_offset;
+                all_river_tiles_x[tile] = x;
+                all_river_tiles_y[tile] = y;
+                river_total_tiles++;
+                tile++;
+            }
+        }
+    }
+
+    // fill in shore order data
+    for (int order = 1; order < 64; order++) {
+
+        // temporary buffer to be transfered later into the offset caches
+        int temp_cache_buffer[grid_total_size[ENGINE_ENV_PHARAOH]];
+        int temp_cache_howmany = 0;
+
+        // go through every river tile
+        for (int i = 0; i < river_total_tiles; i++) {
+
+            int current_tile = all_river_tiles[i];
+            if ((order == 1 && map_terrain_is(current_tile, TERRAIN_WATER) && !map_terrain_is(current_tile, TERRAIN_FLOODPLAIN)) || // loop through every water tile
+                (order > 1 && // or, through every floodplain tile of the previous round
+                 map_terrain_is(current_tile, TERRAIN_FLOODPLAIN) &&
+                 map_get_shoreorder(current_tile) == order - 1)) {
+
+                // loop through for a 3x3 area around the tile
+                int x_min = all_river_tiles_x[i] - 1;
+                int x_max = all_river_tiles_x[i] + 1;
+                int y_min = all_river_tiles_y[i] - 1;
+                int y_max = all_river_tiles_y[i] + 1;
+
+                map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
+                int grid_offset = map_grid_offset(x_min, y_min);
+                for (int yy = y_min; yy <= y_max; yy++) {
+                    for (int xx = x_min; xx <= x_max; xx++) {
+                        // do only on floodplain tiles
+                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+
+                            // set fertility data
+                            int prev_fert = map_grid_get(&terrain_floodplain_fertility, grid_offset);
+                            int this_fert = 101 - (order - 1) * 3.4;
+                            if (this_fert < 0)
+                                this_fert = 0;
+                            if (prev_fert == 0)
+                                map_grid_set(&terrain_floodplain_fertility, grid_offset, this_fert);
+
+                            // only do new order cache tiles
+                            if (map_get_shoreorder(grid_offset) == 0) {
+                                map_grid_set(&terrain_floodplain_shoreorder, grid_offset, order);
+
+                                // add current tile to temp list of offsets
+                                temp_cache_buffer[temp_cache_howmany] = grid_offset;
+                                temp_cache_howmany++;
+                            }
+                        }
+                        ++grid_offset;
+                    }
+                    grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
+                }
+            }
+        }
+
+        // build long-term order list cache!
+        floodplain_order *order_cache = &floodplain_offsets[order - 1];
+        if (order_cache->initialized)
+            free(order_cache->offsets);
+        order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
+        order_cache->initialized = true;
+        order_cache->amount = temp_cache_howmany;
+        for (int o = 0; o < temp_cache_howmany; o++)
+            order_cache->offsets[o] = temp_cache_buffer[o];
+    }
+}
+
+uint8_t map_get_shoreorder(int grid_offset) {
+    return map_grid_get(&terrain_floodplain_shoreorder, grid_offset);
+}
+uint8_t map_get_growth(int grid_offset) {
+    return map_grid_get(&terrain_floodplain_growth, grid_offset);
+}
+uint8_t map_get_fertility(int grid_offset) {
+    int fert_tile = map_grid_get(&terrain_floodplain_fertility, grid_offset);
+//    if (fert_tile < 0)
+//        return 0;
+    return fert_tile + city_data.religion.osiris_fertility_modifier;
+}
+void map_set_growth(int grid_offset, int growth) {
+    if (growth >= 0 && growth < 6)
+        map_grid_set(&terrain_floodplain_growth, grid_offset, growth);
+}
+void map_set_fertility(int grid_offset, int fertility) {
+    if (fertility >= 0 && fertility <= 255)
+        map_grid_set(&terrain_floodplain_fertility, grid_offset, fertility);
+}
+
+/////
 
 void map_terrain_backup(void) {
     map_grid_copy(&terrain_grid, &terrain_grid_backup);

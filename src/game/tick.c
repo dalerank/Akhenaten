@@ -83,7 +83,7 @@ static void advance_month(void) {
     city_message_decrease_delays();
 
     map_tiles_update_all_roads();
-    map_tiles_refresh_river_tiles();
+    map_tiles_river_refresh_entire();
     map_routing_update_land_citizen();
     city_message_sort_and_compact();
 
@@ -102,6 +102,8 @@ static void advance_month(void) {
 }
 
 static void advance_day(void) {
+//    map_advance_floodplain_growth();
+
     if (game_time_advance_day())
         advance_month();
 
@@ -114,7 +116,8 @@ static void advance_day(void) {
 static void advance_tick(void) {
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
-    map_tiles_refresh_river_tiles(); // temp
+    map_advance_floodplain_growth(); // temp
+    map_tiles_river_refresh_entire(); // temp
     switch (game_time_tick()) {
         case 1:
             city_gods_calculate_moods(1);

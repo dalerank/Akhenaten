@@ -38,6 +38,19 @@ enum {
     TERRAIN_ALL = 0xffff + 0xffff0000
 };
 
+extern int all_river_tiles[];
+extern int all_river_tiles_x[];
+extern int all_river_tiles_y[];
+extern int river_total_tiles;
+
+typedef struct floodplain_order {
+    bool initialized = false;
+    uint32_t *offsets;
+    uint32_t amount;
+} floodplain_order;
+
+extern floodplain_order floodplain_offsets[12];
+
 int map_terrain_is(int grid_offset, int terrain);
 
 int map_terrain_get(int grid_offset);
@@ -88,12 +101,15 @@ void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
+void map_floodplain_rebuild();
+uint8_t map_get_shoreorder(int grid_offset);
+uint8_t map_get_growth(int grid_offset);
+uint8_t map_get_fertility(int grid_offset);
+void map_set_growth(int grid_offset, int growth);
+
 void map_terrain_backup(void);
-
 void map_terrain_restore(void);
-
 void map_terrain_clear(void);
-
 void map_terrain_init_outside_map(void);
 
 void map_terrain_save_state(buffer *buf);

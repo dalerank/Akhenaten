@@ -545,7 +545,7 @@ static void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
 
     // draw terrain data
-    if (false) {
+    if (true) {
         uint32_t tile_data = map_terrain_get(grid_offset);
         uint8_t str[10];
         int flag_data = 0;
@@ -563,14 +563,21 @@ static void draw_debug(int x, int y, int grid_offset) {
             i++;
         }
 
-        string_from_int(str, flag_data, 0);
-        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+//        string_from_int(str, flag_data, 0);
+//        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
 
-//        int d = map_bitfield_get(grid_offset);
+        int d = map_get_shoreorder(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
 //            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
 //        }
+
+//        int d = map_get_fertility(grid_offset);
+        if (d) {
+            string_from_int(str, d, 0);
+            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+        }
+
 
 //        int d = map_unk32_get(grid_offset, 0);
 //        if (d) {
@@ -678,10 +685,12 @@ static void draw_animation(int x, int y, int grid_offset) {
                                 ydiff = 90;
                                 break;
                         }
-                        image_draw_masked(image_id + animation_offset,
+                        if (img->draw.type != IMAGE_TYPE_ISOMETRIC)
+                            image_draw_masked(image_id + animation_offset,
                                           x + img->sprite_offset_x,
-                                          y + ydiff + img->sprite_offset_y - img->height,
-                                          color_mask);
+                                          y + ydiff + img->sprite_offset_y - img->height, color_mask);
+                        else
+                            image_draw_isometric_footprint(image_id + animation_offset, x, y, color_mask);
                 }
             }
             // specific buildings

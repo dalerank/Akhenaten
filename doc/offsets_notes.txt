@@ -61,6 +61,23 @@ donkey (21) action 8 (following trader)
 390 360 -> coords
 397 394 -> adjusted
 
+==================
+
+lookup: 590127 entries
+no lookup: 44497 entries
+
+(inner)
+249 w/out lookup
+325 with lookup
+
+(inner w/ outer loop count)
+ 4.866k~ w/out lookup
+14.651k~ with lookup
+
+(outer)
+ 4.160k~ w/out lookup
+12.768k~ with lookup
+
 ================
 
 ..

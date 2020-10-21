@@ -133,7 +133,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
 
     // initialize grids
     map_tiles_update_all_elevation();
-    map_tiles_refresh_river_tiles();
+    map_tiles_river_refresh_entire();
     map_tiles_update_all_earthquake();
     map_tiles_update_all_rocks();
     map_tiles_add_entry_exit_flags();
@@ -234,6 +234,7 @@ static void initialize_saved_game(void) {
     city_view_init();
 
     map_routing_update_all();
+    map_floodplain_rebuild();
 
     map_orientation_update_buildings();
     figure_route_clean();
@@ -258,6 +259,7 @@ static void initialize_saved_game(void) {
     map_tiles_determine_gardens();
 
     city_message_clear_scroll();
+    map_tiles_river_refresh_entire();
 
     game_state_unpause();
 }

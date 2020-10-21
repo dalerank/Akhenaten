@@ -272,6 +272,7 @@ extern struct city_data_t {
         int32_t neptune_double_trade_active;
         int32_t neptune_sank_ships;
         int32_t mars_spirit_power;
+        int32_t osiris_fertility_modifier;
     } religion;
     struct {
         int32_t theater_shows;

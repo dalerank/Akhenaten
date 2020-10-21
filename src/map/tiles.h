@@ -28,9 +28,11 @@ void map_tiles_update_region_empty_land(int x_min, int y_min, int x_max, int y_m
 void map_tiles_update_all_meadow(void);
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max);
 
-void map_tiles_refresh_river_tiles(void);
-void map_tiles_update_region_water(int x_min, int y_min, int x_max, int y_max);
+void map_tiles_river_refresh_entire(void);
+void map_tiles_river_refresh_region(int x_min, int y_min, int x_max, int y_max);
 void map_tiles_set_water(int x, int y);
+
+void map_advance_floodplain_growth();
 
 int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image *img);
 void map_tiles_update_all_aqueducts(int include_construction);

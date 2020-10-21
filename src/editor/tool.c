@@ -229,14 +229,14 @@ void editor_tool_update_use(const map_tile *tile) {
     switch (data.type) {
         case TOOL_GRASS:
             map_image_context_reset_water();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_empty_land(x_min, y_min, x_max, y_max);
             map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
             break;
         case TOOL_TREES:
             map_image_context_reset_water();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
             break;
@@ -244,17 +244,17 @@ void editor_tool_update_use(const map_tile *tile) {
         case TOOL_ROCKS:
             map_image_context_reset_water();
             map_tiles_update_all_rocks();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             break;
         case TOOL_SHRUB:
             map_image_context_reset_water();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
             break;
         case TOOL_MEADOW:
             map_image_context_reset_water();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
             map_tiles_update_region_meadow(x_min, y_min, x_max, y_max);
             break;
@@ -263,7 +263,7 @@ void editor_tool_update_use(const map_tile *tile) {
             map_image_context_reset_water();
             map_image_context_reset_elevation();
             map_tiles_update_all_elevation();
-            map_tiles_update_region_water(x_min, y_min, x_max, y_max);
+            map_tiles_river_refresh_region(x_min, y_min, x_max, y_max);
             map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
             map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
             map_tiles_update_all_rocks();
