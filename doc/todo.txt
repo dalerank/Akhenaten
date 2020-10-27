@@ -11,17 +11,22 @@
 [x] Ostriches
 [x] Hunters
 [x] Foods
-[ ] Proper map terrain data
+[x] Floodplains
+[ ] Inundations
+[ ] Farms / fertility
+[ ] Workers
+[ ] Grassland terrain
 [ ] Water supply
 [ ] Entertainment
-[ ] Floodplain farms
-[ ] Workers
 [ ] Monuments
 [ ] Figure speeches
 [ ] Sound/music
 
 ===== generic fixes: =====
 
+- graphics
+  - roads over floodplains
+  
 - messages/text
   - objectives/tutorial goals/scenario goals
   - buildings panel text
@@ -31,6 +36,7 @@
 	- messages crashing
   - "File" drop down menu colors
   - household "X has having negative effect" color
+  - farms have wrong food type (off by 2?)
 - figures
   - figure icons (bigpeople)
 

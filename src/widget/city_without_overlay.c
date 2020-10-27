@@ -1,4 +1,6 @@
 #include <cmath>
+#include <building/industry.h>
+#include <window/city.h>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -450,6 +452,58 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     }
 }
 
+//#define PH_WORKER_SPEED 8
+
+//figure ph_crops_worker_figure(-1);
+int ph_crops_worker_frame = 0;
+static void draw_ph_worker(int direction, int action, int x, int y) {
+    int action_offset = 0;
+    switch (action) {
+        case 0: // tiling
+            action_offset = 104; break;
+        case 1: // seeding
+            action_offset = 208; break;
+        case 2: // harvesting
+            action_offset = 312; break;
+    }
+
+    image_draw_offset_adj(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
+                          8 * (ph_crops_worker_frame%26 / 2), x, y + 15, 0);
+//    ph_crops_worker_figure.direction = direction;
+//    ph_crops_worker_figure.image_set_animation(GROUP_FIGURE_WORKER_PH, action_offset, 13, 2);
+//    ph_crops_worker_figure.draw_figure_main(x, y);
+
+//    ph_crops_worker_figure.figure_image_update();
+}
+static void draw_farm_crops(building *b) {
+//    int pp = b->data.industry.progress;
+//    b->data.industry.progress += debug_range_1;
+
+    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, 0);
+    pixel_coordinate coord = city_view_grid_offset_to_pixel(b->grid_offset);
+    if (b->num_workers > 0) {
+        if (b->data.industry.progress < 400)
+            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, coord.x + 30, coord.y + 30);
+        else if (b->data.industry.progress < 450)
+            draw_ph_worker(1, 0, coord.x + 60, coord.y + 15);
+        else if (b->data.industry.progress < 650)
+            draw_ph_worker(2, 0, coord.x + 90, coord.y + 30);
+        else if (b->data.industry.progress < 900)
+            draw_ph_worker(3, 0, coord.x + 0, coord.y + 15);
+        else if (b->data.industry.progress < 1100)
+            draw_ph_worker(4, 0, coord.x + 30, coord.y + 30);
+        else if (b->data.industry.progress < 1350)
+            draw_ph_worker(5, 0, coord.x + 60, coord.y + 45);
+        else if (b->data.industry.progress < 1550)
+            draw_ph_worker(6, 0, coord.x + -30, coord.y + 30);
+        else if (b->data.industry.progress < 1800)
+            draw_ph_worker(0, 0, coord.x + 0, coord.y + 45);
+        else if (b->data.industry.progress < 2000)
+            draw_ph_worker(1, 0, coord.x + 30, coord.y + 60);
+    }
+//    b->data.industry.progress = pp;
+}
+
 static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset == 26791)
         int a = 3245;
@@ -542,7 +596,6 @@ static void draw_figures(int x, int y, int grid_offset) {
 #include "map/property.h"
 
 static void draw_debug(int x, int y, int grid_offset) {
-    int figure_id = map_figure_at(grid_offset);
 
     // draw terrain data
     if (true) {
@@ -563,48 +616,49 @@ static void draw_debug(int x, int y, int grid_offset) {
             i++;
         }
 
-//        string_from_int(str, flag_data, 0);
-//        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+        building *b = building_get(map_building_at(grid_offset));
+        if (map_building_at(grid_offset) && b->grid_offset == grid_offset && false) {
+            string_from_int(str, b->type, 0);
+            draw_text_shadow(str, x + 13, y + 5, COLOR_WHITE);
 
-        int d = map_get_shoreorder(grid_offset);
+            if (b->data.industry.progress && false) {
+                string_from_int(str, b->data.industry.progress, 0);
+                draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
+//                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
+//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+                string_from_int(str, b->data.industry.labor_state, 0);
+                draw_text_shadow(str, x + 40, y + 15, COLOR_GREEN);
+                string_from_int(str, b->data.industry.labor_days_left, 0);
+                draw_text_shadow(str, x + 65, y + 15, COLOR_GREEN);
+            }
+            if (b->figure_spawn_delay && false) {
+                string_from_int(str, b->figure_spawn_delay, 0);
+                draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
+//                draw_text_shadow((uint8_t*)string_from_ascii("/"), x + 60, y + 5, COLOR_GREEN);
+//                string_from_int(str, b->house_figure_generation_delay, 0);
+//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+            }
+        }
+
+//        int d = map_get_shoreorder(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+//            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //        }
 
-//        int d = map_get_fertility(grid_offset);
-        if (d) {
+        int d = map_image_at(grid_offset) - 14252;
+        if (d > 200 && d <= 1514) {
             string_from_int(str, d, 0);
-            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
         }
 
 
-//        int d = map_unk32_get(grid_offset, 0);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
-//        }
-//        d = map_unk32_get(grid_offset, 1);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 25, y + 5, COLOR_RED);
-//        }
-//        d = map_unk32_get(grid_offset, 2);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 15, y + 15, COLOR_GREEN);
-//        }
-//        d = map_unk32_get(grid_offset, 3);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 25, y + 15, COLOR_BLUE);
-//        }
+
+
+//        string_from_int(str, flag_data, 0);
+//        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
 
 //        string_from_int(str, map_moisture_get(grid_offset), 0);
-//        string_from_int(str, map_temp_grid_get(grid_offset, 0), 0);
-//        draw_text_shadow(str, x + 15, y + 15, COLOR_WHITE);
-//        string_from_int(str, map_temp_grid_get(grid_offset, 0), 0);
-//        draw_text_shadow(str, x + 15, y + 25, COLOR_WHITE);
 
 //        string_from_int(str, flag_data, 0);
 //        string_from_int(str, tile_data, 0);
@@ -613,6 +667,7 @@ static void draw_debug(int x, int y, int grid_offset) {
 //    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
     }
 
+    int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
 //        f->draw_debug();
@@ -632,7 +687,7 @@ static void draw_animation(int x, int y, int grid_offset) {
     int color_mask = 0;
     if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
-    if (img->num_animation_sprites > 1) {
+    if (img->num_animation_sprites > 0) {
         if (map_property_is_draw_tile(grid_offset)) {
 
             if (b->type == BUILDING_DOCK)
@@ -666,6 +721,16 @@ static void draw_animation(int x, int y, int grid_offset) {
                             image_draw_masked(image_id + 17, x - 5, y - 42, color_mask);
                         }
                         break;
+                    case BUILDING_GRAIN_FARM:
+                    case BUILDING_LETTUCE_FARM:
+                    case BUILDING_CHICKPEAS_FARM:
+                    case BUILDING_POMEGRANATES_FARM:
+                    case BUILDING_FIGS_FARM:
+                    case BUILDING_BARLEY_FARM:
+                    case BUILDING_FLAX_FARM:
+                    case BUILDING_HENNA_FARM:
+                        draw_farm_crops(b);
+                        break;
                     default:
                         int ydiff = 0;
                         switch (map_property_multi_tile_size(grid_offset)) {
@@ -685,12 +750,16 @@ static void draw_animation(int x, int y, int grid_offset) {
                                 ydiff = 90;
                                 break;
                         }
-                        if (img->draw.type != IMAGE_TYPE_ISOMETRIC)
-                            image_draw_masked(image_id + animation_offset,
+                        image_draw_masked(image_id + animation_offset,
                                           x + img->sprite_offset_x,
-                                          y + ydiff + img->sprite_offset_y - img->height, color_mask);
-                        else
-                            image_draw_isometric_footprint(image_id + animation_offset, x, y, color_mask);
+                                          y + ydiff + img->sprite_offset_y - img->height,
+                                          color_mask);
+//                        if (img->draw.type != IMAGE_TYPE_ISOMETRIC)
+//                            image_draw_masked(image_id + animation_offset,
+//                                          x + img->sprite_offset_x,
+//                                          y + ydiff + img->sprite_offset_y - img->height, color_mask);
+//                        else
+//                            image_draw_isometric_footprint(image_id + animation_offset, x, y, color_mask);
                 }
             }
             // specific buildings
@@ -731,15 +800,13 @@ static void draw_animation(int x, int y, int grid_offset) {
             if (b->subtype.orientation == 1) {
                 if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
                     image_draw_masked(image_id, x - 22, y - 80, color_mask);
-                else {
+                else
                     image_draw_masked(image_id + 1, x - 18, y - 81, color_mask);
-                }
             } else if (b->subtype.orientation == 2) {
                 if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
                     image_draw_masked(image_id + 1, x - 18, y - 81, color_mask);
-                else {
+                else
                     image_draw_masked(image_id, x - 22, y - 80, color_mask);
-                }
             }
         }
     } else if (b->type == BUILDING_WELL) {
@@ -786,6 +853,11 @@ static void deletion_draw_remaining(int x, int y, int grid_offset) {
 }
 
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
+    ph_crops_worker_frame++;
+    if (ph_crops_worker_frame >= 13 * 16)
+        ph_crops_worker_frame = 0;
+//    ph_crops_worker_figure.figure_image_update();
+
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);

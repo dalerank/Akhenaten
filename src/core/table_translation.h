@@ -30,7 +30,7 @@ static int groupid_translation_table_ph[] = {
         34, 100, // data/Pharaoh_General.sg3 Housng1a.bmp
         35, 101, // data/Pharaoh_General.sg3 Housng1a.bmp
         36, 102, // data/Pharaoh_General.sg3 Housng1a.bmp
-        37, 225 + 66, // farmland hut
+        37, 225 + 66, // farmhouse
         38, 187 + 66, // stone quarry
         39, 170 + 66, // limestone quarry
         40, 40 + 66, // clay pit
@@ -83,6 +83,7 @@ static int groupid_translation_table_ph[] = {
         97, 77 + 341, // cartpusher cart
         98, 130 + 341, // actor (juggler)
         99, 99 + 66, // granary
+//        100, 37 + 66, // farmland
         100, 37 + 66, // farmland
         101, 128 + 341, // lion tamer (dancer)
         102, 168, // data/Pharaoh_General.sg3 Sprites.bmp

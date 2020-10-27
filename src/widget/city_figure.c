@@ -321,7 +321,7 @@ void figure::draw_figure_main(int x, int y) {
     int _y = 3;
 
     switch (type) {
-        case FIGURE_IMMIGRANT:
+        case FIGURE_IMMIGRANT: // todo: mmmmmmaybe I was using the wrong draw function all along. look into this
             _y = 10;
             break;
 //        case FIGURE_TRADE_CARAVAN:

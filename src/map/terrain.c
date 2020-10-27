@@ -316,7 +316,7 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 #include <stdlib.h>
 #include <city/data_private.h>
 
-floodplain_order floodplain_offsets[12];
+floodplain_order floodplain_offsets[60];
 
 void map_floodplain_rebuild() {
     map_grid_fill(&terrain_floodplain_shoreorder, 0);
@@ -339,7 +339,7 @@ void map_floodplain_rebuild() {
     }
 
     // fill in shore order data
-    for (int order = 1; order < 64; order++) {
+    for (int order = 1; order < 60; order++) {
 
         // temporary buffer to be transfered later into the offset caches
         int temp_cache_buffer[grid_total_size[ENGINE_ENV_PHARAOH]];
@@ -365,7 +365,7 @@ void map_floodplain_rebuild() {
                 for (int yy = y_min; yy <= y_max; yy++) {
                     for (int xx = x_min; xx <= x_max; xx++) {
                         // do only on floodplain tiles
-                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && map_grid_is_valid_offset(grid_offset)) {
 
                             // set fertility data
                             int prev_fert = map_grid_get(&terrain_floodplain_fertility, grid_offset);
@@ -403,17 +403,30 @@ void map_floodplain_rebuild() {
     }
 }
 
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
 uint8_t map_get_shoreorder(int grid_offset) {
     return map_grid_get(&terrain_floodplain_shoreorder, grid_offset);
 }
 uint8_t map_get_growth(int grid_offset) {
     return map_grid_get(&terrain_floodplain_growth, grid_offset);
 }
-uint8_t map_get_fertility(int grid_offset) {
+uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
     int fert_tile = map_grid_get(&terrain_floodplain_fertility, grid_offset);
 //    if (fert_tile < 0)
 //        return 0;
-    return fert_tile + city_data.religion.osiris_fertility_modifier;
+    return max(0, min(99, fert_tile + city_data.religion.osiris_fertility_modifier));
+}
+uint8_t map_get_fertility_average(int grid_offset) {
+    return (map_get_fertility(grid_offset) + map_get_fertility(grid_offset + 1) + map_get_fertility(grid_offset + 2)
+          + map_get_fertility(grid_offset + 228) + map_get_fertility(grid_offset + 229) + map_get_fertility(grid_offset + 230)
+          + map_get_fertility(grid_offset + 228 + 228) + map_get_fertility(grid_offset + 229 + 228) + map_get_fertility(grid_offset + 230 + 228)) / 9;
 }
 void map_set_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6)

@@ -78,14 +78,20 @@ static int CATEGORY_FOR_int_arr_PH[] = {
         -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, //230
 };
 
-const int CATEGORY_FOR_int(int type)
-{
+#include "building/industry.h"
+#include "map/terrain.h"
+
+const int CATEGORY_FOR_building(building *b) {
+    int type = b->type;
     if (type < 0 || type >= 240 - 1)
         type = 0;
     if (GAME_ENV == ENGINE_ENV_C3)
         return CATEGORY_FOR_int_arr[type];
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (map_terrain_is(b->grid_offset, TERRAIN_FLOODPLAIN) && building_is_farm(type))
+            return 255;
         return CATEGORY_FOR_int_arr_PH[type];
+    }
 }
 
 static struct {
@@ -209,7 +215,7 @@ static void calculate_workers_needed_per_category(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        int category = CATEGORY_FOR_int(b->type);
+        int category = CATEGORY_FOR_building(b);
         b->labor_category = category;
         if (!should_have_workers(b, category, 1))
             continue;
@@ -226,7 +232,7 @@ static void set_building_worker_weight(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        int cat = CATEGORY_FOR_int(b->type);
+        int cat = CATEGORY_FOR_building(b);
         if (cat == LABOR_CATEGORY_WATER_HEALTH)
             b->percentage_houses_covered = water_per_10k_per_building;
         else if (cat >= 0) {
@@ -330,7 +336,7 @@ static void allocate_workers_to_water(void) {
             building_id = 1;
 
         building *b = building_get(building_id);
-        if (b->state != BUILDING_STATE_VALID || CATEGORY_FOR_int(b->type) != LABOR_CATEGORY_WATER_HEALTH)
+        if (b->state != BUILDING_STATE_VALID || CATEGORY_FOR_building(b) != LABOR_CATEGORY_WATER_HEALTH)
             continue;
 
         b->num_workers = 0;
@@ -366,11 +372,14 @@ static void allocate_workers_to_non_water_buildings(void) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        int cat = CATEGORY_FOR_int(b->type);
-        if (cat < 0)
-            continue;
+        int cat = CATEGORY_FOR_building(b);
         if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH)
+            continue;
+        if (cat == 255) {
+            if (b->data.industry.labor_state <= 0)
+                b->num_workers = 0;
             continue; // water is handled by allocate_workers_to_water(void) in C3
+        }
         b->num_workers = 0;
         if (!should_have_workers(b, cat, 0))
             continue;
@@ -403,7 +412,7 @@ static void allocate_workers_to_non_water_buildings(void) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        int cat = CATEGORY_FOR_int(b->type);
+        int cat = CATEGORY_FOR_building(b);
         if (cat < 0)
             continue;
         if (GAME_ENV == ENGINE_ENV_C3)

@@ -171,6 +171,8 @@ static void add_building(building *b, int image_id) {
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
 
+const int CROPS_OFFSETS[2] = {5, 6};
+
 static void add_to_map(int type, building *b, int size,
                        int orientation, int waterside_orientation_abs, int waterside_orientation_rel) {
     switch (type) {
@@ -293,22 +295,22 @@ static void add_to_map(int type, building *b, int size,
             break;
             // farms
         case BUILDING_WHEAT_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS), 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, 0, 0);
             break;
         case BUILDING_VEGETABLE_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 5, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV], 0);
             break;
         case BUILDING_FRUIT_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 10, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 2, 0);
             break;
         case BUILDING_OLIVE_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 15, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 3, 0);
             break;
         case BUILDING_VINES_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 20, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 4, 0);
             break;
         case BUILDING_PIG_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + 25, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 5, 0);
             break;
             // industry
         case BUILDING_MARBLE_QUARRY:
@@ -509,7 +511,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_id_from_group(GROUP_BUILDING_NATIVE) + 2);
             break;
         case BUILDING_NATIVE_CROPS:
-            add_building(b, image_id_from_group(GROUP_BUILDING_FARM_CROPS));
+            add_building(b, image_id_from_group(GROUP_BUILDING_FARMLAND));
             break;
             // distribution center (also unused)
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
@@ -532,6 +534,8 @@ static void add_to_map(int type, building *b, int size,
     map_routing_update_walls();
 }
 
+#include "industry.h"
+
 int building_construction_place_building(int type, int x, int y) {
     int terrain_mask = TERRAIN_ALL;
     if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
@@ -539,6 +543,8 @@ int building_construction_place_building(int type, int x, int y) {
         terrain_mask = ~TERRAIN_ROAD;
     else if (type == BUILDING_TOWER)
         terrain_mask = ~TERRAIN_WALL;
+    else if (building_is_farm(type))
+        terrain_mask = ~TERRAIN_FLOODPLAIN;
     int size = building_properties_for_type(type)->size;
     if (type == BUILDING_WAREHOUSE)
         size = 3;

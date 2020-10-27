@@ -443,10 +443,23 @@ static void image_draw_warehouse(int image_id, int x, int y) {
 
 static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
     if (building_is_farm(type)) {
+        image_id = get_farm_image(grid_offset);
         draw_building(image_id, x, y);
         // fields
-        for (int i = 4; i < 9; i++)
-            image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            for (int i = 4; i < 9; i++)
+                image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//            image_draw_from_below(type, 0, x, y, COLOR_MASK_GREEN);
+            draw_ph_crops(type, 0, grid_offset, COLOR_MASK_GREEN);
+//            int image_crops = get_crops_image(type, 0);
+//            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+//                for (int i = 0; i < 9; i++)
+//                    image_draw_from_below(image_crops, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+//            }
+//            for (int i = 4; i < 9; i++)
+//                image_draw_from_below(image_crops, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+        }
     } else if (type == BUILDING_WAREHOUSE)
         image_draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {
@@ -501,6 +514,8 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, int type)
             forbidden_terrain &= ~TERRAIN_ROAD;
         if (type == BUILDING_TOWER)
             forbidden_terrain &= ~TERRAIN_WALL;
+        if (building_is_farm(type))
+            forbidden_terrain &= ~TERRAIN_FLOODPLAIN;
         if (forbidden_terrain || map_has_figure_at(tile_offset))
             blocked_tiles[i] = blocked = 1;
         else
@@ -564,24 +579,21 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
         building_construction_get_view_position(&x_start, &y_start);
         y_start -= 30;
         if (blocked) {
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 9; i++)
                 draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-            }
         } else {
             offset = building_construction_get_start_grid_offset();
             if (offset != reservoir_range_data.last_grid_offset) {
                 reservoir_range_data.last_grid_offset = offset;
                 reservoir_range_data.total = 0;
                 reservoir_range_data.save_offsets = 1;
-            } else {
+            } else
                 reservoir_range_data.save_offsets = 0;
-            }
             int map_x_start = map_grid_offset_to_x(offset) - 1;
             int map_y_start = map_grid_offset_to_y(offset) - 1;
             if (!has_water)
                 has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5,
                                                                       TERRAIN_WATER);
-
             switch (city_view_orientation()) {
                 case DIR_0_TOP_RIGHT:
                     draw_later = map_x_start > map_x || map_y_start > map_y;
@@ -673,7 +685,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
             blocked = !map_is_straight_road_for_aqueduct(grid_offset); // can't start over a road curve!
             if (map_property_is_plaza_or_earthquake(grid_offset)) // todo: plaza not allowing aqueducts? maybe?
                 blocked = 1;
-        } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) // terrain is not clear!
+        } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) // terrain is not clear!
             blocked = 1;
     }
     if (city_finance_out_of_money()) // check sufficient funds to continue
@@ -962,7 +974,7 @@ static void draw_road(const map_tile *tile, int x, int y) {
             image_id += map_get_aqueduct_with_road_image(grid_offset);
         else
             blocked = 1;
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
         blocked = 1;
     else {
         image_id = image_id_from_group(GROUP_TERRAIN_ROAD);

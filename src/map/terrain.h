@@ -49,7 +49,7 @@ typedef struct floodplain_order {
     uint32_t amount;
 } floodplain_order;
 
-extern floodplain_order floodplain_offsets[12];
+extern floodplain_order floodplain_offsets[60];
 
 int map_terrain_is(int grid_offset, int terrain);
 
@@ -105,6 +105,7 @@ void map_floodplain_rebuild();
 uint8_t map_get_shoreorder(int grid_offset);
 uint8_t map_get_growth(int grid_offset);
 uint8_t map_get_fertility(int grid_offset);
+uint8_t map_get_fertility_average(int grid_offset);
 void map_set_growth(int grid_offset, int growth);
 
 void map_terrain_backup(void);

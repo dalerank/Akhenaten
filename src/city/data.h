@@ -9,10 +9,12 @@ void city_data_init_scenario(void);
 
 void city_data_init_campaign_mission(void);
 
-void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset);
+void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order, buffer *entry_exit_xy,
+                     buffer *entry_exit_grid_offset, buffer *floodplain_settings);
 
-void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset);
+void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order, buffer *entry_exit_xy,
+                     buffer *entry_exit_grid_offset, buffer *floodplain_settings);
+
+bool is_flood_imminent();
 
 #endif // CITY_DATA_H

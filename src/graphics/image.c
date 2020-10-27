@@ -757,13 +757,10 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask) {
     if (img->draw.is_fully_compressed) {
         if (!color_mask)
             draw_compressed(img, data, x, y, img->height);
-        else {
+        else
             draw_compressed_and(img, data, x, y, img->height, color_mask);
-        }
-    } else {
-        draw_uncompressed(img, data, x, y,
-                          color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
-    }
+    } else
+        draw_uncompressed(img, data, x, y, color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
 }
 void image_draw_blend(int image_id, int x, int y, color_t color) {
     const image *img = image_get(image_id);
@@ -944,9 +941,8 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask) {
     }
     if (!color_mask)
         draw_compressed(img, data, x, y, height);
-    else {
+    else
         draw_compressed_and(img, data, x, y, height, color_mask);
-    }
 }
 void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
@@ -988,4 +984,46 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     else {
         draw_compressed_and(img, data, x, y, height, color_mask);
     }
+}
+
+void image_draw_offset_adj(int image_id, int x, int y, color_t color_mask) {
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+    if (!data)
+        return;
+    x -= img->sprite_offset_x;
+    y -= img->sprite_offset_y;
+
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
+        return;
+    }
+
+    if (img->draw.is_fully_compressed) {
+        if (!color_mask)
+            draw_compressed(img, data, x, y, img->height);
+        else
+            draw_compressed_and(img, data, x, y, img->height, color_mask);
+    } else
+        draw_uncompressed(img, data, x, y, color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
+}
+void image_draw_from_below(int image_id, int x, int y, color_t color_mask) {
+    const image *img = image_get(image_id);
+    const color_t *data = image_data(image_id);
+    if (!data)
+        return;
+    y -= img->height;
+
+    if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
+        return;
+    }
+
+    if (img->draw.is_fully_compressed) {
+        if (!color_mask)
+            draw_compressed(img, data, x, y, img->height);
+        else
+            draw_compressed_and(img, data, x, y, img->height, color_mask);
+    } else
+        draw_uncompressed(img, data, x, y, color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
 }

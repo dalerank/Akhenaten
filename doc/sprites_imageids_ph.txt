@@ -35,7 +35,7 @@
 2121 ship waiting
 2129 reedgatherer
 2225 reedgatherer ded
-2233 reedgatherer gathering
+2233 reedgatherer harvesting
 2353 reedgatherer returning
 2449 taxcollector
 2545 taxcollector ded
@@ -71,7 +71,7 @@
 4473 physician ded
 4481 woodcutter
 4577 woodcutter ded
-4585 woodcutter gathering
+4585 woodcutter harvesting
 4681 woodcutter returning
 4777 cart
 4785 cart grain
@@ -91,7 +91,7 @@
 6019 workman ded
 6027 workman tiling
 6131 workman seeding
-6235 workman gathering
+6235 workman harvesting
 6355 workman cartpulling
 6451 workman cartpulling2 ???
 6547 merchantship
@@ -106,7 +106,7 @@
 6910 senetmaster
 7006 senetmaster ded
 7014 fishship
-7046 fishship gathering
+7046 fishship harvesting
 7118 fishship ded
 7129 fishship waiting
 7137 ferry

@@ -3,9 +3,16 @@
 
 #include "building/building.h"
 #include "map/point.h"
+#include "graphics/image.h"
 
 int building_is_farm(int type);
 int building_is_workshop(int type);
+
+int get_farm_image(int grid_offset);
+int get_crops_image(int type, int growth);
+void draw_ph_crops(int type, int progress, int grid_offset, color_t color_mask);
+
+int building_determine_worker_needed();
 
 void building_industry_update_production(void);
 void building_industry_update_wheat_production(void);

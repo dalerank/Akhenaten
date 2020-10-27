@@ -203,11 +203,17 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
             break;
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
-            blocked = 1;
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN))
+                blocked = 1;
             break;
         default:
             if (map_terrain_is(next_offset, TERRAIN_BUILDING))
                 blocked = 1;
+            if ((map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)
+                && map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD)) ||
+                (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_FLOODPLAIN)
+                 && map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_ROAD)))
+                blocked = 1; // todo: make this work also in build planning.... somehow
             break;
     }
     if (!blocked)
@@ -236,7 +242,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
-    if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N1_BLOCKED) {
+    if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N1_BLOCKED && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         // not open land, can only if:
         // - aqueduct should be placed, and:
         // - land is a reservoir building OR an aqueduct

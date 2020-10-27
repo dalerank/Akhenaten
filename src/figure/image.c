@@ -41,7 +41,7 @@ void figure::image_set_animation(int group, int offset, int max_frames, int dura
 void figure::figure_image_update() {
     // advance animation frame
     anim_frame++;
-    if (anim_frame >= anim_max_frames)
+    if (anim_frame >= anim_max_frames * anim_frame_duration)
         anim_frame = 0;
 
     switch (type) {
@@ -56,8 +56,10 @@ void figure::figure_image_update() {
             // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
             if (state == FIGURE_STATE_DYING)
                 sprite_image_id = anim_base + figure_image_corpse_offset();
-            else
-                sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * anim_frame / anim_frame_duration;
+            else {
+                int effective_frame = anim_frame / anim_frame_duration;
+                sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * effective_frame;
+            }
 
             // null images
             if (anim_base <= 0)
@@ -65,6 +67,7 @@ void figure::figure_image_update() {
             break;
     }
 }
+//int testcart = 0;
 void figure::cart_update_image() {
 
     // determine cart sprite
@@ -76,9 +79,11 @@ void figure::cart_update_image() {
                 amount_offset = 0;
             else if (loads_counter <= 4)
                 amount_offset = 1;
+//            amount_offset = testcart;
+//            testcart++; if (testcart >= 3) testcart = 0;
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
 
-            // adjust sprite for single-load resources
+            // adjust sprite for sled resources (blocks/chariots/etc.)
             short res_single_load[] = {12, 24, 25, 26, 27, 28, 30, 35, 999};
             for (int i = 0; res_single_load[i] < 999; i++)
                 if (resource_id > res_single_load[i])
@@ -104,8 +109,8 @@ void figure::cart_update_image() {
     if (cart_image_id) {
         cart_image_id += dir;
         figure_image_set_cart_offset(dir);
-        if (loads_counter >= 8)
-            y_offset_cart -= 40;
+//        if (loads_counter >= 8)
+//            y_offset_cart -= 40;
     }
 }
 int figure::figure_image_corpse_offset() {

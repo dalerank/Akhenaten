@@ -30,7 +30,7 @@ static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
 }
 static void check_labor_problem(building *b) {
-    if (b->houses_covered <= 0)
+    if ((b->houses_covered <= 0 && b->labor_category != 255) || (b->labor_category == 255 && b->num_workers <= 0))
         b->show_on_problem_overlay = 2;
 }
 static void generate_labor_seeker(building *b, int x, int y) {
@@ -64,10 +64,8 @@ static void spawn_labor_seeker(building *b, int x, int y, int min_houses) {
         // If it can access Rome
         if (b->distance_from_entry)
             b->houses_covered = 2 * min_houses;
-
-        else {
+        else
             b->houses_covered = 0;
-        }
     } else if (b->houses_covered <= min_houses)
         generate_labor_seeker(b, x, y);
 }
@@ -76,6 +74,24 @@ static void spawn_figure_labor_seeker_common(building *b, int min_houses = 100) 
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road))
         spawn_labor_seeker(b, road.x, road.y, min_houses);
+}
+static void spawn_figure_ph_worker(building *b) {
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > 20) {
+            b->figure_spawn_delay = 0;
+            int b_dest = building_determine_worker_needed();
+            if (b_dest) {
+                figure *f = figure_create(FIGURE_WORKER_PH, road.x, road.y, DIR_4_BOTTOM_LEFT);
+                f->action_state = ACTION_10_GOING;
+                f->building_id = b->id;
+                f->destination_building_id = b_dest;
+                building_get(b_dest)->data.industry.worker_id = f->id;
+//            f->init_roaming();
+            }
+        }
+    }
 }
 
 static int has_figure_of_types(building *b, int type1, int type2) {
@@ -871,24 +887,44 @@ static void spawn_figure_mission_post(building *b) {
     }
 }
 
+#include "city/data.h"
+
 static void spawn_figure_industry(building *b) {
 //    if (true) // todo: floodplain farms
 //        return;
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        spawn_labor_seeker(b, road.x, road.y, 50);
-        if (has_figure_of_type(b, FIGURE_CART_PUSHER))
-            return;
-        if (building_industry_has_produced_resource(b)) {
-            building_industry_start_new_production(b);
-            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            f->resource_id = b->output_resource_id;
-            f->building_id = b->id;
-            b->figure_id = f->id;
-            f->wait_ticks = 30;
-            f->loads_counter = 1; // todo: take into consideration multiple loads
+        if (b->labor_category != 255) {
+            spawn_labor_seeker(b, road.x, road.y, 50);
+            if (has_figure_of_type(b, FIGURE_CART_PUSHER))
+                return;
+            if (building_industry_has_produced_resource(b)) {
+                building_industry_start_new_production(b);
+                figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
+                f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+                f->resource_id = b->output_resource_id;
+                f->building_id = b->id;
+                b->figure_id = f->id;
+                f->wait_ticks = 30;
+                f->loads_counter = 1; // todo: take into consideration multiple loads
+            }
+        } else { // floodplain farms!!
+            if (has_figure_of_type(b, FIGURE_CART_PUSHER))
+                return;
+            if (b->data.industry.progress > 0 && is_flood_imminent() || b->data.industry.progress >= 2000) {
+                figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
+                f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+                f->resource_id = b->output_resource_id;
+                f->building_id = b->id;
+                b->figure_id = f->id;
+                f->wait_ticks = 30;
+                f->loads_counter = b->data.industry.progress / 250;
+                b->data.industry.progress = 0;
+                b->data.industry.worker_id = 0;
+                b->data.industry.labor_state = 0;
+                b->data.industry.labor_days_left = 0;
+            }
         }
     }
 }
@@ -1026,9 +1062,8 @@ static void spawn_figure_warehouse(building *b) {
                     f->loads_counter = amount;
                     building_warehouse_remove_resource(b, resource, amount);
                 }
-                else { // getting
+                else // getting
                     f->loads_counter = 0;
-                }
             }
             b->figure_id = f->id;
             f->building_id = b->id;
@@ -1221,7 +1256,7 @@ static void update_native_crop_progress(building *b) {
     if (b->data.industry.progress >= 5)
         b->data.industry.progress = 0;
 
-    map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
+    map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + b->data.industry.progress);
 }
 
 void building_figure_generate(void) {
@@ -1242,7 +1277,7 @@ void building_figure_generate(void) {
         // range of building types
         if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE)
             patrician_generated = spawn_patrician(b, patrician_generated);
-        else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP)
+        else if (building_is_farm(b->type) || building_is_workshop(b->type))
             spawn_figure_industry(b);
         else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED)
             spawn_figure_senate_forum(b);
@@ -1328,6 +1363,8 @@ void building_figure_generate(void) {
                     spawn_figure_labor_seeker_common(b); break;
                 case BUILDING_HUNTING_LODGE:
                     spawn_figure_hunting_lodge(b); break;
+                case BUILDING_WORK_CAMP:
+                    spawn_figure_ph_worker(b); break;
             }
         }
     }

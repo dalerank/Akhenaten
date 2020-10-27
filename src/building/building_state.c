@@ -239,8 +239,11 @@ static void read_type_data(buffer *buf, building *b) {
         }
         b->data.dock.trade_ship_id = buf->read_i16();
     } else if (is_industry_type(b)) {
+        if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            buf->skip(2);
         b->data.industry.progress = buf->read_i16();
-        buf->skip(12);
+//        b->data.farm.progress = buf->read_u16(); // determines amount of stuff produced, by value = x / 250 * 100
+        buf->skip(10);
         b->data.industry.has_fish = buf->read_u8();
         buf->skip(14);
         b->data.industry.blessing_days_left = buf->read_u8();
@@ -250,6 +253,13 @@ static void read_type_data(buffer *buf, building *b) {
         b->data.industry.curse_days_left = buf->read_u8();
         buf->skip(6);
         b->data.industry.fishing_boat_id = buf->read_i16();
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            buf->skip(42);
+            b->data.industry.labor_state = buf->read_u8();
+            b->data.industry.labor_days_left = buf->read_u8();
+            buf->skip(12);
+            b->data.industry.worker_id = buf->read_u8();
+        }
     } else {
         buf->skip(26);
         b->data.entertainment.num_shows = buf->read_u8();
@@ -257,6 +267,11 @@ static void read_type_data(buffer *buf, building *b) {
         b->data.entertainment.days2 = buf->read_u8();
         b->data.entertainment.play = buf->read_u8();
         buf->skip(12);
+//        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//            buf->skip(66);
+//            // FE <-- workcamp something????
+//            buf->skip(3);
+//        }
     }
 }
 
@@ -274,15 +289,14 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
         b->x = buf->read_u8();
         b->y = buf->read_u8();
         b->grid_offset = buf->read_i16();
-        b->type = buf->read_i16();
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         b->x = buf->read_u16();
         b->y = buf->read_u16();
         buf->skip(2);
         b->grid_offset = buf->read_i16();
         buf->skip(2);
-        b->type = buf->read_i16();
     }
+    b->type = buf->read_i16();
     b->subtype.house_level = buf->read_i16(); // which union field we use does not matter
     b->road_network_id = buf->read_u8();
     buf->skip(1);
@@ -306,7 +320,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->figure_id2 = buf->read_i16(); // laborseeker
     b->immigrant_figure_id = buf->read_i16();
     b->figure_id4 = buf->read_i16();
-    b->figure_spawn_delay = buf->read_u8();
+    b->figure_spawn_delay = buf->read_u8(); // 1 (workcamp 1)
     buf->skip(1);
     b->figure_roam_direction = buf->read_u8();
     b->has_water_access = buf->read_u8(); // 16 bytes
@@ -346,7 +360,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->fire_duration = buf->read_i16();
     b->fire_proof = buf->read_u8();
 
-    b->house_figure_generation_delay = buf->read_u8();
+    b->house_figure_generation_delay = buf->read_u8(); // 20 (workcamp 1)
     b->house_tax_coverage = buf->read_u8();
     buf->skip(1);
     b->formation_id = buf->read_i16();

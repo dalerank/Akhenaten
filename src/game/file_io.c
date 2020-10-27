@@ -210,6 +210,7 @@ typedef struct {
     buffer *bookmarks = new buffer;
     buffer *tutorial_part3 = new buffer;
     buffer *city_entry_exit_grid_offset = new buffer;
+    buffer *floodplain_settings = new buffer;
     buffer *moisture_grid = new buffer;
     buffer *end_marker = new buffer;
 
@@ -238,7 +239,7 @@ typedef struct {
     buffer *junk12 = new buffer;
     buffer *junk13 = new buffer;
     buffer *junk14 = new buffer;
-    buffer *junk15 = new buffer;
+//    buffer *junk15 = new buffer;
     buffer *junk16 = new buffer;
     buffer *junk17 = new buffer;
     buffer *junk18 = new buffer;
@@ -637,7 +638,7 @@ static void init_savegame_data(int expanded) {
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
             state->junk14 = create_savegame_piece(20 + 528, 0, "junk14");
 
-            state->junk15 = create_savegame_piece(36, 1, "junk15"); // unknown compressed data
+            state->floodplain_settings = create_savegame_piece(36, 1, "floodplain_settings"); // floodplain_settings
             state->GRID03_32BIT = create_savegame_piece(207936, 1, "GRID03_32BIT"); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
@@ -720,7 +721,8 @@ static void savegame_load_from_state(savegame_state *state) {
                          state->city_faction_unknown,
                          state->city_graph_order,
                          state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset);
+                         state->city_entry_exit_grid_offset,
+                         state->floodplain_settings);
 
     building_load_state(state->buildings,
                         state->building_extra_highest_id,
@@ -804,7 +806,7 @@ static void savegame_save_to_state(savegame_state *state) {
                          state->city_faction_unknown,
                          state->city_graph_order,
                          state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset);
+                         state->city_entry_exit_grid_offset, nullptr);
 
     building_save_state(state->buildings,
                         state->building_extra_highest_id,

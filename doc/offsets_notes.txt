@@ -49,22 +49,10 @@ hunt. lodge (21) : 5544
 hunt. lodge (19) : 5016
 3 hunters out (0 left?)
 
-======================
-
-trader (19) action 11 (arriving)
-16540 > 710 + 
-donkey (21) action 8 (following trader)
-4003 > 3321 (3303??) + 700
-
-47 101
--32385
-390 360 -> coords
-397 394 -> adjusted
-
 ==================
 
-lookup: 590127 entries
-no lookup: 44497 entries
+lookup: 19.600/590.127 entries
+no lookup: 12.113/44.497 entries
 
 (inner)
 249 w/out lookup
@@ -211,52 +199,6 @@ H1	R	H2	W
 24074 PALACE
 25891 GRANARY1
 
-getting
-delivering
-unloading
-returning
-
-ostriches
-8 -> 18
-14 (??) -> 19
-18 -> 18 (3+???)
-18 (83+) -> 10
-19 (77+) -> 
-10 -> 18 (???) 19 (???)
-
-184 - 283
-
-fire 10		1	11	fire marshal
-clay 4		2	9	 delivering clay
-clay 4		3	9	 delivering clay
-pott 4 *	4	15	returning empty from yard to pottery
-pott 4		5	9	 delivering clay
-pott 4		6	9	 delivering pottery
-------		7	-	--
-labr 5		8	2	returning from patrol
-yard 9		9	8	waiting...
-------		10	-	--
-pott 4		11	9	 delivering pottery
-------		12	-	--
-labr 5		13	1	patrol
-labr 5		14	1	patrol
-------		15
-
-
-	5	5	8	 8	88	10	10
-	LAB	LAB* 	ENG	ENG*	POL	PRE*	FIR
-ROAM	1	125	10	62	10	72	10
-RET	2	126	11	63			11
-
-1	labor, water, physician (roamers)
-2	(roamers returning)
-8	cartpusher (waiting), trader donkey (following)
-9	immigrant (arriving), cartpusher (going to
-10	engineer, police, fireman, cartpusher, worker (going to place)
-11	(returning from destination?)
-
-15
-
 CULTURE:
 384
 
@@ -292,25 +234,41 @@ prefect
 engineer
 
 ====================
+==== farm progress:
 
-64, 64
-size = 3
+94 > ?? :: +15
+90 > 19 :: +14
+86 > 18 :: ??
+78 > 17 :: +12
+19 > ?? :: +3
 
-53 .. .. .. .. .. ..
-54 .. [] __ __ .. ..
-55 .. __ __ __ .. ..
-56 .. __ __ XX .. .. <----- dest
-57 .. .. .. .. .. ..
-58 .. .. .. .. .. ..
-59 .. .. .. .. .. ..
-60 .. .. .. .. .. ..
-61 .. .. .. .. .. ..
->> 63 64 65 66 67 68
-63 .. .. .. .. .. ..
-64 .. [] __ __ .. .. <----- main
-65 .. __ __ __ .. ..
-66 .. __ __ __ .. ..
-67 .. .. .. .. .. ..
+1: 2:
+10   8
+52  47
+94  86
+
+ 0%
+	0	0  <-- phase?
+	0	0  <-- seem to be counting down
+12%
+	238	0
+	1	79
+
+====================
+
+building_extra_highest_id_ever (97012)
+random_iv (...)
+...
+figure names
+
+150: early june
+165: late june
+180: early july
+195: late july
+210: early august
+225: late august
+240: early september
+255: late september
 
 
 ====================

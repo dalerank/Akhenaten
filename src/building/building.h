@@ -21,7 +21,7 @@ typedef struct {
     unsigned char house_size;
     unsigned char x;
     unsigned char y;
-    short grid_offset;
+    unsigned short grid_offset;
     short type;
     union {
         short house_level;
@@ -95,7 +95,15 @@ typedef struct {
             unsigned char has_fish;
             unsigned char orientation;
             short fishing_boat_id;
+            unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
+            unsigned char labor_days_left;
+            unsigned char worker_id;
         } industry;
+//        struct {
+//            unsigned short progress;
+//            unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
+//            unsigned char labor_days_left;
+//        } farm;
         struct {
             unsigned char num_shows;
             unsigned char days1;

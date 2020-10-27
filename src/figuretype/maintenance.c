@@ -297,6 +297,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
         case ACTION_11_RETURNING_FROM_PATROL:
             do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
             break;
+        case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             do_enterbuilding(false, building_id);
             break;
@@ -391,6 +392,7 @@ void figure::policeman_action() {
                     kill();
             }
             break;
+        case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             use_cross_country = 1;
             is_ghost = 1;
@@ -479,12 +481,32 @@ void figure::policeman_action() {
             break;
     }
 }
+
+#include "building/industry.h"
+
 void figure::worker_action() {
     terrain_usage = TERRAIN_USAGE_ROADS;
     use_cross_country = 0;
     max_roam_length = 384;
     building *b = building_get(building_id);
-    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+    building *b_dest = building_get(destination_building_id);
+    if (b->state != BUILDING_STATE_VALID
+        || b_dest->state != BUILDING_STATE_VALID || b_dest->data.industry.worker_id != id)
         kill();
-
+    switch (action_state) {
+        case 9:
+            break;
+        case 10:
+            if (do_gotobuilding(destination_building_id)) {
+                if (building_is_farm(b_dest->type)) {
+                    b_dest->num_workers = 10;
+                    b_dest->data.industry.worker_id = 0;
+                    b_dest->data.industry.labor_state = 2;
+                    b_dest->data.industry.labor_days_left = 96;
+                } else if (b_dest->type == BUILDING_PYRAMID) {
+                    // todo: MONUMENTSSSS
+                }
+            }
+            break;
+    }
 }

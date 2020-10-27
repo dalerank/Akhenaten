@@ -1078,8 +1078,8 @@ static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
     city_data.map.exit_flag.grid_offset = 0;
 }
 
-void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
+void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order, buffer *entry_exit_xy,
+                     buffer *entry_exit_grid_offset, buffer *floodplain_settings) {
     save_main_data(main);
 
     faction->write_i32(city_data.unused.faction_id);
@@ -1091,8 +1091,8 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
     save_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
 
-void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset) {
+void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order, buffer *entry_exit_xy,
+                     buffer *entry_exit_grid_offset, buffer *floodplain_settings) {
     load_main_data(main);
 
     city_data.unused.faction_id = faction->read_i32();
@@ -1101,5 +1101,23 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
     city_data.population.graph_order = graph_order->read_i32();
     city_data.unused.unknown_order = graph_order->read_i32();
 
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        city_data.floods.month = floodplain_settings->read_i32();
+        city_data.floods.duration = floodplain_settings->read_i32();
+        city_data.floods.quality_map_initial = floodplain_settings->read_i32();
+        city_data.floods.month_prev = floodplain_settings->read_i32();
+        city_data.floods.duration_prev = floodplain_settings->read_i32();
+        city_data.floods.quality_current = floodplain_settings->read_i32();
+        city_data.floods.unk00 = floodplain_settings->read_i32();
+        city_data.floods.quality_coming = floodplain_settings->read_i32();
+        city_data.floods.quality_prev = floodplain_settings->read_i32();
+    }
+
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
+}
+
+////
+
+bool is_flood_imminent() {
+    return false;
 }

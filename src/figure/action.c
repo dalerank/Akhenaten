@@ -123,7 +123,7 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ROADS,   0,      0},  // 82
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 83
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 84
-        {1, TERRAIN_USAGE_ANY,     0,      0},  // 85
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_WORKER_PH},  // 85
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 86
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_WATER_CARRIER},  // 87 water carrier
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_POLICEMAN},  // 88 policeman
@@ -435,7 +435,7 @@ void figure::action_perform() {
             // PHARAOH vvvv
             case 73: hunter_action();                   break;
             case 74: arrow_action();                    break;
-//            case 85: worker_action();                   break;
+            case 85: worker_action();                   break;
             case 88: policeman_action();                break;
             default:
                 break;

@@ -46,7 +46,6 @@ static int is_clear(int x, int y, int size, int disallowed_terrain, int check_im
                 return 0;
             else if (check_image && map_image_at(grid_offset))
                 return 0;
-
         }
     }
     return 1;
@@ -730,8 +729,20 @@ static void set_road_image(int x, int y, int grid_offset) {
                                    img->group_offset + img->item_offset);
     } else {
         const terrain_image *img = map_image_context_get_dirt_road(grid_offset);
-        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) +
-                                   img->group_offset + img->item_offset + 49);
+        if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_FLOODPLAIN))
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 84);
+            else if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_FLOODPLAIN))
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 85);
+            else if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_FLOODPLAIN))
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 86);
+            else if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_FLOODPLAIN))
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 87);
+            else map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) +
+                                            img->group_offset + img->item_offset + 49);
+        } else
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) +
+                                       img->group_offset + img->item_offset + 49 + 344);
     }
     map_property_set_multi_tile_size(grid_offset, 1);
     map_property_mark_draw_tile(grid_offset);
@@ -753,74 +764,6 @@ int map_tiles_set_road(int x, int y) {
 
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_road_image);
     return tile_set;
-}
-
-static void clear_empty_land_image(int x, int y, int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-
-        map_image_set(grid_offset, 0);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
-    }
-}
-static void set_empty_land_image(int x, int y, int size, int image_id) {
-    if (!map_grid_is_inside(x, y, size))
-        return;
-    int index = 0;
-    for (int dy = 0; dy < size; dy++) {
-        for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
-            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-            map_building_set(grid_offset, 0);
-            map_property_clear_constructing(grid_offset);
-            map_property_set_multi_tile_size(grid_offset, 1);
-            map_property_mark_draw_tile(grid_offset);
-            map_image_set(grid_offset, image_id + index);
-            index++;
-        }
-    }
-}
-static void set_empty_land_pass1(int x, int y, int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset) &&
-        !(map_random_get(grid_offset) & 0xf0)) {
-        int image_id;
-        if (map_property_is_alternate_terrain(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
-        else {
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
-        }
-        set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
-    }
-}
-static void set_empty_land_pass2(int x, int y, int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset)) {
-        int image_id;
-        if (map_property_is_alternate_terrain(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
-        else {
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
-        }
-        if (is_clear(x, y, 4, TERRAIN_ALL, 1))
-            set_empty_land_image(x, y, 4, image_id + 42);
-        else if (is_clear(x, y, 3, TERRAIN_ALL, 1))
-            set_empty_land_image(x, y, 3, image_id + 24 + 9 * (map_random_get(grid_offset) & 1));
-        else if (is_clear(x, y, 2, TERRAIN_ALL, 1))
-            set_empty_land_image(x, y, 2, image_id + 8 + 4 * (map_random_get(grid_offset) & 3));
-        else {
-            set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
-        }
-    }
-}
-
-void map_tiles_update_all_empty_land(void) {
-    foreach_map_tile(clear_empty_land_image);
-    foreach_map_tile(set_empty_land_pass1);
-    foreach_map_tile(set_empty_land_pass2);
-}
-void map_tiles_update_region_empty_land(int x_min, int y_min, int x_max, int y_max) {
-    foreach_region_tile(x_min, y_min, x_max, y_max, clear_empty_land_image);
-    foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass1);
-    foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass2);
 }
 
 static void set_meadow_image(int x, int y, int grid_offset) {
@@ -915,6 +858,8 @@ static void set_deepwater_image(int grid_offset) {
     map_property_mark_draw_tile(grid_offset);
 }
 static void set_floodplain_image(int x, int y, int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_ROAD))
+        return;
     int image_id = 0;
     if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) { // dry land shoreline
         const terrain_image *img = map_image_context_get_floodplain_shore(grid_offset);
@@ -1003,31 +948,37 @@ void map_tiles_set_water(int x, int y) { // todo: broken
 //    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
 }
 
-int floodplain_growth_advance = 1;
+#define PH_FLOODPLAIN_GROWTH_MAX 6;
+int floodplain_growth_advance = 0;
+int floodplain_growth_limit = PH_FLOODPLAIN_GROWTH_MAX;
 static void advance_floodplain_growth_tile(int x, int y, int grid_offset) {
-    if (map_get_shoreorder(grid_offset) == floodplain_growth_advance) {
+//    if (map_get_shoreorder(grid_offset) == floodplain_growth_advance + 1) {
         int curr = map_get_growth(grid_offset);
         if (curr < 5) {
             map_set_growth(grid_offset, curr + 1);
             set_floodplain_land_tiles_image(x, y, grid_offset);
 //            refresh_river_at(x, y, grid_offset); // todo: broken
         }
-    }
+//    }
 }
 void map_advance_floodplain_growth() {
-    return;
-    foreach_floodplain_order(floodplain_growth_advance - 1, advance_floodplain_growth_tile);
+    if (floodplain_growth_limit <= 0)
+        return;
+    foreach_floodplain_order(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(36 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(48 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
-    if (floodplain_growth_advance > 12)
-        floodplain_growth_advance = 1;
+    if (floodplain_growth_advance >= 12) {
+        floodplain_growth_advance = 0;
+        floodplain_growth_limit--;
+    }
 }
-//static void recalc_floodplain_fertility_tile(int x, int y, int grid_offset) {
-//
-//}
-//void map_recalc_fertility(int modifier) {
-//    foreach_floodplain_order(floodplain_growth_advance - 1, recalc_floodplain_fertility_tile);
-//}
+void map_reset_floodplain_growth() {
+    floodplain_growth_limit = PH_FLOODPLAIN_GROWTH_MAX;
+}
 
 static void set_earthquake_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
@@ -1289,4 +1240,89 @@ static void remove_entry_exit_flag(const map_tile *tile) {
 void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_entry_flag());
     remove_entry_exit_flag(city_map_exit_flag());
+}
+
+
+static void clear_empty_land_image(int x, int y, int grid_offset) {
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+
+        int clear_terrain_image = 0;
+//        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//            clear_terrain_image = image_id_from_group(GROUP_TERRAIN_GRASS_1);
+//            int moist = map_moisture_get(grid_offset);
+////            clear_terrain_image += 18;
+//        }
+        map_image_set(grid_offset, clear_terrain_image);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
+        set_floodplain_land_tiles_image(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), grid_offset);
+    else if (map_terrain_exists_tile_in_radius_with_type(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1, 1, TERRAIN_FLOODPLAIN))
+        set_floodplain_image(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), grid_offset);
+}
+static void set_empty_land_image(int x, int y, int size, int image_id) {
+    if (!map_grid_is_inside(x, y, size))
+        return;
+    int index = 0;
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+            map_building_set(grid_offset, 0);
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, 1);
+            map_property_mark_draw_tile(grid_offset);
+            map_image_set(grid_offset, image_id + index);
+            index++;
+        }
+    }
+}
+static void set_empty_land_pass1(int x, int y, int grid_offset) {
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset) &&
+        !(map_random_get(grid_offset) & 0xf0)) {
+        int image_id;
+        if (map_property_is_alternate_terrain(grid_offset))
+            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
+        else
+            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            int moist = map_moisture_get(grid_offset);
+            image_id += moist;
+        }
+        set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
+    }
+}
+static void set_empty_land_pass2(int x, int y, int grid_offset) {
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset)) {
+        int image_id;
+        if (map_property_is_alternate_terrain(grid_offset))
+            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
+        else
+            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            int moist = map_moisture_get(grid_offset);
+            image_id += moist;
+        }
+        if (is_clear(x, y, 4, TERRAIN_ALL, 1))
+            set_empty_land_image(x, y, 4, image_id + 42);
+        else if (is_clear(x, y, 3, TERRAIN_ALL, 1))
+            set_empty_land_image(x, y, 3, image_id + 24 + 9 * (map_random_get(grid_offset) & 1));
+        else if (is_clear(x, y, 2, TERRAIN_ALL, 1))
+            set_empty_land_image(x, y, 2, image_id + 8 + 4 * (map_random_get(grid_offset) & 3));
+        else {
+            set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
+        }
+    }
+}
+
+void map_tiles_update_all_empty_land(void) {
+    foreach_map_tile(clear_empty_land_image);
+    foreach_map_tile(set_empty_land_pass1);
+    foreach_map_tile(set_empty_land_pass2);
+}
+void map_tiles_update_region_empty_land(int x_min, int y_min, int x_max, int y_max) {
+    foreach_region_tile(x_min, y_min, x_max, y_max, clear_empty_land_image);
+    foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass1);
+    foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass2);
 }

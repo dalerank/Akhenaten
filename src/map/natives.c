@@ -111,7 +111,7 @@ void map_natives_init(void) {
                 map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
-                map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARM_CROPS) + random_bit);
+                map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + random_bit);
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;

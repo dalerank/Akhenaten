@@ -317,6 +317,7 @@ void building_construction_set_type(
             case BUILDING_VINES_FARM:
             case BUILDING_PIG_FARM:
             case BUILDING_FIGS_FARM:
+            case BUILDING_HENNA_FARM:
                 data.required_terrain.meadow = true;
                 break;
             case BUILDING_MARBLE_QUARRY:
@@ -705,10 +706,17 @@ static void set_warning(int *warning_id, int warning) {
 
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id) {
     if (data.required_terrain.meadow) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) { // todo: add inundable lands
+        int can_place = 0;
+        if (map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) { // todo: add inundable lands
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
-            return 0;
+            can_place = 1;
         }
+        if (GAME_ENV == ENGINE_ENV_PHARAOH && map_terrain_all_tiles_in_radius_are(x, y, 3, 0, TERRAIN_FLOODPLAIN)) { // todo: add inundable lands
+            set_warning(warning_id, WARNING_MEADOW_NEEDED);
+            can_place = 1;
+        }
+        if (!can_place)
+            return 0;
     } else if (data.required_terrain.rock) {
         if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) { // todo: add ore rock
             set_warning(warning_id, WARNING_ROCK_NEEDED);
@@ -720,8 +728,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id) {
             return 0;
         }
     } else if (data.required_terrain.water) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3,
-                                                         TERRAIN_WATER)) { // todo: add inundable lands check
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) { // todo: add inundable lands check
             set_warning(warning_id, WARNING_WATER_NEEDED);
             return 0;
         }
