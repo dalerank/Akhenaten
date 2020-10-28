@@ -599,7 +599,7 @@ static void draw_debug(int x, int y, int grid_offset) {
 
     // draw terrain data
     if (true) {
-        uint32_t tile_data = map_terrain_get(grid_offset);
+        uint32_t tile_data = map_moisture_get(grid_offset);
         uint8_t str[10];
         int flag_data = 0;
         int bin_tile_data = 0;
@@ -645,12 +645,50 @@ static void draw_debug(int x, int y, int grid_offset) {
 //            string_from_int(str, d, 0);
 //            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //        }
-
         int d = map_image_at(grid_offset) - 14252;
-        if (d > 200 && d <= 1514) {
+        if (d > 200 && d <= 1514 && true) {
             string_from_int(str, d, 0);
-            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
+            draw_text_shadow(str, x + 13, y, COLOR_WHITE);
         }
+        d = map_moisture_get(grid_offset);
+        if (d && false) {
+            if (d & MOISTURE_TRANSITION) {
+                string_from_int(str, d-MOISTURE_TRANSITION, 0);
+                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+            }
+//            if (d & MOISTURE_TALLGRASS) {
+//                string_from_int(str, d-MOISTURE_TALLGRASS, 0);
+//                draw_text_shadow(str, x + 13, y + 10, COLOR_RED);
+//            } else
+                else if (d & MOISTURE_GRASS) {
+                string_from_int(str, (d-MOISTURE_GRASS)/8, 0);
+                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+            }
+//                else if (d & MOISTURE_TRANSITION) {
+//                string_from_int(str, d-MOISTURE_TRANSITION, 0);
+//                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+//            }
+            string_from_int(str, tile_data, 0);
+            draw_text_shadow(str, x + 13, y, COLOR_WHITE);
+
+//            int m = (d+1)/8;
+//            string_from_int(str, m, 0);
+//            if ((d+1)%8 == 0)
+//                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+//            else
+//                draw_text_shadow(str, x + 13, y + 10, COLOR_RED);
+        }
+        d = map_grasslevel_get(grid_offset);
+        if (d && true) {
+            if (d >= 16) {
+                string_from_int(str, d, 0);
+                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+            } else {
+                string_from_int(str, d, 0);
+                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+            }
+        }
+
 
 
 

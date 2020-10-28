@@ -68,23 +68,16 @@ no lookup: 12.113/44.497 entries
 
 ================
 
-..
-image_grid
-..
-figure_grid
-..
-figures 
-route_figures
-route_paths
-formations
-..
-game_time
-random_iv
-..
-junk8
-..
-unk32_grid
-..
+
+
+217	218
+229	230
+241	242
+
+254...265
+266...289
+
+
 
 ================
 

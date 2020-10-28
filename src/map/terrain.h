@@ -35,7 +35,14 @@ enum {
     TERRAIN_IMPASSABLE = 0xc77f, //0xc75f,
     TERRAIN_IMPASSABLE_ENEMY = 0x1237,
     TERRAIN_IMPASSABLE_WOLF = 0xd77f, //0xd73f,
-    TERRAIN_ALL = 0xffff + 0xffff0000
+    TERRAIN_ALL = 0xffff + 0xffff0000,
+
+    // Pharaoh moisture combinators
+    MOISTURE_GRASS = 0x7,
+    MOISTURE_TRANSITION = 0x80,
+//    MOISTURE_TALLGRASS = 0x40,
+//    MOISTURE_SHORE_TIP = 0x24,
+    MOISTURE_SHORE_TALLGRASS = 0x64
 };
 
 extern int all_river_tiles[];
@@ -118,6 +125,8 @@ void map_terrain_load_state(buffer *buf);
 
 void map_moisture_load_state(buffer *buf);
 uint8_t  map_moisture_get(int grid_offset);
+uint8_t map_grasslevel_get(int grid_offset);
+bool map_is_3x3_tallgrass(int x, int y, int grid_offset);
 
 void map_unk32_load_state(buffer *buf);
 int8_t map_unk32_get(int grid_offset, int a);
