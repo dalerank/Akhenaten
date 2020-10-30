@@ -1301,17 +1301,20 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
     }
 }
 static void set_empty_land_pass3(int x, int y, int grid_offset) {
-    int image_id;
     int ph_grass = map_grasslevel_get(grid_offset);
-    int image_base = image_id_from_group(GROUP_TERRAIN_GRASS_PH);
-    if (ph_grass && ph_grass <= 11)
-        return set_empty_land_image(x, y, 1, image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
-    else if (ph_grass == 12) {
-        if (map_is_3x3_tallgrass(x, y, grid_offset))
-            return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 23));
-        return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
-    } else if (ph_grass >= 16)
-        return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + ph_grass - 16);
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && ph_grass >= 0) {
+        int image_base = image_id_from_group(GROUP_TERRAIN_GRASS_PH);
+        if (ph_grass && ph_grass <= 11)
+            return set_empty_land_image(x, y, 1, image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
+        else if (ph_grass == 12) {
+            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR))
+                return set_empty_land_image(x, y, 1, image_base + 12 - 1 + 12 * (map_random_get(grid_offset) % 3));
+            if (map_is_3x3_tallgrass(x, y, grid_offset)) // randomly do flat isometric tile
+                return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 23));
+            return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
+        } else if (ph_grass >= 16)
+            return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + ph_grass - 16);
+    }
 }
 
 void map_tiles_update_all_empty_land(void) {
