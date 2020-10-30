@@ -16,10 +16,24 @@
 #define INFINITE 10000
 
 int building_is_farm(int type) {
-    return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
+    return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
+    || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
 }
 int building_is_workshop(int type) {
-    return type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP;
+    return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
+    || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
+    || type == BUILDING_CATTLE_RANCH
+    || type == BUILDING_LAMP_WORKSHOP
+    || type == BUILDING_PAINT_WORKSHOP;
+}
+int building_is_extractor(int type) {
+    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
+    || type == BUILDING_GOLD_MINE
+    || type == BUILDING_GEMSTONE_MINE
+    || type == BUILDING_COPPER_MINE
+    || type == BUILDING_GRANITE_QUARRY
+    || type == BUILDING_SANDSTONE_QUARRY
+    || type == BUILDING_REED_GATHERER;
 }
 
 #include "map/terrain.h"
@@ -90,22 +104,20 @@ int get_crops_image(int type, int growth) {
     }
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
-void draw_ph_crops(int type, int progress, int grid_offset, color_t color_mask) {
-//    progress += debug_range_1;
+void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
     int image_crops = get_crops_image(type, 0);
-    pixel_coordinate coord = city_view_grid_offset_to_pixel(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         for (int i = 0; i < 9; i++) {
             int growth_offset = min(5, max(0, (progress - i*200)/100));
-            image_draw_from_below(image_crops + growth_offset, coord.x + X_VIEW_OFFSETS[i],
-                                  coord.y + Y_VIEW_OFFSETS[i],
+            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                  y + Y_VIEW_OFFSETS[i] - 30,
                                   color_mask);
         }
     } else {
         for (int i = 4; i < 9; i++) {
             int growth_offset = min(5, max(0, (progress - i*200)/100));
-            image_draw_from_below(image_crops + growth_offset, coord.x + X_VIEW_OFFSETS[i],
-                                  coord.y + Y_VIEW_OFFSETS[i],
+            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                  y + Y_VIEW_OFFSETS[i] - 30,
                                   color_mask);
         }
     }

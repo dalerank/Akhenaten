@@ -13,6 +13,8 @@ typedef struct {
     int buys_resource[36];
     int sells_resource[36];
     int cost_to_open;
+    int ph_unk01;
+    int ph_unk02;
     int trader_entry_delay;
     int empire_object_id;
     int is_sea_trade;

@@ -365,7 +365,7 @@ static int is_fully_blocked(int map_x, int map_y, int type, int building_size, i
     int x = 0, y = 0;
     get_building_base_xy(map_x, map_y, building_size, &x, &y);
 
-    if (!building_construction_can_place_on_terrain(x, y, 0))
+    if (!building_construction_can_place_on_terrain(x, y, 0, building_size))
         return 1;
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate())
         return 1;
@@ -451,7 +451,7 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
                 image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
 //            image_draw_from_below(type, 0, x, y, COLOR_MASK_GREEN);
-            draw_ph_crops(type, 0, grid_offset, COLOR_MASK_GREEN);
+            draw_ph_crops(type, 0, grid_offset, x, y, COLOR_MASK_GREEN);
 //            int image_crops = get_crops_image(type, 0);
 //            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
 //                for (int i = 0; i < 9; i++)
@@ -707,7 +707,7 @@ static void draw_fountain(const map_tile *tile, int x, int y) {
                                             draw_fountain_range);
 
         draw_building(image_id, x, y);
-        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER_RANGE)) {
+        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
             const image *img = image_get(image_id);
             image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
@@ -740,7 +740,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y) {
                     tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
                     break;
             }
-            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER_RANGE))
+            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;
 
         }

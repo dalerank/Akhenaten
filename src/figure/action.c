@@ -36,8 +36,8 @@ typedef struct {
 
 static figure_action_property action_lookup[] = {
         {0, 0,                     0,      0},  //FIGURE_NONE = 0,
-        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_MIGRANT},  //FIGURE_IMMIGRANT = 1,
-        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_EMIGRANT = 2,
+        {1, TERRAIN_USAGE_ANIMAL,     0,      GROUP_FIGURE_MIGRANT},  //FIGURE_IMMIGRANT = 1,
+        {1, TERRAIN_USAGE_ANIMAL,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_EMIGRANT = 2,
         {1, TERRAIN_USAGE_PREFER_ROADS,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_HOMELESS = 3,
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_CART_PUSHER = 4,
         {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_LABOR_SEEKER},  //FIGURE_LABOR_SEEKER = 5,

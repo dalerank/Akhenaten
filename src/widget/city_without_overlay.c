@@ -305,7 +305,7 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         image_base = image_id_from_group(GROUP_EMPIRE_RESOURCES);
         switch (b->type) {
             case BUILDING_HUNTING_LODGE:
-                if (b->loads_stored >= 0)
+                if (b->loads_stored > 0)
                     image_draw_masked(image_base + b->loads_stored - 1, x + 61, y + 14, color_mask);
                 break;
         }
@@ -452,9 +452,6 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     }
 }
 
-//#define PH_WORKER_SPEED 8
-
-//figure ph_crops_worker_figure(-1);
 int ph_crops_worker_frame = 0;
 static void draw_ph_worker(int direction, int action, int x, int y) {
     int action_offset = 0;
@@ -466,42 +463,33 @@ static void draw_ph_worker(int direction, int action, int x, int y) {
         case 2: // harvesting
             action_offset = 312; break;
     }
-
     image_draw_offset_adj(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
                           8 * (ph_crops_worker_frame%26 / 2), x, y + 15, 0);
-//    ph_crops_worker_figure.direction = direction;
-//    ph_crops_worker_figure.image_set_animation(GROUP_FIGURE_WORKER_PH, action_offset, 13, 2);
-//    ph_crops_worker_figure.draw_figure_main(x, y);
-
-//    ph_crops_worker_figure.figure_image_update();
 }
-static void draw_farm_crops(building *b) {
-//    int pp = b->data.industry.progress;
-//    b->data.industry.progress += debug_range_1;
-
-    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, 0);
-    pixel_coordinate coord = city_view_grid_offset_to_pixel(b->grid_offset);
+static void draw_farm_crops(building *b, int x, int y) {
+    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
+    x += 60;
+    y -= 30;
     if (b->num_workers > 0) {
         if (b->data.industry.progress < 400)
-            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, coord.x + 30, coord.y + 30);
+            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, x + 30, y + 30);
         else if (b->data.industry.progress < 450)
-            draw_ph_worker(1, 0, coord.x + 60, coord.y + 15);
+            draw_ph_worker(1, 0, x + 60, y + 15);
         else if (b->data.industry.progress < 650)
-            draw_ph_worker(2, 0, coord.x + 90, coord.y + 30);
+            draw_ph_worker(2, 0, x + 90, y + 30);
         else if (b->data.industry.progress < 900)
-            draw_ph_worker(3, 0, coord.x + 0, coord.y + 15);
+            draw_ph_worker(3, 0, x + 0, y + 15);
         else if (b->data.industry.progress < 1100)
-            draw_ph_worker(4, 0, coord.x + 30, coord.y + 30);
+            draw_ph_worker(4, 0, x + 30, y + 30);
         else if (b->data.industry.progress < 1350)
-            draw_ph_worker(5, 0, coord.x + 60, coord.y + 45);
+            draw_ph_worker(5, 0, x + 60, y + 45);
         else if (b->data.industry.progress < 1550)
-            draw_ph_worker(6, 0, coord.x + -30, coord.y + 30);
+            draw_ph_worker(6, 0, x + -30, y + 30);
         else if (b->data.industry.progress < 1800)
-            draw_ph_worker(0, 0, coord.x + 0, coord.y + 45);
+            draw_ph_worker(0, 0, x + 0, y + 45);
         else if (b->data.industry.progress < 2000)
-            draw_ph_worker(1, 0, coord.x + 30, coord.y + 60);
+            draw_ph_worker(1, 0, x + 30, y + 60);
     }
-//    b->data.industry.progress = pp;
 }
 
 static void draw_footprint(int x, int y, int grid_offset) {
@@ -537,9 +525,6 @@ static void draw_footprint(int x, int y, int grid_offset) {
             sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
         }
         int image_id = map_image_at(grid_offset);
-        if (map_property_is_constructing(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
-
         if (draw_context.advance_water_animation) {
             if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
                 image_id++;
@@ -554,6 +539,8 @@ static void draw_footprint(int x, int y, int grid_offset) {
 
             map_image_set(grid_offset, image_id);
         }
+        if (map_property_is_constructing(grid_offset))
+            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     }
 }
@@ -646,7 +633,7 @@ static void draw_debug(int x, int y, int grid_offset) {
 //            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //        }
         int d = map_image_at(grid_offset) - 14252;
-        if (d > 200 && d <= 1514 && true) {
+        if (d > 200 && d <= 1514 && false) {
             string_from_int(str, d, 0);
             draw_text_shadow(str, x + 13, y, COLOR_WHITE);
         }
@@ -679,7 +666,7 @@ static void draw_debug(int x, int y, int grid_offset) {
 //                draw_text_shadow(str, x + 13, y + 10, COLOR_RED);
         }
         d = map_grasslevel_get(grid_offset);
-        if (d && true) {
+        if (d && false) {
             if (d >= 16) {
                 string_from_int(str, d, 0);
                 draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
@@ -725,7 +712,7 @@ static void draw_animation(int x, int y, int grid_offset) {
     int color_mask = 0;
     if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
-    if (img->num_animation_sprites > 0) {
+    if (img->num_animation_sprites > 1) {
         if (map_property_is_draw_tile(grid_offset)) {
 
             if (b->type == BUILDING_DOCK)
@@ -767,8 +754,18 @@ static void draw_animation(int x, int y, int grid_offset) {
                     case BUILDING_BARLEY_FARM:
                     case BUILDING_FLAX_FARM:
                     case BUILDING_HENNA_FARM:
-                        draw_farm_crops(b);
+                        draw_farm_crops(b, x, y);
                         break;
+                    case BUILDING_WATER_LIFT:
+                        break; // todo
+                    case BUILDING_STONE_QUARRY:
+                    case BUILDING_LIMESTONE_QUARRY:
+                    case BUILDING_GRANITE_QUARRY:
+                    case BUILDING_SANDSTONE_QUARRY:
+                    case BUILDING_GOLD_MINE:
+                    case BUILDING_COPPER_MINE:
+                    case BUILDING_GEMSTONE_MINE:
+                        break; // todo
                     default:
                         int ydiff = 0;
                         switch (map_property_multi_tile_size(grid_offset)) {

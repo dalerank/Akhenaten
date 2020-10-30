@@ -81,20 +81,46 @@ static int can_produce_resource(int resource) {
 }
 
 static int get_raw_resource(int resource) {
-    switch (resource) {
-        case RESOURCE_POTTERY_C3:
-            return RESOURCE_CLAY_C3;
-        case RESOURCE_FURNITURE:
-            return RESOURCE_TIMBER_C3;
-        case RESOURCE_OIL_C3:
-            return RESOURCE_OLIVES;
-        case RESOURCE_WINE:
-            return RESOURCE_VINES;
-        case RESOURCE_WEAPONS_C3:
-            return RESOURCE_IRON;
-        default:
-            return resource;
-    }
+    if (GAME_ENV == ENGINE_ENV_C3)
+        switch (resource) {
+            case RESOURCE_POTTERY_C3:
+                return RESOURCE_CLAY_C3;
+            case RESOURCE_FURNITURE:
+                return RESOURCE_TIMBER_C3;
+            case RESOURCE_OIL_C3:
+                return RESOURCE_OLIVES;
+            case RESOURCE_WINE:
+                return RESOURCE_VINES;
+            case RESOURCE_WEAPONS_C3:
+                return RESOURCE_IRON;
+            default:
+                return resource;
+        }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        switch (resource) {
+            case RESOURCE_STRAW:
+                return RESOURCE_GRAIN;
+            case RESOURCE_POTTERY_PH:
+                return RESOURCE_CLAY_PH;
+            case RESOURCE_LUXURY_GOODS:
+                return RESOURCE_GEMS;
+            case RESOURCE_LINEN:
+                return RESOURCE_FLAX;
+            case RESOURCE_BEER:
+                return RESOURCE_BARLEY;
+            case RESOURCE_WEAPONS_PH:
+                return RESOURCE_COPPER;
+            case RESOURCE_PAPYRUS:
+                return RESOURCE_REEDS;
+            case RESOURCE_CHARIOTS:
+                return RESOURCE_TIMBER_PH;
+            case RESOURCE_PAINT:
+                return RESOURCE_HENNA;
+            case RESOURCE_LAMPS:
+                return RESOURCE_OIL_PH;
+            default:
+                return resource;
+        }
 }
 
 int empire_can_produce_resource(int resource) {
@@ -361,23 +387,24 @@ void empire_city_load_state(buffer *buf) {
         city->name_id = buf->read_u8();
         city->route_id = buf->read_u8();
         city->is_open = buf->read_u8();
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
             city->buys_resource[r] = buf->read_u8();
-        }
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
             city->sells_resource[r] = buf->read_u8();
-        }
         city->cost_to_open = buf->read_i16();
-        buf->skip(2);
+//        buf->skip(2);
+        city->ph_unk01 = buf->read_i16();
         city->trader_entry_delay = buf->read_i16();
-        buf->skip(2);
+//        buf->skip(2);
+        city->ph_unk02 = buf->read_i16();
         city->empire_object_id = buf->read_i16();
         city->is_sea_trade = buf->read_u8();
         buf->skip(1);
-        for (int f = 0; f < 3; f++) {
+        for (int f = 0; f < 3; f++)
             city->trader_figure_ids[f] = buf->read_i16();
-        }
         buf->skip(10);
+        if (city->type == EMPIRE_CITY_OURS)
+            int a = 24;
     }
 }
 

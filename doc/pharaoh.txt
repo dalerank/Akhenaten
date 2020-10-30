@@ -2,7 +2,7 @@ terrain
 	desert
 	water
 	grassland (3-4 stages)
-	tall grass
+	tall groundwater
 	swamp/reeds
 	inundable land (farms)
 	yellow prairie (farms)

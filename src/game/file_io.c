@@ -527,17 +527,15 @@ static void init_savegame_data(int expanded) {
             // 12 bytes     0A 00 00 00 (3x4) ???
             // 12 bytes     CB 32 00 00 (3x4) ??? (n, n+2, n+1497)
             // 14 bytes     01 00 00 00 ???
-            // 34 bytes     FF FF 2C 00 (....non cyclic?) ???
-            state->junk4 = create_savegame_piece(40 + 4 + 12 + 12 + 14 + 34, 0, "junk4"); // unknown bytes
-
+            // 2  bytes     FF FF       ???
+            state->junk4 = create_savegame_piece(40 + 4 + 12 + 12 + 14 + 2, 0, "junk4"); // unknown bytes
+            state->scenario_data.herds = create_savegame_piece(32, 0, "scenario_data.herds");
             state->scenario_data.allowed_builds = create_savegame_piece(228, 0, "scenario_data.allowed_builds");
 
             // 24 bytes     FF FF FF FF (cyclic) ???
             state->junk5 = create_savegame_piece(24, 0, "junk5"); // unknown bytes
 
-            state->scenario_data.monuments = create_savegame_piece(10, 0,
-                                                                   "scenario_data.monuments"); // 4 bytes + 3 x 2-byte
-
+            state->scenario_data.monuments = create_savegame_piece(10, 0, "scenario_data.monuments"); // 4 bytes + 3 x 2-byte
 
             // 290 bytes    00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???

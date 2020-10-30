@@ -60,7 +60,7 @@ static struct {
         bool ore;
         bool tree;
         bool water;
-        bool grass;
+        bool groundwater;
         bool wall;
     } required_terrain;
     int draw_as_constructing;
@@ -302,7 +302,7 @@ void building_construction_set_type(
     if (type != BUILDING_NONE) {
         data.required_terrain.wall = false;
         data.required_terrain.water = false;
-        data.required_terrain.grass = false;
+        data.required_terrain.groundwater = false;
         data.required_terrain.tree = false;
         data.required_terrain.rock = false;
         data.required_terrain.ore = false;
@@ -329,10 +329,12 @@ void building_construction_set_type(
             case BUILDING_GOLD_MINE:
             case BUILDING_GEMSTONE_MINE:
             case BUILDING_COPPER_MINE:
+                data.required_terrain.rock = true;
                 data.required_terrain.ore = true;
                 break;
             case BUILDING_TIMBER_YARD:
-                data.required_terrain.tree = true;
+                if (GAME_ENV == ENGINE_ENV_C3)
+                    data.required_terrain.tree = true;
                 break;
             case BUILDING_CLAY_PIT:
                 data.required_terrain.water = true;
@@ -349,7 +351,7 @@ void building_construction_set_type(
             case BUILDING_WELL:
             case BUILDING_WATER_SUPPLY:
                 if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                    data.required_terrain.grass = true;
+                    data.required_terrain.groundwater = true;
                 break;
             default:
                 break;
@@ -531,7 +533,7 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
             data.draw_as_constructing = 1;
 
     } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
-               data.required_terrain.water || data.required_terrain.wall) {
+               data.required_terrain.water || data.required_terrain.wall || data.required_terrain.groundwater) {
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
@@ -544,8 +546,7 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
     }
     data.cost = current_cost;
 }
-void building_construction_place(void) // confirm final placement
-{
+void building_construction_place(void) { // confirm final placement
     data.in_progress = 0;
     int x_start = data.start.x;
     int y_start = data.start.y;
@@ -701,40 +702,48 @@ void building_construction_place(void) // confirm final placement
 static void set_warning(int *warning_id, int warning) {
     if (warning_id)
         *warning_id = warning;
-
 }
 
-int building_construction_can_place_on_terrain(int x, int y, int *warning_id) {
+int building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size) {
     if (data.required_terrain.meadow) {
         int can_place = 0;
-        if (map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) { // todo: add inundable lands
+        if (map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_MEADOW)) { // todo: add inundable lands
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
             can_place = 1;
         }
-        if (GAME_ENV == ENGINE_ENV_PHARAOH && map_terrain_all_tiles_in_radius_are(x, y, 3, 0, TERRAIN_FLOODPLAIN)) { // todo: add inundable lands
+        if (GAME_ENV == ENGINE_ENV_PHARAOH && map_terrain_all_tiles_in_radius_are(x, y, size, 0, TERRAIN_FLOODPLAIN)) { // todo: add inundable lands
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
             can_place = 1;
         }
         if (!can_place)
             return 0;
     } else if (data.required_terrain.rock) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) { // todo: add ore rock
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_ROCK)) { // todo: add ore rock
+            set_warning(warning_id, WARNING_ROCK_NEEDED);
+            return 0;
+        }
+        if (data.required_terrain.ore && !map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_ORE)) { // todo: add ore rock
             set_warning(warning_id, WARNING_ROCK_NEEDED);
             return 0;
         }
     } else if (data.required_terrain.tree) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             set_warning(warning_id, WARNING_TREE_NEEDED);
             return 0;
         }
     } else if (data.required_terrain.water) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) { // todo: add inundable lands check
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_WATER)) { // todo: add inundable lands check
             set_warning(warning_id, WARNING_WATER_NEEDED);
             return 0;
         }
     } else if (data.required_terrain.wall) {
-        if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
+        if (!map_terrain_all_tiles_in_radius_are(x, y, size, 0, TERRAIN_WALL)) {
             set_warning(warning_id, WARNING_WALL_NEEDED);
+            return 0;
+        }
+    } else if (data.required_terrain.groundwater) {
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 0, TERRAIN_GROUNDWATER)) {
+            set_warning(warning_id, WARNING_GROUNDWATER_NEEDED);
             return 0;
         }
     }

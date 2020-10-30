@@ -618,7 +618,7 @@ int building_construction_place_building(int type, int x, int y) {
             return 0;
         }
         int warning_id;
-        if (!building_construction_can_place_on_terrain(x, y, &warning_id)) {
+        if (!building_construction_can_place_on_terrain(x, y, &warning_id, size)) {
             city_warning_show(warning_id);
             return 0;
         }

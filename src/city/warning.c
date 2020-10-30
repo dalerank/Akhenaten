@@ -39,9 +39,8 @@ void city_warning_show(int type) {
     const uint8_t *text;
     if (type == WARNING_ORIENTATION)
         text = lang_get_string(17, city_view_orientation());
-    else {
+    else
         text = lang_get_string(19, type - 2);
-    }
     string_copy(text, w->text, MAX_TEXT);
 }
 

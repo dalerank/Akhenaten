@@ -426,12 +426,19 @@ void scenario_load_state(scenario_data_buffers *data) {
         for (int i = 0; i < env_sizes().MAX_REQUESTS; i++)
             scenario.requests[i].can_comply_dialog_shown = data->request_comply_dialogs->read_u8(); // 1
 
-    // 6. animal herds (16)
+    // 6. animal herds (16 : 32)
     if (data->herds->is_valid(1)) {
-        for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
-            scenario.herd_points[i].x = data->herds->read_i16(); // 2
-        for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
-            scenario.herd_points[i].y = data->herds->read_i16(); // 2
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
+                scenario.herd_points[i].x = data->herds->read_i16(); // 2
+            for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
+                scenario.herd_points[i].y = data->herds->read_i16(); // 2
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
+                scenario.herd_points[i].x = data->herds->read_i32(); // 4
+            for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++)
+                scenario.herd_points[i].y = data->herds->read_i32(); // 4
+        }
     }
 
     // 7. demands (240)

@@ -613,7 +613,7 @@ static void spawn_figure_market(building *b) {
 static void set_bathhouse_graphic(building *b) {
     if (b->state != BUILDING_STATE_VALID)
         return;
-    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_GROUNDWATER_RANGE))
+    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_GROUNDWATER))
         b->has_water_access = 1;
     else {
         b->has_water_access = 0;
@@ -1277,7 +1277,7 @@ void building_figure_generate(void) {
         // range of building types
         if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE)
             patrician_generated = spawn_patrician(b, patrician_generated);
-        else if (building_is_farm(b->type) || building_is_workshop(b->type))
+        else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type))
             spawn_figure_industry(b);
         else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED)
             spawn_figure_senate_forum(b);

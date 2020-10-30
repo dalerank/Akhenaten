@@ -25,7 +25,7 @@ void building_construction_update(int x, int y, int grid_offset);
 
 void building_construction_place(void);
 
-int building_construction_can_place_on_terrain(int x, int y, int *warning_id);
+int building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size);
 
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
 void building_construction_get_view_position(int *view_x, int *view_y);

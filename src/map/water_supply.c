@@ -154,7 +154,7 @@ static int OFFSET(int x, int y) {
 }
 
 void map_water_supply_update_reservoir_fountain_C3(void) {
-    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_GROUNDWATER_RANGE);
+    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_GROUNDWATER);
     // reservoirs
     set_all_aqueducts_to_no_water();
     building_list_large_clear(1);
@@ -191,7 +191,7 @@ void map_water_supply_update_reservoir_fountain_C3(void) {
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
         if (b->has_water_access)
-            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_GROUNDWATER_RANGE);
+            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_GROUNDWATER);
     }
     // fountains
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -210,7 +210,7 @@ void map_water_supply_update_reservoir_fountain_C3(void) {
         else
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        if (map_terrain_is(b->grid_offset, TERRAIN_GROUNDWATER_RANGE) && b->num_workers) {
+        if (map_terrain_is(b->grid_offset, TERRAIN_GROUNDWATER) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
                                         scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,

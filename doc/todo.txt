@@ -25,8 +25,8 @@
 ===== generic fixes: =====
 
 - graphics
-  - roads over floodplains
-  
+  - clearing building doesn't refresh river shores
+  - river shores bleed over floodplains
 - messages/text
   - objectives/tutorial goals/scenario goals
   - buildings panel text
