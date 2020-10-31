@@ -859,7 +859,7 @@ static void set_deepwater_image(int grid_offset) {
 }
 static void set_floodplain_edges_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_ROAD)
-        || map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+        || (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)))
         return;
     int image_id = 0;
     if (!map_terrain_is(grid_offset, TERRAIN_WATER)) { // dry land shoreline

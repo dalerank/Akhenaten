@@ -79,47 +79,36 @@ static void hippodrome_coverage(building *b) {
 static void bathhouse_coverage(building *b) {
     b->data.house.bathhouse = MAX_COVERAGE;
 }
-
 static void religion_coverage_ceres(building *b) {
     b->data.house.temple_ceres = MAX_COVERAGE;
 }
-
 static void religion_coverage_neptune(building *b) {
     b->data.house.temple_neptune = MAX_COVERAGE;
 }
-
 static void religion_coverage_mercury(building *b) {
     b->data.house.temple_mercury = MAX_COVERAGE;
 }
-
 static void religion_coverage_mars(building *b) {
     b->data.house.temple_mars = MAX_COVERAGE;
 }
-
 static void religion_coverage_venus(building *b) {
     b->data.house.temple_venus = MAX_COVERAGE;
 }
-
 static void school_coverage(building *b) {
     b->data.house.school = MAX_COVERAGE;
 }
-
 static void academy_coverage(building *b) {
     b->data.house.academy = MAX_COVERAGE;
 }
-
 static void library_coverage(building *b) {
     b->data.house.library = MAX_COVERAGE;
 }
-
 static void barber_coverage(building *b) {
     b->data.house.barber = MAX_COVERAGE;
 }
-
 static void clinic_coverage(building *b) {
     b->data.house.clinic = MAX_COVERAGE;
 }
-
 static void hospital_coverage(building *b) {
     b->data.house.hospital = MAX_COVERAGE;
 }
@@ -170,7 +159,6 @@ static void engineer_coverage(building *b, int *max_damage_seen) {
 
     b->damage_risk = 0;
 }
-
 static void prefect_coverage(building *b, int *min_happiness_seen) {
     if (b->type == BUILDING_HIPPODROME)
         b = building_main(b);
@@ -180,7 +168,6 @@ static void prefect_coverage(building *b, int *min_happiness_seen) {
         *min_happiness_seen = b->sentiment.house_happiness;
 
 }
-
 static void tax_collector_coverage(building *b, int *max_tax_multiplier) {
     if (b->house_size && b->house_population > 0) {
         int tax_multiplier = model_get_house(b->subtype.house_level)->tax_multiplier;
@@ -190,7 +177,6 @@ static void tax_collector_coverage(building *b, int *max_tax_multiplier) {
         b->house_tax_coverage = 50;
     }
 }
-
 static void distribute_good(building *b, building *market, int stock_wanted, int inventory_resource) {
     int amount_wanted = stock_wanted - b->data.house.inventory[inventory_resource];
     if (market->data.market.inventory[inventory_resource] > 0 && amount_wanted > 0) {
@@ -203,7 +189,6 @@ static void distribute_good(building *b, building *market, int stock_wanted, int
         }
     }
 }
-
 static void distribute_market_resources(building *b, building *market) {
     int level = b->subtype.house_level;
     if (level < HOUSE_LUXURY_PALACE)
@@ -255,7 +240,6 @@ static void distribute_market_resources(building *b, building *market) {
         distribute_good(b, market, goods_no * model->wine, INVENTORY_GOOD4);
     }
 }
-
 static int provide_market_goods(int market_building_id, int x, int y) {
     int serviced = 0;
     building *market = building_get(market_building_id);
@@ -311,6 +295,7 @@ int figure::figure_service_provide_coverage() {
 
             break;
         case FIGURE_BATHHOUSE_WORKER:
+        case FIGURE_WATER_CARRIER:
             houses_serviced = provide_culture(tile_x, tile_y, bathhouse_coverage);
             break;
         case FIGURE_SCHOOL_CHILD:

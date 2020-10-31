@@ -55,7 +55,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION))
+            if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE))
                 continue;
             if (measure_only && visual_feedback_on_delete) {
                 building *b = get_deletable_building(grid_offset);
@@ -68,7 +68,8 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
                     continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) ||
-                           map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
+                           map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&
+                           !map_terrain_is(grid_offset, TERRAIN_NOT_REMOVABLE))
                     items_placed++;
                 continue;
             }
@@ -124,7 +125,8 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     map_property_clear_plaza_or_earthquake(grid_offset);
 
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-                items_placed++;
+                if (!map_terrain_is(grid_offset, TERRAIN_NOT_REMOVABLE))
+                    items_placed++;
             }
         }
     }
@@ -207,7 +209,6 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
     } else if (ask_confirm_bridge) {
         window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, 2);
         return -1;
-    } else {
+    } else
         return clear_land_confirmed(measure_only, x_start, y_start, x_end, y_end);
-    }
 }
