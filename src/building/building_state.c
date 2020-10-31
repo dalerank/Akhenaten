@@ -243,7 +243,7 @@ static void read_type_data(buffer *buf, building *b) {
             buf->skip(2);
         b->data.industry.progress = buf->read_i16();
 //        b->data.farm.progress = buf->read_u16(); // determines amount of stuff produced, by value = x / 250 * 100
-        buf->skip(10);
+        buf->skip(12);
         b->data.industry.has_fish = buf->read_u8();
         buf->skip(14);
         b->data.industry.blessing_days_left = buf->read_u8();
@@ -254,7 +254,7 @@ static void read_type_data(buffer *buf, building *b) {
         buf->skip(6);
         b->data.industry.fishing_boat_id = buf->read_i16();
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            buf->skip(42);
+            buf->skip(40);
             b->data.industry.labor_state = buf->read_u8();
             b->data.industry.labor_days_left = buf->read_u8();
             buf->skip(12);
@@ -279,6 +279,8 @@ static void read_type_data(buffer *buf, building *b) {
 
 void building_state_load_from_buffer(buffer *buf, building *b) {
     int sind = buf->get_offset();
+    if (sind ==  640)
+        int a = 2134;
     b->state = buf->read_u8();
     b->faction_id = buf->read_u8();
     b->unknown_value = buf->read_u8();

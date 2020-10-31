@@ -1,3 +1,4 @@
+#include <cmath>
 #include "action.h"
 
 #include "city/entertainment.h"
@@ -145,7 +146,6 @@ static figure_action_property action_lookup[] = {
 #include "map/building.h"
 #include "map/grid.h"
 
-
 void figure::advance_action(short NEXT_ACTION) {
     if (NEXT_ACTION == 0)
         kill();
@@ -212,6 +212,7 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         advance_action(FAIL_ACTION);
     if (stop_at_road) {
         bool found_road = false;
+        bool already_there = false;
         if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
             building *main = building_main(dest);
             found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
@@ -229,8 +230,6 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         }
     } else
         return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
-//        if (dest->state != BUILDING_STATE_VALID)
-//            advance_action(FAIL_ACTION);
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(building_id, true, terrainchoice, NEXT_ACTION);

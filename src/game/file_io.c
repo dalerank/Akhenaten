@@ -766,13 +766,14 @@ static void savegame_load_from_state(savegame_state *state) {
 //    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_load_state(state->bookmarks);
 
-    map_temp_grid_load(state->GRID01_8BIT, 0);
-    map_temp_grid_load(state->GRID02_8BIT, 1);
-//    map_temp_grid_load(state->GRID03_32BIT, 2);
-    map_temp_grid_load(state->GRID04_8BIT, 2);
-    map_moisture_load_state(state->moisture_grid);
-    map_unk32_load_state(state->GRID03_32BIT);
-
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        map_temp_grid_load(state->GRID01_8BIT, 0);
+        map_temp_grid_load(state->GRID02_8BIT, 1);
+//        map_temp_grid_load(state->GRID03_32BIT, 2);
+        map_temp_grid_load(state->GRID04_8BIT, 2);
+        map_moisture_load_state(state->moisture_grid);
+        map_unk32_load_state(state->GRID03_32BIT);
+    }
 //    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state) {

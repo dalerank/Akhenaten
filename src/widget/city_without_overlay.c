@@ -493,7 +493,7 @@ static void draw_farm_crops(building *b, int x, int y) {
 }
 
 static void draw_footprint(int x, int y, int grid_offset) {
-    if (grid_offset == 26791)
+    if (grid_offset == 24063 || grid_offset == 24291)
         int a = 3245;
 
 
@@ -607,6 +607,9 @@ static void draw_debug(int x, int y, int grid_offset) {
         if (map_building_at(grid_offset) && b->grid_offset == grid_offset && false) {
             string_from_int(str, b->type, 0);
             draw_text_shadow(str, x + 13, y + 5, COLOR_WHITE);
+
+            string_from_int(str, map_image_at(grid_offset), 0);
+            draw_text_shadow(str, x + 13, y-5, COLOR_GREEN);
 
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);

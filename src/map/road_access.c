@@ -178,7 +178,6 @@ int map_closest_reachable_road_within_radius(int x, int y, int size, int radius,
     for (int r = 1; r <= radius; r++) {
         if (reachable_road_within_radius(x, y, size, r, x_road, y_road))
             return 1;
-
     }
     return 0;
 }

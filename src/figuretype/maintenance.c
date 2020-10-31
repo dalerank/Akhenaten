@@ -17,68 +17,6 @@
 
 #include "core/game_environment.h"
 
-void figure::engineer_action() {
-    building *b = building_get(building_id);
-    switch (action_state) {
-        case FIGURE_ACTION_60_ENGINEER_CREATED:
-            is_ghost = 1;
-            anim_frame = 0;
-            wait_ticks--;
-            if (wait_ticks <= 0) {
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    action_state = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                    set_cross_country_destination(x_road, y_road);
-                    roam_length = 0;
-                } else {
-                    kill();
-                }
-            }
-            break;
-        case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
-            use_cross_country = 1;
-            is_ghost = 1;
-            if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == building_id) {
-                    // returned to own building
-                    kill();
-                } else {
-                    action_state = FIGURE_ACTION_62_ENGINEER_ROAMING;
-                    init_roaming();
-                    roam_length = 0;
-                }
-            }
-            break;
-        case ACTION_10_GOING:
-        case FIGURE_ACTION_62_ENGINEER_ROAMING:
-            is_ghost = 0;
-            roam_length++;
-            if (roam_length >= max_roam_length) {
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    action_state = FIGURE_ACTION_63_ENGINEER_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
-                } else
-                    kill();
-            }
-            roam_ticks(1);
-            break;
-        case ACTION_11_RETURNING_EMPTY:
-        case FIGURE_ACTION_63_ENGINEER_RETURNING:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
-                action_state = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                set_cross_country_destination(b->x, b->y);
-                roam_length = 0;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
-
-            break;
-    }
-//    figure_image_update(image_id_from_group(GROUP_FIGURE_ENGINEER));
-}
-
 #include "figure/properties.h"
 
 enum {
@@ -282,6 +220,25 @@ int figure::target_is_alive() {
     return 0;
 }
 
+void figure::engineer_action() {
+    building *b = building_get(building_id);
+    switch (action_state) {
+        case FIGURE_ACTION_60_ENGINEER_CREATED:
+            advance_action(ACTION_10_GOING);
+            break;
+        case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
+            do_enterbuilding(false, building_id);
+            break;
+        case ACTION_10_GOING:
+        case FIGURE_ACTION_62_ENGINEER_ROAMING:
+            do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+            break;
+        case ACTION_11_RETURNING_FROM_PATROL:
+        case FIGURE_ACTION_63_ENGINEER_RETURNING:
+            do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
+            break;
+    }
+}
 void figure::prefect_action() { // doubles as fireman! not as policeman!!!
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (!fight_enemy(2, 22))

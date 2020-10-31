@@ -134,7 +134,6 @@ int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radi
         for (int xx = x_min; xx <= x_max; xx++) {
             if (map_terrain_is(map_grid_offset(xx, yy), terrain))
                 return 1;
-
         }
     }
     return 0;

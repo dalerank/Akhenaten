@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-#define MAX_UNDO_BUILDINGS 50
+#define MAX_UNDO_BUILDINGS 500
 
 static struct {
     int available;
@@ -32,16 +32,16 @@ static struct {
     int num_buildings;
     int type;
     building buildings[MAX_UNDO_BUILDINGS];
+    int newhouses_offsets[MAX_UNDO_BUILDINGS];
+    int newhouses_num;
 } data;
 
 int game_can_undo(void) {
     return data.ready && data.available;
 }
-
 void game_undo_disable(void) {
     data.available = 0;
 }
-
 void game_undo_add_building(building *b) {
     if (b->id <= 0)
         return;
@@ -50,10 +50,8 @@ void game_undo_add_building(building *b) {
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
         if (data.buildings[i].id)
             data.num_buildings++;
-
         if (data.buildings[i].id == b->id)
             is_on_list = 1;
-
     }
     if (!is_on_list) {
         for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
@@ -66,7 +64,6 @@ void game_undo_add_building(building *b) {
         data.available = 0;
     }
 }
-
 void game_undo_adjust_building(building *b) {
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
         if (data.buildings[i].id == b->id) {
@@ -75,18 +72,14 @@ void game_undo_adjust_building(building *b) {
         }
     }
 }
-
 int game_undo_contains_building(int building_id) {
     if (building_id <= 0 || !game_can_undo())
         return 0;
-
     if (data.num_buildings <= 0)
         return 0;
-
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
         if (data.buildings[i].id == building_id)
             return 1;
-
     }
     return 0;
 }
@@ -122,14 +115,12 @@ int game_undo_start_build(int type) {
 
     return 1;
 }
-
 void game_undo_restore_building_state(void) {
     for (int i = 0; i < data.num_buildings; i++) {
         if (data.buildings[i].id) {
             building *b = building_get(data.buildings[i].id);
             if (b->state == BUILDING_STATE_DELETED_BY_PLAYER)
                 b->state = BUILDING_STATE_VALID;
-
             b->is_deleted = 0;
         }
     }
@@ -144,7 +135,6 @@ static void restore_map_images(void) {
             int grid_offset = map_grid_offset(x, y);
             if (!map_building_at(grid_offset))
                 map_image_restore_at(grid_offset);
-
         }
     }
 }
@@ -154,10 +144,8 @@ void game_undo_restore_map(int include_properties) {
     map_aqueduct_restore();
     if (include_properties)
         map_property_restore();
-
     restore_map_images();
 }
-
 void game_undo_finish_build(int cost) {
     data.ready = 1;
     data.timeout_ticks = 500;
@@ -193,14 +181,36 @@ static void add_building_to_terrain(building *b) {
         }
         map_building_tiles_add_farm(b->id, b->x, b->y,
                                     image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
+    } else if (b->house_size) {
+
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
         if (b->type == BUILDING_WHARF)
             b->data.industry.fishing_boat_id = 0;
-
     }
     b->state = BUILDING_STATE_VALID;
+}
+
+static void restore_housing(building *b) {
+    int size = b->house_size;
+    for (int x = b->x; x < b->x + size; x++)
+        for (int y = b->y; y < b->y + size; y++) {
+            int grid_offset = map_grid_offset(x, y);
+            data.newhouses_offsets[data.newhouses_num] = grid_offset + 1;
+            data.newhouses_num++;
+//            if (x == b->x && y == b->y) {
+//                b->house_size = 1;
+//                b->house_is_merged = 0;
+//                map_building_tiles_add(b->id, x, y, 1,
+//                                       image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
+//            } else {
+//                building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+//                if (new_b->id > 0)
+//                    map_building_tiles_add(new_b->id, x, y, 1,
+//                                           image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
+//            }
+        }
 }
 
 void game_undo_perform(void) {
@@ -212,13 +222,16 @@ void game_undo_perform(void) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
-                memcpy(b, &data.buildings[i], sizeof(building));
-                if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
-                    if (!building_storage_restore(b->storage_id))
-                        building_storage_reset_building_ids();
-
+                if (building_is_house(data.buildings[i].type) && true)
+                    restore_housing(&data.buildings[i]);
+                else {
+                    memcpy(b, &data.buildings[i], sizeof(building));
+                    if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
+                        if (!building_storage_restore(b->storage_id))
+                            building_storage_reset_building_ids();
+                    }
+                    add_building_to_terrain(b);
                 }
-                add_building_to_terrain(b);
             }
         }
         map_terrain_restore();
@@ -261,8 +274,23 @@ void game_undo_perform(void) {
     map_routing_update_land();
     map_routing_update_walls();
     data.num_buildings = 0;
-}
+    for (int i = 0; data.newhouses_offsets[i] != 0; i++) {
+        int grid_offset = data.newhouses_offsets[i] - 1;
+        int vacant_lot_image = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 
+        int x = map_grid_offset_to_x(grid_offset);
+        int y = map_grid_offset_to_y(grid_offset);
+
+        building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+        if (new_b->id > 0)
+            map_building_tiles_add(new_b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
+
+        map_image_set(grid_offset, vacant_lot_image);
+//        map_property_mark_draw_tile(grid_offset);
+        data.newhouses_offsets[i] = 0;
+        data.newhouses_num--;
+    }
+}
 void game_undo_reduce_time_available(void) {
     if (!game_can_undo())
         return;

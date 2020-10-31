@@ -1243,7 +1243,6 @@ void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_exit_flag());
 }
 
-
 static void clear_empty_land_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         map_image_set(grid_offset, 0);
