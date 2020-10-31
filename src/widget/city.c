@@ -414,19 +414,19 @@ static void handle_mouse(const mouse *m) {
     if (m->left.went_up)
         build_end();
 
-    if (m->right.went_down && input_coords_in_city(m->x, m->y) && !building_construction_type())
+    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !building_construction_type())
         scroll_drag_start(0);
 
     if (m->right.went_up) {
         if (!building_construction_type()) {
-            int has_scrolled = scroll_drag_end();
-            if (!has_scrolled && handle_right_click_allow_building_info(tile))
+            if (handle_right_click_allow_building_info(tile))
                 window_building_info_show(tile->grid_offset);
-
-        } else {
+        } else
             building_construction_cancel();
-        }
     }
+
+    if (m->middle.went_up)
+        scroll_drag_end();
 }
 static void military_map_click(int legion_formation_id, const map_tile *tile) {
     if (!tile->grid_offset) {

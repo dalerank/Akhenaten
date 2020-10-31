@@ -244,30 +244,24 @@ void scroll_drag_start(int is_touch) {
 static int set_scroll_speed_from_drag(void) {
     if (!data.drag.active)
         return 0;
-
-
     int delta_x = 0;
     int delta_y = 0;
     if (!data.drag.is_touch)
         system_mouse_get_relative_state(&delta_x, &delta_y);
-
     else {
         const touch *t = get_earliest_touch();
         delta_x = -t->frame_movement.x;
         delta_y = -t->frame_movement.y;
     }
-
     data.drag.delta.x += delta_x;
     data.drag.delta.y += delta_y;
     if ((delta_x != 0 || delta_y != 0)) {
         if (!data.drag.is_touch)
             system_mouse_set_relative_mode(1);
-
         // Store tiny movements until we decide that it's enough to move into scroll mode
         if (!data.drag.has_started)
             data.drag.has_started =
                     abs(data.drag.delta.x) > SCROLL_DRAG_MIN_DELTA || abs(data.drag.delta.y) > SCROLL_DRAG_MIN_DELTA;
-
     }
     if (data.drag.has_started) {
         speed_set_target(&data.speed.x, data.drag.delta.x, SPEED_CHANGE_IMMEDIATE, 0);
@@ -281,8 +275,6 @@ static int set_scroll_speed_from_drag(void) {
 int scroll_drag_end(void) {
     if (!data.drag.active)
         return 0;
-
-
     int has_scrolled = data.drag.has_started;
 
     data.drag.active = 0;
@@ -290,7 +282,6 @@ int scroll_drag_end(void) {
 
     if (!data.drag.is_touch)
         system_mouse_set_relative_mode(0);
-
     else if (has_scrolled) {
         const touch *t = get_earliest_touch();
         speed_set_target(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);

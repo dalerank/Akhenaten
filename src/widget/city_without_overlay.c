@@ -852,7 +852,11 @@ static void draw_animation(int x, int y, int grid_offset) {
             const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
             image_draw_masked(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 20, color_mask);
         }
-    }
+    } else if (b->type == BUILDING_WATER_SUPPLY)
+        if (map_property_is_draw_tile(grid_offset)) {
+            const image *img = image_get(image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER));
+            image_draw_masked(image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 27, color_mask);
+        }
 }
 static int should_draw_top_before_deletion(int grid_offset) {
     return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);

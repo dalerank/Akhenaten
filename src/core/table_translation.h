@@ -54,6 +54,7 @@ static int groupid_translation_table_ph[] = {
         66, 66 + 66, // apothecary
         67, 67 + 66, // apothecary
         68, 68 + 66, // apothecary
+        69, 69 + 66, // water supply
         70, 175 + 66, // mortuary
         71, 25 + 66, // temple osiris
         72, 21 + 66, // temple ra
