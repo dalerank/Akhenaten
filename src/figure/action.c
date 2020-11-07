@@ -146,6 +146,17 @@ static figure_action_property action_lookup[] = {
 #include "map/building.h"
 #include "map/grid.h"
 
+bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius) {
+    int min_x = b_x - radius;
+    int min_y = b_y - radius;
+    int max_x = b_x + size - 1 + radius;
+    int max_y = b_y + size - 1 + radius;
+
+    if (x >= min_x && x <= max_x && y >= min_y && y <= max_y)
+        return true;
+    return false;
+}
+
 void figure::advance_action(short NEXT_ACTION) {
     if (NEXT_ACTION == 0)
         kill();
@@ -216,11 +227,21 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
             building *main = building_main(dest);
             found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
-        } else
+            if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
+                x = tile_x;
+                y = tile_y;
+            }
+        } else {
             found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
-
+            if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
+                x = tile_x;
+                y = tile_y;
+            }
+        }
         // found any road...?
         if (found_road) {
+            if (tile_x)
+
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)

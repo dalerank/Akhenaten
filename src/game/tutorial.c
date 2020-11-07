@@ -288,7 +288,7 @@ void tutorial_on_day_tick(void) {
             if (!data.pharaoh.population_150_reached && city_population() >= 150) {
                 data.pharaoh.population_150_reached = 1;
                 building_menu_update();
-                post_message(239);
+                post_message(MESSAGE_TUTORIAL_FOOD_OR_FAMINE);
             }
         }
     }

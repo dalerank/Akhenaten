@@ -129,9 +129,10 @@ static void move_animals(const formation *m, int attacking_animals) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     f->destination_x = 0;
                     f->destination_y = 0;
-                    while (f->destination_x == 0 || f->destination_y == 0)
+//                    while (f->destination_x == 0 || f->destination_y == 0)
                         f->herd_roost(4, 8, 22);
-                    f->advance_action(16);
+                    if (f->destination_x != 0 && f->destination_y != 0)
+                        f->advance_action(16);
                 } else {
                     figure *target = figure_get(target_id);
                     f->target_figure_id = target_id;
