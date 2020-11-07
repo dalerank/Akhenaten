@@ -329,7 +329,7 @@ void building_clear_related_data(building *b) {
 
     if (b->type == BUILDING_TRIUMPHAL_ARCH) {
         city_buildings_remove_triumphal_arch();
-        building_menu_update();
+        building_menu_update(BUILDSET_NORMAL);
     }
 }
 void building_clear_all(void) {

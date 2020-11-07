@@ -9,22 +9,11 @@ typedef enum {
     NOT_AVAILABLE_YET,
 } tutorial_availability;
 
-typedef enum {
-    TUT_BUILD_NORMAL,
-    TUT1_BUILD_START,
-    TUT1_BUILD_AFTER_FIRE,
-    TUT1_BUILD_AFTER_COLLAPSE,
-    TUT2_BUILD_START,
-    TUT2_BUILD_UP_TO_250,
-    TUT2_BUILD_UP_TO_450,
-    TUT2_BUILD_AFTER_450
-} tutorial_build_buttons;
-
 void tutorial_init(void);
 
 tutorial_availability tutorial_advisor_empire_availability(void);
 
-tutorial_build_buttons tutorial_get_build_buttons(void);
+//tutorial_build_buttons tutorial_get_build_buttons(void);
 
 int tutorial_get_population_cap(int current_cap);
 

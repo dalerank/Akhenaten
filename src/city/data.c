@@ -49,7 +49,7 @@ void city_data_init_campaign_mission(void) {
 int ALLOWED_FOODS(int i) {
     return city_data.resource.food_types_allowed[i];
 }
-bool is_resource_allowed(int resource) {
+bool is_food_allowed(int resource) {
     for (int i = 0; i < 4; i++)
         if (ALLOWED_FOODS(i) == resource)
             return true;

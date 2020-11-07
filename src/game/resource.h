@@ -82,6 +82,7 @@ enum {
 };
 
 int ALLOWED_FOODS(int i);
+bool is_food_allowed(int resource);
 
 //static int ALLOWED_FOODS[4] = {
 //        1,

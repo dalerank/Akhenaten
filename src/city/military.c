@@ -226,7 +226,7 @@ static void fight_distant_battle(void) {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
         city_ratings_change_favor(25);
         city_buildings_earn_triumphal_arch();
-        building_menu_update();
+        building_menu_update(BUILDSET_NORMAL);
         city_data.distant_battle.won_count++;
         city_data.distant_battle.city_foreign_months_left = 0;
         city_data.distant_battle.roman_months_to_travel_back = city_data.distant_battle.roman_months_traveled;

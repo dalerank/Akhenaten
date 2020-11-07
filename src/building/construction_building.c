@@ -481,7 +481,7 @@ static void add_to_map(int type, building *b, int size,
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
             city_buildings_build_triumphal_arch();
-            building_menu_update();
+            building_menu_update(BUILDSET_NORMAL);
             building_construction_clear_type();
             break;
         case BUILDING_SENATE_UPGRADED:

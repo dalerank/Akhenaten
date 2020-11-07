@@ -25,17 +25,34 @@ enum {
     BUILD_MENU_FORTS = 17,
     //
     BUILD_MENU_FOOD = 18,
-    BUILD_MENU_DISTRIBUTION,
-    BUILD_MENU_SHRINES,
-    BUILD_MENU_MONUMENTS,
-    BUILD_MENU_DEFENCES,
+    BUILD_MENU_DISTRIBUTION = 19,
+    BUILD_MENU_SHRINES = 20,
+    BUILD_MENU_MONUMENTS = 21,
+    BUILD_MENU_DEFENCES = 22,
     //
     BUILD_MENU_MAX
 };
 
+enum {
+    BUILDSET_NORMAL,
+    //
+    BUILDSET_TUT1_START,
+    BUILDSET_TUT1_FIRE_C3,
+    BUILDSET_TUT1_FIRE_PH,
+    BUILDSET_TUT1_CRIME,
+    BUILDSET_TUT1_FOOD,
+    BUILDSET_TUT1_COLLAPSE_C3,
+    BUILDSET_TUT1_COLLAPSE_PH,
+    BUILDSET_TUT2_START,
+    BUILDSET_TUT2_UP_TO_250,
+    BUILDSET_TUT2_UP_TO_450,
+    BUILDSET_TUT2_AFTER_450,
+    BUILDSET_TUT3_START,
+};
+
 void building_menu_enable_all(void);
 
-void building_menu_update(void);
+void building_menu_update(int build_set);
 
 int building_menu_count_items(int submenu);
 

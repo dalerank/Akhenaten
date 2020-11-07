@@ -627,7 +627,7 @@ static void button_show_resource_window(int resource, int param2) {
 static void confirmed_open_trade(int accepted) {
     if (accepted) {
         empire_city_open_trade(data.selected_city);
-        building_menu_update();
+        building_menu_update(BUILDSET_NORMAL);
         window_trade_opened_show(data.selected_city);
     }
 }

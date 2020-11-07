@@ -177,7 +177,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     scenario_request_init();
     scenario_demand_change_init();
     scenario_price_change_init();
-    building_menu_update();
+    building_menu_update(BUILDSET_NORMAL);
     image_load_main(scenario_property_climate(), 0, 0);
     image_load_enemy(scenario_property_enemy());
 
@@ -241,7 +241,7 @@ static void initialize_saved_game(void) {
     map_road_network_update();
     building_maintenance_check_rome_access();
     building_granaries_calculate_stocks();
-    building_menu_update();
+    building_menu_update(BUILDSET_NORMAL);
     city_message_init_problem_areas();
 
     sound_city_init();
@@ -310,7 +310,7 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
 
     tutorial_init();
 
-    building_menu_update();
+    building_menu_update(BUILDSET_NORMAL);
     city_message_init_scenario();
     return 1;
 }

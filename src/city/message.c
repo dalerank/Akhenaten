@@ -149,6 +149,9 @@ void city_message_apply_sound_interval(int category) {
 }
 
 void city_message_post(int use_popup, int message_id, int param1, int param2) {
+
+    use_popup = 1; // temp
+
     int id = new_message_id();
     if (id < 0)
         return;
@@ -170,7 +173,6 @@ void city_message_post(int use_popup, int message_id, int param1, int param2) {
         data.problem_count = 1;
         window_invalidate();
     }
-//    use_popup = 0; // debug
     if (use_popup && window_is(WINDOW_CITY))
         show_message_popup(id);
     else if (use_popup) {

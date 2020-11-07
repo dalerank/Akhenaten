@@ -129,6 +129,10 @@ int empire_can_produce_resource(int resource) {
     if (raw_resource != resource && empire_can_import_resource(raw_resource))
         return 1;
 
+    // if food, see if it's enabled
+    if (is_food_allowed(resource))
+        return 1;
+
     // check if we can produce the raw materials
     return can_produce_resource(raw_resource);
 }

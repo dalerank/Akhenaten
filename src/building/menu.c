@@ -105,267 +105,205 @@ static int changed = 1;
 #include "core/lang.h"
 #include "core/game_environment.h"
 
+void building_menu_disable_all() {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
+            menu_enabled[sub][item] = 0;
+        }
+    }
+}
 void building_menu_enable_all(void) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             menu_enabled[sub][item] = 1;
         }
     }
-//    for (int i = 0; i < 400; i++) {
-//        auto s = lang_get_string(28, i);
-//        SDL_Log("%i : %s", i, s);
-//    }
 }
 
+static void enable_building(int type, bool enabled = true) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
+            if (MENU_int[GAME_ENV][sub][item] == type) // found matching menu item!!!
+                menu_enabled[sub][item] = enabled;
+        }
+    }
+}
 static void enable_cycling_temples_if_allowed(int type) {
     int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
     menu_enabled[sub][0] = 1;
 }
-static void enable_if_allowed(int *enabled, int menu_int, int type) {
-    if (menu_int == type && scenario_building_allowed(type)) {
-        *enabled = 1;
+static void enable_if_allowed(int type) {
+    if (scenario_building_allowed(type)) {
+        enable_building(type, true);
         if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES)
             enable_cycling_temples_if_allowed(type);
-    }
+    } else
+        enable_building(type, false);
+}
+static void enable_normal() {
+    for (int i = 0; i < 236; i++)
+        enable_if_allowed(i);
+    return;
 }
 
-static void disable_raw(int *enabled, int menu_int, int type, int resource) {
-    if (type == menu_int && !empire_can_produce_resource(resource))
-        *enabled = 0;
+static void disable_raw(int type, int resource) {
+    if (!empire_can_produce_resource(resource))
+        enable_building(type, false);
 }
-static void disable_crafted(int *enabled, int menu_int, int type, int resource) {
-    if (type == menu_int && !empire_can_produce_resource_potentially(resource))
-        *enabled = 0;
+static void disable_crafted(int type, int resource) {
+    if (!empire_can_produce_resource_potentially(resource))
+        enable_building(type, false);
 }
-static void enable_normal(int *enabled, int type) {
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        int max = env_sizes().MAX_ALLOWED_BUILDINGS;
-        for (int i = 0; i < 236; i++)
-            enable_if_allowed(enabled, type, i);
-        return;
-//        return building_menu_enable_all();
-    }
-    enable_if_allowed(enabled, type, BUILDING_ROAD);
-    enable_if_allowed(enabled, type, BUILDING_DRAGGABLE_RESERVOIR);
-    enable_if_allowed(enabled, type, BUILDING_AQUEDUCT);
-    enable_if_allowed(enabled, type, BUILDING_FOUNTAIN);
-    enable_if_allowed(enabled, type, BUILDING_WELL);
-    enable_if_allowed(enabled, type, BUILDING_BARBER);
-    enable_if_allowed(enabled, type, BUILDING_BATHHOUSE);
-    enable_if_allowed(enabled, type, BUILDING_DOCTOR);
-    enable_if_allowed(enabled, type, BUILDING_HOSPITAL);
-    enable_if_allowed(enabled, type, BUILDING_MENU_SMALL_TEMPLES);
-    enable_if_allowed(enabled, type, BUILDING_MENU_LARGE_TEMPLES);
-    enable_if_allowed(enabled, type, BUILDING_ORACLE);
-    enable_if_allowed(enabled, type, BUILDING_SCHOOL);
-    enable_if_allowed(enabled, type, BUILDING_ACADEMY);
-    enable_if_allowed(enabled, type, BUILDING_LIBRARY);
-    enable_if_allowed(enabled, type, BUILDING_THEATER);
-    enable_if_allowed(enabled, type, BUILDING_AMPHITHEATER);
-    enable_if_allowed(enabled, type, BUILDING_COLOSSEUM);
-    enable_if_allowed(enabled, type, BUILDING_HIPPODROME);
-    enable_if_allowed(enabled, type, BUILDING_GLADIATOR_SCHOOL);
-    enable_if_allowed(enabled, type, BUILDING_LION_HOUSE);
-    enable_if_allowed(enabled, type, BUILDING_ACTOR_COLONY);
-    enable_if_allowed(enabled, type, BUILDING_CHARIOT_MAKER);
-    enable_if_allowed(enabled, type, BUILDING_FORUM);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
-    enable_if_allowed(enabled, type, BUILDING_GOVERNORS_HOUSE);
-    enable_if_allowed(enabled, type, BUILDING_GOVERNORS_VILLA);
-    enable_if_allowed(enabled, type, BUILDING_GOVERNORS_PALACE);
-    enable_if_allowed(enabled, type, BUILDING_SMALL_STATUE);
-    enable_if_allowed(enabled, type, BUILDING_MEDIUM_STATUE);
-    enable_if_allowed(enabled, type, BUILDING_LARGE_STATUE);
-    enable_if_allowed(enabled, type, BUILDING_GARDENS);
-    enable_if_allowed(enabled, type, BUILDING_PLAZA);
-    enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
-    enable_if_allowed(enabled, type, BUILDING_MISSION_POST);
-    enable_if_allowed(enabled, type, BUILDING_SHIPYARD);
-    enable_if_allowed(enabled, type, BUILDING_WHARF);
-    enable_if_allowed(enabled, type, BUILDING_DOCK);
-    enable_if_allowed(enabled, type, BUILDING_WALL);
-    enable_if_allowed(enabled, type, BUILDING_TOWER);
-    enable_if_allowed(enabled, type, BUILDING_GATEHOUSE);
-    enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
-    enable_if_allowed(enabled, type, BUILDING_FORT);
-    enable_if_allowed(enabled, type, BUILDING_MILITARY_ACADEMY);
-    enable_if_allowed(enabled, type, BUILDING_BARRACKS);
-    enable_if_allowed(enabled, type, BUILDING_DISTRIBUTION_CENTER_UNUSED);
-    enable_if_allowed(enabled, type, BUILDING_MENU_FARMS);
-    enable_if_allowed(enabled, type, BUILDING_MENU_RAW_MATERIALS);
-    enable_if_allowed(enabled, type, BUILDING_MENU_WORKSHOPS);
-    enable_if_allowed(enabled, type, BUILDING_MARKET);
-    enable_if_allowed(enabled, type, BUILDING_GRANARY);
-    enable_if_allowed(enabled, type, BUILDING_WAREHOUSE);
-    enable_if_allowed(enabled, type, BUILDING_LOW_BRIDGE);
-    enable_if_allowed(enabled, type, BUILDING_SHIP_BRIDGE);
-    if (type == BUILDING_TRIUMPHAL_ARCH) {
-        if (city_buildings_triumphal_arch_available())
-            *enabled = 1;
-    }
-    enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
-}
-
-static void enable_tutorial1_start(int *enabled, int type) {
-    enable_if_allowed(enabled, type, BUILDING_WELL);
-    enable_if_allowed(enabled, type, BUILDING_ROAD);
-}
-static void enable_tutorial1_after_fire(int *enabled, int type) {
-    enable_tutorial1_start(enabled, type);
-    enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
-    enable_if_allowed(enabled, type, BUILDING_MARKET);
-}
-static void enable_tutorial1_after_collapse(int *enabled, int type) {
-    enable_tutorial1_after_fire(enabled, type);
-    enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
-    enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
-}
-static void enable_tutorial2_start(int *enabled, int type) {
-    enable_if_allowed(enabled, type, BUILDING_WELL);
-    enable_if_allowed(enabled, type, BUILDING_ROAD);
-    enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
-    enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
-    enable_if_allowed(enabled, type, BUILDING_ROADBLOCK);
-    enable_if_allowed(enabled, type, BUILDING_MARKET);
-    enable_if_allowed(enabled, type, BUILDING_GRANARY);
-    enable_if_allowed(enabled, type, BUILDING_MENU_FARMS);
-    enable_if_allowed(enabled, type, BUILDING_MENU_SMALL_TEMPLES);
-}
-static void enable_tutorial2_up_to_250(int *enabled, int type) {
-    enable_tutorial2_start(enabled, type);
-    enable_if_allowed(enabled, type, BUILDING_DRAGGABLE_RESERVOIR);
-    enable_if_allowed(enabled, type, BUILDING_AQUEDUCT);
-    enable_if_allowed(enabled, type, BUILDING_FOUNTAIN);
-}
-static void enable_tutorial2_up_to_450(int *enabled, int type) {
-    enable_tutorial2_up_to_250(enabled, type);
-    enable_if_allowed(enabled, type, BUILDING_GARDENS);
-    enable_if_allowed(enabled, type, BUILDING_ACTOR_COLONY);
-    enable_if_allowed(enabled, type, BUILDING_THEATER);
-    enable_if_allowed(enabled, type, BUILDING_BATHHOUSE);
-    enable_if_allowed(enabled, type, BUILDING_SCHOOL);
-}
-static void enable_tutorial2_after_450(int *enabled, int type) {
-    enable_tutorial2_up_to_450(enabled, type);
-    enable_if_allowed(enabled, type, BUILDING_MENU_RAW_MATERIALS);
-    enable_if_allowed(enabled, type, BUILDING_MENU_WORKSHOPS);
-    enable_if_allowed(enabled, type, BUILDING_WAREHOUSE);
-    enable_if_allowed(enabled, type, BUILDING_FORUM);
-    enable_if_allowed(enabled, type, BUILDING_AMPHITHEATER);
-    enable_if_allowed(enabled, type, BUILDING_GLADIATOR_SCHOOL);
-}
-
-static void disable_resources(int *enabled, int type) {
+static void disable_resources() {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        disable_raw(enabled, type, BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
-        disable_raw(enabled, type, BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
-        disable_raw(enabled, type, BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
-        disable_raw(enabled, type, BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
-        disable_raw(enabled, type, BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
-        disable_raw(enabled, type, BUILDING_VINES_FARM, RESOURCE_VINES);
-        disable_raw(enabled, type, BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
-        disable_raw(enabled, type, BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
-        disable_raw(enabled, type, BUILDING_IRON_MINE, RESOURCE_IRON);
-        disable_raw(enabled, type, BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
-        disable_crafted(enabled, type, BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_C3);
-        disable_crafted(enabled, type, BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
-        disable_crafted(enabled, type, BUILDING_OIL_WORKSHOP, RESOURCE_OIL_C3);
-        disable_crafted(enabled, type, BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
-        disable_crafted(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_C3);
+        disable_raw(BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
+        disable_raw(BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
+        disable_raw(BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
+        disable_raw(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
+        disable_raw(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
+        disable_raw(BUILDING_VINES_FARM, RESOURCE_VINES);
+        disable_raw(BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
+        disable_raw(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
+        disable_raw(BUILDING_IRON_MINE, RESOURCE_IRON);
+        disable_raw(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
+        disable_crafted(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_C3);
+        disable_crafted(BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
+        disable_crafted(BUILDING_OIL_WORKSHOP, RESOURCE_OIL_C3);
+        disable_crafted(BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
+        disable_crafted(BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_C3);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        disable_raw(enabled, type, BUILDING_BARLEY_FARM, RESOURCE_BARLEY);
-        disable_raw(enabled, type, BUILDING_FLAX_FARM, RESOURCE_FLAX);
-        disable_raw(enabled, type, BUILDING_GRAIN_FARM, RESOURCE_GRAIN);
-        disable_raw(enabled, type, BUILDING_LETTUCE_FARM, RESOURCE_LETTUCE);
-        disable_raw(enabled, type, BUILDING_POMEGRANATES_FARM, RESOURCE_POMEGRANATES);
-        disable_raw(enabled, type, BUILDING_CHICKPEAS_FARM, RESOURCE_CHICKPEAS);
-        disable_raw(enabled, type, BUILDING_FIGS_FARM, RESOURCE_FIGS);
-        disable_raw(enabled, type, BUILDING_HENNA_FARM, RESOURCE_HENNA);
+        disable_raw(BUILDING_BARLEY_FARM, RESOURCE_BARLEY);
+        disable_raw(BUILDING_FLAX_FARM, RESOURCE_FLAX);
+        disable_raw(BUILDING_GRAIN_FARM, RESOURCE_GRAIN);
+        disable_raw(BUILDING_LETTUCE_FARM, RESOURCE_LETTUCE);
+        disable_raw(BUILDING_POMEGRANATES_FARM, RESOURCE_POMEGRANATES);
+        disable_raw(BUILDING_CHICKPEAS_FARM, RESOURCE_CHICKPEAS);
+        disable_raw(BUILDING_FIGS_FARM, RESOURCE_FIGS);
+        disable_raw(BUILDING_HENNA_FARM, RESOURCE_HENNA);
         //
-        disable_raw(enabled, type, BUILDING_HUNTING_LODGE, RESOURCE_GAMEMEAT);
+        disable_raw(BUILDING_HUNTING_LODGE, RESOURCE_GAMEMEAT);
         //
-        disable_raw(enabled, type, BUILDING_CLAY_PIT, RESOURCE_CLAY_PH);
-        disable_raw(enabled, type, BUILDING_TIMBER_YARD, RESOURCE_TIMBER_PH);
-        disable_raw(enabled, type, BUILDING_REED_GATHERER, RESOURCE_REEDS);
+        disable_raw(BUILDING_CLAY_PIT, RESOURCE_CLAY_PH);
+        disable_raw(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_PH);
+        disable_raw(BUILDING_REED_GATHERER, RESOURCE_REEDS);
         //
-        disable_raw(enabled, type, BUILDING_STONE_QUARRY, RESOURCE_STONE);
-        disable_raw(enabled, type, BUILDING_LIMESTONE_QUARRY, RESOURCE_LIMESTONE);
-        disable_raw(enabled, type, BUILDING_GRANITE_QUARRY, RESOURCE_GRANITE);
+        disable_raw(BUILDING_STONE_QUARRY, RESOURCE_STONE);
+        disable_raw(BUILDING_LIMESTONE_QUARRY, RESOURCE_LIMESTONE);
+        disable_raw(BUILDING_GRANITE_QUARRY, RESOURCE_GRANITE);
 //        disable_raw(enabled, type, BUILDING_UNUSED12, RESOURCE_UNUSED12);
-        disable_raw(enabled, type, BUILDING_SANDSTONE_QUARRY, RESOURCE_SANDSTONE);
+        disable_raw(BUILDING_SANDSTONE_QUARRY, RESOURCE_SANDSTONE);
 //        disable_raw(enabled, type, BUILDING_MARBLE_QUARRY_PH, RESOURCE_MARBLE_PH);
-        disable_raw(enabled, type, BUILDING_COPPER_MINE, RESOURCE_COPPER);
-        disable_raw(enabled, type, BUILDING_GEMSTONE_MINE, RESOURCE_GEMS);
+        disable_raw(BUILDING_COPPER_MINE, RESOURCE_COPPER);
+        disable_raw(BUILDING_GEMSTONE_MINE, RESOURCE_GEMS);
 
-        disable_crafted(enabled, type, BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_PH);
-        disable_crafted(enabled, type, BUILDING_JEWELS_WORKSHOP, RESOURCE_LUXURY_GOODS);
-        disable_crafted(enabled, type, BUILDING_LINEN_WORKSHOP, RESOURCE_LINEN);
-        disable_crafted(enabled, type, BUILDING_BEER_WORKSHOP, RESOURCE_BEER);
-        disable_crafted(enabled, type, BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
-        disable_crafted(enabled, type, BUILDING_BRICKS_WORKSHOP, RESOURCE_BRICKS);
-        disable_crafted(enabled, type, BUILDING_CATTLE_RANCH, RESOURCE_MEAT_PH);
-        disable_crafted(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_PH);
-        disable_crafted(enabled, type, BUILDING_CHARIOTS_WORKSHOP, RESOURCE_CHARIOTS);
+        disable_crafted(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_PH);
+        disable_crafted(BUILDING_JEWELS_WORKSHOP, RESOURCE_LUXURY_GOODS);
+        disable_crafted(BUILDING_LINEN_WORKSHOP, RESOURCE_LINEN);
+        disable_crafted(BUILDING_BEER_WORKSHOP, RESOURCE_BEER);
+        disable_crafted(BUILDING_PAPYRUS_WORKSHOP, RESOURCE_PAPYRUS);
+        disable_crafted(BUILDING_BRICKS_WORKSHOP, RESOURCE_BRICKS);
+        disable_crafted(BUILDING_CATTLE_RANCH, RESOURCE_MEAT_PH);
+        disable_crafted(BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_PH);
+        disable_crafted(BUILDING_CHARIOTS_WORKSHOP, RESOURCE_CHARIOTS);
 //        disable_crafted(enabled, type, BUILDING_OIL_WORKSHOP_PH, RESOURCE_OIL_PH);
-        disable_crafted(enabled, type, BUILDING_PAINT_WORKSHOP, RESOURCE_PAINT);
-        disable_crafted(enabled, type, BUILDING_LAMP_WORKSHOP, RESOURCE_LAMPS);
+        disable_crafted(BUILDING_PAINT_WORKSHOP, RESOURCE_PAINT);
+        disable_crafted(BUILDING_LAMP_WORKSHOP, RESOURCE_LAMPS);
     }
 }
 
-void building_menu_update(void) {
-    tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            int building_type = MENU_int[GAME_ENV][sub][item]; // cycle through each building, determine if it's allowed...
-            int *menu_item = &menu_enabled[sub][item];
-            // first 12 items always disabled
-            if (sub < 12)
-                *menu_item = 0;
-            else
-                *menu_item = 1;
+#include "scenario/property.h"
 
-            if (building_type >= BUILDING_HOUSE_VACANT_LOT && building_type <= BUILDING_HOUSE_LUXURY_PALACE)
-                *menu_item = 1;
-            if (building_type == BUILDING_CLEAR_LAND)
-                *menu_item = 1;
-            if (building_type == BUILDING_ROAD)
-                *menu_item = 1;
-
-            enable_normal(menu_item, building_type); // first, enabled as normal
-
-            switch (tutorial_buttons) {
-                case TUT1_BUILD_START:
-                    enable_tutorial1_start(menu_item, building_type);
-                    break;
-                case TUT1_BUILD_AFTER_FIRE:
-                    enable_tutorial1_after_fire(menu_item, building_type);
-                    break;
-                case TUT1_BUILD_AFTER_COLLAPSE:
-                    enable_tutorial1_after_collapse(menu_item, building_type);
-                    break;
-                case TUT2_BUILD_START:
-                    enable_tutorial2_start(menu_item, building_type);
-                    break;
-                case TUT2_BUILD_UP_TO_250:
-                    enable_tutorial2_up_to_250(menu_item, building_type);
-                    break;
-                case TUT2_BUILD_UP_TO_450:
-                    enable_tutorial2_up_to_450(menu_item, building_type);
-                    break;
-                case TUT2_BUILD_AFTER_450:
-                    enable_tutorial2_after_450(menu_item, building_type);
-                    break;
-//                default:
-//                    enable_normal(menu_item, building_type);
-//                    break;
-            }
-            disable_resources(menu_item, building_type);
-        }
+void building_menu_update(int build_set) {
+    if (build_set == BUILDSET_NORMAL) {
+        if (scenario_is_tutorial_1())
+            build_set = BUILDSET_TUT1_START;
+        else if (scenario_is_tutorial_2())
+            build_set = BUILDSET_TUT2_START;
+        else if (scenario_is_tutorial_3())
+            build_set = BUILDSET_TUT3_START;
     }
 
-//    building_menu_enable_all(); // temp
+    switch (build_set) {
+        case BUILDSET_TUT1_START:
+            building_menu_disable_all();
+            break;
+        case BUILDSET_TUT1_FIRE_C3:
+            enable_building(BUILDING_PREFECTURE);
+            enable_building(BUILDING_MARKET);
+            break;
+        case BUILDSET_TUT1_FIRE_PH:
+            enable_building(BUILDING_PREFECTURE);
+            break;
+        case BUILDSET_TUT1_FOOD:
+            enable_building(BUILDING_HUNTING_LODGE);
+            enable_building(BUILDING_GRANARY);
+            enable_building(BUILDING_MARKET);
+            break;
+        case BUILDSET_TUT1_COLLAPSE_C3:
+            enable_building(BUILDING_ENGINEERS_POST);
+            enable_building(BUILDING_SENATE_UPGRADED);
+            enable_building(BUILDING_ROADBLOCK);
+            break;
+        case BUILDSET_TUT1_COLLAPSE_PH:
+            enable_building(BUILDING_ENGINEERS_POST);
+            break;
+        case BUILDSET_TUT2_START:
+            building_menu_disable_all();
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                enable_building(BUILDING_PREFECTURE);
+                enable_building(BUILDING_ENGINEERS_POST);
+                enable_building(BUILDING_SENATE_UPGRADED);
+                enable_building(BUILDING_ROADBLOCK);
+                enable_building(BUILDING_MARKET);
+                enable_building(BUILDING_GRANARY);
+                enable_building(BUILDING_MENU_FARMS);
+                enable_building(BUILDING_MENU_SMALL_TEMPLES);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                enable_building(BUILDING_PREFECTURE);
+                enable_building(BUILDING_ENGINEERS_POST);
+                enable_building(BUILDING_MARKET);
+                enable_building(BUILDING_GRANARY);
+                enable_building(BUILDING_HUNTING_LODGE);
+                enable_building(BUILDING_GOLD_MINE);
+                enable_building(BUILDING_VILLAGE_PALACE);
+            }
+            break;
+        case BUILDSET_TUT2_UP_TO_250:
+            enable_building(BUILDING_DRAGGABLE_RESERVOIR);
+            enable_building(BUILDING_AQUEDUCT);
+            enable_building(BUILDING_FOUNTAIN);
+            break;
+        case BUILDSET_TUT2_UP_TO_450:
+            enable_building(BUILDING_GARDENS);
+            enable_building(BUILDING_ACTOR_COLONY);
+            enable_building(BUILDING_THEATER);
+            enable_building(BUILDING_BATHHOUSE);
+            enable_building(BUILDING_SCHOOL);
+            break;
+        case BUILDSET_TUT2_AFTER_450:
+            enable_building(BUILDING_MENU_RAW_MATERIALS);
+            enable_building(BUILDING_MENU_WORKSHOPS);
+            enable_building(BUILDING_WAREHOUSE);
+            enable_building(BUILDING_FORUM);
+            enable_building(BUILDING_AMPHITHEATER);
+            enable_building(BUILDING_GLADIATOR_SCHOOL);
+            break;
+        case BUILDSET_TUT3_START:
+            building_menu_disable_all();
+            break;
+        default:
+            enable_normal();
+            break;
+    }
+
+    // these are always enabled
+    enable_if_allowed(BUILDING_HOUSE_VACANT_LOT);
+    enable_if_allowed(BUILDING_CLEAR_LAND);
+    enable_if_allowed(BUILDING_ROAD);
+    enable_if_allowed(BUILDING_WELL);
+
+    // disable resources that aren't available on map
+    disable_resources();
 
     changed = 1;
 }
@@ -374,7 +312,6 @@ int building_menu_count_items(int submenu) {
     for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
         if (menu_enabled[submenu][item] && MENU_int[GAME_ENV][submenu][item] > 0)
             count++;
-
     }
     return count;
 }

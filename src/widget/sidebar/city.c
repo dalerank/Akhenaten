@@ -242,17 +242,18 @@ static void draw_buttons_expanded(int x_offset) {
     }
 }
 
-static void enable_building_buttons(void) {
-    for (int i = 0; i < 12; i++) {
+static void refresh_build_menu_buttons(void) {
+    int num_buttons = 12;
+//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//        num_buttons = 22;
+    for (int i = 0; i < num_buttons; i++) {
         buttons_build_expanded[GAME_ENV][i].enabled = 1;
         if (building_menu_count_items(buttons_build_expanded[GAME_ENV][i].parameter1) <= 0)
             buttons_build_expanded[GAME_ENV][i].enabled = 0;
 
-
         buttons_build_collapsed[GAME_ENV][i].enabled = 1;
         if (building_menu_count_items(buttons_build_collapsed[GAME_ENV][i].parameter1) <= 0)
             buttons_build_collapsed[GAME_ENV][i].enabled = 0;
-
     }
 }
 static void draw_collapsed_background(void) {
@@ -298,7 +299,7 @@ void widget_sidebar_city_draw_background(void) {
 }
 void widget_sidebar_city_draw_foreground(void) {
     if (building_menu_has_changed())
-        enable_building_buttons();
+        refresh_build_menu_buttons();
 
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
