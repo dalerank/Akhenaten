@@ -26,7 +26,7 @@ void sidebar_common_draw_relief(int x_offset, int y_offset, int image, int is_co
             image_draw(image_base + image_offset + is_collapsed, x_offset, y_offset);
             y_offset += 120;
         } else {
-            image_draw(image_base + image_offset + image_offset + is_collapsed, x_offset, y_offset);
+            image_draw(image_base + image_offset + image_offset + is_collapsed, x_offset, y_offset + 6);
             y_offset += 285;
         }
     }

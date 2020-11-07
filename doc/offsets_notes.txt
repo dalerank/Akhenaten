@@ -71,6 +71,8 @@ no lookup: 12.113/44.497 entries
 67 84 --> breeding grounds
 
 58 64 --> ???
+129 61
+15 56
 
 
 ================
@@ -243,10 +245,86 @@ engineer
 
 ====================
 
-building_extra_highest_id_ever (97012)
-random_iv (...)
-...
 figure names
+..
+message extra
+..
+figure sequence
+..
+city sounds
+
+====================
+
+9600 total ticks (year)
+
+
+break: month-day-tick
+0		0-0-0;6-0-0
+1		   8-2-19;  8-2-2;   8-2-10
+2	10-11-20; 10-11-28; 10-11-11
+m	11-8-0
+
+675
+150
+1750
+150
+700
+
+5th Aug tick 21: phase 1
+2nd Sept tick 33: phase 2
+
+1: 675 harvest
+2: x
+3: 2050 - 2*x
+4: x
+5: 700 cooldown
+6: 6375 nothing
+
+inundation time: 2.5 * quality
+quality:
+0:   0-2050-0
+20:  50-1950-50
+60:  150-1750-150
+80:  200-
+100: 250-
+110: 275-1500-275
+
+--: 6
+675: 1
+2050: 3
+660: 5 --> new prediction message
++40: 5
+
+
+1: 10 days before flood period -> harvest time
+2: flooding!
+3: inundated...
+4: contracting!
+5: contraction done
+6: new nilometer prediction -> farming time
+
+50 ticks/day
+16 day/month
+12 months/year
+
+day 86 (6th June - 10 days before flood)
+tick 17: start harvesting animation
+
+day 87 (7th June - 9 days before flood)
+tick 0: next harvesting animation stage
+tick 31: spawn cartpushers
+
+day 99 (3rd July - 3 days after flood)
+tick 28: flood commences!
+day 102 (6th July - 6 days after flood)
+tick 28: flood maximum!
+
+day 128 (+60, corrected) flood period end
+day 133 (5th Sept - 5 dats after flood period end)
+tick 19: flood starts contracting (first couple tiles?)
+day 134 (6th Sept - 6 days after flood period end)
+tick 19: flood goes away!
+
 
 150: early june
 165: late june
@@ -256,7 +334,6 @@ figure names
 225: late august
 240: early september
 255: late september
-
 
 ====================
 

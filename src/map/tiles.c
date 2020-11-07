@@ -951,7 +951,6 @@ void map_tiles_set_water(int x, int y) { // todo: broken
 
 #define PH_FLOODPLAIN_GROWTH_MAX 6;
 int floodplain_growth_advance = 0;
-//int floodplain_growth_limit = PH_FLOODPLAIN_GROWTH_MAX;
 static void advance_floodplain_growth_tile(int x, int y, int grid_offset) {
 //    if (map_get_shoreorder(grid_offset) == floodplain_growth_advance + 1) {
         int curr = map_get_growth(grid_offset);
@@ -963,8 +962,6 @@ static void advance_floodplain_growth_tile(int x, int y, int grid_offset) {
 //    }
 }
 void map_advance_floodplain_growth() {
-//    if (floodplain_growth_limit <= 0)
-//        return;
     foreach_floodplain_order(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
@@ -972,13 +969,8 @@ void map_advance_floodplain_growth() {
     foreach_floodplain_order(48 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
-    if (floodplain_growth_advance >= 12) {
+    if (floodplain_growth_advance >= 12)
         floodplain_growth_advance = 0;
-//        floodplain_growth_limit--;
-    }
-}
-void map_reset_floodplain_growth() {
-//    floodplain_growth_limit = PH_FLOODPLAIN_GROWTH_MAX;
 }
 
 static void set_earthquake_image(int x, int y, int grid_offset) {
@@ -1046,7 +1038,6 @@ static const int offsets_PH[4][6] = {
         {OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, 1), OFFSET_PH(1, 1), OFFSET_PH(0, -1), OFFSET_PH(1, -1)},
         {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(0, 0), OFFSET_PH(0, 1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1)},
 };
-
 
 static int get_access_ramp_image_offset(int x, int y) {
     if (!map_grid_is_inside(x, y, 1))
@@ -1308,8 +1299,8 @@ static void set_empty_land_pass3(int x, int y, int grid_offset) {
         else if (ph_grass == 12) {
             if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR))
                 return set_empty_land_image(x, y, 1, image_base + 12 - 1 + 12 * (map_random_get(grid_offset) % 3));
-            if (map_is_3x3_tallgrass(x, y, grid_offset)) // randomly do flat isometric tile
-                return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 23));
+//            if (map_is_4x4_tallgrass(x, y, grid_offset)) // randomly do flat isometric tile
+//                return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 23));
             return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
         } else if (ph_grass >= 16)
             return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + ph_grass - 16);

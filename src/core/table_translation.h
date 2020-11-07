@@ -6,30 +6,30 @@ static int groupid_translation_table_ph[] = {
         1, 1, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         2, 2, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         3, 3, // data/Pharaoh_Terrain.sg3 Land1a.bmp
-        11, 77, // data/Pharaoh_General.sg3 paneling.bmp
+        11, 11 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         12, 121 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         13, 155, // data/Pharaoh_General.sg3 paneling.bmp
         14, 308, // data/Pharaoh_Unloaded.sg3 title.bmp
-        15, 81, // data/Pharaoh_General.sg3 paneling.bmp
+        15, 15 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         16, 333, // data/Pharaoh_Fonts.sg3 fonts.bmp
         19, 9, // irrigation ditch
         20, 20, // data/Pharaoh_Terrain.sg3 Land2a.bmp
         21, 21, // data/Pharaoh_Terrain.sg3 Land2a.bmp
-        22, 88, // data/Pharaoh_General.sg3 Commerce.bmp
+        22, 22 + 66, // data/Pharaoh_General.sg3 Commerce.bmp
         23, 23 + 66, // well
         24, 24, // data/Pharaoh_Terrain.sg3 Land2a.bmp
         25, 50, // water lift
-        26, 92, // data/Pharaoh_General.sg3 Housng1a.bmp
-        27, 93, // data/Pharaoh_General.sg3 Housng1a.bmp
-        28, 94, // data/Pharaoh_General.sg3 Housng1a.bmp
-        29, 95, // data/Pharaoh_General.sg3 Housng1a.bmp
-        30, 96, // data/Pharaoh_General.sg3 Housng1a.bmp
-        31, 97, // data/Pharaoh_General.sg3 Housng1a.bmp
-        32, 98, // data/Pharaoh_General.sg3 Housng1a.bmp
-        33, 99, // data/Pharaoh_General.sg3 Housng1a.bmp
-        34, 100, // data/Pharaoh_General.sg3 Housng1a.bmp
-        35, 101, // data/Pharaoh_General.sg3 Housng1a.bmp
-        36, 102, // data/Pharaoh_General.sg3 Housng1a.bmp
+        26, 26 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        27, 27 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        28, 28 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        29, 29 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        30, 30 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        31, 31 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        32, 32 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        33, 33 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        34, 34 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        35, 35 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        36, 36 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
         37, 225 + 66, // farmhouse
         38, 187 + 66, // stone quarry
         39, 170 + 66, // limestone quarry
@@ -66,29 +66,29 @@ static int groupid_translation_table_ph[] = {
         79, 18, // fishing wharf
         80, 316, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
         81, 81 + 66, // architect post
-        82, 148, // data/Pharaoh_General.sg3 Warehouse.bmp
-        83, 149, // data/Pharaoh_General.sg3 Warehouse.bmp
-        84, 150, // data/Pharaoh_General.sg3 Warehouse.bmp
+        82, 82 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
+        83, 83 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
+        84, 84 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
         85, 85 + 66, // personal mansion
         86, 86 + 66, // family mansion
         87, 87 + 66, // dynasty mansion
         88, 71 + 341, // bathhouse worker (physician)
-        89, 155, // data/Pharaoh_General.sg3 paneling.bmp
-        90, 156, // data/Pharaoh_General.sg3 paneling.bmp
+        89, 89 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        90, 90 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         91, 197 + 341,
         92, 136 + 66,
-        93, 159, // data/Pharaoh_General.sg3 paneling.bmp
-        94, 160, // data/Pharaoh_General.sg3 paneling.bmp
+        93, 93 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        94, 94 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         95, 315, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
-        96, 162, // data/Pharaoh_General.sg3 paneling.bmp
+        96, 96 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         97, 77 + 341, // cartpusher cart
         98, 130 + 341, // actor (juggler)
         99, 99 + 66, // granary
 //        100, 37 + 66, // farmland
         100, 37 + 66, // farmland
         101, 128 + 341, // lion tamer (dancer)
-        102, 168, // data/Pharaoh_General.sg3 Sprites.bmp
-        103, 169, // data/Pharaoh_General.sg3 Sprites.bmp
+        102, 102 + 66, // data/Pharaoh_General.sg3 Sprites.bmp
+        103, 103 + 66, // data/Pharaoh_General.sg3 Sprites.bmp
         104, 41 + 341, // tax collector
         105, 57 + 341, // school child (scribe)
         106, 16 + 341, // market lady
@@ -135,6 +135,7 @@ static int groupid_translation_table_ph[] = {
         154, 205, // data/Pharaoh_General.sg3 Sprites.bmp
         157, 223, // data/Pharaoh_General.sg3 paneling.bmp
         158, 224, // data/Pharaoh_General.sg3 paneling.bmp
+        159, 10 + 294, // data/Pharaoh_Unloaded.sg3 History1A.bmp
         160, 303, // data/Pharaoh_Unloaded.sg3 scoreb.BMP
         161, 302, // data/Pharaoh_Unloaded.sg3 Briefing1a.bmp
         162, 301, // data/Pharaoh_Unloaded.sg3 C3title.BMP

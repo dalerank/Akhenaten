@@ -89,6 +89,8 @@ static void init(intermezzo_type type, void (*callback)(void)) {
     }
 }
 
+#include "core/game_environment.h"
+
 static void draw_background(void) {
     graphics_clear_screens();
     int x_offset = (screen_width() - 1024) / 2;
@@ -101,16 +103,21 @@ static void draw_background(void) {
         if (scenario_is_custom())
             image_draw(image_base + 1, x_offset, y_offset);
         else {
-            image_draw(image_base + 1 + 2 * mission, x_offset, y_offset);
+            if (GAME_ENV == ENGINE_ENV_C3)
+                image_draw(image_base + 1 + 2 * mission, x_offset, y_offset);
+            else
+                image_draw(image_base + 1, x_offset, y_offset);
         }
     } else if (data.type == INTERMEZZO_FIRED)
         image_draw(image_base, x_offset, y_offset);
     else if (data.type == INTERMEZZO_WON) {
         if (scenario_is_custom())
             image_draw(image_base + 2, x_offset, y_offset);
-        else {
-            image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
-        }
+        else
+            if (GAME_ENV == ENGINE_ENV_C3)
+                image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
+            else
+                image_draw(image_base + 2, x_offset, y_offset);
     }
 }
 

@@ -143,11 +143,37 @@ enum {
     MESSAGE_FISHING_BOAT_BLOCKED = 118,
     MESSAGE_TUTORIAL_HEALTH = 119,
     MESSAGE_LOCAL_UPRISING_MARS = 121,
+
+    //
+
+    MESSAGE_TUTORIAL_FOOD_OR_FAMINE = 239,
+    MESSAGE_TUTORIAL_ENTERTAINMENT = 240,
+    MESSAGE_TUTORIAL_GOLD_AND_CRIME = 241,
+    MESSAGE_TUTORIAL_FARMING_ALONG_THE_NILE = 242,
+    MESSAGE_TUTORIAL_DEVELOPING_CULTURE = 243,
+    MESSAGE_TUTORIAL_GETTING_STARTED = 244,
+    MESSAGE_TUTORIAL_SOLDIERS_AND_FORT = 245,
+    MESSAGE_TUTORIAL_AT_WATERS_EDGE = 246,
+    MESSAGE_TUTORIAL_AT_WATERS_EDGE_2 = 247,
+    MESSAGE_TUTORIAL_THE_FINER_THINGS = 248,
+    MESSAGE_TUTORIAL_HOUSING_AND_ROADS = 249,
+    MESSAGE_TUTORIAL_BASIC_HEALTHCARE = 250,
+    MESSAGE_TUTORIAL_REQUESTS_FROM_OTHER_CITIES = 251,
+    MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE = 252,
+    MESSAGE_TUTORIAL_COLLAPSED_BUILDING = 253,
+    MESSAGE_TUTORIAL_EDUCATION = 254,
+    MESSAGE_TUTORIAL_CLEAN_WATER = 255,
+    MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES = 256,
+    MESSAGE_TUTORIAL_MONUMENTS_AND_MORE = 257,
+    MESSAGE_TUTORIAL_GODS_OF_EGYPT = 258,
+    MESSAGE_TUTORIAL_INDUSTRY = 259,
+    MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES = 260,
 };
 
 typedef struct {
     int sequence;
-    int message_type;
+//    int message_type;
+    int message_id;
     int year;
     int month;
     int param1;
@@ -163,7 +189,7 @@ void city_message_disable_sound_for_next_message(void);
 
 void city_message_apply_sound_interval(int category);
 
-void city_message_post(int use_popup, int message_type, int param1, int param2);
+void city_message_post(int use_popup, int message_id, int param1, int param2);
 
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
 
@@ -173,7 +199,7 @@ void city_message_process_queue(void);
 
 void city_message_sort_and_compact(void);
 
-int city_message_get_text_id(int message_type);
+int city_message_get_text_id(int message_id);
 
 int city_message_get_advisor(int message_type);
 

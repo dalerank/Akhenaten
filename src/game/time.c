@@ -1,12 +1,10 @@
 #include "time.h"
 
-static struct {
-    int tick; // 50 ticks in a day
-    int day; // 16 days in a month
-    int month; // 12 months in a year
-    int year;
-    int total_days;
-} data;
+time_data data;
+
+time_data* give_me_da_time() {
+    return &data;
+}
 
 void game_time_init(int year) {
     data.tick = 0;
@@ -32,8 +30,12 @@ int game_time_year(void) {
     return data.year;
 }
 
+#include "core/game_environment.h"
+
 int game_time_advance_tick(void) {
     if (++data.tick >= 50) {
+        if (GAME_ENV == ENGINE_ENV_PHARAOH && data.tick == 50)
+            return 0;
         data.tick = 0;
         return 1;
     }

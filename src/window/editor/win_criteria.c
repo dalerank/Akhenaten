@@ -75,29 +75,29 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 50, 66, 141, FONT_NORMAL_BLACK);
     button_border_draw(316, 132, 80, 30, focus_button_id == 1);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_culture_enabled(), 316, 141, 80,
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_culture(), 316, 141, 80,
                             FONT_NORMAL_BLACK);
     button_border_draw(416, 132, 180, 30, focus_button_id == 2);
-    text_draw_number_centered(scenario_criteria_culture(), 416, 141, 180, FONT_NORMAL_BLACK);
+    text_draw_number_centered(winning_culture(), 416, 141, 180, FONT_NORMAL_BLACK);
 
     lang_text_draw(44, 51, 66, 181, FONT_NORMAL_BLACK);
     button_border_draw(316, 172, 80, 30, focus_button_id == 3);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_prosperity_enabled(), 316, 181, 80,
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_prosperity(), 316, 181, 80,
                             FONT_NORMAL_BLACK);
     button_border_draw(416, 172, 180, 30, focus_button_id == 4);
-    text_draw_number_centered(scenario_criteria_prosperity(), 416, 181, 180, FONT_NORMAL_BLACK);
+    text_draw_number_centered(winning_prosperity(), 416, 181, 180, FONT_NORMAL_BLACK);
 
     lang_text_draw(44, 52, 66, 221, FONT_NORMAL_BLACK);
     button_border_draw(316, 212, 80, 30, focus_button_id == 5);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_peace_enabled(), 316, 221, 80, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_peace(), 316, 221, 80, FONT_NORMAL_BLACK);
     button_border_draw(416, 212, 180, 30, focus_button_id == 6);
-    text_draw_number_centered(scenario_criteria_peace(), 416, 221, 180, FONT_NORMAL_BLACK);
+    text_draw_number_centered(winning_peace(), 416, 221, 180, FONT_NORMAL_BLACK);
 
     lang_text_draw(44, 53, 66, 261, FONT_NORMAL_BLACK);
     button_border_draw(316, 252, 80, 30, focus_button_id == 7);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_favor_enabled(), 316, 261, 80, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_favor(), 316, 261, 80, FONT_NORMAL_BLACK);
     button_border_draw(416, 252, 180, 30, focus_button_id == 8);
-    text_draw_number_centered(scenario_criteria_favor(), 416, 261, 180, FONT_NORMAL_BLACK);
+    text_draw_number_centered(winning_favor(), 416, 261, 180, FONT_NORMAL_BLACK);
 
     lang_text_draw(44, 54, 66, 301, FONT_NORMAL_BLACK);
     button_border_draw(316, 292, 80, 30, focus_button_id == 9);
@@ -119,10 +119,10 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 56, 66, 381, FONT_NORMAL_BLACK);
     button_border_draw(316, 372, 80, 30, focus_button_id == 13);
-    lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_population_enabled(), 316, 381, 80,
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_population(), 316, 381, 80,
                             FONT_NORMAL_BLACK);
     button_border_draw(416, 372, 180, 30, focus_button_id == 14);
-    text_draw_number_centered(scenario_criteria_population(), 416, 381, 180, FONT_NORMAL_BLACK);
+    text_draw_number_centered(winning_population(), 416, 381, 180, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }

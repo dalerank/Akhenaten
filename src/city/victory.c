@@ -31,39 +31,47 @@ int city_victory_state(void) {
     return data.state;
 }
 
+#include "buildings.h"
+
 static int determine_victory_state(void) {
     int state = VICTORY_STATE_WON;
     int has_criteria = 0;
 
-    if (scenario_criteria_culture_enabled()) {
+    if (winning_culture()) {
         has_criteria = 1;
-        if (city_data.ratings.culture < scenario_criteria_culture())
+        if (city_data.ratings.culture < winning_culture())
             state = VICTORY_STATE_NONE;
-
     }
-    if (scenario_criteria_prosperity_enabled()) {
+    if (winning_prosperity()) {
         has_criteria = 1;
-        if (city_data.ratings.prosperity < scenario_criteria_prosperity())
+        if (city_data.ratings.prosperity < winning_prosperity())
             state = VICTORY_STATE_NONE;
-
     }
-    if (scenario_criteria_peace_enabled()) {
+    if (winning_peace()) {
         has_criteria = 1;
-        if (city_data.ratings.peace < scenario_criteria_peace())
+        if (city_data.ratings.peace < winning_peace())
             state = VICTORY_STATE_NONE;
-
     }
-    if (scenario_criteria_favor_enabled()) {
+    if (winning_favor()) {
         has_criteria = 1;
-        if (city_data.ratings.favor < scenario_criteria_favor())
+        if (city_data.ratings.favor < winning_favor())
             state = VICTORY_STATE_NONE;
-
     }
-    if (scenario_criteria_population_enabled()) {
+    if (winning_population()) {
         has_criteria = 1;
-        if (city_data.population.population < scenario_criteria_population())
+        if (city_data.population.population < winning_population())
             state = VICTORY_STATE_NONE;
-
+    }
+    if (winning_housing()) {
+        has_criteria = 1;
+        int houses_of_required_level = 0;
+        for (int i = 0; i < building_get_highest_id(); i++) {
+            building *b = building_get(i);
+            if (b->state == BUILDING_STATE_VALID && b->type == winning_houselevel() + BUILDING_HOUSE_SMALL_TENT)
+                houses_of_required_level++;
+        }
+        if (houses_of_required_level < winning_housing())
+            state = VICTORY_STATE_NONE;
     }
 
     if (!has_criteria)

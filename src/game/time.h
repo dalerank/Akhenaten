@@ -3,6 +3,14 @@
 
 #include "core/buffer.h"
 
+typedef struct time_data {
+    int tick; // 50 ticks in a day
+    int day; // 16 days in a month
+    int month; // 12 months in a year
+    int year;
+    int total_days;
+} time_data;
+
 /**
  * @file
  * Game time.
@@ -72,5 +80,7 @@ void game_time_save_state(buffer *buf);
  * @param buf Buffer
  */
 void game_time_load_state(buffer *buf);
+
+time_data* give_me_da_time();
 
 #endif // GAME_TIME_H

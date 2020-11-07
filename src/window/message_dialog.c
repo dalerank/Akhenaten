@@ -107,7 +107,6 @@ static void set_city_message(int year, int month,
     player_message.message_advisor = message_advisor;
     player_message.use_popup = use_popup;
 }
-
 static void init(int text_id, void (*background_callback)(void)) {
     scroll_drag_end();
     for (int i = 0; i < MAX_HISTORY; i++) {
@@ -130,16 +129,24 @@ static void init(int text_id, void (*background_callback)(void)) {
         video_init();
 
 }
-
 static int resource_image(int resource) {
     int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
     image_id += resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     return image_id;
 }
-
 static int is_problem_message(const lang_message *msg) {
     return msg->type == TYPE_MESSAGE &&
            (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION);
+}
+static int get_message_image_id(const lang_message *msg) {
+    if (!msg->image.id)
+        return 0;
+    else if (data.text_id == 0) {
+        // message id = 0 ==> "about": fixed image position
+        return image_id_from_group(GROUP_BIG_PEOPLE);
+    } else {
+        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
+    }
 }
 
 static void draw_city_message_text(const lang_message *msg) {
@@ -223,18 +230,6 @@ static void draw_city_message_text(const lang_message *msg) {
         }
     }
 }
-
-static int get_message_image_id(const lang_message *msg) {
-    if (!msg->image.id)
-        return 0;
-    else if (data.text_id == 0) {
-        // message id = 0 ==> "about": fixed image position
-        return image_id_from_group(GROUP_BIG_PEOPLE);
-    } else {
-        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
-    }
-}
-
 static void draw_title(const lang_message *msg) {
     if (!msg->title.text)
         return;
@@ -263,7 +258,6 @@ static void draw_title(const lang_message *msg) {
 
     }
 }
-
 static void draw_subtitle(const lang_message *msg) {
     if (msg->subtitle.x && msg->subtitle.text) {
         int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
@@ -275,7 +269,6 @@ static void draw_subtitle(const lang_message *msg) {
 
     }
 }
-
 static void draw_content(const lang_message *msg) {
     if (!msg->content.text)
         return;
@@ -284,20 +277,17 @@ static void draw_content(const lang_message *msg) {
     data.text_width_blocks = rich_text_init(msg->content.text,
                                             data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks,
                                             1);
-
     // content!
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
-    graphics_set_clip_rectangle(data.x_text + 3, data.y_text + 3,
-                                16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
+    graphics_set_clip_rectangle(data.x_text + 3, data.y_text + 3, 16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6);
     rich_text_clear_links();
 
     if (msg->type == TYPE_MESSAGE)
         draw_city_message_text(msg);
-    else {
+    else
         rich_text_draw(msg->content.text,
                        data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16,
                        data.text_height_blocks - 1, 0);
-    }
     graphics_reset_clip_rectangle();
 }
 
@@ -313,7 +303,6 @@ static void draw_background_normal(void) {
     draw_subtitle(msg);
     draw_content(msg);
 }
-
 static void draw_background_video(void) {
     const lang_message *msg = lang_get_message(data.text_id);
     data.x = 32;
@@ -390,7 +379,6 @@ static void draw_background_video(void) {
 
     draw_foreground_video();
 }
-
 static void draw_background(void) {
     if (data.background_callback)
         data.background_callback();
@@ -448,7 +436,6 @@ static void draw_foreground_normal(void) {
                        1);
     rich_text_draw_scrollbar();
 }
-
 static void draw_foreground_video(void) {
     video_draw(data.x + 8, data.y + 8);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
@@ -458,7 +445,6 @@ static void draw_foreground_video(void) {
         image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
 
 }
-
 static void draw_foreground(void) {
     graphics_in_dialog();
     if (data.show_video)
@@ -484,7 +470,6 @@ static int handle_input_video(const mouse *m_dialog, const lang_message *msg) {
     }
     return 0;
 }
-
 static int handle_input_normal(const mouse *m_dialog, const lang_message *msg) {
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
             m_dialog, data.x + 16, data.y + 16 * msg->height_blocks - 36, &image_button_back, 1, 0)) {
@@ -523,7 +508,6 @@ static int handle_input_normal(const mouse *m_dialog, const lang_message *msg) {
     }
     return 0;
 }
-
 static void handle_input(const mouse *m, const hotkeys *h) {
     data.focus_button_id = 0;
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -540,6 +524,13 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
 }
 
+static void cleanup(void) {
+    if (data.show_video) {
+        video_stop();
+        data.show_video = 0;
+    }
+    player_message.message_advisor = 0;
+}
 static void button_back(int param1, int param2) {
     if (data.num_history > 0) {
         data.num_history--;
@@ -548,33 +539,21 @@ static void button_back(int param1, int param2) {
         window_invalidate();
     }
 }
-
-static void cleanup(void) {
-    if (data.show_video) {
-        video_stop();
-        data.show_video = 0;
-    }
-    player_message.message_advisor = 0;
-}
-
 static void button_close(int param1, int param2) {
     cleanup();
     window_go_back();
     window_invalidate();
 }
-
 static void button_help(int param1, int param2) {
     button_close(0, 0);
     window_message_dialog_show(MESSAGE_DIALOG_HELP, data.background_callback);
 }
-
 static void button_advisor(int advisor, int param2) {
     cleanup();
     if (!window_advisors_show_advisor(advisor))
         window_city_show();
 
 }
-
 static void button_go_to_problem(int param1, int param2) {
     cleanup();
     const lang_message *msg = lang_get_message(data.text_id);
@@ -610,9 +589,7 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void)) 
     init(text_id, background_callback);
     window_show(&window);
 }
-
-void window_message_dialog_show_city_message(int text_id, int year, int month,
-                                             int param1, int param2, int message_advisor, int use_popup) {
+void window_message_dialog_show_city_message(int text_id, int year, int month, int param1, int param2, int message_advisor, int use_popup) {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
     window_message_dialog_show(text_id, window_city_draw_all);
 }

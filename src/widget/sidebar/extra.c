@@ -62,17 +62,15 @@ static int calculate_displayable_info(int info_to_display, int available_height)
             available_height -= EXTRA_INFO_HEIGHT_GAME_SPEED;
             result |= SIDEBAR_EXTRA_DISPLAY_GAME_SPEED;
         }
-    } else {
+    } else
         return result;
-    }
     if (available_height >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
             available_height -= EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
             result |= SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT;
         }
-    } else {
+    } else
         return result;
-    }
     if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
             available_height -= EXTRA_INFO_HEIGHT_RATINGS;
@@ -107,20 +105,20 @@ static void set_extra_info_objectives(void) {
 
     if (scenario_is_open_play())
         return;
-    if (scenario_criteria_culture_enabled())
-        data.culture.target = scenario_criteria_culture();
+    if (winning_culture())
+        data.culture.target = winning_culture();
 
-    if (scenario_criteria_prosperity_enabled())
-        data.prosperity.target = scenario_criteria_prosperity();
+    if (winning_prosperity())
+        data.prosperity.target = winning_prosperity();
 
-    if (scenario_criteria_peace_enabled())
-        data.peace.target = scenario_criteria_peace();
+    if (winning_peace())
+        data.peace.target = winning_peace();
 
-    if (scenario_criteria_favor_enabled())
-        data.favor.target = scenario_criteria_favor();
+    if (winning_favor())
+        data.favor.target = winning_favor();
 
-    if (scenario_criteria_population_enabled())
-        data.population.target = scenario_criteria_population();
+    if (winning_population())
+        data.population.target = winning_population();
 
 }
 static int update_extra_info_value(int value, int *field) {
@@ -158,15 +156,15 @@ static int update_extra_info(int is_background) {
 
 #include "core/game_environment.h"
 
-static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj,
-                                     int cut_off_at_parenthesis) {
+static int draw_extra_info_objective(int x_offset, int y_offset, int text_group, int text_id, objective *obj, int cut_off_at_parenthesis) {
     if (cut_off_at_parenthesis) {
         // Exception for Chinese: the string for "population" includes the hotkey " (6)"
         // To fix that: cut the string off at the '('
+        // Also: Pharaoh's string contains ":" at the end (same fix)
         uint8_t tmp[100];
         string_copy(lang_get_string(text_group, text_id), tmp, 100);
         for (int i = 0; i < 100 && tmp[i]; i++) {
-            if (tmp[i] == '(') {
+            if (tmp[i] == '(' || tmp[i] == ':') {
                 tmp[i] = 0;
                 break;
             }
@@ -180,11 +178,9 @@ static int draw_extra_info_objective(int x_offset, int y_offset, int text_group,
     return EXTRA_INFO_LINE_SPACE * 2;
 }
 static void draw_extra_info_panel(void) {
-    int panel_blocks = data.height / 16;
     graphics_draw_vertical_line(data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
-    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset, data.y_offset + data.height,
-                                COLOR_SIDEBAR);
-    inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, panel_blocks);
+    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset, data.y_offset + data.height, COLOR_SIDEBAR);
+    inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, data.height / 16);
 
     int y_current_line = data.y_offset;
 
@@ -197,35 +193,40 @@ static void draw_extra_info_panel(void) {
         text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
 
-        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
-        lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        if (GAME_ENV == ENGINE_ENV_C3)
+            lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        else
+            lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line,
-                                              FONT_NORMAL_GREEN);
-        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line,
-                         FONT_NORMAL_GREEN);
+        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_GREEN);
 
-        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
+        if (GAME_ENV == ENGINE_ENV_C3)
+            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 6, &data.population, 1);
+//            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 44, 56, &data.population, 1);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 1, &data.culture, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 2, &data.prosperity, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 3, &data.peace, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 4, &data.favor, 0);
-        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
     }
+    // todo: extra goal / required households
 }
-int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed,
-                                  int info_to_display) {
+int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int available_height, int is_collapsed, int info_to_display) {
 //    if (GAME_ENV == ENGINE_ENV_PHARAOH)
 //        x_offset -= 24;
     data.is_collapsed = is_collapsed;

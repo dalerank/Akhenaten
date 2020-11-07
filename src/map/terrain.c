@@ -488,9 +488,9 @@ uint8_t map_grasslevel_get(int grid_offset) {
         return 0;
     return 13;
 }
-bool map_is_3x3_tallgrass(int x, int y, int grid_offset) {
+bool map_is_4x4_tallgrass(int x, int y, int grid_offset) {
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 3, 1, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(x, y, 1, 3, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {

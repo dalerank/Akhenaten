@@ -48,6 +48,8 @@ void tutorial_on_filled_granary(void);
 
 void tutorial_on_add_to_warehouse(void);
 
+void tutorial_starting_message();
+
 void tutorial_on_day_tick(void);
 
 void tutorial_on_month_tick(void);

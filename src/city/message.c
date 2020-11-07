@@ -53,7 +53,7 @@ static int should_play_sound = 1;
 
 void city_message_init_scenario(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        data.messages[i].message_type = 0;
+        data.messages[i].message_id = 0;
     }
     for (int i = 0; i < MAX_QUEUE; i++) {
         data.queue[i] = 0;
@@ -85,7 +85,6 @@ void city_message_init_scenario(void) {
 
     city_message_init_problem_areas();
 }
-
 void city_message_init_problem_areas(void) {
     data.problem_count = 0;
     data.problem_index = 0;
@@ -94,13 +93,12 @@ void city_message_init_problem_areas(void) {
 
 static int new_message_id(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (!data.messages[i].message_type)
+        if (!data.messages[i].message_id)
             return i;
 
     }
     return -1;
 }
-
 static int has_video(int text_id) {
     const lang_message *msg = lang_get_message(text_id);
     if (!msg->video.text)
@@ -110,7 +108,6 @@ static int has_video(int text_id) {
     encoding_to_utf8(msg->video.text, video_file, FILE_NAME_MAX, 0);
     return file_exists(video_file, MAY_BE_LOCALIZED);
 }
-
 static void enqueue_message(int sequence) {
     for (int i = 0; i < MAX_QUEUE; i++) {
         if (!data.queue[i]) {
@@ -119,7 +116,6 @@ static void enqueue_message(int sequence) {
         }
     }
 }
-
 static void play_sound(int text_id) {
     if (lang_get_message(text_id)->urgent == 1)
         sound_effect_play(SOUND_EFFECT_FANFARE_URGENT);
@@ -127,24 +123,22 @@ static void play_sound(int text_id) {
         sound_effect_play(SOUND_EFFECT_FANFARE);
     }
 }
-
 static void show_message_popup(int message_id) {
     city_message *msg = &data.messages[message_id];
     data.consecutive_message_delay = 5;
     msg->is_read = 1;
-    int text_id = city_message_get_text_id(msg->message_type);
+    int text_id = msg->message_id;
     if (!has_video(text_id))
         play_sound(text_id);
 
     window_message_dialog_show_city_message(text_id,
                                             msg->year, msg->month, msg->param1, msg->param2,
-                                            city_message_get_advisor(msg->message_type), 1);
+                                            city_message_get_advisor(msg->message_id), 1);
 }
 
 void city_message_disable_sound_for_next_message(void) {
     should_play_sound = 0;
 }
-
 void city_message_apply_sound_interval(int category) {
     time_millis now = time_get_millis();
     if (now - data.last_sound_time[category] <= 15000)
@@ -154,7 +148,7 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
-void city_message_post(int use_popup, int message_type, int param1, int param2) {
+void city_message_post(int use_popup, int message_id, int param1, int param2) {
     int id = new_message_id();
     if (id < 0)
         return;
@@ -162,7 +156,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2) 
     data.current_message_id = id;
 
     city_message *msg = &data.messages[id];
-    msg->message_type = message_type;
+    msg->message_id = message_id;
     msg->is_read = 0;
     msg->year = game_time_year();
     msg->month = game_time_month();
@@ -170,13 +164,13 @@ void city_message_post(int use_popup, int message_type, int param1, int param2) 
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
 
-    int text_id = city_message_get_text_id(message_type);
+    int text_id = city_message_get_text_id(message_id);
     int lang_msg_type = lang_get_message(text_id)->message_type;
     if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
         window_invalidate();
     }
-    use_popup = 0; // debug
+//    use_popup = 0; // debug
     if (use_popup && window_is(WINDOW_CITY))
         show_message_popup(id);
     else if (use_popup) {
@@ -187,7 +181,6 @@ void city_message_post(int use_popup, int message_type, int param1, int param2) 
 
     should_play_sound = 1;
 }
-
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
     int use_popup = 0;
     if (data.message_delay[category] <= 0) {
@@ -197,7 +190,6 @@ void city_message_post_with_popup_delay(int category, int message_type, int para
     city_message_post(use_popup, message_type, param1, param2);
     data.message_count[category]++;
 }
-
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay) {
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
@@ -233,7 +225,7 @@ void city_message_process_queue(void) {
         return;
     int message_id = -1;
     for (int i = 0; i < 999; i++) {
-        if (!data.messages[i].message_type)
+        if (!data.messages[i].message_id)
             return;
         if (data.messages[i].sequence == sequence) {
             message_id = i;
@@ -249,13 +241,13 @@ void city_message_sort_and_compact(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
             int swap = 0;
-            if (data.messages[a].message_type) {
+            if (data.messages[a].message_id) {
                 if (data.messages[a].sequence < data.messages[a + 1].sequence) {
-                    if (data.messages[a + 1].message_type)
+                    if (data.messages[a + 1].message_id)
                         swap = 1;
 
                 }
-            } else if (data.messages[a + 1].message_type)
+            } else if (data.messages[a + 1].message_id)
                 swap = 1;
 
             if (swap) {
@@ -267,20 +259,20 @@ void city_message_sort_and_compact(void) {
     }
     data.total_messages = 0;
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (data.messages[i].message_type)
+        if (data.messages[i].message_id)
             data.total_messages++;
-
     }
 }
 
-int city_message_get_text_id(int message_type) {
-    if (message_type > 50)
-        return message_type + 199;
-    else {
-        return message_type + 99;
-    }
+int city_message_get_text_id(int message_id) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (message_id > 50)
+            return message_id + 199;
+        else
+            return message_id + 99;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return message_id;
 }
-
 int city_message_get_advisor(int message_type) {
     switch (message_type) {
         case MESSAGE_LOCAL_UPRISING:
@@ -325,11 +317,9 @@ int city_message_get_advisor(int message_type) {
 void city_message_reset_category_count(int category) {
     data.message_count[category] = 0;
 }
-
 void city_message_increase_category_count(int category) {
     data.message_count[category]++;
 }
-
 int city_message_get_category_count(int category) {
     return data.message_count[category];
 }
@@ -341,7 +331,6 @@ void city_message_decrease_delays(void) {
 
     }
 }
-
 int city_message_mark_population_shown(int population) {
     int *field;
     switch (population) {
@@ -385,20 +374,16 @@ int city_message_mark_population_shown(int population) {
 const city_message *city_message_get(int message_id) {
     return &data.messages[message_id];
 }
-
 int city_message_set_current(int message_id) {
     return data.current_message_id = message_id;
 }
-
 void city_message_mark_read(int message_id) {
     data.messages[message_id].is_read = 1;
 }
-
 void city_message_delete(int message_id) {
-    data.messages[message_id].message_type = 0;
+    data.messages[message_id].message_id = 0;
     city_message_sort_and_compact();
 }
-
 int city_message_count(void) {
     return data.total_messages;
 }
@@ -406,7 +391,6 @@ int city_message_count(void) {
 int city_message_problem_area_count(void) {
     return data.problem_count;
 }
-
 static int has_problem_area(const city_message *msg, int lang_msg_type) {
     if (lang_msg_type == MESSAGE_TYPE_DISASTER)
         return 1;
@@ -423,7 +407,6 @@ static int has_problem_area(const city_message *msg, int lang_msg_type) {
     }
     return 0;
 }
-
 int city_message_next_problem_area_grid_offset(void) {
     time_millis now = time_get_millis();
     if (now - data.problem_last_click_time > 3000)
@@ -435,8 +418,8 @@ int city_message_next_problem_area_grid_offset(void) {
     data.problem_count = 0;
     for (int i = 0; i < 999; i++) {
         city_message *msg = &data.messages[i];
-        if (msg->message_type && msg->year >= game_time_year() - 1) {
-            const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
+        if (msg->message_id && msg->year >= game_time_year() - 1) {
+            const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_id));
             int lang_msg_type = lang_msg->message_type;
             if (has_problem_area(msg, lang_msg_type))
                 data.problem_count++;
@@ -454,8 +437,8 @@ int city_message_next_problem_area_grid_offset(void) {
     int current_year = game_time_year();
     for (int i = 0; i < 999; i++) {
         city_message *msg = &data.messages[i];
-        if (msg->message_type && msg->year >= current_year - 1) {
-            int text_id = city_message_get_text_id(msg->message_type);
+        if (msg->message_id && msg->year >= current_year - 1) {
+            int text_id = city_message_get_text_id(msg->message_id);
             int lang_msg_type = lang_get_message(text_id)->message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
@@ -479,11 +462,9 @@ int city_message_next_problem_area_grid_offset(void) {
 void city_message_clear_scroll(void) {
     data.scroll_position = 0;
 }
-
 int city_message_scroll_position(void) {
     return data.scroll_position;
 }
-
 void city_message_set_scroll_position(int scroll_position) {
     data.scroll_position = scroll_position;
 }
@@ -494,7 +475,7 @@ void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, bu
         messages->write_i32(msg->param1);
         messages->write_i16(msg->year);
         messages->write_i16(msg->param2);
-        messages->write_i16(msg->message_type);
+        messages->write_i16(msg->message_id);
         messages->write_i16(msg->sequence);
         messages->write_u8(msg->is_read);
         messages->write_u8(msg->month);
@@ -521,18 +502,31 @@ void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, bu
     population->write_u8(data.population_shown.pop20000);
     population->write_u8(data.population_shown.pop25000);
 }
-
 void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message *msg = &data.messages[i];
-        msg->param1 = messages->read_i32();
-        msg->year = messages->read_i16();
-        msg->param2 = messages->read_i16();
-        msg->message_type = messages->read_i16();
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            msg->param1 = messages->read_i32();
+            msg->year = messages->read_i16();
+            msg->param2 = messages->read_i16();
+//            msg->message_id = messages->read_i16();
+//            msg->message_id = city_message_get_text_id(msg->message_id);
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            msg->param1 = messages->read_i32();
+            msg->param2 = messages->read_i32();
+            msg->year = messages->read_i16();
+//            msg->message_id = messages->read_i16();
+//            msg->message_id = lang_get_message(msg->message_id)->message_id;
+        }
+        msg->message_id = messages->read_i16();
         msg->sequence = messages->read_i16();
         msg->is_read = messages->read_u8();
         msg->month = messages->read_u8();
-        messages->skip(2);
+        if (GAME_ENV == ENGINE_ENV_C3)
+            messages->skip(2);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            messages->skip(32); // ?????
+        }
     }
 
     data.next_message_sequence = extra->read_i32();

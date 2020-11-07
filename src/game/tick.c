@@ -107,13 +107,16 @@ static void advance_day(void) {
     if (game_time_advance_day())
         advance_month();
 
-    if (game_time_day() == 0 || game_time_day() == 8)
+    if (game_time_day() % 8 == 0)
         city_sentiment_update();
 
     tutorial_on_day_tick();
 }
 
 static void advance_tick(void) {
+
+    tutorial_starting_message();
+
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
     map_advance_floodplain_growth(); // temp
@@ -187,6 +190,8 @@ static void advance_tick(void) {
             break;
         case 28:
             map_water_supply_update_houses();
+            // todo
+//            map_commence_flood();
             break;
         case 29:
             formation_update_all(1);
@@ -243,10 +248,13 @@ static void advance_tick(void) {
         case 49:
             city_culture_calculate();
             break;
+        case 50:
+            // todo
+//            flood message prediction
+            break;
     }
     if (game_time_advance_tick())
         advance_day();
-
 }
 
 void game_tick_run(void) {

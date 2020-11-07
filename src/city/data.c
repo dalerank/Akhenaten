@@ -1120,9 +1120,3 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
-
-////
-
-bool is_flood_imminent() {
-    return false;
-}

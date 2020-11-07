@@ -127,7 +127,7 @@ void map_terrain_load_state(buffer *buf);
 void map_moisture_load_state(buffer *buf);
 uint8_t  map_moisture_get(int grid_offset);
 uint8_t map_grasslevel_get(int grid_offset);
-bool map_is_3x3_tallgrass(int x, int y, int grid_offset);
+bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
 
 void map_unk32_load_state(buffer *buf);
 int8_t map_unk32_get(int grid_offset, int a);

@@ -522,29 +522,29 @@ static void update_favor_rating(int is_yearly_update) {
         }
         if (milestone_pct) {
             int bonus = 1;
-            if (scenario_criteria_culture_enabled() &&
+            if (winning_culture() &&
                 city_data.ratings.culture < calc_adjust_with_percentage(
-                        scenario_criteria_culture(), milestone_pct)) {
+                        winning_culture(), milestone_pct)) {
                 bonus = 0;
             }
-            if (scenario_criteria_prosperity_enabled() &&
+            if (winning_prosperity() &&
                 city_data.ratings.prosperity < calc_adjust_with_percentage(
-                        scenario_criteria_prosperity(), milestone_pct)) {
+                        winning_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
-            if (scenario_criteria_peace_enabled() &&
+            if (winning_peace() &&
                 city_data.ratings.peace < calc_adjust_with_percentage(
-                        scenario_criteria_peace(), milestone_pct)) {
+                        winning_peace(), milestone_pct)) {
                 bonus = 0;
             }
-            if (scenario_criteria_favor_enabled() &&
+            if (winning_favor() &&
                 city_data.ratings.favor < calc_adjust_with_percentage(
-                        scenario_criteria_favor(), milestone_pct)) {
+                        winning_favor(), milestone_pct)) {
                 bonus = 0;
             }
-            if (scenario_criteria_population_enabled() &&
+            if (winning_population() &&
                 city_data.population.population < calc_adjust_with_percentage(
-                        scenario_criteria_population(), milestone_pct)) {
+                        winning_population(), milestone_pct)) {
                 bonus = 0;
             }
             if (bonus)

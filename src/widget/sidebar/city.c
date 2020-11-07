@@ -209,8 +209,7 @@ static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     if (is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[GAME_ENV],
-                                                     162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[GAME_ENV], 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
     int relief_y_offset =
             SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[0] + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
@@ -281,9 +280,8 @@ static void draw_expanded_background(int x_offset) {
         int s_end = 768;
         int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
         int s_start = s_num * block_height;
-        for (int i = 0; i < s_num; i++) {
+        for (int i = 0; i < s_num; i++)
             image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
-        }
         image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
         draw_number_of_messages(x_offset - 26);
     }

@@ -35,12 +35,10 @@ void scenario_settings_init(void);
 void scenario_settings_init_mission(void);
 void scenario_fix_patch_trade(int mission_id);
 
-void scenario_save_state(scenario_data_buffers *scenario_data);
-void scenario_load_state(scenario_data_buffers *scenario_data);
+void scenario_save_state(scenario_data_buffers *buf);
+void scenario_load_state(scenario_data_buffers *buf);
 
-void
-scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
-void
-scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
+void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
+void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
 
 #endif // SCENARIO_SCENARIO_H

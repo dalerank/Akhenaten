@@ -604,12 +604,12 @@ static void draw_debug(int x, int y, int grid_offset) {
         }
 
         building *b = building_get(map_building_at(grid_offset));
-        if (map_building_at(grid_offset) && b->grid_offset == grid_offset && false) {
-            string_from_int(str, b->type, 0);
+        if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
+            string_from_int(str, b->id, 0);
             draw_text_shadow(str, x + 13, y + 5, COLOR_WHITE);
 
             string_from_int(str, map_image_at(grid_offset), 0);
-            draw_text_shadow(str, x + 13, y-5, COLOR_GREEN);
+            draw_text_shadow(str, x + 13, y - 5, COLOR_GREEN);
 
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);
@@ -894,6 +894,9 @@ static void deletion_draw_remaining(int x, int y, int grid_offset) {
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
+#include "game/time.h"
+#include "city/data_private.h"
+
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
     ph_crops_worker_frame++;
     if (ph_crops_worker_frame >= 13 * 16)
@@ -927,4 +930,32 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
     }
+
+    /////// TEMP
+    if (false) return;
+    auto data = give_me_da_time();
+    uint8_t str[10];
+    string_from_int(str, data->tick, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("tick:"), 13, 15, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 15, COLOR_WHITE);
+    string_from_int(str, data->day, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("day:"), 13, 25, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 25, COLOR_WHITE);
+    string_from_int(str, data->month, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("month:"), 13, 35, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 35, COLOR_WHITE);
+    string_from_int(str, data->year, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("year:"), 13, 45, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 45, COLOR_WHITE);
+
+    string_from_int(str, data->month*16+data->day, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("total:"), 13, 65, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 65, COLOR_WHITE);
+    string_from_int(str, city_data.floods.month/15*8, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("coming:"), 13, 75, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 75, COLOR_WHITE);
+    string_from_int(str, city_data.floods.month, 0);
+    draw_text_shadow((uint8_t*)string_from_ascii("flood:"), 13, 85, COLOR_WHITE);
+    draw_text_shadow(str, 50 + 13, 85, COLOR_WHITE);
+
 }

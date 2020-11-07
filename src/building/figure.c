@@ -912,7 +912,7 @@ static void spawn_figure_industry(building *b) {
         } else { // floodplain farms!!
             if (has_figure_of_type(b, FIGURE_CART_PUSHER))
                 return;
-            if (b->data.industry.progress > 0 && is_flood_imminent() || b->data.industry.progress >= 2000) {
+            if (b->data.industry.progress >= 2000 || b->data.industry.progress > 0 && is_flood_imminent()) { // temp
                 figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->resource_id = b->output_resource_id;
@@ -924,6 +924,7 @@ static void spawn_figure_industry(building *b) {
                 b->data.industry.worker_id = 0;
                 b->data.industry.labor_state = 0;
                 b->data.industry.labor_days_left = 0;
+                b->num_workers = 0;
             }
         }
     }

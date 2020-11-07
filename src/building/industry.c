@@ -209,9 +209,20 @@ void building_industry_update_wheat_production(void) {
         }
     }
 }
+
+#include "city/data_private.h"
+
+bool is_flood_imminent() {
+    if (city_data.floods.month == 0)
+        return true;
+    return false;
+}
 int building_industry_has_produced_resource(building *b) {
-//    if (building_is_farm(b->type) && b->data.farm.)
-//        return true;
+//    if (building_is_farm(b->type) && GAME_ENV == ENGINE_ENV_PHARAOH) {
+//        if (is_flood_imminent())
+//            return 1;
+//        return 0;
+//    }
     return b->data.industry.progress >= max_progress(b);
 }
 void building_industry_start_new_production(building *b) {

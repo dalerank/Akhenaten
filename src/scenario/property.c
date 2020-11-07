@@ -22,13 +22,22 @@ void scenario_set_campaign_mission(int mission) {
     scenario.settings.campaign_mission = mission;
 }
 int scenario_is_tutorial_1(void) {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 0;
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 0;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 0;
 }
 int scenario_is_tutorial_2(void) {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 1;
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 1;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 1;
 }
 int scenario_is_tutorial_3(void) {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 2;
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 2;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 2;
 }
 
 int scenario_starting_favor(void) {

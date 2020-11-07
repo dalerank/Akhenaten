@@ -18,6 +18,7 @@ int building_determine_worker_needed();
 void building_industry_update_production(void);
 void building_industry_update_wheat_production(void);
 
+bool is_flood_imminent();
 int building_industry_has_produced_resource(building *b);
 void building_industry_start_new_production(building *b);
 

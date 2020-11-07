@@ -152,26 +152,26 @@ static void draw_scenario_info(void) {
     } else {
         lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
         int width;
-        if (scenario_criteria_culture_enabled()) {
-            width = text_draw_number(scenario_criteria_culture(), '@', " ", scenario_criteria_x, 290,
+        if (winning_culture()) {
+            width = text_draw_number(winning_culture(), '@', " ", scenario_criteria_x, 290,
                                      FONT_NORMAL_BLACK);
             lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK);
         }
-        if (scenario_criteria_prosperity_enabled()) {
-            width = text_draw_number(scenario_criteria_prosperity(), '@', " ", scenario_criteria_x, 306,
+        if (winning_prosperity()) {
+            width = text_draw_number(winning_prosperity(), '@', " ", scenario_criteria_x, 306,
                                      FONT_NORMAL_BLACK);
             lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK);
         }
-        if (scenario_criteria_peace_enabled()) {
-            width = text_draw_number(scenario_criteria_peace(), '@', " ", scenario_criteria_x, 322, FONT_NORMAL_BLACK);
+        if (winning_peace()) {
+            width = text_draw_number(winning_peace(), '@', " ", scenario_criteria_x, 322, FONT_NORMAL_BLACK);
             lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK);
         }
-        if (scenario_criteria_favor_enabled()) {
-            width = text_draw_number(scenario_criteria_favor(), '@', " ", scenario_criteria_x, 338, FONT_NORMAL_BLACK);
+        if (winning_favor()) {
+            width = text_draw_number(winning_favor(), '@', " ", scenario_criteria_x, 338, FONT_NORMAL_BLACK);
             lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
         }
-        if (scenario_criteria_population_enabled()) {
-            width = text_draw_number(scenario_criteria_population(), '@', " ", scenario_criteria_x, 354,
+        if (winning_population()) {
+            width = text_draw_number(winning_population(), '@', " ", scenario_criteria_x, 354,
                                      FONT_NORMAL_BLACK);
             lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
         }
