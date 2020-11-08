@@ -1,6 +1,7 @@
 #include <cmath>
 #include <building/industry.h>
 #include <window/city.h>
+#include <game/tutorial.h>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -958,4 +959,37 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     draw_text_shadow((uint8_t*)string_from_ascii("flood:"), 13, 85, COLOR_WHITE);
     draw_text_shadow(str, 50 + 13, 85, COLOR_WHITE);
 
+    auto flags = give_me_da_tut_flags();
+    const char* const flagnames[41] = {
+        "fire","pop_150","meat_400","collapse","gold_mined","entertainment msg","","","","",
+        "","","","","","tut1 start","tut2 start","","","",
+        "","","","","","","","","","",
+        "","","","","","","","","","",
+        "",
+    };
+    for (int i = 0; i < 41; i++) {
+
+        int f = flags->pharaoh.flags[i];
+        switch (i) {
+            case 0: f = flags->pharaoh.fire; break;
+            case 1: f = flags->pharaoh.population_150_reached; break;
+            case 2: f = flags->pharaoh.gamemeat_400_stored; break;
+            case 3: f = flags->pharaoh.collapse; break;
+            case 4: f = flags->pharaoh.gold_mined_enough; break;
+            case 5: f = flags->pharaoh.entertainment_msg; break;
+            //
+            case 15: f = flags->pharaoh.housing_and_roads_msg; break;
+            case 16: f = flags->pharaoh.crime_and_gold_msg; break;
+        }
+
+        int color = COLOR_WHITE;
+        if (f)
+            color = COLOR_GREEN;
+        string_from_int(str, i, 0);
+        draw_text_shadow(str, 13, 115 + i*10, color);
+        draw_text_shadow((uint8_t*)string_from_ascii(":"), 13+20, 115 + i*10, color);
+        string_from_int(str, f, 0);
+        draw_text_shadow(str, 13+30, 115 + i*10, color);
+        draw_text_shadow((uint8_t*)string_from_ascii(flagnames[i]), 13+45, 115 + i*10, color);
+    }
 }

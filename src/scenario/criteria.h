@@ -3,26 +3,6 @@
 
 #include "core/buffer.h"
 
-//int winning_population(void);
-//
-//int winning_population(void);
-//
-//int winning_culture(void);
-//
-//int winning_culture(void);
-//
-//int winning_prosperity(void);
-//
-//int winning_prosperity(void);
-//
-//int winning_peace(void);
-//
-//int winning_peace(void);
-//
-//int winning_favor(void);
-//
-//int winning_favor(void);
-//
 int scenario_criteria_time_limit_enabled(void);
 int scenario_criteria_time_limit_years(void);
 

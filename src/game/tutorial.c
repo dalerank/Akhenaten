@@ -11,41 +11,11 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-static struct {
-    struct {
-        int fire;
-        int crime;
-        int collapse;
-        int senate_built;
-    } tutorial1;
-    struct {
-        int granary_built;
-        int population_250_reached;
-        int population_450_reached;
-        int pottery_made;
-        int pottery_made_year;
-    } tutorial2;
-    struct {
-        int disease;
-    } tutorial3;
-    struct {
-        bool flags[41];
-        //
-        bool fire;
-        bool population_150_reached;
-        bool gamemeat_400_stored;
-        bool gold_mined_enough;
-        bool entertainment_msg;
-        //
-        bool housing_and_roads_msg;
-        bool crime_and_gold_msg;
+static tutorial_flags data;
 
-
-        bool collapse;
-
-
-    } pharaoh;
-} data;
+tutorial_flags *give_me_da_tut_flags() {
+    return &data;
+}
 
 static void post_message(int message) {
     city_message_post(1, message, 0, 0);
@@ -94,53 +64,41 @@ tutorial_availability tutorial_advisor_empire_availability(void) {
         return AVAILABLE;
     }
 }
-//tutorial_build_buttons tutorial_get_build_buttons(void) {
-//    if (GAME_ENV == ENGINE_ENV_C3) {
-//        if (scenario_is_tutorial_1()) {
-//            if (!data.tutorial1.fire && !data.tutorial1.crime)
-//                return TUT1_BUILD_START;
-//            else if (!data.tutorial1.collapse)
-//                return TUT1_BUILD_FIREHOUSE;
-//            else if (!data.tutorial1.senate_built)
-//                return TUT1_BUILD_ARCHITECT;
-//
-//        } else if (scenario_is_tutorial_2()) {
-//            if (!data.tutorial2.granary_built)
-//                return TUT2_BUILD_START;
-//            else if (!data.tutorial2.population_250_reached)
-//                return TUT2_BUILD_UP_TO_250;
-//            else if (!data.tutorial2.population_450_reached)
-//                return TUT2_BUILD_UP_TO_450;
-//            else if (!data.tutorial2.pottery_made)
-//                return TUT2_BUILD_AFTER_450;
-//
-//        }
-//        return TUT_BUILD_NORMAL;
-//    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        if (scenario_is_tutorial_1()) {
-//            if (!data.pharaoh.fire && !data.pharaoh.collapse && !data.pharaoh.population_150_reached)
-//                return TUT1_BUILD_START;
-//            else if (!data.pharaoh.collapse)
-//                return TUT1_BUILD_FOOD;
-//            else if (!data.pharaoh.population_150_reached)
-//                return TUT1_BUILD_ARCHITECT;
-//            else
-//                return TUT1_BUILD_FOOD;
-//
-//        } else if (scenario_is_tutorial_2()) {
-//            if (!data.tutorial2.granary_built)
-//                return TUT2_BUILD_START;
-//            else if (!data.tutorial2.population_250_reached)
-//                return TUT2_BUILD_UP_TO_250;
-//            else if (!data.tutorial2.population_450_reached)
-//                return TUT2_BUILD_UP_TO_450;
-//            else if (!data.tutorial2.pottery_made)
-//                return TUT2_BUILD_AFTER_450;
-//
-//        }
-//        return TUT_BUILD_NORMAL;
-//    }
-//}
+
+void tutorial_menu_update(int tut) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (tut == 1) {
+            building_menu_update(BUILDSET_TUT1_START);
+            if (data.tutorial1.fire || data.tutorial1.crime)
+                building_menu_update(BUILDSET_TUT1_FIRE_C3);
+            if (data.tutorial1.collapse)
+                building_menu_update(BUILDSET_TUT1_COLLAPSE_C3);
+        } else if (tut == 2) {
+            building_menu_update(BUILDSET_TUT2_START);
+            if (data.tutorial2.granary_built)
+                building_menu_update(BUILDSET_TUT2_UP_TO_250);
+            if (data.tutorial2.population_250_reached)
+                building_menu_update(BUILDSET_TUT2_UP_TO_450);
+            if (data.tutorial2.population_450_reached)
+                building_menu_update(BUILDSET_TUT2_AFTER_450);
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (tut == 1) {
+            building_menu_update(BUILDSET_TUT1_START);
+            if (data.pharaoh.population_150_reached)
+                building_menu_update(BUILDSET_TUT1_FOOD);
+            if (data.pharaoh.fire)
+                building_menu_update(BUILDSET_TUT1_FIRE_PH);
+            if (data.pharaoh.collapse)
+                building_menu_update(BUILDSET_TUT1_COLLAPSE_PH);
+            if (data.pharaoh.gamemeat_400_stored)
+                building_menu_update(BUILDSET_TUT1_WATER);
+        } else if (tut == 2) {
+            building_menu_update(BUILDSET_TUT2_START);
+            ////
+        }
+    }
+}
 
 int tutorial_get_population_cap(int current_cap) {
     return current_cap; //temp
@@ -255,10 +213,14 @@ void tutorial_on_disease(void) {
     data.tutorial3.disease = 1;
 }
 void tutorial_on_filled_granary(void) {
-    if (!data.tutorial2.granary_built) {
+    if (GAME_ENV == ENGINE_ENV_C3 && !data.tutorial2.granary_built) {
         data.tutorial2.granary_built = 1;
         building_menu_update(BUILDSET_TUT2_UP_TO_250);
         post_message(MESSAGE_TUTORIAL_WATER);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && !data.pharaoh.gamemeat_400_stored) {
+        data.pharaoh.gamemeat_400_stored = 1;
+        building_menu_update(BUILDSET_TUT1_WATER);
+        post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
     }
 }
 void tutorial_on_add_to_warehouse(void) {
@@ -360,7 +322,7 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.fire = buf1->read_u8();
         data.pharaoh.population_150_reached = buf1->read_u8();
         data.pharaoh.gamemeat_400_stored = buf1->read_u8();
-        data.pharaoh.flags[3] = buf1->read_u8();
+        data.pharaoh.collapse = buf1->read_u8();
         data.pharaoh.gold_mined_enough = buf1->read_u8();
         data.pharaoh.entertainment_msg = buf1->read_u8();
         data.pharaoh.flags[6] = buf1->read_u8();
@@ -384,14 +346,14 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.flags[23] = buf1->read_u8();
         data.pharaoh.flags[24] = buf1->read_u8();
         data.pharaoh.flags[25] = buf1->read_u8();
-        data.pharaoh.flags[26] = buf1->read_u8(); // ??
+        data.pharaoh.flags[26] = buf1->read_u8(); // goal: bazaar
         data.pharaoh.flags[27] = buf1->read_u8();
         data.pharaoh.flags[28] = buf1->read_u8();
         data.pharaoh.flags[29] = buf1->read_u8();
         data.pharaoh.flags[30] = buf1->read_u8();
         data.pharaoh.flags[31] = buf1->read_u8();
         data.pharaoh.flags[32] = buf1->read_u8();
-        data.pharaoh.flags[33] = buf1->read_u8(); // ??
+        data.pharaoh.flags[33] = buf1->read_u8(); // goal: water supply
         data.pharaoh.flags[34] = buf1->read_u8();
         data.pharaoh.flags[35] = buf1->read_u8();
         data.pharaoh.flags[36] = buf1->read_u8(); // goal: entertainment

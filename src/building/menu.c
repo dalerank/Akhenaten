@@ -216,11 +216,11 @@ static void disable_resources() {
 void building_menu_update(int build_set) {
     if (build_set == BUILDSET_NORMAL) {
         if (scenario_is_tutorial_1())
-            build_set = BUILDSET_TUT1_START;
+            return tutorial_menu_update(1);
         else if (scenario_is_tutorial_2())
-            build_set = BUILDSET_TUT2_START;
+            return tutorial_menu_update(2);
         else if (scenario_is_tutorial_3())
-            build_set = BUILDSET_TUT3_START;
+            return tutorial_menu_update(3);
     }
 
     switch (build_set) {
@@ -232,12 +232,15 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_MARKET);
             break;
         case BUILDSET_TUT1_FIRE_PH:
-            enable_building(BUILDING_PREFECTURE);
+            enable_building(BUILDING_FIREHOUSE);
             break;
         case BUILDSET_TUT1_FOOD:
             enable_building(BUILDING_HUNTING_LODGE);
             enable_building(BUILDING_GRANARY);
             enable_building(BUILDING_MARKET);
+            break;
+        case BUILDSET_TUT1_WATER:
+            enable_building(BUILDING_WATER_SUPPLY);
             break;
         case BUILDSET_TUT1_COLLAPSE_C3:
             enable_building(BUILDING_ENGINEERS_POST);
@@ -297,10 +300,10 @@ void building_menu_update(int build_set) {
     }
 
     // these are always enabled
-    enable_if_allowed(BUILDING_HOUSE_VACANT_LOT);
-    enable_if_allowed(BUILDING_CLEAR_LAND);
-    enable_if_allowed(BUILDING_ROAD);
-    enable_if_allowed(BUILDING_WELL);
+    enable_building(BUILDING_HOUSE_VACANT_LOT);
+    enable_building(BUILDING_CLEAR_LAND);
+    enable_building(BUILDING_ROAD);
+    enable_building(BUILDING_WELL);
 
     // disable resources that aren't available on map
     disable_resources();

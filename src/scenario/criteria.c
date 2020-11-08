@@ -4,36 +4,6 @@
 
 static int max_game_year;
 
-//int winning_population(void) {
-//    return scenario.win_criteria.population.enabled;
-//}
-//int winning_population(void) {
-//    return scenario.win_criteria.population.goal;
-//}
-//int winning_culture(void) {
-//    return scenario.win_criteria.culture.enabled;
-//}
-//int winning_culture(void) {
-//    return scenario.win_criteria.culture.goal;
-//}
-//int winning_prosperity(void) {
-//    return scenario.win_criteria.prosperity.enabled;
-//}
-//int winning_prosperity(void) {
-//    return scenario.win_criteria.prosperity.goal;
-//}
-//int winning_peace(void) {
-//    return scenario.win_criteria.peace.enabled;
-//}
-//int winning_peace(void) {
-//    return scenario.win_criteria.peace.goal;
-//}
-//int winning_favor(void) {
-//    return scenario.win_criteria.favor.enabled;
-//}
-//int winning_favor(void) {
-//    return scenario.win_criteria.favor.goal;
-//}
 int scenario_criteria_time_limit_enabled(void) {
     return scenario.win_criteria.time_limit.enabled;
 }
