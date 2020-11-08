@@ -51,6 +51,15 @@ void city_finance_process_export(int price) {
     }
 }
 
+#include "game/tutorial.h"
+
+void city_finance_process_gold_extraction(int amount) {
+    city_data.finance.treasury += amount;
+    city_data.finance.this_year.income.gold_extracted += amount;
+    if (city_data.finance.this_year.income.gold_extracted >= 500)
+        tutorial_on_gold_extracted();
+}
+
 void city_finance_process_cheat(void) {
     if (city_data.finance.treasury < 5000) {
         city_data.finance.treasury += 1000;

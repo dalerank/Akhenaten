@@ -269,6 +269,7 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
 }
 
 void figure::action_perform() {
+//    return;
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);

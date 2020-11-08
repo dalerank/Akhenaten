@@ -33,8 +33,8 @@ typedef struct tutorial_flags {
         bool population_150_reached;
         bool gamemeat_400_stored;
         bool collapse;
-        bool gold_mined_enough;
-        bool entertainment_msg;
+        bool gold_mined_500;
+        bool temples_built;
         //
         bool housing_and_roads_msg;
         bool crime_and_gold_msg;
@@ -74,6 +74,10 @@ void tutorial_on_disease(void);
 void tutorial_on_filled_granary(void);
 
 void tutorial_on_add_to_warehouse(void);
+
+void tutorial_on_gold_extracted();
+
+void tutorial_on_religion();
 
 void tutorial_starting_message();
 

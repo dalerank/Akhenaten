@@ -735,14 +735,14 @@ static void draw_animation(int x, int y, int grid_offset) {
 
                 switch (b->type) {
                     case BUILDING_GRANARY:
-                        img = (image*)image_get(image_id_from_group(GROUP_GRANARY_ANIM_PH) + animation_offset - 1);
+//                        img = (image*)image_get(image_id_from_group(GROUP_GRANARY_ANIM_PH) + animation_offset - 1);
                         if (GAME_ENV == ENGINE_ENV_C3)
                             image_draw_masked(image_id + animation_offset + 5, x + 77, y - 49, color_mask);
                         else
                             image_draw_masked(image_id_from_group(GROUP_GRANARY_ANIM_PH) + animation_offset - 1, x - img->sprite_offset_x + 114, y - img->sprite_offset_y + 2, color_mask);
                         break;
                     case BUILDING_WAREHOUSE:
-                        img = (image*)image_get(image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) + animation_offset - 1);
+//                        img = (image*)image_get(image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) + animation_offset - 1);
                         if (GAME_ENV == ENGINE_ENV_C3)
                             image_draw_masked(image_id + animation_offset, x + 77, y - 49, color_mask);
                         else {
@@ -762,13 +762,20 @@ static void draw_animation(int x, int y, int grid_offset) {
                         break;
                     case BUILDING_WATER_LIFT:
                         break; // todo
+                    case BUILDING_GOLD_MINE:
+                    case BUILDING_COPPER_MINE:
+                    case BUILDING_GEMSTONE_MINE:
+                        image_id = image_id_from_group(GROUP_MINES) - 1;
+                        img = (image*)image_get(image_id + animation_offset);
+                        image_draw_masked(image_id + animation_offset,
+                                          x + 29,
+                                          y + 26 - img->height,
+                                          color_mask);
+                        break; // todo
                     case BUILDING_STONE_QUARRY:
                     case BUILDING_LIMESTONE_QUARRY:
                     case BUILDING_GRANITE_QUARRY:
                     case BUILDING_SANDSTONE_QUARRY:
-                    case BUILDING_GOLD_MINE:
-                    case BUILDING_COPPER_MINE:
-                    case BUILDING_GEMSTONE_MINE:
                         break; // todo
                     default:
                         int ydiff = 0;
@@ -793,12 +800,6 @@ static void draw_animation(int x, int y, int grid_offset) {
                                           x + img->sprite_offset_x,
                                           y + ydiff + img->sprite_offset_y - img->height,
                                           color_mask);
-//                        if (img->draw.type != IMAGE_TYPE_ISOMETRIC)
-//                            image_draw_masked(image_id + animation_offset,
-//                                          x + img->sprite_offset_x,
-//                                          y + ydiff + img->sprite_offset_y - img->height, color_mask);
-//                        else
-//                            image_draw_isometric_footprint(image_id + animation_offset, x, y, color_mask);
                 }
             }
             // specific buildings
@@ -975,8 +976,8 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             case 1: f = flags->pharaoh.population_150_reached; break;
             case 2: f = flags->pharaoh.gamemeat_400_stored; break;
             case 3: f = flags->pharaoh.collapse; break;
-            case 4: f = flags->pharaoh.gold_mined_enough; break;
-            case 5: f = flags->pharaoh.entertainment_msg; break;
+            case 4: f = flags->pharaoh.gold_mined_500; break;
+            case 5: f = flags->pharaoh.temples_built; break;
             //
             case 15: f = flags->pharaoh.housing_and_roads_msg; break;
             case 16: f = flags->pharaoh.crime_and_gold_msg; break;

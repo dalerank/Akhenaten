@@ -4,6 +4,7 @@
 #include "building/building.h"
 
 int city_buildings_has_senate(void);
+int city_buildings_get_senate_id();
 void city_buildings_add_senate(building *senate);
 void city_buildings_remove_senate(building *senate);
 

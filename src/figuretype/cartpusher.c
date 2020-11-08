@@ -21,9 +21,20 @@ static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+#include "city/buildings.h"
+
 void figure::determine_deliveryman_destination(building *b, int road_network_id) {
     map_point dst;
     int understaffed_storages = 0;
+
+    // first: gold deliverers
+    if (b->output_resource_id == RESOURCE_GOLD) {
+        int senate_id = city_buildings_get_senate_id();
+        if (senate_id && building_get(senate_id)->state == BUILDING_STATE_VALID) {
+            destination_building_id = senate_id;
+            return advance_action(11);
+        }
+    }
 
     // priority 1: warehouse if resource is on stockpile
     destination_building_id = building_warehouse_for_storing(0, tile_x, tile_y, b->output_resource_id, b->distance_from_entry, road_network_id, &understaffed_storages, &dst);
@@ -206,6 +217,8 @@ void figure::determine_warehouseman_destination(int road_network_id) {
     advance_action(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
 }
 
+#include "city/finance.h"
+
 void figure::cartpusher_action() {
 
 //    if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD))
@@ -233,6 +246,9 @@ void figure::cartpusher_action() {
         case ACTION_10_DELIVERING_FOOD:
             do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, ACTION_13_UNLOADING2, ACTION_8_RECALCULATE);
             break;
+        case 11: // delivering gold
+            do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, 14, ACTION_8_RECALCULATE);
+            break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
             do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
             break;
@@ -242,8 +258,9 @@ void figure::cartpusher_action() {
         case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
             do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
             break;
-        case ACTION_12_UNLOADING1:
-        case ACTION_13_UNLOADING2:
+        case 12: // storage yard
+        case 13: // granary
+        case 14: // palace
         case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
         case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
         case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
@@ -266,6 +283,12 @@ void figure::cartpusher_action() {
                         building_barracks_add_weapon(dest);
                         delivery_check = true;
                         break;
+                    case BUILDING_VILLAGE_PALACE:
+                    case BUILDING_TOWN_PALACE:
+                    case BUILDING_CITY_PALACE:
+                        city_finance_process_gold_extraction(100);
+                        delivery_check = true;
+                        break;
                     default:
                         building_workshop_add_raw_material(dest);
                         delivery_check = true;
@@ -274,13 +297,13 @@ void figure::cartpusher_action() {
                 if (delivery_check)
                     loads_counter -= 1;
                 if (!loads_counter) {
-                    advance_action(ACTION_11_RETURNING_EMPTY);
+                    advance_action(ACTION_15_RETURNING2);
                 } else if (!delivery_check)
                     advance_action(ACTION_8_RECALCULATE);
             }
             anim_frame = 0;
             break;
-        case ACTION_11_RETURNING_EMPTY:
+//        case ACTION_11_RETURNING_EMPTY:
         case ACTION_15_RETURNING2:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
             do_returnhome();

@@ -6,6 +6,12 @@ int city_buildings_has_senate(void) {
     return city_data.building.senate_placed;
 }
 
+int city_buildings_get_senate_id(void) {
+    if (!city_buildings_has_senate())
+        return 0;
+    return city_data.building.senate_building_id;
+}
+
 void city_buildings_add_senate(building *senate) {
     city_data.building.senate_placed = 1;
     if (!city_data.building.senate_grid_offset) {

@@ -846,7 +846,21 @@ static void load_main_data(buffer *buf) {
         city_data.unused.unknown_4374[i] = buf->read_i32();
     city_data.finance.last_year.income.donated = buf->read_i32();
     city_data.finance.this_year.income.donated = buf->read_i32();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        city_data.emperor.donate_amount = buf->read_i32();
+        for (int i = 0; i < 10; i++)
+            city_data.building.working_dock_ids[i] = buf->read_i16(); // at i == 9 <-- 6 became 5 (animals?)
+        for (int i = 0; i < 3; i++)
+            city_data.unused.unknown_439c[i] = buf->read_i16();
+        city_data.figure.animals = buf->read_i16();
+        city_data.trade.num_sea_routes = buf->read_i16();
+        city_data.trade.num_land_routes = buf->read_i16();
+        city_data.trade.sea_trade_problem_duration = buf->read_i16();
+        city_data.trade.land_trade_problem_duration = buf->read_i16();
+        city_data.building.working_docks = buf->read_i16();
+        city_data.building.senate_placed = buf->read_i16();
+        city_data.building.working_wharfs = buf->read_i16();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         for (int i = 0; i < 10; i++)
             city_data.building.working_dock_ids[i] = buf->read_i16();
         buf->skip(2);
@@ -854,21 +868,21 @@ static void load_main_data(buffer *buf) {
         for (int i = 0; i < 3; i++)
             city_data.unused.unknown_439c[i] = buf->read_i16();
         buf->skip(2);
-    } else {
-        city_data.emperor.donate_amount = buf->read_i32();
-        for (int i = 0; i < 10; i++)
-            city_data.building.working_dock_ids[i] = buf->read_i16(); // at i == 9 <-- 6 became 5 (animals?)
-        for (int i = 0; i < 3; i++)
-            city_data.unused.unknown_439c[i] = buf->read_i16();
-        city_data.figure.animals = buf->read_i16();
+        buf->skip(2);
+        city_data.building.senate_placed = buf->read_i16();
+        buf->skip(2);
+        buf->skip(2);
+        buf->skip(2);
+        buf->skip(2);
+        buf->skip(2);
+//        city_data.trade.num_sea_routes = buf->read_i16();
+//        city_data.trade.num_land_routes = buf->read_i16();
+//        city_data.trade.sea_trade_problem_duration = buf->read_i16();
+//        city_data.trade.land_trade_problem_duration = buf->read_i16();
+//        city_data.building.working_docks = buf->read_i16();
+//        city_data.building.senate_placed = buf->read_i16();
+//        city_data.building.working_wharfs = buf->read_i16();
     }
-    city_data.trade.num_sea_routes = buf->read_i16();
-    city_data.trade.num_land_routes = buf->read_i16();
-    city_data.trade.sea_trade_problem_duration = buf->read_i16();
-    city_data.trade.land_trade_problem_duration = buf->read_i16();
-    city_data.building.working_docks = buf->read_i16();
-    city_data.building.senate_placed = buf->read_i16();
-    city_data.building.working_wharfs = buf->read_i16();
     for (int i = 0; i < 2; i++)
         city_data.unused.padding_43b2[i] = buf->read_i8();
     city_data.finance.stolen_this_year = buf->read_i16();
@@ -1040,9 +1054,14 @@ static void load_main_data(buffer *buf) {
     city_data.mission.tutorial_fire_message_shown = buf->read_i32();
     city_data.mission.tutorial_disease_message_shown = buf->read_i32();
     city_data.figure.attacking_natives = buf->read_i32();
-    for (int i = 0; i < 232; i++)
-        city_data.unused.unknown_464c[i] = buf->read_i8(); // i=48,68,72
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
+
+    if (GAME_ENV == ENGINE_ENV_C3)
+        for (int i = 0; i < 232; i++)
+            city_data.unused.unknown_464c[i] = buf->read_i8(); // i=48,68,72
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
+        buf->skip(132);
+        city_data.finance.this_year.income.gold_extracted = buf->read_i32();
+        buf->skip(96);
         buf->skip(40);
         buf->skip(2); // 2800 --> 0     granary space?
         buf->skip(30);

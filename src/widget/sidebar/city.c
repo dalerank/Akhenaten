@@ -244,8 +244,6 @@ static void draw_buttons_expanded(int x_offset) {
 
 static void refresh_build_menu_buttons(void) {
     int num_buttons = 12;
-//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//        num_buttons = 22;
     for (int i = 0; i < num_buttons; i++) {
         buttons_build_expanded[GAME_ENV][i].enabled = 1;
         if (building_menu_count_items(buttons_build_expanded[GAME_ENV][i].parameter1) <= 0)

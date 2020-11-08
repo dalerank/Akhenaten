@@ -19,6 +19,8 @@ void city_finance_process_import(int price);
 
 void city_finance_process_export(int price);
 
+void city_finance_process_gold_extraction(int amount);
+
 void city_finance_process_cheat(void);
 
 void city_finance_process_console(int amount);
@@ -49,6 +51,7 @@ typedef struct {
     struct {
         int taxes;
         int exports;
+        int gold_extracted;
         int donated;
         int total;
     } income;

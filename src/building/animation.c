@@ -24,34 +24,34 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
             else if (!b->has_water_access)
                 return 0;
             break;
-        case BUILDING_PREFECTURE: // police house
-        case BUILDING_ENGINEERS_POST:
-        case BUILDING_FIREHOUSE:
-        case BUILDING_WATER_SUPPLY:
-        case BUILDING_PHYSICIAN:
-        case BUILDING_APOTHECARY:
-        case BUILDING_DENTIST:
-        case BUILDING_MORTUARY:
-        case BUILDING_MARKET:
-        case BUILDING_WAREHOUSE: // b->num_workers < model_get_building(b->type)->laborers
-        case BUILDING_GRANARY: // b->num_workers < model_get_building(b->type)->laborers
-        case BUILDING_IRON_MINE:
-        case BUILDING_CLAY_PIT:
-        case BUILDING_TIMBER_YARD:
-        case BUILDING_THEATER:
-        case BUILDING_CHARIOT_MAKER:
-        case BUILDING_HIPPODROME:
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_BAST:
-        case BUILDING_VILLAGE_PALACE:
-        case BUILDING_TOWN_PALACE:
-        case BUILDING_CITY_PALACE:
-            if (b->num_workers <= 0)
-                return 0;
-            break;
+//        case BUILDING_PREFECTURE: // police house
+//        case BUILDING_ENGINEERS_POST:
+//        case BUILDING_FIREHOUSE:
+//        case BUILDING_WATER_SUPPLY:
+//        case BUILDING_PHYSICIAN:
+//        case BUILDING_APOTHECARY:
+//        case BUILDING_DENTIST:
+//        case BUILDING_MORTUARY:
+//        case BUILDING_MARKET:
+//        case BUILDING_WAREHOUSE: // b->num_workers < model_get_building(b->type)->laborers
+//        case BUILDING_GRANARY: // b->num_workers < model_get_building(b->type)->laborers
+//        case BUILDING_IRON_MINE:
+//        case BUILDING_CLAY_PIT:
+//        case BUILDING_TIMBER_YARD:
+//        case BUILDING_THEATER:
+//        case BUILDING_CHARIOT_MAKER:
+//        case BUILDING_HIPPODROME:
+//        case BUILDING_TEMPLE_OSIRIS:
+//        case BUILDING_TEMPLE_RA:
+//        case BUILDING_TEMPLE_SETH:
+//        case BUILDING_TEMPLE_PTAH:
+//        case BUILDING_TEMPLE_BAST:
+//        case BUILDING_VILLAGE_PALACE:
+//        case BUILDING_TOWN_PALACE:
+//        case BUILDING_CITY_PALACE:
+//            if (b->num_workers <= 0)
+//                return 0;
+//            break;
         case BUILDING_MARBLE_QUARRY:
         case BUILDING_GLADIATOR_SCHOOL:
             if (b->num_workers <= 0) {
@@ -65,6 +65,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
                 map_sprite_animation_set(grid_offset, 1);
                 return 1;
             } break;
+        default:
+            if (b->num_workers <= 0)
+                return 0;
+            break;
     }
 
     const image *img = image_get(image_id);
