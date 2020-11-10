@@ -484,8 +484,24 @@ static void add_to_map(int type, building *b, int size,
             building_menu_update(BUILDSET_NORMAL);
             building_construction_clear_type();
             break;
+        case BUILDING_VILLAGE_PALACE:
+        case BUILDING_TOWN_PALACE:
+        case BUILDING_CITY_PALACE:
         case BUILDING_SENATE_UPGRADED:
-            add_building(b, image_id_from_group(GROUP_BUILDING_SENATE));
+            switch (type) {
+                case BUILDING_VILLAGE_PALACE:
+                    add_building(b, image_id_from_group(GROUP_BUILDING_VILLAGE_PALACE));
+                    break;
+                case GROUP_BUILDING_TOWN_PALACE:
+                    add_building(b, image_id_from_group(GROUP_BUILDING_TOWN_PALACE));
+                    break;
+                case GROUP_BUILDING_CITY_PALACE:
+                    add_building(b, image_id_from_group(GROUP_BUILDING_CITY_PALACE));
+                    break;
+                case BUILDING_SENATE_UPGRADED:
+                    add_building(b, image_id_from_group(GROUP_BUILDING_SENATE));
+                    break;
+            }
             city_buildings_add_senate(b);
             break;
         case BUILDING_BARRACKS:
@@ -653,7 +669,10 @@ int building_construction_place_building(int type, int x, int y) {
             return 0;
         }
     }
-    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+    if ((type == BUILDING_SENATE_UPGRADED ||
+        type == BUILDING_VILLAGE_PALACE ||
+        type == BUILDING_TOWN_PALACE ||
+        type == BUILDING_CITY_PALACE) && city_buildings_has_senate()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

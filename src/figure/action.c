@@ -224,25 +224,30 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
     if (stop_at_road) {
         bool found_road = false;
         bool already_there = false;
-        if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
-            building *main = building_main(dest);
-            found_road = map_closest_road_within_radius(main->x, main->y, 3, 2, &x, &y);
-            if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
-                x = tile_x;
-                y = tile_y;
+        if (!destination_x && !destination_y) {
+            if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
+                building *main = building_main(dest);
+                found_road = map_closest_reachable_road_within_radius(main->x, main->y, 3, 1, &x, &y);
+                if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
+                    x = tile_x;
+                    y = tile_y;
+                }
+            } else {
+                found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+                if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
+                    x = tile_x;
+                    y = tile_y;
+                }
             }
         } else {
-            found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
-            if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
-                x = tile_x;
-                y = tile_y;
-            }
+            found_road = true;
+            x = destination_x;
+            y = destination_y;
         }
         // found any road...?
         if (found_road) {
             if (tile_x)
-
-            return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
+                return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
                 advance_action(FAIL_ACTION); // kill dude!!!

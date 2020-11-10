@@ -27,10 +27,14 @@ void figure::determine_deliveryman_destination(building *b, int road_network_id)
     map_point dst;
     int understaffed_storages = 0;
 
+    destination_x = 0;
+    destination_y = 0;
+
     // first: gold deliverers
     if (b->output_resource_id == RESOURCE_GOLD) {
         int senate_id = city_buildings_get_senate_id();
-        if (senate_id && building_get(senate_id)->state == BUILDING_STATE_VALID) {
+        building *b = building_get(senate_id);
+        if (senate_id && b->state == BUILDING_STATE_VALID && b->num_workers >= 5) {
             destination_building_id = senate_id;
             return advance_action(11);
         }

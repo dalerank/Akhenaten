@@ -309,7 +309,10 @@ void building_clear_related_data(building *b) {
     if (b->storage_id)
         building_storage_delete(b->storage_id);
 
-    if (b->type == BUILDING_SENATE_UPGRADED)
+    if (b->type == BUILDING_SENATE_UPGRADED ||
+        b->type == BUILDING_VILLAGE_PALACE ||
+        b->type == BUILDING_TOWN_PALACE ||
+        b->type == BUILDING_CITY_PALACE)
         city_buildings_remove_senate(b);
 
     if (b->type == BUILDING_DOCK)
