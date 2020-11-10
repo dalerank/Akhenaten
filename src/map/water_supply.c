@@ -56,7 +56,7 @@ void map_water_supply_update_houses(void) {
         else if (b->house_size) {
             b->has_water_access = 0;
             b->has_well_access = 0;
-            if (map_terrain_exists_tile_in_area_with_type(
+            if (b->data.house.bathhouse || map_terrain_exists_tile_in_area_with_type(
                     b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = 1;
             }

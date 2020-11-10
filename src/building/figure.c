@@ -615,9 +615,8 @@ static void set_bathhouse_graphic(building *b) {
         return;
     if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_GROUNDWATER))
         b->has_water_access = 1;
-    else {
+    else
         b->has_water_access = 0;
-    }
     if (b->has_water_access && b->num_workers) {
         if (map_desirability_get(b->grid_offset) <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,

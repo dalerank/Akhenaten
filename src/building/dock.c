@@ -44,9 +44,8 @@ int building_dock_is_connected_to_open_water(int x, int y) {
     map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
     if (map_terrain_is_adjacent_to_open_water(x, y, 3))
         return 1;
-    else {
+    else
         return 0;
-    }
 }
 
 int building_dock_accepts_ship(int ship_id, int dock_id) {
