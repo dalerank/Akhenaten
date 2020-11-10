@@ -46,7 +46,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, hou
     const model_house *model = model_get_house(level);
     // water
     int water = model->water;
-    if (!house->has_water_access) {
+    if (!house->has_water_access && !house->data.house.bathhouse) {
         if (water >= 2) {
             ++demands->missing.fountain;
             return 0;

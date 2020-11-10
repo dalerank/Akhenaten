@@ -43,6 +43,8 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->roam_length = 0;
     f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
     f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
+    f->destination_x = 0;
+    f->destination_y = 0;
     f->grid_offset_figure = map_grid_offset(x, y);
     f->cross_country_x = 15 * x;
     f->cross_country_y = 15 * y;

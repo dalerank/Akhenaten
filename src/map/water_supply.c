@@ -240,7 +240,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
             int building_id = map_building_at(grid_offset);
-            if (building_id && building_get(building_id)->house_size) {
+            if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.bathhouse) {
                 num_houses++;
 //                if (!building_get(building_id)->has_water_access) //todo: water carrier access
                     return WELL_NECESSARY;

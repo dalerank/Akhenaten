@@ -854,7 +854,7 @@ static void draw_animation(int x, int y, int grid_offset) {
             const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
             image_draw_masked(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 20, color_mask);
         }
-    } else if (b->type == BUILDING_WATER_SUPPLY)
+    } else if (b->type == BUILDING_WATER_SUPPLY && b->num_workers > 0)
         if (map_property_is_draw_tile(grid_offset)) {
             const image *img = image_get(image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER));
             image_draw_masked(image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER) + 1, x + img->sprite_offset_x, y + img->sprite_offset_y - 27, color_mask);
