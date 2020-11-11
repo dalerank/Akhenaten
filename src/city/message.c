@@ -159,6 +159,8 @@ void city_message_post(int use_popup, int message_id, int param1, int param2) {
     data.current_message_id = id;
 
     city_message *msg = &data.messages[id];
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        message_id += 99;
     msg->message_id = message_id;
     msg->is_read = 0;
     msg->year = game_time_year();

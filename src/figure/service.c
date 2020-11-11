@@ -261,6 +261,8 @@ static int provide_market_goods(int market_building_id, int x, int y) {
     return serviced;
 }
 
+#include "game/tutorial.h"
+
 building *figure::get_entertainment_building() {
     if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
         action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
@@ -320,6 +322,7 @@ int figure::figure_service_provide_coverage() {
             houses_serviced = provide_missionary_coverage(tile_x, tile_y);
             break;
         case FIGURE_PRIEST:
+            tutorial_on_religion();
             switch (building_get(building_id)->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
                 case BUILDING_LARGE_TEMPLE_CERES:
