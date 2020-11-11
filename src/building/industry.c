@@ -15,27 +15,6 @@
 #define MAX_PROGRESS_FARM_PH 2000
 #define INFINITE 10000
 
-int building_is_farm(int type) {
-    return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
-    || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
-}
-int building_is_workshop(int type) {
-    return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
-    || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
-    || type == BUILDING_CATTLE_RANCH
-    || type == BUILDING_LAMP_WORKSHOP
-    || type == BUILDING_PAINT_WORKSHOP;
-}
-int building_is_extractor(int type) {
-    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
-    || type == BUILDING_GOLD_MINE
-    || type == BUILDING_GEMSTONE_MINE
-    || type == BUILDING_COPPER_MINE
-    || type == BUILDING_GRANITE_QUARRY
-    || type == BUILDING_SANDSTONE_QUARRY
-    || type == BUILDING_REED_GATHERER;
-}
-
 #include "map/terrain.h"
 #include "city/view.h"
 

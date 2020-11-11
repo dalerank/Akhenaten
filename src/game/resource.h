@@ -69,10 +69,10 @@ enum {
 //    INVENTORY_FOOD2 = 1,
 //    INVENTORY_FOOD3 = 2,
 //    INVENTORY_FOOD4 = 3,
+    INVENTORY_GOOD1 = 5,
+    INVENTORY_GOOD2 = 7,
+    INVENTORY_GOOD3 = 6,
     INVENTORY_GOOD4 = 4,
-    INVENTORY_GOOD3 = 5,
-    INVENTORY_GOOD2 = 6,
-    INVENTORY_GOOD1 = 7,
     // helper constants
     INVENTORY_MIN_FOOD = 0,
     INVENTORY_MAX_FOOD = 4,
@@ -83,13 +83,6 @@ enum {
 
 int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
-
-//static int ALLOWED_FOODS[4] = {
-//        1,
-//        4,
-//        6,
-//        8
-//};
 
 const int INV_RESOURCES[2][20] = {
     {

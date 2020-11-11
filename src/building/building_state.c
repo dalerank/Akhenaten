@@ -176,8 +176,17 @@ void building_state_save_to_buffer(buffer *buf, const building *b) {
 
 static void read_type_data(buffer *buf, building *b) {
     if (building_is_house(b->type)) {
-        for (int i = 0; i < INVENTORY_MAX; i++) {
-            b->data.house.inventory[i] = buf->read_i16();
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            for (int i = 0; i < INVENTORY_MAX; i++)
+                b->data.house.inventory[i] = buf->read_i16();
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            for (int i = 0; i < 9; i++)
+                b->data.house.foods_ph[i] = buf->read_i16();
+            for (int i = 0; i < 4; i++) {
+                int food_n = ALLOWED_FOODS(i);
+                b->data.house.inventory[i] = b->data.house.foods_ph[food_n];
+                b->data.house.inventory[i + 4] = buf->read_i16();
+            }
         }
         b->data.house.theater = buf->read_u8();
         b->data.house.amphitheater_actor = buf->read_u8();

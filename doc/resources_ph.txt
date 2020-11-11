@@ -35,3 +35,11 @@
 34:Lamps
   35:Marble
 36:[????]
+
+
+house inventory:
+[0-9]: foods
+0: beer
+1: pottery
+2: linen
+3: luxury items

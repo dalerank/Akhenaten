@@ -64,7 +64,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                 {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_SMALL_STATUE,   BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, 0},
 
                 // military structures
-                {BUILDING_MENU_DEFENCES, BUILDING_RECRUITER, BUILDING_FORT,      BUILDING_MILITARY_ACADEMY,
+                {BUILDING_MENU_DEFENSES, BUILDING_RECRUITER, BUILDING_FORT, BUILDING_MILITARY_ACADEMY,
                         BUILDING_WEAPONS_WORKSHOP, BUILDING_CHARIOTS_WORKSHOP, BUILDING_WARSHIP_WHARF, BUILDING_TRANSPORT_WHARF},
                 // industry structures
                 {BUILDING_MENU_RAW_MATERIALS,
@@ -134,6 +134,24 @@ static void enable_building(int type, bool enabled = true) {
             enable_building(BUILDING_MENU_FARMS);
         if (building_is_extractor(type))
             enable_building(BUILDING_MENU_RAW_MATERIALS);
+        if (building_is_extractor(type))
+            enable_building(BUILDING_MENU_RAW_MATERIALS);
+//        if (building_is_fort(type))
+//            enable_building(BUILD_MENU_FORTS);
+        if (building_is_defense_ph(type))
+            enable_building(BUILDING_MENU_DEFENSES);
+        if (building_is_shrine(type))
+            enable_building(BUILDING_MENU_SHRINES);
+        if (building_is_temple(type))
+            enable_building(BUILDING_MENU_SMALL_TEMPLES);
+        if (building_is_large_temple(type))
+            enable_building(BUILDING_MENU_LARGE_TEMPLES);
+        if (building_is_guild(type))
+            enable_building(BUILDING_MENU_LARGE_TEMPLES);
+        if (building_is_beautification(type))
+            enable_building(BUILDING_MENU_BEAUTIFICATION);
+        if (building_is_water_crossing(type))
+            enable_building(BUILDING_MENU_WATER_CROSSINGS);
     }
 }
 static void enable_cycling_temples_if_allowed(int type) {
@@ -286,6 +304,15 @@ void building_menu_update(int build_set) {
                 enable_building(BUILDING_GOLD_MINE);
                 enable_building(BUILDING_VILLAGE_PALACE);
             }
+            break;
+        case BUILDSET_TUT2_GODS:
+            enable_building(BUILDING_TEMPLE_BAST);
+            enable_building(BUILDING_SHRINE_BAST);
+            enable_building(BUILDING_FESTIVAL_SQUARE);
+            break;
+        case BUILDSET_TUT2_ENTERTAINMENT:
+            enable_building(BUILDING_BOOTH);
+            enable_building(BUILDING_JUGGLER_SCHOOL);
             break;
         case BUILDSET_TUT2_UP_TO_250:
             enable_building(BUILDING_DRAGGABLE_RESERVOIR);

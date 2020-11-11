@@ -362,6 +362,54 @@ int building_is_fort(int type) {
            type == BUILDING_FORT_JAVELIN ||
            type == BUILDING_FORT_MOUNTED;
 }
+int building_is_defense_ph(int type) {
+    return (type == BUILDING_WALL_PH)
+           || type == BUILDING_WALL_PH
+           || type == BUILDING_GATEHOUSE_PH
+           || type == BUILDING_TOWER_PH;
+}
+int building_is_farm(int type) {
+    return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
+           || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
+}
+int building_is_workshop(int type) {
+    return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
+           || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
+           || type == BUILDING_CATTLE_RANCH
+           || type == BUILDING_LAMP_WORKSHOP
+           || type == BUILDING_PAINT_WORKSHOP;
+}
+int building_is_extractor(int type) {
+    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
+           || type == BUILDING_GOLD_MINE
+           || type == BUILDING_GEMSTONE_MINE
+           || type == BUILDING_COPPER_MINE
+           || type == BUILDING_GRANITE_QUARRY
+           || type == BUILDING_SANDSTONE_QUARRY
+           || type == BUILDING_REED_GATHERER;
+}
+int building_is_temple(int type) {
+    return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);
+}
+int building_is_large_temple(int type) {
+    return (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS);
+}
+int building_is_shrine(int type) {
+    return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
+}
+int building_is_guild(int type) {
+    return (type >= BUILDING_CARPENTERS_GUILD && type <= BUILDING_STONEMASONS_GUILD);
+}
+int building_is_beautification(int type) {
+    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE)
+           || type == BUILDING_GARDENS
+           || type == BUILDING_PLAZA;
+}
+int building_is_water_crossing(int type) {
+    return (type == BUILDING_FERRY)
+           || type == BUILDING_LOW_BRIDGE
+           || type == BUILDING_SHIP_BRIDGE;
+}
 
 int building_get_highest_id(void) {
     return extra.highest_id_in_use;

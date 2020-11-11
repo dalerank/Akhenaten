@@ -74,6 +74,7 @@ static void draw_happiness_info(building_info_context *c, int y_offset) {
     lang_text_draw(127, text_id, c->x_offset + 36, y_offset, FONT_NORMAL_GREEN);
 }
 
+#define Y_COMPLAINTS 40 //70
 #define Y_FOODS 100 //234
 #define Y_GOODS Y_FOODS + 20 //174 //274
 
@@ -91,15 +92,15 @@ void window_building_draw_house(building_info_context *c) {
     inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
 
     if (b->data.house.evolve_text_id == 62) { // is about to devolve
-        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60,
+        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + Y_COMPLAINTS,
                                    FONT_NORMAL_BLACK);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,
-                                        c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, COLOR_FONT_RED);
-        text_draw((uint8_t *) ")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
-        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 76,
+                                        c->x_offset + 32 + width, c->y_offset + Y_COMPLAINTS, FONT_NORMAL_RED, 0);
+        text_draw((uint8_t *) ")", c->x_offset + 32 + width, c->y_offset + Y_COMPLAINTS, FONT_NORMAL_BLACK, 0);
+        lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + Y_COMPLAINTS + 16,
                                  16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     } else // needs something to evolve
-        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60,
+        lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + Y_COMPLAINTS,
                                  16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 
     int resource_image = image_id_from_group(GROUP_RESOURCE_ICONS);

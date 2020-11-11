@@ -111,6 +111,7 @@ typedef struct {
             unsigned char play;
         } entertainment;
         struct {
+            short foods_ph[8];
             short inventory[8];
             unsigned char theater;
             unsigned char amphitheater_actor;
@@ -167,6 +168,16 @@ void building_clear_all(void);
 
 int building_is_house(int type);
 int building_is_fort(int type);
+int building_is_defense_ph(int type);
+int building_is_farm(int type);
+int building_is_workshop(int type);
+int building_is_extractor(int type);
+int building_is_temple(int type);
+int building_is_large_temple(int type);
+int building_is_shrine(int type);
+int building_is_guild(int type);
+int building_is_beautification(int type);
+int building_is_water_crossing(int type);
 
 int building_get_highest_id(void);
 void building_update_highest_id(void);

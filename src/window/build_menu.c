@@ -134,7 +134,7 @@ static int set_submenu_for_type(int type) {
                 return 0;
             data.selected_submenu = BUILD_MENU_BEAUTIFICATION;
             break;
-        case BUILDING_MENU_DEFENCES:
+        case BUILDING_MENU_DEFENSES:
             data.selected_submenu = BUILD_MENU_DEFENCES;
             break;
         case BUILDING_MENU_SHRINES:
