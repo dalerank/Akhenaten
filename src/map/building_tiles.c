@@ -177,19 +177,34 @@ void map_building_tiles_remove(int building_id, int x, int y) {
         return;
     int size; // todo: monuments???
     int base_grid_offset = north_tile_grid_offset(x, y, &size);
-    x = map_grid_offset_to_x(base_grid_offset);
-    y = map_grid_offset_to_y(base_grid_offset);
     if (map_terrain_get(base_grid_offset) == TERRAIN_ROCK)
         return;
     building *b = building_get(building_id);
     if (building_id && building_is_farm(b->type))
         size = 3;
-
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (b->type) {
+            case BUILDING_BOOTH:
+                size = 2;
+                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+                break;
+            case BUILDING_BANDSTAND:
+                size = 3;
+                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+                break;
+            case BUILDING_PAVILLION:
+                size = 4;
+                base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
+                break;
+        }
+    }
+    x = map_grid_offset_to_x(base_grid_offset);
+    y = map_grid_offset_to_y(base_grid_offset);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            if (building_id && map_building_at(grid_offset) != building_id)
-                continue;
+//            if (building_id && map_building_at(grid_offset) != building_id)
+//                continue;
 
             if (building_id && b->type != BUILDING_BURNING_RUIN)
                 map_set_rubble_building_type(grid_offset, b->type);
@@ -209,7 +224,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
                 map_image_set(grid_offset,
                               image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) +
                               (map_random_get(grid_offset) & 7));
-                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE - TERRAIN_ROAD);
             }
         }
     }
@@ -279,9 +294,8 @@ void map_building_tiles_mark_deleting(int grid_offset) {
     int building_id = map_building_at(grid_offset);
     if (!building_id)
         map_bridge_remove(grid_offset, 1);
-    else {
+    else
         grid_offset = building_main(building_get(building_id))->grid_offset;
-    }
     map_property_mark_deleted(grid_offset);
 }
 int map_building_tiles_are_clear(int x, int y, int size, int terrain) {
@@ -294,7 +308,6 @@ int map_building_tiles_are_clear(int x, int y, int size, int terrain) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR))
                 return 0;
-
         }
     }
     return 1;

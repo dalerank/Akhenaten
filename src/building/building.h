@@ -109,6 +109,7 @@ typedef struct {
             unsigned char days1;
             unsigned char days2;
             unsigned char play;
+            unsigned short booth_corner_grid_offset;
         } entertainment;
         struct {
             short foods_ph[8];
