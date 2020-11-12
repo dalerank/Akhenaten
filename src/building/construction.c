@@ -350,6 +350,9 @@ void building_construction_set_type(
                 break;
             case BUILDING_WELL:
             case BUILDING_WATER_SUPPLY:
+            case BUILDING_VILLAGE_PALACE:
+            case BUILDING_TOWN_PALACE:
+            case BUILDING_CITY_PALACE:
                 if (GAME_ENV == ENGINE_ENV_PHARAOH)
                     data.required_terrain.groundwater = true;
                 break;
