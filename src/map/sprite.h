@@ -15,10 +15,6 @@ int map_sprite_animation_at(int grid_offset);
 
 void map_sprite_animation_set(int grid_offset, int value);
 
-int map_sprite_bridge_at(int grid_offset);
-
-void map_sprite_bridge_set(int grid_offset, int value);
-
 void map_sprite_clear_tile(int grid_offset);
 
 void map_sprite_clear(void);

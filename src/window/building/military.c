@@ -102,7 +102,8 @@ void window_building_draw_barracks(building_info_context *c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS_C3, c->x_offset + 64, c->y_offset + 38);
+    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS_C3, c->x_offset + 64,
+               c->y_offset + 38);
 
     building *b = building_get(c->building_id);
     if (b->loads_stored < 1)
@@ -206,7 +207,8 @@ void window_building_draw_legion_info(building_info_context *c) {
         image_id += 8;
 
     int flag_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height);
+    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+               c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
     image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,

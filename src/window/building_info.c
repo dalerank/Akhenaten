@@ -260,7 +260,7 @@ static void init(int grid_offset) {
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;
     context.figure.drawn = 0;
-    if (!context.building_id && map_sprite_bridge_at(grid_offset) > 0) {
+    if (!context.building_id && map_sprite_animation_at(grid_offset) > 0) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER))
             context.terrain_type = TERRAIN_INFO_BRIDGE;
         else

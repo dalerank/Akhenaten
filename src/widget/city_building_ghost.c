@@ -435,7 +435,8 @@ static void image_draw_warehouse(int image_id, int x, int y) {
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
             draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-            image_draw_masked(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4, y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
+            image_draw(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4,
+                       y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
         } else
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
     }
@@ -466,7 +467,7 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         if (GAME_ENV == ENGINE_ENV_C3) {
             image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
             const image *img = image_get(image_id + 1);
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64, COLOR_MASK_GREEN);
+            image_draw(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64, COLOR_MASK_GREEN);
         } else
             draw_building(image_id, x, y);
     } else if (type == BUILDING_HOUSE_VACANT_LOT)
@@ -475,9 +476,9 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         draw_building(image_id, x, y);
         const image *img = image_get(image_id + 1);
         if (image_id == image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH))
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51, COLOR_MASK_GREEN);
+            image_draw(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51, COLOR_MASK_GREEN);
         else
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
+            image_draw(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
     } else if (type == BUILDING_WELL) {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
             city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
@@ -536,7 +537,7 @@ static void draw_single_reservoir(int x, int y, int has_water) {
         const image *img = image_get(image_id);
         int x_water = x - 58 + img->sprite_offset_x - 2;
         int y_water = y + img->sprite_offset_y - (img->height - 90);
-        image_draw_masked(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+        image_draw(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
     }
 }
 static void draw_first_reservoir_range(int x, int y, int grid_offset) {
@@ -709,7 +710,7 @@ static void draw_fountain(const map_tile *tile, int x, int y) {
         draw_building(image_id, x, y);
         if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            image_draw(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
     }
 }
@@ -747,7 +748,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y) {
         draw_building(image_id, x, y);
         if (has_water) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            image_draw(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
     }
 }

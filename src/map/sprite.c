@@ -13,14 +13,6 @@ void map_sprite_animation_set(int grid_offset, int value) {
     map_grid_set(&sprite, grid_offset, value);
 }
 
-int map_sprite_bridge_at(int grid_offset) {
-    return map_grid_get(&sprite, grid_offset);
-}
-
-void map_sprite_bridge_set(int grid_offset, int value) {
-    map_grid_set(&sprite, grid_offset, value);
-}
-
 void map_sprite_clear_tile(int grid_offset) {
     map_grid_set(&sprite, grid_offset, 0);
 }

@@ -178,6 +178,10 @@ int tutorial_get_immediate_goal_text(void) {
         } else if (scenario_is_tutorial_2()) {
             if (!data.pharaoh.gold_mined_500)
                 return 24;
+            else if (!data.pharaoh.temples_built)
+                return 23;
+            else
+                return 22;
         } else if (scenario_is_tutorial_3()) {
 
         }

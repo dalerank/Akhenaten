@@ -339,7 +339,8 @@ void figure::draw_figure_main(int x, int y) {
 }
 void figure::draw_figure_cart(int x, int y) {
     const image *img = image_get(cart_image_id);
-    image_draw(cart_image_id, x + x_offset_cart - img->sprite_offset_x, y + y_offset_cart - img->sprite_offset_y - 7);
+    image_draw(cart_image_id, x + x_offset_cart - img->sprite_offset_x,
+               y + y_offset_cart - img->sprite_offset_y - 7);
 }
 void figure::draw_figure_with_cart(int x, int y) {
     draw_figure_cart(x, y);

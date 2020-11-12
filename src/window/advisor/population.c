@@ -145,7 +145,8 @@ static void draw_history_graph(int full_size, int x, int y) {
                         image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
                         break;
                     case 40:
-                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+                        image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m,
+                                   y + 200 - val);
                         break;
                     case 100:
                         image_draw(image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);

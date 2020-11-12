@@ -201,7 +201,7 @@ int map_bridge_add(int x, int y, int is_ship_bridge) {
     for (int i = 0; i < bridge.length; i++) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
         int value = map_bridge_get_sprite_id(i, bridge.length, bridge.direction, is_ship_bridge);
-        map_sprite_bridge_set(grid_offset, value);
+        map_sprite_animation_set(grid_offset, value);
         grid_offset += bridge.direction_grid_delta;
     }
 
@@ -212,7 +212,7 @@ int map_bridge_add(int x, int y, int is_ship_bridge) {
 }
 
 int map_is_bridge(int grid_offset) {
-    return map_terrain_is(grid_offset, TERRAIN_WATER) && map_sprite_bridge_at(grid_offset);
+    return map_terrain_is(grid_offset, TERRAIN_WATER) && map_sprite_animation_at(grid_offset);
 }
 
 static int get_y_bridge_tiles(int grid_offset) {
@@ -311,7 +311,7 @@ void map_bridge_update_after_rotate(int counter_clockwise) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
-                switch (map_sprite_bridge_at(grid_offset)) {
+                switch (map_sprite_animation_at(grid_offset)) {
                     case 1:
                         new_value = counter_clockwise ? 2 : 4;
                         break;
@@ -358,16 +358,16 @@ void map_bridge_update_after_rotate(int counter_clockwise) {
                         new_value = 14;
                         break;
                     default:
-                        new_value = map_sprite_bridge_at(grid_offset);
+                        new_value = map_sprite_animation_at(grid_offset);
                 }
-                map_sprite_bridge_set(grid_offset, new_value);
+                map_sprite_animation_set(grid_offset, new_value);
             }
         }
     }
 }
 
 int map_bridge_height(int grid_offset) {
-    int sprite = map_sprite_bridge_at(grid_offset);
+    int sprite = map_sprite_animation_at(grid_offset);
     if (sprite <= 6) {
         // low bridge
         switch (sprite) {
