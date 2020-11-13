@@ -78,6 +78,8 @@ enum {
     WARNING_PALACE_ROBBED = 102,
     WARNING_MANSION_ROBBED = 103,
     WARNING_NO_TROOPS = 104,
+
+    WARNING_FESTIVAL_ROAD_INTERSECTION_NEEDED = 215,
 };
 
 void city_warning_show(int type);

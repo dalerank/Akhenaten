@@ -109,9 +109,8 @@ void widget_city_draw(void) {
 
     if (game_state_overlay())
         city_with_overlay_draw(&data.current_tile);
-    else {
+    else
         city_without_overlay_draw(0, 0, &data.current_tile);
-    }
 
     graphics_set_active_canvas(CANVAS_UI);
 }

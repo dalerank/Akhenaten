@@ -37,8 +37,8 @@ static int groupid_translation_table_ph[] = {
         41, 42 + 66, // apothecary
         42, 43 + 66, // apothecary
         44, 116 + 66, // beer
-        45, 99 + 66, // bandstand
-        46, 113 + 66, // booth
+        45, 92 + 66, // bandstand
+        46, 114 + 66, // booth
         48, 48 + 66, // pavillion
         49, 51 + 66, // conservatory
         50, 52 + 66, // dance school

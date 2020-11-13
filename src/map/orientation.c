@@ -386,3 +386,155 @@ void map_orientation_update_buildings(void) {
         }
     }
 }
+
+const uint8_t BOOTH_ROAD_POSITIONS[4][2][2] = {
+    {
+        {0, 1},
+        {1, 1},
+    },
+    {
+        {1, 0},
+        {1, 1},
+    },
+    {
+        {1, 1},
+        {1, 0},
+    },
+    {
+        {1, 1},
+        {0, 1},
+    },
+};
+const uint8_t BANDSTAND_ROAD_POSITIONS[4][3][3] = {
+    {
+        {0, 1, 0},
+        {0, 1, 0},
+        {1, 1, 1},
+    },
+    {
+        {1, 0, 0},
+        {1, 1, 1},
+        {1, 0, 0},
+    },
+    {
+        {1, 1, 1},
+        {0, 1, 0},
+        {0, 1, 0},
+    },
+    {
+        {0, 0, 1},
+        {1, 1, 1},
+        {0, 0, 1},
+    },
+};
+const uint8_t PAVILLION_ROAD_POSITIONS[4][4][4] = {
+    {
+        {0, 0, 1, 0},
+        {0, 0, 1, 0},
+        {0, 0, 1, 0},
+        {1, 1, 1, 1},
+    },
+    {
+        {1, 0, 0, 0},
+        {1, 0, 0, 0},
+        {1, 1, 1, 1},
+        {1, 0, 0, 0},
+    },
+    {
+        {1, 1, 1, 1},
+        {0, 1, 0, 0},
+        {0, 1, 0, 0},
+        {0, 1, 0, 0},
+    },
+    {
+        {0, 0, 0, 1},
+        {1, 1, 1, 1},
+        {0, 0, 0, 1},
+        {0, 0, 0, 1},
+    },
+};
+const uint8_t FESTIVAL_ROAD_POSITIONS[5][5] = {
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+        {1, 1, 1, 1, 1},
+        {0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0},
+};
+
+int map_orientation_for_venue(int x, int y, int mode, int *building_orientation) {
+    switch (city_view_orientation()) {
+        case DIR_2_BOTTOM_RIGHT:
+            x -= (mode + 1);
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            x -= (mode + 1);
+            y -= (mode + 1);
+            break;
+        case DIR_6_TOP_LEFT:
+            y -= (mode + 1);
+            break;
+    }
+
+    *building_orientation = 0;
+    int num_correct_road_tiles[8] = {0,0,0,0,0,0,0,0};
+
+    int grid_offset = map_grid_offset(x, y);
+    for (int y_delta = 0; y_delta < mode + 2; y_delta++)
+        for (int x_delta = 0; x_delta < mode + 2; x_delta++) {
+            int offset_check = grid_offset + map_grid_delta(x_delta, y_delta);
+            int is_road = map_terrain_is(offset_check, TERRAIN_ROAD);
+            if (map_terrain_is(offset_check, TERRAIN_BUILDING) || (map_terrain_is(offset_check, TERRAIN_NOT_CLEAR) && !is_road))
+                return 0;
+            else {
+                for (int orientation_check = 0; orientation_check < 8; orientation_check++) {
+                    int tile_road_checked_against = 0;
+                    int half_orientation_check = orientation_check / 2;
+                    switch (mode) {
+                        case 0: // only 4 orientations
+                            tile_road_checked_against = BOOTH_ROAD_POSITIONS[half_orientation_check][y_delta][x_delta];
+                            break;
+                        case 1: // only 4 orientations
+                            tile_road_checked_against = BANDSTAND_ROAD_POSITIONS[half_orientation_check][y_delta][x_delta];
+                            break;
+                        case 2: // ugh...
+                            switch (orientation_check) {
+                                case 0:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[0][y_delta][x_delta]; break;
+                                case 1:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[0][y_delta][3 - x_delta]; break;
+                                case 2:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[1][y_delta][x_delta]; break;
+                                case 3:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[1][3 - y_delta][x_delta]; break;
+                                case 4:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[2][y_delta][x_delta]; break;
+                                case 5:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[2][y_delta][3 - x_delta]; break;
+                                case 6:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[3][y_delta][x_delta]; break;
+                                case 7:
+                                    tile_road_checked_against = PAVILLION_ROAD_POSITIONS[3][3 - y_delta][x_delta]; break;
+                            }
+                            break;
+                        case 3: // only one orientation
+                            orientation_check = 7;
+                            tile_road_checked_against = FESTIVAL_ROAD_POSITIONS[y_delta][x_delta];
+                            break;
+                    }
+
+                    if (tile_road_checked_against == is_road)
+                        num_correct_road_tiles[orientation_check]++;
+                }
+            }
+        }
+
+    // check the final count and return orientation
+    for (int orientation_check = 0; orientation_check < 8; orientation_check++)
+        if (num_correct_road_tiles[orientation_check] == (mode + 2) * (mode + 2)) {
+            *building_orientation = orientation_check;
+            return 1;
+        }
+    if (mode == 3)
+        return -2;
+    return -1;
+}

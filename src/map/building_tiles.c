@@ -196,6 +196,9 @@ void map_building_tiles_remove(int building_id, int x, int y) {
                 size = 4;
                 base_grid_offset = b->data.entertainment.booth_corner_grid_offset;
                 break;
+            case BUILDING_FESTIVAL_SQUARE:
+                size = 5;
+                break;
         }
     }
     x = map_grid_offset_to_x(base_grid_offset);

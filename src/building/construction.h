@@ -3,6 +3,8 @@
 
 #include "building/type.h"
 
+int building_construction_place_building(int type, int x, int y);
+
 void building_construction_set_type(int type);
 
 void building_construction_clear_type(void);

@@ -180,12 +180,12 @@ static building_properties properties[2][400] = {
                 {3, 0, 0, 0},
                 {4, 0, 0, 0},
                 {4, 0, 0, 0}, // houses ^^^^
-                {3, 0, 45, 0},
-                {2, 0, 46, 0},
+                {1, 0, 45, 0}, // bandstand
+                {1, 0, 46, 0}, // booth
                 {5, 0, 213, 0}, // senet
-                {4, 0, 48, 0},
-                {3, 0, 49, 0},
-                {4, 0, 50, 0},
+                {2, 0, 48, 0}, // pavillion
+                {3, 0, 49, 0}, // conservatory
+                {4, 0, 50, 0}, // dance school
                 {2, 0, 51, 0}, // juggler
                 {3, 0, 52, 0}, // unused (senet master)
                 {1, 1, 58, 0}, // plaza

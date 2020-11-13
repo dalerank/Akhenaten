@@ -450,17 +450,8 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         if (GAME_ENV == ENGINE_ENV_C3) {
             for (int i = 4; i < 9; i++)
                 image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//            image_draw_from_below(type, 0, x, y, COLOR_MASK_GREEN);
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             draw_ph_crops(type, 0, grid_offset, x, y, COLOR_MASK_GREEN);
-//            int image_crops = get_crops_image(type, 0);
-//            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-//                for (int i = 0; i < 9; i++)
-//                    image_draw_from_below(image_crops, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
-//            }
-//            for (int i = 4; i < 9; i++)
-//                image_draw_from_below(image_crops, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
-        }
     } else if (type == BUILDING_WAREHOUSE)
         image_draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {
@@ -991,6 +982,163 @@ static void draw_road(const map_tile *tile, int x, int y) {
         draw_building(image_id, x, y);
 }
 
+static void draw_entertainment_venue(const map_tile *tile, int x, int y, int type) {
+    int can_build = 0;
+//    const building_properties *props = building_properties_for_type(type);
+    int size = 0;
+    switch (type) {
+        case BUILDING_BOOTH:
+            size = 2; break;
+        case BUILDING_BANDSTAND:
+            size = 3; break;
+            break;
+        case BUILDING_PAVILLION:
+            size = 4; break;
+            break;
+        case BUILDING_FESTIVAL_SQUARE:
+            size = 5; break;
+            break;
+    }
+    int orientation = 0;
+    switch (type) {
+        case BUILDING_BOOTH:
+            can_build = map_orientation_for_venue(tile->x, tile->y, 0, &orientation);
+            break;
+        case BUILDING_BANDSTAND:
+            can_build = map_orientation_for_venue(tile->x, tile->y, 1, &orientation);
+            break;
+        case BUILDING_PAVILLION:
+            can_build = map_orientation_for_venue(tile->x, tile->y, 2, &orientation);
+            break;
+        case BUILDING_FESTIVAL_SQUARE:
+            can_build = map_orientation_for_venue(tile->x, tile->y, 3, &orientation);
+            break;
+    }
+    if (can_build != 1 || (type == BUILDING_FESTIVAL_SQUARE && city_building_has_festival_square())) {
+        for (int i = 0; i < size * size; i++)
+            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+    } else {
+        for (int i = 0; i < size * size; i++)
+            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+        switch (type) {
+            case BUILDING_BOOTH:
+                for (int i = 0; i < size * size; i++)
+                    image_draw_isometric_footprint(image_id_from_group(GROUP_BOOTH_SQUARE) + i,
+                                                   x + ((i % size) - (i / size)) * 30,
+                                                   y + ((i % size) + (i / size)) * 15,
+                                                   COLOR_MASK_GREEN);
+                switch (orientation / 2) {
+                    case 0:
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y, COLOR_MASK_GREEN);
+                        break;
+                    case 1:
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x + 30, y + 15, COLOR_MASK_GREEN);
+                        break;
+                    case 2:
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y + 30, COLOR_MASK_GREEN);
+                        break;
+                    case 3:
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 30, y + 15, COLOR_MASK_GREEN);
+                        break;
+                }
+                break;
+            case BUILDING_BANDSTAND:
+                for (int i = 0; i < size * size; i++)
+                    image_draw_isometric_footprint(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i,
+                                                   x + ((i % size) - (i / size)) * 30,
+                                                   y + ((i % size) + (i / size)) * 15,
+                                                   COLOR_MASK_GREEN);
+                switch (orientation / 2) {
+                    case 0:
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x, y, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x - 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x + 60, y + 30, COLOR_MASK_GREEN);
+                        break;
+                    case 1:
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 2, x + 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 3, x + 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y + 60, COLOR_MASK_GREEN);
+                        break;
+                    case 2:
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x - 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x - 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y + 60, COLOR_MASK_GREEN);
+                        break;
+                    case 3:
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 2, x, y, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 3, x + 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 60, y + 30, COLOR_MASK_GREEN);
+                        break;
+                }
+                break;
+            case BUILDING_PAVILLION:
+                for (int i = 0; i < size * size; i++)
+                    image_draw_isometric_footprint(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
+                                                   x + ((i % size) - (i / size)) * 30,
+                                                   y + ((i % size) + (i / size)) * 15,
+                                                   COLOR_MASK_GREEN);
+                switch (orientation) {
+                    case 0:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x, y, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x + 90, y + 45, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x + 60, y + 60, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 60, y + 30, COLOR_MASK_GREEN);
+                        break;
+                    case 1:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x + 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x, y, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x - 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 60, y + 30, COLOR_MASK_GREEN);
+                        break;
+                    case 2:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x + 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x + 90, y + 45, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x + 60, y + 60, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y + 90, COLOR_MASK_GREEN);
+                        break;
+                    case 3:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x - 30, y + 45, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x + 30, y + 75, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x, y + 90, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x + 90, y + 45, COLOR_MASK_GREEN);
+                        break;
+                    case 4:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x + 30, y + 45, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x - 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x - 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 90, y + 45, COLOR_MASK_GREEN);
+                        break;
+                    case 5:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x - 30, y + 15, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x + 60, y + 60, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x + 30, y + 75, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 90, y + 45, COLOR_MASK_GREEN);
+                        break;
+                    case 6:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x - 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x, y + 60, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x - 30, y + 75, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x, y, COLOR_MASK_GREEN);
+                        break;
+                    case 7:
+                        draw_building(image_id_from_group(GROUP_BUILDING_COLOSSEUM), x, y, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + 1, x + 60, y + 30, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_AMPHITHEATER), x + 30, y + 45, COLOR_MASK_GREEN);
+                        draw_building(image_id_from_group(GROUP_BUILDING_THEATER), x - 90, y + 45, COLOR_MASK_GREEN);
+                        break;
+                }
+                break;
+            case BUILDING_FESTIVAL_SQUARE:
+                for (int i = 0; i < size * size; i++)
+                    image_draw_isometric_footprint(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
+                                                   x + ((i % size) - (i / size)) * 30,
+                                                   y + ((i % size) + (i / size)) * 15,
+                                                   COLOR_MASK_GREEN);
+                break;
+        }
+    }
+}
+
 int city_building_ghost_mark_deleting(const map_tile *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
@@ -1060,7 +1208,7 @@ void city_building_ghost_draw(const map_tile *tile) {
         case BUILDING_BANDSTAND:
         case BUILDING_PAVILLION:
         case BUILDING_FESTIVAL_SQUARE:
-//            draw_square(tile, x, y, type);
+            draw_entertainment_venue(tile, x, y, type);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:

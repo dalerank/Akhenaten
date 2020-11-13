@@ -70,8 +70,7 @@ static int OFFSET(int x, int y) {
     }
 }
 
-int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative) {
+int map_water_determine_orientation_size2(int x, int y, int adjust_xy, int *orientation_absolute, int *orientation_relative) {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
             case DIR_0_TOP_RIGHT:
@@ -148,8 +147,7 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
     return 999;
 }
 
-int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative) {
+int map_water_determine_orientation_size3(int x, int y, int adjust_xy, int *orientation_absolute, int *orientation_relative) {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
             case DIR_0_TOP_RIGHT:

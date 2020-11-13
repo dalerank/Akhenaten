@@ -121,7 +121,10 @@ void tutorial_menu_update(int tut) {
                 building_menu_update(BUILDSET_TUT1_WATER);
         } else if (tut == 2) {
             building_menu_update(BUILDSET_TUT2_START);
-            ////
+            if (data.pharaoh.gold_mined_500)
+                building_menu_update(BUILDSET_TUT2_GODS);
+            if (data.pharaoh.temples_built)
+                building_menu_update(BUILDSET_TUT2_ENTERTAINMENT);
         }
     }
 }

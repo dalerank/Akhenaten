@@ -586,7 +586,7 @@ static void draw_figures(int x, int y, int grid_offset) {
 #include "core/string.h"
 #include "map/property.h"
 
-static void draw_debug(int x, int y, int grid_offset) {
+void draw_debug(int x, int y, int grid_offset) {
 
     // draw terrain data
     if (true) {
@@ -608,15 +608,24 @@ static void draw_debug(int x, int y, int grid_offset) {
         }
 
         building *b = building_get(map_building_at(grid_offset));
-        if (map_building_at(grid_offset) && true && b->grid_offset == grid_offset) {
+        if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
             string_from_int(str, b->id, 0);
-            draw_text_shadow(str, x + 13, y + 5, COLOR_WHITE);
+            draw_text_shadow(str, x + 23, y, COLOR_WHITE);
 
-            string_from_int(str, b->type, 0);
-            draw_text_shadow(str, x + 63, y + 5, COLOR_WHITE);
+//            string_from_int(str, b->type, 0);
+//            draw_text_shadow(str, x + 13, y + 15, COLOR_BLUE);
 
-            string_from_int(str, map_image_at(grid_offset), 0);
-            draw_text_shadow(str, x + 13, y - 5, COLOR_GREEN);
+//            string_from_int(str, map_image_at(grid_offset), 0);
+//            draw_text_shadow(str, x + 13, y - 5, COLOR_GREEN);
+
+            int p = map_bitfield_get(grid_offset);
+            if (p & 32)
+                p -= 32;
+            string_from_int(str, p, 0);
+            draw_text_shadow(str, x + 23, y + 10, COLOR_RED);
+
+            string_from_int(str, b->next_part_building_id, 0);
+            draw_text_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);
@@ -687,7 +696,7 @@ static void draw_debug(int x, int y, int grid_offset) {
         }
 
         d = map_terrain_get(grid_offset);
-        if (d & TERRAIN_ROAD) {
+        if (d & TERRAIN_ROAD && false) {
             draw_text_shadow((uint8_t*)string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
         }
 
@@ -896,7 +905,6 @@ static int should_draw_top_before_deletion(int grid_offset) {
 static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
     if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
-
 }
 static void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
@@ -960,6 +968,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
+        city_view_foreach_map_tile(draw_debug);
     }
 
     /////// TEMP
