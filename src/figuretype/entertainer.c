@@ -13,7 +13,7 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-static int determine_destination(int x, int y, int type1, int type2) {
+int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
     int road_network = map_road_network_get(map_grid_offset(x, y));
 
     building_list_small_clear();
@@ -29,7 +29,6 @@ static int determine_destination(int x, int y, int type1, int type2) {
         if (b->distance_from_entry && b->road_network_id == road_network) {
             if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
                 continue;
-
             building_list_small_add(i);
         }
     }
@@ -42,14 +41,15 @@ static int determine_destination(int x, int y, int type1, int type2) {
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
         building *b = building_get(venues[i]);
+        if (!b->num_workers)
+            break;
         int days_left;
         if (b->type == type1)
             days_left = b->data.entertainment.days1;
         else if (b->type == type2)
             days_left = b->data.entertainment.days2;
-        else {
+        else
             days_left = 0;
-        }
         int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
@@ -69,16 +69,14 @@ void figure::entertainer_update_shows() {
 
             if (b->type == BUILDING_THEATER)
                 b->data.entertainment.days1 = 32;
-            else {
+            else
                 b->data.entertainment.days2 = 32;
-            }
             break;
         case FIGURE_GLADIATOR:
             if (b->type == BUILDING_AMPHITHEATER)
                 b->data.entertainment.days1 = 32;
-            else {
+            else
                 b->data.entertainment.days2 = 32;
-            }
             break;
         case FIGURE_LION_TAMER:
         case FIGURE_CHARIOTEER:
@@ -126,12 +124,6 @@ void figure::entertainer_update_image() {
     }
 }
 void figure::entertainer_action() {
-//    building *b = building_get(building_id);
-//    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-//    terrain_usage = TERRAIN_USAGE_ROADS;
-//    use_cross_country = 0;
-//    max_roam_length = 512;
-//    figure_image_increase_offset(12);
     wait_ticks_missile++;
     if (wait_ticks_missile >= 120)
         wait_ticks_missile = 0;
@@ -179,16 +171,16 @@ void figure::entertainer_action() {
                 int dst_building_id = 0;
                 switch (type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, 0);
                         break;
-                    case FIGURE_LION_TAMER:
-                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_COLOSSEUM, 0);
+                    case FIGURE_LION_TAMER: // dancer
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_COLOSSEUM, 0, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_destination(tile_x, tile_y, BUILDING_HIPPODROME, 0);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_HIPPODROME, 0, 0);
                         break;
                 }
                 if (dst_building_id) {
@@ -207,42 +199,40 @@ void figure::entertainer_action() {
             }
             is_ghost = 1;
             break;
+//        case 95:
+        case 10:
         case FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE:
             is_ghost = 0;
             roam_length++;
             if (roam_length >= 3200)
                 kill();
-
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (do_gotobuilding(destination_building_id))
                 entertainer_update_shows();
-                kill();
-            } else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
-            else if (direction == DIR_FIGURE_LOST)
-                kill();
             break;
-        case ACTION_10_DELIVERING_FOOD:
+        case 12:
+//        case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
-            is_ghost = 0;
-            roam_length++;
-            if (roam_length >= max_roam_length) {
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                    action_state = FIGURE_ACTION_95_ENTERTAINER_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
-                } else
-                    kill();
-            }
-            roam_ticks(speed_factor);
+            do_roam();
+//            is_ghost = 0;
+//            roam_length++;
+//            if (roam_length >= max_roam_length) {
+//                int x_road, y_road;
+//                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+//                    action_state = FIGURE_ACTION_95_ENTERTAINER_RETURNING;
+//                    destination_x = x_road;
+//                    destination_y = y_road;
+//                } else
+//                    kill();
+//            }
+//            roam_ticks(speed_factor);
             break;
         case ACTION_11_RETURNING_EMPTY:
-        case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
-            move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-                kill();
-            }
+//        case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
+            do_returnhome();
+//            move_ticks(speed_factor);
+//            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+//                kill();
+//            }
             break;
     }
     entertainer_update_image();

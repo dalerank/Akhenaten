@@ -1,4 +1,5 @@
 #include <ntdef.h>
+#include <figuretype/entertainer.h>
 #include "building/figure.h"
 
 #include "building/barracks.h"
@@ -285,6 +286,17 @@ static void spawn_figure_actor_colony(building *b) {
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                int dest = determine_venue_destination(road.x, road.y, BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                if (dest) {
+                    figure *f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP_RIGHT);
+                    f->destination_building_id = dest;
+                    f->action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
+                    f->building_id = b->id;
+                    b->figure_id = f->id;
+                }
+                return;
+            }
             figure *f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
             f->building_id = b->id;

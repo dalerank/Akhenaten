@@ -323,10 +323,10 @@ void figure::action_perform() {
             case FIGURE_TAX_COLLECTOR:
             case FIGURE_TOWER_SENTRY:
             case FIGURE_MISSIONARY:
-            case FIGURE_ACTOR:
-            case FIGURE_GLADIATOR:
-            case FIGURE_LION_TAMER:
-            case FIGURE_CHARIOTEER:
+//            case FIGURE_ACTOR:
+//            case FIGURE_GLADIATOR:
+//            case FIGURE_LION_TAMER:
+//            case FIGURE_CHARIOTEER:
             case FIGURE_BATHHOUSE_WORKER:
             case FIGURE_DOCTOR:
             case FIGURE_SURGEON:

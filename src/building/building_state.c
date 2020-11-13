@@ -271,12 +271,18 @@ static void read_type_data(buffer *buf, building *b) {
         }
     } else {
         buf->skip(26);
-        b->data.entertainment.num_shows = buf->read_u8();
-        b->data.entertainment.days1 = buf->read_u8();
-        b->data.entertainment.days2 = buf->read_u8();
-        b->data.entertainment.play = buf->read_u8();
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            buf->skip(82);
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            b->data.entertainment.num_shows = buf->read_u8();
+            b->data.entertainment.days1 = buf->read_u8();
+            b->data.entertainment.days2 = buf->read_u8();
+            b->data.entertainment.play = buf->read_u8();
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            buf->skip(58);
+            b->data.entertainment.num_shows = buf->read_u8();
+            b->data.entertainment.days1 = buf->read_u8();
+            b->data.entertainment.days2 = buf->read_u8();
+            b->data.entertainment.play = buf->read_u8();
+            buf->skip(24);
             buf->skip(2); // 50 ???
             buf->skip(12);
             b->data.entertainment.booth_corner_grid_offset = buf->read_i32();

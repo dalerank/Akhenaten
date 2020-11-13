@@ -618,15 +618,25 @@ void draw_debug(int x, int y, int grid_offset) {
 //            string_from_int(str, map_image_at(grid_offset), 0);
 //            draw_text_shadow(str, x + 13, y - 5, COLOR_GREEN);
 
-            int p = map_bitfield_get(grid_offset);
-            if (p & 32)
-                p -= 32;
-            string_from_int(str, p, 0);
-            draw_text_shadow(str, x + 23, y + 10, COLOR_RED);
+//            int p = map_bitfield_get(grid_offset);
+//            if (p & 32)
+//                p -= 32;
+//            string_from_int(str, p, 0);
+//            draw_text_shadow(str, x + 23, y + 10, COLOR_RED);
 
-            string_from_int(str, b->next_part_building_id, 0);
-            draw_text_shadow(str, x + 23, y + 20, COLOR_GREEN);
+//            string_from_int(str, b->next_part_building_id, 0);
+//            draw_text_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
+            if (b->data.entertainment.days1 && false) {
+                string_from_int(str, b->data.entertainment.play, 0);
+                draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
+//                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
+//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+                string_from_int(str, b->data.entertainment.days1, 0);
+                draw_text_shadow(str, x + 40, y + 15, COLOR_GREEN);
+                string_from_int(str, b->data.entertainment.days2, 0);
+                draw_text_shadow(str, x + 65, y + 15, COLOR_GREEN);
+            }
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);
                 draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
@@ -797,9 +807,11 @@ static void draw_gatehouse_anim(int x, int y, building *b) {
     }
 }
 static void draw_entertainment_anim_ph(int x, int y, building *b, int color_mask) {
+    if (!b->data.entertainment.days1 && !b->data.entertainment.days2)
+        return;
     switch (b->type) {
         case BUILDING_BOOTH:
-            draw_normal_anim(x, y, b, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1, color_mask);
+            draw_normal_anim(x + 30, y + 15, b, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1, color_mask);
             break;
         case BUILDING_BANDSTAND:
             // todo: orientation
@@ -887,7 +899,10 @@ static void draw_animation(int x, int y, int grid_offset) {
         case BUILDING_BANDSTAND:
         case BUILDING_BOOTH:
         case BUILDING_PAVILLION:
-            draw_entertainment_anim_ph(x, y, b, color_mask);
+            if (GAME_ENV == ENGINE_ENV_C3)
+                draw_entertainment_spectators(b, x, y, color_mask);
+            else if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
+                draw_entertainment_anim_ph(x, y, b, color_mask);
             break;
         default:
             draw_normal_anim(x, y, b, image_id, color_mask);
@@ -896,7 +911,6 @@ static void draw_animation(int x, int y, int grid_offset) {
 
     // specific buildings
     draw_senate_rating_flags(b, x, y, color_mask);
-    draw_entertainment_spectators(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 }
 static int should_draw_top_before_deletion(int grid_offset) {
@@ -968,7 +982,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
-        city_view_foreach_map_tile(draw_debug);
+//        city_view_foreach_map_tile(draw_debug);
     }
 
     /////// TEMP
