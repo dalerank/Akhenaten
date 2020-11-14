@@ -10,6 +10,7 @@
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include <algorithm>
 
 static tutorial_flags data;
 
@@ -29,8 +30,22 @@ static void set_all_tut_flags_null() {
     data.pharaoh.gold_mined_500 = 0;
     data.pharaoh.temples_built = 0;
 
-    data.pharaoh.housing_and_roads_msg = 0;
-    data.pharaoh.crime_and_gold_msg = 0;
+    data.pharaoh.figs_800_stored = 0;
+
+    data.pharaoh.pottery_made = 0;
+
+    data.pharaoh.beer_made = 0;
+    data.pharaoh.spacious_apartment = 0;
+    data.pharaoh.papyrus_made = 0;
+    data.pharaoh.bricks_bought = 0;
+
+    data.pharaoh.tut1_start = 0;
+    data.pharaoh.tut3_start = 0;
+    data.pharaoh.tut4_start = 0;
+    data.pharaoh.tut5_start = 0;
+    data.pharaoh.tut6_start = 0;
+    data.pharaoh.tut7_start = 0;
+    data.pharaoh.tut8_start = 0;
 
     for (int i = 0; i < 41; i++)
         data.pharaoh.flags[i] = 0;
@@ -39,45 +54,65 @@ static void set_all_tut_flags_null() {
 void tutorial_init(void) {
     set_all_tut_flags_null();
 
-    int tut1_passed = 1, tut2_passed = 1, tut3_passed = 1;
-    if (scenario_is_tutorial_1())
-        tut1_passed = tut2_passed = 0;
-    else if (scenario_is_tutorial_2())
-        tut2_passed = 0;
-    else if (scenario_is_tutorial_3())
-        tut3_passed = 0;
+    int tut_passed[10];
+    std::fill_n(tut_passed, 10, 1);
+
+    for (int t = 1; t <= 10; t++) {
+        if (scenario_is_tutorial(t))
+            for (int i = t - 1; i < 10; i++)
+                tut_passed[i] = 0;
+    }
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        data.pharaoh.fire = tut1_passed;
-        data.pharaoh.collapse = tut1_passed;
-        data.pharaoh.population_150_reached = tut1_passed;
-        data.pharaoh.gamemeat_400_stored = tut1_passed;
-        //
-        data.pharaoh.housing_and_roads_msg = tut1_passed;
-        data.pharaoh.crime_and_gold_msg = tut2_passed;
-//        data.pharaoh.farming_msg = tut3_passed;
-        //
-        data.pharaoh.flags[26] = tut1_passed;
-        data.pharaoh.flags[33] = tut1_passed;
+        data.pharaoh.fire = tut_passed[0];
+        data.pharaoh.collapse = tut_passed[0];
+        data.pharaoh.population_150_reached = tut_passed[0];
+        data.pharaoh.gamemeat_400_stored = tut_passed[0];
+        data.pharaoh.gold_mined_500 = tut_passed[1];
+        data.pharaoh.temples_built = tut_passed[1];
 
-        data.pharaoh.flags[36] = tut2_passed;
-        data.pharaoh.flags[37] = tut2_passed;
+        data.pharaoh.figs_800_stored = tut_passed[2];
+
+        data.pharaoh.pottery_made = tut_passed[2];
+
+        data.pharaoh.beer_made = tut_passed[3];
+        data.pharaoh.spacious_apartment = tut_passed[4];
+        data.pharaoh.papyrus_made = tut_passed[4];
+        data.pharaoh.bricks_bought = tut_passed[4];
+
+        //
+        data.pharaoh.tut1_start = tut_passed[0];
+        data.pharaoh.tut2_start = tut_passed[1];
+        data.pharaoh.tut3_start = tut_passed[2];
+        data.pharaoh.tut4_start = tut_passed[3];
+        data.pharaoh.tut5_start = tut_passed[4];
+        data.pharaoh.tut6_start = tut_passed[5];
+        data.pharaoh.tut7_start = tut_passed[6];
+        data.pharaoh.tut8_start = tut_passed[7];
+        //
+        data.pharaoh.flags[26] = tut_passed[0];
+        data.pharaoh.flags[27] = tut_passed[2];
+
+        data.pharaoh.flags[33] = tut_passed[0];
+
+        data.pharaoh.flags[36] = tut_passed[1];
+        data.pharaoh.flags[37] = tut_passed[1];
 
     } else if (GAME_ENV == ENGINE_ENV_C3) {
-        data.tutorial1.fire = tut1_passed;
-        data.tutorial1.crime = tut1_passed;
-        data.tutorial1.collapse = tut1_passed;
-        data.tutorial1.senate_built = tut1_passed;
-        city_mission_tutorial_set_fire_message_shown(tut1_passed);
+        data.tutorial1.fire = tut_passed[0];
+        data.tutorial1.crime = tut_passed[0];
+        data.tutorial1.collapse = tut_passed[0];
+        data.tutorial1.senate_built = tut_passed[0];
+        city_mission_tutorial_set_fire_message_shown(tut_passed[0]);
 
-        data.tutorial2.granary_built = tut2_passed;
-        data.tutorial2.population_250_reached = tut2_passed;
-        data.tutorial2.population_450_reached = tut2_passed;
-        data.tutorial2.pottery_made = tut2_passed;
-        data.tutorial2.pottery_made_year = tut2_passed;
+        data.tutorial2.granary_built = tut_passed[1];
+        data.tutorial2.population_250_reached = tut_passed[1];
+        data.tutorial2.population_450_reached = tut_passed[1];
+        data.tutorial2.pottery_made = tut_passed[1];
+        data.tutorial2.pottery_made_year = tut_passed[1];
 
-        data.tutorial3.disease = tut3_passed;
-        city_mission_tutorial_set_disease_message_shown(tut3_passed);
+        data.tutorial3.disease = tut_passed[2];
+        city_mission_tutorial_set_disease_message_shown(tut_passed[2]);
     }
 }
 
@@ -125,6 +160,30 @@ void tutorial_menu_update(int tut) {
                 building_menu_update(BUILDSET_TUT2_GODS);
             if (data.pharaoh.temples_built)
                 building_menu_update(BUILDSET_TUT2_ENTERTAINMENT);
+        } else if (tut == 3) {
+            building_menu_update(BUILDSET_TUT3_START);
+            if (data.pharaoh.figs_800_stored)
+                building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            if (data.pharaoh.pottery_made)
+                building_menu_update(BUILDSET_TUT3_INDUSTRY);
+        } else if (tut == 4) {
+            building_menu_update(BUILDSET_TUT4_START);
+            if (data.pharaoh.beer_made)
+                building_menu_update(BUILDSET_TUT4_FINANCE);
+        } else if (tut == 5) {
+            building_menu_update(BUILDSET_TUT5_START);
+            if (data.pharaoh.spacious_apartment)
+                building_menu_update(BUILDSET_TUT5_EDUCATION);
+            if (data.pharaoh.papyrus_made)
+                building_menu_update(BUILDSET_TUT5_TRADING);
+            if (data.pharaoh.bricks_bought)
+                building_menu_update(BUILDING_MENU_MONUMENTS);
+        } else if (tut == 6) {
+            building_menu_update(BUILDSET_TUT6_START);
+        } else if (tut == 7) {
+            building_menu_update(BUILDSET_TUT7_START);
+        } else if (tut == 8) {
+            building_menu_update(BUILDSET_TUT8_START);
         }
     }
 }
@@ -148,7 +207,7 @@ int tutorial_get_population_cap(int current_cap) {
 }
 int tutorial_get_immediate_goal_text(void) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_tutorial_1()) {
+        if (scenario_is_tutorial(1)) {
             if (!data.tutorial1.fire && !data.tutorial1.crime)
                 return 17;
             else if (!data.tutorial1.collapse)
@@ -157,7 +216,7 @@ int tutorial_get_immediate_goal_text(void) {
                 return 19;
             else
                 return 20;
-        } else if (scenario_is_tutorial_2()) {
+        } else if (scenario_is_tutorial(2)) {
             if (!data.tutorial2.granary_built)
                 return 21;
             else if (!data.tutorial2.population_250_reached)
@@ -171,22 +230,39 @@ int tutorial_get_immediate_goal_text(void) {
         }
         return 0;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial_1()) {
+        if (scenario_is_tutorial(1)) {
             if (!data.pharaoh.population_150_reached)
                 return 21;
             else if (!data.pharaoh.gamemeat_400_stored)
                 return 19;
             else
                 return 20;
-        } else if (scenario_is_tutorial_2()) {
+        } else if (scenario_is_tutorial(2)) {
             if (!data.pharaoh.gold_mined_500)
                 return 24;
             else if (!data.pharaoh.temples_built)
                 return 23;
             else
                 return 22;
-        } else if (scenario_is_tutorial_3()) {
-
+        } else if (scenario_is_tutorial(3)) {
+            if (!data.pharaoh.figs_800_stored)
+                return 28;
+            else if (!data.pharaoh.pottery_made)
+                return 27;
+            else
+                return 26;
+        } else if (scenario_is_tutorial(4)) {
+            if (!data.pharaoh.beer_made)
+                return 33;
+        } else if (scenario_is_tutorial(5)) {
+            if (!data.pharaoh.spacious_apartment)
+                return 31;
+            else if (!data.pharaoh.papyrus_made)
+                return 30;
+            else if (!data.pharaoh.bricks_bought)
+                return 29;
+            else
+                return 34;
         }
         return 0;
     }
@@ -246,15 +322,22 @@ void tutorial_on_crime(void) {
 void tutorial_on_disease(void) {
     data.tutorial3.disease = 1;
 }
-void tutorial_on_filled_granary(void) {
-    if (GAME_ENV == ENGINE_ENV_C3 && !data.tutorial2.granary_built) {
+void tutorial_on_filled_granary(int quantity) {
+    if (GAME_ENV == ENGINE_ENV_C3 && !data.tutorial2.granary_built && quantity > 400) {
         data.tutorial2.granary_built = 1;
         building_menu_update(BUILDSET_TUT2_UP_TO_250);
         post_message(MESSAGE_TUTORIAL_WATER);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && !data.pharaoh.gamemeat_400_stored) {
-        data.pharaoh.gamemeat_400_stored = 1;
-        building_menu_update(BUILDSET_TUT1_WATER);
-        post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (scenario_is_tutorial(1) && !data.pharaoh.gamemeat_400_stored && quantity >= 400) {
+            data.pharaoh.gamemeat_400_stored = 1;
+            building_menu_update(BUILDSET_TUT1_WATER);
+            post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
+        }
+        if (scenario_is_tutorial(3) && !data.pharaoh.figs_800_stored && quantity >= 800) {
+            data.pharaoh.figs_800_stored = 1;
+            building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            post_message(MESSAGE_TUTORIAL_INDUSTRY);
+        }
     }
 }
 void tutorial_on_add_to_warehouse(void) {
@@ -263,6 +346,28 @@ void tutorial_on_add_to_warehouse(void) {
         data.tutorial2.pottery_made_year = game_time_year();
         building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (!data.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY_PH) >= 2) {
+            data.pharaoh.pottery_made = 1;
+            building_menu_update(BUILDSET_TUT3_GARDENS);
+            post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
+        }
+        if (!data.pharaoh.beer_made && city_resource_count(RESOURCE_BEER) >= 1) {
+            data.pharaoh.beer_made = 1;
+            building_menu_update(BUILDSET_TUT4_FINANCE);
+            post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
+        }
+        if (!data.pharaoh.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
+            data.pharaoh.papyrus_made = 1;
+            building_menu_update(BUILDSET_TUT5_TRADING);
+            post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
+        }
+        if (!data.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
+            data.pharaoh.bricks_bought = 1;
+            building_menu_update(BUILDSET_TUT5_MONUMENTS);
+            post_message(MESSAGE_TUTORIAL_MONUMENTS);
+        }
     }
 }
 void tutorial_on_gold_extracted() {
@@ -280,13 +385,40 @@ void tutorial_on_religion() {
     }
 }
 void tutorial_starting_message() {
-    if (scenario_is_tutorial_1() && !data.pharaoh.housing_and_roads_msg) {
+    if (scenario_is_tutorial(1) && !data.pharaoh.tut1_start) {
         post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
-        data.pharaoh.housing_and_roads_msg = 1;
+        data.pharaoh.tut1_start = 1;
     }
-    if (scenario_is_tutorial_2() && !data.pharaoh.crime_and_gold_msg) {
+    if (scenario_is_tutorial(2) && !data.pharaoh.tut2_start) {
         post_message(MESSAGE_TUTORIAL_GOLD_AND_CRIME);
-        data.pharaoh.crime_and_gold_msg = 1;
+        data.pharaoh.tut2_start = 1;
+    }
+    if (scenario_is_tutorial(3) && !data.pharaoh.tut3_start) {
+        post_message(MESSAGE_TUTORIAL_FARMING_ALONG_THE_NILE);
+        data.pharaoh.tut3_start = 1;
+    }
+    if (scenario_is_tutorial(4) && !data.pharaoh.tut4_start) {
+        post_message(MESSAGE_TUTORIAL_DEVELOPING_CULTURE);
+        data.pharaoh.tut4_start = 1;
+    }
+    if (scenario_is_tutorial(5) && !data.pharaoh.tut5_start) {
+        post_message(MESSAGE_TUTORIAL_GETTING_STARTED);
+        data.pharaoh.tut5_start = 1;
+    }
+    if (scenario_is_tutorial(6) && !data.pharaoh.tut6_start) {
+        post_message(MESSAGE_TUTORIAL_SOLDIERS_AND_FORT);
+        data.pharaoh.tut6_start = 1;
+    }
+    if (scenario_is_tutorial(7) && !data.pharaoh.tut7_start) {
+        if (scenario_campaign_mission() == 6)
+            post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE);
+        else
+            post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2);
+        data.pharaoh.tut7_start = 1;
+    }
+    if (scenario_is_tutorial(8) && !data.pharaoh.tut8_start) {
+        post_message(MESSAGE_TUTORIAL_THE_FINER_THINGS);
+        data.pharaoh.tut8_start = 1;
     }
 }
 void tutorial_on_day_tick(void) {
@@ -323,7 +455,7 @@ void tutorial_on_day_tick(void) {
             }
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (data.pharaoh.housing_and_roads_msg) {
+        if (scenario_is_tutorial(1)) {
             if (!data.pharaoh.population_150_reached && city_population() >= 150) {
                 data.pharaoh.population_150_reached = 1;
                 building_menu_update(BUILDSET_TUT1_FOOD);
@@ -374,28 +506,28 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.gold_mined_500 = buf1->read_u8();
         data.pharaoh.temples_built = buf1->read_u8();
         data.pharaoh.flags[6] = buf1->read_u8();
-        data.pharaoh.flags[7] = buf1->read_u8();
+        data.pharaoh.figs_800_stored = buf1->read_u8();
         data.pharaoh.flags[8] = buf1->read_u8();
-        data.pharaoh.flags[9] = buf1->read_u8();
+        data.pharaoh.pottery_made = buf1->read_u8();
         data.pharaoh.flags[10] = buf1->read_u8();
         data.pharaoh.flags[11] = buf1->read_u8();
         data.pharaoh.flags[12] = buf1->read_u8();
         data.pharaoh.flags[13] = buf1->read_u8();
         data.pharaoh.flags[14] = buf1->read_u8();
 
-        data.pharaoh.housing_and_roads_msg = buf1->read_u8();
-        data.pharaoh.crime_and_gold_msg = buf1->read_u8();
-        data.pharaoh.flags[17] = buf1->read_u8();
-        data.pharaoh.flags[18] = buf1->read_u8();
-        data.pharaoh.flags[19] = buf1->read_u8();
-        data.pharaoh.flags[20] = buf1->read_u8();
-        data.pharaoh.flags[21] = buf1->read_u8();
-        data.pharaoh.flags[22] = buf1->read_u8();
+        data.pharaoh.tut1_start = buf1->read_u8();
+        data.pharaoh.tut2_start = buf1->read_u8();
+        data.pharaoh.tut3_start = buf1->read_u8();
+        data.pharaoh.tut4_start = buf1->read_u8();
+        data.pharaoh.tut5_start = buf1->read_u8();
+        data.pharaoh.tut6_start = buf1->read_u8();
+        data.pharaoh.tut7_start = buf1->read_u8();
+        data.pharaoh.tut8_start = buf1->read_u8();
         data.pharaoh.flags[23] = buf1->read_u8();
         data.pharaoh.flags[24] = buf1->read_u8();
         data.pharaoh.flags[25] = buf1->read_u8();
         data.pharaoh.flags[26] = buf1->read_u8(); // goal: bazaar
-        data.pharaoh.flags[27] = buf1->read_u8();
+        data.pharaoh.flags[27] = buf1->read_u8(); // goal: pottery
         data.pharaoh.flags[28] = buf1->read_u8();
         data.pharaoh.flags[29] = buf1->read_u8();
         data.pharaoh.flags[30] = buf1->read_u8();

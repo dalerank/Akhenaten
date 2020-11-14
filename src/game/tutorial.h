@@ -35,12 +35,25 @@ typedef struct tutorial_flags {
         bool collapse;
         bool gold_mined_500;
         bool temples_built;
+
+        bool figs_800_stored;
+
+        bool pottery_made;
+
+        bool beer_made;
+        bool spacious_apartment;
+        bool papyrus_made;
+        bool bricks_bought;
+
         //
-        bool housing_and_roads_msg;
-        bool crime_and_gold_msg;
-
-
-
+        bool tut1_start;
+        bool tut2_start;
+        bool tut3_start;
+        bool tut4_start;
+        bool tut5_start;
+        bool tut6_start;
+        bool tut7_start;
+        bool tut8_start;
 
     } pharaoh;
 } tutorial_flags;
@@ -54,39 +67,29 @@ tutorial_availability tutorial_advisor_empire_availability(void);
 void tutorial_menu_update(int tut);
 
 int tutorial_get_population_cap(int current_cap);
-
 int tutorial_get_immediate_goal_text(void);
 
 int tutorial_adjust_request_year(int *year);
 
 int tutorial_extra_fire_risk(void);
-
 int tutorial_extra_damage_risk(void);
 
 int tutorial_handle_fire(void);
-
 int tutorial_handle_collapse(void);
 
 void tutorial_on_crime(void);
-
 void tutorial_on_disease(void);
-
-void tutorial_on_filled_granary(void);
-
+void tutorial_on_filled_granary(int quantity);
 void tutorial_on_add_to_warehouse(void);
-
 void tutorial_on_gold_extracted();
-
 void tutorial_on_religion();
 
 void tutorial_starting_message();
 
 void tutorial_on_day_tick(void);
-
 void tutorial_on_month_tick(void);
 
 void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3);
-
 void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3);
 
 #endif // GAME_TUTORIAL_H

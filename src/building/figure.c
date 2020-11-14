@@ -30,6 +30,22 @@
 static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
 }
+static int default_spawn_delay(building *b) {
+    int pct_workers = worker_percentage(b);
+    if (pct_workers >= 100)
+        return 3;
+    else if (pct_workers >= 75)
+        return 7;
+    else if (pct_workers >= 50)
+        return 15;
+    else if (pct_workers >= 25)
+        return 29;
+    else if (pct_workers >= 1)
+        return 44;
+    else {
+        return 0;
+    }
+}
 static void check_labor_problem(building *b) {
     if ((b->houses_covered <= 0 && b->labor_category != 255) || (b->labor_category == 255 && b->num_workers <= 0))
         b->show_on_problem_overlay = 2;
@@ -76,11 +92,15 @@ static void spawn_figure_labor_seeker_common(building *b, int min_houses = 100) 
     if (map_has_road_access(b->x, b->y, b->size, &road))
         spawn_labor_seeker(b, road.x, road.y, min_houses);
 }
-static void spawn_figure_ph_worker(building *b) {
+static void spawn_figure_work_camp(building *b) {
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 50);
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay)
+            return;
         b->figure_spawn_delay++;
-        if (b->figure_spawn_delay > 20) {
+        if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             int b_dest = building_determine_worker_needed();
             if (b_dest) {
@@ -111,22 +131,6 @@ static int has_figure_of_type(building *b, int type) {
     return has_figure_of_types(b, type, 0);
 }
 
-static int default_spawn_delay(building *b) {
-    int pct_workers = worker_percentage(b);
-    if (pct_workers >= 100)
-        return 3;
-    else if (pct_workers >= 75)
-        return 7;
-    else if (pct_workers >= 50)
-        return 15;
-    else if (pct_workers >= 25)
-        return 29;
-    else if (pct_workers >= 1)
-        return 44;
-    else {
-        return 0;
-    }
-}
 static void create_roaming_figure(building *b, int x, int y, int type) {
     figure *f = figure_create(type, x, y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_125_ROAMING;
@@ -1376,7 +1380,7 @@ void building_figure_generate(void) {
                 case BUILDING_HUNTING_LODGE:
                     spawn_figure_hunting_lodge(b); break;
                 case BUILDING_WORK_CAMP:
-                    spawn_figure_ph_worker(b); break;
+                    spawn_figure_work_camp(b); break;
             }
         }
     }

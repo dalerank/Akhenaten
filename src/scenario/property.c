@@ -21,23 +21,23 @@ int scenario_campaign_mission(void) {
 void scenario_set_campaign_mission(int mission) {
     scenario.settings.campaign_mission = mission;
 }
-int scenario_is_tutorial_1(void) {
+
+#include "game/mission.h"
+
+bool scenario_is_tutorial(int rank) {
     if (GAME_ENV == ENGINE_ENV_C3)
-        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 0;
+        return !scenario.settings.is_custom && scenario.settings.campaign_rank == rank - 1;
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 0;
+        return !scenario.settings.is_custom && scenario_ph_mission_selector() == rank;
+}
+int scenario_is_tutorial_1(void) {
+    return scenario_is_tutorial(1);
 }
 int scenario_is_tutorial_2(void) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 1;
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 1;
+    return scenario_is_tutorial(2);
 }
 int scenario_is_tutorial_3(void) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return !scenario.settings.is_custom && scenario.settings.campaign_rank == 2;
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return !scenario.settings.is_custom && scenario.settings.campaign_mission == 2;
+    return scenario_is_tutorial(3);
 }
 
 int scenario_starting_favor(void) {

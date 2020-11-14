@@ -252,6 +252,50 @@ message extra
 figure sequence
 ..
 city sounds
+..
+building list large
+..
+
+37256
+
+	TUT3:
+"farming along the nile"
+800 figs in granary?? --> industry (pottery)
+ +CLAY
+ +POTTER
+ +YARD
+any pottery in storage yard?? --> gardens/municipal structures
+ +ROADBLOCK
+ +CROSSINGS
+ +GARDENS
+ +STATUES
+
+	TUT4:
+"developing culture"
+200 beer in storage?? --> finances
+ +TAX
+ +MANSION
+	
+	TUT5:
+"getting started"
+1 spacious apartment?? --> education
+ +REEDS
+ +PAPYRUS
+ +SCHOOL
+papyrus?? --> trading with other cities
+bricks?? --> monuments
+ +BRICKSGUILD
+ +MASTABA
+
+	TUT6:
+"soldiers and forts"
+
+	TUT7:
+"at water's edge"
+
+	TUT8:
+"the finer things"
+
 
 ====================
 

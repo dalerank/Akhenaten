@@ -60,11 +60,6 @@ static void draw_background(void) {
     }
     graphics_reset_dialog();
 }
-
-static int is_mouse_hit(const mouse *m, int x, int y, int size) {
-    return x <= m->x && m->x < x + size && y <= m->y && m->y < y + size;
-}
-
 static void draw_foreground(void) {
     graphics_in_dialog();
 
@@ -91,6 +86,9 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
+static int is_mouse_hit(const mouse *m, int x, int y, int size) {
+    return x <= m->x && m->x < x + size && y <= m->y && m->y < y + size;
+}
 static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
 
@@ -141,7 +139,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         }
     }
 }
-
 static void button_start(int param1, int param2) {
     window_mission_briefing_show();
 }

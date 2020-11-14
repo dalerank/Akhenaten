@@ -237,12 +237,10 @@ static void calculate_available_food(void) {
 
             } else {
                 city_data.resource.granaries.operating++;
-                for (int r = 0; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++) {
+                for (int r = 0; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++)
                     city_data.resource.granary_food_stored[r] += b->data.granary.resource_stored[r];
-                }
-                if (amount_stored > 400)
-                    tutorial_on_filled_granary();
-
+                if (amount_stored >= 100)
+                    tutorial_on_filled_granary(amount_stored);
             }
         }
     }

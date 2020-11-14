@@ -362,6 +362,7 @@ int game_file_delete_saved_game(const char *filename) {
     return game_file_io_delete_saved_game(filename);
 }
 void game_file_write_mission_saved_game(void) {
+    return; // temp
     int rank = scenario_campaign_rank();
     if (rank < 0)
         rank = 0;

@@ -259,7 +259,6 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
 //    map_image_set(booth_offset, image_id_from_group(GROUP_BUILDING_THEATER));
 //    map_building_set(booth_offset, booth->id);
 }
-
 static void add_entertainment_venue(building *b) {
     b->data.entertainment.booth_corner_grid_offset = b->grid_offset;
 //    const building_properties *props = building_properties_for_type(b->type);
@@ -303,13 +302,10 @@ static void add_entertainment_venue(building *b) {
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(b->x + dx, b->y + dy);
-//                    map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             map_terrain_add(grid_offset, TERRAIN_BUILDING);
             map_building_set(grid_offset, b->id);
             map_property_clear_constructing(grid_offset);
-//            map_property_set_multi_tile_size(grid_offset, size);
             map_image_set(grid_offset, image_id + dx + (dy * size));
-//            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_leftmost && dy == y_leftmost);
         }
     }
 
@@ -356,7 +352,7 @@ static void add_entertainment_venue(building *b) {
             }
             break;
         case BUILDING_PAVILLION:
-
+            // todo
             break;
     }
 }

@@ -33,12 +33,6 @@ static generic_button fired_buttons[] = {
 
 static int focus_button_id;
 
-static void draw_lost(void) {
-    outer_panel_draw(48, 16, 34, 16);
-    lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK);
-    lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK);
-}
-
 static int get_max(int value1, int value2, int value3) {
     int max = value1;
     if (value2 > max)
@@ -50,6 +44,11 @@ static int get_max(int value1, int value2, int value3) {
     return max;
 }
 
+static void draw_lost(void) {
+    outer_panel_draw(48, 16, 34, 16);
+    lang_text_draw_centered(62, 1, 48, 32, 544, FONT_LARGE_BLACK);
+    lang_text_draw_multiline(62, 16, 64, 72, 496, FONT_NORMAL_BLACK);
+}
 static void draw_won(void) {
     outer_panel_draw(48, 128, 34, 18);
     lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
@@ -94,7 +93,6 @@ static void draw_won(void) {
 
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK);
 }
-
 static void draw_background(void) {
     window_draw_underlying_window();
     graphics_in_dialog();
@@ -105,7 +103,6 @@ static void draw_background(void) {
     }
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void) {
     if (city_victory_state() != VICTORY_STATE_WON) {
         graphics_in_dialog();
@@ -150,7 +147,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
                                      fired_buttons, 1, &focus_button_id);
     }
 }
-
 static void button_fired(int param1, int param2) {
     sound_music_stop();
     sound_speech_stop();
@@ -172,14 +168,15 @@ static void show_end_dialog(void) {
     };
     window_show(&window);
 }
-
 static void show_intermezzo(void) {
     window_intermezzo_show(INTERMEZZO_WON, show_end_dialog);
 }
 
+#include "core/game_environment.h"
+
 void window_mission_end_show_won(void) {
     mouse_reset_up_state();
-    if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
         // tutorials: immediately go to next mission
         show_intermezzo();
     } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
@@ -193,7 +190,6 @@ void window_mission_end_show_won(void) {
         }
     }
 }
-
 void window_mission_end_show_fired(void) {
     window_intermezzo_show(INTERMEZZO_FIRED, show_end_dialog);
 }

@@ -1014,10 +1014,10 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
 
     auto flags = give_me_da_tut_flags();
     const char* const flagnames[41] = {
-        "fire","pop_150","meat_400","collapse","gold_mined","entertainment msg","","","","",
-        "","","","","","tut1 start","tut2 start","","","",
-        "","","","","","","","","","",
-        "","","","","","","","","","",
+        "fire","pop_150","meat_400","collapse","gold_500","temples_done","","figs_800","","pottery_200",
+        "","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
+        "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
+        "","","","// water supply","","","// entertainment","// temples","","",
         "",
     };
     for (int i = 0; i < 41; i++) {
@@ -1030,9 +1030,19 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             case 3: f = flags->pharaoh.collapse; break;
             case 4: f = flags->pharaoh.gold_mined_500; break;
             case 5: f = flags->pharaoh.temples_built; break;
+//            case 6: ???
+            case 7: f = flags->pharaoh.figs_800_stored; break;
+//            case 8: ???
+            case 9: f = flags->pharaoh.pottery_made; break;
             //
-            case 15: f = flags->pharaoh.housing_and_roads_msg; break;
-            case 16: f = flags->pharaoh.crime_and_gold_msg; break;
+            case 15: f = flags->pharaoh.tut1_start; break;
+            case 16: f = flags->pharaoh.tut2_start; break;
+            case 17: f = flags->pharaoh.tut3_start; break;
+            case 18: f = flags->pharaoh.tut4_start; break;
+            case 19: f = flags->pharaoh.tut5_start; break;
+            case 20: f = flags->pharaoh.tut6_start; break;
+            case 21: f = flags->pharaoh.tut7_start; break;
+            case 22: f = flags->pharaoh.tut8_start; break;
         }
 
         int color = COLOR_WHITE;
