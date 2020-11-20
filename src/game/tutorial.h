@@ -35,12 +35,10 @@ typedef struct tutorial_flags {
         bool collapse;
         bool gold_mined_500;
         bool temples_built;
-
         bool figs_800_stored;
-
         bool pottery_made;
-
         bool beer_made;
+
         bool spacious_apartment;
         bool papyrus_made;
         bool bricks_bought;

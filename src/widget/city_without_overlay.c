@@ -609,14 +609,14 @@ void draw_debug(int x, int y, int grid_offset) {
 
         building *b = building_get(map_building_at(grid_offset));
         if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
-            string_from_int(str, b->id, 0);
-            draw_text_shadow(str, x + 23, y, COLOR_WHITE);
+            string_from_int(str, b->type, 0);
+            draw_text_shadow(str, x + 13, y, COLOR_GREEN);
 
-//            string_from_int(str, b->type, 0);
-//            draw_text_shadow(str, x + 13, y + 15, COLOR_BLUE);
+//            string_from_int(str, b->id, 0);
+//            draw_text_shadow(str, x + 23, y + 15, COLOR_WHITE);
 
 //            string_from_int(str, map_image_at(grid_offset), 0);
-//            draw_text_shadow(str, x + 13, y - 5, COLOR_GREEN);
+//            draw_text_shadow(str, x + 13, y - 5, COLOR_BLUE);
 
 //            int p = map_bitfield_get(grid_offset);
 //            if (p & 32)
@@ -1014,10 +1014,10 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
 
     auto flags = give_me_da_tut_flags();
     const char* const flagnames[41] = {
-        "fire","pop_150","meat_400","collapse","gold_500","temples_done","","figs_800","","pottery_200",
-        "","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
+        "fire","pop_150","meat_400","collapse","gold_500","temples_done","???","figs_800","???","pottery_200",
+        "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
         "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
-        "","","","// water supply","","","// entertainment","// temples","","",
+        "// tut4 ???","","","// water supply","// tut4 ???","","// entertainment","// temples","// taxes","// mansion",
         "",
     };
     for (int i = 0; i < 41; i++) {
@@ -1034,6 +1034,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             case 7: f = flags->pharaoh.figs_800_stored; break;
 //            case 8: ???
             case 9: f = flags->pharaoh.pottery_made; break;
+            case 10: f = flags->pharaoh.beer_made; break;
             //
             case 15: f = flags->pharaoh.tut1_start; break;
             case 16: f = flags->pharaoh.tut2_start; break;

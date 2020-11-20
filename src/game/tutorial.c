@@ -70,12 +70,12 @@ void tutorial_init(void) {
         data.pharaoh.gamemeat_400_stored = tut_passed[0];
         data.pharaoh.gold_mined_500 = tut_passed[1];
         data.pharaoh.temples_built = tut_passed[1];
-
+        data.pharaoh.flags[6] = tut_passed[3];
         data.pharaoh.figs_800_stored = tut_passed[2];
-
+        data.pharaoh.flags[8] = tut_passed[3];
         data.pharaoh.pottery_made = tut_passed[2];
-
         data.pharaoh.beer_made = tut_passed[3];
+
         data.pharaoh.spacious_apartment = tut_passed[4];
         data.pharaoh.papyrus_made = tut_passed[4];
         data.pharaoh.bricks_bought = tut_passed[4];
@@ -93,10 +93,15 @@ void tutorial_init(void) {
         data.pharaoh.flags[26] = tut_passed[0];
         data.pharaoh.flags[27] = tut_passed[2];
 
+        data.pharaoh.flags[30] = tut_passed[3];
+
         data.pharaoh.flags[33] = tut_passed[0];
+        data.pharaoh.flags[34] = tut_passed[3];
 
         data.pharaoh.flags[36] = tut_passed[1];
         data.pharaoh.flags[37] = tut_passed[1];
+        data.pharaoh.flags[38] = tut_passed[3];
+        data.pharaoh.flags[39] = tut_passed[3];
 
     } else if (GAME_ENV == ENGINE_ENV_C3) {
         data.tutorial1.fire = tut_passed[0];
@@ -174,8 +179,8 @@ void tutorial_menu_update(int tut) {
             building_menu_update(BUILDSET_TUT5_START);
             if (data.pharaoh.spacious_apartment)
                 building_menu_update(BUILDSET_TUT5_EDUCATION);
-            if (data.pharaoh.papyrus_made)
-                building_menu_update(BUILDSET_TUT5_TRADING);
+//            if (data.pharaoh.papyrus_made)
+//                building_menu_update(BUILDSET_TUT5_TRADING);
             if (data.pharaoh.bricks_bought)
                 building_menu_update(BUILDING_MENU_MONUMENTS);
         } else if (tut == 6) {
@@ -353,14 +358,14 @@ void tutorial_on_add_to_warehouse(void) {
             building_menu_update(BUILDSET_TUT3_GARDENS);
             post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);
         }
-        if (!data.pharaoh.beer_made && city_resource_count(RESOURCE_BEER) >= 1) {
+        if (!data.pharaoh.beer_made && city_resource_count(RESOURCE_BEER) >= 3) {
             data.pharaoh.beer_made = 1;
             building_menu_update(BUILDSET_TUT4_FINANCE);
-            post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
+            post_message(MESSAGE_TUTORIAL_FINANCES);
         }
         if (!data.pharaoh.papyrus_made && city_resource_count(RESOURCE_PAPYRUS) >= 1) {
             data.pharaoh.papyrus_made = 1;
-            building_menu_update(BUILDSET_TUT5_TRADING);
+//            building_menu_update(BUILDSET_TUT5_TRADING);
             post_message(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES);
         }
         if (!data.pharaoh.bricks_bought && city_resource_count(RESOURCE_BRICKS) >= 1) {
@@ -505,11 +510,11 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.collapse = buf1->read_u8();
         data.pharaoh.gold_mined_500 = buf1->read_u8();
         data.pharaoh.temples_built = buf1->read_u8();
-        data.pharaoh.flags[6] = buf1->read_u8();
+        data.pharaoh.flags[6] = buf1->read_u8(); // ????
         data.pharaoh.figs_800_stored = buf1->read_u8();
-        data.pharaoh.flags[8] = buf1->read_u8();
+        data.pharaoh.flags[8] = buf1->read_u8(); // ????
         data.pharaoh.pottery_made = buf1->read_u8();
-        data.pharaoh.flags[10] = buf1->read_u8();
+        data.pharaoh.beer_made = buf1->read_u8();
         data.pharaoh.flags[11] = buf1->read_u8();
         data.pharaoh.flags[12] = buf1->read_u8();
         data.pharaoh.flags[13] = buf1->read_u8();
@@ -530,11 +535,11 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.flags[27] = buf1->read_u8(); // goal: pottery
         data.pharaoh.flags[28] = buf1->read_u8();
         data.pharaoh.flags[29] = buf1->read_u8();
-        data.pharaoh.flags[30] = buf1->read_u8();
+        data.pharaoh.flags[30] = buf1->read_u8(); // tut4 ???
         data.pharaoh.flags[31] = buf1->read_u8();
         data.pharaoh.flags[32] = buf1->read_u8();
         data.pharaoh.flags[33] = buf1->read_u8(); // goal: water supply
-        data.pharaoh.flags[34] = buf1->read_u8();
+        data.pharaoh.flags[34] = buf1->read_u8(); // tut4 ???
         data.pharaoh.flags[35] = buf1->read_u8();
         data.pharaoh.flags[36] = buf1->read_u8(); // goal: entertainment
         data.pharaoh.flags[37] = buf1->read_u8(); // goal: temples

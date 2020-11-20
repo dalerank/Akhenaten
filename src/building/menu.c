@@ -68,7 +68,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                  BUILDING_PAPYRUS_WORKSHOP, BUILDING_BRICKS_WORKSHOP, BUILDING_LAMP_WORKSHOP, BUILDING_PAINT_WORKSHOP, BUILDING_SHIPYARD, BUILDING_MENU_GUILDS, 0},
 
                 // farms
-                {BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_GRAIN_FARM, BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM, BUILDING_FIGS_FARM, BUILDING_HENNA_FARM, 0},
+                {BUILDING_GRAIN_FARM, BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM, BUILDING_FIGS_FARM, BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_HENNA_FARM, 0},
                 // raw materials
                 {BUILDING_CLAY_PIT, BUILDING_GEMSTONE_MINE, BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_STONE_QUARRY,
                  BUILDING_LIMESTONE_QUARRY, BUILDING_GRANITE_QUARRY, BUILDING_SANDSTONE_QUARRY, BUILDING_REED_GATHERER, BUILDING_TIMBER_YARD, 0},
@@ -124,8 +124,10 @@ static void enable_building(int type, bool enabled = true) {
         }
     }
     if (GAME_ENV == ENGINE_ENV_PHARAOH && enabled) {
-        if (building_is_farm(type))
+        if (building_is_farm(type)) {
             enable_building(BUILDING_MENU_FARMS);
+//            enable_building(BUILDING_WORK_CAMP);
+        }
         if (building_is_extractor(type))
             enable_building(BUILDING_MENU_RAW_MATERIALS);
         if (building_is_extractor(type))
@@ -146,6 +148,9 @@ static void enable_building(int type, bool enabled = true) {
             enable_building(BUILDING_MENU_BEAUTIFICATION);
         if (building_is_water_crossing(type))
             enable_building(BUILDING_MENU_WATER_CROSSINGS);
+//        if (building_is_monument(type))
+//            enable_building(BUILDING_MENU_MONUMENTS);
+//            enable_building(BUILDING_WORK_CAMP);
     }
 }
 static void enable_cycling_temples_if_allowed(int type) {
@@ -160,11 +165,11 @@ static void enable_if_allowed(int type) {
     } else
         enable_building(type, false);
 }
-static void enable_normal() {
-    for (int i = 0; i < 236; i++)
-        enable_if_allowed(i);
-    return;
-}
+//static void enable_normal() {
+//    for (int i = 0; i < 236; i++)
+//        enable_if_allowed(i);
+//    return;
+//}
 
 static int disable_raw_if_unavailable(int type, int resource) {
     if (!empire_can_produce_resource(resource)) {
@@ -182,16 +187,19 @@ static int disable_crafted_if_unavailable(int type, int resource) {
 }
 static void disable_resources() {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        disable_raw_if_unavailable(BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
-        disable_raw_if_unavailable(BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
-        disable_raw_if_unavailable(BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
-        disable_raw_if_unavailable(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
-        disable_raw_if_unavailable(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
-        disable_raw_if_unavailable(BUILDING_VINES_FARM, RESOURCE_VINES);
-        disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
-        disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
-        disable_raw_if_unavailable(BUILDING_IRON_MINE, RESOURCE_IRON);
-        disable_raw_if_unavailable(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
+        int farms = 0;
+        farms += disable_raw_if_unavailable(BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
+        farms += disable_raw_if_unavailable(BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
+        farms += disable_raw_if_unavailable(BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
+        farms += disable_raw_if_unavailable(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
+        farms += disable_raw_if_unavailable(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
+        farms += disable_raw_if_unavailable(BUILDING_VINES_FARM, RESOURCE_VINES);
+        farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
+        farms += disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
+        farms += disable_raw_if_unavailable(BUILDING_IRON_MINE, RESOURCE_IRON);
+        farms += disable_raw_if_unavailable(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
+//        if (!farms) // todo: monuments
+//            enable_building(BUILDING_WORK_CAMP, false);
         disable_crafted_if_unavailable(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_C3);
         disable_crafted_if_unavailable(BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
         disable_crafted_if_unavailable(BUILDING_OIL_WORKSHOP, RESOURCE_OIL_C3);
@@ -239,13 +247,79 @@ static void disable_resources() {
 
 #include "scenario/property.h"
 
+enum {
+    GOD_OSIRIS = 1,
+    GOD_RA = 2,
+    GOD_PTAH = 4,
+    GOD_SETH = 8,
+    GOD_BAST = 16,
+};
+
+static void enable_common_municipal(int level) {
+    building_menu_update(BUILDSET_TUT3_GARDENS);
+    enable_building(BUILDING_FIREHOUSE);
+    enable_building(BUILDING_ENGINEERS_POST);
+    enable_building(BUILDING_POLICE_STATION);
+    if (level >= 3)
+        enable_building(BUILDING_CITY_PALACE);
+    else if (level >= 2)
+        enable_building(BUILDING_TOWN_PALACE);
+    else if (level >= 1)
+        enable_building(BUILDING_VILLAGE_PALACE);
+}
+static void enable_common_health() {
+    enable_building(BUILDING_WATER_SUPPLY);
+    enable_building(BUILDING_APOTHECARY);
+    enable_building(BUILDING_PHYSICIAN);
+}
+static void enable_entertainment(int level) {
+    if (level >= 1) {
+        enable_building(BUILDING_BOOTH);
+        enable_building(BUILDING_JUGGLER_SCHOOL);
+    }
+    if (level >= 2) {
+        enable_building(BUILDING_BANDSTAND);
+        enable_building(BUILDING_CONSERVATORY);
+    }
+    if (level >= 3) {
+        enable_building(BUILDING_PAVILLION);
+        enable_building(BUILDING_DANCE_SCHOOL);
+    }
+    if (level >= 4) {
+        enable_building(BUILDING_SENET_HOUSE);
+    }
+}
+static void enable_gods(int flag) {
+    enable_building(BUILDING_FESTIVAL_SQUARE);
+    if (flag & 1) {
+        enable_building(BUILDING_TEMPLE_OSIRIS);
+        enable_building(BUILDING_SHRINE_OSIRIS);
+    }
+    if (flag & 2) {
+        enable_building(BUILDING_TEMPLE_RA);
+        enable_building(BUILDING_SHRINE_RA);
+    }
+    if (flag & 4) {
+        enable_building(BUILDING_TEMPLE_PTAH);
+        enable_building(BUILDING_SHRINE_PTAH);
+    }
+    if (flag & 8) {
+        enable_building(BUILDING_TEMPLE_SETH);
+        enable_building(BUILDING_SHRINE_SETH);
+    }
+    if (flag & 16) {
+        enable_building(BUILDING_TEMPLE_BAST);
+        enable_building(BUILDING_SHRINE_BAST);
+    }
+}
+
 void building_menu_update(int build_set) {
+    // do this if loading normally from a save - tutorial stage will
+    // be determined accordingly by the set flags!
     if (build_set == BUILDSET_NORMAL) {
         for (int i = 1; i <= 10; i++)
             if (scenario_is_tutorial(i))
                 return tutorial_menu_update(i);
-        // disable resources that aren't available on map
-        disable_resources();
     }
 
     switch (build_set) {
@@ -299,9 +373,7 @@ void building_menu_update(int build_set) {
             }
             break;
         case BUILDSET_TUT2_GODS:
-            enable_building(BUILDING_TEMPLE_BAST);
-            enable_building(BUILDING_SHRINE_BAST);
-            enable_building(BUILDING_FESTIVAL_SQUARE);
+            enable_gods(GOD_BAST);
             break;
         case BUILDSET_TUT2_ENTERTAINMENT:
             enable_building(BUILDING_BOOTH);
@@ -340,9 +412,7 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_JUGGLER_SCHOOL);
             enable_building(BUILDING_MARKET);
             enable_building(BUILDING_GRANARY);
-            enable_building(BUILDING_TEMPLE_OSIRIS);
-            enable_building(BUILDING_SHRINE_OSIRIS);
-            enable_building(BUILDING_FESTIVAL_SQUARE);
+            enable_gods(GOD_OSIRIS);
             break;
         case BUILDSET_TUT3_INDUSTRY:
             enable_building(BUILDING_CLAY_PIT);
@@ -356,24 +426,63 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_MEDIUM_STATUE);
             enable_building(BUILDING_LARGE_STATUE);
             enable_building(BUILDING_GARDENS);
+            enable_building(BUILDING_PLAZA);
             break;
         case BUILDSET_TUT4_START:
             building_menu_disable_all();
+            enable_common_municipal(1);
+            enable_common_health();
+            enable_building(BUILDING_GRAIN_FARM);
+            enable_building(BUILDING_BARLEY_FARM);
+            enable_building(BUILDING_WORK_CAMP);
+            enable_entertainment(2);
+            enable_building(BUILDING_MARKET);
+            enable_building(BUILDING_GRANARY);
+            building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            enable_building(BUILDING_LOW_BRIDGE);
+            enable_gods(GOD_OSIRIS + GOD_RA + GOD_BAST);
+            enable_building(BUILDING_BEER_WORKSHOP);
+            break;
+        case BUILDSET_TUT4_FINANCE:
+            enable_building(BUILDING_TAX_COLLECTOR);
+            enable_building(BUILDING_PERSONAL_MANSION);
             break;
         case BUILDSET_TUT5_START:
             building_menu_disable_all();
+            // todo
+            break;
+        case BUILDSET_TUT5_EDUCATION:
+            enable_building(BUILDING_REED_GATHERER);
+            enable_building(BUILDING_PAPYRUS_WORKSHOP);
+            enable_building(BUILDING_SCHOOL);
+            break;
+//        case BUILDSET_TUT5_TRADING:
+//            break;
+        case BUILDSET_TUT5_MONUMENTS:
+            enable_building(BUILDING_BRICKLAYERS_GUILD);
+//            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!
             break;
         case BUILDSET_TUT6_START:
             building_menu_disable_all();
+            // todo
             break;
         case BUILDSET_TUT7_START:
             building_menu_disable_all();
+            // todo
             break;
         case BUILDSET_TUT8_START:
             building_menu_disable_all();
+            // todo
             break;
         default:
-            enable_normal();
+            for (int i = 0; i < 236; i++)
+                enable_if_allowed(i);
+
+            // enable monuments!!!
+//            enable_available_monuments(); // todo!!!!!!
+
+            // disable resources that aren't available on map
+            disable_resources();
             break;
     }
 

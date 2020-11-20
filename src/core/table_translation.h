@@ -169,6 +169,7 @@ static int groupid_translation_table_ph[] = {
         206, 114 + 341, // seagulls
         208, 174 + 66, // bordered paneling
         209, 9 + 341, // delivery boy
+        210, 45 + 66, // bazaar (fancy)
         213, 17 + 66, // senet house
         227, 293, // data/Pharaoh_General.sg3 Sprites.bmp
         228, 180 + 341, // doctor (apothecary)

@@ -247,37 +247,6 @@ static void spawn_figure_police(building *b) {
         }
     }
 }
-static void spawn_figure_watersupply(building *b) {
-    check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_WATER_CARRIER))
-        return;
-    map_point road;
-    if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        spawn_labor_seeker(b, road.x, road.y, 100);
-        int pct_workers = worker_percentage(b);
-        int spawn_delay;
-        if (pct_workers >= 100)
-            spawn_delay = 0;
-        else if (pct_workers >= 75)
-            spawn_delay = 1;
-        else if (pct_workers >= 50)
-            spawn_delay = 3;
-        else if (pct_workers >= 25)
-            spawn_delay = 7;
-        else if (pct_workers >= 1)
-            spawn_delay = 15;
-        else
-            return;
-        b->figure_spawn_delay++;
-        if (b->figure_spawn_delay > spawn_delay) {
-            b->figure_spawn_delay = 0;
-            figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP_RIGHT);
-            f->action_state = ACTION_1_ROAMING;
-            f->building_id = b->id;
-            b->figure_id = f->id;
-        }
-    }
-}
 
 static void spawn_figure_actor_colony(building *b) {
     check_labor_problem(b);
@@ -837,6 +806,50 @@ static void spawn_figure_temple(building *b) {
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
+        }
+    }
+}
+
+static void set_water_supply_graphic(building *b) {
+    if (b->state != BUILDING_STATE_VALID)
+        return;
+    if (map_desirability_get(b->grid_offset) <= 30) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+                               image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+                               image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER) + 2, TERRAIN_BUILDING);
+    }
+}
+static void spawn_figure_watersupply(building *b) {
+    set_water_supply_graphic(b);
+    check_labor_problem(b);
+    if (has_figure_of_type(b, FIGURE_WATER_CARRIER))
+        return;
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+        if (pct_workers >= 100)
+            spawn_delay = 0;
+        else if (pct_workers >= 75)
+            spawn_delay = 1;
+        else if (pct_workers >= 50)
+            spawn_delay = 3;
+        else if (pct_workers >= 25)
+            spawn_delay = 7;
+        else if (pct_workers >= 1)
+            spawn_delay = 15;
+        else
+            return;
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP_RIGHT);
+            f->action_state = ACTION_1_ROAMING;
+            f->building_id = b->id;
+            b->figure_id = f->id;
         }
     }
 }
