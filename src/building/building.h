@@ -108,8 +108,12 @@ typedef struct {
             unsigned char num_shows;
             unsigned char days1;
             unsigned char days2;
+            unsigned char days3;
             unsigned char play;
             unsigned short booth_corner_grid_offset;
+            unsigned short ph_unk00_u32;
+            unsigned short ph_unk01_u8;
+            unsigned short ph_unk02_u8;
         } entertainment;
         struct {
             short foods_ph[8];
@@ -118,7 +122,7 @@ typedef struct {
             unsigned char amphitheater_actor;
             unsigned char amphitheater_gladiator;
             unsigned char colosseum_gladiator;
-            unsigned char colosseum_lion;
+            unsigned char magistrate; // colosseum_lion
             unsigned char hippodrome;
             unsigned char school;
             unsigned char library;

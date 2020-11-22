@@ -22,7 +22,7 @@ void house_service_decay_culture(void) {
         decay(&b->data.house.amphitheater_actor);
         decay(&b->data.house.amphitheater_gladiator);
         decay(&b->data.house.colosseum_gladiator);
-        decay(&b->data.house.colosseum_lion);
+        decay(&b->data.house.magistrate);
         decay(&b->data.house.hippodrome);
         decay(&b->data.house.school);
         decay(&b->data.house.library);
@@ -94,11 +94,11 @@ void house_service_calculate_culture_aggregates(void) {
             }
         }
         if (b->data.house.colosseum_gladiator) {
-            if (b->data.house.colosseum_lion)
-                b->data.house.entertainment += 25;
-            else {
+//            if (b->data.house.magistrate)
+//                b->data.house.entertainment += 25;
+//            else {
                 b->data.house.entertainment += 15;
-            }
+//            }
         }
         if (b->data.house.hippodrome)
             b->data.house.entertainment += 30;

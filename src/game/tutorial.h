@@ -38,8 +38,8 @@ typedef struct tutorial_flags {
         bool figs_800_stored;
         bool pottery_made;
         bool beer_made;
-
         bool spacious_apartment;
+
         bool papyrus_made;
         bool bricks_bought;
 
@@ -81,6 +81,7 @@ void tutorial_on_filled_granary(int quantity);
 void tutorial_on_add_to_warehouse(void);
 void tutorial_on_gold_extracted();
 void tutorial_on_religion();
+void tutorial_on_house_evolve(int level);
 
 void tutorial_starting_message();
 

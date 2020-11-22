@@ -18,7 +18,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                 {BUILDING_MENU_SMALL_TEMPLES, BUILDING_MENU_LARGE_TEMPLES, BUILDING_ORACLE, 0},
                 {BUILDING_SCHOOL, BUILDING_ACADEMY, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
                 {BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_HIPPODROME,
-                 BUILDING_GLADIATOR_SCHOOL, BUILDING_LION_HOUSE, BUILDING_ACTOR_COLONY, BUILDING_CHARIOT_MAKER, 0},
+                 BUILDING_ACTOR_COLONY, BUILDING_GLADIATOR_SCHOOL, BUILDING_LION_HOUSE, BUILDING_CHARIOT_MAKER, 0},
                 {BUILDING_FORUM, BUILDING_SENATE_UPGRADED, BUILDING_GOVERNORS_HOUSE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_PALACE,
                  BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_ROADBLOCK, BUILDING_TRIUMPHAL_ARCH, 0},
                 {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_ENGINEERS_POST, BUILDING_LOW_BRIDGE, BUILDING_SHIP_BRIDGE, BUILDING_SHIPYARD, BUILDING_DOCK, BUILDING_WHARF, 0},
@@ -255,8 +255,16 @@ enum {
     GOD_BAST = 16,
 };
 
+static void enable_common_beautifications() {
+    enable_building(BUILDING_SMALL_STATUE);
+    enable_building(BUILDING_MEDIUM_STATUE);
+    enable_building(BUILDING_LARGE_STATUE);
+    enable_building(BUILDING_GARDENS);
+    enable_building(BUILDING_PLAZA);
+}
 static void enable_common_municipal(int level) {
-    building_menu_update(BUILDSET_TUT3_GARDENS);
+    enable_common_beautifications();
+    enable_building(BUILDING_ROADBLOCK);
     enable_building(BUILDING_FIREHOUSE);
     enable_building(BUILDING_ENGINEERS_POST);
     enable_building(BUILDING_POLICE_STATION);
@@ -422,11 +430,7 @@ void building_menu_update(int build_set) {
         case BUILDSET_TUT3_GARDENS:
             enable_building(BUILDING_ROADBLOCK);
             enable_building(BUILDING_FERRY);
-            enable_building(BUILDING_SMALL_STATUE);
-            enable_building(BUILDING_MEDIUM_STATUE);
-            enable_building(BUILDING_LARGE_STATUE);
-            enable_building(BUILDING_GARDENS);
-            enable_building(BUILDING_PLAZA);
+            enable_common_beautifications();
             break;
         case BUILDSET_TUT4_START:
             building_menu_disable_all();
@@ -449,7 +453,19 @@ void building_menu_update(int build_set) {
             break;
         case BUILDSET_TUT5_START:
             building_menu_disable_all();
-            // todo
+            enable_common_municipal(1);
+            enable_common_health();
+            enable_building(BUILDING_CHICKPEAS_FARM);
+            enable_building(BUILDING_BARLEY_FARM);
+            enable_building(BUILDING_WORK_CAMP);
+            enable_entertainment(2);
+            enable_building(BUILDING_MARKET);
+            enable_building(BUILDING_GRANARY);
+            building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            building_menu_update(BUILDSET_TUT4_FINANCE);
+            enable_gods(GOD_OSIRIS + GOD_PTAH + GOD_BAST);
+            enable_building(BUILDING_BEER_WORKSHOP);
+            enable_building(BUILDING_COURTHOUSE);
             break;
         case BUILDSET_TUT5_EDUCATION:
             enable_building(BUILDING_REED_GATHERER);

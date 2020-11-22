@@ -17,7 +17,7 @@ static void write_type_data(buffer *buf, const building *b) {
         buf->write_u8(b->data.house.amphitheater_actor);
         buf->write_u8(b->data.house.amphitheater_gladiator);
         buf->write_u8(b->data.house.colosseum_gladiator);
-        buf->write_u8(b->data.house.colosseum_lion);
+        buf->write_u8(b->data.house.magistrate);
         buf->write_u8(b->data.house.hippodrome);
         buf->write_u8(b->data.house.school);
         buf->write_u8(b->data.house.library);
@@ -192,7 +192,7 @@ static void read_type_data(buffer *buf, building *b) {
         b->data.house.amphitheater_actor = buf->read_u8();
         b->data.house.amphitheater_gladiator = buf->read_u8();
         b->data.house.colosseum_gladiator = buf->read_u8();
-        b->data.house.colosseum_lion = buf->read_u8();
+        b->data.house.magistrate = buf->read_u8();
         b->data.house.hippodrome = buf->read_u8();
         b->data.house.school = buf->read_u8();
         b->data.house.library = buf->read_u8();
@@ -230,8 +230,10 @@ static void read_type_data(buffer *buf, building *b) {
         buf->skip(2);
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             buf->skip(2);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
             b->data.granary.resource_stored[i] = buf->read_i16();
+            b->data.granary.resource_stored[i] = (b->data.granary.resource_stored[i] / 100) * 100; // todo
+        }
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             buf->skip(6);
         else
@@ -282,8 +284,10 @@ static void read_type_data(buffer *buf, building *b) {
             b->data.entertainment.days1 = buf->read_u8();
             b->data.entertainment.days2 = buf->read_u8();
             b->data.entertainment.play = buf->read_u8();
-            buf->skip(24);
-            buf->skip(2); // 50 ???
+            buf->skip(20);
+            b->data.entertainment.ph_unk00_u32 = buf->read_u32(); //  5 for latched booth??
+            b->data.entertainment.ph_unk01_u8 = buf->read_u8();   // 50 ???
+            b->data.entertainment.ph_unk02_u8 = buf->read_u8();   //  2 for latched booth??
             buf->skip(12);
             b->data.entertainment.booth_corner_grid_offset = buf->read_i32();
         }

@@ -51,7 +51,7 @@ void window_building_draw_bathhouse(building_info_context *c) {
 }
 
 void window_building_draw_barber(building_info_context *c) {
-    draw_culture_info(c, 63, "wavs/barber.wav", 84);
+    draw_culture_info(c, 63, "wavs/mortuary.wav", 84);
 }
 
 void window_building_draw_school(building_info_context *c) {

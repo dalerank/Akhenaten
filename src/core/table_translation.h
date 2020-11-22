@@ -72,7 +72,7 @@ static int groupid_translation_table_ph[] = {
         85, 85 + 66, // personal mansion
         86, 86 + 66, // family mansion
         87, 87 + 66, // dynasty mansion
-        88, 71 + 341, // bathhouse worker (physician)
+        88, 71 + 341, // magistrate worker (physician)
         89, 89 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         90, 90 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         91, 197 + 341,
@@ -99,7 +99,7 @@ static int groupid_translation_table_ph[] = {
         112, 33,
         114, 34, // rubble
         115, 32 + 341, // thief
-        116, 182 + 341, // barber (dentist)
+        116, 182 + 341, // mortuary (dentist)
         117, 6 + 341, // prefect (fireman)
         118, 12 + 341, // homeless
         119, 35, // burning ruins (tent)

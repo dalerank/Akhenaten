@@ -490,7 +490,8 @@ int imagepak::get_entry_count() {
 int imagepak::get_id(int group) {
     if (group >= groups_num)
         group = 0;
-    return group_image_ids[group] + id_shift_overall;
+    int image_id = group_image_ids[group];
+    return image_id + id_shift_overall;
 }
 const image *imagepak::get_image(int id, bool relative) {
     if (!relative)

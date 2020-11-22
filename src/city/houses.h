@@ -14,6 +14,7 @@ typedef struct {
         int third_religion;
         int barber;
         int bathhouse;
+        int magistrate;
         int clinic;
         int hospital;
         int food;
@@ -24,6 +25,7 @@ typedef struct {
         int library;
         int barber;
         int bathhouse;
+        int magistrate;
         int clinic;
         int religion;
     } requiring;

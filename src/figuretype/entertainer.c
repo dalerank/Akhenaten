@@ -67,15 +67,15 @@ void figure::entertainer_update_shows() {
             if (b->data.entertainment.play >= 5)
                 b->data.entertainment.play = 0;
 
-            if (b->type == BUILDING_THEATER)
+//            if (b->type == BUILDING_THEATER)
                 b->data.entertainment.days1 = 32;
-            else
-                b->data.entertainment.days2 = 32;
+//            else
+//                b->data.entertainment.days2 = 32;
             break;
         case FIGURE_GLADIATOR:
-            if (b->type == BUILDING_AMPHITHEATER)
-                b->data.entertainment.days1 = 32;
-            else
+//            if (b->type == BUILDING_AMPHITHEATER)
+//                b->data.entertainment.days1 = 32;
+//            else
                 b->data.entertainment.days2 = 32;
             break;
         case FIGURE_LION_TAMER:

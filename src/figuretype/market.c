@@ -16,34 +16,45 @@ void figure::market_buyer_action() {
     switch (action_state) {
         case 8:
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+
+            if (do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
                 if (collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(destination_building_id))
                         kill();
-
                 } else {
                     if (!take_food_from_granary(building_id, destination_building_id))
                         kill();
                 }
-                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                destination_x = source_x;
-                destination_y = source_y;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                destination_x = source_x;
-                destination_y = source_y;
-                route_remove();
             }
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION) {
+//                if (collecting_item_id > 3) {
+//                    if (!take_resource_from_warehouse(destination_building_id))
+//                        kill();
+//
+//                } else {
+//                    if (!take_food_from_granary(building_id, destination_building_id))
+//                        kill();
+//                }
+//                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+//                destination_x = source_x;
+//                destination_y = source_y;
+//            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+//                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+//                destination_x = source_x;
+//                destination_y = source_y;
+//                route_remove();
+//            }
             break;
         case 9:
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-                kill();
-            else if (direction == DIR_FIGURE_REROUTE)
-                route_remove();
+            do_returnhome();
+//            move_ticks(1);
+//            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
+//                kill();
+//            else if (direction == DIR_FIGURE_REROUTE)
+//                route_remove();
             break;
     }
 }
@@ -113,22 +124,40 @@ int figure::take_food_from_granary(int market_id, int granary_id) {
 }
 int figure::take_resource_from_warehouse(int warehouse_id) {
     int resource;
-    switch (collecting_item_id) {
-        case INVENTORY_GOOD1:
-            resource = RESOURCE_POTTERY_C3;
-            break;
-        case INVENTORY_GOOD2:
-            resource = RESOURCE_FURNITURE;
-            break;
-        case INVENTORY_GOOD3:
-            resource = RESOURCE_OIL_C3;
-            break;
-        case INVENTORY_GOOD4:
-            resource = RESOURCE_WINE;
-            break;
-        default:
-            return 0;
-    }
+    if (GAME_ENV == ENGINE_ENV_C3)
+        switch (collecting_item_id) {
+            case INVENTORY_GOOD1:
+                resource = RESOURCE_POTTERY_C3;
+                break;
+            case INVENTORY_GOOD2:
+                resource = RESOURCE_FURNITURE;
+                break;
+            case INVENTORY_GOOD3:
+                resource = RESOURCE_OIL_C3;
+                break;
+            case INVENTORY_GOOD4:
+                resource = RESOURCE_WINE;
+                break;
+            default:
+                return 0;
+        }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        switch (collecting_item_id) {
+            case INVENTORY_GOOD1:
+                resource = RESOURCE_POTTERY_PH;
+                break;
+            case INVENTORY_GOOD2:
+                resource = RESOURCE_LUXURY_GOODS;
+                break;
+            case INVENTORY_GOOD3:
+                resource = RESOURCE_LINEN;
+                break;
+            case INVENTORY_GOOD4:
+                resource = RESOURCE_BEER;
+                break;
+            default:
+                return 0;
+        }
     building *warehouse = building_get(warehouse_id);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);

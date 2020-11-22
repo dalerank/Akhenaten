@@ -67,17 +67,16 @@ static void amphitheater_coverage(building *b, int shows) {
 
 static void colosseum_coverage(building *b, int shows) {
     b->data.house.colosseum_gladiator = MAX_COVERAGE;
-    if (shows == 2)
-        b->data.house.colosseum_lion = MAX_COVERAGE;
-
+//    if (shows == 2)
+//        b->data.house.magistrate = MAX_COVERAGE;
 }
 
 static void hippodrome_coverage(building *b) {
     b->data.house.hippodrome = MAX_COVERAGE;
 }
 
-static void bathhouse_coverage(building *b) {
-    b->data.house.bathhouse = MAX_COVERAGE;
+static void magistrate_coverage(building *b) {
+    b->data.house.magistrate = MAX_COVERAGE;
 }
 static void religion_coverage_ceres(building *b) {
     b->data.house.temple_ceres = MAX_COVERAGE;
@@ -111,6 +110,9 @@ static void clinic_coverage(building *b) {
 }
 static void hospital_coverage(building *b) {
     b->data.house.hospital = MAX_COVERAGE;
+}
+static void water_supply_coverage(building *b) {
+    b->data.house.bathhouse = MAX_COVERAGE;
 }
 
 static int provide_missionary_coverage(int x, int y) {
@@ -297,8 +299,8 @@ int figure::figure_service_provide_coverage() {
 
             break;
         case FIGURE_BATHHOUSE_WORKER:
-        case FIGURE_WATER_CARRIER:
-            houses_serviced = provide_culture(tile_x, tile_y, bathhouse_coverage);
+        case FIGURE_MAGISTRATE:
+            houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
             break;
         case FIGURE_SCHOOL_CHILD:
             houses_serviced = provide_culture(tile_x, tile_y, school_coverage);
@@ -317,6 +319,9 @@ int figure::figure_service_provide_coverage() {
             break;
         case FIGURE_SURGEON:
             houses_serviced = provide_culture(tile_x, tile_y, hospital_coverage);
+            break;
+        case FIGURE_WATER_CARRIER:
+            houses_serviced = provide_culture(tile_x, tile_y, water_supply_coverage);
             break;
         case FIGURE_MISSIONARY:
             houses_serviced = provide_missionary_coverage(tile_x, tile_y);

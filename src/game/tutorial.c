@@ -33,9 +33,9 @@ static void set_all_tut_flags_null() {
     data.pharaoh.figs_800_stored = 0;
 
     data.pharaoh.pottery_made = 0;
-
     data.pharaoh.beer_made = 0;
     data.pharaoh.spacious_apartment = 0;
+
     data.pharaoh.papyrus_made = 0;
     data.pharaoh.bricks_bought = 0;
 
@@ -75,8 +75,8 @@ void tutorial_init(void) {
         data.pharaoh.flags[8] = tut_passed[3];
         data.pharaoh.pottery_made = tut_passed[2];
         data.pharaoh.beer_made = tut_passed[3];
-
         data.pharaoh.spacious_apartment = tut_passed[4];
+
         data.pharaoh.papyrus_made = tut_passed[4];
         data.pharaoh.bricks_bought = tut_passed[4];
 
@@ -389,6 +389,13 @@ void tutorial_on_religion() {
         post_message(MESSAGE_TUTORIAL_ENTERTAINMENT);
     }
 }
+void tutorial_on_house_evolve(int level) {
+    if (!data.pharaoh.spacious_apartment && level == 9) {
+        data.pharaoh.spacious_apartment = 1;
+        building_menu_update(BUILDSET_TUT5_EDUCATION);
+        post_message(MESSAGE_TUTORIAL_EDUCATION);
+    }
+}
 void tutorial_starting_message() {
     if (scenario_is_tutorial(1) && !data.pharaoh.tut1_start) {
         post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
@@ -515,7 +522,7 @@ void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
         data.pharaoh.flags[8] = buf1->read_u8(); // ????
         data.pharaoh.pottery_made = buf1->read_u8();
         data.pharaoh.beer_made = buf1->read_u8();
-        data.pharaoh.flags[11] = buf1->read_u8();
+        data.pharaoh.spacious_apartment = buf1->read_u8();
         data.pharaoh.flags[12] = buf1->read_u8();
         data.pharaoh.flags[13] = buf1->read_u8();
         data.pharaoh.flags[14] = buf1->read_u8();

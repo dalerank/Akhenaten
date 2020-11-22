@@ -779,6 +779,23 @@ static void spawn_figure_physician(building *b) {
         }
     }
 }
+static void spawn_figure_magistrate(building *b) {
+    check_labor_problem(b);
+    if (has_figure_of_type(b, FIGURE_MAGISTRATE))
+        return;
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 50);
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay)
+            return;
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            create_roaming_figure(b, road.x, road.y, FIGURE_MAGISTRATE);
+        }
+    }
+}
 static void spawn_figure_temple(building *b) {
     check_labor_problem(b);
     if (has_figure_of_type(b, FIGURE_PRIEST))
@@ -1394,6 +1411,8 @@ void building_figure_generate(void) {
                     spawn_figure_hunting_lodge(b); break;
                 case BUILDING_WORK_CAMP:
                     spawn_figure_work_camp(b); break;
+                case BUILDING_COURTHOUSE:
+                    spawn_figure_magistrate(b); break;
             }
         }
     }

@@ -221,7 +221,7 @@ int figure::target_is_alive() {
 }
 
 void figure::engineer_action() {
-    building *b = building_get(building_id);
+//    building *b = building_get(building_id);
     switch (action_state) {
         case FIGURE_ACTION_60_ENGINEER_CREATED:
             advance_action(ACTION_10_GOING);
@@ -437,6 +437,25 @@ void figure::policeman_action() {
             sprite_image_id = image_id_from_group(GROUP_FIGURE_POLICEMAN) + dir + 8 * anim_frame;
             break;
     }
+}
+void figure::magistrate_action() {
+    switch (action_state) {
+        case FIGURE_ACTION_60_ENGINEER_CREATED:
+            advance_action(ACTION_10_GOING);
+            break;
+        case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
+            do_enterbuilding(false, building_id);
+            break;
+        case ACTION_10_GOING:
+            do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+            break;
+        case ACTION_11_RETURNING_FROM_PATROL:
+            do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
+            break;
+    }
+}
+void figure::water_carrier_action() {
+    fight_fire(); // todo
 }
 
 #include "building/industry.h"

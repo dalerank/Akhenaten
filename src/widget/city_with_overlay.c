@@ -487,7 +487,7 @@ static void draw_animation(int x, int y, int grid_offset) {
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
                     image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
             } else {
-                int animation_offset = building_animation_offset(b, image_id, grid_offset);
+                int animation_offset = building_animation_offset(b, image_id, grid_offset, 0);
                 if (animation_offset > 0) {
                     if (animation_offset > img->num_animation_sprites)
                         animation_offset = img->num_animation_sprites;

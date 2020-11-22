@@ -69,6 +69,10 @@ void figure::draw_debug() {
     string_from_int(str, wait_ticks, 0);
     draw_text_shadow(str, coords.x, coords.y+30, COLOR_WHITE);
 
+    // roam_length
+    string_from_int(str, roam_length, 0);
+    draw_text_shadow(str, coords.x, coords.y+40, COLOR_WHITE);
+
     if (resource_id) {
         string_from_int(str, resource_id, 0);
         draw_text_shadow(str, coords.x+25, coords.y+10, COLOR_GREEN);

@@ -264,7 +264,7 @@ building list large
  +CLAY
  +POTTER
  +YARD
-any pottery in storage yard?? --> gardens/municipal structures
+200 pottery in storage yard?? --> gardens/municipal structures
  +ROADBLOCK
  +CROSSINGS
  +GARDENS
@@ -272,7 +272,7 @@ any pottery in storage yard?? --> gardens/municipal structures
 
 	TUT4:
 "developing culture"
-200 beer in storage?? --> finances
+300 beer in storage?? --> finances
  +TAX
  +MANSION
 	

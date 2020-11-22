@@ -8,7 +8,7 @@
 #include "map/sprite.h"
 #include "core/game_environment.h"
 
-int building_animation_offset(building *b, int image_id, int grid_offset) {
+int building_animation_offset(building *b, int image_id, int grid_offset, int max_frames) {
     if (building_is_workshop(b->type) && (b->loads_stored <= 0 || b->num_workers <= 0))
         return 0;
 
@@ -72,6 +72,8 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
     }
 
     const image *img = image_get(image_id);
+    if (!max_frames)
+        max_frames = img->num_animation_sprites;
     if (!game_animation_should_advance(img->animation_speed_id))
         return map_sprite_animation_at(grid_offset) & 0x7f;
 
@@ -120,15 +122,15 @@ int building_animation_offset(building *b, int image_id, int grid_offset) {
             }
         } else {
             new_sprite = current_sprite + 1;
-            if (new_sprite > img->num_animation_sprites) {
-                new_sprite = img->num_animation_sprites;
+            if (new_sprite > max_frames) {
+                new_sprite = max_frames;
                 is_reverse = 1;
             }
         }
     } else {
         // Absolutely normal case
         new_sprite = map_sprite_animation_at(grid_offset) + 1;
-        if (new_sprite > img->num_animation_sprites)
+        if (new_sprite > max_frames)
             new_sprite = 1;
     }
 

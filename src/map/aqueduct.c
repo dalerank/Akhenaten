@@ -4,7 +4,7 @@
 
 /**
  * The aqueduct grid is used in two ways:
- * 1) to mark water/no water (0/1, see map/water_supply.c)
+ * 1) to mark water/no water (0/1, see map/bathhouse.c)
  * 2) to store image IDs for the aqueduct (0-15)
  * This leads to some strange results
  */

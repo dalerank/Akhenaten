@@ -128,7 +128,7 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 86
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_WATER_CARRIER},  // 87 water carrier
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_POLICEMAN},  // 88 policeman
-        {1, TERRAIN_USAGE_ANY,     0,      0},  // 89
+        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_MAGISTRATE},  // 89
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 90
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 91
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 92
@@ -467,7 +467,9 @@ void figure::action_perform() {
             case 73: hunter_action();                   break;
             case 74: arrow_action();                    break;
             case 85: worker_action();                   break;
+            case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;
+            case 89: magistrate_action();               break;
             default:
                 break;
         }

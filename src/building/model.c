@@ -142,8 +142,8 @@ int model_load(void) {
         ptr = get_value(ptr, end_ptr, &houses[i].religion);
         ptr = get_value(ptr, end_ptr, &houses[i].education);
         ptr = get_value(ptr, end_ptr, &houses[i].food);
-        ptr = get_value(ptr, end_ptr, &houses[i].barber);
-        ptr = get_value(ptr, end_ptr, &houses[i].bathhouse);
+        ptr = get_value(ptr, end_ptr, &houses[i].mortuary);
+        ptr = get_value(ptr, end_ptr, &houses[i].magistrate);
         ptr = get_value(ptr, end_ptr, &houses[i].health);
         ptr = get_value(ptr, end_ptr, &houses[i].food_types);
         ptr = get_value(ptr, end_ptr, &houses[i].pottery);

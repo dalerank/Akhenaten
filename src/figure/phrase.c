@@ -35,7 +35,7 @@ static const char FIGURE_SOUNDS[2][50][SOUND_FILENAME_MAX] = {
                 "pupils",
                 "bather",
                 "doctor",
-                "barber",
+                "mortuary",
                 "actors",
                 "gladtr",
                 "liontr",
