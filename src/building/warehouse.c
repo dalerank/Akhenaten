@@ -1,4 +1,3 @@
-#include <ntdef.h>
 #include "warehouse.h"
 
 #include "building/barracks.h"
@@ -17,6 +16,8 @@
 #include "map/image.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
+
+#include <math.h>
 
 int building_warehouse_get_space_info(building *warehouse) {
     int total_loads = 0;
@@ -525,7 +526,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             }
             if (available > 0) {
                 *resource = RESOURCE_WEAPONS_C3;
-                *amount = min(available, barracks_want);
+                *amount = fmin(available, barracks_want);
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }

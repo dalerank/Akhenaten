@@ -334,7 +334,7 @@ static void correct_channel_filenames(void) {
                 strncpy(str, "AUDIO/", CHANNEL_FILENAME_MAX);
                 break;
         }
-        strcat_s(str, CHANNEL_FILENAME_MAX, channel_filenames[GAME_ENV][i]);
+        strncat(str, channel_filenames[GAME_ENV][i], CHANNEL_FILENAME_MAX);
 
         const char *corrected = dir_get_file(str, MAY_BE_LOCALIZED);
         if (!corrected)

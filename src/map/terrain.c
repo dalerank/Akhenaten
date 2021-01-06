@@ -1,4 +1,3 @@
-#include <ntdef.h>
 #include "terrain.h"
 
 #include "map/grid.h"

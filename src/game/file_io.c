@@ -911,7 +911,9 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     char *lfile = (char *) malloc(200);
     sprintf(lfile, "DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
     FILE *log = fopen(lfile, "wb+");
-    fwrite(buf->data_const(), filepiece_size, 1, log);
+    if (log) {
+        fwrite(buf->data_const(), filepiece_size, 1, log);
+    }
     fclose(log);
     free(lfile);
     return 1;

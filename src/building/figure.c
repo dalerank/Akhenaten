@@ -1,5 +1,4 @@
-#include <ntdef.h>
-#include <figuretype/entertainer.h>
+#include "figuretype/entertainer.h"
 #include "building/figure.h"
 
 #include "building/barracks.h"
@@ -26,6 +25,8 @@
 #include "map/road_access.h"
 #include "map/terrain.h"
 #include "map/water.h"
+
+#include <math.h>
 
 static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -1198,7 +1199,7 @@ static void spawn_figure_hunting_lodge(building *b) {
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
-            int loads_to_carry = min(b->loads_stored, 4);
+            int loads_to_carry = fmin(b->loads_stored, 4);
             f->loads_counter = loads_to_carry;
             b->loads_stored -= loads_to_carry;
         }

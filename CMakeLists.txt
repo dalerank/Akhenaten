@@ -27,7 +27,7 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endif()
 endif()
 
-set(SHORT_NAME augustus)
+set(SHORT_NAME ozymandias)
 #project(${SHORT_NAME} C)
 project(${SHORT_NAME} CXX)
 
@@ -39,7 +39,7 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 #SET(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
-SET(CMAKE_CXX_FLAGS "-std=c++0x" ${CMAKE_CXX_FLAGS})
+SET(CMAKE_CXX_FLAGS "-std=c++0x -Wno-c++11-narrowing" ${CMAKE_CXX_FLAGS})
 set (CMAKE_CXX_STANDARD 11)
 
 #SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
@@ -139,9 +139,9 @@ if (SWITCH_BUILD)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
-#configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
-#configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
-#configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
 if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
@@ -598,7 +598,7 @@ set(TRANSLATION_FILES
 
 set(MACOSX_FILES "")
 if(APPLE)
-    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/augustus.icns)
+    #set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/augustus.icns)
 endif()
 
 set(SOURCE_FILES
@@ -686,7 +686,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
 
-    set_target_properties(augustus PROPERTIES
+    set_target_properties(${SHORT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
