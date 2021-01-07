@@ -131,7 +131,6 @@ static void parse_MM_file(buffer *buf) {
 static int load_files(const char *text_filename, const char *message_filename, int localizable) {
     // load text into buffer
     buffer *buf = new buffer(BUFFER_SIZE);
-    buf->init(BUFFER_SIZE);
     int filesize = io_read_file_into_buffer(text_filename, localizable, buf, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
         delete buf;
@@ -147,7 +146,7 @@ static int load_files(const char *text_filename, const char *message_filename, i
     buf->read_raw(data.text_data, filesize - 8028); //MAX_TEXT_DATA
 
     // load message
-    buf->init(BUFFER_SIZE);
+    buf->clear();
     filesize = io_read_file_into_buffer(message_filename, localizable, buf, BUFFER_SIZE);
     if (filesize < MIN_MESSAGE_SIZE) { // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
         delete buf;

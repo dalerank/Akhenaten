@@ -50,10 +50,14 @@ int ALLOWED_FOODS(int i) {
     return city_data.resource.food_types_allowed[i];
 }
 bool is_food_allowed(int resource) {
-    for (int i = 0; i < 4; i++)
-        if (ALLOWED_FOODS(i) == resource)
-            return true;
+    bool result = false;
+    for (int i = 0; i < 4; i++) {
+        if (ALLOWED_FOODS(i) == resource) {
+            result = true;
+        }
+    }
     // for etc etc todo: other resources?
+    return result;
 }
 void set_allowed_food(int i, int resource) {
     city_data.resource.food_types_allowed[i] = resource;

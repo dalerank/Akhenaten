@@ -19,7 +19,7 @@ int io_read_file_into_buffer(const char *filepath, int localizable, buffer *buf,
         size = max_size;
 
     fseek(fp, 0, SEEK_SET);
-    int bytes_read = buf->from_file(1, (size_t) size, fp);
+    int bytes_read = buf->from_file((size_t) size, fp);
     file_close(fp);
     return bytes_read;
 }
@@ -33,7 +33,7 @@ int io_read_file_part_into_buffer(const char *filepath, int localizable, buffer 
     if (fp) {
         int seek_result = fseek(fp, offset_in_file, SEEK_SET);
         if (seek_result == 0)
-            bytes_read = buf->from_file(1, (size_t) size, fp);
+            bytes_read = buf->from_file((size_t) size, fp);
         file_close(fp);
     }
     return bytes_read;
@@ -48,7 +48,7 @@ int io_write_buffer_to_file(const char *filepath, buffer *buf, int size) {
     if (!fp)
         return 0;
 
-    int bytes_written = buf->to_file(1, (size_t) size, fp);
+    int bytes_written = buf->to_file((size_t) size, fp);
     file_close(fp);
     return bytes_written;
 }

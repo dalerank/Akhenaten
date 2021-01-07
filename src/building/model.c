@@ -97,7 +97,7 @@ int model_load(void) {
     int num_lines = 0;
     int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
-    const uint8_t *haystack = (uint8_t *) buf->data_const();
+    const uint8_t *haystack = buf->get_data();
     const uint8_t *ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
     do {
         guard--;

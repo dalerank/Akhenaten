@@ -269,18 +269,18 @@ static int convert_uncompressed(buffer *buf, int amount, color_t *dst) {
 static int convert_compressed(buffer *buf, int amount, color_t *dst) {
     int dst_length = 0;
     while (amount > 0) {
-        int control = buf->read_u8(true);
+        int control = buf->read_u8();
         if (control == 255) {
             // next byte = transparent pixels to skip
             *dst++ = 255;
-            *dst++ = buf->read_u8(true);
+            *dst++ = buf->read_u8();
             dst_length += 2;
             amount -= 2;
         } else {
             // control = number of concrete pixels
             *dst++ = control;
             for (int i = 0; i < control; i++) {
-                *dst++ = to_32_bit(buf->read_u16(true));
+                *dst++ = to_32_bit(buf->read_u16());
             }
             dst_length += control + 1;
             amount -= control * 2 + 1;
@@ -452,7 +452,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     }
 
     // prepare bitmap data
-    buf->init(SCRATCH_DATA_SIZE);
+    buf->clear();
     int data_size = io_read_file_into_buffer(filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
     if (!data_size)
         return 0;

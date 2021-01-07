@@ -878,13 +878,13 @@ void log_hex(file_piece *piece, int i, int offs) {
     char hexstr[40] = {0};
     for (int b = 0; b < s; b++) {
         char hexcode[3] = {0};
-        uint8_t inbyte = ((uint8_t *) piece->buf->data_const())[b];
+        uint8_t inbyte = piece->buf->get_value(b);
         snprintf(hexcode, 4, "%02X", inbyte);
         strncat(hexstr, hexcode, 4);
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%zu) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
             offs, hexstr, piece->buf->size(), fname);
 }
 static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
@@ -898,7 +898,7 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
 
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
     if ((unsigned int) chunk_size == UNCOMPRESSED) {
-        if (buf->from_file(1, filepiece_size, fp) != filepiece_size)
+        if (buf->from_file(filepiece_size, fp) != filepiece_size)
             return 0;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
@@ -907,12 +907,12 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
                buf->size())
             return 0;
     }
-    buf->force_validate_unsafe_pls_use_carefully();
+//    buf->force_validate_unsafe_pls_use_carefully();
     char *lfile = (char *) malloc(200);
     sprintf(lfile, "DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
     FILE *log = fopen(lfile, "wb+");
     if (log) {
-        fwrite(buf->data_const(), filepiece_size, 1, log);
+        fwrite(buf->get_data(), filepiece_size, 1, log);
     }
     fclose(log);
     free(lfile);
@@ -923,7 +923,7 @@ static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
         return 0;
 
     int output_size = COMPRESS_BUFFER_SIZE;
-    if (zip_compress(buf->data_const(), bytes_to_write, compress_buffer, &output_size)) {
+    if (zip_compress(buf->get_data(), bytes_to_write, compress_buffer, &output_size)) {
 //        write_int32(fp, output_size);
         fwrite(&output_size, 4, 1, fp);
         fwrite(compress_buffer, 1, output_size, fp);
@@ -932,7 +932,7 @@ static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
 //        write_int32(fp, UNCOMPRESSED);
         output_size = UNCOMPRESSED;
         fwrite(&output_size, 4, 1, fp);
-        fwrite(buf->data_const(), 1, bytes_to_write, fp);
+        fwrite(buf->get_data(), 1, bytes_to_write, fp);
     }
     return 1;
 }
@@ -951,7 +951,7 @@ static int savegame_read_from_file(FILE *fp) {
         if (piece->compressed)
             result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
         else
-            result = piece->buf->from_file(1, piece->buf->size(), fp) == piece->buf->size();
+            result = piece->buf->from_file(piece->buf->size(), fp) == piece->buf->size();
 
         log_hex(piece, i, offs);
 
@@ -969,7 +969,7 @@ static void savegame_write_to_file(FILE *fp) {
         if (piece->compressed)
             write_compressed_chunk(fp, piece->buf, piece->buf->size());
         else
-            piece->buf->to_file(1, piece->buf->size(), fp);
+            piece->buf->to_file(piece->buf->size(), fp);
     }
 }
 
