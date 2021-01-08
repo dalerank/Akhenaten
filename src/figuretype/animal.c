@@ -341,6 +341,10 @@ void figure::ostrich_action() {
         case FIGURE_ACTION_150_ATTACK: // unused?
             image_set_animation(GROUP_FIGURE_OSTRICH, 104, 7);
             break;
+        default:
+            // In any strange situation load eating/roosting animation
+            image_set_animation(GROUP_FIGURE_OSTRICH, 160, 8);
+            break;
     }
 }
 void figure::zebra_action() {

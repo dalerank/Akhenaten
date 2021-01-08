@@ -727,7 +727,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-//        f->draw_debug();
+        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else
@@ -1015,7 +1015,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
-//        city_view_foreach_map_tile(draw_debug);
+        city_view_foreach_map_tile(draw_debug);
     }
 
     /////// TEMP
