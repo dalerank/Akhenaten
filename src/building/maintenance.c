@@ -159,12 +159,7 @@ void building_maintenance_check_fire_collapse(void) {
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
 
-        // todo: collapse-proof/dynamic fire & collapse risk per building
-        // temp for debugging
-        b->damage_risk = 0;
-        b->fire_risk = 0;
-        continue;
-
+        // todo: improve collapse-proof/dynamic fire & collapse risk per building
 
         if (b->state != BUILDING_STATE_VALID || b->fire_proof)
             continue;

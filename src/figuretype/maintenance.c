@@ -252,6 +252,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             advance_action(ACTION_10_GOING);
             break;
         case ACTION_11_RETURNING_FROM_PATROL:
+        case FIGURE_ACTION_73_PREFECT_RETURNING:
             do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
             break;
         case 9:
@@ -314,13 +315,16 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * anim_frame;
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (anim_frame / 2);
-            break;
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (anim_frame / 2);
         case FIGURE_ACTION_150_ATTACK:
-            if (attack_image_offset >= 12) {
-                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
-            } else
-                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
+            // FIXME: to fix fireman direction
+//            if (attack_image_offset >= 12) {
+//                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
+//            } else {
+//                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
+//            }
+            image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
+
             break;
         case FIGURE_ACTION_149_CORPSE:
             sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();

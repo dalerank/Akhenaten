@@ -54,12 +54,15 @@ static void destroy_on_fire(building *b, int plagued) {
         b->size = 1;
         b->ruin_has_plague = plagued;
         memset(&b->data, 0, 42);
+
+        // FIXME: possible can't render image & fire animation
         int image_id;
         if (was_tent)
             image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
         else {
-            int random = map_random_get(b->grid_offset) & 3;
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+//            int random = map_random_get(b->grid_offset) & 3;
+//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9;
         }
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
@@ -73,14 +76,18 @@ static void destroy_on_fire(building *b, int plagued) {
         if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER))
             continue;
 
+        // FIXME: possible can't render image & fire animation
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
         int image_id;
         if (was_tent)
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
+//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
         else {
-            int random = map_random_get(ruin->grid_offset) & 3;
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+//            int random = map_random_get(ruin->grid_offset) & 3;
+//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
+            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9;
         }
+
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
         ruin->figure_id4 = 0;
@@ -125,6 +132,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
 void building_destroy_by_collapse(building *b) {
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
+    //TODO: fix collapsing animation
     figure_create_explosion_cloud(b->x, b->y, b->size);
     destroy_linked_parts(b, 0);
 }
