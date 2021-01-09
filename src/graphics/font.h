@@ -9,7 +9,7 @@ typedef enum {
     FONT_NORMAL_PLAIN,
     FONT_NORMAL_BLACK,
     FONT_NORMAL_WHITE,
-    FONT_NORMAL_RED,
+    FONT_NORMAL_RED, // Yellow font for the Pharaoh
     FONT_LARGE_PLAIN,
     FONT_LARGE_BLACK,
     FONT_LARGE_BROWN,
