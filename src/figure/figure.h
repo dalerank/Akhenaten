@@ -285,6 +285,7 @@ public:
     void sheep_action();
     void wolf_action(); // C3 only? hyena???
     void ostrich_action();
+    void hippo_action();
     void zebra_action();
     void spear_action();
     void hippodrome_horse_action();
