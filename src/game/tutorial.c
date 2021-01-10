@@ -282,10 +282,13 @@ int tutorial_adjust_request_year(int *year) {
     return 1;
 }
 int tutorial_extra_fire_risk(void) {
-    return !data.tutorial1.fire;
+    return !data.tutorial1.fire &&
+        scenario_is_tutorial_1(); // Fix for extra fire risk in late tutorials
 }
 int tutorial_extra_damage_risk(void) {
-    return data.tutorial1.fire && !data.tutorial1.collapse;
+    return data.tutorial1.fire &&
+        !data.tutorial1.collapse &&
+        scenario_is_tutorial_1(); // Fix for extra damage risk in late tutorials
 }
 int tutorial_handle_fire(void) {
     if (data.tutorial1.fire || data.pharaoh.fire)
