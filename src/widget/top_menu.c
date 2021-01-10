@@ -10,6 +10,7 @@
 #include "game/system.h"
 #include "game/time.h"
 #include "game/undo.h"
+#include "game/orientation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -17,6 +18,7 @@
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/image_button.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "window/advisors.h"
@@ -105,6 +107,15 @@ static menu_bar_item menu[] = {
         {4, menu_advisors, 12},
 };
 
+static void button_rotate_left(int param1, int param2) {
+    game_orientation_rotate_left();
+    window_invalidate();
+}
+
+static image_button orientation_button[] = {
+        {0, 0, 36, 21, IB_NORMAL,GROUP_SIDEBAR_BUTTONS, 72, button_rotate_left, button_none, 0, 0, 1},
+};
+
 static const int INDEX_OPTIONS = 1;
 static const int INDEX_HELP = 2;
 
@@ -112,6 +123,7 @@ static struct {
     int offset_funds;
     int offset_population;
     int offset_date;
+    int offset_rotate;
 
     int open_sub_menu;
     int focus_menu_id;
@@ -238,15 +250,20 @@ void widget_top_menu_draw(int force) {
         data.offset_funds = s_width - 540;
         data.offset_population = s_width - 400;
         data.offset_date = s_width - 150; // 135
+        data.offset_rotate = data.offset_date - 50;
+
 
         lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110,
                                             FONT_NORMAL_GREEN, 0);
+        // Orientation icon
+        image_buttons_draw(data.offset_rotate, 0, orientation_button, 1);
     }
     if (s_width < 800) {
         if (GAME_ENV == ENGINE_ENV_C3) {
             data.offset_funds = 338; // +2
             data.offset_population = 453; // +5
             data.offset_date = 547;
+            data.offset_rotate = data.offset_date - 50;
 
             int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -256,7 +273,7 @@ void widget_top_menu_draw(int force) {
 
             lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_GREEN, 0);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            //
+            // TODO: draw for 800x600 resolution
         }
 
     } else if (s_width < 1024) {
@@ -264,6 +281,7 @@ void widget_top_menu_draw(int force) {
             data.offset_funds = 338; // +2
             data.offset_population = 458; // +2
             data.offset_date = 652;
+            data.offset_rotate = data.offset_date - 50;
 
             int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -286,6 +304,7 @@ void widget_top_menu_draw(int force) {
             data.offset_funds = 493; // +2
             data.offset_population = 637; // +8
             data.offset_date = 852;
+            data.offset_rotate = data.offset_date - 50;
 
             int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
@@ -371,14 +390,21 @@ static int handle_mouse_menu(const mouse *m) {
 }
 
 int widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
-    if (widget_city_has_input())
-        return 0;
+    int result = 0;
+    if (!widget_city_has_input()) {
+        int button_id = 0;
+        int handled = image_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_button, 1, &button_id);
 
-    if (data.open_sub_menu)
-        return handle_input_submenu(m, h);
-    else {
-        return handle_mouse_menu(m);
+        if (button_id) {
+            result = handled;
+        } else if (data.open_sub_menu) {
+            result = handle_input_submenu(m, h);
+        } else {
+            result = handle_mouse_menu(m);
+        }
     }
+
+    return result;
 }
 int widget_top_menu_get_tooltip_text(tooltip_context *c) {
     if (data.focus_menu_id)
