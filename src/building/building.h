@@ -177,6 +177,7 @@ int building_is_defense_ph(int type);
 int building_is_farm(int type);
 int building_is_workshop(int type);
 int building_is_extractor(int type);
+int building_is_senate(int type);
 int building_is_temple(int type);
 int building_is_large_temple(int type);
 int building_is_shrine(int type);

@@ -309,10 +309,7 @@ void building_clear_related_data(building *b) {
     if (b->storage_id)
         building_storage_delete(b->storage_id);
 
-    if (b->type == BUILDING_SENATE_UPGRADED ||
-        b->type == BUILDING_VILLAGE_PALACE ||
-        b->type == BUILDING_TOWN_PALACE ||
-        b->type == BUILDING_CITY_PALACE)
+    if (building_is_senate(b->type))
         city_buildings_remove_senate(b);
 
     if (b->type == BUILDING_DOCK)
@@ -363,10 +360,9 @@ int building_is_fort(int type) {
            type == BUILDING_FORT_MOUNTED;
 }
 int building_is_defense_ph(int type) {
-    return (type == BUILDING_WALL_PH)
-           || type == BUILDING_WALL_PH
+    return (type == BUILDING_WALL_PH
            || type == BUILDING_GATEHOUSE_PH
-           || type == BUILDING_TOWER_PH;
+           || type == BUILDING_TOWER_PH);
 }
 int building_is_farm(int type) {
     return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
@@ -379,6 +375,7 @@ int building_is_workshop(int type) {
            || type == BUILDING_LAMP_WORKSHOP
            || type == BUILDING_PAINT_WORKSHOP;
 }
+
 int building_is_extractor(int type) {
     return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
            || type == BUILDING_GOLD_MINE
@@ -388,6 +385,12 @@ int building_is_extractor(int type) {
            || type == BUILDING_SANDSTONE_QUARRY
            || type == BUILDING_REED_GATHERER;
 }
+
+int building_is_senate(int type) {
+    return ((type >= BUILDING_SENATE && type <= BUILDING_FORUM_UPGRADED) ||
+            (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
+}
+
 int building_is_temple(int type) {
     return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);
 }
