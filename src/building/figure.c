@@ -1323,14 +1323,20 @@ void building_figure_generate(void) {
 
         b->show_on_problem_overlay = 0;
         // range of building types
-        if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE)
+        if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
             patrician_generated = spawn_patrician(b, patrician_generated);
-        else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type))
+        }
+        else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type)) {
             spawn_figure_industry(b);
-        else if (building_is_senate(b->type))
+        }
+        else if (building_is_senate(b->type) ||
+            b->type == BUILDING_TAX_COLLECTOR ||
+            b->type == BUILDING_TAX_COLLECTOR_UPGRADED) {
             spawn_figure_senate_forum(b);
-        else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)
+        }
+        else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
             spawn_figure_temple(b);
+        }
         else {
             // single building type
             switch (b->type) {
