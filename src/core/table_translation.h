@@ -158,7 +158,7 @@ static int groupid_translation_table_ph[] = {
         187, 299, // data/Pharaoh_Unloaded.sg3 Demo2.bmp
         188, 298, // data/Pharaoh_Unloaded.sg3 Demo3.bmp
         189, 255, // data/Pharaoh_General.sg3 paneling.bmp
-        190, 297, // data/Pharaoh_Unloaded.sg3 bigpeople.BMP
+        190, 319, // data/Pharaoh_Unloaded.sg3 'Portraits.BMP', comment: 'New Big Persons'
         191, 7 + 555, // Jugglers
         192, 6 + 555, // Dancers
         193, 9 + 555, // Musicians
