@@ -52,6 +52,8 @@ void figure::figure_image_update() {
             sprite_image_id = anim_base + 16 + dir;
             break;
         }
+        case FIGURE_EXPLOSION:
+            break;
         default:
             // play death animation if it's dying, otherwise always follow the same pattern - offsets are set during action logic
             if (state == FIGURE_STATE_DYING)

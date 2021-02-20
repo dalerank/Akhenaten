@@ -132,7 +132,6 @@ static void destroy_linked_parts(building *b, int on_fire) {
 void building_destroy_by_collapse(building *b) {
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
-    //TODO: fix collapsing animation
     figure_create_explosion_cloud(b->x, b->y, b->size);
     destroy_linked_parts(b, 0);
 }
