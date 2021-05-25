@@ -575,7 +575,7 @@ static void draw_figures(int x, int y, int grid_offset) {
 void draw_debug(int x, int y, int grid_offset) {
 
     // draw terrain data
-    if (true) {
+    if (false) {
         uint32_t tile_data = map_moisture_get(grid_offset);
         uint8_t str[10];
         int flag_data = 0;
@@ -712,7 +712,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        f->draw_debug();
+//        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else
@@ -1004,7 +1004,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     }
 
     /////// TEMP
-    if (false) return;
+    if (true) return;
     auto data = give_me_da_time();
     uint8_t str[10];
     string_from_int(str, data->tick, 0);

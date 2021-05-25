@@ -55,6 +55,9 @@ bool is_food_allowed(int resource) {
             return true;
     // for etc etc todo: other resources?
 }
+void set_allowed_food(int i, int resource) {
+    city_data.resource.food_types_allowed[i] = resource;
+}
 
 static void save_main_data(buffer *main) {
     main->write_raw(city_data.unused.other_player, 18068);
@@ -533,6 +536,7 @@ static void save_main_data(buffer *main) {
 }
 
 #include "core/game_environment.h"
+#include "empire/city.h"
 
 static void load_main_data(buffer *buf) {
     if (GAME_ENV == ENGINE_ENV_C3)
@@ -661,6 +665,8 @@ static void load_main_data(buffer *buf) {
             city_data.resource.granary_food_stored[i] = buf->read_i16();
         buf->skip(28); // temp
         int food_index = 0;
+        for (int i = 0; i < 4; i++) // reset available foods quick array
+            city_data.resource.food_types_allowed[i] = 0;
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
             city_data.resource.food_types_available_arr[i] = buf->read_u8();
             if (city_data.resource.food_types_available_arr[i]) {
@@ -668,6 +674,16 @@ static void load_main_data(buffer *buf) {
                 food_index++;
             }
         }
+//        if (food_index == 0) {
+//            for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+//                int can_do_food_x = empire_can_produce_resource(i);
+//                if (can_do_food_x) {
+//                    city_data.resource.food_types_allowed[food_index] = i;
+//                    food_index++;
+//                }
+//            }
+//            int a = 24;
+//        }
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
             city_data.resource.food_types_eaten_arr[i] = buf->read_u8();
 
@@ -743,7 +759,7 @@ static void load_main_data(buffer *buf) {
     for (int i = 0; i < 1400; i++)
         city_data.unused.unknown_2c20[i] = buf->read_i32();
     for (int i = 0; i < 8; i++)
-        city_data.unused.houses_requiring_unknown_to_evolve[i] = buf->read_i32();
+        city_data.unused.houses_requiring_unknown_to_evolve[i] = buf->read_i32(); // ????
     city_data.trade.caravan_import_resource = buf->read_i32();
     city_data.trade.caravan_backup_import_resource = buf->read_i32();
     city_data.ratings.culture = buf->read_i32();
@@ -911,7 +927,7 @@ static void load_main_data(buffer *buf) {
     if (GAME_ENV == ENGINE_ENV_C3)
         city_data.finance.tribute_not_paid_total_years = buf->read_i32();
     city_data.festival.selected.god = buf->read_i32();
-    city_data.festival.selected.size = buf->read_i32();
+    city_data.festival.selected.size = buf->read_i32(); // ????
     city_data.festival.planned.size = buf->read_i32();
     city_data.festival.planned.months_to_go = buf->read_i32();
     city_data.festival.planned.god = buf->read_i32();
@@ -1039,7 +1055,7 @@ static void load_main_data(buffer *buf) {
     city_data.resource.wine_types_available = buf->read_i32();
     city_data.ratings.prosperity_max = buf->read_i32();
     for (int i = 0; i < 10; i++) {
-        city_data.map.largest_road_networks[i].id = buf->read_i32();
+        city_data.map.largest_road_networks[i].id = buf->read_i32(); // ????
         city_data.map.largest_road_networks[i].size = buf->read_i32();
     }
     city_data.houses.missing.second_wine = buf->read_i32();

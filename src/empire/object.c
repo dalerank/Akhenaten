@@ -25,6 +25,45 @@ typedef struct {
     empire_object obj;
 } full_empire_object;
 
+typedef struct {
+    int type;
+    //
+    int unk01;
+    //
+    int image_x;
+    int image_y;
+    int border_offset_right;
+    int border_offset_bottom;
+    int image_id;
+    //
+    //
+    //
+    //
+    //
+    int text_align;
+    //
+    //
+    //
+    //
+    int unk_flag_graphics;
+    int name_id;
+    //
+    //
+    int unk02[9];
+    int unk03[25];
+    int unk04[32];
+//    int unk_32bit_pair1_a;
+//    int unk_32bit_pair1_b;
+//    int unk_32bit_pair2_a;
+//    int unk_32bit_pair2_b;
+//    int unk_32bit_pair3_a;
+//    int unk_32bit_pair3_b;
+//    int unk_32bit_pair4_a;
+//    int unk_32bit_pair4_b;
+    int unk_32bit_full_twos[4];
+
+} full_empire_object_ph;
+
 static full_empire_object objects[MAX_OBJECTS];
 
 static int get_trade_amount_code(int index, int resource);
@@ -74,7 +113,8 @@ void empire_object_load(buffer *buf) {
         obj->expanded.image_id = buf->read_i16();
         buf->skip(1);
         obj->distant_battle_travel_months = buf->read_u8();
-        buf->skip(2);
+        buf->skip(1);
+        obj->text_align = buf->read_u8();
         obj->expanded.x = buf->read_i16();
         obj->expanded.y = buf->read_i16();
         full->city_type = buf->read_u8();

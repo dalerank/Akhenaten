@@ -83,6 +83,7 @@ enum {
 
 int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
+void set_allowed_food(int i, int resource);
 
 const int INV_RESOURCES[2][20] = {
     {

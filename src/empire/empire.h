@@ -3,7 +3,9 @@
 
 #include "core/buffer.h"
 
-void empire_load(int is_custom_scenario, int empire_id);
+void empire_load_external_c3(int is_custom_scenario, int empire_id);
+void empire_load_internal_ph(buffer *buf);
+void empire_save_internal_ph(buffer *buf);
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height);
 
 void empire_init_scenario(void);

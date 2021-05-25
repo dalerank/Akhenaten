@@ -209,6 +209,7 @@ typedef struct {
     buffer *scenario_name = new buffer;
     buffer *bookmarks = new buffer;
     buffer *tutorial_part3 = new buffer;
+    buffer *empire_map_objects = new buffer;
     buffer *city_entry_exit_grid_offset = new buffer;
     buffer *floodplain_settings = new buffer;
     buffer *moisture_grid = new buffer;
@@ -242,7 +243,7 @@ typedef struct {
     buffer *junk10d = new buffer;
     buffer *junk10e = new buffer;
     buffer *junk11 = new buffer;
-    buffer *junk12 = new buffer;
+//    buffer *junk12 = new buffer;
     buffer *junk13 = new buffer;
     buffer *junk14a = new buffer;
     buffer *junk14b = new buffer;
@@ -633,9 +634,9 @@ static void init_savegame_data(int expanded) {
 
             state->junk11 = create_savegame_piece(1280, 1, "junk11"); // unknown compressed data
             if (expanded)
-                state->junk12 = create_savegame_piece(19600, 1, "junk12"); // unknown compressed data
+                state->empire_map_objects = create_savegame_piece(19600, 1, "junk12"); // unknown compressed data
             else
-                state->junk12 = create_savegame_piece(15200, 1, "junk12"); // unknown compressed data
+                state->empire_map_objects = create_savegame_piece(15200, 1, "junk12"); // unknown compressed data
             state->junk13 = create_savegame_piece(16200, 1, "junk13"); // unknown compressed data
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
@@ -783,6 +784,8 @@ static void savegame_load_from_state(savegame_state *state) {
         map_temp_grid_load(state->GRID04_8BIT, 2);
         map_moisture_load_state(state->moisture_grid);
         map_unk32_load_state(state->GRID03_32BIT);
+
+        empire_load_internal_ph(state->empire_map_objects);
     }
 //    state->end_marker->skip(284);
 }
@@ -942,7 +945,6 @@ static int savegame_read_from_file(FILE *fp) {
 
         if (i == 49)
             int a = 24;
-
 
         if (piece->compressed)
             result = read_compressed_chunk(fp, piece->buf, piece->buf->size());

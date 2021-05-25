@@ -195,7 +195,8 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
     return 1;
 }
 static void load_empire_data(int is_custom_scenario, int empire_id) {
-    empire_load(is_custom_scenario, empire_id);
+    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
+        empire_load_external_c3(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }

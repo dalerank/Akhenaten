@@ -2,7 +2,7 @@
 #define GRAPHICS_TABLE_TRANSLATION_H
 
 static int groupid_translation_table_ph[] = {
-        0, 294,
+        0, 999999, // data/Pharaoh_General.sg3 system.bmp
         1, 1, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         2, 2, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         3, 3, // data/Pharaoh_Terrain.sg3 Land1a.bmp
@@ -39,6 +39,7 @@ static int groupid_translation_table_ph[] = {
         44, 116 + 66, // beer
         45, 92 + 66, // bandstand
         46, 114 + 66, // booth
+        47, 1 + 611, // empire map
         48, 48 + 66, // pavillion
         49, 51 + 66, // conservatory
         50, 52 + 66, // dance school

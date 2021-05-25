@@ -65,6 +65,7 @@ struct graphics_files_collection {
     const char PH_EDITOR_GRAPHICS_555[NAME_SIZE];
     const char PH_EDITOR_GRAPHICS_SG3[NAME_SIZE];
     const char PH_EMPIRE_555[NAME_SIZE];
+    const char PH_EMPIRE_SG3[NAME_SIZE];
     const char PH_ENEMY_555[20][NAME_SIZE];
     const char PH_ENEMY_SG2[20][NAME_SIZE];
     const char PH_EXPANSION_555[NAME_SIZE];
@@ -153,6 +154,7 @@ struct graphics_files_collection {
         "",
         "",
         "data/Empire.555",
+        "data/Empire.sg3",
         {
                 "data/Assyrian.555",
                 "data/Egyptian.555",
@@ -378,17 +380,16 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     groups_num = 0;
     for (int i = 0; i < 300; i++) {
         group_image_ids[i] = buf->read_u16();
-        if (group_image_ids[i] != 0) {
+        if (group_image_ids[i] != 0 || i == 0) {
             groups_num++;
-//            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
         }
     }
 
     // parse bitmap names
     int num_bmp_names = (int) header_data[5];
     char bmp_names[num_bmp_names][200];
-    buf->read_raw(bmp_names, 200 *
-                             num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
+    buf->read_raw(bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
 
     // move on to the rest of the content
     buf->set_offset(HEADER_SIZE);
@@ -507,7 +508,6 @@ int image_groupid_translation(int table[], int group) {
     if (group == 246)
         int a = 2;
 
-
     if (group > 99999)
         group -= 99999;
     else
@@ -525,11 +525,9 @@ int image_id_from_group(int group) {
             return data.main->get_id(group);
         case ENGINE_ENV_PHARAOH:
             group = image_groupid_translation(groupid_translation_table_ph, group);
-//            if (group == GROUP_SYSTEM_GRAPHICS)
-//                return 11026;
-//            if (group == 1)
-//                return 615 + data.ph_terrain->id_shift_overall;
-            if (group < 67)
+            if (group == 999999) //
+                return data.main->get_id(0);
+            else if (group < 67)
                 return data.ph_terrain->get_id(group);
             else if (group < 295)
                 return data.main->get_id(group - 66);// + 2000;
@@ -539,8 +537,10 @@ int image_id_from_group(int group) {
                 return data.font->get_id(group - 332);// + 6000;
             else if (group < 555)
                 return data.ph_sprmain->get_id(group - 341);// + 8000;
-            else
+            else if (group < 611)
                 return data.ph_sprambient->get_id(group - 555);// + ????;
+
+            return data.empire->get_id(1);
     }
     return -1;
 }
@@ -569,6 +569,8 @@ const image *image_get(int id, int mode) {
             img = data.font->get_image(id);
             if (img != &DUMMY_IMAGE) return img;
             img = data.ph_sprambient->get_image(id);
+            if (img != &DUMMY_IMAGE) return img;
+            img = data.empire->get_image(id);
             if (img != &DUMMY_IMAGE) return img;
 
             // default
@@ -639,6 +641,7 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
             // ???? 64-long gap?
             if (!data.ph_sprambient->load_555(gfc.PH_SPRAMBIENT_555, gfc.PH_SPRAMBIENT_SG3, 15766+64)) return 0;
             if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 18764)) return 0;
+            if (!data.empire->load_555(gfc.PH_EMPIRE_555, gfc.PH_EMPIRE_SG3, 18764+1541)) return 0;
             break;
     }
 

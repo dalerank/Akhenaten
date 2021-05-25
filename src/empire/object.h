@@ -12,6 +12,7 @@ typedef struct {
     int width;
     int height;
     int image_id;
+    int text_align;
     struct {
         int x;
         int y;

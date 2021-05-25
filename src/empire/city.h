@@ -21,6 +21,45 @@ typedef struct {
     int trader_figure_ids[3];
 } empire_city;
 
+//typedef struct {
+//    int type;
+//    //
+//    int unk01;
+//    //
+//    int image_x;
+//    int image_y;
+//    int border_offset_right;
+//    int border_offset_bottom;
+//    int image_id;
+//    //
+//    //
+//    //
+//    //
+//    //
+//    int text_align;
+//    //
+//    //
+//    //
+//    //
+//    int unk_flag_graphics;
+//    int name_id;
+//    //
+//    //
+//    int unk02[9];
+//    int unk03[25];
+//    int unk04[32];
+////    int unk_32bit_pair1_a;
+////    int unk_32bit_pair1_b;
+////    int unk_32bit_pair2_a;
+////    int unk_32bit_pair2_b;
+////    int unk_32bit_pair3_a;
+////    int unk_32bit_pair3_b;
+////    int unk_32bit_pair4_a;
+////    int unk_32bit_pair4_b;
+//    int unk_32bit_full_twos[4];
+//
+//} empire_map_object;
+
 void empire_city_clear_all(void);
 
 empire_city *empire_city_get(int city_id);
@@ -62,7 +101,6 @@ void empire_city_generate_trader(void);
 void empire_city_remove_trader(int city_id, int figure_id);
 
 void empire_city_save_state(buffer *buf);
-
 void empire_city_load_state(buffer *buf);
 
 #endif // EMPIRE_CITY_H
