@@ -311,21 +311,55 @@ static void draw_empire_object(const empire_object *obj) {
         image_id = obj->image_id;
     }
 
-    if (obj->type == EMPIRE_OBJECT_ORNAMENT && GAME_ENV == ENGINE_ENV_PHARAOH)
-        image_id = obj->image_id;
-    if (obj->type == EMPIRE_OBJECT_CITY) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
+    if (GAME_ENV == ENGINE_ENV_C3 && obj->type == EMPIRE_OBJECT_CITY) {
+        const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
+        if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
+            city->type == EMPIRE_CITY_FUTURE_ROMAN) {
+            image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
+        } else if (city->type == EMPIRE_CITY_TRADE) {
+            // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
+            image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
+        }
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (obj->type == EMPIRE_OBJECT_CITY) {
             const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
-            if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
-                city->type == EMPIRE_CITY_FUTURE_ROMAN) {
-                image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
-            } else if (city->type == EMPIRE_CITY_TRADE) {
-                // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
-                image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
+
+            int text_group = 21;
+            if (setting_city_names_style() == CITIES_OLD_NAMES)
+                text_group = 195;
+
+            int text_offset_x = 0;
+            int text_offset_y = 50;
+
+            int text_x = data.x_draw_offset + x + text_offset_x;
+            int text_y = data.y_draw_offset + y + text_offset_x;
+
+            switch (obj->text_align) {
+                case 0:
+                    lang_text_draw_left_colored(text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    break;
+                case 1:
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    break;
+                case 2:
+                    lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    break;
+                case 3:
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    break;
             }
         }
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            image_id = obj->image_id;
+        else if (obj->type == EMPIRE_OBJECT_TEXT) {
+
+
+            const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
+            int text_x = data.x_draw_offset + x + 0;
+            int text_y = data.y_draw_offset + y + 0;
+
+            lang_text_draw_centered_colored(196, city->name_id, text_x, text_y, 268, FONT_NORMAL_SHADED, COLOR_FONT_SHITTY_BROWN);
+            // write map text
+        }
     }
     if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
         // handled later

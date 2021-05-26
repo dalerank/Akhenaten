@@ -101,6 +101,7 @@ void empire_object_load(buffer *buf) {
         full_empire_object *full = &objects[i];
         empire_object *obj = &full->obj;
         obj->id = i;
+        //
         obj->type = buf->read_u8();
         full->in_use = buf->read_u8();
         obj->animation_index = buf->read_u8();

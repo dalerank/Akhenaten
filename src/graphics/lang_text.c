@@ -13,17 +13,24 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t fon
     const uint8_t *str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
-
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
     const uint8_t *str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, color);
+}
+
+int lang_text_draw_left(int group, int number, int x_offset, int y_offset, font_t font) {
+    const uint8_t *str = lang_get_string(group, number);
+    return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, 0);
+}
+int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color) {
+    const uint8_t *str = lang_get_string(group, number);
+    return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, color);
 }
 
 void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, font_t font) {
     const uint8_t *str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
-
 void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, font_t font,
                                      color_t color) {
     const uint8_t *str = lang_get_string(group, number);
@@ -46,7 +53,6 @@ int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y
     return desc_offset_x + lang_text_draw(group, number + amount_offset,
                                           x_offset + desc_offset_x, y_offset, font);
 }
-
 int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     int width = 0;
     if (year >= 0) {
@@ -64,7 +70,6 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font) {
     }
     return width;
 }
-
 void lang_text_draw_month_year_max_width(int month, int year, int x_offset, int y_offset, int box_width, font_t font,
                                          color_t color) {
     int month_width = lang_text_get_width(25, month, font);

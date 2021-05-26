@@ -241,7 +241,12 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         y = y - 3;
 
-    const font_definition *def = font_definition_for(font);
+//    const font_definition *def = font_definition_for(font);
+    const font_definition *def;
+    if (font == FONT_NORMAL_SHADED)
+        def = font_definition_for(FONT_NORMAL_PLAIN);
+    else
+        def = font_definition_for(font);
 
     int length = string_length(str);
     if (input_cursor.capture) {
@@ -261,7 +266,7 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
             else {
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height, def->line_height);
-                image_draw_letter(def->font, letter_id, current_x, y - height, color);
+                image_draw_letter(font, letter_id, current_x, y - height, color);
                 width = def->letter_spacing + img->width;
             }
             if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {

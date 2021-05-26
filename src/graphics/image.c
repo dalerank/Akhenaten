@@ -832,6 +832,9 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             draw_uncompressed(img, data, x + 1, y + 1, 0xcead9c, DRAW_TYPE_BLEND_ALPHA);
             draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
             break;
+        case FONT_NORMAL_SHADED:
+            draw_uncompressed(img, data, x + 1, y + 1, 0, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
         default:
             draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
             break;
@@ -846,17 +849,19 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color) 
         draw_multibyte_letter(font, img, data, x, y, color);
         return;
     }
-
+    if (font == FONT_NORMAL_SHADED) {
+        if (img->draw.is_fully_compressed) {
+            draw_compressed(img, data, x + 1, y + 1, img->height);
+        } else
+            draw_uncompressed(img, data, x + 1, y + 1, 0, DRAW_TYPE_NONE);
+    }
     if (img->draw.is_fully_compressed) {
         if (color)
             draw_compressed_set(img, data, x, y, img->height, color);
-        else {
+        else
             draw_compressed(img, data, x, y, img->height);
-        }
-    } else {
-        draw_uncompressed(img, data, x, y,
-                          color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
-    }
+    } else
+        draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
 }
 void image_draw_fullscreen_background(int image_id) {
     int s_width = screen_width();
