@@ -29,6 +29,7 @@
 #include "window/resource_settings.h"
 #include "window/trade_opened.h"
 #include "core/game_environment.h"
+#include "game/settings.h"
 
 const static int MAX_WIDTH[2] = {
         2000+32,
@@ -52,8 +53,10 @@ static image_button image_button_return_to_city[] = {
         {0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_return_to_city, button_none, 0, 0, 1}
 };
 static image_button image_button_advisor[] = {
-        {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
+        {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1},
 };
+static int ADVISOR_BUTTON_X = 0;
+
 static generic_button generic_button_trade_resource[] = {
         {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WHEAT,      0},
         {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VEGETABLES, 0},
@@ -196,28 +199,51 @@ static void draw_city_info(const empire_object *object) {
     int y_offset = data.y_max - 88;
 
     const empire_city *city = empire_city_get(data.selected_city);
-    switch (city->type) {
-        case EMPIRE_CITY_DISTANT_ROMAN:
-            lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-            break;
-        case EMPIRE_CITY_VULNERABLE_ROMAN:
-            if (city_military_distant_battle_city_is_roman())
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        switch (city->type) {
+            case EMPIRE_CITY_DISTANT_ROMAN:
                 lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-            else {
-                lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-            }
-            break;
-        case EMPIRE_CITY_FUTURE_TRADE:
-        case EMPIRE_CITY_DISTANT_FOREIGN:
-        case EMPIRE_CITY_FUTURE_ROMAN:
-            lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-            break;
-        case EMPIRE_CITY_OURS:
-            lang_text_draw_centered(47, 1, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
-            break;
-        case EMPIRE_CITY_TRADE:
-            draw_trade_city_info(object, city);
-            break;
+                break;
+            case EMPIRE_CITY_VULNERABLE_ROMAN:
+                if (city_military_distant_battle_city_is_roman())
+                    lang_text_draw_centered(47, 12, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+                else {
+                    lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+                }
+                break;
+            case EMPIRE_CITY_FUTURE_TRADE:
+            case EMPIRE_CITY_DISTANT_FOREIGN:
+            case EMPIRE_CITY_FUTURE_ROMAN:
+                lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+                break;
+            case EMPIRE_CITY_OURS:
+                lang_text_draw_centered(47, 1, x_offset, y_offset + 42, 240, FONT_NORMAL_GREEN);
+                break;
+            case EMPIRE_CITY_TRADE:
+                draw_trade_city_info(object, city);
+                break;
+        }
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (city->type) {
+            case EMPIRE_CITY_PH_OURS:
+                lang_text_draw_centered(47, 1, x_offset, y_offset + 42, 240, FONT_NORMAL_BLACK);
+                break;
+            case EMPIRE_CITY_PH_PHARAOH:
+                lang_text_draw_centered(47, 19, x_offset, y_offset + 42, 240, FONT_NORMAL_BLACK);
+                break;
+            case EMPIRE_CITY_PH_EGYPT:
+                lang_text_draw_centered(47, 13, x_offset, y_offset + 42, 240, FONT_NORMAL_BLACK);
+                break;
+            case EMPIRE_CITY_PH_FOREIGN:
+                lang_text_draw_centered(47, 0, x_offset, y_offset + 42, 240, FONT_NORMAL_BLACK);
+                break;
+            case EMPIRE_CITY_PH_PHARAOH_TRADE:
+            case EMPIRE_CITY_PH_EGYPT_TRADE:
+            case EMPIRE_CITY_PH_FOREIGN_TRADE:
+                draw_trade_city_info(object, city);
+                break;
+        }
     }
 }
 
@@ -263,7 +289,10 @@ static void draw_object_info(void) {
                 break;
         }
     } else {
-        lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+        if (GAME_ENV == ENGINE_ENV_C3)
+            lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            lang_text_draw_centered(47, 9, data.x_min, data.y_max - 68, data.x_max - data.x_min, FONT_NORMAL_BLACK);
     }
 }
 static void draw_empire_object(const empire_object *obj) {
@@ -282,15 +311,21 @@ static void draw_empire_object(const empire_object *obj) {
         image_id = obj->image_id;
     }
 
+    if (obj->type == EMPIRE_OBJECT_ORNAMENT && GAME_ENV == ENGINE_ENV_PHARAOH)
+        image_id = obj->image_id;
     if (obj->type == EMPIRE_OBJECT_CITY) {
-        const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
-        if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
-            city->type == EMPIRE_CITY_FUTURE_ROMAN) {
-            image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
-        } else if (city->type == EMPIRE_CITY_TRADE) {
-            // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
-            image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
+            if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
+                city->type == EMPIRE_CITY_FUTURE_ROMAN) {
+                image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
+            } else if (city->type == EMPIRE_CITY_TRADE) {
+                // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
+                image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
+            }
         }
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            image_id = obj->image_id;
     }
     if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
         // handled later
@@ -338,21 +373,43 @@ static void draw_map(void) {
     graphics_reset_clip_rectangle();
 }
 static void draw_city_name(const empire_city *city) {
-    int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
-    image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
-    image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
-    image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
-    if (city) {
-        lang_text_draw_centered(21, city->name_id,
-                                (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK);
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
+        image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
+        image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
+        image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
+        if (city) {
+            lang_text_draw_centered(21, city->name_id,
+                                    (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK);
+        }
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (city) {
+            if (setting_city_names_style() == CITIES_OLD_NAMES)
+                lang_text_draw_centered(195, city->name_id,
+                                        (data.x_min + data.x_max - 332) / 2 + 34, data.y_max - 98, 268, FONT_LARGE_BLACK);
+            else
+                lang_text_draw_centered(21, city->name_id,
+                                        (data.x_min + data.x_max - 332) / 2 + 34, data.y_max - 98, 268, FONT_LARGE_BLACK);
+        }
     }
 }
 static void draw_panel_buttons(const empire_city *city) {
     image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
     image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
-    image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
-    if (city) {
-        if (city->type == EMPIRE_CITY_TRADE && !city->is_open)
+
+    if (GAME_ENV == ENGINE_ENV_C3)
+        ADVISOR_BUTTON_X = data.x_max - 44;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        ADVISOR_BUTTON_X = data.x_min + 24;
+    image_buttons_draw(ADVISOR_BUTTON_X, data.y_max - 100, image_button_advisor, 1);
+
+    if (city && !city->is_open) {
+        if (GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE
+            || GAME_ENV == ENGINE_ENV_PHARAOH &&
+           (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
+            || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
+            || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE))
             button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440, 26,
                                data.selected_button);
 
@@ -462,8 +519,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1, &button_id);
     if (button_id)
         data.focus_button_id = 2;
-
-    image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 100, image_button_advisor, 1, &button_id);
+    image_buttons_handle_mouse(m, ADVISOR_BUTTON_X, data.y_max - 100, image_button_advisor, 1, &button_id);
     if (button_id)
         data.focus_button_id = 3;
 
@@ -474,7 +530,12 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         if (obj->type == EMPIRE_OBJECT_CITY) {
             data.selected_city = empire_city_get_for_object(selected_object - 1);
             const empire_city *city = empire_city_get(data.selected_city);
-            if (city->type == EMPIRE_CITY_TRADE) {
+
+            if (GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE
+                || GAME_ENV == ENGINE_ENV_PHARAOH &&
+                    (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
+                    || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
+                    || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE)) {
                 if (city->is_open) {
                     int x_offset = (data.x_min + data.x_max - 500) / 2;
                     int y_offset = data.y_max - 113;

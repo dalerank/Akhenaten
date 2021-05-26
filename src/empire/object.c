@@ -135,6 +135,8 @@ void empire_object_load(buffer *buf) {
         full->trade25 = buf->read_u16();
         full->trade15 = buf->read_u16();
         buf->skip(6);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            buf->skip(34);
     }
 
     fix_image_ids();

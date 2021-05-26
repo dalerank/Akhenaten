@@ -24,13 +24,17 @@ enum {
     SOUND_CITY = 4,
 };
 
+enum {
+    CITIES_OLD_NAMES = 0,
+    CITIES_NEW_NAMES = 1
+};
+
 typedef struct {
     int enabled;
     int volume;
 } set_sound;
 
 void settings_load(void);
-
 void settings_save(void);
 
 int setting_fullscreen(void);
@@ -62,6 +66,15 @@ void setting_toggle_warnings(void);
 
 int setting_monthly_autosave(void);
 void setting_toggle_monthly_autosave(void);
+
+int setting_city_names_style(void);
+void setting_toggle_city_names_style(void);
+
+int setting_pyramid_speedup(void);
+void setting_toggle_pyramid_speedup(void);
+
+int setting_popup_messages(void);
+void setting_toggle_popup_messages(int flag);
 
 int setting_gods_enabled(void);
 void setting_toggle_gods_enabled(void);

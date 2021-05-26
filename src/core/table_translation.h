@@ -164,6 +164,7 @@ static int groupid_translation_table_ph[] = {
         193, 9 + 555, // Musicians
         195, 296, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
         197, 295, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
+        199, 106 + 66,
         201, 173 + 66, // military academy
         202, 66 + 66, // fort
         204, 66 + 66, // fort

@@ -31,6 +31,10 @@ static struct {
     int warnings;
     int gods_enabled;
     int victory_video;
+    // pharaoh settings
+    int popup_messages;
+    int city_names_style;
+    int pyramid_speedup;
     // persistent game state
     int last_advisor;
     uint8_t player_name[32];
@@ -63,6 +67,10 @@ static void load_default_settings(void) {
     data.gods_enabled = 1;
     data.victory_video = 0;
     data.last_advisor = ADVISOR_LABOR;
+
+    data.popup_messages = 0;
+    data.city_names_style = CITIES_OLD_NAMES;
+    data.pyramid_speedup = 0;
 
     setting_clear_personal_savings();
 }
@@ -284,6 +292,27 @@ int setting_monthly_autosave(void) {
 }
 void setting_toggle_monthly_autosave(void) {
     data.monthly_autosave = data.monthly_autosave ? 0 : 1;
+}
+
+int setting_city_names_style(void) {
+    return data.city_names_style;
+}
+void setting_toggle_city_names_style(void) {
+    data.city_names_style = data.city_names_style ? 0 : 1;
+}
+
+int setting_pyramid_speedup(void) {
+    return data.pyramid_speedup;
+}
+void setting_toggle_pyramid_speedup(void) {
+    data.pyramid_speedup = data.pyramid_speedup ? 0 : 1;
+}
+
+int setting_popup_messages(void) {
+    return data.popup_messages;
+}
+void setting_toggle_popup_messages(int flag) {
+    data.popup_messages ^= flag;
 }
 
 int setting_gods_enabled(void) {
