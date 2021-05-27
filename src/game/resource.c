@@ -31,7 +31,7 @@ int resource_get_icon(int resource, int quantity) {
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         // assume we are dealing with NORMAL icons....
 
-        return resource + image_id_from_group(GROUP_EMPIRE_RESOURCES);
+        return resource + image_id_from_group(GROUP_RESOURCE_ICONS);
     }
 }
 

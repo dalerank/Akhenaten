@@ -44,11 +44,11 @@ enum {
 };
 
 enum {
-    GOD_CERES = 0,
-    GOD_NEPTUNE = 1,
-    GOD_MERCURY = 2,
-    GOD_MARS = 3,
-    GOD_VENUS = 4
+    GOD_CERES = 0,      GOD_OSIRIS = 0,
+    GOD_NEPTUNE = 1,    GOD_RA = 1,
+    GOD_MERCURY = 2,    GOD_PTAH = 2,
+    GOD_MARS = 3,       GOD_SETH = 3,
+    GOD_VENUS = 4,       GOD_BAST = 4
 };
 
 enum {
