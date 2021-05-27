@@ -634,9 +634,9 @@ static void init_savegame_data(int expanded) {
 
             state->junk11 = create_savegame_piece(1280, 1, "junk11"); // unknown compressed data
             if (expanded)
-                state->empire_map_objects = create_savegame_piece(19600, 1, "junk12"); // unknown compressed data
+                state->empire_map_objects = create_savegame_piece(19600, 1, "empire_state_objects"); // unknown compressed data
             else
-                state->empire_map_objects = create_savegame_piece(15200, 1, "junk12"); // unknown compressed data
+                state->empire_map_objects = create_savegame_piece(15200, 1, "empire_state_objects"); // unknown compressed data
             state->junk13 = create_savegame_piece(16200, 1, "junk13"); // unknown compressed data
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????

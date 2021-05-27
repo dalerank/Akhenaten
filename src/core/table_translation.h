@@ -149,7 +149,7 @@ static int groupid_translation_table_ph[] = {
         170, 63, // data/Pharaoh_Terrain.sg3 transport.BMP
         171, 55 + 555, // docker workers
         172, 238, // data/Pharaoh_General.sg3 empire_panels.bmp
-        173, 205 + 66, // empire resources
+        173, 129 + 66, // empire resources
         174, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
         177, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
         178, 244, // data/Pharaoh_General.sg3 empire_bits.BMP
@@ -184,6 +184,7 @@ static int groupid_translation_table_ph[] = {
         235, 23 + 341, // zebra (crocodile)
 //        236, 236+341, // legionary
 //        237, 237+341, // cartpusher cart, multiple food
+        243, 171 + 66,
         244, 306, // data/Pharaoh_Unloaded.sg3 Mapback.bmp
         246, 15 + 294, // data/Pharaoh_Unloaded.sg3 FE_Map Editor.bmp
         247, 322, // data/Pharaoh_Unloaded.sg3 Picture9.bmp

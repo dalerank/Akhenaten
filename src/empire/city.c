@@ -20,7 +20,6 @@ const static int MAX_CITIES[2] = {
 };
 
 static empire_city cities[61];
-//static empire_map_object map_objects[200];
 
 void empire_city_clear_all(void) {
     memset(cities, 0, sizeof(cities));
@@ -29,9 +28,8 @@ void empire_city_clear_all(void) {
 empire_city *empire_city_get(int city_id) {
     if (city_id >= 0 && city_id < MAX_CITIES[GAME_ENV])
         return &cities[city_id];
-    else {
+    else
         return 0;
-    }
 }
 
 int empire_city_get_route_id(int city_id) {

@@ -11,60 +11,15 @@
 
 #define MAX_OBJECTS 200
 
-typedef struct {
-    int in_use;
-    int city_type;
-    int city_name_id;
-    int trade_route_open;
-    int trade_route_cost;
-    int city_sells_resource[10];
-    int city_buys_resource[8];
-    int trade40;
-    int trade25;
-    int trade15;
-    empire_object obj;
-} full_empire_object;
-
-typedef struct {
-    int type;
-    //
-    int unk01;
-    //
-    int image_x;
-    int image_y;
-    int border_offset_right;
-    int border_offset_bottom;
-    int image_id;
-    //
-    //
-    //
-    //
-    //
-    int text_align;
-    //
-    //
-    //
-    //
-    int unk_flag_graphics;
-    int name_id;
-    //
-    //
-    int unk02[9];
-    int unk03[25];
-    int unk04[32];
-//    int unk_32bit_pair1_a;
-//    int unk_32bit_pair1_b;
-//    int unk_32bit_pair2_a;
-//    int unk_32bit_pair2_b;
-//    int unk_32bit_pair3_a;
-//    int unk_32bit_pair3_b;
-//    int unk_32bit_pair4_a;
-//    int unk_32bit_pair4_b;
-    int unk_32bit_full_twos[4];
-
-} full_empire_object_ph;
-
 static full_empire_object objects[MAX_OBJECTS];
+
+void empire_object_foreach(void (*callback)(const empire_object *)) {
+    for (int i = 0; i < MAX_OBJECTS; i++) {
+        if (objects[i].in_use)
+            callback(&objects[i].obj);
+
+    }
+}
 
 static int get_trade_amount_code(int index, int resource);
 static int is_sea_trade_route(int route_id);
@@ -96,7 +51,12 @@ static void fix_image_ids(void) {
     }
 }
 
-void empire_object_load(buffer *buf) {
+//static int objects_are_loaded = 0;
+
+void empire_object_load(buffer *buf, int expanded) {
+//    if (objects_are_loaded)
+//        return;
+    int last_object_was_used = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         full_empire_object *full = &objects[i];
         empire_object *obj = &full->obj;
@@ -123,26 +83,33 @@ void empire_object_load(buffer *buf) {
         obj->trade_route_id = buf->read_u8();
         full->trade_route_open = buf->read_u8();
         full->trade_route_cost = buf->read_i16();
-        for (int r = 0; r < 10; r++) {
+        for (int r = 0; r < 10; r++)
             full->city_sells_resource[r] = buf->read_u8();
-        }
         buf->skip(2);
-        for (int r = 0; r < 8; r++) {
+        for (int r = 0; r < 8; r++)
             full->city_buys_resource[r] = buf->read_u8();
-        }
         obj->invasion_path_id = buf->read_u8();
         obj->invasion_years = buf->read_u8();
         full->trade40 = buf->read_u16();
         full->trade25 = buf->read_u16();
         full->trade15 = buf->read_u16();
         buf->skip(6);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            buf->skip(34);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (expanded)
+                buf->skip(34); // 18600 : 98 (64)
+            else
+                buf->skip(12); // 15200 : 76 (64)
+            if (last_object_was_used)
+                last_object_was_used = full->in_use;
+            else
+                full->in_use = last_object_was_used;
+        }
     }
 
-    fix_image_ids();
+//    objects_are_loaded = 1;
+    if (GAME_ENV == ENGINE_ENV_C3)
+        fix_image_ids();
 }
-
 void empire_object_init_cities(void) {
     empire_city_clear_all();
     int route_index = 1;
@@ -205,7 +172,6 @@ void empire_object_init_cities(void) {
         city->empire_object_id = i;
     }
 }
-
 int empire_object_init_distant_battle_travel_months(int object_type) {
     int month = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {
@@ -217,10 +183,12 @@ int empire_object_init_distant_battle_travel_months(int object_type) {
     return month;
 }
 
+const full_empire_object *empire_get_full_object(int object_id) {
+    return &objects[object_id];
+}
 const empire_object *empire_object_get(int object_id) {
     return &objects[object_id].obj;
 }
-
 const empire_object *empire_object_get_our_city(void) {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
@@ -232,15 +200,6 @@ const empire_object *empire_object_get_our_city(void) {
     }
     return 0;
 }
-
-void empire_object_foreach(void (*callback)(const empire_object *)) {
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (objects[i].in_use)
-            callback(&objects[i].obj);
-
-    }
-}
-
 const empire_object *empire_object_get_battle_icon(int path_id, int year) {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
@@ -265,7 +224,6 @@ int empire_object_get_max_invasion_path(void) {
     }
     return max_path;
 }
-
 int empire_object_get_closest(int x, int y) {
     int min_dist = 10000;
     int min_obj_id = 0;
@@ -293,7 +251,6 @@ int empire_object_get_closest(int x, int y) {
     }
     return min_obj_id;
 }
-
 void empire_object_set_expanded(int object_id, int new_city_type) {
     objects[object_id].city_type = new_city_type;
     if (new_city_type == EMPIRE_CITY_TRADE)
@@ -304,32 +261,47 @@ void empire_object_set_expanded(int object_id, int new_city_type) {
 }
 
 int empire_object_city_buys_resource(int object_id, int resource) {
-    const full_empire_object *object = &objects[object_id];
-    for (int i = 0; i < 8; i++) {
-        if (object->city_buys_resource[i] == resource)
-            return 1;
-
+    if (object_id == -1)
+        return 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        const full_empire_object *object = &objects[object_id];
+        for (int i = 0; i < 8; i++) {
+            if (object->city_buys_resource[i] == resource)
+                return 1;
+        }
+        return 0;
     }
-    return 0;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        const empire_city *city = empire_city_get(empire_city_get_for_object(object_id));
+        if (city->buys_resource[resource] == 1)
+            return 1;
+        return 0;
+    }
 }
-
 int empire_object_city_sells_resource(int object_id, int resource) {
-    const full_empire_object *object = &objects[object_id];
-    for (int i = 0; i < 10; i++) {
-        if (object->city_sells_resource[i] == resource)
-            return 1;
-
+    if (object_id == -1)
+        return 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        const full_empire_object *object = &objects[object_id];
+        for (int i = 0; i < 10; i++) {
+            if (object->city_sells_resource[i] == resource)
+                return 1;
+        }
+        return 0;
     }
-    return 0;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        const empire_city *city = empire_city_get(empire_city_get_for_object(object_id));
+        if (city->sells_resource[resource] == 1)
+            return 1;
+        return 0;
+    }
 }
-
 static int is_trade_city(int index) {
     if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
         return 0;
 
     return objects[index].city_type > EMPIRE_CITY_OURS && objects[index].city_type < EMPIRE_CITY_FUTURE_ROMAN;
 }
-
 static int get_trade_amount_code(int index, int resource) {
     if (!is_trade_city(index))
         return 0;
@@ -346,7 +318,6 @@ static int get_trade_amount_code(int index, int resource) {
 
     return 0;
 }
-
 static int is_sea_trade_route(int route_id) {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
@@ -401,7 +372,6 @@ static int get_animation_offset(int image_id, int current_index) {
     }
     return current_index;
 }
-
 int empire_object_update_animation(const empire_object *obj, int image_id) {
     return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
 }

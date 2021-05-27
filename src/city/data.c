@@ -59,6 +59,23 @@ void set_allowed_food(int i, int resource) {
     city_data.resource.food_types_allowed[i] = resource;
 }
 
+int stack_proper_quantity(int units, int resource) {
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return units;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (resource) {
+//            case RESOURCE_GOLD:
+            case RESOURCE_STONE:
+            case RESOURCE_LIMESTONE:
+            case RESOURCE_GRANITE:
+            case RESOURCE_SANDSTONE:
+            case RESOURCE_MARBLE_PH:
+                return units;
+        }
+        return units * 100; // all other goods are 100 worth of, per pile
+    }
+}
+
 static void save_main_data(buffer *main) {
     main->write_raw(city_data.unused.other_player, 18068);
     main->write_i8(city_data.unused.unknown_00a0);

@@ -386,11 +386,11 @@ INFO: data/Pharaoh_General.sg3 group 2 -> id 737
 INFO: data/Pharaoh_General.sg3 group 3 -> id 1619
 INFO: data/Pharaoh_General.sg3 group 4 -> id 1630
 INFO: data/Pharaoh_General.sg3 group 5 -> id 2075
-INFO: data/Pharaoh_General.sg3 group 6 -> id 2664
+INFO: data/Pharaoh_General.sg3 group 6 -> id 2664 small overlay icons
 INFO: data/Pharaoh_General.sg3 group 7 -> id 2313
 INFO: data/Pharaoh_General.sg3 group 8 -> id 2305
 INFO: data/Pharaoh_General.sg3 group 9 -> id 501
-INFO: data/Pharaoh_General.sg3 group 10 -> id 2657
+INFO: data/Pharaoh_General.sg3 group 10 -> id 2657 extra icons
 INFO: data/Pharaoh_General.sg3 group 11 -> id 201
 INFO: data/Pharaoh_General.sg3 group 12 -> id 216
 INFO: data/Pharaoh_General.sg3 group 13 -> id 2261
@@ -463,20 +463,20 @@ INFO: data/Pharaoh_General.sg3 group 79 -> id 1629
 INFO: data/Pharaoh_General.sg3 group 80 -> id 1350
 INFO: data/Pharaoh_General.sg3 group 81 -> id 1248
 INFO: data/Pharaoh_General.sg3 group 82 -> id 1353
-INFO: data/Pharaoh_General.sg3 group 83 -> id 1371
+INFO: data/Pharaoh_General.sg3 group 83 -> id 1371 storage yard resources (on warehouse tiles)
 INFO: data/Pharaoh_General.sg3 group 84 -> id 1372
 INFO: data/Pharaoh_General.sg3 group 85 -> id 1121
 INFO: data/Pharaoh_General.sg3 group 86 -> id 1134
 INFO: data/Pharaoh_General.sg3 group 87 -> id 1147
 INFO: data/Pharaoh_General.sg3 group 88 -> id 871
-INFO: data/Pharaoh_General.sg3 group 89 -> id 279
+INFO: data/Pharaoh_General.sg3 group 89 -> id 279 sidebar extra buttons
 INFO: data/Pharaoh_General.sg3 group 90 -> id 291
 INFO: data/Pharaoh_General.sg3 group 91 -> id 856
 INFO: data/Pharaoh_General.sg3 group 92 -> id 1096
 INFO: data/Pharaoh_General.sg3 group 93 -> id 382
 INFO: data/Pharaoh_General.sg3 group 94 -> id 386
 INFO: data/Pharaoh_General.sg3 group 95 -> id 1349
-INFO: data/Pharaoh_General.sg3 group 96 -> id 387
+INFO: data/Pharaoh_General.sg3 group 96 -> id 387 common checkbox/cancel/accept/arrow buttons
 INFO: data/Pharaoh_General.sg3 group 97 -> id 1715
 INFO: data/Pharaoh_General.sg3 group 98 -> id 816
 INFO: data/Pharaoh_General.sg3 group 99 -> id 2285
@@ -486,38 +486,38 @@ INFO: data/Pharaoh_General.sg3 group 102 -> id 1534
 INFO: data/Pharaoh_General.sg3 group 103 -> id 1542
 INFO: data/Pharaoh_General.sg3 group 104 -> id 218
 INFO: data/Pharaoh_General.sg3 group 105 -> id 2201
-INFO: data/Pharaoh_General.sg3 group 106 -> id 428
+INFO: data/Pharaoh_General.sg3 group 106 -> id 428 advisors bordered icons (small)
 INFO: data/Pharaoh_General.sg3 group 107 -> id 2376
-INFO: data/Pharaoh_General.sg3 group 108 -> id 2530
-INFO: data/Pharaoh_General.sg3 group 109 -> id 2525
-INFO: data/Pharaoh_General.sg3 group 110 -> id 2512
+INFO: data/Pharaoh_General.sg3 group 108 -> id 2530 sidebar main buttons (small)
+INFO: data/Pharaoh_General.sg3 group 109 -> id 2525 sidebar locust
+INFO: data/Pharaoh_General.sg3 group 110 -> id 2512 sidebar upper buttons
 INFO: data/Pharaoh_General.sg3 group 111 -> id 500
 INFO: data/Pharaoh_General.sg3 group 112 -> id 2377
 INFO: data/Pharaoh_General.sg3 group 113 -> id 2060
 INFO: data/Pharaoh_General.sg3 group 114 -> id 1095
 INFO: data/Pharaoh_General.sg3 group 115 -> id 2249
 INFO: data/Pharaoh_General.sg3 group 116 -> id 1015
-INFO: data/Pharaoh_General.sg3 group 117 -> id 2587
+INFO: data/Pharaoh_General.sg3 group 117 -> id 2587 sidebar build menus backdrops
 INFO: data/Pharaoh_General.sg3 group 118 -> id 2504
 INFO: data/Pharaoh_General.sg3 group 119 -> id 915
 INFO: data/Pharaoh_General.sg3 group 120 -> id 902
-INFO: data/Pharaoh_General.sg3 group 121 -> id 2578
+INFO: data/Pharaoh_General.sg3 group 121 -> id 2578 sidebar paneling
 INFO: data/Pharaoh_General.sg3 group 122 -> id 946
 INFO: data/Pharaoh_General.sg3 group 123 -> id 1028
 INFO: data/Pharaoh_General.sg3 group 124 -> id 935
 INFO: data/Pharaoh_General.sg3 group 125 -> id 959
 INFO: data/Pharaoh_General.sg3 group 126 -> id 1561
 INFO: data/Pharaoh_General.sg3 group 127 -> id 1609
-INFO: data/Pharaoh_General.sg3 group 128 -> id 403
-INFO: data/Pharaoh_General.sg3 group 129 -> id 467
+INFO: data/Pharaoh_General.sg3 group 128 -> id 403 advisors bordered icons (large)
+INFO: data/Pharaoh_General.sg3 group 129 -> id 467 resource icons (proper)
 INFO: data/Pharaoh_General.sg3 group 130 -> id 2109
 INFO: data/Pharaoh_General.sg3 group 131 -> id 731
 INFO: data/Pharaoh_General.sg3 group 132 -> id 502
 INFO: data/Pharaoh_General.sg3 group 133 -> id 646
 INFO: data/Pharaoh_General.sg3 group 134 -> id 695
 INFO: data/Pharaoh_General.sg3 group 135 -> id 2339
-INFO: data/Pharaoh_General.sg3 group 136 -> id 2440
-INFO: data/Pharaoh_General.sg3 group 137 -> id 331
+INFO: data/Pharaoh_General.sg3 group 136 -> id 2440 sidebar main buttons (large)
+INFO: data/Pharaoh_General.sg3 group 137 -> id 331 sidebar editor buttons
 INFO: data/Pharaoh_General.sg3 group 138 -> id 2342
 INFO: data/Pharaoh_General.sg3 group 139 -> id 1632
 INFO: data/Pharaoh_General.sg3 group 140 -> id 1640
@@ -539,8 +539,8 @@ INFO: data/Pharaoh_General.sg3 group 155 -> id 1657
 INFO: data/Pharaoh_General.sg3 group 156 -> id 1662
 INFO: data/Pharaoh_General.sg3 group 157 -> id 275
 INFO: data/Pharaoh_General.sg3 group 158 -> id 256
-INFO: data/Pharaoh_General.sg3 group 159 -> id 2601
-INFO: data/Pharaoh_General.sg3 group 160 -> id 2600
+INFO: data/Pharaoh_General.sg3 group 159 -> id 2601 advisors buttons
+INFO: data/Pharaoh_General.sg3 group 160 -> id 2600 advisors layout
 INFO: data/Pharaoh_General.sg3 group 161 -> id 2323
 INFO: data/Pharaoh_General.sg3 group 162 -> id 933
 INFO: data/Pharaoh_General.sg3 group 163 -> id 1716
@@ -551,7 +551,7 @@ INFO: data/Pharaoh_General.sg3 group 167 -> id 2111
 INFO: data/Pharaoh_General.sg3 group 168 -> id 2431
 INFO: data/Pharaoh_General.sg3 group 169 -> id 2092
 INFO: data/Pharaoh_General.sg3 group 170 -> id 934
-INFO: data/Pharaoh_General.sg3 group 171 -> id 2033
+INFO: data/Pharaoh_General.sg3 group 171 -> id 2033 trade amount
 INFO: data/Pharaoh_General.sg3 group 172 -> id 2028
 INFO: data/Pharaoh_General.sg3 group 173 -> id 1313
 INFO: data/Pharaoh_General.sg3 group 174 -> id 715
@@ -585,7 +585,7 @@ INFO: data/Pharaoh_General.sg3 group 201 -> id 1499
 INFO: data/Pharaoh_General.sg3 group 202 -> id 1517
 INFO: data/Pharaoh_General.sg3 group 203 -> id 1532
 INFO: data/Pharaoh_General.sg3 group 204 -> id 1497
-INFO: data/Pharaoh_General.sg3 group 205 -> id 1492
+INFO: data/Pharaoh_General.sg3 group 205 -> id 1492 WEIRD resource icons
 INFO: data/Pharaoh_General.sg3 group 206 -> id 1522
 INFO: data/Pharaoh_General.sg3 group 207 -> id 1501
 INFO: data/Pharaoh_General.sg3 group 208 -> id 1503

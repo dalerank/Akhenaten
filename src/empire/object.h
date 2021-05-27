@@ -24,14 +24,28 @@ typedef struct {
     int invasion_years;
 } empire_object;
 
-void empire_object_load(buffer *buf);
+typedef struct {
+    int in_use;
+    int city_type;
+    int city_name_id;
+    int trade_route_open;
+    int trade_route_cost;
+    int city_sells_resource[10];
+    int city_buys_resource[8];
+    int trade40;
+    int trade25;
+    int trade15;
+    empire_object obj;
+} full_empire_object;
+
+void empire_object_load(buffer *buf, int expanded);
 
 void empire_object_init_cities(void);
 
 int empire_object_init_distant_battle_travel_months(int object_type);
 
+const full_empire_object *empire_get_full_object(int object_id);
 const empire_object *empire_object_get(int object_id);
-
 const empire_object *empire_object_get_our_city(void);
 
 void empire_object_foreach(void (*callback)(const empire_object *));

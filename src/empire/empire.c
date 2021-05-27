@@ -26,7 +26,12 @@ enum {
 //    EMPIRE_WIDTH = 2000,
 //    EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,
-    EMPIRE_DATA_SIZE = 12800
+//    EMPIRE_DATA_SIZE = 12800
+};
+
+const static int EMPIRE_DATA_SIZE[2] = {
+        12800,
+        15200
 };
 
 static struct {
@@ -39,9 +44,17 @@ static struct {
     int viewport_height;
 } data;
 
+const char SCENARIO_FILE[2][2][100] = {
+        {"c32.emp", "c3.emp"},
+        {"", "Pharaoh2.emp"}
+};
+
 void empire_load_external_c3(int is_custom_scenario, int empire_id) {
-    buffer *buf = new buffer(EMPIRE_DATA_SIZE);
-    const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
+    buffer *buf = new buffer(EMPIRE_DATA_SIZE[GAME_ENV]);
+    const char *filename = is_custom_scenario ? SCENARIO_FILE[GAME_ENV][0] : SCENARIO_FILE[GAME_ENV][1];
+
+    if (is_custom_scenario && GAME_ENV == ENGINE_ENV_PHARAOH) // in Pharaoh, custom map data is saved internally
+        return;
 
     // read header with scroll positions
     if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, 4, 32 * empire_id)) {
@@ -52,22 +65,25 @@ void empire_load_external_c3(int is_custom_scenario, int empire_id) {
     data.initial_scroll_y = buf->read_i16();
 
     // read data section with objects
-    int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE * empire_id;
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, EMPIRE_DATA_SIZE, offset) != EMPIRE_DATA_SIZE) {
+    int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE[GAME_ENV] * empire_id;
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, EMPIRE_DATA_SIZE[GAME_ENV], offset) != EMPIRE_DATA_SIZE[GAME_ENV]) {
         // load empty empire when loading fails
         log_error("Unable to load empire data from file", filename, 0);
         buf->fill(0);
     }
-    empire_object_load(buf);
+    empire_object_load(buf, is_custom_scenario);
 }
 void empire_load_internal_ph(buffer *buf) {
-    empire_object_load(buf);
+    if (buf->size() == 15200)
+//        return;
+        empire_object_load(buf, 0);
+    else
+        empire_object_load(buf, 1);
 }
-
 
 static void check_scroll_boundaries(void) {
     int max_x = EMPIRE_WIDTH[GAME_ENV] - data.viewport_width;
-    int max_y = EMPIRE_HEIGHT[GAME_ENV] - data.viewport_height;
+    int max_y = EMPIRE_HEIGHT[GAME_ENV] - data.viewport_height + 20;
 
     data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
     data.scroll_y = calc_bound(data.scroll_y, 0, max_y);

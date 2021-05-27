@@ -17,12 +17,23 @@ int resource_image_offset(int resource, int type) {
             default:
                 return 0;
         }
-    } else {
+    } else
         return 0;
-    }
 }
 
 #include "core/game_environment.h"
+#include "graphics/image.h"
+
+int resource_get_icon(int resource, int quantity) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        return resource + image_id_from_group(GROUP_EMPIRE_RESOURCES) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        // assume we are dealing with NORMAL icons....
+
+        return resource + image_id_from_group(GROUP_EMPIRE_RESOURCES);
+    }
+}
 
 int resource_is_food(int resource) {
     if (GAME_ENV == ENGINE_ENV_C3)

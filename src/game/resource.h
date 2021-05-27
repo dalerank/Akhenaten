@@ -84,6 +84,7 @@ enum {
 int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
 void set_allowed_food(int i, int resource);
+int stack_proper_quantity(int units, int resource);
 
 const int INV_RESOURCES[2][20] = {
     {
@@ -125,10 +126,13 @@ enum {
     RESOURCE_IMAGE_STORAGE = 0,
     RESOURCE_IMAGE_CART = 1,
     RESOURCE_IMAGE_FOOD_CART = 2,
-    RESOURCE_IMAGE_ICON = 3
+    RESOURCE_IMAGE_ICON = 3,
+    RESOURCE_IMAGE_ICON_WEIRD = 3
 };
 
 int resource_image_offset(int resource, int type);
+
+int resource_get_icon(int resource, int quantity = 1);
 
 int resource_is_food(int resource);
 
