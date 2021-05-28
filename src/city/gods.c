@@ -114,7 +114,7 @@ static void perform_blessing(int god) {
                 building_granary_bless();
                 break;
             case GOD_SETH:
-                
+
                 city_message_post(1, MESSAGE_BLESSING_SETH, 0, 0);
                 city_data.religion.mars_spirit_power = 10;
                 break;
@@ -400,9 +400,8 @@ static void update_god_moods(void) {
         city_data.religion.angry_message_delay = 20;
         if (min_happiness < 10)
             city_message_post(0, MESSAGE_GODS_WRATHFUL, 0, 0);
-        else {
+        else if (GAME_ENV == ENGINE_ENV_C3)
             city_message_post(0, MESSAGE_GODS_UNHAPPY, 0, 0);
-        }
     }
 }
 

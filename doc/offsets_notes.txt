@@ -51,6 +51,45 @@ hunt. lodge (19) : 5016
 
 ==================
 
+first one in the list is always null
+
+type 0 is OURS
+
+last city in the list, if PHARAOH is not present,
+defaults to PHARAOH (2)
+(name ID is 2?)
+(route ID is 2?)
+(object ID is 77?)
+
+00 00 00 N/A
+01 00 05 FOREIGN_TRADE
+01 00 00 OURS
+01 00 02 PHARAOH
+
+01 02 05 00 6A 03 86 04 25 00 22 00 >>> the same???
+
+ty iu ai
+
+01 02 05	01 Enkomi (foreign trade)
+02 02 00	03 CRETE (text)
+01 02 01	02 Gaza (our city!!!)
+01 02 01	00 Alexandria
+01 02 01	00 Sumur
+01 02 01	03 Swiw Oasis
+01 02 01	00 Pwenet
+01 02 01	03 Rowarty
+00 00 00
+00 00 00
+...
+
+junk7a
+junk8b
+junk10a
+junk12		>> bingo!!
+junk16b		>> nothing
+
+==================
+
 lookup: 19.600/590.127 entries
 no lookup: 12.113/44.497 entries
 

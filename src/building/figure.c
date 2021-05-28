@@ -839,7 +839,7 @@ static void set_water_supply_graphic(building *b) {
     }
 }
 static void spawn_figure_watersupply(building *b) {
-    set_water_supply_graphic(b);
+//    set_water_supply_graphic(b);
     check_labor_problem(b);
     if (has_figure_of_type(b, FIGURE_WATER_CARRIER))
         return;

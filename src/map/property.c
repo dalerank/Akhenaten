@@ -4,11 +4,11 @@
 #include "map/random.h"
 
 enum {
-    BIT_SIZE1 = 0x00,
-    BIT_SIZE2 = 0x01,
-    BIT_SIZE3 = 0x02,
-    BIT_SIZE4 = 0x04,
-    BIT_SIZE5 = 0x08,
+//    BIT_SIZE1 = 0x00,
+//    BIT_SIZE2 = 0x01,
+//    BIT_SIZE3 = 0x02,
+//    BIT_SIZE4 = 0x04,
+//    BIT_SIZE5 = 0x08,
     BIT_SIZES = 0x0f,
     BIT_NO_SIZES = 0xf0,
     BIT_CONSTRUCTION = 0x10,
@@ -83,48 +83,31 @@ void map_property_clear_multi_tile_xy(int grid_offset) {
 }
 int map_property_multi_tile_size(int grid_offset) {
     auto bfield = map_grid_get(&bitfields_grid, grid_offset);
+    int field = bfield & BIT_SIZES;
 
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        switch (bfield & BIT_SIZES) {
-            case 0x01:
-                return 2;
-            case 0x02:
-                return 3;
-            case 0x03:
-                return 4;
-            case 0x04:
-                return 5;
-            default:
-                return 1;
-        }
-    switch (bfield & BIT_SIZES) {
-        case BIT_SIZE2:
-            return 2;
-        case BIT_SIZE3:
-            return 3;
-        case BIT_SIZE4:
-            return 4;
-        case BIT_SIZE5:
-            return 5;
-        default:
-            return 1;
-    }
+//    if (GAME_ENV == ENGINE_ENV_C3)
+    field += 1;
+
+    if (field >= 1 || field <= 6)
+        return field;
+    return 1;
 }
 void map_property_set_multi_tile_size(int grid_offset, int size) {
     map_grid_and(&bitfields_grid, grid_offset, BIT_NO_SIZES);
-    switch (size) {
-        case 2:
-            map_grid_or(&bitfields_grid, grid_offset, BIT_SIZE2);
-            break;
-        case 3:
-            map_grid_or(&bitfields_grid, grid_offset, BIT_SIZE3);
-            break;
-        case 4:
-            map_grid_or(&bitfields_grid, grid_offset, BIT_SIZE4);
-            break;
-        case 5:
-            map_grid_or(&bitfields_grid, grid_offset, BIT_SIZE5);
-            break;
+
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (size < 2)
+            size = 2;
+        if (size > 5)
+            size = 5;
+        map_grid_or(&bitfields_grid, grid_offset, size - 1);
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (size < 1)
+            size = 1;
+        if (size > 6)
+            size = 6;
+        map_grid_or(&bitfields_grid, grid_offset, size - 1);
     }
 }
 

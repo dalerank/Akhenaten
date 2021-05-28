@@ -575,7 +575,7 @@ static void draw_figures(int x, int y, int grid_offset) {
 void draw_debug(int x, int y, int grid_offset) {
 
     // draw terrain data
-    if (false) {
+    if (true) {
         uint32_t tile_data = map_moisture_get(grid_offset);
         uint8_t str[10];
         int flag_data = 0;
@@ -594,12 +594,12 @@ void draw_debug(int x, int y, int grid_offset) {
         }
 
         building *b = building_get(map_building_at(grid_offset));
-        if (map_building_at(grid_offset) && true && b->grid_offset == grid_offset) {
+        if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
             string_from_int(str, b->type, 0);
             draw_text_shadow(str, x + 13, y, COLOR_GREEN);
 
-//            string_from_int(str, b->id, 0);
-//            draw_text_shadow(str, x + 23, y + 15, COLOR_WHITE);
+            string_from_int(str, b->grid_offset, 0);
+            draw_text_shadow(str, x + 23, y + 15, COLOR_WHITE);
 
 //            string_from_int(str, map_image_at(grid_offset), 0);
 //            draw_text_shadow(str, x + 13, y - 5, COLOR_BLUE);
@@ -613,7 +613,7 @@ void draw_debug(int x, int y, int grid_offset) {
 //            string_from_int(str, b->next_part_building_id, 0);
 //            draw_text_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
-            if (b->data.entertainment.booth_corner_grid_offset && !b->data.entertainment.ph_unk02_u8 && true) {
+            if (b->data.entertainment.booth_corner_grid_offset && !b->data.entertainment.ph_unk02_u8 && false) {
                 string_from_int(str, b->data.entertainment.play, 0);
                 draw_text_shadow(str, x + 40, y + 5, COLOR_WHITE);
 //                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
@@ -642,12 +642,27 @@ void draw_debug(int x, int y, int grid_offset) {
             }
         }
 
+        int d = map_property_multi_tile_size(grid_offset);
+        if (false) {
+            string_from_int(str, d, 0);
+            draw_text_shadow(str, x+25, y+10, COLOR_GREEN);
+            if (map_building_at(grid_offset) && b->grid_offset == grid_offset) {
+                string_from_int(str, b->id, 0);
+                draw_text_shadow(str, x+25, y, COLOR_WHITE);
+            }
+        }
+//        d = map_property_multi_tile_y(grid_offset);
+//        if (true) {
+//            string_from_int(str, d, 0);
+//            draw_text_shadow(str, x + 7, y+3, COLOR_RED);
+//        }
+
 //        int d = map_get_shoreorder(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
 //            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //        }
-        int d = map_image_at(grid_offset) - 14252;
+        d = map_image_at(grid_offset) - 14252;
         if (d > 200 && d <= 1514 && false) {
             string_from_int(str, d, 0);
             draw_text_shadow(str, x + 13, y, COLOR_WHITE);
