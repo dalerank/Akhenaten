@@ -383,9 +383,8 @@ static void spawn_figure_amphitheater(building *b) {
             figure *f;
             if (b->data.entertainment.days1 > 0)
                 f = figure_create(FIGURE_GLADIATOR, road.x, road.y, DIR_0_TOP_RIGHT);
-            else {
+            else
                 f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP_RIGHT);
-            }
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
             b->figure_id = f->id;
@@ -408,6 +407,8 @@ static void spawn_figure_theater(building *b) {
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            if (b->data.entertainment.days1 <= 0)
+                return;
             figure *f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP_RIGHT);
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->building_id = b->id;
