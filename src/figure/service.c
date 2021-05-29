@@ -131,7 +131,6 @@ static int provide_missionary_coverage(int x, int y) {
     }
     return 1;
 }
-
 static int provide_service(int x, int y, int *data, void (*callback)(building *, int *)) {
     int serviced = 0;
     int x_min, y_min, x_max, y_max;
@@ -169,6 +168,11 @@ static void prefect_coverage(building *b, int *min_happiness_seen) {
     if (b->sentiment.house_happiness < *min_happiness_seen)
         *min_happiness_seen = b->sentiment.house_happiness;
 
+}
+static void policeman_coverage(building *b, int *max_anger_seen) {
+    b->house_criminal_active = 0;
+    if (b->sentiment.native_anger > *max_anger_seen)
+        *max_anger_seen = b->damage_risk;
 }
 static void tax_collector_coverage(building *b, int *max_tax_multiplier) {
     if (b->house_size && b->house_population > 0) {
@@ -298,10 +302,10 @@ int figure::figure_service_provide_coverage() {
                 houses_serviced = provide_market_goods(building_id, tile_x, tile_y);
 
             break;
-        case FIGURE_BATHHOUSE_WORKER:
-        case FIGURE_MAGISTRATE:
-            houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
-            break;
+//        case FIGURE_BATHHOUSE_WORKER:
+//        case FIGURE_MAGISTRATE:
+//            houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
+//            break;
         case FIGURE_SCHOOL_CHILD:
             houses_serviced = provide_culture(tile_x, tile_y, school_coverage);
             break;
@@ -400,6 +404,19 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_RIOTER:
             if (figure_rioter_collapse_building() == 1)
                 return 1;
+            break;
+        case FIGURE_POLICEMAN:
+        case FIGURE_MAGISTRATE:
+            int max_anger = 0;
+            houses_serviced = provide_service(tile_x, tile_y, &max_anger, policeman_coverage);
+            if (type == FIGURE_MAGISTRATE)
+                houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
+            if (max_anger > min_max_seen)
+                min_max_seen = max_anger;
+            else if (min_max_seen <= 10)
+                min_max_seen = 0;
+            else
+                min_max_seen -= 10;
             break;
     }
     if (building_id) {
