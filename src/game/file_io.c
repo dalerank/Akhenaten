@@ -884,7 +884,7 @@ void log_hex(file_piece *piece, int i, int offs) {
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%zu) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
             offs, hexstr, piece->buf->size(), fname);
 }
 static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
