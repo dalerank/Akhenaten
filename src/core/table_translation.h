@@ -67,9 +67,9 @@ static int groupid_translation_table_ph[] = {
         79, 18, // fishing wharf
         80, 316, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
         81, 81 + 66, // architect post
-        82, 82 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
-        83, 83 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
-        84, 84 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
+        82, 82 + 66, // Warehouse top sprite
+        83, 83 + 66, // Empty warehouse
+        84, 84 + 66, // Warehouse resources
         85, 85 + 66, // personal mansion
         86, 86 + 66, // family mansion
         87, 87 + 66, // dynasty mansion

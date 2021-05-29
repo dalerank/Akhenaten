@@ -2,12 +2,30 @@
 
 #include "building/type.h"
 #include "scenario/building.h"
+#include "core/game_environment.h"
 
 int resource_image_offset(int resource, int type) {
-    if (resource == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF)) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (resource == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF)) {
+            switch (type) {
+                case RESOURCE_IMAGE_STORAGE:
+                    return 40;
+                case RESOURCE_IMAGE_CART:
+                    return 648;
+                case RESOURCE_IMAGE_FOOD_CART:
+                    return 8;
+                case RESOURCE_IMAGE_ICON:
+                    return 11;
+                default:
+                    return 0;
+            }
+        } else {
+            return 0;
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (type) {
             case RESOURCE_IMAGE_STORAGE:
-                return 40;
+                return 0;
             case RESOURCE_IMAGE_CART:
                 return 648;
             case RESOURCE_IMAGE_FOOD_CART:
