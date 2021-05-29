@@ -258,23 +258,27 @@ void window_building_draw_water_supply(building_info_context *c) {
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(108, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
+    building *b = building_get(c->building_id);
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
     else {
-        int text_id;
-        if (c->worker_percentage >= 100)
-            text_id = 2;
-        else if (c->worker_percentage >= 75)
-            text_id = 3;
-        else if (c->worker_percentage >= 50)
-            text_id = 4;
-        else if (c->worker_percentage >= 25)
-            text_id = 5;
-        else
-            text_id = 7;
-        window_building_draw_description(c, 108, text_id);
-
-        window_building_draw_description_at(c, 16 * c->height_blocks - 120, 108, 1);
+        if (!b->num_workers)
+            window_building_draw_description(c, 108, 7);
+        else {
+            int text_id;
+            if (c->worker_percentage >= 100)
+                text_id = 2;
+            else if (c->worker_percentage >= 75)
+                text_id = 3;
+            else if (c->worker_percentage >= 50)
+                text_id = 4;
+            else if (c->worker_percentage >= 25)
+                text_id = 5;
+            else
+                text_id = 7;
+            window_building_draw_description(c, 108, text_id);
+            window_building_draw_description_at(c, 16 * c->height_blocks - 120, 108, 1);
+        }
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 144, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 150);
