@@ -451,7 +451,7 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
             for (int i = 4; i < 9; i++)
                 image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            draw_ph_crops(type, 0, grid_offset, x, y, COLOR_MASK_GREEN);
+            draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
     } else if (type == BUILDING_WAREHOUSE)
         image_draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {
