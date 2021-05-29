@@ -10,7 +10,7 @@
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
-#include <algorithm>
+#include "empire/city.h"
 
 static tutorial_flags data;
 

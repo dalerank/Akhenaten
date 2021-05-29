@@ -7,9 +7,9 @@ int city_festival_months_since_last(void);
 int city_festival_small_cost(void);
 int city_festival_large_cost(void);
 int city_festival_grand_cost(void);
-int city_festival_grand_wine(void);
+int city_festival_grand_alcohol(void);
 
-int city_festival_out_of_wine(void);
+int city_festival_out_of_alcohol(void);
 
 int city_festival_selected_god(void);
 void city_festival_select_god(int god_id);

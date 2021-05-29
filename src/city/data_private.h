@@ -306,8 +306,8 @@ extern struct city_data_t {
         int32_t small_cost;
         int32_t large_cost;
         int32_t grand_cost;
-        int32_t grand_wine;
-        int32_t not_enough_wine;
+        int32_t grand_alcohol;
+        int32_t not_enough_alcohol;
 
         int32_t months_since_festival;
         int32_t first_festival_effect_months;
