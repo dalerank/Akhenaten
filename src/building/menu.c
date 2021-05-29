@@ -194,7 +194,7 @@ static void disable_resources() {
         farms += disable_raw_if_unavailable(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
         farms += disable_raw_if_unavailable(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
         farms += disable_raw_if_unavailable(BUILDING_VINES_FARM, RESOURCE_VINES);
-        farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
+        farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY);
         farms += disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
         farms += disable_raw_if_unavailable(BUILDING_IRON_MINE, RESOURCE_IRON);
         farms += disable_raw_if_unavailable(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
@@ -217,7 +217,7 @@ static void disable_resources() {
         //
         disable_raw_if_unavailable(BUILDING_HUNTING_LODGE, RESOURCE_GAMEMEAT);
         //
-        disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_PH);
+        disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY);
         disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_PH);
         disable_raw_if_unavailable(BUILDING_REED_GATHERER, RESOURCE_REEDS);
         //

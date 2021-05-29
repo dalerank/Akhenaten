@@ -74,8 +74,7 @@ void window_building_draw_pig_farm(building_info_context *c) {
     draw_farm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT_C3);
 }
 
-static void
-draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource) {
+static void draw_raw_material(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -113,23 +112,39 @@ draw_raw_material(building_info_context *c, int help_id, const char *sound_file,
 }
 
 void window_building_draw_marble_quarry(building_info_context *c) {
-    draw_raw_material(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE_C3);
+    int output_resource = RESOURCE_MARBLE_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        output_resource = RESOURCE_MARBLE_C3;
+    }
+    draw_raw_material(c, 95, "wavs/quarry.wav", 118, output_resource);
 }
 
 void window_building_draw_iron_mine(building_info_context *c) {
-    draw_raw_material(c, 93, "wavs/mine.wav", 119, RESOURCE_IRON);
+    int output_resource = RESOURCE_COPPER;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        output_resource = RESOURCE_IRON;
+    }
+    draw_raw_material(c, 93, "wavs/mine.wav", 119, output_resource);
 }
 
 void window_building_draw_timber_yard(building_info_context *c) {
-    draw_raw_material(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER_C3);
+    int output_resource = RESOURCE_TIMBER_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        output_resource = RESOURCE_TIMBER_C3;
+    }
+    draw_raw_material(c, 94, "wavs/timber.wav", 120, output_resource);
 }
 
 void window_building_draw_clay_pit(building_info_context *c) {
-    draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY_C3);
+    draw_raw_material(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);
 }
 
-static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource,
-                          int input_resource) {
+// TODO: fix reed gatherer panel
+void window_building_draw_reed_gatherer(building_info_context *c) {
+    draw_raw_material(c, 92, "wavs/clay.wav", 116, RESOURCE_REEDS);
+}
+
+static void draw_workshop(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource, int input_resource) {
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -176,23 +191,49 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
 }
 
 void window_building_draw_wine_workshop(building_info_context *c) {
-    draw_workshop(c, 96, "wavs/wine_workshop.wav", 122, RESOURCE_WINE, RESOURCE_VINES);
+    int input_resource = RESOURCE_BARLEY;
+    int output_resource = RESOURCE_BEER;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        input_resource = RESOURCE_VINES;
+        output_resource = RESOURCE_WINE;
+    }
+    draw_workshop(c, 96, "wavs/wine_workshop.wav", 122, output_resource, input_resource);
 }
 
 void window_building_draw_oil_workshop(building_info_context *c) {
-    draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, RESOURCE_OIL_C3, RESOURCE_OLIVES);
+    int input_resource = RESOURCE_FLAX;
+    int output_resource = RESOURCE_LINEN;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        input_resource = RESOURCE_OLIVES;
+        output_resource = RESOURCE_OIL_C3;
+    }
+    draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, output_resource, input_resource);
 }
 
 void window_building_draw_weapons_workshop(building_info_context *c) {
-    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, RESOURCE_WEAPONS_C3, RESOURCE_IRON);
+    int output_resource = RESOURCE_WEAPONS_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        output_resource = RESOURCE_WEAPONS_C3;
+    }
+    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, output_resource, RESOURCE_IRON);
 }
 
 void window_building_draw_furniture_workshop(building_info_context *c) {
-    draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, RESOURCE_FURNITURE, RESOURCE_TIMBER_C3);
+    int input_resource = RESOURCE_GEMS;
+    int output_resource = RESOURCE_LUXURY_GOODS;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        input_resource = RESOURCE_TIMBER_C3;
+        output_resource = RESOURCE_FURNITURE;
+    }
+    draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, output_resource, input_resource);
 }
 
 void window_building_draw_pottery_workshop(building_info_context *c) {
-    draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY_C3, RESOURCE_CLAY_C3);
+    int output_resource = RESOURCE_POTTERY_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        output_resource = RESOURCE_POTTERY_C3;
+    }
+    draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, output_resource, RESOURCE_CLAY);
 }
 
 void window_building_draw_shipyard(building_info_context *c) {

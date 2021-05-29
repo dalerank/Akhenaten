@@ -570,27 +570,28 @@ void window_building_draw_warehouse(building_info_context *c) {
     lang_text_draw_centered(99, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
     data.building_id = c->building_id;
-    if (!c->has_road_access)
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    else {
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    } else {
+        const resources_list *list = city_resource_get_available();
+        for (int i = 0; i < list->size; i++) {
+            int resource = list->items[i];
             int x, y;
-            if (r <= 5) {
+            if (i < 5) { // column 1
                 x = c->x_offset + 20;
-                y = c->y_offset + 24 * (r - 1) + 36;
-            } else if (r <= 10) {
+                y = c->y_offset + 24 * i + 36;
+            } else if (i < 10) { // column 2
                 x = c->x_offset + 170;
-                y = c->y_offset + 24 * (r - 6) + 36;
-            } else {
+                y = c->y_offset + 24 * (i - 5) + 36;
+            } else { // column 3
                 x = c->x_offset + 320;
-                y = c->y_offset + 24 * (r - 11) + 36;
+                y = c->y_offset + 24 * (i - 10) + 36;
             }
-            int amount = building_warehouse_get_amount(b, r);
-            int image_id =
-                    image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+            int amount = building_warehouse_get_amount(b, resource);
+            int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
             image_draw(image_id, x, y);
             int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
-            lang_text_draw(23, r, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
+            lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 168, c->width_blocks - 2, 5);

@@ -97,12 +97,16 @@ void window_building_draw_tower(building_info_context *c) {
 }
 
 void window_building_draw_barracks(building_info_context *c) {
+    int military_resource = RESOURCE_WEAPONS_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        military_resource = RESOURCE_WEAPONS_C3;
+    }
     c->help_id = 37;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS_C3, c->x_offset + 64,
+    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64,
                c->y_offset + 38);
 
     building *b = building_get(c->building_id);

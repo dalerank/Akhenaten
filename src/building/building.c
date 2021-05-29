@@ -143,7 +143,7 @@ building *building_create(int type, int x, int y) {
                 b->output_resource_id = RESOURCE_TIMBER_C3;
                 break;
             case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY_C3;
+                b->output_resource_id = RESOURCE_CLAY;
                 break;
             case BUILDING_WINE_WORKSHOP:
                 b->output_resource_id = RESOURCE_WINE;
@@ -199,7 +199,7 @@ building *building_create(int type, int x, int y) {
                 b->output_resource_id = RESOURCE_TIMBER_PH;
                 break;
             case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY_PH;
+                b->output_resource_id = RESOURCE_CLAY;
                 break;
             case BUILDING_BEER_WORKSHOP:
                 b->output_resource_id = RESOURCE_BEER;

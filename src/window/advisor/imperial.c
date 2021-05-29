@@ -86,6 +86,10 @@ static void draw_request(int index, const scenario_request *request) {
 }
 
 static int draw_background(void) {
+    int military_resource = RESOURCE_WEAPONS_PH;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        military_resource = RESOURCE_WEAPONS_C3;
+    }
     city_emperor_calculate_gift_costs();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
@@ -105,7 +109,7 @@ static int draw_background(void) {
         !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS_C3, 50, 106);
+        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102,
                        FONT_NORMAL_WHITE);

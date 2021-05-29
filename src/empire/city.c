@@ -83,7 +83,7 @@ static int get_raw_resource(int resource) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (resource) {
             case RESOURCE_POTTERY_C3:
-                return RESOURCE_CLAY_C3;
+                return RESOURCE_CLAY;
             case RESOURCE_FURNITURE:
                 return RESOURCE_TIMBER_C3;
             case RESOURCE_OIL_C3:
@@ -100,7 +100,7 @@ static int get_raw_resource(int resource) {
             case RESOURCE_STRAW:
                 return RESOURCE_GRAIN;
             case RESOURCE_POTTERY_PH:
-                return RESOURCE_CLAY_PH;
+                return RESOURCE_CLAY;
             case RESOURCE_LUXURY_GOODS:
                 return RESOURCE_GEMS;
             case RESOURCE_LINEN:

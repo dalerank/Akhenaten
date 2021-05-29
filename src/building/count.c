@@ -149,7 +149,7 @@ void building_count_update(void) {
                 increase_industry_count(RESOURCE_TIMBER_C3, b->num_workers > 0);
                 break;
             case BUILDING_CLAY_PIT:
-                increase_industry_count(RESOURCE_CLAY_C3, b->num_workers > 0);
+                increase_industry_count(RESOURCE_CLAY, b->num_workers > 0);
                 break;
             case BUILDING_WINE_WORKSHOP:
                 increase_industry_count(RESOURCE_WINE, b->num_workers > 0);
