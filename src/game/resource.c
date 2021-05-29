@@ -65,18 +65,40 @@ int resource_is_food(int resource) {
 }
 
 int resource_to_workshop_type(int resource) {
-    switch (resource) {
-        case RESOURCE_OLIVES:
-            return WORKSHOP_OLIVES_TO_OIL;
-        case RESOURCE_VINES:
-            return WORKSHOP_VINES_TO_WINE;
-        case RESOURCE_IRON:
-            return WORKSHOP_IRON_TO_WEAPONS;
-        case RESOURCE_TIMBER_C3:
-            return WORKSHOP_TIMBER_TO_FURNITURE;
-        case RESOURCE_CLAY_C3:
-            return WORKSHOP_CLAY_TO_POTTERY;
-        default:
-            return WORKSHOP_NONE;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        switch (resource) {
+            case RESOURCE_OLIVES:
+                return WORKSHOP_OLIVES_TO_OIL;
+            case RESOURCE_VINES:
+                return WORKSHOP_VINES_TO_WINE;
+            case RESOURCE_IRON:
+                return WORKSHOP_IRON_TO_WEAPONS;
+            case RESOURCE_TIMBER_C3:
+                return WORKSHOP_TIMBER_TO_FURNITURE;
+            case RESOURCE_CLAY_C3:
+                return WORKSHOP_CLAY_TO_POTTERY;
+            default:
+                return WORKSHOP_NONE;
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (resource) {
+            case RESOURCE_CLAY_PH:
+                return WORKSHOP_CLAY_TO_POTTERY;
+// TODO: How to use clay both for pottery and bricks workshop?
+//            case RESOURCE_CLAY_PH:
+//                return WORKSHOP_CLAY_TO_BRICKS;
+            case RESOURCE_TIMBER_PH:
+                return WORKSHOP_TIMBER_TO_FURNITURE;
+            case RESOURCE_BARLEY:
+                return WORKSHOP_BARLEY_TO_BEER;
+            case RESOURCE_FLAX:
+                return WORKSHOP_FLAX_TO_LINEN;
+            case RESOURCE_REEDS:
+                return WORKSHOP_REEDS_TO_PAPYRUS;
+            case RESOURCE_COPPER:
+                return WORKSHOP_COPPER_TO_WEAPONS;
+            default:
+                return WORKSHOP_NONE;
+        }
     }
 }

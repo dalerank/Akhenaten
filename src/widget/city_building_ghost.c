@@ -479,7 +479,7 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
 }
 static void draw_default(const map_tile *tile, int x_view, int y_view, int type) {
     const building_properties *props = building_properties_for_type(type);
-    int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
+    int building_size = (type == BUILDING_WAREHOUSE) ? 3 : props->size;
 
     // check if we can place building
     int grid_offset = tile->grid_offset;
@@ -1192,7 +1192,11 @@ void city_building_ghost_draw(const map_tile *tile) {
             draw_fort(tile, x, y);
             break;
         case BUILDING_HIPPODROME:
-            draw_hippodrome(tile, x, y);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                draw_hippodrome(tile, x, y);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                draw_default(tile, x, y, type); // Senet house
+            }
             break;
         case BUILDING_SHIPYARD:
         case BUILDING_WHARF:

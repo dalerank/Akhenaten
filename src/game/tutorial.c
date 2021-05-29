@@ -66,6 +66,7 @@ void tutorial_init(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.pharaoh.fire = tut_passed[0];
         data.pharaoh.collapse = tut_passed[0];
+        data.pharaoh.disease = tut_passed[0];
         data.pharaoh.population_150_reached = tut_passed[0];
         data.pharaoh.gamemeat_400_stored = tut_passed[0];
         data.pharaoh.gold_mined_500 = tut_passed[1];
@@ -171,6 +172,8 @@ void tutorial_menu_update(int tut) {
                 building_menu_update(BUILDSET_TUT3_INDUSTRY);
             if (data.pharaoh.pottery_made)
                 building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            if (data.pharaoh.disease)
+                building_menu_update(BUILDSET_TUT3_HEALTH);
         } else if (tut == 4) {
             building_menu_update(BUILDSET_TUT4_START);
             if (data.pharaoh.beer_made)
@@ -179,8 +182,8 @@ void tutorial_menu_update(int tut) {
             building_menu_update(BUILDSET_TUT5_START);
             if (data.pharaoh.spacious_apartment)
                 building_menu_update(BUILDSET_TUT5_EDUCATION);
-//            if (data.pharaoh.papyrus_made)
-//                building_menu_update(BUILDSET_TUT5_TRADING);
+            if (data.pharaoh.papyrus_made)
+                building_menu_update(BUILDSET_TUT5_TRADING);
             if (data.pharaoh.bricks_bought)
                 building_menu_update(BUILDING_MENU_MONUMENTS);
         } else if (tut == 6) {

@@ -242,7 +242,7 @@ building *building_create(int type, int x, int y) {
                 break;
             case BUILDING_PAPYRUS_WORKSHOP:
                 b->output_resource_id = RESOURCE_PAPYRUS;
-//                b->subtype.workshop_type = ??? todo
+                b->subtype.workshop_type = WORKSHOP_REEDS_TO_PAPYRUS;
                 break;
             case BUILDING_BRICKS_WORKSHOP:
                 b->output_resource_id = RESOURCE_BRICKS;

@@ -432,6 +432,9 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_FERRY);
             enable_common_beautifications();
             break;
+        case BUILDSET_TUT3_HEALTH:
+            enable_common_health();
+            break;
         case BUILDSET_TUT4_START:
             building_menu_disable_all();
             enable_common_municipal(1);
@@ -454,26 +457,34 @@ void building_menu_update(int build_set) {
         case BUILDSET_TUT5_START:
             building_menu_disable_all();
             enable_common_municipal(1);
+            enable_building(BUILDING_TAX_COLLECTOR);
+            enable_building(BUILDING_COURTHOUSE);
+            enable_building(BUILDING_PERSONAL_MANSION);
             enable_common_health();
+            enable_entertainment(2);
+            enable_gods(GOD_OSIRIS + GOD_RA + GOD_BAST);
+
+            enable_building(BUILDING_CLAY_PIT);
+            enable_building(BUILDING_POTTERY_WORKSHOP);
+            enable_building(BUILDING_BEER_WORKSHOP);
+
+            enable_building(BUILDING_MARKET);
+            enable_building(BUILDING_GRANARY);
+            enable_building(BUILDING_WAREHOUSE);
+
             enable_building(BUILDING_CHICKPEAS_FARM);
             enable_building(BUILDING_BARLEY_FARM);
             enable_building(BUILDING_WORK_CAMP);
-            enable_entertainment(2);
-            enable_building(BUILDING_MARKET);
-            enable_building(BUILDING_GRANARY);
-            building_menu_update(BUILDSET_TUT3_INDUSTRY);
-            building_menu_update(BUILDSET_TUT4_FINANCE);
-            enable_gods(GOD_OSIRIS + GOD_PTAH + GOD_BAST);
-            enable_building(BUILDING_BEER_WORKSHOP);
-            enable_building(BUILDING_COURTHOUSE);
             break;
         case BUILDSET_TUT5_EDUCATION:
             enable_building(BUILDING_REED_GATHERER);
             enable_building(BUILDING_PAPYRUS_WORKSHOP);
             enable_building(BUILDING_SCHOOL);
             break;
-//        case BUILDSET_TUT5_TRADING:
-//            break;
+        case BUILDSET_TUT5_TRADING:
+            // TODO: enable trading
+            enable_building(BUILDING_DOCK);
+            break;
         case BUILDSET_TUT5_MONUMENTS:
             enable_building(BUILDING_BRICKLAYERS_GUILD);
 //            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!

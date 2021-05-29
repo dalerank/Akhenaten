@@ -747,7 +747,11 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_warehouse(b);
             break;
         case BUILDING_HIPPODROME:
-            add_hippodrome(b);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_hippodrome(b);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_SENET_HOUSE));
+            }
             break;
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:

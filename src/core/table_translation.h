@@ -49,7 +49,7 @@ static int groupid_translation_table_ph[] = {
         58, 168 + 66, // plaza
         59, 59 + 66, // gardens
         61, 61 + 66, // statues
-        63, 83 + 66, // tax collector
+        63, 63 + 66, // tax collector
         64, 64 + 66, // police station
         65, 65 + 66, // woodcutter
         66, 66 + 66, // apothecary
