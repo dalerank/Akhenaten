@@ -727,7 +727,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        f->draw_debug();
+//        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else

@@ -72,7 +72,7 @@ static generic_button generic_button_trade_resource[] = {
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_OIL_C3,     0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_IRON,       0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_TIMBER_C3,  0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_CLAY_C3,    0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_CLAY,    0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MARBLE_C3,  0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_WEAPONS_C3, 0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_FURNITURE,  0},
