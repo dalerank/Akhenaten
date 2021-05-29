@@ -149,7 +149,7 @@ void building_industry_update_production(void) {
 
             if (b->type == BUILDING_MARBLE_QUARRY)
                 b->data.industry.progress += b->num_workers / 2;
-            else if (building_is_farm(b->type) && GAME_ENV == ENGINE_ENV_PHARAOH && b->data.industry.labor_state >= 1) {
+            else if (building_is_floodplain_farm(b)) {
                 int fert = map_get_fertility_average(b->grid_offset);
                 b->data.industry.progress += fert * 0.16;
             } else

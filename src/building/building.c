@@ -368,6 +368,9 @@ int building_is_farm(int type) {
     return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
            || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
 }
+int building_is_floodplain_farm(building *b) {
+    return (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type) && b->data.industry.labor_state >= 1);
+}
 int building_is_workshop(int type) {
     return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
            || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
@@ -375,7 +378,6 @@ int building_is_workshop(int type) {
            || type == BUILDING_LAMP_WORKSHOP
            || type == BUILDING_PAINT_WORKSHOP;
 }
-
 int building_is_extractor(int type) {
     return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
            || type == BUILDING_GOLD_MINE
@@ -385,12 +387,13 @@ int building_is_extractor(int type) {
            || type == BUILDING_SANDSTONE_QUARRY
            || type == BUILDING_REED_GATHERER;
 }
-
+int building_is_monument(int type) {
+    return 0; // TODO: monuments
+}
 int building_is_senate(int type) {
     return ((type >= BUILDING_SENATE && type <= BUILDING_FORUM_UPGRADED) ||
             (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
 }
-
 int building_is_temple(int type) {
     return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);
 }

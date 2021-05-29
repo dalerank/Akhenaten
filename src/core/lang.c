@@ -23,6 +23,7 @@
 //#define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
 
 #define BUFFER_SIZE 800000
+static const int MESSAGE_DATA_SIZE = 510103;
 
 static struct {
     struct {
@@ -32,7 +33,7 @@ static struct {
     uint8_t text_data[MAX_TEXT_DATA];
 
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
-    uint8_t message_data[510103];
+    uint8_t message_data[MESSAGE_DATA_SIZE];
 } data;
 
 typedef struct lang_files_collection {
@@ -124,36 +125,34 @@ static void parse_MM_file(buffer *buf) {
             break;
         case ENGINE_ENV_PHARAOH:
             buf->set_offset(80024);
-            buf->read_raw(&data.message_data, 510103);
+            buf->read_raw(&data.message_data, MESSAGE_DATA_SIZE);
             break;
     }
 }
 static int load_files(const char *text_filename, const char *message_filename, int localizable) {
     // load text into buffer
-    buffer *buf = new buffer(BUFFER_SIZE);
-    int filesize = io_read_file_into_buffer(text_filename, localizable, buf, BUFFER_SIZE);
+    buffer buf(BUFFER_SIZE);
+    int filesize = io_read_file_into_buffer(text_filename, localizable, &buf, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
-        delete buf;
         return 0;
     }
 
     // parse text
-    buf->skip(28); // header
+    buf.skip(28); // header
     for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-        data.text_entries[i].offset = buf->read_i32();
-        data.text_entries[i].in_use = buf->read_i32();
+        data.text_entries[i].offset = buf.read_i32();
+        data.text_entries[i].in_use = buf.read_i32();
+
     }
-    buf->read_raw(data.text_data, filesize - 8028); //MAX_TEXT_DATA
+    buf.read_raw(data.text_data, filesize - 8028); //MAX_TEXT_DATA
 
     // load message
-    buf->clear();
-    filesize = io_read_file_into_buffer(message_filename, localizable, buf, BUFFER_SIZE);
+    buf.clear();
+    filesize = io_read_file_into_buffer(message_filename, localizable, &buf, BUFFER_SIZE);
     if (filesize < MIN_MESSAGE_SIZE) { // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
-        delete buf;
         return 0;
     }
-    parse_MM_file(buf);
-    delete buf;
+    parse_MM_file(&buf);
 
     return 1;
 }
@@ -178,7 +177,8 @@ const uint8_t *lang_get_string(int group, int index) {
             return translation_for(TR_BUILDING_ROADBLOCK_DESC);
     }
 
-    const uint8_t *str = &data.text_data[data.text_entries[group].offset];
+    int32_t string_offset = data.text_entries[group].offset;
+    const uint8_t *str = &data.text_data[string_offset];
     uint8_t prev = 0;
     while (index > 0) {
         if (!*str && (prev >= ' ' || prev == 0))

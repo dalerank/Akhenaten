@@ -618,12 +618,13 @@ void window_building_draw_warehouse(building_info_context *c) {
     //    lang_text_draw_multiline(99, 14, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 93,
     //        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     //}
-    image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 32,
-               c->y_offset + 16 * c->height_blocks - 93);
-    image_draw(image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 128,
-               c->y_offset + 16 * c->height_blocks - 93);
-    image_draw(image_id_from_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 216,
-               c->y_offset + 16 * c->height_blocks - 110);
+
+//    image_draw(image_id_from_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 32,
+//               c->y_offset + 16 * c->height_blocks - 93);
+//    image_draw(image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 128,
+//               c->y_offset + 16 * c->height_blocks - 93);
+//    image_draw(image_id_from_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 216,
+//               c->y_offset + 16 * c->height_blocks - 110);
 }
 void window_building_draw_warehouse_foreground(building_info_context *c) {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
