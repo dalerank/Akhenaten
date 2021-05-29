@@ -477,13 +477,13 @@ INFO: data/Pharaoh_General.sg3 group 93 -> id 382
 INFO: data/Pharaoh_General.sg3 group 94 -> id 386
 INFO: data/Pharaoh_General.sg3 group 95 -> id 1349
 INFO: data/Pharaoh_General.sg3 group 96 -> id 387 common checkbox/cancel/accept/arrow buttons
-INFO: data/Pharaoh_General.sg3 group 97 -> id 1715
+INFO: data/Pharaoh_General.sg3 group 97 -> id 1715 skull
 INFO: data/Pharaoh_General.sg3 group 98 -> id 816
 INFO: data/Pharaoh_General.sg3 group 99 -> id 2285
 INFO: data/Pharaoh_General.sg3 group 100 -> id 2243
 INFO: data/Pharaoh_General.sg3 group 101 -> id 2301
-INFO: data/Pharaoh_General.sg3 group 102 -> id 1534
-INFO: data/Pharaoh_General.sg3 group 103 -> id 1542
+INFO: data/Pharaoh_General.sg3 group 102 -> id 1534 explosion
+INFO: data/Pharaoh_General.sg3 group 103 -> id 1542 column
 INFO: data/Pharaoh_General.sg3 group 104 -> id 218
 INFO: data/Pharaoh_General.sg3 group 105 -> id 2201
 INFO: data/Pharaoh_General.sg3 group 106 -> id 428 advisors bordered icons (small)
@@ -506,7 +506,7 @@ INFO: data/Pharaoh_General.sg3 group 122 -> id 946
 INFO: data/Pharaoh_General.sg3 group 123 -> id 1028
 INFO: data/Pharaoh_General.sg3 group 124 -> id 935
 INFO: data/Pharaoh_General.sg3 group 125 -> id 959
-INFO: data/Pharaoh_General.sg3 group 126 -> id 1561
+INFO: data/Pharaoh_General.sg3 group 126 -> id 1561 flags?, scroll?
 INFO: data/Pharaoh_General.sg3 group 127 -> id 1609
 INFO: data/Pharaoh_General.sg3 group 128 -> id 403 advisors bordered icons (large)
 INFO: data/Pharaoh_General.sg3 group 129 -> id 467 resource icons (proper)
@@ -606,7 +606,7 @@ INFO: data/Pharaoh_General.sg3 group 222 -> id 2164
 INFO: data/Pharaoh_General.sg3 group 223 -> id 1946
 INFO: data/Pharaoh_General.sg3 group 224 -> id 1721
 INFO: data/Pharaoh_General.sg3 group 225 -> id 2199
-INFO: data/Pharaoh_General.sg3 group 226 -> id 1742
+INFO: data/Pharaoh_General.sg3 group 226 -> id 1742 horisontal panel without buttons
 INFO: data/Pharaoh_General.sg3 group 227 -> id 1750
 INFO: data/Pharaoh_General.sg3 group 228 -> id 2439
 

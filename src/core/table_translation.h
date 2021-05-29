@@ -173,7 +173,7 @@ static int groupid_translation_table_ph[] = {
         209, 9 + 341, // delivery boy
         210, 45 + 66, // bazaar (fancy)
         213, 17 + 66, // senet house
-        227, 293, // data/Pharaoh_General.sg3 Sprites.bmp
+        227, 163, // skull
         228, 180 + 341, // doctor (apothecary)
 //        229, 229+341, // patrician
 //        230, 230+341, // missionary
