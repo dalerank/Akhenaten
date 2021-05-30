@@ -1,8 +1,8 @@
-# Building Julius
+# Building Ozymandias
 
 If you have experience in compiling from source, these are the basic instructions.
 
-To build Julius, you'll need:
+To build Ozymandias, you'll need:
 
 - `git`
 - a compiler (`gcc`, `clang`, Visual Studio and MinGW(-w64) are all known to be supported)
@@ -11,13 +11,13 @@ To build Julius, you'll need:
 - `SDL2_mixer`
 - `libpng` (optional, a bundled copy will be used if not found)
 
-After cloning the repo (URL: `https://github.com/bvschaik/julius.git`), run the following commands:
+After cloning the repo (URL: `https://github.com/bvschaik/ozymandias.git`), run the following commands:
 
 	$ mkdir build && cd build
 	$ cmake ..
 	$ make
 
-This results in a `julius` executable.
+This results in a `ozymandias` executable.
 
 To use the bundled copies of optional libraries even if a system version is available, add `-DSYSTEM_LIBS=OFF` to `cmake` invocation.
 
@@ -29,7 +29,7 @@ You'll obviously need the Vita or Switch SDK's. Docker images for the SDK's are 
 - Vita: `gnuton/vitasdk-docker:20190626`
 - Switch: `rsn8887/switchdev`
 
-See [Running Julius](RUNNING.md) for instructions on how to configure Julius for your platform.
+See [Running Ozymandias](RUNNING.md) for instructions on how to configure Ozymandias for your platform.
 
 --------------------------------------------------
 
@@ -38,5 +38,3 @@ For detailed building instructions, please check out the respective page:
 - [Building for Windows](building_windows.md)
 - [Building for Linux](building_linux.md)
 - [Building for Mac](building_macos.md)
-- [Building for Playstation Vita](building_vita.md)
-- [Building for Nintendo Switch](building_switch.md)

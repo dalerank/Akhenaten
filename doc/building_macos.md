@@ -1,8 +1,8 @@
-# Building Julius for Mac OS
+# Building Ozymandias for Mac OS
 
 ## Installing the dependencies
 
-In order to be able to build Julius, you need to install the dependencies first.
+In order to be able to build Ozymandias, you need to install the dependencies first.
 
 The dependencies are:
 
@@ -12,7 +12,7 @@ The dependencies are:
 * The `SDL` library
 * The `SDL_mixer` library
 
-If you already have all of them installed, you can proceed to [build Julius](#building-julius).
+If you already have all of them installed, you can proceed to [build Ozymandias](#building-ozymandias).
 
 
 ### Installing the command line developer tools
@@ -47,29 +47,29 @@ After Homebrew is installed, it's time to install the remaining dependencies. To
 
 Then type your superuser password.
 
-After the required dependencies have been installed, you can proceed to build julius.
+After the required dependencies have been installed, you can proceed to build ozymandias.
 
 
-## Building Julius
+## Building Ozymandias
 
 1. Navigate to the directory where you want the repository folder to be installed. As an example,
    we're using the `home` folder:
 
         $ cd ~
 
-2. Clone the Julius github repository to your computer:
+2. Clone the Ozymandias github repository to your computer:
 
-        $ git clone https://github.com/bvschaik/julius.git
+        $ git clone https://github.com/3t0n/Ozymandias.git
 
-3. Move to the new `julius` directory:
+3. Move to the new `ozymandias` directory:
 
-        $ cd julius
+        $ cd ozymandias
 
-    **Optional:** If you have already downloaded the Julius repository and only wish to update it
+    **Optional:** If you have already downloaded the Ozymandias repository and only wish to update it
     (in order to build a newer version), instead of the previous three steps, do the following in
     a terminal window:
 
-    a. Move to the `julius` directory where the repository was installed.
+    a. Move to the `ozymandias` directory where the repository was installed.
 
     b. Type:
 
@@ -85,7 +85,7 @@ After the required dependencies have been installed, you can proceed to build ju
 
         $ cmake ..
 
-6. Build Julius:
+6. Build Ozymandias:
 
         $ make
 
@@ -95,5 +95,5 @@ After the required dependencies have been installed, you can proceed to build ju
 
         $ make test
 
-**Success!** Julius should have been built without any errors. You can now move `julius.app` to the
+**Success!** Ozymandias should have been built without any errors. You can now move `ozymandias.app` to the
 `Applications` folder to execute it.

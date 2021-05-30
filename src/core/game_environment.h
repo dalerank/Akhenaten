@@ -7,6 +7,12 @@ enum {
     ENGINE_ENV_MAX = 2
 };
 
+enum {
+    ENGINE_MODE_RELEASE = 0,
+    ENGINE_MODE_DEBUG = 1,
+    ENGINE_MODE_MAX = 2
+};
+
 typedef struct engine_sizes {
     int MAX_REQUESTS;
     int MAX_INVASIONS;
@@ -28,8 +34,9 @@ typedef struct engine_sizes {
 } engine_sizes;
 
 extern int GAME_ENV;
+extern int DEBUG_MODE;
 
-void init_game_environment(int env);
+void init_game_environment(int env, int mode);
 const char *get_game_title(void);
 const char *get_engine_pref_path(void);
 engine_sizes env_sizes(void);

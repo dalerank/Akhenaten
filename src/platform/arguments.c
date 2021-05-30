@@ -47,10 +47,11 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
     int ok = 1;
 
     // Set sensible defaults
-    output_args->data_directory = 0;
+    output_args->data_directory = nullptr;
     output_args->display_scale_percentage = 100;
     output_args->cursor_scale_percentage = 100;
-    output_args->game_engine_env = 0;
+    output_args->game_engine_env = 1; // run pharaoh by default
+    output_args->game_engine_debug_mode = 0;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -61,8 +62,8 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
 
         if (SDL_strcmp(argv[i], "--caesar3") == 0)
             output_args->game_engine_env = 0;
-        else if (SDL_strcmp(argv[i], "--pharaoh") == 0)
-            output_args->game_engine_env = 1;
+        else if (SDL_strcmp(argv[i], "--debug") == 0)
+            output_args->game_engine_debug_mode = 1;
         else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
@@ -102,13 +103,15 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args) {
     }
 
     if (!ok) {
-        SDL_Log("Usage: augustus [ARGS] [DATA_DIR]");
+        SDL_Log("Usage: ozymandias [ARGS] [DATA_DIR]");
         SDL_Log("ARGS may be:");
         SDL_Log("--display-scale NUMBER");
         SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
         SDL_Log("--cursor-scale NUMBER");
         SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
-        SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
+        SDL_Log("--debug");
+        SDL_Log("          Prints additional debug information on the screen");
+        SDL_Log("The last argument, if present, is interpreted as data directory for the Pharaoh installation");
     }
     return ok;
 }
