@@ -45,7 +45,7 @@ building *building_get(int id) {
     return &all_buildings[id];
 }
 building *building_main(building *b) {
-    for (int guard = 0; guard < 9; guard++) {
+    for (int guard = 0; guard < 99; guard++) {
         if (b->prev_part_building_id <= 0)
             return b;
         b = &all_buildings[b->prev_part_building_id];

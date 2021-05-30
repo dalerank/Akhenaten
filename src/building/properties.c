@@ -1,5 +1,6 @@
 #include "properties.h"
 #include "core/game_environment.h"
+#include "core/image_group.h"
 
 static int BUILD_MAX[2] = {
         140,
@@ -215,11 +216,11 @@ static building_properties properties[2][400] = {
                 {3, 0, 73, 0},
                 {3, 0, 74, 0},
                 {3, 0, 75, 0}, // temples ^^^^
-                {-1, 0, 71, 1},
-                {-1, 0, 72, 1},
-                {-1, 0, 73, 1},
-                {-1, 0, 74, 1},
-                {-1, 0, 75, 1}, // temple complex ^^^^
+                {-1, 0, GROUP_BUILDING_TEMPLE_COMPLEX_OSIRIS, 1}, // oz
+                {-1, 0, GROUP_BUILDING_TEMPLE_COMPLEX_RA, 1}, // ra
+                {-1, 0, GROUP_BUILDING_TEMPLE_COMPLEX_PTAH, 1}, // ptah
+                {-1, 0, GROUP_BUILDING_TEMPLE_COMPLEX_SETH, 1}, // seth
+                {-1, 0, GROUP_BUILDING_TEMPLE_COMPLEX_BAST, 1}, // temple complex ^^^^
                 {2, 0, 22, 0}, // bazaar
                 {4, 0, 99, 0}, // granary
                 {1, 1, 82, 0}, // storageyard (hut)

@@ -100,7 +100,7 @@ static void destroy_on_fire(building *b, int plagued) {
 }
 static void destroy_linked_parts(building *b, int on_fire) {
     building *part = b;
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 99; i++) {
         if (part->prev_part_building_id <= 0)
             break;
 
@@ -115,7 +115,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
     }
 
     part = b;
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 99; i++) {
         part = building_next(part);
         if (part->id <= 0)
             break;

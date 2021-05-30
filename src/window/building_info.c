@@ -318,6 +318,11 @@ static void init(int grid_offset) {
                 break;
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_HIPPODROME:
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
                 b = building_main(b);
                 context.building_id = b->id;
                 break;
@@ -340,6 +345,14 @@ static void init(int grid_offset) {
 //
 //                break;
             case BUILDING_HIPPODROME:
+                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
+                    context.has_road_access = 1;
+
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
                 if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
                     context.has_road_access = 1;
 

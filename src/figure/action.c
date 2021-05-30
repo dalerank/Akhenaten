@@ -24,9 +24,6 @@
 #include "core/game_environment.h"
 #include "map/road_access.h"
 #include "core/image_group.h"
-//static void no_action() {
-//
-//}
 
 typedef struct {
     char speed_mult;

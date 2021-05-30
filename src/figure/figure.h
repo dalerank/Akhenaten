@@ -16,11 +16,10 @@ static int MAX_FIGURES[] = {5000, 2000};
 class figure {
 public:
     int id;
-
-    short sprite_image_id;
-    short cart_image_id;
-    short anim_base;
-    short anim_offset;
+    int sprite_image_id;
+    int cart_image_id;
+    int anim_base;
+    int anim_offset;
     unsigned char anim_frame_duration;
     unsigned char anim_max_frames;
     unsigned char anim_frame;

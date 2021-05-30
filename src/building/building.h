@@ -52,8 +52,8 @@ typedef struct {
     unsigned char figure_spawn_delay;
     unsigned char figure_roam_direction;
     unsigned char has_water_access;
-    short prev_part_building_id;
-    short next_part_building_id;
+    int prev_part_building_id;
+    int next_part_building_id;
     short loads_stored;
     unsigned char has_well_access;
     short num_workers;

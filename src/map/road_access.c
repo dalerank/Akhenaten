@@ -98,6 +98,11 @@ int map_has_road_access_hippodrome(int x, int y, map_point *road) {
     return map_has_road_access_hippodrome_rotation(x, y, road, building_rotation_get_rotation());
 }
 
+// TODO: fix getting road access for temple complex
+int map_has_road_access_temple_complex(int x, int y, map_point *road) {
+    return map_has_road_access_hippodrome(x, y, road);
+}
+
 //int map_has_road_access_granary(int x, int y, map_point *road) {
 //    int rx = -1, ry = -1;
 //    if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD) &&

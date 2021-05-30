@@ -188,6 +188,74 @@ static void add_hippodrome(building *b) {
     map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
 }
 
+static building *add_temple_complex_element(int x, int y, int size, int image_id, building *prev) {
+    building *b = building_create(prev->type, x, y);
+    game_undo_add_building(b);
+
+    b->size = size;
+    b->grid_offset = map_grid_offset(b->x, b->y);
+    b->prev_part_building_id = prev->id;
+    prev->next_part_building_id = b->id;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+
+    return b;
+}
+
+// TODO: Fix the orientation
+static void add_temple_complex(building *b) {
+    auto properties = building_properties_for_type(b->type);
+    int temple_complex_image_id = properties->image_group;
+    building_rotation_force_two_orientations();
+    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
+
+    int empty = 0;
+    int main1 = image_id_from_group(temple_complex_image_id);
+    int main2 = main1 + 6;
+    int main3 = main1 + 12;
+    int tile0 = main1 + 22;
+    int tile1 = main1 + 23;
+    int tile2 = main1 + 24;
+    int tile3 = main1 + 25;
+    int tile4 = main1 + 26;
+    int tile5 = main1 + 28;
+    int tile6 = main1 + 30;
+    int tile7 = main1 + 31;
+    int tile8 = main1 + 34;
+    int tile9 = main1 + 35;
+
+    int TEMPLE_COMPLEX_SCHEME[7][13] = {{tile5, tile5, tile1, tile5, tile5, tile1, tile5, tile5, tile0, tile2, tile3, tile2, tile3},
+                                          {  tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, tile6, tile6, tile6},
+                                          {  empty, empty, empty, empty, empty, empty, empty, empty, empty, tile0, tile7, tile7, tile7},
+                                          {  empty, empty, empty, empty, empty, empty, empty, empty, empty, tile1, tile1, tile1, tile1},
+                                          {  main1, empty, empty, main2, empty, empty, main3, empty, empty, tile0, tile8, tile8, tile8},
+                                          {  tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, tile9, tile9, tile9},
+                                          {  tile4, tile4, tile1, tile4, tile4, tile1, tile4, tile4, tile0, tile2, tile3, tile2, tile3}
+    };
+
+    if (orientation == 0) {
+        b->size = 1;
+        b->prev_part_building_id = 0;
+        building *prev = b;
+
+        // Start draw from the back
+        for (int i = 6; i >= 0; --i) {
+            for (int j = 0; j < 13; j++) {
+                int current_tile = TEMPLE_COMPLEX_SCHEME[i][j];
+
+                int current_size = 1;
+                if (current_tile == main1 || current_tile == main2 || current_tile == main3) {
+                    current_size = 3;
+                }
+
+                if (current_tile > 0) {
+                    prev = add_temple_complex_element(b->x + j, b->y - i, current_size, current_tile, prev);
+                }
+            }
+        }
+        prev->next_part_building_id = 0;
+    }
+}
+
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
     int x = main->x + dx;
     int y = main->y + dy;
@@ -632,26 +700,45 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_temple_complex(b);
+            }
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_temple_complex(b);
+            }
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_temple_complex(b);
+            }
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_temple_complex(b);
+            }
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                add_temple_complex(b);
+            }
             break;
         case BUILDING_ORACLE:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ORACLE));
             break;
         case BUILDING_ROADBLOCK:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ROADBLOCK));
-//            add_building_tiles_image(b, mods_get_group_id("Keriew", "Roadblocks"));
             map_terrain_add_roadblock_road(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
@@ -1439,8 +1526,7 @@ void building_construction_place(void) { // confirm final placement
         city_warning_show(WARNING_OUT_OF_MONEY);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS &&
-        city_resource_count(RESOURCE_MARBLE_C3) < 2) {
+    if (GAME_ENV == ENGINE_ENV_C3 && building_is_large_temple(type) && city_resource_count(RESOURCE_MARBLE_C3) < 2) {
         map_property_clear_constructing_and_deleted();
         city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
         return;
@@ -1560,8 +1646,9 @@ void building_construction_place(void) { // confirm final placement
     }
     placement_cost *= length;
 
-    if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE)
+    if (GAME_ENV == ENGINE_ENV_C3 && building_is_large_temple(type) || type == BUILDING_ORACLE) {
         building_warehouses_remove_resource(RESOURCE_MARBLE_C3, 2);
+    }
     if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
         data.sub_type++;
         if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS)

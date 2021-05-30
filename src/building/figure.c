@@ -829,10 +829,15 @@ static void spawn_figure_magistrate(building *b) {
 }
 static void spawn_figure_temple(building *b) {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_PRIEST))
+    if (has_figure_of_type(b, FIGURE_PRIEST) ||
+        building_is_large_temple(b->type) && b->prev_part_building_id) {
         return;
+    }
+
     map_point road;
-    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+    if (building_is_temple(b->type) && map_has_road_access(b->x, b->y, b->size, &road) ||
+        building_is_large_temple(b->type) && map_has_road_access_temple_complex(b->x, b->y, &road)) {
+
         spawn_labor_seeker(b, road.x, road.y, 50);
         int pct_workers = worker_percentage(b);
         int spawn_delay;
@@ -1342,8 +1347,6 @@ void building_figure_generate(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->type == 71)
-            int a =24;
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
@@ -1363,7 +1366,7 @@ void building_figure_generate(void) {
             b->type == BUILDING_TAX_COLLECTOR_UPGRADED) {
             spawn_figure_senate_forum(b);
         }
-        else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
+        else if (building_is_temple(b->type) || building_is_large_temple(b->type)) {
             spawn_figure_temple(b);
         }
         else {

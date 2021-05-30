@@ -66,30 +66,23 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
 }
 
 int model_load(void) {
-    // allocate buffer for file data & read file into it
-//    uint8_t *buffer = (uint8_t *) malloc(TMP_BUFFER_SIZE);
-//    if (!buffer) {
-//        log_error("No memory for model", 0, 0);
-//        return 0;
-//    }
-//    memset(buffer, 0, TMP_BUFFER_SIZE);
-    buffer *buf = new buffer(TMP_BUFFER_SIZE);
+    buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
+
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             NUM_BUILDINGS = 130;
             NUM_HOUSES = 20;
-            filesize = io_read_file_into_buffer("c3_model.txt", NOT_LOCALIZED, buf, TMP_BUFFER_SIZE);
+            filesize = io_read_file_into_buffer("c3_model.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
             break;
         case ENGINE_ENV_PHARAOH:
             NUM_BUILDINGS = 237;
             NUM_HOUSES = 20;
-            filesize = io_read_file_into_buffer("Pharaoh_Model_Easy.txt", NOT_LOCALIZED, buf, TMP_BUFFER_SIZE);
+            filesize = io_read_file_into_buffer("Pharaoh_Model_Easy.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
             break;
     }
     if (filesize == 0) {
         log_error("Model file not found", 0, 0);
-        delete buf;
         return 0;
     }
 
@@ -97,7 +90,7 @@ int model_load(void) {
     int num_lines = 0;
     int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
-    const uint8_t *haystack = buf->get_data();
+    const uint8_t *haystack = buf.get_data();
     const uint8_t *ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
     do {
         guard--;
@@ -109,7 +102,6 @@ int model_load(void) {
     } while (brace_index && guard > 0);
     if (num_lines != NUM_BUILDINGS + NUM_HOUSES) {
         log_error("Model has incorrect no of lines ", 0, num_lines + 1);
-        delete buf;
         return 0;
     }
 
@@ -158,7 +150,6 @@ int model_load(void) {
     }
 
     log_info("Model loaded", 0, 0);
-    delete buf;
     return 1;
 }
 
