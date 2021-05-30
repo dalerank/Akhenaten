@@ -41,8 +41,8 @@ more about some known bugs.
 
 ## Building Ozymandias from source
 
-If you want to build this repository yourself, check [Building Julius](doc/BUILDING.md) for
-details.
+If you want to build this repository yourself, check [Building Ozymandias](doc/BUILDING.md) for
+details. (Note: outdated!)
 
 ## Running the game
 
