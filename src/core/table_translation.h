@@ -110,6 +110,8 @@ static int groupid_translation_table_ph[] = {
         123, 123 + 66, // weapons
         124, 119 + 66, // jewels
         125, 125 + 66, // pottery
+        126, 126 + 66, // fort flags
+        127, 127 + 66, // fort icons
         128, 128 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         129, 129 + 66, // empire resources
         130, 20 + 555, // merchant caravan
