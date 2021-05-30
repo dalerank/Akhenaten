@@ -18,11 +18,14 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
                 return 0;
             break;
         case BUILDING_RESERVOIR:
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                if (b->num_workers <= 0)
+            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                if (b->num_workers <= 0) {
                     return 0;
-            else if (!b->has_water_access)
-                return 0;
+                }
+                else if (!b->has_water_access) {
+                    return 0;
+                }
+            }
             break;
 //        case BUILDING_PREFECTURE: // police house
 //        case BUILDING_ENGINEERS_POST:

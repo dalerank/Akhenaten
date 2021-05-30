@@ -5,6 +5,7 @@
 #include "city/finance.h"
 #include "city/gods.h"
 #include "core/image_group.h"
+#include "core/game_environment.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -59,16 +60,25 @@ static void draw_buttons(void) {
     button_border_draw(102, 276, 430, 26, focus_button_id == 8);
     width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK);
     width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK);
-    width += lang_text_draw_amount(8, 10, city_festival_grand_wine(), 120 + width, 284, FONT_NORMAL_BLACK);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, 120 + width, 279);
+    width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK);
+
+    int resource_image_id = 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
+    }
+
+    image_draw(resource_image_id, 120 + width, 279);
 
     // greying out of buttons
     if (city_finance_out_of_money()) {
         graphics_shade_rect(104, 218, 426, 22, 0);
         graphics_shade_rect(104, 248, 426, 22, 0);
         graphics_shade_rect(104, 278, 426, 22, 0);
-    } else if (city_festival_out_of_wine())
+    } else if (city_festival_out_of_alcohol()) {
         graphics_shade_rect(104, 278, 426, 22, 0);
+    }
 
 }
 

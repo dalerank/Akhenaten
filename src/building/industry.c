@@ -1,5 +1,4 @@
-#include <ntdef.h>
-#include <window/city.h>
+#include "window/city.h"
 #include "industry.h"
 
 #include "city/resource.h"
@@ -17,6 +16,8 @@
 
 #include "map/terrain.h"
 #include "city/view.h"
+
+#include <math.h>
 
 static const int X_VIEW_OFFSETS[9] = {
         0, 30, 60,
@@ -87,13 +88,13 @@ void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         for (int i = 0; i < 9; i++) {
-            int growth_offset = min(5, max(0, (progress - i*200)/100));
+            int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
             image_draw_sprite(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
                                   y + Y_VIEW_OFFSETS[i] - 90, color_mask);
         }
     } else {
         for (int i = 4; i < 9; i++) {
-            int growth_offset = min(5, max(0, (progress - i*200)/100));
+            int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
             image_draw_sprite(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
                                   y + Y_VIEW_OFFSETS[i] - 90, color_mask);
         }
@@ -148,7 +149,7 @@ void building_industry_update_production(void) {
 
             if (b->type == BUILDING_MARBLE_QUARRY)
                 b->data.industry.progress += b->num_workers / 2;
-            else if (building_is_farm(b->type) && GAME_ENV == ENGINE_ENV_PHARAOH && b->data.industry.labor_state >= 1) {
+            else if (building_is_floodplain_farm(b)) {
                 int fert = map_get_fertility_average(b->grid_offset);
                 b->data.industry.progress += fert * 0.16;
             } else

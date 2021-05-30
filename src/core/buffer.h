@@ -1,8 +1,9 @@
 #ifndef CORE_BUFFER_H
 #define CORE_BUFFER_H
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
+#include <vector>
 
 /**
 * @file
@@ -13,49 +14,38 @@
 * Struct representing a buffer to read from / write to
 */
 class buffer {
-    bool initialized = false;
-    uint8_t *valid_memory = nullptr;
-    uint8_t *data = nullptr;
-    size_t datasize = 0;
+private:
+    std::vector<uint8_t> data;
     size_t index = 0;
 
-    size_t reinit = 0;
-
-    void check_initialized();
-    bool out_of_bounds(size_t i, size_t s);
-    void validate(size_t i, size_t s);
-
 public:
-
     buffer();
-    buffer(size_t s);
-    ~buffer();
+    explicit buffer(size_t s);
+    ~buffer() = default;
 
-    size_t size();
-    void init(size_t s);
+    size_t size() const;
     void clear();
+    void fill(uint8_t val);
 
-    int get_offset();
+    int get_offset() const;
     void set_offset(size_t offset);
     void reset_offset();
     void skip(size_t s);
-    bool at_end();
+    bool at_end() const;
 
-    bool is_valid(size_t s, int i = -1);
-    void force_validate_unsafe_pls_use_carefully();
-
-    const uint8_t *data_const();
+    bool is_valid(size_t count) const;
+    const uint8_t *get_data() const;
+    uint8_t get_value(size_t i) const;
     void *data_unsafe_pls_use_carefully();
 
-    uint8_t read_u8(bool force = false);
-    uint16_t read_u16(bool force = false);
-    uint32_t read_u32(bool force = false);
-    int8_t read_i8(bool force = false);
-    int16_t read_i16(bool force = false);
-    int32_t read_i32(bool force = false);
-    int read_raw(void *value, size_t max_size);
+    uint8_t read_u8();
+    uint16_t read_u16();
+    uint32_t read_u32();
+    int8_t read_i8();
+    int16_t read_i16();
+    int32_t read_i32();
+    size_t read_raw(void *value, size_t max_size);
 
-    void fill(uint8_t val);
     void write_u8(uint8_t value);
     void write_u16(uint16_t value);
     void write_u32(uint32_t value);
@@ -64,8 +54,8 @@ public:
     void write_i32(int32_t value);
     void write_raw(const void *value, size_t s);
 
-    size_t from_file(size_t s, size_t c, FILE *__restrict__ fp);
-    size_t to_file(size_t s, size_t c, FILE *__restrict__ fp);
+    size_t from_file(size_t count, FILE *__restrict__ fp);
+    size_t to_file(size_t count, FILE *__restrict__ fp) const;
 };
 
 #endif // CORE_BUFFER_H

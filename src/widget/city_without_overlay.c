@@ -483,10 +483,6 @@ static void draw_farm_crops(building *b, int x, int y) {
 }
 
 static void draw_footprint(int x, int y, int grid_offset) {
-    if (grid_offset == 24063 || grid_offset == 24291)
-        int a = 3245;
-
-
     building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
@@ -1015,7 +1011,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
-//        city_view_foreach_map_tile(draw_debug);
+        city_view_foreach_map_tile(draw_debug);
     }
 
     /////// TEMP
@@ -1047,7 +1043,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
 
     auto flags = give_me_da_tut_flags();
     const char* const flagnames[41] = {
-        "fire","pop_150","meat_400","collapse","gold_500","temples_done","???","figs_800","???","pottery_200",
+        "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
         "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
         "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
         "// tut4 ???","// tut5 ???","","// water supply","// tut4 ???","","// entertainment","// temples","// taxes","// mansion",
@@ -1063,9 +1059,9 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             case 3: f = flags->pharaoh.collapse; break;
             case 4: f = flags->pharaoh.gold_mined_500; break;
             case 5: f = flags->pharaoh.temples_built; break;
-//            case 6: ???
+//            case 6: ??? crime?
             case 7: f = flags->pharaoh.figs_800_stored; break;
-//            case 8: ???
+            case 8: f = flags->pharaoh.disease; break;
             case 9: f = flags->pharaoh.pottery_made; break;
             case 10: f = flags->pharaoh.beer_made; break;
             case 11: f = flags->pharaoh.spacious_apartment; break;

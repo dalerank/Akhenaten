@@ -49,7 +49,7 @@ static int groupid_translation_table_ph[] = {
         58, 168 + 66, // plaza
         59, 59 + 66, // gardens
         61, 61 + 66, // statues
-        63, 83 + 66, // tax collector
+        63, 63 + 66, // tax collector
         64, 64 + 66, // police station
         65, 65 + 66, // woodcutter
         66, 66 + 66, // apothecary
@@ -67,9 +67,9 @@ static int groupid_translation_table_ph[] = {
         79, 18, // fishing wharf
         80, 316, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
         81, 81 + 66, // architect post
-        82, 82 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
-        83, 83 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
-        84, 84 + 66, // data/Pharaoh_General.sg3 Warehouse.bmp
+        82, 82 + 66, // Warehouse top sprite
+        83, 83 + 66, // Empty warehouse
+        84, 84 + 66, // Warehouse resources
         85, 85 + 66, // personal mansion
         86, 86 + 66, // family mansion
         87, 87 + 66, // dynasty mansion
@@ -88,8 +88,8 @@ static int groupid_translation_table_ph[] = {
 //        100, 37 + 66, // farmland
         100, 37 + 66, // farmland
         101, 128 + 341, // lion tamer (dancer)
-        102, 102 + 66, // data/Pharaoh_General.sg3 Sprites.bmp
-        103, 103 + 66, // data/Pharaoh_General.sg3 Sprites.bmp
+        102, 102 + 66, // data/Pharaoh_General.sg3 Sprites.bmp Explosion
+        103, 103 + 66, // data/Pharaoh_General.sg3 Sprites.bmp Pillars
         104, 41 + 341, // tax collector
         105, 57 + 341, // school child (scribe)
         106, 16 + 341, // market lady
@@ -110,6 +110,8 @@ static int groupid_translation_table_ph[] = {
         123, 123 + 66, // weapons
         124, 119 + 66, // jewels
         125, 125 + 66, // pottery
+        126, 126 + 66, // fort flags
+        127, 127 + 66, // fort icons
         128, 128 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         129, 129 + 66, // empire resources
         130, 20 + 555, // merchant caravan
@@ -158,7 +160,7 @@ static int groupid_translation_table_ph[] = {
         187, 299, // data/Pharaoh_Unloaded.sg3 Demo2.bmp
         188, 298, // data/Pharaoh_Unloaded.sg3 Demo3.bmp
         189, 255, // data/Pharaoh_General.sg3 paneling.bmp
-        190, 297, // data/Pharaoh_Unloaded.sg3 bigpeople.BMP
+        190, 319, // data/Pharaoh_Unloaded.sg3 'Portraits.BMP', comment: 'New Big Persons'
         191, 7 + 555, // Jugglers
         192, 6 + 555, // Dancers
         193, 9 + 555, // Musicians
@@ -173,7 +175,7 @@ static int groupid_translation_table_ph[] = {
         209, 9 + 341, // delivery boy
         210, 45 + 66, // bazaar (fancy)
         213, 17 + 66, // senet house
-        227, 293, // data/Pharaoh_General.sg3 Sprites.bmp
+        227, 97 + 66, // skull
         228, 180 + 341, // doctor (apothecary)
 //        229, 229+341, // patrician
 //        230, 230+341, // missionary

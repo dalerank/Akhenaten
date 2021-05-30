@@ -6,6 +6,7 @@ typedef struct {
     int display_scale_percentage;
     int cursor_scale_percentage;
     int game_engine_env;
+    int game_engine_debug_mode;
 } julius_args;
 
 int platform_parse_arguments(int argc, char **argv, julius_args *output_args);

@@ -1,6 +1,6 @@
-# Building Julius for Windows
+# Building Ozymandias for Windows
 
-You have two main options in how you want to build Julius. You can either:
+You have two main options in how you want to build Ozymandias. You can either:
 
 * [Build using **Microsoft Visual Studio**](#a-using-microsoft-visual-studio-64-bit-build); or
 * [Install CMake and MinGW-w64 and **use the command line**](#b-using-cmake-and-mingw-w64-via-command-line)
@@ -31,15 +31,12 @@ You have two main options in how you want to build Julius. You can either:
 
  	![Visual Studio 2019 Startup window](images/building_windows_msvc_1.png)
 
-6. In the `Repository location` option, type `https://github.com/bvschaik/julius.git`.
+6. In the `Repository location` option, type `https://github.com/3t0n/Ozymandias.git`.
    In the `Local path` option, select in which folder you wish the source to be downloaded to.
    This will be your `work folder`:
 
     ![Visual Studio 2019 Clone or check out code window](images/building_windows_msvc_2.png)
 
-    Alternatively, you can obtain the source code without using Visual Studio's built in Git
-    integration. Check [obtaining the source files for Julius](#obtaining-the-source-files-for-julius)
-    for details.
 
 7. The first time you open the project, Visual Studio will throw an error complaining it can't
    find SDL:
@@ -63,7 +60,7 @@ You have two main options in how you want to build Julius. You can either:
 11. Press `CTRL` + `S` to save the configuration. Visual Studio will attempt to reconfigure
     everything, and this time it should detect the libraries and work.
 
-12. Pick `Select Startup Item` up top and select `julius.exe`.
+12. Pick `Select Startup Item` up top and select `ozymandias.exe`.
 
 	![Visual Studio 2019 selecting startup item](images/building_windows_msvc_5.gif)
 
@@ -86,7 +83,7 @@ You have two main options in how you want to build Julius. You can either:
 
 ## B. Using CMake and MinGW-w64 via command line
 
-Building Julius by command line is useful if you don't wish to install a very large IDE
+Building Ozymandias by command line is useful if you don't wish to install a very large IDE
 such as Visual Studio. However, it still requires that you install some programs, such as CMake,
 MinGW-w64 and optionally Git.
 
@@ -141,7 +138,7 @@ the relevant changes instead of the entire codebase. This program is optional.
 
 If you wish to install it, [download it from the `gitforwindows` website](https://gitforwindows.org),
 which provides an user interface as well as the command line tools. The default installation
-options are enough for Julius.
+options are enough for Ozymandias.
 
 
 ### Obtaining SDL2 and SDL2_mixer
@@ -165,17 +162,16 @@ options are enough for Julius.
 
         ![MinGW-w64 extracting SDL](images/building_windows_mingw_4.gif)
 
-### Obtaining the source files for Julius
+### Obtaining the source files for Ozymandias
 
-You have two options regarding on how to obtain the source code for Julius.
-The simplest, but not recommended one, is [downloading the `julius` repository as a zip file](https://github.com/bvschaik/julius/archive/master.zip).
+You have two options regarding on how to obtain the source code for Ozymandias.
 
 While doing this will work, you will have to download the entire source again if there are
 any updates to the game which you wish to build yourself. So only directly download the
 source if you're sure you want to do it just once.
 
 Still, if you download the contents as a zip file, extract them to a folder, which will be
-your `work folder`. You can now proceed to [build Julius](#building-julius).
+your `work folder`. You can now proceed to [build Ozymandias](#building-ozymandias).
 
 The best approach, however, is to use Git for Windows, since it allows you to keep up with
 changes to the source code.
@@ -192,22 +188,22 @@ To obtain the source from Git, follow the following steps:
 
 3. On the command window, type:
 
-        > git clone https://github.com/bvschaik/julius.git
+        > git clone https://github.com/3t0n/Ozymandias.git
 
 **Optional:** If you already have the source files from Git and simply wish to update them
 (in order to build a newer version), repeat above steps 1. and 2. and type:
 
         > git pull origin master
 
-If you then wish to proceed building Julius, delete the `build` folder and proceed to
-[build Julius](#building-julius) normally.
+If you then wish to proceed building Ozymandias, delete the `build` folder and proceed to
+[build Ozymandias](#building-ozymandias) normally.
 
 
-### Building Julius
+### Building Ozymandias
 
 1. Open the folder where you downloaded the source files to.
 
-2. Press `Shift` and right-click with the mouse on the `julius` folder and select
+2. Press `Shift` and right-click with the mouse on the `ozymandias` folder and select
    `Open PowerShell window here` or `Open command window here`.
 
 3. Create a `build` directory and move to it:
@@ -223,7 +219,7 @@ If you then wish to proceed building Julius, delete the `build` folder and proce
     you extracted `SDL2` and `SDL2_mixer` to, and be sure to add the `i686-w64-mingw32`
     at the end of both locations.
 
-5. Build Julius:
+5. Build Ozymandias:
 
         > mingw32-make
 

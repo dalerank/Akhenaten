@@ -1,53 +1,47 @@
 
 ===== tasks: =====
 
-[x] Store Pharaoh path
-[x] Load Pharaoh files
-[x] Load main equivalent graphics
-[x] City building menus & panels
-[x] Map data
-[ ] City messages
-[ ] Fire-fighting
-[x] Ostriches
-[x] Hunters
-[x] Foods
-[x] Floodplains
-[ ] Inundations
-[ ] Farms / fertility
-[ ] Workers
-[ ] Grassland terrain
-[ ] Water supply
-[ ] Entertainment
-[ ] Monuments
-[ ] Figure speeches
-[ ] Sound/music
-
-===== generic fixes: =====
-
-- graphics
-  - clearing building doesn't refresh river shores
-  - river shores bleed over floodplains
-- messages/text
-  - objectives/tutorial goals/scenario goals
-  - buildings panel text
-  - figures text
-  - panel tooltips
-- UI
-	- messages crashing
-  - "File" drop down menu colors
-  - household "X has having negative effect" color
-  - farms have wrong food type (off by 2?)
-- figures
-  - figure icons (bigpeople)
-
-
-
-
-
-
-====== crashes??? ======
-
-19958 15543
-
-0007b = ??????????????
-0007c = figure action callback out of bounds
+- [x]  Store Pharaoh path
+- [x]  Load Pharaoh files
+- [x]  Load main equivalent graphics
+- [x]  City building menus & panels
+- [x]  Map data
+- [x]  Map orientation
+- [x]  City messages
+- [ ]  Empire map
+- [ ]  Trading
+- [ ]  Empire requests
+- [ ]  Fire-fighting
+- [x]  Ostriches
+- [x]  Hippos
+- [ ]  Hyenas
+- [ ]  Antelopes
+- [x]  Hunters
+- [ ]  Reed gatherers
+- [ ]  Woodcutters
+- [x]  Food types
+- [x]  Floodplains
+- [ ]  Inundations
+- [ ]  Irrigation
+- [x]  Farms/fertility
+- [x]  Workers
+- [x]  Grassland terrain
+- [x]  Water supply
+- [x]  Gold mines
+- [x]  Entertainment
+- [ ]  Festival square
+- [ ]  Fishing
+- [ ]  Monuments
+- [x]  Temple complexes
+- [x]  Campaign progression
+- [x]  Mission objectives
+- [ ]  Family system & scores
+- [ ]  Forts
+- [ ]  Combat
+- [ ]  Naval combat
+- [ ]  Invasions
+- [ ]  Figure speeches
+- [ ]  Sound/music
+- [ ]  Overlays
+- [ ]  Save games
+- [ ]  Mission editor

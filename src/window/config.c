@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "core/game_environment.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "graphics/button.h"
@@ -354,8 +355,10 @@ static void draw_background(void) {
                            page_buttons[i].width, FONT_NORMAL_BLACK, 0);
     }
 
-    text_draw_label_and_number_centered((const char *) translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60,
-                                        416, 85, FONT_NORMAL_BLACK, 0);
+    if (GAME_ENV==ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
+        text_draw_label_and_number_centered((const char *) translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60,
+                                            416, 85, FONT_NORMAL_BLACK, 0);
+    }
 
     //text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);
     //text_draw_number(data.page + 1, '@', " ", 120, 415, FONT_NORMAL_BLACK);

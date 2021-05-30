@@ -45,7 +45,7 @@ static void draw_background(void) {
     graphics_in_dialog();
 
     outer_panel_draw(64, 160, 32, 10);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 80, 176);
+    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_get_gold(), 80, 176);
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK);
 
     inner_panel_draw(112, 208, 26, 4);

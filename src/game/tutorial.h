@@ -33,6 +33,7 @@ typedef struct tutorial_flags {
         bool population_150_reached;
         bool gamemeat_400_stored;
         bool collapse;
+        bool disease;
         bool gold_mined_500;
         bool temples_built;
         bool figs_800_stored;

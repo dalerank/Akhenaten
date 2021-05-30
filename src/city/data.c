@@ -50,10 +50,14 @@ int ALLOWED_FOODS(int i) {
     return city_data.resource.food_types_allowed[i];
 }
 bool is_food_allowed(int resource) {
-    for (int i = 0; i < 4; i++)
-        if (ALLOWED_FOODS(i) == resource)
-            return true;
+    bool result = false;
+    for (int i = 0; i < 4; i++) {
+        if (ALLOWED_FOODS(i) == resource) {
+            result = true;
+        }
+    }
     // for etc etc todo: other resources?
+    return result;
 }
 void set_allowed_food(int i, int resource) {
     city_data.resource.food_types_allowed[i] = resource;
@@ -411,8 +415,8 @@ static void save_main_data(buffer *main) {
     main->write_i32(city_data.festival.small_cost);
     main->write_i32(city_data.festival.large_cost);
     main->write_i32(city_data.festival.grand_cost);
-    main->write_i32(city_data.festival.grand_wine);
-    main->write_i32(city_data.festival.not_enough_wine);
+    main->write_i32(city_data.festival.grand_alcohol);
+    main->write_i32(city_data.festival.not_enough_alcohol);
     main->write_i32(city_data.culture.average_religion);
     main->write_i32(city_data.culture.average_education);
     main->write_i32(city_data.culture.average_health);
@@ -951,8 +955,8 @@ static void load_main_data(buffer *buf) {
     city_data.festival.small_cost = buf->read_i32(); // 23 --> 22 ??????
     city_data.festival.large_cost = buf->read_i32(); // 46 --> 45
     city_data.festival.grand_cost = buf->read_i32(); // 93 --> 90
-    city_data.festival.grand_wine = buf->read_i32();
-    city_data.festival.not_enough_wine = buf->read_i32();
+    city_data.festival.grand_alcohol = buf->read_i32();
+    city_data.festival.not_enough_alcohol = buf->read_i32();
     city_data.culture.average_religion = buf->read_i32();
     city_data.culture.average_education = buf->read_i32();
     city_data.culture.average_health = buf->read_i32();

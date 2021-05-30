@@ -86,7 +86,7 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                 // shrines
                 {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST, 0},
                 // monuments
-                {0},
+                {BUILDING_SMALL_ROYAL_TOMB, BUILDING_MEDIUM_ROYAL_TOMB, BUILDING_LARGE_ROYAL_TOMB, BUILDING_GRAND_ROYAL_TOMB, BUILDING_PYRAMID, BUILDING_SPHYNX, BUILDING_MAUSOLEUM, BUILDING_ALEXANDRIA_LIBRARY, BUILDING_CAESAREUM, BUILDING_PHAROS_LIGHTHOUSE, BUILDING_ABU_SIMBEL, 0},
                 // defensive structures
                 {BUILDING_WALL_PH, BUILDING_TOWER_PH, BUILDING_GATEHOUSE_PH, 0},
         }
@@ -194,7 +194,7 @@ static void disable_resources() {
         farms += disable_raw_if_unavailable(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
         farms += disable_raw_if_unavailable(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
         farms += disable_raw_if_unavailable(BUILDING_VINES_FARM, RESOURCE_VINES);
-        farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_C3);
+        farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY);
         farms += disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
         farms += disable_raw_if_unavailable(BUILDING_IRON_MINE, RESOURCE_IRON);
         farms += disable_raw_if_unavailable(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
@@ -217,7 +217,7 @@ static void disable_resources() {
         //
         disable_raw_if_unavailable(BUILDING_HUNTING_LODGE, RESOURCE_GAMEMEAT);
         //
-        disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY_PH);
+        disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY);
         disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_PH);
         disable_raw_if_unavailable(BUILDING_REED_GATHERER, RESOURCE_REEDS);
         //
@@ -432,6 +432,9 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_FERRY);
             enable_common_beautifications();
             break;
+        case BUILDSET_TUT3_HEALTH:
+            enable_common_health();
+            break;
         case BUILDSET_TUT4_START:
             building_menu_disable_all();
             enable_common_municipal(1);
@@ -454,26 +457,34 @@ void building_menu_update(int build_set) {
         case BUILDSET_TUT5_START:
             building_menu_disable_all();
             enable_common_municipal(1);
+            enable_building(BUILDING_TAX_COLLECTOR);
+            enable_building(BUILDING_COURTHOUSE);
+            enable_building(BUILDING_PERSONAL_MANSION);
             enable_common_health();
+            enable_entertainment(2);
+            enable_gods(GOD_OSIRIS + GOD_RA + GOD_BAST);
+
+            enable_building(BUILDING_CLAY_PIT);
+            enable_building(BUILDING_POTTERY_WORKSHOP);
+            enable_building(BUILDING_BEER_WORKSHOP);
+
+            enable_building(BUILDING_MARKET);
+            enable_building(BUILDING_GRANARY);
+            enable_building(BUILDING_WAREHOUSE);
+
             enable_building(BUILDING_CHICKPEAS_FARM);
             enable_building(BUILDING_BARLEY_FARM);
             enable_building(BUILDING_WORK_CAMP);
-            enable_entertainment(2);
-            enable_building(BUILDING_MARKET);
-            enable_building(BUILDING_GRANARY);
-            building_menu_update(BUILDSET_TUT3_INDUSTRY);
-            building_menu_update(BUILDSET_TUT4_FINANCE);
-            enable_gods(GOD_OSIRIS + GOD_PTAH + GOD_BAST);
-            enable_building(BUILDING_BEER_WORKSHOP);
-            enable_building(BUILDING_COURTHOUSE);
             break;
         case BUILDSET_TUT5_EDUCATION:
             enable_building(BUILDING_REED_GATHERER);
             enable_building(BUILDING_PAPYRUS_WORKSHOP);
             enable_building(BUILDING_SCHOOL);
             break;
-//        case BUILDSET_TUT5_TRADING:
-//            break;
+        case BUILDSET_TUT5_TRADING:
+            // TODO: enable trading
+            enable_building(BUILDING_DOCK);
+            break;
         case BUILDSET_TUT5_MONUMENTS:
             enable_building(BUILDING_BRICKLAYERS_GUILD);
 //            enable_monument(MONUMENT_SMALL_MASTABA); // todo!!!!!!

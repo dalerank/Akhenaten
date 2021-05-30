@@ -94,7 +94,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 b->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 b->is_deleted = 1;
                 building *space = b;
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 99; i++) {
                     if (space->prev_part_building_id <= 0)
                         break;
                     space = building_get(space->prev_part_building_id);

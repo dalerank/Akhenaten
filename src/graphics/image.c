@@ -566,7 +566,7 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
         color_mask = COLOR_MASK_NONE;
 
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
-    if (!clip->is_visible)
+    if (data == nullptr || !clip->is_visible)
         return;
     // If the current tile neither clipped nor color masked, just draw it normally
     if (clip->clip_y == CLIP_NONE && clip->clip_x == CLIP_NONE && color_mask == COLOR_MASK_NONE) {

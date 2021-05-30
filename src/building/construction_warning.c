@@ -52,6 +52,8 @@ static void check_road_access(int type, int x, int y, int size) {
         has_road = 1;
     else if (type == BUILDING_HIPPODROME && map_has_road_access_hippodrome(x, y, 0))
         has_road = 1;
+    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, 0))
+        has_road = 1;
     else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
         has_road = 1;
 
@@ -219,14 +221,14 @@ static void check_timber_access(int type) {
 
 static void check_clay_access(int type) {
     if (type == BUILDING_POTTERY_WORKSHOP &&
-        building_count_industry_active(RESOURCE_CLAY_C3) <= 0) {
-        if (city_resource_count(RESOURCE_POTTERY_C3) <= 0 && city_resource_count(RESOURCE_CLAY_C3) <= 0) {
+        building_count_industry_active(RESOURCE_CLAY) <= 0) {
+        if (city_resource_count(RESOURCE_POTTERY_C3) <= 0 && city_resource_count(RESOURCE_CLAY) <= 0) {
             show(WARNING_CLAY_NEEDED);
-            if (empire_can_produce_resource(RESOURCE_CLAY_C3))
+            if (empire_can_produce_resource(RESOURCE_CLAY))
                 show(WARNING_BUILD_CLAY_PIT);
-            else if (!empire_can_import_resource(RESOURCE_CLAY_C3))
+            else if (!empire_can_import_resource(RESOURCE_CLAY))
                 show(WARNING_OPEN_TRADE_TO_IMPORT);
-            else if (city_int(RESOURCE_CLAY_C3) != TRADE_STATUS_IMPORT)
+            else if (city_int(RESOURCE_CLAY) != TRADE_STATUS_IMPORT)
                 show(WARNING_TRADE_IMPORT_RESOURCE);
 
         }

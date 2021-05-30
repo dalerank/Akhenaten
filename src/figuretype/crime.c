@@ -48,6 +48,7 @@ static void generate_rioter(building *b) {
     int x_target, y_target;
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
+        // TODO: to add correct rioter image
         figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
         f->action_state = FIGURE_ACTION_120_RIOTER_CREATED;
         f->roam_length = 0;
@@ -125,7 +126,11 @@ void figure_generate_criminals(void) {
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {
                 if (min_happiness <= 10)
-                    generate_rioter(min_building);
+                    if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
+                        generate_rioter(min_building);
+                    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                        generate_mugger(min_building);
+                    }
                 else if (min_happiness < 30)
                     generate_mugger(min_building);
                 else if (min_happiness < 50)

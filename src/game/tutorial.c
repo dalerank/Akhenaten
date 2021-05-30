@@ -10,7 +10,7 @@
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
-#include <algorithm>
+#include "empire/city.h"
 
 static tutorial_flags data;
 
@@ -66,6 +66,7 @@ void tutorial_init(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.pharaoh.fire = tut_passed[0];
         data.pharaoh.collapse = tut_passed[0];
+        data.pharaoh.disease = tut_passed[0];
         data.pharaoh.population_150_reached = tut_passed[0];
         data.pharaoh.gamemeat_400_stored = tut_passed[0];
         data.pharaoh.gold_mined_500 = tut_passed[1];
@@ -171,6 +172,8 @@ void tutorial_menu_update(int tut) {
                 building_menu_update(BUILDSET_TUT3_INDUSTRY);
             if (data.pharaoh.pottery_made)
                 building_menu_update(BUILDSET_TUT3_INDUSTRY);
+            if (data.pharaoh.disease)
+                building_menu_update(BUILDSET_TUT3_HEALTH);
         } else if (tut == 4) {
             building_menu_update(BUILDSET_TUT4_START);
             if (data.pharaoh.beer_made)
@@ -179,8 +182,8 @@ void tutorial_menu_update(int tut) {
             building_menu_update(BUILDSET_TUT5_START);
             if (data.pharaoh.spacious_apartment)
                 building_menu_update(BUILDSET_TUT5_EDUCATION);
-//            if (data.pharaoh.papyrus_made)
-//                building_menu_update(BUILDSET_TUT5_TRADING);
+            if (data.pharaoh.papyrus_made)
+                building_menu_update(BUILDSET_TUT5_TRADING);
             if (data.pharaoh.bricks_bought)
                 building_menu_update(BUILDING_MENU_MONUMENTS);
         } else if (tut == 6) {
@@ -282,10 +285,13 @@ int tutorial_adjust_request_year(int *year) {
     return 1;
 }
 int tutorial_extra_fire_risk(void) {
-    return !data.tutorial1.fire;
+    return !data.tutorial1.fire &&
+        scenario_is_tutorial_1(); // Fix for extra fire risk in late tutorials
 }
 int tutorial_extra_damage_risk(void) {
-    return data.tutorial1.fire && !data.tutorial1.collapse;
+    return data.tutorial1.fire &&
+        !data.tutorial1.collapse &&
+        scenario_is_tutorial_1(); // Fix for extra damage risk in late tutorials
 }
 int tutorial_handle_fire(void) {
     if (data.tutorial1.fire || data.pharaoh.fire)

@@ -48,7 +48,13 @@ static struct {
 } data;
 
 static int big_people_image(int type) {
-    return image_id_from_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
+    int result = 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        result = image_id_from_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        result = image_id_from_group(GROUP_BIG_PEOPLE) + type;
+    }
+    return result;
 }
 
 static int inventory_to_resource_id(int value) {
@@ -357,7 +363,11 @@ void figure::draw_normal_figure(building_info_context *c) {
     }
     image_draw(image_id, c->x_offset + 28, c->y_offset + 112);
 
-    lang_text_draw(65, name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
+    int16_t name_group_id = 254;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        name_group_id = 65;
+    }
+    lang_text_draw(name_group_id, name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_GREEN);
 
     if (c->figure.phrase_id >= 0) {

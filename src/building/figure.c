@@ -1,5 +1,4 @@
-#include <ntdef.h>
-#include <figuretype/entertainer.h>
+#include "figuretype/entertainer.h"
 #include "building/figure.h"
 
 #include "building/barracks.h"
@@ -26,6 +25,8 @@
 #include "map/road_access.h"
 #include "map/terrain.h"
 #include "map/water.h"
+
+#include <math.h>
 
 static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -781,6 +782,35 @@ static void spawn_figure_physician(building *b) {
     }
 }
 static void spawn_figure_magistrate(building *b) {
+//    check_labor_problem(b);
+//    if (has_figure_of_type(b, FIGURE_MAGISTRATE))
+//        return;
+//    map_point road;
+//    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+//        spawn_labor_seeker(b, road.x, road.y, 100);
+//        int pct_workers = worker_percentage(b);
+//        int spawn_delay;
+//        if (pct_workers >= 100)
+//            spawn_delay = 0;
+//        else if (pct_workers >= 75)
+//            spawn_delay = 1;
+//        else if (pct_workers >= 50)
+//            spawn_delay = 3;
+//        else if (pct_workers >= 25)
+//            spawn_delay = 7;
+//        else if (pct_workers >= 1)
+//            spawn_delay = 15;
+//        else
+//            return;
+//        b->figure_spawn_delay++;
+//        if (b->figure_spawn_delay > spawn_delay) {
+//            b->figure_spawn_delay = 0;
+//            figure *f = figure_create(FIGURE_MAGISTRATE, road.x, road.y, DIR_0_TOP_RIGHT);
+//            f->action_state = FIGURE_ACTION_70_PREFECT_CREATED;
+//            f->building_id = b->id;
+//            b->figure_id = f->id;
+//        }
+//    }
     check_labor_problem(b);
     if (has_figure_of_type(b, FIGURE_MAGISTRATE))
         return;
@@ -799,10 +829,15 @@ static void spawn_figure_magistrate(building *b) {
 }
 static void spawn_figure_temple(building *b) {
     check_labor_problem(b);
-    if (has_figure_of_type(b, FIGURE_PRIEST))
+    if (has_figure_of_type(b, FIGURE_PRIEST) ||
+        building_is_large_temple(b->type) && b->prev_part_building_id) {
         return;
+    }
+
     map_point road;
-    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+    if (building_is_temple(b->type) && map_has_road_access(b->x, b->y, b->size, &road) ||
+        building_is_large_temple(b->type) && map_has_road_access_temple_complex(b->x, b->y, &road)) {
+
         spawn_labor_seeker(b, road.x, road.y, 50);
         int pct_workers = worker_percentage(b);
         int spawn_delay;
@@ -1198,7 +1233,7 @@ static void spawn_figure_hunting_lodge(building *b) {
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
-            int loads_to_carry = min(b->loads_stored, 4);
+            int loads_to_carry = fmin(b->loads_stored, 4);
             f->loads_counter = loads_to_carry;
             b->loads_stored -= loads_to_carry;
         }
@@ -1312,8 +1347,6 @@ void building_figure_generate(void) {
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-        if (b->type == 71)
-            int a =24;
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
@@ -1322,14 +1355,20 @@ void building_figure_generate(void) {
 
         b->show_on_problem_overlay = 0;
         // range of building types
-        if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE)
+        if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
             patrician_generated = spawn_patrician(b, patrician_generated);
-        else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type))
+        }
+        else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type)) {
             spawn_figure_industry(b);
-        else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED)
+        }
+        else if (building_is_senate(b->type) ||
+            b->type == BUILDING_TAX_COLLECTOR ||
+            b->type == BUILDING_TAX_COLLECTOR_UPGRADED) {
             spawn_figure_senate_forum(b);
-        else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)
+        }
+        else if (building_is_temple(b->type) || building_is_large_temple(b->type)) {
             spawn_figure_temple(b);
+        }
         else {
             // single building type
             switch (b->type) {

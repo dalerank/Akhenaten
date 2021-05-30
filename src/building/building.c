@@ -45,7 +45,7 @@ building *building_get(int id) {
     return &all_buildings[id];
 }
 building *building_main(building *b) {
-    for (int guard = 0; guard < 9; guard++) {
+    for (int guard = 0; guard < 99; guard++) {
         if (b->prev_part_building_id <= 0)
             return b;
         b = &all_buildings[b->prev_part_building_id];
@@ -143,7 +143,7 @@ building *building_create(int type, int x, int y) {
                 b->output_resource_id = RESOURCE_TIMBER_C3;
                 break;
             case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY_C3;
+                b->output_resource_id = RESOURCE_CLAY;
                 break;
             case BUILDING_WINE_WORKSHOP:
                 b->output_resource_id = RESOURCE_WINE;
@@ -199,7 +199,7 @@ building *building_create(int type, int x, int y) {
                 b->output_resource_id = RESOURCE_TIMBER_PH;
                 break;
             case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY_PH;
+                b->output_resource_id = RESOURCE_CLAY;
                 break;
             case BUILDING_BEER_WORKSHOP:
                 b->output_resource_id = RESOURCE_BEER;
@@ -242,7 +242,7 @@ building *building_create(int type, int x, int y) {
                 break;
             case BUILDING_PAPYRUS_WORKSHOP:
                 b->output_resource_id = RESOURCE_PAPYRUS;
-//                b->subtype.workshop_type = ??? todo
+                b->subtype.workshop_type = WORKSHOP_REEDS_TO_PAPYRUS;
                 break;
             case BUILDING_BRICKS_WORKSHOP:
                 b->output_resource_id = RESOURCE_BRICKS;
@@ -309,10 +309,7 @@ void building_clear_related_data(building *b) {
     if (b->storage_id)
         building_storage_delete(b->storage_id);
 
-    if (b->type == BUILDING_SENATE_UPGRADED ||
-        b->type == BUILDING_VILLAGE_PALACE ||
-        b->type == BUILDING_TOWN_PALACE ||
-        b->type == BUILDING_CITY_PALACE)
+    if (building_is_senate(b->type))
         city_buildings_remove_senate(b);
 
     if (b->type == BUILDING_DOCK)
@@ -363,14 +360,16 @@ int building_is_fort(int type) {
            type == BUILDING_FORT_MOUNTED;
 }
 int building_is_defense_ph(int type) {
-    return (type == BUILDING_WALL_PH)
-           || type == BUILDING_WALL_PH
+    return (type == BUILDING_WALL_PH
            || type == BUILDING_GATEHOUSE_PH
-           || type == BUILDING_TOWER_PH;
+           || type == BUILDING_TOWER_PH);
 }
 int building_is_farm(int type) {
     return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
            || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
+}
+int building_is_floodplain_farm(building *b) {
+    return (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type) && b->data.industry.labor_state >= 1);
 }
 int building_is_workshop(int type) {
     return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
@@ -387,6 +386,13 @@ int building_is_extractor(int type) {
            || type == BUILDING_GRANITE_QUARRY
            || type == BUILDING_SANDSTONE_QUARRY
            || type == BUILDING_REED_GATHERER;
+}
+int building_is_monument(int type) {
+    return 0; // TODO: monuments
+}
+int building_is_senate(int type) {
+    return ((type >= BUILDING_SENATE && type <= BUILDING_FORUM_UPGRADED) ||
+            (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
 }
 int building_is_temple(int type) {
     return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);

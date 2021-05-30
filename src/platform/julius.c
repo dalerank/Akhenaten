@@ -252,7 +252,7 @@ static void setup(const julius_args *args) {
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
-    init_game_environment(args->game_engine_env);
+    init_game_environment(args->game_engine_env, args->game_engine_debug_mode);
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);

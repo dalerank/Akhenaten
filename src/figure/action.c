@@ -24,9 +24,6 @@
 #include "core/game_environment.h"
 #include "map/road_access.h"
 #include "core/image_group.h"
-//static void no_action() {
-//
-//}
 
 typedef struct {
     char speed_mult;
@@ -47,9 +44,9 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_ENGINEER},  //FIGURE_ENGINEER = 8,
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CARTPUSHER},  //FIGURE_WAREHOUSEMAN = 9,
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_PREFECT},  //FIGURE_PREFECT = 10,
-        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_JAVELIN = 11,
-        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_MOUNTED = 12,
-        {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_LEGIONARY = 13,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_ARCHER_PH},  //FIGURE_FORT_JAVELIN = 11,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_CHARIOTEER_PH},  //FIGURE_FORT_MOUNTED = 12,
+        {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_INFANTRY_PH},  //FIGURE_FORT_LEGIONARY = 13,
         {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FORT_STANDARD = 14,
         {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_ACTOR},  //FIGURE_ACTOR = 15,
         {1, TERRAIN_USAGE_ROADS,   512,    GROUP_FIGURE_GLADIATOR},  //FIGURE_GLADIATOR = 16,
@@ -58,9 +55,9 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN},  //FIGURE_TRADE_CARAVAN = 19,
         {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_TRADE_SHIP = 20,
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_TRADE_CARAVAN_DONKEY},  //FIGURE_TRADE_CARAVAN_DONKEY = 21,
-        {1, TERRAIN_USAGE_ROADS,   0,      0},  //FIGURE_PROTESTER = 22,
+        {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CRIMINAL},  //FIGURE_PROTESTER = 22,
         {1, TERRAIN_USAGE_ROADS,   0,      GROUP_FIGURE_CRIMINAL},  //FIGURE_CRIMINAL = 23,
-        {1, TERRAIN_USAGE_ENEMY,   480,    0},  //FIGURE_RIOTER = 24,
+        {1, TERRAIN_USAGE_ENEMY,   480,    GROUP_FIGURE_CRIMINAL},  //FIGURE_RIOTER = 24,
         {1, TERRAIN_USAGE_ANY,     0,      0},  //FIGURE_FISHING_BOAT = 25,
         {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_MARKET_LADY_2},  //FIGURE_MARKET_TRADER = 26,
         {1, TERRAIN_USAGE_ROADS,   384,    GROUP_FIGURE_PRIEST},  //FIGURE_PRIEST = 27,
@@ -123,12 +120,12 @@ static figure_action_property action_lookup[] = {
         {1, TERRAIN_USAGE_ROADS,   0,      0},  // 81
         {1, TERRAIN_USAGE_ROADS,   0,      0},  // 82
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 83
-        {1, TERRAIN_USAGE_ANY,     0,      0},  // 84
+        {1, TERRAIN_USAGE_ANIMAL,  0,      GROUP_FIGURE_HIPPO},  // 84 hippo
         {1, TERRAIN_USAGE_ANY,     0,      GROUP_FIGURE_WORKER_PH},  // 85
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 86
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_WATER_CARRIER},  // 87 water carrier
         {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_POLICEMAN},  // 88 policeman
-        {1, TERRAIN_USAGE_ROADS,   640,    GROUP_FIGURE_MAGISTRATE},  // 89
+        {1, TERRAIN_USAGE_ROADS,   800,    GROUP_FIGURE_MAGISTRATE},  // 89 magistrate
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 90
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 91
         {1, TERRAIN_USAGE_ANY,     0,      0},  // 92
@@ -317,6 +314,7 @@ void figure::action_perform() {
             case FIGURE_ENGINEER:
             case FIGURE_PREFECT:
             case FIGURE_POLICEMAN:
+            case FIGURE_MAGISTRATE:
             case FIGURE_WORKER:
             case FIGURE_MARKET_TRADER:
             case FIGURE_NATIVE_TRADER:
@@ -466,6 +464,7 @@ void figure::action_perform() {
             // PHARAOH vvvv
             case 73: hunter_action();                   break;
             case 74: arrow_action();                    break;
+            case 84: hippo_action();                    break;
             case 85: worker_action();                   break;
             case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;

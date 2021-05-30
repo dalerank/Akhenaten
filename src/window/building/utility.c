@@ -44,7 +44,6 @@ static generic_button roadblock_order_buttons[] = {
         {314, 0, 20, 20, roadblock_orders, button_none, 0, 0},
 };
 
-
 void window_building_draw_engineers_post(building_info_context *c) {
     c->help_id = 81;
     window_building_play_sound(c, "wavs/eng_post.wav");
@@ -52,7 +51,6 @@ void window_building_draw_engineers_post(building_info_context *c) {
     lang_text_draw_centered(104, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
-
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
     else if (!b->num_workers)
@@ -60,9 +58,9 @@ void window_building_draw_engineers_post(building_info_context *c) {
     else {
         if (b->figure_id)
             window_building_draw_description(c, 104, 2);
-        else {
+        else
             window_building_draw_description(c, 104, 3);
-        }
+
         if (c->worker_percentage >= 100)
             window_building_draw_description_at(c, 72, 104, 4);
         else if (c->worker_percentage >= 75)
@@ -71,15 +69,46 @@ void window_building_draw_engineers_post(building_info_context *c) {
             window_building_draw_description_at(c, 72, 104, 6);
         else if (c->worker_percentage >= 25)
             window_building_draw_description_at(c, 72, 104, 7);
-        else {
+        else
             window_building_draw_description_at(c, 72, 104, 8);
-        }
     }
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
+void window_building_draw_firehouse(building_info_context *c) {
+    const int32_t LANG_GROUP_ID = 164;
+    c->help_id = 81; // TODO: change to firehouse
+    window_building_play_sound(c, "wavs/prefecture.wav"); // TODO: change to firehouse
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(LANG_GROUP_ID, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
+    building *b = building_get(c->building_id);
+    if (!c->has_road_access)
+        window_building_draw_description(c, 69, 25);
+    else if (!b->num_workers)
+        window_building_draw_description(c, LANG_GROUP_ID, 9);
+    else {
+        if (b->figure_id)
+            window_building_draw_description(c, LANG_GROUP_ID, 2);
+        else
+            window_building_draw_description(c, LANG_GROUP_ID, 3);
+
+        if (c->worker_percentage >= 100)
+            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 4);
+        else if (c->worker_percentage >= 75)
+            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 5);
+        else if (c->worker_percentage >= 50)
+            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 6);
+        else if (c->worker_percentage >= 25)
+            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 7);
+        else
+            window_building_draw_description_at(c, 72, LANG_GROUP_ID, 8);
+    }
+
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 142);
+}
 void window_building_draw_prefect(building_info_context *c) {
     c->help_id = 86;
     window_building_play_sound(c, "wavs/prefecture.wav");
@@ -89,14 +118,14 @@ void window_building_draw_prefect(building_info_context *c) {
     building *b = building_get(c->building_id);
     if (!c->has_road_access)
         window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
+    else if (!b->num_workers)
         window_building_draw_description(c, 88, 9);
     else {
         if (b->figure_id)
             window_building_draw_description(c, 88, 2);
-        else {
+        else
             window_building_draw_description(c, 88, 3);
-        }
+
         if (c->worker_percentage >= 100)
             window_building_draw_description_at(c, 72, 88, 4);
         else if (c->worker_percentage >= 75)
@@ -105,15 +134,13 @@ void window_building_draw_prefect(building_info_context *c) {
             window_building_draw_description_at(c, 72, 88, 6);
         else if (c->worker_percentage >= 25)
             window_building_draw_description_at(c, 72, 88, 7);
-        else {
+        else
             window_building_draw_description_at(c, 72, 88, 8);
-        }
     }
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
-
 
 void window_building_draw_roadblock(building_info_context *c) {
     c->help_id = 0;
@@ -124,7 +151,6 @@ void window_building_draw_roadblock(building_info_context *c) {
     window_building_draw_description(c, 28, 116);
 
 }
-
 void window_building_draw_roadblock_foreground(building_info_context *c) {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
                        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
@@ -132,7 +158,6 @@ void window_building_draw_roadblock_foreground(building_info_context *c) {
                             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
 }
-
 void window_building_draw_roadblock_orders(building_info_context *c) {
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28);
@@ -141,7 +166,6 @@ void window_building_draw_roadblock_orders(building_info_context *c) {
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 
 }
-
 void window_building_draw_roadblock_orders_foreground(building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
     int ids[] = {GROUP_FIGURE_ENGINEER, GROUP_FIGURE_PREFECT, GROUP_FIGURE_PRIEST, GROUP_FIGURE_PRIEST,
@@ -170,7 +194,6 @@ void window_building_draw_roadblock_orders_foreground(building_info_context *c) 
     }
 }
 
-
 void window_building_draw_burning_ruin(building_info_context *c) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
@@ -182,7 +205,6 @@ void window_building_draw_burning_ruin(building_info_context *c) {
     lang_text_draw_multiline(111, 1, c->x_offset + 32, c->y_offset + 16 * c->height_blocks - 143,
                              16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
-
 void window_building_draw_rubble(building_info_context *c) {
     c->help_id = 0;
     window_building_play_sound(c, "wavs/ruin.wav");
@@ -203,7 +225,6 @@ void window_building_draw_reservoir(building_info_context *c) {
     int text_id = building_get(c->building_id)->has_water_access ? 1 : 3;
     window_building_draw_description_at(c, 16 * c->height_blocks - 173, 107, text_id);
 }
-
 void window_building_draw_aqueduct(building_info_context *c) {
     c->help_id = 60;
     window_building_play_sound(c, "wavs/aquaduct.wav");
@@ -211,7 +232,6 @@ void window_building_draw_aqueduct(building_info_context *c) {
     lang_text_draw_centered(141, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, 16 * c->height_blocks - 144, 141, c->aqueduct_has_water ? 1 : 2);
 }
-
 void window_building_draw_fountain(building_info_context *c) {
     c->help_id = 61;
     window_building_play_sound(c, "wavs/fountain.wav");
@@ -222,19 +242,47 @@ void window_building_draw_fountain(building_info_context *c) {
     if (b->has_water_access) {
         if (b->num_workers > 0)
             text_id = 1;
-        else {
+        else
             text_id = 2;
-        }
     } else if (c->has_reservoir_pipes)
         text_id = 2;
-    else {
+    else
         text_id = 3;
-    }
     window_building_draw_description(c, 108, text_id);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 166, c->width_blocks - 2, 4);
     window_building_draw_employment_without_house_cover(c, 172);
 }
+void window_building_draw_water_supply(building_info_context *c) {
+    c->help_id = 61;
+    window_building_play_sound(c, "wavs/fountain.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(108, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
+    building *b = building_get(c->building_id);
+    if (!c->has_road_access)
+        window_building_draw_description(c, 69, 25);
+    else {
+        if (!b->num_workers)
+            window_building_draw_description(c, 108, 7);
+        else {
+            int text_id;
+            if (c->worker_percentage >= 100)
+                text_id = 2;
+            else if (c->worker_percentage >= 75)
+                text_id = 3;
+            else if (c->worker_percentage >= 50)
+                text_id = 4;
+            else if (c->worker_percentage >= 25)
+                text_id = 5;
+            else
+                text_id = 7;
+            window_building_draw_description(c, 108, text_id);
+            window_building_draw_description_at(c, 16 * c->height_blocks - 120, 108, 1);
+        }
+    }
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 144, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 150);
+}
 void window_building_draw_well(building_info_context *c) {
     c->help_id = 62;
     window_building_play_sound(c, "wavs/well.wav");
@@ -274,11 +322,9 @@ static void draw_native(building_info_context *c, int group_id) {
 void window_building_draw_native_hut(building_info_context *c) {
     draw_native(c, 131);
 }
-
 void window_building_draw_native_meeting(building_info_context *c) {
     draw_native(c, 132);
 }
-
 void window_building_draw_native_crops(building_info_context *c) {
     draw_native(c, 133);
 }
@@ -295,7 +341,6 @@ void toggle_figure_state(int index, int param2) {
 static void roadblock_orders(int param1, int param2) {
 
 }
-
 static void go_to_orders(int param1, int param2) {
     window_building_info_show_storage_orders();
 }
@@ -306,7 +351,6 @@ int window_building_handle_mouse_roadblock(const mouse *m, building_info_context
             m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
             go_to_orders_button, 1, &data.focus_button_id);
 }
-
 int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28);
 

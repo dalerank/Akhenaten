@@ -31,7 +31,7 @@ enum {
     RESOURCE_OIL_C3 = 8, RESOURCE_GAMEMEAT = 8,
     RESOURCE_IRON = 9, RESOURCE_STRAW = 9,
     RESOURCE_TIMBER_C3 = 10, RESOURCE_WEAPONS_PH = 10,
-    RESOURCE_CLAY_C3 = 11, RESOURCE_CLAY_PH = 11,
+    RESOURCE_CLAY = 11,
     RESOURCE_MARBLE_C3 = 12, RESOURCE_BRICKS = 12,
     RESOURCE_WEAPONS_C3 = 13, RESOURCE_POTTERY_PH = 13,
     RESOURCE_FURNITURE = 14, RESOURCE_BARLEY = 14,
@@ -119,7 +119,12 @@ enum {
     WORKSHOP_VINES_TO_WINE = 2,
     WORKSHOP_IRON_TO_WEAPONS = 3,
     WORKSHOP_TIMBER_TO_FURNITURE = 4,
-    WORKSHOP_CLAY_TO_POTTERY = 5
+    WORKSHOP_CLAY_TO_POTTERY = 5,
+    WORKSHOP_BARLEY_TO_BEER = 6,
+    WORKSHOP_FLAX_TO_LINEN = 7,
+    WORKSHOP_REEDS_TO_PAPYRUS = 8,
+    WORKSHOP_CLAY_TO_BRICKS = 9,
+    WORKSHOP_COPPER_TO_WEAPONS = 10,
 };
 
 enum {
@@ -137,5 +142,7 @@ int resource_get_icon(int resource, int quantity = 1);
 int resource_is_food(int resource);
 
 int resource_to_workshop_type(int resource);
+
+int resource_get_gold();
 
 #endif // GAME_RESOURCE_H
