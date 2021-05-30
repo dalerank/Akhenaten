@@ -977,9 +977,6 @@ static void deletion_draw_remaining(int x, int y, int grid_offset) {
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
-#include "game/time.h"
-#include "city/data_private.h"
-
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
     ph_crops_worker_frame++;
     if (ph_crops_worker_frame >= 13 * 16)
@@ -1012,78 +1009,5 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
         city_view_foreach_map_tile(draw_debug);
-    }
-
-    /////// TEMP
-    if (true) return;
-    auto data = give_me_da_time();
-    uint8_t str[10];
-    string_from_int(str, data->tick, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("tick:"), 13, 15, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 15, COLOR_WHITE);
-    string_from_int(str, data->day, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("day:"), 13, 25, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 25, COLOR_WHITE);
-    string_from_int(str, data->month, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("month:"), 13, 35, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 35, COLOR_WHITE);
-    string_from_int(str, data->year, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("year:"), 13, 45, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 45, COLOR_WHITE);
-
-    string_from_int(str, data->month*16+data->day, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("total:"), 13, 65, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 65, COLOR_WHITE);
-    string_from_int(str, city_data.floods.month/15*8, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("coming:"), 13, 75, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 75, COLOR_WHITE);
-    string_from_int(str, city_data.floods.month, 0);
-    draw_text_shadow((uint8_t*)string_from_ascii("flood:"), 13, 85, COLOR_WHITE);
-    draw_text_shadow(str, 50 + 13, 85, COLOR_WHITE);
-
-    auto flags = give_me_da_tut_flags();
-    const char* const flagnames[41] = {
-        "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
-        "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
-        "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
-        "// tut4 ???","// tut5 ???","","// water supply","// tut4 ???","","// entertainment","// temples","// taxes","// mansion",
-        "",
-    };
-    for (int i = 0; i < 41; i++) {
-
-        int f = flags->pharaoh.flags[i];
-        switch (i) {
-            case 0: f = flags->pharaoh.fire; break;
-            case 1: f = flags->pharaoh.population_150_reached; break;
-            case 2: f = flags->pharaoh.gamemeat_400_stored; break;
-            case 3: f = flags->pharaoh.collapse; break;
-            case 4: f = flags->pharaoh.gold_mined_500; break;
-            case 5: f = flags->pharaoh.temples_built; break;
-//            case 6: ??? crime?
-            case 7: f = flags->pharaoh.figs_800_stored; break;
-            case 8: f = flags->pharaoh.disease; break;
-            case 9: f = flags->pharaoh.pottery_made; break;
-            case 10: f = flags->pharaoh.beer_made; break;
-            case 11: f = flags->pharaoh.spacious_apartment; break;
-            //
-            case 15: f = flags->pharaoh.tut1_start; break;
-            case 16: f = flags->pharaoh.tut2_start; break;
-            case 17: f = flags->pharaoh.tut3_start; break;
-            case 18: f = flags->pharaoh.tut4_start; break;
-            case 19: f = flags->pharaoh.tut5_start; break;
-            case 20: f = flags->pharaoh.tut6_start; break;
-            case 21: f = flags->pharaoh.tut7_start; break;
-            case 22: f = flags->pharaoh.tut8_start; break;
-        }
-
-        int color = COLOR_WHITE;
-        if (f)
-            color = COLOR_GREEN;
-        string_from_int(str, i, 0);
-        draw_text_shadow(str, 13, 115 + i*10, color);
-        draw_text_shadow((uint8_t*)string_from_ascii(":"), 13+20, 115 + i*10, color);
-        string_from_int(str, f, 0);
-        draw_text_shadow(str, 13+30, 115 + i*10, color);
-        draw_text_shadow((uint8_t*)string_from_ascii(flagnames[i]), 13+45, 115 + i*10, color);
     }
 }

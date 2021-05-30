@@ -17,29 +17,7 @@
 static const int X_DIRECTION_FOR_ORIENTATION[] = {1, 1, -1, -1};
 static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
 
-static struct {
-    int screen_width;
-    int screen_height;
-    int sidebar_collapsed;
-    int orientation;
-    int scale;
-    struct {
-        view_tile tile;
-        pixel_coordinate pixel;
-    } camera;
-    struct {
-        int x;
-        int y;
-        int width_pixels;
-        int height_pixels;
-        int width_tiles;
-        int height_tiles;
-    } viewport;
-    struct {
-        int x_pixels;
-        int y_pixels;
-    } selected_tile;
-} data;
+static view_data data;
 
 // TODO get rid of these
 //#define VIEW_X_MAX 165 // max_x     + 3
@@ -51,6 +29,10 @@ static struct {
 static int view_to_grid_offset_lookup[500][500];
 static pixel_coordinate grid_offset_to_pixel_lookup[500][500];
 
+view_data *city_view_data_unsafe() {
+    return &data;
+}
+
 int VIEW_X_MAX() {
     return grid_size[GAME_ENV] + 3;
 }
@@ -58,34 +40,97 @@ int VIEW_Y_MAX() {
     return grid_size[GAME_ENV] * 2 + 1;
 }
 
+int SCROLLABLE_X_MIN() {
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return (VIEW_X_MAX() - map_grid_width()) / 2 - 1;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return (VIEW_X_MAX() - map_grid_width() / 2) / 2 + 2 - 1;
+}
+int SCROLLABLE_Y_MIN() {
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return (VIEW_Y_MAX() - 2 * map_grid_height()) / 2;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return (VIEW_Y_MAX() - map_grid_height()) / 2 + 2;
+}
+int SCROLLABLE_X_MAX() {
+    return VIEW_X_MAX() - SCROLLABLE_X_MIN() - 3;
+}
+int SCROLLABLE_Y_MAX() {
+    return VIEW_Y_MAX() - SCROLLABLE_Y_MIN() - 4;
+}
+
+
+void city_view_get_camera_max_tile(int *x, int *y) {
+    int mx, my;
+    city_view_get_camera_max_pixel_offset(&mx, &my);
+    mx = mx > 0 ? 1 : 0;
+    my = my > 0 ? 1 : 0;
+
+    int tx = (data.viewport.width_pixels / TILE_WIDTH_PIXELS);
+    int ty = (2 * data.viewport.height_pixels / TILE_HEIGHT_PIXELS);
+
+    *x = SCROLLABLE_X_MAX() - tx;
+    *y = (SCROLLABLE_Y_MAX() - ty) & ~1;
+
+//    *x -= tx;
+//    *y -= ty;
+//    *y = (*y & ~1);
+//
+//    return;
+
+//    *x = SCROLLABLE_X_MAX() - data.viewport.width_tiles - mx; //(data.viewport.width_pixels / TILE_WIDTH_PIXELS);
+//    *y = SCROLLABLE_Y_MAX() - data.viewport.height_tiles - my; //(data.viewport.height_pixels / TILE_HEIGHT_PIXELS);
+}
+void city_view_get_camera_max_pixel_offset(int *x, int *y) {
+    *x = TILE_WIDTH_PIXELS - (data.viewport.width_pixels % TILE_WIDTH_PIXELS);
+    *y = TILE_HEIGHT_PIXELS - (data.viewport.height_pixels % TILE_HEIGHT_PIXELS);
+}
+
 static void check_camera_boundaries(void) {
-    int x_min;
-    int y_min;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        x_min = (VIEW_X_MAX() - map_grid_width()) / 2;
-        y_min = (VIEW_Y_MAX() - 2 * map_grid_height()) / 2;
-    }
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        x_min = (VIEW_X_MAX() - map_grid_width() / 2) / 2 + 2;
-        y_min = (VIEW_Y_MAX() - map_grid_height()) / 2 + 2;
-    }
-    if (data.camera.tile.x < x_min - 1) {
-        data.camera.tile.x = x_min - 1;
+    int real_min_x = SCROLLABLE_X_MIN();
+    int real_max_x;
+    int real_min_y = SCROLLABLE_Y_MIN();
+    int real_max_y;
+    city_view_get_camera_max_tile(&real_max_x, &real_max_y);
+
+    int max_x_pixel_offset;
+    int max_y_pixel_offset;
+    city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
+
+    bool compensated_x = false;
+    bool compensated_y = false;
+
+    if (data.camera.tile.x < real_min_x) {
+        data.camera.tile.x = real_min_x;
         data.camera.pixel.x = 0;
+        compensated_x = true;
     }
-    if (data.camera.tile.x >= VIEW_X_MAX() - x_min - data.viewport.width_tiles - 2) {
-        data.camera.tile.x = VIEW_X_MAX() - x_min - data.viewport.width_tiles - 2;
-        data.camera.pixel.x = 0;
-    }
-    if (data.camera.tile.y < y_min - 2) {
-        data.camera.tile.y = y_min - 1;
+    if (data.camera.tile.y < real_min_y) {
+        data.camera.tile.y = real_min_y + 1;
         data.camera.pixel.y = 0;
+        compensated_y = true;
     }
-    if (data.camera.tile.y >= ((VIEW_Y_MAX() - y_min - data.viewport.height_tiles - 1) & ~1)) {
-        data.camera.tile.y = VIEW_Y_MAX() - y_min - data.viewport.height_tiles - 1;
-        data.camera.pixel.y = 0;
+
+    if (data.camera.tile.x > real_max_x ||
+        (data.camera.tile.x == real_max_x && data.camera.pixel.x >= max_x_pixel_offset)) {
+        data.camera.tile.x = real_max_x;
+        data.camera.pixel.x = max_x_pixel_offset;
+        if (compensated_x) {
+
+        }
+    }
+    if (data.camera.tile.y > real_max_y ||
+            (data.camera.tile.y == real_max_y && data.camera.pixel.y >= max_y_pixel_offset)) {
+        data.camera.tile.y = real_max_y;
+        data.camera.pixel.y = max_y_pixel_offset;
+        if (compensated_y) {
+
+        }
     }
     data.camera.tile.y &= ~1;
+//    int temp = data.camera.tile.y;
+//    temp &= ~1;
+//    return;
 }
 
 static void reset_lookup(void) {
@@ -391,15 +436,16 @@ static void set_viewport_without_sidebar(void) {
 void city_view_set_scale(int scale) {
     if (config_get(CONFIG_UI_ZOOM))
         scale = calc_bound(scale, 50, 200);
-    else {
+    else
         scale = 100;
-    }
     data.scale = scale;
     if (data.sidebar_collapsed)
         set_viewport_without_sidebar();
-    else {
+    else
         set_viewport_with_sidebar();
-    }
+//    data.camera.pixel.x = 0;
+//    data.camera.pixel.y = 0;
+    adjust_camera_position_for_pixels();
     check_camera_boundaries();
 }
 void city_view_set_viewport(int screen_width, int screen_height) {
@@ -407,9 +453,9 @@ void city_view_set_viewport(int screen_width, int screen_height) {
     data.screen_height = screen_height;
     if (data.sidebar_collapsed)
         set_viewport_without_sidebar();
-    else {
+    else
         set_viewport_with_sidebar();
-    }
+    adjust_camera_position_for_pixels();
     check_camera_boundaries();
 }
 
