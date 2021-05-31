@@ -64,8 +64,8 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.y_offset = y_offset;
     data.width = 2 * width_tiles;
     data.height = height_tiles;
-    data.absolute_x = (VIEW_X_MAX() - width_tiles) / 2;
-    data.absolute_y = (VIEW_Y_MAX() - height_tiles) / 2;
+    data.absolute_x = (MAP_TILE_UPPER_LIMIT_X() - width_tiles) / 2;
+    data.absolute_y = (MAP_TILE_UPPER_LIMIT_Y() - height_tiles) / 2;
 
     int camera_x, camera_y;
     city_view_get_camera_tile(&camera_x, &camera_y);

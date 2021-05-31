@@ -236,7 +236,7 @@ static void draw_debug_ui(int x, int y) {
 
     draw_debug_line_double_left(str, x, y + 105, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
 
-    draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN(), SCROLLABLE_Y_MIN());
+    draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
     draw_debug_line_double_left(str, x, y + 135, 90, 40, "tile:", tx, ty);
     draw_debug_line_double_left(str, x, y + 145, 90, 40, "---max:", real_max_x, real_max_y);
 

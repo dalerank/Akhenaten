@@ -3,13 +3,13 @@
 
 #include "core/buffer.h"
 
-int VIEW_X_MAX();
-int VIEW_Y_MAX();
+int MAP_TILE_UPPER_LIMIT_X();
+int MAP_TILE_UPPER_LIMIT_Y();
 
-int SCROLLABLE_X_MIN();
-int SCROLLABLE_Y_MIN();
-int SCROLLABLE_X_MAX();
-int SCROLLABLE_Y_MAX();
+int SCROLLABLE_X_MIN_TILE();
+int SCROLLABLE_Y_MIN_TILE();
+int SCROLLABLE_X_MAX_TILE();
+int SCROLLABLE_Y_MAX_TILE();
 
 typedef struct {
     int x;
