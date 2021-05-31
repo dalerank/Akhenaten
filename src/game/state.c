@@ -18,7 +18,7 @@ void game_state_init(void) {
     map_ring_init();
 
     city_view_reset_orientation();
-    city_view_set_camera(76, 152);
+    city_view_go_to_tile(76, 152);
 
     random_generate_pool();
 

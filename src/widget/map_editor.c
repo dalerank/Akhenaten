@@ -102,10 +102,10 @@ static void set_city_scaled_clip_rectangle(void) {
 static void update_zoom_level(void) {
     int zoom = city_view_get_scale();
     pixel_coordinate offset;
-    city_view_get_camera_in_pixels(&offset.x, &offset.y);
+    city_view_get_camera_position(&offset.x, &offset.y);
     if (zoom_update_value(&zoom, &offset)) {
         city_view_set_scale(zoom);
-        city_view_set_camera_from_pixel_position(offset.x, offset.y);
+        city_view_go_to_position(offset.x, offset.y);
         sound_city_decay_views();
     }
 }

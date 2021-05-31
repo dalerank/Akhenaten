@@ -410,7 +410,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
             pixel_coordinate camera_offset;
-            city_view_get_pixel_offset(&camera_offset.x, &camera_offset.y);
+            city_view_get_camera_pixel_offset(&camera_offset.x, &camera_offset.y);
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_offset.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_offset.y);
         }

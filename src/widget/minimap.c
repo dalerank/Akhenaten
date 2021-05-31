@@ -68,7 +68,7 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_y = (VIEW_Y_MAX() - height_tiles) / 2;
 
     int camera_x, camera_y;
-    city_view_get_camera(&camera_x, &camera_y);
+    city_view_get_camera_tile(&camera_x, &camera_y);
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
@@ -204,8 +204,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
 static void draw_viewport_rectangle(void) {
     int camera_x, camera_y;
     int camera_pixels_x, camera_pixels_y;
-    city_view_get_camera(&camera_x, &camera_y);
-    city_view_get_pixel_offset(&camera_pixels_x, &camera_pixels_y);
+    city_view_get_camera_tile(&camera_x, &camera_y);
+    city_view_get_camera_pixel_offset(&camera_pixels_x, &camera_pixels_y);
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
