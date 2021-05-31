@@ -1,3 +1,4 @@
+#include <cmath>
 #include "view.h"
 
 #include "core/calc.h"
@@ -59,7 +60,6 @@ int SCROLLABLE_Y_MAX() {
     return VIEW_Y_MAX() - SCROLLABLE_Y_MIN() - 4;
 }
 
-
 void city_view_get_camera_max_tile(int *x, int *y) {
     int mx, my;
     city_view_get_camera_max_pixel_offset(&mx, &my);
@@ -71,15 +71,6 @@ void city_view_get_camera_max_tile(int *x, int *y) {
 
     *x = SCROLLABLE_X_MAX() - tx;
     *y = (SCROLLABLE_Y_MAX() - ty) & ~1;
-
-//    *x -= tx;
-//    *y -= ty;
-//    *y = (*y & ~1);
-//
-//    return;
-
-//    *x = SCROLLABLE_X_MAX() - data.viewport.width_tiles - mx; //(data.viewport.width_pixels / TILE_WIDTH_PIXELS);
-//    *y = SCROLLABLE_Y_MAX() - data.viewport.height_tiles - my; //(data.viewport.height_pixels / TILE_HEIGHT_PIXELS);
 }
 void city_view_get_camera_max_pixel_offset(int *x, int *y) {
     *x = TILE_WIDTH_PIXELS - (data.viewport.width_pixels % TILE_WIDTH_PIXELS);
@@ -87,50 +78,68 @@ void city_view_get_camera_max_pixel_offset(int *x, int *y) {
 }
 
 static void check_camera_boundaries(void) {
-    int real_min_x = SCROLLABLE_X_MIN();
-    int real_max_x;
-    int real_min_y = SCROLLABLE_Y_MIN();
-    int real_max_y;
-    city_view_get_camera_max_tile(&real_max_x, &real_max_y);
+    int min_x = SCROLLABLE_X_MIN();
+    int max_x;
+    int min_y = SCROLLABLE_Y_MIN();
+    int max_y;
+    city_view_get_camera_max_tile(&max_x, &max_y);
 
+    int min_x_pixel_offset = 0;
+    int min_y_pixel_offset = 0;
     int max_x_pixel_offset;
     int max_y_pixel_offset;
     city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
-    bool compensated_x = false;
-    bool compensated_y = false;
 
-    if (data.camera.tile.x < real_min_x) {
-        data.camera.tile.x = real_min_x;
-        data.camera.pixel.x = 0;
-        compensated_x = true;
+    // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
+    if (max_x <= min_x) {
+
+        int diff = abs(min_x - max_x);
+        int corr_x = (diff / 2) & ~1;
+
+        min_x -= corr_x;
+        max_x += corr_x;
+        max_x_pixel_offset *= 0.5;
+        min_x_pixel_offset = max_x_pixel_offset;
+//        data.camera.tile.x = max_x;
+//        data.camera.pixel.x = max_x_pixel_offset;
     }
-    if (data.camera.tile.y < real_min_y) {
-        data.camera.tile.y = real_min_y + 1;
-        data.camera.pixel.y = 0;
-        compensated_y = true;
+    if (max_y <= min_y) {
+        int diff = abs(min_y - max_y);
+        int corr_y = diff / 2;
+
+        min_y -= corr_y;
+        max_y += corr_y;
+        max_y_pixel_offset *= 0.5;
+        min_y_pixel_offset = max_y_pixel_offset;
+//        data.camera.tile.y = max_y;
+//        data.camera.pixel.y = max_y_pixel_offset;
     }
 
-    if (data.camera.tile.x > real_max_x ||
-        (data.camera.tile.x == real_max_x && data.camera.pixel.x >= max_x_pixel_offset)) {
-        data.camera.tile.x = real_max_x;
+
+    if (data.camera.tile.x < min_x ||
+        (data.camera.tile.x == min_x && data.camera.pixel.x <= min_x_pixel_offset)) {
+        data.camera.tile.x = min_x;
+        data.camera.pixel.x = min_x_pixel_offset;
+    }
+    if (data.camera.tile.y < min_y ||
+        (data.camera.tile.y == min_y && data.camera.pixel.y <= min_y_pixel_offset)) {
+        data.camera.tile.y = min_y + 1;
+        data.camera.pixel.y = min_y_pixel_offset;
+    }
+
+    // this is a MESS >:(
+    if (data.camera.tile.x > max_x ||
+        (data.camera.tile.x == max_x && data.camera.pixel.x >= max_x_pixel_offset)) {
+        data.camera.tile.x = max_x;
         data.camera.pixel.x = max_x_pixel_offset;
-        if (compensated_x) {
-
-        }
     }
-    if (data.camera.tile.y > real_max_y ||
-            (data.camera.tile.y == real_max_y && data.camera.pixel.y >= max_y_pixel_offset)) {
-        data.camera.tile.y = real_max_y;
+    if (data.camera.tile.y > max_y ||
+        (data.camera.tile.y == max_y && data.camera.pixel.y >= max_y_pixel_offset)) {
+        data.camera.tile.y = max_y;
         data.camera.pixel.y = max_y_pixel_offset;
-        if (compensated_y) {
-
-        }
     }
     data.camera.tile.y &= ~1;
-//    int temp = data.camera.tile.y;
-//    temp &= ~1;
-//    return;
 }
 
 static void reset_lookup(void) {
