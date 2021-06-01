@@ -418,11 +418,11 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
     int x, y;
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
 
-    city_view_go_to_tile(x - 2, y - 6);
+//    city_view_go_to_tile(x - 2, y - 6);
 
     widget_city_draw_for_figure(figure_id, coord);
 
-    city_view_go_to_tile(x_cam, y_cam);
+//    city_view_go_to_tile(x_cam, y_cam);
 }
 
 void window_building_prepare_figure_list(building_info_context *c) {

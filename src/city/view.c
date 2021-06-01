@@ -51,13 +51,13 @@ int SCROLLABLE_Y_MIN_TILE() {
     if (GAME_ENV == ENGINE_ENV_C3)
         return (MAP_TILE_UPPER_LIMIT_Y() - 2 * map_grid_height()) / 2;
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return (MAP_TILE_UPPER_LIMIT_Y() - map_grid_height()) / 2 + 2;
+        return (MAP_TILE_UPPER_LIMIT_Y() - map_grid_height()) / 2;
 }
 int SCROLLABLE_X_MAX_TILE() {
-    return MAP_TILE_UPPER_LIMIT_X() - SCROLLABLE_X_MIN_TILE() - 3;
+    return MAP_TILE_UPPER_LIMIT_X() - SCROLLABLE_X_MIN_TILE() - 2;
 }
 int SCROLLABLE_Y_MAX_TILE() {
-    return MAP_TILE_UPPER_LIMIT_Y() - SCROLLABLE_Y_MIN_TILE() - 4;
+    return MAP_TILE_UPPER_LIMIT_Y() - SCROLLABLE_Y_MIN_TILE() - 5;
 }
 
 void city_view_get_camera_max_tile(int *x, int *y) {
@@ -116,11 +116,9 @@ static void camera_validate_position(void) {
 }
 
 static void reset_lookup(void) {
-    for (int y = 0; y < MAP_TILE_UPPER_LIMIT_Y(); y++) {
-        for (int x = 0; x < MAP_TILE_UPPER_LIMIT_X(); x++) {
+    for (int y = 0; y < MAP_TILE_UPPER_LIMIT_Y(); y++)
+        for (int x = 0; x < MAP_TILE_UPPER_LIMIT_X(); x++)
             view_to_grid_offset_lookup[x][y] = -1;
-        }
-    }
 }
 static void calculate_lookup(void) {
     reset_lookup();
@@ -166,6 +164,12 @@ static void calculate_lookup(void) {
             break;
     }
 
+    int min_x = SCROLLABLE_X_MIN_TILE();
+    int max_x = SCROLLABLE_X_MAX_TILE();
+
+    int min_y = SCROLLABLE_Y_MIN_TILE();
+    int max_y = SCROLLABLE_Y_MAX_TILE();
+
     int grid_s;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
@@ -181,10 +185,13 @@ static void calculate_lookup(void) {
         for (int x = 0; x < grid_s; x++) {
             int grid_offset = x + grid_s * y;
 
-            if (map_image_at(grid_offset) < 6)
-                view_to_grid_offset_lookup[x_view / 2][y_view] = -1;
-            else
+            if (map_grid_is_tile_inside_playable_area(x, y))
                 view_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
+            else
+//            if (map_image_at(grid_offset) < 6)
+                view_to_grid_offset_lookup[x_view / 2][y_view] = -1;
+//            else
+//                view_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
             x_view += x_view_step;
             y_view += y_view_step;
         }

@@ -468,7 +468,6 @@ void map_grid_bound(int *x, int *y) {
 
     if (*y >= map_data.height)
         *y = map_data.height - 1;
-
 }
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max) {
     if (*x_min < 0)
@@ -511,6 +510,14 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, 
 }
 int map_grid_is_inside(int x, int y, int size) {
     return x >= 0 && x + size <= map_data.width && y >= 0 && y + size <= map_data.height;
+}
+int map_grid_is_tile_inside_playable_area(int x, int y) {
+    int dist_horizontal = abs(x - y);
+    int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 2);
+
+    if (dist_horizontal < map_data.width / 2 && dist_vertical < map_data.height / 2)
+        return 1;
+    return 0;
 }
 
 const int *map_grid_adjacent_offsets(int size) {
