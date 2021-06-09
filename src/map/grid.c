@@ -516,8 +516,8 @@ int map_grid_is_tile_inside_playable_area(int x, int y) {
     int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 2);
 
     if (dist_horizontal < map_data.width / 2 && dist_vertical < map_data.height / 2)
-        return 1;
-    return 0;
+        return 1; // inside area
+    return 0; // outside area
 }
 
 const int *map_grid_adjacent_offsets(int size) {
