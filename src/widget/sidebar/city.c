@@ -196,20 +196,11 @@ static struct {
 #include "game/tutorial.h"
 #include "core/string.h"
 
-void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color = COLOR_WHITE) {
-    draw_text_shadow((uint8_t*)string_from_ascii(text), x, y, COLOR_WHITE);
-    string_from_int(str, value, 0); draw_text_shadow(str, x + indent, y, COLOR_WHITE);
-}
-void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color = COLOR_WHITE) {
-    draw_text_shadow((uint8_t*)string_from_ascii(text), x, y, COLOR_WHITE);
-    string_from_int(str, value1, 0); draw_text_shadow_left(str, x + indent, y, COLOR_WHITE);
-    string_from_int(str, value2, 0); draw_text_shadow_left(str, x + indent + indent2, y, COLOR_WHITE);
-}
-
 static void draw_debug_ui(int x, int y) {
     auto data = give_me_da_time();
     uint8_t str[10];
 
+    /////// TIME
     draw_debug_line(str, x, y + 15, 50, "tick:", data->tick);
     draw_debug_line(str, x, y + 25, 50, "day:", data->day);
     draw_debug_line(str, x, y + 35, 50, "month:", data->month);
@@ -219,80 +210,81 @@ static void draw_debug_ui(int x, int y) {
     draw_debug_line(str, x, y + 75, 50, "coming:", city_data.floods.month / 15 * 8);
     draw_debug_line(str, x, y + 85, 50, "flood:", city_data.floods.month);
 
-    int tx, ty;
-    int px, py;
-    city_view_get_camera_tile(&tx, &ty);
-    city_view_get_camera_pixel_offset(&px, &py);
+    /////// CAMERA
+    if (false) {
+        int tx, ty;
+        int px, py;
+        city_view_get_camera_tile(&tx, &ty);
+        city_view_get_camera_pixel_offset(&px, &py);
 
+        view_data* viewdata = city_view_data_unsafe();
+        int real_max_x;
+        int real_max_y;
+        city_view_get_camera_max_tile(&real_max_x, &real_max_y);
 
-    view_data* viewdata = city_view_data_unsafe();
-    int real_max_x;
-    int real_max_y;
-    city_view_get_camera_max_tile(&real_max_x, &real_max_y);
+        int max_x_pixel_offset;
+        int max_y_pixel_offset;
+        city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
-    int max_x_pixel_offset;
-    int max_y_pixel_offset;
-    city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
+        draw_debug_line_double_left(str, x, y + 105, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
 
-    draw_debug_line_double_left(str, x, y + 105, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
+        draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
+        draw_debug_line_double_left(str, x, y + 135, 90, 40, "tile:", tx, ty);
+        draw_debug_line_double_left(str, x, y + 145, 90, 40, "---max:", real_max_x, real_max_y);
 
-    draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
-    draw_debug_line_double_left(str, x, y + 135, 90, 40, "tile:", tx, ty);
-    draw_debug_line_double_left(str, x, y + 145, 90, 40, "---max:", real_max_x, real_max_y);
+        draw_debug_line_double_left(str, x, y + 165, 90, 40, "---min:", 0, 0);
+        draw_debug_line_double_left(str, x, y + 175, 90, 40, "pixel:", px, py);
+        draw_debug_line_double_left(str, x, y + 185, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-    draw_debug_line_double_left(str, x, y + 165, 90, 40, "---min:", 0, 0);
-    draw_debug_line_double_left(str, x, y + 175, 90, 40, "pixel:", px, py);
-    draw_debug_line_double_left(str, x, y + 185, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
+        draw_debug_line_double_left(str, x, y + 205, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
+        draw_debug_line_double_left(str, x, y + 215, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
+    }
 
-    draw_debug_line_double_left(str, x, y + 205, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
-    draw_debug_line_double_left(str, x, y + 215, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
-
-    ///////
-    return;
-    auto flags = give_me_da_tut_flags();
-    const char* const flagnames[41] = {
-            "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
-            "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
-            "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
-            "// tut4 ???","// tut5 ???","","// water supply","// tut4 ???","","// entertainment","// temples","// taxes","// mansion",
-            "",
-    };
-    for (int i = 0; i < 41; i++) {
-
-        int f = flags->pharaoh.flags[i];
-        switch (i) {
-            case 0: f = flags->pharaoh.fire; break;
-            case 1: f = flags->pharaoh.population_150_reached; break;
-            case 2: f = flags->pharaoh.gamemeat_400_stored; break;
-            case 3: f = flags->pharaoh.collapse; break;
-            case 4: f = flags->pharaoh.gold_mined_500; break;
-            case 5: f = flags->pharaoh.temples_built; break;
+    /////// TUTORIAL
+    if (true) {auto flags = give_me_da_tut_flags();
+        const char* const flagnames[41] = {
+                "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
+                "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
+                "tut6 start","tut7 start","tut8 start","","","","// bazaar","// pottery","","",
+                "// tut4 ???","// tut5 ???","","// water supply","// tut4 ???","","// entertainment","// temples","// taxes","// mansion",
+                "",
+        };
+        for (int i = 0; i < 41; i++) {
+            int f = flags->pharaoh.flags[i];
+            switch (i) {
+                case 0: f = flags->pharaoh.fire; break;
+                case 1: f = flags->pharaoh.population_150_reached; break;
+                case 2: f = flags->pharaoh.gamemeat_400_stored; break;
+                case 3: f = flags->pharaoh.collapse; break;
+                case 4: f = flags->pharaoh.gold_mined_500; break;
+                case 5: f = flags->pharaoh.temples_built; break;
 //            case 6: ??? crime?
-            case 7: f = flags->pharaoh.figs_800_stored; break;
-            case 8: f = flags->pharaoh.disease; break;
-            case 9: f = flags->pharaoh.pottery_made; break;
-            case 10: f = flags->pharaoh.beer_made; break;
-            case 11: f = flags->pharaoh.spacious_apartment; break;
-                //
-            case 15: f = flags->pharaoh.tut1_start; break;
-            case 16: f = flags->pharaoh.tut2_start; break;
-            case 17: f = flags->pharaoh.tut3_start; break;
-            case 18: f = flags->pharaoh.tut4_start; break;
-            case 19: f = flags->pharaoh.tut5_start; break;
-            case 20: f = flags->pharaoh.tut6_start; break;
-            case 21: f = flags->pharaoh.tut7_start; break;
-            case 22: f = flags->pharaoh.tut8_start; break;
-        }
+                case 7: f = flags->pharaoh.figs_800_stored; break;
+                case 8: f = flags->pharaoh.disease; break;
+                case 9: f = flags->pharaoh.pottery_made; break;
+                case 10: f = flags->pharaoh.beer_made; break;
+                case 11: f = flags->pharaoh.spacious_apartment; break;
+                    //
+                case 15: f = flags->pharaoh.tut1_start; break;
+                case 16: f = flags->pharaoh.tut2_start; break;
+                case 17: f = flags->pharaoh.tut3_start; break;
+                case 18: f = flags->pharaoh.tut4_start; break;
+                case 19: f = flags->pharaoh.tut5_start; break;
+                case 20: f = flags->pharaoh.tut6_start; break;
+                case 21: f = flags->pharaoh.tut7_start; break;
+                case 22: f = flags->pharaoh.tut8_start; break;
+            }
 
-        int color = COLOR_WHITE;
-        if (f)
-            color = COLOR_GREEN;
-        string_from_int(str, i, 0);
-        draw_text_shadow(str, x + 13, y + 115 + i*10, color);
-        draw_text_shadow((uint8_t*)string_from_ascii(":"), x + 13+20, y + 115 + i*10, color);
-        string_from_int(str, f, 0);
-        draw_text_shadow(str, x + 13+30, y + 115 + i*10, color);
-        draw_text_shadow((uint8_t*)string_from_ascii(flagnames[i]), x + 13+45, y + 115 + i*10, color);
+            int color = COLOR_WHITE;
+            if (f)
+                color = COLOR_GREEN;
+            string_from_int(str, i, 0);
+            text_draw_shadow(str, x + 13, y + 115 + i * 10, color);
+            text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 13 + 20, y + 115 + i * 10, color);
+            string_from_int(str, f, 0);
+            text_draw_shadow(str, x + 13 + 30, y + 115 + i * 10, color);
+            text_draw_shadow((uint8_t *) string_from_ascii(flagnames[i]), x + 13 + 45, y + 115 + i * 10, color);
+        }
     }
 }
 

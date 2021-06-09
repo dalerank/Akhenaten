@@ -108,35 +108,6 @@ bool figure::is_herd() {
     return type >= FIGURE_SHEEP && type <= FIGURE_ZEBRA;
 }
 
-int figureid_translation(int id, bool reverse = true) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return id;
-    int *table = figureid_translation_table_ph;
-    for (int i = 0; table[i] < FIGURE_MAX; i += 2) {
-        if (reverse)
-            if (table[i + 1] == id)
-                return table[i];
-            else if (table[i] == id)
-                return table[i + 1];
-    }
-    return id;
-}
-int actionid_translation(int id, bool reverse = true) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return id;
-//    if (id != 0)
-//        id += 300;
-    int *table = actionid_translation_table_ph;
-    for (int i = 0; table[i] < FIGURE_ACTION_MAX; i += 2) {
-        if (reverse)
-            if (table[i + 1] == id)
-                return table[i];
-        else if (table[i] == id)
-            return table[i + 1];
-    }
-    return id;
-}
-
 void init_figures() {
     if (!data.initialized) {
         for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -266,7 +237,7 @@ void figure::load(buffer *buf) {
     else
         f->cart_image_id = buf->read_i16();
     f->next_figure = buf->read_i16();
-    f->type = figureid_translation(buf->read_u8());
+    f->type = buf->read_u8();
     f->resource_id = buf->read_u8();
     f->use_cross_country = buf->read_u8();
     f->is_friendly = buf->read_u8();
@@ -312,8 +283,7 @@ void figure::load(buffer *buf) {
     }
     f->__unused_24 = buf->read_i16(); // 0
     f->wait_ticks = buf->read_i16(); // 0
-    f->action_state_untouched = buf->read_u8(); // 9
-    f->action_state = actionid_translation(f->action_state_untouched);
+    f->action_state = buf->read_u8(); // 9
     f->progress_on_tile = buf->read_u8(); // 11
     f->routing_path_id = buf->read_i16(); // 12
     f->routing_path_current_tile = buf->read_i16(); // 4

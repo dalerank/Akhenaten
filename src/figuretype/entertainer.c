@@ -154,7 +154,7 @@ void figure::entertainer_action() {
             anim_frame = 0;
             wait_ticks_missile = 0;
             wait_ticks--;
-            if (wait_ticks <= 0) {
+            if (wait_ticks <= 0) { // todo: summarize
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
@@ -183,7 +183,7 @@ void figure::entertainer_action() {
                         dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_HIPPODROME, 0, 0);
                         break;
                 }
-                if (dst_building_id) {
+                if (dst_building_id) { // todo: summarize
                     building *b_dst = building_get(dst_building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
@@ -213,26 +213,11 @@ void figure::entertainer_action() {
 //        case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
             do_roam();
-//            is_ghost = 0;
-//            roam_length++;
-//            if (roam_length >= max_roam_length) {
-//                int x_road, y_road;
-//                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-//                    action_state = FIGURE_ACTION_95_ENTERTAINER_RETURNING;
-//                    destination_x = x_road;
-//                    destination_y = y_road;
-//                } else
-//                    kill();
-//            }
-//            roam_ticks(speed_factor);
             break;
         case ACTION_11_RETURNING_EMPTY:
+        case ACTION_13_RETURNING_TO_VENUE:
 //        case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
             do_returnhome();
-//            move_ticks(speed_factor);
-//            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-//                kill();
-//            }
             break;
     }
     entertainer_update_image();

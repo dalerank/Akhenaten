@@ -62,7 +62,6 @@ public:
     short __unused_24;
     short wait_ticks;
     unsigned short action_state;
-    unsigned short action_state_untouched;
     unsigned char progress_on_tile;
     short routing_path_id;
     short routing_path_current_tile;

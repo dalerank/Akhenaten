@@ -602,138 +602,138 @@ void draw_debug(int x, int y, int grid_offset) {
         building *b = building_get(map_building_at(grid_offset));
         if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
             string_from_int(str, b->type, 0);
-            draw_text_shadow(str, x + 13, y, COLOR_GREEN);
+            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
 
             string_from_int(str, b->grid_offset, 0);
-            draw_text_shadow(str, x + 23, y + 15, COLOR_WHITE);
+            text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);
 
 //            string_from_int(str, map_image_at(grid_offset), 0);
-//            draw_text_shadow(str, x + 13, y - 5, COLOR_BLUE);
+//            text_draw_shadow(str, x + 13, y - 5, COLOR_BLUE);
 
 //            int p = map_bitfield_get(grid_offset);
 //            if (p & 32)
 //                p -= 32;
 //            string_from_int(str, p, 0);
-//            draw_text_shadow(str, x + 23, y + 10, COLOR_RED);
+//            text_draw_shadow(str, x + 23, y + 10, COLOR_RED);
 
 //            string_from_int(str, b->next_part_building_id, 0);
-//            draw_text_shadow(str, x + 23, y + 20, COLOR_GREEN);
+//            text_draw_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
             if (b->data.entertainment.booth_corner_grid_offset && !b->data.entertainment.ph_unk02_u8 && false) {
                 string_from_int(str, b->data.entertainment.play, 0);
-                draw_text_shadow(str, x + 40, y + 5, COLOR_WHITE);
+                text_draw_shadow(str, x + 40, y + 5, COLOR_WHITE);
 //                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
-//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+//                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
                 string_from_int(str, b->data.entertainment.days1, 0);
-                draw_text_shadow(str, x + 40, y + 15, COLOR_WHITE);
+                text_draw_shadow(str, x + 40, y + 15, COLOR_WHITE);
                 string_from_int(str, b->data.entertainment.days2, 0);
-                draw_text_shadow(str, x + 65, y + 15, COLOR_WHITE);
+                text_draw_shadow(str, x + 65, y + 15, COLOR_WHITE);
             }
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);
-                draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
+                text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
 //                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
-//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+//                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
                 string_from_int(str, b->data.industry.labor_state, 0);
-                draw_text_shadow(str, x + 40, y + 15, COLOR_GREEN);
+                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
                 string_from_int(str, b->data.industry.labor_days_left, 0);
-                draw_text_shadow(str, x + 65, y + 15, COLOR_GREEN);
+                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
             }
             if (b->figure_spawn_delay && false) {
                 string_from_int(str, b->figure_spawn_delay, 0);
-                draw_text_shadow(str, x + 40, y + 5, COLOR_GREEN);
-//                draw_text_shadow((uint8_t*)string_from_ascii("/"), x + 60, y + 5, COLOR_GREEN);
+                text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
+//                text_draw_shadow((uint8_t*)string_from_ascii("/"), x + 60, y + 5, COLOR_GREEN);
 //                string_from_int(str, b->house_figure_generation_delay, 0);
-//                draw_text_shadow(str, x + 65, y + 5, COLOR_GREEN);
+//                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
             }
         }
 
         int d = map_property_multi_tile_size(grid_offset);
         if (false) {
             string_from_int(str, d, 0);
-            draw_text_shadow(str, x+25, y+10, COLOR_GREEN);
+            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
             if (map_building_at(grid_offset) && b->grid_offset == grid_offset) {
                 string_from_int(str, b->id, 0);
-                draw_text_shadow(str, x+25, y, COLOR_WHITE);
+                text_draw_shadow(str, x + 25, y, COLOR_WHITE);
             }
         }
 //        d = map_property_multi_tile_y(grid_offset);
 //        if (true) {
 //            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 7, y+3, COLOR_RED);
+//            text_draw_shadow(str, x + 7, y+3, COLOR_RED);
 //        }
 
 //        int d = map_get_shoreorder(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
-//            draw_text_shadow(str, x + 13, y + 15, COLOR_WHITE);
+//            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //        }
         d = map_image_at(grid_offset) - 14252;
         if (d > 200 && d <= 1514 && false) {
             string_from_int(str, d, 0);
-            draw_text_shadow(str, x + 13, y, COLOR_WHITE);
+            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
         }
         d = map_moisture_get(grid_offset);
         if (d && false) {
             if (d & MOISTURE_TRANSITION) {
                 string_from_int(str, d-MOISTURE_TRANSITION, 0);
-                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
             }
 //            if (d & MOISTURE_TALLGRASS) {
 //                string_from_int(str, d-MOISTURE_TALLGRASS, 0);
-//                draw_text_shadow(str, x + 13, y + 10, COLOR_RED);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_RED);
 //            } else
                 else if (d & MOISTURE_GRASS) {
                 string_from_int(str, (d-MOISTURE_GRASS)/8, 0);
-                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
             }
 //                else if (d & MOISTURE_TRANSITION) {
 //                string_from_int(str, d-MOISTURE_TRANSITION, 0);
-//                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
 //            }
             string_from_int(str, tile_data, 0);
-            draw_text_shadow(str, x + 13, y, COLOR_WHITE);
+            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
 
 //            int m = (d+1)/8;
 //            string_from_int(str, m, 0);
 //            if ((d+1)%8 == 0)
-//                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
 //            else
-//                draw_text_shadow(str, x + 13, y + 10, COLOR_RED);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_RED);
         }
         d = map_grasslevel_get(grid_offset);
         if (d && false) {
             if (d >= 16) {
                 string_from_int(str, d, 0);
-                draw_text_shadow(str, x + 13, y + 10, COLOR_BLUE);
+                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
             } else {
                 string_from_int(str, d, 0);
-                draw_text_shadow(str, x + 13, y + 10, COLOR_GREEN);
+                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
             }
         }
 
         d = map_terrain_get(grid_offset);
         if (d & TERRAIN_ROAD && false) {
-            draw_text_shadow((uint8_t*)string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
+            text_draw_shadow((uint8_t *) string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
         }
 
 
 //        string_from_int(str, flag_data, 0);
-//        draw_text_shadow(str, x + 15, y + 5, COLOR_WHITE);
+//        text_draw_shadow(str, x + 15, y + 5, COLOR_WHITE);
 
 //        string_from_int(str, map_moisture_get(grid_offset), 0);
 
 //        string_from_int(str, flag_data, 0);
 //        string_from_int(str, tile_data, 0);
 //        string_from_int(str, grid_offset, 0);
-//        draw_text_shadow(str, x + 15, y + 15, COLOR_GREEN);
+//        text_draw_shadow(str, x + 15, y + 15, COLOR_GREEN);
 //    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
     }
 
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-//        f->draw_debug();
+        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else

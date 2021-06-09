@@ -28,6 +28,11 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 #include "building/properties.h"
 #include "figure/route.h"
 
+//void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color = COLOR_WHITE) {
+//    text_draw_shadow((uint8_t*)string_from_ascii(text), x, y, COLOR_WHITE);
+//    string_from_int(str, value, 0); text_draw_shadow(str, x + indent, y, COLOR_WHITE);
+//}
+
 void figure::draw_debug() {
 
 //    if (id == 6)
@@ -53,35 +58,22 @@ void figure::draw_debug() {
 
     coords.y -= 80;
 
-    // id
-    string_from_int(str, id, 0);
-    draw_text_shadow(str, coords.x, coords.y, COLOR_WHITE);
-
-    // type
-    string_from_int(str, type, 0);
-    draw_text_shadow(str, coords.x, coords.y+10, COLOR_BLUE);
-
-    // action state
-    string_from_int(str, action_state, 0);
-    draw_text_shadow(str, coords.x, coords.y+20, COLOR_RED);
-
-    // wait_ticks
-    string_from_int(str, wait_ticks, 0);
-    draw_text_shadow(str, coords.x, coords.y+30, COLOR_WHITE);
-
-    // roam_length
-    string_from_int(str, roam_length, 0);
-    draw_text_shadow(str, coords.x, coords.y+40, COLOR_WHITE);
+    int indent = 18;
+    draw_debug_line(str, coords.x, coords.y, indent, "ID", id, COLOR_WHITE);
+    draw_debug_line(str, coords.x, coords.y + 10, indent, "T", type, COLOR_BLUE);
+    draw_debug_line(str, coords.x, coords.y + 20, indent, "A", action_state, COLOR_RED);
+    draw_debug_line(str, coords.x, coords.y + 30, indent, "W", wait_ticks, COLOR_WHITE);
+    draw_debug_line(str, coords.x, coords.y + 40, indent, "R", roam_length, COLOR_WHITE);
 
     if (resource_id) {
         string_from_int(str, resource_id, 0);
-        draw_text_shadow(str, coords.x+25, coords.y+10, COLOR_GREEN);
+        text_draw_shadow(str, coords.x + 25, coords.y + 10, COLOR_GREEN);
         string_from_int(str, loads_counter, 0);
-        draw_text_shadow(str, coords.x+25, coords.y+20, COLOR_GREEN);
+        text_draw_shadow(str, coords.x + 25, coords.y + 20, COLOR_GREEN);
     }
 //    else {
-//        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+10, COLOR_GREEN);
-//        draw_text_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
+//        text_draw_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+10, COLOR_GREEN);
+//        text_draw_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
 //    }
 
 //    coords = city_view_grid_offset_to_pixel(destination_x, destination_y);

@@ -15,8 +15,8 @@ unsigned int
 text_get_max_length_for_width(const uint8_t *str, int length, font_t font, unsigned int requested_width, int invert);
 void text_ellipsize(uint8_t *str, font_t font, int requested_width);
 
-void draw_text_shadow(uint8_t *str, int _x, int _y, color_t color);
-void draw_text_shadow_left(uint8_t *str, int _x, int _y, color_t color);
+void text_draw_shadow(uint8_t *str, int _x, int _y, color_t color);
+void text_draw_shadow_left(uint8_t *str, int _x, int _y, color_t color);
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color);
 
@@ -42,5 +42,9 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
  * @return Number of lines required to draw the text
  */
 int text_measure_multiline(const uint8_t *str, int box_width, font_t font);
+
+void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color = COLOR_WHITE);
+void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color = COLOR_WHITE);
+
 
 #endif // GRAPHICS_TEXT_H

@@ -32,7 +32,7 @@ typedef struct {
     int base_image_group;
 } figure_action_property;
 
-static figure_action_property action_lookup[] = {
+static figure_action_property action_properties_lookup[] = {
         {0, 0,                     0,      0},  //FIGURE_NONE = 0,
         {1, TERRAIN_USAGE_ANIMAL,     0,      GROUP_FIGURE_MIGRANT},  //FIGURE_IMMIGRANT = 1,
         {1, TERRAIN_USAGE_ANIMAL,     0,      GROUP_FIGURE_HOMELESS},  //FIGURE_EMIGRANT = 2,
@@ -295,12 +295,12 @@ void figure::action_perform() {
         is_ghost = 0;
 
         // base lookup data
-        auto action_props = action_lookup[type];
-        if (action_props.terrain_usage != -1)
-            terrain_usage = action_props.terrain_usage;
-        max_roam_length = action_props.max_roam_length;
-        speed_multiplier = action_props.speed_mult;
-        image_set_animation(action_props.base_image_group);
+        auto action_properties = action_properties_lookup[type];
+        if (action_properties.terrain_usage != -1)
+            terrain_usage = action_properties.terrain_usage;
+        max_roam_length = action_properties.max_roam_length;
+        speed_multiplier = action_properties.speed_mult;
+        image_set_animation(action_properties.base_image_group);
 
         // check for building being alive (at the start of the action)
         building *b = building_get(building_id);
@@ -359,7 +359,6 @@ void figure::action_perform() {
                 break;
         }
 
-        //////////////// roamer_action()
         // common action states handling
         switch (action_state) {
             case FIGURE_ACTION_150_ATTACK:
@@ -379,7 +378,6 @@ void figure::action_perform() {
                 do_returnhome();
                 break;
         }
-
 
         ////////////
 
@@ -478,7 +476,6 @@ void figure::action_perform() {
             return figure_delete();
 
         // advance sprite offset
-//        if (state != FIGURE_STATE_NONE)
         figure_image_update();
     }
 }

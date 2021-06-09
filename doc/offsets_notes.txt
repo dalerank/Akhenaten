@@ -451,7 +451,12 @@ tick 19: flood goes away!
 1672
 36136 -> 37808
 
+=====================
+(crashes)
+19958 15543
 
+0007b = ??????????????
+0007c = figure action callback out of bounds
 
 
 
