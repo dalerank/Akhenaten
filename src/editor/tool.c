@@ -304,9 +304,8 @@ static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int 
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(data.id, tile->x, tile->y);
-    else {
+    else
         city_warning_show(warning);
-    }
 }
 
 static void place_building(const map_tile *tile) {
@@ -337,9 +336,8 @@ static void place_building(const map_tile *tile) {
         building *b = building_create(type, tile->x, tile->y);
         map_building_tiles_add(b->id, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
-    } else {
+    } else
         city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
-    }
 }
 
 static void update_terrain_after_elevation_changes(void) {

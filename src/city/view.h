@@ -3,13 +3,13 @@
 
 #include "core/buffer.h"
 
-int VIEW_X_MAX();
-int VIEW_Y_MAX();
+int MAP_TILE_UPPER_LIMIT_X();
+int MAP_TILE_UPPER_LIMIT_Y();
 
-int SCROLLABLE_X_MIN();
-int SCROLLABLE_Y_MIN();
-int SCROLLABLE_X_MAX();
-int SCROLLABLE_Y_MAX();
+int SCROLLABLE_X_MIN_TILE();
+int SCROLLABLE_Y_MIN_TILE();
+int SCROLLABLE_X_MAX_TILE();
+int SCROLLABLE_Y_MAX_TILE();
 
 typedef struct {
     int x;
@@ -23,8 +23,9 @@ typedef struct {
     int orientation;
     int scale;
     struct {
-        view_tile tile;
-        pixel_coordinate pixel;
+        view_tile tile_internal;
+        pixel_coordinate pixel_offset_internal;
+        pixel_coordinate position;
     } camera;
     struct {
         int x;
@@ -34,10 +35,7 @@ typedef struct {
         int width_tiles;
         int height_tiles;
     } viewport;
-    struct {
-        int x_pixels;
-        int y_pixels;
-    } selected_tile;
+    pixel_coordinate selected_tile;
 } view_data;
 
 typedef void (map_callback)(int x, int y, int grid_offset);
@@ -52,27 +50,31 @@ void city_view_reset_orientation(void);
 int city_view_get_scale(void);
 void city_view_set_scale(int scale);
 
-void city_view_get_camera(int *x, int *y);
-void city_view_get_pixel_offset(int *x, int *y);
-void city_view_get_camera_in_pixels(int *x, int *y);
+void city_view_get_camera_tile(int *tile_x, int *tile_y);
+void city_view_get_camera_pixel_offset(int *offset_x, int *offset_y);
+void city_view_get_camera_position(int *x, int *y);
 void city_view_get_camera_max_tile(int *x, int *y);
 void city_view_get_camera_max_pixel_offset(int *x, int *y);
+void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y);
+void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y);
 
-void city_view_set_camera(int x, int y);
-void city_view_set_camera_from_pixel_position(int x, int y);
+void city_view_go_to_tile(int tile_x, int tile_y);
 void city_view_scroll(int x, int y);
+void city_view_go_to_position(int x, int y);
+void city_view_go_to_grid_offset(int grid_offset);
 
 pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset);
 pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y);
 
+
+
 int city_view_to_grid_offset(int x_view, int y_view);
 void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
-void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels);
-int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile);
-void city_view_set_selected_view_tile(const view_tile *tile);
-
+int city_view_pixels_to_view_tile(int x, int y, view_tile *tile);
 int city_view_tile_to_grid_offset(const view_tile *tile);
-void city_view_go_to_grid_offset(int grid_offset);
+
+void city_view_get_selected_tile_pixels(int *x, int *y);
+void city_view_set_selected_view_tile(const view_tile *tile);
 
 void city_view_rotate_left(void);
 void city_view_rotate_right(void);

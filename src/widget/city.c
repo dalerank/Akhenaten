@@ -53,10 +53,10 @@ static void set_city_unscaled_clip_rectangle(void) {
 static void update_zoom_level(void) {
     int zoom = city_view_get_scale();
     pixel_coordinate offset;
-    city_view_get_camera_in_pixels(&offset.x, &offset.y);
+    city_view_get_camera_position(&offset.x, &offset.y);
     if (zoom_update_value(&zoom, &offset)) {
         city_view_set_scale(zoom);
-        city_view_set_camera_from_pixel_position(offset.x, offset.y);
+        city_view_go_to_position(offset.x, offset.y);
         sound_city_decay_views();
     }
 }
@@ -74,9 +74,8 @@ static void update_city_view_coords(int x, int y, map_tile *tile) {
         city_view_set_selected_view_tile(&view);
         tile->x = map_grid_offset_to_x(tile->grid_offset);
         tile->y = map_grid_offset_to_y(tile->grid_offset);
-    } else {
+    } else
         tile->grid_offset = tile->x = tile->y = 0;
-    }
 }
 static int input_coords_in_city(int x, int y) {
     int x_offset, y_offset, width, height;

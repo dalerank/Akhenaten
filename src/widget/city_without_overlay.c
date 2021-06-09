@@ -2,6 +2,7 @@
 #include <building/industry.h>
 #include <window/city.h>
 #include <game/tutorial.h>
+#include <graphics/graphics.h>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -483,11 +484,12 @@ static void draw_farm_crops(building *b, int x, int y) {
 }
 
 static void draw_footprint(int x, int y, int grid_offset) {
-    building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
-        // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
-    } else if (map_property_is_draw_tile(grid_offset)) {
+        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+        return;
+    }
+    building_construction_record_view_position(x, y, grid_offset);
+    if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
         color_t color_mask = 0;
@@ -528,6 +530,14 @@ static void draw_footprint(int x, int y, int grid_offset) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+    }
+}
+static void draw_outside_map(int x, int y, int grid_offset) {
+    if (grid_offset < 0) {
+//        if (grid_offset == -2)
+//            image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_GRASS_PH), x, y, COLOR_GREEN);
+//        else
+            image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
     }
 }
 static void draw_top(int x, int y, int grid_offset) {
@@ -989,6 +999,13 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             highlighted_formation = 0;
     }
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
+
+//    city_view_foreach_map_tile(draw_outside_map);
+//    int x;
+//    int y;
+//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
+//    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
+
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
     if (!should_mark_deleting) {

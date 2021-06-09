@@ -221,9 +221,11 @@ static void draw_debug_ui(int x, int y) {
 
     int tx, ty;
     int px, py;
-    city_view_get_camera(&tx, &ty);
-    city_view_get_pixel_offset(&px, &py);
+    city_view_get_camera_tile(&tx, &ty);
+    city_view_get_camera_pixel_offset(&px, &py);
 
+
+    view_data* viewdata = city_view_data_unsafe();
     int real_max_x;
     int real_max_y;
     city_view_get_camera_max_tile(&real_max_x, &real_max_y);
@@ -232,18 +234,18 @@ static void draw_debug_ui(int x, int y) {
     int max_y_pixel_offset;
     city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
-    draw_debug_line_double_left(str, x, y + 105, 90, 40, "---min:", SCROLLABLE_X_MIN(), SCROLLABLE_Y_MIN());
-    draw_debug_line_double_left(str, x, y + 115, 90, 40, "camera:", tx, ty);
-    draw_debug_line_double_left(str, x, y + 125, 90, 40, "---max:", real_max_x, real_max_y);
+    draw_debug_line_double_left(str, x, y + 105, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
 
-    draw_debug_line_double_left(str, x, y + 145, 90, 40, "---min:", 0, 0);
-    draw_debug_line_double_left(str, x, y + 155, 90, 40, "pixel:", px, py);
-    draw_debug_line_double_left(str, x, y + 165, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
+    draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
+    draw_debug_line_double_left(str, x, y + 135, 90, 40, "tile:", tx, ty);
+    draw_debug_line_double_left(str, x, y + 145, 90, 40, "---max:", real_max_x, real_max_y);
 
-    view_data* viewdata = city_view_data_unsafe();
+    draw_debug_line_double_left(str, x, y + 165, 90, 40, "---min:", 0, 0);
+    draw_debug_line_double_left(str, x, y + 175, 90, 40, "pixel:", px, py);
+    draw_debug_line_double_left(str, x, y + 185, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-    draw_debug_line_double_left(str, x, y + 185, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
-    draw_debug_line_double_left(str, x, y + 195, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
+    draw_debug_line_double_left(str, x, y + 205, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
+    draw_debug_line_double_left(str, x, y + 215, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
 
     ///////
     return;
