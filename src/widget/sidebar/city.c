@@ -86,29 +86,18 @@ static image_button buttons_build_collapsed[][20] = {
                 {2, 417, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
         },
         {
-                {9, CL_ROW0, 36, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {9, CL_ROW0 +
-                    36, 36, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-                {9, CL_ROW0 +
-                    71, 36, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
-                {9, CL_ROW0 +
-                    108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_WATER, 0, 1},
-                {9, CL_ROW0 +
-                    142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-                {9, CL_ROW0 +
-                    177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
-                {9, CL_ROW0 +
-                    212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
-                {9, CL_ROW0 +
-                    245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-                {9, CL_ROW0 +
-                    281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-                {9, CL_ROW0 +
-                    317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILD_MENU_ENGINEERING, 0, 1},
-                {9, CL_ROW0 +
-                    353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
-                {9, CL_ROW0 +
-                    385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+                {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
+                {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
+                {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
+                {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
+                {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+                {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
+                {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+                {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
+                {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
+                {9, CL_ROW0 + 317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
+                {9, CL_ROW0 + 353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
+                {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
         }
 };
 
@@ -141,9 +130,9 @@ static image_button buttons_build_expanded[][20] = {
                 {113, 421,   39, 26, IB_BUILD, GROUP_MESSAGE_ICON,    22, button_go_to_problem, button_none, 0, 0, 1},
         },
         {
-                {COL1, ROW1, 34, 48, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {COL1, ROW2, 34, 50, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_ROAD,       0, 1},
-                {COL1, ROW3, 34, 49, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 8,  button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
+                {COL1, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
+                {COL1, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_ROAD,       0, 1},
+                {COL1, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 8,  button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
 
                 {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_FOOD,  0, 1},
                 {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
@@ -157,8 +146,8 @@ static image_button buttons_build_expanded[][20] = {
                 {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
                 {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 
-                {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-                {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
+                {COL1, ROW4, 35, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
+                {COL2, ROW4, 38, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
                 {COL3, ROW4, 28, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
 //        {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
         }
@@ -472,6 +461,11 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse *m) {
 }
 int widget_sidebar_city_get_tooltip_text(void) {
     return data.focus_button_for_tooltip;
+}
+
+void widget_sidebar_city_release_build_buttons() {
+    image_buttons_release_press(buttons_build_expanded[GAME_ENV], 20);
+    image_buttons_release_press(buttons_build_collapsed[GAME_ENV], 20);
 }
 
 static void slide_finished(void) {

@@ -204,6 +204,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         return;
     if (input_go_back_requested(m, h)) {
         window_city_show();
+        widget_sidebar_city_release_build_buttons();
         return;
     }
 }
@@ -228,9 +229,8 @@ static void button_menu_item(int item) {
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
         building_construction_clear_type();
         window_invalidate();
-    } else {
+    } else
         window_city_show();
-    }
 }
 
 int window_build_menu_image(void) {

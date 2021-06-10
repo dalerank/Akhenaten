@@ -44,6 +44,10 @@ typedef struct tutorial_flags {
         bool papyrus_made;
         bool bricks_bought;
 
+
+
+        bool tut5_can_trade_finally;
+
         //
         bool tut1_start;
         bool tut2_start;
@@ -61,7 +65,8 @@ tutorial_flags *give_me_da_tut_flags();
 
 void tutorial_init(void);
 
-tutorial_availability tutorial_advisor_empire_availability(void);
+tutorial_availability tutorial_advisor_availability(void);
+tutorial_availability tutorial_empire_availability(void);
 
 void tutorial_menu_update(int tut);
 

@@ -29,7 +29,6 @@ static void remove_pressed_effect_build(image_button *buttons, int num_buttons) 
         image_button *btn = &buttons[i];
         if (btn->pressed && btn->button_type == IB_BUILD)
             btn->pressed = 0;
-
     }
 }
 
@@ -58,10 +57,9 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons) {
     }
 }
 
-int
-image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id) {
+int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id) {
     fade_pressed_effect(buttons, num_buttons);
-    remove_pressed_effect_build(buttons, num_buttons);
+//    remove_pressed_effect_build(buttons, num_buttons);
     image_button *hit_button = 0;
     if (focus_button_id)
         *focus_button_id = 0;
@@ -98,10 +96,12 @@ image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, 
     }
     if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);
+        remove_pressed_effect_build(buttons, num_buttons);
         hit_button->pressed = 1;
         hit_button->pressed_since = time_get_millis();
         hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (m->right.went_up) {
+        remove_pressed_effect_build(buttons, num_buttons);
         hit_button->pressed = 1;
         hit_button->pressed_since = time_get_millis();
         hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
@@ -114,4 +114,7 @@ image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, 
         }
     }
     return 1;
+}
+void image_buttons_release_press(image_button *buttons, int num_buttons) {
+    remove_pressed_effect_build(buttons, num_buttons);
 }

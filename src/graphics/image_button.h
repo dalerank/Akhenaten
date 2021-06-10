@@ -33,7 +33,7 @@ typedef struct {
 
 void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons);
 
-int
-image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id);
+int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id);
+void image_buttons_release_press(image_button *buttons, int num_buttons);
 
 #endif // GRAPHICS_IMAGE_BUTTON_H

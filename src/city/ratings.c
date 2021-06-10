@@ -481,7 +481,7 @@ static void update_favor_rating(int is_yearly_update) {
         city_data.ratings.favor_salary_penalty = 0;
         city_data.ratings.favor_milestone_penalty = 0;
         city_data.ratings.favor_ignored_request_penalty = 0;
-        if (!scenario_is_tutorial_1() && !scenario_is_tutorial_2())
+        if (!scenario_is_tutorial(1) && !scenario_is_tutorial(2))
             city_data.ratings.favor -= 2;
 
         // tribute penalty

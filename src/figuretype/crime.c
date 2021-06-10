@@ -120,7 +120,7 @@ void figure_generate_criminals(void) {
         }
     }
     if (min_building) {
-        if (scenario_is_tutorial_1() || scenario_is_tutorial_2())
+        if (scenario_is_tutorial(1) || scenario_is_tutorial(2))
             return;
         int sentiment = city_sentiment();
         if (sentiment < 30) {

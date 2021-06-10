@@ -176,7 +176,7 @@ static void show_intermezzo(void) {
 
 void window_mission_end_show_won(void) {
     mouse_reset_up_state();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH || scenario_is_tutorial(1) || scenario_is_tutorial(2)) {
         // tutorials: immediately go to next mission
         show_intermezzo();
     } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {

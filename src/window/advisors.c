@@ -1,3 +1,4 @@
+#include <scenario/property.h>
 #include "advisors.h"
 
 #include "city/constants.h"
@@ -34,15 +35,17 @@
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
 #include "window/advisor/housing.h"
+#include "window/advisor/monuments.h"
 
 static void button_change_advisor(int advisor, int param2);
+static void button_back_to_city(int param1, int param2);
 static void button_help(int param1, int param2);
 
 static image_button help_button = {
         11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
 };
 
-static generic_button advisor_buttons[] = {
+static generic_button advisor_buttons_C3[] = {
         {12,  1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR,         0},
         {60,  1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY,      0},
         {108, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL,      0},
@@ -56,6 +59,22 @@ static generic_button advisor_buttons[] = {
         {492, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL,     0},
         {540, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF,         0},
         {588, 1, 40, 40, button_change_advisor, button_none, 0,                     0},
+};
+static image_button advisor_buttons_PH[] = {
+        {12,  1, 33, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 0,  button_change_advisor, button_none, ADVISOR_LABOR,         0},
+        {52,  1, 39, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 4,  button_change_advisor, button_none, ADVISOR_MILITARY,      0},
+        {96,  1, 34, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 8,  button_change_advisor, button_none, ADVISOR_IMPERIAL,      0},
+        {135, 1, 38, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 12, button_change_advisor, button_none, ADVISOR_RATINGS,       0},
+        {178, 1, 46, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 16, button_change_advisor, button_none, ADVISOR_TRADE,         0},
+        {229, 1, 48, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 20, button_change_advisor, button_none, ADVISOR_POPULATION,    0},
+        {282, 1, 35, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 24, button_change_advisor, button_none, ADVISOR_HEALTH,        0},
+        {322, 1, 38, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 28, button_change_advisor, button_none, ADVISOR_EDUCATION,     0},
+        {363, 1, 39, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 32, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
+        {406, 1, 35, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 36, button_change_advisor, button_none, ADVISOR_RELIGION,      0},
+        {445, 1, 40, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL,     0},
+        {490, 1, 46, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 44, button_change_advisor, button_none, ADVISOR_CHIEF,         0},
+        {542, 1, 40, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 48, button_change_advisor, button_none, ADVISOR_MONUMENTS,     0},
+        {588, 1, 42, 32, IB_NORMAL, GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city,   button_none, 0,                     0},
 };
 
 static const advisor_window_type *(*sub_advisors[])(void) = {
@@ -72,7 +91,7 @@ static const advisor_window_type *(*sub_advisors[])(void) = {
         window_advisor_religion,
         window_advisor_financial,
         window_advisor_chief,
-        0,
+        window_advisor_monuments,
         // sub-advisors begin here
         0,
         0,
@@ -114,15 +133,33 @@ static int advisor_height;
 static void set_advisor_window(void) {
     if (sub_advisors[current_advisor])
         current_advisor_window = sub_advisors[current_advisor]();
-    else {
+    else
         current_advisor_window = 0;
-    }
 }
-
 static void set_advisor(int advisor) {
     current_advisor = advisor;
     setting_set_last_advisor(advisor);
     set_advisor_window();
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        advisor_buttons_PH[advisor - 1].pressed = 1;
+}
+
+static int is_advisor_available(int advisor_id) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (advisor_id == 13)
+            return 1;
+        if (advisor_id < 0 || advisor_id > 12)
+            return 0;
+        if (scenario_is_tutorial(2))
+            return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
+        else if (scenario_is_tutorial(3))
+            return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
+        else if (scenario_is_tutorial(4))
+            return ((bool[13]){1,0,1,0,0,1,1,0,1,1,0,0,0})[advisor_id];
+        else if (scenario_is_tutorial(5))
+            return ((bool[13]){1,0,1,1,0,1,1,0,1,1,1,1,0})[advisor_id];
+    }
+    return 1;
 }
 
 static void init(void) {
@@ -145,19 +182,43 @@ static void init(void) {
     city_ratings_update_explanations();
 
     set_advisor_window();
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        for (int i = 0; i < 13; i++)
+            advisor_buttons_PH[i].enabled = is_advisor_available(i);
+        advisor_buttons_PH[13].enabled = 1;
+    }
 }
+
 
 void window_advisors_draw_dialog_background(void) {
     image_draw_fullscreen_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
-    image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
+    if (GAME_ENV == ENGINE_ENV_C3)
+        image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        image_draw(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
 
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 14; i++) {
         int selected_offset = 0;
-        if (current_advisor && i == (current_advisor % 13) - 1)
-            selected_offset = 13;
-
-        image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            if (i == 13)
+                break;
+            if (current_advisor && i == (current_advisor % 13) - 1)
+                selected_offset = 13;
+            image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
+        }
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            image_buttons_draw(0, 440, advisor_buttons_PH, 14);
+//            if (focus_button_id - 1 == i)
+//                selected_offset = 1;
+//            if (current_advisor - 1 == i)
+//                selected_offset = 2;
+//            if (!is_advisor_available(i))
+//                selected_offset = 3;
+//            int image_id = image_id_from_group(GROUP_MENU_ADVISOR_BUTTONS) + (i * 4) + selected_offset;
+//            image_draw(image_id, advisor_buttons_PH[i].x, 441);
+        }
     }
     graphics_reset_dialog();
 }
@@ -168,7 +229,6 @@ static void draw_background(void) {
     advisor_height = current_advisor_window->draw_background();
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void) {
     graphics_in_dialog();
     image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
@@ -190,12 +250,16 @@ static void handle_hotkeys(const hotkeys *h) {
         }
     }
 }
-
 static void handle_input(const mouse *m, const hotkeys *h) {
     handle_hotkeys(h);
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id))
+    int old_focus_button_id = focus_button_id;
+    if (GAME_ENV == ENGINE_ENV_C3 && generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons_C3, 13, &focus_button_id))
         return;
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH && image_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons_PH, 14, &focus_button_id))
+        return;
+//    if (focus_button_id != old_focus_button_id)
+//        window_request_refresh();
     int button_id;
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id)
@@ -207,6 +271,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         window_city_show();
         return;
     }
+    window_request_refresh();
 }
 
 static void button_change_advisor(int advisor, int param2) {
@@ -217,7 +282,9 @@ static void button_change_advisor(int advisor, int param2) {
         window_city_show();
     }
 }
-
+static void button_back_to_city(int param1, int param2) {
+    window_city_show();
+}
 static void button_help(int param1, int param2) {
     if (current_advisor > 0)
         window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
@@ -230,7 +297,13 @@ static void get_tooltip(tooltip_context *c) {
         if (focus_button_id == -1)
             c->text_id = 1; // help button
         else {
-            c->text_id = 69 + focus_button_id;
+            if (GAME_ENV == ENGINE_ENV_C3)
+                c->text_id = 69 + focus_button_id;
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                c->text_id = 70 + focus_button_id;
+                if (!is_advisor_available(focus_button_id - 1))
+                    c->type = TOOLTIP_NONE;
+            }
         }
         return;
     }
@@ -247,7 +320,6 @@ static void get_tooltip(tooltip_context *c) {
 int window_advisors_get_advisor(void) {
     return current_advisor;
 }
-
 void window_advisors_show(void) {
     window_type window = {
             WINDOW_ADVISORS,
@@ -259,19 +331,16 @@ void window_advisors_show(void) {
     init();
     window_show(&window);
 }
-
 void window_advisors_show_checked(void) {
-    tutorial_availability avail = tutorial_advisor_empire_availability();
+    tutorial_availability avail = tutorial_advisor_availability();
     if (avail == AVAILABLE) {
         set_advisor(setting_last_advisor());
         window_advisors_show();
-    } else {
+    } else
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
-    }
 }
-
 int window_advisors_show_advisor(int advisor) {
-    tutorial_availability avail = tutorial_advisor_empire_availability();
+    tutorial_availability avail = tutorial_advisor_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return 0;

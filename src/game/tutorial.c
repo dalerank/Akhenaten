@@ -122,13 +122,38 @@ void tutorial_init(void) {
     }
 }
 
-tutorial_availability tutorial_advisor_empire_availability(void) {
-    if (scenario_is_tutorial_1())
-        return NOT_AVAILABLE;
-    else if (scenario_is_tutorial_2() && !data.tutorial2.population_250_reached)
-        return NOT_AVAILABLE_YET;
-    else {
-        return AVAILABLE;
+tutorial_availability tutorial_advisor_availability(void) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (scenario_is_tutorial(1))
+            return NOT_AVAILABLE;
+        else if (scenario_is_tutorial(2) && !data.tutorial2.population_250_reached)
+            return NOT_AVAILABLE_YET;
+        else
+            return AVAILABLE;
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (scenario_is_tutorial(1))
+            return NOT_AVAILABLE;
+        else
+            return AVAILABLE;
+    }
+}
+tutorial_availability tutorial_empire_availability(void) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        if (scenario_is_tutorial(1))
+            return NOT_AVAILABLE;
+        else if (scenario_is_tutorial(2) && !data.tutorial2.population_250_reached)
+            return NOT_AVAILABLE_YET;
+        else
+            return AVAILABLE;
+    }
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (scenario_is_tutorial_before_mission_5())
+            return NOT_AVAILABLE;
+        else if (!data.pharaoh.tut5_can_trade_finally)
+            return NOT_AVAILABLE_YET;
+        else
+            return AVAILABLE;
     }
 }
 
@@ -198,13 +223,13 @@ void tutorial_menu_update(int tut) {
 
 int tutorial_get_population_cap(int current_cap) {
     return current_cap; //temp
-    if (scenario_is_tutorial_1()) {
+    if (scenario_is_tutorial(1)) {
         if (!data.tutorial1.fire ||
             !data.tutorial1.collapse ||
             !data.tutorial1.senate_built) {
             return 80;
         }
-    } else if (scenario_is_tutorial_2()) {
+    } else if (scenario_is_tutorial(2)) {
         if (!data.tutorial2.granary_built)
             return 150;
         else if (!data.tutorial2.pottery_made)
@@ -276,7 +301,7 @@ int tutorial_get_immediate_goal_text(void) {
     }
 }
 int tutorial_adjust_request_year(int *year) {
-    if (scenario_is_tutorial_2()) {
+    if (scenario_is_tutorial(2)) {
         if (!data.tutorial2.pottery_made)
             return 0;
 
@@ -286,12 +311,12 @@ int tutorial_adjust_request_year(int *year) {
 }
 int tutorial_extra_fire_risk(void) {
     return !data.tutorial1.fire &&
-        scenario_is_tutorial_1(); // Fix for extra fire risk in late tutorials
+        scenario_is_tutorial(1); // Fix for extra fire risk in late tutorials
 }
 int tutorial_extra_damage_risk(void) {
     return data.tutorial1.fire &&
         !data.tutorial1.collapse &&
-        scenario_is_tutorial_1(); // Fix for extra damage risk in late tutorials
+        scenario_is_tutorial(1); // Fix for extra damage risk in late tutorials
 }
 int tutorial_handle_fire(void) {
     if (data.tutorial1.fire || data.pharaoh.fire)
@@ -483,7 +508,7 @@ void tutorial_on_day_tick(void) {
     }
 }
 void tutorial_on_month_tick(void) {
-    if (scenario_is_tutorial_3()) {
+    if (scenario_is_tutorial(3)) {
         if (game_time_month() == 5)
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
                                                  1200);

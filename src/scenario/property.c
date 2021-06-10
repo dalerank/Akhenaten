@@ -30,14 +30,8 @@ bool scenario_is_tutorial(int rank) {
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         return !scenario.settings.is_custom && scenario_ph_mission_selector() == rank;
 }
-int scenario_is_tutorial_1(void) {
-    return scenario_is_tutorial(1);
-}
-int scenario_is_tutorial_2(void) {
-    return scenario_is_tutorial(2);
-}
-int scenario_is_tutorial_3(void) {
-    return scenario_is_tutorial(3);
+int scenario_is_tutorial_before_mission_5(void) {
+    return !scenario.settings.is_custom && scenario_ph_mission_selector() < 5;
 }
 
 int scenario_starting_favor(void) {

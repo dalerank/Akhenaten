@@ -817,7 +817,7 @@ void window_empire_show(void) {
     window_show(&window);
 }
 void window_empire_show_checked(void) {
-    tutorial_availability avail = tutorial_advisor_empire_availability();
+    tutorial_availability avail = tutorial_empire_availability();
     if (avail == AVAILABLE)
         window_empire_show();
     else {

@@ -1,3 +1,4 @@
+#include <widget/sidebar/city.h>
 #include "construction.h"
 
 #include "building/construction_building.h"
@@ -1409,6 +1410,7 @@ void building_construction_cancel(void) {
         data.in_progress = 0;
     } else {
         building_construction_set_type(BUILDING_NONE);
+        widget_sidebar_city_release_build_buttons();
     }
     building_rotation_reset_rotation();
 }

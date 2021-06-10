@@ -302,7 +302,7 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     scenario_set_campaign_mission(mission);
     scenario_set_campaign_rank(rank);
 
-    if (scenario_is_tutorial_1())
+    if (scenario_is_tutorial(1))
         setting_set_personal_savings_for_mission(0, 0);
 
     scenario_settings_init_mission();
