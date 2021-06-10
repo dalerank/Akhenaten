@@ -79,6 +79,7 @@ static int init(int submenu) {
 //    int type = building_menu_type(data.selected_submenu, item);
 //    building_construction_set_type(type);
 
+    building_construction_set_type(BUILDING_NONE);
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
@@ -210,9 +211,8 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 }
 static int button_index_to_submenu_item(int index) {
     int item = -1;
-    for (int i = 0; i <= index; i++) {
+    for (int i = 0; i <= index; i++)
         item = building_menu_next_index(data.selected_submenu, item);
-    }
     return item;
 }
 static void button_menu_index(int param1, int param2) {

@@ -127,7 +127,7 @@ static image_button buttons_build_expanded[][20] = {
                 {113, 385,   39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
                 {13, 421,    39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
                 {63, 421,    39, 26, IB_NORMAL, GROUP_MESSAGE_ICON,    18, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-                {113, 421,   39, 26, IB_BUILD, GROUP_MESSAGE_ICON,    22, button_go_to_problem, button_none, 0, 0, 1},
+                {113, 421,   39, 26, IB_NORMAL, GROUP_MESSAGE_ICON,    22, button_go_to_problem, button_none, 0, 0, 1},
         },
         {
                 {COL1, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
@@ -146,9 +146,9 @@ static image_button buttons_build_expanded[][20] = {
                 {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
                 {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 
-                {COL1, ROW4, 35, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-                {COL2, ROW4, 38, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-                {COL3, ROW4, 28, 45, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
+                {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
+                {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
+                {COL3, ROW4, 28, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
 //        {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
         }
 };

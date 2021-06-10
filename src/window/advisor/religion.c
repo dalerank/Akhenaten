@@ -3,11 +3,22 @@
 #include "building/count.h"
 #include "city/gods.h"
 #include "city/houses.h"
+#include "city/festival.h"
 #include "game/settings.h"
+#include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "window/hold_festival.h"
+
+static void button_hold_festival(int param1, int param2);
+
+static generic_button hold_festival_button[] = {
+        {102, 280 + 68, 300, 20, button_hold_festival, button_none, 0, 0},
+};
+
+static int focus_button_id;
 
 static int get_religion_advice(void) {
     int least_happy = city_god_least_happy();
@@ -28,7 +39,38 @@ static int get_religion_advice(void) {
         return 5;
     }
 }
+static int get_festival_advice(void) {
+    int months_since_festival = city_festival_months_since_last();
+    if (months_since_festival <= 1)
+        return 0;
+    else if (months_since_festival <= 6)
+        return 1;
+    else if (months_since_festival <= 12)
+        return 2;
+    else if (months_since_festival <= 18)
+        return 3;
+    else if (months_since_festival <= 24)
+        return 4;
+    else if (months_since_festival <= 30)
+        return 5;
+    else {
+        return 6;
+    }
+}
 
+static void draw_festival_info(int y_offset) {
+    inner_panel_draw(48, 252 + y_offset, 34, 6);
+    image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
+//    lang_text_draw(58, 17, 52, 224 + y_offset, FONT_LARGE_BLACK);
+
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE);
+    lang_text_draw(58, 15, 112 + width, 260 + y_offset, FONT_NORMAL_WHITE);
+    if (city_festival_is_planned())
+        lang_text_draw_centered(58, 34, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE);
+    else
+        lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE);
+    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE);
+}
 static void draw_god_row(int god, int y_offset, int small_temple, int large_temple) {
     lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
     lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
@@ -45,10 +87,12 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
 static int draw_background(void) {
     int height_blocks;
     if (setting_gods_enabled()) {
-        height_blocks = 17;
+//        height_blocks = 17;
+        height_blocks = 27;
         outer_panel_draw(0, 0, 40, height_blocks);
     } else {
-        height_blocks = 20;
+//        height_blocks = 20;
+        height_blocks = 27;
         outer_panel_draw(0, 0, 40, height_blocks);
         lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
     }
@@ -83,15 +127,40 @@ static int draw_background(void) {
 
     lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 196, 512, FONT_NORMAL_BLACK);
 
+    draw_festival_info(68);
+
     return height_blocks;
+}
+
+
+static void draw_foreground(void) {
+    if (!city_festival_is_planned())
+        button_border_draw(102, 280 + 68, 300, 20, focus_button_id == 1);
+}
+
+static int handle_mouse(const mouse *m) {
+    return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
+}
+
+static void button_hold_festival(int param1, int param2) {
+    if (!city_festival_is_planned())
+        window_hold_festival_show();
+}
+
+static int get_tooltip_text(void) {
+    if (focus_button_id)
+        return 112;
+    else {
+        return 0;
+    }
 }
 
 const advisor_window_type *window_advisor_religion(void) {
     static const advisor_window_type window = {
             draw_background,
-            0,
-            0,
-            0
+            draw_foreground,
+            handle_mouse,
+            get_tooltip_text
     };
     return &window;
 }

@@ -14,7 +14,7 @@
 #include "graphics/window.h"
 #include "window/hold_festival.h"
 
-#define ADVISOR_HEIGHT 23
+#define ADVISOR_HEIGHT 20 //23
 
 #define PEOPLE_OFFSET 330
 #define COVERAGE_OFFSET 470
@@ -104,9 +104,8 @@ static int draw_background(void) {
     else if (pct_theater < 100) {
         lang_text_draw_centered(57, 11 + pct_theater / 10, COVERAGE_OFFSET, 64, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
         //lang_text_draw_centered(57, 17, COVERAGE_OFFSET, 64, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    } else {
+    } else
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 64, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    }
 
     // amphitheaters
     lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER), 40, 84, FONT_NORMAL_WHITE);
@@ -120,9 +119,8 @@ static int draw_background(void) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     else if (pct_amphitheater < 100)
         lang_text_draw_centered(57, 11 + pct_amphitheater / 10, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    else {
+    else
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 84, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    }
 
     // colosseums
     lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 104, FONT_NORMAL_WHITE);
@@ -136,9 +134,8 @@ static int draw_background(void) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 104, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     else if (pct_colosseum < 100)
         lang_text_draw_centered(57, 11 + pct_colosseum / 10, COVERAGE_OFFSET, 104, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    else {
+    else
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 104, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    }
 
     // hippodromes
     lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 123, FONT_NORMAL_WHITE);
@@ -147,30 +144,29 @@ static int draw_background(void) {
     lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 123, 100, FONT_NORMAL_WHITE);
     if (city_culture_coverage_hippodrome() == 0)
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 123, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    else {
+    else
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 123, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-    }
 
     lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 148, 512, FONT_NORMAL_BLACK);
 
-    draw_festival_info();
+//    draw_festival_info();
 
     return ADVISOR_HEIGHT;
 }
 
 static void draw_foreground(void) {
-    if (!city_festival_is_planned())
-        button_border_draw(102, 280, 300, 20, focus_button_id == 1);
+//    if (!city_festival_is_planned())
+//        button_border_draw(102, 280, 300, 20, focus_button_id == 1);
 
 }
 
 static int handle_mouse(const mouse *m) {
-    return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
+//    return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
 }
 
 static void button_hold_festival(int param1, int param2) {
-    if (!city_festival_is_planned())
-        window_hold_festival_show();
+//    if (!city_festival_is_planned())
+//        window_hold_festival_show();
 
 }
 

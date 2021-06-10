@@ -1,3 +1,4 @@
+#include <core/game_environment.h>
 #include "arrow_button.h"
 
 #include "core/time.h"
@@ -15,7 +16,10 @@ static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         int image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
-        if (buttons[i].pressed)
+
+        if (GAME_ENV == ENGINE_ENV_C3 && buttons[i].pressed)
+            image_id += 1;
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH && !buttons[i].pressed)
             image_id += 1;
 
         image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
@@ -74,10 +78,8 @@ arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, 
             if (btn->repeats < 48) {
                 if (!REPEATS[btn->repeats])
                     return 0;
-
-            } else {
+            } else
                 btn->repeats = 47;
-            }
             btn->left_click_handler(btn->parameter1, btn->parameter2);
         }
         return button_id;

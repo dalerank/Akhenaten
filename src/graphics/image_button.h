@@ -7,9 +7,10 @@
 #include "core/time.h"
 
 enum {
+    IB_BUILD = 2,
     IB_NORMAL = 4,
     IB_SCROLL = 6,
-    IB_BUILD = 2
+    IB_OVERSEER = 8
 };
 
 typedef struct {
@@ -27,6 +28,7 @@ typedef struct {
     char enabled;
     // state
     char pressed;
+    char floating;
     char focused;
     time_millis pressed_since;
 } image_button;

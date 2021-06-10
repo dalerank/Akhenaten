@@ -14,21 +14,21 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons) {
         image_button *btn = &buttons[i];
         if (btn->pressed) {
             if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
-                if (btn->button_type == IB_NORMAL)
+                if (btn->button_type != IB_BUILD && btn->button_type != IB_OVERSEER && !mouse_get()->left.is_down)
                     btn->pressed = 0;
-                else if (btn->button_type == IB_SCROLL && !mouse_get()->left.is_down)
-                    btn->pressed = 0;
-
             }
         }
     }
 }
 
 static void remove_pressed_effect_build(image_button *buttons, int num_buttons) {
+    // un-press all buttons
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
-        if (btn->pressed && btn->button_type == IB_BUILD)
+        if (btn->pressed) {
             btn->pressed = 0;
+            btn->floating = 0;
+        }
     }
 }
 
@@ -81,34 +81,48 @@ int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *butto
                 hit_button = btn;
             }
         }
+        else if (btn->floating) {
+            if (btn->button_type != IB_BUILD) // remove "press" when hovering away from button
+                btn->pressed = 0;
+            else if (!m->left.is_down) { // remove "press" when fully canceling
+                btn->pressed = 0;
+                btn->floating = 0;
+            }
+        }
     }
     if (!hit_button)
         return 0;
-
-    if (hit_button->button_type == IB_SCROLL) {
+    if (hit_button->button_type == IB_SCROLL)
         if (!m->left.went_down && !m->left.is_down)
             return 0;
 
-    } else if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_NORMAL) {
-        if (!m->left.went_up && !m->right.went_up)
-            return 0;
-
+    // on click, press button and set reminder to this button (floating = true)
+    if (m->left.went_down && hit_button->button_type != IB_SCROLL) {
+        hit_button->pressed = 1;
+        hit_button->floating = 1;
     }
+    if (m->left.is_down && hit_button->floating) // resume "pressing" when mouse is over the button again
+        hit_button->pressed = 1;
+
     if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);
         remove_pressed_effect_build(buttons, num_buttons);
-        hit_button->pressed = 1;
+        if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER)
+            hit_button->pressed = 1;
+        hit_button->floating = 0;
         hit_button->pressed_since = time_get_millis();
         hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (m->right.went_up) {
-        remove_pressed_effect_build(buttons, num_buttons);
-        hit_button->pressed = 1;
+        if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_OVERSEER)
+            hit_button->pressed = 1;
+        hit_button->floating = 0;
         hit_button->pressed_since = time_get_millis();
         hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (hit_button->button_type == IB_SCROLL && m->left.is_down) {
         time_millis delay = hit_button->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
         if (time_get_millis() - hit_button->pressed_since >= delay) {
             hit_button->pressed = 2;
+            hit_button->floating = 0;
             hit_button->pressed_since = time_get_millis();
             hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
         }

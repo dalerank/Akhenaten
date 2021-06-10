@@ -61,20 +61,20 @@ static generic_button advisor_buttons_C3[] = {
         {588, 1, 40, 40, button_change_advisor, button_none, 0,                     0},
 };
 static image_button advisor_buttons_PH[] = {
-        {12,  1, 33, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 0,  button_change_advisor, button_none, ADVISOR_LABOR,         0},
-        {52,  1, 39, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 4,  button_change_advisor, button_none, ADVISOR_MILITARY,      0},
-        {96,  1, 34, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 8,  button_change_advisor, button_none, ADVISOR_IMPERIAL,      0},
-        {135, 1, 38, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 12, button_change_advisor, button_none, ADVISOR_RATINGS,       0},
-        {178, 1, 46, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 16, button_change_advisor, button_none, ADVISOR_TRADE,         0},
-        {229, 1, 48, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 20, button_change_advisor, button_none, ADVISOR_POPULATION,    0},
-        {282, 1, 35, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 24, button_change_advisor, button_none, ADVISOR_HEALTH,        0},
-        {322, 1, 38, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 28, button_change_advisor, button_none, ADVISOR_EDUCATION,     0},
-        {363, 1, 39, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 32, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
-        {406, 1, 35, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 36, button_change_advisor, button_none, ADVISOR_RELIGION,      0},
-        {445, 1, 40, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL,     0},
-        {490, 1, 46, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 44, button_change_advisor, button_none, ADVISOR_CHIEF,         0},
-        {542, 1, 40, 32, IB_BUILD, GROUP_MENU_ADVISOR_BUTTONS, 48, button_change_advisor, button_none, ADVISOR_MONUMENTS,     0},
-        {588, 1, 42, 32, IB_NORMAL, GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city,   button_none, 0,                     0},
+        {12,  1, 33, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 0,  button_change_advisor, button_none, ADVISOR_LABOR,         0},
+        {52,  1, 39, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 4,  button_change_advisor, button_none, ADVISOR_MILITARY,      0},
+        {96,  1, 34, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 8,  button_change_advisor, button_none, ADVISOR_IMPERIAL,      0},
+        {135, 1, 38, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 12, button_change_advisor, button_none, ADVISOR_RATINGS,       0},
+        {178, 1, 46, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 16, button_change_advisor, button_none, ADVISOR_TRADE,         0},
+        {229, 1, 48, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 20, button_change_advisor, button_none, ADVISOR_POPULATION,    0},
+        {282, 1, 35, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 24, button_change_advisor, button_none, ADVISOR_HEALTH,        0},
+        {322, 1, 38, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 28, button_change_advisor, button_none, ADVISOR_EDUCATION,     0},
+        {363, 1, 39, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 32, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
+        {406, 1, 35, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 36, button_change_advisor, button_none, ADVISOR_RELIGION,      0},
+        {445, 1, 40, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL,     0},
+        {490, 1, 46, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 44, button_change_advisor, button_none, ADVISOR_CHIEF,         0},
+        {542, 1, 40, 32, IB_OVERSEER, GROUP_MENU_ADVISOR_BUTTONS, 48, button_change_advisor, button_none, ADVISOR_MONUMENTS,     0},
+        {588, 1, 42, 32, IB_NORMAL,   GROUP_MENU_ADVISOR_BUTTONS, 52, button_back_to_city,   button_none, 0,                     0},
 };
 
 static const advisor_window_type *(*sub_advisors[])(void) = {
@@ -141,15 +141,17 @@ static void set_advisor(int advisor) {
     setting_set_last_advisor(advisor);
     set_advisor_window();
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        advisor_buttons_PH[advisor - 1].pressed = 1;
+        advisor_buttons_PH[advisor - 1].pressed = 1; // set button active when coming back to menu
 }
 
 static int is_advisor_available(int advisor_id) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (advisor_id == 13)
+        if (advisor_id == 13) // last button is always enabled
             return 1;
-        if (advisor_id < 0 || advisor_id > 12)
+        if (advisor_id < 0 || advisor_id > 12) // out of range
             return 0;
+        // maybe these are actually stored in the saves?
+        // either way, I'll make these hardcoded for the time being.
         if (scenario_is_tutorial(2))
             return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
         else if (scenario_is_tutorial(3))
@@ -208,17 +210,8 @@ void window_advisors_draw_dialog_background(void) {
                 selected_offset = 13;
             image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
         }
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            image_buttons_draw(0, 440, advisor_buttons_PH, 14);
-//            if (focus_button_id - 1 == i)
-//                selected_offset = 1;
-//            if (current_advisor - 1 == i)
-//                selected_offset = 2;
-//            if (!is_advisor_available(i))
-//                selected_offset = 3;
-//            int image_id = image_id_from_group(GROUP_MENU_ADVISOR_BUTTONS) + (i * 4) + selected_offset;
-//            image_draw(image_id, advisor_buttons_PH[i].x, 441);
-        }
+//        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//            image_buttons_draw(0, 440, advisor_buttons_PH, 14);
     }
     graphics_reset_dialog();
 }
@@ -232,6 +225,8 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_in_dialog();
     image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        image_buttons_draw(0, 440, advisor_buttons_PH, 14);
     graphics_reset_dialog();
 
     if (current_advisor_window->draw_foreground) {
@@ -258,8 +253,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         return;
     else if (GAME_ENV == ENGINE_ENV_PHARAOH && image_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons_PH, 14, &focus_button_id))
         return;
-//    if (focus_button_id != old_focus_button_id)
-//        window_request_refresh();
     int button_id;
     image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id)
@@ -271,7 +264,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         window_city_show();
         return;
     }
-    window_request_refresh();
+//    window_request_refresh(); // update image button graphics?
 }
 
 static void button_change_advisor(int advisor, int param2) {
