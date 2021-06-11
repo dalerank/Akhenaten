@@ -13,6 +13,7 @@
 /**
  * Updates the building counts and does some extra work on the side
  */
+void building_entertainment_update();
 void building_count_update(void);
 
 /**

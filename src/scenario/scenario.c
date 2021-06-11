@@ -1,3 +1,5 @@
+#include <city/data_private.h>
+#include <city/gods.h>
 #include "scenario.h"
 
 #include "city/resource.h"
@@ -264,12 +266,18 @@ void scenario_load_state(scenario_data_buffers *buf) {
     // 17. map info 3
     // 18. empire info
 
-    // 1. header (14)
+    // 1. header (32)
     if (buf->header->is_valid(1)) {
         scenario.start_year = buf->header->read_i16(); // 2 bytes
         buf->header->skip(2);
         scenario.empire.id = buf->header->read_i16(); // 2 bytes
-        buf->header->skip(8);
+        buf->header->skip(4);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            for (int i = 0; i < MAX_GODS; i++)
+                city_data.religion.gods[i].is_known = buf->header->read_i16();
+            buf->header->skip(10);
+            buf->header->skip(2); // 2 bytes ???        03 00
+        }
     }
 
     // 3. map info 1 (614)

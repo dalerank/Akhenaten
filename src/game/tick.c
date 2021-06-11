@@ -209,6 +209,7 @@ static void advance_tick(void) {
             break;
         case 33:
             building_count_update();
+            building_entertainment_update();
             city_culture_update_coverage();
             break;
         case 34:

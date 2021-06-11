@@ -302,6 +302,8 @@ static int trade_ship_phrase() {
 static int city_god_state(void) {
     int least_god_happiness = 100;
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         int happiness = city_god_happiness(i);
         if (happiness < least_god_happiness)
             least_god_happiness = happiness;

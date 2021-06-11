@@ -103,7 +103,7 @@ static void write_type_data(buffer *buf, const building *b) {
         buf->write_u8(b->data.entertainment.num_shows);
         buf->write_u8(b->data.entertainment.days1);
         buf->write_u8(b->data.entertainment.days2);
-        buf->write_u8(b->data.entertainment.play);
+        buf->write_u8(b->data.entertainment.days3_or_play);
         for (int i = 0; i < 12; i++) {
             buf->write_u8(0);
         }
@@ -277,13 +277,15 @@ static void read_type_data(buffer *buf, building *b) {
             b->data.entertainment.num_shows = buf->read_u8();
             b->data.entertainment.days1 = buf->read_u8();
             b->data.entertainment.days2 = buf->read_u8();
-            b->data.entertainment.play = buf->read_u8();
+            b->data.entertainment.days3_or_play = buf->read_u8();
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             buf->skip(58);
             b->data.entertainment.num_shows = buf->read_u8();
             b->data.entertainment.days1 = buf->read_u8();
             b->data.entertainment.days2 = buf->read_u8();
-            b->data.entertainment.play = buf->read_u8();
+            b->data.entertainment.days3_or_play = buf->read_u8();
+//            if (b->data.entertainment.days1 > 0)
+//                int a = 245;
             buf->skip(20);
             b->data.entertainment.ph_unk00_u32 = buf->read_u32(); //  5 for latched booth??
             b->data.entertainment.ph_unk01_u8 = buf->read_u8();   // 50 ???

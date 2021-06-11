@@ -108,8 +108,8 @@ typedef struct {
             unsigned char num_shows;
             unsigned char days1;
             unsigned char days2;
-            unsigned char days3;
-            unsigned char play;
+//            unsigned char days3;
+            unsigned char days3_or_play;
             unsigned short booth_corner_grid_offset;
             unsigned short ph_unk00_u32;
             unsigned short ph_unk01_u8;

@@ -72,6 +72,8 @@ enum {
     BUILDSET_TUT8_START,
 };
 
+int is_building_enabled(int type);
+
 void building_menu_enable_all(void);
 
 void building_menu_update(int build_set);

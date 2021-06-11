@@ -23,6 +23,8 @@
 
 void city_gods_reset(void) {
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         god_status *god = &city_data.religion.gods[i];
         god->target_happiness = 50;
         god->happiness = 50;
@@ -314,6 +316,8 @@ static int perform_large_curse(int god) {
 
 static void update_god_moods(void) {
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         god_status *god = &city_data.religion.gods[i];
         if (god->happiness < god->target_happiness)
             god->happiness++;
@@ -356,6 +360,8 @@ static void update_god_moods(void) {
 
     // handle blessings, curses, etc every month
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         city_data.religion.gods[i].months_since_festival++;
     }
     if (god_id >= MAX_GODS) {
@@ -390,6 +396,8 @@ static void update_god_moods(void) {
 
     int min_happiness = 100;
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         if (city_data.religion.gods[i].happiness < min_happiness)
             min_happiness = city_data.religion.gods[i].happiness;
 
@@ -405,17 +413,22 @@ static void update_god_moods(void) {
     }
 }
 
+int is_god_known(int god) {
+    return city_data.religion.gods[god].is_known;
+}
+
 void city_gods_calculate_moods(int update_moods) {
     // base happiness: percentage of houses covered
-    for (int i = 0; i < MAX_GODS; i++) {
+    for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].target_happiness = city_culture_coverage_religion(i);
-    }
 
     int max_temples = 0;
     int max_god = TIE;
     int min_temples = 100000;
     int min_god = TIE;
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         int num_temples = 0;
         switch (i) {
             case GOD_CERES:
@@ -454,6 +467,8 @@ void city_gods_calculate_moods(int update_moods) {
     }
     // happiness factor based on months since festival (max 40)
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         int festival_penalty = city_data.religion.gods[i].months_since_festival;
         if (festival_penalty > 40)
             festival_penalty = 40;
@@ -484,13 +499,10 @@ void city_gods_calculate_moods(int update_moods) {
         min_happiness = 20;
     else if (city_data.population.population < 500)
         min_happiness = 10;
-    else {
+    else
         min_happiness = 0;
-    }
-    for (int i = 0; i < MAX_GODS; i++) {
-        city_data.religion.gods[i].target_happiness = calc_bound(city_data.religion.gods[i].target_happiness,
-                                                                 min_happiness, 100);
-    }
+    for (int i = 0; i < MAX_GODS; i++)
+        city_data.religion.gods[i].target_happiness = calc_bound(city_data.religion.gods[i].target_happiness, min_happiness, 100);
     if (update_moods)
         update_god_moods();
 
@@ -498,7 +510,10 @@ void city_gods_calculate_moods(int update_moods) {
 int city_gods_calculate_least_happy(void) {
     int max_god = 0;
     int max_wrath = 0;
+    // first, check who's the most enraged (number of bolts)
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         if (city_data.religion.gods[i].wrath_bolts > max_wrath) {
             max_god = i + 1;
             max_wrath = city_data.religion.gods[i].wrath_bolts;
@@ -509,7 +524,10 @@ int city_gods_calculate_least_happy(void) {
         return 1;
     }
     int min_happiness = 40;
+    // lastly, check who's the least happy
     for (int i = 0; i < MAX_GODS; i++) {
+        if (is_god_known(i) == GOD_STATUS_UNKNOWN)
+            break;
         if (city_data.religion.gods[i].happiness < min_happiness) {
             max_god = i + 1;
             min_happiness = city_data.religion.gods[i].happiness;

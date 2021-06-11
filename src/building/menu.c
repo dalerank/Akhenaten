@@ -116,6 +116,16 @@ void building_menu_enable_all(void) {
 
 #include "building/industry.h"
 
+int is_building_enabled(int type) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
+            if (MENU_int[GAME_ENV][sub][item] == type) // found matching menu item!!!
+                return menu_enabled[sub][item];
+        }
+    }
+    return 0;
+}
+
 static void enable_building(int type, bool enabled = true) {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
@@ -495,14 +505,18 @@ void building_menu_update(int build_set) {
             break;
         case BUILDSET_TUT7_START:
             building_menu_disable_all();
+            for (int i = 0; i < int_MAX; i++)
+                enable_if_allowed(i);
             // todo
             break;
         case BUILDSET_TUT8_START:
             building_menu_disable_all();
+            for (int i = 0; i < int_MAX; i++)
+                enable_if_allowed(i);
             // todo
             break;
         default:
-            for (int i = 0; i < 236; i++)
+            for (int i = 0; i < int_MAX; i++)
                 enable_if_allowed(i);
 
             // enable monuments!!!

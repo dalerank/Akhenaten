@@ -37,17 +37,11 @@ static void increase_industry_count(int resource, int active) {
 static void limit_hippodrome(void) {
     if (data.buildings[BUILDING_HIPPODROME].total > 1)
         data.buildings[BUILDING_HIPPODROME].total = 1;
-
     if (data.buildings[BUILDING_HIPPODROME].active > 1)
         data.buildings[BUILDING_HIPPODROME].active = 1;
-
 }
 
-void building_count_update(void) {
-    clear_counters();
-    city_buildings_reset_dock_wharf_counters();
-    city_health_reset_hospital_workers();
-
+void building_entertainment_update() {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->house_size)
@@ -63,6 +57,54 @@ void building_count_update(void) {
             case BUILDING_COLOSSEUM:
             case BUILDING_HIPPODROME:
                 is_entertainment_venue = 1;
+                break;
+        }
+        if (is_entertainment_venue) {
+            // update number of shows
+            int shows = 0;
+            if (b->data.entertainment.days1 > 0) {
+                --b->data.entertainment.days1;
+                ++shows;
+            }
+            if (b->data.entertainment.days2 > 0) {
+                --b->data.entertainment.days2;
+                ++shows;
+            }
+            if (type != BUILDING_THEATER && b->data.entertainment.days3_or_play > 0) {
+                --b->data.entertainment.days3_or_play;
+                ++shows;
+            }
+            b->data.entertainment.num_shows = shows;
+        }
+    }
+}
+void building_count_update(void) {
+    clear_counters();
+    city_buildings_reset_dock_wharf_counters();
+    city_health_reset_hospital_workers();
+
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID || b->house_size)
+            continue;
+
+        int type = b->type;
+        switch (type) {
+            // SPECIAL TREATMENT
+            // entertainment venues
+            case BUILDING_THEATER:
+                increase_count(type, b->num_workers > 0);
+                break;
+            case BUILDING_AMPHITHEATER:
+                increase_count(type, b->num_workers > 0);
+                increase_count(BUILDING_THEATER, b->num_workers > 0);
+                break;
+            case BUILDING_COLOSSEUM:
+                increase_count(type, b->num_workers > 0);
+                increase_count(BUILDING_AMPHITHEATER, b->num_workers > 0);
+                increase_count(BUILDING_THEATER, b->num_workers > 0);
+                break;
+            case BUILDING_HIPPODROME:
                 increase_count(type, b->num_workers > 0);
                 break;
 
@@ -118,6 +160,14 @@ void building_count_update(void) {
             case BUILDING_LARGE_TEMPLE_VENUS:
             case BUILDING_ORACLE:
                 increase_count(type, b->num_workers > 0);
+                break;
+
+            case BUILDING_SHRINE_OSIRIS:
+            case BUILDING_SHRINE_RA:
+            case BUILDING_SHRINE_PTAH:
+            case BUILDING_SHRINE_SETH:
+            case BUILDING_SHRINE_BAST:
+                increase_count(type, b->has_road_access > 0);
                 break;
 
                 // industry
@@ -185,23 +235,10 @@ void building_count_update(void) {
             figure *f = figure_get(b->immigrant_figure_id);
             if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i)
                 b->immigrant_figure_id = 0;
-
-        }
-        if (is_entertainment_venue) {
-            // update number of shows
-            int shows = 0;
-            if (b->data.entertainment.days1 > 0) {
-                --b->data.entertainment.days1;
-                ++shows;
-            }
-            if (b->data.entertainment.days2 > 0) {
-                --b->data.entertainment.days2;
-                ++shows;
-            }
-            b->data.entertainment.num_shows = shows;
         }
     }
-    limit_hippodrome();
+    if (GAME_ENV == ENGINE_ENV_C3)
+        limit_hippodrome();
 }
 int building_count_active(int type) {
     return data.buildings[type].active;
@@ -215,15 +252,12 @@ int building_count_industry_active(int resource) {
 int building_count_industry_total(int resource) {
     return data.industry[resource].total;
 }
-void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military,
-                               buffer *support) {
+void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support) {
     // industry
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         industry->write_i32(data.industry[i].total);
-    }
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         industry->write_i32(data.industry[i].active);
-    }
 
     // culture 1
     culture1->write_i32(data.buildings[BUILDING_THEATER].total);
@@ -296,8 +330,7 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     support->write_i32(data.buildings[BUILDING_FOUNTAIN].total);
     support->write_i32(data.buildings[BUILDING_FOUNTAIN].active);
 }
-void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military,
-                               buffer *support) {
+void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support) {
     // industry
     for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
         data.industry[i].total = industry->read_i32();

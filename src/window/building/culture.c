@@ -145,7 +145,7 @@ void window_building_draw_theater(building_info_context *c) {
         int width = lang_text_draw(72, 6, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_GREEN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
                               c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_GREEN);
-        lang_text_draw(72, 7 + b->data.entertainment.play,
+        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play,
                        c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_GREEN);
     } else {
         lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_GREEN);
@@ -185,7 +185,7 @@ void window_building_draw_amphitheater(building_info_context *c) {
         int width = lang_text_draw(71, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_GREEN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
                               c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_GREEN);
-        lang_text_draw(72, 7 + b->data.entertainment.play,
+        lang_text_draw(72, 7 + b->data.entertainment.days3_or_play,
                        c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_GREEN);
     } else {
         lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_GREEN);

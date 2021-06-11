@@ -48,43 +48,41 @@ void city_entertainment_calculate_shows(void) {
             continue;
 
         switch (b->type) {
-            case BUILDING_THEATER:
+            case BUILDING_THEATER: // booth
                 if (b->data.entertainment.days1)
                     city_data.entertainment.theater_shows++;
-                else {
+                else
                     city_data.entertainment.theater_no_shows_weighted++;
-                }
                 break;
-            case BUILDING_AMPHITHEATER:
+            case BUILDING_AMPHITHEATER: // bandstand
                 if (b->data.entertainment.days1)
-                    city_data.entertainment.amphitheater_shows++;
-                else {
-                    city_data.entertainment.amphitheater_no_shows_weighted += 2;
-                }
+                    city_data.entertainment.theater_shows++;
+                else
+                    city_data.entertainment.theater_no_shows_weighted++;
                 if (b->data.entertainment.days2)
                     city_data.entertainment.amphitheater_shows++;
-                else {
-                    city_data.entertainment.amphitheater_no_shows_weighted += 2;
-                }
+                else
+                    city_data.entertainment.amphitheater_no_shows_weighted++;
                 break;
-            case BUILDING_COLOSSEUM:
+            case BUILDING_COLOSSEUM: // pavillion
                 if (b->data.entertainment.days1)
-                    city_data.entertainment.colosseum_shows++;
-                else {
-                    city_data.entertainment.colosseum_no_shows_weighted += 3;
-                }
+                    city_data.entertainment.theater_shows++;
+                else
+                    city_data.entertainment.theater_no_shows_weighted++;
                 if (b->data.entertainment.days2)
+                    city_data.entertainment.amphitheater_shows++;
+                else
+                    city_data.entertainment.amphitheater_no_shows_weighted++;
+                if (b->data.entertainment.days3_or_play)
                     city_data.entertainment.colosseum_shows++;
-                else {
-                    city_data.entertainment.colosseum_no_shows_weighted += 3;
-                }
+                else
+                    city_data.entertainment.colosseum_no_shows_weighted++;
                 break;
             case BUILDING_HIPPODROME:
                 if (b->data.entertainment.days1)
                     city_data.entertainment.hippodrome_shows++;
-                else {
+                else
                     city_data.entertainment.hippodrome_no_shows_weighted += 100;
-                }
                 break;
         }
     }

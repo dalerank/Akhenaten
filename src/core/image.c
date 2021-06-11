@@ -382,7 +382,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
         group_image_ids[i] = buf->read_u16();
         if (group_image_ids[i] != 0 || i == 0) {
             groups_num++;
-            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+//            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
         }
     }
 

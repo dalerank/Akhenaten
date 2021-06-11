@@ -20,6 +20,7 @@ typedef struct {
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;
+    int8_t is_known;
 } god_status;
 
 extern struct city_data_t {

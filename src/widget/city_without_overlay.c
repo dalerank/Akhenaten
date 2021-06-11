@@ -620,7 +620,7 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
             if (b->data.entertainment.booth_corner_grid_offset && !b->data.entertainment.ph_unk02_u8 && false) {
-                string_from_int(str, b->data.entertainment.play, 0);
+                string_from_int(str, b->data.entertainment.days3_or_play, 0);
                 text_draw_shadow(str, x + 40, y + 5, COLOR_WHITE);
 //                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
 //                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
@@ -850,7 +850,7 @@ static void draw_entertainment_shows_ph(building *b, int x, int y, color_t color
     }
 
     // dancers
-    if (b->type == BUILDING_PAVILLION && main->data.entertainment.days3) {
+    if (b->type == BUILDING_PAVILLION && main->data.entertainment.days3_or_play) {
         draw_normal_anim(x + 30, y + 15, main, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
     }

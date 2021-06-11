@@ -72,6 +72,7 @@
 #include "sound/music.h"
 
 #include <string.h>
+#include <building/count.h>
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
@@ -261,6 +262,8 @@ static void initialize_saved_game(void) {
 
     city_message_clear_scroll();
     map_tiles_river_refresh_entire();
+
+    building_count_update();
 
     game_state_unpause();
 }

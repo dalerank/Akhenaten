@@ -63,9 +63,9 @@ void figure::entertainer_update_shows() {
     building *b = building_get(destination_building_id);
     switch (type) {
         case FIGURE_ACTOR:
-            b->data.entertainment.play++;
-            if (b->data.entertainment.play >= 5)
-                b->data.entertainment.play = 0;
+            b->data.entertainment.days3_or_play++;
+            if (b->data.entertainment.days3_or_play >= 5)
+                b->data.entertainment.days3_or_play = 0;
 
 //            if (b->type == BUILDING_THEATER)
                 b->data.entertainment.days1 = 32;
