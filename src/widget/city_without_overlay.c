@@ -648,26 +648,14 @@ void draw_debug(int x, int y, int grid_offset) {
             }
         }
 
-        int d = map_property_multi_tile_size(grid_offset);
-        if (false) {
-            string_from_int(str, d, 0);
-            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
-            if (map_building_at(grid_offset) && b->grid_offset == grid_offset) {
-                string_from_int(str, b->id, 0);
-                text_draw_shadow(str, x + 25, y, COLOR_WHITE);
-            }
-        }
+        int d = 0;
+
 //        d = map_property_multi_tile_y(grid_offset);
 //        if (true) {
 //            string_from_int(str, d, 0);
 //            text_draw_shadow(str, x + 7, y+3, COLOR_RED);
 //        }
 
-//        int d = map_get_shoreorder(grid_offset);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
-//        }
         d = map_image_at(grid_offset) - 14252;
         if (d > 200 && d <= 1514 && false) {
             string_from_int(str, d, 0);
@@ -701,21 +689,43 @@ void draw_debug(int x, int y, int grid_offset) {
 //            else
 //                text_draw_shadow(str, x + 13, y + 10, COLOR_RED);
         }
-        d = map_grasslevel_get(grid_offset);
-        if (d && false) {
-            if (d >= 16) {
-                string_from_int(str, d, 0);
-                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
-            } else {
-                string_from_int(str, d, 0);
-                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
-            }
-        }
+//        d = map_grasslevel_get(grid_offset);
+//        if (d) {
+//            if (d >= 16) {
+//                string_from_int(str, d, 0);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
+//            } else {
+//                string_from_int(str, d, 0);
+//                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
+//            }
+//        }
 
-        d = map_terrain_get(grid_offset);
-        if (d & TERRAIN_ROAD && false) {
-            text_draw_shadow((uint8_t *) string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
-        }
+//        d = map_get_fertility(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
+//        }
+
+//        d = map_terrain_get(grid_offset);
+//        if (d & TERRAIN_FLOODPLAIN) {
+////            string_from_int(str, d, 0);
+////            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
+//            if (d & TERRAIN_WATER)
+//                text_draw_shadow((uint8_t *) string_from_ascii("u"), x + 30, y + 15, COLOR_WHITE);
+//            else
+//                text_draw_shadow((uint8_t *) string_from_ascii("f"), x + 30, y + 15, COLOR_WHITE);
+//        }
+
+//        d = map_get_shoreorder(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
+//        }
+
+//        d = map_terrain_get(grid_offset);
+//        if (d & TERRAIN_ROAD && false) {
+//            text_draw_shadow((uint8_t *) string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
+//        }
 
 
 //        string_from_int(str, flag_data, 0);
@@ -733,7 +743,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        f->draw_debug();
+//        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else

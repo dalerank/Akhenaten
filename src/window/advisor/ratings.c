@@ -16,10 +16,10 @@
 static void button_rating(int rating, int param2);
 
 static generic_button rating_buttons[] = {
-        {80,  286, 110, 66, button_rating, button_none, SELECTED_RATING_CULTURE,    0},
-        {200, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
-        {320, 286, 110, 66, button_rating, button_none, SELECTED_RATING_PEACE,      0},
-        {440, 286, 110, 66, button_rating, button_none, SELECTED_RATING_FAVOR,      0},
+        {80,  276, 120, 60, button_rating, button_none, SELECTED_RATING_CULTURE,    0},
+        {200, 276, 120, 60, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
+        {320, 276, 120, 60, button_rating, button_none, SELECTED_RATING_PEACE,      0},
+        {440, 276, 120, 60, button_rating, button_none, SELECTED_RATING_FAVOR,      0},
 };
 
 static int focus_button_id;
@@ -27,24 +27,33 @@ static int focus_button_id;
 static void draw_rating_column(int x_offset, int y_offset, int value, int has_reached) {
     int image_base = image_id_from_group(GROUP_RATINGS_COLUMN);
     int y = y_offset - image_get(image_base)->height;
-    int value_to_draw = value;
+    int value_to_draw = value * 0.75;
     if (config_get(CONFIG_UI_COMPLETE_RATING_COLUMNS)) {
         if (has_reached && value < 25)
             value_to_draw = 25;
-
     } else {
         // Default behaviour: not completing too small columns
-        if (value < 30)
-            has_reached = 0;
-
+//        if (value < 30)
+//            has_reached = 0;
     }
-    image_draw(image_base, x_offset, y);
-    for (int i = 0; i < 2 * value_to_draw; i++) {
+    image_draw(image_base, x_offset - 4, y);
+    for (int i = 0; i < 2 * value_to_draw; i++)
         image_draw(image_base + 1, x_offset + 11, --y);
-    }
     if (has_reached)
-        image_draw(image_base + 2, x_offset - 6, y);
+        image_draw(image_base + 2, x_offset - 6, y - 50);
+}
 
+static void draw_rating(int id, int value, int open_play, int goal) {
+//    int value = city_rating_culture();
+    int enabled = !open_play && goal;
+    button_border_draw(rating_buttons[id].x, rating_buttons[id].y, rating_buttons[id].width, rating_buttons[id].height, focus_button_id == SELECTED_RATING_CULTURE);
+    lang_text_draw_centered(53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK);
+    text_draw_number_centered(value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK);
+    int width = text_draw_number(enabled ? goal : 0,
+                                 '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK);
+    lang_text_draw(53, 5, rating_buttons[id].x + 5 + width, rating_buttons[id].y + 45, FONT_NORMAL_BLACK);
+    int has_reached = !enabled || value >= goal;
+    draw_rating_column(rating_buttons[id].x + 30, rating_buttons[id].y, value, has_reached);
 }
 
 static int draw_background(void) {
@@ -57,111 +66,66 @@ static int draw_background(void) {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }
-
-    image_draw(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48);
+    image_draw(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
 
     int open_play = scenario_is_open_play();
 
     // culture
-    int culture = city_rating_culture();
-    int has_culture_goal = !open_play && winning_culture();
-    button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
-    lang_text_draw_centered(53, 1, 80, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(culture, 80, 309, 100, FONT_LARGE_BLACK);
-    width = text_draw_number(has_culture_goal ? winning_culture() : 0,
-                             '@', " ", 85, 334, FONT_NORMAL_BLACK);
-    lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
-    int has_reached = !has_culture_goal || culture >= winning_culture();
-    draw_rating_column(110, 274, culture, has_reached);
-
-    // prosperity
-    int prosperity = city_rating_prosperity();
-    int has_prosperity_goal = !open_play && winning_prosperity();
-    button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
-    lang_text_draw_centered(53, 2, 200, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(prosperity, 200, 309, 100, FONT_LARGE_BLACK);
-    width = text_draw_number(has_prosperity_goal ? winning_prosperity() : 0,
-                             '@', " ", 205, 334, FONT_NORMAL_BLACK);
-    lang_text_draw(53, 5, 205 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !has_prosperity_goal || prosperity >= winning_prosperity();
-    draw_rating_column(230, 274, prosperity, has_reached);
-
-    // peace
-    int peace = city_rating_peace();
-    int has_peace_goal = !open_play && winning_peace();
-    button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
-    lang_text_draw_centered(53, 3, 320, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(peace, 320, 309, 100, FONT_LARGE_BLACK);
-    width = text_draw_number(has_peace_goal ? winning_peace() : 0,
-                             '@', " ", 325, 334, FONT_NORMAL_BLACK);
-    lang_text_draw(53, 5, 325 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !has_peace_goal || peace >= winning_peace();
-    draw_rating_column(350, 274, peace, has_reached);
-
-    // favor
-    int favor = city_rating_favor();
-    int has_favor_goal = !open_play && winning_favor();
-    button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
-    lang_text_draw_centered(53, 4, 440, 294, 110, FONT_NORMAL_BLACK);
-    text_draw_number_centered(favor, 440, 309, 100, FONT_LARGE_BLACK);
-    width = text_draw_number(has_favor_goal ? winning_favor() : 0,
-                             '@', " ", 445, 334, FONT_NORMAL_BLACK);
-    lang_text_draw(53, 5, 445 + width, 334, FONT_NORMAL_BLACK);
-    has_reached = !has_favor_goal || favor >= winning_favor();
-    draw_rating_column(470, 274, favor, has_reached);
+    draw_rating(0, city_rating_culture(), open_play, winning_culture());
+    draw_rating(1, city_rating_prosperity(), open_play, winning_prosperity());
+    draw_rating(2, city_rating_peace(), open_play, winning_peace());
+    draw_rating(3, city_rating_favor(), open_play, winning_favor());
 
     // bottom info box
-    inner_panel_draw(64, 356, 32, 4);
+    int box_x = 44;
+    int box_y = 340;
+    int box_w = 520;
+    inner_panel_draw(box_x, box_y, 35, 5);
     switch (city_rating_selected()) {
         case SELECTED_RATING_CULTURE:
-            lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
-            if (culture <= 90) {
+            lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            if (city_rating_culture() <= 90) {
                 lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(),
-                                         72, 374, 496, FONT_NORMAL_WHITE);
-            } else {
-                lang_text_draw_multiline(53, 50, 72, 374, 496, FONT_NORMAL_WHITE);
-            }
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+            } else
+                lang_text_draw_multiline(53, 50, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
             break;
         case SELECTED_RATING_PROSPERITY:
-            lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
-            if (prosperity <= 90) {
+            lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            if (city_rating_prosperity() <= 90) {
                 lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
-                                         72, 374, 496, FONT_NORMAL_WHITE);
-            } else {
-                lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
-            }
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+            } else
+                lang_text_draw_multiline(53, 51, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
             break;
         case SELECTED_RATING_PEACE:
-            lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
-            if (peace <= 90) {
+            lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            if (city_rating_peace() <= 90) {
                 lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
-                                         72, 374, 496, FONT_NORMAL_WHITE);
-            } else {
-                lang_text_draw_multiline(53, 52, 72, 374, 496, FONT_NORMAL_WHITE);
-            }
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+            } else
+                lang_text_draw_multiline(53, 52, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
             break;
         case SELECTED_RATING_FAVOR:
-            lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
-            if (favor <= 90) {
+            lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            if (city_rating_favor() <= 90) {
                 lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
-                                         72, 374, 496, FONT_NORMAL_WHITE);
-            } else {
-                lang_text_draw_multiline(53, 53, 72, 374, 496, FONT_NORMAL_WHITE);
-            }
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+            } else
+                lang_text_draw_multiline(53, 53, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
             break;
         default:
-            lang_text_draw_centered(53, 8, 72, 380, 496, FONT_NORMAL_WHITE);
+            lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE);
             break;
     }
 
     return ADVISOR_HEIGHT;
 }
-
 static void draw_foreground(void) {
-    button_border_draw(80, 286, 110, 66, focus_button_id == SELECTED_RATING_CULTURE);
-    button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
-    button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
-    button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
+    button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == SELECTED_RATING_CULTURE);
+    button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == SELECTED_RATING_PROSPERITY);
+    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == SELECTED_RATING_PEACE);
+    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, focus_button_id == SELECTED_RATING_FAVOR);
 }
 
 static int handle_mouse(const mouse *m) {

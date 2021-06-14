@@ -392,17 +392,6 @@ extern struct city_data_t {
         int32_t tutorial_senate_built;
     } mission;
     struct {
-        int32_t month;
-        int32_t duration;
-        int32_t quality_map_initial;
-        int32_t month_prev;
-        int32_t duration_prev;
-        int32_t quality_current;
-        int32_t unk00;
-        int32_t quality_coming;
-        int32_t quality_prev;
-    } floods;
-    struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
         int8_t unknown_00a1;

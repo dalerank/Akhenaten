@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <city/floods.h>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -730,8 +731,8 @@ static void savegame_load_from_state(savegame_state *state) {
                          state->city_faction_unknown,
                          state->city_graph_order,
                          state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset,
-                         state->floodplain_settings);
+                         state->city_entry_exit_grid_offset);
+    floodplains_load_state(state->floodplain_settings);
 
     building_load_state(state->buildings,
                         state->building_extra_highest_id,

@@ -1,3 +1,4 @@
+#include <city/floods.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -118,6 +119,7 @@ static void advance_day(void) {
 static void advance_tick(void) {
 
     tutorial_starting_message();
+    floodplains_tick_update();
 
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47

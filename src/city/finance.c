@@ -74,7 +74,7 @@ void city_finance_process_console(int amount) {
 
 void city_finance_process_stolen(int stolen) {
     city_data.finance.stolen_this_year += stolen;
-    city_finance_process_sundry(stolen);
+    city_data.finance.this_year.expenses.stolen += stolen;
 }
 
 void city_finance_process_donation(int amount) {

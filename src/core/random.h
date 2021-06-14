@@ -64,4 +64,6 @@ void random_load_state(buffer *buf);
 
 void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist);
 
+int random_bool_lerp_scalar_int(int minimum, int maximum, int v);
+
 #endif // CORE_RANDOM_H

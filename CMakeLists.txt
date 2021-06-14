@@ -312,6 +312,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/victory.c
     ${PROJECT_SOURCE_DIR}/src/city/view.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
+    ${PROJECT_SOURCE_DIR}/src/city/floods.c
 )
 set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.c

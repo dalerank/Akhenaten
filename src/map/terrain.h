@@ -4,10 +4,10 @@
 #include "core/buffer.h"
 
 enum {
-    TERRAIN_TREE = 1,
-    TERRAIN_ROCK = 2,
-    TERRAIN_WATER = 4,
-    TERRAIN_BUILDING = 8,
+    TERRAIN_TREE = 0x1,
+    TERRAIN_ROCK = 0x2,
+    TERRAIN_WATER = 0x4,
+    TERRAIN_BUILDING = 0x8,
     TERRAIN_SHRUB = 0x10,
     TERRAIN_GARDEN = 0x20,
     TERRAIN_ROAD = 0x40,

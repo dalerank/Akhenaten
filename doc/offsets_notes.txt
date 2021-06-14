@@ -338,7 +338,36 @@ bricks?? --> monuments
 
 ====================
 
+150: early june
+165: late june
+180: early july
+195: late july
+210: early august
+225: late august
+240: early september
+255: late september
+
 9600 total ticks (year)
+ 192 total days  (year)
+
+      DAY TICK  END TICK    CYCLE DIFF
+  0:                           15   15
+ 15:                           30   15
+ 30:                           46   16
+ 45:                           62   17
+...
+165:   91   34  136    0      188   23
+180:   99   26
+195:  106   44                219   24
+210:  114   36
+225:  122   28  168   10      
+240:
+255:                          282   27
+
+every 25 ticks, check again for flood.
+
+flood_cycle = (m * 105) / 100 + (int)h + 15
+???_cycle = flood_cycle + 2*10 + duration
 
 
 break: month-day-tick
@@ -386,7 +415,7 @@ quality:
 5: contraction done
 6: new nilometer prediction -> farming time
 
-50 ticks/day
+51 ticks/day
 16 day/month
 12 months/year
 
@@ -409,14 +438,6 @@ day 134 (6th Sept - 6 days after flood period end)
 tick 19: flood goes away!
 
 
-150: early june
-165: late june
-180: early july
-195: late july
-210: early august
-225: late august
-240: early september
-255: late september
 
 ====================
 

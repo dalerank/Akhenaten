@@ -1,4 +1,5 @@
 #include <tgmath.h>
+#include <city/floods.h>
 #include "city.h"
 
 #include "building/menu.h"
@@ -186,18 +187,58 @@ static struct {
 #include "core/string.h"
 
 static void draw_debug_ui(int x, int y) {
-    auto data = give_me_da_time();
+    auto time = give_me_da_time();
     uint8_t str[10];
 
     /////// TIME
-    draw_debug_line(str, x, y + 15, 50, "tick:", data->tick);
-    draw_debug_line(str, x, y + 25, 50, "day:", data->day);
-    draw_debug_line(str, x, y + 35, 50, "month:", data->month);
-    draw_debug_line(str, x, y + 45, 50, "year:", data->year);
+    draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
+    draw_debug_line(str, x, y + 25, 50, "day:", time->day);
+    draw_debug_line(str, x, y + 35, 50, "month:", time->month);
+    draw_debug_line(str, x, y + 45, 50, "year:", time->year);
+    draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
+    draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
 
-    draw_debug_line(str, x, y + 65, 50, "total:", data->month * 16 + data->day);
-    draw_debug_line(str, x, y + 75, 50, "coming:", city_data.floods.month / 15 * 8);
-    draw_debug_line(str, x, y + 85, 50, "flood:", city_data.floods.month);
+    /////// FLOODS
+    auto floods = give_me_da_floods_data();
+
+    int c_curr = floodplains_current_cycle();
+    int c_start = floodplains_flooding_start_cycle();
+    int c_end = floodplains_flooding_end_cycle();
+    int c_hh = floodplains_flooding_rest_period_cycle();
+    int c_minus49 = c_start - 49;
+    int c_minus27 = c_start - 27;
+    int c_first_rest = c_start + c_hh;
+    int c_second_rest = c_end - c_hh;
+    int c_plus28 = c_end + 28;
+
+    int cl = 60;
+    draw_debug_line(str, x, y + 85, cl, "current:", c_curr); // current cycle
+
+    draw_debug_line(str, x, y + 95, cl, "t-49:", c_minus49); // 49 days prior
+    draw_debug_line(str, x, y + 105, cl, "t-27:", c_minus27); // 27 days prior
+    draw_debug_line(str, x, y + 115, cl, "start:", c_start); // flood start
+    draw_debug_line(str, x, y + 125, cl, "rest-1:", c_first_rest); // first rest period
+    draw_debug_line(str, x, y + 135, cl, "rest-2:", c_second_rest); // second rest period
+    draw_debug_line(str, x, y + 145, cl, "end:", c_end); // flood end
+    draw_debug_line(str, x, y + 155, cl, "final:", c_plus28); // lands farmable again
+
+    cl = 100;
+    draw_debug_line(str, x, y + 175, cl, "season_impose:", floods->season_impose);
+    draw_debug_line(str, x, y + 185, cl, "duration_impose:", floods->duration_impose);
+    draw_debug_line(str, x, y + 195, cl, "quality_impose:", floods->quality_impose);
+    draw_debug_line(str, x, y + 205, cl, "season:", floods->season);
+    draw_debug_line(str, x, y + 215, cl, "duration:", floods->duration);
+    draw_debug_line(str, x, y + 225, cl, "quality:", floods->quality);
+    draw_debug_line(str, x, y + 235, cl, "(unk00):", floods->unk00);
+    draw_debug_line(str, x, y + 245, cl, "quality_next:", floods->quality_next);
+    draw_debug_line(str, x, y + 255, cl, "quality_prev:", floods->quality_prev);
+
+    cl = 60;
+    draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->unk_status_30); // status 30 (???)
+    draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
+    draw_debug_line(str, x, y + 295, cl, "state:", floods->floodplains_state); // floodplains state
+    draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->unk_status_10); // status 10 (???)
+    draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->unk_status_10); // status 10 (???)
 
     /////// CAMERA
     if (false) {
@@ -230,7 +271,9 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// TUTORIAL
-    if (true) {auto flags = give_me_da_tut_flags();
+    x -= 10;
+    y += 150;
+    if (false) {auto flags = give_me_da_tut_flags();
         const char* const flagnames[41] = {
                 "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
                 "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",

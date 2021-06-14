@@ -21,13 +21,13 @@ typedef struct {
 void scenario_request_init(void);
 
 void scenario_request_process(void);
-
 void scenario_request_dispatch(int id);
 
+int scenario_requests_active_count();
+
 const scenario_request *scenario_request_get(int id);
+const scenario_request *scenario_request_get_visible(int index);
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request));
-
-const scenario_request *scenario_request_get_visible(int index);
 
 #endif // SCENARIO_REQUEST_H

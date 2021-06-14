@@ -27,6 +27,7 @@
 #include "map/water.h"
 
 #include <math.h>
+#include <city/floods.h>
 
 static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -993,7 +994,7 @@ static void spawn_figure_industry(building *b) {
         } else { // floodplain farms!!
             if (has_figure_of_type(b, FIGURE_CART_PUSHER))
                 return;
-            if (b->data.industry.progress >= 2000 || b->data.industry.progress > 0 && is_flood_imminent()) { // temp
+            if (b->data.industry.progress >= 2000 || b->data.industry.progress > 0 && floodplains_is_coming()) { // temp
                 figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->resource_id = b->output_resource_id;

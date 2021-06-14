@@ -138,6 +138,7 @@ static int draw_background(void) {
 
     inner_panel_draw(32, 60, 36, 13);
 
+    // todo: god description when clicking on god name
     // god rows
     draw_god_row(GOD_CERES, 66, BUILDING_SMALL_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_CERES, BUILDING_SHRINE_OSIRIS);
     draw_god_row(GOD_NEPTUNE, 106, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_SHRINE_RA);
@@ -163,6 +164,7 @@ static void draw_foreground(void) {
 }
 
 static void button_hold_festival(int param1, int param2) {
+    // todo: need festival square
     if (!city_festival_is_planned())
         window_hold_festival_show();
 }

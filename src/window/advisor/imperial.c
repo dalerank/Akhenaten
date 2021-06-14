@@ -138,27 +138,25 @@ static int get_request_status(int index) {
     int num_requests = 0;
     if (city_military_months_until_distant_battle() > 0 &&
         !city_military_distant_battle_roman_army_is_traveling_forth()) {
-        num_requests = 1;
+        num_requests = 1; // if there's an army request, display that first?
         if (index == 0) {
             if (city_military_total_legions() <= 0)
                 return STATUS_NO_LEGIONS_AVAILABLE;
             else if (city_military_empire_service_legions() <= 0)
                 return STATUS_NO_LEGIONS_SELECTED;
-            else {
+            else
                 return STATUS_CONFIRM_SEND_LEGIONS;
-            }
         }
     }
     const scenario_request *request = scenario_request_get_visible(index - num_requests);
     if (request) {
-        if (request->resource == RESOURCE_DENARII) {
+        if ((request->resource == RESOURCE_DENARII && GAME_ENV == ENGINE_ENV_C3) ||
+            (request->resource == RESOURCE_GOLD && GAME_ENV == ENGINE_ENV_PHARAOH)) {
             if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
-
         } else {
             if (city_resource_count(request->resource) < request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
-
         }
         return request->id + 1;
     }

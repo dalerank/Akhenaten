@@ -91,7 +91,6 @@ void scenario_request_process(void) {
         }
     }
 }
-
 void scenario_request_dispatch(int id) {
     if (scenario.requests[id].state == REQUEST_STATE_NORMAL)
         scenario.requests[id].state = REQUEST_STATE_DISPATCHED;
@@ -111,6 +110,17 @@ void scenario_request_dispatch(int id) {
     }
 }
 
+int scenario_requests_active_count() {
+    int count = 0;
+    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+        if (scenario.requests[i].resource && scenario.requests[i].visible &&
+            scenario.requests[i].state <= 1) {
+            count++;
+        }
+    };
+    return count;
+}
+
 const scenario_request *scenario_request_get(int id) {
     static scenario_request request;
     request.id = id;
@@ -119,6 +129,17 @@ const scenario_request *scenario_request_get(int id) {
     request.state = scenario.requests[id].state;
     request.months_to_comply = scenario.requests[id].months_to_comply;
     return &request;
+}
+const scenario_request *scenario_request_get_visible(int index) {
+    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+        if (scenario.requests[i].resource && scenario.requests[i].visible &&
+            scenario.requests[i].state <= 1) {
+            if (index == 0)
+                return scenario_request_get(i);
+            index--; // I have no idea
+        }
+    }
+    return 0;
 }
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
@@ -130,17 +151,4 @@ int scenario_request_foreach_visible(int start_index, void (*callback)(int index
         }
     }
     return index;
-}
-
-const scenario_request *scenario_request_get_visible(int index) {
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
-        if (scenario.requests[i].resource && scenario.requests[i].visible &&
-            scenario.requests[i].state <= 1) {
-            if (index == 0)
-                return scenario_request_get(i);
-
-            index--;
-        }
-    }
-    return 0;
 }

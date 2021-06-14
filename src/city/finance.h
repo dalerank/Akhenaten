@@ -61,6 +61,7 @@ typedef struct {
         int construction;
         int interest;
         int salary;
+        int stolen;
         int sundries;
         int tribute;
         int total;

@@ -95,6 +95,33 @@ void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int 
     }
 }
 
+// please email me if you have a better name for this
+int random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
+
+    // let's not make our life harder.
+    v -= minimum;
+    maximum -= minimum;
+    minimum = 0;
+
+    if (v <= minimum)
+        return 0;
+    if (v >= maximum)
+        return 1;
+
+    int length = maximum - minimum;
+    int max_length = uint16_t(-1);
+    float det = (float)max_length / (float)length;
+
+    random_generate_next();
+    uint16_t rand_short = (uint16_t)random_short();
+    rand_short = rand_short / det;
+
+    if (v < rand_short)
+        return 0;
+    else
+        return 1;
+}
+
 void random_load_state(buffer *buf) {
     data.iv1 = buf->read_u32();
     data.iv2 = buf->read_u32();
