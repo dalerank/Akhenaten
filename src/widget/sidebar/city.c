@@ -223,20 +223,20 @@ static void draw_debug_ui(int x, int y) {
     draw_debug_line(str, x, y + 155, cl, "final:", c_plus28); // lands farmable again
 
     cl = 100;
-    draw_debug_line(str, x, y + 175, cl, "season_impose:", floods->season_impose);
-    draw_debug_line(str, x, y + 185, cl, "duration_impose:", floods->duration_impose);
-    draw_debug_line(str, x, y + 195, cl, "quality_impose:", floods->quality_impose);
+    draw_debug_line(str, x, y + 175, cl, "season_initial:", floods->season_initial);
+    draw_debug_line(str, x, y + 185, cl, "duration_initial:", floods->duration_initial);
+    draw_debug_line(str, x, y + 195, cl, "quality_initial:", floods->quality_initial);
     draw_debug_line(str, x, y + 205, cl, "season:", floods->season);
     draw_debug_line(str, x, y + 215, cl, "duration:", floods->duration);
     draw_debug_line(str, x, y + 225, cl, "quality:", floods->quality);
     draw_debug_line(str, x, y + 235, cl, "(unk00):", floods->unk00);
     draw_debug_line(str, x, y + 245, cl, "quality_next:", floods->quality_next);
-    draw_debug_line(str, x, y + 255, cl, "quality_prev:", floods->quality_prev);
+    draw_debug_line(str, x, y + 255, cl, "quality_last:", floods->quality_last);
 
     cl = 60;
-    draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->unk_status_30); // status 30 (???)
+    draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->flood_progress); // status 30 (???)
     draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
-    draw_debug_line(str, x, y + 295, cl, "state:", floods->floodplains_state); // floodplains state
+    draw_debug_line(str, x, y + 295, cl, "state:", floods->state); // floodplains state
     draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->unk_status_10); // status 10 (???)
     draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->unk_status_10); // status 10 (???)
 

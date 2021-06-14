@@ -18,6 +18,7 @@
 #include "city/view.h"
 
 #include <math.h>
+#include <city/floods.h>
 
 static const int X_VIEW_OFFSETS[9] = {
         0, 30, 60,
@@ -122,9 +123,9 @@ int building_determine_worker_needed() {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        if (building_is_farm(b->type) && !b->data.industry.worker_id && b->data.industry.labor_days_left <= 47)
+        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b) && b->data.industry.labor_days_left <= 47)
             return i;
-        else if (b->type == BUILDING_PYRAMID) {
+        else if (building_is_monument(b->type)) {
             // todo
         }
     }
@@ -190,7 +191,7 @@ void building_industry_update_wheat_production(void) {
 
 int building_industry_has_produced_resource(building *b) {
 //    if (building_is_farm(b->type) && GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        if (floodplains_is_coming())
+//        if (floodplains_is_imminent())
 //            return 1;
 //        return 0;
 //    }

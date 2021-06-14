@@ -977,7 +977,7 @@ static void spawn_figure_industry(building *b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->labor_category != 255) {
+        if (b->labor_category != 255) { // normal farms
             spawn_labor_seeker(b, road.x, road.y, 50);
             if (has_figure_of_type(b, FIGURE_CART_PUSHER))
                 return;
@@ -994,7 +994,7 @@ static void spawn_figure_industry(building *b) {
         } else { // floodplain farms!!
             if (has_figure_of_type(b, FIGURE_CART_PUSHER))
                 return;
-            if (b->data.industry.progress >= 2000 || b->data.industry.progress > 0 && floodplains_is_coming()) { // temp
+            if (b->data.industry.progress >= 2000 || b->data.industry.progress > 0 && floodplains_is(FLOOD_STATE_IMMINENT)) {
                 figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->resource_id = b->output_resource_id;
