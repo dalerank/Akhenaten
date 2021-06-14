@@ -90,14 +90,14 @@ void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            image_draw_sprite(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
-                                  y + Y_VIEW_OFFSETS[i] - 90, color_mask);
+            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                  y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
     } else {
         for (int i = 4; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            image_draw_sprite(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
-                                  y + Y_VIEW_OFFSETS[i] - 90, color_mask);
+            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                  y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
     }
 
@@ -123,7 +123,10 @@ int building_determine_worker_needed() {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
-        if (floodplains_is(FLOOD_STATE_FARMABLE) && building_is_floodplain_farm(b) && b->data.industry.labor_days_left <= 47)
+        if (floodplains_is(FLOOD_STATE_FARMABLE)
+            && building_is_floodplain_farm(b)
+            && !b->data.industry.worker_id
+            && b->data.industry.labor_days_left <= 47)
             return i;
         else if (building_is_monument(b->type)) {
             // todo
@@ -139,6 +142,8 @@ void building_industry_update_production(void) {
             continue;
         b->data.industry.has_raw_materials = 0;
         if (b->labor_category != 255 && (b->houses_covered <= 0 || b->num_workers <= 0))
+            continue;
+        if (building_is_floodplain_farm(b) && b->data.industry.labor_days_left <= 0)
             continue;
         if (b->subtype.workshop_type && !b->loads_stored)
             continue;
@@ -190,11 +195,11 @@ void building_industry_update_wheat_production(void) {
 }
 
 int building_industry_has_produced_resource(building *b) {
-//    if (building_is_farm(b->type) && GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        if (floodplains_is_imminent())
-//            return 1;
-//        return 0;
-//    }
+    if (building_is_floodplain_farm(b)) {
+        if (floodplains_is(FLOOD_STATE_IMMINENT) && b->data.industry.progress > 0)
+            return 1;
+        return 0;
+    }
     return b->data.industry.progress >= max_progress(b);
 }
 void building_industry_start_new_production(building *b) {

@@ -616,6 +616,12 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_PIG_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 5, 0);
             break;
+        case BUILDING_FIGS_FARM:
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 6, 0);
+            break;
+        case BUILDING_HENNA_FARM:
+            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 7, 0);
+            break;
             // industry
         case BUILDING_MARBLE_QUARRY:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MARBLE_QUARRY));
@@ -837,9 +843,8 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_HIPPODROME:
             if (GAME_ENV == ENGINE_ENV_C3) {
                 add_hippodrome(b);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_SENET_HOUSE));
-            }
             break;
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:

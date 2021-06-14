@@ -7,6 +7,7 @@
 
 void image_draw(int image_id, int x, int y, color_t color_mask = 0);
 void image_draw_sprite(int image_id, int x, int y, color_t color_mask);
+void image_draw_from_below(int image_id, int x, int y, color_t color_mask);
 void image_draw_enemy(int image_id, int x, int y);
 void image_draw_blend(int image_id, int x, int y, color_t color);
 void image_draw_blend_alpha(int image_id, int x, int y, color_t color);

@@ -525,11 +525,16 @@ static void draw_footprint(int x, int y, int grid_offset) {
                     image_id -= 90;
             }
 
-            map_image_set(grid_offset, image_id);
+//            map_image_set(grid_offset, image_id);
         }
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        if (building_id) {
+            building *b = building_get(building_id);
+            if (building_is_farm(b->type))
+                draw_farm_crops(b, x, y);
+        }
     }
 }
 static void draw_outside_map(int x, int y, int grid_offset) {
@@ -607,14 +612,14 @@ void draw_debug(int x, int y, int grid_offset) {
             string_from_int(str, b->grid_offset, 0);
             text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);
 
-//            string_from_int(str, map_image_at(grid_offset), 0);
-//            text_draw_shadow(str, x + 13, y - 5, COLOR_BLUE);
+            string_from_int(str, map_image_at(grid_offset), 0);
+            text_draw_shadow(str, x + 13, y - 5, COLOR_BLUE);
 
-//            int p = map_bitfield_get(grid_offset);
-//            if (p & 32)
-//                p -= 32;
-//            string_from_int(str, p, 0);
-//            text_draw_shadow(str, x + 23, y + 10, COLOR_RED);
+            int p = map_bitfield_get(grid_offset);
+            if (p & 32)
+                p -= 32;
+            string_from_int(str, p, 0);
+            text_draw_shadow(str, x + 23, y + 10, COLOR_RED);
 
 //            string_from_int(str, b->next_part_building_id, 0);
 //            text_draw_shadow(str, x + 23, y + 20, COLOR_GREEN);
@@ -869,7 +874,9 @@ static void draw_entertainment_shows_ph(building *b, int x, int y, color_t color
 static void draw_animation(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     building *b = building_get(map_building_at(grid_offset));
-    if (!map_property_is_draw_tile(grid_offset) || b->type == 0 || b->state != BUILDING_STATE_VALID) {
+    if (b->type == 0 || b->state != BUILDING_STATE_VALID)
+        return;
+    if (!map_property_is_draw_tile(grid_offset)) {
 //    if (map_sprite_bridge_at(grid_offset)) // todo
 //        city_draw_bridge(x, y, grid_offset);
         return;
@@ -912,7 +919,7 @@ static void draw_animation(int x, int y, int grid_offset) {
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
-            draw_farm_crops(b, x, y);
+//            draw_farm_crops(b, x, y);
             break;
         case BUILDING_WATER_LIFT:
             break; // todo

@@ -369,7 +369,9 @@ int building_is_farm(int type) {
            || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
 }
 int building_is_floodplain_farm(building *b) {
-    return (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type) && b->data.industry.labor_state >= 1);
+    return (GAME_ENV == ENGINE_ENV_PHARAOH
+        && building_is_farm(b->type)
+        && b->labor_category == 255); // b->data.industry.labor_state >= 1
 }
 int building_is_workshop(int type) {
     return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)

@@ -772,6 +772,10 @@ void image_draw_sprite(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
     image_draw(image_id, x - img->sprite_offset_x, y - img->sprite_offset_y, color_mask);
 }
+void image_draw_from_below(int image_id, int x, int y, color_t color_mask) {
+    const image *img = image_get(image_id);
+    image_draw(image_id, x - img->sprite_offset_x, y - img->height, color_mask);
+}
 void image_draw_enemy(int image_id, int x, int y) {
     if (image_id <= 0 || image_id >= 801)
         return;
@@ -1004,7 +1008,6 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     }
     if (!color_mask)
         draw_compressed(img, data, x, y, height);
-    else {
+    else
         draw_compressed_and(img, data, x, y, height, color_mask);
-    }
 }
