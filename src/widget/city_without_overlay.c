@@ -691,9 +691,9 @@ void draw_debug(int x, int y, int grid_offset) {
         }
 
 
-        d = map_routing_distance(grid_offset);
-        string_from_int(str, d, 0);
-        text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
+//        d = map_get_shoreorder(grid_offset);
+//        string_from_int(str, d, 0);
+//        text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
 
 //        d = map_image_at(grid_offset) - 14252;
 //        if (d > 200 && d <= 1514 && true) {

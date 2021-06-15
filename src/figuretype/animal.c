@@ -550,7 +550,7 @@ void figure::hippodrome_horse_action() {
 //    f->is_ghost = 0;
 //    figure_image_increase_offset(8);
 //    if (!(building_get(building_id)->state)) {
-//        f->kill();
+//        f->poof();
 //        return;
 //    }
 //    switch (f->action_state) {
@@ -619,7 +619,7 @@ void figure::hippodrome_horse_action() {
 //
 //            f->wait_ticks++;
 //            if (f->wait_ticks > 150)
-//                f->kill();
+//                f->poof();
 //
 //            break;
 //    }
@@ -707,7 +707,7 @@ void figure::hunter_action() {
             break;
         case 10: // picking up prey
             if (target_figure_id)
-                prey->figure_delete();
+                prey->figure_delete_UNSAFE();
             target_figure_id = 0;
             if (anim_frame >= 17)
                 advance_action(12);

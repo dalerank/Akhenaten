@@ -656,7 +656,7 @@ static void init_savegame_data(int expanded) {
             state->junk16a = create_savegame_piece(312 , 0, "junk16a"); // 71x 4-bytes emptiness
             state->junk16b = create_savegame_piece(64, 0, "junk16b"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, 0, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->GRID04_8BIT = create_savegame_piece(51984, 1, "terrain_floodplain_soil_malus"); // todo: 1-byte grid
+            state->GRID04_8BIT = create_savegame_piece(51984, 1, "terrain_floodplain_soil_depletion"); // todo: 1-byte grid
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, 0, "junk17");

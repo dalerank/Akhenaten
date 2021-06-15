@@ -161,7 +161,7 @@ void figure::entertainer_action() {
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
                 } else
-                    kill();
+                    poof();
             }
             break;
         case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
@@ -193,9 +193,9 @@ void figure::entertainer_action() {
                         destination_y = y_road;
                         roam_length = 0;
                     } else
-                        kill();
+                        poof();
                 } else
-                    kill();
+                    poof();
             }
             is_ghost = 1;
             break;
@@ -205,7 +205,7 @@ void figure::entertainer_action() {
             is_ghost = 0;
             roam_length++;
             if (roam_length >= 3200)
-                kill();
+                poof();
             if (do_gotobuilding(destination_building_id))
                 entertainer_update_shows();
             break;

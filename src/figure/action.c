@@ -156,7 +156,7 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
 
 void figure::advance_action(short NEXT_ACTION) {
     if (NEXT_ACTION == 0)
-        kill();
+        poof();
     else
         action_state = NEXT_ACTION;
 }
@@ -252,9 +252,9 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
-                advance_action(FAIL_ACTION); // kill dude!!!
+                advance_action(FAIL_ACTION); // poof dude!!!
             else
-                advance_action(NEXT_ACTION); // don't kill if it's not *requiring* roads, was just looking for one
+                advance_action(NEXT_ACTION); // don't poof if it's not *requiring* roads, was just looking for one
         }
     } else
         return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
@@ -309,7 +309,7 @@ void figure::action_perform() {
         switch (type) {
             case FIGURE_IMMIGRANT:
                 if (b_imm->state != BUILDING_STATE_VALID || b_imm->immigrant_figure_id != id || !b_imm->house_size)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_ENGINEER:
             case FIGURE_PREFECT:
@@ -332,33 +332,33 @@ void figure::action_perform() {
             case FIGURE_WATER_CARRIER:
             case FIGURE_PRIEST:
                 if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_HUNTER:
                 if (b->state != BUILDING_STATE_VALID)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_CART_PUSHER:
                 if (destination_building_id)
                     break;
 //                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//                    return figure_delete();
+//                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_WAREHOUSEMAN:
                 if (destination_building_id)
                     break;
                 if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_LABOR_SEEKER:
             case FIGURE_MARKET_BUYER:
                 if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 break;
             case FIGURE_DELIVERY_BOY:
             case FIGURE_TRADE_CARAVAN_DONKEY:
                 if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
-                    return figure_delete();
+                    return figure_delete_UNSAFE();
                 if (leader->is_ghost)
                     is_ghost = 1;
                 break;
@@ -383,6 +383,8 @@ void figure::action_perform() {
                 do_returnhome();
                 break;
         }
+        if (state == FIGURE_STATE_DYING)
+           figure_combat_handle_corpse();
 
         ////////////
 
@@ -478,7 +480,11 @@ void figure::action_perform() {
 
         // if DEAD, delete figure
         if (state == FIGURE_STATE_DEAD)
-            return figure_delete();
+            return figure_delete_UNSAFE();
+
+        // poof if LOST
+        if (direction == DIR_FIGURE_LOST)
+            poof();
 
         // advance sprite offset
         figure_image_update();

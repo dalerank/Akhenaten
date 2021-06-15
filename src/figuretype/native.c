@@ -16,7 +16,7 @@ void figure::indigenous_native_action() {
 //    use_cross_country = 0;
 //    max_roam_length = 800;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
-//        kill();
+//        poof();
 
 //    figure_image_increase_offset(12);
     switch (action_state) {
@@ -27,7 +27,7 @@ void figure::indigenous_native_action() {
                 destination_x = source_x;
                 destination_y = source_y;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
@@ -35,7 +35,7 @@ void figure::indigenous_native_action() {
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_LOST) {
-                kill();
+                poof();
             }
             break;
         case FIGURE_ACTION_158_NATIVE_CREATED:

@@ -18,7 +18,7 @@ void figure::school_child_action() {
             is_ghost = 0;
             roam_length++;
             if (roam_length >= max_roam_length)
-                kill();
+                poof();
 
             roam_ticks(2);
             break;
@@ -70,7 +70,7 @@ void figure::tax_collector_action() {
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
                 } else {
-                    kill();
+                    poof();
                 }
             }
             break;
@@ -80,7 +80,7 @@ void figure::tax_collector_action() {
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
-                    kill();
+                    poof();
                 } else {
                     action_state = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
                     init_roaming();
@@ -99,7 +99,7 @@ void figure::tax_collector_action() {
                     destination_x = x_road;
                     destination_y = y_road;
                 } else {
-                    kill();
+                    poof();
                 }
             }
             roam_ticks(1);
@@ -112,7 +112,7 @@ void figure::tax_collector_action() {
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
     };

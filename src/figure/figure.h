@@ -148,6 +148,9 @@ public:
     bool has_figure_color(); // minimap.c
 
     void kill() {
+        set_state(FIGURE_STATE_DYING);
+    };
+    void poof() {
         set_state(FIGURE_STATE_DEAD);
     };
     bool available() {
@@ -162,7 +165,7 @@ public:
     void save(buffer *buf);
 
     // figure/figure.c
-    void figure_delete();
+    void figure_delete_UNSAFE();
 
     // map/figure.c
     void map_figure_add();

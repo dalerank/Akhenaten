@@ -47,9 +47,11 @@ enum {
 };
 
 extern int all_river_tiles[];
+extern int all_floodplain_tiles[];
 extern int all_river_tiles_x[];
 extern int all_river_tiles_y[];
 extern int river_total_tiles;
+extern int floodplain_total_tiles;
 
 typedef struct floodplain_order {
     bool initialized = false;
@@ -57,7 +59,7 @@ typedef struct floodplain_order {
     uint32_t amount;
 } floodplain_order;
 
-extern floodplain_order floodplain_offsets[60];
+extern floodplain_order floodplain_offsets[30];
 
 int map_terrain_is(int grid_offset, int terrain);
 
@@ -109,13 +111,13 @@ void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
-void map_floodplain_rebuild();
+int map_floodplain_rebuild_shoreorder();
 uint8_t map_get_shoreorder(int grid_offset);
 uint8_t map_get_growth(int grid_offset);
 uint8_t map_get_fertility(int grid_offset);
 uint8_t map_get_fertility_average(int grid_offset);
 void map_set_growth(int grid_offset, int growth);
-void map_set_soil_malus(int grid_offset, int malus);
+void map_soil_depletion(int grid_offset, int malus);
 
 void map_terrain_backup(void);
 void map_terrain_restore(void);

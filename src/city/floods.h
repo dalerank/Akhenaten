@@ -19,21 +19,23 @@ typedef struct floods_data {
     int season;
     int duration;
     int quality;
-    int unk00;          // 00
+    int unk00;              // 00
     int quality_next;
     int quality_last;
     //
     // Pharaoh had a struct containing tile data for the updates.
     // I reimplemented it via other means.
     //
-    int flood_progress; // 1E -> 13
-    int unk01;          // 05
-    int state;          // 06 -> 03
-    int unk_status_10;  // 0A
-    int unk02;          // 01
+    int flood_progress;     // 0 - 30
+    int unk01;              // 05
+    int state;              // 1 - 6
+    int floodplain_width;   // 0 - 30
+    int unk02;              // 01
 } floods_data;
 
 floods_data* give_me_da_floods_data();
+
+void floodplains_init();
 
 int floodplains_current_cycle_tick();
 int floodplains_current_cycle();

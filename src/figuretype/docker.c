@@ -276,10 +276,10 @@ void figure::docker_action() {
 //    cart_image_id = 0;
     building *b = building_get(building_id);
     if (b->state != BUILDING_STATE_VALID)
-        kill();
+        poof();
 
     if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF)
-        kill();
+        poof();
 
     if (b->data.dock.num_ships)
         b->data.dock.num_ships--;
@@ -370,10 +370,10 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
@@ -384,10 +384,10 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
@@ -399,10 +399,10 @@ void figure::docker_action() {
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
@@ -413,7 +413,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:

@@ -205,7 +205,7 @@ void figure::extinguish_fire() {
                 destination_y = y_road;
                 route_remove();
             } else
-                kill();
+                poof();
         }
     }
 }
@@ -227,7 +227,7 @@ void figure::engineer_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
-            do_enterbuilding(false, building_id);
+            do_enterbuilding(true, building_id);
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_62_ENGINEER_ROAMING:
@@ -257,7 +257,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(false, building_id);
+            do_enterbuilding(true, building_id);
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
@@ -272,7 +272,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 roam_length = 0;
                 wait_ticks = 50;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
             extinguish_fire();
@@ -288,7 +288,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                     route_remove();
                     roam_length = 0;
                 } else
-                    kill();
+                    poof();
             }
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -297,7 +297,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 destination_y = target->tile_y;
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             break;
     }
     // graphic id
@@ -350,7 +350,7 @@ void figure::policeman_action() {
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
                 } else
-                    kill();
+                    poof();
             }
             break;
         case 9:
@@ -360,7 +360,7 @@ void figure::policeman_action() {
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == building_id) {
                     // returned to own building
-                    kill();
+                    poof();
                 } else {
                     action_state = FIGURE_ACTION_72_PREFECT_ROAMING;
                     init_roaming();
@@ -380,7 +380,7 @@ void figure::policeman_action() {
                     destination_y = y_road;
                     route_remove();
                 } else
-                    kill();
+                    poof();
             }
             roam_ticks(1);
             break;
@@ -392,7 +392,7 @@ void figure::policeman_action() {
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
             terrain_usage = TERRAIN_USAGE_ANY;
@@ -405,7 +405,7 @@ void figure::policeman_action() {
                     route_remove();
                     roam_length = 0;
                 } else
-                    kill();
+                    poof();
             }
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -414,7 +414,7 @@ void figure::policeman_action() {
                 destination_y = target->tile_y;
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             break;
     }
     // graphic id
@@ -448,7 +448,7 @@ void figure::magistrate_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(false, building_id);
+            do_enterbuilding(true, building_id);
             break;
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
@@ -477,7 +477,7 @@ void figure::water_carrier_action() {
 //                    set_cross_country_destination(x_road, y_road);
 //                    roam_length = 0;
 //                } else
-//                    kill();
+//                    poof();
 //            }
 //            break;
 //        case 9:
@@ -487,7 +487,7 @@ void figure::water_carrier_action() {
 //            if (move_ticks_cross_country(1) == 1) {
 //                if (map_building_at(grid_offset_figure) == building_id) {
 //                    // returned to own building
-//                    kill();
+//                    poof();
 //                } else {
 //                    action_state = FIGURE_ACTION_72_PREFECT_ROAMING;
 //                    init_roaming();
@@ -507,7 +507,7 @@ void figure::water_carrier_action() {
 //                    destination_y = y_road;
 //                    route_remove();
 //                } else
-//                    kill();
+//                    poof();
 //            }
 //            roam_ticks(1);
 //            break;
@@ -519,7 +519,7 @@ void figure::water_carrier_action() {
 //                set_cross_country_destination(b->x, b->y);
 //                roam_length = 0;
 //            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
-//                kill();
+//                poof();
 //            break;
 //    }
 //    // graphic id
@@ -552,7 +552,7 @@ void figure::worker_action() {
     building *b_dest = building_get(destination_building_id);
     if (b->state != BUILDING_STATE_VALID
         || b_dest->state != BUILDING_STATE_VALID || b_dest->data.industry.worker_id != id)
-        kill();
+        poof();
     switch (action_state) {
         case 9:
             break;

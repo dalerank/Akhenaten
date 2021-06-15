@@ -399,7 +399,7 @@ void figure::soldier_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
@@ -408,7 +408,7 @@ void figure::soldier_action() {
             destination_y = source_y;
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
 
@@ -431,7 +431,7 @@ void figure::soldier_action() {
             else if (direction == DIR_FIGURE_LOST) {
                 alternative_location_index++;
                 if (alternative_location_index > 168)
-                    kill();
+                    poof();
 
                 anim_frame = 0;
             }
@@ -468,7 +468,7 @@ void figure::soldier_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
@@ -499,7 +499,7 @@ void figure::soldier_action() {
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         }
@@ -516,7 +516,7 @@ void figure::soldier_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:

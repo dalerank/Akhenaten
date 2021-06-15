@@ -20,21 +20,21 @@ void figure::market_buyer_action() {
             if (do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
                 if (collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(destination_building_id))
-                        kill();
+                        poof();
                 } else {
                     if (!take_food_from_granary(building_id, destination_building_id))
-                        kill();
+                        poof();
                 }
             }
 //            move_ticks(1);
 //            if (direction == DIR_FIGURE_AT_DESTINATION) {
 //                if (collecting_item_id > 3) {
 //                    if (!take_resource_from_warehouse(destination_building_id))
-//                        kill();
+//                        poof();
 //
 //                } else {
 //                    if (!take_food_from_granary(building_id, destination_building_id))
-//                        kill();
+//                        poof();
 //                }
 //                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
 //                destination_x = source_x;
@@ -52,7 +52,7 @@ void figure::market_buyer_action() {
             do_returnhome();
 //            move_ticks(1);
 //            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-//                kill();
+//                poof();
 //            else if (direction == DIR_FIGURE_REROUTE)
 //                route_remove();
             break;
@@ -186,16 +186,16 @@ void figure::delivery_boy_action() {
 
     figure *leader = figure_get(leading_figure_id);
 //    if (leading_figure_id <= 0 || leader->action_state == FIGURE_ACTION_149_CORPSE)
-//        kill();
+//        poof();
 //    else {
         if (leader->state == FIGURE_STATE_ALIVE) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY)
                 follow_ticks(1);
             else
-                kill();
+                poof();
         } else { // leader arrived at market, drop resource at market
             building_get(building_id)->data.market.inventory[collecting_item_id] += 100;
-            kill();
+            poof();
         }
 //    }
     if (leader->is_ghost)

@@ -237,8 +237,8 @@ static void draw_debug_ui(int x, int y) {
     draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->flood_progress); // status 30 (???)
     draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
     draw_debug_line(str, x, y + 295, cl, "state:", floods->state); // floodplains state
-    draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->unk_status_10); // status 10 (???)
-    draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->unk_status_10); // status 10 (???)
+    draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
+    draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
 
     /////// CAMERA
     if (false) {

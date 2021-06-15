@@ -238,12 +238,11 @@ void building_curse_farms(int big_curse) {
     }
 }
 void building_farm_deplete_soil(const building *b) {
+    // DIFFERENT from original Pharaoh... and a bit easier to do?
     int malus = (float)b->data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
-//    if (floodplains_is(FLOOD_STATE_IMMINENT) && b->data.industry.progress > 0)
-//        malus = -60;
     for (int _y = b->y; _y < b->y + b->size; _y++)
         for (int _x = b->x; _x < b->x + b->size; _x++)
-            map_set_soil_malus(map_grid_offset(_x, _y), malus);
+            map_soil_depletion(map_grid_offset(_x, _y), malus);
     update_farm_image(b);
 }
 

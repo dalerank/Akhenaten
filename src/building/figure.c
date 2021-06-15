@@ -1099,10 +1099,10 @@ static void spawn_figure_dock(building *b) {
             }
         }
         if (existing_dockers > max_dockers) {
-            // too many dockers, kill one of them
+            // too many dockers, poof one of them
             for (int i = 2; i >= 0; i--) {
                 if (b->data.dock.docker_ids[i]) {
-                    figure_get(b->data.dock.docker_ids[i])->kill();
+                    figure_get(b->data.dock.docker_ids[i])->poof();
                     break;
                 }
             }

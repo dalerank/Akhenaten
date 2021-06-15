@@ -158,7 +158,7 @@ void figure::determine_granaryman_destination( int road_network_id) {
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD))
                 terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
         } else
-            kill();
+            poof();
         return;
     }
     // delivering resource
@@ -193,7 +193,7 @@ void figure::determine_warehouseman_destination(int road_network_id) {
             advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
         } else
-            kill();
+            poof();
         return;
     }
     building *warehouse = building_get(building_id);
@@ -224,7 +224,7 @@ void figure::determine_warehouseman_destination(int road_network_id) {
     int empty_warehouse = building_storage_get(building_get(building_id)->storage_id)->empty_all; // deliver to another warehouse because this one is being emptied
     if (destination_building_id && empty_warehouse) {
         if (destination_building_id == building_id)
-            kill();
+            poof();
         else
             advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
         return;
@@ -332,10 +332,10 @@ void figure::cartpusher_action() {
         case ACTION_15_RETURNING2:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
             if (building_is_floodplain_farm(b))
-                kill();
+                poof();
             else
                 do_returnhome();
-//            kill(); // meh, useless?
+//            poof(); // meh, useless?
             break;
     }
     cart_update_image();

@@ -1,6 +1,7 @@
 #include <game/time.h>
 #include <map/tiles.h>
 #include <map/building.h>
+#include <map/terrain.h>
 #include "floods.h"
 
 #include "city/constants.h"
@@ -21,6 +22,10 @@ const double randomizing_double = 391.68; //0x40787ae147ae147b; // hardcoded
 static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
+void floodplains_init() {
+    data.floodplain_width = map_floodplain_rebuild_shoreorder();
+}
+
 int floodplains_current_cycle_tick() {
     return cycle_tick;
 }
@@ -33,10 +38,10 @@ int floodplains_flooding_start_cycle() {
     return data.season * 1.05 + 15 + h;
 }
 int floodplains_flooding_end_cycle() {
-    return floodplains_flooding_start_cycle() + data.duration + data.unk_status_10 * 2;
+    return floodplains_flooding_start_cycle() + data.duration + data.floodplain_width * 2;
 }
 int floodplains_flooding_rest_period_cycle() {
-    return (float)data.quality_last * (float)data.unk_status_10 * 0.01;
+    return (float)data.quality_last * (float)data.floodplain_width * 0.01;
 }
 
 bool floodplains_is(int state) {
@@ -60,11 +65,11 @@ void floodplains_tick_update() {
     cycle_tick = total_ticks % 25;
 
     // ???
-    if (data.flood_progress == 0) {
-        data.state = FLOOD_STATE_FARMABLE;
-        data.quality = 0;
-        return;
-    }
+//    if (data.flood_progress == 0) {
+//        data.state = FLOOD_STATE_FARMABLE;
+//        data.quality = 0;
+//        return;
+//    }
 
     // clamp and update flood quality
     if (game_time_tick() == 1 && data.state != FLOOD_STATE_FLOODING) {
@@ -148,7 +153,7 @@ void floodplains_tick_update() {
 
             // todo: FUN_004bd0b0(data.season_initial);
         }
-        else if (cycle == cycle_flooding_start + data.unk_status_10) {
+        else if (cycle == cycle_flooding_start + data.floodplain_width) {
             int a = 2;
             // todo ?????
         }
@@ -165,7 +170,7 @@ void floodplains_tick_update() {
         map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_tick);
 
     // update grass growth
-    if (cycle_tick % 5 == 0 && cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period)
+    if (cycle_tick % 10 == 0 && cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period)
     map_advance_floodplain_growth();
 }
 
@@ -186,5 +191,5 @@ void floodplains_load_state(buffer *floodplain_data) {
     data.flood_progress = 30;
     data.unk00 = 0;
     data.state = FLOOD_STATE_FARMABLE;
-    data.unk_status_10 = 10;
+    data.floodplain_width = 10;
 }

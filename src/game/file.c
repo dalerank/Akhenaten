@@ -73,6 +73,7 @@
 
 #include <string.h>
 #include <building/count.h>
+#include <city/floods.h>
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
@@ -236,7 +237,7 @@ static void initialize_saved_game(void) {
     city_view_init();
 
     map_routing_update_all();
-    map_floodplain_rebuild();
+    floodplains_init();
 
     map_orientation_update_buildings();
     figure_route_clean();

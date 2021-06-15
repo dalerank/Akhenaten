@@ -88,7 +88,7 @@ static void foreach_river_tile(void (*callback)(int x, int y, int grid_offset)) 
 //    SDL_Log("Average time: %i (%i cycles)", clock_total / clock_count, clock_count);
 }
 static void foreach_floodplain_order(int order, void (*callback)(int x, int y, int grid_offset, int order)) {
-    if (order < 0 || order >= 60)
+    if (order < 0 || order >= 30)
         return;
     floodplain_order *order_cache = &floodplain_offsets[order];
     for (int i = 0; i < order_cache->amount; i++) {
@@ -720,7 +720,7 @@ static void set_road_with_aqueduct_image(int grid_offset) {
 }
 static void set_road_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-        map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING))
+        map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING))
         return;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
         set_road_with_aqueduct_image(grid_offset);
@@ -869,11 +869,13 @@ static void set_river_image(int x, int y, int grid_offset) {
         set_deepwater_image(grid_offset);
 }
 static void set_floodplain_edges_image(int x, int y, int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_ROAD)
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)
         || (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))) // non-flooded floodplain, skip
         return;
     int image_id = 0;
     if (!map_terrain_is(grid_offset, TERRAIN_WATER)) { // NOT floodplain, but not water either -- dry land shoreline
+        if (map_terrain_is(grid_offset, TERRAIN_ROAD))
+            return;
         const terrain_image *img = map_image_context_get_floodplain_shore(grid_offset); // this checks against FLOODPLAIN tiles
         image_id = image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 48 + img->group_offset + img->item_offset;
     } else { // floodplain which is ALSO flooded --  this is a waterline
@@ -980,8 +982,6 @@ void map_advance_floodplain_growth() {
     foreach_floodplain_order(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(36 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(48 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
     if (floodplain_growth_advance >= 12)
@@ -994,7 +994,7 @@ static void floodplain_set_inundation(int x, int y, int grid_offset, int order) 
 
     int min = floodplain_flood_tick - 150;
     int max = floodplain_flood_tick + 50;
-    int v = (order - 2) * 25; // every cycle (25 ticks) the order increases or decreases by one.
+    int v = (order + 1) * 25; // every cycle (25 ticks) the order increases or decreases by one.
     int flooded = !random_bool_lerp_scalar_int(min, max, v);
 
     int b_id = map_building_at(grid_offset);
@@ -1003,6 +1003,8 @@ static void floodplain_set_inundation(int x, int y, int grid_offset, int order) 
     if (flooded != map_terrain_is(grid_offset, TERRAIN_WATER)) {
         if (floodplain_is_flooding == 1) {
             map_terrain_add(grid_offset, TERRAIN_WATER);
+
+            map_soil_depletion(grid_offset, 0);
 
             // hide building
             if (b_id && b->state == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING))
@@ -1042,7 +1044,7 @@ void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {
     floodplain_is_flooding = is_flooding;
     if (floodplain_is_flooding == 0)
         return;
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 30; i++)
         foreach_floodplain_order(i, floodplain_set_inundation);
 }
 

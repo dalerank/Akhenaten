@@ -403,12 +403,12 @@ void figure::trade_caravan_action() {
                     route_remove();
                     break;
                 case DIR_FIGURE_LOST:
-                    kill();
+                    poof();
                     is_ghost = 1;
                     break;
             }
             if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
@@ -451,13 +451,13 @@ void figure::trade_caravan_action() {
             switch (direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-                    kill();
+                    poof();
                     break;
                 case DIR_FIGURE_REROUTE:
                     route_remove();
                     break;
                 case DIR_FIGURE_LOST:
-                    kill();
+                    poof();
                     break;
             }
             break;
@@ -473,14 +473,14 @@ void figure::trade_caravan_donkey_action() {
 
     figure *leader = figure_get(leading_figure_id);
 //    if (leading_figure_id <= 0)
-//        kill();
+//        poof();
 //    else {
         if (leader->action_state == FIGURE_ACTION_149_CORPSE)
-            kill();
+            poof();
         else if (leader->state != FIGURE_STATE_ALIVE)
-            kill();
+            poof();
         else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY)
-            kill();
+            poof();
         else {
             follow_ticks(1);
         }
@@ -505,18 +505,18 @@ void figure::native_trader_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST) {
-                kill();
+                poof();
                 is_ghost = 1;
             }
             if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
-                kill();
+                poof();
 
             break;
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
 
@@ -534,7 +534,7 @@ void figure::native_trader_action() {
                     destination_x = tile.x;
                     destination_y = tile.y;
                 } else {
-                    kill();
+                    poof();
                 }
             }
             anim_frame = 0;
@@ -605,7 +605,7 @@ void figure::trade_ship_action() {
                     destination_x = tile.x;
                     destination_y = tile.y;
                 } else {
-                    kill();
+                    poof();
                 }
             }
             anim_frame = 0;
@@ -618,7 +618,7 @@ void figure::trade_ship_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST) {
-                kill();
+                poof();
                 if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                     city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
                     city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
@@ -676,7 +676,7 @@ void figure::trade_ship_action() {
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
         case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED:
@@ -704,11 +704,11 @@ void figure::trade_ship_action() {
             height_adjusted_ticks = 0;
             if (direction == DIR_FIGURE_AT_DESTINATION) {
                 action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
-                kill();
+                poof();
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
             else if (direction == DIR_FIGURE_LOST)
-                kill();
+                poof();
 
             break;
     }

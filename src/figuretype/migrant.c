@@ -109,7 +109,7 @@ void figure::immigrant_action() {
             do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-            if (do_enterbuilding(true, immigrant_building_id))
+            if (do_enterbuilding(false, immigrant_building_id))
                 add_house_population(b, migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
@@ -151,7 +151,7 @@ void figure::homeless_action() {
                         immigrant_building_id = building_id;
                         advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                     } else
-                        kill();
+                        poof();
                 } else
                     advance_action(FIGURE_ACTION_10_HOMELESS_LEAVING);
             }
@@ -160,7 +160,7 @@ void figure::homeless_action() {
             do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-            if (do_enterbuilding(true, immigrant_building_id))
+            if (do_enterbuilding(false, immigrant_building_id))
                 add_house_population(building_get(immigrant_building_id), migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;

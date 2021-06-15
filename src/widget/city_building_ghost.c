@@ -1056,7 +1056,7 @@ static void draw_road(const map_tile *tile, int x, int y) {
             image_id += map_get_aqueduct_with_road_image(grid_offset);
         else
             blocked = 1;
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN))
         blocked = 1;
     else {
         image_id = image_id_from_group(GROUP_TERRAIN_ROAD);

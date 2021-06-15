@@ -33,7 +33,7 @@ void formation_legion_delete_for_fort(building *fort) {
         formation *m = formation_get(fort->formation_id);
         if (m->in_use) {
             if (m->standard_figure_id)
-                figure_get(m->standard_figure_id)->figure_delete();
+                figure_get(m->standard_figure_id)->figure_delete_UNSAFE();
 
             formation_clear(fort->formation_id);
             formation_calculate_legion_totals();
@@ -214,7 +214,7 @@ static void kill_soldiers(formation *m, int kill_percentage) {
             if (!f->is_dead()) {
                 if (soldiers_to_kill) {
                     soldiers_to_kill--;
-                    f->kill();
+                    f->poof();
                 }
             }
         }

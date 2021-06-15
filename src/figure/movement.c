@@ -242,6 +242,10 @@ void figure::advance_route_tile(int roaming_enabled) {
         direction = DIR_FIGURE_REROUTE;
 }
 void figure::move_ticks(int num_ticks, int roaming_enabled) {
+    if (!is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+        kill();
+    if (is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+        kill();
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;

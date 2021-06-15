@@ -13,12 +13,14 @@ static grid_xx terrain_moisture = {0, {FS_UINT8, FS_UINT8}};
 int all_river_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
 int all_river_tiles_x[GRID_SIZE_PH * GRID_SIZE_PH];
 int all_river_tiles_y[GRID_SIZE_PH * GRID_SIZE_PH];
+int all_floodplain_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
 int river_total_tiles = 0;
+int floodplain_total_tiles = 0;
 
 static grid_xx terrain_floodplain_shoreorder = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
-static grid_xx terrain_floodplain_soil_malus = {0, {FS_INT8, FS_INT8}};
+static grid_xx terrain_floodplain_soil_depletion = {0, {FS_INT8, FS_INT8}};
 
 // unknown data grids
 static grid_xx GRID01_8BIT = {0, {FS_INT8, FS_INT8}}; // all 00
@@ -323,30 +325,44 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 #include <stdlib.h>
 #include <city/data_private.h>
 
-floodplain_order floodplain_offsets[60];
+floodplain_order floodplain_offsets[30];
 
-void map_floodplain_rebuild() {
+int map_floodplain_rebuild_shoreorder() {
+
+    // reset all to zero
     map_grid_fill(&terrain_floodplain_shoreorder, 0);
     map_grid_fill(&terrain_floodplain_growth, 0);
     map_grid_fill(&terrain_floodplain_fertility, 0);
+    for (int order = 1; order <= 30; order++) {
+        floodplain_offsets[order].initialized = false;
+        floodplain_offsets[order].amount = 0;
+    }
+    river_total_tiles = 0;
+    floodplain_total_tiles = 0;
 
     // fill in all water/river tiles
-    int tile = 0;
+    int river_tile = 0;
+    int floodplain_tile = 0;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
-                all_river_tiles[tile] = grid_offset;
-                all_river_tiles_x[tile] = x;
-                all_river_tiles_y[tile] = y;
+                all_river_tiles[river_tile] = grid_offset;
+                all_river_tiles_x[river_tile] = x;
+                all_river_tiles_y[river_tile] = y;
                 river_total_tiles++;
-                tile++;
+                river_tile++;
+            }
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                all_floodplain_tiles[floodplain_tile] = grid_offset;
+                floodplain_total_tiles++;
+                floodplain_tile++;
             }
         }
     }
 
     // fill in shore order data
-    for (int order = 1; order < 60; order++) {
+    for (int order = 1; order < 30; order++) {
 
         // temporary buffer to be transfered later into the offset caches
         int temp_cache_buffer[grid_total_size[ENGINE_ENV_PHARAOH]];
@@ -407,7 +423,35 @@ void map_floodplain_rebuild() {
         order_cache->amount = temp_cache_howmany;
         for (int o = 0; o < temp_cache_howmany; o++)
             order_cache->offsets[o] = temp_cache_buffer[o];
+
+        // no more shore tiles, return!
+        if (temp_cache_howmany == 0)
+            return order;
     }
+
+    // if past 29, fill in all the rest with the same order
+    int temp_cache_buffer[grid_total_size[ENGINE_ENV_PHARAOH]];
+    int temp_cache_howmany = 0;
+    for (int i = 0; i < floodplain_total_tiles; i++) {
+        int offset = all_floodplain_tiles[i];
+        if (map_get_shoreorder(offset) == 0) {
+            map_grid_set(&terrain_floodplain_shoreorder, offset, 30);
+            // add current tile to temp list of offsets
+            temp_cache_buffer[temp_cache_howmany] = offset;
+            temp_cache_howmany++;
+        }
+    }
+    // fill in the last order!
+    floodplain_order *order_cache = &floodplain_offsets[29];
+    if (order_cache->initialized)
+        free(order_cache->offsets);
+    order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
+    order_cache->initialized = true;
+    order_cache->amount = temp_cache_howmany;
+    for (int o = 0; o < temp_cache_howmany; o++)
+        order_cache->offsets[o] = temp_cache_buffer[o];
+
+    return 30;
 }
 
 #ifndef min
@@ -428,9 +472,9 @@ uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
     int fert_value = map_grid_get(&terrain_floodplain_fertility, grid_offset); // start with the "theoretical" value
 
     // calculate and add malus
-    int malus = map_grid_get(&terrain_floodplain_soil_malus, grid_offset);
+    int malus = map_grid_get(&terrain_floodplain_soil_depletion, grid_offset);
     if (malus != 0)
-        fert_value += map_grid_get(&terrain_floodplain_soil_malus, grid_offset);
+        fert_value += map_grid_get(&terrain_floodplain_soil_depletion, grid_offset);
 
     return max(0, min(99, fert_value));
 }
@@ -444,8 +488,8 @@ void map_set_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6)
         map_grid_set(&terrain_floodplain_growth, grid_offset, growth);
 }
-void map_set_soil_malus(int grid_offset, int malus) {
-    map_grid_set(&terrain_floodplain_soil_malus, grid_offset, malus);
+void map_soil_depletion(int grid_offset, int malus) {
+    map_grid_set(&terrain_floodplain_soil_depletion, grid_offset, malus);
 }
 
 
@@ -524,7 +568,7 @@ void map_temp_grid_load(buffer *buf, int g) {
         case 2:
             map_grid_load_buffer(&GRID03_32BIT, buf); break;
         case 3:
-            map_grid_load_buffer(&terrain_floodplain_soil_malus, buf); break;
+            map_grid_load_buffer(&terrain_floodplain_soil_depletion, buf); break;
     }
 }
 int64_t map_temp_grid_get(int grid_offset, int g) {
@@ -536,7 +580,7 @@ int64_t map_temp_grid_get(int grid_offset, int g) {
         case 2:
             return map_grid_get(&GRID03_32BIT, grid_offset); break;
         case 3:
-            return map_grid_get(&terrain_floodplain_soil_malus, grid_offset); break;
+            return map_grid_get(&terrain_floodplain_soil_depletion, grid_offset); break;
     }
 }
 

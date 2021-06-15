@@ -57,7 +57,7 @@ figure *figure_create(int type, int x, int y, int dir) {
 
     return f;
 }
-void figure::figure_delete() {
+void figure::figure_delete_UNSAFE() {
     building *b = building_get(building_id);
     if (building_id) {
         if (id == b->figure_id)
@@ -124,7 +124,7 @@ void figure_init_scenario(void) {
 }
 void figure_kill_all() {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++)
-        figure_get(i)->kill();
+        figure_get(i)->poof();
 }
 void figure::save(buffer *buf) {
     figure *f = this;

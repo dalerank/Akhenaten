@@ -224,28 +224,16 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
                     if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
                         if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_ROAD))
                             blocked = 1;
-//                        int x_dist = abs(map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.head));
-//                        if (x_dist % 2 == 1)
-//                            blocked = 1;
+                        // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
+                        // after starting the road placement. not perfect, but it works.
                         if (queue_has(next_offset + map_grid_delta(-1, 0)) || queue_has(next_offset + map_grid_delta(1, 0)))
                             blocked = 1;
-//                        if (queue.items[queue.head] == next_offset + map_grid_delta(-1, 0))
-//                            blocked = 1;
-//                        if (queue.items[queue.head] == next_offset + map_grid_delta(1, 0))
-//                            blocked = 1;
                     }
                     if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
                         if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD))
                             blocked = 1;
-//                        int y_dist = abs(map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.head));
-//                        if (y_dist % 2 == 1)
-//                            blocked = 1;
                         if (queue_has(next_offset + map_grid_delta(0, -1)) || queue_has(next_offset + map_grid_delta(0, 1)))
                             blocked = 1;
-//                        if (queue.items[queue.head] == next_offset + map_grid_delta(0, -1))
-//                            blocked = 1;
-//                        if (queue.items[queue.head] == next_offset + map_grid_delta(0, 1))
-//                            blocked = 1;
                     }
                 }
             }

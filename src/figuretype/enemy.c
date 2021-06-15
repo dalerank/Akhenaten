@@ -169,7 +169,7 @@ void figure::enemy_action(formation *m) {
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_LOST) {
-                kill();
+                poof();
             }
             break;
         case FIGURE_ACTION_151_ENEMY_INITIAL:
@@ -496,7 +496,7 @@ void figure::enemy_gladiator_action() {
 //    use_cross_country = 0;
 //    figure_image_increase_offset(12);
     if (scenario_gladiator_revolt_is_finished()) {
-        // end of gladiator revolt: kill gladiators
+        // end of gladiator revolt: poof gladiators
         if (action_state != FIGURE_ACTION_149_CORPSE) {
             action_state = FIGURE_ACTION_149_CORPSE;
             wait_ticks = 0;
@@ -525,7 +525,7 @@ void figure::enemy_gladiator_action() {
                     destination_building_id = building_id;
                     route_remove();
                 } else {
-                    kill();
+                    poof();
                 }
             }
             break;
