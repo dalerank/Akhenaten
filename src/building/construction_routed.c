@@ -80,9 +80,9 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
             TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
-    if (map_terrain_is(start_offset, forbidden_terrain_mask) && !map_terrain_is(start_offset, TERRAIN_FLOODPLAIN))
+    if (map_terrain_is(start_offset, forbidden_terrain_mask))
         return 0;
-    if (map_terrain_is(end_offset, forbidden_terrain_mask) && !map_terrain_is(end_offset, TERRAIN_FLOODPLAIN))
+    if (map_terrain_is(end_offset, forbidden_terrain_mask))
         return 0;
 
     int items_placed = 0;

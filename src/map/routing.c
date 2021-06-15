@@ -1,3 +1,4 @@
+#include <cmath>
 #include "routing.h"
 
 #include "building/building.h"
@@ -151,6 +152,13 @@ static void route_queue_dir8(int source, void (*callback)(int, int)) {
     }
 }
 
+static int queue_has(int offset) {
+    for (int i = 0; i < MAX_QUEUE; i++)
+        if (queue.items[i] == offset)
+            return 1;
+    return 0;
+}
+
 static void callback_calc_distance(int next_offset, int dist) {
     if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
@@ -203,17 +211,44 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
             break;
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
-            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN))
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(next_offset, TERRAIN_WATER))
                 blocked = 1;
             break;
         default:
             if (map_terrain_is(next_offset, TERRAIN_BUILDING))
                 blocked = 1;
-            if ((map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)
-                && map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD)) ||
-                (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_FLOODPLAIN)
-                 && map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_ROAD)))
-                blocked = 1; // todo: make this work also in build planning.... somehow
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
+                if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
+                    blocked = 1;
+                else {
+                    if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
+                        if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_ROAD))
+                            blocked = 1;
+//                        int x_dist = abs(map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.head));
+//                        if (x_dist % 2 == 1)
+//                            blocked = 1;
+                        if (queue_has(next_offset + map_grid_delta(-1, 0)) || queue_has(next_offset + map_grid_delta(1, 0)))
+                            blocked = 1;
+//                        if (queue.items[queue.head] == next_offset + map_grid_delta(-1, 0))
+//                            blocked = 1;
+//                        if (queue.items[queue.head] == next_offset + map_grid_delta(1, 0))
+//                            blocked = 1;
+                    }
+                    if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
+                        if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD))
+                            blocked = 1;
+//                        int y_dist = abs(map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.head));
+//                        if (y_dist % 2 == 1)
+//                            blocked = 1;
+                        if (queue_has(next_offset + map_grid_delta(0, -1)) || queue_has(next_offset + map_grid_delta(0, 1)))
+                            blocked = 1;
+//                        if (queue.items[queue.head] == next_offset + map_grid_delta(0, -1))
+//                            blocked = 1;
+//                        if (queue.items[queue.head] == next_offset + map_grid_delta(0, 1))
+//                            blocked = 1;
+                    }
+                }
+            }
             break;
     }
     if (!blocked)
@@ -264,6 +299,20 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
         if (map_can_place_road_under_aqueduct(grid_offset))
             return 1;
         return 0;
+    } else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
+            return 0;
+        else {
+            if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
+                    return 0;
+            }
+            if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+                    return 0;
+            }
+        }
+        return 1;
     } else
         return 1;
 }
@@ -390,9 +439,8 @@ int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x,
     if (only_through_building_id) {
         state.through_building_id = only_through_building_id;
         route_queue(src_offset, dst_offset, callback_travel_noncitizen_land_through_building);
-    } else {
+    } else
         route_queue_max(src_offset, dst_offset, max_tiles, callback_travel_noncitizen_land);
-    }
     return map_grid_get(&routing_distance, dst_offset) != 0;
 }
 static void callback_travel_noncitizen_through_everything(int next_offset, int dist) {

@@ -97,16 +97,29 @@ int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain
     return count;
 }
 
+int map_terrain_has_adjecent_with_type(int grid_offset, int terrain) {
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, -1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(0, -1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(1, -1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(1, 0), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(1, 1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(0, 1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(-1, 1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(-1, 0), terrain)) {
+        return 1;
+    }
+    return 0;
+}
 int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain) {
-    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), terrain) ||
-        map_terrain_is(grid_offset + map_grid_delta(0, 1), terrain)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(1, 0), terrain)) {
         return 1;
     }
     return 0;
 }
 int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
-    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), terrain) ||
-        map_terrain_is(grid_offset + map_grid_delta(1, 0), terrain)) {
+    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(0, 1), terrain)) {
         return 1;
     }
     return 0;

@@ -199,7 +199,7 @@ void map_routing_update_land_citizen(void) {
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
-            if (terrain & TERRAIN_ROAD) {
+            if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER)) {
                 map_grid_set(&terrain_land_citizen, grid_offset, CITIZEN_0_ROAD);
             } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN)) {
                 map_grid_set(&terrain_land_citizen, grid_offset, CITIZEN_2_PASSABLE_TERRAIN);

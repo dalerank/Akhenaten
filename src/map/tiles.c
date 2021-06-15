@@ -47,6 +47,8 @@ static int is_clear(int x, int y, int size, int disallowed_terrain, int check_im
                 return 0;
             else if (check_image && map_image_at(grid_offset))
                 return 0;
+            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
+                return 0;
         }
     }
     return 1;

@@ -3,6 +3,7 @@
 #include <window/city.h>
 #include <game/tutorial.h>
 #include <graphics/graphics.h>
+#include <map/routing.h>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -690,14 +691,9 @@ void draw_debug(int x, int y, int grid_offset) {
         }
 
 
-//        d = map_property_multi_tile_xy(grid_offset);
-//        if (true) {
-//            string_from_int(str, d, 0);
-//            if (d == 0)
-//                text_draw_shadow(str, x + 15, y + 10, COLOR_RED);
-//            else
-//                text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
-//        }
+        d = map_routing_distance(grid_offset);
+        string_from_int(str, d, 0);
+        text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
 
 //        d = map_image_at(grid_offset) - 14252;
 //        if (d > 200 && d <= 1514 && true) {

@@ -1087,7 +1087,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
+            if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) || map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
                 continue;
 
             if (measure_only) {
@@ -1151,7 +1151,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&  !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)) {
                 items_placed++;
                 map_terrain_add(grid_offset, TERRAIN_GARDEN);
             }
@@ -1666,6 +1666,8 @@ void building_construction_place(void) { // confirm final placement
         if (data.sub_type > BUILDING_LARGE_TEMPLE_VENUS)
             data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
     }
+    if (placement_cost == 0)
+        return;
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
     game_undo_finish_build(placement_cost);

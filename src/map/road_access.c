@@ -301,6 +301,8 @@ static int terrain_is_road_like(int grid_offset) {
 
 static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
     int is_road = terrain_is_road_like(grid_offset);
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+        return 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
         if (b->type == BUILDING_GATEHOUSE)

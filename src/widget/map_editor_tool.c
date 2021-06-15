@@ -81,8 +81,8 @@ static void draw_road(const map_tile *tile, int x, int y) {
         blocked = 1;
     else {
         image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
-        if (!map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD) &&
-            map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD)) {
+        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) &&
+            map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD)) {
             image_id++;
         }
     }

@@ -396,6 +396,9 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
         int tile_blocked = 0;
         if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
             tile_blocked = 1;
+        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0
+            || map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0)
+            tile_blocked = 1;
 
         if (map_has_figure_at(tile_offset))
             tile_blocked = 1;
@@ -415,9 +418,8 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
         int y_offset = y + Y_VIEW_OFFSETS[i];
         if (fully_blocked || blocked_tiles[i])
             draw_flat_tile(x_offset, y_offset, COLOR_MASK_RED);
-        else {
+        else
             draw_flat_tile(x_offset, y_offset, COLOR_MASK_GREEN);
-        }
     }
 }
 void draw_building(int image_id, int x, int y, color_t color_mask) {
@@ -512,6 +514,9 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, int type)
             blocked_tiles[i] = blocked = 1;
         else
             blocked_tiles[i] = 0;
+        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0
+            || map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0)
+            blocked_tiles[i] = blocked = 1;
     }
     if (blocked)
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
@@ -1055,9 +1060,28 @@ static void draw_road(const map_tile *tile, int x, int y) {
         blocked = 1;
     else {
         image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
-        if (!map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD) &&
-            map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
+        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) &&
+            map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
             image_id++;
+        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
+                blocked = 1;
+        }
+        else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
+                blocked = 1;
+            else {
+                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+                    if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
+                        blocked = 1;
+                    else
+                        image_id++;
+                }
+                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN) &&
+                    map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+                    blocked = 1;
+            }
+        }
     }
     if (city_finance_out_of_money())
         blocked = 1;

@@ -170,7 +170,6 @@ void figure::set_next_route_tile_direction() {
         direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
         if (direction != DIR_FIGURE_AT_DESTINATION)
             direction = DIR_FIGURE_LOST;
-
     }
 }
 void figure::advance_route_tile(int roaming_enabled) {
@@ -214,7 +213,9 @@ void figure::advance_route_tile(int roaming_enabled) {
         if (!map_routing_is_wall_passable(target_grid_offset))
             direction = DIR_FIGURE_REROUTE;
     } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
-        if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
+        if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN))
+            direction = DIR_FIGURE_REROUTE;
+        else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building *b = building_get(map_building_at(target_grid_offset));
             if (b->type == BUILDING_GATEHOUSE)
                 // do not allow roaming through gatehouse
@@ -312,8 +313,11 @@ void figure::roam_set_direction() {
     int road_dir1 = 0;
     for (int i = 0, dir = direction; i < 8; i++) {
         if (dir % 2 == 0 && map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
-            road_dir1 = dir;
-            break;
+            if (!map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_WATER)
+                || !map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_FLOODPLAIN)) {
+                road_dir1 = dir;
+                break;
+            }
         }
         dir++;
         if (dir > 7) dir = 0;
@@ -323,8 +327,11 @@ void figure::roam_set_direction() {
     int road_dir2 = 0;
     for (int i = 0, dir = direction; i < 8; i++) {
         if (dir % 2 == 0 && map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
-            road_dir2 = dir;
-            break;
+            if (!map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_WATER)
+                || !map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_FLOODPLAIN)) {
+                road_dir2 = dir;
+                break;
+            }
         }
         dir--;
         if (dir < 0) dir = 7;
@@ -411,15 +418,15 @@ void figure::roam_ticks(int num_ticks) {
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT) {
                     if (road_tiles[0] && road_tiles[4])
                         road_tiles[2] = road_tiles[6] = 0;
-                    else {
+                    else
                         road_tiles[0] = road_tiles[4] = 0;
-                    }
+
                 } else {
                     if (road_tiles[2] && road_tiles[6])
                         road_tiles[0] = road_tiles[4] = 0;
-                    else {
+                    else
                         road_tiles[2] = road_tiles[6] = 0;
-                    }
+
                 }
             }
             if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(grid_offset_figure, road_tiles) >= 8) {
@@ -427,9 +434,9 @@ void figure::roam_ticks(int num_ticks) {
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP_RIGHT || came_from_direction == DIR_4_BOTTOM_LEFT)
                     road_tiles[2] = road_tiles[6] = 0;
-                else {
+                else
                     road_tiles[0] = road_tiles[4] = 0;
-                }
+
             }
             if (adjacent_road_tiles <= 0) {
                 roam_length = max_roam_length; // end roaming walk

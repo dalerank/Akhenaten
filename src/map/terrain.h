@@ -79,9 +79,9 @@ int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain);
 
 int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain);
 
-int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
-
+int map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
 int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
+int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
 
 int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain);
 
