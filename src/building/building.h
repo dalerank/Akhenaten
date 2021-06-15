@@ -88,15 +88,22 @@ typedef struct {
             short resource_stored[16];
         } granary;
         struct {
+            int unk_2[2];
             short progress;
-            unsigned char blessing_days_left;
-            unsigned char curse_days_left;
-            unsigned char has_raw_materials;
+            int unk_b[12];
             unsigned char has_fish;
+            int unk_c[14];
+            unsigned char blessing_days_left;
             unsigned char orientation;
+            unsigned char has_raw_materials;
+            int unk_1;
+            unsigned char curse_days_left;
+            int unk_6[6];
             short fishing_boat_id;
+            int unk_40[40];
             unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
             unsigned char labor_days_left;
+            int unk_12[12];
             unsigned char worker_id;
         } industry;
 //        struct {

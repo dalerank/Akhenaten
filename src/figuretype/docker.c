@@ -222,7 +222,7 @@ int figure::deliver_import_resource(building *dock) {
         return 0;
 
     figure *ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->loads_counter <= 0)
+    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->get_carrying_amount() <= 0)
         return 0;
 
     int x, y;
@@ -235,7 +235,7 @@ int figure::deliver_import_resource(building *dock) {
     if (!warehouse_id)
         return 0;
 
-    ship->loads_counter--;
+    ship->unload_resource(100);
     destination_building_id = warehouse_id;
     wait_ticks = 0;
     action_state = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;

@@ -119,12 +119,13 @@ static void advance_day(void) {
 static void advance_tick(void) {
 
     tutorial_starting_message();
-    floodplains_tick_update();
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        floodplains_tick_update();
 
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
-    map_advance_floodplain_growth(); // temp
-//    map_tiles_river_refresh_entire(); // temp
+
     switch (game_time_tick()) {
         case 1:
             city_gods_calculate_moods(1);
@@ -194,8 +195,6 @@ static void advance_tick(void) {
             break;
         case 28:
             map_water_supply_update_houses();
-            // todo
-//            map_commence_flood();
             break;
         case 29:
             formation_update_all(1);

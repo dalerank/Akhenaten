@@ -75,11 +75,11 @@ void figure::cart_update_image() {
     // determine cart sprite
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART);
-        if (loads_counter > 0) {
+        if (resource_amount_full > 0) {
             short amount_offset = 2;
-            if (loads_counter <= 2)
+            if (resource_amount_full <= 200)
                 amount_offset = 0;
-            else if (loads_counter <= 4)
+            else if (resource_amount_full <= 400)
                 amount_offset = 1;
 //            amount_offset = testcart;
 //            testcart++; if (testcart >= 3) testcart = 0;
@@ -92,7 +92,7 @@ void figure::cart_update_image() {
                     cart_image_id -= 16;
         }
     } else {
-        if (loads_counter == 1) {
+        if (resource_amount_full == 100) {
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 +
                             resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
         } else {

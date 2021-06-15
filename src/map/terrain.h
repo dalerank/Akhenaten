@@ -115,6 +115,7 @@ uint8_t map_get_growth(int grid_offset);
 uint8_t map_get_fertility(int grid_offset);
 uint8_t map_get_fertility_average(int grid_offset);
 void map_set_growth(int grid_offset, int growth);
+void map_set_soil_malus(int grid_offset, int malus);
 
 void map_terrain_backup(void);
 void map_terrain_restore(void);
@@ -129,8 +130,8 @@ uint8_t  map_moisture_get(int grid_offset);
 uint8_t map_grasslevel_get(int grid_offset);
 bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
 
-void map_unk32_load_state(buffer *buf);
-int8_t map_unk32_get(int grid_offset, int a);
+//void map_GRID03_32BIT_load_split_state(buffer *buf);
+//int8_t map_GRID03_32BIT_get_byte(int grid_offset, int a);
 
 void map_temp_grid_load(buffer *buf, int g);
 int64_t map_temp_grid_get(int grid_offset, int g);

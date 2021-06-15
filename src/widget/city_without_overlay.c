@@ -360,7 +360,9 @@ static void draw_granary_stores(const building *b, int x, int y, color_t color_m
         int spot_y = 0;
         for (int r = 1; r < 9; r++) {
             if (b->data.granary.resource_stored[r] > 0) {
-                int spots_filled = ceil((float)b->data.granary.resource_stored[r] / (float)400); // number of "spots" occupied by food
+                int spots_filled = floor((float)b->data.granary.resource_stored[r] / (float)400); // number of "spots" occupied by food
+                if (spots_filled == 0 && b->data.granary.resource_stored[r] > 0)
+                    spots_filled = 1;
                 for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                     // draw sprite on each granary "spot"
                     spot_x = granary_offsets_ph[spot][0];
@@ -532,7 +534,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
         if (building_id) {
             building *b = building_get(building_id);
-            if (building_is_farm(b->type))
+            if (building_is_farm(b->type) && map_terrain_is(grid_offset, TERRAIN_BUILDING))
                 draw_farm_crops(b, x, y);
         }
     }
@@ -583,6 +585,15 @@ static void draw_figures(int x, int y, int grid_offset) {
 #include "core/string.h"
 #include "map/property.h"
 
+static void print_temp_sum(int x, int y, int arr[], int n, color_t color = COLOR_RED) {
+    uint8_t str[10];
+    int UNK_SUM = 0;
+    for (int i = 0; i < n; i++)
+        UNK_SUM += arr[i];
+    string_from_int(str, UNK_SUM, 0);
+    text_draw_shadow(str, x, y, color);
+}
+
 void draw_debug(int x, int y, int grid_offset) {
 
     // draw terrain data
@@ -604,22 +615,39 @@ void draw_debug(int x, int y, int grid_offset) {
             i++;
         }
 
-        building *b = building_get(map_building_at(grid_offset));
-        if (map_building_at(grid_offset) && false && b->grid_offset == grid_offset) {
-            string_from_int(str, b->type, 0);
-            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
+        int d = 0;
+        int b_id = map_building_at(grid_offset);
+        building *b = building_get(b_id);
 
-            string_from_int(str, b->grid_offset, 0);
-            text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);
+//        if (b_id) {
+////            string_from_int(str, b->type, 0);
+////            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
+//
+//            string_from_int(str, map_terrain_is(grid_offset, TERRAIN_BUILDING), 0);
+//            text_draw_shadow(str, x + 17, y + 5, COLOR_RED);
+//
+//            string_from_int(str, map_property_multi_tile_size(grid_offset), 0);
+//            text_draw_shadow(str, x + 17, y + 15, COLOR_GREEN);
+//
+//            string_from_int(str, map_property_multi_tile_xy(grid_offset), 0);
+//            text_draw_shadow(str, x + 33, y + 15, COLOR_WHITE);
+//        }
 
-            string_from_int(str, map_image_at(grid_offset), 0);
-            text_draw_shadow(str, x + 13, y - 5, COLOR_BLUE);
+        if (b_id && true && b->grid_offset == grid_offset) {
+//            string_from_int(str, b->type, 0);
+//            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
+//
+//            string_from_int(str, b->grid_offset, 0);
+//            text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);
+//
+//            string_from_int(str, map_image_at(grid_offset), 0);
+//            text_draw_shadow(str, x + 13, y - 5, COLOR_BLUE);
 
-            int p = map_bitfield_get(grid_offset);
-            if (p & 32)
-                p -= 32;
-            string_from_int(str, p, 0);
-            text_draw_shadow(str, x + 23, y + 10, COLOR_RED);
+//            int p = map_bitfield_get(grid_offset);
+//            if (p & 32)
+//                p -= 32;
+//            string_from_int(str, p, 0);
+//            text_draw_shadow(str, x + 23, y + 10, COLOR_RED);
 
 //            string_from_int(str, b->next_part_building_id, 0);
 //            text_draw_shadow(str, x + 23, y + 20, COLOR_GREEN);
@@ -644,6 +672,14 @@ void draw_debug(int x, int y, int grid_offset) {
                 string_from_int(str, b->data.industry.labor_days_left, 0);
                 text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
             }
+//            if (building_is_floodplain_farm(b)) {
+////                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
+////                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
+////                string_from_int(str, b->data.industry.labor_state, 0);
+////                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
+////                string_from_int(str, b->data.industry.labor_days_left, 0);
+////                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
+//            }
             if (b->figure_spawn_delay && false) {
                 string_from_int(str, b->figure_spawn_delay, 0);
                 text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
@@ -653,19 +689,21 @@ void draw_debug(int x, int y, int grid_offset) {
             }
         }
 
-        int d = 0;
 
-//        d = map_property_multi_tile_y(grid_offset);
+//        d = map_property_multi_tile_xy(grid_offset);
 //        if (true) {
 //            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 7, y+3, COLOR_RED);
+//            if (d == 0)
+//                text_draw_shadow(str, x + 15, y + 10, COLOR_RED);
+//            else
+//                text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
 //        }
 
-        d = map_image_at(grid_offset) - 14252;
-        if (d > 200 && d <= 1514 && false) {
-            string_from_int(str, d, 0);
-            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
-        }
+//        d = map_image_at(grid_offset) - 14252;
+//        if (d > 200 && d <= 1514 && true) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
+//        }
         d = map_moisture_get(grid_offset);
         if (d && false) {
             if (d & MOISTURE_TRANSITION) {
@@ -711,10 +749,14 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
+//        d = map_temp_grid_get(grid_offset, 3);
+//        if (d != 0) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 13, y + 5, COLOR_LIGHT_BLUE);
+//        }
+
 //        d = map_terrain_get(grid_offset);
 //        if (d & TERRAIN_FLOODPLAIN) {
-////            string_from_int(str, d, 0);
-////            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
 //            if (d & TERRAIN_WATER)
 //                text_draw_shadow((uint8_t *) string_from_ascii("u"), x + 30, y + 15, COLOR_WHITE);
 //            else

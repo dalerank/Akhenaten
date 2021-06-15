@@ -9,7 +9,8 @@
 
 void figure_create_editor_flags(void) {
     for (int id = MAP_FLAG_MIN; id < MAP_FLAG_MAX; id++) {
-        figure_create(FIGURE_MAP_FLAG, -1, -1, 0)->resource_id = id;
+        figure *f = figure_create(FIGURE_MAP_FLAG, -1, -1, 0);
+        f->set_resource(id);
     }
 }
 

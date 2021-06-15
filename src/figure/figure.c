@@ -202,7 +202,7 @@ void figure::save(buffer *buf) {
     buf->write_u8(f->trader_amount_bought);
     buf->write_i16(f->name);
     buf->write_u8(f->terrain_usage);
-    buf->write_u8(f->loads_counter);
+    buf->write_u8(f->resource_amount_loads);
     buf->write_u8(f->is_boat);
     buf->write_u8(f->height_adjusted_ticks);
     buf->write_u8(f->current_height);
@@ -327,23 +327,24 @@ void figure::load(buffer *buf) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         f->is_boat = buf->read_u8();
 
-        int resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
+        f->resource_amount_full = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
 
         // ignore partial loads (for now....)
-        if (resource_quantity > 350)
-            resource_quantity = 400;
-        else if (resource_quantity > 250)
-            resource_quantity = 300;
-        else if (resource_quantity > 150)
-            resource_quantity = 200;
-        else if (resource_quantity > 50)
-            resource_quantity = 100;
-        else
-            resource_quantity = 0;
+//        if (resource_quantity > 350)
+//            resource_quantity = 400;
+//        else if (resource_quantity > 250)
+//            resource_quantity = 300;
+//        else if (resource_quantity > 150)
+//            resource_quantity = 200;
+//        else if (resource_quantity > 50)
+//            resource_quantity = 100;
+//        else
+//            resource_quantity = 0;
+        f->resource_amount_loads = f->resource_amount_full / 100;
 
-        f->loads_counter = resource_quantity / 100;
     } else {
-        f->loads_counter = buf->read_u8();
+        f->resource_amount_loads = buf->read_u8();
+        f->resource_amount_full = f->resource_amount_loads * 100;
         f->is_boat = buf->read_u8();
     }
     f->height_adjusted_ticks = buf->read_u8();

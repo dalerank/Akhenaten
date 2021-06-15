@@ -45,7 +45,7 @@ void figure_create_flotsam(void) {
     for (int i = 0; i < 20; i++) {
         figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP_RIGHT);
         f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
-        f->resource_id = FLOTSAM_RESOURCE_IDS[i];
+        f->set_resource(FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
     }
 }

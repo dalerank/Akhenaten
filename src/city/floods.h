@@ -45,6 +45,8 @@ bool floodplains_is(int state);
 int floodplains_expected_quality();
 int floodplains_expected_month();
 
+int floodplains_time_to_deliver();
+
 void floodplains_tick_update();
 
 void floodplains_save_state(buffer *floodplain_data);

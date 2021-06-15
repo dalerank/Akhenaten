@@ -245,30 +245,39 @@ static void read_type_data(buffer *buf, building *b) {
         buf->skip(2);
         b->data.dock.orientation = buf->read_i8();
         buf->skip(3);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
             b->data.dock.docker_ids[i] = buf->read_i16();
-        }
         b->data.dock.trade_ship_id = buf->read_i16();
     } else if (is_industry_type(b)) {
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            buf->skip(2);
+            for (int i = 0; i < 2; i++)
+                b->data.industry.unk_2[i] = buf->read_u8();
+//            buf->skip(2);
         b->data.industry.progress = buf->read_i16();
-//        b->data.farm.progress = buf->read_u16(); // determines amount of stuff produced, by value = x / 250 * 100
-        buf->skip(12);
+        for (int i = 0; i < 12; i++)
+            b->data.industry.unk_b[i] = buf->read_u8();
+//        buf->skip(12);
         b->data.industry.has_fish = buf->read_u8();
-        buf->skip(14);
+        for (int i = 0; i < 14; i++)
+            b->data.industry.unk_c[i] = buf->read_u8();
+//        buf->skip(14);
         b->data.industry.blessing_days_left = buf->read_u8();
         b->data.industry.orientation = buf->read_u8();
         b->data.industry.has_raw_materials = buf->read_u8();
-        buf->skip(1);
+        b->data.industry.unk_1 = buf->read_u8();
+//        buf->skip(1);
         b->data.industry.curse_days_left = buf->read_u8();
-        buf->skip(6);
+        for (int i = 0; i < 6; i++)
+            b->data.industry.unk_6[i] = buf->read_u8();
+//        buf->skip(6);
         b->data.industry.fishing_boat_id = buf->read_i16();
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            buf->skip(40);
+            for (int i = 0; i < 40; i++)
+                b->data.industry.unk_40[i] = buf->read_u8();
             b->data.industry.labor_state = buf->read_u8();
             b->data.industry.labor_days_left = buf->read_u8();
-            buf->skip(12);
+            for (int i = 0; i < 12; i++)
+                b->data.industry.unk_12[i] = buf->read_u8();
             b->data.industry.worker_id = buf->read_u8();
         }
     } else {

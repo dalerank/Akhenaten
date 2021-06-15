@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <city/floods.h>
+#include <map/grid.h>
 
 static const int X_VIEW_OFFSETS[9] = {
         0, 30, 60,
@@ -143,7 +144,7 @@ void building_industry_update_production(void) {
         b->data.industry.has_raw_materials = 0;
         if (b->labor_category != 255 && (b->houses_covered <= 0 || b->num_workers <= 0))
             continue;
-        if (building_is_floodplain_farm(b) && b->data.industry.labor_days_left <= 0)
+        if (building_is_floodplain_farm(b) && (b->data.industry.labor_days_left <= 0 || floodplains_is(FLOOD_STATE_IMMINENT)))
             continue;
         if (b->subtype.workshop_type && !b->loads_stored)
             continue;
@@ -193,11 +194,10 @@ void building_industry_update_wheat_production(void) {
         }
     }
 }
-
 int building_industry_has_produced_resource(building *b) {
     if (building_is_floodplain_farm(b)) {
         if (floodplains_is(FLOOD_STATE_IMMINENT) && b->data.industry.progress > 0)
-            return 1;
+            return floodplains_time_to_deliver();
         return 0;
     }
     return b->data.industry.progress >= max_progress(b);
@@ -236,6 +236,15 @@ void building_curse_farms(int big_curse) {
             update_farm_image(b);
         }
     }
+}
+void building_farm_deplete_soil(const building *b) {
+    int malus = (float)b->data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
+//    if (floodplains_is(FLOOD_STATE_IMMINENT) && b->data.industry.progress > 0)
+//        malus = -60;
+    for (int _y = b->y; _y < b->y + b->size; _y++)
+        for (int _x = b->x; _x < b->x + b->size; _x++)
+            map_set_soil_malus(map_grid_offset(_x, _y), malus);
+    update_farm_image(b);
 }
 
 void building_workshop_add_raw_material(building *b) {

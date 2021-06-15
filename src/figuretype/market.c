@@ -105,9 +105,9 @@ int figure::take_food_from_granary(int market_id, int granary_id) {
         num_loads = 2;
     else if (granary_units >= 100)
         num_loads = 1;
-    else {
+    else
         num_loads = 0;
-    }
+
     if (num_loads > max_units / 100)
         num_loads = max_units / 100;
 
@@ -117,9 +117,9 @@ int figure::take_food_from_granary(int market_id, int granary_id) {
     building_granary_remove_resource(granary, resource, 100 * num_loads);
     // create delivery boys
     int previous_boy = id;
-    for (int i = 0; i < num_loads; i++) {
+    for (int i = 0; i < num_loads; i++)
         previous_boy = create_delivery_boy(previous_boy);
-    }
+
     return 1;
 }
 int figure::take_resource_from_warehouse(int warehouse_id) {

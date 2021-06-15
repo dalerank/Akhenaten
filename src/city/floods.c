@@ -1,10 +1,12 @@
 #include <game/time.h>
 #include <map/tiles.h>
+#include <map/building.h>
 #include "floods.h"
 
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "scenario/data.h"
+#include "buildings.h"
 
 static floods_data data;
 
@@ -48,9 +50,10 @@ int floodplains_expected_month() {
     return data.season_initial;
 }
 
-static void do_the_flooding(int state) {
-    // todo
+int floodplains_time_to_deliver() {
+    return cycle >= floodplains_flooding_start_cycle() - 23;
 }
+
 void floodplains_tick_update() {
     int total_ticks = game_time_absolute_tick();
     cycle = total_ticks / 25;
@@ -82,10 +85,10 @@ void floodplains_tick_update() {
     int cycle_flooding_end = floodplains_flooding_end_cycle();
     int rest_period = floodplains_flooding_rest_period_cycle();
     // ????
-    if ((double)(cycle_flooding_start - cycle) > randomizing_double * 0.5) {
-        cycle_flooding_start -= (int)randomizing_double;
-        cycle_flooding_end += (int)randomizing_double;
-    }
+//    if ((double)(cycle_flooding_start - cycle) > randomizing_double * 0.5) {
+//        cycle_flooding_start -= (int)randomizing_double;
+//        cycle_flooding_end += (int)randomizing_double;
+//    }
 
     // ???
     data.unk01 = data.season / 30;
@@ -129,6 +132,9 @@ void floodplains_tick_update() {
         if (cycle == cycle_flooding_start - 49) {
             // todo: FUN_00489310();
         }
+        else if (cycle == cycle_flooding_start - 23) {
+            // harvest!
+        }
         else if (cycle == cycle_flooding_start - 1) {
             // update values
             data.season = data.season_initial;      // reset to initial
@@ -157,6 +163,10 @@ void floodplains_tick_update() {
         map_update_floodplain_inundation(1, (29 - data.flood_progress) * 25 + cycle_tick);
     else if (cycle >= cycle_flooding_end - rest_period && cycle <= cycle_flooding_end)
         map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_tick);
+
+    // update grass growth
+    if (cycle_tick % 5 == 0 && cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period)
+    map_advance_floodplain_growth();
 }
 
 void floodplains_save_state(buffer *floodplain_data) {

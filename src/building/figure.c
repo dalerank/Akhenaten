@@ -465,13 +465,13 @@ static void spawn_figure_hippodrome(building *b) {
                 figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_BOTTOM_RIGHT);
                 horse1->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
                 horse1->building_id = b->id;
-                horse1->resource_id = 0;
+                horse1->set_resource(0);
                 horse1->speed_multiplier = 3;
 
                 figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_BOTTOM_RIGHT);
                 horse2->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
                 horse2->building_id = b->id;
-                horse2->resource_id = 1;
+                horse1->set_resource(1);
                 horse2->speed_multiplier = 2;
 
                 if (b->data.entertainment.days1 > 0) {
@@ -985,11 +985,12 @@ static void spawn_figure_industry(building *b) {
                 building_industry_start_new_production(b);
                 figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                f->resource_id = b->output_resource_id;
+//                f->resource_id = b->output_resource_id;
+//                f->loads_counter = 1;
+                f->load_resource(100, b->output_resource_id);
                 f->building_id = b->id;
                 b->figure_id = f->id;
                 f->wait_ticks = 30;
-                f->loads_counter = 1; // todo: take into consideration multiple loads
             }
         } else { // floodplain farms!!
             if (has_figure_of_type(b, FIGURE_CART_PUSHER))
@@ -997,11 +998,13 @@ static void spawn_figure_industry(building *b) {
             if (building_industry_has_produced_resource(b)) {
                 figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-                f->resource_id = b->output_resource_id;
+//                f->resource_id = b->output_resource_id;
+//                f->loads_counter = b->data.industry.progress / 250;
+                f->load_resource(b->data.industry.progress / 2.5, b->output_resource_id);
                 f->building_id = b->id;
                 b->figure_id = f->id;
                 f->wait_ticks = 30;
-                f->loads_counter = b->data.industry.progress / 250;
+                building_farm_deplete_soil(b);
                 b->data.industry.progress = 0;
                 b->data.industry.worker_id = 0;
                 b->data.industry.labor_state = 0;
@@ -1030,7 +1033,7 @@ static void spawn_figure_wharf(building *b) {
             b->output_resource_id = RESOURCE_MEAT_C3;
             figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            f->resource_id = RESOURCE_MEAT_C3;
+            f->set_resource(RESOURCE_MEAT_C3);
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
@@ -1137,16 +1140,15 @@ static void spawn_figure_warehouse(building *b) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             if (task == WAREHOUSE_TASK_GETTING) {
-                f->resource_id = RESOURCE_NONE;
+                f->load_resource(0, RESOURCE_NONE);
                 f->collecting_item_id = resource;
             } else {
-                f->resource_id = resource;
                 if (amount >= 0) { // delivering
-                    f->loads_counter = amount;
+                    f->load_resource(amount * 100, resource);
                     building_warehouse_remove_resource(b, resource, amount);
                 }
                 else // getting
-                    f->loads_counter = 0;
+                    f->load_resource(0, resource);
             }
             b->figure_id = f->id;
             f->building_id = b->id;
@@ -1164,7 +1166,7 @@ static void spawn_figure_granary(building *b) {
         if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            f->resource_id = task;
+            f->load_resource(0, task);
             b->figure_id = f->id;
             f->building_id = b->id;
         }
@@ -1230,13 +1232,12 @@ static void spawn_figure_hunting_lodge(building *b) {
         if (b->loads_stored) {
             figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            f->resource_id = b->output_resource_id;
+            int loads_to_carry = fmin(b->loads_stored, 4);
+            b->loads_stored -= loads_to_carry;
+            f->load_resource(loads_to_carry * 100, b->output_resource_id);
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;
-            int loads_to_carry = fmin(b->loads_stored, 4);
-            f->loads_counter = loads_to_carry;
-            b->loads_stored -= loads_to_carry;
         }
     }
 }

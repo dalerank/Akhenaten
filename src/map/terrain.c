@@ -4,6 +4,7 @@
 #include "map/ring.h"
 #include "map/routing.h"
 #include "core/game_environment.h"
+#include "city/floods.h"
 
 static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
@@ -17,17 +18,12 @@ int river_total_tiles = 0;
 static grid_xx terrain_floodplain_shoreorder = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_floodplain_soil_malus = {0, {FS_INT8, FS_INT8}};
 
-// originally a 32-bit grid?
-static grid_xx grid_unk32_1 = {0, {FS_INT8, FS_INT8}};
-static grid_xx grid_unk32_2 = {0, {FS_INT8, FS_INT8}};
-static grid_xx grid_unk32_3 = {0, {FS_INT8, FS_INT8}};
-static grid_xx grid_unk32_4 = {0, {FS_INT8, FS_INT8}};
-
-static grid_xx grid_unk_01 = {0, {FS_INT8, FS_INT8}}; // all 00
-static grid_xx grid_unk_02 = {0, {FS_INT8, FS_INT8}}; // all FF
-//static grid_xx grid_unk_03 = {0, {FS_INT8, FS_INT32}}; // ?? routing
-static grid_xx grid_unk_04 = {0, {FS_INT8, FS_INT8}}; // ?? terrain data
+// unknown data grids
+static grid_xx GRID01_8BIT = {0, {FS_INT8, FS_INT8}}; // all 00
+static grid_xx GRID02_8BIT = {0, {FS_INT8, FS_INT8}}; // all FF
+static grid_xx GRID03_32BIT = {0, {FS_INT8, FS_INT32}}; // ?? routing
 
 int map_terrain_is(int grid_offset, int terrain) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&terrain_grid, grid_offset) & terrain;
@@ -416,12 +412,17 @@ uint8_t map_get_growth(int grid_offset) {
     return map_grid_get(&terrain_floodplain_growth, grid_offset);
 }
 uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
-    int fert_tile = map_grid_get(&terrain_floodplain_fertility, grid_offset);
-//    if (fert_tile < 0)
-//        return 0;
-    return max(0, min(99, fert_tile + city_data.religion.osiris_fertility_modifier));
+    int fert_value = map_grid_get(&terrain_floodplain_fertility, grid_offset); // start with the "theoretical" value
+
+    // calculate and add malus
+    int malus = map_grid_get(&terrain_floodplain_soil_malus, grid_offset);
+    if (malus != 0)
+        fert_value += map_grid_get(&terrain_floodplain_soil_malus, grid_offset);
+
+    return max(0, min(99, fert_value));
 }
 uint8_t map_get_fertility_average(int grid_offset) {
+    // returns average of fertility in 3x3 square starting on the top-left corner
     return (map_get_fertility(grid_offset) + map_get_fertility(grid_offset + 1) + map_get_fertility(grid_offset + 2)
           + map_get_fertility(grid_offset + 228) + map_get_fertility(grid_offset + 229) + map_get_fertility(grid_offset + 230)
           + map_get_fertility(grid_offset + 228 + 228) + map_get_fertility(grid_offset + 229 + 228) + map_get_fertility(grid_offset + 230 + 228)) / 9;
@@ -430,10 +431,11 @@ void map_set_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6)
         map_grid_set(&terrain_floodplain_growth, grid_offset, growth);
 }
-void map_set_fertility(int grid_offset, int fertility) {
-    if (fertility >= 0 && fertility <= 255)
-        map_grid_set(&terrain_floodplain_fertility, grid_offset, fertility);
+void map_set_soil_malus(int grid_offset, int malus) {
+    map_grid_set(&terrain_floodplain_soil_malus, grid_offset, malus);
 }
+
+
 
 /////
 
@@ -500,58 +502,28 @@ bool map_is_4x4_tallgrass(int x, int y, int grid_offset) {
     return true;
 }
 
-void map_unk32_load_state(buffer *buf) {
-    if (!grid_unk32_1.initialized)
-        map_grid_init(&grid_unk32_1);
-    if (!grid_unk32_2.initialized)
-        map_grid_init(&grid_unk32_2);
-    if (!grid_unk32_3.initialized)
-        map_grid_init(&grid_unk32_3);
-    if (!grid_unk32_4.initialized)
-        map_grid_init(&grid_unk32_4);
-
-    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-        ((int8_t*)grid_unk32_1.items_xx)[i] = buf->read_i8();
-        ((int8_t*)grid_unk32_2.items_xx)[i] = buf->read_i8();
-        ((int8_t*)grid_unk32_3.items_xx)[i] = buf->read_i8();
-        ((int8_t*)grid_unk32_4.items_xx)[i] = buf->read_i8();
-    }
-}
-int8_t map_unk32_get(int grid_offset, int a) {
-    switch (a) {
-        case 0:
-            return map_grid_get(&grid_unk32_1, grid_offset); break;
-        case 1:
-            return map_grid_get(&grid_unk32_2, grid_offset); break;
-        case 2:
-            return map_grid_get(&grid_unk32_3, grid_offset); break;
-        case 3:
-            return map_grid_get(&grid_unk32_4, grid_offset); break;
-    }
-}
-
 void map_temp_grid_load(buffer *buf, int g) {
     switch (g) {
         case 0:
-            map_grid_load_buffer(&grid_unk_01, buf); break;
+            map_grid_load_buffer(&GRID01_8BIT, buf); break;
         case 1:
-            map_grid_load_buffer(&grid_unk_02, buf); break;
-//        case 2:
-//            map_grid_load_buffer(&grid_unk_03, buf); break;
+            map_grid_load_buffer(&GRID02_8BIT, buf); break;
         case 2:
-            map_grid_load_buffer(&grid_unk_04, buf); break;
+            map_grid_load_buffer(&GRID03_32BIT, buf); break;
+        case 3:
+            map_grid_load_buffer(&terrain_floodplain_soil_malus, buf); break;
     }
 }
 int64_t map_temp_grid_get(int grid_offset, int g) {
     switch (g) {
         case 0:
-            return map_grid_get(&grid_unk_01, grid_offset); break;
+            return map_grid_get(&GRID01_8BIT, grid_offset); break;
         case 1:
-            return map_grid_get(&grid_unk_02, grid_offset); break;
-//        case 2:
-//            return map_grid_get(&grid_unk_03, grid_offset); break;
+            return map_grid_get(&GRID02_8BIT, grid_offset); break;
         case 2:
-            return map_grid_get(&grid_unk_04, grid_offset); break;
+            return map_grid_get(&GRID03_32BIT, grid_offset); break;
+        case 3:
+            return map_grid_get(&terrain_floodplain_soil_malus, grid_offset); break;
     }
 }
 

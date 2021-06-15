@@ -649,14 +649,14 @@ static void init_savegame_data(int expanded) {
             state->junk14b = create_savegame_piece(528, 0, "junk14b");
 
             state->floodplain_settings = create_savegame_piece(36, 1, "floodplain_settings"); // floodplain_settings
-            state->GRID03_32BIT = create_savegame_piece(207936, 1, "GRID03_32BIT"); // todo: 4-byte grid
+            state->GRID03_32BIT = create_savegame_piece(207936, 1, "GRID03_32BIT_3BYTE"); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
             // 64 bytes     00 00 00 00 ???
             state->junk16a = create_savegame_piece(312 , 0, "junk16a"); // 71x 4-bytes emptiness
             state->junk16b = create_savegame_piece(64, 0, "junk16b"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, 0, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->GRID04_8BIT = create_savegame_piece(51984, 1, "GRID04_8BIT"); // todo: 1-byte grid
+            state->GRID04_8BIT = create_savegame_piece(51984, 1, "terrain_floodplain_soil_malus"); // todo: 1-byte grid
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, 0, "junk17");
@@ -781,10 +781,10 @@ static void savegame_load_from_state(savegame_state *state) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         map_temp_grid_load(state->GRID01_8BIT, 0);
         map_temp_grid_load(state->GRID02_8BIT, 1);
-//        map_temp_grid_load(state->GRID03_32BIT, 2);
-        map_temp_grid_load(state->GRID04_8BIT, 2);
+        map_temp_grid_load(state->GRID03_32BIT, 2);
+        map_temp_grid_load(state->GRID04_8BIT, 3);
         map_moisture_load_state(state->moisture_grid);
-        map_unk32_load_state(state->GRID03_32BIT);
+//        map_GRID03_32BIT_load_split_state(state->GRID03_32BIT);
 
         empire_load_internal_ph(state->empire_map_objects);
     }

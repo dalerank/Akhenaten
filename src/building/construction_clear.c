@@ -16,6 +16,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "window/popup_dialog.h"
+#include "industry.h"
 
 static struct {
     int x_start;
@@ -87,6 +88,8 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     figure_create_homeless(b->x, b->y, b->house_population);
                     b->house_population = 0;
                 }
+                if (building_is_floodplain_farm(b))
+                    building_farm_deplete_soil(b);
                 if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {
                     items_placed++;
                     game_undo_add_building(b);

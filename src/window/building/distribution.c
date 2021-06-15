@@ -599,7 +599,7 @@ void window_building_draw_warehouse(building_info_context *c) {
     // cartpusher state
     int cartpusher = b->figure_id;
     if (cartpusher && figure_get(cartpusher)->state == FIGURE_STATE_ALIVE) {
-        int resource = figure_get(cartpusher)->resource_id;
+        int resource = figure_get(cartpusher)->get_resource();
         image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                    resource_image_offset(resource, RESOURCE_IMAGE_ICON),
                    c->x_offset + 32, c->y_offset + 220);

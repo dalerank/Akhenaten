@@ -1,3 +1,5 @@
+#include <ntdef.h>
+#include <cmath>
 #include "granary.h"
 
 #include "building/destruction.h"
@@ -81,33 +83,29 @@ int building_granary_is_not_accepting(int resource, building *b) {
     return !((building_granary_is_accepting(resource, b) || building_granary_is_getting(resource, b)));
 }
 
-int building_granary_add_resource(building *granary, int resource, int is_produced) {
+int building_granary_add_resource(building *granary, int resource, int is_produced, int amount) {
     if (granary->id <= 0)
-        return 1;
+        return -1;
 
     if (!resource_is_food(resource))
-        return 0;
+        return -1;
 
     if (granary->type != BUILDING_GRANARY)
-        return 0;
+        return -1;
 
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0)
-        return 0; // no space
+        return -1; // no space
 
     if (building_granary_is_not_accepting(resource, granary))
-        return 0;
+        return -1;
 
     if (is_produced)
         city_resource_add_produced_to_granary(ONE_LOAD);
 
-    if (granary->data.granary.resource_stored[RESOURCE_NONE] <= ONE_LOAD) {
-        granary->data.granary.resource_stored[resource] += granary->data.granary.resource_stored[RESOURCE_NONE];
-        granary->data.granary.resource_stored[RESOURCE_NONE] = 0;
-    } else {
-        granary->data.granary.resource_stored[resource] += ONE_LOAD;
-        granary->data.granary.resource_stored[RESOURCE_NONE] -= ONE_LOAD;
-    }
-    return 1;
+    int deliverable_amount = fmin(granary->data.granary.resource_stored[RESOURCE_NONE], amount);
+    granary->data.granary.resource_stored[resource] += deliverable_amount;
+    granary->data.granary.resource_stored[RESOURCE_NONE] -= deliverable_amount;
+    return amount - deliverable_amount;
 }
 int building_granary_remove_resource(building *granary, int resource, int amount) {
     if (amount <= 0)
@@ -432,16 +430,16 @@ void building_granary_bless(void) {
     }
     if (min_building) {
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_WHEAT, 0);
+            building_granary_add_resource(min_building, RESOURCE_WHEAT, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_VEGETABLES, 0);
+            building_granary_add_resource(min_building, RESOURCE_VEGETABLES, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_FRUIT, 0);
+            building_granary_add_resource(min_building, RESOURCE_FRUIT, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_MEAT_C3, 0);
+            building_granary_add_resource(min_building, RESOURCE_MEAT_C3, 0, 100);
         }
     }
 }

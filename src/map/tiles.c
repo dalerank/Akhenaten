@@ -936,6 +936,7 @@ static void refresh_river_at(int x, int y, int grid_offset) {
     set_river_3x3_tiles(x, y, grid_offset);
     set_floodplain_edge_3x3_tiles(x, y, grid_offset);
     set_floodplain_land_tiles_image(x, y, grid_offset);
+    set_road_image(x, y, grid_offset);
 }
 void map_tiles_river_refresh_entire(void) {
 //    return;
@@ -958,14 +959,22 @@ void map_tiles_set_water(int x, int y) { // todo: broken
 #define PH_FLOODPLAIN_GROWTH_MAX 6;
 int floodplain_growth_advance = 0;
 static void advance_floodplain_growth_tile(int x, int y, int grid_offset, int order) {
-    int curr = map_get_growth(grid_offset);
-    if (curr < 5) {
-        map_set_growth(grid_offset, curr + 1);
+    if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
+        || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+        map_set_growth(grid_offset, 0);
+        set_floodplain_land_tiles_image(x, y, grid_offset);
+        refresh_river_at(x, y, grid_offset);
+        return;
+    }
+    int growth_current = map_get_growth(grid_offset);
+    if (growth_current < PH_FLOODPLAIN_GROWTH_MAX - 1) {
+        map_set_growth(grid_offset, growth_current + 1);
         set_floodplain_land_tiles_image(x, y, grid_offset);
         refresh_river_at(x, y, grid_offset);
     }
 }
 void map_advance_floodplain_growth() {
+    // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
     foreach_floodplain_order(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
     foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
@@ -976,6 +985,7 @@ void map_advance_floodplain_growth() {
     if (floodplain_growth_advance >= 12)
         floodplain_growth_advance = 0;
 }
+
 int floodplain_flood_tick = 0;
 int floodplain_is_flooding = 0;
 static void floodplain_set_inundation(int x, int y, int grid_offset, int order) {
@@ -985,12 +995,44 @@ static void floodplain_set_inundation(int x, int y, int grid_offset, int order) 
     int v = (order - 2) * 25; // every cycle (25 ticks) the order increases or decreases by one.
     int flooded = !random_bool_lerp_scalar_int(min, max, v);
 
+    int b_id = map_building_at(grid_offset);
+    building *b = building_get(b_id);
+
     if (flooded != map_terrain_is(grid_offset, TERRAIN_WATER)) {
-        if (floodplain_is_flooding == 1)
+        if (floodplain_is_flooding == 1) {
             map_terrain_add(grid_offset, TERRAIN_WATER);
-        else if (floodplain_is_flooding == -1)
+
+            // hide building
+            if (b_id && b->state == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING))
+                for (int _y = b->y; _y < b->y + b->size; _y++)
+                    for (int _x = b->x; _x < b->x + b->size; _x++) {
+                        int _offset = map_grid_offset(_x, _y);
+                        map_terrain_remove(_offset, TERRAIN_BUILDING);
+                        map_property_set_multi_tile_size(_offset, 1);
+                        refresh_river_at(_x, _y, _offset);
+                    }
+        }
+        else if (floodplain_is_flooding == -1) {
             map_terrain_remove(grid_offset, TERRAIN_WATER);
-        refresh_river_at(x, y, grid_offset); // maybe working???
+
+            // bring back flooded buildings
+            if (b_id && b->state == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                int still_flooded = 0;
+                for (int _y = b->y; _y < b->y + b->size; _y++)
+                    for (int _x = b->x; _x < b->x + b->size; _x++)
+                        if (map_terrain_is(map_grid_offset(_x, _y), TERRAIN_WATER))
+                            still_flooded = 1;
+                if (!still_flooded)
+                    map_building_tiles_add_farm(b_id, b->x, b->y, 0, 0);
+//                    for (int _y = b->y; _y < b->y + b->size; _y++)
+//                        for (int _x = b->x; _x < b->x + b->size; _x++) {
+//                            int _offset = map_grid_offset(_x, _y);
+//                            map_terrain_add(_offset, TERRAIN_BUILDING);
+//                            map_property_set_multi_tile_size(_offset, b->size);
+//                        }
+            }
+        }
+        refresh_river_at(x, y, grid_offset);
     }
 }
 void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {

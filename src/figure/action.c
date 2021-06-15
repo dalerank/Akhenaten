@@ -339,6 +339,11 @@ void figure::action_perform() {
                     return figure_delete();
                 break;
             case FIGURE_CART_PUSHER:
+                if (destination_building_id)
+                    break;
+//                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+//                    return figure_delete();
+                break;
             case FIGURE_WAREHOUSEMAN:
                 if (destination_building_id)
                     break;

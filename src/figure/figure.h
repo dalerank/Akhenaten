@@ -14,6 +14,10 @@
 static int MAX_FIGURES[] = {5000, 2000};
 
 class figure {
+private:
+    unsigned char resource_id;
+    unsigned char resource_amount_loads;
+    unsigned short resource_amount_full; // full load counter
 public:
     int id;
     int sprite_image_id;
@@ -29,8 +33,7 @@ public:
     unsigned char flotsam_visible;
     short next_figure;
     unsigned char type;
-    unsigned char resource_id;
-//    short resource_quantity;
+//    unsigned char resource_id;
     unsigned char use_cross_country;
     unsigned char is_friendly;
     unsigned char state;
@@ -81,6 +84,8 @@ public:
     short cc_delta_x;
     short cc_delta_y;
     short cc_delta_xy;
+//    unsigned char loads_counter;
+//    unsigned short loads_full; // full load counter
     unsigned char cc_direction; // 1 = x, 2 = y
     unsigned char speed_multiplier;
     short building_id;
@@ -102,7 +107,6 @@ public:
     unsigned char trader_amount_bought;
     short name;
     unsigned char terrain_usage;
-    unsigned char loads_counter;
     unsigned char is_boat; // 1 for boat, 2 for flotsam
     unsigned char height_adjusted_ticks;
     unsigned char current_height;
@@ -306,6 +310,11 @@ public:
     int fetch_export_resource(building *dock);
 
     // cartpusher.c
+    void set_resource(int resource);
+    int get_resource() const;
+    void load_resource(int amount, int resource);
+    int unload_resource(int amount);
+    int get_carrying_amount();
     void determine_deliveryman_destination(building *b, int road_network_id);
     void determine_deliveryman_destination_food(int road_network_id);
     void cart_update_image();

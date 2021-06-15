@@ -68,7 +68,7 @@ void figure::draw_debug() {
     if (resource_id) {
         string_from_int(str, resource_id, 0);
         text_draw_shadow(str, coords.x + 25, coords.y + 10, COLOR_GREEN);
-        string_from_int(str, loads_counter, 0);
+        string_from_int(str, get_carrying_amount(), 0);
         text_draw_shadow(str, coords.x + 25, coords.y + 20, COLOR_GREEN);
     }
 //    else {

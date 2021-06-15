@@ -59,11 +59,11 @@ int building_warehouse_get_amount(building *warehouse, int resource) {
 
 int building_warehouse_add_resource(building *b, int resource) {
     if (b->id <= 0)
-        return 0;
+        return -1;
 
     building *main = building_main(b);
     if (building_warehouse_is_not_accepting(resource, main))
-        return 0;
+        return -1;
 
     // check building itself
     int find_space = 0;
@@ -80,7 +80,7 @@ int building_warehouse_add_resource(building *b, int resource) {
         for (int i = 0; i < 8; i++) {
             space = building_next(space);
             if (!space->id)
-                return 0;
+                return -1;
 
             if (!space->subtype.warehouse_resource_id || space->subtype.warehouse_resource_id == resource) {
                 if (space->loads_stored < 4) {
@@ -91,7 +91,7 @@ int building_warehouse_add_resource(building *b, int resource) {
             }
         }
         if (!space_found)
-            return 0;
+            return -1;
 
     }
     city_resource_add_to_warehouse(resource, 1);
