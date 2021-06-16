@@ -191,54 +191,58 @@ static void draw_debug_ui(int x, int y) {
     uint8_t str[10];
 
     /////// TIME
-    draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
-    draw_debug_line(str, x, y + 25, 50, "day:", time->day);
-    draw_debug_line(str, x, y + 35, 50, "month:", time->month);
-    draw_debug_line(str, x, y + 45, 50, "year:", time->year);
-    draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
-    draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
+    if (false) {
+        draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
+        draw_debug_line(str, x, y + 25, 50, "day:", time->day);
+        draw_debug_line(str, x, y + 35, 50, "month:", time->month);
+        draw_debug_line(str, x, y + 45, 50, "year:", time->year);
+        draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
+        draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
+    }
 
     /////// FLOODS
-    auto floods = give_me_da_floods_data();
+    if (false) {
+        auto floods = give_me_da_floods_data();
 
-    int c_curr = floodplains_current_cycle();
-    int c_start = floodplains_flooding_start_cycle();
-    int c_end = floodplains_flooding_end_cycle();
-    int c_hh = floodplains_flooding_rest_period_cycle();
-    int c_minus49 = c_start - 49;
-    int c_minus27 = c_start - 27;
-    int c_first_rest = c_start + c_hh;
-    int c_second_rest = c_end - c_hh;
-    int c_plus28 = c_end + 28;
+        int c_curr = floodplains_current_cycle();
+        int c_start = floodplains_flooding_start_cycle();
+        int c_end = floodplains_flooding_end_cycle();
+        int c_hh = floodplains_flooding_rest_period_cycle();
+        int c_minus49 = c_start - 49;
+        int c_minus27 = c_start - 27;
+        int c_first_rest = c_start + c_hh;
+        int c_second_rest = c_end - c_hh;
+        int c_plus28 = c_end + 28;
 
-    int cl = 60;
-    draw_debug_line(str, x, y + 85, cl, "current:", c_curr); // current cycle
+        int cl = 60;
+        draw_debug_line(str, x, y + 85, cl, "current:", c_curr); // current cycle
 
-    draw_debug_line(str, x, y + 95, cl, "t-49:", c_minus49); // 49 days prior
-    draw_debug_line(str, x, y + 105, cl, "t-27:", c_minus27); // 27 days prior
-    draw_debug_line(str, x, y + 115, cl, "start:", c_start); // flood start
-    draw_debug_line(str, x, y + 125, cl, "rest-1:", c_first_rest); // first rest period
-    draw_debug_line(str, x, y + 135, cl, "rest-2:", c_second_rest); // second rest period
-    draw_debug_line(str, x, y + 145, cl, "end:", c_end); // flood end
-    draw_debug_line(str, x, y + 155, cl, "final:", c_plus28); // lands farmable again
+        draw_debug_line(str, x, y + 95, cl, "t-49:", c_minus49); // 49 days prior
+        draw_debug_line(str, x, y + 105, cl, "t-27:", c_minus27); // 27 days prior
+        draw_debug_line(str, x, y + 115, cl, "start:", c_start); // flood start
+        draw_debug_line(str, x, y + 125, cl, "rest-1:", c_first_rest); // first rest period
+        draw_debug_line(str, x, y + 135, cl, "rest-2:", c_second_rest); // second rest period
+        draw_debug_line(str, x, y + 145, cl, "end:", c_end); // flood end
+        draw_debug_line(str, x, y + 155, cl, "final:", c_plus28); // lands farmable again
 
-    cl = 100;
-    draw_debug_line(str, x, y + 175, cl, "season_initial:", floods->season_initial);
-    draw_debug_line(str, x, y + 185, cl, "duration_initial:", floods->duration_initial);
-    draw_debug_line(str, x, y + 195, cl, "quality_initial:", floods->quality_initial);
-    draw_debug_line(str, x, y + 205, cl, "season:", floods->season);
-    draw_debug_line(str, x, y + 215, cl, "duration:", floods->duration);
-    draw_debug_line(str, x, y + 225, cl, "quality:", floods->quality);
-    draw_debug_line(str, x, y + 235, cl, "(unk00):", floods->unk00);
-    draw_debug_line(str, x, y + 245, cl, "quality_next:", floods->quality_next);
-    draw_debug_line(str, x, y + 255, cl, "quality_last:", floods->quality_last);
+        cl = 100;
+        draw_debug_line(str, x, y + 175, cl, "season_initial:", floods->season_initial);
+        draw_debug_line(str, x, y + 185, cl, "duration_initial:", floods->duration_initial);
+        draw_debug_line(str, x, y + 195, cl, "quality_initial:", floods->quality_initial);
+        draw_debug_line(str, x, y + 205, cl, "season:", floods->season);
+        draw_debug_line(str, x, y + 215, cl, "duration:", floods->duration);
+        draw_debug_line(str, x, y + 225, cl, "quality:", floods->quality);
+        draw_debug_line(str, x, y + 235, cl, "(unk00):", floods->unk00);
+        draw_debug_line(str, x, y + 245, cl, "quality_next:", floods->quality_next);
+        draw_debug_line(str, x, y + 255, cl, "quality_last:", floods->quality_last);
 
-    cl = 60;
-    draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->flood_progress); // status 30 (???)
-    draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
-    draw_debug_line(str, x, y + 295, cl, "state:", floods->state); // floodplains state
-    draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
-    draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
+        cl = 60;
+        draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->flood_progress); // status 30 (???)
+        draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
+        draw_debug_line(str, x, y + 295, cl, "state:", floods->state); // floodplains state
+        draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
+        draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
+    }
 
     /////// CAMERA
     if (false) {

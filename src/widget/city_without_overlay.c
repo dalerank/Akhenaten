@@ -717,8 +717,8 @@ void draw_debug(int x, int y, int grid_offset) {
 //                string_from_int(str, d-MOISTURE_TRANSITION, 0);
 //                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
 //            }
-            string_from_int(str, tile_data, 0);
-            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
+//            string_from_int(str, tile_data, 0);
+//            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
 
 //            int m = (d+1)/8;
 //            string_from_int(str, m, 0);
@@ -744,19 +744,9 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
-//        d = map_temp_grid_get(grid_offset, 3);
-//        if (d != 0) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 13, y + 5, COLOR_LIGHT_BLUE);
-//        }
-
 //        d = map_terrain_get(grid_offset);
-//        if (d & TERRAIN_FLOODPLAIN) {
 //            if (d & TERRAIN_WATER)
 //                text_draw_shadow((uint8_t *) string_from_ascii("u"), x + 30, y + 15, COLOR_WHITE);
-//            else
-//                text_draw_shadow((uint8_t *) string_from_ascii("f"), x + 30, y + 15, COLOR_WHITE);
-//        }
 
 //        d = map_get_shoreorder(grid_offset);
 //        if (d) {

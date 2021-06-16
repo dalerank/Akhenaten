@@ -204,6 +204,26 @@ S	  E
 
 ================
 
+grass transitions
+
+0 = NOT grass at level 5
+1 = grass at level 5
+
+<------ y  x
+ [ ][0][0] | edge
+ [1][ ][0] |
+ [ ][0][0] V
+ 
+ [1][0][0]	big corner
+ [0][ ][ ]
+ [0][ ][0]
+
+ [ ][1][ ]	small corner
+ [1][ ][ ]
+ [ ][ ][ ]
+
+================
+
 
 +684
 

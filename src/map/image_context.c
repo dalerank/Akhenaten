@@ -265,25 +265,25 @@ static struct terrain_image_context terrain_images_aqueduct[16] = {
 };
 
 static struct terrain_image_context terrain_images_deepwater[19] = {
-        {{0, 2, 1, 1, 2, 1, 1, 2}, {0,  2,  4,  6},  0,  1},
-        {{1, 2, 0, 2, 1, 1, 2, 1}, {2,  4,  6,  0},  0,  1},
-        {{2, 1, 1, 2, 0, 2, 1, 1}, {4,  6,  0,  2},  0,  1},
-        {{1, 1, 2, 1, 1, 2, 0, 2}, {6,  0,  2,  4},  0,  1},
+        {{0, 2, 1, 1, 2, 1, 1, 2}, {0,  6,  4,  2},  0,  1},
+        {{1, 2, 0, 2, 1, 1, 2, 1}, {2,  0,  6,  4},  0,  1},
+        {{2, 1, 1, 2, 0, 2, 1, 1}, {4,  2,  0,  6},  0,  1},
+        {{1, 1, 2, 1, 1, 2, 0, 2}, {6,  4,  2,  0},  0,  1},
 
-        {{0, 2, 0, 1, 2, 1, 2, 1}, {1,  3,  5,  7},  0,  1},
-        {{2, 1, 0, 2, 0, 1, 2, 1}, {3,  5,  7,  1},  0,  1},
-        {{2, 1, 2, 1, 0, 2, 0, 1}, {5,  7,  1,  3},  0,  1},
-        {{0, 1, 2, 1, 2, 1, 0, 2}, {7,  1,  3,  5},  0,  1},
+        {{0, 2, 0, 1, 2, 1, 2, 1}, {1,  7,  5,  3},  0,  1},
+        {{2, 1, 0, 2, 0, 1, 2, 1}, {3,  1,  7,  5},  0,  1},
+        {{2, 1, 2, 1, 0, 2, 0, 1}, {5,  3,  1,  7},  0,  1},
+        {{0, 1, 2, 1, 2, 1, 0, 2}, {7,  5,  3,  1},  0,  1},
 
-        {{2, 0, 2, 1, 2, 1, 2, 1}, {8,  9,  10, 11}, 0,  1},
-        {{2, 1, 2, 0, 2, 1, 2, 1}, {9,  10, 11, 8},  0,  1},
-        {{2, 1, 2, 1, 2, 0, 2, 1}, {10, 11, 8,  9},  0,  1},
-        {{2, 1, 2, 1, 2, 1, 2, 0}, {11, 8,  9,  10}, 0,  1},
+        {{2, 0, 2, 1, 2, 1, 2, 1}, {8,  11, 10, 9},  0,  1},
+        {{2, 1, 2, 0, 2, 1, 2, 1}, {9,  8,  11, 10}, 0,  1},
+        {{2, 1, 2, 1, 2, 0, 2, 1}, {10, 9,  8,  11}, 0,  1},
+        {{2, 1, 2, 1, 2, 1, 2, 0}, {11, 10, 9,  8},  0,  1},
 
-        {{2, 0, 2, 2, 1, 1, 1, 2}, {1,  3,  5,  7},  0,  1},
-        {{1, 2, 2, 0, 2, 2, 1, 1}, {3,  5,  7,  1},  0,  1},
-        {{1, 1, 1, 2, 2, 0, 2, 2}, {5,  7,  1,  3},  0,  1},
-        {{2, 2, 1, 1, 1, 2, 2, 0}, {7,  1,  3,  5},  0,  1},
+        {{2, 0, 2, 2, 1, 1, 1, 2}, {1,  7,  5,  3},  0,  1},
+        {{1, 2, 2, 0, 2, 2, 1, 1}, {3,  1,  7,  5},  0,  1},
+        {{1, 1, 1, 2, 2, 0, 2, 2}, {5,  3,  1,  7},  0,  1},
+        {{2, 2, 1, 1, 1, 2, 2, 0}, {7,  5,  3,  1},  0,  1},
 
         {{2, 0, 2, 1, 2, 0, 2, 1}, {12, 13, 12, 13}, 0,  1},
         {{2, 1, 2, 0, 2, 1, 2, 0}, {13, 12, 13, 12}, 0,  1},
@@ -292,65 +292,65 @@ static struct terrain_image_context terrain_images_deepwater[19] = {
 };
 
 static struct terrain_image_context terrain_images_floodsystem[46] = {
-        {{1, 1, 1, 2, 0, 2, 1, 1}, {0,  4,  8,  12}, 0,  1},
-        {{1, 1, 1, 1, 1, 2, 0, 2}, {4,  8,  12, 0},  0,  1},
-        {{0, 2, 1, 1, 1, 1, 1, 2}, {8,  12, 0,  4},  0,  1},
-        {{1, 2, 0, 2, 1, 1, 1, 1}, {12, 0,  4,  8},  0,  1},
+        {{1, 1, 1, 2, 0, 2, 1, 1}, {0,  12, 8,  4},  0,  1},
+        {{1, 1, 1, 1, 1, 2, 0, 2}, {4,  0,  12, 8},  0,  1},
+        {{0, 2, 1, 1, 1, 1, 1, 2}, {8,  4,  0,  12}, 0,  1},
+        {{1, 2, 0, 2, 1, 1, 1, 1}, {12, 8,  4,  0},  0,  1},
 
         // L-corner
-        {{1, 0, 1, 2, 0, 2, 0, 2}, {67, 68, 69, 70}, 0,  1},
-        {{0, 2, 1, 0, 1, 2, 0, 2}, {68, 69, 70, 67}, 0,  1},
-        {{0, 2, 0, 2, 1, 0, 1, 2}, {69, 70, 67, 68}, 0,  1},
-        {{1, 2, 0, 2, 0, 2, 1, 0}, {70, 67, 68, 69}, 0,  1},
+        {{1, 0, 1, 2, 0, 2, 0, 2}, {67, 70, 69, 68}, 0,  1},
+        {{0, 2, 1, 0, 1, 2, 0, 2}, {68, 67, 70, 69}, 0,  1},
+        {{0, 2, 0, 2, 1, 0, 1, 2}, {69, 68, 67, 70}, 0,  1},
+        {{1, 2, 0, 2, 0, 2, 1, 0}, {70, 69, 68, 67}, 0,  1},
 
         // big corners
-        {{1, 2, 1, 2, 0, 2, 0, 2}, {16, 20, 24, 28}, 0,  1},
-        {{0, 2, 1, 2, 1, 2, 0, 2}, {20, 24, 28, 16}, 0,  1},
-        {{0, 2, 0, 2, 1, 2, 1, 2}, {24, 28, 16, 20}, 0,  1},
-        {{1, 2, 0, 2, 0, 2, 1, 2}, {28, 16, 20, 24}, 0,  1},
+        {{1, 2, 1, 2, 0, 2, 0, 2}, {16, 28, 24, 20}, 0,  1},
+        {{0, 2, 1, 2, 1, 2, 0, 2}, {20, 16, 28, 24}, 0,  1},
+        {{0, 2, 0, 2, 1, 2, 1, 2}, {24, 20, 16, 28}, 0,  1},
+        {{1, 2, 0, 2, 0, 2, 1, 2}, {28, 24, 20, 16}, 0,  1},
 
         // deadend
-        {{1, 2, 0, 2, 0, 2, 0, 2}, {36, 37, 38, 39}, 0,  1},
-        {{0, 2, 1, 2, 0, 2, 0, 2}, {37, 38, 39, 36}, 0,  1},
-        {{0, 2, 0, 2, 1, 2, 0, 2}, {38, 39, 36, 37}, 0,  1},
-        {{0, 2, 0, 2, 0, 2, 1, 2}, {39, 36, 37, 38}, 0,  1},
+        {{1, 2, 0, 2, 0, 2, 0, 2}, {36, 39, 38, 37}, 0,  1},
+        {{0, 2, 1, 2, 0, 2, 0, 2}, {37, 36, 39, 38}, 0,  1},
+        {{0, 2, 0, 2, 1, 2, 0, 2}, {38, 37, 36, 39}, 0,  1},
+        {{0, 2, 0, 2, 0, 2, 1, 2}, {39, 38, 37, 36}, 0,  1},
 
         // opposite corners
         {{1, 0, 1, 1, 1, 0, 1, 1}, {40, 41, 40, 41}, 0,  1},
         {{1, 1, 1, 0, 1, 1, 1, 0}, {41, 40, 41, 40}, 0,  1},
 
         // big delta junction
-        {{1, 1, 1, 1, 1, 0, 1, 0}, {46, 47, 48, 49}, 0,  1},
-        {{1, 0, 1, 1, 1, 1, 1, 0}, {47, 48, 49, 46}, 0,  1},
-        {{1, 0, 1, 0, 1, 1, 1, 1}, {48, 49, 46, 47}, 0,  1},
-        {{1, 1, 1, 0, 1, 0, 1, 1}, {49, 46, 47, 48}, 0,  1},
+        {{1, 1, 1, 1, 1, 0, 1, 0}, {46, 49, 48, 47}, 0,  1},
+        {{1, 0, 1, 1, 1, 1, 1, 0}, {47, 46, 49, 48}, 0,  1},
+        {{1, 0, 1, 0, 1, 1, 1, 1}, {48, 47, 46, 49}, 0,  1},
+        {{1, 1, 1, 0, 1, 0, 1, 1}, {49, 48, 47, 46}, 0,  1},
 
         // big Y-junction
-        {{1, 0, 1, 1, 1, 0, 1, 0}, {50, 51, 52, 53}, 0,  1},
-        {{1, 0, 1, 0, 1, 1, 1, 0}, {51, 52, 53, 50}, 0,  1},
-        {{1, 0, 1, 0, 1, 0, 1, 1}, {52, 53, 50, 51}, 0,  1},
-        {{1, 1, 1, 0, 1, 0, 1, 0}, {53, 50, 51, 52}, 0,  1},
+        {{1, 0, 1, 1, 1, 0, 1, 0}, {50, 53, 52, 51}, 0,  1},
+        {{1, 0, 1, 0, 1, 1, 1, 0}, {51, 50, 53, 52}, 0,  1},
+        {{1, 0, 1, 0, 1, 0, 1, 1}, {52, 51, 50, 53}, 0,  1},
+        {{1, 1, 1, 0, 1, 0, 1, 0}, {53, 52, 51, 50}, 0,  1},
 
         // cross
         {{1, 0, 1, 0, 1, 0, 1, 0}, {54, 54, 54, 54}, 0,  1},
 
         // T-junction
-        {{1, 0, 1, 2, 0, 2, 1, 0}, {57, 60, 63, 66}, 0,  1},
-        {{1, 0, 1, 0, 1, 2, 0, 2}, {60, 63, 66, 57}, 0,  1},
-        {{0, 2, 1, 0, 1, 0, 1, 2}, {63, 66, 57, 60}, 0,  1},
-        {{1, 2, 0, 2, 1, 0, 1, 0}, {66, 57, 60, 63}, 0,  1},
+        {{1, 0, 1, 2, 0, 2, 1, 0}, {57, 66, 63, 60}, 0,  1},
+        {{1, 0, 1, 0, 1, 2, 0, 2}, {60, 57, 66, 63}, 0,  1},
+        {{0, 2, 1, 0, 1, 0, 1, 2}, {63, 60, 57, 66}, 0,  1},
+        {{1, 2, 0, 2, 1, 0, 1, 0}, {66, 63, 60, 57}, 0,  1},
 
         // L-junction
-        {{1, 2, 1, 2, 0, 2, 1, 0}, {55, 58, 61, 64}, 0,  1},
-        {{1, 0, 1, 2, 1, 2, 0, 2}, {58, 61, 64, 55}, 0,  1},
-        {{0, 2, 1, 0, 1, 2, 1, 2}, {61, 64, 55, 58}, 0,  1},
-        {{1, 2, 0, 2, 1, 0, 1, 2}, {64, 55, 58, 61}, 0,  1},
+        {{1, 2, 1, 2, 0, 2, 1, 0}, {55, 64, 61, 58}, 0,  1},
+        {{1, 0, 1, 2, 1, 2, 0, 2}, {58, 55, 64, 61}, 0,  1},
+        {{0, 2, 1, 0, 1, 2, 1, 2}, {61, 58, 55, 64}, 0,  1},
+        {{1, 2, 0, 2, 1, 0, 1, 2}, {64, 61, 58, 55}, 0,  1},
 
         // L-junction (mirror)
-        {{1, 0, 1, 2, 0, 2, 1, 2}, {56, 59, 62, 65}, 0,  1},
-        {{1, 2, 1, 0, 1, 2, 0, 2}, {59, 62, 65, 56}, 0,  1},
-        {{0, 2, 1, 2, 1, 0, 1, 2}, {62, 65, 56, 59}, 0,  1},
-        {{1, 2, 0, 2, 1, 2, 1, 0}, {65, 56, 59, 62}, 0,  1},
+        {{1, 0, 1, 2, 0, 2, 1, 2}, {56, 65, 62, 59}, 0,  1},
+        {{1, 2, 1, 0, 1, 2, 0, 2}, {59, 56, 65, 62}, 0,  1},
+        {{0, 2, 1, 2, 1, 0, 1, 2}, {62, 59, 56, 65}, 0,  1},
+        {{1, 2, 0, 2, 1, 2, 1, 0}, {65, 62, 59, 56}, 0,  1},
 
         //puddle
         {{0, 2, 0, 2, 0, 2, 0, 2}, {71, 71, 71, 71}, 0,  1},
@@ -360,11 +360,33 @@ static struct terrain_image_context terrain_images_floodsystem[46] = {
         {{1, 2, 0, 2, 1, 2, 0, 2}, {34, 32, 34, 32}, 0,  1},
 
         // small corners
-        {{2, 2, 2, 2, 1, 0, 1, 2}, {42, 43, 44, 45}, 0,  1},
-        {{1, 2, 2, 2, 2, 2, 1, 0}, {43, 44, 45, 42}, 0,  1},
-        {{1, 0, 1, 2, 2, 2, 2, 2}, {44, 45, 42, 43}, 0,  1},
-        {{2, 2, 1, 0, 1, 2, 2, 2}, {45, 42, 43, 44}, 0,  1},
+        {{2, 2, 2, 2, 1, 0, 1, 2}, {42, 45, 44, 43}, 0,  1},
+        {{1, 2, 2, 2, 2, 2, 1, 0}, {43, 42, 45, 44}, 0,  1},
+        {{1, 0, 1, 2, 2, 2, 2, 2}, {44, 43, 42, 45}, 0,  1},
+        {{2, 2, 1, 0, 1, 2, 2, 2}, {45, 44, 43, 42}, 0,  1},
 };
+
+static struct terrain_image_context terrain_images_grass_corners[12] = {
+
+        // edges
+        {{0, 0, 0, 2, 1, 2, 0, 0}, {0,  6,  4,  2},  0, 1},
+        {{0, 0, 0, 0, 0, 2, 1, 2}, {2,  0,  6,  4},  0, 1},
+        {{1, 2, 0, 0, 0, 0, 0, 2}, {4,  2,  0,  6},  0, 1},
+        {{0, 2, 1, 2, 0, 0, 0, 0}, {6,  4,  2,  0},  0, 1},
+
+        // big corners
+        {{2, 0, 2, 0, 0, 1, 0, 0}, {1,  7,  5,  3},  0, 1},
+        {{0, 0, 2, 0, 2, 0, 0, 1}, {3,  1,  7,  5},  0, 1},
+        {{0, 1, 0, 0, 2, 0, 2, 0}, {5,  3,  1,  7},  0, 1},
+        {{2, 0, 0, 1, 0, 0, 2, 0}, {7,  5,  3,  1},  0, 1},
+
+        // small corners
+        {{2, 2, 2, 2, 1, 2, 1, 2}, {8 , 11, 10, 9},  0, 1},
+        {{1, 2, 2, 2, 2, 2, 1, 2}, {9,  8,  11, 10}, 0, 1},
+        {{1, 2, 1, 2, 2, 2, 2, 2}, {10, 9,  8,  11}, 0, 1},
+        {{2, 2, 1, 2, 1, 2, 2, 2}, {11, 10, 9,  8},  0, 1},
+};
+
 
 // [5][6][7]
 // [4]   [0]
@@ -381,6 +403,7 @@ enum {
     CONTEXT_AQUEDUCT,
     CONTEXT_DEEPWATER,
     CONTEXT_FLOODSYSTEM,
+    CONTEXT_GRASSCORNERS,
 
     CONTEXT_MAX_ITEMS
 };
@@ -398,7 +421,8 @@ static struct {
         {terrain_images_paved_road,     48},
         {terrain_images_aqueduct,       16},
         {terrain_images_deepwater,      19},
-        {terrain_images_floodsystem,    46}
+        {terrain_images_floodsystem,    46},
+        {terrain_images_grass_corners,  12}
 };
 
 static void clear_current_offset(struct terrain_image_context *items, int num_items) {
@@ -428,6 +452,17 @@ static bool context_matches_tiles(const struct terrain_image_context *context, c
 static void fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, int tiles[MAX_TILES]) {
     for (int i = 0; i < MAX_TILES; i++)
         tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
+}
+static void fill_matches_grass(int grid_offset, int match_value, int no_match_value, int tiles[MAX_TILES]) {
+    for (int i = 0; i < MAX_TILES; i++) {
+        int moisture = map_moisture_get(grid_offset + map_grid_direction_delta(i));
+        if (moisture & MOISTURE_TRANSITION)
+            tiles[i] = no_match_value;
+        else if (moisture >= 46 && moisture <= 50)
+            tiles[i] = match_value;
+        else
+            tiles[i] = no_match_value;
+    }
 }
 
 static const terrain_image *get_image(int group, int tiles[MAX_TILES]) {
@@ -490,13 +525,17 @@ const terrain_image *map_image_context_get_floodplain_waterline(int grid_offset)
     fill_matches(grid_offset, TERRAIN_WATER, 1, 0, tiles);
     return get_image(CONTEXT_FLOODSYSTEM, tiles);
 }
+const terrain_image *map_image_context_get_grass_corners(int grid_offset) {
+    int tiles[MAX_TILES];
+    fill_matches_grass(grid_offset, 1, 0, tiles);
+    return get_image(CONTEXT_GRASSCORNERS, tiles);
+}
 
 const terrain_image *map_image_context_get_wall(int grid_offset) {
     int tiles[MAX_TILES];
     fill_matches(grid_offset, TERRAIN_WALL, 0, 1, tiles);
     return get_image(CONTEXT_WALL, tiles);
 }
-
 const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset) {
     int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
     for (int i = 0; i < MAX_TILES; i += 2) {
@@ -504,7 +543,6 @@ const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset) {
     }
     return get_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
-
 static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
     fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
     for (int i = 0; i < MAX_TILES; i += 2) {
@@ -528,19 +566,16 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
         }
     }
 }
-
 const terrain_image *map_image_context_get_dirt_road(int grid_offset) {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);
     return get_image(CONTEXT_DIRT_ROAD, tiles);
 }
-
 const terrain_image *map_image_context_get_paved_road(int grid_offset) {
     int tiles[MAX_TILES];
     set_tiles_road(grid_offset, tiles);
     return get_image(CONTEXT_PAVED_ROAD, tiles);
 }
-
 static int is_reservoir_construction_entrance(int grid_offset) {
     if (!map_property_is_constructing(grid_offset))
         return 0;
@@ -557,7 +592,6 @@ static int is_reservoir_construction_entrance(int grid_offset) {
     }
     return 0;
 }
-
 static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile_mask, int tiles[MAX_TILES],
                                   int include_construction) {
     int offset = grid_offset + map_grid_direction_delta(direction);
@@ -572,7 +606,6 @@ static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile
         tiles[direction] = 1;
 
 }
-
 const terrain_image *map_image_context_get_aqueduct(int grid_offset, int include_construction) {
     int tiles[MAX_TILES] = {0, 0, 0, 0, 0, 0, 0, 0};
     int has_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;

@@ -1371,8 +1371,39 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
                 return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
             return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
 
-        } else if (ph_grass >= 16) // edges have special ids
-            return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + ph_grass - 16);
+        } else if (ph_grass >= 16) { // edges have special ids
+
+            // todo: this doesn't work yet.....
+//            const terrain_image *img = map_image_context_get_grass_corners(grid_offset);
+//            if (img->is_valid) {
+//                int image_id = image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + img->group_offset + img->item_offset;
+//                return set_empty_land_image(x, y, 1, image_id);
+//            }
+//            else
+//                return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_BLACK));
+
+
+            // correct for city orientation the janky, hardcoded, but at least working way
+            int tr_offset = ph_grass - 16;
+            int orientation = city_view_orientation();
+            if (tr_offset < 8) {
+                if (tr_offset % 2 == 0) {
+                    tr_offset -= orientation;
+                    if (tr_offset < 0)
+                        tr_offset += 8;
+                }
+                else {
+                    tr_offset -= orientation;
+                    if (tr_offset < 1)
+                        tr_offset += 8;
+                }
+            } else {
+                tr_offset -= orientation / 2;
+                if (tr_offset < 8)
+                    tr_offset += 4;
+            }
+            return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + tr_offset);
+        }
     }
 }
 
