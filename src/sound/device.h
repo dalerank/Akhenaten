@@ -6,6 +6,9 @@
 void sound_device_open(void);
 void sound_device_close(void);
 
+void sound_device_load_formats(void);
+void sound_device_unload_formats(void);
+
 void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX]);
 int sound_device_is_channel_playing(int channel);
 

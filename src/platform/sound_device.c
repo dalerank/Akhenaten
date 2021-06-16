@@ -152,6 +152,25 @@ void sound_device_close(void) {
     }
 }
 
+void sound_device_load_formats(void) {
+    if (!data.initialized) {
+        return;
+    }
+
+    const int flags = MIX_INIT_MP3;
+    const int initialized_flags = Mix_Init(flags);
+    if (flags != (flags & initialized_flags)) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL_mixer (%i, %i): %s", flags, initialized_flags, Mix_GetError());
+    }
+    else {
+        SDL_Log("SDL_mixer initialized: %i", initialized_flags);
+    }
+}
+
+void sound_device_unload_formats(void) {
+    Mix_Quit();
+}
+
 int sound_device_is_channel_playing(int channel) {
     return data.channels[channel].chunk && Mix_Playing(channel);
 }
