@@ -72,7 +72,7 @@ if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
 entry initialized from old variable name")
 endif()
 
-if(APPLE)
+if(NOT SDL2_MIXER_INCLUDE_DIR AND APPLE)
   # Try to find the include in the SDL2_mixer framework bundle
   # This fixes CMake finding the header from SDL_mixer 1.2 when both 1.2 and 2.0 are installed
   find_path(SDL2_MIXER_INCLUDE_DIR SDL2_mixer/SDL_mixer.h
@@ -82,7 +82,9 @@ if(APPLE)
     PATH_SUFFIXES include include/SDL2
     PATHS ${SDL2_SEARCH_PATHS}
   )
-  set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INCLUDE_DIR}/Headers")
+  if (SDL2_MIXER_INCLUDE_DIR)
+    set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INCLUDE_DIR}/Headers")
+  endif()
 endif()
 
 if(NOT APPLE OR NOT EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
