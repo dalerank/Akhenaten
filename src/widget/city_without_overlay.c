@@ -518,7 +518,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
         int image_id = map_image_at(grid_offset);
         if (draw_context.advance_water_animation) {
             if (image_id >= draw_context.image_id_water_first && image_id <= draw_context.image_id_water_last) {
-                image_id++;
+                image_id++; // wrong, but eh
                 if (image_id > draw_context.image_id_water_last)
                     image_id = draw_context.image_id_water_first;
             }
@@ -527,8 +527,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
                 if (image_id > draw_context.image_id_deepwater_last)
                     image_id -= 90;
             }
-
-//            map_image_set(grid_offset, image_id);
+            map_image_set(grid_offset, image_id);
         }
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);

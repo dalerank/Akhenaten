@@ -97,7 +97,7 @@ static int groupid_translation_table_ph[] = {
         108, 14 + 341, // migrant
         110, 4 + 341, // engineer
         111, 191 + 341, // gladiator (musician)
-        112, 33,
+        112, 33, // road
         114, 34, // rubble
         115, 32 + 341, // thief
         116, 182 + 341, // mortuary (dentist)

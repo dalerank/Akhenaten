@@ -338,7 +338,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             // display groundwater
-            int image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+            int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
             image_draw_isometric_footprint_from_draw_tile(image_id, x, y,
                                                           map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {

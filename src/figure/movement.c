@@ -244,7 +244,7 @@ void figure::advance_route_tile(int roaming_enabled) {
 void figure::move_ticks(int num_ticks, int roaming_enabled) {
     if (!is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
         kill();
-    if (is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+    if (is_boat && !map_terrain_is(grid_offset_figure, TERRAIN_WATER))
         kill();
     while (num_ticks > 0) {
         num_ticks--;
@@ -392,7 +392,7 @@ void figure::roam_ticks(int num_ticks) {
         if (direction == DIR_FIGURE_AT_DESTINATION) {
             roam_choose_destination = 1;
 //            roam_length = 0;
-        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+        } else if (direction == DIR_FIGURE_REROUTE)
             roam_choose_destination = 1;
 
         if (roam_choose_destination) {

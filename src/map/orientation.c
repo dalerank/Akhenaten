@@ -530,9 +530,36 @@ int map_orientation_for_venue(int x, int y, int mode, int *building_orientation)
 
     // check the final count and return orientation
     for (int orientation_check = 0; orientation_check < 8; orientation_check++)
-        if (num_correct_road_tiles[orientation_check] == (mode + 2) * (mode + 2)) {
-            *building_orientation = orientation_check;
-            return 1;
+        if (num_correct_road_tiles[orientation_check] == (mode + 2) * (mode + 2)) { // check if the num of correct tiles is ALL of them (n x n)
+            if (mode == 0) {
+                int offset_1 = 0;
+                int offset_2 = 0;
+                switch (orientation_check) {
+                    case 0:
+                        offset_1 = grid_offset + map_grid_delta(1, 2);
+                        offset_2 = grid_offset + map_grid_delta(2, 1);
+                        break;
+                    case 2:
+                        offset_1 = grid_offset + map_grid_delta(-1, 1);
+                        offset_2 = grid_offset + map_grid_delta(0, 2);
+                        break;
+                    case 4:
+                        offset_1 = grid_offset + map_grid_delta(0, -1);
+                        offset_2 = grid_offset + map_grid_delta(-1, 0);
+                        break;
+                    case 6:
+                        offset_1 = grid_offset + map_grid_delta(1, -1);
+                        offset_2 = grid_offset + map_grid_delta(2, 0);
+                        break;
+                }
+                if (map_terrain_is(offset_1, TERRAIN_ROAD) || map_terrain_is(offset_2, TERRAIN_ROAD)) {
+                    *building_orientation = orientation_check;
+                    return 1;
+                }
+            } else {
+                *building_orientation = orientation_check;
+                return 1;
+            }
         }
     if (mode == 3)
         return -2;

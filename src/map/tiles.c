@@ -990,7 +990,7 @@ void map_advance_floodplain_growth() {
 
 int floodplain_flood_tick = 0;
 int floodplain_is_flooding = 0;
-static void floodplain_set_inundation(int x, int y, int grid_offset, int order) {
+static void floodplain_update_inundation_row(int x, int y, int grid_offset, int order) {
 
     int min = floodplain_flood_tick - 150;
     int max = floodplain_flood_tick + 50;
@@ -1045,7 +1045,7 @@ void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {
     if (floodplain_is_flooding == 0)
         return;
     for (int i = 0; i < 30; i++)
-        foreach_floodplain_order(i, floodplain_set_inundation);
+        foreach_floodplain_order(i, floodplain_update_inundation_row);
 }
 
 static void set_earthquake_image(int x, int y, int grid_offset) {
@@ -1199,7 +1199,7 @@ static void set_elevation_image(int x, int y, int grid_offset) {
             else {
                 map_terrain_remove(grid_offset, TERRAIN_ELEVATION);
                 map_image_set(grid_offset,
-                              image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7));
+                              image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
             }
         } else {
             map_building_tiles_add(0, x, y, 2,
@@ -1228,7 +1228,7 @@ static void set_elevation_image(int x, int y, int grid_offset) {
                                   image_id_from_group(GROUP_TERRAIN_MEADOW) + (map_random_get(grid_offset) & 3));
                 } else {
                     map_image_set(grid_offset,
-                                  image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7));
+                                  image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
                 }
             }
         } else {
@@ -1338,23 +1338,13 @@ static void set_empty_land_image(int x, int y, int size, int image_id) {
     }
 }
 static void set_empty_land_pass1(int x, int y, int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset) &&
-        !(map_random_get(grid_offset) & 0xf0)) {
-        int image_id;
-        if (map_property_is_alternate_terrain(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
-        else
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
-        set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
-    }
-}
-static void set_empty_land_pass2(int x, int y, int grid_offset) {
+    // first pass: clear land with no grass
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_image_at(grid_offset)) {
         int image_id;
         if (map_property_is_alternate_terrain(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_2);
+            image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND_ALT);
         else
-            image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1);
+            image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND);
         if (is_clear(x, y, 4, TERRAIN_ALL, 1))
             set_empty_land_image(x, y, 4, image_id + 42);
         else if (is_clear(x, y, 3, TERRAIN_ALL, 1))
@@ -1365,19 +1355,23 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
             set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
     }
 }
-static void set_empty_land_pass3(int x, int y, int grid_offset) {
+static void set_empty_land_pass2(int x, int y, int grid_offset) {
+    // second pass:
     int ph_grass = map_grasslevel_get(grid_offset);
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && ph_grass >= 0) {
         int image_base = image_id_from_group(GROUP_TERRAIN_GRASS_PH);
         if (ph_grass && ph_grass <= 11)
             return set_empty_land_image(x, y, 1, image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
         else if (ph_grass == 12) {
-            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR))
-                return set_empty_land_image(x, y, 1, image_base + 12 - 1 + 12 * (map_random_get(grid_offset) % 3));
-//            if (map_is_4x4_tallgrass(x, y, grid_offset)) // randomly do flat isometric tile
-//                return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 23));
-            return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
-        } else if (ph_grass >= 16)
+
+            // check for non-clear terrain tiles in a radius around it
+            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR)) // one tile of distance
+                return set_empty_land_image(x, y, 1, image_base + 36 + (map_random_get(grid_offset) % 12));
+            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_NOT_CLEAR)) // two tiles of distance
+                return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
+            return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
+
+        } else if (ph_grass >= 16) // edges have special ids
             return set_empty_land_image(x, y, 1, image_id_from_group(GROUP_TERRAIN_GRASS_PH_EDGES) + ph_grass - 16);
     }
 }
@@ -1386,13 +1380,11 @@ void map_tiles_update_all_empty_land(void) {
     foreach_map_tile(clear_empty_land_image);
     foreach_map_tile(set_empty_land_pass1);
     foreach_map_tile(set_empty_land_pass2);
-    foreach_map_tile(set_empty_land_pass3);
     foreach_map_tile(set_floodplain_edge_3x3_tiles);
 }
 void map_tiles_update_region_empty_land(int x_min, int y_min, int x_max, int y_max) {
     foreach_region_tile(x_min, y_min, x_max, y_max, clear_empty_land_image);
     foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass1);
     foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass2);
-    foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass3);
     foreach_region_tile(x_min-1, y_min-1, x_max+1, y_max+1, set_floodplain_edge_3x3_tiles);
 }

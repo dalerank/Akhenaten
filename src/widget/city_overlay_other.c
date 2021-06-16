@@ -275,7 +275,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
         // display groundwater
-        int image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
@@ -390,7 +390,7 @@ static void draw_footprint_desirability(int x, int y, int grid_offset) {
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display empty land/groundwater
-        int image_id = image_id_from_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         if (has_deleted_building(grid_offset))

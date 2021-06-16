@@ -91,7 +91,7 @@ void figure::cart_update_image() {
                 if (resource_id > res_single_load[i])
                     cart_image_id -= 16;
         }
-    } else {
+    } else
         if (resource_amount_full == 100) {
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8 +
                             resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
@@ -99,7 +99,6 @@ void figure::cart_update_image() {
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
             cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
         }
-    }
 
     int dir = figure_image_normalize_direction( direction < 8 ? direction : previous_tile_direction);
 

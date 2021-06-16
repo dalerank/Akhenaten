@@ -1234,7 +1234,7 @@ static void spawn_figure_hunting_lodge(building *b) {
             f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
             int loads_to_carry = fmin(b->loads_stored, 4);
             b->loads_stored -= loads_to_carry;
-            f->load_resource(loads_to_carry * 100, b->output_resource_id);
+            f->load_resource(loads_to_carry * 100, RESOURCE_GAMEMEAT);
             f->building_id = b->id;
             b->figure_id = f->id;
             f->wait_ticks = 30;

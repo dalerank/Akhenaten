@@ -210,7 +210,7 @@ void map_routing_update_land_citizen(void) {
                                  CITIZEN_4_CLEAR_TERRAIN); // BUG: should be citizen grid?
                     map_terrain_remove(grid_offset, TERRAIN_BUILDING);
                     map_image_set(grid_offset, (map_random_get(grid_offset) & 7) +
-                                               image_id_from_group(GROUP_TERRAIN_GRASS_1));
+                                               image_id_from_group(GROUP_TERRAIN_EMPTY_LAND));
                     map_property_mark_draw_tile(grid_offset);
                     map_property_set_multi_tile_size(grid_offset, 1);
                     continue;

@@ -1671,6 +1671,7 @@ void building_construction_place(void) { // confirm final placement
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
     game_undo_finish_build(placement_cost);
+    map_tiles_update_region_empty_land(x_start - 2, y_start - 2, x_end + 2, y_end + 2);
 }
 
 static void set_warning(int *warning_id, int warning) {
