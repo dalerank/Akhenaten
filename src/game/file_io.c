@@ -880,8 +880,8 @@ void log_hex(file_piece *piece, int i, int offs) {
     for (int b = 0; b < s; b++) {
         char hexcode[3] = {0};
         uint8_t inbyte = piece->buf->get_value(b);
-        snprintf(hexcode, 4, "%02X", inbyte);
-        strncat(hexstr, hexcode, 4);
+        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
