@@ -17,7 +17,7 @@ out/
 cmake-build-debug
 cmake-build-release
 /data
-ext/SDL2/*/
+/ext/SDL2/**
 *~
 *.swp
 .vscode
