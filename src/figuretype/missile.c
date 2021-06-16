@@ -76,8 +76,8 @@ void figure::missile_fire_at(int target_id, int missile_type) {
 
 bool figure::is_citizen() {
     if (action_state != FIGURE_ACTION_149_CORPSE) {
-        if (type && type != FIGURE_EXPLOSION && type != FIGURE_FORT_STANDARD &&
-            type != FIGURE_MAP_FLAG && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE ||
+        if ((type && type != FIGURE_EXPLOSION && type != FIGURE_FORT_STANDARD &&
+             type != FIGURE_MAP_FLAG && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE) ||
             type == FIGURE_TOWER_SENTRY) {
             return id;
         }

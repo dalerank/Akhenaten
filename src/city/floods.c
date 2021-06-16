@@ -170,8 +170,8 @@ void floodplains_tick_update() {
         map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_tick);
 
     // update grass growth
-    if (cycle_tick % 10 == 0 && cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period)
-    map_advance_floodplain_growth();
+    if (cycle_tick % 10 == 0 && (cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period))
+        map_advance_floodplain_growth();
 }
 
 void floodplains_save_state(buffer *floodplain_data) {

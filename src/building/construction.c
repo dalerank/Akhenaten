@@ -956,8 +956,8 @@ int building_construction_place_building(int type, int x, int y) {
             city_warning_show(WARNING_DOCK_OPEN_WATER_NEEDED);
             return 0;
         }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && type == BUILDING_BOOTH ||
-        type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION || type == BUILDING_FESTIVAL_SQUARE) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && (type == BUILDING_BOOTH ||
+        type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION || type == BUILDING_FESTIVAL_SQUARE)) {
         int booth_warning = 0;
         if (type == BUILDING_BOOTH)
             booth_warning = map_orientation_for_venue(x, y, 0, &building_orientation);
@@ -1504,8 +1504,8 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
     } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
                data.required_terrain.water || data.required_terrain.wall || data.required_terrain.groundwater) {
         // never mark as constructing
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && type == BUILDING_BOOTH || type == BUILDING_BANDSTAND
-        || type == BUILDING_PAVILLION || type == BUILDING_FESTIVAL_SQUARE) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND
+        || type == BUILDING_PAVILLION || type == BUILDING_FESTIVAL_SQUARE)) {
         // never mark as constructing; todo?
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
@@ -1653,7 +1653,7 @@ void building_construction_place(void) { // confirm final placement
     }
     placement_cost *= length;
 
-    if (GAME_ENV == ENGINE_ENV_C3 && building_is_large_temple(type) || type == BUILDING_ORACLE) {
+    if (GAME_ENV == ENGINE_ENV_C3 && (building_is_large_temple(type) || type == BUILDING_ORACLE)) {
         building_warehouses_remove_resource(RESOURCE_MARBLE_C3, 2);
     }
     if (data.type == BUILDING_MENU_SMALL_TEMPLES) {

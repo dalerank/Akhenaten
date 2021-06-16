@@ -69,9 +69,9 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
                     continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) ||
-                           map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&
+                           (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&
                            !map_terrain_is(grid_offset, TERRAIN_NOT_REMOVABLE) &&
-                           !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
+                           !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
                     items_placed++;
                 continue;
             }
