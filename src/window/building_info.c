@@ -280,13 +280,26 @@ static void init(int grid_offset) {
 
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE))
         context.terrain_type = TERRAIN_INFO_TREE;
+    else if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        if (map_terrain_is(grid_offset, TERRAIN_WATER))
+            context.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
+        else
+            context.terrain_type = TERRAIN_INFO_FLOODPLAIN;
+    } else if (map_terrain_is(grid_offset, TERRAIN_REEDS))
+        context.terrain_type = TERRAIN_INFO_MARSHLAND;
+    else if (map_terrain_is(grid_offset, TERRAIN_DUNE))
+        context.terrain_type = TERRAIN_INFO_DUNES;
     else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
         if (grid_offset == city_map_entry_flag()->grid_offset)
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
         else if (grid_offset == city_map_exit_flag()->grid_offset)
             context.terrain_type = TERRAIN_INFO_EXIT_FLAG;
-        else
-            context.terrain_type = TERRAIN_INFO_ROCK;
+        else {
+            if (map_terrain_is(grid_offset, TERRAIN_ORE))
+                context.terrain_type = TERRAIN_INFO_ORE_ROCK;
+            else
+                context.terrain_type = TERRAIN_INFO_ROCK;
+        }
     } else if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER)
         context.terrain_type = TERRAIN_INFO_WATER;
     else if (map_terrain_is(grid_offset, TERRAIN_SHRUB))

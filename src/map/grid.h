@@ -91,7 +91,7 @@ void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_mi
 void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max,
                                 int *y_max);
 int map_grid_is_inside(int x, int y, int size);
-int map_grid_is_tile_inside_playable_area(int x, int y);
+int map_view_tile_inside_map_area(int x, int y);
 const int *map_grid_adjacent_offsets(int size);
 
 void map_grid_save_state_u8(const uint8_t *grid, buffer *buf);

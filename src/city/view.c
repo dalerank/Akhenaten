@@ -201,8 +201,8 @@ static void calculate_lookup(void) {
         for (int x = 0; x < grid_s; x++) {
             int grid_offset = x + grid_s * y;
 
-            int is_inside_area = map_grid_is_tile_inside_playable_area(x, y);
-            if (is_inside_area != -1) // inside area
+            int is_inside_area = map_view_tile_inside_map_area(x, y);
+            if (is_inside_area) // inside area
                 view_tile_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
             else // outside area
                 view_tile_to_grid_offset_lookup[x_view / 2][y_view] = -1;
@@ -373,8 +373,8 @@ void city_view_set_selected_view_tile(const view_tile *tile) {
 }
 
 static int get_center_grid_offset(void) {
-    int x_center = data.camera.position.x + data.viewport.width_tiles / 2;
-    int y_center = data.camera.position.y + data.viewport.height_tiles / 2;
+    int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
+    int y_center = data.camera.tile_internal.y + data.viewport.height_tiles / 2;
     return view_tile_to_grid_offset_lookup[x_center][y_center];
 }
 

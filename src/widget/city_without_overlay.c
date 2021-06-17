@@ -532,8 +532,8 @@ static void draw_footprint(int x, int y, int grid_offset) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
 
-        if (!map_grid_is_inside(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1))
-            color_mask = COLOR_MASK_RED;
+//        if (!map_grid_is_inside(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1))
+//            color_mask = COLOR_MASK_RED;
 
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
         if (building_id) {

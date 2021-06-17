@@ -19,6 +19,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/image_button.h"
+#include "graphics/generic_button.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "window/advisors.h"
@@ -107,13 +108,27 @@ static menu_bar_item menu[] = {
         {4, menu_advisors, 12},
 };
 
+static void button_rotate_reset(int param1, int param2) {
+    game_orientation_rotate_north();
+    window_invalidate();
+}
 static void button_rotate_left(int param1, int param2) {
     game_orientation_rotate_left();
+    window_invalidate();
+}
+static void button_rotate_right(int param1, int param2) {
+    game_orientation_rotate_right();
     window_invalidate();
 }
 
 static image_button orientation_button[] = {
         {0, 0, 36, 21, IB_NORMAL,GROUP_SIDEBAR_BUTTONS, 72, button_rotate_left, button_none, 0, 0, 1},
+};
+
+static generic_button orientation_buttons_ph[] = {
+        {12,  0, 36-24, 21, button_rotate_reset, button_none, 0, 0},
+        {0,  0, 12, 21, button_rotate_left,  button_none, 0, 0},
+        {36-12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
 };
 
 static const int INDEX_OPTIONS = 1;
@@ -200,6 +215,9 @@ static void top_menu_window_show(void) {
 
 #include "city/view.h"
 
+int orientation_button_state = 0;
+int orientation_button_pressed = 0;
+
 static void refresh_background(void) {
     int block_width = 24;
     int image_base = image_id_from_group(GROUP_TOP_MENU_SIDEBAR);
@@ -225,9 +243,8 @@ static void refresh_background(void) {
         block_width = 96;
         int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
         int s_start = s_end - ceil((float) s_end / (float) block_width) * block_width;
-        for (int i = 0; s_start + i * block_width < s_end; i++) {
+        for (int i = 0; s_start + i * block_width < s_end; i++)
             image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
-        }
         image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 }
@@ -256,7 +273,11 @@ void widget_top_menu_draw(int force) {
         lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110,
                                             FONT_NORMAL_GREEN, 0);
         // Orientation icon
-        image_buttons_draw(data.offset_rotate, 0, orientation_button, 1);
+        if (orientation_button_pressed) {
+            image_draw(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+            orientation_button_pressed--;
+        } else
+            image_draw(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
     }
     if (s_width < 800) {
         if (GAME_ENV == ENGINE_ENV_C3) {
@@ -340,6 +361,14 @@ static int get_info_id(int mouse_x, int mouse_y) {
     if (mouse_x > data.offset_date && mouse_x < data.offset_date + 128)
         return INFO_DATE;
 
+    if (mouse_x > data.offset_rotate && mouse_x < data.offset_rotate + 36) {
+        if (mouse_x <= data.offset_rotate + 12)
+            return -15;
+        else if (mouse_x <= data.offset_rotate + 24)
+            return -16;
+        else
+            return -14;
+    }
     return INFO_NONE;
 }
 
@@ -393,15 +422,25 @@ int widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
     int result = 0;
     if (!widget_city_has_input()) {
         int button_id = 0;
-        int handled = image_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_button, 1, &button_id);
-
-        if (button_id) {
-            result = handled;
-        } else if (data.open_sub_menu) {
-            result = handle_input_submenu(m, h);
-        } else {
-            result = handle_mouse_menu(m);
+        int handled = 0;
+        if (GAME_ENV == ENGINE_ENV_C3)
+            handled = image_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_button, 3, &button_id);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            handled = generic_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_buttons_ph, 3, &button_id);
+            if (button_id) {
+                orientation_button_state = button_id;
+                if (handled)
+                    orientation_button_pressed = 5;
+            } else
+                orientation_button_state = 0;
         }
+
+        if (button_id)
+            result = handled;
+        else if (data.open_sub_menu)
+            result = handle_input_submenu(m, h);
+        else
+            result = handle_mouse_menu(m);
     }
 
     return result;
@@ -411,6 +450,8 @@ int widget_top_menu_get_tooltip_text(tooltip_context *c) {
         return 49 + data.focus_menu_id;
 
     int button_id = get_info_id(c->mouse_x, c->mouse_y);
+    if (button_id && GAME_ENV == ENGINE_ENV_PHARAOH)
+        button_id += 1;
     if (button_id)
         return 59 + button_id;
 

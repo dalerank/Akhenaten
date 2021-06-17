@@ -512,36 +512,38 @@ int map_grid_is_inside(int x, int y, int size) {
         return x >= 0 && x + size <= map_data.width && y >= 0 && y + size <= map_data.height;
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
 
-        int start_x = map_grid_offset_to_x(2 * map_data.start_offset);
-        int start_y = map_grid_offset_to_y(2 * map_data.start_offset);
+        // todo? it's not really making anything go haywire at the moment.
 
-        x += start_x; // -1
-        y += start_y; // -1
+//        int start_x = map_grid_offset_to_x(2 * map_data.start_offset);
+//        int start_y = map_grid_offset_to_y(2 * map_data.start_offset);
+//
+//        x += start_x; // -1
+//        y += start_y; // -1
+//
+//        int dist_horizontal = abs(x - y);
+//        int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 2);
+//
+//        if (dist_horizontal < map_data.width * 0.5 && dist_vertical < map_data.height * 0.5) // -2, -2
+//            return 1;
+//        return 0;
 
-        int dist_horizontal = abs(x - y);
-        int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 2);
+        int min_x = 0;
+        int max_x = map_data.width;
+        int min_y = 0;
+        int max_y = map_data.height;
 
-        if (dist_horizontal < map_data.width * 0.5 && dist_vertical < map_data.height * 0.5) // -2, -2
-            return 1;
-        return 0;
-
-//        int min_x = 0;
-//        int max_x = map_data.width;
-//        int min_y = 0;
-//        int max_y = map_data.height;
-
-//        return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
+        return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
     }
 }
-int map_grid_is_tile_inside_playable_area(int x, int y) {
+int map_view_tile_inside_map_area(int x, int y) {
     int dist_horizontal = abs(x - y);
-    int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 2);
+    int dist_vertical = abs(y - (grid_size[GAME_ENV] - x) + 1);
 
-    if (dist_horizontal < map_data.width / 2 - 1 && dist_vertical < map_data.height / 2 - 1)
-        return 1; // inside play space
     if (dist_horizontal < map_data.width / 2 + 1 && dist_vertical < map_data.height / 2 + 1)
-        return 0; // outside play space, but visible
-    return -1; // outside viewable area
+        return 1; // inside play space
+//    if (dist_horizontal < map_data.width / 2 + 1 && dist_vertical < map_data.height / 2 + 1)
+//        return 0; // outside play space, but visible
+    return 0; // outside viewable area
 }
 
 const int *map_grid_adjacent_offsets(int size) {

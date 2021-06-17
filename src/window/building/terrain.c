@@ -49,28 +49,33 @@ void window_building_draw_terrain(building_info_context *c) {
             c->can_play_sound = 0;
             if (c->figure.count > 0)
                 window_building_play_figure_phrase(c);
-            else {
+            else
                 sound_speech_play_file("wavs/empty_land.wav");
-            }
         }
         if (c->figure.count > 0 && c->figure.figure_ids[c->figure.selected_index]) {
             figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
             if (f->type < FIGURE_SHIPWRECK)
                 c->help_id = 42;
-            else {
+            else
                 c->help_id = 330;
-            }
         }
 
         window_building_prepare_figure_list(c);
         outer_panel_draw(c->x_offset, c->y_offset,
                          c->width_blocks, c->height_blocks);
+
+        int text_id_offset = 0;
+        if (GAME_ENV == ENGINE_ENV_C3)
+            text_id_offset = 25;
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            text_id_offset = 36;
+
         if (!c->figure.count) {
             lang_text_draw_centered(70, c->terrain_type + 10,
                                     c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
         }
         if (c->terrain_type != TERRAIN_INFO_ROAD && c->terrain_type != TERRAIN_INFO_PLAZA) {
-            lang_text_draw_multiline(70, c->terrain_type + 25,
+            lang_text_draw_multiline(70, c->terrain_type + text_id_offset,
                                      c->x_offset + 40, c->y_offset + 16 * c->height_blocks - 113,
                                      16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
         }
