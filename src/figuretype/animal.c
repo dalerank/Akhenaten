@@ -707,7 +707,7 @@ void figure::hunter_action() {
             break;
         case 10: // picking up prey
             if (target_figure_id)
-                prey->figure_delete_UNSAFE();
+                prey->poof();
             target_figure_id = 0;
             if (anim_frame >= 17)
                 advance_action(12);

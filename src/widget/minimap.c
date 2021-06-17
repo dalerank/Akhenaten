@@ -15,6 +15,7 @@
 #include "scenario/property.h"
 
 #include <stdlib.h>
+#include <window/city.h>
 
 enum {
     FIGURE_COLOR_NONE = 0,
@@ -151,11 +152,34 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
             building *b = building_get(map_building_at(grid_offset));
             if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
-            else if (b->type == BUILDING_RESERVOIR)
-                image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT) - 1;
-            else {
-                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING);
+            else if (b->type == BUILDING_RESERVOIR || b->type == BUILDING_WELL)
+                image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
+            else if (terrain & TERRAIN_ROAD) {
+                if (b->type == BUILDING_ROADBLOCK)
+                    image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 5; // black
             }
+            else if (building_is_food_category(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 160; // green
+            else if (building_is_industry(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 165; // dark red
+            else if (building_is_entertainment(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 170; // bright teal
+            else if (building_is_religion(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 175; // purple
+            else if (building_is_culture(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 180; // light yellow
+            else if (building_is_infrastructure(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 190; // bright blue
+            else if (building_is_administration(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 195; // lilac
+            else if (building_is_military(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 200; // orange
+            else if (building_is_beautification(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 205; // spent teal
+            else if (building_is_monument(b->type))
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
+            else
+                image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
             switch (map_property_multi_tile_size(grid_offset)) {
                 case 1:
                     image_draw(image_id, x_view, y_view);
@@ -195,9 +219,17 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
             image_id = image_id_from_group(GROUP_MINIMAP_WALL);
         else if (terrain & TERRAIN_MEADOW)
             image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
-        else {
+        else if (terrain & TERRAIN_FLOODPLAIN && !(terrain & TERRAIN_WATER))
+            image_id = image_id_from_group(GROUP_MINIMAP_FLOODPLAIN) + (rand & 3);
+        else if (terrain & TERRAIN_REEDS)
+            image_id = image_id_from_group(GROUP_MINIMAP_REEDS) - 4 * (rand & 1);
+        else if (terrain & TERRAIN_DUNE)
+            image_id = image_id_from_group(GROUP_MINIMAP_DUNES) + (rand & 7);
+        else if (terrain & TERRAIN_GARDEN)
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 205; // spent teal
+        else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
-        }
+
         image_draw(image_id, x_view, y_view);
     }
 }
@@ -216,10 +248,10 @@ static void draw_viewport_rectangle(void) {
     if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles)
         x_offset -= 2;
 
-    int y_offset = data.y_offset + camera_y - data.absolute_y + 2;
+    int y_offset = data.y_offset + camera_y - data.absolute_y + 1;
     graphics_draw_rect(x_offset, y_offset,
-                       view_width_tiles * 2 + 4,
-                       view_height_tiles - 4,
+                       view_width_tiles * 2 + 8,
+                       view_height_tiles + 3,
                        COLOR_MINIMAP_VIEWPORT);
 }
 

@@ -236,8 +236,12 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
             } else {
                 if (terrainchoice == TERRAIN_USAGE_ROADS)
                     found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
-                if (!found_road)
-                    found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+                if (!found_road) {
+                    if (building_is_house(dest->type))
+                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
+                    else
+                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+                }
                 if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
                     x = tile_x;
                     y = tile_y;
@@ -277,6 +281,7 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
 }
 
 void figure::action_perform() {
+    return;
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);

@@ -187,12 +187,23 @@ int building_is_workshop(int type);
 int building_is_extractor(int type);
 int building_is_monument(int type);
 int building_is_senate(int type);
+int building_is_tax_collector(int type);
+int building_is_governor_palace(int type);
 int building_is_temple(int type);
 int building_is_large_temple(int type);
 int building_is_shrine(int type);
 int building_is_guild(int type);
 int building_is_beautification(int type);
 int building_is_water_crossing(int type);
+
+int building_is_industry(int type);
+int building_is_food_category(int type);
+int building_is_infrastructure(int type);
+int building_is_administration(int type);
+int building_is_religion(int type);
+int building_is_entertainment(int type);
+int building_is_culture(int type);
+int building_is_military(int type);
 
 int building_get_highest_id(void);
 void building_update_highest_id(void);

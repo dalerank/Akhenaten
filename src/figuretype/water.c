@@ -37,7 +37,7 @@ void figure_create_flotsam(void) {
     for (int i = 1; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
         if (f->state && f->type == FIGURE_FLOTSAM)
-            f->figure_delete_UNSAFE();
+            f->poof();
 
     }
 

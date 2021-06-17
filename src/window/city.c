@@ -164,9 +164,9 @@ int debug_range_1 = 0;
 
 static void handle_hotkeys(const hotkeys *h) {
     if (h->decrease_game_speed)
-        debug_range_1+=25;
+        debug_range_1+=1;
     if (h->increase_game_speed)
-        debug_range_1-=25;
+        debug_range_1-=1;
 //    if (debug_range_1 < 0)
 //        debug_range_1 = 0;
 //    if (debug_range_1 > 20)

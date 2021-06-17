@@ -457,6 +457,50 @@ tick 19: flood starts contracting (first couple tiles?)
 day 134 (6th Sept - 6 days after flood period end)
 tick 19: flood goes away!
 
+==================
+
+5     black
+10      dark brown
+15      brown
+20      light brown
+25      beige
+30      light beige
+35      yellow beige
+40      caramel
+45      bright caramel
+50      dark caramel
+55      cobalt
+60      dark blue
+65      darker blue
+70      prussian blue
+75      almost black
+80        black
+85        dark brown
+90        light brown
+95        ...
+100       ...
+105       ...
+110       ...
+115       ...
+120       ...
+125       ...
+130       cobalt
+135       ...
+140       ...
+145       ...
+150       ...
+155     grey
+160   green
+165   dark red
+170   bright teal
+175   purple
+180   light yellow
+185     white
+190   bright blue
+195   lilac
+200   orange
+205   spent teal
+210   dark grey
 
 
 ====================

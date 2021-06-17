@@ -35,3 +35,5 @@ distribution/
 *.log
 
 *.ods#
+
+*.lnk

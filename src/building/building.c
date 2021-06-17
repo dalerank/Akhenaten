@@ -390,11 +390,32 @@ int building_is_extractor(int type) {
            || type == BUILDING_REED_GATHERER;
 }
 int building_is_monument(int type) {
-    return 0; // TODO: monuments
+    switch (type) {
+        case BUILDING_PYRAMID:
+        case BUILDING_SPHYNX:
+        case BUILDING_MAUSOLEUM:
+        case BUILDING_ALEXANDRIA_LIBRARY:
+        case BUILDING_CAESAREUM:
+        case BUILDING_PHAROS_LIGHTHOUSE:
+        case BUILDING_SMALL_ROYAL_TOMB:
+        case BUILDING_ABU_SIMBEL:
+        case BUILDING_MEDIUM_ROYAL_TOMB:
+        case BUILDING_LARGE_ROYAL_TOMB:
+        case BUILDING_GRAND_ROYAL_TOMB:
+            return 1;
+        default:
+            return 0;
+    }
 }
 int building_is_senate(int type) {
     return ((type >= BUILDING_SENATE && type <= BUILDING_FORUM_UPGRADED) ||
             (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
+}
+int building_is_tax_collector(int type) {
+    return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
+}
+int building_is_governor_palace(int type) {
+    return (type >= BUILDING_GOVERNORS_HOUSE && type <= BUILDING_GOVERNORS_PALACE);
 }
 int building_is_temple(int type) {
     return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);
@@ -417,6 +438,70 @@ int building_is_water_crossing(int type) {
     return (type == BUILDING_FERRY)
            || type == BUILDING_LOW_BRIDGE
            || type == BUILDING_SHIP_BRIDGE;
+}
+
+int building_is_industry(int type) {
+    if (building_is_extractor(type))
+        return 1;
+    if (building_is_workshop(type))
+        return 1;
+    if (building_is_farm(type))
+        return 1;
+    if (building_is_guild(type))
+        return 1;
+    if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
+        return 1;
+    if (type == BUILDING_WAREHOUSE || type == BUILDING_WAREHOUSE_SPACE)
+        return 1;
+    return 0;
+}
+int building_is_food_category(int type) {
+    if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
+    || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
+        return 1;
+    return 0;
+}
+int building_is_infrastructure(int type) {
+    if (type == BUILDING_ENGINEERS_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
+        return 1;
+    if (building_is_water_crossing(type))
+        return 1;
+    return 0;
+}
+int building_is_administration(int type) {
+    if (building_is_senate(type) || building_is_tax_collector(type) || building_is_governor_palace(type))
+        return 1;
+    if (type == BUILDING_COURTHOUSE)
+        return 1;
+    return 0;
+}
+int building_is_religion(int type) {
+    if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type))
+        return 1;
+    if (type == BUILDING_FESTIVAL_SQUARE)
+        return 1;
+    return 0;
+}
+int building_is_entertainment(int type) {
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION)
+        return 1;
+    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL)
+        return 1;
+    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO)
+        return 1;
+    return 0;
+}
+int building_is_culture(int type) {
+    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
+        return 1;
+    return 0;
+}
+int building_is_military(int type) {
+    if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT)
+        return 1;
+    if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
+        return 1;
+    return 0;
 }
 
 int building_get_highest_id(void) {

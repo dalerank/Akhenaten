@@ -132,9 +132,9 @@ static int groupid_translation_table_ph[] = {
         147, 213, // data/Pharaoh_General.sg3 radar.bmp
         148, 214, // data/Pharaoh_General.sg3 radar.bmp
         149, 215, // data/Pharaoh_General.sg3 radar.bmp
-        150, 210,
-        151, 210,
-        152, 210,
+        150, 150 + 66,
+        151, 151 + 66,
+        152, 152 + 66,
         154, 205, // data/Pharaoh_General.sg3 Sprites.bmp
         157, 223, // data/Pharaoh_General.sg3 paneling.bmp
         158, 224, // data/Pharaoh_General.sg3 paneling.bmp
