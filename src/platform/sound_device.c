@@ -46,6 +46,11 @@ static struct {
     sound_channel channels[MAX_CHANNELS];
 } data;
 
+struct music_format {
+    const int flag;
+    const char* desc;
+};
+
 static struct {
     SDL_AudioFormat format;
 #ifdef USE_SDL_AUDIOSTREAM
@@ -157,13 +162,46 @@ void sound_device_load_formats(void) {
         return;
     }
 
-    const int flags = MIX_INIT_MP3;
-    const int initialized_flags = Mix_Init(flags);
-    if (flags != (flags & initialized_flags)) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL_mixer (%i, %i): %s", flags, initialized_flags, Mix_GetError());
+    const int format_desc_max_chars = 4;
+    const music_format formats[] = { { MIX_INIT_FLAC, "FLAC" }, { MIX_INIT_MOD, "MOD" }, { MIX_INIT_MP3, "MP3" },
+        { MIX_INIT_OGG, "OGG" }, { MIX_INIT_MID, "MIDI" }, { MIX_INIT_OPUS, "Opus" } };
+    const int max_num_formats = sizeof(formats) / sizeof(formats[0]);
+
+    int all_flags = 0;
+    for ( int i = 0; i < max_num_formats; ++i ) {
+        all_flags |= formats[i].flag;
     }
-    else {
-        SDL_Log("SDL_mixer initialized: %i", initialized_flags);
+
+    const int initialized_flags = Mix_Init(all_flags);
+    if (initialized_flags == 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not load any music formats: %s", Mix_GetError());
+    } else {
+        const char* seperator = ", ";
+        const int seperator_length = strlen( seperator );
+        const int max_format_length = format_desc_max_chars + seperator_length; // desc + seperator
+        char buf[max_num_formats * max_format_length + 1];
+
+        int buf_pos = 0;
+        for (int i = 0; i < max_num_formats; ++i) {
+            if (initialized_flags & formats[i].flag) {
+                int desc_length = strlen(formats[i].desc);
+                if (desc_length > format_desc_max_chars) {
+                    desc_length = format_desc_max_chars;
+                }
+
+                memcpy(buf + buf_pos, formats[i].desc, desc_length);
+                buf_pos += desc_length;
+                memcpy(buf + buf_pos, seperator, seperator_length);
+                buf_pos += seperator_length;
+            }
+        }
+        if (buf_pos >= seperator_length) {
+            // remove last seperator
+            buf_pos -= seperator_length;
+        }
+        buf[buf_pos] = 0;
+
+        SDL_Log("music formats initialized: %s (%i)", buf, initialized_flags);
     }
 }
 
