@@ -18,6 +18,7 @@ const terrain_image *map_image_context_get_shore(int grid_offset);
 const terrain_image *map_image_context_get_river(int grid_offset);
 const terrain_image *map_image_context_get_floodplain_shore(int grid_offset);
 const terrain_image *map_image_context_get_floodplain_waterline(int grid_offset);
+const terrain_image *map_image_context_get_reeds_transition(int grid_offseet);
 const terrain_image *map_image_context_get_grass_corners(int grid_offset);
 const terrain_image *map_image_context_get_wall(int grid_offset);
 const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset);

@@ -202,7 +202,7 @@ static void calculate_lookup(void) {
             int grid_offset = x + grid_s * y;
 
             int is_inside_area = map_grid_is_tile_inside_playable_area(x, y);
-            if (is_inside_area == 1) // inside area
+            if (is_inside_area != -1) // inside area
                 view_tile_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
             else // outside area
                 view_tile_to_grid_offset_lookup[x_view / 2][y_view] = -1;

@@ -779,9 +779,9 @@ static void set_meadow_image(int x, int y, int grid_offset) {
             map_image_set(grid_offset, image_id + random + 8);
         else if (map_terrain_has_only_meadow_in_ring(x, y, 1))
             map_image_set(grid_offset, image_id + random + 4);
-        else {
+        else
             map_image_set(grid_offset, image_id + random);
-        }
+
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
         map_aqueduct_set(grid_offset, 0);
@@ -797,6 +797,26 @@ void map_tiles_update_all_meadow(void) {
 }
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) {
     foreach_region_tile(x_min, y_min, x_max, y_max, update_meadow_tile);
+}
+
+static void set_reeds_tile(int x, int y, int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_REEDS)) { // there's no way to build anything on reed tiles, so... it's fine?
+
+        const terrain_image *img = map_image_context_get_reeds_transition(grid_offset);
+        int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img->group_offset + img->item_offset;
+
+        if (!img->is_valid) { // else, normal water tile
+            // todo
+            // if uncut:
+            image_id = image_id_from_group(GROUP_TERRAIN_REEDS_GROWN) + (map_random_get(grid_offset) & 7);
+            // if cut:
+//            image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + (map_random_get(grid_offset) & 7);
+        }
+        return map_image_set(grid_offset, image_id);
+    }
+}
+void map_tiles_update_all_reed_fields() {
+    foreach_map_tile(set_reeds_tile);
 }
 
 #include "game/time.h"
@@ -1391,8 +1411,7 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
                     tr_offset -= orientation;
                     if (tr_offset < 0)
                         tr_offset += 8;
-                }
-                else {
+                } else {
                     tr_offset -= orientation;
                     if (tr_offset < 1)
                         tr_offset += 8;

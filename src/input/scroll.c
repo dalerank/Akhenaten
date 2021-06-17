@@ -462,19 +462,15 @@ void scroll_stop(void) {
     data.drag.active = 0;
     data.limits.active = 0;
 }
-
 void scroll_arrow_left(int value) {
     set_arrow_key(&data.arrow_key.left, value);
 }
-
 void scroll_arrow_right(int value) {
     set_arrow_key(&data.arrow_key.right, value);
 }
-
 void scroll_arrow_up(int value) {
     set_arrow_key(&data.arrow_key.up, value);
 }
-
 void scroll_arrow_down(int value) {
     set_arrow_key(&data.arrow_key.down, value);
 }

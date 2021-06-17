@@ -448,16 +448,14 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
 
     if (m->is_touch)
         handle_touch();
-    else {
+    else
         handle_mouse(m);
-    }
 
     if (h->escape_pressed) {
         if (building_construction_type())
             building_construction_cancel();
-        else {
+        else
             hotkey_handle_escape();
-        }
     }
 }
 void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id) {

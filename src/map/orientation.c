@@ -52,6 +52,7 @@ void map_orientation_change(int counter_clockwise) {
 
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
+    map_tiles_update_all_reed_fields();
     map_tiles_update_all_rubble();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
