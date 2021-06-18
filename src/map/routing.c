@@ -211,12 +211,12 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
             break;
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
-            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(next_offset, TERRAIN_WATER))
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_BUILDING))
                 blocked = 1;
             break;
         default:
-            if (map_terrain_is(next_offset, TERRAIN_BUILDING))
-                blocked = 1;
+//            if (map_terrain_is(next_offset, TERRAIN_BUILDING))
+//                blocked = 1;
             if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
                     blocked = 1;

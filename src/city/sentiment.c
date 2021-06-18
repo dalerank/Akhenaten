@@ -255,12 +255,13 @@ void city_sentiment_update(void) {
     if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
         if (city_data.sentiment.message_delay <= 0) {
             city_data.sentiment.message_delay = 3;
-            if (city_data.sentiment.value < 35)
-                city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            else if (city_data.sentiment.value < 40)
-                city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
-            else {
-                city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
+            if (GAME_ENV == ENGINE_ENV_C3) {
+                if (city_data.sentiment.value < 35)
+                    city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
+                else if (city_data.sentiment.value < 40)
+                    city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
+                else
+                    city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
             }
         }
     }

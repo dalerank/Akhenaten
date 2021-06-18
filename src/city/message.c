@@ -149,7 +149,7 @@ void city_message_apply_sound_interval(int category) {
 }
 
 void city_message_post(int use_popup, int message_id, int param1, int param2) {
-    return;
+//    return;
 
 //    use_popup = 0; // temp
 

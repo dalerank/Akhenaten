@@ -919,7 +919,7 @@ static void set_senate_graphic(building *b) {
                                image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
-static void spawn_figure_senate_forum(building *b) {
+static void spawn_figure_tax_collector(building *b) {
     if (b->type == BUILDING_SENATE_UPGRADED)
         set_senate_graphic(b);
 
@@ -951,6 +951,23 @@ static void spawn_figure_senate_forum(building *b) {
             f->building_id = b->id;
             b->figure_id = f->id;
         }
+    }
+}
+static void spawn_figure_senate(building *b) {
+    check_labor_problem(b);
+//    if (has_figure_of_type(b, FIGURE_MAGISTRATE))
+//        return;
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 50);
+//        int spawn_delay = default_spawn_delay(b);
+//        if (!spawn_delay)
+//            return;
+//        b->figure_spawn_delay++;
+//        if (b->figure_spawn_delay > spawn_delay) {
+//            b->figure_spawn_delay = 0;
+//            create_roaming_figure(b, road.x, road.y, FIGURE_MAGISTRATE);
+//        }
     }
 }
 static void spawn_figure_mission_post(building *b) {
@@ -1363,10 +1380,11 @@ void building_figure_generate(void) {
         else if (building_is_farm(b->type) || building_is_workshop(b->type) || building_is_extractor(b->type)) {
             spawn_figure_industry(b);
         }
-        else if (building_is_senate(b->type) ||
-            b->type == BUILDING_TAX_COLLECTOR ||
-            b->type == BUILDING_TAX_COLLECTOR_UPGRADED) {
-            spawn_figure_senate_forum(b);
+        else if (building_is_tax_collector(b->type)) {
+            spawn_figure_tax_collector(b);
+        }
+        else if (building_is_senate(b->type)) {
+            spawn_figure_senate(b);
         }
         else if (building_is_temple(b->type) || building_is_large_temple(b->type)) {
             spawn_figure_temple(b);

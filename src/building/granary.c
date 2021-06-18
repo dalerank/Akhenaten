@@ -272,7 +272,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
             continue;
 
         int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers < 100) {
+        if (pct_workers < 75) {
             if (understaffed)
                 *understaffed += 1;
 

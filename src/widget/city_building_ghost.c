@@ -501,21 +501,20 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, int type)
                 tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
                 break;
         }
-        int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
+        int non_clear_terrain_at_tile = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
             type == BUILDING_PLAZA || (type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) ||
             type == BUILDING_ROADBLOCK)
-            forbidden_terrain &= ~TERRAIN_ROAD;
+            non_clear_terrain_at_tile &= ~TERRAIN_ROAD;
         if (type == BUILDING_TOWER)
-            forbidden_terrain &= ~TERRAIN_WALL;
+            non_clear_terrain_at_tile &= ~TERRAIN_WALL;
         if (building_is_farm(type))
-            forbidden_terrain &= ~TERRAIN_FLOODPLAIN;
-        if (forbidden_terrain || map_has_figure_at(tile_offset))
+            non_clear_terrain_at_tile &= ~TERRAIN_FLOODPLAIN;
+        if (non_clear_terrain_at_tile || map_has_figure_at(tile_offset))
             blocked_tiles[i] = blocked = 1;
         else
             blocked_tiles[i] = 0;
-        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0
-            || map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0)
+        if (!building_is_farm(type) && map_terrain_exists_tile_in_radius_with_type(map_grid_offset_to_x(tile_offset), map_grid_offset_to_y(tile_offset), 1, 1, TERRAIN_FLOODPLAIN))
             blocked_tiles[i] = blocked = 1;
     }
     if (blocked)

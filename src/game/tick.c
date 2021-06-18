@@ -98,7 +98,8 @@ static void advance_month(void) {
 
     city_population_record_monthly();
     city_festival_update();
-    tutorial_on_month_tick();
+    if (GAME_ENV == ENGINE_ENV_C3)
+        tutorial_on_month_tick();
     if (setting_monthly_autosave())
         game_file_write_saved_game("autosave.svx");
 

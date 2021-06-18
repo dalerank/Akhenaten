@@ -512,7 +512,6 @@ void tutorial_on_month_tick(void) {
         if (game_time_month() == 5)
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
                                                  1200);
-
     }
 }
 void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3) {

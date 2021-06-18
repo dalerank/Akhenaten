@@ -279,11 +279,17 @@ int map_building_tiles_mark_construction(int x, int y, int size, int terrain, in
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset))
+            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset) || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
                 return 0;
 
         }
     }
+
+    // update empty land
+    // todo: maybe...
+    // -----> map_property_is_constructing() <------
+//    map_tiles_update_region_empty_land(x - 2, y - 2, x + size + 2, y + size + 2);
+
     // mark as being constructed
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {

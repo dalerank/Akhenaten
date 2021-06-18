@@ -56,6 +56,7 @@ enum {
 
 static struct {
     int type;
+    int size;
     int sub_type;
     int in_progress;
     map_tile start;
@@ -1259,6 +1260,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
 
 void building_construction_set_type(int type) { // select building for construction, set up main terrain restrictions/requirements
     data.type = type;
+    data.size = building_properties_for_type(type)->size;
     data.sub_type = BUILDING_NONE;
     data.in_progress = 0;
     data.start.x = 0;
@@ -1671,7 +1673,8 @@ void building_construction_place(void) { // confirm final placement
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
     game_undo_finish_build(placement_cost);
-    map_tiles_update_region_empty_land(x_start - 2, y_start - 2, x_end + 2, y_end + 2);
+    int size = data.size;
+    map_tiles_update_region_empty_land(x_start - 2, y_start - 2, x_end + size + 2, y_end + size + 2);
 }
 
 static void set_warning(int *warning_id, int warning) {

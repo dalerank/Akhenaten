@@ -749,8 +749,8 @@ void draw_debug(int x, int y, int grid_offset) {
 //        }
 
 //        d = map_terrain_get(grid_offset);
-//            if (d & TERRAIN_WATER)
-//                text_draw_shadow((uint8_t *) string_from_ascii("u"), x + 30, y + 15, COLOR_WHITE);
+//            if (d & TERRAIN_BUILDING)
+//                text_draw_shadow((uint8_t *) string_from_ascii("b"), x + 30, y + 15, COLOR_WHITE);
 
 //        d = map_get_shoreorder(grid_offset);
 //        if (d) {

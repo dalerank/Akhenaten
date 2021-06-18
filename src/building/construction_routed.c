@@ -12,6 +12,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "graphics/window.h"
+#include <algorithm>
 
 static int place_routed_building(int x_start, int y_start, int x_end, int y_end, routed_int type, int *items) {
     static const int direction_indices[8][4] = {
@@ -66,6 +67,9 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
                 break;
             }
         }
+
+        // update land graphics
+        map_tiles_update_region_empty_land(x_end - 4, y_end - 4, x_end + 4, y_end + 4);
         if (!routed)
             return 0;
     }
