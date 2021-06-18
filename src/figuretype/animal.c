@@ -687,7 +687,7 @@ void figure::hunter_action() {
             if (wait_ticks <= 0) {
                 if (!target_figure_id) return advance_action(8);
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
-                if (prey->action_state == FIGURE_ACTION_149_CORPSE)
+                if (prey->state == FIGURE_STATE_DYING)
                     advance_action(11);
                 else if (dist >= 2) {
 //                    advance_action(9);

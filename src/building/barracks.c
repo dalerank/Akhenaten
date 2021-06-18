@@ -163,9 +163,8 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
         f->destination_x = road.x;
         f->destination_y = road.y;
-    } else {
+    } else
         f->poof();
-    }
     tower->figure_id = f->id;
     f->building_id = tower->id;
     return 1;

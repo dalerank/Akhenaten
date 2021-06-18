@@ -498,7 +498,7 @@ void figure::enemy_gladiator_action() {
     if (scenario_gladiator_revolt_is_finished()) {
         // end of gladiator revolt: poof gladiators
         if (action_state != FIGURE_ACTION_149_CORPSE) {
-            action_state = FIGURE_ACTION_149_CORPSE;
+            kill();
             wait_ticks = 0;
             direction = 0;
         }

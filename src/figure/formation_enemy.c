@@ -343,7 +343,7 @@ static void mars_kill_enemies(void) {
             continue;
 
         if (f->is_enemy() && f->type != FIGURE_ENEMY54_GLADIATOR) {
-            f->action_state = FIGURE_ACTION_149_CORPSE;
+            f->kill();
             to_kill--;
             if (!grid_offset)
                 grid_offset = f->grid_offset_figure;

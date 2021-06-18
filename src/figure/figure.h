@@ -149,6 +149,7 @@ public:
 
     void kill() {
         set_state(FIGURE_STATE_DYING);
+        action_state = FIGURE_ACTION_149_CORPSE;
     };
     void poof() {
         set_state(FIGURE_STATE_DEAD);

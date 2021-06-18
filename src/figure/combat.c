@@ -217,7 +217,7 @@ bool figure::is_attacking_native() {
     return type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING;
 }
 void figure::figure_combat_handle_corpse() {
-    state = FIGURE_STATE_DYING;
+//    state = FIGURE_STATE_DYING;
     if (wait_ticks < 0)
         wait_ticks = 0;
 
@@ -288,7 +288,7 @@ void figure::hit_opponent() {
     if (opponent->damage <= max_damage)
         play_hit_sound();
     else {
-        opponent->action_state = FIGURE_ACTION_149_CORPSE;
+        opponent->kill();
         opponent->wait_ticks = 0;
         opponent->play_die_sound();
         formation_update_morale_after_death(opponent_formation);

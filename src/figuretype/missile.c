@@ -125,7 +125,7 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
         target->damage = target_damage;
     else { // poof target
         target->damage = max_damage + 1;
-        target->action_state = FIGURE_ACTION_149_CORPSE;
+        target->kill();
         target->wait_ticks = 0;
         target->play_die_sound();
         formation_update_morale_after_death(m);
@@ -218,7 +218,7 @@ void figure::bolt_action() {
             target->damage = target_damage;
         else { // poof target
             target->damage = max_damage + 1;
-            target->action_state = FIGURE_ACTION_149_CORPSE;
+            target->kill();
             target->wait_ticks = 0;
             target->play_die_sound();
             formation_update_morale_after_death(formation_get(target->formation_id));

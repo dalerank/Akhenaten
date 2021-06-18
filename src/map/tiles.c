@@ -805,7 +805,7 @@ static void set_reeds_tile(int x, int y, int grid_offset) {
         const terrain_image *img = map_image_context_get_reeds_transition(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img->group_offset + img->item_offset;
 
-        if (!img->is_valid) { // else, normal water tile
+        if (!img->is_valid) { // if not edge, then it's a full reeds tile
             // todo
             // if uncut:
             image_id = image_id_from_group(GROUP_TERRAIN_REEDS_GROWN) + (map_random_get(grid_offset) & 7);

@@ -359,7 +359,7 @@ void figure::soldier_action() {
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
     if (m->in_use != 1)
-        action_state = FIGURE_ACTION_149_CORPSE;
+        kill();
 
     int speed_factor;
     if (type == FIGURE_FORT_MOUNTED)

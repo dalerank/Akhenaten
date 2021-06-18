@@ -281,7 +281,7 @@ bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, sh
 }
 
 void figure::action_perform() {
-    return;
+//    return;
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);
@@ -313,8 +313,8 @@ void figure::action_perform() {
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:
-                if (b_imm->state != BUILDING_STATE_VALID || b_imm->immigrant_figure_id != id || !b_imm->house_size)
-                    return poof();
+//                if (b_imm->state != BUILDING_STATE_VALID || b_imm->immigrant_figure_id != id || !b_imm->house_size)
+//                    return poof();
                 break;
             case FIGURE_ENGINEER:
             case FIGURE_PREFECT:

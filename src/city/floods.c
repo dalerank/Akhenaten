@@ -52,7 +52,7 @@ int floodplains_expected_quality() {
     return data.quality_next;
 }
 int floodplains_expected_month() {
-    return data.season_initial;
+    return (data.season_initial / 15) - 10;
 }
 
 int floodplains_time_to_deliver() {

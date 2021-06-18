@@ -391,9 +391,8 @@ static void draw_figure_info(building_info_context *c, int figure_id) {
         f->draw_cartpusher(c);
     else if (type == FIGURE_MARKET_BUYER)
         f->draw_market_buyer(c);
-    else {
+    else
         f->draw_normal_figure(c);
-    }
 }
 
 void window_building_draw_figure_list(building_info_context *c) {
