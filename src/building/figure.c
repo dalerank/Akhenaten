@@ -831,13 +831,13 @@ static void spawn_figure_magistrate(building *b) {
 static void spawn_figure_temple(building *b) {
     check_labor_problem(b);
     if (has_figure_of_type(b, FIGURE_PRIEST) ||
-        building_is_large_temple(b->type) && b->prev_part_building_id) {
+        (building_is_large_temple(b->type) && b->prev_part_building_id)) {
         return;
     }
 
     map_point road;
-    if (building_is_temple(b->type) && map_has_road_access(b->x, b->y, b->size, &road) ||
-        building_is_large_temple(b->type) && map_has_road_access_temple_complex(b->x, b->y, &road)) {
+    if ((building_is_temple(b->type) && map_has_road_access(b->x, b->y, b->size, &road)) ||
+        (building_is_large_temple(b->type) && map_has_road_access_temple_complex(b->x, b->y, &road))) {
 
         spawn_labor_seeker(b, road.x, road.y, 50);
         int pct_workers = worker_percentage(b);

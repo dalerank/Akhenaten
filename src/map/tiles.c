@@ -982,7 +982,7 @@ void map_tiles_set_water(int x, int y) { // todo: broken
 //    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_water_image);
 }
 
-#define PH_FLOODPLAIN_GROWTH_MAX 6;
+#define PH_FLOODPLAIN_GROWTH_MAX 6
 int floodplain_growth_advance = 0;
 static void advance_floodplain_growth_tile(int x, int y, int grid_offset, int order) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)

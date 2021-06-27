@@ -125,12 +125,13 @@ void figure_generate_criminals(void) {
         int sentiment = city_sentiment();
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {
-                if (min_happiness <= 10)
+                if (min_happiness <= 10) {
                     if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
                         generate_rioter(min_building);
                     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                         generate_mugger(min_building);
                     }
+                }
                 else if (min_happiness < 30)
                     generate_mugger(min_building);
                 else if (min_happiness < 50)

@@ -506,11 +506,11 @@ static void draw_panel_buttons(const empire_city *city) {
 
     // trade button
     if (city && !city->is_open) {
-        if (GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE
-            || GAME_ENV == ENGINE_ENV_PHARAOH &&
+        if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE)
+            || (GAME_ENV == ENGINE_ENV_PHARAOH &&
            (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
             || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
-            || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE))
+            || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE)))
             button_border_draw((data.x_min + data.x_max - 500) / 2 + 30 + TRADE_BUTTON_OFFSET_X,
                                data.y_max - 49 + TRADE_BUTTON_OFFSET_Y,
                                generic_button_open_trade[0].width, generic_button_open_trade[0].height,
@@ -635,11 +635,11 @@ static void handle_input(const mouse *m, const hotkeys *h) {
             data.selected_city = empire_city_get_for_object(selected_object - 1);
             const empire_city *city = empire_city_get(data.selected_city);
 
-            if (GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE
-                || GAME_ENV == ENGINE_ENV_PHARAOH &&
+            if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE)
+                || (GAME_ENV == ENGINE_ENV_PHARAOH &&
                     (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
                     || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
-                    || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE)) {
+                    || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE))) {
                 if (city->is_open) {
                     int x_offset = (data.x_min + data.x_max - 500) / 2;
                     int y_offset = data.y_max - 113;

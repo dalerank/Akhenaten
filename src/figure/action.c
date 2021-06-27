@@ -346,7 +346,7 @@ void figure::action_perform() {
             case FIGURE_CART_PUSHER:
                 if (destination_building_id)
                     break;
-                if (!building_is_floodplain_farm(b) && b->state != BUILDING_STATE_VALID || b->figure_id != id)
+                if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || b->figure_id != id))
                     poof();
                 break;
             case FIGURE_WAREHOUSEMAN:

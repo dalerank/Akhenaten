@@ -880,12 +880,12 @@ void log_hex(file_piece *piece, int i, int offs) {
     for (int b = 0; b < s; b++) {
         char hexcode[3] = {0};
         uint8_t inbyte = piece->buf->get_value(b);
-        snprintf(hexcode, 4, "%02X", inbyte);
-        strncat(hexstr, hexcode, 4);
+        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%zu) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
             offs, hexstr, piece->buf->size(), fname);
 }
 static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
