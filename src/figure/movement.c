@@ -168,8 +168,8 @@ void figure::set_next_route_tile_direction() {
         }
     } else { // should be at destination
         direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
-        if (direction != DIR_FIGURE_AT_DESTINATION)
-            direction = DIR_FIGURE_LOST;
+//        if (direction != DIR_FIGURE_AT_DESTINATION)
+//            direction = DIR_FIGURE_LOST;
     }
 }
 void figure::advance_route_tile(int roaming_enabled) {
@@ -222,9 +222,12 @@ void figure::advance_route_tile(int roaming_enabled) {
                 direction = DIR_FIGURE_REROUTE;
             if (b->type == BUILDING_ROADBLOCK) {
                 // do not allow roaming through roadblock
-                int permission = get_permission_for_int();
-                if (!building_roadblock_get_permission(permission, b))
+
+                if (roaming_enabled)
                     direction = DIR_FIGURE_REROUTE;
+//                int permission = get_permission_for_int();
+//                if (!building_roadblock_get_permission(permission, b))
+//                    direction = DIR_FIGURE_REROUTE;
             }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {

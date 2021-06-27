@@ -155,7 +155,7 @@ static int is_advisor_available(int advisor_id) {
         if (scenario_is_tutorial(2))
             return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
         else if (scenario_is_tutorial(3))
-            return ((bool[13]){0,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
+            return ((bool[13]){1,0,0,0,0,1,0,0,1,1,0,0,0})[advisor_id];
         else if (scenario_is_tutorial(4))
             return ((bool[13]){1,0,1,0,0,1,1,0,1,1,0,0,0})[advisor_id];
         else if (scenario_is_tutorial(5))

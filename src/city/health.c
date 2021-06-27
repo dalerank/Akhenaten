@@ -18,6 +18,7 @@ void city_health_change(int amount) {
 }
 
 static void cause_disease(int total_people) {
+    return; // todo: temp
     if (city_data.health.value >= 40)
         return;
     int chance_value = random_byte() & 0x3f;
@@ -40,9 +41,9 @@ static void cause_disease(int total_people) {
     }
     if (city_data.health.num_hospital_workers > 0)
         city_message_post(1, MESSAGE_HEALTH_DISEASE, 0, 0);
-    else {
+    else
         city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
-    }
+
     tutorial_on_disease();
     // kill people who don't have access to a doctor
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {

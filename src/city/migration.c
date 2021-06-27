@@ -97,7 +97,7 @@ static void create_migrants(void) {
             city_data.migration.emigration_queue_size = 0;
             if (!city_data.migration.emigration_message_shown) {
                 city_data.migration.emigration_message_shown = 1;
-                city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
+//                city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
             }
         } else {
             // queue them for next round

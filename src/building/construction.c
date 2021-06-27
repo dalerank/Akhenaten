@@ -1710,7 +1710,8 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id, in
             return 0;
         }
     } else if (data.required_terrain.water) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_WATER)) { // todo: add inundable lands check
+        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_WATER)
+        && !map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_FLOODPLAIN)) { // todo: add inundable lands check
             set_warning(warning_id, WARNING_WATER_NEEDED);
             return 0;
         }

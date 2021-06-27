@@ -487,8 +487,8 @@ void figure::action_perform() {
         }
 
         // poof if LOST
-        if (direction == DIR_FIGURE_LOST)
-            poof();
+//        if (direction == DIR_FIGURE_LOST)
+//            poof();
 
         // if DEAD, delete figure
         if (state == FIGURE_STATE_DEAD)
