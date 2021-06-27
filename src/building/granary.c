@@ -1,4 +1,3 @@
-#include <ntdef.h>
 #include <cmath>
 #include "granary.h"
 
