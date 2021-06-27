@@ -349,6 +349,7 @@ void sound_system_init(void) {
 
     sound_device_open();
     sound_device_init_channels(SOUND_CHANNEL_MAX, channel_filenames[GAME_ENV]);
+    sound_device_load_formats();
 
     sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
     sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
@@ -357,4 +358,10 @@ void sound_system_init(void) {
 }
 void sound_system_shutdown(void) {
     sound_device_close();
+
+    // It is counter-intuitive that we must do this after sound_device_close, however it unloads shared libraries
+    // which might be required both for sound_device_close and by other threads fetching new audio chunks until
+    // sound_device_close is called. It is also surprising that we can (and must) call Mix_Quit after Mix_CloseAudio,
+    // even though Mix_CloseAudio's docs say that afterwards "the SDL_mixer functions should not be used".
+    sound_device_unload_formats();
 }
