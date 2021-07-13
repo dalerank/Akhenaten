@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <city/floods.h>
+#include <cinttypes>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -885,8 +886,15 @@ void log_hex(file_piece *piece, int i, int offs) {
         if ((b + 1) % 4 == 0 || (b + 1) == s)
             strncat(hexstr, " ", 2);
     }
+
+    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
+#ifdef _WIN32
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
+            offs, hexstr, piece->buf->size(), fname);
+#else
     SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%zu) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
             offs, hexstr, piece->buf->size(), fname);
+#endif
 }
 static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer
