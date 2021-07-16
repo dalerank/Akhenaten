@@ -244,14 +244,7 @@ void figure::determine_warehouseman_destination(int road_network_id) {
 #include "city/finance.h"
 
 void figure::cartpusher_action() {
-
-//    if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD))
-//        terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-
     building *b = building_get(building_id);
-//    int from_industry = true;
-//    if (type == BUILDING_WAREHOUSE)
-//        from_industry = false;
     int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case ACTION_8_RECALCULATE:
@@ -331,20 +324,15 @@ void figure::cartpusher_action() {
 //        case ACTION_11_RETURNING_EMPTY:
         case ACTION_15_RETURNING2:
         case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
-            if (building_is_floodplain_farm(b))
+            if (building_is_floodplain_farm(b)) // do not return to floodplain farms
                 poof();
             else
                 do_returnhome();
-//            poof(); // meh, useless?
             break;
     }
     cart_update_image();
 }
 void figure::warehouseman_action() {
-
-//    if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD))
-//        terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-
     int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case ACTION_8_RECALCULATE:

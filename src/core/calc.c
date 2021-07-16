@@ -47,8 +47,7 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2) {
     }
 }
 
-int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
-                               int dist_to_entry1, int dist_to_entry2) {
+int calc_distance_with_penalty(int x1, int y1, int x2, int y2, int dist_to_entry1, int dist_to_entry2) {
     int penalty;
     if (dist_to_entry1 > dist_to_entry2)
         penalty = dist_to_entry1 - dist_to_entry2;

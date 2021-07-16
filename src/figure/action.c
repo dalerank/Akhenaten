@@ -490,7 +490,7 @@ void figure::action_perform() {
 //        if (direction == DIR_FIGURE_LOST)
 //            poof();
 
-        // if DEAD, delete figure
+        // if DEAD, delete figure -- this is UNSAFE, and should only be done here.
         if (state == FIGURE_STATE_DEAD)
             return figure_delete_UNSAFE();
 

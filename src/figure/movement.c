@@ -176,7 +176,7 @@ void figure::advance_route_tile(int roaming_enabled) {
     if (direction >= 8)
         return;
     int target_grid_offset = grid_offset_figure + map_grid_direction_delta(direction);
-    if (is_boat) {
+    if (is_boat) { // boats can not travel on land
         if (!map_terrain_is(target_grid_offset, TERRAIN_WATER))
             direction = DIR_FIGURE_REROUTE;
     } else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
@@ -217,17 +217,10 @@ void figure::advance_route_tile(int roaming_enabled) {
             direction = DIR_FIGURE_REROUTE;
         else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building *b = building_get(map_building_at(target_grid_offset));
-            if (b->type == BUILDING_GATEHOUSE)
-                // do not allow roaming through gatehouse
-                direction = DIR_FIGURE_REROUTE;
-            if (b->type == BUILDING_ROADBLOCK) {
-                // do not allow roaming through roadblock
-
+            if (b->type == BUILDING_GATEHOUSE || b->type == BUILDING_ROADBLOCK) {
+                // do not allow roaming through gatehouses or roadblocks
                 if (roaming_enabled)
                     direction = DIR_FIGURE_REROUTE;
-//                int permission = get_permission_for_int();
-//                if (!building_roadblock_get_permission(permission, b))
-//                    direction = DIR_FIGURE_REROUTE;
             }
         }
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {

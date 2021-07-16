@@ -352,8 +352,6 @@ void figure::draw_figure_with_cart(int x, int y) {
     }
 }
 void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord) {
-//    if (state == FIGURE_STATE_DEAD || state == FIGURE_STATE_NONE)
-//        return;
     pixel_coordinate coords2 = city_view_grid_offset_to_pixel(tile_x, tile_y);
     adjust_pixel_offset(&x, &y);
     if (coord != nullptr) {
@@ -362,7 +360,6 @@ void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coo
         coord->y = y;
     }
 
-    // draw_figure()
     if (cart_image_id) {
         switch (type) {
             case FIGURE_CART_PUSHER:
