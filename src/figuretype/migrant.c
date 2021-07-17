@@ -94,7 +94,7 @@ static void add_house_population(building *house, int num_people) {
 }
 
 void figure::immigrant_action() {
-    building *b = building_get(immigrant_building_id);
+    building *b = immigrant_building();
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
@@ -161,7 +161,7 @@ void figure::homeless_action() {
             break;
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
             if (do_enterbuilding(false, immigrant_building_id))
-                add_house_population(building_get(immigrant_building_id), migrant_num_people);
+                add_house_population(immigrant_building(), migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case ACTION_11_RETURNING_EMPTY:

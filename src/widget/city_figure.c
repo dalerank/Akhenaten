@@ -39,8 +39,8 @@ void figure::draw_debug() {
 //        return;
 
 
-    building *b = building_get(building_id);
-    building *bdest = building_get(destination_building_id);
+    building *b = home();
+    building *bdest = destination();
 
     uint8_t str[10];
     pixel_coordinate coords;

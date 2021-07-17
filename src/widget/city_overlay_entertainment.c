@@ -31,7 +31,7 @@ static building *get_entertainment_building(const figure *f) {
         f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
         return ((figure*)f)->home();
     } else
-        return ((figure*)f)->dest();
+        return ((figure *) f)->destination();
 }
 
 static int show_figure_entertainment(const figure *f) {

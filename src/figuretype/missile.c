@@ -132,7 +132,7 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
     }
     poof();
     // for missiles: building_id contains the figure who shot it
-    int missile_formation = figure_get(building_id)->formation_id;
+    int missile_formation = figure_get(home_building_id)->formation_id;
     formation_record_missile_attack(m, missile_formation);
 }
 

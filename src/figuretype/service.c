@@ -27,7 +27,7 @@ void figure::school_child_action() {
 void figure::priest_action() {
     if (GAME_ENV == ENGINE_ENV_C3)
         return;
-    building *temple = building_get(building_id);
+    building *temple = home();
     switch (temple->type) {
         case BUILDING_TEMPLE_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -47,7 +47,7 @@ void figure::priest_action() {
     }
 }
 void figure::market_trader_action() {
-    building *market = building_get(building_id);
+    building *market = home();
     if (action_state == FIGURE_ACTION_125_ROAMING) {
         // force return on out of stock
         int stock = building_market_get_max_food_stock(market) +
@@ -57,7 +57,7 @@ void figure::market_trader_action() {
     }
 }
 void figure::tax_collector_action() {
-    building *b = building_get(building_id);
+    building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
             is_ghost = 1;
@@ -78,7 +78,7 @@ void figure::tax_collector_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == building_id) {
+                if (map_building_at(grid_offset_figure) == home_building_id) {
                     // returned to own building
                     poof();
                 } else {

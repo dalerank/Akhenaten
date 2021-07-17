@@ -186,12 +186,12 @@ figure *building::create_figure_with_destination(int type, building *destination
     f->set_home(id);
     f->set_destination(destination->id);
     f->set_immigrant_building(0);
-    if (extra)
+    if (!extra)
         figure_id = f->id;
-//        figure_2 = f;
+//        figure_1 = f;
     else
         figure_id2 = f->id;
-//        figure_1 = f;
+//        figure_2 = f;
     return f;
 }
 figure *building::create_cartpusher(int goods, int quantity, int created_action, bool extra) {
@@ -201,12 +201,12 @@ figure *building::create_cartpusher(int goods, int quantity, int created_action,
     f->set_home(id);
     f->set_destination(0);
     f->set_immigrant_building(0);
-    if (extra)
+    if (!extra)
         figure_id = f->id;
-//        figure_2 = f;
+//        figure_1 = f;
     else
         figure_id2 = f->id;
-//        figure_1 = f;
+//        figure_2 = f;
     f->wait_ticks = 30;
 }
 
@@ -452,44 +452,24 @@ static void spawn_figure_market(building *b) {
             spawn_delay = 30;
         else
             return;
+        // TODO: coalesce the trader and buyer into a single slot?
         // market trader
         if (!b->has_figure(FIGURE_MARKET_TRADER) && !b->has_extra_figure(FIGURE_MARKET_BUYER)) {
             b->figure_spawn_delay++;
-            if (b->figure_spawn_delay <= spawn_delay)
+            if (b->figure_spawn_delay > spawn_delay) {
+                b->figure_spawn_delay = 0;
+                b->create_roaming_figure(FIGURE_MARKET_TRADER);
                 return;
-            b->figure_spawn_delay = 0;
-            b->create_roaming_figure(FIGURE_MARKET_TRADER);
+            }
         }
-        // market buyer or labor seeker
-        if (!b->has_figure(FIGURE_MARKET_TRADER, FIGURE_LABOR_SEEKER)) {
-//            figure *f = b->figure_2;
-//            if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER))
-//                b->figure_2 = nullptr;
-        } else {
-            map_has_road_access(b->x, b->y, b->size, &road);
+        // market buyer
+        if (!b->has_figure(FIGURE_MARKET_TRADER) && !b->has_extra_figure(FIGURE_LABOR_SEEKER, FIGURE_MARKET_BUYER)) {
             building *dest = building_get(building_market_get_storage_destination(b));
             if (dest->id) {
                 figure *f = b->create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
                                                               FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, true);
 
-//                figure *f = figure_create(FIGURE_MARKET_BUYER, road.x, road.y, DIR_0_TOP_RIGHT);
-//                f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
-//                f->home() = b;
-//                b->figure_id2 = f->id;
-//                f->dest()->id = dst_building_id;
                 f->collecting_item_id = b->data.market.fetch_inventory_id;
-//                building *b_dst = building_get(dst_building_id);
-
-
-//                if (map_has_road_access(dest()->x, dest()->y, dest()->size, &road) ||
-//                    map_has_road_access(dest()->x, dest()->y, 3, &road)) {
-//                    f->destination_x = road.x;
-//                    f->destination_y = road.y;
-//                } else {
-//                    f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-//                    f->destination_x = f->tile_x;
-//                    f->destination_y = f->tile_y;
-//                }
             }
         }
     }

@@ -97,7 +97,7 @@ void figure::enemy_marching(const formation *m) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
         }
-        destination_building_id = m->destination_building_id;
+        set_destination(m->destination_building_id);
         route_remove();
     }
     move_ticks(speed_multiplier);
@@ -522,7 +522,7 @@ void figure::enemy_gladiator_action() {
                 if (building_id) {
                     destination_x = x_tile;
                     destination_y = y_tile;
-                    destination_building_id = building_id;
+                    set_destination(building_id);
                     route_remove();
                 } else {
                     poof();

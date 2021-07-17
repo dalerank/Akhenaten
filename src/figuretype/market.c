@@ -22,7 +22,7 @@ void figure::market_buyer_action() {
                     if (!take_resource_from_warehouse(destination_building_id))
                         poof();
                 } else {
-                    if (!take_food_from_granary(building_id, destination_building_id))
+                    if (!take_food_from_granary(home_building_id, destination_building_id))
                         poof();
                 }
             }
@@ -63,7 +63,7 @@ int figure::create_delivery_boy(int leader_id) {
     figure *boy = figure_create(FIGURE_DELIVERY_BOY, tile_x, tile_y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = collecting_item_id;
-    boy->building_id = building_id;
+    boy->home_building_id = home_building_id;
     return boy->id;
 }
 int figure::take_food_from_granary(int market_id, int granary_id) {
@@ -194,7 +194,7 @@ void figure::delivery_boy_action() {
             else
                 poof();
         } else { // leader arrived at market, drop resource at market
-            building_get(building_id)->data.market.inventory[collecting_item_id] += 100;
+            home()->data.market.inventory[collecting_item_id] += 100;
             poof();
         }
 //    }

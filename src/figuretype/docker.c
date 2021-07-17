@@ -236,7 +236,7 @@ int figure::deliver_import_resource(building *dock) {
         return 0;
 
     ship->unload_resource(100);
-    destination_building_id = warehouse_id;
+    set_destination(warehouse_id);
     wait_ticks = 0;
     action_state = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;
     destination_x = tile.x;
@@ -262,7 +262,7 @@ int figure::fetch_export_resource(building *dock) {
         return 0;
 
     ship->trader_amount_bought++;
-    destination_building_id = warehouse_id;
+    set_destination(warehouse_id);
     action_state = FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE;
     wait_ticks = 0;
     destination_x = tile.x;
@@ -274,7 +274,7 @@ int figure::fetch_export_resource(building *dock) {
 void figure::docker_action() {
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
-    building *b = building_get(building_id);
+    building *b = home();
     if (b->state != BUILDING_STATE_VALID)
         poof();
 
@@ -372,7 +372,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 poof();
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
+            if (destination()->state != BUILDING_STATE_VALID)
                 poof();
 
             break;
@@ -386,7 +386,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 poof();
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
+            if (destination()->state != BUILDING_STATE_VALID)
                 poof();
 
             break;
@@ -401,7 +401,7 @@ void figure::docker_action() {
             else if (direction == DIR_FIGURE_LOST)
                 poof();
 
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
+            if (destination()->state != BUILDING_STATE_VALID)
                 poof();
 
             break;

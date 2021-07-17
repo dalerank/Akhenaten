@@ -60,7 +60,7 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
 }
 
 void figure::entertainer_update_shows() {
-    building *b = building_get(destination_building_id);
+    building *b = destination();
     switch (type) {
         case FIGURE_ACTOR:
             b->data.entertainment.days3_or_play++;
@@ -128,7 +128,7 @@ void figure::entertainer_action() {
     if (wait_ticks_missile >= 120)
         wait_ticks_missile = 0;
 
-    building *b = building_get(building_id);
+    building *b = home();
     if (scenario_gladiator_revolt_is_in_progress() && type == FIGURE_GLADIATOR) {
         if (action_state == FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE ||
             action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
@@ -187,7 +187,7 @@ void figure::entertainer_action() {
                     building *b_dst = building_get(dst_building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
-                        destination_building_id = dst_building_id;
+                        set_destination(dst_building_id);
                         action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
                         destination_x = x_road;
                         destination_y = y_road;

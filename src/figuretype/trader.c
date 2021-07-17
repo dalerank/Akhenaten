@@ -210,7 +210,7 @@ static int trader_get_sell_resource(int warehouse_id, int city_id) {
     return 0;
 }
 int figure_trade_ship_is_trading(figure *ship) {
-    building *b = ship->dest();
+    building *b = ship->destination();
     if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_DOCK)
         return TRADE_SHIP_BUYING;
 
@@ -328,7 +328,7 @@ void figure::go_to_next_warehouse(int x_src, int y_src, int distance_to_entry) {
     map_point dst;
     int warehouse_id = get_closest_warehouse(x_src, y_src, empire_city_id, distance_to_entry, &dst);
     if (warehouse_id) {
-        destination_building_id = warehouse_id;
+        set_destination(warehouse_id);
         action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_x = dst.x;
         destination_y = dst.y;
@@ -340,7 +340,7 @@ void figure::go_to_next_warehouse(int x_src, int y_src, int distance_to_entry) {
     }
 }
 int figure::trade_ship_lost_queue() {
-    building *b = building_get(destination_building_id);
+    building *b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK &&
         b->num_workers > 0 && b->data.dock.trade_ship_id == id) {
         return 0;
@@ -348,7 +348,7 @@ int figure::trade_ship_lost_queue() {
     return 1;
 }
 int figure::trade_ship_done_trading() {
-    building *b = building_get(destination_building_id);
+    building *b = destination();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
         for (int i = 0; i < 3; i++) {
             if (b->data.dock.docker_ids[i]) {
@@ -407,7 +407,7 @@ void figure::trade_caravan_action() {
                     is_ghost = 1;
                     break;
             }
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
+            if (destination()->state != BUILDING_STATE_VALID)
                 poof();
 
             break;
@@ -508,7 +508,7 @@ void figure::native_trader_action() {
                 poof();
                 is_ghost = 1;
             }
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID)
+            if (destination()->state != BUILDING_STATE_VALID)
                 poof();
 
             break;
@@ -530,7 +530,7 @@ void figure::native_trader_action() {
                 int building_id = get_closest_warehouse(tile_x, tile_y, 0, -1, &tile);
                 if (building_id) {
                     action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
-                    destination_building_id = building_id;
+                    set_destination(building_id);
                     destination_x = tile.x;
                     destination_y = tile.y;
                 } else {
@@ -552,7 +552,7 @@ void figure::native_trader_action() {
                     int building_id = get_closest_warehouse(tile_x, tile_y, 0, -1, &tile);
                     if (building_id) {
                         action_state = FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE;
-                        destination_building_id = building_id;
+                        set_destination(building_id);
                         destination_x = tile.x;
                         destination_y = tile.y;
                     } else {
@@ -596,7 +596,7 @@ void figure::trade_ship_action() {
                 map_point tile;
                 int dock_id = building_dock_get_free_destination(id, &tile);
                 if (dock_id) {
-                    destination_building_id = dock_id;
+                    set_destination(dock_id);
                     action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     destination_x = tile.x;
                     destination_y = tile.y;
@@ -624,7 +624,7 @@ void figure::trade_ship_action() {
                     city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
                 }
             }
-            if (building_get(destination_building_id)->state != BUILDING_STATE_VALID) {
+            if (destination()->state != BUILDING_STATE_VALID) {
                 action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
                 wait_ticks = 0;
                 map_point river_exit = scenario_map_river_exit();
@@ -647,11 +647,11 @@ void figure::trade_ship_action() {
                 map_point river_entry = scenario_map_river_entry();
                 destination_x = river_entry.x;
                 destination_y = river_entry.y;
-                building *dst = building_get(destination_building_id);
+                building *dst = destination();
                 dst->data.dock.queued_docker_id = 0;
                 dst->data.dock.num_ships = 0;
             }
-            switch (building_get(destination_building_id)->data.dock.orientation) {
+            switch (destination()->data.dock.orientation) {
                 case 0:
                     direction = DIR_2_BOTTOM_RIGHT;
                     break;
@@ -685,7 +685,7 @@ void figure::trade_ship_action() {
                 map_point tile;
                 int dock_id = building_dock_get_free_destination(id, &tile);
                 if (dock_id) {
-                    destination_building_id = dock_id;
+                    set_destination(dock_id);
                     action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
                     destination_x = tile.x;
                     destination_y = tile.y;

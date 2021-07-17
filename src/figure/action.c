@@ -169,7 +169,7 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     if (roam_length >= max_roam_length) {
         destination_x = 0;
         destination_y = 0;
-        destination_building_id = 0;
+        set_destination(0);
         roam_length = 0;
         route_remove();
         advance_action(NEXT_ACTION);
@@ -205,7 +205,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     if (direction == DIR_FIGURE_AT_DESTINATION) {
         advance_action(NEXT_ACTION);
         direction = previous_tile_direction;
-//        destination_building_id = 0;
+//        set_destination(0;
         return true;
     }
     if (direction == DIR_FIGURE_REROUTE)
@@ -265,13 +265,14 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
-    return do_gotobuilding(building_id, true, terrainchoice, NEXT_ACTION);
+    return do_gotobuilding(home_building_id, true, terrainchoice, NEXT_ACTION);
 }
 bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = 1;
     if (invisible)
         is_ghost = 1;
-    return do_gotobuilding(building_id, true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+    // "go to" home, but stop at road = go to entrance
+    return do_gotobuilding(home_building_id, true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = 1;
@@ -308,8 +309,8 @@ void figure::action_perform() {
         image_set_animation(action_properties.base_image_group);
 
         // check for building being alive (at the start of the action)
-        building *b = building_get(building_id);
-        building *b_imm = building_get(immigrant_building_id); // todo: get rid of this
+        building *b = home();
+        building *b_imm = immigrant_building(); // todo: get rid of this
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:

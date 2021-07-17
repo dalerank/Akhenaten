@@ -176,6 +176,7 @@ public:
 
     ////
 
+    // building.c
     int is_house();
     int is_fort();
     int is_defense_ph();
@@ -211,7 +212,6 @@ public:
 
     // figure.c
     bool road_is_accessible;
-//    map_point road;
 
     bool has_figure(int type, int type2 = -1);
     bool has_extra_figure(int type, int type2 = -1);
@@ -221,20 +221,12 @@ public:
     figure *create_roaming_figure(int type, int created_action = FIGURE_ACTION_125_ROAMING, bool extra = false);
     figure *create_figure_with_destination(int type, building *destination, int created_action = ACTION_10_GOING, bool extra = false);
     figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, bool extra = false);
-
-//    figure *common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
-//    figure *common_spawn_figure_with_destination(int type, building *destination, int created_action);
 };
 
 int building_find(int type);
 building *building_get(int id);
 building *building_create(int type, int x, int y);
 
-//building *building_main(building *b);
-//building *building_next(building *b);
-//building *building_top_xy(building *b);
-
-//void building_clear_related_data(building *b);
 void building_clear_all(void);
 //void building_totals_add_corrupted_house(int unfixable);
 

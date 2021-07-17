@@ -172,7 +172,7 @@ int figure::fight_fire() {
         action_state = FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE;
         destination_x = ruin->road_access_x;
         destination_y = ruin->road_access_y;
-        destination_building_id = ruin_id;
+        set_destination(ruin_id);
         route_remove();
         ruin->figure_id4 = id;
         return 1;
@@ -180,7 +180,7 @@ int figure::fight_fire() {
     return 0;
 }
 void figure::extinguish_fire() {
-    building *burn = building_get(destination_building_id);
+    building *burn = destination();
     int distance = calc_maximum_distance(tile_x, tile_y, burn->x, burn->y);
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) &&
         burn->type == BUILDING_BURNING_RUIN && distance < 2) {
@@ -197,7 +197,7 @@ void figure::extinguish_fire() {
     if (wait_ticks <= 0) {
         wait_ticks_missile = 20;
         if (!fight_fire()) {
-            building *b = building_get(building_id);
+            building *b = home();
             int x_road, y_road;
             if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                 action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
@@ -227,7 +227,7 @@ void figure::engineer_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
-            do_enterbuilding(true, building_id);
+            do_enterbuilding(true, home_building_id);
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_62_ENGINEER_ROAMING:
@@ -246,7 +246,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
     } else
         fight_fire();
 
-    building *b = building_get(building_id);
+    building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_70_PREFECT_CREATED:
             advance_action(ACTION_10_GOING);
@@ -257,7 +257,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(true, building_id);
+            do_enterbuilding(true, home_building_id);
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
@@ -337,7 +337,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
 void figure::policeman_action() {
     fight_enemy(2, 22);
 
-    building *b = building_get(building_id);
+    building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_70_PREFECT_CREATED:
             is_ghost = 1;
@@ -358,7 +358,7 @@ void figure::policeman_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == building_id) {
+                if (map_building_at(grid_offset_figure) == home_building_id) {
                     // returned to own building
                     poof();
                 } else {
@@ -448,7 +448,7 @@ void figure::magistrate_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(true, building_id);
+            do_enterbuilding(true, home_building_id);
             break;
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
@@ -548,8 +548,8 @@ void figure::worker_action() {
     terrain_usage = TERRAIN_USAGE_ROADS;
     use_cross_country = 0;
     max_roam_length = 384;
-    building *b = building_get(building_id);
-    building *b_dest = building_get(destination_building_id);
+    building *b = home();
+    building *b_dest = destination();
     if (b->state != BUILDING_STATE_VALID
         || b_dest->state != BUILDING_STATE_VALID || b_dest->data.industry.worker_id != id)
         poof();

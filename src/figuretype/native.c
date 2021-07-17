@@ -11,7 +11,7 @@
 #include "map/terrain.h"
 
 void figure::indigenous_native_action() {
-    building *b = building_get(building_id);
+    building *b = home();
 //    terrain_usage = TERRAIN_USAGE_ANY;
 //    use_cross_country = 0;
 //    max_roam_length = 800;
@@ -57,7 +57,7 @@ void figure::indigenous_native_action() {
                     action_state = FIGURE_ACTION_159_NATIVE_ATTACKING;
                     destination_x = m->destination_x;
                     destination_y = m->destination_y;
-                    destination_building_id = m->destination_building_id;
+                    set_destination(m->destination_building_id);
                 }
                 route_remove();
             }

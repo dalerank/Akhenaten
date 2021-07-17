@@ -22,7 +22,7 @@ private:
     unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
 
-    short building_id;
+    short home_building_id;
     short immigrant_building_id;
     short destination_building_id;
 public:
@@ -99,16 +99,16 @@ public:
 //    short immigrant_building_id;
 //    short destination_building_id;
     building *home();
-    building *dest();
     building *immigrant_building();
+    building *destination();
     void set_home(int _id) {
-        building_id = _id;
-    };
-    void set_destination(int _id) {
-        destination_building_id = _id;
+        home_building_id = _id;
     };
     void set_immigrant_building(int _id) {
         immigrant_building_id = _id;
+    };
+    void set_destination(int _id) {
+        destination_building_id = _id;
     };
 
     short formation_id;

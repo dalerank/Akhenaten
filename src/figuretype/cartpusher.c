@@ -57,54 +57,54 @@ void figure::determine_deliveryman_destination(building *b, int road_network_id)
         int senate_id = city_buildings_get_senate_id();
         building *b = building_get(senate_id);
         if (senate_id && b->state == BUILDING_STATE_VALID && b->num_workers >= 5) {
-            destination_building_id = senate_id;
+            set_destination(senate_id);
             return advance_action(11);
         }
     }
 
     // priority 1: warehouse if resource is on stockpile
-    destination_building_id = building_warehouse_for_storing(0, tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    set_destination(building_warehouse_for_storing(0, tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &understaffed_storages, &dst));
     if (!city_resource_is_stockpiled(resource_id))
-        destination_building_id = 0;
+        set_destination(0);
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
 
     // priority 2: accepting granary for food
-    destination_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst);
+    set_destination(building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 0, &understaffed_storages, &dst));
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
-        building *src_building = building_get(building_id);
-        building *dst_building = building_get(destination_building_id);
+        building *src_building = home();
+        building *dst_building = destination();
         int src_int = src_building->type;
         if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) || src_int == BUILDING_WHARF)
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
-            destination_building_id = 0;
+            set_destination(0);
     }
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
 
     // priority 3: workshop for raw material
-    destination_building_id = building_get_workshop_for_raw_material_with_room(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &dst);
+    set_destination(building_get_workshop_for_raw_material_with_room(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &dst));
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP);
 
     // priority 4: warehouse
-    destination_building_id = building_warehouse_for_storing(0, tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &understaffed_storages, &dst);
+    set_destination(building_warehouse_for_storing(0, tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, &understaffed_storages, &dst));
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
 
     // priority 5: granary forced when on stockpile
-    destination_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 1, &understaffed_storages, &dst);
+    set_destination(building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 1, &understaffed_storages, &dst));
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
-        building *src_building = building_get(building_id);
-        building *dst_building = building_get(destination_building_id);
+        building *src_building = home();
+        building *dst_building = destination();
         int src_int = src_building->type;
         if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) || src_int == BUILDING_WHARF)
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
-            destination_building_id = 0;
+            set_destination(0);
     }
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
@@ -114,7 +114,7 @@ void figure::determine_deliveryman_destination(building *b, int road_network_id)
     advance_action(ACTION_8_RECALCULATE);
 }
 void figure::determine_deliveryman_destination_food(int road_network_id) {
-    building *b = building_get(building_id);
+    building *b = home();
     map_point dst;
     // priority 1: accepting granary for food
     int dst_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 0, 0, &dst);
@@ -127,19 +127,19 @@ void figure::determine_deliveryman_destination_food(int road_network_id) {
             dst_building_id = 0;
     }
     if (dst_building_id) {
-        destination_building_id = dst_building_id;
+        set_destination(dst_building_id);
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
     // priority 2: warehouse
     dst_building_id = building_warehouse_for_storing(0, tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 0, &dst);
     if (dst_building_id) {
-        destination_building_id = dst_building_id;
+        set_destination(dst_building_id);
         return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
     }
     // priority 3: granary
     dst_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, b->distance_from_entry, road_network_id, 1, 0, &dst);
     if (dst_building_id) {
-        destination_building_id = dst_building_id;
+        set_destination(dst_building_id);
         return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
     // no one will accept, stand idle
@@ -148,10 +148,10 @@ void figure::determine_deliveryman_destination_food(int road_network_id) {
 void figure::determine_granaryman_destination( int road_network_id) {
     map_point dst;
 //    int dst_building_id;
-    building *granary = building_get(building_id);
+    building *granary = home();
     if (!resource_id) {
         // getting granaryman
-        destination_building_id = building_granary_for_getting(granary, &dst);
+        set_destination(building_granary_for_getting(granary, &dst));
         if (destination_building_id) {
             advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
 //            set_destination(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD, dst_building_id, dst.x, dst.y);
@@ -163,19 +163,19 @@ void figure::determine_granaryman_destination( int road_network_id) {
     }
     // delivering resource
     // priority 1: another granary
-    destination_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 0, 0, &dst);
+    set_destination(building_granary_for_storing(tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 0, 0, &dst));
     if (destination_building_id) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
     // priority 2: warehouse
-    destination_building_id = building_warehouse_for_storing(0, tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 0, &dst);
+    set_destination(building_warehouse_for_storing(0, tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 0, &dst));
     if (destination_building_id) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
     }
     // priority 3: granary even though resource is on stockpile
-    destination_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 1, 0, &dst);
+    set_destination(building_granary_for_storing(tile_x, tile_y, resource_id, granary->distance_from_entry, road_network_id, 1, 0, &dst));
     if (destination_building_id) {
         building_granary_remove_resource(granary, resource_id, 100);
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
@@ -188,7 +188,7 @@ void figure::determine_warehouseman_destination(int road_network_id) {
 
     ////// getting resources!
     if (!resource_id) {
-        destination_building_id = building_warehouse_for_getting(building_get(building_id), collecting_item_id, &dst);
+        set_destination(building_warehouse_for_getting(home(), collecting_item_id, &dst));
         if (destination_building_id) {
             advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
             terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -196,34 +196,34 @@ void figure::determine_warehouseman_destination(int road_network_id) {
             poof();
         return;
     }
-    building *warehouse = building_get(building_id);
+    building *warehouse = home();
 
     ////// delivering resource!
     // priority 1: weapons to barracks
-    destination_building_id = building_get_barracks_for_weapon(tile_x, tile_y, resource_id, road_network_id, warehouse->distance_from_entry, &dst);
+    set_destination(building_get_barracks_for_weapon(tile_x, tile_y, resource_id, road_network_id, warehouse->distance_from_entry, &dst));
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 2: raw materials to workshop
-    destination_building_id = building_get_workshop_for_raw_material_with_room(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst);
+    set_destination(building_get_workshop_for_raw_material_with_room(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 3: food to granary
-    destination_building_id = building_granary_for_storing(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dst);
+    set_destination(building_granary_for_storing(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dst));
     if (destination_building_id)
         return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 4: food to getting granary
-    destination_building_id = building_getting_granary_for_storing(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst);
+    set_destination(building_getting_granary_for_storing(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst));
     if (destination_building_id)
         advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
 
     // priority 5: resource to other warehouse
-    destination_building_id = building_warehouse_for_storing(building_id, tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst);
-    int empty_warehouse = building_storage_get(building_get(building_id)->storage_id)->empty_all; // deliver to another warehouse because this one is being emptied
+    set_destination(building_warehouse_for_storing(home_building_id, tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, 0, &dst));
+    int empty_warehouse = building_storage_get(home()->storage_id)->empty_all; // deliver to another warehouse because this one is being emptied
     if (destination_building_id && empty_warehouse) {
-        if (destination_building_id == building_id)
+        if (destination_building_id == home_building_id)
             poof();
         else
             advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
@@ -231,7 +231,7 @@ void figure::determine_warehouseman_destination(int road_network_id) {
     }
 
 //    // priority 6: raw material to well-stocked workshop
-//    destination_building_id = building_get_workshop_for_raw_material(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst);
+//    set_destination(building_get_workshop_for_raw_material(tile_x, tile_y, resource_id, warehouse->distance_from_entry, road_network_id, &dst);
 //    if (destination_building_id) {
 //        remove_resource_from_warehouse();
 //        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
@@ -244,12 +244,12 @@ void figure::determine_warehouseman_destination(int road_network_id) {
 #include "city/finance.h"
 
 void figure::cartpusher_action() {
-    building *b = building_get(building_id);
+    building *b = home();
     int road_network_id = map_road_network_get(grid_offset_figure);
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
-            destination_building_id = 0;
+            set_destination(0);
             anim_frame = 0;
             wait_ticks++;
             if (wait_ticks > 30) {
@@ -284,7 +284,7 @@ void figure::cartpusher_action() {
             wait_ticks++;
             if (wait_ticks >= 10) {
                 wait_ticks = 0;
-                building *dest = building_get(destination_building_id);
+                building *dest = destination();
                 if (dest->state != BUILDING_STATE_VALID)
                     advance_action(ACTION_8_RECALCULATE);
                 bool delivery_check = false;
@@ -337,12 +337,12 @@ void figure::warehouseman_action() {
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
-            destination_building_id = 0;
-            building *b = building_get(building_id);
+            set_destination(0);
+            building *b = home();
             wait_ticks++;
             if (wait_ticks > 2) {
                 wait_ticks = 0;
-                if (building_get(building_id)->type == BUILDING_GRANARY)
+                if (home()->type == BUILDING_GRANARY)
                     determine_granaryman_destination(road_network_id);
                 else
                     determine_warehouseman_destination(road_network_id);
@@ -359,7 +359,7 @@ void figure::warehouseman_action() {
             wait_ticks++;
             if (wait_ticks > 4) {
                 bool delivery_check = false;
-                building *dest = building_get(destination_building_id);
+                building *dest = destination();
                 if (dest->state != BUILDING_STATE_VALID || dest->figure_id != id)
                     advance_action(ACTION_8_RECALCULATE);
                 int amount_left = fmin(get_carrying_amount(), 100);
@@ -404,7 +404,7 @@ void figure::warehouseman_action() {
             wait_ticks++;
             if (wait_ticks > 4) {
                 int resource;
-                int loads = building_granary_remove_for_getting_deliveryman(building_get(destination_building_id), building_get(building_id), &resource);
+                int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), &resource);
                 load_resource(loads * 100, resource);
                 advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
             }
@@ -415,17 +415,17 @@ void figure::warehouseman_action() {
         case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
             // update graphic
             if (do_returnhome()) {
-                building *b = building_get(building_id);
+                building *b = home();
                 bool delivery_check = false;
                 int amount_left = fmin(get_carrying_amount(), 100);
                 for (int i = 0; i < get_carrying_amount() / 100; i++) {
                     switch (b->type) {
                         case BUILDING_GRANARY:
-                            delivery_check = (building_granary_add_resource(building_get(building_id), resource_id, 0, amount_left) != -1);
+                            delivery_check = (building_granary_add_resource(home(), resource_id, 0, amount_left) != -1);
                             break;
                         case BUILDING_WAREHOUSE:
                         case BUILDING_WAREHOUSE_SPACE:
-                            delivery_check = (building_warehouse_add_resource(building_get(building_id), resource_id) != -1);
+                            delivery_check = (building_warehouse_add_resource(home(), resource_id) != -1);
                             break;
                     }
                 }
@@ -441,7 +441,7 @@ void figure::warehouseman_action() {
             wait_ticks++;
             if (wait_ticks > 4) {
 //                loads_counter = 0;
-                if (get_carrying_amount() < 400 && building_warehouse_remove_resource(building_get(destination_building_id), collecting_item_id, 1) == 0)
+                if (get_carrying_amount() < 400 && building_warehouse_remove_resource(destination(), collecting_item_id, 1) == 0)
                     load_resource(100, collecting_item_id);
                 else { // made it so it goes through the loads bit by bit??
                     set_resource(collecting_item_id);

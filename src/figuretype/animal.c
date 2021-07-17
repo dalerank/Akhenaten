@@ -714,7 +714,7 @@ void figure::hunter_action() {
             break;
         case 12: // returning with prey
             if (do_returnhome(TERRAIN_USAGE_ANIMAL)) // add game meat to hunting lodge!
-                building_get(building_id)->loads_stored++;
+                home()->loads_stored++;
             break;
     }
     switch (action_state) {

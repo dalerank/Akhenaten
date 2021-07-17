@@ -207,7 +207,7 @@ void figure::rioter_action() {
                 if (building_id) {
                     destination_x = x_tile;
                     destination_y = y_tile;
-                    destination_building_id = building_id;
+                    set_destination(building_id);
                     route_remove();
                 } else
                     poof();
@@ -222,7 +222,7 @@ void figure::rioter_action() {
                 if (building_id) {
                     destination_x = x_tile;
                     destination_y = y_tile;
-                    destination_building_id = building_id;
+                    set_destination(building_id);
                     route_remove();
                 } else {
                     poof();

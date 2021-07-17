@@ -265,9 +265,9 @@ static int provide_market_goods(int market_building_id, int x, int y) {
 building *figure::get_entertainment_building() {
     if (action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
         action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-        return building_get(building_id);
+        return home();
     } else { // going to venue
-        return building_get(destination_building_id);
+        return destination();
     }
 }
 int figure::figure_service_provide_coverage() {
@@ -288,11 +288,11 @@ int figure::figure_service_provide_coverage() {
             break;
         }
         case FIGURE_MARKET_TRADER:
-            houses_serviced = provide_market_goods(building_id, tile_x, tile_y);
+            houses_serviced = provide_market_goods(home_building_id, tile_x, tile_y);
             break;
         case FIGURE_MARKET_BUYER:
             if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
-                houses_serviced = provide_market_goods(building_id, tile_x, tile_y);
+                houses_serviced = provide_market_goods(home_building_id, tile_x, tile_y);
 
             break;
 //        case FIGURE_BATHHOUSE_WORKER:
@@ -325,7 +325,7 @@ int figure::figure_service_provide_coverage() {
             break;
         case FIGURE_PRIEST:
             tutorial_on_religion();
-            switch (building_get(building_id)->type) {
+            switch (home()->type) {
                 case BUILDING_SMALL_TEMPLE_CERES:
                 case BUILDING_LARGE_TEMPLE_CERES:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_ceres);
@@ -412,8 +412,8 @@ int figure::figure_service_provide_coverage() {
                 min_max_seen -= 10;
             break;
     }
-    if (building_id) {
-        b = building_get(building_id);
+    if (home_building_id) {
+        b = home();
         b->houses_covered += houses_serviced;
         if (b->houses_covered > 300)
             b->houses_covered = 300;

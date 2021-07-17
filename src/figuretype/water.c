@@ -56,7 +56,7 @@ void figure_sink_all_ships(void) {
             continue;
 
         if (f->type == FIGURE_TRADE_SHIP)
-            f->dest()->data.dock.trade_ship_id = 0;
+            f->destination()->data.dock.trade_ship_id = 0;
         else if (f->type == FIGURE_FISHING_BOAT)
             f->home()->data.industry.fishing_boat_id = 0;
         else {
@@ -176,7 +176,7 @@ void figure::shipwreck_action() {
     sprite_image_id = image_id_from_group(GROUP_FIGURE_SHIPWRECK) + anim_frame / 16;
 }
 void figure::fishing_boat_action() {
-    building *b = building_get(building_id);
+    building *b = home();
 //    if (b->state != BUILDING_STATE_VALID)
 //        poof();
 
@@ -184,7 +184,7 @@ void figure::fishing_boat_action() {
         map_point tile;
         b = building_get(map_water_get_wharf_for_new_fishing_boat(this, &tile));
         if (b->id) {
-            building_id = b->id;
+            home_building_id = b->id;
             b->data.industry.fishing_boat_id = id;
             action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
             destination_x = tile.x;
@@ -209,7 +209,7 @@ void figure::fishing_boat_action() {
                 int wharf_id = map_water_get_wharf_for_new_fishing_boat(this, &tile);
                 if (wharf_id) {
                     b->figure_id = 0; // remove from original building
-                    building_id = wharf_id;
+                    home_building_id = wharf_id;
                     building_get(wharf_id)->data.industry.fishing_boat_id = id;
                     action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
                     destination_x = tile.x;

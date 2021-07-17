@@ -268,7 +268,7 @@ void figure::move_ticks(int num_ticks, int roaming_enabled) {
 }
 
 void figure::init_roaming() {
-    building *b = building_get(building_id);
+    building *b = home();
     progress_on_tile = 15;
     roam_choose_destination = 0;
     roam_ticks_until_next_turn = -1;

@@ -58,8 +58,8 @@ figure *figure_create(int type, int x, int y, int dir) {
     return f;
 }
 void figure::figure_delete_UNSAFE() {
-    building *b = building_get(building_id);
-    if (building_id) {
+    building *b = home();
+    if (home_building_id) {
         if (id == b->figure_id)
             b->figure_id = 0;
         if (id == b->figure_id2)
@@ -183,7 +183,7 @@ void figure::save(buffer *buf) {
     buf->write_i16(f->cc_delta_xy);
     buf->write_u8(f->cc_direction);
     buf->write_u8(f->speed_multiplier);
-    buf->write_i16(f->building_id);
+    buf->write_i16(f->home_building_id);
     buf->write_i16(f->immigrant_building_id);
     buf->write_i16(f->destination_building_id);
     buf->write_i16(f->formation_id);
@@ -305,7 +305,7 @@ void figure::load(buffer *buf) {
     f->cc_delta_xy = buf->read_i16();
     f->cc_direction = buf->read_u8();
     f->speed_multiplier = buf->read_u8();
-    f->building_id = buf->read_i16();
+    f->home_building_id = buf->read_i16();
     f->immigrant_building_id = buf->read_i16();
     f->destination_building_id = buf->read_i16();
     f->formation_id = buf->read_i16(); // formation: 10

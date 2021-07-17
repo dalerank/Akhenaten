@@ -276,13 +276,13 @@ building *building_create(int type, int x, int y) {
 
 // from figure.h
 building *figure::home() {
-    return building_get(building_id);
+    return building_get(home_building_id);
 };
-building *figure::dest() {
-    return building_get(immigrant_building_id);
+building *figure::destination() {
+    return building_get(destination_building_id);
 };
 building *figure::immigrant_building() {
-    return building_get(destination_building_id);
+    return building_get(immigrant_building_id);
 };
 
 building *building::main() {
