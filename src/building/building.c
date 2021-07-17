@@ -274,17 +274,6 @@ building *building_create(int type, int x, int y) {
     return b;
 }
 
-// from figure.h
-building *figure::home() {
-    return building_get(home_building_id);
-};
-building *figure::destination() {
-    return building_get(destination_building_id);
-};
-building *figure::immigrant_building() {
-    return building_get(immigrant_building_id);
-};
-
 building *building::main() {
     building *b = this;
     for (int guard = 0; guard < 99; guard++) {

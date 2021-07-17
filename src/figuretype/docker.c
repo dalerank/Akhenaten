@@ -18,8 +18,8 @@
 #include "map/road_access.h"
 #include "core/game_environment.h"
 
-static int try_import_resource(int building_id, int resource, int city_id) {
-    building *warehouse = building_get(building_id);
+static int try_import_resource(building *warehouse, int resource, int city_id) {
+//    building *warehouse = building_get(b);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
@@ -59,8 +59,8 @@ static int try_import_resource(int building_id, int resource, int city_id) {
     }
     return 0;
 }
-static int try_export_resource(int building_id, int resource, int city_id) {
-    building *warehouse = building_get(building_id);
+static int try_export_resource(building *warehouse, int resource, int city_id) {
+//    building *warehouse = building_get(b);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, warehouse))
@@ -426,7 +426,7 @@ void figure::docker_action() {
                 else {
                     trade_city_id = 0;
                 }
-                if (try_import_resource(destination_building_id, resource_id, trade_city_id)) {
+                if (try_import_resource(destination(), resource_id, trade_city_id)) {
                     int trader_id = figure_get(b->data.dock.trade_ship_id)->trader_id;
                     trader_record_sold_resource(trader_id, resource_id);
                     action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
@@ -458,7 +458,7 @@ void figure::docker_action() {
                 destination_x = source_x;
                 destination_y = source_y;
                 wait_ticks = 0;
-                if (try_export_resource(destination_building_id, resource_id, trade_city_id)) {
+                if (try_export_resource(destination(), resource_id, trade_city_id)) {
                     int trader_id = figure_get(b->data.dock.trade_ship_id)->trader_id;
                     trader_record_bought_resource(trader_id, resource_id);
                     action_state = FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING;

@@ -239,9 +239,9 @@ static void distribute_market_resources(building *b, building *market) {
         distribute_good(b, market, goods_no * model->wine, INVENTORY_GOOD4);
     }
 }
-static int provide_market_goods(int market_building_id, int x, int y) {
+static int provide_market_goods(building *market, int x, int y) {
     int serviced = 0;
-    building *market = building_get(market_building_id);
+//    building *market = building_get(market);
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
@@ -288,11 +288,11 @@ int figure::figure_service_provide_coverage() {
             break;
         }
         case FIGURE_MARKET_TRADER:
-            houses_serviced = provide_market_goods(home_building_id, tile_x, tile_y);
+            houses_serviced = provide_market_goods(home(), tile_x, tile_y);
             break;
         case FIGURE_MARKET_BUYER:
             if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
-                houses_serviced = provide_market_goods(home_building_id, tile_x, tile_y);
+                houses_serviced = provide_market_goods(home(), tile_x, tile_y);
 
             break;
 //        case FIGURE_BATHHOUSE_WORKER:
@@ -412,7 +412,7 @@ int figure::figure_service_provide_coverage() {
                 min_max_seen -= 10;
             break;
     }
-    if (home_building_id) {
+    if (has_home()) {
         b = home();
         b->houses_covered += houses_serviced;
         if (b->houses_covered > 300)

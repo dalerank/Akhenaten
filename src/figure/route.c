@@ -61,7 +61,7 @@ void figure::figure_route_add() {
         int can_travel;
         switch (terrain_usage) {
             case TERRAIN_USAGE_ENEMY:
-                can_travel = map_routing_noncitizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y, destination_building_id, 5000);
+                can_travel = map_routing_noncitizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y, destinationID(), 5000);
                 if (!can_travel) {
                     can_travel = map_routing_noncitizen_can_travel_over_land(tile_x, tile_y, destination_x, destination_y, 0, 25000);
                     if (!can_travel)

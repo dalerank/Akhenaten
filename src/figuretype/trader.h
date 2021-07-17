@@ -13,9 +13,9 @@ int figure_create_trade_caravan(int x, int y, int city_id);
 
 int figure_create_trade_ship(int x, int y, int city_id);
 
-int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id);
+int figure_trade_caravan_can_buy(figure *trader, building *warehouse, int city_id);
 
-int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id);
+int figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city_id);
 
 //void figure_trade_caravan_action();
 //

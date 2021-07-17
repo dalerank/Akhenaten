@@ -177,6 +177,10 @@ public:
     ////
 
     // building.c
+    building *main();
+    building *next();
+    building *top_xy();
+
     int is_house();
     int is_fort();
     int is_defense_ph();
@@ -204,9 +208,6 @@ public:
     int is_culture();
     int is_military();
 
-    building *main();
-    building *next();
-    building *top_xy();
 
     void clear_related_data();
 

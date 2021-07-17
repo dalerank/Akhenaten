@@ -78,7 +78,7 @@ void figure::tax_collector_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == home_building_id) {
+                if (has_home(map_building_at(grid_offset_figure))) {
                     // returned to own building
                     poof();
                 } else {

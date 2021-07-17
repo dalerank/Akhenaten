@@ -16,7 +16,7 @@ void figure_create_immigrant(building *house, int num_people) {
     const map_tile *entry = city_map_entry_point();
     figure *f = figure_create(FIGURE_IMMIGRANT, entry->x, entry->y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
-    f->set_immigrant_building(house->id);
+    f->set_immigrant_home(house->id);
     house->immigrant_figure_id = f->id;
     f->wait_ticks = 10 + (house->house_figure_generation_delay & 0x7f);
     f->migrant_num_people = num_people;
@@ -94,7 +94,7 @@ static void add_house_population(building *house, int num_people) {
 }
 
 void figure::immigrant_action() {
-    building *b = immigrant_building();
+    building *b = immigrant_home();
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
@@ -106,10 +106,10 @@ void figure::immigrant_action() {
             break;
         case 9: // arriving
         case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
-            do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
+            do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
-            if (do_enterbuilding(false, immigrant_building_id))
+            if (do_enterbuilding(false, immigrant_home()))
                 add_house_population(b, migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
@@ -148,7 +148,7 @@ void figure::homeless_action() {
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrant_figure_id = id;
-                        immigrant_building_id = building_id;
+                        set_immigrant_home(building_id);
                         advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                     } else
                         poof();
@@ -157,11 +157,11 @@ void figure::homeless_action() {
             }
             break;
         case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
-            do_gotobuilding(immigrant_building_id, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+            do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-            if (do_enterbuilding(false, immigrant_building_id))
-                add_house_population(immigrant_building(), migrant_num_people);
+            if (do_enterbuilding(false, immigrant_home()))
+                add_house_population(immigrant_home(), migrant_num_people);
             is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case ACTION_11_RETURNING_EMPTY:
@@ -178,7 +178,7 @@ void figure::homeless_action() {
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                         b->immigrant_figure_id = id;
-                        immigrant_building_id = building_id;
+                        set_immigrant_home(building_id);
                         advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                     }
                 }

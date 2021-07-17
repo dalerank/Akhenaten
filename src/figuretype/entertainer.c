@@ -206,7 +206,7 @@ void figure::entertainer_action() {
             roam_length++;
             if (roam_length >= 3200)
                 poof();
-            if (do_gotobuilding(destination_building_id))
+            if (do_gotobuilding(destination()))
                 entertainer_update_shows();
             break;
         case 12:

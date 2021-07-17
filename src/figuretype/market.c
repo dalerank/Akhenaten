@@ -17,12 +17,12 @@ void figure::market_buyer_action() {
         case 8:
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
 
-            if (do_gotobuilding(destination_building_id, true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
+            if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
                 if (collecting_item_id > 3) {
-                    if (!take_resource_from_warehouse(destination_building_id))
+                    if (!take_resource_from_warehouse(destination()))
                         poof();
                 } else {
-                    if (!take_food_from_granary(home_building_id, destination_building_id))
+                    if (!take_food_from_granary(home(), destination()))
                         poof();
                 }
             }
@@ -63,10 +63,10 @@ int figure::create_delivery_boy(int leader_id) {
     figure *boy = figure_create(FIGURE_DELIVERY_BOY, tile_x, tile_y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = collecting_item_id;
-    boy->home_building_id = home_building_id;
+    boy->set_home(homeID());
     return boy->id;
 }
-int figure::take_food_from_granary(int market_id, int granary_id) {
+int figure::take_food_from_granary(building *market, building *granary) {
     int resource;
     switch (collecting_item_id) {
         case 0:
@@ -84,8 +84,9 @@ int figure::take_food_from_granary(int market_id, int granary_id) {
         default:
             return 0;
     }
-    building *granary = building_get(granary_id);
-    int market_units = building_get(market_id)->data.market.inventory[collecting_item_id];
+//    building *granary = building_get(granary);
+//    int market_units = building_get(market)->data.market.inventory[collecting_item_id];
+    int market_units = market->data.market.inventory[collecting_item_id];
     int max_units = (collecting_item_id == 0 ? 800 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
@@ -122,7 +123,7 @@ int figure::take_food_from_granary(int market_id, int granary_id) {
 
     return 1;
 }
-int figure::take_resource_from_warehouse(int warehouse_id) {
+int figure::take_resource_from_warehouse(building *warehouse) {
     int resource;
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (collecting_item_id) {
@@ -158,7 +159,7 @@ int figure::take_resource_from_warehouse(int warehouse_id) {
             default:
                 return 0;
         }
-    building *warehouse = building_get(warehouse_id);
+//    building *warehouse = building_get(warehouse);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored < 2)

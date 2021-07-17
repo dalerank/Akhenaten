@@ -169,7 +169,7 @@ figure *building::create_roaming_figure(int type, int created_action, bool extra
     f->action_state = created_action;
     f->set_home(id);
     f->set_destination(0);
-    f->set_immigrant_building(0);
+    f->set_immigrant_home(0);
 
     if (!extra)
         figure_id = f->id;
@@ -185,7 +185,7 @@ figure *building::create_figure_with_destination(int type, building *destination
     f->action_state = created_action;
     f->set_home(id);
     f->set_destination(destination->id);
-    f->set_immigrant_building(0);
+    f->set_immigrant_home(0);
     if (!extra)
         figure_id = f->id;
 //        figure_1 = f;
@@ -200,7 +200,7 @@ figure *building::create_cartpusher(int goods, int quantity, int created_action,
     f->load_resource(quantity, goods);
     f->set_home(id);
     f->set_destination(0);
-    f->set_immigrant_building(0);
+    f->set_immigrant_home(0);
     if (!extra)
         figure_id = f->id;
 //        figure_1 = f;

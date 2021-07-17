@@ -47,8 +47,8 @@ int figure_create_trade_ship(int x, int y, int city_id) {
     ship->wait_ticks = 10;
     return ship->id;
 }
-int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id) {
-    building *warehouse = building_get(warehouse_id);
+int figure_trade_caravan_can_buy(figure *trader, building *warehouse, int city_id) {
+//    building *warehouse = building_get(warehouse);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
@@ -68,8 +68,8 @@ int figure_trade_caravan_can_buy(figure *trader, int warehouse_id, int city_id) 
     }
     return 0;
 }
-int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id) {
-    building *warehouse = building_get(warehouse_id);
+int figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city_id) {
+//    building *warehouse = building_get(warehouse);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
@@ -128,8 +128,8 @@ int figure_trade_caravan_can_sell(figure *trader, int warehouse_id, int city_id)
     }
     return 0;
 }
-static int trader_get_buy_resource(int warehouse_id, int city_id) {
-    building *warehouse = building_get(warehouse_id);
+static int trader_get_buy_resource(building *warehouse, int city_id) {
+//    building *warehouse = building_get(warehouse);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return RESOURCE_NONE;
 
@@ -157,8 +157,8 @@ static int trader_get_buy_resource(int warehouse_id, int city_id) {
     }
     return 0;
 }
-static int trader_get_sell_resource(int warehouse_id, int city_id) {
-    building *warehouse = building_get(warehouse_id);
+static int trader_get_sell_resource(building *warehouse, int city_id) {
+//    building *warehouse = building_get(warehouse);
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
@@ -416,8 +416,8 @@ void figure::trade_caravan_action() {
             if (wait_ticks > 10) {
                 wait_ticks = 0;
                 int move_on = 0;
-                if (figure_trade_caravan_can_buy(this, destination_building_id, empire_city_id)) {
-                    int resource = trader_get_buy_resource(destination_building_id, empire_city_id);
+                if (figure_trade_caravan_can_buy(this, destination(), empire_city_id)) {
+                    int resource = trader_get_buy_resource(destination(), empire_city_id);
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_bought_resource(trader_id, resource);
@@ -428,8 +428,8 @@ void figure::trade_caravan_action() {
                 } else {
                     move_on++;
                 }
-                if (figure_trade_caravan_can_sell(this, destination_building_id, empire_city_id)) {
-                    int resource = trader_get_sell_resource(destination_building_id, empire_city_id);
+                if (figure_trade_caravan_can_sell(this, destination(), empire_city_id)) {
+                    int resource = trader_get_sell_resource(destination(), empire_city_id);
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_sold_resource(trader_id, resource);
@@ -543,8 +543,8 @@ void figure::native_trader_action() {
             wait_ticks++;
             if (wait_ticks > 10) {
                 wait_ticks = 0;
-                if (figure_trade_caravan_can_buy(this, destination_building_id, 0)) {
-                    int resource = trader_get_buy_resource(destination_building_id, 0);
+                if (figure_trade_caravan_can_buy(this, destination(), 0)) {
+                    int resource = trader_get_buy_resource(destination(), 0);
                     trader_record_bought_resource(trader_id, resource);
                     trader_amount_bought += 3;
                 } else {

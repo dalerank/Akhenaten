@@ -293,7 +293,7 @@ void figure::draw_cartpusher(building_info_context *c) {
                                                  c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8),
                                                  FONT_NORMAL_GREEN);
 
-    if (!home_building_id)
+    if (!has_home())
         return;
     building *source_building = home();
     building *target_building = destination();

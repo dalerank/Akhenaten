@@ -214,44 +214,40 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
         advance_action(FAIL_ACTION);
     return false;
 }
-bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
+bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
     int x, y;
-    building *dest = building_get(destid);
+    set_destination(dest);
     if (dest->state != BUILDING_STATE_VALID)
         advance_action(FAIL_ACTION);
     if (stop_at_road) {
         bool found_road = false;
         bool already_there = false;
-//        if (!destination_x && !destination_y) {
-            if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
-                building *main = dest->main();
-                if (terrainchoice == TERRAIN_USAGE_ROADS)
-                    found_road = map_closest_reachable_road_within_radius(main->x, main->y, 3, 1, &x, &y);
-                if (!found_road)
-                    found_road = map_closest_road_within_radius(main->x, main->y, 3, 1, &x, &y);
-                if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
-                    x = tile_x;
-                    y = tile_y;
-                }
-            } else {
-                if (terrainchoice == TERRAIN_USAGE_ROADS)
-                    found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
-                if (!found_road) {
-                    if (building_is_house(dest->type))
-                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
-                    else
-                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
-                }
-                if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
-                    x = tile_x;
-                    y = tile_y;
-                }
+
+        // correct road lookup for warehouse tiles range
+        if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
+            building *main = dest->main();
+            if (terrainchoice == TERRAIN_USAGE_ROADS)
+                found_road = map_closest_reachable_road_within_radius(main->x, main->y, 3, 1, &x, &y);
+            if (!found_road)
+                found_road = map_closest_road_within_radius(main->x, main->y, 3, 1, &x, &y);
+            if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
+                x = tile_x;
+                y = tile_y;
             }
-//        } else {
-//            found_road = true;
-//            x = destination_x;
-//            y = destination_y;
-//        }
+        } else {
+            if (terrainchoice == TERRAIN_USAGE_ROADS)
+                found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+            if (!found_road) {
+                if (building_is_house(dest->type))
+                    found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
+                else
+                    found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+            }
+            if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
+                x = tile_x;
+                y = tile_y;
+            }
+        }
         // found any road...?
         if (found_road) {
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
@@ -265,20 +261,20 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         return do_goto(dest->x, dest->y, terrainchoice, NEXT_ACTION, FAIL_ACTION); // go into building **directly**
 }
 bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
-    return do_gotobuilding(home_building_id, true, terrainchoice, NEXT_ACTION);
+    return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
 }
 bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = 1;
     if (invisible)
         is_ghost = 1;
     // "go to" home, but stop at road = go to entrance
-    return do_gotobuilding(home_building_id, true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+    return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
-bool figure::do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION, short FAIL_ACTION) {
+bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, short FAIL_ACTION) {
     use_cross_country = 1;
     if (invisible)
         is_ghost = 1;
-    return do_gotobuilding(buildid, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
+    return do_gotobuilding(b, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 
 void figure::action_perform() {
@@ -310,7 +306,7 @@ void figure::action_perform() {
 
         // check for building being alive (at the start of the action)
         building *b = home();
-        building *b_imm = immigrant_building(); // todo: get rid of this
+        building *b_imm = immigrant_home(); // todo: get rid of this
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:
@@ -345,13 +341,13 @@ void figure::action_perform() {
                     poof();
                 break;
             case FIGURE_CART_PUSHER:
-                if (destination_building_id)
+                if (has_destination())
                     break;
                 if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || b->figure_id != id))
                     poof();
                 break;
             case FIGURE_WAREHOUSEMAN:
-                if (destination_building_id)
+                if (has_destination())
                     break;
                 if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
                     poof();
@@ -389,11 +385,12 @@ void figure::action_perform() {
                 do_returnhome();
                 break;
         }
-        if (state == FIGURE_STATE_DYING)
+        if (state == FIGURE_STATE_DYING) // update corpses / dying animation
            figure_combat_handle_corpse();
-        if (terrain_usage == TERRAIN_USAGE_ROADS && !map_terrain_is(grid_offset_figure, TERRAIN_ROAD))
-            if (action_state == ACTION_1_ROAMING || action_state == FIGURE_ACTION_125_ROAMING || destination_building_id == 0)
-                poof();
+        if (terrain_usage == TERRAIN_USAGE_ROADS && !map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) // walkers outside of roads?
+            if (action_state == ACTION_1_ROAMING || action_state == FIGURE_ACTION_125_ROAMING || !has_destination()) // if not roaming, let them be...
+//                poof();
+                kill(); // this is more amusing
 
         ////////////
 

@@ -23,7 +23,7 @@ private:
     unsigned short resource_amount_full; // full load counter
 
     short home_building_id;
-    short immigrant_building_id;
+    short immigrant_home_building_id;
     short destination_building_id;
 public:
     int id;
@@ -98,18 +98,6 @@ public:
 //    short building_id;
 //    short immigrant_building_id;
 //    short destination_building_id;
-    building *home();
-    building *immigrant_building();
-    building *destination();
-    void set_home(int _id) {
-        home_building_id = _id;
-    };
-    void set_immigrant_building(int _id) {
-        immigrant_building_id = _id;
-    };
-    void set_destination(int _id) {
-        destination_building_id = _id;
-    };
 
     short formation_id;
     unsigned char index_in_formation;
@@ -168,6 +156,8 @@ public:
     bool has_figure_color(); // minimap.c
 
     void kill() {
+        if (state != FIGURE_STATE_ALIVE)
+            return;
         set_state(FIGURE_STATE_DYING);
         action_state = FIGURE_ACTION_149_CORPSE;
     };
@@ -187,6 +177,24 @@ public:
 
     // figure/figure.c
     void figure_delete_UNSAFE();
+    building *home();
+    building *immigrant_home();
+    building *destination();
+    const int homeID();
+    const int immigrant_homeID();
+    const int destinationID();
+    void set_home(int _id);
+    void set_immigrant_home(int _id);
+    void set_destination(int _id);
+    void set_home(building *b);
+    void set_immigrant_home(building *b);
+    void set_destination(building *b);
+    bool has_home(int _id = -1);
+    bool has_home(building *b);
+    bool has_immigrant_home(int _id = -1);
+    bool has_immigrant_home(building *b);
+    bool has_destination(int _id = -1);
+    bool has_destination(building *b);
 
     // map/figure.c
     void map_figure_add();
@@ -241,14 +249,13 @@ public:
 
     // actions.c
     void action_perform();
-
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
     bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_gotobuilding(int destid, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_gotobuilding(building *dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
     bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0);
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_enterbuilding(bool invisible, building *b, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
 
     void immigrant_action();
     void emigrant_action();
@@ -348,8 +355,8 @@ public:
 
     // market.c
     int create_delivery_boy(int leader_id);
-    int take_food_from_granary(int market_id, int granary_id);
-    int take_resource_from_warehouse(int warehouse_id);
+    int take_food_from_granary(building *market, building *granary);
+    int take_resource_from_warehouse(building *warehouse);
     void figure_delivery_boy_action();
 
     // trader.c

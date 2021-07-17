@@ -301,7 +301,7 @@ int building_warehouses_remove_resource(int resource, int amount) {
     }
     return amount - amount_left;
 }
-int building_warehouse_for_storing(int src_building_id, int x, int y, int resource, int distance_from_entry, int road_network_id, int *understaffed, map_point *dst) {
+int building_warehouse_for_storing(building *src, int x, int y, int resource, int distance_from_entry, int road_network_id, int *understaffed, map_point *dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -312,15 +312,15 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
             continue;
 
-        building *building_dst = b->main();
-        if (src_building_id == building_dst->id)
+        building *dest = b->main();
+        if (src == dest)
             continue;
 
-        const building_storage *s = building_storage_get(building_dst->storage_id);
-        if (building_warehouse_is_not_accepting(resource, building_dst) || s->empty_all)
+        const building_storage *s = building_storage_get(dest->storage_id);
+        if (building_warehouse_is_not_accepting(resource, dest) || s->empty_all)
             continue;
 
-        int pct_workers = calc_percentage(building_dst->num_workers, model_get_building(building_dst->type)->laborers);
+        int pct_workers = calc_percentage(dest->num_workers, model_get_building(dest->type)->laborers);
         if (pct_workers < 100) {
             if (understaffed)
                 *understaffed += 1;

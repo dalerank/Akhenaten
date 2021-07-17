@@ -227,7 +227,7 @@ void figure::engineer_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
-            do_enterbuilding(true, home_building_id);
+            do_enterbuilding(true, home());
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_62_ENGINEER_ROAMING:
@@ -257,7 +257,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(true, home_building_id);
+            do_enterbuilding(true, home());
             break;
         case ACTION_10_GOING:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
@@ -358,7 +358,7 @@ void figure::policeman_action() {
             use_cross_country = 1;
             is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == home_building_id) {
+                if (map_building_at(grid_offset_figure) == homeID()) {
                     // returned to own building
                     poof();
                 } else {
@@ -448,7 +448,7 @@ void figure::magistrate_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            do_enterbuilding(true, home_building_id);
+            do_enterbuilding(true, home());
             break;
         case FIGURE_ACTION_72_PREFECT_ROAMING:
             do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
@@ -557,7 +557,7 @@ void figure::worker_action() {
         case 9:
             break;
         case 10:
-            if (do_gotobuilding(destination_building_id)) {
+            if (do_gotobuilding(destination())) {
                 if (building_is_farm(b_dest->type)) {
                     b_dest->num_workers = 10;
                     b_dest->data.industry.worker_id = 0;

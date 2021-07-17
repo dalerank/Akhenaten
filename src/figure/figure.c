@@ -58,8 +58,8 @@ figure *figure_create(int type, int x, int y, int dir) {
     return f;
 }
 void figure::figure_delete_UNSAFE() {
-    building *b = home();
-    if (home_building_id) {
+    if (has_home()) {
+        building *b = home();
         if (id == b->figure_id)
             b->figure_id = 0;
         if (id == b->figure_id2)
@@ -68,12 +68,16 @@ void figure::figure_delete_UNSAFE() {
 
     switch (type) {
         case FIGURE_BALLISTA:
-            b->figure_id4 = 0;
+            if (has_home())
+                home()->figure_id4 = 0;
             break;
         case FIGURE_DOCKER:
-            for (int i = 0; i < 3; i++) {
-                if (b->data.dock.docker_ids[i] == id)
-                    b->data.dock.docker_ids[i] = 0;
+            if (has_home()) {
+                building *b = home();
+                for (int i = 0; i < 3; i++) {
+                    if (b->data.dock.docker_ids[i] == id)
+                        b->data.dock.docker_ids[i] = 0;
+                }
             }
             break;
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
@@ -83,8 +87,8 @@ void figure::figure_delete_UNSAFE() {
     if (empire_city_id)
         empire_city_remove_trader(empire_city_id, id);
 
-    if (immigrant_building_id)
-        b->immigrant_figure_id = 0;
+    if (has_immigrant_home())
+        immigrant_home()->immigrant_figure_id = 0;
 
     route_remove();
     map_figure_remove();
@@ -106,6 +110,67 @@ bool figure::is_legion() {
 }
 bool figure::is_herd() {
     return type >= FIGURE_SHEEP && type <= FIGURE_ZEBRA;
+}
+
+building *figure::home() {
+    return building_get(home_building_id);
+};
+building *figure::destination() {
+    return building_get(destination_building_id);
+};
+building *figure::immigrant_home() {
+    return building_get(immigrant_home_building_id);
+};
+const int figure::homeID() {
+    return home_building_id;
+}
+const int figure::immigrant_homeID() {
+    return immigrant_home_building_id;
+}
+const int figure::destinationID() {
+    return destination_building_id;
+}
+void figure::set_home(int _id) {
+    home_building_id = _id;
+};
+void figure::set_immigrant_home(int _id) {
+    immigrant_home_building_id = _id;
+};
+void figure::set_destination(int _id) {
+    destination_building_id = _id;
+};
+void figure::set_home(building *b) {
+    home_building_id = b->id;
+};
+void figure::set_immigrant_home(building *b) {
+    immigrant_home_building_id = b->id;
+};
+void figure::set_destination(building *b) {
+    destination_building_id = b->id;
+};
+bool figure::has_home(int _id) {
+    if (_id == -1)
+        return  (home_building_id != 0);
+    return (home_building_id == _id);
+}
+bool figure::has_home(building *b) {
+    return (b == home());
+}
+bool figure::has_immigrant_home(int _id) {
+    if (_id == -1)
+        return (immigrant_home_building_id != 0);
+    return (immigrant_home_building_id == _id);
+}
+bool figure::has_immigrant_home(building *b) {
+    return (b == immigrant_home());
+}
+bool figure::has_destination(int _id) {
+    if (_id == -1)
+        return (destination_building_id != 0);
+    return (destination_building_id == _id);
+}
+bool figure::has_destination(building *b) {
+    return (b == destination());
 }
 
 void init_figures() {
@@ -184,7 +249,7 @@ void figure::save(buffer *buf) {
     buf->write_u8(f->cc_direction);
     buf->write_u8(f->speed_multiplier);
     buf->write_i16(f->home_building_id);
-    buf->write_i16(f->immigrant_building_id);
+    buf->write_i16(f->immigrant_home_building_id);
     buf->write_i16(f->destination_building_id);
     buf->write_i16(f->formation_id);
     buf->write_u8(f->index_in_formation);
@@ -306,7 +371,7 @@ void figure::load(buffer *buf) {
     f->cc_direction = buf->read_u8();
     f->speed_multiplier = buf->read_u8();
     f->home_building_id = buf->read_i16();
-    f->immigrant_building_id = buf->read_i16();
+    f->immigrant_home_building_id = buf->read_i16();
     f->destination_building_id = buf->read_i16();
     f->formation_id = buf->read_i16(); // formation: 10
     f->index_in_formation = buf->read_u8(); // 3
