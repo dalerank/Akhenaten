@@ -30,7 +30,7 @@ static void destroy_on_fire(building *b, int plagued) {
     b->house_size = 0;
     b->output_resource_id = 0;
     b->distance_from_entry = 0;
-    building_clear_related_data(b);
+    b->clear_related_data();
 
     int waterside_building = 0;
     if (b->type == BUILDING_DOCK || b->type == BUILDING_WHARF || b->type == BUILDING_SHIPYARD)
@@ -116,7 +116,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
 
     part = b;
     for (int i = 0; i < 99; i++) {
-        part = building_next(part);
+        part = part->next();
         if (part->id <= 0)
             break;
 

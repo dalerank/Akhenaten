@@ -56,13 +56,13 @@ void figure_sink_all_ships(void) {
             continue;
 
         if (f->type == FIGURE_TRADE_SHIP)
-            building_get(f->destination_building_id)->data.dock.trade_ship_id = 0;
+            f->dest()->data.dock.trade_ship_id = 0;
         else if (f->type == FIGURE_FISHING_BOAT)
-            building_get(f->building_id)->data.industry.fishing_boat_id = 0;
+            f->home()->data.industry.fishing_boat_id = 0;
         else {
             continue;
         }
-        f->building_id = 0;
+        f->set_home(0);
         f->type = FIGURE_SHIPWRECK;
         f->wait_ticks = 0;
     }

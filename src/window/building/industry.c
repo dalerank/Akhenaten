@@ -421,7 +421,7 @@ void window_building_draw_work_camp(building_info_context *c) {
         else {
             if (b->figure_id) {
                 figure *f = figure_get(b->figure_id);
-                building *b_dest = building_get(f->destination_building_id);
+                building *b_dest = f->dest();
                 if (building_is_farm(b_dest->type))
                     window_building_draw_description(c, group_id, 5); // working on floodplains
                 else if (building_is_monument(b_dest->id))

@@ -32,7 +32,7 @@ static building *get_deletable_building(int grid_offset) {
     if (!building_id)
         return 0;
 
-    building *b = building_main(building_get(building_id));
+    building *b = building_get(building_id)->main();
     if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS ||
         b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
         return 0;
@@ -107,7 +107,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 }
                 space = b;
                 for (int i = 0; i < 9; i++) {
-                    space = building_next(space);
+                    space = space->next();
                     if (space->id <= 0)
                         break;
                     game_undo_add_building(space);

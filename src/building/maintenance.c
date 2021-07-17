@@ -279,7 +279,7 @@ void building_maintenance_check_rome_access(void) {
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
             b->distance_from_entry = 0;
-            building *main_building = building_main(b);
+            building *main_building = b->main();
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
             b->road_access_x = main_building->road_access_x;

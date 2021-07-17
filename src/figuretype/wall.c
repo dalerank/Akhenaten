@@ -330,7 +330,7 @@ void figure_tower_sentry_reroute(void) {
         } else {
             // Teleport back to tower
             f->map_figure_remove();
-            building *b = building_get(f->building_id);
+            building *b = f->home();
             f->source_x = f->tile_x = b->x;
             f->source_y = f->tile_y = b->y;
             f->grid_offset_figure = map_grid_offset(f->tile_x, f->tile_y);

@@ -1,6 +1,7 @@
 #ifndef BUILDING_BUILDING_H
 #define BUILDING_BUILDING_H
 
+//#include "figure/figure.h"
 #include "building/type.h"
 #include "core/buffer.h"
 
@@ -10,7 +11,12 @@ static const int MAX_BUILDINGS[2] = {
         4000
 };
 
-typedef struct {
+// partial (forward) declaration for recursive class
+class figure;
+#include "figure/figure.h"
+
+class building {
+public:
     int id;
 
     unsigned char state;
@@ -47,6 +53,8 @@ typedef struct {
     unsigned char road_access_y;
     short figure_id;
     short figure_id2; // labor seeker or market buyer
+//    figure *figure_1;
+//    figure *figure_2; // labor seeker or market buyer
     short immigrant_figure_id;
     short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;
@@ -165,16 +173,68 @@ typedef struct {
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
-} building;
+
+    ////
+
+    int is_house();
+    int is_fort();
+    int is_defense_ph();
+    int is_farm();
+    int is_floodplain_farm();
+    int is_workshop();
+    int is_extractor();
+    int is_monument();
+    int is_senate();
+    int is_tax_collector();
+    int is_governor_palace();
+    int is_temple();
+    int is_large_temple();
+    int is_shrine();
+    int is_guild();
+    int is_beautification();
+    int is_water_crossing();
+
+    int is_industry();
+    int is_food_category();
+    int is_infrastructure();
+    int is_administration();
+    int is_religion();
+    int is_entertainment();
+    int is_culture();
+    int is_military();
+
+    building *main();
+    building *next();
+    building *top_xy();
+
+    void clear_related_data();
+
+    // figure.c
+    bool road_is_accessible;
+//    map_point road;
+
+    bool has_figure(int type, int type2 = -1);
+    bool has_extra_figure(int type, int type2 = -1);
+    bool has_any_figure(int type, int type2 = -1);
+
+    bool common_spawn_figure_trigger(int type, int delay_shift = 2);
+    figure *create_roaming_figure(int type, int created_action = FIGURE_ACTION_125_ROAMING, bool extra = false);
+    figure *create_figure_with_destination(int type, building *destination, int created_action = ACTION_10_GOING, bool extra = false);
+    figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, bool extra = false);
+
+//    figure *common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
+//    figure *common_spawn_figure_with_destination(int type, building *destination, int created_action);
+};
 
 int building_find(int type);
 building *building_get(int id);
-building *building_main(building *b);
-building *building_next(building *b);
-building *building_top_xy(building *b);
 building *building_create(int type, int x, int y);
 
-void building_clear_related_data(building *b);
+//building *building_main(building *b);
+//building *building_next(building *b);
+//building *building_top_xy(building *b);
+
+//void building_clear_related_data(building *b);
 void building_clear_all(void);
 //void building_totals_add_corrupted_house(int unfixable);
 

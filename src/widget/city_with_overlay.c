@@ -194,7 +194,7 @@ static int draw_building_as_deleted(building *b) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
-    b = building_main(b);
+    b = b->main();
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
 

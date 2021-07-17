@@ -212,7 +212,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.highlighted_formation = highlighted_formation;
 }
 static int draw_building_as_deleted(building *b) {
-    b = building_main(b);
+    b = b->main();
     if (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)))
         return 1;
     return 0;
@@ -875,7 +875,7 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
         if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0)
             image_draw(image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
 
-        if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0 &&
+        if (b->type == BUILDING_HIPPODROME && b->main()->num_workers > 0 &&
             city_entertainment_hippodrome_has_race())
             draw_hippodrome_spectators(b, x, y, color_mask);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -884,7 +884,7 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
     }
 }
 static void draw_entertainment_shows_ph(building *b, int x, int y, color_t color_mask) {
-    building *main = building_main(b);
+    building *main = b->main();
 
     // jugglers
     if (b->type == BUILDING_BOOTH && main->data.entertainment.days1) {

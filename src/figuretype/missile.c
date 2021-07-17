@@ -63,7 +63,7 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
     figure *f = figure_create(type, x, y, DIR_0_TOP_RIGHT);
     if (f->id) {
         f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
-        f->building_id = building_id;
+        f->set_home(building_id);
         f->destination_x = x_dst;
         f->destination_y = y_dst;
         f->set_cross_country_direction(f->cross_country_x, f->cross_country_y, 15 * x_dst, 15 * y_dst, 1);

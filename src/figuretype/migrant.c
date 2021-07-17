@@ -16,7 +16,7 @@ void figure_create_immigrant(building *house, int num_people) {
     const map_tile *entry = city_map_entry_point();
     figure *f = figure_create(FIGURE_IMMIGRANT, entry->x, entry->y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
-    f->immigrant_building_id = house->id;
+    f->set_immigrant_building(house->id);
     house->immigrant_figure_id = f->id;
     f->wait_ticks = 10 + (house->house_figure_generation_delay & 0x7f);
     f->migrant_num_people = num_people;

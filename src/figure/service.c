@@ -142,7 +142,7 @@ static void water_supply_coverage(building *b) {
 }
 static void engineer_coverage(building *b, int *max_damage_seen) {
     if (b->type == BUILDING_HIPPODROME)
-        b = building_main(b);
+        b = b->main();
 
     if (b->damage_risk > *max_damage_seen)
         *max_damage_seen = b->damage_risk;
@@ -151,7 +151,7 @@ static void engineer_coverage(building *b, int *max_damage_seen) {
 }
 static void prefect_coverage(building *b, int *min_happiness_seen) {
     if (b->type == BUILDING_HIPPODROME)
-        b = building_main(b);
+        b = b->main();
 
     b->fire_risk = 0;
     if (b->sentiment.house_happiness < *min_happiness_seen)

@@ -56,7 +56,7 @@ static void generate_rioter(building *b) {
         if (target_building_id) {
             f->destination_x = x_target;
             f->destination_y = y_target;
-            f->destination_building_id = target_building_id;
+            f->set_destination(target_building_id);
         } else {
             f->poof();
         }

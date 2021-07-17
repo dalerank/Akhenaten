@@ -233,7 +233,7 @@ void building_count_update(void) {
         }
         if (b->immigrant_figure_id) {
             figure *f = figure_get(b->immigrant_figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i)
+            if (f->state != FIGURE_STATE_ALIVE || f->dest()->id != i)
                 b->immigrant_figure_id = 0;
         }
     }

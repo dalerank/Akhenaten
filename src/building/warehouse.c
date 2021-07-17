@@ -24,7 +24,7 @@ int building_warehouse_get_space_info(building *warehouse) {
     int empty_spaces = 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id <= 0)
             return 0;
 
@@ -46,7 +46,7 @@ int building_warehouse_get_amount(building *warehouse, int resource) {
     int loads = 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id <= 0)
             return 0;
 
@@ -61,7 +61,7 @@ int building_warehouse_add_resource(building *b, int resource) {
     if (b->id <= 0)
         return -1;
 
-    building *main = building_main(b);
+    building *main = b->main();
     if (building_warehouse_is_not_accepting(resource, main))
         return -1;
 
@@ -76,9 +76,9 @@ int building_warehouse_add_resource(building *b, int resource) {
 
     if (find_space) {
         int space_found = 0;
-        building *space = building_main(b);
+        building *space = b->main();
         for (int i = 0; i < 8; i++) {
-            space = building_next(space);
+            space = space->next();
             if (!space->id)
                 return -1;
 
@@ -111,7 +111,7 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
         if (amount <= 0)
             return 0;
 
-        space = building_next(space);
+        space = space->next();
         if (space->id <= 0)
             continue;
 
@@ -137,7 +137,7 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount) {
         return;
     building *space = warehouse;
     for (int i = 0; i < 8 && amount > 0; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id <= 0 || space->loads_stored <= 0)
             continue;
 
@@ -312,7 +312,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
             continue;
 
-        building *building_dst = building_main(b);
+        building *building_dst = b->main();
         if (src_building_id == building_dst->id)
             continue;
 
@@ -340,7 +340,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
             min_building_id = i;
         }
     }
-    building *b = building_main(building_get(min_building_id));
+    building *b = building_get(min_building_id)->main();
     if (b->has_road_access == 1)
         map_point_store_result(b->x, b->y, dst);
     else if (!map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, dst))
@@ -363,7 +363,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
         building *space = b;
         const building_storage *s = building_storage_get(b->storage_id);
         for (int t = 0; t < 8; t++) {
-            space = building_next(space);
+            space = space->next();
             if (space->id > 0 && space->loads_stored > 0) {
                 if (space->subtype.warehouse_resource_id == resource)
                     loads_stored += space->loads_stored;
@@ -487,7 +487,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         int room = 0; // total potential room for resource!
         space = warehouse;
         for (int i = 0; i < 8; i++) {
-            space = building_next(space);
+            space = space->next();
             if (space->id > 0) {
                 if (space->loads_stored <= 0) // this space (tile) is empty! FREE REAL ESTATE
                     room += 4;
@@ -519,7 +519,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             int available = 0;
             space = warehouse;
             for (int i = 0; i < 8; i++) {
-                space = building_next(space);
+                space = space->next();
                 if (space->id > 0 && space->loads_stored > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
                     available += space->loads_stored;
                 }
@@ -534,7 +534,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     // deliver raw materials to workshops
     space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id > 0 && space->loads_stored > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
                 int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
@@ -551,7 +551,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     if (determine_granary_get_foods(granary_resources, warehouse->road_network_id)) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
-            space = building_next(space);
+            space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
                 *amount = 1; // always one load only for granaries?
@@ -564,7 +564,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         !scenario_property_rome_supplies_wheat()) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
-            space = building_next(space);
+            space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
                 *amount = 1; // always one load only for granaries?
@@ -577,7 +577,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     if (s->empty_all) {
         space = warehouse;
         for (int i = 0; i < 8; i++) {
-            space = building_next(space);
+            space = space->next();
             if (space->id > 0 && space->loads_stored > 0) {
                 *resource = space->subtype.warehouse_resource_id;
                 *amount = space->loads_stored;

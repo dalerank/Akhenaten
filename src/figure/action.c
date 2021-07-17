@@ -224,7 +224,7 @@ bool figure::do_gotobuilding(int destid, bool stop_at_road, int terrainchoice, s
         bool already_there = false;
 //        if (!destination_x && !destination_y) {
             if (dest->type == BUILDING_WAREHOUSE || dest->type == BUILDING_WAREHOUSE_SPACE) {
-                building *main = building_main(dest);
+                building *main = dest->main();
                 if (terrainchoice == TERRAIN_USAGE_ROADS)
                     found_road = map_closest_reachable_road_within_radius(main->x, main->y, 3, 1, &x, &y);
                 if (!found_road)

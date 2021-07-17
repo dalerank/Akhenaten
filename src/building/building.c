@@ -44,31 +44,6 @@ int building_find(int type) {
 building *building_get(int id) {
     return &all_buildings[id];
 }
-building *building_main(building *b) {
-    for (int guard = 0; guard < 99; guard++) {
-        if (b->prev_part_building_id <= 0)
-            return b;
-        b = &all_buildings[b->prev_part_building_id];
-    }
-    return &all_buildings[0];
-}
-building *building_top_xy(building *b) {
-    b = building_main(b);
-    int x = b->x;
-    int y = b->y;
-    building *top = b;
-    while (b->next_part_building_id <= 0) {
-        b = building_next(b);
-        if (b->x < x)
-            top = b;
-        if (b->y < y)
-            top = b;
-    }
-    return top;
-}
-building *building_next(building *b) {
-    return &all_buildings[b->next_part_building_id];
-}
 building *building_create(int type, int x, int y) {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
@@ -107,7 +82,7 @@ building *building_create(int type, int x, int y) {
         b->house_size = 4;
 
     // subtype
-    if (building_is_house(type))
+    if (b->is_house())
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
     else
         b->subtype.house_level = 0;
@@ -299,35 +274,73 @@ building *building_create(int type, int x, int y) {
     return b;
 }
 
-static void building_delete(building *b) {
-    building_clear_related_data(b);
+// from figure.h
+building *figure::home() {
+    return building_get(building_id);
+};
+building *figure::dest() {
+    return building_get(immigrant_building_id);
+};
+building *figure::immigrant_building() {
+    return building_get(destination_building_id);
+};
+
+building *building::main() {
+    building *b = this;
+    for (int guard = 0; guard < 99; guard++) {
+        if (b->prev_part_building_id <= 0)
+            return b;
+        b = &all_buildings[b->prev_part_building_id];
+    }
+    return &all_buildings[0];
+}
+building *building::top_xy() {
+    building *b = main();
+    int x = b->x;
+    int y = b->y;
+    building *top = b;
+    while (b->next_part_building_id <= 0) {
+        b = next();
+        if (b->x < x)
+            top = b;
+        if (b->y < y)
+            top = b;
+    }
+    return top;
+}
+building *building::next() {
+    return building_get(next_part_building_id);
+}
+
+static void building_delete_UNSAFE(building *b) {
+    b->clear_related_data();
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
 }
-void building_clear_related_data(building *b) {
-    if (b->storage_id)
-        building_storage_delete(b->storage_id);
+void building::clear_related_data() {
+    if (storage_id)
+        building_storage_delete(storage_id);
 
-    if (building_is_senate(b->type))
-        city_buildings_remove_senate(b);
+    if (is_senate())
+        city_buildings_remove_senate(this);
 
-    if (b->type == BUILDING_DOCK)
+    if (type == BUILDING_DOCK)
         city_buildings_remove_dock();
 
-    if (b->type == BUILDING_BARRACKS)
-        city_buildings_remove_barracks(b);
+    if (type == BUILDING_BARRACKS)
+        city_buildings_remove_barracks(this);
 
-    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
-        city_buildings_remove_distribution_center(b);
+    if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
+        city_buildings_remove_distribution_center(this);
 
-    if (b->type == BUILDING_FORT)
-        formation_legion_delete_for_fort(b);
+    if (type == BUILDING_FORT)
+        formation_legion_delete_for_fort(this);
 
-    if (b->type == BUILDING_HIPPODROME)
+    if (type == BUILDING_HIPPODROME)
         city_buildings_remove_hippodrome();
 
-    if (b->type == BUILDING_TRIUMPHAL_ARCH) {
+    if (type == BUILDING_TRIUMPHAL_ARCH) {
         city_buildings_remove_triumphal_arch();
         building_menu_update(BUILDSET_NORMAL);
     }
@@ -351,6 +364,159 @@ void building_clear_all(void) {
 //    }
 //}
 
+int building::is_house() {
+    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
+}
+int building::is_fort() {
+    return type == BUILDING_FORT_LEGIONARIES ||
+           type == BUILDING_FORT_JAVELIN ||
+           type == BUILDING_FORT_MOUNTED;
+}
+int building::is_defense_ph() {
+    return (type == BUILDING_WALL_PH
+            || type == BUILDING_GATEHOUSE_PH
+            || type == BUILDING_TOWER_PH);
+}
+int building::is_farm() {
+    return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
+           || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
+}
+int building::is_floodplain_farm() {
+    return (GAME_ENV == ENGINE_ENV_PHARAOH
+            && is_farm()
+            && labor_category == 255); // b->data.industry.labor_state >= 1
+}
+int building::is_workshop() {
+    return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
+           || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
+           || type == BUILDING_CATTLE_RANCH
+           || type == BUILDING_LAMP_WORKSHOP
+           || type == BUILDING_PAINT_WORKSHOP;
+}
+int building::is_extractor() {
+    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
+           || type == BUILDING_GOLD_MINE
+           || type == BUILDING_GEMSTONE_MINE
+           || type == BUILDING_COPPER_MINE
+           || type == BUILDING_GRANITE_QUARRY
+           || type == BUILDING_SANDSTONE_QUARRY
+           || type == BUILDING_REED_GATHERER;
+}
+int building::is_monument() {
+    switch (type) {
+        case BUILDING_PYRAMID:
+        case BUILDING_SPHYNX:
+        case BUILDING_MAUSOLEUM:
+        case BUILDING_ALEXANDRIA_LIBRARY:
+        case BUILDING_CAESAREUM:
+        case BUILDING_PHAROS_LIGHTHOUSE:
+        case BUILDING_SMALL_ROYAL_TOMB:
+        case BUILDING_ABU_SIMBEL:
+        case BUILDING_MEDIUM_ROYAL_TOMB:
+        case BUILDING_LARGE_ROYAL_TOMB:
+        case BUILDING_GRAND_ROYAL_TOMB:
+            return 1;
+        default:
+            return 0;
+    }
+}
+int building::is_senate() {
+    return ((type >= BUILDING_SENATE && type <= BUILDING_FORUM_UPGRADED) ||
+            (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
+}
+int building::is_tax_collector() {
+    return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
+}
+int building::is_governor_palace() {
+    return (type >= BUILDING_GOVERNORS_HOUSE && type <= BUILDING_GOVERNORS_PALACE);
+}
+int building::is_temple() {
+    return (type >= BUILDING_SMALL_TEMPLE_CERES && type <= BUILDING_SMALL_TEMPLE_VENUS);
+}
+int building::is_large_temple() {
+    return (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS);
+}
+int building::is_shrine() {
+    return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
+}
+int building::is_guild() {
+    return (type >= BUILDING_CARPENTERS_GUILD && type <= BUILDING_STONEMASONS_GUILD);
+}
+int building::is_beautification() {
+    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE)
+           || type == BUILDING_GARDENS
+           || type == BUILDING_PLAZA;
+}
+int building::is_water_crossing() {
+    return (type == BUILDING_FERRY)
+           || type == BUILDING_LOW_BRIDGE
+           || type == BUILDING_SHIP_BRIDGE;
+}
+
+int building::is_industry() {
+    if (is_extractor())
+        return 1;
+    if (is_workshop())
+        return 1;
+    if (is_farm())
+        return 1;
+    if (is_guild())
+        return 1;
+    if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
+        return 1;
+    if (type == BUILDING_WAREHOUSE || type == BUILDING_WAREHOUSE_SPACE)
+        return 1;
+    return 0;
+}
+int building::is_food_category() {
+    if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
+        || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
+        return 1;
+    return 0;
+}
+int building::is_infrastructure() {
+    if (type == BUILDING_ENGINEERS_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
+        return 1;
+    if (is_water_crossing())
+        return 1;
+    return 0;
+}
+int building::is_administration() {
+    if (is_senate() || is_tax_collector() || is_governor_palace())
+        return 1;
+    if (type == BUILDING_COURTHOUSE)
+        return 1;
+    return 0;
+}
+int building::is_religion() {
+    if (is_temple() || is_large_temple() || is_shrine())
+        return 1;
+    if (type == BUILDING_FESTIVAL_SQUARE)
+        return 1;
+    return 0;
+}
+int building::is_entertainment() {
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION)
+        return 1;
+    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL)
+        return 1;
+    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO)
+        return 1;
+    return 0;
+}
+int building::is_culture() {
+    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_ACADEMY)
+        return 1;
+    return 0;
+}
+int building::is_military() {
+    if (is_fort() || type == BUILDING_FORT_GROUND || type == BUILDING_FORT)
+        return 1;
+    if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
+        return 1;
+    return 0;
+}
+
 int building_is_house(int type) {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
 }
@@ -361,8 +527,8 @@ int building_is_fort(int type) {
 }
 int building_is_defense_ph(int type) {
     return (type == BUILDING_WALL_PH
-           || type == BUILDING_GATEHOUSE_PH
-           || type == BUILDING_TOWER_PH);
+            || type == BUILDING_GATEHOUSE_PH
+            || type == BUILDING_TOWER_PH);
 }
 int building_is_farm(int type) {
     return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
@@ -370,8 +536,8 @@ int building_is_farm(int type) {
 }
 int building_is_floodplain_farm(building *b) {
     return (GAME_ENV == ENGINE_ENV_PHARAOH
-        && building_is_farm(b->type)
-        && b->labor_category == 255); // b->data.industry.labor_state >= 1
+            && building_is_farm(b->type)
+            && b->labor_category == 255); // b->data.industry.labor_state >= 1
 }
 int building_is_workshop(int type) {
     return (type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
@@ -457,7 +623,7 @@ int building_is_industry(int type) {
 }
 int building_is_food_category(int type) {
     if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
-    || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
+        || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
         return 1;
     return 0;
 }
@@ -541,14 +707,14 @@ void building_update_state(void) {
                 map_building_tiles_remove(i, b->x, b->y);
                 road_recalc = 1; // always recalc underlying road tiles
                 land_recalc = 1;
-                building_delete(b);
+                building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 if (b->house_size)
                     city_population_remove_home_removed(b->house_population);
 
-                building_delete(b);
+                building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME)
-                building_delete(b);
+                building_delete_UNSAFE(b);
 
         }
     }

@@ -166,7 +166,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
     } else
         f->poof();
     tower->figure_id = f->id;
-    f->building_id = tower->id;
+    f->set_home(tower->id);
     return 1;
 }
 

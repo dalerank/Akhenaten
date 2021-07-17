@@ -304,7 +304,7 @@ void map_building_tiles_mark_deleting(int grid_offset) {
     if (!building_id)
         map_bridge_remove(grid_offset, 1);
     else
-        grid_offset = building_main(building_get(building_id))->grid_offset;
+        grid_offset = building_get(building_id)->main()->grid_offset;
     map_property_mark_deleted(grid_offset);
 }
 int map_building_tiles_are_clear(int x, int y, int size, int terrain) {

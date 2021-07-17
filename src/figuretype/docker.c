@@ -36,7 +36,7 @@ static int try_import_resource(int building_id, int resource, int city_id) {
     // try existing storage bay with the same resource
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id > 0) {
             if (space->loads_stored && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
@@ -48,7 +48,7 @@ static int try_import_resource(int building_id, int resource, int city_id) {
     // try unused storage bay
     space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id > 0) {
             if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 trade_route_increase_traded(route_id, resource);
@@ -67,7 +67,7 @@ static int try_export_resource(int building_id, int resource, int city_id) {
         return 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
-        space = building_next(space);
+        space = space->next();
         if (space->id > 0) {
             if (space->loads_stored && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
@@ -113,7 +113,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             int distance_penalty = 32;
             building *space = b;
             for (int s = 0; s < 8; s++) {
-                space = building_next(space);
+                space = space->next();
                 if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE)
                     distance_penalty -= 8;
 
@@ -177,7 +177,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
         int distance_penalty = 32;
         building *space = b;
         for (int s = 0; s < 8; s++) {
-            space = building_next(space);
+            space = space->next();
             if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0)
                 distance_penalty--;
 

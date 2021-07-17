@@ -5,11 +5,14 @@
 #include "core/direction.h"
 #include "figure/action.h"
 #include "figure/type.h"
-#include "building/building.h"
 #include "figure/formation.h"
 #include "map/point.h"
 #include "window/building/common.h"
 #include "widget/city.h"
+
+// partial (forward) declaration for recursive class
+class building;
+#include "building/building.h"
 
 static int MAX_FIGURES[] = {5000, 2000};
 
@@ -18,6 +21,10 @@ private:
     unsigned char resource_id;
     unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
+
+    short building_id;
+    short immigrant_building_id;
+    short destination_building_id;
 public:
     int id;
     int sprite_image_id;
@@ -88,9 +95,22 @@ public:
 //    unsigned short loads_full; // full load counter
     unsigned char cc_direction; // 1 = x, 2 = y
     unsigned char speed_multiplier;
-    short building_id;
-    short immigrant_building_id;
-    short destination_building_id;
+//    short building_id;
+//    short immigrant_building_id;
+//    short destination_building_id;
+    building *home();
+    building *dest();
+    building *immigrant_building();
+    void set_home(int _id) {
+        building_id = _id;
+    };
+    void set_destination(int _id) {
+        destination_building_id = _id;
+    };
+    void set_immigrant_building(int _id) {
+        immigrant_building_id = _id;
+    };
+
     short formation_id;
     unsigned char index_in_formation;
     unsigned char formation_at_rest;

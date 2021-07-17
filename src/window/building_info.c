@@ -336,7 +336,7 @@ static void init(int grid_offset) {
             case BUILDING_TEMPLE_COMPLEX_PTAH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                b = building_main(b);
+                b = b->main();
                 context.building_id = b->id;
                 break;
             case BUILDING_BARRACKS:

@@ -29,10 +29,9 @@ static int show_building_hippodrome(const building *b) {
 static building *get_entertainment_building(const figure *f) {
     if (f->action_state == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
         f->action_state == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
-        return building_get(f->building_id);
-    } else {
-        return building_get(f->destination_building_id);
-    }
+        return ((figure*)f)->home();
+    } else
+        return ((figure*)f)->dest();
 }
 
 static int show_figure_entertainment(const figure *f) {
