@@ -56,7 +56,7 @@ void window_building_draw_engineers_post(building_info_context *c) {
     else if (!b->num_workers)
         window_building_draw_description(c, 104, 9);
     else {
-        if (b->figure_id)
+        if (b->has_figure(0))
             window_building_draw_description(c, 104, 2);
         else
             window_building_draw_description(c, 104, 3);
@@ -89,7 +89,7 @@ void window_building_draw_firehouse(building_info_context *c) {
     else if (!b->num_workers)
         window_building_draw_description(c, LANG_GROUP_ID, 9);
     else {
-        if (b->figure_id)
+        if (b->has_figure(0))
             window_building_draw_description(c, LANG_GROUP_ID, 2);
         else
             window_building_draw_description(c, LANG_GROUP_ID, 3);
@@ -121,7 +121,7 @@ void window_building_draw_prefect(building_info_context *c) {
     else if (!b->num_workers)
         window_building_draw_description(c, 88, 9);
     else {
-        if (b->figure_id)
+        if (b->has_figure(0))
             window_building_draw_description(c, 88, 2);
         else
             window_building_draw_description(c, 88, 3);

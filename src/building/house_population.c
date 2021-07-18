@@ -98,14 +98,14 @@ int house_population_create_immigrants(int num_people) {
     // clean up any dead immigrants
     for (int i = 0; i < total_houses; i++) {
         building *b = building_get(houses[i]);
-        if (b->immigrant_figure_id && figure_get(b->immigrant_figure_id)->state != FIGURE_STATE_ALIVE)
-            b->immigrant_figure_id = 0;
+        if (b->has_figure(2) && b->get_figure(2)->state != FIGURE_STATE_ALIVE)
+            b->remove_figure(2);
 
     }
     // houses with plenty of room
     for (int i = 0; i < total_houses && to_immigrate > 0; i++) {
         building *b = building_get(houses[i]);
-        if (b->distance_from_entry > 0 && b->house_population_room >= 8 && !b->immigrant_figure_id) {
+        if (b->distance_from_entry > 0 && b->house_population_room >= 8 && !b->has_figure(2, -1)) {
             if (to_immigrate <= 4) {
                 figure_create_immigrant(b, to_immigrate);
                 to_immigrate = 0;
@@ -118,7 +118,7 @@ int house_population_create_immigrants(int num_people) {
     // houses with less room
     for (int i = 0; i < total_houses && to_immigrate > 0; i++) {
         building *b = building_get(houses[i]);
-        if (b->distance_from_entry > 0 && b->house_population_room > 0 && !b->immigrant_figure_id) {
+        if (b->distance_from_entry > 0 && b->house_population_room > 0 && !b->has_figure(2, -1)) {
             if (to_immigrate <= b->house_population_room) {
                 figure_create_immigrant(b, to_immigrate);
                 to_immigrate = 0;

@@ -17,7 +17,7 @@ void figure_create_immigrant(building *house, int num_people) {
     figure *f = figure_create(FIGURE_IMMIGRANT, entry->x, entry->y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->set_immigrant_home(house->id);
-    house->immigrant_figure_id = f->id;
+    house->set_figure(2, f->id);
     f->wait_ticks = 10 + (house->house_figure_generation_delay & 0x7f);
     f->migrant_num_people = num_people;
 }
@@ -59,7 +59,7 @@ static int closest_house_with_room(int x, int y) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size && b->distance_from_entry > 0 &&
             b->house_population_room > 0) {
-            if (!b->immigrant_figure_id) {
+            if (!b->has_figure(2)) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (dist < min_dist) {
                     min_dist = dist;
@@ -90,7 +90,7 @@ static void add_house_population(building *house, int num_people) {
     house->house_population += num_people;
     house->house_population_room = max_people - house->house_population;
     city_population_add(num_people);
-    house->immigrant_figure_id = 0;
+    house->remove_figure(2);
 }
 
 void figure::immigrant_action() {
@@ -147,7 +147,7 @@ void figure::homeless_action() {
                     building *b = building_get(building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                        b->immigrant_figure_id = id;
+                        b->set_figure(2, id);
                         set_immigrant_home(building_id);
                         advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                     } else
@@ -177,7 +177,7 @@ void figure::homeless_action() {
                     building *b = building_get(building_id);
                     int x_road, y_road;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                        b->immigrant_figure_id = id;
+                        b->set_figure(2, id);
                         set_immigrant_home(building_id);
                         advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                     }

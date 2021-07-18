@@ -231,10 +231,11 @@ void building_count_update(void) {
             default:
                 continue;
         }
-        if (b->immigrant_figure_id) {
-            figure *f = figure_get(b->immigrant_figure_id);
+        if (b->has_figure(2)) {
+            figure *f = b->get_figure(2);
             if (f->state != FIGURE_STATE_ALIVE || f->destination()->id != i)
-                b->immigrant_figure_id = 0;
+                b->remove_figure(2);
+//                b->immigrant_figure_id = 0;
         }
     }
     if (GAME_ENV == ENGINE_ENV_C3)

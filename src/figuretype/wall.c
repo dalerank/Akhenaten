@@ -48,10 +48,10 @@ void figure::ballista_action() {
     height_adjusted_ticks = 10;
     current_height = 45;
 
-    if (b->state != BUILDING_STATE_VALID || b->figure_id4 != id)
+    if (b->state != BUILDING_STATE_VALID || !b->has_figure(3, id))
         poof();
 
-    if (b->num_workers <= 0 || b->figure_id <= 0)
+    if (b->num_workers <= 0 || !b->has_figure(3))
         poof();
 
     map_figure_remove();

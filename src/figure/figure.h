@@ -180,9 +180,16 @@ public:
     building *home();
     building *immigrant_home();
     building *destination();
-    const int homeID();
-    const int immigrant_homeID();
-    const int destinationID();
+    const int homeID() const {
+        return home_building_id;
+    }
+    const int immigrant_homeID() const {
+        return immigrant_home_building_id;
+    }
+    const int destinationID() const {
+        return destination_building_id;
+    }
+
     void set_home(int _id);
     void set_immigrant_home(int _id);
     void set_destination(int _id);

@@ -174,7 +174,7 @@ int figure::fight_fire() {
         destination_y = ruin->road_access_y;
         set_destination(ruin_id);
         route_remove();
-        ruin->figure_id4 = id;
+        ruin->set_figure(3, id);
         return 1;
     }
     return 0;

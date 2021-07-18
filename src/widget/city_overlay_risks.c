@@ -9,9 +9,9 @@
 #include "map/random.h"
 #include "map/terrain.h"
 
-static int is_problem_cartpusher(int figure_id) {
-    if (figure_id) {
-        figure *fig = figure_get(figure_id);
+static int is_problem_cartpusher(figure *fig) {
+    if (fig->id > 0) {
+//        figure *fig = figure_get(fig);
         return fig->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->min_max_seen;
     } else {
         return 0;
@@ -26,11 +26,11 @@ void overlay_problems_prepare_building(building *b) {
             b->show_on_problem_overlay = 1;
 
     } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
-        if (is_problem_cartpusher(b->figure_id))
+        if (is_problem_cartpusher(b->get_figure(0)))
             b->show_on_problem_overlay = 1;
 
     } else if (building_is_workshop(b->type)) {
-        if (is_problem_cartpusher(b->figure_id))
+        if (is_problem_cartpusher(b->get_figure(0)))
             b->show_on_problem_overlay = 1;
         else if (b->loads_stored <= 0)
             b->show_on_problem_overlay = 1;

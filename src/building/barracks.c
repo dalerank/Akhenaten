@@ -148,7 +148,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_TOWER && b->num_workers > 0 &&
-            !b->figure_id &&
+            !b->has_figure(0) &&
             (b->road_network_id == barracks->road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
             tower = b;
             break;
@@ -165,7 +165,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y) {
         f->destination_y = road.y;
     } else
         f->poof();
-    tower->figure_id = f->id;
+    tower->set_figure(0, f->id);
     f->set_home(tower->id);
     return 1;
 }

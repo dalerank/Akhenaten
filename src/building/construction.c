@@ -1,4 +1,5 @@
 #include <widget/sidebar/city.h>
+#include <figure/formation_herd.h>
 #include "construction.h"
 
 #include "building/construction_building.h"
@@ -1034,6 +1035,11 @@ int building_construction_place_building(int type, int x, int y) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }
+    if (formation_herd_breeding_ground_at(x, y, size)) {
+        map_property_clear_constructing_and_deleted();
+        city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
+        return 0;
+    }
     building_construction_warning_check_all(type, x, y, size);
 
     // phew, checks done!
@@ -1095,15 +1101,19 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
                 map_property_mark_constructing(grid_offset);
                 items_placed++;
             } else {
-                building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-                game_undo_add_building(b);
-                if (b->id > 0) {
-                    items_placed++;
-                    map_building_tiles_add(b->id, x, y, 1,
-                                           image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
-                    if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD))
-                        needs_road_warning = 1;
-
+                if (formation_herd_breeding_ground_at(x, y, 1)) {
+                    map_property_clear_constructing_and_deleted();
+                    city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
+                } else {
+                    building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+                    game_undo_add_building(b);
+                    if (b->id > 0) {
+                        items_placed++;
+                        map_building_tiles_add(b->id, x, y, 1,
+                                               image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
+                        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD))
+                            needs_road_warning = 1;
+                    }
                 }
             }
         }
@@ -1153,16 +1163,20 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&  !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)) {
-                items_placed++;
-                map_terrain_add(grid_offset, TERRAIN_GARDEN);
+                if (formation_herd_breeding_ground_at(x, y, 1)) {
+                    map_property_clear_constructing_and_deleted();
+                    city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
+                } else {
+                    items_placed++;
+                    map_terrain_add(grid_offset, TERRAIN_GARDEN);
+                }
             }
         }
     }
     map_tiles_update_all_gardens();
     return items_placed;
 }
-static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end,
-                                         struct reservoir_info *info) {
+static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info) {
     info->cost = 0;
     info->place_reservoir_at_start = PLACE_RESERVOIR_NO;
     info->place_reservoir_at_end = PLACE_RESERVOIR_NO;

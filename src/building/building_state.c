@@ -134,10 +134,14 @@ void building_state_save_to_buffer(buffer *buf, const building *b) {
     buf->write_i16(b->house_unreachable_ticks);
     buf->write_u8(b->road_access_x);
     buf->write_u8(b->road_access_y);
-    buf->write_i16(b->figure_id);
-    buf->write_i16(b->figure_id2);
-    buf->write_i16(b->immigrant_figure_id);
-    buf->write_i16(b->figure_id4);
+//    buf->write_i16(b->figure_id);
+//    buf->write_i16(b->figure_id2);
+//    buf->write_i16(b->immigrant_figure_id);
+//    buf->write_i16(b->figure_id4);
+    buf->write_i16(b->get_figureID(0));
+    buf->write_i16(b->get_figureID(1));
+    buf->write_i16(b->get_figureID(2));
+    buf->write_i16(b->get_figureID(3));
     buf->write_u8(b->figure_spawn_delay);
     buf->write_u8(0);
     buf->write_u8(b->figure_roam_direction);
@@ -345,10 +349,14 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
         b->road_access_x = buf->read_u16();
         b->road_access_y = buf->read_u16();
     }
-    b->figure_id = buf->read_i16();
-    b->figure_id2 = buf->read_i16(); // laborseeker
-    b->immigrant_figure_id = buf->read_i16();
-    b->figure_id4 = buf->read_i16();
+//    b->figure_id = buf->read_i16();
+//    b->figure_id2 = buf->read_i16(); // laborseeker
+//    b->immigrant_figure_id = buf->read_i16();
+//    b->figure_id4 = buf->read_i16();
+    b->set_figure(0, buf->read_u16());
+    b->set_figure(1, buf->read_u16());
+    b->set_figure(2, buf->read_u16());
+    b->set_figure(3, buf->read_u16());
     b->figure_spawn_delay = buf->read_u8(); // 1 (workcamp 1)
     buf->skip(1);
     b->figure_roam_direction = buf->read_u8();

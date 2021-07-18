@@ -208,7 +208,7 @@ void figure::fishing_boat_action() {
                 map_point tile;
                 int wharf_id = map_water_get_wharf_for_new_fishing_boat(this, &tile);
                 if (wharf_id) {
-                    b->figure_id = 0; // remove from original building
+                    b->remove_figure(0); // remove from original building
                     set_home(wharf_id);
                     building_get(wharf_id)->data.industry.fishing_boat_id = id;
                     action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;

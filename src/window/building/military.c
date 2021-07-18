@@ -87,7 +87,7 @@ void window_building_draw_tower(building_info_context *c) {
         window_building_draw_description(c, 69, 25);
     else if (b->num_workers <= 0)
         window_building_draw_description(c, 91, 2);
-    else if (b->figure_id)
+    else if (b->has_figure(0))
         window_building_draw_description(c, 91, 3);
     else {
         window_building_draw_description(c, 91, 4);

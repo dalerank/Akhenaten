@@ -15,10 +15,17 @@ static const int MAX_BUILDINGS[2] = {
 class figure;
 #include "figure/figure.h"
 
+#define MAX_FIGURES_PER_BUILDING 8
+
 class building {
+private:
+//    short figure_id;
+//    short figure_id2; // labor seeker or market buyer
+//    short immigrant_figure_id;
+//    short figure_id4; // tower ballista or burning ruin prefect
+    short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
 public:
     int id;
-
     unsigned char state;
     unsigned char faction_id;
     unsigned char unknown_value;
@@ -51,12 +58,10 @@ public:
     short house_unreachable_ticks;
     unsigned char road_access_x;
     unsigned char road_access_y;
-    short figure_id;
-    short figure_id2; // labor seeker or market buyer
-//    figure *figure_1;
-//    figure *figure_2; // labor seeker or market buyer
-    short immigrant_figure_id;
-    short figure_id4; // tower ballista or burning ruin prefect
+//    figure *figure_id;
+//    figure *figure_id2; // labor seeker or market buyer
+//    short immigrant_figure_id;
+//    short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;
     unsigned char figure_roam_direction;
     unsigned char has_water_access;
@@ -114,11 +119,6 @@ public:
             int unk_12[12];
             unsigned char worker_id;
         } industry;
-//        struct {
-//            unsigned short progress;
-//            unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
-//            unsigned char labor_days_left;
-//        } farm;
         struct {
             unsigned char num_shows;
             unsigned char days1;
@@ -208,20 +208,26 @@ public:
     int is_culture();
     int is_military();
 
-
     void clear_related_data();
 
     // figure.c
     bool road_is_accessible;
 
-    bool has_figure(int type, int type2 = -1);
-    bool has_extra_figure(int type, int type2 = -1);
-    bool has_any_figure(int type, int type2 = -1);
+    const int get_figureID(int i) const {
+        return figure_ids_array[i];
+    };
+    figure *get_figure(int i);
+    void set_figure(int i, int figure_id = -1);
+    void set_figure(int i, figure* f);
+    void remove_figure(int i);
+    bool has_figure(int i, int figure_id = -1);
+    bool has_figure(int i, figure* f);
+    bool has_figure_of_type(int i, int _type);
 
-    bool common_spawn_figure_trigger(int type, int delay_shift = 2);
-    figure *create_roaming_figure(int type, int created_action = FIGURE_ACTION_125_ROAMING, bool extra = false);
-    figure *create_figure_with_destination(int type, building *destination, int created_action = ACTION_10_GOING, bool extra = false);
-    figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, bool extra = false);
+    bool common_spawn_figure_trigger(int _type, int delay_shift = 2);
+    figure *create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
+    figure *create_figure_with_destination(int _type, building *destination, int created_action = ACTION_10_GOING, int slot = 0);
+    figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = 0);
 };
 
 int building_find(int type);

@@ -419,8 +419,8 @@ void window_building_draw_work_camp(building_info_context *c) {
         if (!b->num_workers)
             window_building_draw_description(c, group_id, 2); // not enough workers
         else {
-            if (b->figure_id) {
-                figure *f = figure_get(b->figure_id);
+            if (b->has_figure(0)) {
+                figure *f = b->get_figure(0);
                 building *b_dest = f->destination();
                 if (building_is_farm(b_dest->type))
                     window_building_draw_description(c, group_id, 5); // working on floodplains

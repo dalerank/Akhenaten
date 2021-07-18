@@ -360,7 +360,7 @@ void figure::warehouseman_action() {
             if (wait_ticks > 4) {
                 bool delivery_check = false;
                 building *dest = destination();
-                if (dest->state != BUILDING_STATE_VALID || dest->figure_id != id)
+                if (dest->state != BUILDING_STATE_VALID || !dest->has_figure(0, id))
                     advance_action(ACTION_8_RECALCULATE);
                 int amount_left = fmin(get_carrying_amount(), 100);
                 switch (dest->type) {

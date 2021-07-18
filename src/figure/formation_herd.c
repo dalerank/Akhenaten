@@ -277,6 +277,17 @@ void formation_herd_update(void) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0)
             update_herd_formation(m);
-
     }
+}
+
+int formation_herd_breeding_ground_at(int x, int y, int size) {
+    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && m->is_herd && !m->is_legion) {
+            if (m->x >= x && m->x < x + size
+                && m->y >= y && m->y < y + size)
+                return 1;
+        }
+    }
+    return 0;
 }

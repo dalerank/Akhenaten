@@ -637,9 +637,18 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 33, y + 15, COLOR_WHITE);
 //        }
 
-        if (b_id && true && b->grid_offset == grid_offset) {
-//            string_from_int(str, b->type, 0);
-//            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
+        if (b_id && false && b->grid_offset == grid_offset) {
+            string_from_int(str, b_id, 0);
+            text_draw_shadow(str, x + 10, y, COLOR_WHITE);
+
+            string_from_int(str, b->type, 0);
+            text_draw_shadow(str, x + 27, y, COLOR_GREEN);
+
+            string_from_int(str, b->road_is_accessible, 0);
+            if (b->road_is_accessible)
+                text_draw_shadow(str, x + 10, y + 10, COLOR_GREEN);
+            else
+                text_draw_shadow(str, x + 10, y + 10, COLOR_RED);
 //
 //            string_from_int(str, b->grid_offset, 0);
 //            text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);

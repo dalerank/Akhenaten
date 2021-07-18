@@ -60,16 +60,16 @@ figure *figure_create(int type, int x, int y, int dir) {
 void figure::figure_delete_UNSAFE() {
     if (has_home()) {
         building *b = home();
-        if (id == b->figure_id)
-            b->figure_id = 0;
-        if (id == b->figure_id2)
-            b->figure_id2 = 0;
+        if (b->has_figure(0, id))
+            b->remove_figure(0);
+        if (b->has_figure(1, id))
+            b->remove_figure(1);
     }
 
     switch (type) {
         case FIGURE_BALLISTA:
             if (has_home())
-                home()->figure_id4 = 0;
+                home()->remove_figure(3);
             break;
         case FIGURE_DOCKER:
             if (has_home()) {
@@ -88,7 +88,7 @@ void figure::figure_delete_UNSAFE() {
         empire_city_remove_trader(empire_city_id, id);
 
     if (has_immigrant_home())
-        immigrant_home()->immigrant_figure_id = 0;
+        immigrant_home()->remove_figure(2);
 
     route_remove();
     map_figure_remove();
@@ -121,15 +121,6 @@ building *figure::destination() {
 building *figure::immigrant_home() {
     return building_get(immigrant_home_building_id);
 };
-const int figure::homeID() {
-    return home_building_id;
-}
-const int figure::immigrant_homeID() {
-    return immigrant_home_building_id;
-}
-const int figure::destinationID() {
-    return destination_building_id;
-}
 void figure::set_home(int _id) {
     home_building_id = _id;
 };

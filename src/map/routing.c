@@ -288,9 +288,11 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
             return 1;
         return 0;
     } else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        // on a corner of the floodplains edge: nope
         if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
             return 0;
         else {
+            // on the edge of floodplains: maybe?
             if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
                     return 0;
@@ -301,7 +303,12 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
             }
         }
         return 1;
-    } else
+    }
+// TODO: herd breeeding grounds
+//    else if (is_aqueduct && formation_herd_breeding_ground_at(x, y, 1)) {
+//        return 0;
+//    }
+    else
         return 1;
 }
 int map_routing_calculate_distances_for_building(routed_int type, int x, int y) {

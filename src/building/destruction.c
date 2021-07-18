@@ -47,7 +47,7 @@ static void destroy_on_fire(building *b, int plagued) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     else {
         b->type = BUILDING_BURNING_RUIN;
-        b->figure_id4 = 0;
+        b->remove_figure(3);
         b->tax_income_or_storage = 0;
         b->fire_duration = (b->house_figure_generation_delay & 7) + 1;
         b->fire_proof = 1;
@@ -90,7 +90,7 @@ static void destroy_on_fire(building *b, int plagued) {
 
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
-        ruin->figure_id4 = 0;
+        b->remove_figure(3);
         ruin->fire_proof = 1;
         ruin->ruin_has_plague = plagued;
     }

@@ -597,9 +597,9 @@ void window_building_draw_warehouse(building_info_context *c) {
     inner_panel_draw(c->x_offset + 16, c->y_offset + 168, c->width_blocks - 2, 5);
     window_building_draw_employment(c, 173);
     // cartpusher state
-    int cartpusher = b->figure_id;
-    if (cartpusher && figure_get(cartpusher)->state == FIGURE_STATE_ALIVE) {
-        int resource = figure_get(cartpusher)->get_resource();
+    figure *cartpusher = b->get_figure(0);
+    if (cartpusher->state == FIGURE_STATE_ALIVE) {
+        int resource = cartpusher->get_resource();
         image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                    resource_image_offset(resource, RESOURCE_IMAGE_ICON),
                    c->x_offset + 32, c->y_offset + 220);

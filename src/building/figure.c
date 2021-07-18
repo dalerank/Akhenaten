@@ -39,6 +39,84 @@ const int generic_delay_table[] = {
         44
 };
 
+//const int building::get_figureID(int i) {
+////    // correct index if out of bounds
+////    if (i < 0)
+////        i = 0;
+////    if (i >= MAX_FIGURES_PER_BUILDING)
+////        i = MAX_FIGURES_PER_BUILDING - 1;
+//
+//    // correct id if below zero
+//    if (id < 0)
+//        figure_ids_array[i] = 0;
+//
+//    return figure_ids_array[i];
+//}
+figure *building::get_figure(int i) {
+    return figure_get(get_figureID(i));
+}
+
+void building::set_figure(int i, int figure_id) {
+//    // correct index if out of bounds
+//    if (i < 0)
+//        i = 0;
+//    if (i >= MAX_FIGURES_PER_BUILDING)
+//        i = MAX_FIGURES_PER_BUILDING - 1;
+
+//    // correct id if below zero
+//    if (id < 0)
+//        figure_id = 0;
+
+    figure_ids_array[i] = figure_id;
+}
+void building::set_figure(int i, figure *f) {
+//    if (f == nullptr)
+//        return;
+    set_figure(i, f->id);
+}
+void building::remove_figure(int i) {
+    set_figure(i, 0);
+}
+
+bool building::has_figure(int i, int figure_id) {
+    // seatrch through all the figures if index is -1
+    if (i == -1) {
+        bool has_any = false;
+        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++)
+            if (has_figure(i, figure_id))
+                has_any = true;
+        return has_any;
+    } else {
+
+        // only check if there is a figure
+        if (figure_id < 0)
+            return (get_figureID(i) > 0);
+
+        figure *f = get_figure(i);
+        if (f->state && f->home() == this) { // check if figure belongs to this building...
+            return (f->id == figure_id);
+        } else { // decouple if figure does not belong to this building - assume cache is incorrect
+            remove_figure(i);
+            return false;
+        }
+    }
+}
+bool building::has_figure(int i, figure *f) {
+    return has_figure(i, f->id);
+}
+bool building::has_figure_of_type(int i, int _type) {
+    // seatrch through all the figures if index is -1
+    if (i == -1) {
+        bool has_any = false;
+        for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++)
+            if (get_figure(i)->type == _type)
+                has_any = true;
+        return has_any;
+    }
+    else
+        return (get_figure(i)->type == _type);
+}
+
 static int worker_percentage(const building *b) {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
 }
@@ -73,7 +151,7 @@ static void spawn_labor_seeker(building *b, int x, int y, int min_houses) {
     } else if (b->houses_covered <= min_houses) {
 //        if (b->figure_2 != nullptr) { // no figure slot available!
 //            return;
-        if (b->figure_id2 != 0) { // no figure slot available!
+        if (b->has_figure(1)) { // no figure slot available!
             return;
 //        figure *f = figure_get(b->figure_id2);
 //        if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->building_id != b->id)
@@ -83,53 +161,6 @@ static void spawn_labor_seeker(building *b, int x, int y, int min_houses) {
     }
 }
 
-bool building::has_figure(int type, int type2) {
-    if (figure_id <= 0)
-        return 0;
-
-    figure *f = figure_get(figure_id);
-    if (f->state && f->home() == this && (f->type == type || f->type == type2))
-        return 1;
-    else {
-        figure_id = 0;
-        return 0;
-    }
-
-    // TODO: TEMP
-//    if (figure_1 == nullptr)
-//        return false;
-//
-//    if (figure_1->state && figure_1->home == this && (figure_1->type == type || figure_1->type == type2))
-//        return true;
-//
-//    figure_1 = nullptr; // decouple if incorrect
-//    return false;
-}
-bool building::has_extra_figure(int type, int type2) {
-    if (figure_id2 <= 0)
-        return 0;
-
-    figure *f = figure_get(figure_id2);
-    if (f->state && f->home() == this && (f->type == type || f->type == type2))
-        return 1;
-    else {
-        figure_id2 = 0;
-        return 0;
-    }
-
-    // TODO: TEMP
-//    if (figure_2 == nullptr)
-//        return false;
-//
-//    if (figure_2->state && figure_2->home == this && (figure_2->type == type || figure_2->type == type2))
-//        return true;
-//
-//    figure_2 = nullptr; // decouple if incorrect
-//    return false;
-}
-bool building::has_any_figure(int type, int type2) {
-    return (has_figure(type, type2) || has_extra_figure(type, type2));
-}
 
 //static int has_figure_of_types(building *b, int type1, int type2) {
 //    if (b->figure_id <= 0)
@@ -147,9 +178,9 @@ bool building::has_any_figure(int type, int type2) {
 //    return has_figure_of_types(b, type, 0);
 //}
 
-bool building::common_spawn_figure_trigger(int type, int delay_shift) {
+bool building::common_spawn_figure_trigger(int _type, int delay_shift) {
     check_labor_problem(this);
-    if (has_figure(type))
+    if (has_figure_of_type(0, _type))
         return false;
     if (road_is_accessible) {
         spawn_labor_seeker(this, road_access_x, road_access_y, 100);
@@ -164,49 +195,36 @@ bool building::common_spawn_figure_trigger(int type, int delay_shift) {
         }
     }
 }
-figure *building::create_roaming_figure(int type, int created_action, bool extra) {
-    figure *f = figure_create(type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
+figure *building::create_roaming_figure(int _type, int created_action, int slot) {
+    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
     f->action_state = created_action;
     f->set_home(id);
     f->set_destination(0);
     f->set_immigrant_home(0);
 
-    if (!extra)
-        figure_id = f->id;
-//        figure_1 = f;
-    else
-        figure_id2 = f->id;
-//        figure_2 = f;
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->init_roaming();
     return f;
 }
-figure *building::create_figure_with_destination(int type, building *destination, int created_action, bool extra) {
-    figure *f = figure_create(type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
+figure *building::create_figure_with_destination(int _type, building *destination, int created_action, int slot) {
+    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
     f->action_state = created_action;
     f->set_home(id);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
-    if (!extra)
-        figure_id = f->id;
-//        figure_1 = f;
-    else
-        figure_id2 = f->id;
-//        figure_2 = f;
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
 }
-figure *building::create_cartpusher(int goods, int quantity, int created_action, bool extra) {
+figure *building::create_cartpusher(int goods, int quantity, int created_action, int slot) {
     figure *f = figure_create(FIGURE_CART_PUSHER, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
     f->action_state = created_action;
     f->load_resource(quantity, goods);
     f->set_home(id);
     f->set_destination(0);
     f->set_immigrant_home(0);
-    if (!extra)
-        figure_id = f->id;
-//        figure_1 = f;
-    else
-        figure_id2 = f->id;
-//        figure_2 = f;
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->wait_ticks = 30;
 }
 
@@ -321,7 +339,7 @@ static void spawn_figure_hippodrome(building *b) {
 //            part->show_on_problem_overlay = b->show_on_problem_overlay;
 //
 //    }
-//    if (b->has_figure(FIGURE_CHARIOTEER))
+//    if (b->has_figure_of_type(FIGURE_CHARIOTEER))
 //        return;
 //    map_point road;
 //    if (map_has_road_access_hippodrome_rotation(b->x, b->y, &road, b->subtype.orientation)) {
@@ -454,7 +472,7 @@ static void spawn_figure_market(building *b) {
             return;
         // TODO: coalesce the trader and buyer into a single slot?
         // market trader
-        if (!b->has_figure(FIGURE_MARKET_TRADER) && !b->has_extra_figure(FIGURE_MARKET_BUYER)) {
+        if (!b->has_figure_of_type(0, FIGURE_MARKET_TRADER) && !b->has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             b->figure_spawn_delay++;
             if (b->figure_spawn_delay > spawn_delay) {
                 b->figure_spawn_delay = 0;
@@ -463,7 +481,7 @@ static void spawn_figure_market(building *b) {
             }
         }
         // market buyer
-        if (!b->has_figure(FIGURE_MARKET_TRADER) && !b->has_extra_figure(FIGURE_LABOR_SEEKER, FIGURE_MARKET_BUYER)) {
+        if (!b->has_figure_of_type(0, FIGURE_MARKET_TRADER) && !b->has_figure_of_type(1, FIGURE_LABOR_SEEKER) && !b->has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             building *dest = building_get(building_market_get_storage_destination(b));
             if (dest->id) {
                 figure *f = b->create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
@@ -525,7 +543,7 @@ static void spawn_figure_bathhouse(building *b) {
 }
 static void spawn_figure_school(building *b) {
     check_labor_problem(b);
-    if (b->has_figure(FIGURE_SCHOOL_CHILD))
+    if (b->has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
         return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -540,8 +558,7 @@ static void spawn_figure_school(building *b) {
             figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
             child1->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(b->id);
-            b->figure_id = child1->id;
-//            b->figure_1 = child1;
+            b->set_figure(0, child1->id); // first "child" (teacher) is the coupled figure to the school building
             child1->init_roaming();
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
@@ -564,7 +581,7 @@ static void spawn_figure_school(building *b) {
 static void spawn_figure_library(building *b) {
     common_spawn_roamer(b, FIGURE_LIBRARIAN);
     check_labor_problem(b);
-//    if (b->has_figure(FIGURE_LIBRARIAN))
+//    if (b->has_figure_of_type(FIGURE_LIBRARIAN))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -581,7 +598,7 @@ static void spawn_figure_library(building *b) {
 }
 static void spawn_figure_academy(building *b) {
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_TEACHER))
+//    if (b->has_figure_of_type(FIGURE_TEACHER))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -599,7 +616,7 @@ static void spawn_figure_academy(building *b) {
 static void spawn_figure_barber(building *b) {
     common_spawn_roamer(b, FIGURE_BARBER);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_BARBER))
+//    if (b->has_figure_of_type(FIGURE_BARBER))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -617,7 +634,7 @@ static void spawn_figure_barber(building *b) {
 static void spawn_figure_doctor(building *b) {
     common_spawn_roamer(b, FIGURE_DOCTOR);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_DOCTOR))
+//    if (b->has_figure_of_type(FIGURE_DOCTOR))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -635,7 +652,7 @@ static void spawn_figure_doctor(building *b) {
 static void spawn_figure_hospital(building *b) {
     common_spawn_roamer(b, FIGURE_SURGEON);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_SURGEON))
+//    if (b->has_figure_of_type(FIGURE_SURGEON))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -653,7 +670,7 @@ static void spawn_figure_hospital(building *b) {
 static void spawn_figure_physician(building *b) {
     common_spawn_roamer(b, FIGURE_BATHHOUSE_WORKER);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_BATHHOUSE_WORKER))
+//    if (b->has_figure_of_type(FIGURE_BATHHOUSE_WORKER))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -671,7 +688,7 @@ static void spawn_figure_physician(building *b) {
 static void spawn_figure_magistrate(building *b) {
     common_spawn_roamer(b, FIGURE_MAGISTRATE);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_MAGISTRATE))
+//    if (b->has_figure_of_type(FIGURE_MAGISTRATE))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -689,7 +706,7 @@ static void spawn_figure_magistrate(building *b) {
 static void spawn_figure_temple(building *b) {
     common_spawn_roamer(b, FIGURE_PRIEST);
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_PRIEST) ||
+//    if (b->has_figure_of_type(FIGURE_PRIEST) ||
 //        (building_is_large_temple(b->type) && b->prev_part_building_id)) {
 //        return;
 //    }
@@ -739,7 +756,7 @@ static void spawn_figure_watersupply(building *b) {
 //    set_water_supply_graphic(b);
 
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_WATER_CARRIER))
+//    if (b->has_figure_of_type(FIGURE_WATER_CARRIER))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -787,7 +804,7 @@ static void spawn_figure_tax_collector(building *b) {
     common_spawn_roamer(b, FIGURE_TAX_COLLECTOR);
 
 //    check_labor_problem(b);
-//    if (b->has_figure(FIGURE_TAX_COLLECTOR))
+//    if (b->has_figure_of_type(FIGURE_TAX_COLLECTOR))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -818,7 +835,7 @@ static void spawn_figure_tax_collector(building *b) {
 }
 static void spawn_figure_senate(building *b) {
     check_labor_problem(b);
-//    if (b->has_figure(FIGURE_MAGISTRATE))
+//    if (b->has_figure_of_type(FIGURE_MAGISTRATE))
 //        return;
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -834,7 +851,7 @@ static void spawn_figure_senate(building *b) {
     }
 }
 static void spawn_figure_mission_post(building *b) {
-//    if (b->has_figure(FIGURE_MISSIONARY))
+//    if (b->has_figure_of_type(FIGURE_MISSIONARY))
 //        return;
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -860,7 +877,7 @@ static void spawn_figure_industry(building *b) {
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (b->labor_category != 255) { // normal farms
             spawn_labor_seeker(b, road.x, road.y, 50);
-            if (b->has_figure(FIGURE_CART_PUSHER))
+            if (b->has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
             if (building_industry_has_produced_resource(b)) {
                 building_industry_start_new_production(b);
@@ -875,7 +892,7 @@ static void spawn_figure_industry(building *b) {
 //                f->wait_ticks = 30;
             }
         } else { // floodplain farms!!
-            if (b->has_figure(FIGURE_CART_PUSHER))
+            if (b->has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
             if (building_industry_has_produced_resource(b)) {
                 b->create_cartpusher(b->output_resource_id, b->data.industry.progress / 2.5);
@@ -908,7 +925,7 @@ static void spawn_figure_wharf(building *b) {
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
 //        spawn_labor_seeker(b, road.x, road.y, 50);
-//        if (b->has_figure(FIGURE_CART_PUSHER))
+//        if (b->has_figure_of_type(FIGURE_CART_PUSHER))
 //            return;
 //        if (b->figure_spawn_delay) {
 //            b->figure_spawn_delay = 0;
@@ -928,7 +945,7 @@ static void spawn_figure_shipyard(building *b) {
 //    map_point road;
 //    if (map_has_road_access(b->x, b->y, b->size, &road)) {
 //        spawn_labor_seeker(b, road.x, road.y, 50);
-//        if (b->has_figure(FIGURE_FISHING_BOAT))
+//        if (b->has_figure_of_type(FIGURE_FISHING_BOAT))
 //            return;
 //        int pct_workers = worker_percentage(b);
 //        if (pct_workers >= 100)
@@ -1014,7 +1031,7 @@ static void spawn_figure_warehouse(building *b) {
     if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, &road) ||
         map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (b->has_figure(FIGURE_WAREHOUSEMAN))
+        if (b->has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
         int resource = 0;
         int amount = 0;
@@ -1033,7 +1050,7 @@ static void spawn_figure_warehouse(building *b) {
                 else // getting
                     f->load_resource(0, resource);
             }
-            b->figure_id = f->id;
+            b->set_figure(0, f->id);
             f->set_home(b->id);
         }
     }
@@ -1043,14 +1060,14 @@ static void spawn_figure_granary(building *b) {
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) { //map_has_road_access_granary(b->x, b->y, &road)
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (b->has_figure(FIGURE_WAREHOUSEMAN))
+        if (b->has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
         int task = building_granary_determine_worker_task(b);
         if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             f->load_resource(0, task);
-            b->figure_id = f->id;
+            b->set_figure(0, f->id);
             f->set_home(b->id);
         }
     }
@@ -1110,7 +1127,7 @@ static void spawn_figure_hunting_lodge(building *b) {
 //            f->wait_ticks = 30;
 //            f->loads_counter = 1;
         }
-        if (b->has_figure(FIGURE_CART_PUSHER))
+        if (b->has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
         if (b->loads_stored) {
             figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
@@ -1119,7 +1136,7 @@ static void spawn_figure_hunting_lodge(building *b) {
             b->loads_stored -= loads_to_carry;
             f->load_resource(loads_to_carry * 100, RESOURCE_GAMEMEAT);
             f->set_home(b->id);
-            b->figure_id = f->id;
+            b->set_figure(0, f->id);
             f->wait_ticks = 30;
         }
     }
@@ -1127,7 +1144,7 @@ static void spawn_figure_hunting_lodge(building *b) {
 
 static void spawn_figure_native_hut(building *b) {
 //    map_image_set(b->grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->grid_offset) & 1));
-//    if (b->has_figure(FIGURE_INDIGENOUS_NATIVE))
+//    if (b->has_figure_of_type(FIGURE_INDIGENOUS_NATIVE))
 //        return;
 //    int x_out, y_out;
 //    if (b->subtype.native_meeting_center_id > 0 &&
@@ -1145,7 +1162,7 @@ static void spawn_figure_native_hut(building *b) {
 static void spawn_figure_native_meeting(building *b) {
 //    map_building_tiles_add(b->id, b->x, b->y, 2,
 //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
-//    if (city_buildings_is_mission_post_operational() && !b->has_figure(FIGURE_NATIVE_TRADER)) {
+//    if (city_buildings_is_mission_post_operational() && !b->has_figure_of_type(FIGURE_NATIVE_TRADER)) {
 //        int x_out, y_out;
 //        if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {
 //            b->figure_spawn_delay++;
@@ -1167,14 +1184,13 @@ static void spawn_figure_tower(building *b) {
         spawn_labor_seeker(b, road.x, road.y, 50);
         if (b->num_workers <= 0)
             return;
-        if (!b->figure_id4 && b->figure_id) { // has sentry but no ballista -> create
+        if (b->has_figure(0) && !b->has_figure(3)) { // has sentry but no ballista -> create
             figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP_RIGHT);
-            b->figure_id4 = f->id;
+            b->set_figure(3, f->id);
             f->set_home(b->id);
             f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
         }
-        b->has_figure(FIGURE_TOWER_SENTRY);
-        if (b->figure_id <= 0)
+        if (!b->has_figure(0))
             building_barracks_request_tower_sentry();
 
     }

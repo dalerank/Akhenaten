@@ -333,7 +333,7 @@ void figure::action_perform() {
             case FIGURE_BARBER:
             case FIGURE_WATER_CARRIER:
             case FIGURE_PRIEST:
-                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+                if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id))
                     poof();
                 break;
             case FIGURE_HUNTER:
@@ -343,18 +343,18 @@ void figure::action_perform() {
             case FIGURE_CART_PUSHER:
                 if (has_destination())
                     break;
-                if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || b->figure_id != id))
+                if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)))
                     poof();
                 break;
             case FIGURE_WAREHOUSEMAN:
                 if (has_destination())
                     break;
-                if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
+                if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id))
                     poof();
                 break;
             case FIGURE_LABOR_SEEKER:
             case FIGURE_MARKET_BUYER:
-                if (b->state != BUILDING_STATE_VALID || b->figure_id2 != id)
+                if (b->state != BUILDING_STATE_VALID || !b->has_figure(1, id))
                     poof();
                 break;
             case FIGURE_DELIVERY_BOY:

@@ -80,7 +80,7 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
-    int forbidden_terrain_mask = // todo: ore rock/inundable lands
+    int forbidden_terrain_mask = // todo: ore rock
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
             TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
