@@ -470,24 +470,21 @@ static void spawn_figure_market(building *b) {
             spawn_delay = 30;
         else
             return;
-        // TODO: coalesce the trader and buyer into a single slot?
-        // market trader
-        if (!b->has_figure_of_type(0, FIGURE_MARKET_TRADER) && !b->has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
-            b->figure_spawn_delay++;
-            if (b->figure_spawn_delay > spawn_delay) {
-                b->figure_spawn_delay = 0;
-                b->create_roaming_figure(FIGURE_MARKET_TRADER);
-                return;
-            }
-        }
-        // market buyer
-        if (!b->has_figure_of_type(0, FIGURE_MARKET_TRADER) && !b->has_figure_of_type(1, FIGURE_LABOR_SEEKER) && !b->has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
+        if (!b->has_figure_of_type(0, FIGURE_MARKET_TRADER) && !b->has_figure_of_type(0, FIGURE_MARKET_BUYER)) {
+            // market buyer
             building *dest = building_get(building_market_get_storage_destination(b));
             if (dest->id) {
-                figure *f = b->create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
-                                                              FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, true);
-
+                figure *f = b->create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE);
                 f->collecting_item_id = b->data.market.fetch_inventory_id;
+            }
+            else {
+                // market trader
+                b->figure_spawn_delay++;
+                if (b->figure_spawn_delay > spawn_delay) {
+                    b->figure_spawn_delay = 0;
+                    b->create_roaming_figure(FIGURE_MARKET_TRADER);
+                    return;
+                }
             }
         }
     }
