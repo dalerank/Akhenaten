@@ -39,23 +39,9 @@ const int generic_delay_table[] = {
         44
 };
 
-//const int building::get_figureID(int i) {
-////    // correct index if out of bounds
-////    if (i < 0)
-////        i = 0;
-////    if (i >= MAX_FIGURES_PER_BUILDING)
-////        i = MAX_FIGURES_PER_BUILDING - 1;
-//
-//    // correct id if below zero
-//    if (id < 0)
-//        figure_ids_array[i] = 0;
-//
-//    return figure_ids_array[i];
-//}
 figure *building::get_figure(int i) {
     return figure_get(get_figureID(i));
 }
-
 void building::set_figure(int i, int figure_id) {
 //    // correct index if out of bounds
 //    if (i < 0)
@@ -77,7 +63,6 @@ void building::set_figure(int i, figure *f) {
 void building::remove_figure(int i) {
     set_figure(i, 0);
 }
-
 bool building::has_figure(int i, int figure_id) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
@@ -115,6 +100,45 @@ bool building::has_figure_of_type(int i, int _type) {
     }
     else
         return (get_figure(i)->type == _type);
+}
+
+figure *building::create_roaming_figure(int _type, int created_action, int slot) {
+    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
+    f->action_state = created_action;
+    f->set_home(id);
+    f->set_destination(0);
+    f->set_immigrant_home(0);
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    f->init_roaming_from_building(figure_roam_direction);
+
+    // update building to have a different roamer direction for next time
+    figure_roam_direction += 2;
+    if (figure_roam_direction > 6)
+        figure_roam_direction = 0;
+
+    return f;
+}
+figure *building::create_figure_with_destination(int _type, building *destination, int created_action, int slot) {
+    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
+    f->action_state = created_action;
+    f->set_home(id);
+    f->set_destination(destination->id);
+    f->set_immigrant_home(0);
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    return f;
+}
+figure *building::create_cartpusher(int goods, int quantity, int created_action, int slot) {
+    figure *f = figure_create(FIGURE_CART_PUSHER, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+    f->action_state = created_action;
+    f->load_resource(quantity, goods);
+    f->set_home(id);
+    f->set_destination(0);
+    f->set_immigrant_home(0);
+
+    set_figure(slot, f->id); // warning: this overwrites any existing figure!
+    f->wait_ticks = 30;
 }
 
 static int worker_percentage(const building *b) {
@@ -161,23 +185,6 @@ static void spawn_labor_seeker(building *b, int x, int y, int min_houses) {
     }
 }
 
-
-//static int has_figure_of_types(building *b, int type1, int type2) {
-//    if (b->figure_id <= 0)
-//        return 0;
-//
-//    figure *f = figure_get(b->figure_id);
-//    if (f->state && f->building_id == b->id && (f->type == type1 || f->type == type2))
-//        return 1;
-//    else {
-//        b->figure_id = 0;
-//        return 0;
-//    }
-//}
-//static int has_figure_of_type(building *b, int type) {
-//    return has_figure_of_types(b, type, 0);
-//}
-
 bool building::common_spawn_figure_trigger(int _type, int delay_shift) {
     check_labor_problem(this);
     if (has_figure_of_type(0, _type))
@@ -194,44 +201,6 @@ bool building::common_spawn_figure_trigger(int _type, int delay_shift) {
             return true;
         }
     }
-}
-figure *building::create_roaming_figure(int _type, int created_action, int slot) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
-    f->action_state = created_action;
-    f->set_home(id);
-    f->set_destination(0);
-    f->set_immigrant_home(0);
-
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    f->init_roaming_from_building(figure_roam_direction);
-
-    // update building to have a different roamer direction for next time
-    figure_roam_direction += 2;
-    if (figure_roam_direction > 6)
-        figure_roam_direction = 0;
-
-    return f;
-}
-figure *building::create_figure_with_destination(int _type, building *destination, int created_action, int slot) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
-    f->action_state = created_action;
-    f->set_home(id);
-    f->set_destination(destination->id);
-    f->set_immigrant_home(0);
-
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    return f;
-}
-figure *building::create_cartpusher(int goods, int quantity, int created_action, int slot) {
-    figure *f = figure_create(FIGURE_CART_PUSHER, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
-    f->action_state = created_action;
-    f->load_resource(quantity, goods);
-    f->set_home(id);
-    f->set_destination(0);
-    f->set_immigrant_home(0);
-
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    f->wait_ticks = 30;
 }
 
 static void spawn_figure_labor_seeker_only(building *b, int min_houses = 100) {
@@ -1101,7 +1070,6 @@ static bool can_spawn_hunter(building *b) { // no cache because fuck the system 
         return true;
     return false;
 }
-
 static void spawn_figure_hunting_lodge(building *b) {
     check_labor_problem(b);
     map_point road;

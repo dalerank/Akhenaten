@@ -2,7 +2,6 @@
 #include <figure/formation_herd.h>
 #include "construction.h"
 
-#include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_routed.h"
 #include "building/construction_warning.h"
