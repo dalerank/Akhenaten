@@ -77,10 +77,10 @@ public:
     short routing_path_current_tile;
     short routing_path_length;
     unsigned char in_building_wait_ticks;
-    unsigned char is_on_road;
+    unsigned char outside_road_ticks;
     short max_roam_length;
     short roam_length;
-    unsigned char roam_choose_destination;
+    unsigned char roam_wander_freely;
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
@@ -203,6 +203,8 @@ public:
     bool has_destination(int _id = -1);
     bool has_destination(building *b);
 
+//    bool is_roamer();
+
     // map/figure.c
     void map_figure_add();
     void map_figure_update();
@@ -236,9 +238,9 @@ public:
     void set_target_height_bridge();
     int get_permission_for_int();
     void move_to_next_tile();
-    void set_next_route_tile_direction();
+    void set_next_tile_and_direction();
     void advance_route_tile(int roaming_enabled);
-    void init_roaming();
+    void init_roaming_from_building(int roam_dir);
     void roam_set_direction();
     void move_ticks(int num_ticks, int roaming_enabled = false);
     void move_ticks_tower_sentry(int num_ticks);

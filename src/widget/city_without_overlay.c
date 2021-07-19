@@ -4,6 +4,7 @@
 #include <game/tutorial.h>
 #include <graphics/graphics.h>
 #include <map/routing.h>
+#include <map/road_network.h>
 #include "city_without_overlay.h"
 
 #include "building/animation.h"
@@ -757,9 +758,11 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
-//        d = map_terrain_get(grid_offset);
-//            if (d & TERRAIN_BUILDING)
-//                text_draw_shadow((uint8_t *) string_from_ascii("b"), x + 30, y + 15, COLOR_WHITE);
+//        d = map_road_network_get(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
+//        }
 
 //        d = map_terrain_get(grid_offset);
 //            if (d & TERRAIN_BUILDING)
@@ -792,7 +795,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-//        f->draw_debug();
+        f->draw_debug();
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
         else

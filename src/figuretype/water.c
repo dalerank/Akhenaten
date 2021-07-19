@@ -72,12 +72,12 @@ void figure::flotsam_action() {
     is_boat = 2;
     if (!scenario_map_has_river_exit())
         return;
-    is_ghost = 0;
+//    is_ghost = 0;
     cart_image_id = 0;
     terrain_usage = TERRAIN_USAGE_ANY;
     switch (action_state) {
         case FIGURE_ACTION_128_FLOTSAM_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
@@ -97,16 +97,16 @@ void figure::flotsam_action() {
                 flotsam_visible = 1;
                 wait_ticks++;
                 move_ticks(1);
-                is_ghost = 0;
+//                is_ghost = 0;
                 height_adjusted_ticks = 0;
                 if (direction == DIR_FIGURE_AT_DESTINATION ||
-                    direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+                    direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
                     action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
                 }
             }
             break;
         case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
-            is_ghost = 1;
+//            is_ghost = 1;
             min_max_seen = 0;
             action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
             if (wait_ticks >= 400)
@@ -234,7 +234,7 @@ void figure::fishing_boat_action() {
                     action_state = FIGURE_ACTION_192_FISHING_BOAT_FISHING;
                     wait_ticks = 0;
                 }
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
                 destination_x = source_x;
                 destination_y = source_y;
@@ -258,7 +258,7 @@ void figure::fishing_boat_action() {
                 wait_ticks = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST) {
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 // cannot reach grounds
                 city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
                 poof();
@@ -295,7 +295,7 @@ void figure::fishing_boat_action() {
                 b->data.industry.has_fish++;
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;

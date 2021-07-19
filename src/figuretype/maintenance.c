@@ -271,7 +271,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 route_remove();
                 roam_length = 0;
                 wait_ticks = 50;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
@@ -296,7 +296,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 destination_x = target->tile_x;
                 destination_y = target->tile_y;
                 route_remove();
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             break;
     }
@@ -340,7 +340,7 @@ void figure::policeman_action() {
     building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_70_PREFECT_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
@@ -356,21 +356,21 @@ void figure::policeman_action() {
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             use_cross_country = 1;
-            is_ghost = 1;
+//            is_ghost = 1;
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == homeID()) {
                     // returned to own building
                     poof();
                 } else {
                     action_state = FIGURE_ACTION_72_PREFECT_ROAMING;
-                    init_roaming();
+                    init_roaming_from_building(0);
                     roam_length = 0;
                 }
             }
             break;
         case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
-            is_ghost = 0;
+//            is_ghost = 0;
             roam_length++;
             if (roam_length >= max_roam_length) {
                 int x_road, y_road;
@@ -391,7 +391,7 @@ void figure::policeman_action() {
                 action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
@@ -413,7 +413,7 @@ void figure::policeman_action() {
                 destination_x = target->tile_x;
                 destination_y = target->tile_y;
                 route_remove();
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             break;
     }

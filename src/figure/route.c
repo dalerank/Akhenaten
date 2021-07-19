@@ -41,6 +41,10 @@ static int get_first_available(void) {
 }
 
 void figure::figure_route_add() {
+
+    if (type == 87)
+        int a = 24;
+
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;

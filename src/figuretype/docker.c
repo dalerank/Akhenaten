@@ -369,7 +369,7 @@ void figure::docker_action() {
                 action_state = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             if (destination()->state != BUILDING_STATE_VALID)
@@ -383,7 +383,7 @@ void figure::docker_action() {
                 action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             if (destination()->state != BUILDING_STATE_VALID)
@@ -398,7 +398,7 @@ void figure::docker_action() {
                 wait_ticks = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             if (destination()->state != BUILDING_STATE_VALID)
@@ -412,7 +412,7 @@ void figure::docker_action() {
                 action_state = FIGURE_ACTION_132_DOCKER_IDLING;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;

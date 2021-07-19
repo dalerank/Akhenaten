@@ -1,3 +1,4 @@
+#include <map/road_network.h>
 #include "movement.h"
 
 #include "building/building.h"
@@ -53,7 +54,7 @@ void figure::advance_tick() {
     if (height_adjusted_ticks) {
         height_adjusted_ticks--;
         if (height_adjusted_ticks > 0) {
-            is_ghost = 1;
+//            is_ghost = 1;
             if (current_height < target_height)
                 current_height++;
 
@@ -61,7 +62,7 @@ void figure::advance_tick() {
                 current_height--;
 
         } else {
-            is_ghost = 0;
+//            is_ghost = 0;
         }
     } else {
         if (current_height)
@@ -110,7 +111,7 @@ int figure::get_permission_for_int() {
 void figure::move_to_next_tile() {
     int old_x = tile_x;
     int old_y = tile_y;
-    map_figure_remove();
+    map_figure_remove(); // is this necessary??? maybe could be refactored in the future...
     switch (direction) {
         default:
             return;
@@ -145,31 +146,35 @@ void figure::move_to_next_tile() {
     }
     grid_offset_figure += map_grid_direction_delta(direction);
     map_figure_add();
-    if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) {
-        is_on_road = 1;
-        if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) { // bridge
-            set_target_height_bridge();
-        }
-    } else {
-        is_on_road = 0;
-    }
+//    if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) {
+//        is_on_road = 1;
+//        if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) { // bridge
+//            set_target_height_bridge();
+//        }
+//    } else {
+//        is_on_road = 0;
+//    }
     figure_combat_attack_figure_at(grid_offset_figure);
     previous_tile_x = old_x;
     previous_tile_y = old_y;
 }
 
-void figure::set_next_route_tile_direction() {
-    if (routing_path_id > 0) {
-        if (routing_path_current_tile < routing_path_length)
+void figure::set_next_tile_and_direction() {
+    if (routing_path_id > 0) { // has a path generated for its destination
+        if (routing_path_current_tile < routing_path_length) // advance to next tile in path
             direction = figure_route_get_direction(routing_path_id, routing_path_current_tile);
-        else {
+        else { // at destination!!
             route_remove();
             direction = DIR_FIGURE_AT_DESTINATION;
         }
-    } else { // should be at destination
+    } else { // no path possible - should be at destination
         direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
-//        if (direction != DIR_FIGURE_AT_DESTINATION)
-//            direction = DIR_FIGURE_LOST;
+        if (direction != DIR_FIGURE_AT_DESTINATION) {
+            if (!roam_wander_freely) // this is because the road network was cutoff from the "randomized direction" target
+                roam_wander_freely = 1;
+            else // all other cases
+                direction = DIR_FIGURE_CAN_NOT_REACH;
+        }
     }
 }
 void figure::advance_route_tile(int roaming_enabled) {
@@ -253,7 +258,7 @@ void figure::move_ticks(int num_ticks, int roaming_enabled) {
             if (routing_path_id <= 0)
                 figure_route_add();
 
-            set_next_route_tile_direction();
+            set_next_tile_and_direction();
             advance_route_tile(roaming_enabled);
             if (direction >= 8)
                 break;
@@ -267,41 +272,42 @@ void figure::move_ticks(int num_ticks, int roaming_enabled) {
     }
 }
 
-void figure::init_roaming() {
-    building *b = home();
+void figure::init_roaming_from_building(int roam_dir) {
     progress_on_tile = 15;
-    roam_choose_destination = 0;
+    roam_wander_freely = 0;
     roam_ticks_until_next_turn = -1;
     roam_turn_direction = 2;
-    int roam_dir = b->figure_roam_direction;
-    b->figure_roam_direction += 2;
-    if (b->figure_roam_direction > 6)
-        b->figure_roam_direction = 0;
 
-    int x = b->x;
-    int y = b->y;
+    // randomize a search area in a general direction to send off roamers to
+    building *b = home();
+    int offset_search_x = b->x;
+    int offset_search_y = b->y;
     switch (roam_dir) {
         case DIR_0_TOP_RIGHT:
-            y -= 8;
+            offset_search_y -= 8;
             break;
         case DIR_2_BOTTOM_RIGHT:
-            x += 8;
+            offset_search_x += 8;
             break;
         case DIR_4_BOTTOM_LEFT:
-            y += 8;
+            offset_search_y += 8;
             break;
         case DIR_6_TOP_LEFT:
-            x -= 8;
+            offset_search_x -= 8;
             break;
     }
-    map_grid_bound(&x, &y);
+
+    // look for a road within the search area
+    map_grid_bound(&offset_search_x, &offset_search_y);
     int x_road, y_road;
-    if (map_closest_road_within_radius(x, y, 1, 6, &x_road, &y_road)) {
+    int found_road = map_closest_road_within_radius(offset_search_x, offset_search_y, 1, 6, &x_road, &y_road);
+    int road_network_original = map_road_network_get(map_grid_offset(tile_x, tile_y));
+    int road_network_found = map_road_network_get(map_grid_offset(x_road, y_road));
+    if (found_road && road_network_original == road_network_found) { // must be in the same network!!
         destination_x = x_road;
         destination_y = y_road;
-    } else {
-        roam_choose_destination = 1;
-    }
+    } else
+        roam_wander_freely = 1; // no road found within bounds, roam freely
 }
 void figure::roam_set_direction() {
     int grid_offset = map_grid_offset(tile_x, tile_y);
@@ -381,17 +387,15 @@ void figure::follow_ticks(int num_ticks) {
     }
 }
 void figure::roam_ticks(int num_ticks) {
-//    routing_path_id = 0;
-    route_remove();
-    if (roam_choose_destination == 0) {
+    route_remove(); // refresh path to check if road network is disconnected
+    if (roam_wander_freely == 0) {
         move_ticks(num_ticks, true);
         if (direction == DIR_FIGURE_AT_DESTINATION) {
-            roam_choose_destination = 1;
-//            roam_length = 0;
+            roam_wander_freely = 1;
         } else if (direction == DIR_FIGURE_REROUTE)
-            roam_choose_destination = 1;
+            roam_wander_freely = 1;
 
-        if (roam_choose_destination) {
+        if (roam_wander_freely) { // keep going in same direction until turn
             roam_ticks_until_next_turn = 100;
             direction = previous_tile_direction;
         } else

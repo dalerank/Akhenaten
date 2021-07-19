@@ -193,7 +193,7 @@ void figure::tower_sentry_action() {
     building *b = home();
 //    terrain_usage = TERRAIN_USAGE_WALLS;
 //    use_cross_country = 0;
-    is_ghost = 1;
+//    is_ghost = 1;
     height_adjusted_ticks = 10;
 //    max_roam_length = 800;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
@@ -224,7 +224,7 @@ void figure::tower_sentry_action() {
                 destination_x = source_x;
                 destination_y = source_y;
                 route_remove();
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
 
             break;
@@ -251,7 +251,7 @@ void figure::tower_sentry_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION)
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-            else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
@@ -261,7 +261,7 @@ void figure::tower_sentry_action() {
                 terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
 
-            is_ghost = 0;
+//            is_ghost = 0;
             height_adjusted_ticks = 0;
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {
@@ -272,7 +272,7 @@ void figure::tower_sentry_action() {
                 map_figure_add();
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 route_remove();
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;

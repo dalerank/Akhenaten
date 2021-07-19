@@ -103,7 +103,7 @@ void figure::enemy_marching(const formation *m) {
     move_ticks(speed_multiplier);
     if (direction == DIR_FIGURE_AT_DESTINATION ||
         direction == DIR_FIGURE_REROUTE ||
-        direction == DIR_FIGURE_LOST) {
+        direction == DIR_FIGURE_CAN_NOT_REACH) {
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
     }
 }
@@ -146,7 +146,7 @@ void figure::enemy_fighting(const formation *m) {
             destination_x = target->tile_x;
             destination_y = target->tile_y;
             route_remove();
-        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+        } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             target_figure_id = 0;
         }
@@ -168,7 +168,7 @@ void figure::enemy_action(formation *m) {
             move_ticks(speed_multiplier);
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_LOST) {
+                direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
             }
             break;
@@ -535,7 +535,7 @@ void figure::enemy_gladiator_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_LOST) {
+                direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_158_NATIVE_CREATED;
             }
             break;

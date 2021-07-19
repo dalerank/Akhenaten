@@ -227,7 +227,7 @@ void figure::rioter_action() {
                 } else {
                     poof();
                 }
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_120_RIOTER_CREATED;
                 route_remove();
             } else if (direction == DIR_FIGURE_ATTACK) {

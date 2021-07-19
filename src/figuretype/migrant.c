@@ -98,7 +98,7 @@ void figure::immigrant_action() {
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0)
@@ -111,7 +111,7 @@ void figure::immigrant_action() {
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
             if (do_enterbuilding(false, immigrant_home()))
                 add_house_population(b, migrant_num_people);
-            is_ghost = in_building_wait_ticks ? 1 : 0;
+//            is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
     }
     update_direction_and_image();
@@ -119,7 +119,7 @@ void figure::immigrant_action() {
 void figure::emigrant_action() {
     switch (action_state) {
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             anim_frame = 0;
             wait_ticks++;
             if (wait_ticks >= 5)
@@ -127,7 +127,7 @@ void figure::emigrant_action() {
             break;
         case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
             do_exitbuilding(false, FIGURE_ACTION_6_EMIGRANT_LEAVING);
-            is_ghost = in_building_wait_ticks ? 1 : 0;
+//            is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case FIGURE_ACTION_6_EMIGRANT_LEAVING:
             const map_tile *exit = city_map_entry_point();
@@ -162,7 +162,7 @@ void figure::homeless_action() {
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
             if (do_enterbuilding(false, immigrant_home()))
                 add_house_population(immigrant_home(), migrant_num_people);
-            is_ghost = in_building_wait_ticks ? 1 : 0;
+//            is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_10_HOMELESS_LEAVING:

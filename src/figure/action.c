@@ -163,14 +163,12 @@ void figure::advance_action(short NEXT_ACTION) {
 }
 bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     terrain_usage = terrainchoice;
-    if (!roam_length)
-        init_roaming();
     roam_length++;
-    if (roam_length >= max_roam_length) {
+    if (roam_length >= max_roam_length) { // roam over, return home
         destination_x = 0;
         destination_y = 0;
-        set_destination(0);
         roam_length = 0;
+        set_destination(0);
         route_remove();
         advance_action(NEXT_ACTION);
         return true;
@@ -210,7 +208,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     }
     if (direction == DIR_FIGURE_REROUTE)
         route_remove();
-    if (direction == DIR_FIGURE_LOST)
+    if (direction == DIR_FIGURE_CAN_NOT_REACH)
         advance_action(FAIL_ACTION);
     return false;
 }
@@ -387,10 +385,16 @@ void figure::action_perform() {
         }
         if (state == FIGURE_STATE_DYING) // update corpses / dying animation
            figure_combat_handle_corpse();
-        if (terrain_usage == TERRAIN_USAGE_ROADS && !map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) // walkers outside of roads?
-            if (action_state == ACTION_1_ROAMING || action_state == FIGURE_ACTION_125_ROAMING || !has_destination()) // if not roaming, let them be...
-//                poof();
-                kill(); // this is more amusing
+        if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) { // update road flag
+            outside_road_ticks = 0;
+            if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) // bridge
+                set_target_height_bridge();
+        } else {
+            if (outside_road_ticks < 255)
+                outside_road_ticks++;
+            if (terrain_usage == TERRAIN_USAGE_ROADS && outside_road_ticks > 100) // walkers outside of roads for too long?
+                poof();
+        }
 
         ////////////
 
@@ -484,13 +488,13 @@ void figure::action_perform() {
                 break;
         }
 
-        // poof if LOST
-//        if (direction == DIR_FIGURE_LOST)
-//            poof();
-
         // if DEAD, delete figure -- this is UNSAFE, and should only be done here.
         if (state == FIGURE_STATE_DEAD)
             return figure_delete_UNSAFE();
+
+        // poof if LOST
+        if (direction == DIR_FIGURE_CAN_NOT_REACH)
+            poof();
 
         // advance sprite offset
         figure_image_update();

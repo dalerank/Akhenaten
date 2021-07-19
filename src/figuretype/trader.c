@@ -375,7 +375,7 @@ void figure::trade_caravan_action() {
 //    cart_image_id = 0;
     switch (action_state) {
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             wait_ticks++;
             if (wait_ticks > 20) {
                 wait_ticks = 0;
@@ -402,9 +402,9 @@ void figure::trade_caravan_action() {
                 case DIR_FIGURE_REROUTE:
                     route_remove();
                     break;
-                case DIR_FIGURE_LOST:
+                case DIR_FIGURE_CAN_NOT_REACH:
                     poof();
-                    is_ghost = 1;
+//                    is_ghost = 1;
                     break;
             }
             if (destination()->state != BUILDING_STATE_VALID)
@@ -456,7 +456,7 @@ void figure::trade_caravan_action() {
                 case DIR_FIGURE_REROUTE:
                     route_remove();
                     break;
-                case DIR_FIGURE_LOST:
+                case DIR_FIGURE_CAN_NOT_REACH:
                     poof();
                     break;
             }
@@ -504,9 +504,9 @@ void figure::native_trader_action() {
                 action_state = FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST) {
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
-                is_ghost = 1;
+//                is_ghost = 1;
             }
             if (destination()->state != BUILDING_STATE_VALID)
                 poof();
@@ -515,14 +515,14 @@ void figure::native_trader_action() {
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
 
             break;
         case FIGURE_ACTION_162_NATIVE_TRADER_CREATED:
-            is_ghost = 1;
+//            is_ghost = 1;
             wait_ticks++;
             if (wait_ticks > 10) {
                 wait_ticks = 0;
@@ -589,7 +589,7 @@ void figure::trade_ship_action() {
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
             load_resource(1200, resource_id);
             trader_amount_bought = 0;
-            is_ghost = 1;
+//            is_ghost = 1;
             wait_ticks++;
             if (wait_ticks > 20) {
                 wait_ticks = 0;
@@ -617,7 +617,7 @@ void figure::trade_ship_action() {
                 action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST) {
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
                 if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                     city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
@@ -675,7 +675,7 @@ void figure::trade_ship_action() {
                 action_state = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
@@ -707,7 +707,7 @@ void figure::trade_ship_action() {
                 poof();
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;

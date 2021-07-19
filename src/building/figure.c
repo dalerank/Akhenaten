@@ -203,7 +203,13 @@ figure *building::create_roaming_figure(int _type, int created_action, int slot)
     f->set_immigrant_home(0);
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    f->init_roaming();
+    f->init_roaming_from_building(figure_roam_direction);
+
+    // update building to have a different roamer direction for next time
+    figure_roam_direction += 2;
+    if (figure_roam_direction > 6)
+        figure_roam_direction = 0;
+
     return f;
 }
 figure *building::create_figure_with_destination(int _type, building *destination, int created_action, int slot) {
@@ -556,22 +562,22 @@ static void spawn_figure_school(building *b) {
             child1->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(b->id);
             b->set_figure(0, child1->id); // first "child" (teacher) is the coupled figure to the school building
-            child1->init_roaming();
+            child1->init_roaming_from_building(0);
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
             child2->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(b->id);
-            child2->init_roaming();
+            child2->init_roaming_from_building(0);
 
             figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
             child3->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(b->id);
-            child3->init_roaming();
+            child3->init_roaming_from_building(0);
 
             figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
             child4->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(b->id);
-            child4->init_roaming();
+            child4->init_roaming_from_building(0);
         }
     }
 }
@@ -1250,7 +1256,6 @@ void building_figure_generate(void) {
 
         if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id))
             continue;
-
 
         // update building road access
         map_point road;

@@ -224,6 +224,26 @@ grass transitions
 
 ================
 
+ x,  y: 41 51 YES
+ x,  y: 41 35 NO
+ 
+ 
+ x,  y: 41 43  <---- firehouse location
+ x,  y: 42 43  <---- road spawn point
+ 
+ x,  y: 43 43  <---- search offset (+1)
+ x,  y: 50 43  <---- search offset (+8)
+ 
+dx, dy: 42 50
+
+​   ... 0 1 2 3 4 5 6 7 8 9 0 ...
+
+40   _ _ _ _ . . . . . . . . . .
+41   . . . _ W W . . . . . . . .
+42   . . . s W W . . . . . X . .
+43   . . H s x . . . . . . X . .
+44   . . . _ . . . . . . . . . .
+45   . . . _ . . . . . . . . . .
 
 +684
 

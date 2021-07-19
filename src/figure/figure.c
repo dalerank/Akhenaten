@@ -164,6 +164,20 @@ bool figure::has_destination(building *b) {
     return (b == destination());
 }
 
+//bool figure::is_roamer() {
+//    switch (action_state) {
+//        case ACTION_1_ROAMING:
+//        case ACTION_10_GOING:
+//        case FIGURE_ACTION_125_ROAMING:
+//        case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
+//        case FIGURE_ACTION_62_ENGINEER_ROAMING:
+//        case FIGURE_ACTION_72_PREFECT_ROAMING:
+//        case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
+//            return true;
+//    }
+//    return false;
+//}
+
 void init_figures() {
     if (!data.initialized) {
         for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -223,10 +237,10 @@ void figure::save(buffer *buf) {
     buf->write_i16(f->routing_path_current_tile);
     buf->write_i16(f->routing_path_length);
     buf->write_u8(f->in_building_wait_ticks);
-    buf->write_u8(f->is_on_road);
+    buf->write_u8(f->outside_road_ticks);
     buf->write_i16(f->max_roam_length);
     buf->write_i16(f->roam_length);
-    buf->write_u8(f->roam_choose_destination);
+    buf->write_u8(f->roam_wander_freely);
     buf->write_u8(f->roam_random_counter);
     buf->write_i8(f->roam_turn_direction);
     buf->write_i8(f->roam_ticks_until_next_turn);
@@ -345,10 +359,10 @@ void figure::load(buffer *buf) {
     f->routing_path_current_tile = buf->read_i16(); // 4
     f->routing_path_length = buf->read_i16(); // 28
     f->in_building_wait_ticks = buf->read_u8(); // 0
-    f->is_on_road = buf->read_u8(); // 1
+    f->outside_road_ticks = buf->read_u8(); // 1
     f->max_roam_length = buf->read_i16();
     f->roam_length = buf->read_i16();
-    f->roam_choose_destination = buf->read_u8();
+    f->roam_wander_freely = buf->read_u8();
     f->roam_random_counter = buf->read_u8();
     f->roam_turn_direction = buf->read_i8();
     f->roam_ticks_until_next_turn = buf->read_i8(); // 0 ^^^^

@@ -202,7 +202,7 @@ void figure::sheep_action() {
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH) {
                 direction = previous_tile_direction;
                 action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 wait_ticks = id & 0x1f;
@@ -239,7 +239,7 @@ void figure::wolf_action() {
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
             move_ticks(2);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH) {
                 direction = previous_tile_direction;
                 action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 wait_ticks = id & 0x1f;
@@ -265,7 +265,7 @@ void figure::wolf_action() {
                 }
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST) {
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 direction = previous_tile_direction;
                 action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 wait_ticks = id & 0x1f;
@@ -435,7 +435,7 @@ void figure::zebra_action() {
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
             move_ticks(2);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST) {
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH) {
                 direction = previous_tile_direction;
                 action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
                 wait_ticks = id & 0x1f;

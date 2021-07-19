@@ -398,7 +398,7 @@ void figure::soldier_action() {
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
@@ -407,7 +407,7 @@ void figure::soldier_action() {
             destination_x = source_x;
             destination_y = source_y;
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
+            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -428,7 +428,7 @@ void figure::soldier_action() {
                 anim_frame = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST) {
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 alternative_location_index++;
                 if (alternative_location_index > 168)
                     poof();
@@ -467,7 +467,7 @@ void figure::soldier_action() {
                 action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
@@ -480,7 +480,7 @@ void figure::soldier_action() {
                     destination_x = target->tile_x;
                     destination_y = target->tile_y;
                     route_remove();
-                } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
+                } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
                     action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
                     target_figure_id = 0;
                     anim_frame = 0;
@@ -498,13 +498,13 @@ void figure::soldier_action() {
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
         }
         case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-            is_ghost = 0;
+//            is_ghost = 0;
             wait_ticks = 0;
             formation_at_rest = 1;
             destination_x = formation_position_x.soldier;
@@ -515,12 +515,12 @@ void figure::soldier_action() {
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
-            else if (direction == DIR_FIGURE_LOST)
+            else if (direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
         case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
-            is_ghost = 1;
+//            is_ghost = 1;
             formation_at_rest = 1;
             break;
     }

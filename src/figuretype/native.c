@@ -26,7 +26,7 @@ void figure::indigenous_native_action() {
                 action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
                 destination_x = source_x;
                 destination_y = source_y;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
             break;
@@ -34,7 +34,7 @@ void figure::indigenous_native_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_LOST) {
+                direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
             }
             break;
@@ -68,7 +68,7 @@ void figure::indigenous_native_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION ||
                 direction == DIR_FIGURE_REROUTE ||
-                direction == DIR_FIGURE_LOST) {
+                direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_158_NATIVE_CREATED;
             }
             break;
