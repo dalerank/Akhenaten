@@ -75,7 +75,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
     }
 }
 
-int building_construction_place_road(int measure_only, int x_start, int y_start, int x_end, int y_end) {
+int building_construction_place_road(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
@@ -99,7 +99,7 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
     }
     return items_placed;
 }
-int building_construction_place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end) {
+int building_construction_place_wall(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
@@ -150,7 +150,7 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     *cost = item_cost * num_items;
     return 1;
 }
-int building_construction_place_aqueduct_for_reservoir(int measure_only, int x_start, int y_start, int x_end, int y_end,
+int building_construction_place_aqueduct_for_reservoir(bool measure_only, int x_start, int y_start, int x_end, int y_end,
                                                        int *items) {
     routed_int type = measure_only ? ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC : ROUTED_BUILDING_AQUEDUCT;
     return place_routed_building(x_start, y_start, x_end, y_end, type, items);

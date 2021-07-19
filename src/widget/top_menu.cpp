@@ -458,7 +458,7 @@ int widget_top_menu_get_tooltip_text(tooltip_context *c) {
     return 0;
 }
 
-static void replay_map_confirmed(int confirmed) {
+static void replay_map_confirmed(bool confirmed) {
     if (!confirmed) {
         window_city_show();
         return;
@@ -499,7 +499,7 @@ static void menu_file_delete_game(int param) {
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
-static void menu_file_confirm_exit(int accepted) {
+static void menu_file_confirm_exit(bool accepted) {
     if (accepted)
         system_exit();
     else {

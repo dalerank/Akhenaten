@@ -340,7 +340,7 @@ void figure::policeman_action() {
     building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_70_PREFECT_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
@@ -356,7 +356,7 @@ void figure::policeman_action() {
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             use_cross_country = 1;
-//            is_ghost = 1;
+//            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == homeID()) {
                     // returned to own building
@@ -370,7 +370,7 @@ void figure::policeman_action() {
             break;
         case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
-//            is_ghost = 0;
+//            is_ghost = false;
             roam_length++;
             if (roam_length >= max_roam_length) {
                 int x_road, y_road;
@@ -467,7 +467,7 @@ void figure::water_carrier_action() {
 //    building *b = building_get(building_id);
 //    switch (action_state) {
 //        case FIGURE_ACTION_70_PREFECT_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
 //            anim_frame = 0;
 //            wait_ticks--;
 //            if (wait_ticks <= 0) {
@@ -483,7 +483,7 @@ void figure::water_carrier_action() {
 //        case 9:
 //        case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
 //            use_cross_country = 1;
-//            is_ghost = 1;
+//            is_ghost = true;
 //            if (move_ticks_cross_country(1) == 1) {
 //                if (map_building_at(grid_offset_figure) == building_id) {
 //                    // returned to own building
@@ -497,7 +497,7 @@ void figure::water_carrier_action() {
 //            break;
 //        case ACTION_10_DELIVERING_FOOD:
 //        case FIGURE_ACTION_72_PREFECT_ROAMING:
-//            is_ghost = 0;
+//            is_ghost = false;
 //            roam_length++;
 //            if (roam_length >= max_roam_length) {
 //                int x_road, y_road;

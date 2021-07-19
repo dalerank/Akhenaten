@@ -15,7 +15,7 @@ void figure::school_child_action() {
     switch (action_state) {
         case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_125_ROAMING:
-//            is_ghost = 0;
+//            is_ghost = false;
             roam_length++;
             if (roam_length >= max_roam_length)
                 poof();
@@ -60,7 +60,7 @@ void figure::tax_collector_action() {
     building *b = home();
     switch (action_state) {
         case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0) {
@@ -76,7 +76,7 @@ void figure::tax_collector_action() {
             break;
         case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
             use_cross_country = 1;
-//            is_ghost = 1;
+//            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 if (has_home(map_building_at(grid_offset_figure))) {
                     // returned to own building
@@ -90,7 +90,7 @@ void figure::tax_collector_action() {
             break;
         case ACTION_10_DELIVERING_FOOD:
         case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
-//            is_ghost = 0;
+//            is_ghost = false;
             roam_length++;
             if (roam_length >= max_roam_length) {
                 int x_road, y_road;

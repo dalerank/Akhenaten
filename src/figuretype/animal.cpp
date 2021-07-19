@@ -163,7 +163,7 @@ bool figure::herd_roost(int step, int bias, int max_dist) {
 }
 void figure::seagulls_action() {
     terrain_usage = TERRAIN_USAGE_ANY;
-    is_ghost = 0;
+    is_ghost = false;
     use_cross_country = 1;
     if (!(anim_frame & 3) && move_ticks_cross_country(1)) {
         progress_on_tile++;
@@ -185,7 +185,7 @@ void figure::sheep_action() {
     const formation *m = formation_get(formation_id);
 //    terrain_usage = TERRAIN_USAGE_ANIMAL;
 //    use_cross_country = 0;
-//    is_ghost = 0;
+//    is_ghost = false;
     city_figures_add_animal();
 //    figure_image_increase_offset(6);
 
@@ -418,7 +418,7 @@ void figure::zebra_action() {
     const formation *m = formation_get(formation_id);
 //    terrain_usage = TERRAIN_USAGE_ANIMAL;
 //    use_cross_country = 0;
-//    is_ghost = 0;
+//    is_ghost = false;
     city_figures_add_animal();
 //    figure_image_increase_offset(12);
 
@@ -547,7 +547,7 @@ static void set_horse_destination(int state) {
 void figure::hippodrome_horse_action() {
 //    city_entertainment_set_hippodrome_has_race(1);
 //    f->use_cross_country = 1;
-//    f->is_ghost = 0;
+//    f->is_ghost = false;
 //    figure_image_increase_offset(8);
 //    if (!(building_get(building_id)->state)) {
 //        f->poof();

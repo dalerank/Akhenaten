@@ -173,7 +173,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars) {
     return width;
 }
 
-static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only) {
+static void draw_line(const uint8_t *str, int x, int y, color_t color, bool measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
     while (*str) {
@@ -220,7 +220,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
 }
 
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,
-                     int box_width, int height_lines, color_t color, int measure_only) {
+                     int box_width, int height_lines, color_t color, bool measure_only) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -332,7 +332,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines, int measure_only) {
+int rich_text_draw(const uint8_t *text, int x_offset, int y_offset, int box_width, int height_lines, bool measure_only) {
     return draw_text(text, x_offset, y_offset, box_width, height_lines, 0, measure_only);
 }
 

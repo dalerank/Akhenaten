@@ -216,17 +216,17 @@ static void button_gift_to_emperor(int param1, int param2) {
     window_gift_to_emperor_show();
 }
 
-static void confirm_nothing(int accepted) {
+static void confirm_nothing(bool accepted) {
 }
 
-static void confirm_send_troops(int accepted) {
+static void confirm_send_troops(bool accepted) {
     if (accepted) {
         formation_legions_dispatch_to_distant_battle();
         window_empire_show();
     }
 }
 
-static void confirm_send_goods(int accepted) {
+static void confirm_send_goods(bool accepted) {
     if (accepted)
         scenario_request_dispatch(selected_request_id);
 

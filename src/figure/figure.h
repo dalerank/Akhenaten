@@ -42,7 +42,7 @@ public:
     unsigned char type;
 //    unsigned char resource_id;
     unsigned char use_cross_country;
-    unsigned char is_friendly;
+    bool is_friendly;
     unsigned char state;
     unsigned char faction_id; // 1 = city, 0 = enemy
     unsigned char action_state_before_attack;
@@ -103,7 +103,7 @@ public:
     unsigned char index_in_formation;
     unsigned char formation_at_rest;
     unsigned char migrant_num_people;
-    unsigned char is_ghost;
+    bool is_ghost;
     unsigned char min_max_seen;
     unsigned char __unused_57;
     short leading_figure_id;

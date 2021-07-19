@@ -369,13 +369,13 @@ int figure::trade_ship_done_trading() {
 }
 
 void figure::trade_caravan_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
 //    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
     switch (action_state) {
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             wait_ticks++;
             if (wait_ticks > 20) {
                 wait_ticks = 0;
@@ -404,7 +404,7 @@ void figure::trade_caravan_action() {
                     break;
                 case DIR_FIGURE_CAN_NOT_REACH:
                     poof();
-//                    is_ghost = 1;
+//                    is_ghost = true;
                     break;
             }
             if (destination()->state != BUILDING_STATE_VALID)
@@ -466,7 +466,7 @@ void figure::trade_caravan_action() {
     sprite_image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * anim_frame;
 }
 void figure::trade_caravan_donkey_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
 //    terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
@@ -487,13 +487,13 @@ void figure::trade_caravan_donkey_action() {
 //    }
 
 //    if (leader->is_ghost)
-//        is_ghost = 1;
+//        is_ghost = true;
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
     sprite_image_id = image_id_from_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * anim_frame;
 }
 void figure::native_trader_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
 //    terrain_usage = TERRAIN_USAGE_ANY;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
@@ -506,7 +506,7 @@ void figure::native_trader_action() {
                 route_remove();
             else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
-//                is_ghost = 1;
+//                is_ghost = true;
             }
             if (destination()->state != BUILDING_STATE_VALID)
                 poof();
@@ -522,7 +522,7 @@ void figure::native_trader_action() {
 
             break;
         case FIGURE_ACTION_162_NATIVE_TRADER_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             wait_ticks++;
             if (wait_ticks > 10) {
                 wait_ticks = 0;
@@ -581,7 +581,7 @@ void figure::native_trader_action() {
     }
 }
 void figure::trade_ship_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
     is_boat = 1;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
@@ -589,7 +589,7 @@ void figure::trade_ship_action() {
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
             load_resource(1200, resource_id);
             trader_amount_bought = 0;
-//            is_ghost = 1;
+//            is_ghost = true;
             wait_ticks++;
             if (wait_ticks > 20) {
                 wait_ticks = 0;

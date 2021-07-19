@@ -504,7 +504,7 @@ void figure::soldier_action() {
             break;
         }
         case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-//            is_ghost = 0;
+//            is_ghost = false;
             wait_ticks = 0;
             formation_at_rest = 1;
             destination_x = formation_position_x.soldier;
@@ -520,7 +520,7 @@ void figure::soldier_action() {
 
             break;
         case FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
-//            is_ghost = 1;
+//            is_ghost = true;
             formation_at_rest = 1;
             break;
     }

@@ -674,10 +674,10 @@ void building_update_highest_id(void) {
 
 }
 void building_update_state(void) {
-    int land_recalc = 0;
-    int wall_recalc = 0;
-    int road_recalc = 0;
-    int aqueduct_recalc = 0;
+    bool land_recalc = false;
+    bool wall_recalc = false;
+    bool road_recalc = false;
+    bool aqueduct_recalc = false;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED)
@@ -686,16 +686,16 @@ void building_update_state(void) {
         if (b->state != BUILDING_STATE_VALID || !b->house_size) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
-                    wall_recalc = 1;
-                    road_recalc = 1;
+                    wall_recalc = true;
+                    road_recalc = true;
                 } else if (b->type == BUILDING_RESERVOIR)
-                    aqueduct_recalc = 1;
+                    aqueduct_recalc = true;
                 else if (b->type == BUILDING_GRANARY)
-                    road_recalc = 1;
+                    road_recalc = true;
 
                 map_building_tiles_remove(i, b->x, b->y);
-                road_recalc = 1; // always recalc underlying road tiles
-                land_recalc = 1;
+                road_recalc = true; // always recalc underlying road tiles
+                land_recalc = true;
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 if (b->house_size)

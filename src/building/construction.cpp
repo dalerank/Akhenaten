@@ -1083,7 +1083,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
     return 0;
 }
 
-static int place_houses(int measure_only, int x_start, int y_start, int x_end, int y_end) {
+static int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     int x_min, x_max, y_min, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
 
@@ -1175,7 +1175,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
     map_tiles_update_all_gardens();
     return items_placed;
 }
-static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info) {
+static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info) {
     info->cost = 0;
     info->place_reservoir_at_start = PLACE_RESERVOIR_NO;
     info->place_reservoir_at_end = PLACE_RESERVOIR_NO;

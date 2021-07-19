@@ -418,7 +418,7 @@ void hotkey_key_released(int key, int modifiers) {
     }
 }
 
-static void confirm_exit(int accepted) {
+static void confirm_exit(bool accepted) {
     if (accepted)
         system_exit();
 

@@ -98,7 +98,7 @@ void figure::immigrant_action() {
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0)
@@ -119,7 +119,7 @@ void figure::immigrant_action() {
 void figure::emigrant_action() {
     switch (action_state) {
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             anim_frame = 0;
             wait_ticks++;
             if (wait_ticks >= 5)

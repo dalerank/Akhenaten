@@ -794,7 +794,7 @@ static void button_show_resource_window(int resource, int param2) {
     window_resource_settings_show(resource);
 }
 
-static void confirmed_open_trade(int accepted) {
+static void confirmed_open_trade(bool accepted) {
     if (accepted) {
         empire_city_open_trade(data.selected_city);
         building_menu_update(BUILDSET_NORMAL);

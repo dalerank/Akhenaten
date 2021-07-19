@@ -95,7 +95,7 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
-static void confirm_exit(int accepted) {
+static void confirm_exit(bool accepted) {
     if (accepted)
         system_exit();
 

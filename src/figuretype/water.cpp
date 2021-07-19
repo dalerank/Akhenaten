@@ -72,12 +72,12 @@ void figure::flotsam_action() {
     is_boat = 2;
     if (!scenario_map_has_river_exit())
         return;
-//    is_ghost = 0;
+//    is_ghost = false;
     cart_image_id = 0;
     terrain_usage = TERRAIN_USAGE_ANY;
     switch (action_state) {
         case FIGURE_ACTION_128_FLOTSAM_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             wait_ticks--;
             if (wait_ticks <= 0) {
                 action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
@@ -97,7 +97,7 @@ void figure::flotsam_action() {
                 flotsam_visible = 1;
                 wait_ticks++;
                 move_ticks(1);
-//                is_ghost = 0;
+//                is_ghost = false;
                 height_adjusted_ticks = 0;
                 if (direction == DIR_FIGURE_AT_DESTINATION ||
                     direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
@@ -106,7 +106,7 @@ void figure::flotsam_action() {
             }
             break;
         case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
-//            is_ghost = 1;
+//            is_ghost = true;
             min_max_seen = 0;
             action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
             if (wait_ticks >= 400)
@@ -152,7 +152,7 @@ void figure::flotsam_action() {
     }
 }
 void figure::shipwreck_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
     height_adjusted_ticks = 0;
     is_boat = 1;
 //    figure_image_increase_offset(128);
@@ -196,7 +196,7 @@ void figure::fishing_boat_action() {
             poof();
         }
     }
-//    is_ghost = 0;
+//    is_ghost = false;
     is_boat = 1;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;

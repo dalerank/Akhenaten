@@ -180,7 +180,7 @@ int figure::take_resource_from_warehouse(building *warehouse) {
     return 1;
 }
 void figure::delivery_boy_action() {
-//    is_ghost = 0;
+//    is_ghost = false;
 //    terrain_usage = TERRAIN_USAGE_ROADS;
 //    figure_image_increase_offset(12);
 //    cart_image_id = 0;
@@ -200,7 +200,7 @@ void figure::delivery_boy_action() {
         }
 //    }
     if (leader->is_ghost)
-        is_ghost = 1;
+        is_ghost = true;
 
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
     if (action_state == FIGURE_ACTION_149_CORPSE) {

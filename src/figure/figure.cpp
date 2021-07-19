@@ -37,7 +37,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->faction_id = 1;
     f->type = type;
     f->use_cross_country = 0;
-    f->is_friendly = 1;
+    f->is_friendly = true;
     f->created_sequence = data.created_sequence++;
     f->direction = dir;
     f->roam_length = 0;

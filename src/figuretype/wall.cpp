@@ -44,7 +44,7 @@ void figure::ballista_action() {
     building *b = home();
     terrain_usage = TERRAIN_USAGE_WALLS;
     use_cross_country = 0;
-    is_ghost = 1;
+    is_ghost = true;
     height_adjusted_ticks = 10;
     current_height = 45;
 
@@ -193,7 +193,7 @@ void figure::tower_sentry_action() {
     building *b = home();
 //    terrain_usage = TERRAIN_USAGE_WALLS;
 //    use_cross_country = 0;
-//    is_ghost = 1;
+//    is_ghost = true;
     height_adjusted_ticks = 10;
 //    max_roam_length = 800;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
@@ -261,7 +261,7 @@ void figure::tower_sentry_action() {
                 terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
 
 
-//            is_ghost = 0;
+//            is_ghost = false;
             height_adjusted_ticks = 0;
             move_ticks(1);
             if (direction == DIR_FIGURE_AT_DESTINATION) {

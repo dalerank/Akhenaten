@@ -187,7 +187,7 @@ static void menu_file_save_map(int param) {
     window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
 }
 
-static void menu_file_confirm_exit(int accepted) {
+static void menu_file_confirm_exit(bool accepted) {
     if (accepted)
         game_exit_editor();
     else {

@@ -43,7 +43,7 @@ static building *get_deletable_building(int grid_offset) {
     return b;
 }
 
-static int clear_land_confirmed(int measure_only, int x_start, int y_start, int x_end, int y_end) {
+static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     int items_placed = 0;
     game_undo_restore_building_state();
     game_undo_restore_map(0);
@@ -161,25 +161,23 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     return items_placed;
 }
 
-static void confirm_delete_fort(int accepted) {
-    if (accepted == 1)
+static void confirm_delete_fort(bool accepted) {
+    if (accepted)
         confirm.fort_confirmed = 1;
-    else {
+    else
         confirm.fort_confirmed = -1;
-    }
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
 }
 
-static void confirm_delete_bridge(int accepted) {
-    if (accepted == 1)
+static void confirm_delete_bridge(bool accepted) {
+    if (accepted)
         confirm.bridge_confirmed = 1;
-    else {
+    else
         confirm.bridge_confirmed = -1;
-    }
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
 }
 
-int building_construction_clear_land(int measure_only, int x_start, int y_start, int x_end, int y_end) {
+int building_construction_clear_land(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     confirm.fort_confirmed = 0;
     confirm.bridge_confirmed = 0;
     if (measure_only)

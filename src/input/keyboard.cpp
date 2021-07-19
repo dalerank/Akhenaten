@@ -8,7 +8,7 @@
 static struct {
     int insert;
     int capture;
-    int accepted;
+    bool accepted;
 
     int capture_numeric;
     void (*capture_numeric_callback)(int);

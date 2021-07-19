@@ -195,7 +195,7 @@ void figure::rioter_action() {
 //    terrain_usage = TERRAIN_USAGE_ENEMY;
 //    max_roam_length = 480;
 //    cart_image_id = 0;
-//    is_ghost = 0;
+//    is_ghost = false;
     switch (action_state) {
         case FIGURE_ACTION_120_RIOTER_CREATED:
 //            figure_image_increase_offset(32);

@@ -150,7 +150,7 @@ void figure::entertainer_action() {
             figure_combat_handle_corpse();
             break;
         case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
-//            is_ghost = 1;
+//            is_ghost = true;
             anim_frame = 0;
             wait_ticks_missile = 0;
             wait_ticks--;
@@ -166,7 +166,7 @@ void figure::entertainer_action() {
             break;
         case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
             use_cross_country = 1;
-//            is_ghost = 1;
+//            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 int dst_building_id = 0;
                 switch (type) {
@@ -197,12 +197,12 @@ void figure::entertainer_action() {
                 } else
                     poof();
             }
-//            is_ghost = 1;
+//            is_ghost = true;
             break;
 //        case 95:
         case 10:
         case FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE:
-//            is_ghost = 0;
+//            is_ghost = false;
             roam_length++;
             if (roam_length >= 3200)
                 poof();

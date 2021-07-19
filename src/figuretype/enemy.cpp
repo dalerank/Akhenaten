@@ -32,7 +32,7 @@ void figure::enemy_initial(formation *m) {
                 sound_speech_play_file("wavs/horn1.wav");
             }
         }
-        is_ghost = 0;
+        is_ghost = false;
         if (m->recent_fight)
             action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
         else {

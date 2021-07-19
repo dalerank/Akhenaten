@@ -54,7 +54,7 @@ void figure::advance_tick() {
     if (height_adjusted_ticks) {
         height_adjusted_ticks--;
         if (height_adjusted_ticks > 0) {
-//            is_ghost = 1;
+//            is_ghost = true;
             if (current_height < target_height)
                 current_height++;
 
@@ -62,7 +62,7 @@ void figure::advance_tick() {
                 current_height--;
 
         } else {
-//            is_ghost = 0;
+//            is_ghost = false;
         }
     } else {
         if (current_height)
@@ -365,7 +365,7 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
 void figure::follow_ticks(int num_ticks) {
     const figure *leader = figure_get(leading_figure_id);
     if (tile_x == source_x && tile_y == source_y)
-        is_ghost = 1;
+        is_ghost = true;
 
     while (num_ticks > 0) {
         num_ticks--;
