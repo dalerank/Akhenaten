@@ -69,7 +69,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
         }
 
         // update land graphics
-        map_tiles_update_region_empty_land(x_end - 4, y_end - 4, x_end + 4, y_end + 4);
+        map_tiles_update_region_empty_land(false, x_end - 4, y_end - 4, x_end + 4, y_end + 4);
         if (!routed)
             return 0;
     }

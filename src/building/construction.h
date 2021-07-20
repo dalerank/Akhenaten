@@ -15,19 +15,19 @@ int building_construction_cost(void);
 
 int building_construction_size(int *x, int *y);
 
-int building_construction_in_progress(void);
+bool building_construction_in_progress(void);
 
 void building_construction_start(int x, int y, int grid_offset);
 
-int building_construction_is_updatable(void);
+bool building_construction_is_draggable(void);
 
 void building_construction_cancel(void);
 
 void building_construction_update(int x, int y, int grid_offset);
 
-void building_construction_place(void);
+void building_construction_finalize(void);
 
-int building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size);
+bool building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size);
 
 void building_construction_record_view_position(int view_x, int view_y, int grid_offset);
 void building_construction_get_view_position(int *view_x, int *view_y);

@@ -4,6 +4,8 @@
 #include "core/buffer.h"
 
 enum {
+    TERRAIN_NONE = 0x0,
+
     TERRAIN_TREE = 0x1,
     TERRAIN_ROCK = 0x2,
     TERRAIN_WATER = 0x4,
@@ -61,7 +63,7 @@ typedef struct floodplain_order {
 
 extern floodplain_order floodplain_offsets[30];
 
-int map_terrain_is(int grid_offset, int terrain);
+bool map_terrain_is(int grid_offset, int terrain);
 
 int map_terrain_get(int grid_offset);
 
@@ -81,31 +83,33 @@ int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain);
 
 int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain);
 
-int map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
-int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
-int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
+bool map_terrain_has_adjecent_with_type(int grid_offset, int terrain);
+bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
+bool map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
 
-int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain);
+bool map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain);
 
-int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain);
-int map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);
+bool map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain);
+bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);
 
-int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
-                                            int *x_tile, int *y_tile);
+bool map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
+                                             int *x_tile, int *y_tile);
 
-int map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain);
+bool map_terrain_all_tiles_in_area_are(int x, int y, int size, int terrain);
 
-int map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance);
+bool map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain);
 
-int map_terrain_has_only_meadow_in_ring(int x, int y, int distance);
+bool map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance);
 
-int map_terrain_is_adjacent_to_wall(int x, int y, int size);
+bool map_terrain_has_only_meadow_in_ring(int x, int y, int distance);
 
-int map_terrain_is_adjacent_to_water(int x, int y, int size);
+bool map_terrain_is_adjacent_to_wall(int x, int y, int size);
 
-int map_terrain_is_adjacent_to_open_water(int x, int y, int size);
+bool map_terrain_is_adjacent_to_water(int x, int y, int size);
 
-int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile);
+bool map_terrain_is_adjacent_to_open_water(int x, int y, int size);
+
+bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile);
 
 void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);

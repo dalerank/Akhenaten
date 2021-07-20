@@ -1002,7 +1002,7 @@ static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type
 }
 static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type) {
     int dir_absolute, dir_relative; // todo: water lift
-    int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute, &dir_relative);
+    int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute);
     if (city_finance_out_of_money())
         blocked = 999; // ????
 
@@ -1017,7 +1017,7 @@ static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type) {
 }
 static void draw_dock(const map_tile *tile, int x, int y) {
     int dir_absolute, dir_relative;
-    int blocked = map_water_determine_orientation_size3(tile->x, tile->y, 1, &dir_absolute, &dir_relative);
+    int blocked = map_water_determine_orientation_size3(tile->x, tile->y, 1, &dir_absolute);
     if (city_finance_out_of_money())
         blocked = 1;
     if (blocked) {

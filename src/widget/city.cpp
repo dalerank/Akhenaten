@@ -178,7 +178,7 @@ static void build_end(void) {
         if (building_construction_type() != BUILDING_NONE)
             sound_effect_play(SOUND_EFFECT_BUILD);
 
-        building_construction_place();
+        building_construction_finalize();
     }
 }
 
@@ -303,7 +303,7 @@ static void handle_first_touch(map_tile *tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (building_construction_is_updatable()) {
+    if (building_construction_is_draggable()) {
         if (!building_construction_in_progress()) {
             if (first->has_started) {
                 build_start(tile);

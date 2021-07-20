@@ -104,7 +104,7 @@ static int get_pillar_distance(int length) {
     }
 }
 
-int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge) {
+int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_bridge) {
     if (is_ship_bridge) {
         int pillar_distance = get_pillar_distance(length);
         if (index == 1 || index == length - 2) {
@@ -185,7 +185,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
     return 0;
 }
 
-int map_bridge_add(int x, int y, int is_ship_bridge) {
+int map_bridge_add(int x, int y, bool is_ship_bridge) {
     int min_length = is_ship_bridge ? 5 : 2;
     if (bridge.end_grid_offset <= 0 || bridge.length < min_length) {
         bridge.length = 0;
