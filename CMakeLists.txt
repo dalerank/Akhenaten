@@ -12,7 +12,7 @@ cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
-        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cppmake" CACHE PATH "toolchain file")
     else()
         message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
     endif()
@@ -21,7 +21,7 @@ endif()
 if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{DEVKITPRO})
         set(DEVKITPRO $ENV{DEVKITPRO})
-        set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cmake" CACHE PATH "toolchain file")
+        set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cppmake" CACHE PATH "toolchain file")
     else()
         message(FATAL_ERROR "Please define DEVKITPRO to point to your SDK path!")
     endif()
@@ -32,7 +32,7 @@ set(SHORT_NAME ozymandias)
 project(${SHORT_NAME} CXX)
 
 if (VITA_BUILD)
-    include("${VITASDK}/share/vita.cmake" REQUIRED)
+    include("${VITASDK}/share/vita.cppmake" REQUIRED)
     set(VITA_TITLEID  "AUGUSTUS001")
 endif()
 
@@ -44,7 +44,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 #SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 #list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS c)
-#set(CMAKE_USER_MAKE_RULES_OVERRIDE "CryptoppMakeRulesOverwrite.cmake")
+#set(CMAKE_USER_MAKE_RULES_OVERRIDE "CryptoppMakeRulesOverwrite.cppmake")
 
 #if (CMAKE_VERSION VERSION_LESS 3.1)
 #    if (CMAKE_COMPILER_IS_GNUCC)
@@ -139,7 +139,7 @@ if (SWITCH_BUILD)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
-configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
+configure_file(${PROJECT_SOURCE_DIR}/gen/version.cpp.in ${PROJECT_SOURCE_DIR}/src/platform/version.cpp)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
 
@@ -187,415 +187,414 @@ set(TINYFD_FILES
 #)
 
 set(PLATFORM_FILES
-    ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
-    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
-    ${PROJECT_SOURCE_DIR}/src/platform/julius.c
-    ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
-    ${PROJECT_SOURCE_DIR}/src/platform/log.c
-    ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
-    ${PROJECT_SOURCE_DIR}/src/platform/platform.c
-    ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
-    ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
-    ${PROJECT_SOURCE_DIR}/src/platform/touch.c
-    ${PROJECT_SOURCE_DIR}/src/platform/version.c
-    ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
+    ${PROJECT_SOURCE_DIR}/src/platform/arguments.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/julius.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/log.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/mouse.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/platform.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/prefs.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/sound_device.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/touch.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/version.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.cpp
 )
 
 if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.cpp
     )
 elseif (SWITCH_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.cpp
     )
 else()
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
+        ${PROJECT_SOURCE_DIR}/src/platform/cursor.cpp
+        ${PROJECT_SOURCE_DIR}/src/platform/screen.cpp
     )
 endif()
 
 set(CORE_FILES
-    ${PROJECT_SOURCE_DIR}/src/core/backtrace.c
+    ${PROJECT_SOURCE_DIR}/src/core/backtrace.cpp
     ${PROJECT_SOURCE_DIR}/src/core/buffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/calc.c
-    ${PROJECT_SOURCE_DIR}/src/core/config.c
-    ${PROJECT_SOURCE_DIR}/src/core/dir.c
-    ${PROJECT_SOURCE_DIR}/src/core/encoding.c
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.c
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_simp_chinese.c
-    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.c
-    ${PROJECT_SOURCE_DIR}/src/core/file.c
-    ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
-    ${PROJECT_SOURCE_DIR}/src/core/image.c
-    ${PROJECT_SOURCE_DIR}/src/core/io.c
-    ${PROJECT_SOURCE_DIR}/src/core/lang.c
-    ${PROJECT_SOURCE_DIR}/src/core/locale.c
-#    ${PROJECT_SOURCE_DIR}/src/core/mods.c
-#    ${PROJECT_SOURCE_DIR}/src/core/png_read.c
-    ${PROJECT_SOURCE_DIR}/src/core/random.c
-    ${PROJECT_SOURCE_DIR}/src/core/smacker.c
-    ${PROJECT_SOURCE_DIR}/src/core/speed.c
-    ${PROJECT_SOURCE_DIR}/src/core/string.c
-    ${PROJECT_SOURCE_DIR}/src/core/time.c
-    ${PROJECT_SOURCE_DIR}/src/core/zip.c
-    ${PROJECT_SOURCE_DIR}/src/core/game_environment.c
+    ${PROJECT_SOURCE_DIR}/src/core/calc.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/config.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/dir.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_korean.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_simp_chinese.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/file.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/io.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/lang.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
+#    ${PROJECT_SOURCE_DIR}/src/core/mods.cpp
+#    ${PROJECT_SOURCE_DIR}/src/core/png_read.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/random.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/smacker.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/speed.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/string.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/time.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/zip.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
 )
 
 set(BUILDING_FILES
-    ${PROJECT_SOURCE_DIR}/src/building/animation.c
-    ${PROJECT_SOURCE_DIR}/src/building/barracks.c
-    ${PROJECT_SOURCE_DIR}/src/building/building.c
-    ${PROJECT_SOURCE_DIR}/src/building/building_state.c
-    ${PROJECT_SOURCE_DIR}/src/building/construction.c
-    ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
-    ${PROJECT_SOURCE_DIR}/src/building/construction_clear.c
-    ${PROJECT_SOURCE_DIR}/src/building/construction_routed.c
-    ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
-    ${PROJECT_SOURCE_DIR}/src/building/count.c
-    ${PROJECT_SOURCE_DIR}/src/building/destruction.c
-    ${PROJECT_SOURCE_DIR}/src/building/dock.c
-    ${PROJECT_SOURCE_DIR}/src/building/figure.c
-    ${PROJECT_SOURCE_DIR}/src/building/government.c
-    ${PROJECT_SOURCE_DIR}/src/building/granary.c
-    ${PROJECT_SOURCE_DIR}/src/building/house.c
-    ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
-    ${PROJECT_SOURCE_DIR}/src/building/house_population.c
-    ${PROJECT_SOURCE_DIR}/src/building/house_service.c
-    ${PROJECT_SOURCE_DIR}/src/building/industry.c
-    ${PROJECT_SOURCE_DIR}/src/building/list.c
-    ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
-    ${PROJECT_SOURCE_DIR}/src/building/market.c
-    ${PROJECT_SOURCE_DIR}/src/building/menu.c
-    ${PROJECT_SOURCE_DIR}/src/building/model.c
-    ${PROJECT_SOURCE_DIR}/src/building/properties.c
-    ${PROJECT_SOURCE_DIR}/src/building/roadblock.c
-    ${PROJECT_SOURCE_DIR}/src/building/rotation.c
-    ${PROJECT_SOURCE_DIR}/src/building/storage.c
-    ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
+    ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/building.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/building_state.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction_clear.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction_routed.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction_warning.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/count.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/destruction.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/dock.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/government.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/granary.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/house.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/house_evolution.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/house_population.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/house_service.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/industry.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/list.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/maintenance.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/market.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/model.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/properties.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/roadblock.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/rotation.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/storage.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/warehouse.cpp
 )
 set(CITY_FILES
-    ${PROJECT_SOURCE_DIR}/src/city/buildings.c
-    ${PROJECT_SOURCE_DIR}/src/city/culture.c
-    ${PROJECT_SOURCE_DIR}/src/city/data.c
-    ${PROJECT_SOURCE_DIR}/src/city/data_private.c
-    ${PROJECT_SOURCE_DIR}/src/city/emperor.c
-    ${PROJECT_SOURCE_DIR}/src/city/entertainment.c
-    ${PROJECT_SOURCE_DIR}/src/city/festival.c
-    ${PROJECT_SOURCE_DIR}/src/city/figures.c
-    ${PROJECT_SOURCE_DIR}/src/city/finance.c
-    ${PROJECT_SOURCE_DIR}/src/city/gods.c
-    ${PROJECT_SOURCE_DIR}/src/city/health.c
-    ${PROJECT_SOURCE_DIR}/src/city/houses.c
-    ${PROJECT_SOURCE_DIR}/src/city/labor.c
-    ${PROJECT_SOURCE_DIR}/src/city/map.c
-    ${PROJECT_SOURCE_DIR}/src/city/message.c
-    ${PROJECT_SOURCE_DIR}/src/city/migration.c
-    ${PROJECT_SOURCE_DIR}/src/city/military.c
-    ${PROJECT_SOURCE_DIR}/src/city/mission.c
-    ${PROJECT_SOURCE_DIR}/src/city/population.c
-    ${PROJECT_SOURCE_DIR}/src/city/ratings.c
-    ${PROJECT_SOURCE_DIR}/src/city/resource.c
-    ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
-    ${PROJECT_SOURCE_DIR}/src/city/sound.c
-    ${PROJECT_SOURCE_DIR}/src/city/trade.c
-    ${PROJECT_SOURCE_DIR}/src/city/victory.c
-    ${PROJECT_SOURCE_DIR}/src/city/view.c
-    ${PROJECT_SOURCE_DIR}/src/city/warning.c
-    ${PROJECT_SOURCE_DIR}/src/city/floods.c
+    ${PROJECT_SOURCE_DIR}/src/city/buildings.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/culture.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/data.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/data_private.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/emperor.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/entertainment.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/festival.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/figures.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/finance.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/gods.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/health.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/houses.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/labor.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/map.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/message.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/migration.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/military.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/mission.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/population.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/ratings.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/resource.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/sentiment.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/sound.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/trade.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/victory.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/view.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/warning.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/floods.cpp
 )
 set(EMPIRE_FILES
-    ${PROJECT_SOURCE_DIR}/src/empire/city.c
-    ${PROJECT_SOURCE_DIR}/src/empire/empire.c
-    ${PROJECT_SOURCE_DIR}/src/empire/object.c
-    ${PROJECT_SOURCE_DIR}/src/empire/trade_prices.c
-    ${PROJECT_SOURCE_DIR}/src/empire/trade_route.c
+    ${PROJECT_SOURCE_DIR}/src/empire/city.cpp
+    ${PROJECT_SOURCE_DIR}/src/empire/empire.cpp
+    ${PROJECT_SOURCE_DIR}/src/empire/object.cpp
+    ${PROJECT_SOURCE_DIR}/src/empire/trade_prices.cpp
+    ${PROJECT_SOURCE_DIR}/src/empire/trade_route.cpp
 )
 set(FIGURE_FILES
-    ${PROJECT_SOURCE_DIR}/src/figure/action.c
-    ${PROJECT_SOURCE_DIR}/src/figure/combat.c
-    ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.c
-    ${PROJECT_SOURCE_DIR}/src/figure/figure.c
-    ${PROJECT_SOURCE_DIR}/src/figure/formation.c
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_enemy.c
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_herd.c
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.c
-    ${PROJECT_SOURCE_DIR}/src/figure/formation_legion.c
-    ${PROJECT_SOURCE_DIR}/src/figure/image.c
-    ${PROJECT_SOURCE_DIR}/src/figure/movement.c
-    ${PROJECT_SOURCE_DIR}/src/figure/name.c
-    ${PROJECT_SOURCE_DIR}/src/figure/phrase.c
-    ${PROJECT_SOURCE_DIR}/src/figure/properties.c
-    ${PROJECT_SOURCE_DIR}/src/figure/route.c
-    ${PROJECT_SOURCE_DIR}/src/figure/service.c
-    ${PROJECT_SOURCE_DIR}/src/figure/sound.c
-    ${PROJECT_SOURCE_DIR}/src/figure/trader.c
+    ${PROJECT_SOURCE_DIR}/src/figure/action.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/combat.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/formation.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_enemy.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_herd.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_legion.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/movement.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/name.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/phrase.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/properties.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/route.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/service.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/sound.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/trader.cpp
 )
 set(FIGURETYPE_FILES
-    ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/crime.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/docker.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/editor.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/market.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/missile.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/native.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/service.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/soldier.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/trader.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/animal.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/crime.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/docker.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/market.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/missile.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/native.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/service.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/soldier.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/trader.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/wall.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/water.cpp
 )
 set(GAME_FILES
-    ${PROJECT_SOURCE_DIR}/src/game/animation.c
-    ${PROJECT_SOURCE_DIR}/src/game/cheats.c
-    ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
-    ${PROJECT_SOURCE_DIR}/src/game/file.c
-    ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
-    ${PROJECT_SOURCE_DIR}/src/game/file_io.c
-    ${PROJECT_SOURCE_DIR}/src/game/game.c
-    ${PROJECT_SOURCE_DIR}/src/game/mission.c
-    ${PROJECT_SOURCE_DIR}/src/game/orientation.c
-    ${PROJECT_SOURCE_DIR}/src/game/resource.c
-    ${PROJECT_SOURCE_DIR}/src/game/settings.c
-    ${PROJECT_SOURCE_DIR}/src/game/state.c
-    ${PROJECT_SOURCE_DIR}/src/game/tick.c
-    ${PROJECT_SOURCE_DIR}/src/game/time.c
-    ${PROJECT_SOURCE_DIR}/src/game/tutorial.c
-    ${PROJECT_SOURCE_DIR}/src/game/undo.c
+    ${PROJECT_SOURCE_DIR}/src/game/animation.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/cheats.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/difficulty.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/file.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/file_editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/file_io.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/game.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/mission.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/orientation.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/resource.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/settings.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/state.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/tick.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/time.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
 )
 set(INPUT_FILES
-    ${PROJECT_SOURCE_DIR}/src/input/cursor.c
-    ${PROJECT_SOURCE_DIR}/src/input/hotkey.c
-    ${PROJECT_SOURCE_DIR}/src/input/input.c
-    ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
-    ${PROJECT_SOURCE_DIR}/src/input/keys.c
-    ${PROJECT_SOURCE_DIR}/src/input/mouse.c
-    ${PROJECT_SOURCE_DIR}/src/input/scroll.c
-    ${PROJECT_SOURCE_DIR}/src/input/touch.c
-    ${PROJECT_SOURCE_DIR}/src/input/zoom.c
+    ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/hotkey.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/input.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/keyboard.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/keys.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/mouse.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/scroll.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/touch.cpp
+    ${PROJECT_SOURCE_DIR}/src/input/zoom.cpp
 )
 set(MAP_FILES
-    ${PROJECT_SOURCE_DIR}/src/map/aqueduct.c
-    ${PROJECT_SOURCE_DIR}/src/map/bookmark.c
-    ${PROJECT_SOURCE_DIR}/src/map/bridge.c
-    ${PROJECT_SOURCE_DIR}/src/map/building.c
-    ${PROJECT_SOURCE_DIR}/src/map/building_tiles.c
-    ${PROJECT_SOURCE_DIR}/src/map/desirability.c
-    ${PROJECT_SOURCE_DIR}/src/map/elevation.c
-    ${PROJECT_SOURCE_DIR}/src/map/figure.c
-    ${PROJECT_SOURCE_DIR}/src/map/grid.c
-    ${PROJECT_SOURCE_DIR}/src/map/image.c
-    ${PROJECT_SOURCE_DIR}/src/map/image_context.c
-    ${PROJECT_SOURCE_DIR}/src/map/natives.c
-    ${PROJECT_SOURCE_DIR}/src/map/orientation.c
-    ${PROJECT_SOURCE_DIR}/src/map/point.c
-    ${PROJECT_SOURCE_DIR}/src/map/property.c
-    ${PROJECT_SOURCE_DIR}/src/map/random.c
-    ${PROJECT_SOURCE_DIR}/src/map/ring.c
-    ${PROJECT_SOURCE_DIR}/src/map/road_access.c
-    ${PROJECT_SOURCE_DIR}/src/map/road_aqueduct.c
-    ${PROJECT_SOURCE_DIR}/src/map/road_network.c
-    ${PROJECT_SOURCE_DIR}/src/map/routing.c
-    ${PROJECT_SOURCE_DIR}/src/map/routing_data.c
-    ${PROJECT_SOURCE_DIR}/src/map/routing_path.c
-    ${PROJECT_SOURCE_DIR}/src/map/routing_terrain.c
-    ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.c
-    ${PROJECT_SOURCE_DIR}/src/map/sprite.c
-    ${PROJECT_SOURCE_DIR}/src/map/terrain.c
-    ${PROJECT_SOURCE_DIR}/src/map/tiles.c
-    ${PROJECT_SOURCE_DIR}/src/map/water.c
-    ${PROJECT_SOURCE_DIR}/src/map/water_supply.c
+    ${PROJECT_SOURCE_DIR}/src/map/aqueduct.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/bookmark.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/bridge.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/building.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/building_tiles.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/desirability.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/elevation.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/grid.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/image_context.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/natives.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/orientation.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/point.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/property.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/random.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/ring.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/road_access.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/road_aqueduct.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/road_network.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing_data.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing_path.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing_terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/sprite.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/tiles.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/water.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
 )
 set(SCENARIO_FILES
-    ${PROJECT_SOURCE_DIR}/src/scenario/building.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/criteria.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor_events.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/editor_map.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/emperor_change.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/empire.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/gladiator_revolt.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/invasion.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/map.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/price_change.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/property.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/random_event.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/request.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/building.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/criteria.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor_events.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/editor_map.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/emperor_change.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/empire.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/gladiator_revolt.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/invasion.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/map.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/price_change.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/property.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/random_event.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/request.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/scenario.cpp
 )
 set(GRAPHICS_FILES
-    ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/button.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/font.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/graphics.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/image.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/image_button.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/menu.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/panel.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/screen.c
-#    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/text.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/video.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/warning.c
-    ${PROJECT_SOURCE_DIR}/src/graphics/window.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/graphics.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/image_button.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/panel.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/rich_text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/screen.cpp
+#    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/video.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/warning.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/window.cpp
 )
 set(SOUND_FILES
-    ${PROJECT_SOURCE_DIR}/src/sound/city.c
-    ${PROJECT_SOURCE_DIR}/src/sound/effect.c
-    ${PROJECT_SOURCE_DIR}/src/sound/music.c
-    ${PROJECT_SOURCE_DIR}/src/sound/speech.c
-    ${PROJECT_SOURCE_DIR}/src/sound/system.c
+    ${PROJECT_SOURCE_DIR}/src/sound/city.cpp
+    ${PROJECT_SOURCE_DIR}/src/sound/effect.cpp
+    ${PROJECT_SOURCE_DIR}/src/sound/music.cpp
+    ${PROJECT_SOURCE_DIR}/src/sound/speech.cpp
+    ${PROJECT_SOURCE_DIR}/src/sound/system.cpp
 )
 set(WIDGET_FILES
-    ${PROJECT_SOURCE_DIR}/src/widget/city.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_bridge.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_building_ghost.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_figure.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.c
-    ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.c
-    ${PROJECT_SOURCE_DIR}/src/widget/input_box.c
-    ${PROJECT_SOURCE_DIR}/src/widget/map_editor.c
-    ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.c
-    ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
-    ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
-    ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.c
-    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.c
+    ${PROJECT_SOURCE_DIR}/src/widget/city.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_bridge.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_building_ghost.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/input_box.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/map_editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/minimap.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.cpp
 )
 set(WINDOW_FILES
-    ${PROJECT_SOURCE_DIR}/src/window/advisors.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/education.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/entertainment.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/financial.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/health.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/housing.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/labor.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/military.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/population.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.c
-    ${PROJECT_SOURCE_DIR}/src/window/advisor/monuments.c
-    ${PROJECT_SOURCE_DIR}/src/window/build_menu.c
-    ${PROJECT_SOURCE_DIR}/src/window/building_info.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/common.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/culture.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/distribution.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/figures.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/government.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/house.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/industry.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/military.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/terrain.c
-    ${PROJECT_SOURCE_DIR}/src/window/building/utility.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/empire.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/requests.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.c
-    ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.c
-    ${PROJECT_SOURCE_DIR}/src/window/cck_selection.c
-    ${PROJECT_SOURCE_DIR}/src/window/city.c
-    ${PROJECT_SOURCE_DIR}/src/window/config.c
-    ${PROJECT_SOURCE_DIR}/src/window/console.c
-    ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/display_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.c
-    ${PROJECT_SOURCE_DIR}/src/window/empire.c
-    ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
-    ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
-    ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.c
-    ${PROJECT_SOURCE_DIR}/src/window/hotkey_editor.c
-    ${PROJECT_SOURCE_DIR}/src/window/intermezzo.c
-    ${PROJECT_SOURCE_DIR}/src/window/intro_video.c
-    ${PROJECT_SOURCE_DIR}/src/window/labor_priority.c
-    ${PROJECT_SOURCE_DIR}/src/window/logo.c
-    ${PROJECT_SOURCE_DIR}/src/window/main_menu.c
-    ${PROJECT_SOURCE_DIR}/src/window/message_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/message_list.c
-    ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
-    ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
-    ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
-    ${PROJECT_SOURCE_DIR}/src/window/new_career.c
-    ${PROJECT_SOURCE_DIR}/src/window/numeric_input.c
-    ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.c
-    ${PROJECT_SOURCE_DIR}/src/window/plain_message_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
-    ${PROJECT_SOURCE_DIR}/src/window/select_list.c
-    ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
-    ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
-    ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
-    ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
-    ${PROJECT_SOURCE_DIR}/src/window/family_selection.c
-    ${PROJECT_SOURCE_DIR}/src/window/family_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/education.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/entertainment.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/financial.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/health.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/housing.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/imperial.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/labor.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/military.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/population.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/ratings.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/religion.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/trade.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/advisor/monuments.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/build_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building_info.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/common.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/culture.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/distribution.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/figures.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/government.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/house.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/industry.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/military.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/building/utility.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_price_change.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/edit_request.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/empire.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/invasions.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/map.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/requests.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/cck_selection.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/city.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/config.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/console.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/display_options.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/empire.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/file_dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/hold_festival.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/hotkey_editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/intermezzo.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/intro_video.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/labor_priority.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/logo.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/main_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/message_dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/message_list.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/mission_end.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/mission_selection.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/new_career.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/numeric_input.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/plain_message_dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/resource_settings.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/select_list.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/set_salary.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/sound_options.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/speed_options.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/trade_opened.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/trade_prices.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/victory_video.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/family_selection.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/family_menu.cpp
 )
 set(EDITOR_FILES
-    ${PROJECT_SOURCE_DIR}/src/editor/editor.c
-    ${PROJECT_SOURCE_DIR}/src/editor/tool.c
-    ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
+    ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp
+    ${PROJECT_SOURCE_DIR}/src/editor/tool.cpp
+    ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.cpp
 )
 set(TRANSLATION_FILES
-    ${PROJECT_SOURCE_DIR}/src/translation/english.c
-    ${PROJECT_SOURCE_DIR}/src/translation/french.c
-    ${PROJECT_SOURCE_DIR}/src/translation/german.c
-    ${PROJECT_SOURCE_DIR}/src/translation/italian.c
-    ${PROJECT_SOURCE_DIR}/src/translation/korean.c
-    ${PROJECT_SOURCE_DIR}/src/translation/polish.c
-    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.c
-    ${PROJECT_SOURCE_DIR}/src/translation/russian.c
-    ${PROJECT_SOURCE_DIR}/src/translation/simplified_chinese.c
-    ${PROJECT_SOURCE_DIR}/src/translation/spanish.c
-    ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.c
-    ${PROJECT_SOURCE_DIR}/src/translation/translation.c
+    ${PROJECT_SOURCE_DIR}/src/translation/english.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/french.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/german.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/italian.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/korean.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/polish.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/portuguese.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/russian.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/simplified_chinese.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/spanish.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.cpp
+    ${PROJECT_SOURCE_DIR}/src/translation/translation.cpp
 )
 
 set(MACOSX_FILES "")
@@ -661,7 +660,7 @@ if(MSVC)
 endif()
 
 if(APPLE)
-    # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
+    # generating a macOS icns file (see https://stackoverflow.cppom/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/augustus.icns
         COMMAND mkdir -p augustus.iconset
         COMMAND sips -z 16 16    augustus_256.png --out augustus.iconset/icon_16x16.png

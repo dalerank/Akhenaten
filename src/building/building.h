@@ -1,6 +1,7 @@
 #ifndef BUILDING_BUILDING_H
 #define BUILDING_BUILDING_H
 
+//#include "figure/figure.h"
 #include "building/type.h"
 #include "core/buffer.h"
 
@@ -10,9 +11,21 @@ static const int MAX_BUILDINGS[2] = {
         4000
 };
 
-typedef struct {
-    int id;
+// partial (forward) declaration for recursive class
+class figure;
+#include "figure/figure.h"
 
+#define MAX_FIGURES_PER_BUILDING 8
+
+class building {
+private:
+//    short figure_id;
+//    short figure_id2; // labor seeker or market buyer
+//    short immigrant_figure_id;
+//    short figure_id4; // tower ballista or burning ruin prefect
+    short figure_ids_array[MAX_FIGURES_PER_BUILDING]; // oh boy!
+public:
+    int id;
     unsigned char state;
     unsigned char faction_id;
     unsigned char unknown_value;
@@ -45,10 +58,10 @@ typedef struct {
     short house_unreachable_ticks;
     unsigned char road_access_x;
     unsigned char road_access_y;
-    short figure_id;
-    short figure_id2; // labor seeker or market buyer
-    short immigrant_figure_id;
-    short figure_id4; // tower ballista or burning ruin prefect
+//    figure *figure_id;
+//    figure *figure_id2; // labor seeker or market buyer
+//    short immigrant_figure_id;
+//    short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;
     unsigned char figure_roam_direction;
     unsigned char has_water_access;
@@ -106,11 +119,6 @@ typedef struct {
             int unk_12[12];
             unsigned char worker_id;
         } industry;
-//        struct {
-//            unsigned short progress;
-//            unsigned char labor_state; // 0 = no laborers; 1 = present; 2 = just entered;
-//            unsigned char labor_days_left;
-//        } farm;
         struct {
             unsigned char num_shows;
             unsigned char days1;
@@ -165,16 +173,131 @@ typedef struct {
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
-} building;
+
+    ////
+
+    // building.c
+    building *main();
+    building *next();
+    building *top_xy();
+
+    int is_house();
+    int is_fort();
+    int is_defense_ph();
+    int is_farm();
+    int is_floodplain_farm();
+    int is_workshop();
+    int is_extractor();
+    int is_monument();
+    int is_senate();
+    int is_tax_collector();
+    int is_governor_palace();
+    int is_temple();
+    int is_large_temple();
+    int is_shrine();
+    int is_guild();
+    int is_beautification();
+    int is_water_crossing();
+
+    int is_industry();
+    int is_food_category();
+    int is_infrastructure();
+    int is_administration();
+    int is_religion();
+    int is_entertainment();
+    int is_culture();
+    int is_military();
+
+    void clear_related_data();
+
+    // figure.c
+    bool road_is_accessible;
+
+    const int get_figureID(int i) const {
+        return figure_ids_array[i];
+    };
+    figure *get_figure(int i);
+    void set_figure(int i, int figure_id = -1);
+    void set_figure(int i, figure* f);
+    void remove_figure(int i);
+    bool has_figure(int i, int figure_id = -1);
+    bool has_figure(int i, figure* f);
+    bool has_figure_of_type(int i, int _type);
+
+    figure *create_figure_generic(int _type, int created_action, int slot, int created_dir);
+    figure *create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
+    figure *create_figure_with_destination(int _type, building *destination, int created_action = ACTION_10_GOING, int slot = 0);
+    figure *create_cartpusher(int resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = 0);
+
+    int worker_percentage();
+    int figure_spawn_timer();
+    void check_labor_problem();
+    bool common_spawn_figure_trigger();
+    void common_spawn_labor_seeker(int min_houses);
+    bool common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_goods_output_cartpusher(bool only_one = true);
+
+    void spawn_figure_work_camp();
+    bool spawn_patrician(bool spawned);
+    void spawn_figure_engineers_post();
+    void spawn_figure_prefecture();
+    void spawn_figure_police();
+    void spawn_figure_actor_colony();
+    void spawn_figure_gladiator_school();
+    void spawn_figure_lion_house();
+    void spawn_figure_chariot_maker();
+    void spawn_figure_amphitheater();
+    void spawn_figure_theater();
+    void spawn_figure_hippodrome();
+    void spawn_figure_colosseum();
+    void set_market_graphic();
+    void spawn_figure_market();
+    void set_bathhouse_graphic();
+    void spawn_figure_bathhouse();
+    void spawn_figure_school();
+    void spawn_figure_library();
+    void spawn_figure_academy();
+    void spawn_figure_barber();
+    void spawn_figure_doctor();
+    void spawn_figure_hospital();
+    void spawn_figure_physician();
+    void spawn_figure_magistrate();
+    void spawn_figure_temple();
+    void set_water_supply_graphic();
+    void spawn_figure_watersupply();
+    void set_senate_graphic();
+    void spawn_figure_tax_collector();
+    void spawn_figure_senate();
+    void spawn_figure_mission_post();
+    void spawn_figure_industry();
+    void spawn_figure_wharf();
+    void spawn_figure_shipyard();
+    void spawn_figure_dock();
+    void spawn_figure_warehouse();
+    void spawn_figure_granary();
+    bool can_spawn_hunter();
+    void spawn_figure_hunting_lodge();
+    void spawn_figure_native_hut();
+    void spawn_figure_native_meeting();
+    void spawn_figure_tower();
+    void spawn_figure_barracks();
+
+    void update_native_crop_progress();
+    void update_road_access();
+    bool figure_generate();
+
+    // barracks.c
+    void barracks_add_weapon();
+    int barracks_create_soldier();
+    int barracks_create_tower_sentry();
+    void barracks_toggle_priority();
+    int barracks_get_priority();
+};
 
 int building_find(int type);
 building *building_get(int id);
-building *building_main(building *b);
-building *building_next(building *b);
-building *building_top_xy(building *b);
 building *building_create(int type, int x, int y);
 
-void building_clear_related_data(building *b);
 void building_clear_all(void);
 //void building_totals_add_corrupted_house(int unfixable);
 

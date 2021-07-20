@@ -7,7 +7,7 @@ void map_bridge_reset_building_length(void);
 
 int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction);
 
-int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge);
+int map_bridge_get_sprite_id(int index, int length, int direction, bool is_ship_bridge);
 /**
  * Adds a bridge to the terrain
  * @param x Map X
@@ -15,7 +15,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
  * @param is_ship_bridge Whether this is a ship bridge or low bridge
  * @return Length of the bridge
  */
-int map_bridge_add(int x, int y, int is_ship_bridge);
+int map_bridge_add(int x, int y, bool is_ship_bridge);
 
 void map_bridge_remove(int grid_offset, int mark_deleted);
 

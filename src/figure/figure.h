@@ -5,11 +5,14 @@
 #include "core/direction.h"
 #include "figure/action.h"
 #include "figure/type.h"
-#include "building/building.h"
 #include "figure/formation.h"
 #include "map/point.h"
 #include "window/building/common.h"
 #include "widget/city.h"
+
+// partial (forward) declaration for recursive class
+class building;
+#include "building/building.h"
 
 static int MAX_FIGURES[] = {5000, 2000};
 
@@ -18,6 +21,10 @@ private:
     unsigned char resource_id;
     unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
+
+    short home_building_id;
+    short immigrant_home_building_id;
+    short destination_building_id;
 public:
     int id;
     int sprite_image_id;
@@ -35,7 +42,7 @@ public:
     unsigned char type;
 //    unsigned char resource_id;
     unsigned char use_cross_country;
-    unsigned char is_friendly;
+    bool is_friendly;
     unsigned char state;
     unsigned char faction_id; // 1 = city, 0 = enemy
     unsigned char action_state_before_attack;
@@ -70,10 +77,10 @@ public:
     short routing_path_current_tile;
     short routing_path_length;
     unsigned char in_building_wait_ticks;
-    unsigned char is_on_road;
+    unsigned char outside_road_ticks;
     short max_roam_length;
     short roam_length;
-    unsigned char roam_choose_destination;
+    unsigned char roam_wander_freely;
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
@@ -88,14 +95,15 @@ public:
 //    unsigned short loads_full; // full load counter
     unsigned char cc_direction; // 1 = x, 2 = y
     unsigned char speed_multiplier;
-    short building_id;
-    short immigrant_building_id;
-    short destination_building_id;
+//    short building_id;
+//    short immigrant_building_id;
+//    short destination_building_id;
+
     short formation_id;
     unsigned char index_in_formation;
     unsigned char formation_at_rest;
     unsigned char migrant_num_people;
-    unsigned char is_ghost;
+    bool is_ghost;
     unsigned char min_max_seen;
     unsigned char __unused_57;
     short leading_figure_id;
@@ -148,6 +156,8 @@ public:
     bool has_figure_color(); // minimap.c
 
     void kill() {
+        if (state != FIGURE_STATE_ALIVE)
+            return;
         set_state(FIGURE_STATE_DYING);
         action_state = FIGURE_ACTION_149_CORPSE;
     };
@@ -167,6 +177,33 @@ public:
 
     // figure/figure.c
     void figure_delete_UNSAFE();
+    building *home();
+    building *immigrant_home();
+    building *destination();
+    const int homeID() const {
+        return home_building_id;
+    }
+    const int immigrant_homeID() const {
+        return immigrant_home_building_id;
+    }
+    const int destinationID() const {
+        return destination_building_id;
+    }
+
+    void set_home(int _id);
+    void set_immigrant_home(int _id);
+    void set_destination(int _id);
+    void set_home(building *b);
+    void set_immigrant_home(building *b);
+    void set_destination(building *b);
+    bool has_home(int _id = -1);
+    bool has_home(building *b);
+    bool has_immigrant_home(int _id = -1);
+    bool has_immigrant_home(building *b);
+    bool has_destination(int _id = -1);
+    bool has_destination(building *b);
+
+//    bool is_roamer();
 
     // map/figure.c
     void map_figure_add();
@@ -201,9 +238,9 @@ public:
     void set_target_height_bridge();
     int get_permission_for_int();
     void move_to_next_tile();
-    void set_next_route_tile_direction();
+    void set_next_tile_and_direction();
     void advance_route_tile(int roaming_enabled);
-    void init_roaming();
+    void init_roaming_from_building(int roam_dir);
     void roam_set_direction();
     void move_ticks(int num_ticks, int roaming_enabled = false);
     void move_ticks_tower_sentry(int num_ticks);
@@ -221,14 +258,13 @@ public:
 
     // actions.c
     void action_perform();
-
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
     bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_gotobuilding(int destid, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_gotobuilding(building *dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
     bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0);
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_enterbuilding(bool invisible, int buildid, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_enterbuilding(bool invisible, building *b, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
 
     void immigrant_action();
     void emigrant_action();
@@ -328,8 +364,8 @@ public:
 
     // market.c
     int create_delivery_boy(int leader_id);
-    int take_food_from_granary(int market_id, int granary_id);
-    int take_resource_from_warehouse(int warehouse_id);
+    int take_food_from_granary(building *market, building *granary);
+    int take_resource_from_warehouse(building *warehouse);
     void figure_delivery_boy_action();
 
     // trader.c

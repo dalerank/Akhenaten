@@ -53,7 +53,7 @@ int rich_text_get_clicked_link(const mouse *m);
  * @return Total number of lines required for the text
  */
 int rich_text_draw(const uint8_t *text, int x_offset, int y_offset,
-                   int box_width, int height_lines, int measure_only);
+                   int box_width, int height_lines, bool measure_only);
 
 /**
  * Draws rich text with specified color
