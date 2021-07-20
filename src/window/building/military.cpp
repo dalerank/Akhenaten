@@ -52,7 +52,7 @@ static void draw_priority_buttons(int x, int y, int buttons) {
         int x_adj = x + priority_buttons[i].x;
         int y_adj = y + priority_buttons[i].y;
         building *barracks = building_get(data.building_id);
-        int priority = building_barracks_get_priority(barracks);
+        int priority = barracks->barracks_get_priority();
         button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
         if (priority == i)
             text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK, 0);
@@ -508,6 +508,6 @@ static void button_layout(int index, int param2) {
 static void button_priority(int index, int param2) {
     building *barracks = building_get(data.building_id);
     if (index != barracks->subtype.barracks_priority)
-        building_barracks_toggle_priority(barracks);
+        barracks->barracks_toggle_priority();
 
 }

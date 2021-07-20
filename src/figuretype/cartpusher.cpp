@@ -298,7 +298,7 @@ void figure::cartpusher_action() {
                         delivery_check = (building_granary_add_resource(dest, resource_id, true, amount_left) != -1);
                         break;
                     case BUILDING_BARRACKS:
-                        building_barracks_add_weapon(dest);
+                        dest->barracks_add_weapon();
                         delivery_check = true;
                         break;
                     case BUILDING_VILLAGE_PALACE:
@@ -368,7 +368,7 @@ void figure::warehouseman_action() {
                         delivery_check = (building_granary_add_resource(dest, resource_id, 0, amount_left) != -1);
                         break;
                     case BUILDING_BARRACKS:
-                        building_barracks_add_weapon(dest);
+                        dest->barracks_add_weapon();
                         delivery_check = true;
                         break;
                     case BUILDING_WAREHOUSE:

@@ -1171,7 +1171,7 @@ static bool attempt_placing_on_shore(int type, int x, int y, int shore_size, boo
     }
 
     // place!
-    if (!attempt_placing_generic(type, x, y, orientation, 0))
+    if (!attempt_placing_generic(type, x, y, orientation, TERRAIN_WATER))
         return false;
     return true;
 }

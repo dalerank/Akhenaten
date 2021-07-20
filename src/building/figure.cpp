@@ -102,10 +102,14 @@ bool building::has_figure_of_type(int i, int _type) {
         return (get_figure(i)->type == _type);
 }
 
-figure *building::create_roaming_figure(int _type, int created_action, int slot) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
+figure *building::create_figure_generic(int _type, int created_action, int slot, int created_dir) {
+    figure *f = figure_create(_type, road_access_x, road_access_y, created_dir);
     f->action_state = created_action;
     f->set_home(id);
+    return f;
+}
+figure *building::create_roaming_figure(int _type, int created_action, int slot) {
+    figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
     f->set_destination(0);
     f->set_immigrant_home(0);
 
@@ -120,20 +124,16 @@ figure *building::create_roaming_figure(int _type, int created_action, int slot)
     return f;
 }
 figure *building::create_figure_with_destination(int _type, building *destination, int created_action, int slot) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
-    f->action_state = created_action;
-    f->set_home(id);
+    figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
     f->set_immigrant_home(0);
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
 }
-figure *building::create_cartpusher(int goods, int quantity, int created_action, int slot) {
-    figure *f = figure_create(FIGURE_CART_PUSHER, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
-    f->action_state = created_action;
-    f->load_resource(quantity, goods);
-    f->set_home(id);
+figure *building::create_cartpusher(int resource_id, int quantity, int created_action, int slot) {
+    figure *f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
+    f->load_resource(quantity, resource_id);
     f->set_destination(0);
     f->set_immigrant_home(0);
 
@@ -163,7 +163,7 @@ void building::check_labor_problem() {
     if ((houses_covered <= 0 && labor_category != 255) || (labor_category == 255 && num_workers <= 0))
         show_on_problem_overlay = 2;
 }
-void building::spawn_labor_seeker(int min_houses) {
+void building::common_spawn_labor_seeker(int min_houses) {
     if (city_population() <= 0)
         return;
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
@@ -179,13 +179,12 @@ void building::spawn_labor_seeker(int min_houses) {
             create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, true);
     }
 }
-
-bool building::common_spawn_figure_trigger(int _type) {
+bool building::common_spawn_figure_trigger() {
     check_labor_problem();
-    if (has_figure_of_type(0, _type))
+    if (has_figure(0))
         return false;
     if (road_is_accessible) {
-        spawn_labor_seeker(100);
+        common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1)
@@ -198,15 +197,33 @@ bool building::common_spawn_figure_trigger(int _type) {
     }
 }
 bool building::common_spawn_roamer(int type, int created_action) {
-    if (common_spawn_figure_trigger(type)) {
+    if (common_spawn_figure_trigger()) {
         create_roaming_figure(type, created_action);
         return true;
     }
     return false;
 }
+bool building::common_spawn_goods_output_cartpusher(bool only_one) {
+    // can only have one?
+    if (only_one && has_figure_of_type(0, FIGURE_CART_PUSHER))
+        return false;
+
+    // no checking for work force? doesn't matter anyways.... there's no instance
+    // in the game that allows cartpushers to spawn before the workers disappear!
+    if (road_is_accessible) {
+        while (loads_stored) {
+            int loads_to_carry = fmin(loads_stored, 4);
+            create_cartpusher(output_resource_id, loads_to_carry * 100);
+            loads_stored -= loads_to_carry;
+            if (only_one || loads_stored == 0) // done once, or out of goods?
+                return true;
+        }
+    }
+    return false;
+}
 
 void building::spawn_figure_work_camp() {
-    if (common_spawn_figure_trigger(FIGURE_WORKER_PH)) {
+    if (common_spawn_figure_trigger()) {
         building *dest = building_get(building_determine_worker_needed());
         figure *f = create_figure_with_destination(FIGURE_WORKER_PH, dest);
         dest->data.industry.worker_id = f->id;
@@ -227,7 +244,7 @@ void building::spawn_figure_police() {
 }
 
 void building::spawn_figure_actor_colony() {
-    if (common_spawn_figure_trigger(FIGURE_WORKER_PH)) {
+    if (common_spawn_figure_trigger()) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM));
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             create_figure_with_destination(FIGURE_ACTOR, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -285,7 +302,7 @@ void building::spawn_figure_amphitheater() {
 //    }
 }
 void building::spawn_figure_theater() {
-    if (common_spawn_figure_trigger(FIGURE_ACTOR)) {
+    if (common_spawn_figure_trigger()) {
         if (data.entertainment.days1 <= 0)
             return;
         create_roaming_figure(FIGURE_ACTOR, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
@@ -417,23 +434,11 @@ void building::set_market_graphic() {
 void building::spawn_figure_market() {
     set_market_graphic();
     check_labor_problem();
-    map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(50);
+
+    if (road_is_accessible) {
+        common_spawn_labor_seeker(50);
         int pct_workers = worker_percentage();
-        int spawn_delay;
-        if (pct_workers >= 100)
-            spawn_delay = 2;
-        else if (pct_workers >= 75)
-            spawn_delay = 5;
-        else if (pct_workers >= 50)
-            spawn_delay = 10;
-        else if (pct_workers >= 25)
-            spawn_delay = 20;
-        else if (pct_workers >= 1)
-            spawn_delay = 30;
-        else
-            return;
+        int spawn_delay = figure_spawn_timer();
         if (!has_figure_of_type(0, FIGURE_MARKET_TRADER) && !has_figure_of_type(0, FIGURE_MARKET_BUYER)) {
             // market buyer
             building *dest = building_get(building_market_get_storage_destination(this));
@@ -508,7 +513,7 @@ void building::spawn_figure_school() {
         return;
     map_point road;
     if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(50);
+        common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1)
             return;
@@ -800,7 +805,7 @@ void building::spawn_figure_senate() {
 //        return;
     map_point road;
     if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(50);
+        common_spawn_labor_seeker(50);
 //        int spawn_delay = default_spawn_delay();
 //        if (spawn_delay == -1)
 //            return;
@@ -834,10 +839,9 @@ void building::spawn_figure_industry() {
 //        return;
 
     check_labor_problem();
-    map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
+    if (road_is_accessible) {
         if (labor_category != 255) { // normal farms
-            spawn_labor_seeker(50);
+            common_spawn_labor_seeker(50);
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
             if (building_industry_has_produced_resource(this)) {
@@ -860,6 +864,15 @@ void building::spawn_figure_industry() {
     }
 }
 void building::spawn_figure_wharf() {
+    common_spawn_figure_trigger();
+//    if (common_spawn_figure_trigger()) {
+//        create_figure_generic(FIGURE_FISHING_BOAT, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+//    }
+    common_spawn_goods_output_cartpusher();
+
+
+
+
 //    check_labor_problem();
 //    if (data.industry.fishing_boat_id) {
 //        figure *f = figure_get(data.industry.fishing_boat_id);
@@ -975,7 +988,7 @@ void building::spawn_figure_warehouse() {
     map_point road;
     if (map_has_road_access_rotation(subtype.orientation, x, y, size, &road) ||
         map_has_road_access_rotation(subtype.orientation, x, y, 3, &road)) {
-        spawn_labor_seeker(100);
+        common_spawn_labor_seeker(100);
         if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
         int resource = 0;
@@ -1004,7 +1017,7 @@ void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
     if (map_has_road_access(x, y, size, &road)) { //map_has_road_access_granary(x, y, &road)
-        spawn_labor_seeker(100);
+        common_spawn_labor_seeker(100);
         if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
         int task = building_granary_determine_worker_task(this);
@@ -1044,46 +1057,62 @@ bool building::can_spawn_hunter() { // no cache because fuck the system (also I 
     return false;
 }
 void building::spawn_figure_hunting_lodge() {
+
     check_labor_problem();
-    map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(50);
+    if (road_is_accessible) {
+        common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
-        int spawn_delay;
-        if (pct_workers >= 100)
-            spawn_delay = 0;
-        else if (pct_workers >= 75)
-            spawn_delay = 1;
-        else if (pct_workers >= 50)
-            spawn_delay = 3;
-        else if (pct_workers >= 25)
-            spawn_delay = 7;
-        else if (pct_workers >= 1)
-            spawn_delay = 15;
-        else
+        int spawn_delay = figure_spawn_timer();
+        if (spawn_delay == -1)
             return;
         figure_spawn_delay++;
         if (figure_spawn_delay > spawn_delay && can_spawn_hunter()) {
             figure_spawn_delay = 0;
-            figure *f = figure_create(FIGURE_HUNTER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-            f->action_state = ACTION_8_RECALCULATE;
-            f->set_home(id);
-//            f->wait_ticks = 30;
-//            f->loads_counter = 1;
-        }
-        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
-            return;
-        if (loads_stored) {
-            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-            int loads_to_carry = fmin(loads_stored, 4);
-            loads_stored -= loads_to_carry;
-            f->load_resource(loads_to_carry * 100, RESOURCE_GAMEMEAT);
-            f->set_home(id);
-            set_figure(0, f->id);
-            f->wait_ticks = 30;
+            create_figure_generic(FIGURE_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
         }
     }
+    common_spawn_goods_output_cartpusher();
+
+
+
+//    check_labor_problem();
+//    if (road_is_accessible) {
+//        spawn_labor_seeker(50);
+//        int pct_workers = worker_percentage();
+//        int spawn_delay = figure_spawn_timer();
+////        if (pct_workers >= 100)
+////            spawn_delay = 0;
+////        else if (pct_workers >= 75)
+////            spawn_delay = 1;
+////        else if (pct_workers >= 50)
+////            spawn_delay = 3;
+////        else if (pct_workers >= 25)
+////            spawn_delay = 7;
+////        else if (pct_workers >= 1)
+////            spawn_delay = 15;
+////        else
+////            return;
+//        figure_spawn_delay++;
+//        if (figure_spawn_delay > spawn_delay && can_spawn_hunter()) {
+//            figure_spawn_delay = 0;
+//            create_figure_generic(FIGURE_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+//        }
+//        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+//            return;
+//        if (loads_stored) {
+//            int loads_to_carry = fmin(loads_stored, 4);
+//            create_cartpusher(RESOURCE_GAMEMEAT, loads_to_carry);
+//            loads_stored -= loads_to_carry;
+////            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
+////            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
+////            int loads_to_carry = fmin(loads_stored, 4);
+////            loads_stored -= loads_to_carry;
+////            f->load_resource(loads_to_carry * 100, RESOURCE_GAMEMEAT);
+////            f->set_home(id);
+////            set_figure(0, f->id);
+////            f->wait_ticks = 30;
+//        }
+//    }
 }
 
 void building::spawn_figure_native_hut() {
@@ -1125,55 +1154,46 @@ void building::spawn_figure_tower() {
     check_labor_problem();
     map_point road;
     if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(50);
+        common_spawn_labor_seeker(50);
         if (num_workers <= 0)
             return;
-        if (has_figure(0) && !has_figure(3)) { // has sentry but no ballista -> create
-            figure *f = figure_create(FIGURE_BALLISTA, x, y, DIR_0_TOP_RIGHT);
-            set_figure(3, f->id);
-            f->set_home(id);
-            f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
-        }
+        if (has_figure(0) && !has_figure(3)) // has sentry but no ballista -> create
+            create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, 3, DIR_0_TOP_RIGHT);
         if (!has_figure(0))
             building_barracks_request_tower_sentry();
-
     }
 }
 void building::spawn_figure_barracks() {
     check_labor_problem();
-    map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
-        spawn_labor_seeker(100);
+//    map_point road;
+    if (road_is_accessible) {
+        common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
-        int spawn_delay;
-        if (pct_workers >= 100)
-            spawn_delay = 8;
-        else if (pct_workers >= 75)
-            spawn_delay = 12;
-        else if (pct_workers >= 50)
-            spawn_delay = 16;
-        else if (pct_workers >= 25)
-            spawn_delay = 32;
-        else if (pct_workers >= 1)
-            spawn_delay = 48;
-        else
-            return;
+        int spawn_delay = figure_spawn_timer();
+//        if (pct_workers >= 100)
+//            spawn_delay = 8;
+//        else if (pct_workers >= 75)
+//            spawn_delay = 12;
+//        else if (pct_workers >= 50)
+//            spawn_delay = 16;
+//        else if (pct_workers >= 25)
+//            spawn_delay = 32;
+//        else if (pct_workers >= 1)
+//            spawn_delay = 48;
+//        else
+//            return;
         figure_spawn_delay++;
         if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
-            map_has_road_access(x, y, size, &road);
             switch (subtype.barracks_priority) {
                 case PRIORITY_FORT:
-                    if (!building_barracks_create_soldier(this, road.x, road.y))
-                        building_barracks_create_tower_sentry(this, road.x, road.y);
-
+                    if (!barracks_create_soldier())
+                        barracks_create_tower_sentry();
                     break;
                 default:
-                    if (!building_barracks_create_tower_sentry(this, road.x, road.y))
-                        building_barracks_create_soldier(this, road.x, road.y);
-
+                    if (!barracks_create_tower_sentry())
+                        barracks_create_soldier();
             }
-
         }
     }
 }
@@ -1288,7 +1308,7 @@ bool building::figure_generate() {
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
             case BUILDING_MILITARY_ACADEMY:
-                spawn_labor_seeker(100); break;
+                common_spawn_figure_trigger(); break;
             case BUILDING_HUNTING_LODGE:
                 spawn_figure_hunting_lodge(); break;
             case BUILDING_WORK_CAMP:

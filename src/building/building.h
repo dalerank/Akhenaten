@@ -224,17 +224,19 @@ public:
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, int _type);
 
+    figure *create_figure_generic(int _type, int created_action, int slot, int created_dir);
     figure *create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
     figure *create_figure_with_destination(int _type, building *destination, int created_action = ACTION_10_GOING, int slot = 0);
-    figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = 0);
+    figure *create_cartpusher(int resource_id, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = 0);
 
     int worker_percentage();
     int figure_spawn_timer();
     void check_labor_problem();
-    bool common_spawn_figure_trigger(int _type);
+    bool common_spawn_figure_trigger();
+    void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_goods_output_cartpusher(bool only_one = true);
 
-    void spawn_labor_seeker(int min_houses);
     void spawn_figure_work_camp();
     bool spawn_patrician(bool spawned);
     void spawn_figure_engineers_post();
@@ -283,6 +285,13 @@ public:
     void update_native_crop_progress();
     void update_road_access();
     bool figure_generate();
+
+    // barracks.c
+    void barracks_add_weapon();
+    int barracks_create_soldier();
+    int barracks_create_tower_sentry();
+    void barracks_toggle_priority();
+    int barracks_get_priority();
 };
 
 int building_find(int type);
