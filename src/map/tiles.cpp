@@ -1329,6 +1329,19 @@ void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_exit_flag());
 }
 
+static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (map_grasslevel_get(map_grid_offset(xx, yy)) < 12)
+                return true;
+        }
+    }
+    return false;
+}
+
 static void clear_empty_land_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         map_image_set(grid_offset, 0);
@@ -1385,11 +1398,21 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
         else if (ph_grass == 12) {
 
             // check for non-clear terrain tiles in a radius around it
-            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR)) // one tile of distance
-                return set_empty_land_image(x, y, 1, image_base + 36 + (map_random_get(grid_offset) % 12));
-            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_NOT_CLEAR)) // two tiles of distance
-                return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
-            return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
+            int closest_radius_not_fullgrass = 3;
+            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR))
+                closest_radius_not_fullgrass = 1;
+            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_NOT_CLEAR)
+                || map_has_nonfull_grassland_in_radius(x, y, 1, 1, TERRAIN_NOT_CLEAR)) // for lower grass level transition
+                closest_radius_not_fullgrass = 2;
+
+            switch (closest_radius_not_fullgrass) {
+                case 1: // one tile of distance
+                    return set_empty_land_image(x, y, 1, image_base + 36 + (map_random_get(grid_offset) % 12));
+                case 2: // two tiles of distance
+                    return set_empty_land_image(x, y, 1, image_base + 60 + (map_random_get(grid_offset) % 12));
+                default: // any other distance
+                    return set_empty_land_image(x, y, 1, image_base + 48 + (map_random_get(grid_offset) % 12)); // flat tiles
+            }
 
         } else if (ph_grass >= 16) { // edges have special ids
 

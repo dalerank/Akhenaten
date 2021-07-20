@@ -235,7 +235,7 @@ static void check_clay_access(int type) {
     }
 }
 
-void building_construction_warning_check_all(int type, int x, int y, int size) {
+void building_construction_warning_generic_checks(int type, int x, int y, int size) {
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
     check_market(type);

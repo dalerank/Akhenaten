@@ -70,7 +70,6 @@ static struct {
         bool water;
         bool groundwater;
         bool wall;
-        bool road;
     } required_terrain;
     int draw_as_constructing;
     int start_offset_x_view;
@@ -87,7 +86,6 @@ static const int FORT_Y_OFFSET[4][4] = {{-1, -1, 0,  0},
                                         {-4, -4, -3, -3},
                                         {0,  0,  1,  1},
                                         {3,  3,  4,  4}};
-
 
 const int CROPS_OFFSETS[2] = {5, 6};
 
@@ -884,8 +882,6 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
     map_routing_update_walls();
 }
 
-
-
 static void mark_construction(int x, int y, int size, int terrain, int absolute_xy) {
     if (map_building_tiles_mark_construction(x, y, size, terrain, absolute_xy))
         data.draw_as_constructing = 1;
@@ -1136,7 +1132,8 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
         return false;
     }
 
-    building_construction_warning_check_all(type, x, y, size);
+    // final generic checks
+    building_construction_warning_generic_checks(type, x, y, size);
 
     // checks done!!!
     building *b;
@@ -1183,6 +1180,9 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
     int x = x_end;
     int y = y_end;
 
+    // Check warnings for placement and create building/update tiles accordingly.
+    // Some of the buildings below have specific warning messages (e.g. roadblocks)
+    // that can't be easily put in `building_construction_can_place_on_terrain()`!
     int placement_cost = model_get_building(type)->cost;
     switch (type) {
         case BUILDING_CLEAR_LAND: {
@@ -1444,7 +1444,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
 //    }
 }
 
-bool can_place_building_preliminary_warnings(int type, int x_start, int y_start, int x_end, int y_end) {
+bool building_check_preliminary_warnings(int type, int x_start, int y_start, int x_end, int y_end) {
     // reset all warnings before checking
     building_construction_warning_reset();
 
@@ -1786,7 +1786,7 @@ void building_construction_finalize(void) { // confirm final placement
     int type = data.sub_type ? data.sub_type : data.type;
 
     // preliminary, global checks
-    if (!can_place_building_preliminary_warnings(type, x_start, y_start, x_end, y_end))
+    if (!building_check_preliminary_warnings(type, x_start, y_start, x_end, y_end))
         return;
 
     // attempt placing!
