@@ -1103,10 +1103,11 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
     return 1;
 }
 
-static bool attempt_placing_generic(int type, int x, int y, int orientation, int terrain_exception = TERRAIN_NONE, int size = -1) {
+static bool attempt_placing_generic(int type, int x, int y, int orientation, int terrain_exception = TERRAIN_NONE) {
     // by default, get size from building's properties
-    if (size == -1)
-        size = building_properties_for_type(type)->size;
+    int size = building_properties_for_type(type)->size;
+    if (type == BUILDING_WAREHOUSE)
+        size = 3; // special case
 
     // correct building placement for city orientations
     switch (city_view_orientation()) {
@@ -1234,13 +1235,6 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 if (!attempt_placing_on_shore(type, x, y, 2, false))
                     return 0;
-//                int orientation = 0;
-//                if (map_water_determine_orientation_size2(x, y, 0, &orientation)) {
-//                    city_warning_show(WARNING_SHORE_NEEDED);
-//                    return 0;
-//                }
-//                if (!building_place_generic(type, x, y, orientation))
-//                    return 0;
                 break;
             }
             struct reservoir_info info;
@@ -1360,7 +1354,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
                         city_warning_show(WARNING_CLEAR_LAND_NEEDED);
                     return 0;
                 }
-                if (!attempt_placing_generic(type, x, y, orientation))
+                if (!attempt_placing_generic(type, x, y, orientation, TERRAIN_ROAD))
                     return 0;
             }
             break;
@@ -1449,179 +1443,6 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
 //        }
 //    }
 }
-
-//int building_construction_place_building(int type, int x, int y) {
-//    int terrain_mask = TERRAIN_ALL;
-//
-//    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
-//        type == BUILDING_ROADBLOCK)
-//        terrain_mask = ~TERRAIN_ROAD;
-//    else if (type == BUILDING_TOWER)
-//        terrain_mask = ~TERRAIN_WALL;
-//    else if (building_is_farm(type))
-//        terrain_mask = ~TERRAIN_FLOODPLAIN;
-//
-//    int size = building_properties_for_type(type)->size;
-//    if (type == BUILDING_WAREHOUSE)
-//        size = 3;
-//    int building_orientation = 0;
-//    if (type == BUILDING_GATEHOUSE)
-//        building_orientation = map_orientation_for_gatehouse(x, y);
-//    else if (type == BUILDING_TRIUMPHAL_ARCH)
-//        building_orientation = map_orientation_for_triumphal_arch(x, y);
-//    switch (city_view_orientation()) {
-//        case DIR_2_BOTTOM_RIGHT:
-//            x = x - size + 1;
-//            break;
-//        case DIR_4_BOTTOM_LEFT:
-//            x = x - size + 1;
-//            y = y - size + 1;
-//            break;
-//        case DIR_6_TOP_LEFT:
-//            y = y - size + 1;
-//            break;
-//    }
-//    // extra checks
-//    if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH) {
-//        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
-//            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//        if (!building_orientation) {
-//            if (building_rotation_get_road_orientation() == 1)
-//                building_orientation = 1;
-//            else
-//                building_orientation = 2;
-//        }
-//    }
-//    if (type == BUILDING_ROADBLOCK) {
-//        if (map_tiles_are_clear(x, y, size, TERRAIN_ROAD))
-//            return 0;
-//    }
-//    if (type == BUILDING_TRIUMPHAL_ARCH) {
-//        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
-//            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//        if (!building_orientation) {
-//            if (building_rotation_get_road_orientation() == 1)
-//                building_orientation = 1;
-//            else
-//                building_orientation = 3;
-//        }
-//    }
-//    int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
-//    if ((type == BUILDING_SHIPYARD && GAME_ENV == ENGINE_ENV_C3) || type == BUILDING_WHARF ||
-//        (type == BUILDING_WATER_LIFT && GAME_ENV == ENGINE_ENV_PHARAOH)) {
-//        if (map_water_determine_orientation_size2(x, y, 0, &waterside_orientation_abs)) {
-//            city_warning_show(WARNING_SHORE_NEEDED);
-//            return 0;
-//        }
-//    } else if ((type == BUILDING_SHIPYARD && GAME_ENV == ENGINE_ENV_PHARAOH) || type == BUILDING_DOCK) {
-//        if (map_water_determine_orientation_size3(x, y, 0, &waterside_orientation_abs)) {
-//            city_warning_show(WARNING_SHORE_NEEDED);
-//            return 0;
-//        }
-//        if (!building_dock_is_connected_to_open_water(x, y)) {
-//            city_warning_show(WARNING_DOCK_OPEN_WATER_NEEDED);
-//            return 0;
-//        }
-//    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && (type == BUILDING_BOOTH ||
-//              type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION || type == BUILDING_FESTIVAL_SQUARE)) {
-//        int booth_warning = 0;
-//        if (type == BUILDING_BOOTH)
-//            booth_warning = map_orientation_for_venue(x, y, 0, &building_orientation);
-//        if (type == BUILDING_BANDSTAND)
-//            booth_warning = map_orientation_for_venue(x, y, 1, &building_orientation);
-//        if (type == BUILDING_PAVILLION)
-//            booth_warning = map_orientation_for_venue(x, y, 2, &building_orientation);
-//        if (type == BUILDING_FESTIVAL_SQUARE) {
-//            if (city_building_has_festival_square()) {
-//                city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
-//                return 0;
-//            }
-//            booth_warning = map_orientation_for_venue(x, y, 3, &building_orientation);
-//        }
-//        if (booth_warning != 1) {
-//            if (booth_warning == -1)
-//                city_warning_show(WARNING_BOOTH_ROAD_INTERSECTION_NEEDED);
-//            else if (booth_warning == -2)
-//                city_warning_show(WARNING_FESTIVAL_ROAD_INTERSECTION_NEEDED);
-//            else if (booth_warning == 0)
-//                city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//    } else {
-//        if (!map_tiles_are_clear(x, y, size, terrain_mask)) {
-//            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//        int warning_id;
-//        if (!building_construction_can_place_on_terrain(x, y, &warning_id, size)) {
-//            city_warning_show(warning_id);
-//            return 0;
-//        }
-//    }
-//    if (building_is_fort(type)) {
-//        const int offsets_x[] = {3, -1, -4, 0};
-//        const int offsets_y[] = {-1, -4, 0, 3};
-//        int orient_index = building_rotation_get_rotation();
-//        int x_offset = offsets_x[orient_index];
-//        int y_offset = offsets_y[orient_index];
-//        if (!map_tiles_are_clear(x + x_offset, y + y_offset, 4, terrain_mask)) {
-//            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//        if (formation_get_num_legions_cached() >= formation_get_max_legions()) {
-//            city_warning_show(WARNING_MAX_LEGIONS_REACHED);
-//            return 0;
-//        }
-//    }
-//    if (type == BUILDING_HIPPODROME) {
-//        if (city_buildings_has_hippodrome()) {
-//            city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
-//            return 0;
-//        }
-//        int x_offset_1, y_offset_1;
-//        building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset_1, &y_offset_1);
-//        int x_offset_2, y_offset_2;
-//        building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset_2, &y_offset_2);
-//        if (!map_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, terrain_mask) ||
-//            !map_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, terrain_mask)) {
-//            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//            return 0;
-//        }
-//    }
-//    if ((type == BUILDING_SENATE_UPGRADED ||
-//         type == BUILDING_VILLAGE_PALACE ||
-//         type == BUILDING_TOWN_PALACE ||
-//         type == BUILDING_CITY_PALACE) && city_buildings_has_senate()) {
-//        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
-//        return 0;
-//    }
-//    if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
-//        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
-//        return 0;
-//    }
-//    if (formation_herd_breeding_ground_at(x, y, size)) {
-//        map_property_clear_constructing_and_deleted();
-//        city_warning_show(WARNING_HERD_BREEDING_GROUNDS);
-//        return 0;
-//    }
-//    building_construction_warning_check_all(type, x, y, size);
-//
-//    // phew, checks done!
-//    building *b;
-//    if (building_is_fort(type))
-//        b = building_create(BUILDING_FORT, x, y);
-//    else
-//        b = building_create(type, x, y);
-//    game_undo_add_building(b);
-//    if (b->id <= 0)
-//        return 0;
-//    add_to_map(type, b, size, building_orientation, waterside_orientation_abs, waterside_orientation_rel);
-//    return 1;
-//}
 
 bool can_place_building_preliminary_warnings(int type, int x_start, int y_start, int x_end, int y_end) {
     // reset all warnings before checking

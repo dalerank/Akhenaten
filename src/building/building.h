@@ -224,10 +224,65 @@ public:
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, int _type);
 
-    bool common_spawn_figure_trigger(int _type, int delay_shift = 2);
     figure *create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);
     figure *create_figure_with_destination(int _type, building *destination, int created_action = ACTION_10_GOING, int slot = 0);
     figure *create_cartpusher(int goods, int quantity, int created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, int slot = 0);
+
+    int worker_percentage();
+    int figure_spawn_timer();
+    void check_labor_problem();
+    bool common_spawn_figure_trigger(int _type);
+    bool common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
+
+    void spawn_labor_seeker(int min_houses);
+    void spawn_figure_work_camp();
+    bool spawn_patrician(bool spawned);
+    void spawn_figure_engineers_post();
+    void spawn_figure_prefecture();
+    void spawn_figure_police();
+    void spawn_figure_actor_colony();
+    void spawn_figure_gladiator_school();
+    void spawn_figure_lion_house();
+    void spawn_figure_chariot_maker();
+    void spawn_figure_amphitheater();
+    void spawn_figure_theater();
+    void spawn_figure_hippodrome();
+    void spawn_figure_colosseum();
+    void set_market_graphic();
+    void spawn_figure_market();
+    void set_bathhouse_graphic();
+    void spawn_figure_bathhouse();
+    void spawn_figure_school();
+    void spawn_figure_library();
+    void spawn_figure_academy();
+    void spawn_figure_barber();
+    void spawn_figure_doctor();
+    void spawn_figure_hospital();
+    void spawn_figure_physician();
+    void spawn_figure_magistrate();
+    void spawn_figure_temple();
+    void set_water_supply_graphic();
+    void spawn_figure_watersupply();
+    void set_senate_graphic();
+    void spawn_figure_tax_collector();
+    void spawn_figure_senate();
+    void spawn_figure_mission_post();
+    void spawn_figure_industry();
+    void spawn_figure_wharf();
+    void spawn_figure_shipyard();
+    void spawn_figure_dock();
+    void spawn_figure_warehouse();
+    void spawn_figure_granary();
+    bool can_spawn_hunter();
+    void spawn_figure_hunting_lodge();
+    void spawn_figure_native_hut();
+    void spawn_figure_native_meeting();
+    void spawn_figure_tower();
+    void spawn_figure_barracks();
+
+    void update_native_crop_progress();
+    void update_road_access();
+    bool figure_generate();
 };
 
 int building_find(int type);
