@@ -27,21 +27,21 @@ empire_city *empire_city_get(int city_id);
 
 int empire_city_get_route_id(int city_id);
 
-int empire_can_import_resource(int resource);
+bool empire_can_import_resource(int resource);
 
-int empire_can_import_resource_potentially(int resource);
+bool empire_can_import_resource_potentially(int resource);
 
-int empire_can_export_resource(int resource);
+bool empire_can_export_resource(int resource);
 
-int empire_can_produce_resource(int resource);
+bool empire_can_produce_resource(int resource);
 
-int empire_can_produce_resource_potentially(int resource);
+bool empire_can_produce_resource_potentially(int resource);
 
 int empire_city_get_for_object(int empire_object_id);
 
 int empire_city_get_for_trade_route(int route_id);
 
-int empire_city_is_trade_route_open(int route_id);
+bool empire_city_is_trade_route_open(int route_id);
 
 void empire_city_reset_yearly_trade_amounts(void);
 

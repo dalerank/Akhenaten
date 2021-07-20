@@ -216,15 +216,15 @@ static void spawn_figure_work_camp(building *b) {
     }
 }
 
-static int common_spawn_roamer(building * b, int type, int created_action = FIGURE_ACTION_125_ROAMING) {
+static bool common_spawn_roamer(building * b, int type, int created_action = FIGURE_ACTION_125_ROAMING) {
     if (b->common_spawn_figure_trigger(type, 0)) {
         b->create_roaming_figure(type, created_action);
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-static int spawn_patrician(building *b, int spawned) {
+static bool spawn_patrician(building *b, bool spawned) {
     return common_spawn_roamer(b, FIGURE_PATRICIAN);
 }
 static void spawn_figure_engineers_post(building *b) {
@@ -1214,7 +1214,7 @@ static void update_native_crop_progress(building *b) {
 }
 
 void building_figure_generate(void) {
-    int patrician_generated = 0;
+    bool patrician_generated = false;
     building_barracks_decay_tower_sentry_request();
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
