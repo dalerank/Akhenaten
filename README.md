@@ -17,19 +17,18 @@ complete the first 5 training missions.
 What is working:
 - Main graphics
 - Main animations
-- Loading savefiles
+- Loading original save files
 - City messages
+- Empire map display
 - Campaign map progression
 - Service and religion
-- Resources and workers
-- And more!
+- Workers
+- (and more)
 
 What is not working:
-- Save game
-- Trade
-- Monuments  
-- Inundations
+- Saving the game
 - Empire requests
+- Monuments
 - Some animals and resources
 - Irrigation
 - Combat
