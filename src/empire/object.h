@@ -82,6 +82,8 @@ struct map_route_object {
     char unk_03;            // 00
 };
 
+map_route_object *empire_get_route_object(int id);
+
 void trade_route_objects_save_state(buffer *buf);
 void trade_route_objects_load_state(buffer *buf);
 

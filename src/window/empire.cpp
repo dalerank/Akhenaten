@@ -1,4 +1,5 @@
 #include <scenario/property.h>
+#include <cmath>
 #include "empire.h"
 
 #include "building/menu.h"
@@ -149,6 +150,59 @@ const int TRADE_RESOURCE_OFFSET[2] = {
 #define TRADE_COLUMN_SPACING 106
 #define TRADE_ROW_SPACING 20
 
+//static int fade_in_out = 1;
+//static color_t fade_in_out_color = 0xff000000;
+
+static void draw_trade_route(int route_id, int effect) {
+    map_route_object *obj = empire_get_route_object(route_id);
+    if (!obj->in_use)
+        return;
+
+    // get graphics ready..
+    int image_id = 0;
+    switch (effect) {
+        case 0: // closed
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
+            break;
+        case 1: // open
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 181;
+            break;
+        case 2: // highlighted, closed
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 201;
+            break;
+        case 3: // highlighted, open
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 186;
+            break;
+    }
+
+    for (int i = 0; i < obj->num_points; i++) {
+        auto route_point = obj->points[i];
+
+        // first corner in pair
+        image_draw(image_id, data.x_draw_offset + route_point.x, data.y_draw_offset + route_point.y);
+
+        // draw lines connecting the turns
+        if (i < obj->num_points - 1) {
+            auto nextup_route_point = obj->points[i + 1];
+            int d_x = nextup_route_point.x - route_point.x;
+            int d_y = nextup_route_point.y - route_point.y;
+//            float step_size = 0.5;
+            float len = 0.2 * sqrt(float(d_x * d_x) + float(d_y * d_y));
+
+            float scaled_x = (float)d_x / len;
+            float scaled_y = (float)d_y / len;
+
+            float progress = 1.0;
+            while (progress < len) {
+                int disp_x = data.x_draw_offset + route_point.x + scaled_x * progress;
+                int disp_y = data.y_draw_offset + route_point.y + scaled_y * progress;
+                image_draw(image_id, disp_x, disp_y);
+                progress += 1.0;
+            }
+        }
+    }
+}
+
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
     image_draw(resource_get_icon(resource), x_offset + 1, y_offset + 1);
@@ -171,8 +225,8 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
 static void draw_trade_city_info(const empire_object *object, const empire_city *city) {
     int x_offset = (data.x_min + data.x_max - 500) / 2;
     int y_offset = data.y_max - 113;
-    if (city->is_open) {
 
+    if (city->is_open) {
         font_t traded_font = FONT_NORMAL_PLAIN;
 //        font_t traded_font = FONT_OBJECT_INFO[GAME_ENV];
 
@@ -394,6 +448,20 @@ static void draw_empire_object(const empire_object *obj) {
         if (obj->type == EMPIRE_OBJECT_CITY) {
             const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
 
+            // draw routes!
+            if (!city->is_open) {
+                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                    draw_trade_route(city->route_id, 2);
+                else
+                    draw_trade_route(city->route_id, 0);
+            } else {
+                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                    draw_trade_route(city->route_id, 3);
+                else
+                    draw_trade_route(city->route_id, 1);
+            }
+
+
             int text_group = 21;
             if (setting_city_names_style() == CITIES_OLD_NAMES)
                 text_group = 195;
@@ -565,6 +633,16 @@ static void draw_background(void) {
         graphics_clear_screens();
 }
 static void draw_foreground(void) {
+//    fade_in_out++;
+//    float v = 0.5 * (1.0 + sin(0.35 * (float)fade_in_out));
+//    int mm = int(v * 0xff);
+//    color_t r = mm * 0x00010000;
+//    color_t g = mm * 0x00000100;
+//    color_t b = mm * 0x00000001;
+//    fade_in_out_color = 0xff000000 + r + g + b;
+
+    ////////
+
     draw_map();
 
     const empire_city *city = 0;

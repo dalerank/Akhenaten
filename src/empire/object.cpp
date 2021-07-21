@@ -381,6 +381,10 @@ int empire_object_update_animation(const empire_object *obj, int image_id) {
 
 static struct map_route_object route_objects[MAX_ROUTE_OBJECTS];
 
+map_route_object *empire_get_route_object(int id) {
+    return &route_objects[id];
+}
+
 #include <SDL_log.h>
 
 void trade_route_objects_save_state(buffer *buf) {

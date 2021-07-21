@@ -810,9 +810,8 @@ void image_draw_blend_alpha(int image_id, int x, int y, color_t color) {
 
     if (img->draw.is_fully_compressed)
         draw_compressed_blend_alpha(img, data, x, y, img->height, color);
-    else {
+    else
         draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
-    }
 }
 static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color) {
     switch (font) {
