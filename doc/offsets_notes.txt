@@ -51,15 +51,15 @@ hunt. lodge (19) : 5016
 
 ==================
 
-_ build_start (city.c)
-  ...
-_ build_move (city.c)
-  ...
-_ build_end (city.c)
-  if constructing:
-    _ building_construction_place (construction.c)
-      building_construction_warning_reset
-      
+junk7a
+  ??
+junk8b
+  ??
+junk10a
+  
+jukn13:
+  -- 01 -- 03 00 00 -- 02 -- 03 00 00 -- 02 -- 04
+
 
 ==================
 

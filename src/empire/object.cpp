@@ -10,6 +10,7 @@
 #include "core/game_environment.h"
 
 #define MAX_OBJECTS 200
+#define MAX_ROUTES 20
 
 static full_empire_object objects[MAX_OBJECTS];
 
@@ -53,7 +54,7 @@ static void fix_image_ids(void) {
 
 //static int objects_are_loaded = 0;
 
-void empire_object_load(buffer *buf, int expanded) {
+void empire_objects_load(buffer *buf, bool expanded) {
 //    if (objects_are_loaded)
 //        return;
     int last_object_was_used = 1;
@@ -125,8 +126,8 @@ void empire_object_init_cities(void) {
         if (obj->obj.trade_route_id < 0)
             obj->obj.trade_route_id = 0;
 
-        if (obj->obj.trade_route_id >= 20)
-            obj->obj.trade_route_id = 19;
+        if (obj->obj.trade_route_id >= MAX_ROUTES)
+            obj->obj.trade_route_id = MAX_ROUTES - 1;
 
         city->route_id = obj->obj.trade_route_id;
         city->is_open = obj->trade_route_open;
@@ -323,10 +324,8 @@ static int is_sea_trade_route(int route_id) {
         if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
             if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
                 return 1;
-
             if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE)
                 return 0;
-
         }
     }
     return 0;
@@ -374,4 +373,41 @@ static int get_animation_offset(int image_id, int current_index) {
 }
 int empire_object_update_animation(const empire_object *obj, int image_id) {
     return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
+}
+
+////////
+
+#define MAX_ROUTE_OBJECTS 50
+
+static struct map_route_object route_objects[MAX_ROUTE_OBJECTS];
+
+#include <SDL_log.h>
+
+void trade_route_objects_save_state(buffer *buf) {
+    //
+}
+void trade_route_objects_load_state(buffer *buf) {
+    for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
+        map_route_object *obj = &route_objects[id];
+
+        obj->unk_header[0] = buf->read_u32(); // 05 00 00 00
+        obj->unk_header[1] = buf->read_u32(); // 00 00 00 00
+
+        for (int i = 0; i < 50; i++) {
+            obj->points[i].x = buf->read_u16();
+            obj->points[i].y = buf->read_u16();
+            obj->points[i].is_in_use = buf->read_u16();
+        }
+        obj->length = buf->read_u32();
+
+        obj->unk_00 = buf->read_u32(); // 00 00 00 00
+        obj->unk_01 = buf->read_u32(); // FF FF FF FF
+
+        obj->route_type = buf->read_u8(); // 1 = land; 2 = sea;
+        obj->num_points = buf->read_u8();
+        obj->in_use = buf->read_u8();
+
+        obj->unk_03 = buf->read_u8();
+//        SDL_Log("TRADE DATA: %04i %04i -- %02i %02i %02i", obj->unk_header[0], obj->unk_header[1], obj->route_type, obj->in_use, obj->unk_03);
+    }
 }

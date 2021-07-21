@@ -246,7 +246,7 @@ typedef struct {
     buffer *junk10e = new buffer;
     buffer *junk11 = new buffer;
 //    buffer *junk12 = new buffer;
-    buffer *junk13 = new buffer;
+    buffer *empire_map_routes = new buffer;
     buffer *junk14a = new buffer;
     buffer *junk14b = new buffer;
 //    buffer *junk15 = new buffer;
@@ -261,7 +261,7 @@ typedef struct {
     buffer *GRID01_8BIT = new buffer;
     buffer *GRID02_8BIT = new buffer;
     buffer *GRID03_32BIT = new buffer;
-    buffer *GRID04_8BIT = new buffer;
+    buffer *floodplain_soil_depletion = new buffer;
 } savegame_state;
 
 static struct {
@@ -270,7 +270,7 @@ static struct {
     savegame_state state;
 } savegame_data = {0};
 
-static void init_file_piece(file_piece *piece, int size, int compressed) {
+static void init_file_piece(file_piece *piece, int size, bool compressed) {
     piece->compressed = compressed;
     piece->buf = new buffer(size);
 }
@@ -280,7 +280,7 @@ static buffer *create_scenario_piece(int size, const char *name) {
     strncpy(piece->name, name, 99);
     return piece->buf;
 }
-static buffer *create_savegame_piece(int size, int compressed, const char *name) {
+static buffer *create_savegame_piece(int size, bool compressed, const char *name) {
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
     strncpy(piece->name, name, 99);
@@ -327,7 +327,7 @@ static void init_scenario_data(void) {
 
     state->end_marker = create_scenario_piece(4, "");
 }
-static void init_savegame_data(int expanded) {
+static void init_savegame_data(bool expanded) {
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++)
             savegame_data.pieces[i].buf->clear();
@@ -639,7 +639,7 @@ static void init_savegame_data(int expanded) {
                 state->empire_map_objects = create_savegame_piece(19600, 1, "empire_state_objects"); // unknown compressed data
             else
                 state->empire_map_objects = create_savegame_piece(15200, 1, "empire_state_objects"); // unknown compressed data
-            state->junk13 = create_savegame_piece(16200, 1, "junk13"); // unknown compressed data
+            state->empire_map_routes = create_savegame_piece(16200, 1, "junk13"); // unknown compressed data
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
             state->GRID02_8BIT = create_savegame_piece(51984, 0, "GRID02_8BIT"); // todo: 1-byte grid
@@ -657,7 +657,7 @@ static void init_savegame_data(int expanded) {
             state->junk16a = create_savegame_piece(312 , 0, "junk16a"); // 71x 4-bytes emptiness
             state->junk16b = create_savegame_piece(64, 0, "junk16b"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, 0, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->GRID04_8BIT = create_savegame_piece(51984, 1, "terrain_floodplain_soil_depletion"); // todo: 1-byte grid
+            state->floodplain_soil_depletion = create_savegame_piece(51984, 1, "floodplain_soil_depletion"); // todo: 1-byte grid
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, 0, "junk17");
@@ -783,11 +783,11 @@ static void savegame_load_from_state(savegame_state *state) {
         map_temp_grid_load(state->GRID01_8BIT, 0);
         map_temp_grid_load(state->GRID02_8BIT, 1);
         map_temp_grid_load(state->GRID03_32BIT, 2);
-        map_temp_grid_load(state->GRID04_8BIT, 3);
+        map_temp_grid_load(state->floodplain_soil_depletion, 3);
         map_moisture_load_state(state->moisture_grid);
 //        map_GRID03_32BIT_load_split_state(state->GRID03_32BIT);
 
-        empire_load_internal_ph(state->empire_map_objects);
+        empire_load_internal_ph(state->empire_map_objects, state->empire_map_routes);
     }
 //    state->end_marker->skip(284);
 }
@@ -917,14 +917,7 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
             return 0;
     }
 //    buf->force_validate_unsafe_pls_use_carefully();
-    char *lfile = (char *) malloc(200);
-    sprintf(lfile, "DEV_TESTING/zip/%i_%i_%s", findex, filepiece_size, fname);
-    FILE *log = fopen(lfile, "wb+");
-    if (log) {
-        fwrite(buf->get_data(), filepiece_size, 1, log);
-    }
-    fclose(log);
-    free(lfile);
+
     return 1;
 }
 static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
@@ -961,6 +954,17 @@ static int savegame_read_from_file(FILE *fp) {
             result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
         else
             result = piece->buf->from_file(piece->buf->size(), fp) == piece->buf->size();
+
+        // export uncompressed buffer data to zip folder for debugging
+        char *lfile = (char *) malloc(200);
+        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex, piece->buf->size(), fname);
+        FILE *log = fopen(lfile, "wb+");
+        if (log)
+            fwrite(piece->buf->get_data(), piece->buf->size(), 1, log);
+        fclose(log);
+        free(lfile);
+
+        ///
 
         log_hex(piece, i, offs);
 
@@ -1022,11 +1026,11 @@ int game_file_io_write_scenario(const char *filename) {
 int game_file_io_read_saved_game(const char *filename, int offset) {
     if (file_has_extension(filename, "pak")) {
         log_info("Loading saved game.", filename, 0);
-        init_savegame_data(0);
+        init_savegame_data(false);
         terrain_ph_offset = 539; //14791
     } else {
         log_info("Loading saved game (expanded).", filename, 0);
-        init_savegame_data(1);
+        init_savegame_data(true);
         terrain_ph_offset = 0; //14252
     }
 
@@ -1050,7 +1054,7 @@ int game_file_io_read_saved_game(const char *filename, int offset) {
     return 1;
 }
 int game_file_io_write_saved_game(const char *filename) {
-    init_savegame_data(1);
+    init_savegame_data(true);
 
     log_info("Saving game", filename, 0);
 //    savegame_version = SAVE_GAME_VERSION;
