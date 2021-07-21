@@ -18,7 +18,6 @@ void trade_route_init(int route_id, int resource, int limit) {
 int trade_route_limit(int route_id, int resource) {
     return data[route_id][resource].limit;
 }
-
 int trade_route_traded(int route_id, int resource) {
     return data[route_id][resource].traded;
 }
@@ -39,7 +38,6 @@ int trade_route_increase_limit(int route_id, int resource) {
     }
     return 1;
 }
-
 int trade_route_decrease_limit(int route_id, int resource) {
     switch (data[route_id][resource].limit) {
         case 40:
@@ -60,7 +58,6 @@ int trade_route_decrease_limit(int route_id, int resource) {
 void trade_route_increase_traded(int route_id, int resource) {
     data[route_id][resource].traded++;
 }
-
 void trade_route_reset_traded(int route_id) {
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         data[route_id][r].traded = 0;
@@ -79,7 +76,6 @@ void trade_routes_save_state(buffer *limit, buffer *traded) {
         }
     }
 }
-
 void trade_routes_load_state(buffer *limit, buffer *traded) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
@@ -88,4 +84,3 @@ void trade_routes_load_state(buffer *limit, buffer *traded) {
         }
     }
 }
-

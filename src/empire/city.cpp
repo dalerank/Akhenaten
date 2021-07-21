@@ -307,7 +307,10 @@ void empire_city_generate_trader(void) {
         if (cities[i].is_sea_trade) {
             if (!city_buildings_has_working_dock()) {
                 // delay of 384 = 1 year
-                city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
+                if (GAME_ENV == ENGINE_ENV_C3)
+                    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
+                else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                    city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK_PH, 384);
                 continue;
             }
             if (!scenario_map_has_river_entry())

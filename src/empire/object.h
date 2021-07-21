@@ -38,7 +38,7 @@ typedef struct {
     empire_object obj;
 } full_empire_object;
 
-void empire_object_load(buffer *buf, int expanded);
+void empire_objects_load(buffer *buf, bool expanded);
 
 void empire_object_init_cities(void);
 
@@ -62,5 +62,27 @@ int empire_object_city_buys_resource(int object_id, int resource);
 int empire_object_city_sells_resource(int object_id, int resource);
 
 int empire_object_update_animation(const empire_object *obj, int image_id);
+
+//////
+
+struct map_route_object {
+    int unk_header[2];      // 05 00 00 00 00 00 00 00
+    /////
+    struct {
+        int x;
+        int y;
+        bool is_in_use;
+    } points[50];
+    int length;
+    int unk_00;             // 00 00 00 00
+    int unk_01;             // FF FF FF FF
+    char route_type;
+    unsigned char num_points;
+    bool in_use;
+    char unk_03;            // 00
+};
+
+void trade_route_objects_save_state(buffer *buf);
+void trade_route_objects_load_state(buffer *buf);
 
 #endif // EMPIRE_OBJECT_H

@@ -1,3 +1,4 @@
+#include <scenario/property.h>
 #include "empire.h"
 
 #include "building/menu.h"
@@ -256,7 +257,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // trade open button
         spacing = lang_text_draw_amount(8, 0, city->cost_to_open,
                                       x_offset + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
-        lang_text_draw(47, 6, x_offset + spacing + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
+        lang_text_draw(47, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
         int image_id = image_id_from_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
         if (GAME_ENV == ENGINE_ENV_C3)
             image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
@@ -515,7 +516,6 @@ static void draw_panel_buttons(const empire_city *city) {
                                data.y_max - 49 + TRADE_BUTTON_OFFSET_Y,
                                generic_button_open_trade[0].width, generic_button_open_trade[0].height,
                                data.selected_button);
-
     }
 }
 
@@ -818,7 +818,7 @@ void window_empire_show(void) {
 }
 void window_empire_show_checked(void) {
     tutorial_availability avail = tutorial_empire_availability();
-    if (avail == AVAILABLE)
+    if (avail == AVAILABLE || scenario_is_custom())
         window_empire_show();
     else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);

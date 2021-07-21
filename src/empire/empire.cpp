@@ -71,14 +71,14 @@ void empire_load_external_c3(int is_custom_scenario, int empire_id) {
         log_error("Unable to load empire data from file", filename, 0);
         buf->fill(0);
     }
-    empire_object_load(buf, is_custom_scenario);
+    empire_objects_load(buf, is_custom_scenario);
 }
-void empire_load_internal_ph(buffer *buf) {
-    if (buf->size() == 15200)
-//        return;
-        empire_object_load(buf, 0);
+void empire_load_internal_ph(buffer *empire_objects, buffer *empire_routes) {
+    if (empire_objects->size() == 15200)
+        empire_objects_load(empire_objects, false);
     else
-        empire_object_load(buf, 1);
+        empire_objects_load(empire_objects, true);
+    trade_route_objects_load_state(empire_routes);
 }
 
 static void check_scroll_boundaries(void) {

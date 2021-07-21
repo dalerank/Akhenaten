@@ -23,11 +23,13 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type != type1 && b->type != type2)
+        if (b->type != type1
+            && b->type != type2
+            && b->type != type3)
             continue;
 
         if (b->distance_from_entry && b->road_network_id == road_network) {
-            if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
+            if (!b->is_main()) // only send directly to the main building
                 continue;
             building_list_small_add(i);
         }
@@ -40,16 +42,16 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
     int min_building_id = 0;
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
-        building *b = building_get(venues[i]);
+        building *b = building_get(venues[i])->main();
         if (!b->num_workers)
-            break;
+            continue;
         int days_left;
-        if (b->type == type1)
-            days_left = b->data.entertainment.days1;
-        else if (b->type == type2)
+        if (type3)
+            days_left = b->data.entertainment.days3_or_play;
+        else if (type2)
             days_left = b->data.entertainment.days2;
         else
-            days_left = 0;
+            days_left = b->data.entertainment.days1;
         int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
@@ -62,25 +64,19 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
 void figure::entertainer_update_shows() {
     building *b = destination();
     switch (type) {
-        case FIGURE_ACTOR:
-            b->data.entertainment.days3_or_play++;
-            if (b->data.entertainment.days3_or_play >= 5)
-                b->data.entertainment.days3_or_play = 0;
-
-//            if (b->type == BUILDING_THEATER)
-                b->data.entertainment.days1 = 32;
-//            else
-//                b->data.entertainment.days2 = 32;
-            break;
-        case FIGURE_GLADIATOR:
-//            if (b->type == BUILDING_AMPHITHEATER)
-//                b->data.entertainment.days1 = 32;
-//            else
-                b->data.entertainment.days2 = 32;
-            break;
-        case FIGURE_LION_TAMER:
-        case FIGURE_CHARIOTEER:
+        case FIGURE_JUGGLER:
+            if (b->type == BUILDING_BOOTH) { // update show index for booths
+                b->data.entertainment.days3_or_play++;
+                if (b->data.entertainment.days3_or_play >= 5)
+                    b->data.entertainment.days3_or_play = 0;
+            }
             b->data.entertainment.days1 = 32;
+            break;
+        case FIGURE_MUSICIAN:
+            b->data.entertainment.days2 = 32;
+            break;
+        case FIGURE_DANCER:
+            b->data.entertainment.days3_or_play = 32;
             break;
     }
 }

@@ -180,6 +180,7 @@ public:
     building *main();
     building *next();
     building *top_xy();
+    bool is_main();
 
     int is_house();
     int is_fort();
@@ -232,9 +233,9 @@ public:
     int worker_percentage();
     int figure_spawn_timer();
     void check_labor_problem();
-    bool common_spawn_figure_trigger();
+    bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(int type, int created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_roamer(int type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
     bool common_spawn_goods_output_cartpusher(bool only_one = true);
 
     void spawn_figure_work_camp();
@@ -242,14 +243,14 @@ public:
     void spawn_figure_engineers_post();
     void spawn_figure_prefecture();
     void spawn_figure_police();
-    void spawn_figure_actor_colony();
-    void spawn_figure_gladiator_school();
-    void spawn_figure_lion_house();
-    void spawn_figure_chariot_maker();
-    void spawn_figure_amphitheater();
-    void spawn_figure_theater();
-    void spawn_figure_hippodrome();
-    void spawn_figure_colosseum();
+    void spawn_figure_actor_juggler();
+    void spawn_figure_gladiator_musician();
+    void spawn_figure_lion_tamer_dancer();
+    void spawn_figure_chariot_senet_master();
+    void spawn_figure_amphitheater_bandstand();
+    void spawn_figure_theater_booth();
+    void spawn_figure_hippodrome_senet();
+    void spawn_figure_colosseum_pavillion();
     void set_market_graphic();
     void spawn_figure_market();
     void set_bathhouse_graphic();

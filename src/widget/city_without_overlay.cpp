@@ -640,16 +640,21 @@ void draw_debug(int x, int y, int grid_offset) {
 
         if (b_id && false && b->grid_offset == grid_offset) {
             string_from_int(str, b_id, 0);
-            text_draw_shadow(str, x + 10, y, COLOR_WHITE);
+            text_draw_shadow(str, x + 10, y - 10, COLOR_LIGHT_BLUE);
+
+            if (!b->is_main())
+                text_draw_shadow((uint8_t *)string_from_ascii("s"), x + 30, y - 10, COLOR_LIGHT_RED);
+//            else
+//                text_draw_shadow((uint8_t *)string_from_ascii("M"), x + 30, y - 10, COLOR_LIGHT_RED);
 
             string_from_int(str, b->type, 0);
-            text_draw_shadow(str, x + 27, y, COLOR_GREEN);
-
-            string_from_int(str, b->road_is_accessible, 0);
-            if (b->road_is_accessible)
-                text_draw_shadow(str, x + 10, y + 10, COLOR_GREEN);
-            else
-                text_draw_shadow(str, x + 10, y + 10, COLOR_RED);
+            text_draw_shadow(str, x + 10, y, COLOR_WHITE);
+//
+//            string_from_int(str, b->road_is_accessible, 0);
+//            if (b->road_is_accessible)
+//                text_draw_shadow(str, x + 10, y + 10, COLOR_GREEN);
+//            else
+//                text_draw_shadow(str, x + 10, y + 10, COLOR_RED);
 //
 //            string_from_int(str, b->grid_offset, 0);
 //            text_draw_shadow(str, x + 23, y + 15, COLOR_WHITE);
@@ -666,15 +671,13 @@ void draw_debug(int x, int y, int grid_offset) {
 //            string_from_int(str, b->next_part_building_id, 0);
 //            text_draw_shadow(str, x + 23, y + 20, COLOR_GREEN);
 
-            if (b->data.entertainment.booth_corner_grid_offset && !b->data.entertainment.ph_unk02_u8 && false) {
-                string_from_int(str, b->data.entertainment.days3_or_play, 0);
-                text_draw_shadow(str, x + 40, y + 5, COLOR_WHITE);
-//                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
-//                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
+            if (b->data.entertainment.booth_corner_grid_offset && true) { // && !b->data.entertainment.ph_unk02_u8
                 string_from_int(str, b->data.entertainment.days1, 0);
-                text_draw_shadow(str, x + 40, y + 15, COLOR_WHITE);
+                text_draw_shadow(str, x + 10, y + 10, COLOR_GREEN);
                 string_from_int(str, b->data.entertainment.days2, 0);
-                text_draw_shadow(str, x + 65, y + 15, COLOR_WHITE);
+                text_draw_shadow(str, x + 10, y + 20, COLOR_GREEN);
+                string_from_int(str, b->data.entertainment.days3_or_play, 0);
+                text_draw_shadow(str, x + 10, y + 30, COLOR_GREEN);
             }
             if (b->data.industry.progress && false) {
                 string_from_int(str, b->data.industry.progress, 0);
@@ -777,6 +780,11 @@ void draw_debug(int x, int y, int grid_offset) {
 //        d = map_terrain_get(grid_offset);
 //        if (d & TERRAIN_ROAD && false) {
 //            text_draw_shadow((uint8_t *) string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
+//        }
+
+//        d = map_property_is_draw_tile(grid_offset);
+//        if (!d) {
+//            text_draw_shadow((uint8_t *) string_from_ascii("N"), x + 30, y + 15, COLOR_RED);
 //        }
 
 
@@ -895,26 +903,31 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
 
     }
 }
-static void draw_entertainment_shows_ph(building *b, int x, int y, color_t color_mask) {
-    building *main = b->main();
 
-    // jugglers
-    if (b->type == BUILDING_BOOTH && main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15, main, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1,
+static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t color_mask) {
+    building *main = b->main();
+    if (main->data.entertainment.days1) {
+        draw_normal_anim(x + 30, y + 15, b, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_THEATER));
     }
-
-    // musicians
-    if (b->type == BUILDING_BANDSTAND && main->data.entertainment.days2) {
-        // todo: orientation
-        draw_normal_anim(x + 20, y + 12, main, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
-                         color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+}
+static void draw_entertainment_shows_musicians(building *b, int x, int y, color_t color_mask) {
+    building *main = b->main();
+    if (main->data.entertainment.days2) {
+        building *next_tile = b->next();
+        if (next_tile->type == BUILDING_BANDSTAND && next_tile->grid_offset == (b->grid_offset + 1))
+            draw_normal_anim(x + 48, y + 12, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
+                             color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+        else
+            draw_normal_anim(x + 20, y + 12, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
+                             color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
     }
-
-    // dancers
-    if (b->type == BUILDING_PAVILLION && main->data.entertainment.days3_or_play) {
-        draw_normal_anim(x + 30, y + 15, main, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
-                         color_mask, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
+}
+static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t color_mask) {
+    building *main = b->main();
+    if (main->data.entertainment.days3_or_play) {
+        draw_normal_anim(x + 64, y, b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
+                         color_mask, image_id_from_group(GROUP_BUILDING_LION_HOUSE));
     }
 }
 
@@ -923,16 +936,31 @@ static void draw_animation(int x, int y, int grid_offset) {
     building *b = building_get(map_building_at(grid_offset));
     if (b->type == 0 || b->state != BUILDING_STATE_VALID)
         return;
+    // draw in red if necessary
+    int color_mask = 0;
+    if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset))
+        color_mask = COLOR_MASK_RED;
+
+//    switch (b->type) {
+//        case BUILDING_BANDSTAND:
+//        case BUILDING_BOOTH:
+//        case BUILDING_PAVILLION:
+//            if (GAME_ENV == ENGINE_ENV_C3)
+//                draw_entertainment_shows_c3(b, x, y, color_mask);
+//            else {
+//                if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
+//                    draw_entertainment_shows_ph(b, x, y, color_mask);
+//            }
+//            break;
+//    }
+
+
     if (!map_property_is_draw_tile(grid_offset)) {
 //    if (map_sprite_bridge_at(grid_offset)) // todo
 //        city_draw_bridge(x, y, grid_offset);
         return;
     }
 
-    // draw in red if necessary
-    int color_mask = 0;
-    if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset))
-        color_mask = COLOR_MASK_RED;
 
     switch (b->type) {
         case BUILDING_BURNING_RUIN:
@@ -993,19 +1021,33 @@ static void draw_animation(int x, int y, int grid_offset) {
                                y + img->sprite_offset_y - 20, color_mask);
                 }
             break;
-        case BUILDING_BANDSTAND:
         case BUILDING_BOOTH:
+            if (GAME_ENV == ENGINE_ENV_C3)
+                draw_entertainment_shows_c3(b, x, y, color_mask);
+            else
+                draw_entertainment_show_jugglers(b, x, y, color_mask);
+            break;
+        case BUILDING_BANDSTAND:
+            if (GAME_ENV == ENGINE_ENV_C3)
+                draw_entertainment_shows_c3(b, x, y, color_mask);
+            else {
+                if (building_get(b->prev_part_building_id)->type != b->type && grid_offset == b->grid_offset)
+                    draw_entertainment_shows_musicians(b, x, y, color_mask);
+            }
+            break;
         case BUILDING_PAVILLION:
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
-            else if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
-                draw_entertainment_shows_ph(b, x, y, color_mask);
+            else {
+                if (grid_offset == b->grid_offset + map_grid_delta(0, 1))
+                    draw_entertainment_shows_dancers(b, x, y, color_mask);
+            }
             break;
         case BUILDING_CONSERVATORY:
             draw_normal_anim(x + 82, y + 14, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12, color_mask);
             break;
         case BUILDING_DANCE_SCHOOL:
-            draw_normal_anim(x, y, b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1, color_mask);
+            draw_normal_anim(x + 104, y, b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1, color_mask);
             break;
         default:
             draw_normal_anim(x, y, b, image_id, color_mask);
