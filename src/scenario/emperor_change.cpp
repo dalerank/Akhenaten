@@ -28,7 +28,7 @@ void scenario_emperor_change_process(void) {
             if (config_get(CONFIG_GP_FIX_EDITOR_EVENTS))
                 city_ratings_reset_favor_emperor_change();
 
-            city_message_post(1, MESSAGE_EMPEROR_CHANGE, 0, 0);
+            city_message_post(true, MESSAGE_EMPEROR_CHANGE, 0, 0);
         }
     }
 }

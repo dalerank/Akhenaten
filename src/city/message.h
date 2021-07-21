@@ -239,7 +239,7 @@ void city_message_disable_sound_for_next_message(void);
 
 void city_message_apply_sound_interval(int category);
 
-void city_message_post(int use_popup, int message_id, int param1, int param2);
+void city_message_post(bool use_popup, int message_id, int param1, int param2);
 
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
 

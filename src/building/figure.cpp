@@ -363,7 +363,7 @@ void building::spawn_figure_hippodrome_senet() {
 //
 //                if (data.entertainment.days1 > 0) {
 //                    if (city_entertainment_show_message_hippodrome())
-//                        city_message_post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
+//                        city_message_post(true, MESSAGE_WORKING_HIPPODROME, 0, 0);
 //
 //                }
 //            }

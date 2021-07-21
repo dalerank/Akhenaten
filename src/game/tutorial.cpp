@@ -19,7 +19,7 @@ tutorial_flags *give_me_da_tut_flags() {
 }
 
 static void post_message(int message) {
-    city_message_post(1, message, 0, 0);
+    city_message_post(true, message, 0, 0);
 }
 
 static void set_all_tut_flags_null() {

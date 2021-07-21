@@ -27,7 +27,7 @@ void scenario_gladiator_revolt_process(void) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0) {
                 data.state = EVENT_IN_PROGRESS;
-                city_message_post(1, MESSAGE_GLADIATOR_REVOLT, 0, 0);
+                city_message_post(true, MESSAGE_GLADIATOR_REVOLT, 0, 0);
             } else {
                 data.state = EVENT_FINISHED;
             }
@@ -35,7 +35,7 @@ void scenario_gladiator_revolt_process(void) {
     } else if (data.state == EVENT_IN_PROGRESS) {
         if (data.end_month == game_time_month()) {
             data.state = EVENT_FINISHED;
-            city_message_post(1, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
+            city_message_post(true, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
         }
     }
 }

@@ -36,7 +36,7 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
 static void raise_wages(void) {
     if (scenario.random_events.raise_wages) {
         if (city_labor_raise_wages_rome())
-            city_message_post(1, MESSAGE_ROME_RAISES_WAGES, 0, 0);
+            city_message_post(true, MESSAGE_ROME_RAISES_WAGES, 0, 0);
 
     }
 }
@@ -44,7 +44,7 @@ static void raise_wages(void) {
 static void lower_wages(void) {
     if (scenario.random_events.lower_wages) {
         if (city_labor_lower_wages_rome())
-            city_message_post(1, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
+            city_message_post(true, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
 
     }
 }
@@ -54,9 +54,9 @@ static void disrupt_land_trade(void) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
-                city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
+                city_message_post(true, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
             else {
-                city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);
+                city_message_post(true, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);
             }
         }
     }
@@ -66,7 +66,7 @@ static void disrupt_sea_trade(void) {
     if (scenario.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
-            city_message_post(1, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
+            city_message_post(true, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
         }
     }
 }
@@ -84,7 +84,7 @@ static void contaminate_water(void) {
                 change = -25;
             }
             city_health_change(change);
-            city_message_post(1, MESSAGE_CONTAMINATED_WATER, 0, 0);
+            city_message_post(true, MESSAGE_CONTAMINATED_WATER, 0, 0);
         }
     }
 }
@@ -94,12 +94,12 @@ static void destroy_iron_mine(void) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_find(BUILDING_IRON_MINE) < MAX_BUILDINGS[GAME_ENV]) {
                 city_finance_process_sundry(250);
-                city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
+                city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
             if (grid_offset)
-                city_message_post(1, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
+                city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
 
         }
     }
@@ -110,12 +110,12 @@ static void destroy_clay_pit(void) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if (building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS[GAME_ENV]) {
                 city_finance_process_sundry(250);
-                city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
+                city_message_post(true, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
             }
         } else {
             int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
             if (grid_offset)
-                city_message_post(1, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
+                city_message_post(true, MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
 
         }
     }

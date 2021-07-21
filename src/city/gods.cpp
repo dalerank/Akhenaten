@@ -48,31 +48,31 @@ static void perform_small_blessing(int god) {
         switch (god) {
             case GOD_OSIRIS:
                 // slightly better flood
-                city_message_post(1, MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_OSIRIS, 0, 0);
                 building_bless_farms();
                 break;
             case GOD_RA:
                 // slightly increased reputation
-                city_message_post(1, MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
                 return;
 
                 // slightly increased trading
-                city_message_post(1, MESSAGE_SMALL_BLESSING_RA_2, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_RA_2, 0, 0);
                 city_data.religion.neptune_double_trade_active = 1;
                 break;
             case GOD_PTAH:
                 // restocks shipwrights, weavers and jewelers
-                city_message_post(1, MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
 //                building_granary_bless();
                 break;
             case GOD_SETH:
                 // protects soldiers far away
-                city_message_post(1, MESSAGE_SMALL_BLESSING_SETH, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_SETH, 0, 0);
                 city_data.religion.mars_spirit_power = 10;
                 break;
             case GOD_BAST:
                 // throws a festival (?) in your honor
-                city_message_post(1, MESSAGE_SMALL_BLESSING_BAST, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_BLESSING_BAST, 0, 0);
                 city_sentiment_change_happiness(25);
                 break;
         }
@@ -81,48 +81,48 @@ static void perform_blessing(int god) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (god) {
             case GOD_CERES:
-                city_message_post(1, MESSAGE_BLESSING_FROM_CERES, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_FROM_CERES, 0, 0);
                 building_bless_farms();
                 break;
             case GOD_NEPTUNE:
-                city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
                 city_data.religion.neptune_double_trade_active = 1;
                 break;
             case GOD_MERCURY:
-                city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
                 building_granary_bless();
                 break;
             case GOD_MARS:
-                city_message_post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_FROM_MARS, 0, 0);
                 city_data.religion.mars_spirit_power = 10;
                 break;
             case GOD_VENUS:
-                city_message_post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
                 city_sentiment_change_happiness(25);
                 break;
         }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         switch (god) {
             case GOD_OSIRIS:
-                city_message_post(1, MESSAGE_BLESSING_OSIRIS, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_OSIRIS, 0, 0);
                 building_bless_farms();
                 break;
             case GOD_RA:
-                city_message_post(1, MESSAGE_BLESSING_RA, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_RA, 0, 0);
                 city_data.religion.neptune_double_trade_active = 1;
                 break;
             case GOD_PTAH:
-                city_message_post(1, MESSAGE_BLESSING_PTAH, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_PTAH, 0, 0);
                 building_granary_bless();
                 break;
             case GOD_SETH:
 
-                city_message_post(1, MESSAGE_BLESSING_SETH, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_SETH, 0, 0);
                 city_data.religion.mars_spirit_power = 10;
                 break;
             case GOD_BAST:
                 // fills houses and bazaars
-                city_message_post(1, MESSAGE_BLESSING_BAST, 0, 0);
+                city_message_post(true, MESSAGE_BLESSING_BAST, 0, 0);
                 city_sentiment_change_happiness(25);
                 break;
         }
@@ -131,26 +131,26 @@ static void perform_small_curse(int god) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (god) {
             case GOD_CERES:
-                city_message_post(1, MESSAGE_CERES_IS_UPSET, 0, 0);
+                city_message_post(true, MESSAGE_CERES_IS_UPSET, 0, 0);
                 building_curse_farms(0);
                 break;
             case GOD_NEPTUNE:
-                city_message_post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
+                city_message_post(true, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
                 figure_sink_all_ships();
                 city_data.religion.neptune_sank_ships = 1;
                 break;
             case GOD_MERCURY:
-                city_message_post(1, MESSAGE_MERCURY_IS_UPSET, 0, 0);
+                city_message_post(true, MESSAGE_MERCURY_IS_UPSET, 0, 0);
                 building_granary_warehouse_curse(0);
                 break;
             case GOD_MARS:
                 if (scenario_invasion_start_from_mars())
-                    city_message_post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
+                    city_message_post(true, MESSAGE_MARS_IS_UPSET, 0, 0);
                 else
-                    city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
+                    city_message_post(true, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
                 break;
             case GOD_VENUS:
-                city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
+                city_message_post(true, MESSAGE_VENUS_IS_UPSET, 0, 0);
                 city_sentiment_set_max_happiness(50);
                 city_sentiment_change_happiness(-5);
                 city_health_change(-10);
@@ -161,33 +161,33 @@ static void perform_small_curse(int god) {
         switch (god) {
             case GOD_OSIRIS:
                 // flood destroys farms
-                city_message_post(1, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
                 building_curse_farms(0);
                 break;
             case GOD_RA:
                 // lowers reputation
-                city_message_post(1, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_CURSE_RA_1, 0, 0);
                 return;
 
                 // lowers amount of traded goods
-                city_message_post(1, MESSAGE_SMALL_CURSE_RA_2, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_CURSE_RA_2, 0, 0);
 
                 break;
             case GOD_PTAH:
                 // destroys random storage yard
-                city_message_post(1, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
                 building_granary_warehouse_curse(0);
                 break;
             case GOD_SETH:
                 // destroys a fort
                 if (formation_legion_curse())
-                    city_message_post(1, MESSAGE_SMALL_CURSE_SETH, 0, 0);
+                    city_message_post(true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
                 else
-                    city_message_post(1, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
+                    city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
                 break;
             case GOD_BAST:
                 // plague
-                city_message_post(1, MESSAGE_SMALL_CURSE_BAST, 0, 0);
+                city_message_post(true, MESSAGE_SMALL_CURSE_BAST, 0, 0);
                 city_sentiment_set_max_happiness(50);
                 city_sentiment_change_happiness(-5);
                 city_health_change(-10);
@@ -199,34 +199,34 @@ static int perform_large_curse(int god) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (god) {
             case GOD_CERES:
-                city_message_post(1, MESSAGE_WRATH_OF_CERES, 0, 0);
+                city_message_post(true, MESSAGE_WRATH_OF_CERES, 0, 0);
                 building_curse_farms(1);
                 break;
             case GOD_NEPTUNE:
                 if (city_data.trade.num_sea_routes <= 0) {
-                    city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
+                    city_message_post(true, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
                     return 0;
                 } else {
-                    city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
+                    city_message_post(true, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
                     figure_sink_all_ships();
                     city_data.religion.neptune_sank_ships = 1;
                     city_trade_start_sea_trade_problems(80);
                 }
                 break;
             case GOD_MERCURY:
-                city_message_post(1, MESSAGE_WRATH_OF_MERCURY, 0, 0);
+                city_message_post(true, MESSAGE_WRATH_OF_MERCURY, 0, 0);
                 building_granary_warehouse_curse(1);
                 break;
             case GOD_MARS:
                 if (formation_legion_curse()) {
-                    city_message_post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
+                    city_message_post(true, MESSAGE_WRATH_OF_MARS, 0, 0);
                     scenario_invasion_start_from_mars();
                 } else {
-                    city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
+                    city_message_post(true, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
                 }
                 break;
             case GOD_VENUS:
-                city_message_post(1, MESSAGE_WRATH_OF_VENUS, 0, 0);
+                city_message_post(true, MESSAGE_WRATH_OF_VENUS, 0, 0);
                 city_sentiment_set_max_happiness(40);
                 city_sentiment_change_happiness(-10);
                 if (city_data.health.value >= 80)
@@ -245,60 +245,60 @@ static int perform_large_curse(int god) {
             case GOD_OSIRIS:
 
                 // bad floods wawrning if not corrected
-                city_message_post(1, MESSAGE_CURSE_OSIRIS_1, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_OSIRIS_1, 0, 0);
                 return 0;
 
                 // locusts
-                city_message_post(1, MESSAGE_CURSE_OSIRIS_2, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_OSIRIS_2, 0, 0);
                 building_curse_farms(1);
                 break;
             case GOD_RA:
 
                 // lowers reputation
-                city_message_post(1, MESSAGE_CURSE_RA_1, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_RA_1, 0, 0);
                 return 0;
 
                 // lowers commerce prices
-                city_message_post(1, MESSAGE_CURSE_RA_2, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_RA_2, 0, 0);
 
                 // no trading ships/caravans for one year
-                city_message_post(1, MESSAGE_CURSE_RA_3, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_RA_3, 0, 0);
 
 //                if (city_data.trade.num_sea_routes <= 0) {
-//                    city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
+//                    city_message_post(true, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
 //                    return 0;
 //                } else {
-//                    city_message_post(1, MESSAGE_CURSE_RA_3, 0, 0);
+//                    city_message_post(true, MESSAGE_CURSE_RA_3, 0, 0);
 //                    figure_sink_all_ships();
 //                    city_data.religion.neptune_sank_ships = 1;
 //                    city_trade_start_sea_trade_problems(80);
 //                }
                 break;
             case GOD_PTAH:
-                city_message_post(1, MESSAGE_CURSE_PTAH_1, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_PTAH_1, 0, 0);
                 building_granary_warehouse_curse(1);
                 break;
             case GOD_SETH:
 
                 // destroys all ships
-                city_message_post(1, MESSAGE_CURSE_SETH_1, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
 //                figure_sink_all_ships();
 //                city_data.religion.neptune_sank_ships = 1;
                 return 0;
 
                 // hailstorm (random killing?)
-                city_message_post(1, MESSAGE_CURSE_SETH_2, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_SETH_2, 0, 0);
 
 //                if (formation_legion_curse()) {
-//                    city_message_post(1, MESSAGE_CURSE_SETH_1, 0, 0);
+//                    city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
 //                    scenario_invasion_start_from_mars();
 //                } else {
-//                    city_message_post(1, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
+//                    city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
 //                    return 0;
 //                }
                 break;
             case GOD_BAST:
-                city_message_post(1, MESSAGE_CURSE_BAST_1, 0, 0);
+                city_message_post(true, MESSAGE_CURSE_BAST_1, 0, 0);
                 city_sentiment_set_max_happiness(40);
                 city_sentiment_change_happiness(-10);
                 if (city_data.health.value >= 80)
@@ -407,9 +407,9 @@ static void update_god_moods(void) {
     else if (min_happiness < 30) {
         city_data.religion.angry_message_delay = 20;
         if (min_happiness < 10)
-            city_message_post(0, MESSAGE_GODS_WRATHFUL, 0, 0);
+            city_message_post(false, MESSAGE_GODS_WRATHFUL, 0, 0);
         else if (GAME_ENV == ENGINE_ENV_C3)
-            city_message_post(0, MESSAGE_GODS_UNHAPPY, 0, 0);
+            city_message_post(false, MESSAGE_GODS_UNHAPPY, 0, 0);
     }
 }
 

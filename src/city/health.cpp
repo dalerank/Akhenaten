@@ -36,13 +36,13 @@ static void cause_disease(int total_people) {
     city_health_change(10);
     int people_to_kill = sick_people - city_data.health.num_hospital_workers;
     if (people_to_kill <= 0) {
-        city_message_post(1, MESSAGE_HEALTH_ILLNESS, 0, 0);
+        city_message_post(true, MESSAGE_HEALTH_ILLNESS, 0, 0);
         return;
     }
     if (city_data.health.num_hospital_workers > 0)
-        city_message_post(1, MESSAGE_HEALTH_DISEASE, 0, 0);
+        city_message_post(true, MESSAGE_HEALTH_DISEASE, 0, 0);
     else
-        city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
+        city_message_post(true, MESSAGE_HEALTH_PESTILENCE, 0, 0);
 
     tutorial_on_disease();
     // kill people who don't have access to a doctor

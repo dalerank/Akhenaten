@@ -351,7 +351,7 @@ static void mars_kill_enemies(void) {
         }
     }
     city_god_spirit_of_mars_mark_used();
-    city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
+    city_message_post(true, MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
 }
 
 static void update_enemy_movement(formation *m, int roman_distance) {

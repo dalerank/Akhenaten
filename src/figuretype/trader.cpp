@@ -620,7 +620,7 @@ void figure::trade_ship_action() {
             else if (direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
                 if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-                    city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
+                    city_message_post(true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
                     city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
                 }
             }

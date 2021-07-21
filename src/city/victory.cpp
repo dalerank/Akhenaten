@@ -151,7 +151,7 @@ void city_victory_check(void) {
                 window_mission_end_show_fired();
             else {
                 city_data.mission.fired_message_shown = 1;
-                city_message_post(1, MESSAGE_FIRED, 0, 0);
+                city_message_post(true, MESSAGE_FIRED, 0, 0);
             }
             data.force_win = 0;
         } else if (data.state == VICTORY_STATE_WON) {

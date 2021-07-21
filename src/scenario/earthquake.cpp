@@ -100,7 +100,7 @@ void scenario_earthquake_process(void) {
             data.duration = 0;
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
-            city_message_post(1, MESSAGE_EARTHQUAKE, 0,
+            city_message_post(true, MESSAGE_EARTHQUAKE, 0,
                               map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_IN_PROGRESS) {

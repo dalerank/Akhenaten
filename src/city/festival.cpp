@@ -115,13 +115,13 @@ static void throw_party(void) {
     city_data.religion.gods[city_data.festival.planned.god].months_since_festival = 0;
     switch (city_data.festival.planned.size) {
         case FESTIVAL_SMALL:
-            city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0);
+            city_message_post(true, MESSAGE_SMALL_FESTIVAL, 0, 0);
             break;
         case FESTIVAL_LARGE:
-            city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0);
+            city_message_post(true, MESSAGE_LARGE_FESTIVAL, 0, 0);
             break;
         case FESTIVAL_GRAND:
-            city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0);
+            city_message_post(true, MESSAGE_GRAND_FESTIVAL, 0, 0);
             if (config_get(CONFIG_GP_CH_GRANDFESTIVAL))
                 city_data.religion.gods[city_data.festival.planned.god].blessing_done = 0;
 

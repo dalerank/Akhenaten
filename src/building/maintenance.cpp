@@ -325,7 +325,7 @@ void building_maintenance_check_rome_access(void) {
             map_routing_update_walls();
 
             if (map_routing_distance(exit_point->grid_offset)) {
-                city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
+                city_message_post(true, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 game_undo_disable();
                 return;
             }

@@ -22,5 +22,5 @@ void scenario_empire_process_expansion(void) {
     empire_city_expand_empire();
 
     scenario.empire.is_expanded = 1;
-    city_message_post(1, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
+    city_message_post(true, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
 }

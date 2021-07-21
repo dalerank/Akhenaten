@@ -330,11 +330,11 @@ void scenario_invasion_process(void) {
                 warning->year_notified = game_time_year();
                 warning->month_notified = game_time_month();
                 if (warning->warning_years > 2)
-                    city_message_post(0, MESSAGE_DISTANT_BATTLE, 0, 0);
+                    city_message_post(false, MESSAGE_DISTANT_BATTLE, 0, 0);
                 else if (warning->warning_years > 1)
-                    city_message_post(0, MESSAGE_ENEMIES_CLOSING, 0, 0);
+                    city_message_post(false, MESSAGE_ENEMIES_CLOSING, 0, 0);
                 else {
-                    city_message_post(0, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
+                    city_message_post(false, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
                 }
             }
         }
@@ -355,9 +355,9 @@ void scenario_invasion_process(void) {
                         warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-                        city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                        city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
                     else {
-                        city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+                        city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
                     }
                 }
             }
@@ -369,7 +369,7 @@ void scenario_invasion_process(void) {
                         scenario.invasions[warning->invasion_id].attack_type,
                         warning->invasion_id);
                 if (grid_offset > 0)
-                    city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                    city_message_post(true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
 
             }
         }
@@ -386,7 +386,7 @@ void scenario_invasion_process(void) {
                         scenario.invasions[i].attack_type,
                         i);
                 if (grid_offset > 0)
-                    city_message_post(1, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset);
+                    city_message_post(true, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset);
 
             }
         }
@@ -404,7 +404,7 @@ int scenario_invasion_start_from_mars(void) {
 
     int grid_offset = start_invasion(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset)
-        city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
+        city_message_post(true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
 
     return 1;
 }
@@ -412,7 +412,7 @@ int scenario_invasion_start_from_mars(void) {
 int scenario_invasion_start_from_caesar(int size) {
     int grid_offset = start_invasion(ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
     if (grid_offset > 0) {
-        city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+        city_message_post(true, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
         return 1;
     }
     return 0;
@@ -423,9 +423,9 @@ void scenario_invasion_start_from_cheat(void) {
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
         if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-            city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+            city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
         else {
-            city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+            city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
         }
     }
 }
@@ -439,9 +439,9 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
                                              FORMATION_ATTACK_RANDOM, 23);
             if (grid_offset) {
                 if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4)
-                    city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+                    city_message_post(true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
                 else {
-                    city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
+                    city_message_post(true, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
                 }
             }
             break;
@@ -453,7 +453,7 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
         case ATTACK_TYPE_NATIVES: {
             int grid_offset = start_invasion(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
             if (grid_offset)
-                city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
+                city_message_post(true, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
 
             break;
         }
