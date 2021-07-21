@@ -69,7 +69,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
                 return 1;
             } break;
         default:
-            if (b->num_workers <= 0)
+            if (b->main()->num_workers <= 0)
                 return 0;
             break;
     }

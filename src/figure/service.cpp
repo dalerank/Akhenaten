@@ -173,7 +173,7 @@ static void tax_collector_coverage(building *b, int *max_tax_multiplier) {
     }
 }
 static void labor_seeker_coverage(building *b) {
-
+    // nothing here, the labor seeker works simply via the `houses_covered` variable
 }
 
 static void distribute_good(building *b, building *market, int stock_wanted, int inventory_resource) {
@@ -413,10 +413,19 @@ int figure::figure_service_provide_coverage() {
             break;
     }
     if (has_home()) {
-        b = home();
+        b = home()->main();
         b->houses_covered += houses_serviced;
-        if (b->houses_covered > 300)
-            b->houses_covered = 300;
+//        for (int i = 0; i < 99; i++) {
+//            // set for each of the building parts
+//            b->houses_covered += houses_serviced;
+//            if (b->houses_covered > 300)
+//                b->houses_covered = 300;
+//
+//            // continue down the chain
+//            b = b->next();
+//            if (b->id <= 0)
+//                break;
+//        }
     }
     return 0;
 }

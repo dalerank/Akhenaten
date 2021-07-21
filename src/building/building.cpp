@@ -300,6 +300,9 @@ building *building::top_xy() {
 building *building::next() {
     return building_get(next_part_building_id);
 }
+bool building::is_main() {
+    return (prev_part_building_id == 0);
+}
 
 static void building_delete_UNSAFE(building *b) {
     b->clear_related_data();
