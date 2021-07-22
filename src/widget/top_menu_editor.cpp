@@ -123,11 +123,11 @@ void widget_top_menu_editor_draw(void) {
     menu_bar_draw(menu, 5);
 }
 
-static int handle_input_submenu(const mouse *m, const hotkeys *h) {
+static bool handle_input_submenu(const mouse *m, const hotkeys *h) {
     if (m->right.went_up || h->escape_pressed) {
         clear_state();
         window_go_back();
-        return 1;
+        return true;
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 5, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu)
@@ -137,20 +137,20 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h) {
         if (m->left.went_up) {
             clear_state();
             window_go_back();
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
-static int handle_mouse_menu(const mouse *m) {
+static bool handle_mouse_menu(const mouse *m) {
     int menu_id = menu_bar_handle_mouse(m, menu, 5, &data.focus_menu_id);
     if (menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         top_menu_window_show();
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 int widget_top_menu_editor_handle_input(const mouse *m, const hotkeys *h) {

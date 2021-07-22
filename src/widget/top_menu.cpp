@@ -372,11 +372,11 @@ static int get_info_id(int mouse_x, int mouse_y) {
     return INFO_NONE;
 }
 
-static int handle_input_submenu(const mouse *m, const hotkeys *h) {
+static bool handle_input_submenu(const mouse *m, const hotkeys *h) {
     if (m->right.went_up || h->escape_pressed) {
         clear_state();
         window_go_back();
-        return 1;
+        return true;
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
@@ -387,14 +387,14 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h) {
         if (m->left.went_up) {
             clear_state();
             window_go_back();
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
-static int handle_right_click(int type) {
+static bool handle_right_click(int type) {
     if (type == INFO_NONE)
-        return 0;
+        return false;
 
     if (type == INFO_FUNDS)
         window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, window_city_draw_all);
@@ -403,26 +403,26 @@ static int handle_right_click(int type) {
     else if (type == INFO_DATE)
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, window_city_draw_all);
 
-    return 1;
+    return true;
 }
-static int handle_mouse_menu(const mouse *m) {
+static bool handle_mouse_menu(const mouse *m) {
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
     if (menu_id && m->left.went_up) {
         data.open_sub_menu = menu_id;
         top_menu_window_show();
-        return 1;
+        return true;
     }
     if (m->right.went_up)
         return handle_right_click(get_info_id(m->x, m->y));
 
-    return 0;
+    return false;
 }
 
-int widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
+bool widget_top_menu_handle_input(const mouse *m, const hotkeys *h) {
     int result = 0;
     if (!widget_city_has_input()) {
         int button_id = 0;
-        int handled = 0;
+        int handled = false;
         if (GAME_ENV == ENGINE_ENV_C3)
             handled = image_buttons_handle_mouse(m, data.offset_rotate, 0, orientation_button, 3, &button_id);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {

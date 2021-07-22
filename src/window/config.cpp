@@ -266,17 +266,17 @@ static void button_page(int param1, int param2) {
 
 static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
-    int handled = 0;
-    handled |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons,
+    int mouse_button = 0;
+    mouse_button |= generic_buttons_min_handle_mouse(m_dialog, 0, 0, checkbox_buttons,
                                                 data.starting_option + options_per_page[data.page], &data.focus_button,
-                                                data.starting_option);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons,
+                                                     data.starting_option);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons,
                                             sizeof(bottom_buttons) / sizeof(*bottom_buttons),
-                                            &data.bottom_focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons),
-                                            &data.page_focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
-    if (!handled && (m->right.went_up || h->escape_pressed))
+                                                 &data.bottom_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, page_buttons, sizeof(page_buttons) / sizeof(*page_buttons),
+                                                 &data.page_focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, &language_button, 1, &data.language_focus_button);
+    if (!mouse_button && (m->right.went_up || h->escape_pressed))
         window_main_menu_show(0);
 
 }

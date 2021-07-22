@@ -1,3 +1,6 @@
+#include <graphics/rich_text.h>
+#include <graphics/graphics.h>
+#include <graphics/scrollbar.h>
 #include "trade.h"
 
 #include "city/resource.h"
@@ -40,6 +43,12 @@ static generic_button resource_buttons[] = {
 
 static int focus_button_id;
 
+
+static void on_scroll(void) {
+    window_invalidate();
+}
+static scrollbar_type scrollbar = {580, 52, 336, on_scroll};
+
 static int draw_background(void) {
     city_resource_determine_available();
 
@@ -48,45 +57,55 @@ static int draw_background(void) {
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
     int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 1, 600 - width, 38, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 1, 60, 38, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }
-
 static void draw_foreground(void) {
     inner_panel_draw(32, 52, 36, 21);
+
+    graphics_set_clip_rectangle(35, 39, 570, 346);
     const resources_list *list = city_resource_get_available();
-    for (int i = 0; i < list->size; i++) {
-        int y_offset = 22 * i;
+    for (int i = scrollbar.scroll_position; i < list->size; i++) {
+        int y_offset = 22 * (i - scrollbar.scroll_position);
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
-
-        if (focus_button_id - 3 == i)
-            button_border_draw(80, y_offset + 54, 480, 24, 1);
+//        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
 
         lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
         text_draw_number_centered(city_resource_count(resource),
                                   180, y_offset + 61, 60, FONT_NORMAL_WHITE);
+
+        // mothballed?
         if (city_resource_is_mothballed(resource))
             lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
 
+        // stockpiled?
         if (city_resource_is_stockpiled(resource))
             lang_text_draw(54, 3, 341, y_offset + 61, FONT_NORMAL_WHITE);
         else {
             int trade_status = city_int(resource);
-            if (trade_status == TRADE_STATUS_IMPORT) {
+            if (trade_status == TRADE_STATUS_IMPORT) { // importing
                 lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                                  500, y_offset + 61, FONT_NORMAL_WHITE);
-            } else if (trade_status == TRADE_STATUS_EXPORT) {
+            } else if (trade_status == TRADE_STATUS_EXPORT) { // exporting
                 int width = lang_text_draw(54, 6, 341, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                                  341 + width, y_offset + 61, FONT_NORMAL_WHITE);
             }
         }
+
+        // update/draw buttons accordingly
+        if (focus_button_id - 3 == i - scrollbar.scroll_position)
+            button_border_draw(80, y_offset + 54, 480, 24, 1);
+        resource_buttons[i + 2 - scrollbar.scroll_position].parameter1 = i;
     }
+    graphics_reset_clip_rectangle();
+    inner_panel_draw(scrollbar.x + 3, scrollbar.y + 20, 2, 19);
+    scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
+    scrollbar_draw(&scrollbar);
 
     button_border_draw(398, 396, 200, 24, focus_button_id == 1);
     lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK);
@@ -97,17 +116,20 @@ static void draw_foreground(void) {
 
 static int handle_mouse(const mouse *m) {
     int num_resources = city_resource_get_available()->size;
+
+    bool handled = scrollbar_handle_mouse(&scrollbar, m);
+    if (handled)
+        return handled;
+
     return generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
 }
 
 static void button_prices(int param1, int param2) {
     window_trade_prices_show();
 }
-
 static void button_empire(int param1, int param2) {
     window_empire_show();
 }
-
 static void button_resource(int resource_index, int param2) {
     window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
@@ -131,6 +153,9 @@ const advisor_window_type *window_advisor_trade(void) {
             handle_mouse,
             get_tooltip_text
     };
+//    scrollbar.thin = true;
+//    scrollbar_init(&scrollbar, 0, city_resource_get_available()->size);
+//    scrollbar_reset(&scrollbar, 0);
     return &window;
 }
 

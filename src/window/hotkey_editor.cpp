@@ -77,7 +77,7 @@ static void draw_foreground(void) {
 static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-    int handled = 0;
+    bool handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.focus_button);
     if (!handled && m->right.went_up)
         button_close(0, 0);

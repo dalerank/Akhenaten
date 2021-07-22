@@ -458,9 +458,9 @@ void widget_sidebar_city_draw_foreground_military(void) {
 }
 int widget_sidebar_city_handle_mouse(const mouse *m) {
     if (widget_city_has_input())
-        return 0;
+        return false;
 
-    int handled = 0;
+    bool handled = false;
     int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
@@ -475,7 +475,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
 
     } else {
         if (widget_minimap_handle_mouse(m))
-            return 1;
+            return true;
 
         int x_offset = sidebar_common_get_x_offset_expanded();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar[GAME_ENV], 2,

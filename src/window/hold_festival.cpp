@@ -132,7 +132,6 @@ static void button_size(int size, int param2) {
     if (!city_finance_out_of_money()) {
         if (city_festival_select_size(size))
             window_invalidate();
-
     }
 }
 

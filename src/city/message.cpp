@@ -49,7 +49,7 @@ static struct {
     int scroll_position;
 } data;
 
-static int should_play_sound = 1;
+static bool should_play_sound = true;
 
 void city_message_init_scenario(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
@@ -137,7 +137,7 @@ static void show_message_popup(int message_id) {
 }
 
 void city_message_disable_sound_for_next_message(void) {
-    should_play_sound = 0;
+    should_play_sound = false;
 }
 void city_message_apply_sound_interval(int category) {
     time_millis now = time_get_millis();
@@ -151,7 +151,7 @@ void city_message_apply_sound_interval(int category) {
 void city_message_post(bool use_popup, int message_id, int param1, int param2) {
 //    return;
 
-//    use_popup = 0; // temp
+//    use_popup = false; // temp
 
     int id = new_message_id();
     if (id < 0)
@@ -184,7 +184,7 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2) {
     } else if (should_play_sound)
         play_sound(text_id);
 
-    should_play_sound = 1;
+    should_play_sound = true;
 }
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2) {
     int use_popup = 0;

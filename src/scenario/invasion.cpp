@@ -76,8 +76,8 @@ enum {
 };
 
 typedef struct {
-    int in_use;
-    int handled;
+    bool in_use;
+    bool handled;
     int invasion_path_id;
     int warning_years;
     int x;

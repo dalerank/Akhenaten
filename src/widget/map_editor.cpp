@@ -207,9 +207,9 @@ static void handle_last_touch(void) {
 
 }
 
-static int handle_cancel_construction_button(const touch *t) {
+static bool handle_cancel_construction_button(const touch *t) {
     if (!editor_tool_is_active())
-        return 0;
+        return false;
 
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
@@ -218,10 +218,10 @@ static int handle_cancel_construction_button(const touch *t) {
 
     if (t->current_point.x < width || t->current_point.x >= width + box_size ||
         t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
+        return false;
     }
     editor_tool_deactivate();
-    return 1;
+    return true;
 }
 
 static void handle_first_touch(map_tile *tile) {

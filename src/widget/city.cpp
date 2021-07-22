@@ -199,35 +199,35 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
     return 0;
 }
 
-static int handle_right_click_allow_building_info(const map_tile *tile) {
-    int allow = 1;
+static bool handle_right_click_allow_building_info(const map_tile *tile) {
+    int allow = true;
     if (!window_is(WINDOW_CITY))
-        allow = 0;
+        allow = false;
 
     window_city_show();
 
     if (!tile->grid_offset)
-        allow = 0;
+        allow = false;
 
     if (allow && city_has_warnings()) {
         city_warning_clear_all();
-        allow = 0;
+        allow = false;
     }
     return allow;
 }
-static int handle_legion_click(const map_tile *tile) {
+static bool handle_legion_click(const map_tile *tile) {
     if (tile->grid_offset) {
         int formation_id = formation_legion_at_grid_offset(tile->grid_offset);
         if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
             window_city_military_show(formation_id);
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
-static int handle_cancel_construction_button(const touch *t) {
+static bool handle_cancel_construction_button(const touch *t) {
     if (!building_construction_type())
-        return 0;
+        return false;
 
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
@@ -236,10 +236,10 @@ static int handle_cancel_construction_button(const touch *t) {
 
     if (t->current_point.x < width || t->current_point.x >= width + box_size ||
         t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
+        return false;
     }
     building_construction_cancel();
-    return 1;
+    return true;
 }
 void widget_city_clear_current_tile(void) {
     data.selected_tile.x = -1;

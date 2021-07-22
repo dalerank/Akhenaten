@@ -269,12 +269,12 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     if (scrollbar_handle_mouse(&scrollbar, m_dialog))
         return;
 
-    int handled = 0;
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2,
-                                            &data.focus_button);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS,
-                                            &data.bottom_focus_button);
-    if (!handled && (m->right.went_up || h->escape_pressed))
+    int mouse_button = 0;
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, hotkey_buttons, NUM_VISIBLE_OPTIONS * 2,
+                                                 &data.focus_button);
+    mouse_button |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS,
+                                                 &data.bottom_focus_button);
+    if (!mouse_button && (m->right.went_up || h->escape_pressed))
         window_config_show();
 
 }

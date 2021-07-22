@@ -35,8 +35,6 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 void figure::draw_debug() {
 
-    return;
-
     building *b = home();
     building *bdest = destination();
 
@@ -56,16 +54,16 @@ void figure::draw_debug() {
 
     coords.y -= 80;
 
-    int indent = 18;
-    if (false) {
-        draw_debug_line(str, coords.x, coords.y, indent, "ID", id, COLOR_WHITE);
-        draw_debug_line(str, coords.x, coords.y + 10, indent, "T", type, COLOR_BLUE);
-        draw_debug_line(str, coords.x, coords.y + 20, indent, "A", action_state, COLOR_RED);
-        draw_debug_line(str, coords.x, coords.y + 30, indent, "W", wait_ticks, COLOR_WHITE);
-        draw_debug_line(str, coords.x, coords.y + 40, indent, "R", roam_length, COLOR_WHITE);
+    int indent = 0;
+    if (true) {
+        draw_debug_line(str, coords.x, coords.y, indent, "", id, COLOR_WHITE);
+        draw_debug_line(str, coords.x, coords.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
+        draw_debug_line(str, coords.x, coords.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
+        draw_debug_line(str, coords.x, coords.y + 30, indent, "", wait_ticks, COLOR_WHITE);
+        draw_debug_line(str, coords.x, coords.y + 40, indent, "", roam_length, COLOR_WHITE);
     }
 
-    if (true) {
+    if (false) {
         indent = 25;
         draw_debug_line(str, coords.x,    coords.y,      indent, "ID:",  routing_path_id, COLOR_WHITE);
         draw_debug_line(str, coords.x, coords.y + 10, indent, "chs:", roam_wander_freely, COLOR_WHITE);
@@ -87,7 +85,7 @@ void figure::draw_debug() {
 //    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
 //    text_draw(str, coords.x, coords.y, FONT_NORMAL_BLACK, 0);
 
-    if (true && routing_path_id) { // draw PATH //&& (roam_length == max_roam_length || roam_length == 0)
+    if (false && routing_path_id) { // draw PATH //&& (roam_length == max_roam_length || roam_length == 0)
         coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
         draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
 //        text_draw(str, coords.x, coords.y, FONT_LARGE_BLACK, COLOR_BLACK);

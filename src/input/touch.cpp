@@ -203,16 +203,15 @@ void reset_touches(int reset_old_touch) {
     }
 }
 
-static int any_touch_went_up(void) {
+static bool any_touch_went_up(void) {
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].has_ended)
-            return 1;
-
+            return true;
     }
-    return 0;
+    return false;
 }
 
-static int handle_emulated_mouse_clicks(void) {
+static bool handle_emulated_mouse_clicks(void) {
     mouse_reset_scroll();
     switch (data.touchpad_mode_click_type) {
         case EMULATED_MOUSE_CLICK_LEFT:
@@ -223,11 +222,11 @@ static int handle_emulated_mouse_clicks(void) {
             break;
         default:
             mouse_reset_button_state();
-            return 0;
+            return false;
     }
     mouse_determine_button_state();
     data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_NONE;
-    return 1;
+    return true;
 }
 
 static void handle_mouse_touchpad(void) {

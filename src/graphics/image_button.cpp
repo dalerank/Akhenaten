@@ -57,7 +57,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons) {
     }
 }
 
-int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id) {
+bool image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id) {
     fade_pressed_effect(buttons, num_buttons);
 //    remove_pressed_effect_build(buttons, num_buttons);
     image_button *hit_button = 0;
@@ -91,10 +91,10 @@ int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *butto
         }
     }
     if (!hit_button)
-        return 0;
+        return false;
     if (hit_button->button_type == IB_SCROLL)
         if (!m->left.went_down && !m->left.is_down)
-            return 0;
+            return false;
 
     // on click, press button and set reminder to this button (floating = true)
     if (m->left.went_down && hit_button->button_type != IB_SCROLL) {
@@ -127,7 +127,7 @@ int image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *butto
             hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
         }
     }
-    return 1;
+    return true;
 }
 void image_buttons_release_press(image_button *buttons, int num_buttons) {
     remove_pressed_effect_build(buttons, num_buttons);

@@ -16,6 +16,7 @@ typedef struct {
     int scroll_position;
     int is_dragging_scroll;
     int scroll_position_drag;
+    bool thin;
 } scrollbar_type;
 
 /**
