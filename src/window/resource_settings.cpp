@@ -123,13 +123,7 @@ static void draw_foreground(void) {
     bool could_import = empire_can_import_resource(data.resource, false);
     bool could_export = empire_can_export_resource(data.resource, false);
 
-//    int trade_flags = TRADE_STATUS_NONE;
     int trade_status = city_int(data.resource);
-//    if (empire_can_import_resource(data.resource, true))
-//        trade_flags |= TRADE_STATUS_IMPORT;
-//    if (empire_can_export_resource(data.resource, true))
-//        trade_flags |= TRADE_STATUS_EXPORT;
-
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (!can_import && !can_export)
             lang_text_draw(54, 24, 98, 212, FONT_NORMAL_BLACK);
@@ -157,25 +151,6 @@ static void draw_foreground(void) {
         int trading_amount = 0;
         if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT)
             trading_amount = stack_proper_quantity(city_resource_trading_amount(data.resource), data.resource);
-//        int text_id = 0;
-//        if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-//            switch (stack_units_by_resource(data.resource)) {
-//                case RESOURCE_UNIT_PILE:
-//                    text_id = 10;
-//                    break;
-//                case RESOURCE_UNIT_BLOCK:
-//                    text_id = 56;
-//                    if (trading_amount > 1)
-//                        text_id = 57;
-//                    break;
-//                case RESOURCE_UNIT_WEAPON:
-//                case RESOURCE_UNIT_CHARIOT:
-//                    text_id = 9;
-//                    if (trading_amount > 1)
-//                        text_id = 10;
-//                    break;
-//            }
-//        }
 
         // import
         if (!can_import) {

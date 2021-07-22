@@ -719,26 +719,17 @@ static void load_main_data(buffer *buf) {
                 food_index++;
             }
         }
-//        if (food_index == 0) {
-//            for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
-//                int can_do_food_x = empire_can_produce_resource(i);
-//                if (can_do_food_x) {
-//                    city_data.resource.food_types_allowed[food_index] = i;
-//                    food_index++;
-//                }
-//            }
-//            int a = 24;
-//        }
         for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
             city_data.resource.food_types_eaten_arr[i] = buf->read_u8();
+
+        buf->skip(234);
+
+        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+            city_data.resource.stockpiled[i] = buf->read_i32();
 
         // TODO: TEMP!!!!
         city_data.resource.food_types_available_num = 0;
         city_data.resource.food_types_eaten_num = 0;
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
-            city_data.resource.stockpiled[i] = 0;
-
-        buf->skip(378);
     }
     city_data.resource.food_supply_months = buf->read_i32();
     city_data.resource.granaries.operating = buf->read_i32();

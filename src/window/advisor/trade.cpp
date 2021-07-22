@@ -77,76 +77,60 @@ static void draw_foreground(void) {
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
-//        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
 
+        font_t font_color = FONT_NORMAL_WHITE;
         if (city_resource_is_mothballed(resource))
-            lang_text_draw(23, resource, 46, y_offset + 61, FONT_NORMAL_RED);
-        else
-            lang_text_draw(23, resource, 46, y_offset + 61, FONT_NORMAL_WHITE);
+            font_color = FONT_NORMAL_RED;
+
+        // resource name and amount in warehouses
+        lang_text_draw(23, resource, 46, y_offset + 61, font_color);
         text_draw_number_centered(stack_proper_quantity(city_resource_count(resource), resource),
-                                  155, y_offset + 61, 60, FONT_NORMAL_WHITE);
+                                  152, y_offset + 61, 60, font_color);
 
-        if (true) {
-            auto res = city_give_me_da_city_data()->resource;
-            int res_id = list->items[i];
+        // mothballed / stockpiled
+        if (city_resource_is_stockpiled(resource))
+            lang_text_draw_centered(54, 3, 210, y_offset + 61, 100, font_color);
+        else if (city_resource_is_mothballed(resource))
+            lang_text_draw_centered(18, 5, 210, y_offset + 61, 100, FONT_NORMAL_RED);
 
-            int width = 100;
-            width += 50; text_draw_number(stack_proper_quantity(res.space_in_warehouses[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(stack_proper_quantity(res.stored_in_warehouses[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(res.trade_status[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(stack_proper_quantity(res.trading_amount[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(res.mothballed[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(res.stockpiled[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            width += 50; text_draw_number(res.unk_00[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
-
-        } else {
-            // mothballed?
-            if (city_resource_is_mothballed(resource))
-                lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
-
-            // stockpiled?
-            if (city_resource_is_stockpiled(resource))
-                lang_text_draw(54, 3, 341, y_offset + 61, FONT_NORMAL_WHITE);
-
-            int trade_status = city_int(resource);
-            int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
-            switch (trade_status) {
-                case TRADE_STATUS_NONE: {
-                    bool can_import = empire_can_import_resource(resource, true);
-                    bool can_export = empire_can_export_resource(resource, true);
-                    bool could_import = empire_can_import_resource(resource, false);
-                    bool could_export = empire_can_export_resource(resource, false);
-                    if (can_import && !can_export)
-                        lang_text_draw(54, 31, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    else if (!can_import && can_export)
-                        lang_text_draw(54, 32, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    else if (can_import && can_export)
-                        lang_text_draw(54, 33, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    else if (could_import && !could_export)
-                        lang_text_draw(54, 34, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
-                    else if (!could_import && could_export)
-                        lang_text_draw(54, 35, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
-                    else if (could_import && could_export)
-                        lang_text_draw(54, 36, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
-                    break;
-                }
-                case TRADE_STATUS_IMPORT: { // importing
-                    int width = lang_text_draw(54, 5, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, FONT_NORMAL_WHITE);
-                    break;
-                }
-                case TRADE_STATUS_EXPORT: { // exporting
-                    int width = lang_text_draw(54, 6, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, FONT_NORMAL_WHITE);
-                    break;
-                }
-                case TRADE_STATUS_IMPORT_AS_NEEDED:
-                    lang_text_draw(54, 37, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    break;
-                case TRADE_STATUS_EXPORT_SURPLUS:
-                    lang_text_draw(54, 38, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
-                    break;
+        int trade_status = city_int(resource);
+        int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
+        switch (trade_status) {
+            case TRADE_STATUS_NONE: {
+                bool can_import = empire_can_import_resource(resource, true);
+                bool can_export = empire_can_export_resource(resource, true);
+                bool could_import = empire_can_import_resource(resource, false);
+                bool could_export = empire_can_export_resource(resource, false);
+                if (can_import && !can_export)
+                    lang_text_draw(54, 31, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                else if (!can_import && can_export)
+                    lang_text_draw(54, 32, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                else if (can_import && can_export)
+                    lang_text_draw(54, 33, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                else if (could_import && !could_export)
+                    lang_text_draw(54, 34, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                else if (!could_import && could_export)
+                    lang_text_draw(54, 35, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                else if (could_import && could_export)
+                    lang_text_draw(54, 36, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                break;
             }
+            case TRADE_STATUS_IMPORT: { // importing
+                int width = lang_text_draw(54, 5, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, font_color);
+                break;
+            }
+            case TRADE_STATUS_EXPORT: { // exporting
+                int width = lang_text_draw(54, 6, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, font_color);
+                break;
+            }
+            case TRADE_STATUS_IMPORT_AS_NEEDED:
+                lang_text_draw(54, 37, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                break;
+            case TRADE_STATUS_EXPORT_SURPLUS:
+                lang_text_draw(54, 38, IMPORT_EXPORT_X, y_offset + 61, font_color);
+                break;
         }
 
         // update/draw buttons accordingly
@@ -192,14 +176,13 @@ static void button_resource(int resource_index, int param2) {
 
 static int get_tooltip_text(void) {
     if (focus_button_id == 1)
-        return 106;
+        return 108;
     else if (focus_button_id == 2)
-        return 41;
+        return 42;
     else if (focus_button_id)
-        return 107;
-    else {
+        return 109;
+    else
         return 0;
-    }
 }
 
 const advisor_window_type *window_advisor_trade(void) {
@@ -209,9 +192,6 @@ const advisor_window_type *window_advisor_trade(void) {
             handle_mouse,
             get_tooltip_text
     };
-//    scrollbar.thin = true;
-//    scrollbar_init(&scrollbar, 0, city_resource_get_available()->size);
-//    scrollbar_reset(&scrollbar, 0);
     return &window;
 }
 
