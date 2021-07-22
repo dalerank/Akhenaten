@@ -10,6 +10,7 @@
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
+#include "type.h"
 
 #include <string.h>
 
@@ -48,6 +49,20 @@ const char SCENARIO_FILE[2][2][100] = {
         {"c32.emp", "c3.emp"},
         {"", "Pharaoh2.emp"}
 };
+
+bool empire_city_type_can_trade(int type) {
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        return type == EMPIRE_CITY_TRADE;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        switch (type) {
+            case EMPIRE_CITY_PH_PHARAOH_TRADE:
+            case EMPIRE_CITY_PH_EGYPT_TRADE:
+            case EMPIRE_CITY_PH_FOREIGN_TRADE:
+                return true;
+        }
+    }
+    return false;
+}
 
 void empire_load_external_c3(int is_custom_scenario, int empire_id) {
     buffer *buf = new buffer(EMPIRE_DATA_SIZE[GAME_ENV]);
@@ -171,7 +186,7 @@ int empire_can_export_resource_to_city(int city_id, int resource) {
         // quota reached
         return 0;
     }
-    if (city_resource_count(resource) <= city_resource_export_over(resource)) {
+    if (city_resource_count(resource) <= city_resource_trading_amount(resource)) {
         // stocks too low
         return 0;
     }
@@ -233,7 +248,7 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     if (finished_good)
         max_in_stock = 2 + 2 * building_count_industry_active(finished_good);
 */
-    max_in_stock = city_resource_export_over(resource);
+    max_in_stock = city_resource_trading_amount(resource);
     return in_stock < max_in_stock ? 1 : 0;
 }
 

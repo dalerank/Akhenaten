@@ -320,9 +320,11 @@ extern struct city_data_t {
         int32_t space_in_workshops[6];
         int32_t stored_in_workshops[6];
         int16_t trade_status[36];
-        int16_t export_over[36];
+        int16_t trading_amount[36];
         int32_t stockpiled[36];
         int16_t mothballed[36];
+        int16_t unk_00[36];
+
         int32_t wine_types_available;
 //        int32_t food_types_available;
 //        int32_t food_types_eaten;
@@ -436,5 +438,7 @@ extern struct city_data_t {
         uint8_t faction_bytes[2];
     } unused;
 } city_data;
+
+city_data_t *city_give_me_da_city_data();
 
 #endif // CITY_DATA_PRIVATE_H

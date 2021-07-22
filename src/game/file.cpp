@@ -13,6 +13,7 @@
 #include "city/mission.h"
 #include "city/victory.h"
 #include "city/view.h"
+#include "city/resource.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image.h"
@@ -70,6 +71,7 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/music.h"
+#include "undo.h"
 
 #include <string.h>
 #include <building/count.h>
@@ -264,7 +266,9 @@ static void initialize_saved_game(void) {
     city_message_clear_scroll();
     map_tiles_river_refresh_entire();
 
+    // can't find cache in Pharaoh's save file format?
     building_count_update();
+    city_resource_calculate_warehouse_stocks();
 
     game_state_unpause();
 }

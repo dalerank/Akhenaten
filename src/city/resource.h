@@ -13,7 +13,6 @@ typedef struct {
 int city_resource_count(int resource);
 
 const resources_list *city_resource_get_available(void);
-
 const resources_list *city_resource_get_available_foods(void);
 
 int city_resource_multiple_wine_available(void);
@@ -31,9 +30,11 @@ void city_resource_set_last_used_warehouse(int warehouse_id);
 
 int city_int(int resource);
 void city_resource_cycle_trade_status(int resource);
+void city_resource_cycle_trade_import(int resource);
+void city_resource_cycle_trade_export(int resource);
 
-int city_resource_export_over(int resource);
-void city_resource_change_export_over(int resource, int change);
+int city_resource_trading_amount(int resource);
+void city_resource_change_trading_amount(int resource, int delta);
 
 int city_resource_is_stockpiled(int resource);
 void city_resource_toggle_stockpiled(int resource);

@@ -81,10 +81,18 @@ enum {
     INVENTORY_MAX = 8
 };
 
+enum {
+    RESOURCE_UNIT_PILE = 0,
+    RESOURCE_UNIT_BLOCK = 1,
+    RESOURCE_UNIT_WEAPON = 2,
+    RESOURCE_UNIT_CHARIOT = 3
+};
+
 int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
 void set_allowed_food(int i, int resource);
-int stack_proper_quantity(int units, int resource);
+int stack_units_by_resource(int resource);
+int stack_proper_quantity(int loads, int resource);
 
 const int INV_RESOURCES[2][20] = {
     {

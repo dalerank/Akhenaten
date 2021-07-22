@@ -22,4 +22,6 @@ enum {
     EMPIRE_CITY_FUTURE_ROMAN = 6,       EMPIRE_CITY_PH_FOREIGN = 6
 };
 
+bool empire_city_type_can_trade(int type);
+
 #endif // EMPIRE_TYPE_H

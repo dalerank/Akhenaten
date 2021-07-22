@@ -27,15 +27,11 @@ empire_city *empire_city_get(int city_id);
 
 int empire_city_get_route_id(int city_id);
 
-bool empire_can_import_resource(int resource);
+bool empire_can_import_resource(int resource, bool check_if_open);
+bool empire_can_export_resource(int resource, bool check_if_open);
 
-bool empire_can_import_resource_potentially(int resource);
-
-bool empire_can_export_resource(int resource);
-
-bool empire_can_produce_resource(int resource);
-
-bool empire_can_produce_resource_potentially(int resource);
+bool empire_can_produce_resource(int resource, bool check_if_open);
+//bool empire_can_produce_resource_potentially(int resource);
 
 int empire_city_get_for_object(int empire_object_id);
 

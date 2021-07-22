@@ -87,6 +87,7 @@ static void load_settings(buffer *buf) {
     buf->read_raw(data.player_name, env_sizes().MAX_PLAYER_NAME);
     buf->skip(16);
     data.last_advisor = buf->read_i32();
+    data.last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4); //int save_game_mission_id;
     data.tooltips = buf->read_i32();
     buf->skip(4); //int starting_favor;

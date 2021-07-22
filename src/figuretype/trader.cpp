@@ -389,6 +389,7 @@ void figure::trade_caravan_action() {
             anim_frame = 0;
             break;
         case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
+        case ACTION_9_DELIVERING_GOODS:
             move_ticks(1);
             switch (direction) {
                 case DIR_FIGURE_AT_DESTINATION:

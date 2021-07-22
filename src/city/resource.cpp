@@ -23,7 +23,6 @@ int city_resource_count(int resource) {
 const resources_list *city_resource_get_available(void) {
     return &available.resource_list;
 }
-
 const resources_list *city_resource_get_available_foods(void) {
     return &available.food_list;
 }
@@ -35,19 +34,15 @@ int city_resource_multiple_wine_available(void) {
 int city_resource_food_types_available(void) {
     return city_data.resource.food_types_available_num;
 }
-
 int city_resource_food_stored(void) {
     return city_data.resource.granary_total_stored;
 }
-
 int city_resource_food_needed(void) {
     return city_data.resource.food_needed_per_month;
 }
-
 int city_resource_food_supply_months(void) {
     return city_data.resource.food_supply_months;
 }
-
 int city_resource_food_percentage_produced(void) {
     return calc_percentage(city_data.resource.food_produced_last_month, city_data.resource.food_consumed_last_month);
 }
@@ -55,11 +50,9 @@ int city_resource_food_percentage_produced(void) {
 int city_resource_operating_granaries(void) {
     return city_data.resource.granaries.operating;
 }
-
 int city_resource_last_used_warehouse(void) {
     return city_data.resource.last_used_warehouse;
 }
-
 void city_resource_set_last_used_warehouse(int warehouse_id) {
     city_data.resource.last_used_warehouse = warehouse_id;
 }
@@ -73,47 +66,76 @@ void city_resource_cycle_trade_status(int resource) {
     if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT)
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
 
-
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT &&
-        !empire_can_import_resource(resource)) {
+        !empire_can_import_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
     }
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT &&
-        !empire_can_export_resource(resource)) {
+        !empire_can_export_resource(resource, true)) {
         city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
     }
     if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT)
         city_data.resource.stockpiled[resource] = 0;
-
 }
+void city_resource_cycle_trade_import(int resource) {
+    // no sellers?
+    if (!empire_can_import_resource(resource, true))
+        return;
 
-int city_resource_export_over(int resource) {
-    return city_data.resource.export_over[resource];
+    switch (city_data.resource.trade_status[resource]) {
+        default:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
+            break;
+        case TRADE_STATUS_IMPORT_AS_NEEDED:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_IMPORT;
+            break;
+        case TRADE_STATUS_IMPORT:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+            break;
+    }
 }
+void city_resource_cycle_trade_export(int resource) {
+    // no buyers?
+    if (!empire_can_export_resource(resource, true))
+        return;
 
-void city_resource_change_export_over(int resource, int change) {
-    city_data.resource.export_over[resource] = calc_bound(city_data.resource.export_over[resource] + change, 0, 100);
+    switch (city_data.resource.trade_status[resource]) {
+        default:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
+            city_data.resource.stockpiled[resource] = false;
+            break;
+        case TRADE_STATUS_EXPORT_SURPLUS:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
+            city_data.resource.stockpiled[resource] = false;
+            break;
+        case TRADE_STATUS_EXPORT:
+            city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+            break;
+    }
+}
+int city_resource_trading_amount(int resource) {
+    return city_data.resource.trading_amount[resource];
+}
+void city_resource_change_trading_amount(int resource, int delta) {
+    city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 100);
 }
 
 int city_resource_is_stockpiled(int resource) {
     return city_data.resource.stockpiled[resource];
 }
-
 void city_resource_toggle_stockpiled(int resource) {
     if (city_data.resource.stockpiled[resource])
         city_data.resource.stockpiled[resource] = 0;
     else {
         city_data.resource.stockpiled[resource] = 1;
-        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT)
+        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT
+            || city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT_SURPLUS)
             city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-
     }
 }
-
 int city_resource_is_mothballed(int resource) {
     return city_data.resource.mothballed[resource];
 }
-
 void city_resource_toggle_mothballed(int resource) {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
@@ -122,20 +144,16 @@ int city_resource_has_workshop_with_room(int workshop_type) {
     // todo: prevent oversending goods from warehouses etc.
     return city_data.resource.space_in_workshops[workshop_type] > 0;
 }
-
 void city_resource_add_produced_to_granary(int amount) {
     city_data.resource.food_produced_this_month += amount;
 }
-
 void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
-
 void city_resource_add_to_warehouse(int resource, int amount) {
     city_data.resource.space_in_warehouses[resource] -= amount;
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
-
 void city_resource_remove_from_warehouse(int resource, int amount) {
     city_data.resource.space_in_warehouses[resource] += amount;
     city_data.resource.stored_in_warehouses[resource] -= amount;
@@ -176,7 +194,6 @@ void city_resource_calculate_warehouse_stocks(void) {
         }
     }
 }
-
 void city_resource_determine_available(void) {
     for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
         available.resource_list.items[i] = 0;
@@ -186,7 +203,7 @@ void city_resource_determine_available(void) {
     available.food_list.size = 0;
 
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
-        if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, true) ||
             (i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
             available.resource_list.items[available.resource_list.size++] = i;
         }
@@ -195,13 +212,12 @@ void city_resource_determine_available(void) {
         if (i == RESOURCE_OLIVES || i == RESOURCE_VINES)
             continue;
 
-        if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, true) ||
             (i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
             available.food_list.items[available.food_list.size++] = i;
         }
     }
 }
-
 static void calculate_available_food(void) {
     for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
         city_data.resource.granary_food_stored[i] = 0;
@@ -264,7 +280,6 @@ static void calculate_available_food(void) {
         city_data.resource.food_supply_months = 12;
     }
 }
-
 void city_resource_calculate_food_stocks_and_supply_wheat(void) {
     calculate_available_food();
     if (scenario_property_rome_supplies_wheat()) {
@@ -276,7 +291,6 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void) {
         }
     }
 }
-
 void city_resource_calculate_workshop_stocks(void) {
     for (int i = 0; i < 6; i++) {
         city_data.resource.stored_in_workshops[i] = 0;

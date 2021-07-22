@@ -575,11 +575,7 @@ static void draw_panel_buttons(const empire_city *city) {
 
     // trade button
     if (city && !city->is_open) {
-        if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE)
-            || (GAME_ENV == ENGINE_ENV_PHARAOH &&
-           (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
-            || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
-            || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE)))
+        if (empire_city_type_can_trade(city->type))
             button_border_draw((data.x_min + data.x_max - 500) / 2 + 30 + TRADE_BUTTON_OFFSET_X,
                                data.y_max - 49 + TRADE_BUTTON_OFFSET_Y,
                                generic_button_open_trade[0].width, generic_button_open_trade[0].height,

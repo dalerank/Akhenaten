@@ -182,14 +182,14 @@ static void enable_if_allowed(int type) {
 //}
 
 static int disable_raw_if_unavailable(int type, int resource) {
-    if (!empire_can_produce_resource(resource)) {
+    if (!empire_can_produce_resource(resource, true)) {
         enable_building(type, false);
         return 0;
     }
     return 1;
 }
 static int disable_crafted_if_unavailable(int type, int resource) {
-    if (!empire_can_produce_resource_potentially(resource)) {
+    if (!empire_can_produce_resource(resource, false)) {
         enable_building(type, false);
         return 0;
     }

@@ -21,33 +21,40 @@ static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_resource(int resource_index, int param2);
 
+#define TRADE_BUTTON_X 20
+#define TRADE_BUTTON_WIDTH 569
+
 static generic_button resource_buttons[] = {
         {400, 398, 200, 23, button_prices,   button_none, 1,  0},
         {100, 398, 200, 23, button_empire,   button_none, 1,  0},
-        {80,  56,  480, 20, button_resource, button_none, 0,  0},
-        {80,  78,  480, 20, button_resource, button_none, 1,  0},
-        {80,  100, 480, 20, button_resource, button_none, 2,  0},
-        {80,  122, 480, 20, button_resource, button_none, 3,  0},
-        {80,  144, 480, 20, button_resource, button_none, 4,  0},
-        {80,  166, 480, 20, button_resource, button_none, 5,  0},
-        {80,  188, 480, 20, button_resource, button_none, 6,  0},
-        {80,  210, 480, 20, button_resource, button_none, 7,  0},
-        {80,  232, 480, 20, button_resource, button_none, 8,  0},
-        {80,  254, 480, 20, button_resource, button_none, 9,  0},
-        {80,  276, 480, 20, button_resource, button_none, 10, 0},
-        {80,  298, 480, 20, button_resource, button_none, 11, 0},
-        {80,  320, 480, 20, button_resource, button_none, 12, 0},
-        {80,  342, 480, 20, button_resource, button_none, 13, 0},
-        {80,  364, 480, 20, button_resource, button_none, 14, 0}
+        {TRADE_BUTTON_X,  56,  TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 0,  0},
+        {TRADE_BUTTON_X,  78,  TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 1,  0},
+        {TRADE_BUTTON_X,  100, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 2,  0},
+        {TRADE_BUTTON_X,  122, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 3,  0},
+        {TRADE_BUTTON_X,  144, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 4,  0},
+        {TRADE_BUTTON_X,  166, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 5,  0},
+        {TRADE_BUTTON_X,  188, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 6,  0},
+        {TRADE_BUTTON_X,  210, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 7,  0},
+        {TRADE_BUTTON_X,  232, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 8,  0},
+        {TRADE_BUTTON_X,  254, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 9,  0},
+        {TRADE_BUTTON_X,  276, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 10, 0},
+        {TRADE_BUTTON_X,  298, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 11, 0},
+        {TRADE_BUTTON_X,  320, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 12, 0},
+        {TRADE_BUTTON_X,  342, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 13, 0},
+        {TRADE_BUTTON_X,  364, TRADE_BUTTON_WIDTH, 20, button_resource, button_none, 14, 0}
 };
 
 static int focus_button_id;
 
-
 static void on_scroll(void) {
     window_invalidate();
 }
-static scrollbar_type scrollbar = {580, 52, 336, on_scroll};
+static scrollbar_type scrollbar = {590, 52, 336, on_scroll};
+
+#define IMPORT_EXPORT_X 310
+
+#include <city/data_private.h>
+#include <empire/city.h>
 
 static int draw_background(void) {
     city_resource_determine_available();
@@ -62,47 +69,94 @@ static int draw_background(void) {
     return ADVISOR_HEIGHT;
 }
 static void draw_foreground(void) {
-    inner_panel_draw(32, 52, 36, 21);
-
-    graphics_set_clip_rectangle(35, 39, 570, 346);
+    inner_panel_draw(17, 52, 36, 21);
+    graphics_set_clip_rectangle(20, 39, 575, 346);
     const resources_list *list = city_resource_get_available();
     for (int i = scrollbar.scroll_position; i < list->size; i++) {
         int y_offset = 22 * (i - scrollbar.scroll_position);
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 48, y_offset + 54);
+        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
 //        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 568, y_offset + 54);
 
-        lang_text_draw(23, resource, 88, y_offset + 61, FONT_NORMAL_WHITE);
-        text_draw_number_centered(city_resource_count(resource),
-                                  180, y_offset + 61, 60, FONT_NORMAL_WHITE);
-
-        // mothballed?
         if (city_resource_is_mothballed(resource))
-            lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
+            lang_text_draw(23, resource, 46, y_offset + 61, FONT_NORMAL_RED);
+        else
+            lang_text_draw(23, resource, 46, y_offset + 61, FONT_NORMAL_WHITE);
+        text_draw_number_centered(stack_proper_quantity(city_resource_count(resource), resource),
+                                  155, y_offset + 61, 60, FONT_NORMAL_WHITE);
 
-        // stockpiled?
-        if (city_resource_is_stockpiled(resource))
-            lang_text_draw(54, 3, 341, y_offset + 61, FONT_NORMAL_WHITE);
-        else {
+        if (true) {
+            auto res = city_give_me_da_city_data()->resource;
+            int res_id = list->items[i];
+
+            int width = 100;
+            width += 50; text_draw_number(stack_proper_quantity(res.space_in_warehouses[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(stack_proper_quantity(res.stored_in_warehouses[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(res.trade_status[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(stack_proper_quantity(res.trading_amount[res_id], res_id), '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(res.mothballed[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(res.stockpiled[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            width += 50; text_draw_number(res.unk_00[res_id], '@', " ", 50 + width, y_offset + 61, FONT_NORMAL_WHITE);
+
+        } else {
+            // mothballed?
+            if (city_resource_is_mothballed(resource))
+                lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
+
+            // stockpiled?
+            if (city_resource_is_stockpiled(resource))
+                lang_text_draw(54, 3, 341, y_offset + 61, FONT_NORMAL_WHITE);
+
             int trade_status = city_int(resource);
-            if (trade_status == TRADE_STATUS_IMPORT) { // importing
-                lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
-                text_draw_number(city_resource_export_over(resource), '@', " ",
-                                 500, y_offset + 61, FONT_NORMAL_WHITE);
-            } else if (trade_status == TRADE_STATUS_EXPORT) { // exporting
-                int width = lang_text_draw(54, 6, 341, y_offset + 61, FONT_NORMAL_WHITE);
-                text_draw_number(city_resource_export_over(resource), '@', " ",
-                                 341 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
+            switch (trade_status) {
+                case TRADE_STATUS_NONE: {
+                    bool can_import = empire_can_import_resource(resource, true);
+                    bool can_export = empire_can_export_resource(resource, true);
+                    bool could_import = empire_can_import_resource(resource, false);
+                    bool could_export = empire_can_export_resource(resource, false);
+                    if (can_import && !can_export)
+                        lang_text_draw(54, 31, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    else if (!can_import && can_export)
+                        lang_text_draw(54, 32, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    else if (can_import && can_export)
+                        lang_text_draw(54, 33, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    else if (could_import && !could_export)
+                        lang_text_draw(54, 34, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    else if (!could_import && could_export)
+                        lang_text_draw(54, 35, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    else if (could_import && could_export)
+                        lang_text_draw(54, 36, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    break;
+                }
+                case TRADE_STATUS_IMPORT: { // importing
+                    int width = lang_text_draw(54, 5, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, FONT_NORMAL_WHITE);
+                    break;
+                }
+                case TRADE_STATUS_EXPORT: { // exporting
+                    int width = lang_text_draw(54, 6, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    text_draw_number(trade_amount, '@', " ", IMPORT_EXPORT_X + width, y_offset + 61, FONT_NORMAL_WHITE);
+                    break;
+                }
+                case TRADE_STATUS_IMPORT_AS_NEEDED:
+                    lang_text_draw(54, 37, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    break;
+                case TRADE_STATUS_EXPORT_SURPLUS:
+                    lang_text_draw(54, 38, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_WHITE);
+                    break;
             }
         }
 
         // update/draw buttons accordingly
         if (focus_button_id - 3 == i - scrollbar.scroll_position)
-            button_border_draw(80, y_offset + 54, 480, 24, 1);
+            button_border_draw(TRADE_BUTTON_X, y_offset + 54, TRADE_BUTTON_WIDTH, 24, 1);
         resource_buttons[i + 2 - scrollbar.scroll_position].parameter1 = i;
     }
     graphics_reset_clip_rectangle();
+
+    // scrollbar
     inner_panel_draw(scrollbar.x + 3, scrollbar.y + 20, 2, 19);
     scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
     scrollbar_draw(&scrollbar);
@@ -116,6 +170,8 @@ static void draw_foreground(void) {
 
 static int handle_mouse(const mouse *m) {
     int num_resources = city_resource_get_available()->size;
+    if (num_resources > 15)
+        num_resources = 15;
 
     bool handled = scrollbar_handle_mouse(&scrollbar, m);
     if (handled)
