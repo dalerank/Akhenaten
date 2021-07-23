@@ -135,7 +135,7 @@ static void draw_foreground(void) {
 
         // update/draw buttons accordingly
         if (focus_button_id - 3 == i - scrollbar.scroll_position)
-            button_border_draw(TRADE_BUTTON_X, y_offset + 54, TRADE_BUTTON_WIDTH, 24, 1);
+            button_border_draw(TRADE_BUTTON_X, y_offset + 54, TRADE_BUTTON_WIDTH, 24, true);
         resource_buttons[i + 2 - scrollbar.scroll_position].parameter1 = i;
     }
     graphics_reset_clip_rectangle();
@@ -145,11 +145,13 @@ static void draw_foreground(void) {
     scrollbar.max_scroll_position = city_resource_get_available()->size - 15;
     scrollbar_draw(&scrollbar);
 
-    button_border_draw(398, 396, 200, 24, focus_button_id == 1);
-    lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK);
-
+    // prices
     button_border_draw(98, 396, 200, 24, focus_button_id == 2);
     lang_text_draw_centered(54, 30, 100, 402, 200, FONT_NORMAL_BLACK);
+
+    // map
+    button_border_draw(398, 396, 200, 24, focus_button_id == 1);
+    lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK);
 }
 
 static int handle_mouse(const mouse *m) {

@@ -32,9 +32,9 @@ static void remove_pressed_effect_build(image_button *buttons, int num_buttons) 
     }
 }
 
-void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons) {
+void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, int starting_button) {
     fade_pressed_effect(buttons, num_buttons);
-    for (int i = 0; i < num_buttons; i++) {
+    for (int i = starting_button; i < starting_button + num_buttons; i++) {
         image_button *btn = &buttons[i];
 
         // hacky workaround

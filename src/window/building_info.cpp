@@ -1,3 +1,4 @@
+#include <building/storage.h>
 #include "building_info.h"
 
 #include "building/barracks.h"
@@ -737,8 +738,8 @@ static void draw_foreground(void) {
 
     // general buttons
     if (context.storage_show_special_orders) {
-        int y_offset = window_building_get_vertical_offset(&context, 28);
-        image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
+        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
+        image_buttons_draw(context.x_offset, y_offset + 490, image_buttons_help_close, 2);
     } else
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
     if (context.can_go_to_advisor)
@@ -789,7 +790,7 @@ static int handle_specific_building_info_mouse(const mouse *m) {
                 break;
             case  BUILDING_WAREHOUSE:
                 if (context.storage_show_special_orders)
-                    window_building_handle_mouse_warehouse_orders(m, &context);
+                    return window_building_handle_mouse_warehouse_orders(m, &context);
                 else
                     window_building_handle_mouse_warehouse(m, &context);
                 break;
@@ -801,8 +802,8 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     int button_id = 0;
     // general buttons
     if (context.storage_show_special_orders) {
-        int y_offset = window_building_get_vertical_offset(&context, 28);
-        button_id |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400, image_buttons_help_close, 2,
+        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
+        button_id |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 490, image_buttons_help_close, 2,
                                               &focus_image_button_id);
     } else {
         button_id |= image_buttons_handle_mouse(
@@ -821,8 +822,12 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     if (!button_id)
         button_id |= handle_specific_building_info_mouse(m);
 
-    if (!button_id && input_go_back_requested(m, h))
-        window_city_show();
+    if (!button_id && input_go_back_requested(m, h)) {
+        if (context.storage_show_special_orders) {
+            storage_settings_backup_check();
+        } else
+            window_city_show();
+    }
 
 }
 
@@ -836,6 +841,7 @@ static void button_help(int param1, int param2) {
 static void button_close(int param1, int param2) {
     if (context.storage_show_special_orders) {
         context.storage_show_special_orders = 0;
+        storage_settings_backup_reset();
         window_invalidate();
     } else
         window_city_show();

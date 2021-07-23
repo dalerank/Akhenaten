@@ -33,7 +33,7 @@ typedef struct {
     time_millis pressed_since;
 } image_button;
 
-void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons);
+void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, int starting_button = 0);
 
 bool image_buttons_handle_mouse(const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id);
 void image_buttons_release_press(image_button *buttons, int num_buttons);

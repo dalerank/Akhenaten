@@ -13,9 +13,13 @@ static const int REPEATS[] = {
 static const time_millis REPEAT_MILLIS = 30;
 static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 
-void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons) {
+void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons, bool tiny) {
     for (int i = 0; i < num_buttons; i++) {
-        int image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
+        int image_id = 0;
+        if (tiny)
+            image_id = image_id_from_group(GROUP_TINY_ARROWS) + buttons[i].image_id;
+        else
+            image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
 
         if (GAME_ENV == ENGINE_ENV_C3 && buttons[i].pressed)
             image_id += 1;

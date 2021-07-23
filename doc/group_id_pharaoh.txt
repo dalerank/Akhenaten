@@ -511,7 +511,7 @@ INFO: data/Pharaoh_General.sg3 group 127 -> id 1609
 INFO: data/Pharaoh_General.sg3 group 128 -> id 403 advisors bordered icons (large)
 INFO: data/Pharaoh_General.sg3 group 129 -> id 467 resource icons (proper)
 INFO: data/Pharaoh_General.sg3 group 130 -> id 2109
-INFO: data/Pharaoh_General.sg3 group 131 -> id 731
+INFO: data/Pharaoh_General.sg3 group 131 -> id 731 tiny extra button icons
 INFO: data/Pharaoh_General.sg3 group 132 -> id 502
 INFO: data/Pharaoh_General.sg3 group 133 -> id 646
 INFO: data/Pharaoh_General.sg3 group 134 -> id 695
@@ -592,7 +592,7 @@ INFO: data/Pharaoh_General.sg3 group 208 -> id 1503
 INFO: data/Pharaoh_General.sg3 group 209 -> id 1530
 INFO: data/Pharaoh_General.sg3 group 210 -> id 1508
 INFO: data/Pharaoh_General.sg3 group 211 -> id 2014
-INFO: data/Pharaoh_General.sg3 group 212 -> id 743
+INFO: data/Pharaoh_General.sg3 group 212 -> id 743 tiny arrow buttons
 INFO: data/Pharaoh_General.sg3 group 213 -> id 2325
 INFO: data/Pharaoh_General.sg3 group 214 -> id 2327
 INFO: data/Pharaoh_General.sg3 group 215 -> id 2329
@@ -606,7 +606,7 @@ INFO: data/Pharaoh_General.sg3 group 222 -> id 2164
 INFO: data/Pharaoh_General.sg3 group 223 -> id 1946
 INFO: data/Pharaoh_General.sg3 group 224 -> id 1721
 INFO: data/Pharaoh_General.sg3 group 225 -> id 2199
-INFO: data/Pharaoh_General.sg3 group 226 -> id 1742 horisontal panel without buttons
+INFO: data/Pharaoh_General.sg3 group 226 -> id 1742 horizontal panel without buttons
 INFO: data/Pharaoh_General.sg3 group 227 -> id 1750
 INFO: data/Pharaoh_General.sg3 group 228 -> id 2439
 

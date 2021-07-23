@@ -16,7 +16,7 @@ typedef struct {
     int repeats;
 } arrow_button;
 
-void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons);
+void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons, bool tiny = false);
 
 int
 arrow_buttons_handle_mouse(const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id);

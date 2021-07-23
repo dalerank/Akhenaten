@@ -35,6 +35,6 @@ void building_granary_bless(void);
 
 void building_granary_warehouse_curse(int big);
 
-int building_granary_is_getting(int resource, building *b);
+bool building_granary_is_getting(int resource, building *b);
 
 #endif // BUILDING_GRANARY_H

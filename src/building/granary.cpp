@@ -39,44 +39,39 @@ int building_granary_get_amount(building *granary, int resource) {
     return granary->data.granary.resource_stored[resource];
 }
 
-int THREEQUARTERS_GRANARY = 1800;
-int HALF_GRANARY = 1200;
-int QUARTER_GRANARY = 600;
+int FULL_GRANARY = 3200;
+int THREEQUARTERS_GRANARY = 2400;
+int HALF_GRANARY = 1600;
+int QUARTER_GRANARY = 800;
 
-int building_granary_is_accepting(int resource, building *b) {
+bool building_granary_is_accepting(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_granary_get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_GRANARY)) {
-        return 1;
-    } else {
-        return 0;
-    }
+    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] == FULL_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= HALF_GRANARY && amount < HALF_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_ACCEPT && s->resource_max_accept[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY))
+        return true;
+    else
+        return false;
 }
-int building_granary_is_getting(int resource, building *b) {
+bool building_granary_is_getting(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_granary_get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_GRANARY)) {
-        return 1;
-    } else {
-        return 0;
-    }
+    if ((s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] == FULL_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= THREEQUARTERS_GRANARY && amount < THREEQUARTERS_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= HALF_GRANARY && amount < HALF_GRANARY) ||
+        (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET && s->resource_max_get[resource] >= QUARTER_GRANARY && amount < QUARTER_GRANARY))
+        return true;
+    else
+        return false;
 }
-int building_granary_is_gettable(int resource, building *b) {
+bool building_granary_is_gettable(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
-        return 1;
-    } else {
-        return 0;
-    }
+    if (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET)
+        return true;
+    else
+        return false;
 }
 int building_granary_is_not_accepting(int resource, building *b) {
     return !((building_granary_is_accepting(resource, b) || building_granary_is_getting(resource, b)));

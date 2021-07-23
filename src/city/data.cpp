@@ -80,6 +80,10 @@ int stack_units_by_resource(int resource) {
         case RESOURCE_SANDSTONE:
         case RESOURCE_MARBLE_PH:
             return RESOURCE_UNIT_BLOCK;
+        case RESOURCE_WEAPONS_PH:
+            return RESOURCE_UNIT_WEAPON;
+        case RESOURCE_CHARIOTS:
+            return RESOURCE_UNIT_CHARIOT;
     }
 }
 int stack_proper_quantity(int loads, int resource) {

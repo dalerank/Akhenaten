@@ -18,15 +18,22 @@ enum {
  * Storage state
  */
 enum {
-    BUILDING_STORAGE_STATE_ACCEPTING = 0,
-    BUILDING_STORAGE_STATE_NOT_ACCEPTING = 1,
-    BUILDING_STORAGE_STATE_GETTING = 2,
-    BUILDING_STORAGE_STATE_ACCEPTING_HALF = 3,
-    BUILDING_STORAGE_STATE_ACCEPTING_QUARTER = 4,
-    BUILDING_STORAGE_STATE_GETTING_HALF = 5,
-    BUILDING_STORAGE_STATE_GETTING_QUARTER = 6,
-    BUILDING_STORAGE_STATE_GETTING_3QUARTERS = 7,
-    BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS = 8,
+    STORAGE_STATE_PHARAOH_ACCEPT = 0,
+    STORAGE_STATE_PHARAOH_REFUSE = 1,
+    STORAGE_STATE_PHARAOH_GET = 2,
+    STORAGE_STATE_PHARAOH_EMPTY = 3,
+};
+
+enum {
+    OLD_STORAGE_STATE_ACCEPTING = 0,
+    OLD_STORAGE_STATE_NOT_ACCEPTING = 1,
+    OLD_STORAGE_STATE_GETTING = 2,
+    OLD_STORAGE_STATE_ACCEPTING_HALF = 3,
+    OLD_STORAGE_STATE_ACCEPTING_QUARTER = 4,
+    OLD_STORAGE_STATE_GETTING_HALF = 5,
+    OLD_STORAGE_STATE_GETTING_QUARTER = 6,
+    OLD_STORAGE_STATE_GETTING_3QUARTERS = 7,
+    OLD_STORAGE_STATE_ACCEPTING_3QUARTERS = 8,
 };
 
 enum {
@@ -42,6 +49,8 @@ enum {
 typedef struct {
     int empty_all;
     int resource_state[36];
+    int resource_max_accept[36];
+    int resource_max_get[36];
     int permissions;
 } building_storage;
 
@@ -76,14 +85,19 @@ void building_storage_delete(int storage_id);
  */
 const building_storage *building_storage_get(int storage_id);
 
+void backup_storage_settings(int storage_id);
+void restore_storage_settings(bool do_forget_changes);
+void storage_settings_backup_check();
+void storage_settings_backup_reset();
+
 /**
  * Cycles the resource state for the storage
  * @param storage_id Storage id
  * @param resource_id Resource id
  */
-void building_storage_cycle_resource_state(int storage_id, int resource_id);
+void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards);
 
-void building_storage_cycle_partial_resource_state(int storage_id, int resource_id);
+void building_storage_increase_decrease_resource_state(int storage_id, int resource_id, bool increase);
 /**
  * Sets all goods to 'not accepting'
  * @param storage_id Storage id

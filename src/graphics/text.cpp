@@ -237,10 +237,14 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
 
 //    const font_definition *def = font_definition_for(font);
     const font_definition *def;
-    if (font == FONT_NORMAL_SHADED)
-        def = font_definition_for(FONT_NORMAL_PLAIN);
-    else
-        def = font_definition_for(font);
+    switch (font) {
+        default:
+            def = font_definition_for(font);
+            break;
+        case FONT_NORMAL_SHADED:
+            def = font_definition_for(FONT_NORMAL_PLAIN);
+            break;
+    }
 
     int length = string_length(str);
     if (input_cursor.capture) {

@@ -44,7 +44,6 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
 
         if (new_window_y + new_window_height > height)
             new_window_y = height - new_window_height;
-
     }
 
     return new_window_y;
