@@ -180,11 +180,8 @@ bool figure::has_destination(building *b) {
 
 void init_figures() {
     if (!data.initialized) {
-        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++)
             data.figures[i] = new figure(i);
-//        memset(&data.figures[i], 0, sizeof(figure));
-//        data.figures[i].id = i;
-        }
         data.initialized = true;
     }
 }

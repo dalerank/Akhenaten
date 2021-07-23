@@ -249,26 +249,25 @@ void figure::move_ticks(int num_ticks, int roaming_enabled) {
         kill();
     while (num_ticks > 0) {
         num_ticks--;
-        progress_on_tile++;
-        if (progress_on_tile < 15)
-            advance_tick();
-        else {
+        if (progress_on_tile == 9) // tile edge reached
+            move_to_next_tile();
+        if (progress_on_tile == 1) { // tile center
             figure_service_provide_coverage();
-            progress_on_tile = 15;
+
+            // update route
             if (routing_path_id <= 0)
                 figure_route_add();
-
             set_next_tile_and_direction();
             advance_route_tile(roaming_enabled);
             if (direction >= 8)
                 break;
-
             routing_path_current_tile++;
             previous_tile_direction = direction;
-            progress_on_tile = 0;
-            move_to_next_tile();
-            advance_tick();
         }
+        progress_on_tile++;
+        if (progress_on_tile == 16)
+            progress_on_tile = 1;
+        advance_tick();
     }
 }
 
@@ -369,21 +368,22 @@ void figure::follow_ticks(int num_ticks) {
 
     while (num_ticks > 0) {
         num_ticks--;
-        progress_on_tile++;
-        if (progress_on_tile < 15)
-            advance_tick();
-        else {
-            progress_on_tile = 15;
-            direction = calc_general_direction(tile_x, tile_y,
-                                               leader->previous_tile_x, leader->previous_tile_y);
-            if (direction >= 8)
-                break;
-
-            previous_tile_direction = direction;
-            progress_on_tile = 0;
+        if (progress_on_tile == 9) // tile edge reached
             move_to_next_tile();
-            advance_tick();
+        if (progress_on_tile == 1) { // tile center
+            figure_service_provide_coverage();
+            int found_dir = calc_general_direction(tile_x, tile_y, leader->previous_tile_x, leader->previous_tile_y);
+            if (found_dir >= 8) {
+                anim_frame = 0;
+                continue;
+            }
+            previous_tile_direction = direction;
+            direction = found_dir;
         }
+        progress_on_tile++;
+        if (progress_on_tile == 16)
+            progress_on_tile = 1;
+        advance_tick();
     }
 }
 void figure::roam_ticks(int num_ticks) {
@@ -404,15 +404,12 @@ void figure::roam_ticks(int num_ticks) {
     // no destination: walk to end of tile and pick a direction
     while (num_ticks > 0) {
         num_ticks--;
-        progress_on_tile++;
-        if (progress_on_tile < 15)
-            advance_tick();
-        else {
-            progress_on_tile = 15;
-            roam_random_counter++;
-            int came_from_direction = (previous_tile_direction + 4) % 8;
+        if (progress_on_tile == 9) // tile edge reached
+            move_to_next_tile();
+        if (progress_on_tile == 1) { // tile center
             if (figure_service_provide_coverage())
                 return;
+            int came_from_direction = (previous_tile_direction + 4) % 8;
             int road_tiles[8];
             int permission = get_permission_for_int();
             int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(grid_offset_figure, road_tiles, permission);
@@ -488,10 +485,11 @@ void figure::roam_ticks(int num_ticks) {
             }
             routing_path_current_tile++;
             previous_tile_direction = direction;
-            progress_on_tile = 0;
-            move_to_next_tile();
-            advance_tick();
         }
+        progress_on_tile++;
+        if (progress_on_tile == 16)
+            progress_on_tile = 1;
+        advance_tick();
     }
 }
 void figure::advance_attack() {

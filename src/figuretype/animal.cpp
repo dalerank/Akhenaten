@@ -167,8 +167,8 @@ void figure::seagulls_action() {
     use_cross_country = 1;
     if (!(anim_frame & 3) && move_ticks_cross_country(1)) {
         progress_on_tile++;
-        if (progress_on_tile > 8)
-            progress_on_tile = 0;
+        if (progress_on_tile > 15)
+            progress_on_tile = 1;
         set_cross_country_destination(source_x + SEAGULL_OFFSETS[progress_on_tile].x, source_y + SEAGULL_OFFSETS[progress_on_tile].y);
     }
     if (id & 1) {

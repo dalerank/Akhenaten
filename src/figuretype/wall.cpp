@@ -316,7 +316,7 @@ void figure_tower_sentry_reroute(void) {
         int x_tile, y_tile;
         if (map_routing_wall_tile_in_radius(f->tile_x, f->tile_y, 2, &x_tile, &y_tile)) {
             f->route_remove();
-            f->progress_on_tile = 0;
+            f->progress_on_tile = 1;
             f->map_figure_remove();
             f->previous_tile_x = f->tile_x = x_tile;
             f->previous_tile_y = f->tile_y = y_tile;

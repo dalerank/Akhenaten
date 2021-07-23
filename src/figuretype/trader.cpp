@@ -25,6 +25,20 @@
 #include "map/road_access.h"
 #include "scenario/map.h"
 
+void figure::trader_buy(int loads) {
+    trader_amount_bought += loads;
+}
+void figure::trader_sell(int loads) {
+    resource_amount_full += loads * 100;
+    resource_amount_loads += loads;
+}
+int figure::trader_total_bought() {
+    return trader_amount_bought;
+}
+int figure::trader_total_sold() {
+    return resource_amount_loads;
+}
+
 int figure_create_trade_caravan(int x, int y, int city_id) {
     figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP_RIGHT);
     caravan->empire_city_id = city_id;
@@ -52,7 +66,7 @@ int figure_trade_caravan_can_buy(figure *trader, building *warehouse, int city_i
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
-    if (trader->trader_amount_bought >= 8)
+    if (trader->trader_total_bought() >= 8)
         return 0;
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse))
@@ -73,7 +87,7 @@ int figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city_
     if (warehouse->type != BUILDING_WAREHOUSE)
         return 0;
 
-    if (trader->get_carrying_amount() >= 800)
+    if (trader->trader_total_sold() >= 8)
         return 0;
 
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, warehouse))
@@ -88,7 +102,6 @@ int figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city_
         if (!building_warehouse_is_not_accepting(r, warehouse)) {
             if (empire_can_import_resource_from_city(city_id, r))
                 num_importable++;
-
         }
     }
     if (num_importable <= 0)
@@ -122,7 +135,6 @@ int figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city_
                 }
                 if (empire_can_import_resource_from_city(city_id, space->subtype.warehouse_resource_id))
                     return 1;
-
             }
         }
     }
@@ -370,7 +382,9 @@ int figure::trade_ship_done_trading() {
 
 void figure::trade_caravan_action() {
     switch (action_state) {
+        default:
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
+        case 8:
             wait_ticks++;
             if (wait_ticks > 20) {
                 wait_ticks = 0;
@@ -389,24 +403,25 @@ void figure::trade_caravan_action() {
             anim_frame = 0;
             break;
         case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
-        case ACTION_9_DELIVERING_GOODS:
-            move_ticks(1);
-            switch (direction) {
-                case DIR_FIGURE_AT_DESTINATION:
-                    action_state = FIGURE_ACTION_102_TRADE_CARAVAN_TRADING;
-                    break;
-                case DIR_FIGURE_REROUTE:
-                    route_remove();
-                    break;
-                case DIR_FIGURE_CAN_NOT_REACH:
-                    poof();
-                    break;
-            }
-            if (destination()->state != BUILDING_STATE_VALID)
-                poof();
-
+        case 9:
+            do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_102_TRADE_CARAVAN_TRADING, FIGURE_ACTION_100_TRADE_CARAVAN_CREATED);
+//            move_ticks(1);
+//            switch (direction) {
+//                case DIR_FIGURE_AT_DESTINATION:
+//                    action_state = FIGURE_ACTION_102_TRADE_CARAVAN_TRADING;
+//                    break;
+//                case DIR_FIGURE_REROUTE:
+//                    route_remove();
+//                    break;
+//                case DIR_FIGURE_CAN_NOT_REACH:
+//                    poof();
+//                    break;
+//            }
+//            if (destination()->state != BUILDING_STATE_VALID)
+//                poof();
             break;
         case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
+        case 10:
             wait_ticks++;
             if (wait_ticks > 10) {
                 wait_ticks = 0;
@@ -416,17 +431,17 @@ void figure::trade_caravan_action() {
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_bought_resource(trader_id, resource);
-                        trader_amount_bought++;
+                        trader_buy(1);
                     } else
                         move_on++;
                 } else
                     move_on++;
-                if (figure_trade_caravan_can_sell(this, destination(), empire_city_id)) {
+                if (move_on > 0 && figure_trade_caravan_can_sell(this, destination(), empire_city_id)) {
                     int resource = trader_get_sell_resource(destination(), empire_city_id);
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_sold_resource(trader_id, resource);
-                        load_resource(100, resource);
+                        trader_sell(1);
                     } else
                         move_on++;
                 } else
@@ -437,7 +452,7 @@ void figure::trade_caravan_action() {
             anim_frame = 0;
             break;
         case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-        case ACTION_11_RETURNING_EMPTY:
+        case 11:
             move_ticks(1);
             switch (direction) {
                 case DIR_FIGURE_AT_DESTINATION:

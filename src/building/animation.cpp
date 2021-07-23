@@ -13,6 +13,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
         return 0;
 
     switch (b->type) {
+        case BUILDING_WAREHOUSE_SPACE:
+            return 0;
+            break;
         case BUILDING_FOUNTAIN:
             if (b->num_workers <= 0 || !b->has_water_access)
                 return 0;

@@ -45,12 +45,15 @@ void figure::draw_debug() {
 
     coords.x -= 10;
 
-    string_from_int(str, coords.x, 0);
+    string_from_int(str, tile_x, 0);
     text_draw(str, coords.x, coords.y, FONT_NORMAL_PLAIN, 0);
-    string_from_int(str, coords.y, 0);
+    string_from_int(str, tile_y, 0);
     text_draw(str, coords.x, coords.y+10, FONT_NORMAL_PLAIN, 0);
     string_from_int(str, grid_offset_figure, 0);
     text_draw(str, coords.x, coords.y+20, FONT_NORMAL_PLAIN, 0);
+    string_from_int(str, progress_on_tile, 0);
+    text_draw(str, coords.x, coords.y+30, FONT_NORMAL_PLAIN, 0);
+    draw_debug_line(str, coords.x, coords.y + 40, 0, "", routing_path_current_tile, COLOR_LIGHT_BLUE);
 
     coords.y -= 80;
 
@@ -268,42 +271,49 @@ void figure::adjust_pixel_offset(int *x, int *y) {
         int dir = figure_image_normalize_direction(direction);
 //        x_offset = tile_progress_to_pixel_offset_x(dir, progress_on_tile);
 //        y_offset = tile_progress_to_pixel_offset_y(dir, progress_on_tile);
-        if (progress_on_tile >= 15) {
-            x_offset = 0;
-            y_offset = 0;
-        }
+//        if (progress_on_tile == 15) {
+//            x_offset = 0;
+//            y_offset = 0;
+//        }
+
+        int adjusted_progress = progress_on_tile;
+        if (progress_on_tile > 9)
+            adjusted_progress -= 16;
+        else
+            adjusted_progress -= 1;
+
         switch (dir) {
             case DIR_0_TOP_RIGHT:
-                x_offset = 2 * progress_on_tile - 28;
-                y_offset = 14 - progress_on_tile;
+                x_offset += 2 * adjusted_progress;
+                y_offset -= adjusted_progress;
                 break;
             case DIR_1_RIGHT:
-                x_offset = 4 * progress_on_tile - 56;
+                x_offset += 4 * adjusted_progress;
                 y_offset = 0;
                 break;
             case DIR_2_BOTTOM_RIGHT:
-                x_offset = 2 * progress_on_tile - 28;
-                y_offset = progress_on_tile - 14;
+                x_offset += 2 * adjusted_progress;
+                y_offset += adjusted_progress;
                 break;
             case DIR_3_BOTTOM:
                 x_offset = 0;
-                y_offset = 2 * progress_on_tile - 28;
+                y_offset += 2 * adjusted_progress;
                 break;
             case DIR_4_BOTTOM_LEFT:
-                x_offset = 28 - 2 * progress_on_tile;
-                y_offset = progress_on_tile - 14;
+                x_offset -= 2 * adjusted_progress;
+                y_offset += adjusted_progress;
                 break;
             case DIR_5_LEFT:
-                x_offset = 56 - 4 * progress_on_tile;
+                x_offset -= 4 * adjusted_progress;
                 y_offset = 0;
                 break;
             case DIR_6_TOP_LEFT:
-                x_offset = 28 - 2 * progress_on_tile;
-                y_offset = 14 - progress_on_tile;
+                x_offset -= 2 * adjusted_progress;
+                y_offset -= adjusted_progress;
                 break;
             case DIR_7_TOP:
                 x_offset = 0;
-                y_offset = 28 - 2 * progress_on_tile;
+                y_offset -= 2 * adjusted_progress;
                 break;
         }
         y_offset -= current_height;

@@ -369,6 +369,10 @@ public:
     void figure_delivery_boy_action();
 
     // trader.c
+    void trader_buy(int loads);
+    void trader_sell(int loads);
+    int trader_total_bought();
+    int trader_total_sold();
     int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point *warehouse);
     void go_to_next_warehouse(int x_src, int y_src, int distance_to_entry);
     int trade_ship_lost_queue();

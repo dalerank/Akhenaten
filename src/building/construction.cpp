@@ -1,5 +1,6 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
+#include <SDL_log.h>
 #include "construction.h"
 
 #include "building/construction_clear.h"
@@ -1118,6 +1119,9 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
             y = y - size + 1;
             break;
     }
+
+    // for debugging...
+    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, map_grid_offset(x, y));
 
     // check if terrain is fully suitable for construction
     if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception)) {
