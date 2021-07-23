@@ -35,6 +35,8 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 void figure::draw_debug() {
 
+    return;
+
     building *b = home();
     building *bdest = destination();
 
@@ -53,7 +55,8 @@ void figure::draw_debug() {
     text_draw(str, coords.x, coords.y+20, FONT_NORMAL_PLAIN, 0);
     string_from_int(str, progress_on_tile, 0);
     text_draw(str, coords.x, coords.y+30, FONT_NORMAL_PLAIN, 0);
-    draw_debug_line(str, coords.x, coords.y + 40, 0, "", routing_path_current_tile, COLOR_LIGHT_BLUE);
+    string_from_int(str, routing_path_current_tile, 0);
+    text_draw(str, coords.x+30, coords.y+30, FONT_NORMAL_PLAIN, 0);
 
     coords.y -= 80;
 

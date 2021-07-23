@@ -203,7 +203,6 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     if (direction == DIR_FIGURE_AT_DESTINATION) {
         advance_action(NEXT_ACTION);
         direction = previous_tile_direction;
-//        set_destination(0;
         return true;
     }
     if (direction == DIR_FIGURE_REROUTE)
@@ -304,7 +303,7 @@ void figure::action_perform() {
 
         // check for building being alive (at the start of the action)
         building *b = home();
-        building *b_imm = immigrant_home(); // todo: get rid of this
+        building *b_imm = immigrant_home();
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:
