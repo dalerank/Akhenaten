@@ -96,6 +96,8 @@ static void draw_messages(int total_messages) {
     for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
         const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_id));
+        // TODO: Pharaoh's eventmsg.txt...
+
         int image_type_offset = 0;
         if (lang_msg->message_type == MESSAGE_TYPE_DISASTER)
             image_type_offset = 2;
@@ -114,7 +116,7 @@ static void draw_messages(int total_messages) {
 
         int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year, data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
-        if (lang_msg->title.text)
+        if (lang_msg->title.text) // temp fix so it doesn't crash
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
         else
             int a = 325;

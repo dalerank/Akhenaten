@@ -1,0 +1,25 @@
+
+
+
+
+10          4           --          255         -1
+0A 00 00 00 04 00 00 00 00 00 00 00 FF 00 00 00 FF FF FF FF
+
+resource 25 is "troops" when in battle request mode?
+invasion can be:
+1 enemy
+2 egyptian
+3 pharaoh
+4 beduin
+
+                  ty mo       res01 res02 res03       oneqq minqq maxqq       oneyy minyy maxyy       oneci minci maxci
+07 00 00 00 00 00 02 09 0C 00 04 00 05 00 06 00 07 00 FF FF 06 00 09 00 04 00 FF FF 02 00 05 00 05 00 FF FF 03 00 08 00
+compl refus recur       until                         gd    at
+02 00 19 00 02 00 00 00 0C 00 0D 00 00 00 00 00 FF FF 01 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                  2late loss  ph          onert minrt maxrt ty                            cX rX 2X lX
+00 00 00 00 00 00 03 00 05 00 01 00 00 00 01 00 FF FF FF FF 03 07 00 00 FF FF 00 00 00 00 06 06 06 04 01 00 FF FF FF FF
+
+05 00 05 00
+
+
+                                                            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00

@@ -755,13 +755,19 @@ void draw_debug(int x, int y, int grid_offset) {
 //            }
 //        }
 
-//        d = map_get_fertility(grid_offset);
+        d = map_get_fertility(grid_offset);
+        if (d) {
+            string_from_int(str, d, 0);
+            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
+        }
+
+//        d = map_get_growth(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
-//        d = map_get_growth(grid_offset);
+//        d = map_temp_grid_get(grid_offset, 0);
 //        if (d) {
 //            string_from_int(str, d, 0);
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);

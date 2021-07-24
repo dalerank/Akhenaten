@@ -568,7 +568,7 @@ void formation_enemy_update(void) {
         enemy_army_calculate_roman_influence();
         enemy_armies_clear_formations();
         int roman_distance = 0;
-        for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+        for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
             formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->is_legion)
                 update_enemy_formation(m, &roman_distance);

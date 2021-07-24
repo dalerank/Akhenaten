@@ -34,8 +34,8 @@ void scenario_editor_create(int map_size) {
     scenario.map.grid_start = (grid_size[GAME_ENV] - scenario.map.height) / 2 * grid_size[GAME_ENV] +
                               (grid_size[GAME_ENV] - scenario.map.width) / 2;
 
-    string_copy(lang_get_string(44, 37), scenario.brief_description, env_sizes().MAX_BRIEF_DESCRIPTION);
-    string_copy(lang_get_string(44, 38), scenario.briefing, env_sizes().MAX_BRIEFING);
+    string_copy(lang_get_string(44, 37), scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    string_copy(lang_get_string(44, 38), scenario.briefing, MAX_BRIEFING);
 
     scenario.initial_funds = 1000;
     scenario.rescue_loan = 500;
@@ -45,7 +45,7 @@ void scenario_editor_create(int map_size) {
     scenario.win_criteria.milestone50_year = 20;
     scenario.win_criteria.milestone75_year = 30;
 
-    for (int i = 0; i < env_sizes().MAX_ALLOWED_BUILDINGS; i++) {
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS[GAME_ENV]; i++) {
         scenario.allowed_buildings[i] = 1;
     }
     scenario.rome_supplies_wheat = 0;
@@ -74,21 +74,21 @@ void scenario_editor_create(int map_size) {
     init_point(&scenario.exit_point);
     init_point(&scenario.river_entry_point);
     init_point(&scenario.river_exit_point);
-    for (int i = 0; i < env_sizes().MAX_INVASION_POINTS; i++) {
+    for (int i = 0; i < MAX_INVASION_POINTS[GAME_ENV]; i++) {
         init_point(&scenario.invasion_points[i]);
     }
-    for (int i = 0; i < env_sizes().MAX_FISH_POINTS; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS[GAME_ENV]; i++) {
         init_point(&scenario.fishing_points[i]);
     }
-    for (int i = 0; i < env_sizes().MAX_HERD_POINTS; i++) {
+    for (int i = 0; i < MAX_HERD_POINTS[GAME_ENV]; i++) {
         init_point(&scenario.herd_points[i]);
     }
 
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         scenario.requests[i].deadline_years = 5;
         scenario.requests[i].favor = 8;
     }
-    for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
+    for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
         scenario.invasions[i].from = 8;
     }
 
@@ -110,8 +110,8 @@ void scenario_editor_request_get(int index, editor_request *request) {
 }
 
 static void sort_requests(void) {
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
-        for (int j = env_sizes().MAX_REQUESTS - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int j = MAX_REQUESTS[GAME_ENV] - 1; j > 0; j--) {
             request_t *current = &scenario.requests[j];
             request_t *prev = &scenario.requests[j - 1];
             if (current->resource && (!prev->resource || prev->year > current->year)) {
@@ -152,8 +152,8 @@ void scenario_editor_invasion_get(int index, editor_invasion *invasion) {
 }
 
 static void sort_invasions(void) {
-    for (int i = 0; i < env_sizes().MAX_INVASIONS; i++) {
-        for (int j = env_sizes().MAX_INVASIONS - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
+        for (int j = MAX_INVASIONS[GAME_ENV] - 1; j > 0; j--) {
             invasion_t *current = &scenario.invasions[j];
             invasion_t *prev = &scenario.invasions[j - 1];
             if (current->type && (!prev->type || prev->year > current->year)) {
@@ -193,13 +193,13 @@ void scenario_editor_price_change_get(int index, editor_price_change *price_chan
 }
 
 static void sort_price_changes(void) {
-    for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
+    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
         if (!scenario.price_changes[i].resource)
             scenario.price_changes[i].year = 0;
 
     }
-    for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
-        for (int j = env_sizes().MAX_PRICE_CHANGES - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
+        for (int j = MAX_PRICE_CHANGES[GAME_ENV] - 1; j > 0; j--) {
             price_change_t *current = &scenario.price_changes[j];
             price_change_t *prev = &scenario.price_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {
@@ -237,13 +237,13 @@ void scenario_editor_demand_change_get(int index, editor_demand_change *demand_c
 }
 
 static void sort_demand_changes(void) {
-    for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++) {
+    for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
         if (!scenario.demand_changes[i].resource)
             scenario.demand_changes[i].year = 0;
 
     }
-    for (int i = 0; i < env_sizes().MAX_DEMAND_CHANGES; i++) {
-        for (int j = env_sizes().MAX_DEMAND_CHANGES - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
+        for (int j = MAX_DEMAND_CHANGES[GAME_ENV] - 1; j > 0; j--) {
             demand_change_t *current = &scenario.demand_changes[j];
             demand_change_t *prev = &scenario.demand_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {
@@ -306,7 +306,7 @@ void scenario_editor_cycle_climate(void) {
 
 void scenario_editor_update_brief_description(const uint8_t *new_description) {
     if (!string_equals(scenario.brief_description, new_description, 1)) {
-        string_copy(new_description, scenario.brief_description, env_sizes().MAX_BRIEF_DESCRIPTION);
+        string_copy(new_description, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
         scenario.is_saved = 0;
     }
 }

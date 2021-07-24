@@ -100,7 +100,7 @@ static generic_button generic_button_trade_resource[] = {
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_PAINT, 0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_LAMPS, 0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MARBLE_PH, 0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_UNUSED16, 0},
+//        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_UNUSED16, 0},
 };
 static generic_button generic_button_open_trade[] = {
         {30, 56, 440, 20, button_open_trade, button_none, 0, 0}

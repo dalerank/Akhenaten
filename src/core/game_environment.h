@@ -13,25 +13,50 @@ enum {
     ENGINE_MODE_MAX = 2
 };
 
-typedef struct engine_sizes {
-    int MAX_REQUESTS;
-    int MAX_INVASIONS;
-    int MAX_DEMAND_CHANGES;
-    int MAX_PRICE_CHANGES;
+const int MAX_REQUESTS[2] = {
+        20,
+        20
+};
+const int MAX_INVASIONS[2] = {
+        20,
+        20
+};
+const int MAX_DEMAND_CHANGES[2] = {
+        20,
+        20
+};
+const int MAX_PRICE_CHANGES[2] = {
+        20,
+        20
+};
 
-    int MAX_HERD_POINTS;
-    int MAX_FISH_POINTS;
-    int MAX_INVASION_POINTS;
+const int MAX_HERD_POINTS[2] = {
+        4,
+        4
+};
+const int MAX_FISH_POINTS[2] = {
+        8,
+        8
+};
+const int MAX_INVASION_POINTS[2] = {
+        8,
+        8
+};
 
-    int MAX_ALLOWED_BUILDINGS;
+const int MAX_ALLOWED_BUILDINGS[2] = {
+        50,
+        114
+};
 
-    int MAX_PLAYER_NAME;
-    int MAX_SCENARIO_NAME;
-    int MAX_BRIEF_DESCRIPTION;
-    int MAX_BRIEFING;
+const int MAX_PLAYER_NAME = 32;
+const int MAX_SCENARIO_NAME = 65;
+const int MAX_BRIEF_DESCRIPTION = 64;
+const int MAX_BRIEFING = 522;
 
-    int MAX_FORMATIONS;
-} engine_sizes;
+const int MAX_FORMATIONS[2] = {
+        250,
+        50
+};
 
 extern int GAME_ENV;
 extern int DEBUG_MODE;
@@ -39,6 +64,5 @@ extern int DEBUG_MODE;
 void init_game_environment(int env, int mode);
 const char *get_game_title(void);
 const char *get_engine_pref_path(void);
-engine_sizes env_sizes(void);
 
 #endif //AUGUSTUS_GAME_ENVIRONMENT_H

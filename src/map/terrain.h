@@ -123,6 +123,9 @@ uint8_t map_get_fertility_average(int grid_offset);
 void map_set_growth(int grid_offset, int growth);
 void map_soil_depletion(int grid_offset, int malus);
 
+void map_soil_fertility_load_state(buffer *buf);
+void map_soil_depletion_load_state(buffer *buf);
+
 void map_terrain_backup(void);
 void map_terrain_restore(void);
 void map_terrain_clear(void);
@@ -131,8 +134,8 @@ void map_terrain_init_outside_map(void);
 void map_terrain_save_state(buffer *buf);
 void map_terrain_load_state(buffer *buf);
 
-void map_moisture_load_state(buffer *buf);
 uint8_t  map_moisture_get(int grid_offset);
+void map_moisture_load_state(buffer *buf);
 uint8_t map_grasslevel_get(int grid_offset);
 bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
 

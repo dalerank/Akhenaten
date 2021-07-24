@@ -13,7 +13,7 @@
 #include "scenario/data.h"
 
 void scenario_request_init(void) {
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         random_generate_next();
         if (scenario.requests[i].resource) {
             scenario.requests[i].month = (random_byte() & 7) + 2;
@@ -23,7 +23,7 @@ void scenario_request_init(void) {
 }
 
 void scenario_request_process(void) {
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE)
             continue;
 
@@ -81,7 +81,7 @@ void scenario_request_process(void) {
 
                     if (scenario.requests[i].resource == RESOURCE_DENARII)
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
-                    else if (scenario.requests[i].resource == RESOURCE_TROOPS)
+                    else if (scenario.requests[i].resource == RESOURCE_TROOPS_C3)
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
                     else {
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
@@ -102,7 +102,7 @@ void scenario_request_dispatch(int id) {
     int amount = scenario.requests[id].amount;
     if (scenario.requests[id].resource == RESOURCE_DENARII)
         city_finance_process_sundry(amount);
-    else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
+    else if (scenario.requests[id].resource == RESOURCE_TROOPS_C3) {
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS_C3, amount);
     } else {
@@ -112,7 +112,7 @@ void scenario_request_dispatch(int id) {
 
 int scenario_requests_active_count() {
     int count = 0;
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible &&
             scenario.requests[i].state <= 1) {
             count++;
@@ -131,7 +131,7 @@ const scenario_request *scenario_request_get(int id) {
     return &request;
 }
 const scenario_request *scenario_request_get_visible(int index) {
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible &&
             scenario.requests[i].state <= 1) {
             if (index == 0)
@@ -144,7 +144,7 @@ const scenario_request *scenario_request_get_visible(int index) {
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
     int index = start_index;
-    for (int i = 0; i < env_sizes().MAX_REQUESTS; i++) {
+    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         if (scenario.requests[i].resource && scenario.requests[i].visible) {
             callback(index, scenario_request_get(i));
             index++;

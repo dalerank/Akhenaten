@@ -45,21 +45,21 @@ const uint8_t *scenario_name(void) {
     return scenario.scenario_name;
 }
 void scenario_set_name(const uint8_t *name) {
-    string_copy(name, scenario.scenario_name, env_sizes().MAX_SCENARIO_NAME);
+    string_copy(name, scenario.scenario_name, MAX_SCENARIO_NAME);
 }
 
 const uint8_t *scenario_player_name(void) {
     return scenario.settings.player_name;
 }
 void scenario_set_player_name(const uint8_t *name) {
-    string_copy(name, scenario.settings.player_name, env_sizes().MAX_PLAYER_NAME);
+    string_copy(name, scenario.settings.player_name, MAX_PLAYER_NAME);
 }
 
 void scenario_save_campaign_player_name(void) {
-    string_copy(scenario.settings.player_name, scenario.settings.campaign_player_name, env_sizes().MAX_PLAYER_NAME);
+    string_copy(scenario.settings.player_name, scenario.settings.campaign_player_name, MAX_PLAYER_NAME);
 }
 void scenario_restore_campaign_player_name(void) {
-    string_copy(scenario.settings.campaign_player_name, scenario.settings.player_name, env_sizes().MAX_PLAYER_NAME);
+    string_copy(scenario.settings.campaign_player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
 }
 int scenario_is_open_play(void) {
     return scenario.is_open_play;

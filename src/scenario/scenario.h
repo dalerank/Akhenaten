@@ -4,6 +4,12 @@
 #include "core/buffer.h"
 
 typedef struct scenario_data_buffers {
+    buffer *mission_index = new buffer;
+    buffer *map_name = new buffer;
+    buffer *map_settings = new buffer;
+    buffer *is_custom = new buffer;
+    buffer *player_name = new buffer;
+
     buffer *header = new buffer;
     buffer *info1 = new buffer;
     buffer *info2 = new buffer;
@@ -26,19 +32,21 @@ typedef struct scenario_data_buffers {
     buffer *request_extra = new buffer;
     buffer *allowed_builds = new buffer;
 
+    buffer *events_ph = new buffer;
+
     buffer *monuments = new buffer;
 
 } scenario_data_buffers;
 
-int scenario_is_saved(void);
+bool scenario_is_saved(void);
 void scenario_settings_init(void);
 void scenario_settings_init_mission(void);
 void scenario_fix_patch_trade(int mission_id);
 
-void scenario_save_state(scenario_data_buffers *buf);
-void scenario_load_state(scenario_data_buffers *buf);
+void scenario_save_state(scenario_data_buffers *SCENARIO);
+void scenario_load_state(scenario_data_buffers *SCENARIO);
 
-void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
-void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
+//void scenario_settings_save_state(buffer *campaign_mission, buffer *scenario_settings, buffer *is_custom, buffer *player_name, buffer *scenario_name);
+//void scenario_settings_load_state(buffer *campaign_mission, buffer *scenario_settings, buffer *is_custom, buffer *player_name, buffer *scenario_name);
 
 #endif // SCENARIO_SCENARIO_H

@@ -233,11 +233,23 @@ typedef struct {
     int unk_00;
     int unk_01;
     int unk_02;
-    int unk_03;
-    int unk_04;
-    int unk_05;
+    int unk_enum;
+
+    int req_amount;
+    int req_time_left;
     int unk_06;
     int unk_07;
+
+    int unk_08;
+    int unk_enum2;
+    int unk_09;
+    int unk_10;
+
+    int req_amount2;
+    int req_time_left2;
+    int unk_11;
+    int unk_12;
+
 } city_message;
 
 void city_message_init_scenario(void);

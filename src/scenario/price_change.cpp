@@ -7,7 +7,7 @@
 #include "scenario/data.h"
 
 void scenario_price_change_init(void) {
-    for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
+    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
         random_generate_next();
         if (scenario.price_changes[i].year)
             scenario.price_changes[i].month = (random_byte() & 7) + 2;
@@ -16,7 +16,7 @@ void scenario_price_change_init(void) {
 }
 
 void scenario_price_change_process(void) {
-    for (int i = 0; i < env_sizes().MAX_PRICE_CHANGES; i++) {
+    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
         if (!scenario.price_changes[i].year)
             continue;
 

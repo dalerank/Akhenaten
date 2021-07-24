@@ -77,7 +77,7 @@ typedef struct {
     buffer *random_iv = new buffer;
     buffer *camera = new buffer;
 //    buffer *scenario = new buffer;
-    scenario_data_buffers scenario_data;
+    scenario_data_buffers SCENARIO;
     buffer *end_marker = new buffer;
 } scenario_state;
 
@@ -88,7 +88,7 @@ static struct {
 } scenario_data = {0};
 
 typedef struct {
-    buffer *scenario_campaign_mission = new buffer;
+//    buffer *scenario_campaign_mission = new buffer;
     buffer *file_version = new buffer;
     buffer *image_grid = new buffer;
     buffer *edge_grid = new buffer;
@@ -111,12 +111,12 @@ typedef struct {
     buffer *formation_totals = new buffer;
     buffer *city_data = new buffer;
     buffer *city_faction_unknown = new buffer;
-    buffer *player_name = new buffer;
+//    buffer *player_name = new buffer;
     buffer *city_faction = new buffer;
     buffer *buildings = new buffer;
     buffer *city_view_orientation = new buffer;
     buffer *game_time = new buffer;
-    buffer *building_extra_highest_id_ever = new buffer;
+    buffer *building_highest_id_ever = new buffer;
     buffer *random_iv = new buffer;
     buffer *city_view_camera = new buffer;
     buffer *building_count_culture1 = new buffer;
@@ -149,7 +149,7 @@ typedef struct {
     // 17. map info 3
     // 18. empire info
 
-    scenario_data_buffers scenario_data;
+    scenario_data_buffers SCENARIO;
 
 //    buffer *scenario_header = new buffer;
 //        buffer *scenario_request_events = new buffer;
@@ -181,11 +181,11 @@ typedef struct {
     buffer *message_delays = new buffer;
     buffer *building_list_burning_totals = new buffer;
     buffer *figure_sequence = new buffer;
-    buffer *scenario_settings = new buffer;
+//    buffer *scenario_settings = new buffer;
     buffer *invasion_warnings = new buffer;
-    buffer *scenario_is_custom = new buffer;
+//    buffer *scenario_is_custom = new buffer;
     buffer *city_sounds = new buffer;
-    buffer *building_extra_highest_id = new buffer;
+    buffer *building_highest_id = new buffer;
     buffer *figure_traders = new buffer;
     buffer *building_list_burning = new buffer;
     buffer *building_list_small = new buffer;
@@ -208,14 +208,14 @@ typedef struct {
     buffer *city_entry_exit_xy = new buffer;
     buffer *last_invasion_id = new buffer;
     buffer *building_extra_corrupt_houses = new buffer;
-    buffer *scenario_name = new buffer;
+//    buffer *scenario_name = new buffer;
     buffer *bookmarks = new buffer;
     buffer *tutorial_part3 = new buffer;
     buffer *empire_map_objects = new buffer;
     buffer *city_entry_exit_grid_offset = new buffer;
     buffer *floodplain_settings = new buffer;
     buffer *moisture_grid = new buffer;
-    buffer *end_marker = new buffer;
+    buffer *bizarre_ordered_fields_4 = new buffer;
 
     buffer *junk1 = new buffer;
     buffer *junk2a = new buffer;
@@ -238,30 +238,32 @@ typedef struct {
     buffer *junk8a = new buffer;
     buffer *junk8b = new buffer;
     buffer *junk8c = new buffer;
-    buffer *junk9 = new buffer;
+    buffer *junk9a = new buffer;
+    buffer *junk9b = new buffer;
+//    buffer *scenario_events = new buffer;
     buffer *junk10a = new buffer;
     buffer *junk10b = new buffer;
     buffer *junk10c = new buffer;
     buffer *junk10d = new buffer;
-    buffer *junk10e = new buffer;
+    buffer *junk10f = new buffer;
     buffer *junk11 = new buffer;
 //    buffer *junk12 = new buffer;
     buffer *empire_map_routes = new buffer;
-    buffer *junk14a = new buffer;
-    buffer *junk14b = new buffer;
+    buffer *junk14 = new buffer;
+    buffer *bizarre_ordered_fields_1 = new buffer;
 //    buffer *junk15 = new buffer;
-    buffer *junk16a = new buffer;
-    buffer *junk16b = new buffer;
+    buffer *bizarre_ordered_fields_3 = new buffer;
+    buffer *junk16 = new buffer;
     buffer *junk17 = new buffer;
-    buffer *junk18a = new buffer;
-    buffer *junk18b = new buffer;
+    buffer *bizarre_ordered_fields_2 = new buffer;
+    buffer *junk18 = new buffer;
     buffer *junk19 = new buffer;
     buffer *junk20 = new buffer;
 
-    buffer *GRID01_8BIT = new buffer;
+    buffer *soil_fertility_grid = new buffer;
     buffer *GRID02_8BIT = new buffer;
     buffer *GRID03_32BIT = new buffer;
-    buffer *floodplain_soil_depletion = new buffer;
+    buffer *soil_depletion_grid = new buffer;
 } savegame_state;
 
 static struct {
@@ -304,26 +306,26 @@ static void init_scenario_data(void) {
     state->random_iv = create_scenario_piece(8, "");
     state->camera = create_scenario_piece(8, "");
 //    state->scenario = create_scenario_piece(1720, "");
-    state->scenario_data.header = create_scenario_piece(14, "");
-    state->scenario_data.requests = create_scenario_piece(160, "");
-    state->scenario_data.invasions = create_scenario_piece(202, "");
-    state->scenario_data.info1 = create_scenario_piece(614, "");
-    state->scenario_data.request_comply_dialogs = create_scenario_piece(20, "");
-    state->scenario_data.info2 = create_scenario_piece(6, "");
-    state->scenario_data.herds = create_scenario_piece(16, "");
-    state->scenario_data.demands = create_scenario_piece(120, "");
-    state->scenario_data.price_changes = create_scenario_piece(120, "");
-    state->scenario_data.events = create_scenario_piece(44, "");
-    state->scenario_data.fishing_points = create_scenario_piece(32, "");
-    state->scenario_data.request_extra = create_scenario_piece(120, "");
-    state->scenario_data.wheat = create_scenario_piece(4, "");
-    state->scenario_data.allowed_builds = create_scenario_piece(100, "");
-    state->scenario_data.win_criteria = create_scenario_piece(52, "");
-    state->scenario_data.map_points = create_scenario_piece(12, "");
-    state->scenario_data.invasion_points = create_scenario_piece(32, "");
-    state->scenario_data.river_points = create_scenario_piece(8, "");
-    state->scenario_data.info3 = create_scenario_piece(32, "");
-    state->scenario_data.empire = create_scenario_piece(12, "");
+    state->SCENARIO.header = create_scenario_piece(14, "");
+    state->SCENARIO.requests = create_scenario_piece(160, "");
+    state->SCENARIO.invasions = create_scenario_piece(202, "");
+    state->SCENARIO.info1 = create_scenario_piece(614, "");
+    state->SCENARIO.request_comply_dialogs = create_scenario_piece(20, "");
+    state->SCENARIO.info2 = create_scenario_piece(6, "");
+    state->SCENARIO.herds = create_scenario_piece(16, "");
+    state->SCENARIO.demands = create_scenario_piece(120, "");
+    state->SCENARIO.price_changes = create_scenario_piece(120, "");
+    state->SCENARIO.events = create_scenario_piece(44, "");
+    state->SCENARIO.fishing_points = create_scenario_piece(32, "");
+    state->SCENARIO.request_extra = create_scenario_piece(120, "");
+    state->SCENARIO.wheat = create_scenario_piece(4, "");
+    state->SCENARIO.allowed_builds = create_scenario_piece(100, "");
+    state->SCENARIO.win_criteria = create_scenario_piece(52, "");
+    state->SCENARIO.map_points = create_scenario_piece(12, "");
+    state->SCENARIO.invasion_points = create_scenario_piece(32, "");
+    state->SCENARIO.river_points = create_scenario_piece(8, "");
+    state->SCENARIO.info3 = create_scenario_piece(32, "");
+    state->SCENARIO.empire = create_scenario_piece(12, "");
 
     state->end_marker = create_scenario_piece(4, "");
 }
@@ -336,7 +338,7 @@ static void init_savegame_data(bool expanded) {
     savegame_state *state = &savegame_data.state;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3: {
-            state->scenario_campaign_mission = create_savegame_piece(4, false, "scenario_campaign_mission");
+            state->SCENARIO.mission_index = create_savegame_piece(4, false, "scenario_campaign_mission");
             state->file_version = create_savegame_piece(4, false, "file_version");
             state->image_grid = create_savegame_piece(52488, true, "image_grid");
             state->edge_grid = create_savegame_piece(26244, true, "edge_grid");
@@ -366,7 +368,7 @@ static void init_savegame_data(bool expanded) {
             state->formation_totals = create_savegame_piece(12, false, "formation_totals");
             state->city_data = create_savegame_piece(36136, true, "city_data");
             state->city_faction_unknown = create_savegame_piece(2, false, "city_faction_unknown");
-            state->player_name = create_savegame_piece(64, false, "player_name");
+            state->SCENARIO.player_name = create_savegame_piece(64, false, "SCENARIO.player_name");
             state->city_faction = create_savegame_piece(4, false, "city_faction");
             if (expanded)
                 state->buildings = create_savegame_piece(1280000, true, "buildings");
@@ -374,7 +376,7 @@ static void init_savegame_data(bool expanded) {
                 state->buildings = create_savegame_piece(256000, true, "buildings");
             state->city_view_orientation = create_savegame_piece(4, false, "city_view_orientation");
             state->game_time = create_savegame_piece(20, false, "game_time");
-            state->building_extra_highest_id_ever = create_savegame_piece(8, false, "building_extra_highest_id_ever");
+            state->building_highest_id_ever = create_savegame_piece(8, false, "building_extra_highest_id_ever");
             state->random_iv = create_savegame_piece(8, false, "random_iv");
             state->city_view_camera = create_savegame_piece(8, false, "city_view_camera");
             state->building_count_culture1 = create_savegame_piece(132, false, "building_count_culture1");
@@ -387,26 +389,26 @@ static void init_savegame_data(bool expanded) {
             state->figure_names = create_savegame_piece(84, false, "figure_names");
             state->culture_coverage = create_savegame_piece(60, false, "culture_coverage");
             //    state->scenario = create_savegame_piece(1720, false, "");
-            state->scenario_data.header = create_savegame_piece(14, false, "header");
-            state->scenario_data.requests = create_savegame_piece(160, false, "requests");
-            state->scenario_data.invasions = create_savegame_piece(202, false, "invasions");
-            state->scenario_data.info1 = create_savegame_piece(614, false, "info1");
-            state->scenario_data.request_comply_dialogs = create_savegame_piece(20, false, "request_comply_dialogs");
-            state->scenario_data.info2 = create_savegame_piece(6, false, "info2");
-            state->scenario_data.herds = create_savegame_piece(16, false, "herds");
-            state->scenario_data.demands = create_savegame_piece(120, false, "demands");
-            state->scenario_data.price_changes = create_savegame_piece(120, false, "price_changes");
-            state->scenario_data.events = create_savegame_piece(44, false, "events");
-            state->scenario_data.fishing_points = create_savegame_piece(32, false, "fishing_points");
-            state->scenario_data.request_extra = create_savegame_piece(120, false, "request_extra");
-            state->scenario_data.wheat = create_savegame_piece(4, false, "wheat");
-            state->scenario_data.allowed_builds = create_savegame_piece(100, false, "allowed_builds");
-            state->scenario_data.win_criteria = create_savegame_piece(52, false, "win_criteria");
-            state->scenario_data.map_points = create_savegame_piece(12, false, "map_points");
-            state->scenario_data.invasion_points = create_savegame_piece(32, false, "invasion_points");
-            state->scenario_data.river_points = create_savegame_piece(8, false, "river_points");
-            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
-            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
+            state->SCENARIO.header = create_savegame_piece(14, false, "header");
+            state->SCENARIO.requests = create_savegame_piece(160, false, "requests");
+            state->SCENARIO.invasions = create_savegame_piece(202, false, "invasions");
+            state->SCENARIO.info1 = create_savegame_piece(614, false, "info1");
+            state->SCENARIO.request_comply_dialogs = create_savegame_piece(20, false, "request_comply_dialogs");
+            state->SCENARIO.info2 = create_savegame_piece(6, false, "info2");
+            state->SCENARIO.herds = create_savegame_piece(16, false, "herds");
+            state->SCENARIO.demands = create_savegame_piece(120, false, "demands");
+            state->SCENARIO.price_changes = create_savegame_piece(120, false, "price_changes");
+            state->SCENARIO.events = create_savegame_piece(44, false, "events");
+            state->SCENARIO.fishing_points = create_savegame_piece(32, false, "fishing_points");
+            state->SCENARIO.request_extra = create_savegame_piece(120, false, "request_extra");
+            state->SCENARIO.wheat = create_savegame_piece(4, false, "wheat");
+            state->SCENARIO.allowed_builds = create_savegame_piece(100, false, "allowed_builds");
+            state->SCENARIO.win_criteria = create_savegame_piece(52, false, "win_criteria");
+            state->SCENARIO.map_points = create_savegame_piece(12, false, "map_points");
+            state->SCENARIO.invasion_points = create_savegame_piece(32, false, "invasion_points");
+            state->SCENARIO.river_points = create_savegame_piece(8, false, "river_points");
+            state->SCENARIO.info3 = create_savegame_piece(32, false, "info3");
+            state->SCENARIO.empire = create_savegame_piece(12, false, "empire");
 
             state->max_game_year = create_savegame_piece(4, false, "max_game_year");
             state->earthquake = create_savegame_piece(60, false, "earthquake");
@@ -418,11 +420,11 @@ static void init_savegame_data(bool expanded) {
             state->message_delays = create_savegame_piece(80, false, "message_delays");
             state->building_list_burning_totals = create_savegame_piece(8, false, "building_list_burning_totals");
             state->figure_sequence = create_savegame_piece(4, false, "figure_sequence");
-            state->scenario_settings = create_savegame_piece(12, false, "scenario_settings");
+            state->SCENARIO.map_settings = create_savegame_piece(12, false, "scenario_settings");
             state->invasion_warnings = create_savegame_piece(3232, true, "invasion_warnings");
-            state->scenario_is_custom = create_savegame_piece(4, false, "scenario_is_custom");
+            state->SCENARIO.is_custom = create_savegame_piece(4, false, "scenario_is_custom");
             state->city_sounds = create_savegame_piece(8960, false, "city_sounds");
-            state->building_extra_highest_id = create_savegame_piece(4, false, "building_extra_highest_id");
+            state->building_highest_id = create_savegame_piece(4, false, "building_extra_highest_id");
             state->figure_traders = create_savegame_piece(4804, false, "figure_traders");
             if (expanded) {
                 state->building_list_burning = create_savegame_piece(5000, true, "building_list_burning");
@@ -454,19 +456,18 @@ static void init_savegame_data(bool expanded) {
             state->city_entry_exit_xy = create_savegame_piece(16, false, "city_entry_exit_xy");
             state->last_invasion_id = create_savegame_piece(2, false, "last_invasion_id");
             state->building_extra_corrupt_houses = create_savegame_piece(8, false, "building_extra_corrupt_houses");
-            state->scenario_name = create_savegame_piece(65, false, "scenario_name");
+            state->SCENARIO.map_name = create_savegame_piece(65, false, "scenario_name");
             state->bookmarks = create_savegame_piece(32, false, "bookmarks");
             state->tutorial_part3 = create_savegame_piece(4, false, "tutorial_part3");
             state->city_entry_exit_grid_offset = create_savegame_piece(8, false, "city_entry_exit_grid_offset");
-            state->end_marker = create_savegame_piece(284, false, "end_marker"); // 71x 4-bytes emptiness
+            state->bizarre_ordered_fields_4 = create_savegame_piece(284, false, "end_marker"); // 71x 4-bytes emptiness
             break;
         }
         case ENGINE_ENV_PHARAOH: {
-            state->scenario_campaign_mission = create_savegame_piece(1, false, "scenario_campaign_mission");
-
-//                state->file_version = create_savegame_piece(4, false, "");
+            state->SCENARIO.mission_index = create_savegame_piece(4, false, "SCENARIO.mission_index");
+            state->file_version = create_savegame_piece(4, false, "file_version");
 //                state->unk01 = create_savegame_piece(3, false, ""); // 3 bytes
-            state->junk1 = create_savegame_piece(6011, false, "junk1"); // ?????
+            state->junk1 = create_savegame_piece(6004, false, "junk1"); // ?????
 
             state->image_grid = create_savegame_piece(207936, true, "image_grid");                         // (228²) * 4 <<
             state->edge_grid = create_savegame_piece(51984, true, "edge_grid");                            // (228²) * 1
@@ -489,12 +490,12 @@ static void init_savegame_data(bool expanded) {
             state->formation_totals = create_savegame_piece(12, false, "formation_totals");
             state->city_data = create_savegame_piece(37808, true, "city_data");
             state->city_faction_unknown = create_savegame_piece(4, false, "city_faction_unknown");
-            state->player_name = create_savegame_piece(64, false, "player_name");
+            state->SCENARIO.player_name = create_savegame_piece(64, false, "SCENARIO.player_name");
             state->city_faction = create_savegame_piece(4, false, "city_faction");
             state->buildings = create_savegame_piece(1056000, true, "buildings");
             state->city_view_orientation = create_savegame_piece(4, false, "city_view_orientation"); // ok
             state->game_time = create_savegame_piece(20, false, "game_time"); // ok
-            state->building_extra_highest_id_ever = create_savegame_piece(8, false, "building_extra_highest_id_ever"); // ok
+            state->building_highest_id_ever = create_savegame_piece(8, false, "building_extra_highest_id_ever"); // ok
             state->random_iv = create_savegame_piece(8, false, "random_iv"); // ok
             state->city_view_camera = create_savegame_piece(8, false, "city_view_camera"); // ok
 //                state->building_count_culture1 = create_savegame_piece(132, false, ""); // MISSING
@@ -508,10 +509,32 @@ static void init_savegame_data(bool expanded) {
 
 //                state->culture_coverage = create_savegame_piece(60, false, ""); // MISSING
 //                state->scenario = create_savegame_piece(1720, false, ""); // MISSING
-            state->scenario_data.header = create_savegame_piece(32, false, "scenario_data.header");
-            state->scenario_data.info1 = create_savegame_piece(614, false, "scenario_data.info1");
+
+
+
+//            state->scenario_data.requests = create_savegame_piece(160, false, "requests");
+//            state->scenario_data.invasions = create_savegame_piece(202, false, "invasions");
+
+//            state->scenario_data.request_comply_dialogs = create_savegame_piece(20, false, "request_comply_dialogs");
+
+//            state->scenario_data.demands = create_savegame_piece(120, false, "demands");
+//            state->scenario_data.price_changes = create_savegame_piece(120, false, "price_changes");
+//            state->scenario_data.events = create_savegame_piece(44, false, "events");
+//            state->scenario_data.fishing_points = create_savegame_piece(32, false, "fishing_points");
+//            state->scenario_data.request_extra = create_savegame_piece(120, false, "request_extra");
+//            state->scenario_data.wheat = create_savegame_piece(4, false, "wheat");
+
+//            state->scenario_data.map_points = create_savegame_piece(12, false, "map_points");
+//            state->scenario_data.invasion_points = create_savegame_piece(32, false, "invasion_points");
+//            state->scenario_data.river_points = create_savegame_piece(8, false, "river_points");
+//            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
+//            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
+
+
+            state->SCENARIO.header = create_savegame_piece(32, false, "SCENARIO.header");
+            state->SCENARIO.info1 = create_savegame_piece(614, false, "SCENARIO.info1");
 //                state->scenario_request_can_comply_dialogs = create_savegame_piece(20, false, ""); // MISSING
-            state->scenario_data.info2 = create_savegame_piece(6, false, "scenario_data.info2");
+            state->SCENARIO.info2 = create_savegame_piece(6, false, "SCENARIO.info2");
 
             // 48 bytes     FF FF FF FF (non cyclic) ???
             // 44 bytes     00 00 00 00 ???
@@ -522,7 +545,7 @@ static void init_savegame_data(bool expanded) {
             state->junk2c = create_savegame_piece(64, false, "junk2c"); // unknown bytes
             state->junk2d = create_savegame_piece(36, false, "junk2d"); // unknown bytes
 
-            state->scenario_data.win_criteria = create_savegame_piece(60, false, "scenario_data.win_criteria");
+            state->SCENARIO.win_criteria = create_savegame_piece(60, false, "SCENARIO.win_criteria");
 
             // 4 bytes     FF FF FF FF ???
             state->junk3 = create_savegame_piece(4, false, "junk3"); // unknown bytes
@@ -541,12 +564,12 @@ static void init_savegame_data(bool expanded) {
             state->junk4d = create_savegame_piece(12, false, "junk4d"); // unknown bytes
             state->junk4e = create_savegame_piece(14, false, "junk4e"); // unknown bytes
             state->junk4f = create_savegame_piece(2, false, "junk4f"); // unknown bytes
-            state->scenario_data.herds = create_savegame_piece(32, false, "scenario_data.herds");
-            state->scenario_data.allowed_builds = create_savegame_piece(228, false, "scenario_data.allowed_builds");
+            state->SCENARIO.herds = create_savegame_piece(32, false, "SCENARIO.herds");
+            state->SCENARIO.allowed_builds = create_savegame_piece(228, false, "SCENARIO.allowed_builds");
 
             // 24 bytes     FF FF FF FF (cyclic) ???
             state->junk5 = create_savegame_piece(24, false, "junk5"); // unknown bytes
-            state->scenario_data.monuments = create_savegame_piece(10, false, "scenario_data.monuments"); // 4 bytes + 3 x 2-byte
+            state->SCENARIO.monuments = create_savegame_piece(10, false, "SCENARIO.monuments"); // 4 bytes + 3 x 2-byte
 
             // 290 bytes    00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
@@ -568,11 +591,11 @@ static void init_savegame_data(bool expanded) {
             state->message_delays = create_savegame_piece(80, false, "message_delays"); // ok
             state->building_list_burning_totals = create_savegame_piece(8, false, "building_list_burning_totals"); // ok
             state->figure_sequence = create_savegame_piece(4, false, "figure_sequence"); // ok
-            state->scenario_settings = create_savegame_piece(12, false, "scenario_settings"); // ok
+            state->SCENARIO.map_settings = create_savegame_piece(12, false, "SCENARIO.map_settings"); // ok
             state->invasion_warnings = create_savegame_piece(3232, true, "invasion_warnings"); // 94743 + 31 --> 94774 + 4 = 94778
-            state->scenario_is_custom = create_savegame_piece(4, false, "scenario_is_custom"); // ok
+            state->SCENARIO.is_custom = create_savegame_piece(4, false, "SCENARIO.is_custom"); // ok
             state->city_sounds = create_savegame_piece(8960, false, "city_sounds"); // ok
-            state->building_extra_highest_id = create_savegame_piece(4, false, "building_extra_highest_id"); // ok
+            state->building_highest_id = create_savegame_piece(4, false, "building_extra_highest_id"); // ok
             state->figure_traders = create_savegame_piece(8804, false, "figure_traders"); // +4000 ???
             state->building_list_burning = create_savegame_piece(1000, true, "building_list_burning"); // ok
             state->building_list_small = create_savegame_piece(1000, true, "building_list_small"); // ok
@@ -612,26 +635,31 @@ static void init_savegame_data(bool expanded) {
 //                state->last_invasion_id = create_savegame_piece(2, false, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
 
-            state->scenario_name = create_savegame_piece(65, false, "scenario_name"); // ok
+            state->SCENARIO.map_name = create_savegame_piece(65, false, "SCENARIO.map_name"); // ok
             state->bookmarks = create_savegame_piece(32, false, "bookmarks"); // ok
             state->tutorial_part3 = create_savegame_piece(4, false, "tutorial_part3"); // ok ????
 
-            // 8 bytes      00 00 00 00 ???
-            state->junk9 = create_savegame_piece(8, false, "junk9");
+            int t_sub = 228;
 
-            // 52370 bytes  00 00 00 00 ???
-            state->GRID01_8BIT = create_savegame_piece(52370, false, "GRID01_8BIT"); // todo: 1-byte grid
+            // 8 bytes      00 00 00 00 ???
+            state->junk9a = create_savegame_piece(8, false, "junk9a");
+            state->junk9b = create_savegame_piece(396, false, "junk9b");
+
+            // 51984 bytes  00 00 00 00 ???
+            state->soil_fertility_grid = create_savegame_piece(51984, false, "soil_fertility_grid"); // todo: 1-byte grid
+
 
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
-            // 38 bytes     2F 01 00 00 ???
+            state->SCENARIO.events_ph = create_savegame_piece(18600, false, "SCENARIO.events_ph");
+
+            // 28 bytes     2F 01 00 00 ???
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
-            state->junk10a = create_savegame_piece(18600, false, "junk10a");
-            state->junk10b = create_savegame_piece(38, false, "junk10b");
-            state->junk10c = create_savegame_piece(13216, false, "junk10c");
+            state->junk10a = create_savegame_piece(28, false, "junk10a");
+            state->junk10b = create_savegame_piece(13216, false, "junk10b");
             if (expanded)
-                state->junk10d = create_savegame_piece(200, false, "junk10d");
-            state->junk10e = create_savegame_piece(8200, false, "junk10e");
+                state->junk10c = create_savegame_piece(200, false, "junk10c");
+            state->junk10d = create_savegame_piece(8200, false, "junk10d");
 
             state->junk11 = create_savegame_piece(1280, true, "junk11"); // unknown compressed data
             if (expanded)
@@ -644,30 +672,33 @@ static void init_savegame_data(bool expanded) {
             state->GRID02_8BIT = create_savegame_piece(51984, false, "GRID02_8BIT"); // todo: 1-byte grid
 
             // 20 bytes     19 00 00 00 ???
+            state->junk14 = create_savegame_piece(20, false, "junk14");
+
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
-            state->junk14a = create_savegame_piece(20, false, "junk14a");
-            state->junk14b = create_savegame_piece(528, false, "junk14b");
+            state->bizarre_ordered_fields_1 = create_savegame_piece(528, false, "bizarre_ordered_fields_1");
 
             state->floodplain_settings = create_savegame_piece(36, true, "floodplain_settings"); // floodplain_settings
-            state->GRID03_32BIT = create_savegame_piece(207936, true, "GRID03_32BIT_3BYTE"); // todo: 4-byte grid
+            state->GRID03_32BIT = create_savegame_piece(207936, true, "GRID03_32BIT"); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
+            state->bizarre_ordered_fields_3 = create_savegame_piece(312 , false, "bizarre_ordered_fields_3"); // 71x 4-bytes emptiness
+
             // 64 bytes     00 00 00 00 ???
-            state->junk16a = create_savegame_piece(312 , false, "junk16a"); // 71x 4-bytes emptiness
-            state->junk16b = create_savegame_piece(64, false, "junk16b"); // 71x 4-bytes emptiness
+            state->junk16 = create_savegame_piece(64, false, "junk16"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->floodplain_soil_depletion = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
+            state->soil_depletion_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, false, "junk17");
             state->moisture_grid = create_savegame_piece(51984, true, "moisture_grid");
 
             // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
+            state->bizarre_ordered_fields_2 = create_savegame_piece(672, false, "bizarre_ordered_fields_2");
+
             // 20 bytes     00 00 00 00 ???
             // 4800 bytes   00 00 00 00 ???
-            state->junk18a = create_savegame_piece(672, false, "junk18a");
-            state->junk18b = create_savegame_piece(20, false, "junk18b");
-            state->end_marker = create_savegame_piece(4800, false, "end_marker");
+            state->junk18 = create_savegame_piece(20, false, "junk18");
+            state->bizarre_ordered_fields_4 = create_savegame_piece(4800, false, "bizarre_ordered_fields_4");
 
             break;
         }
@@ -684,7 +715,7 @@ static void scenario_load_from_state(scenario_state *file) {
 
     random_load_state(file->random_iv);
 
-    scenario_load_state(&file->scenario_data);
+    scenario_load_state(&file->SCENARIO);
 
 //    file->end_marker->skip(4);
 }
@@ -698,18 +729,19 @@ static void scenario_save_to_state(scenario_state *file) {
 
     random_save_state(file->random_iv);
 
-    scenario_save_state(&file->scenario_data);
+    scenario_save_state(&file->SCENARIO);
 
 //    file->end_marker->skip(4);
 }
 static void savegame_load_from_state(savegame_state *state) {
 //    savegame_version = state->file_version->read_i32();
 
-    scenario_settings_load_state(state->scenario_campaign_mission,
-                                 state->scenario_settings,
-                                 state->scenario_is_custom,
-                                 state->player_name,
-                                 state->scenario_name);
+    scenario_load_state(&state->SCENARIO);
+//    scenario_settings_load_state(state->scenario_campaign_mission,
+//                                 state->scenario_settings,
+//                                 state->scenario_is_custom,
+//                                 state->player_name,
+//                                 state->scenario_name);
 
     map_image_load_state(state->image_grid, terrain_ph_offset);
     map_building_load_state(state->building_grid, state->building_damage_grid);
@@ -735,8 +767,8 @@ static void savegame_load_from_state(savegame_state *state) {
     floodplains_load_state(state->floodplain_settings);
 
     building_load_state(state->buildings,
-                        state->building_extra_highest_id,
-                        state->building_extra_highest_id_ever);
+                        state->building_highest_id,
+                        state->building_highest_id_ever);
 //    building_barracks_load_state(state->building_barracks_tower_sentry);
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
@@ -756,7 +788,6 @@ static void savegame_load_from_state(savegame_state *state) {
     figure_name_load_state(state->figure_names);
 //    city_culture_load_state(state->culture_coverage);
 
-    scenario_load_state(&state->scenario_data);
 //    scenario_max_year_load_state(state->max_game_year);
 //    scenario_earthquake_load_state(state->earthquake);
     city_message_load_state(state->messages, state->message_extra,
@@ -779,25 +810,27 @@ static void savegame_load_from_state(savegame_state *state) {
     map_bookmark_load_state(state->bookmarks);
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        map_temp_grid_load(state->GRID01_8BIT, 0);
+        map_soil_fertility_load_state(state->soil_fertility_grid);
+        map_soil_depletion_load_state(state->soil_depletion_grid);
+        map_moisture_load_state(state->moisture_grid);
+        empire_load_internal_ph(state->empire_map_objects, state->empire_map_routes);
+
         map_temp_grid_load(state->GRID02_8BIT, 1);
         map_temp_grid_load(state->GRID03_32BIT, 2);
-        map_temp_grid_load(state->floodplain_soil_depletion, 3);
-        map_moisture_load_state(state->moisture_grid);
 //        map_GRID03_32BIT_load_split_state(state->GRID03_32BIT);
 
-        empire_load_internal_ph(state->empire_map_objects, state->empire_map_routes);
     }
 //    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state) {
     state->file_version->write_i32(savegame_version);
 
-    scenario_settings_save_state(state->scenario_campaign_mission,
-                                 state->scenario_settings,
-                                 state->scenario_is_custom,
-                                 state->player_name,
-                                 state->scenario_name);
+    scenario_save_state(&state->SCENARIO);
+//    scenario_settings_save_state(state->scenario_campaign_mission,
+//                                 state->scenario_settings,
+//                                 state->scenario_is_custom,
+//                                 state->player_name,
+//                                 state->scenario_name);
 
     map_image_save_state(state->image_grid);
     map_building_save_state(state->building_grid, state->building_damage_grid);
@@ -822,8 +855,8 @@ static void savegame_save_to_state(savegame_state *state) {
                          state->city_entry_exit_grid_offset, nullptr);
 
     building_save_state(state->buildings,
-                        state->building_extra_highest_id,
-                        state->building_extra_highest_id_ever);
+                        state->building_highest_id,
+                        state->building_highest_id_ever);
     building_barracks_save_state(state->building_barracks_tower_sentry);
     city_view_save_state(state->city_view_orientation, state->city_view_camera);
     game_time_save_state(state->game_time);
@@ -843,7 +876,7 @@ static void savegame_save_to_state(savegame_state *state) {
     figure_name_save_state(state->figure_names);
     city_culture_save_state(state->culture_coverage);
 
-    scenario_save_state(&state->scenario_data);
+//    scenario_save_state(&state->SCENARIO);
     scenario_max_year_save_state(state->max_game_year);
     scenario_earthquake_save_state(state->earthquake);
     city_message_save_state(state->messages, state->message_extra,

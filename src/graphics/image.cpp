@@ -730,7 +730,7 @@ void image_draw(int image_id, int x, int y, color_t color_mask) {
     if (!data)
         return;
     if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
-        log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
+//        log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
         return;
     }
 

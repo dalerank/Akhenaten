@@ -533,11 +533,22 @@ void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, bu
             msg->unk_00 = messages->read_i16(); // FF FF
             msg->unk_01 = messages->read_i16(); // FF FF
             msg->unk_02 = messages->read_i16(); // FF FF
-            msg->unk_03 = messages->read_i16(); // enum?
-            msg->unk_04 = messages->read_i16();
-            msg->unk_05 = messages->read_i16();
+            msg->unk_enum = messages->read_i16(); // enum?
+
+            msg->req_amount = messages->read_i16();
+            msg->req_time_left = messages->read_i16();
             msg->unk_06 = messages->read_i16();
             msg->unk_07 = messages->read_i16();
+
+            msg->unk_08 = messages->read_i16();
+            msg->unk_enum2 = messages->read_i16(); // enum?
+            msg->unk_09 = messages->read_i16(); // 00 00
+            msg->unk_10 = messages->read_i16(); // 00 00
+
+            msg->req_amount2 = messages->read_i16();
+            msg->req_time_left2 = messages->read_i16();
+            msg->unk_11 = messages->read_i16(); // FF FF
+            msg->unk_12 = messages->read_i16(); // 00 00
         }
     }
 

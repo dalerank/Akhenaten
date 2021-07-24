@@ -438,6 +438,7 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/property.cpp
     ${PROJECT_SOURCE_DIR}/src/scenario/random_event.cpp
     ${PROJECT_SOURCE_DIR}/src/scenario/request.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenario/events.cpp
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.cpp
 )
 set(GRAPHICS_FILES

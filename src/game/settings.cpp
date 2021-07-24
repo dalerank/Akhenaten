@@ -9,7 +9,7 @@
 
 #define INF_SIZE 560
 #define MAX_PERSONAL_SAVINGS 100
-//#define env_sizes().MAX_PLAYER_NAME 32
+//#define MAX_PLAYER_NAME 32
 
 static struct {
     // display settings
@@ -84,7 +84,7 @@ static void load_settings(buffer *buf) {
     buf->skip(6);
     data.game_speed = buf->read_i32(); data.game_speed = 100; // todo: fix settings
     data.scroll_speed = buf->read_i32();
-    buf->read_raw(data.player_name, env_sizes().MAX_PLAYER_NAME);
+    buf->read_raw(data.player_name, MAX_PLAYER_NAME);
     buf->skip(16);
     data.last_advisor = buf->read_i32();
     data.last_advisor = ADVISOR_TRADE; // debug
@@ -147,7 +147,7 @@ void settings_save(void) {
     buf->skip(6);
     buf->write_i32(data.game_speed);
     buf->write_i32(data.scroll_speed);
-    buf->write_raw(data.player_name, env_sizes().MAX_PLAYER_NAME);
+    buf->write_raw(data.player_name, MAX_PLAYER_NAME);
     buf->skip(16);
     buf->write_i32(data.last_advisor);
     buf->skip(4); //int save_game_mission_id;
@@ -357,7 +357,7 @@ const uint8_t *setting_player_name(void) {
     return data.player_name;
 }
 void setting_set_player_name(const uint8_t *player_name) {
-    string_copy(player_name, data.player_name, env_sizes().MAX_PLAYER_NAME);
+    string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
 }
 
 int setting_personal_savings_for_mission(int mission_id) {

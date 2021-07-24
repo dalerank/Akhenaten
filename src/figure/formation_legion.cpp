@@ -42,7 +42,7 @@ void formation_legion_delete_for_fort(building *fort) {
 }
 
 int formation_legion_recruits_needed(void) {
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_legion && m->legion_recruit_type != LEGION_RECRUIT_NONE)
             return 1;
@@ -176,7 +176,7 @@ static int dispatch_soldiers(formation *m) {
 void formation_legions_dispatch_to_distant_battle(void) {
     int num_legions = 0;
     int roman_strength = 0;
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_legion && m->empire_service && m->num_figures > 0) {
             roman_strength += dispatch_soldiers(m);
@@ -222,7 +222,7 @@ static void kill_soldiers(formation *m, int kill_percentage) {
 }
 
 void formation_legions_kill_in_distant_battle(int kill_percentage) {
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_legion && m->in_distant_battle)
             kill_soldiers(m, kill_percentage);
@@ -244,7 +244,7 @@ static void return_soldiers(formation *m) {
 }
 
 void formation_legions_return_from_distant_battle(void) {
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_legion && m->in_distant_battle)
             return_soldiers(m);
@@ -255,7 +255,7 @@ void formation_legions_return_from_distant_battle(void) {
 int formation_legion_curse(void) {
     formation *best_legion = 0;
     int best_legion_weight = 0;
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use == 1 && m->is_legion) {
             int weight = m->num_figures;
@@ -304,7 +304,7 @@ int formation_legion_at_building(int grid_offset) {
 }
 
 void formation_legion_update(void) {
-    for (int i = 1; i < env_sizes().MAX_FORMATIONS; i++) {
+    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
         formation *m = formation_get(i);
         if (m->in_use != 1 || !m->is_legion)
             continue;

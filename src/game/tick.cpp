@@ -1,4 +1,5 @@
 #include <city/floods.h>
+#include <scenario/events.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -75,12 +76,13 @@ static void advance_month(void) {
     city_finance_handle_month_change();
     city_resource_consume_food();
     scenario_distant_battle_process();
-    if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable invasion to Egypt
+    if (GAME_ENV == ENGINE_ENV_C3) {
         scenario_invasion_process();
-    }
-    scenario_request_process();
-    scenario_demand_change_process();
-    scenario_price_change_process();
+        scenario_request_process();
+        scenario_demand_change_process();
+        scenario_price_change_process();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) // Pharaoh uses its own event system
+        scenario_event_process();
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();

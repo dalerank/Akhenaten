@@ -7,21 +7,21 @@
 
 #include <stdint.h>
 
-//#define env_sizes().MAX_REQUESTS 20
-//#define env_sizes().MAX_INVASIONS 20
-//#define env_sizes().MAX_DEMAND_CHANGES 20
-//#define env_sizes().MAX_PRICE_CHANGES 20
+//#define MAX_REQUESTS 20
+//#define MAX_INVASIONS 20
+//#define MAX_DEMAND_CHANGES 20
+//#define MAX_PRICE_CHANGES 20
 //
-//#define env_sizes().MAX_HERD_POINTS 4
-//#define env_sizes().MAX_FISH_POINTS 8
-//#define env_sizes().MAX_INVASION_POINTS 8
+//#define MAX_HERD_POINTS 4
+//#define MAX_FISH_POINTS 8
+//#define MAX_INVASION_POINTS 8
 //
-//#define env_sizes().MAX_ALLOWED_BUILDINGS 50
+//#define MAX_ALLOWED_BUILDINGS 50
 //
-//#define env_sizes().MAX_PLAYER_NAME 32
-//#define env_sizes().MAX_SCENARIO_NAME 65
-//#define env_sizes().MAX_BRIEF_DESCRIPTION 64
-//#define env_sizes().MAX_BRIEFING 522
+//#define MAX_PLAYER_NAME 32
+//#define MAX_SCENARIO_NAME 65
+//#define MAX_BRIEF_DESCRIPTION 64
+//#define MAX_BRIEFING 522
 
 enum {
     EVENT_NOT_STARTED = 0,
@@ -172,11 +172,8 @@ extern struct scenario_t {
     } empire;
 
     request_t requests[40];
-
     demand_change_t demand_changes[40];
-
     price_change_t price_changes[40];
-
     invasion_t invasions[40];
 
     struct {
@@ -220,7 +217,7 @@ extern struct scenario_t {
     map_point fishing_points[16];
     map_point invasion_points[16];
 
-    short allowed_buildings[200];
+    bool allowed_buildings[200];
 
     struct {
         int hut;
@@ -238,7 +235,7 @@ extern struct scenario_t {
         uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
     } settings;
 
-    int is_saved;
+    bool is_saved;
 } scenario;
 
 #endif // SCENARIO_DATA_H

@@ -3,7 +3,7 @@
 #include "building/type.h"
 #include "scenario/data.h"
 
-int scenario_building_allowed(int building_type) {
+bool scenario_building_allowed(int building_type) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (building_type) {
             case BUILDING_ROAD:
@@ -218,7 +218,7 @@ int scenario_building_allowed(int building_type) {
             case BUILDING_TEMPLE_COMPLEX_BAST:
                 return scenario.allowed_buildings[108];
         }
-    return 1;
+    return false;
 }
 
 int scenario_building_image_native_hut(void) {
