@@ -229,6 +229,15 @@ typedef struct {
     int param1;
     int param2;
     int is_read;
+    //
+    int unk_00;
+    int unk_01;
+    int unk_02;
+    int unk_03;
+    int unk_04;
+    int unk_05;
+    int unk_06;
+    int unk_07;
 } city_message;
 
 void city_message_init_scenario(void);

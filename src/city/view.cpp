@@ -262,20 +262,21 @@ void city_view_get_camera_position(int *x, int *y) {
     *y = data.camera.position.y;
 }
 
-void city_view_go_to_position(int x, int y) {
+void city_view_go_to_position(int x, int y, bool validate) {
     data.camera.position.x = x;
     data.camera.position.y = y;
-    camera_validate_position();
+    if (validate)
+        camera_validate_position();
 }
 void city_view_scroll(int x, int y) {
     data.camera.position.x += x;
     data.camera.position.y += y;
     camera_validate_position();
 }
-void city_view_go_to_tile(int tile_x, int tile_y) {
+void city_view_go_to_tile(int tile_x, int tile_y, bool validate) {
     int x = tile_x * TILE_WIDTH_PIXELS;
     int y = tile_y * HALF_TILE_HEIGHT_PIXELS;
-    city_view_go_to_position(x, y);
+    city_view_go_to_position(x, y, validate);
 }
 void city_view_go_to_grid_offset(int grid_offset) {
     int tile_x, tile_y;
@@ -283,7 +284,7 @@ void city_view_go_to_grid_offset(int grid_offset) {
     tile_x = tile_x - data.viewport.width_tiles / 2;
     tile_y = tile_y - data.viewport.height_tiles / 2;
     tile_y &= ~1;
-    city_view_go_to_tile(tile_x, tile_y);
+    city_view_go_to_tile(tile_x, tile_y, true);
 }
 
 pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset) {
@@ -520,10 +521,12 @@ void city_view_save_scenario_state(buffer *camera) {
     camera->write_i32(data.camera.tile_internal.y);
 }
 void city_view_load_scenario_state(buffer *camera) {
-    int tile_x = camera->read_i32();
-    int tile_y = camera->read_i32();
+    int x = camera->read_i32();
+    int y = camera->read_i32();
 
-    city_view_go_to_tile(tile_x, tile_y);
+//    city_view_go_to_position(x, y);
+//    set_viewport_with_sidebar();
+    city_view_go_to_tile(x, y, false);
 }
 void city_view_foreach_map_tile(map_callback *callback) {
     int odd = 0;

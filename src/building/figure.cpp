@@ -911,6 +911,7 @@ void building::spawn_figure_warehouse() {
                         break;
                     case WAREHOUSE_TASK_DELIVERING:
                     case WAREHOUSE_TASK_EMPTYING:
+                        amount = fmin(amount, 4);
                         f->load_resource(amount * 100, resource);
                         building_warehouse_remove_resource(this, resource, amount);
                         break;
@@ -918,7 +919,7 @@ void building::spawn_figure_warehouse() {
                 set_figure(0, f->id);
                 f->set_home(id);
 
-            } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure(1)) {
+            } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure_of_type(1,FIGURE_WAREHOUSEMAN)) {
                 figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 

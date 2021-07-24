@@ -956,7 +956,7 @@ static int savegame_read_from_file(FILE *fp) {
 
         // export uncompressed buffer data to zip folder for debugging
         char *lfile = (char *) malloc(200);
-        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex, piece->buf->size(), fname);
+        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, piece->buf->size(), fname);
         FILE *log = fopen(lfile, "wb+");
         if (log)
             fwrite(piece->buf->get_data(), piece->buf->size(), 1, log);

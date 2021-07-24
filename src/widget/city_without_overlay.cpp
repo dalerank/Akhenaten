@@ -761,15 +761,28 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
+//        d = map_get_growth(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
+//        }
+
+//        d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
+//        if (d) {
+//            text_draw_shadow((uint8_t *) string_from_ascii("b"), x + 30, y + 15, COLOR_WHITE);
+//        }
+
 //        d = map_road_network_get(grid_offset);
 //        if (d) {
 //            string_from_int(str, d, 0);
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
-//        d = map_terrain_get(grid_offset);
-//            if (d & TERRAIN_BUILDING)
-//                text_draw_shadow((uint8_t *) string_from_ascii("b"), x + 30, y + 15, COLOR_WHITE);
+//        d = map_sprite_animation_at(grid_offset);
+//        if (d) {
+//            string_from_int(str, d, 0);
+//            text_draw_shadow(str, x + 25, y + 10, COLOR_WHITE);
+//        }
 
 //        d = map_get_shoreorder(grid_offset);
 //        if (d) {
@@ -943,22 +956,10 @@ static void draw_animation(int x, int y, int grid_offset) {
     if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
 
-//    switch (b->type) {
-//        case BUILDING_BANDSTAND:
-//        case BUILDING_BOOTH:
-//        case BUILDING_PAVILLION:
-//            if (GAME_ENV == ENGINE_ENV_C3)
-//                draw_entertainment_shows_c3(b, x, y, color_mask);
-//            else {
-//                if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
-//                    draw_entertainment_shows_ph(b, x, y, color_mask);
-//            }
-//            break;
-//    }
 
-
+    // TODO: bridges
     if (!map_property_is_draw_tile(grid_offset)) {
-//    if (map_sprite_bridge_at(grid_offset)) // todo
+//    if (map_sprite_bridge_at(grid_offset))
 //        city_draw_bridge(x, y, grid_offset);
         return;
     }

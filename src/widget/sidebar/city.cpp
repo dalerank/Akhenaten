@@ -189,7 +189,7 @@ static void draw_debug_ui(int x, int y) {
     uint8_t str[10];
 
     /////// TIME
-    if (false) {
+    if (true) {
         draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
         draw_debug_line(str, x, y + 25, 50, "day:", time->day);
         draw_debug_line(str, x, y + 35, 50, "month:", time->month);
@@ -199,7 +199,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// FLOODS
-    if (true) {
+    if (false) {
         auto floods = give_me_da_floods_data();
 
         int c_curr = floodplains_current_cycle();

@@ -58,9 +58,9 @@ void city_view_get_camera_max_pixel_offset(int *x, int *y);
 void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y);
 void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y);
 
-void city_view_go_to_tile(int tile_x, int tile_y);
+void city_view_go_to_tile(int tile_x, int tile_y, bool validate);
 void city_view_scroll(int x, int y);
-void city_view_go_to_position(int x, int y);
+void city_view_go_to_position(int x, int y, bool validate);
 void city_view_go_to_grid_offset(int grid_offset);
 
 pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset);

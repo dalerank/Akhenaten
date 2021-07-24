@@ -86,15 +86,14 @@ static void advance_month(void) {
     city_message_decrease_delays();
 
     map_tiles_update_all_roads();
-    map_tiles_river_refresh_entire();
+//    map_tiles_river_refresh_entire();
     map_routing_update_land_citizen();
     city_message_sort_and_compact();
 
     if (game_time_advance_month())
         advance_year();
-    else {
+    else
         city_ratings_update(0);
-    }
 
     city_population_record_monthly();
     city_festival_update();

@@ -530,7 +530,14 @@ void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, bu
         if (GAME_ENV == ENGINE_ENV_C3)
             messages->skip(2);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            messages->skip(32); // ?????
+            msg->unk_00 = messages->read_i16(); // FF FF
+            msg->unk_01 = messages->read_i16(); // FF FF
+            msg->unk_02 = messages->read_i16(); // FF FF
+            msg->unk_03 = messages->read_i16(); // enum?
+            msg->unk_04 = messages->read_i16();
+            msg->unk_05 = messages->read_i16();
+            msg->unk_06 = messages->read_i16();
+            msg->unk_07 = messages->read_i16();
         }
     }
 

@@ -139,93 +139,6 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
         if (resource == RESOURCE_NONE || carrying <= 0)
             return advance_action(ACTION_DONE);
     }
-
-//    building *dest = destination();
-//    if (dest->state != BUILDING_STATE_VALID)
-//        advance_action(ACTION_8_RECALCULATE);
-//    bool delivery_check = false;
-//    int amount_left = fmin(get_carrying_amount(), 100);
-//    switch (dest->type) {
-//        case BUILDING_WAREHOUSE:
-//        case BUILDING_WAREHOUSE_SPACE:
-//            delivery_check = (building_warehouse_add_resource(dest, resource_id) != -1);
-//            break;
-//        case BUILDING_GRANARY:
-//            delivery_check = (building_granary_add_resource(dest, resource_id, true, amount_left) != -1);
-//            break;
-//        case BUILDING_BARRACKS:
-//            dest->barracks_add_weapon();
-//            delivery_check = true;
-//            break;
-//        case BUILDING_VILLAGE_PALACE:
-//        case BUILDING_TOWN_PALACE:
-//        case BUILDING_CITY_PALACE:
-//            city_finance_process_gold_extraction(100);
-//            delivery_check = true;
-//            break;
-//        default:
-//            building_workshop_add_raw_material(dest);
-//            delivery_check = true;
-//            break;
-//    }
-//    if (delivery_check)
-//        amount_left = unload_resource(100);
-//    if (!amount_left) {
-//        advance_action(ACTION_DONE);
-//    } else if (!delivery_check)
-//        advance_action(ACTION_8_RECALCULATE);
-
-
-//    if (wait_ticks > 4) {
-//        wait_ticks = 0;
-//        building *dest = destination();
-//
-//        int carrying = get_carrying_amount();
-//        if (carrying > 0) {
-//            int accepting = building_warehouse_get_accepting_amount(resource_id, dest);
-//            int goal_to_deposit_max = fmin(carrying, accepting);
-//            int unload_single_turn = 1;
-//
-//            if (true) // TODO: more than 100 at once?????
-//                unload_single_turn = 4;
-//
-//            int amount_to_unload = fmin(goal_to_deposit_max, unload_single_turn * 100);
-//            int times = amount_to_unload / 100;
-//
-//            switch (dest->type) {
-//                case BUILDING_GRANARY:
-//                    if (building_granary_add_resource(dest, resource_id, 0, amount_to_unload) != -1)
-//                        unload_resource(amount_to_unload);
-//                    else
-//                        advance_action(ACTION_8_RECALCULATE);
-//                    break;
-//                case BUILDING_BARRACKS:
-//                    for (int i = 0; i < times; i++) { // do one by one...
-//                        dest->barracks_add_weapon();
-//                        unload_resource(100); // assume barracks will ALWAYS accept a weapon
-//                    }
-//                case BUILDING_WAREHOUSE:
-//                case BUILDING_WAREHOUSE_SPACE:
-//                    for (int i = 0; i < times; i++) { // do one by one...
-//                        if (building_warehouse_add_resource(dest, resource_id) != -1)
-//                            unload_resource(100);
-//                        else
-//                            advance_action(ACTION_8_RECALCULATE);
-//                    }
-//                    break;
-//                default: // workshop
-//                    for (int i = 0; i < times; i++) { // do one by one...
-//                        if (dest->loads_stored < 2) {
-//                            building_workshop_add_raw_material(dest);
-//                            unload_resource(100);
-//                        } else
-//                            advance_action(ACTION_8_RECALCULATE);
-//                    }
-//                    break;
-//            }
-//        } else
-//            advance_action(ACTION_DONE);
-//    }
 }
 void figure::cartpusher_do_retrieve(int ACTION_DONE) {
     wait_ticks++;
@@ -542,38 +455,13 @@ void figure::warehouseman_action() {
             break;
         case FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY_GETTING:
             cartpusher_do_retrieve(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
-//            wait_ticks++;
-//            if (wait_ticks > 4) {
-//                int resource;
-//                int loads = building_granary_remove_for_getting_deliveryman(destination(), home(), &resource);
-//                load_resource(loads * 100, resource);
-//                advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
-//            }
-//            anim_frame = 0;
             break;
         case ACTION_14_RETURNING_WITH_FOOD:
         case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
         case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
-            // update graphic
             if (do_returnhome()) {
                 set_destination(home());
                 cartpusher_do_deliver(true, 0);
-//                building *b = home();
-//                bool delivery_check = false;
-//                int amount_left = fmin(get_carrying_amount(), 100);
-//                for (int i = 0; i < get_carrying_amount() / 100; i++) {
-//                    switch (b->type) {
-//                        case BUILDING_GRANARY:
-//                            delivery_check = (building_granary_add_resource(home(), resource_id, 0, amount_left) != -1);
-//                            break;
-//                        case BUILDING_WAREHOUSE:
-//                        case BUILDING_WAREHOUSE_SPACE:
-//                            delivery_check = (building_warehouse_add_resource(home(), resource_id) != -1);
-//                            break;
-//                    }
-//                }
-//                if (!delivery_check)
-//                    advance_action(ACTION_8_RECALCULATE);
             }
             break;
         case ACTION_15_GETTING_GOODS:

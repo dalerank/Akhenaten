@@ -353,7 +353,7 @@ void figure::action_perform() {
                 break;
             case FIGURE_LABOR_SEEKER:
 //            case FIGURE_MARKET_BUYER:
-                if (b->state != BUILDING_STATE_VALID || !b->has_figure(1, id))
+                if (b->state != BUILDING_STATE_VALID) //  || !b->has_figure(1, id)
                     poof();
                 break;
             case FIGURE_DELIVERY_BOY:

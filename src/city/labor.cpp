@@ -217,6 +217,8 @@ static void calculate_workers_needed_per_category(void) {
 
         int category = CATEGORY_FOR_building(b);
         b->labor_category = category;
+        if (building_is_floodplain_farm(b)) // exception for floodplain farms in Pharaoh
+            b->labor_category = 255;
         if (!should_have_workers(b, category, 1))
             continue;
 
