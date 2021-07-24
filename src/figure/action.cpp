@@ -156,9 +156,9 @@ bool is_coords_within_range(int x, int y, int b_x, int b_y, int size, int radius
 }
 
 void figure::advance_action(short NEXT_ACTION) {
-    if (NEXT_ACTION == 0)
-        poof();
-    else
+//    if (NEXT_ACTION == 0)
+//        poof();
+//    else
         action_state = NEXT_ACTION;
 }
 bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
@@ -276,6 +276,8 @@ bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, sh
 
 void figure::action_perform() {
 //    return;
+    if (action_state == 0)
+        poof(); // no action
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);
@@ -340,13 +342,13 @@ void figure::action_perform() {
             case FIGURE_CART_PUSHER:
                 if (has_destination())
                     break;
-                if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id)))
+                if (!building_is_floodplain_farm(b) && (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id))))
                     poof();
                 break;
             case FIGURE_WAREHOUSEMAN:
                 if (has_destination())
                     break;
-                if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id))
+                if (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id) && !b->has_figure(1, id)))
                     poof();
                 break;
             case FIGURE_LABOR_SEEKER:

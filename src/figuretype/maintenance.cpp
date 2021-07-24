@@ -301,18 +301,18 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
     }
     // graphic id
-    int dir;
-    if (action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
-        action_state == FIGURE_ACTION_150_ATTACK) {
-        dir = attack_direction;
-    } else if (direction < 8)
-        dir = direction;
-    else
-        dir = previous_tile_direction;
-    dir = figure_image_normalize_direction(dir);
+//    int dir;
+//    if (action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
+//        action_state == FIGURE_ACTION_150_ATTACK) {
+//        dir = attack_direction;
+//    } else if (direction < 8)
+//        dir = direction;
+//    else
+//        dir = previous_tile_direction;
+//    dir = figure_image_normalize_direction(dir);
     switch (action_state) {
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * anim_frame;
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * anim_frame;
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
 //            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (anim_frame / 2);
@@ -323,15 +323,15 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
 //            } else {
 //                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
 //            }
+            direction = attack_direction;
             image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
-
             break;
-        case FIGURE_ACTION_149_CORPSE:
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();
-            break;
-        default:
-            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + dir + 8 * anim_frame;
-            break;
+//        case FIGURE_ACTION_149_CORPSE:
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();
+//            break;
+//        default:
+//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + dir + 8 * anim_frame;
+//            break;
     }
 }
 void figure::policeman_action() {
@@ -460,6 +460,35 @@ void figure::magistrate_action() {
 }
 void figure::water_carrier_action() {
     fight_fire(); // todo
+
+    building *b = home();
+    switch (action_state) {
+        case ACTION_10_GOING:
+        case FIGURE_ACTION_72_PREFECT_ROAMING:
+            do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+            break;
+        case ACTION_11_RETURNING_FROM_PATROL:
+        case FIGURE_ACTION_73_PREFECT_RETURNING:
+            do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
+            break;
+        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
+            terrain_usage = TERRAIN_USAGE_ANY;
+            move_ticks(1);
+            if (direction == DIR_FIGURE_AT_DESTINATION) {
+                action_state = FIGURE_ACTION_75_PREFECT_AT_FIRE;
+                route_remove();
+                roam_length = 0;
+                wait_ticks = 50;
+            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
+                poof();
+            break;
+        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
+            extinguish_fire();
+            direction = attack_direction;
+            image_set_animation(GROUP_FIGURE_WATER_CARRIER, 104, 36);
+            break;
+    }
+
 }
 
 // Same as policeman, but can't fight

@@ -934,6 +934,8 @@ static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t 
 static void draw_animation(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     building *b = building_get(map_building_at(grid_offset));
+    if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
+        image_draw(image_id + 17, x - 5, y - 42);
     if (b->type == 0 || b->state != BUILDING_STATE_VALID)
         return;
     // draw in red if necessary

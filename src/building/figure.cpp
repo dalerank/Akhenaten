@@ -888,31 +888,46 @@ void building::spawn_figure_warehouse() {
         if (space->id)
             space->show_on_problem_overlay = show_on_problem_overlay;
     }
-    map_point road;
-    if (map_has_road_access_rotation(subtype.orientation, x, y, size, &road) ||
-        map_has_road_access_rotation(subtype.orientation, x, y, 3, &road)) {
+    if (road_is_accessible) {
         common_spawn_labor_seeker(100);
-        if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
-            return;
         int resource = 0;
         int amount = 0;
         int task = building_warehouse_determine_worker_task(this, &resource, &amount);
-        if (task != WAREHOUSE_TASK_NONE) {
-            figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
-            f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
-            if (task == WAREHOUSE_TASK_GETTING) {
+        if (task != WAREHOUSE_TASK_NONE && amount > 0) {
+
+            // assume amount has been set to more than one.
+//            if (true) // TODO: multiple loads setting?????
+//                amount = 1;
+
+            if (!has_figure(0)) {
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+
+                switch (task) {
+                    case WAREHOUSE_TASK_GETTING:
+                    case WAREHOUSE_TASK_GETTING_MOAR:
+                        f->load_resource(0, RESOURCE_NONE);
+                        f->collecting_item_id = resource;
+                        break;
+                    case WAREHOUSE_TASK_DELIVERING:
+                    case WAREHOUSE_TASK_EMPTYING:
+                        f->load_resource(amount * 100, resource);
+                        building_warehouse_remove_resource(this, resource, amount);
+                        break;
+                }
+                set_figure(0, f->id);
+                f->set_home(id);
+
+            } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure(1)) {
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+
                 f->load_resource(0, RESOURCE_NONE);
                 f->collecting_item_id = resource;
-            } else {
-                if (amount >= 0) { // delivering
-                    f->load_resource(amount * 100, resource);
-                    building_warehouse_remove_resource(this, resource, amount);
-                }
-                else // getting
-                    f->load_resource(0, resource);
+
+                set_figure(1, f->id);
+                f->set_home(id);
             }
-            set_figure(0, f->id);
-            f->set_home(id);
         }
     }
 }

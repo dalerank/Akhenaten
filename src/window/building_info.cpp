@@ -823,9 +823,9 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         button_id |= handle_specific_building_info_mouse(m);
 
     if (!button_id && input_go_back_requested(m, h)) {
-        if (context.storage_show_special_orders) {
+        if (context.storage_show_special_orders)
             storage_settings_backup_check();
-        } else
+        else
             window_city_show();
     }
 

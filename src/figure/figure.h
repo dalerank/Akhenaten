@@ -355,12 +355,16 @@ public:
     void load_resource(int amount, int resource);
     int unload_resource(int amount);
     int get_carrying_amount();
-    void determine_deliveryman_destination(building *b, int road_network_id);
-    void determine_deliveryman_destination_food(int road_network_id);
+    void determine_deliveryman_destination();
+    void determine_deliveryman_destination_food();
     void cart_update_image();
-    void determine_granaryman_destination(int road_network_id);
+    void determine_granaryman_destination();
 //    void remove_resource_from_warehouse();
-    void determine_warehouseman_destination(int road_network_id);
+    void determine_warehouseman_destination();
+    ////
+    void cartpusher_calculate_destination(bool warehouseman);
+    void cartpusher_do_deliver(bool warehouseman, int ACTION_DONE);
+    void cartpusher_do_retrieve(int ACTION_DONE);
 
     // market.c
     int create_delivery_boy(int leader_id);

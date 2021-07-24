@@ -266,9 +266,11 @@ static void initialize_saved_game(void) {
     city_message_clear_scroll();
     map_tiles_river_refresh_entire();
 
+    // TODO: temp?
     // can't find cache in Pharaoh's save file format?
     building_count_update();
     city_resource_calculate_warehouse_stocks();
+    city_resource_determine_available();
 
     game_state_unpause();
 }

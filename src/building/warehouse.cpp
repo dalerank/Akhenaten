@@ -226,6 +226,13 @@ bool building_warehouse_is_getting(int resource, building *b) {
     else
         return false;
 }
+bool building_warehouse_is_emptying(int resource, building *b) {
+    const building_storage *s = building_storage_get(b->storage_id);
+    if (s->resource_state[resource] == STORAGE_STATE_PHARAOH_EMPTY)
+        return true;
+    else
+        return false;
+}
 bool building_warehouse_is_gettable(int resource, building *b) {
     const building_storage *s = building_storage_get(b->storage_id);
     if (s->resource_state[resource] == STORAGE_STATE_PHARAOH_GET)
@@ -233,11 +240,11 @@ bool building_warehouse_is_gettable(int resource, building *b) {
     else
         return false;
 }
-int building_warehouse_is_not_accepting(int resource, building *b) {
+bool building_warehouse_is_not_accepting(int resource, building *b) {
     return !((building_warehouse_is_accepting(resource, b) || building_warehouse_is_getting(resource, b)));
 }
-int building_warehouse_get_acceptable_quantity(int resource, building *b) {
-    const building_storage *s = building_storage_get(b->storage_id);
+int building_warehouse_get_accepting_amount(int resource, building *b) {
+    const building_storage *s = building_storage_get(b->main()->storage_id);
     switch (s->resource_state[resource]) {
         case STORAGE_STATE_PHARAOH_ACCEPT:
             return s->resource_max_accept[resource];
@@ -252,6 +259,11 @@ int building_warehouse_get_acceptable_quantity(int resource, building *b) {
 
 static int warehouse_is_this_space_the_best(building *space, int x, int y, int resource, int distance_from_entry) {
     building *b = space->main();
+
+    // check storage settings first
+    if (building_warehouse_is_not_accepting(resource, b))
+        return 0;
+
     // check for spaces that already has some of the resource, first
     building *check = b;
     while (check->next_part_building_id) {
@@ -320,8 +332,8 @@ int building_warehouse_for_storing(building *src, int x, int y, int resource, in
             continue;
 
         building *dest = b->main();
-        if (src == dest)
-            continue;
+//        if (src == dest)
+//            continue;
 
         const building_storage *s = building_storage_get(dest->storage_id);
         if (building_warehouse_is_not_accepting(resource, dest) || s->empty_all)
@@ -499,15 +511,21 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             }
         }
 
-        int lacking = building_warehouse_get_acceptable_quantity(r, warehouse) - loads_stored;
+        int requesting = building_warehouse_get_accepting_amount(r, warehouse) / 100;
+        int lacking = requesting - loads_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
         if (room >= 0 && lacking > 0 && city_resource_count(r) - loads_stored > 0) {
             if (!building_warehouse_for_getting(warehouse, r, 0)) // any other place contain this resource..?
                 continue;
             *resource = r;
-            *amount = -lacking;
-            return WAREHOUSE_TASK_GETTING;
+            *amount = lacking;
+
+            // bug in original Pharaoh: warehouses send out two cartpushers even if there is no room!
+            if (lacking > requesting / 2)
+                return WAREHOUSE_TASK_GETTING_MOAR;
+            else
+                return WAREHOUSE_TASK_GETTING;
         }
     }
     // deliver weapons to barracks
@@ -573,7 +591,18 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             }
         }
     }
-    // todo: emptying only specific goods
+    // emptying resource
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        if (!building_warehouse_is_emptying(r, warehouse))
+            continue;
+
+        int in_storage = building_warehouse_get_amount(warehouse, r);
+        if (in_storage > 0) {
+            *resource = r;
+            *amount = building_warehouse_get_amount(warehouse, r);
+            return WAREHOUSE_TASK_EMPTYING;
+        }
+    }
     // move goods to other warehouses
     if (s->empty_all) {
         space = warehouse;
