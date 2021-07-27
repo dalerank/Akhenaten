@@ -103,7 +103,6 @@ static void advance_month(void) {
         tutorial_on_month_tick();
     if (setting_monthly_autosave())
         game_file_write_saved_game("autosave.svx");
-
 }
 
 static void advance_day(void) {

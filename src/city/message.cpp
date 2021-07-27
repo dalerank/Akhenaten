@@ -53,7 +53,7 @@ static bool should_play_sound = true;
 
 void city_message_init_scenario(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        data.messages[i].message_id = 0;
+        data.messages[i].MM_text_id = 0;
     }
     for (int i = 0; i < MAX_QUEUE; i++) {
         data.queue[i] = 0;
@@ -93,7 +93,7 @@ void city_message_init_problem_areas(void) {
 
 static int new_message_id(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (!data.messages[i].message_id)
+        if (!data.messages[i].MM_text_id)
             return i;
 
     }
@@ -127,13 +127,13 @@ static void show_message_popup(int message_id) {
     city_message *msg = &data.messages[message_id];
     data.consecutive_message_delay = 5;
     msg->is_read = 1;
-    int text_id = msg->message_id;
+    int text_id = msg->MM_text_id;
     if (!has_video(text_id))
         play_sound(text_id);
 
-    window_message_dialog_show_city_message(text_id,
+    window_message_dialog_show_city_message(text_id, message_id,
                                             msg->year, msg->month, msg->param1, msg->param2,
-                                            city_message_get_advisor(msg->message_id), 1);
+                                            city_message_get_advisor(msg->MM_text_id), 1);
 }
 
 void city_message_disable_sound_for_next_message(void) {
@@ -148,6 +148,44 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
+//void city_event_message_post() {
+////    return;
+//
+////    use_popup = false; // temp
+//
+//    int id = new_message_id();
+//    if (id < 0)
+//        return;
+//    data.total_messages++;
+//    data.current_message_id = id;
+//
+//    city_message *msg = &data.messages[id];
+//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//        message_id += 99;
+//    msg->message_id = message_id;
+//    msg->is_read = 0;
+//    msg->year = game_time_year();
+//    msg->month = game_time_month();
+//    msg->param1 = param1;
+//    msg->param2 = param2;
+//    msg->sequence = data.next_message_sequence++;
+//
+//    int text_id = city_message_get_text_id(message_id);
+//    int lang_msg_type = lang_get_message(text_id)->message_type;
+//    if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
+//        data.problem_count = 1;
+//        window_invalidate();
+//    }
+//    if (use_popup && window_is(WINDOW_CITY))
+//        show_message_popup(id);
+//    else if (use_popup) {
+//        // add to queue to be processed when player returns to city
+//        enqueue_message(msg->sequence);
+//    } else if (should_play_sound)
+//        play_sound(text_id);
+//
+//    should_play_sound = true;
+//}
 void city_message_post(bool use_popup, int message_id, int param1, int param2) {
 //    return;
 
@@ -162,7 +200,7 @@ void city_message_post(bool use_popup, int message_id, int param1, int param2) {
     city_message *msg = &data.messages[id];
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         message_id += 99;
-    msg->message_id = message_id;
+    msg->MM_text_id = message_id;
     msg->is_read = 0;
     msg->year = game_time_year();
     msg->month = game_time_month();
@@ -230,7 +268,7 @@ void city_message_process_queue(void) {
         return;
     int message_id = -1;
     for (int i = 0; i < 999; i++) {
-        if (!data.messages[i].message_id)
+        if (!data.messages[i].MM_text_id)
             return;
         if (data.messages[i].sequence == sequence) {
             message_id = i;
@@ -246,13 +284,13 @@ void city_message_sort_and_compact(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
             int swap = 0;
-            if (data.messages[a].message_id) {
+            if (data.messages[a].MM_text_id) {
                 if (data.messages[a].sequence < data.messages[a + 1].sequence) {
-                    if (data.messages[a + 1].message_id)
+                    if (data.messages[a + 1].MM_text_id)
                         swap = 1;
 
                 }
-            } else if (data.messages[a + 1].message_id)
+            } else if (data.messages[a + 1].MM_text_id)
                 swap = 1;
 
             if (swap) {
@@ -264,7 +302,7 @@ void city_message_sort_and_compact(void) {
     }
     data.total_messages = 0;
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (data.messages[i].message_id)
+        if (data.messages[i].MM_text_id)
             data.total_messages++;
     }
 }
@@ -386,7 +424,7 @@ void city_message_mark_read(int message_id) {
     data.messages[message_id].is_read = 1;
 }
 void city_message_delete(int message_id) {
-    data.messages[message_id].message_id = 0;
+    data.messages[message_id].MM_text_id = 0;
     city_message_sort_and_compact();
 }
 int city_message_count(void) {
@@ -423,8 +461,8 @@ int city_message_next_problem_area_grid_offset(void) {
     data.problem_count = 0;
     for (int i = 0; i < 999; i++) {
         city_message *msg = &data.messages[i];
-        if (msg->message_id && msg->year >= game_time_year() - 1) {
-            const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_id));
+        if (msg->MM_text_id && msg->year >= game_time_year() - 1) {
+            const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
             int lang_msg_type = lang_msg->message_type;
             if (has_problem_area(msg, lang_msg_type))
                 data.problem_count++;
@@ -442,8 +480,8 @@ int city_message_next_problem_area_grid_offset(void) {
     int current_year = game_time_year();
     for (int i = 0; i < 999; i++) {
         city_message *msg = &data.messages[i];
-        if (msg->message_id && msg->year >= current_year - 1) {
-            int text_id = city_message_get_text_id(msg->message_id);
+        if (msg->MM_text_id && msg->year >= current_year - 1) {
+            int text_id = city_message_get_text_id(msg->MM_text_id);
             int lang_msg_type = lang_get_message(text_id)->message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
@@ -480,7 +518,7 @@ void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, bu
         messages->write_i32(msg->param1);
         messages->write_i16(msg->year);
         messages->write_i16(msg->param2);
-        messages->write_i16(msg->message_id);
+        messages->write_i16(msg->MM_text_id);
         messages->write_i16(msg->sequence);
         messages->write_u8(msg->is_read);
         messages->write_u8(msg->month);
@@ -523,31 +561,32 @@ void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, bu
 //            msg->message_id = messages->read_i16();
 //            msg->message_id = lang_get_message(msg->message_id)->message_id;
         }
-        msg->message_id = messages->read_i16();
+        msg->MM_text_id = messages->read_i16();
         msg->sequence = messages->read_i16();
         msg->is_read = messages->read_u8();
         msg->month = messages->read_u8();
         if (GAME_ENV == ENGINE_ENV_C3)
             messages->skip(2);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            msg->unk_00 = messages->read_i16(); // FF FF
-            msg->unk_01 = messages->read_i16(); // FF FF
+            msg->eventmsg_body_id = messages->read_i16(); // FF FF
+            msg->eventmsg_title_id = messages->read_i16(); // FF FF
             msg->unk_02 = messages->read_i16(); // FF FF
-            msg->unk_enum = messages->read_i16(); // enum?
 
+            msg->req_city = messages->read_i16();
             msg->req_amount = messages->read_i16();
-            msg->req_time_left = messages->read_i16();
-            msg->unk_06 = messages->read_i16();
+            msg->req_resource = messages->read_i16();
+            msg->req_months_left = messages->read_i16();
             msg->unk_07 = messages->read_i16();
 
-            msg->unk_08 = messages->read_i16();
-            msg->unk_enum2 = messages->read_i16(); // enum?
+            msg->eventmsg_phrase_id = messages->read_i16();
+            msg->req_city_past = messages->read_i16(); // enum?
             msg->unk_09 = messages->read_i16(); // 00 00
             msg->unk_10 = messages->read_i16(); // 00 00
 
-            msg->req_amount2 = messages->read_i16();
-            msg->req_time_left2 = messages->read_i16();
-            msg->unk_11 = messages->read_i16(); // FF FF
+            msg->req_amount_past = messages->read_i16();
+            msg->req_resource_past = messages->read_i16();
+            msg->unk_11a_i8 = messages->read_i8(); // FF
+            msg->unk_11b_i8 = messages->read_i8(); // FF
             msg->unk_12 = messages->read_i16(); // 00 00
         }
     }

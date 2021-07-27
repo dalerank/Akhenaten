@@ -1,3 +1,4 @@
+#include <scenario/events.h>
 #include "game.h"
 
 #include "building/construction.h"
@@ -60,26 +61,25 @@ static encoding_type update_encoding(void) {
     translation_load(language);
     return encoding;
 }
-static int reload_language(int is_editor, int reload_images) {
+static bool reload_language(int is_editor, int reload_images) {
     if (!lang_load(is_editor)) {
         if (is_editor)
             errlog("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
-        else {
+        else
             errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
-        }
-        return 0;
+        return false;
     }
     encoding_type encoding = update_encoding();
 
     if (!image_load_fonts(encoding)) {
         errlog("unable to load font graphics");
-        return 0;
+        return false;
     }
     if (!image_load_main(CLIMATE_CENTRAL, is_editor, reload_images)) {
         errlog("unable to load main graphics");
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 static int get_elapsed_ticks(void) {
@@ -124,9 +124,9 @@ static int get_elapsed_ticks(void) {
     return ticks_per_frame;
 }
 
-int game_pre_init(void) {
+bool game_pre_init(void) {
     if (!lang_load(0))
-        return 0;
+        return false;
     update_encoding();
     settings_load(); // c3.inf
     config_load(); // augustus.ini
@@ -135,9 +135,9 @@ int game_pre_init(void) {
     random_init();
 
     game_state_unpause();
-    return 1;
+    return true;
 }
-int game_init(void) {
+bool game_init(void) {
 //    if (!image_init()) {
 //        errlog("unable to init graphics");
 //        return 0;
@@ -167,25 +167,35 @@ int game_init(void) {
 
     if (!image_load_main(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
-        return 0;
+        return false;
     }
     if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
         errlog("unable to load enemy graphics");
-        return 0;
+        return false;
     }
     int missing_fonts = 0;
     if (!image_load_fonts(encoding_get())) {
         errlog("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;
-        else {
-            return 0;
-        }
+        else
+            return false;
     }
 
     if (!model_load()) {
         errlog("unable to load model.txt");
-        return 0;
+        return false;
+    }
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (!eventmsg_load()) {
+            errlog("unable to load eventmsg.txt");
+            return false;
+        }
+        if (!eventmsg_auto_phrases_load()) {
+            errlog("unable to load event auto reason phrases");
+            return false;
+        }
     }
 
 //    mods_init();
@@ -193,12 +203,11 @@ int game_init(void) {
     game_state_init();
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
-    return 1;
+    return true;
 }
-int game_init_editor(void) {
+bool game_init_editor(void) {
     if (!reload_language(1, 0))
-        return 0;
-
+        return false;
 
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);
@@ -206,10 +215,9 @@ int game_init_editor(void) {
     if (city_view_is_sidebar_collapsed())
         city_view_toggle_sidebar();
 
-
     editor_set_active(1);
     window_editor_map_show();
-    return 1;
+    return true;
 }
 void game_exit_editor(void) {
     if (!reload_language(0, 0))

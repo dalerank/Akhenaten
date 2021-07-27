@@ -136,7 +136,7 @@ static void button_size(int size, int param2) {
 }
 
 static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
 }
 
 static void button_close(int param1, int param2) {

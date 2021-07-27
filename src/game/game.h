@@ -1,11 +1,11 @@
 #ifndef GAME_GAME_H
 #define GAME_GAME_H
 
-int game_pre_init(void);
+bool game_pre_init(void);
 
-int game_init(void);
+bool game_init(void);
 
-int game_init_editor(void);
+bool game_init_editor(void);
 
 int game_reload_language(void);
 

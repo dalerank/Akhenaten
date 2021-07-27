@@ -1,7 +1,11 @@
 #ifndef OZYMANDIAS_EVENTS_H
 #define OZYMANDIAS_EVENTS_H
 
+#include "core/buffer.h"
+
 enum {
+    EVENT_TYPE_NONE = 0,
+
     EVENT_TYPE_REQUEST = 1,
     EVENT_TYPE_INVASION = 2,
 
@@ -45,6 +49,8 @@ enum {
     EVENT_TRIGGER_ONLY_VIA_EVENT = 1,
     EVENT_TRIGGER_RECURRING = 2,
 
+    EVENT_TRIGGER_ALREADY_FIRED = 4,
+
     EVENT_TRIGGER_BY_RATING = 10,
 };
 
@@ -70,11 +76,29 @@ enum {
     EVENT_TIMER_STATE_MISSED_COMPLETELY = 4,
 };
 
+enum {
+    EVENT_VAR_DIRECT_RESULT = 0,        // because
+    EVENT_VAR_INCIDENTALLY = 1,         // (no conjunction)
+    EVENT_VAR_IN_SPITE_OF = 2,          // even though...
+    EVENT_VAR_NO_CAUSE = 3,             // (depends on the message?)
+    EVENT_VAR_CYCLICAL = 4,
+    EVENT_VAR_SPECIFIC_AS_NEEDED = 5,
+    EVENT_VAR_AUTO = 6,                 // (automatically set)
+};
+
+enum {
+    EVENT_ACTION_NONE = -1,
+    EVENT_ACTION_COMPLETED = 0,
+    EVENT_ACTION_REFUSED = 1,
+    EVENT_ACTION_TOOLATE = 2,
+    EVENT_ACTION_DEFEAT = 3,
+};
+
 typedef struct {
-//    int num_of_events;
+    int num_total_header;
     int __unk01;
     int event_id;
-    int event_type;
+    int type;
     int month;
     int __unk03;
     int item_1;
@@ -92,14 +116,14 @@ typedef struct {
     int city_or_marker_FIXED;
     int city_or_marker_MIN;
     int city_or_marker_MAX;
-    int on_complete_action;
+    int on_completed_action;
     int on_refusal_action;
     int event_trigger_type;
     int __unk07;
-    int timer_initial;
-    int timer_time_until;
+    int months_initial;
+    int months_left;
     int timer_trigger_state;
-    int timer_missed_but_keep_trying;
+    int in_progress;
     int __unk11;
     int festival_deity;
     int __unk12_i8;
@@ -115,16 +139,16 @@ typedef struct {
     int route_FIXED;
     int route_MIN;
     int route_MAX;
-    int event_subtype;
+    int subtype;
     int __unk15_i8;
     int __unk16;
     int __unk17;
     int __unk18;
     int __unk19;
-    int on_complete_msgAlt;
+    int on_completed_msgAlt;
     int on_refusal_msgAlt;
     int on_tooLate_msgAlt;
-    int on_loss_msgAlt;
+    int on_defeat_msgAlt;
     int __unk20_FIXED;
     int __unk20_MIN;
     int __unk20_MAX;
@@ -133,10 +157,14 @@ typedef struct {
 } event_ph_t;
 
 const event_ph_t *get_scenario_event(int id);
+uint8_t *get_eventmsg_text(int group_id, int index);
 
 void scenario_event_process();
 
 void scenario_events_save_state(buffer *buf);
 void scenario_events_load_state(buffer *buf);
+
+bool eventmsg_load(void);
+bool eventmsg_auto_phrases_load(void);
 
 #endif //OZYMANDIAS_EVENTS_H

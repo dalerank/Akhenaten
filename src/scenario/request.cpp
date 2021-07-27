@@ -105,9 +105,8 @@ void scenario_request_dispatch(int id) {
     else if (scenario.requests[id].resource == RESOURCE_TROOPS_C3) {
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS_C3, amount);
-    } else {
+    } else
         building_warehouses_remove_resource(scenario.requests[id].resource, amount);
-    }
 }
 
 int scenario_requests_active_count() {

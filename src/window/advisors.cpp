@@ -280,7 +280,7 @@ static void button_back_to_city(int param1, int param2) {
 }
 static void button_help(int param1, int param2) {
     if (current_advisor > 0)
-        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], 0);
+        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[current_advisor], -1, 0);
 
 }
 

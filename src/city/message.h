@@ -223,31 +223,32 @@ enum {
 typedef struct {
     int sequence;
 //    int message_type;
-    int message_id;
+    int MM_text_id;
     int year;
     int month;
     int param1;
     int param2;
     int is_read;
     //
-    int unk_00;
-    int unk_01;
+    int eventmsg_body_id;
+    int eventmsg_title_id;
     int unk_02;
-    int unk_enum;
+    int req_city;
 
     int req_amount;
-    int req_time_left;
-    int unk_06;
+    int req_resource;
+    int req_months_left;
     int unk_07;
 
-    int unk_08;
-    int unk_enum2;
+    int eventmsg_phrase_id;
+    int req_city_past;
     int unk_09;
     int unk_10;
 
-    int req_amount2;
-    int req_time_left2;
-    int unk_11;
+    int req_amount_past;
+    int req_resource_past;
+    int unk_11a_i8;
+    int unk_11b_i8;
     int unk_12;
 
 } city_message;

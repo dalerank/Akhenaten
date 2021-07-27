@@ -1,3 +1,6 @@
+#include <scenario/events.h>
+#include <core/string.h>
+#include <cstring>
 #include "message_dialog.h"
 
 #include "city/message.h"
@@ -76,6 +79,14 @@ static struct {
     int num_history;
 
     int text_id;
+    int message_id;
+    bool is_eventmsg;
+    uint8_t *title_text;
+    uint8_t *body_template;
+    uint8_t body_text[1000];
+    uint8_t *phrase_template;
+    uint8_t phrase_text[200];
+
     void (*background_callback)(void);
     int show_video;
 
@@ -97,6 +108,129 @@ static struct {
     int use_popup;
 } player_message;
 
+static int strings_equal(const uint8_t *a, const uint8_t *b, int len) {
+    for (int i = 0; i < len; i++, a++, b++) {
+        if (*a != *b)
+            return 0;
+
+    }
+    return 1;
+}
+static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
+    int needle_length = string_length(needle);
+    for (int i = 0; i < haystack_length; i++) {
+        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
+            return i;
+    }
+    return -1;
+}
+static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
+    for (int i = 0; i < haystack_length; i++) {
+        if (haystack[i] == needle)
+            return i;
+    }
+    return -1;
+}
+static void write_to_body_text_buffer(const uint8_t *in, uint8_t **out) {
+    int size = string_length(in);
+    memcpy(*out, in, size);
+    *out += size;
+//    for (int c = 0; c < 200; c++) {
+//        if (*in == '\0')
+//            return;
+//        **curr_byte = *(in + c);
+//        *curr_byte++;
+//    }
+}
+static void eventmsg_template_fill_in_tag(uint8_t *curr_byte, uint8_t **curr_byte_out, const city_message *msg, bool details_from_past_events) {
+
+    auto greeting_index = index_of_string(curr_byte, (const uint8_t *)"[greeting]", 200);
+    auto playername_index = index_of_string(curr_byte, (const uint8_t *)"[player_name]", 200);
+    auto phrase_index = index_of_string(curr_byte, (const uint8_t *)"[reason_phrase]", 200);
+    auto city_name_index = index_of_string(curr_byte, (const uint8_t *)"[city_name]", 200);
+    auto army_name_index = index_of_string(curr_byte, (const uint8_t *)"[a_foreign_army]", 200);
+    auto amount_index = index_of_string(curr_byte, (const uint8_t *)"[amount]", 200);
+    auto amount_granted_index = index_of_string(curr_byte, (const uint8_t *)"[amount_granted]", 200);
+    auto item_index = index_of_string(curr_byte, (const uint8_t *)"[item]", 200);
+    auto time_alloted_index = index_of_string(curr_byte, (const uint8_t *)"[time_allotted]", 200);
+    auto time_until_attack_index = index_of_string(curr_byte, (const uint8_t *)"[time_until_attack]", 200);
+    auto travel_time_index = index_of_string(curr_byte, (const uint8_t *)"[travel_time]", 200);
+    auto god_index = index_of_string(curr_byte, (const uint8_t *)"[god]", 200);
+
+    if (!greeting_index) {
+        write_to_body_text_buffer(lang_get_string(32, 11 + scenario_campaign_rank()), curr_byte_out);
+    } else if (!playername_index) {
+        write_to_body_text_buffer(scenario_player_name(), curr_byte_out);
+    } else if (!phrase_index) {
+        write_to_body_text_buffer(data.phrase_text, curr_byte_out);
+    } else if (!city_name_index) {
+        empire_city *city;
+        if (details_from_past_events)
+            city = empire_city_get(msg->req_city_past);
+        else
+            city = empire_city_get(msg->req_city);
+        write_to_body_text_buffer(lang_get_string(195, city->name_id), curr_byte_out);
+    } else if (!army_name_index) {
+        // TODO
+    } else if (!amount_index) {
+        uint8_t nn[6];
+        if (details_from_past_events)
+            string_from_int(nn, stack_proper_quantity(msg->req_amount_past, msg->req_resource_past), false);
+        else
+            string_from_int(nn, stack_proper_quantity(msg->req_amount, msg->req_resource), false);
+        write_to_body_text_buffer(nn, curr_byte_out);
+    } else if (!amount_granted_index) {
+
+    } else if (!item_index) {
+        if (details_from_past_events)
+            write_to_body_text_buffer(lang_get_string(23, 54 + msg->req_resource_past), curr_byte_out);
+        else
+            write_to_body_text_buffer(lang_get_string(23, 54 + msg->req_resource), curr_byte_out);
+    } else if (!time_alloted_index) {
+        uint8_t nn[6];
+        string_from_int(nn, msg->req_months_left, false);
+        write_to_body_text_buffer(nn, curr_byte_out);
+    } else if (!time_until_attack_index) {
+        // TODO
+    } else if (!travel_time_index) {
+        // TODO
+    } else if (!god_index) {
+        // TODO
+    }
+}
+static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, bool phrase_modifier) {
+//    *data.body_text = '\0';
+
+//    uint8_t *template_ptr = data.body_template;
+//    uint8_t *full_ptr = data.body_text;
+
+    auto msg = city_message_get(data.message_id);
+
+    uint8_t *curr_byte_out = out_ptr;
+    memset(curr_byte_out, 0, 1);
+    for (int c = 0; c < 1000; c++) {
+        uint8_t *curr_byte = template_ptr + c;
+
+        if ((char)*curr_byte == '[') { // found an opening bracket
+            uint8_t *tag_end_ptr = curr_byte + index_of(curr_byte, ']', 200);
+            int size = tag_end_ptr - curr_byte;
+
+            // needs to go over all the possible tags...
+            eventmsg_template_fill_in_tag(curr_byte, &curr_byte_out, msg, phrase_modifier);
+
+            // go to the end of the tag, then resume
+            curr_byte += size;
+            c += size;
+        } else {
+            memcpy(curr_byte_out, curr_byte, 1);
+            curr_byte_out++;
+//            *out_ptr = *curr_byte;
+            if ((char)*curr_byte == '\0')
+                return;
+        }
+//        out_ptr++;
+    }
+}
 static void set_city_message(int year, int month,
                              int param1, int param2,
                              int message_advisor, int use_popup) {
@@ -107,7 +241,7 @@ static void set_city_message(int year, int month,
     player_message.message_advisor = message_advisor;
     player_message.use_popup = use_popup;
 }
-static void init(int text_id, void (*background_callback)(void)) {
+static void init(int text_id, int message_id, void (*background_callback)(void)) {
     scroll_drag_end();
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
@@ -115,6 +249,21 @@ static void init(int text_id, void (*background_callback)(void)) {
     }
     data.num_history = 0;
     rich_text_reset(0);
+    data.message_id = message_id;
+
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        const city_message *city_msg = city_message_get(data.message_id);
+        if (city_msg->eventmsg_body_id != -1) {
+            data.is_eventmsg = true;
+            data.title_text = get_eventmsg_text(city_msg->eventmsg_title_id, 0);
+            data.body_template = get_eventmsg_text(city_msg->eventmsg_body_id, 0);
+            data.phrase_template = get_eventmsg_text(city_msg->eventmsg_phrase_id, 0);
+            eventmsg_template_combine(data.phrase_template, data.phrase_text, true);
+            eventmsg_template_combine(data.body_template, data.body_text, false);
+        } else
+            data.is_eventmsg = false;
+    }
+
     data.text_id = text_id;
     data.background_callback = background_callback;
     const lang_message *msg = lang_get_message(text_id);
@@ -122,12 +271,10 @@ static void init(int text_id, void (*background_callback)(void)) {
         data.show_video = 0;
     else if (msg->video.text && video_start((char *) msg->video.text))
         data.show_video = 1;
-    else {
+    else
         data.show_video = 0;
-    }
     if (data.show_video)
         video_init();
-
 }
 static int resource_image(int resource) {
     int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource;
@@ -150,6 +297,13 @@ static int get_message_image_id(const lang_message *msg) {
 }
 
 static void draw_city_message_text(const lang_message *msg) {
+    uint8_t *text = msg->content.text;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (data.is_eventmsg)
+            text = data.body_text;
+    }
+    if (!text)
+        return;
     if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
         int width = lang_text_draw(25, player_message.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE);
         width += lang_text_draw_year(player_message.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE);
@@ -170,7 +324,7 @@ static void draw_city_message_text(const lang_message *msg) {
         case MESSAGE_TYPE_DISASTER:
         case MESSAGE_TYPE_INVASION:
             lang_text_draw(12, 1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
-            rich_text_draw(msg->content.text, data.x_text + 8, data.y_text + 86,
+            rich_text_draw(text, data.x_text + 8, data.y_text + 86,
                            16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
 
@@ -181,13 +335,13 @@ static void draw_city_message_text(const lang_message *msg) {
                 lang_text_draw_multiline(12, city_sentiment + 2,
                                          data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
             }
-            rich_text_draw(msg->content.text,
+            rich_text_draw(text,
                            data.x_text + 8, data.y_text + 86, 16 * (data.text_width_blocks - 1),
                            data.text_height_blocks - 1, 0);
             break;
         }
         case MESSAGE_TYPE_TUTORIAL:
-            rich_text_draw(msg->content.text,
+            rich_text_draw(text,
                            data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16,
                            data.text_height_blocks - 1, 0);
             break;
@@ -196,7 +350,7 @@ static void draw_city_message_text(const lang_message *msg) {
             image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
             lang_text_draw(21, empire_city_get(player_message.param1)->name_id,
                            data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
-            rich_text_draw(msg->content.text,
+            rich_text_draw(text,
                            data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
                            data.text_height_blocks - 1, 0);
             break;
@@ -204,13 +358,13 @@ static void draw_city_message_text(const lang_message *msg) {
         case MESSAGE_TYPE_PRICE_CHANGE:
             image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
             text_draw_money(player_message.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
-            rich_text_draw(msg->content.text,
+            rich_text_draw(text,
                            data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
                            data.text_height_blocks - 1, 0);
             break;
 
         default: {
-            int lines = rich_text_draw(msg->content.text,
+            int lines = rich_text_draw(text,
                                        data.x_text + 8, data.y_text + 56, 16 * data.text_width_blocks - 16,
                                        data.text_height_blocks - 1, 0);
             if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
@@ -231,19 +385,24 @@ static void draw_city_message_text(const lang_message *msg) {
     }
 }
 static void draw_title(const lang_message *msg) {
-    if (!msg->title.text)
+    uint8_t *text = msg->title.text;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (data.is_eventmsg)
+            text = data.title_text;
+    }
+    if (!text)
         return;
     int image_id = get_message_image_id(msg);
     const image *img = image_id ? image_get(image_id) : 0;
     // title
     if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
-        text_draw_centered(msg->title.text,
+        text_draw_centered(text,
                            data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
     } else {
         // Center title in the dialog but ensure it does not overlap with the
         // image: if the title is too long, it will start 8px from the image.
         int title_x_offset = img ? img->width + msg->image.x + 8 : 0;
-        text_draw_centered(msg->title.text, data.x + title_x_offset, data.y + 14,
+        text_draw_centered(text, data.x + title_x_offset, data.y + 14,
                            16 * msg->width_blocks - 2 * title_x_offset, FONT_LARGE_BLACK, 0);
     }
     data.y_text = data.y + 48;
@@ -270,11 +429,16 @@ static void draw_subtitle(const lang_message *msg) {
     }
 }
 static void draw_content(const lang_message *msg) {
-    if (!msg->content.text)
+    uint8_t *text = msg->content.text;
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        if (data.is_eventmsg)
+            text = data.body_text;
+    }
+    if (!text)
         return;
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
-    data.text_width_blocks = rich_text_init(msg->content.text,
+    data.text_width_blocks = rich_text_init(text,
                                             data.x_text, data.y_text, msg->width_blocks - 4, data.text_height_blocks,
                                             1);
     // content!
@@ -285,7 +449,7 @@ static void draw_content(const lang_message *msg) {
     if (msg->type == TYPE_MESSAGE)
         draw_city_message_text(msg);
     else
-        rich_text_draw(msg->content.text,
+        rich_text_draw(text,
                        data.x_text + 8, data.y_text + 6, 16 * data.text_width_blocks - 16,
                        data.text_height_blocks - 1, 0);
     graphics_reset_clip_rectangle();
@@ -541,7 +705,7 @@ static void button_close(int param1, int param2) {
 }
 static void button_help(int param1, int param2) {
     button_close(0, 0);
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, data.background_callback);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, data.background_callback);
 }
 static void button_advisor(int advisor, int param2) {
     cleanup();
@@ -573,7 +737,7 @@ static void get_tooltip(tooltip_context *c) {
     }
 }
 
-void window_message_dialog_show(int text_id, void (*background_callback)(void)) {
+void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void)) {
     window_type window = {
             WINDOW_MESSAGE_DIALOG,
             draw_background,
@@ -581,10 +745,10 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void)) 
             handle_input,
             get_tooltip
     };
-    init(text_id, background_callback);
+    init(text_id, message_id, background_callback);
     window_show(&window);
 }
-void window_message_dialog_show_city_message(int text_id, int year, int month, int param1, int param2, int message_advisor, int use_popup) {
+void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, int use_popup) {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
-    window_message_dialog_show(text_id, window_city_draw_all);
+    window_message_dialog_show(text_id, message_id, window_city_draw_all);
 }

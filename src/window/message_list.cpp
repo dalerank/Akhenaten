@@ -1,3 +1,5 @@
+#include <core/game_environment.h>
+#include <scenario/events.h>
 #include "message_list.h"
 
 #include "city/message.h"
@@ -95,8 +97,7 @@ static void draw_messages(int total_messages) {
     int index = scrollbar.scroll_position;
     for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
-        const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_id));
-        // TODO: Pharaoh's eventmsg.txt...
+        const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
 
         int image_type_offset = 0;
         if (lang_msg->message_type == MESSAGE_TYPE_DISASTER)
@@ -114,12 +115,43 @@ static void draw_messages(int total_messages) {
         if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_RED;
 
+        if (false) {
+            int o = -100;
+            int oo = 45;
+            font_t f = FONT_LARGE_PLAIN;
+            color_t c = COLOR_WHITE;
+            uint8_t str[10];
+
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);; // enum?
+
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount, c);;
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource, c);;
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_months_left, c);
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_07, c);
+
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_phrase_id, c);
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city_past, c);; // enum?
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_09, c); // 00 00
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_10, c); // 00 00
+
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_amount_past, c);;
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_resource_past, c);;
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_11a_i8, c);; // FF FF
+            o += oo; draw_debug_line(str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_12, c);; // 00 00
+
+            continue;
+        }
+
         int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year, data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
-        if (lang_msg->title.text) // temp fix so it doesn't crash
+
+        if (GAME_ENV == ENGINE_ENV_PHARAOH && msg->eventmsg_body_id != -1) {
+            text_draw(get_eventmsg_text(msg->eventmsg_title_id, 0), data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+        } else if (lang_msg->title.text) // temp fix so it doesn't crash
             text_draw(lang_msg->title.text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
-        else
-            int a = 325;
     }
     scrollbar_draw(&scrollbar);
 }
@@ -173,7 +205,7 @@ static void on_scroll(void) {
 }
 
 static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_MESSAGES, window_city_draw_all);
+    window_message_dialog_show(MESSAGE_DIALOG_MESSAGES, -1, window_city_draw_all);
 }
 static void button_close(int param1, int param2) {
     window_city_show();
@@ -184,9 +216,10 @@ static void button_message(int param1, int param2) {
         const city_message *msg = city_message_get(id);
         city_message_mark_read(id);
         window_message_dialog_show_city_message(
-                msg->message_id,
+                msg->MM_text_id,
+                id,
                 msg->year, msg->month, msg->param1, msg->param2,
-                msg->message_id,
+                msg->MM_text_id,
                 0);
     }
 }

@@ -260,7 +260,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 }
 
 static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0);
 }
 static void button_ok(int param1, int param2) {
     window_go_back();

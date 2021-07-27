@@ -65,7 +65,7 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
     return ptr;
 }
 
-int model_load(void) {
+bool model_load(void) {
     buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
 
@@ -83,7 +83,7 @@ int model_load(void) {
     }
     if (filesize == 0) {
         log_error("Model file not found", 0, 0);
-        return 0;
+        return false;
     }
 
     // go through the file to assert number of buildings
@@ -102,7 +102,7 @@ int model_load(void) {
     } while (brace_index && guard > 0);
     if (num_lines != NUM_BUILDINGS + NUM_HOUSES) {
         log_error("Model has incorrect no of lines ", 0, num_lines + 1);
-        return 0;
+        return false;
     }
 
     // parse buildings data
@@ -150,7 +150,7 @@ int model_load(void) {
     }
 
     log_info("Model loaded", 0, 0);
-    return 1;
+    return true;
 }
 
 const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};

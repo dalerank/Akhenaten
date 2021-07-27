@@ -28,9 +28,9 @@ enum {
     MESSAGE_DIALOG_EDITOR_HELP = 332,
 };
 
-void window_message_dialog_show(int text_id, void (*background_callback)(void));
+void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void));
 
-void window_message_dialog_show_city_message(int text_id, int year, int month,
+void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month,
                                              int param1, int param2, int message_advisor, int use_popup);
 
 #endif // WINDOW_MESSAGE_DIALOG_H

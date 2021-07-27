@@ -1,0 +1,1842 @@
+        005d32e0 50 48 52        ds         "PHRASE_pyramid_speedup_Bast"
+                 41 53 45 
+                 5f 70 79 
+        005d32fc 50 48 52        ds         "PHRASE_pyramid_speedup_Seth"
+                 41 53 45 
+                 5f 70 79 
+        005d3318 50 48 52        ds         "PHRASE_pyramid_speedup_Ptah"
+                 41 53 45 
+                 5f 70 79 
+        005d3334 50 48 52        ds         "PHRASE_pyramid_speedup_Ra"
+                 41 53 45 
+                 5f 70 79 
+        005d3350 50 48 52        ds         "PHRASE_pyramid_speedup_Osiris"
+                 41 53 45 
+                 5f 70 79 
+        005d3370 50 48 52        ds         "PHRASE_pyramid_minor_speedup_announcement"
+                 41 53 45 
+                 5f 70 79 
+        005d339c 50 48 52        ds         "PHRASE_pyramid_speedup_announcement"
+                 41 53 45 
+                 5f 70 79 
+        005d33c0 50 48 52        ds         "PHRASE_pyramid_speedup_title"
+                 41 53 45 
+                 5f 70 79 
+        005d33e0 50 48 52        ds         "PHRASE_troopcarryover_all_three"
+                 41 53 45 
+                 5f 74 72 
+        005d3400 50 48 52        ds         "PHRASE_troopcarryover_arch_char"
+                 41 53 45 
+                 5f 74 72 
+        005d3420 50 48 52        ds         "PHRASE_troopcarryover_inf_char"
+                 41 53 45 
+                 5f 74 72 
+        005d3440 50 48 52        ds         "PHRASE_troopcarryover_inf_arch"
+                 41 53 45 
+                 5f 74 72 
+        005d3460 50 48 52        ds         "PHRASE_troopcarryover_char_only"
+                 41 53 45 
+                 5f 74 72 
+        005d3480 50 48 52        ds         "PHRASE_troopcarryover_arch_only"
+                 41 53 45 
+                 5f 74 72 
+        005d34a0 50 48 52        ds         "PHRASE_troopcarryover_inf_only"
+                 41 53 45 
+                 5f 74 72 
+        005d34c0 50 48 52        ds         "PHRASE_troopcarryover_initial_announcement"
+                 41 53 45 
+                 5f 74 72 
+        005d34ec 50 48 52        ds         "PHRASE_troopcarryover_title"
+                 41 53 45 
+                 5f 74 72 
+        005d3508 50 48 52        ds         "PHRASE_grandtomb_congratulations"
+                 41 53 45 
+                 5f 67 72 
+        005d352c 50 48 52        ds         "PHRASE_grandtomb_congratulations_title"
+                 41 53 45 
+                 5f 67 72 
+        005d3554 50 48 52        ds         "PHRASE_largetomb_congratulations"
+                 41 53 45 
+                 5f 6c 61 
+        005d3578 50 48 52        ds         "PHRASE_largetomb_congratulations_title"
+                 41 53 45 
+                 5f 6c 61 
+        005d35a0 50 48 52        ds         "PHRASE_medtomb_congratulations"
+                 41 53 45 
+                 5f 6d 65 
+        005d35c0 50 48 52        ds         "PHRASE_medtomb_congratulations_title"
+                 41 53 45 
+                 5f 6d 65 
+        005d35e8 50 48 52        ds         "PHRASE_smalltomb_congratulations"
+                 41 53 45 
+                 5f 73 6d 
+        005d360c 50 48 52        ds         "PHRASE_smalltomb_congratulations_title"
+                 41 53 45 
+                 5f 73 6d 
+        005d3634 50 48 52        ds         "PHRASE_mausoleum_congratulations"
+                 41 53 45 
+                 5f 6d 61 
+        005d3658 50 48 52        ds         "PHRASE_mausoleum_congratulations_title"
+                 41 53 45 
+                 5f 6d 61 
+        005d3680 50 48 52        ds         "PHRASE_lighthouse_congratulations"
+                 41 53 45 
+                 5f 6c 69 
+        005d36a4 50 48 52        ds         "PHRASE_lighthouse_congratulations_title"
+                 41 53 45 
+                 5f 6c 69 
+        005d36cc 50 48 52        ds         "PHRASE_caesareum_congratulations"
+                 41 53 45 
+                 5f 63 61 
+        005d36f0 50 48 52        ds         "PHRASE_caesareum_congratulations_title"
+                 41 53 45 
+                 5f 63 61 
+        005d3718 50 48 52        ds         "PHRASE_abu_simbel_congratulations"
+                 41 53 45 
+                 5f 61 62 
+        005d373c 50 48 52        ds         "PHRASE_abu_simbel_congratulations_title"
+                 41 53 45 
+                 5f 61 62 
+        005d3764 50 48 52        ds         "PHRASE_alex_library_congratulations"
+                 41 53 45 
+                 5f 61 6c 
+        005d3788 50 48 52        ds         "PHRASE_alex_library_congratulations_title"
+                 41 53 45 
+                 5f 61 6c 
+        005d37b4 50 48 52        ds         "PHRASE_sun_temple_congratulations"
+                 41 53 45 
+                 5f 73 75 
+        005d37d8 50 48 52        ds         "PHRASE_sun_temple_congratulations_title"
+                 41 53 45 
+                 5f 73 75 
+        005d3800 50 48 52        ds         "PHRASE_obelisk_congratulations"
+                 41 53 45 
+                 5f 6f 62 
+        005d3820 50 48 52        ds         "PHRASE_obelisk_congratulations_title"
+                 41 53 45 
+                 5f 6f 62 
+        005d3848 50 48 52        ds         "PHRASE_sphinx_congratulations"
+                 41 53 45 
+                 5f 73 70 
+        005d3868 50 48 52        ds         "PHRASE_sphinx_congratulations_title"
+                 41 53 45 
+                 5f 73 70 
+        005d388c 50 48 52        ds         "PHRASE_mastaba_congratulations"
+                 41 53 45 
+                 5f 6d 61 
+        005d38ac 50 48 52        ds         "PHRASE_mastaba_congratulations_title"
+                 41 53 45 
+                 5f 6d 61 
+        005d38d4 50 48 52        ds         "PHRASE_mudbrick_pyramid_congratulations"
+                 41 53 45 
+                 5f 6d 75 
+        005d38fc 50 48 52        ds         "PHRASE_mudbrick_pyramid_congratulations_title"
+                 41 53 45 
+                 5f 6d 75 
+        005d392c 50 48 52        ds         "PHRASE_bent_pyramid_congratulations"
+                 41 53 45 
+                 5f 62 65 
+        005d3950 50 48 52        ds         "PHRASE_bent_pyramid_congratulations_title"
+                 41 53 45 
+                 5f 62 65 
+        005d397c 50 48 52        ds         "PHRASE_stepped_pyramid_congratulations"
+                 41 53 45 
+                 5f 73 74 
+        005d39a4 50 48 52        ds         "PHRASE_stepped_pyramid_congratulations_title"
+                 41 53 45 
+                 5f 73 74 
+        005d39d4 50 48 52        ds         "PHRASE_pyramid_congratulations"
+                 41 53 45 
+                 5f 70 79 
+        005d39f4 50 48 52        ds         "PHRASE_pyramid_congratulations_title"
+                 41 53 45 
+                 5f 70 79 
+        005d3a1c 50 48 52        ds         "PHRASE_gift_no_reason_C_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3a38 50 48 52        ds         "PHRASE_gift_no_reason_C_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3a54 50 48 52        ds         "PHRASE_gift_no_reason_P_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3a70 50 48 52        ds         "PHRASE_gift_no_reason_P_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3a8c 50 48 52        ds         "PHRASE_gift_refused_reason_C_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3aac 50 48 52        ds         "PHRASE_gift_refused_reason_C_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3acc 50 48 52        ds         "PHRASE_gift_refused_reason_P_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3aec 50 48 52        ds         "PHRASE_gift_refused_reason_P_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3b0c 50 48 52        ds         "PHRASE_gift_forfeited_reason_C_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3b30 50 48 52        ds         "PHRASE_gift_forfeited_reason_C_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3b54 50 48 52        ds         "PHRASE_gift_forfeited_reason_P_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3b78 50 48 52        ds         "PHRASE_gift_forfeited_reason_P_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3b9c 50 48 52        ds         "PHRASE_gift_accepted_reason_C_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3bbc 50 48 52        ds         "PHRASE_gift_accepted_reason_C_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3bdc 50 48 52        ds         "PHRASE_gift_accepted_reason_P_C"
+                 41 53 45 
+                 5f 67 69 
+        005d3bfc 50 48 52        ds         "PHRASE_gift_accepted_reason_P_B"
+                 41 53 45 
+                 5f 67 69 
+        005d3c1c 50 48 52        ds         "PHRASE_bedouin_attacks_you_no_reason_C"
+                 41 53 45 
+                 5f 62 65 
+        005d3c44 50 48 52        ds         "PHRASE_bedouin_attacks_you_no_reason_B"
+                 41 53 45 
+                 5f 62 65 
+        005d3c6c 50 48 52        ds         "PHRASE_bedouin_attacks_you_reason_C"
+                 41 53 45 
+                 5f 62 65 
+        005d3c90 50 48 52        ds         "PHRASE_bedouin_attacks_you_reason_B"
+                 41 53 45 
+                 5f 62 65 
+        005d3cb4 50 48 52        ds         "PHRASE_perfect_flood_no_reason_C"
+                 41 53 45 
+                 5f 70 65 
+        005d3cd8 50 48 52        ds         "PHRASE_perfect_flood_no_reason_B"
+                 41 53 45 
+                 5f 70 65 
+        005d3cfc 50 48 52        ds         "PHRASE_perfect_flood_reason_C"
+                 41 53 45 
+                 5f 70 65 
+        005d3d1c 50 48 52        ds         "PHRASE_perfect_flood_reason_B"
+                 41 53 45 
+                 5f 70 65 
+        005d3d3c 50 48 52        ds         "PHRASE_flood_fails_no_reason_C"
+                 41 53 45 
+                 5f 66 6c 
+        005d3d5c 50 48 52        ds         "PHRASE_flood_fails_no_reason_B"
+                 41 53 45 
+                 5f 66 6c 
+        005d3d7c 50 48 52        ds         "PHRASE_flood_fails_reason_C"
+                 41 53 45 
+                 5f 66 6c 
+        005d3d98 50 48 52        ds         "PHRASE_flood_fails_reason_B"
+                 41 53 45 
+                 5f 66 6c 
+        005d3db4 50 48 52        ds         "PHRASE_landslide_no_reason_C"
+                 41 53 45 
+                 5f 6c 61 
+        005d3dd4 50 48 52        ds         "PHRASE_landslide_no_reason_B"
+                 41 53 45 
+                 5f 6c 61 
+        005d3df4 50 48 52        ds         "PHRASE_landslide_reason_C"
+                 41 53 45 
+                 5f 6c 61 
+        005d3e10 50 48 52        ds         "PHRASE_landslide_reason_B"
+                 41 53 45 
+                 5f 6c 61 
+        005d3e2c 50 48 52        ds         "PHRASE_goldmine_cavein_no_reason_C"
+                 41 53 45 
+                 5f 67 6f 
+        005d3e50 50 48 52        ds         "PHRASE_goldmine_cavein_no_reason_B"
+                 41 53 45 
+                 5f 67 6f 
+        005d3e74 50 48 52        ds         "PHRASE_goldmine_cavein_reason_C"
+                 41 53 45 
+                 5f 67 6f 
+        005d3e94 50 48 52        ds         "PHRASE_goldmine_cavein_reason_B"
+                 41 53 45 
+                 5f 67 6f 
+        005d3eb4 50 48 52        ds         "PHRASE_bad_water_no_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d3ed4 50 48 52        ds         "PHRASE_bad_water_no_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d3ef4 50 48 52        ds         "PHRASE_bad_water_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d3f10 50 48 52        ds         "PHRASE_bad_water_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d3f2c 50 48 52        ds         "PHRASE_wage_change_no_reason_D_C"
+                 41 53 45 
+                 5f 77 61 
+        005d3f50 50 48 52        ds         "PHRASE_wage_change_no_reason_D_B"
+                 41 53 45 
+                 5f 77 61 
+        005d3f74 50 48 52        ds         "PHRASE_wage_change_reason_D_C"
+                 41 53 45 
+                 5f 77 61 
+        005d3f94 50 48 52        ds         "PHRASE_wage_change_reason_D_B"
+                 41 53 45 
+                 5f 77 61 
+        005d3fb4 50 48 52        ds         "PHRASE_wage_change_no_reason_I_C"
+                 41 53 45 
+                 5f 77 61 
+        005d3fd8 50 48 52        ds         "PHRASE_wage_change_no_reason_I_B"
+                 41 53 45 
+                 5f 77 61 
+        005d3ffc 50 48 52        ds         "PHRASE_wage_change_reason_I_C"
+                 41 53 45 
+                 5f 77 61 
+        005d401c 50 48 52        ds         "PHRASE_wage_change_reason_I_B"
+                 41 53 45 
+                 5f 77 61 
+        005d403c 50 48 52        ds         "PHRASE_sandstorm_no_reason_C"
+                 41 53 45 
+                 5f 73 61 
+        005d405c 50 48 52        ds         "PHRASE_sandstorm_no_reason_B"
+                 41 53 45 
+                 5f 73 61 
+        005d407c 50 48 52        ds         "PHRASE_sandstorm_reason_C"
+                 41 53 45 
+                 5f 73 61 
+        005d4098 50 48 52        ds         "PHRASE_sandstorm_reason_B"
+                 41 53 45 
+                 5f 73 61 
+        005d40b4 50 48 52        ds         "PHRASE_stormy_seas_no_reason_C"
+                 41 53 45 
+                 5f 73 74 
+        005d40d4 50 48 52        ds         "PHRASE_stormy_seas_no_reason_B"
+                 41 53 45 
+                 5f 73 74 
+        005d40f4 50 48 52        ds         "PHRASE_stormy_seas_reason_C"
+                 41 53 45 
+                 5f 73 74 
+        005d4110 50 48 52        ds         "PHRASE_stormy_seas_reason_B"
+                 41 53 45 
+                 5f 73 74 
+        005d412c 50 48 52        ds         "PHRASE_earthquake_no_reason_C"
+                 41 53 45 
+                 5f 65 61 
+        005d414c 50 48 52        ds         "PHRASE_earthquake_no_reason_B"
+                 41 53 45 
+                 5f 65 61 
+        005d416c 50 48 52        ds         "PHRASE_earthquake_reason_C"
+                 41 53 45 
+                 5f 65 61 
+        005d4188 50 48 52        ds         "PHRASE_earthquake_reason_B"
+                 41 53 45 
+                 5f 65 61 
+        005d41a4 50 48 52        ds         "PHRASE_demand_change_no_reason_D_C"
+                 41 53 45 
+                 5f 64 65 
+        005d41c8 50 48 52        ds         "PHRASE_demand_change_no_reason_D_B"
+                 41 53 45 
+                 5f 64 65 
+        005d41ec 50 48 52        ds         "PHRASE_demand_change_reason_D_C"
+                 41 53 45 
+                 5f 64 65 
+        005d420c 50 48 52        ds         "PHRASE_demand_change_reason_D_B"
+                 41 53 45 
+                 5f 64 65 
+        005d422c 50 48 52        ds         "PHRASE_demand_change_no_reason_I_C"
+                 41 53 45 
+                 5f 64 65 
+        005d4250 50 48 52        ds         "PHRASE_demand_change_no_reason_I_B"
+                 41 53 45 
+                 5f 64 65 
+        005d4274 50 48 52        ds         "PHRASE_demand_change_reason_I_C"
+                 41 53 45 
+                 5f 64 65 
+        005d4294 50 48 52        ds         "PHRASE_demand_change_reason_I_B"
+                 41 53 45 
+                 5f 64 65 
+        005d42b4 50 48 52        ds         "PHRASE_price_change_no_reason_D_C"
+                 41 53 45 
+                 5f 70 72 
+        005d42d8 50 48 52        ds         "PHRASE_price_change_no_reason_D_B"
+                 41 53 45 
+                 5f 70 72 
+        005d42fc 50 48 52        ds         "PHRASE_price_change_reason_D_C"
+                 41 53 45 
+                 5f 70 72 
+        005d431c 50 48 52        ds         "PHRASE_price_change_reason_D_B"
+                 41 53 45 
+                 5f 70 72 
+        005d433c 50 48 52        ds         "PHRASE_price_change_no_reason_I_C"
+                 41 53 45 
+                 5f 70 72 
+        005d4360 50 48 52        ds         "PHRASE_price_change_no_reason_I_B"
+                 41 53 45 
+                 5f 70 72 
+        005d4384 50 48 52        ds         "PHRASE_price_change_reason_I_C"
+                 41 53 45 
+                 5f 70 72 
+        005d43a4 50 48 52        ds         "PHRASE_price_change_reason_I_B"
+                 41 53 45 
+                 5f 70 72 
+        005d43c4 50 48 52        ds         "PHRASE_rating_change_no_reason_D_C"
+                 41 53 45 
+                 5f 72 61 
+        005d43e8 50 48 52        ds         "PHRASE_rating_change_no_reason_D_B"
+                 41 53 45 
+                 5f 72 61 
+        005d440c 50 48 52        ds         "PHRASE_rating_change_reason_D_C"
+                 41 53 45 
+                 5f 72 61 
+        005d442c 50 48 52        ds         "PHRASE_rating_change_reason_D_B"
+                 41 53 45 
+                 5f 72 61 
+        005d444c 50 48 52        ds         "PHRASE_rating_change_no_reason_I_C"
+                 41 53 45 
+                 5f 72 61 
+        005d4470 50 48 52        ds         "PHRASE_rating_change_no_reason_I_B"
+                 41 53 45 
+                 5f 72 61 
+        005d4494 50 48 52        ds         "PHRASE_rating_change_reason_I_C"
+                 41 53 45 
+                 5f 72 61 
+        005d44b4 50 48 52        ds         "PHRASE_rating_change_reason_I_B"
+                 41 53 45 
+                 5f 72 61 
+        005d44d4 50 48 52        ds         "PHRASE_foreign_army_attacks_you_no_reason_C"
+                 41 53 45 
+                 5f 66 6f 
+        005d4500 50 48 52        ds         "PHRASE_foreign_army_attacks_you_no_reason_B"
+                 41 53 45 
+                 5f 66 6f 
+        005d452c 50 48 52        ds         "PHRASE_foreign_army_attacks_you_reason_C"
+                 41 53 45 
+                 5f 66 6f 
+        005d4558 50 48 52        ds         "PHRASE_foreign_army_attacks_you_reason_B"
+                 41 53 45 
+                 5f 66 6f 
+        005d4584 50 48 52        ds         "PHRASE_eg_city_attacks_you_no_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d45ac 50 48 52        ds         "PHRASE_eg_city_attacks_you_no_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d45d4 50 48 52        ds         "PHRASE_eg_city_attacks_you_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d45f8 50 48 52        ds         "PHRASE_eg_city_attacks_you_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d461c 50 48 52        ds         "PHRASE_pharaoh_attacks_you_no_reason_C"
+                 41 53 45 
+                 5f 70 68 
+        005d4644 50 48 52        ds         "PHRASE_pharaoh_attacks_you_no_reason_B"
+                 41 53 45 
+                 5f 70 68 
+        005d466c 50 48 52        ds         "PHRASE_pharaoh_attacks_you_reason_C"
+                 41 53 45 
+                 5f 70 68 
+        005d4690 50 48 52        ds         "PHRASE_pharaoh_attacks_you_reason_B"
+                 41 53 45 
+                 5f 70 68 
+        005d46b4 50 48 52        ds         "PHRASE_acknowledgement_no_reason_C"
+                 41 53 45 
+                 5f 61 63 
+        005d46d8 50 48 52        ds         "PHRASE_acknowledgement_no_reason_B"
+                 41 53 45 
+                 5f 61 63 
+        005d46fc 50 48 52        ds         "PHRASE_acknowledgement_reason_C"
+                 41 53 45 
+                 5f 61 63 
+        005d471c 50 48 52        ds         "PHRASE_acknowledgement_reason_B"
+                 41 53 45 
+                 5f 61 63 
+        005d473c 50 48 52        ds         "PHRASE_battle_lost_no_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d475c 50 48 52        ds         "PHRASE_battle_lost_no_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d477c 50 48 52        ds         "PHRASE_battle_lost_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d4798 50 48 52        ds         "PHRASE_battle_lost_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d47b4 50 48 52        ds         "PHRASE_battle_won_no_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d47d4 50 48 52        ds         "PHRASE_battle_won_no_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d47f4 50 48 52        ds         "PHRASE_battle_won_reason_C"
+                 41 53 45 
+                 5f 62 61 
+        005d4810 50 48 52        ds         "PHRASE_battle_won_reason_B"
+                 41 53 45 
+                 5f 62 61 
+        005d482c 50 48 52        ds         "PHRASE_eg_city_saved_no_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d4850 50 48 52        ds         "PHRASE_eg_city_saved_no_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d4874 50 48 52        ds         "PHRASE_eg_city_saved_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d4894 50 48 52        ds         "PHRASE_eg_city_saved_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d48b4 50 48 52        ds         "PHRASE_siege_no_reason_C"
+                 41 53 45 
+                 5f 73 69 
+        005d48d0 50 48 52        ds         "PHRASE_siege_no_reason_B"
+                 41 53 45 
+                 5f 73 69 
+        005d48ec 50 48 52        ds         "PHRASE_siege_reason_C"
+                 41 53 45 
+                 5f 73 69 
+        005d4904 50 48 52        ds         "PHRASE_siege_reason_B"
+                 41 53 45 
+                 5f 73 69 
+        005d491c 50 48 52        ds         "PHRASE_route_closed_no_reason_C"
+                 41 53 45 
+                 5f 72 6f 
+        005d493c 50 48 52        ds         "PHRASE_route_closed_no_reason_B"
+                 41 53 45 
+                 5f 72 6f 
+        005d495c 50 48 52        ds         "PHRASE_route_closed_reason_C"
+                 41 53 45 
+                 5f 72 6f 
+        005d497c 50 48 52        ds         "PHRASE_route_closed_reason_B"
+                 41 53 45 
+                 5f 72 6f 
+        005d499c 50 48 52        ds         "PHRASE_route_opened_no_reason_C"
+                 41 53 45 
+                 5f 72 6f 
+        005d49bc 50 48 52        ds         "PHRASE_route_opened_no_reason_B"
+                 41 53 45 
+                 5f 72 6f 
+        005d49dc 50 48 52        ds         "PHRASE_route_opened_reason_C"
+                 41 53 45 
+                 5f 72 6f 
+        005d49fc 50 48 52        ds         "PHRASE_route_opened_reason_B"
+                 41 53 45 
+                 5f 72 6f 
+        005d4a1c 50 48 52        ds         "PHRASE_foreign_city_conquered_no_reason_C"
+                 41 53 45 
+                 5f 66 6f 
+        005d4a48 50 48 52        ds         "PHRASE_foreign_city_conquered_no_reason_B"
+                 41 53 45 
+                 5f 66 6f 
+        005d4a74 50 48 52        ds         "PHRASE_foreign_city_conquered_reason_C"
+                 41 53 45 
+                 5f 66 6f 
+        005d4a9c 50 48 52        ds         "PHRASE_foreign_city_conquered_reason_B"
+                 41 53 45 
+                 5f 66 6f 
+        005d4ac4 50 48 52        ds         "PHRASE_eg_city_falls_no_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d4ae8 50 48 52        ds         "PHRASE_eg_city_falls_no_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d4b0c 50 48 52        ds         "PHRASE_eg_city_falls_reason_C"
+                 41 53 45 
+                 5f 65 67 
+        005d4b2c 50 48 52        ds         "PHRASE_eg_city_falls_reason_B"
+                 41 53 45 
+                 5f 65 67 
+        005d4b4c 50 48 52        ds         "PHRASE_threat_no_reason_C_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4b68 50 48 52        ds         "PHRASE_threat_no_reason_C_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4b84 50 48 52        ds         "PHRASE_threat_no_reason_P_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4ba0 50 48 52        ds         "PHRASE_threat_no_reason_P_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4bbc 50 48 52        ds         "PHRASE_threat_refuse_reason_C_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4bdc 50 48 52        ds         "PHRASE_threat_refuse_reason_C_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4bfc 50 48 52        ds         "PHRASE_threat_refuse_reason_P_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4c1c 50 48 52        ds         "PHRASE_threat_refuse_reason_P_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4c3c 50 48 52        ds         "PHRASE_threat_too_late_reason_C_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4c60 50 48 52        ds         "PHRASE_threat_too_late_reason_C_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4c84 50 48 52        ds         "PHRASE_threat_too_late_reason_P_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4ca8 50 48 52        ds         "PHRASE_threat_too_late_reason_P_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4ccc 50 48 52        ds         "PHRASE_threat_comply_reason_C_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4cec 50 48 52        ds         "PHRASE_threat_comply_reason_C_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4d0c 50 48 52        ds         "PHRASE_threat_comply_reason_P_C"
+                 41 53 45 
+                 5f 74 68 
+        005d4d2c 50 48 52        ds         "PHRASE_threat_comply_reason_P_B"
+                 41 53 45 
+                 5f 74 68 
+        005d4d4c 50 48 52        ds         "PHRASE_famine_no_reason_C_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4d68 50 48 52        ds         "PHRASE_famine_no_reason_C_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4d84 50 48 52        ds         "PHRASE_famine_no_reason_P_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4da0 50 48 52        ds         "PHRASE_famine_no_reason_P_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4dbc 50 48 52        ds         "PHRASE_famine_refuse_reason_C_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4ddc 50 48 52        ds         "PHRASE_famine_refuse_reason_C_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4dfc 50 48 52        ds         "PHRASE_famine_refuse_reason_P_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4e1c 50 48 52        ds         "PHRASE_famine_refuse_reason_P_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4e3c 50 48 52        ds         "PHRASE_famine_too_late_reason_C_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4e60 50 48 52        ds         "PHRASE_famine_too_late_reason_C_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4e84 50 48 52        ds         "PHRASE_famine_too_late_reason_P_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4ea8 50 48 52        ds         "PHRASE_famine_too_late_reason_P_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4ecc 50 48 52        ds         "PHRASE_famine_comply_reason_C_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4eec 50 48 52        ds         "PHRASE_famine_comply_reason_C_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4f0c 50 48 52        ds         "PHRASE_famine_comply_reason_P_C"
+                 41 53 45 
+                 5f 66 61 
+        005d4f2c 50 48 52        ds         "PHRASE_famine_comply_reason_P_B"
+                 41 53 45 
+                 5f 66 61 
+        005d4f4c 50 48 52        ds         "PHRASE_project_no_reason_C_C"
+                 41 53 45 
+                 5f 70 72 
+        005d4f6c 50 48 52        ds         "PHRASE_project_no_reason_C_B"
+                 41 53 45 
+                 5f 70 72 
+        005d4f8c 50 48 52        ds         "PHRASE_project_no_reason_P_C"
+                 41 53 45 
+                 5f 70 72 
+        005d4fac 50 48 52        ds         "PHRASE_project_no_reason_P_B"
+                 41 53 45 
+                 5f 70 72 
+        005d4fcc 50 48 52        ds         "PHRASE_project_refuse_reason_C_C"
+                 41 53 45 
+                 5f 70 72 
+        005d4ff0 50 48 52        ds         "PHRASE_project_refuse_reason_C_B"
+                 41 53 45 
+                 5f 70 72 
+        005d5014 50 48 52        ds         "PHRASE_project_refuse_reason_P_C"
+                 41 53 45 
+                 5f 70 72 
+        005d5038 50 48 52        ds         "PHRASE_project_refuse_reason_P_B"
+                 41 53 45 
+                 5f 70 72 
+        005d505c 50 48 52        ds         "PHRASE_project_too_late_reason_C_C"
+                 41 53 45 
+                 5f 70 72 
+        005d5080 50 48 52        ds         "PHRASE_project_too_late_reason_C_B"
+                 41 53 45 
+                 5f 70 72 
+        005d50a4 50 48 52        ds         "PHRASE_project_too_late_reason_P_C"
+                 41 53 45 
+                 5f 70 72 
+        005d50c8 50 48 52        ds         "PHRASE_project_too_late_reason_P_B"
+                 41 53 45 
+                 5f 70 72 
+        005d50ec 50 48 52        ds         "PHRASE_project_comply_reason_C_C"
+                 41 53 45 
+                 5f 70 72 
+        005d5110 50 48 52        ds         "PHRASE_project_comply_reason_C_B"
+                 41 53 45 
+                 5f 70 72 
+        005d5134 50 48 52        ds         "PHRASE_project_comply_reason_P_C"
+                 41 53 45 
+                 5f 70 72 
+        005d5158 50 48 52        ds         "PHRASE_project_comply_reason_P_B"
+                 41 53 45 
+                 5f 70 72 
+        005d517c 50 48 52        ds         "PHRASE_great_festival_no_reason_C_C"
+                 41 53 45 
+                 5f 67 72 
+        005d51a0 50 48 52        ds         "PHRASE_great_festival_no_reason_C_B"
+                 41 53 45 
+                 5f 67 72 
+        005d51c4 50 48 52        ds         "PHRASE_great_festival_no_reason_P_C"
+                 41 53 45 
+                 5f 67 72 
+        005d51e8 50 48 52        ds         "PHRASE_great_festival_no_reason_P_B"
+                 41 53 45 
+                 5f 67 72 
+        005d520c 50 48 52        ds         "PHRASE_great_festival_refuse_reason_C_C"
+                 41 53 45 
+                 5f 67 72 
+        005d5234 50 48 52        ds         "PHRASE_great_festival_refuse_reason_C_B"
+                 41 53 45 
+                 5f 67 72 
+        005d525c 50 48 52        ds         "PHRASE_great_festival_refuse_reason_P_C"
+                 41 53 45 
+                 5f 67 72 
+        005d5284 50 48 52        ds         "PHRASE_great_festival_refuse_reason_P_B"
+                 41 53 45 
+                 5f 67 72 
+        005d52ac 50 48 52        ds         "PHRASE_great_festival_too_late_reason_C_C"
+                 41 53 45 
+                 5f 67 72 
+        005d52d8 50 48 52        ds         "PHRASE_great_festival_too_late_reason_C_B"
+                 41 53 45 
+                 5f 67 72 
+        005d5304 50 48 52        ds         "PHRASE_great_festival_too_late_reason_P_C"
+                 41 53 45 
+                 5f 67 72 
+        005d5330 50 48 52        ds         "PHRASE_great_festival_too_late_reason_P_B"
+                 41 53 45 
+                 5f 67 72 
+        005d535c 50 48 52        ds         "PHRASE_great_festival_comply_reason_C_C"
+                 41 53 45 
+                 5f 67 72 
+        005d5384 50 48 52        ds         "PHRASE_great_festival_comply_reason_C_B"
+                 41 53 45 
+                 5f 67 72 
+        005d53ac 50 48 52        ds         "PHRASE_great_festival_comply_reason_P_C"
+                 41 53 45 
+                 5f 67 72 
+        005d53d4 50 48 52        ds         "PHRASE_great_festival_comply_reason_P_B"
+                 41 53 45 
+                 5f 67 72 
+        005d53fc 50 48 52        ds         "PHRASE_general_request_no_reason_C_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5424 50 48 52        ds         "PHRASE_general_request_no_reason_C_B"
+                 41 53 45 
+                 5f 67 65 
+        005d544c 50 48 52        ds         "PHRASE_general_request_no_reason_P_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5474 50 48 52        ds         "PHRASE_general_request_no_reason_P_B"
+                 41 53 45 
+                 5f 67 65 
+        005d549c 50 48 52        ds         "PHRASE_general_request_refuse_reason_C_C"
+                 41 53 45 
+                 5f 67 65 
+        005d54c8 50 48 52        ds         "PHRASE_general_request_refuse_reason_C_B"
+                 41 53 45 
+                 5f 67 65 
+        005d54f4 50 48 52        ds         "PHRASE_general_request_refuse_reason_P_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5520 50 48 52        ds         "PHRASE_general_request_refuse_reason_P_B"
+                 41 53 45 
+                 5f 67 65 
+        005d554c 50 48 52        ds         "PHRASE_general_request_too_late_reason_C_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5578 50 48 52        ds         "PHRASE_general_request_too_late_reason_C_B"
+                 41 53 45 
+                 5f 67 65 
+        005d55a4 50 48 52        ds         "PHRASE_general_request_too_late_reason_P_C"
+                 41 53 45 
+                 5f 67 65 
+        005d55d0 50 48 52        ds         "PHRASE_general_request_too_late_reason_P_B"
+                 41 53 45 
+                 5f 67 65 
+        005d55fc 50 48 52        ds         "PHRASE_general_request_comply_reason_C_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5628 50 48 52        ds         "PHRASE_general_request_comply_reason_C_B"
+                 41 53 45 
+                 5f 67 65 
+        005d5654 50 48 52        ds         "PHRASE_general_request_comply_reason_P_C"
+                 41 53 45 
+                 5f 67 65 
+        005d5680 50 48 52        ds         "PHRASE_general_request_comply_reason_P_B"
+                 41 53 45 
+                 5f 67 65 
+        005d56ac 50 48 52        ds         "PHRASE_distant_battle_no_reason_C_C"
+                 41 53 45 
+                 5f 64 69 
+        005d56d0 50 48 52        ds         "PHRASE_distant_battle_no_reason_C_B"
+                 41 53 45 
+                 5f 64 69 
+        005d56f4 50 48 52        ds         "PHRASE_distant_battle_no_reason_P_C"
+                 41 53 45 
+                 5f 64 69 
+        005d5718 50 48 52        ds         "PHRASE_distant_battle_no_reason_P_B"
+                 41 53 45 
+                 5f 64 69 
+        005d573c 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_C_C"
+                 41 53 45 
+                 5f 64 69 
+        005d576c 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_C_B"
+                 41 53 45 
+                 5f 64 69 
+        005d579c 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_P_C"
+                 41 53 45 
+                 5f 64 69 
+        005d57cc 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_P_B"
+                 41 53 45 
+                 5f 64 69 
+        005d57fc 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_C_C"
+                 41 53 45 
+                 5f 64 69 
+        005d5824 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_C_B"
+                 41 53 45 
+                 5f 64 69 
+        005d584c 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_P_C"
+                 41 53 45 
+                 5f 64 69 
+        005d5874 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_P_B"
+                 41 53 45 
+                 5f 64 69 
+        005d589c 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_C_C"
+                 41 53 45 
+                 5f 64 69 
+        005d58c8 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_C_B"
+                 41 53 45 
+                 5f 64 69 
+        005d58f4 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_P_C"
+                 41 53 45 
+                 5f 64 69 
+        005d5920 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_P_B"
+                 41 53 45 
+                 5f 64 69 
+        005d594c 50 48 52        ds         "PHRASE_distant_battle_comply_reason_C_C"
+                 41 53 45 
+                 5f 64 69 
+        005d5974 50 48 52        ds         "PHRASE_distant_battle_comply_reason_C_B"
+                 41 53 45 
+                 5f 64 69 
+        005d599c 50 48 52        ds         "PHRASE_distant_battle_comply_reason_P_C"
+                 41 53 45 
+                 5f 64 69 
+        005d59c4 50 48 52        ds         "PHRASE_distant_battle_comply_reason_P_B"
+                 41 53 45 
+                 5f 64 69 
+        005d59ec 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_C_C"
+                 41 53 45 
+                 5f 65 67 
+        005d5a18 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_C_B"
+                 41 53 45 
+                 5f 65 67 
+        005d5a44 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_P_C"
+                 41 53 45 
+                 5f 65 67 
+        005d5a70 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_P_B"
+                 41 53 45 
+                 5f 65 67 
+        005d5a9c 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d5ad4 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d5b0c 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d5b44 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d5b7c 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d5bac 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d5bdc 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d5c0c 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d5c3c 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d5c70 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d5ca4 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d5cd8 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d5d0c 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d5d3c 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d5d6c 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d5d9c 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d5dcc 50 48 52        ds         "PHRASE_bedouin_attacks_you_disembarked_alert"
+                 41 53 45 
+                 5f 62 65 
+        005d5dfc 50 48 52        ds         "PHRASE_foreign_army_attacks_you_disembarked_a
+                 41 53 45 
+                 5f 66 6f 
+        005d5e30 50 48 52        ds         "PHRASE_eg_city_attacks_you_disembarked_alert"
+                 41 53 45 
+                 5f 65 67 
+        005d5e60 50 48 52        ds         "PHRASE_pharaoh_attacks_you_disembarked_alert"
+                 41 53 45 
+                 5f 70 68 
+        005d5e90 50 48 52        ds         "PHRASE_gift_no_reason_C_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5eac 50 48 52        ds         "PHRASE_gift_no_reason_P_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5ec8 50 48 52        ds         "PHRASE_gift_refused_reason_C_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5ee8 50 48 52        ds         "PHRASE_gift_refused_reason_P_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5f08 50 48 52        ds         "PHRASE_gift_forfeited_reason_C_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5f2c 50 48 52        ds         "PHRASE_gift_forfeited_reason_P_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5f50 50 48 52        ds         "PHRASE_gift_accepted_reason_C_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5f70 50 48 52        ds         "PHRASE_gift_accepted_reason_P_A"
+                 41 53 45 
+                 5f 67 69 
+        005d5f90 50 48 52        ds         "PHRASE_gift_refused_C"
+                 41 53 45 
+                 5f 67 69 
+        005d5fa8 50 48 52        ds         "PHRASE_gift_refused_P"
+                 41 53 45 
+                 5f 67 69 
+        005d5fc0 50 48 52        ds         "PHRASE_gift_postponed_C"
+                 41 53 45 
+                 5f 67 69 
+        005d5fd8 50 48 52        ds         "PHRASE_gift_postponed_P"
+                 41 53 45 
+                 5f 67 69 
+        005d5ff0 50 48 52        ds         "PHRASE_gift_cash_accepted_C"
+                 41 53 45 
+                 5f 67 69 
+        005d600c 50 48 52        ds         "PHRASE_gift_cash_accepted_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6028 50 48 52        ds         "PHRASE_gift_accepted_C"
+                 41 53 45 
+                 5f 67 69 
+        005d6040 50 48 52        ds         "PHRASE_gift_accepted_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6058 50 48 52        ds         "PHRASE_gift_forfeited_C"
+                 41 53 45 
+                 5f 67 69 
+        005d6070 50 48 52        ds         "PHRASE_gift_forfeited_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6088 50 48 52        ds         "PHRASE_gift_last_chance_C"
+                 41 53 45 
+                 5f 67 69 
+        005d60a4 50 48 52        ds         "PHRASE_gift_last_chance_P"
+                 41 53 45 
+                 5f 67 69 
+        005d60c0 50 48 52        ds         "PHRASE_gift_insufficient_space_C"
+                 41 53 45 
+                 5f 67 69 
+        005d60e4 50 48 52        ds         "PHRASE_gift_insufficient_space_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6108 50 48 52        ds         "PHRASE_gift_partial_space_C"
+                 41 53 45 
+                 5f 67 69 
+        005d6124 50 48 52        ds         "PHRASE_gift_partial_space_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6140 50 48 52        ds         "PHRASE_gift_cash_granted_C"
+                 41 53 45 
+                 5f 67 69 
+        005d615c 50 48 52        ds         "PHRASE_gift_cash_granted_P"
+                 41 53 45 
+                 5f 67 69 
+        005d6178 50 48 52        ds         "PHRASE_gift_granted_C"
+                 41 53 45 
+                 5f 67 69 
+        005d6190 50 48 52        ds         "PHRASE_gift_granted_P"
+                 41 53 45 
+                 5f 67 69 
+        005d61a8 50 48 52        ds         "PHRASE_gift_title_C"
+                 41 53 45 
+                 5f 67 69 
+        005d61bc 50 48 52        ds         "PHRASE_gift_title_P"
+                 41 53 45 
+                 5f 67 69 
+        005d61d0 50 48 52        ds         "PHRASE_bedouin_attacks_you_no_reason_A"
+                 41 53 45 
+                 5f 62 65 
+        005d61f8 50 48 52        ds         "PHRASE_bedouin_attacks_you_reason_A"
+                 41 53 45 
+                 5f 62 65 
+        005d621c 50 48 52        ds         "PHRASE_bedouin_attacks_you_city_attacked_alert"
+                 41 53 45 
+                 5f 62 65 
+        005d624c 50 48 52        ds         "PHRASE_bedouin_attacks_you_1month_warning"
+                 41 53 45 
+                 5f 62 65 
+        005d6278 50 48 52        ds         "PHRASE_bedouin_attacks_you_6month_warning"
+                 41 53 45 
+                 5f 62 65 
+        005d62a4 50 48 52        ds         "PHRASE_bedouin_attacks_you_1year_reminder"
+                 41 53 45 
+                 5f 62 65 
+        005d62d0 50 48 52        ds         "PHRASE_bedouin_attacks_you_2year_reminder"
+                 41 53 45 
+                 5f 62 65 
+        005d62fc 50 48 52        ds         "PHRASE_bedouin_attacks_you_initial_announceme
+                 41 53 45 
+                 5f 62 65 
+        005d632c 50 48 52        ds         "PHRASE_bedouin_attacks_you_title"
+                 41 53 45 
+                 5f 62 65 
+        005d6350 50 48 52        ds         "PHRASE_perfect_flood_no_reason_A"
+                 41 53 45 
+                 5f 70 65 
+        005d6374 50 48 52        ds         "PHRASE_perfect_flood_reason_A"
+                 41 53 45 
+                 5f 70 65 
+        005d6394 50 48 52        ds         "PHRASE_perfect_flood_initial_announcement"
+                 41 53 45 
+                 5f 70 65 
+        005d63c0 50 48 52        ds         "PHRASE_perfect_flood_title"
+                 41 53 45 
+                 5f 70 65 
+        005d63dc 50 48 52        ds         "PHRASE_flood_fails_no_reason_A"
+                 41 53 45 
+                 5f 66 6c 
+        005d63fc 50 48 52        ds         "PHRASE_flood_fails_reason_A"
+                 41 53 45 
+                 5f 66 6c 
+        005d6418 50 48 52        ds         "PHRASE_flood_fails_initial_announcement"
+                 41 53 45 
+                 5f 66 6c 
+        005d6440 50 48 52        ds         "PHRASE_flood_fails_title"
+                 41 53 45 
+                 5f 66 6c 
+        005d645c 50 48 52        ds         "PHRASE_landslide_no_reason_A"
+                 41 53 45 
+                 5f 6c 61 
+        005d647c 50 48 52        ds         "PHRASE_landslide_reason_A"
+                 41 53 45 
+                 5f 6c 61 
+        005d6498 50 48 52        ds         "PHRASE_landslide_initial_announcement"
+                 41 53 45 
+                 5f 6c 61 
+        005d64c0 50 48 52        ds         "PHRASE_landslide_title"
+                 41 53 45 
+                 5f 6c 61 
+        005d64d8 50 48 52        ds         "PHRASE_goldmine_cavein_no_reason_A"
+                 41 53 45 
+                 5f 67 6f 
+        005d64fc 50 48 52        ds         "PHRASE_goldmine_cavein_reason_A"
+                 41 53 45 
+                 5f 67 6f 
+        005d651c 50 48 52        ds         "PHRASE_goldmine_cavein_initial_announcement"
+                 41 53 45 
+                 5f 67 6f 
+        005d6548 50 48 52        ds         "PHRASE_goldmine_cavein_title"
+                 41 53 45 
+                 5f 67 6f 
+        005d6568 50 48 52        ds         "PHRASE_bad_water_no_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d6588 50 48 52        ds         "PHRASE_bad_water_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d65a4 50 48 52        ds         "PHRASE_bad_water_initial_announcement"
+                 41 53 45 
+                 5f 62 61 
+        005d65cc 50 48 52        ds         "PHRASE_bad_water_title"
+                 41 53 45 
+                 5f 62 61 
+        005d65e4 50 48 52        ds         "PHRASE_wage_change_no_reason_D_A"
+                 41 53 45 
+                 5f 77 61 
+        005d6608 50 48 52        ds         "PHRASE_wage_change_reason_D_A"
+                 41 53 45 
+                 5f 77 61 
+        005d6628 50 48 52        ds         "PHRASE_wage_change_initial_announcement_D"
+                 41 53 45 
+                 5f 77 61 
+        005d6654 50 48 52        ds         "PHRASE_wage_change_title_D"
+                 41 53 45 
+                 5f 77 61 
+        005d6670 50 48 52        ds         "PHRASE_wage_change_no_reason_I_A"
+                 41 53 45 
+                 5f 77 61 
+        005d6694 50 48 52        ds         "PHRASE_wage_change_reason_I_A"
+                 41 53 45 
+                 5f 77 61 
+        005d66b4 50 48 52        ds         "PHRASE_wage_change_initial_announcement_I"
+                 41 53 45 
+                 5f 77 61 
+        005d66e0 50 48 52        ds         "PHRASE_wage_change_title_I"
+                 41 53 45 
+                 5f 77 61 
+        005d66fc 50 48 52        ds         "PHRASE_sandstorm_no_reason_A"
+                 41 53 45 
+                 5f 73 61 
+        005d671c 50 48 52        ds         "PHRASE_sandstorm_reason_A"
+                 41 53 45 
+                 5f 73 61 
+        005d6738 50 48 52        ds         "PHRASE_sandstorm_initial_announcement"
+                 41 53 45 
+                 5f 73 61 
+        005d6760 50 48 52        ds         "PHRASE_sandstorm_title"
+                 41 53 45 
+                 5f 73 61 
+        005d6778 50 48 52        ds         "PHRASE_stormy_seas_no_reason_A"
+                 41 53 45 
+                 5f 73 74 
+        005d6798 50 48 52        ds         "PHRASE_stormy_seas_reason_A"
+                 41 53 45 
+                 5f 73 74 
+        005d67b4 50 48 52        ds         "PHRASE_stormy_seas_initial_announcement"
+                 41 53 45 
+                 5f 73 74 
+        005d67dc 50 48 52        ds         "PHRASE_stormy_seas_title"
+                 41 53 45 
+                 5f 73 74 
+        005d67f8 50 48 52        ds         "PHRASE_earthquake_no_reason_A"
+                 41 53 45 
+                 5f 65 61 
+        005d6818 50 48 52        ds         "PHRASE_earthquake_reason_A"
+                 41 53 45 
+                 5f 65 61 
+        005d6834 50 48 52        ds         "PHRASE_earthquake_initial_announcement"
+                 41 53 45 
+                 5f 65 61 
+        005d685c 50 48 52        ds         "PHRASE_earthquake_title"
+                 41 53 45 
+                 5f 65 61 
+        005d6874 50 48 52        ds         "PHRASE_demand_change_no_reason_D_A"
+                 41 53 45 
+                 5f 64 65 
+        005d6898 50 48 52        ds         "PHRASE_demand_change_reason_D_A"
+                 41 53 45 
+                 5f 64 65 
+        005d68b8 50 48 52        ds         "PHRASE_demand_change_initial_announcement_D"
+                 41 53 45 
+                 5f 64 65 
+        005d68e4 50 48 52        ds         "PHRASE_demand_change_title_D"
+                 41 53 45 
+                 5f 64 65 
+        005d6904 50 48 52        ds         "PHRASE_demand_change_no_reason_I_A"
+                 41 53 45 
+                 5f 64 65 
+        005d6928 50 48 52        ds         "PHRASE_demand_change_reason_I_A"
+                 41 53 45 
+                 5f 64 65 
+        005d6948 50 48 52        ds         "PHRASE_demand_change_initial_announcement_I"
+                 41 53 45 
+                 5f 64 65 
+        005d6974 50 48 52        ds         "PHRASE_demand_change_title_I"
+                 41 53 45 
+                 5f 64 65 
+        005d6994 50 48 52        ds         "PHRASE_price_change_no_reason_D_A"
+                 41 53 45 
+                 5f 70 72 
+        005d69b8 50 48 52        ds         "PHRASE_price_change_reason_D_A"
+                 41 53 45 
+                 5f 70 72 
+        005d69d8 50 48 52        ds         "PHRASE_price_change_initial_announcement_D"
+                 41 53 45 
+                 5f 70 72 
+        005d6a04 50 48 52        ds         "PHRASE_price_change_title_D"
+                 41 53 45 
+                 5f 70 72 
+        005d6a20 50 48 52        ds         "PHRASE_price_change_no_reason_I_A"
+                 41 53 45 
+                 5f 70 72 
+        005d6a44 50 48 52        ds         "PHRASE_price_change_reason_I_A"
+                 41 53 45 
+                 5f 70 72 
+        005d6a64 50 48 52        ds         "PHRASE_price_change_initial_announcement_I"
+                 41 53 45 
+                 5f 70 72 
+        005d6a90 50 48 52        ds         "PHRASE_price_change_title_I"
+                 41 53 45 
+                 5f 70 72 
+        005d6aac 50 48 52        ds         "PHRASE_rating_change_no_reason_D_A"
+                 41 53 45 
+                 5f 72 61 
+        005d6ad0 50 48 52        ds         "PHRASE_rating_change_reason_D_A"
+                 41 53 45 
+                 5f 72 61 
+        005d6af0 50 48 52        ds         "PHRASE_rating_change_initial_announcement_D"
+                 41 53 45 
+                 5f 72 61 
+        005d6b1c 50 48 52        ds         "PHRASE_rating_change_title_D"
+                 41 53 45 
+                 5f 72 61 
+        005d6b3c 50 48 52        ds         "PHRASE_rating_change_no_reason_I_A"
+                 41 53 45 
+                 5f 72 61 
+        005d6b60 50 48 52        ds         "PHRASE_rating_change_reason_I_A"
+                 41 53 45 
+                 5f 72 61 
+        005d6b80 50 48 52        ds         "PHRASE_rating_change_initial_announcement_I"
+                 41 53 45 
+                 5f 72 61 
+        005d6bac 50 48 52        ds         "PHRASE_rating_change_title_I"
+                 41 53 45 
+                 5f 72 61 
+        005d6bcc 50 48 52        ds         "PHRASE_foreign_army_attacks_you_no_reason_A"
+                 41 53 45 
+                 5f 66 6f 
+        005d6bf8 50 48 52        ds         "PHRASE_foreign_army_attacks_you_reason_A"
+                 41 53 45 
+                 5f 66 6f 
+        005d6c24 50 48 52        ds         "PHRASE_foreign_army_attacks_you_city_attacked
+                 41 53 45 
+                 5f 66 6f 
+        005d6c58 50 48 52        ds         "PHRASE_foreign_army_attacks_you_1month_warning"
+                 41 53 45 
+                 5f 66 6f 
+        005d6c88 50 48 52        ds         "PHRASE_foreign_army_attacks_you_6month_warning"
+                 41 53 45 
+                 5f 66 6f 
+        005d6cb8 50 48 52        ds         "PHRASE_foreign_army_attacks_you_1year_reminder"
+                 41 53 45 
+                 5f 66 6f 
+        005d6ce8 50 48 52        ds         "PHRASE_foreign_army_attacks_you_2year_reminder"
+                 41 53 45 
+                 5f 66 6f 
+        005d6d18 50 48 52        ds         "PHRASE_foreign_army_attacks_you_initial_annou
+                 41 53 45 
+                 5f 66 6f 
+        005d6d50 50 48 52        ds         "PHRASE_foreign_army_attacks_you_title"
+                 41 53 45 
+                 5f 66 6f 
+        005d6d78 50 48 52        ds         "PHRASE_eg_city_attacks_you_because_of_low_fav
+                 41 53 45 
+                 5f 65 67 
+        005d6da8 50 48 52        ds         "PHRASE_eg_city_attacks_you_no_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d6dd0 50 48 52        ds         "PHRASE_eg_city_attacks_you_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d6df4 50 48 52        ds         "PHRASE_eg_city_attacks_you_city_attacked_alert"
+                 41 53 45 
+                 5f 65 67 
+        005d6e24 50 48 52        ds         "PHRASE_eg_city_attacks_you_1month_warning"
+                 41 53 45 
+                 5f 65 67 
+        005d6e50 50 48 52        ds         "PHRASE_eg_city_attacks_you_6month_warning"
+                 41 53 45 
+                 5f 65 67 
+        005d6e7c 50 48 52        ds         "PHRASE_eg_city_attacks_you_1year_reminder"
+                 41 53 45 
+                 5f 65 67 
+        005d6ea8 50 48 52        ds         "PHRASE_eg_city_attacks_you_2year_reminder"
+                 41 53 45 
+                 5f 65 67 
+        005d6ed4 50 48 52        ds         "PHRASE_eg_city_attacks_you_initial_announceme
+                 41 53 45 
+                 5f 65 67 
+        005d6f04 50 48 52        ds         "PHRASE_eg_city_attacks_you_title"
+                 41 53 45 
+                 5f 65 67 
+        005d6f28 50 48 52        ds         "PHRASE_pharaoh_attacks_you_because_of_low_fav
+                 41 53 45 
+                 5f 70 68 
+        005d6f58 50 48 52        ds         "PHRASE_pharaoh_attacks_you_no_reason_A"
+                 41 53 45 
+                 5f 70 68 
+        005d6f80 50 48 52        ds         "PHRASE_pharaoh_attacks_you_reason_A"
+                 41 53 45 
+                 5f 70 68 
+        005d6fa4 50 48 52        ds         "PHRASE_pharaoh_attacks_you_city_attacked_alert"
+                 41 53 45 
+                 5f 70 68 
+        005d6fd4 50 48 52        ds         "PHRASE_pharaoh_attacks_you_1month_warning"
+                 41 53 45 
+                 5f 70 68 
+        005d7000 50 48 52        ds         "PHRASE_pharaoh_attacks_you_6month_warning"
+                 41 53 45 
+                 5f 70 68 
+        005d702c 50 48 52        ds         "PHRASE_pharaoh_attacks_you_1year_reminder"
+                 41 53 45 
+                 5f 70 68 
+        005d7058 50 48 52        ds         "PHRASE_pharaoh_attacks_you_2year_reminder"
+                 41 53 45 
+                 5f 70 68 
+        005d7084 50 48 52        ds         "PHRASE_pharaoh_attacks_you_initial_announceme
+                 41 53 45 
+                 5f 70 68 
+        005d70b4 50 48 52        ds         "PHRASE_pharaoh_attacks_you_title"
+                 41 53 45 
+                 5f 70 68 
+        005d70d8 50 48 52        ds         "PHRASE_acknowledgement_no_reason_A"
+                 41 53 45 
+                 5f 61 63 
+        005d70fc 50 48 52        ds         "PHRASE_acknowledgement_reason_A"
+                 41 53 45 
+                 5f 61 63 
+        005d711c 50 48 52        ds         "PHRASE_acknowledgement_initial_announcement"
+                 41 53 45 
+                 5f 61 63 
+        005d7148 50 48 52        ds         "PHRASE_acknowledgement_title"
+                 41 53 45 
+                 5f 61 63 
+        005d7168 50 48 52        ds         "PHRASE_battle_lost_no_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d7188 50 48 52        ds         "PHRASE_battle_lost_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d71a4 50 48 52        ds         "PHRASE_battle_lost_initial_announcement"
+                 41 53 45 
+                 5f 62 61 
+        005d71cc 50 48 52        ds         "PHRASE_battle_lost_title"
+                 41 53 45 
+                 5f 62 61 
+        005d71e8 50 48 52        ds         "PHRASE_battle_won_no_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d7208 50 48 52        ds         "PHRASE_battle_won_reason_A"
+                 41 53 45 
+                 5f 62 61 
+        005d7224 50 48 52        ds         "PHRASE_battle_won_initial_announcement"
+                 41 53 45 
+                 5f 62 61 
+        005d724c 50 48 52        ds         "PHRASE_battle_won_title"
+                 41 53 45 
+                 5f 62 61 
+        005d7264 50 48 52        ds         "PHRASE_eg_city_saved_no_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d7288 50 48 52        ds         "PHRASE_eg_city_saved_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d72a8 50 48 52        ds         "PHRASE_eg_city_saved_initial_announcement"
+                 41 53 45 
+                 5f 65 67 
+        005d72d4 50 48 52        ds         "PHRASE_eg_city_saved_title"
+                 41 53 45 
+                 5f 65 67 
+        005d72f0 50 48 52        ds         "PHRASE_siege_no_reason_A"
+                 41 53 45 
+                 5f 73 69 
+        005d730c 50 48 52        ds         "PHRASE_siege_reason_A"
+                 41 53 45 
+                 5f 73 69 
+        005d7324 50 48 52        ds         "PHRASE_siege_initial_announcement"
+                 41 53 45 
+                 5f 73 69 
+        005d7348 50 48 52        ds         "PHRASE_siege_title"
+                 41 53 45 
+                 5f 73 69 
+        005d735c 50 48 52        ds         "PHRASE_route_closed_no_reason_A"
+                 41 53 45 
+                 5f 72 6f 
+        005d737c 50 48 52        ds         "PHRASE_route_closed_reason_A"
+                 41 53 45 
+                 5f 72 6f 
+        005d739c 50 48 52        ds         "PHRASE_route_closed_initial_announcement"
+                 41 53 45 
+                 5f 72 6f 
+        005d73c8 50 48 52        ds         "PHRASE_route_closed_title"
+                 41 53 45 
+                 5f 72 6f 
+        005d73e4 50 48 52        ds         "PHRASE_route_opened_no_reason_A"
+                 41 53 45 
+                 5f 72 6f 
+        005d7404 50 48 52        ds         "PHRASE_route_opened_reason_A"
+                 41 53 45 
+                 5f 72 6f 
+        005d7424 50 48 52        ds         "PHRASE_route_opened_initial_announcement"
+                 41 53 45 
+                 5f 72 6f 
+        005d7450 50 48 52        ds         "PHRASE_route_opened_title"
+                 41 53 45 
+                 5f 72 6f 
+        005d746c 50 48 52        ds         "PHRASE_foreign_city_conquered_no_reason_A"
+                 41 53 45 
+                 5f 66 6f 
+        005d7498 50 48 52        ds         "PHRASE_foreign_city_conquered_reason_A"
+                 41 53 45 
+                 5f 66 6f 
+        005d74c0 50 48 52        ds         "PHRASE_foreign_city_conquered_initial_announc
+                 41 53 45 
+                 5f 66 6f 
+        005d74f4 50 48 52        ds         "PHRASE_foreign_city_conquered_title"
+                 41 53 45 
+                 5f 66 6f 
+        005d7518 50 48 52        ds         "PHRASE_eg_city_falls_no_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d753c 50 48 52        ds         "PHRASE_eg_city_falls_reason_A"
+                 41 53 45 
+                 5f 65 67 
+        005d755c 50 48 52        ds         "PHRASE_eg_city_falls_initial_announcement"
+                 41 53 45 
+                 5f 65 67 
+        005d7588 50 48 52        ds         "PHRASE_eg_city_falls_title"
+                 41 53 45 
+                 5f 65 67 
+        005d75a4 50 48 52        ds         "PHRASE_threat_no_reason_C_A"
+                 41 53 45 
+                 5f 74 68 
+        005d75c0 50 48 52        ds         "PHRASE_threat_no_reason_P_A"
+                 41 53 45 
+                 5f 74 68 
+        005d75dc 50 48 52        ds         "PHRASE_threat_refuse_reason_C_A"
+                 41 53 45 
+                 5f 74 68 
+        005d75fc 50 48 52        ds         "PHRASE_threat_refuse_reason_P_A"
+                 41 53 45 
+                 5f 74 68 
+        005d761c 50 48 52        ds         "PHRASE_threat_too_late_reason_C_A"
+                 41 53 45 
+                 5f 74 68 
+        005d7640 50 48 52        ds         "PHRASE_threat_too_late_reason_P_A"
+                 41 53 45 
+                 5f 74 68 
+        005d7664 50 48 52        ds         "PHRASE_threat_comply_reason_C_A"
+                 41 53 45 
+                 5f 74 68 
+        005d7684 50 48 52        ds         "PHRASE_threat_comply_reason_P_A"
+                 41 53 45 
+                 5f 74 68 
+        005d76a4 50 48 52        ds         "PHRASE_threat_warning_C"
+                 41 53 45 
+                 5f 74 68 
+        005d76bc 50 48 52        ds         "PHRASE_threat_warning_P"
+                 41 53 45 
+                 5f 74 68 
+        005d76d4 50 48 52        ds         "PHRASE_threat_overdue_C"
+                 41 53 45 
+                 5f 74 68 
+        005d76ec 50 48 52        ds         "PHRASE_threat_overdue_P"
+                 41 53 45 
+                 5f 74 68 
+        005d7704 50 48 52        ds         "PHRASE_threat_reminder_C"
+                 41 53 45 
+                 5f 74 68 
+        005d7720 50 48 52        ds         "PHRASE_threat_reminder_P"
+                 41 53 45 
+                 5f 74 68 
+        005d773c 50 48 52        ds         "PHRASE_threat_initial_announcement_C"
+                 41 53 45 
+                 5f 74 68 
+        005d7764 50 48 52        ds         "PHRASE_threat_initial_announcement_P"
+                 41 53 45 
+                 5f 74 68 
+        005d778c 50 48 52        ds         "PHRASE_threat_title_C"
+                 41 53 45 
+                 5f 74 68 
+        005d77a4 50 48 52        ds         "PHRASE_threat_title_P"
+                 41 53 45 
+                 5f 74 68 
+        005d77bc 50 48 52        ds         "PHRASE_famine_no_reason_C_A"
+                 41 53 45 
+                 5f 66 61 
+        005d77d8 50 48 52        ds         "PHRASE_famine_no_reason_P_A"
+                 41 53 45 
+                 5f 66 61 
+        005d77f4 50 48 52        ds         "PHRASE_famine_refuse_reason_C_A"
+                 41 53 45 
+                 5f 66 61 
+        005d7814 50 48 52        ds         "PHRASE_famine_refuse_reason_P_A"
+                 41 53 45 
+                 5f 66 61 
+        005d7834 50 48 52        ds         "PHRASE_famine_too_late_reason_C_A"
+                 41 53 45 
+                 5f 66 61 
+        005d7858 50 48 52        ds         "PHRASE_famine_too_late_reason_P_A"
+                 41 53 45 
+                 5f 66 61 
+        005d787c 50 48 52        ds         "PHRASE_famine_comply_reason_C_A"
+                 41 53 45 
+                 5f 66 61 
+        005d789c 50 48 52        ds         "PHRASE_famine_comply_reason_P_A"
+                 41 53 45 
+                 5f 66 61 
+        005d78bc 50 48 52        ds         "PHRASE_famine_warning_C"
+                 41 53 45 
+                 5f 66 61 
+        005d78d4 50 48 52        ds         "PHRASE_famine_warning_P"
+                 41 53 45 
+                 5f 66 61 
+        005d78ec 50 48 52        ds         "PHRASE_famine_overdue_C"
+                 41 53 45 
+                 5f 66 61 
+        005d7904 50 48 52        ds         "PHRASE_famine_overdue_P"
+                 41 53 45 
+                 5f 66 61 
+        005d791c 50 48 52        ds         "PHRASE_famine_reminder_C"
+                 41 53 45 
+                 5f 66 61 
+        005d7938 50 48 52        ds         "PHRASE_famine_reminder_P"
+                 41 53 45 
+                 5f 66 61 
+        005d7954 50 48 52        ds         "PHRASE_famine_initial_announcement_C"
+                 41 53 45 
+                 5f 66 61 
+        005d797c 50 48 52        ds         "PHRASE_famine_initial_announcement_P"
+                 41 53 45 
+                 5f 66 61 
+        005d79a4 50 48 52        ds         "PHRASE_famine_title_C"
+                 41 53 45 
+                 5f 66 61 
+        005d79bc 50 48 52        ds         "PHRASE_famine_title_P"
+                 41 53 45 
+                 5f 66 61 
+        005d79d4 50 48 52        ds         "PHRASE_project_no_reason_C_A"
+                 41 53 45 
+                 5f 70 72 
+        005d79f4 50 48 52        ds         "PHRASE_project_no_reason_P_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7a14 50 48 52        ds         "PHRASE_project_refuse_reason_C_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7a38 50 48 52        ds         "PHRASE_project_refuse_reason_P_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7a5c 50 48 52        ds         "PHRASE_project_too_late_reason_C_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7a80 50 48 52        ds         "PHRASE_project_too_late_reason_P_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7aa4 50 48 52        ds         "PHRASE_project_comply_reason_C_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7ac8 50 48 52        ds         "PHRASE_project_comply_reason_P_A"
+                 41 53 45 
+                 5f 70 72 
+        005d7aec 50 48 52        ds         "PHRASE_project_warning_C"
+                 41 53 45 
+                 5f 70 72 
+        005d7b08 50 48 52        ds         "PHRASE_project_warning_P"
+                 41 53 45 
+                 5f 70 72 
+        005d7b24 50 48 52        ds         "PHRASE_project_overdue_C"
+                 41 53 45 
+                 5f 70 72 
+        005d7b40 50 48 52        ds         "PHRASE_project_overdue_P"
+                 41 53 45 
+                 5f 70 72 
+        005d7b5c 50 48 52        ds         "PHRASE_project_reminder_C"
+                 41 53 45 
+                 5f 70 72 
+        005d7b78 50 48 52        ds         "PHRASE_project_reminder_P"
+                 41 53 45 
+                 5f 70 72 
+        005d7b94 50 48 52        ds         "PHRASE_project_initial_announcement_C"
+                 41 53 45 
+                 5f 70 72 
+        005d7bbc 50 48 52        ds         "PHRASE_project_initial_announcement_P"
+                 41 53 45 
+                 5f 70 72 
+        005d7be4 50 48 52        ds         "PHRASE_project_title_C"
+                 41 53 45 
+                 5f 70 72 
+        005d7bfc 50 48 52        ds         "PHRASE_project_title_P"
+                 41 53 45 
+                 5f 70 72 
+        005d7c14 50 48 52        ds         "PHRASE_great_festival_no_reason_C_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7c38 50 48 52        ds         "PHRASE_great_festival_no_reason_P_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7c5c 50 48 52        ds         "PHRASE_great_festival_refuse_reason_C_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7c84 50 48 52        ds         "PHRASE_great_festival_refuse_reason_P_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7cac 50 48 52        ds         "PHRASE_great_festival_too_late_reason_C_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7cd8 50 48 52        ds         "PHRASE_great_festival_too_late_reason_P_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7d04 50 48 52        ds         "PHRASE_great_festival_comply_reason_C_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7d2c 50 48 52        ds         "PHRASE_great_festival_comply_reason_P_A"
+                 41 53 45 
+                 5f 67 72 
+        005d7d54 50 48 52        ds         "PHRASE_great_festival_warning_C"
+                 41 53 45 
+                 5f 67 72 
+        005d7d74 50 48 52        ds         "PHRASE_great_festival_warning_P"
+                 41 53 45 
+                 5f 67 72 
+        005d7d94 50 48 52        ds         "PHRASE_great_festival_overdue_C"
+                 41 53 45 
+                 5f 67 72 
+        005d7db4 50 48 52        ds         "PHRASE_great_festival_overdue_P"
+                 41 53 45 
+                 5f 67 72 
+        005d7dd4 50 48 52        ds         "PHRASE_great_festival_reminder_C"
+                 41 53 45 
+                 5f 67 72 
+        005d7df8 50 48 52        ds         "PHRASE_great_festival_reminder_P"
+                 41 53 45 
+                 5f 67 72 
+        005d7e1c 50 48 52        ds         "PHRASE_great_festival_initial_announcement_C"
+                 41 53 45 
+                 5f 67 72 
+        005d7e4c 50 48 52        ds         "PHRASE_great_festival_initial_announcement_P"
+                 41 53 45 
+                 5f 67 72 
+        005d7e7c 50 48 52        ds         "PHRASE_great_festival_title_C"
+                 41 53 45 
+                 5f 67 72 
+        005d7e9c 50 48 52        ds         "PHRASE_great_festival_title_P"
+                 41 53 45 
+                 5f 67 72 
+        005d7ebc 50 48 52        ds         "PHRASE_general_request_no_reason_C_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7ee4 50 48 52        ds         "PHRASE_general_request_no_reason_P_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7f0c 50 48 52        ds         "PHRASE_general_request_refuse_reason_C_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7f38 50 48 52        ds         "PHRASE_general_request_refuse_reason_P_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7f64 50 48 52        ds         "PHRASE_general_request_too_late_reason_C_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7f90 50 48 52        ds         "PHRASE_general_request_too_late_reason_P_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7fbc 50 48 52        ds         "PHRASE_general_request_comply_reason_C_A"
+                 41 53 45 
+                 5f 67 65 
+        005d7fe8 50 48 52        ds         "PHRASE_general_request_comply_reason_P_A"
+                 41 53 45 
+                 5f 67 65 
+        005d8014 50 48 52        ds         "PHRASE_general_request_warning_C"
+                 41 53 45 
+                 5f 67 65 
+        005d8038 50 48 52        ds         "PHRASE_general_request_warning_P"
+                 41 53 45 
+                 5f 67 65 
+        005d805c 50 48 52        ds         "PHRASE_general_request_overdue_C"
+                 41 53 45 
+                 5f 67 65 
+        005d8080 50 48 52        ds         "PHRASE_general_request_overdue_P"
+                 41 53 45 
+                 5f 67 65 
+        005d80a4 50 48 52        ds         "PHRASE_general_request_reminder_C"
+                 41 53 45 
+                 5f 67 65 
+        005d80c8 50 48 52        ds         "PHRASE_general_request_reminder_P"
+                 41 53 45 
+                 5f 67 65 
+        005d80ec 50 48 52        ds         "PHRASE_general_request_initial_announcement_C"
+                 41 53 45 
+                 5f 67 65 
+        005d811c 50 48 52        ds         "PHRASE_general_request_initial_announcement_P"
+                 41 53 45 
+                 5f 67 65 
+        005d814c 50 48 52        ds         "PHRASE_general_request_title_C"
+                 41 53 45 
+                 5f 67 65 
+        005d816c 50 48 52        ds         "PHRASE_general_request_title_P"
+                 41 53 45 
+                 5f 67 65 
+        005d818c 50 48 52        ds         "PHRASE_distant_battle_no_reason_C_A"
+                 41 53 45 
+                 5f 64 69 
+        005d81b0 50 48 52        ds         "PHRASE_distant_battle_no_reason_P_A"
+                 41 53 45 
+                 5f 64 69 
+        005d81d4 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_C_A"
+                 41 53 45 
+                 5f 64 69 
+        005d8204 50 48 52        ds         "PHRASE_distant_battle_lost_battle_reason_P_A"
+                 41 53 45 
+                 5f 64 69 
+        005d8234 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_C_A"
+                 41 53 45 
+                 5f 64 69 
+        005d825c 50 48 52        ds         "PHRASE_distant_battle_refuse_reason_P_A"
+                 41 53 45 
+                 5f 64 69 
+        005d8284 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_C_A"
+                 41 53 45 
+                 5f 64 69 
+        005d82b0 50 48 52        ds         "PHRASE_distant_battle_too_late_reason_P_A"
+                 41 53 45 
+                 5f 64 69 
+        005d82dc 50 48 52        ds         "PHRASE_distant_battle_comply_reason_C_A"
+                 41 53 45 
+                 5f 64 69 
+        005d8304 50 48 52        ds         "PHRASE_distant_battle_comply_reason_P_A"
+                 41 53 45 
+                 5f 64 69 
+        005d832c 50 48 52        ds         "PHRASE_distant_battle_last_reminder_C"
+                 41 53 45 
+                 5f 64 69 
+        005d8354 50 48 52        ds         "PHRASE_distant_battle_last_reminder_P"
+                 41 53 45 
+                 5f 64 69 
+        005d837c 50 48 52        ds         "PHRASE_distant_battle_first_reminder_C"
+                 41 53 45 
+                 5f 64 69 
+        005d83a4 50 48 52        ds         "PHRASE_distant_battle_first_reminder_P"
+                 41 53 45 
+                 5f 64 69 
+        005d83cc 50 48 52        ds         "PHRASE_distant_battle_initial_announcement_C"
+                 41 53 45 
+                 5f 64 69 
+        005d83fc 50 48 52        ds         "PHRASE_distant_battle_initial_announcement_P"
+                 41 53 45 
+                 5f 64 69 
+        005d842c 50 48 52        ds         "PHRASE_distant_battle_title_C"
+                 41 53 45 
+                 5f 64 69 
+        005d844c 50 48 52        ds         "PHRASE_distant_battle_title_P"
+                 41 53 45 
+                 5f 64 69 
+        005d846c 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_C_A"
+                 41 53 45 
+                 5f 65 67 
+        005d8498 50 48 52        ds         "PHRASE_egyptian_city_attacked_no_reason_P_A"
+                 41 53 45 
+                 5f 65 67 
+        005d84c4 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d84fc 50 48 52        ds         "PHRASE_egyptian_city_attacked_lost_battle_rea
+                 41 53 45 
+                 5f 65 67 
+        005d8534 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d8564 50 48 52        ds         "PHRASE_egyptian_city_attacked_refuse_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d8594 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d85c8 50 48 52        ds         "PHRASE_egyptian_city_attacked_too_late_reason
+                 41 53 45 
+                 5f 65 67 
+        005d85fc 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_C
+                 41 53 45 
+                 5f 65 67 
+        005d862c 50 48 52        ds         "PHRASE_egyptian_city_attacked_comply_reason_P
+                 41 53 45 
+                 5f 65 67 
+        005d865c 50 48 52        ds         "PHRASE_egyptian_city_attacked_last_reminder_C"
+                 41 53 45 
+                 5f 65 67 
+        005d868c 50 48 52        ds         "PHRASE_egyptian_city_attacked_last_reminder_P"
+                 41 53 45 
+                 5f 65 67 
+        005d86bc 50 48 52        ds         "PHRASE_egyptian_city_attacked_first_reminder_C"
+                 41 53 45 
+                 5f 65 67 
+        005d86ec 50 48 52        ds         "PHRASE_egyptian_city_attacked_first_reminder_P"
+                 41 53 45 
+                 5f 65 67 
+        005d871c 50 48 52        ds         "PHRASE_egyptian_city_attacked_initial_announc
+                 41 53 45 
+                 5f 65 67 
+        005d8754 50 48 52        ds         "PHRASE_egyptian_city_attacked_initial_announc
+                 41 53 45 
+                 5f 65 67 
+        005d878c 50 48 52        ds         "PHRASE_egyptian_city_attacked_title_C"
+                 41 53 45 
+                 5f 65 67 
+        005d87b4 50 48 52        ds         "PHRASE_egyptian_city_attacked_title_P"
+                 41 53 45 
+                 5f 65 67 
+        005d87dc 71 75 61        ds         "quantity_total_secondary"
+                 6e 74 69 
+                 74 79 5f 
+        005d87f8 71 75 61        ds         "quantity_total_main"
+                 6e 74 69 
+                 74 79 5f 
+        005d880c 6e 75 6d        ds         "number_loads_remainder_secondary"
+                 62 65 72 
+                 5f 6c 6f 
+        005d8830 6e 75 6d        ds         "number_loads_remainder_main"
+                 62 65 72 
+                 5f 6c 6f 
+        005d884c 6e 75 6d        ds         "number_loads_current_course_secondary"
+                 62 65 72 
+                 5f 6c 6f 
+        005d8874 6e 75 6d        ds         "number_loads_current_course_main"
+                 62 65 72 
+                 5f 6c 6f 
+        005d8898 71 75 61        ds         "quantity_needed_remainder_secondary"
+                 6e 74 69 
+                 74 79 5f 
+        005d88bc 71 75 61        ds         "quantity_needed_remainder_main"
+                 6e 74 69 
+                 74 79 5f 
+        005d88dc 71 75 61        ds         "quantity_needed_current_course_secondary"
+                 6e 74 69 
+                 74 79 5f 
+        005d8908 71 75 61        ds         "quantity_needed_current_course_main"
+                 6e 74 69 
+                 74 79 5f 
+        005d892c 6e 75 6d        ds         "number_courses_complete"
+                 62 65 72 
+                 5f 63 6f 
+        005d8944 70 65 72        ds         "percent_complete"
+                 63 65 6e 
+                 74 5f 63 
+        005d8958 6d 6f 6e        ds         "monument_name"
+                 75 6d 65 
+                 6e 74 5f 

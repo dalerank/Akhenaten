@@ -538,7 +538,7 @@ static void button_messages(int param1, int param2) {
     window_message_list_show();
 }
 static void button_help(int param1, int param2) {
-    window_message_dialog_show(param2, window_city_draw_all);
+    window_message_dialog_show(param2, -1, window_city_draw_all);
 }
 static void button_go_to_problem(int param1, int param2) {
     int grid_offset = city_message_next_problem_area_grid_offset();

@@ -397,11 +397,11 @@ static bool handle_right_click(int type) {
         return false;
 
     if (type == INFO_FUNDS)
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
     else if (type == INFO_POPULATION)
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
     else if (type == INFO_DATE)
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, window_city_draw_all);
+        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
 
     return true;
 }
@@ -535,7 +535,7 @@ static void menu_options_autosave(int param) {
 static void menu_help_help(int param) {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, window_city_draw_all);
+    window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
 }
 static void menu_help_mouse_help(int param) {
     setting_cycle_tooltips();
@@ -548,7 +548,7 @@ static void menu_help_warnings(int param) {
 static void menu_help_about(int param) {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, window_city_draw_all);
+    window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
 }
 
 static void menu_advisors_go_to(int advisor) {
