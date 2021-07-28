@@ -146,6 +146,40 @@ enum {
 
     //
 
+    MESSAGE_TEMPLATE_ATTACK_CHEAT = 122,
+    MESSAGE_TEMPLATE_UNUSED = 123,
+    MESSAGE_TEMPLATE_ATK_PHARAOH_6MO_1MO = 124,
+    MESSAGE_TEMPLATE_ATK_PHARAOH_1YR = 125,
+    MESSAGE_TEMPLATE_ATK_PHARAOH_INIT_2YR = 126,
+    MESSAGE_TEMPLATE_ATK_CITY_6MO_1MO = 127,
+    MESSAGE_TEMPLATE_ATK_CITY_1YR = 128,
+    MESSAGE_TEMPLATE_ATK_CITY_INIT_2YR = 129,
+    MESSAGE_TEMPLATE_REQUEST = 130,
+    MESSAGE_TEMPLATE_GENERAL = 131,
+    MESSAGE_TEMPLATE_GIFT = 132,
+    MESSAGE_TEMPLATE_ATTACK_ALERT = 133,
+    MESSAGE_TEMPLATE_MONUMENT_CONGRATZ = 146,
+    MESSAGE_TEMPLATE_EARTHQUAKE = 261,
+    MESSAGE_TEMPLATE_CITY_SAVED = 262,
+    MESSAGE_TEMPLATE_DISTANT_BATTLE_WON = 263,
+    MESSAGE_TEMPLATE_LAND_TRADE_PROBLEM = 264,
+    MESSAGE_TEMPLATE_SEA_TRADE_PROBLEM = 265,
+    MESSAGE_TEMPLATE_CITY_UNDER_ATTACK = 266,
+    MESSAGE_TEMPLATE_WAGE_INCREASE = 267,
+    MESSAGE_TEMPLATE_WAGE_DECREASE = 268,
+    MESSAGE_TEMPLATE_CONTAMINATED_WATER = 269,
+    MESSAGE_TEMPLATE_GOLD_MINE_CAVEIN = 270,
+    MESSAGE_CLAY_PIT_CAVEIN = 271,
+    MESSAGE_TEMPLATE_DISTANT_BATTLE = 272,
+    MESSAGE_TEMPLATE_DEMAND_INCREASE = 273,
+    MESSAGE_TEMPLATE_DEMAND_DECREASE = 274,
+    MESSAGE_TEMPLATE_FESTIVAL = 275,
+    MESSAGE_TEMPLATE_CONSTR_PROJECT = 276,
+    MESSAGE_TEMPLATE_PRICE_INCREASE = 277,
+    MESSAGE_TEMPLATE_PRICE_DECREASE = 278,
+    MESSAGE_TEMPLATE_FOREIGN_CITY_FALLS = 338,
+    MESSAGE_TEMPLATE_FOREIGN_CITY_CONQUERED = 339,
+
     MESSAGE_NO_WORKING_DOCK_PH = 316 - 99,
 
     MESSAGE_TUTORIAL_FOOD_OR_FAMINE = 239 - 99,
@@ -254,33 +288,25 @@ typedef struct {
 } city_message;
 
 void city_message_init_scenario(void);
-
 void city_message_init_problem_areas(void);
 
 void city_message_disable_sound_for_next_message(void);
-
 void city_message_apply_sound_interval(int category);
 
+void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
 void city_message_post(bool use_popup, int message_id, int param1, int param2);
-
 void city_message_post_with_popup_delay(int category, int message_type, int param1, short param2);
-
 void city_message_post_with_message_delay(int category, int use_popup, int message_type, int delay);
 
 void city_message_process_queue(void);
-
 void city_message_sort_and_compact(void);
 
 int city_message_get_text_id(int message_id);
-
 int city_message_get_advisor(int message_type);
 
 void city_message_reset_category_count(int category);
-
 void city_message_increase_category_count(int category);
-
 int city_message_get_category_count(int category);
-
 void city_message_decrease_delays(void);
 
 int city_message_mark_population_shown(int population);
@@ -288,25 +314,18 @@ int city_message_mark_population_shown(int population);
 const city_message *city_message_get(int message_id);
 
 int city_message_set_current(int message_id);
-
 void city_message_mark_read(int message_id);
-
 void city_message_delete(int message_id);
-
 int city_message_count(void);
 
 int city_message_problem_area_count(void);
-
 int city_message_next_problem_area_grid_offset(void);
 
 void city_message_clear_scroll(void);
-
 int city_message_scroll_position(void);
-
 void city_message_set_scroll_position(int scroll_position);
 
 void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population);
-
 void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population);
 
 #endif // CITY_MESSAGE_H

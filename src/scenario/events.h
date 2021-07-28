@@ -45,6 +45,11 @@ enum {
 };
 
 enum {
+    EVENT_FACTION_REQUEST_FROM_CITY = 0,
+    EVENT_FACTION_REQUEST_FROM_PHARAOH = 1,
+};
+
+enum {
     EVENT_TRIGGER_ONCE = 0,
     EVENT_TRIGGER_ONLY_VIA_EVENT = 1,
     EVENT_TRIGGER_RECURRING = 2,
@@ -75,9 +80,9 @@ enum {
 
 enum {
     EVENT_STATE_INITIAL = 0,
-    EVENT_STATE_IN_PROGRESS = 1,
+    EVENT_STATE_IN_PROGRESS = 1, EVENT_STATE_OVERDUE = 1,
     EVENT_STATE_FINISHED = 2,
-    //
+    EVENT_STATE_FINISHED_LATE = 3,
     EVENT_STATE_FAILED = 4,
 };
 
@@ -98,11 +103,6 @@ enum {
     EVENT_ACTION_TOOLATE = 2,
     EVENT_ACTION_DEFEAT = 3,
 };
-
-#define MAX_EVENTS 150
-#define NUM_AUTO_PHRASE_VARIANTS 54
-#define NUM_PHRASES 601
-#define MAX_EVENTMSG_TEXT_DATA NUM_PHRASES * 200
 
 typedef struct {
     int num_total_header;
@@ -133,7 +133,7 @@ typedef struct {
     int months_initial;
     int months_left;
     int event_state;
-    int in_progress;
+    int is_active;
     int __unk11;
     int festival_deity;
     int __unk12_i8;
@@ -165,6 +165,8 @@ typedef struct {
     int __unk21;
     int __unk22;
 } event_ph_t;
+
+const int get_scenario_events_num();
 
 const event_ph_t *get_scenario_event(int id);
 uint8_t *get_eventmsg_text(int group_id, int index);

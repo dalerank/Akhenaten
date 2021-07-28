@@ -178,16 +178,6 @@ extern struct scenario_t {
     invasion_t invasions[40];
 
     struct {
-        event_ph_t event_list[MAX_EVENTS];
-        int *num_of_events = nullptr;
-        int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
-
-        uint8_t eventmsg_phrases_data[MAX_EVENTMSG_TEXT_DATA];
-        int eventmsg_line_offsets[NUM_PHRASES];
-        int eventmsg_group_offsets[NUM_PHRASES];
-    } events;
-
-    struct {
         int severity;
         int year;
     } earthquake;

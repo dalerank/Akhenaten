@@ -1,3 +1,4 @@
+#include <scenario/events.h>
 #include "message.h"
 
 #include "core/encoding.h"
@@ -148,44 +149,53 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
-//void city_event_message_post() {
-////    return;
-//
-////    use_popup = false; // temp
-//
-//    int id = new_message_id();
-//    if (id < 0)
-//        return;
-//    data.total_messages++;
-//    data.current_message_id = id;
-//
-//    city_message *msg = &data.messages[id];
-//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//        message_id += 99;
-//    msg->message_id = message_id;
-//    msg->is_read = 0;
-//    msg->year = game_time_year();
-//    msg->month = game_time_month();
-//    msg->param1 = param1;
-//    msg->param2 = param2;
-//    msg->sequence = data.next_message_sequence++;
-//
-//    int text_id = city_message_get_text_id(message_id);
-//    int lang_msg_type = lang_get_message(text_id)->message_type;
-//    if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
-//        data.problem_count = 1;
-//        window_invalidate();
-//    }
-//    if (use_popup && window_is(WINDOW_CITY))
-//        show_message_popup(id);
-//    else if (use_popup) {
-//        // add to queue to be processed when player returns to city
-//        enqueue_message(msg->sequence);
-//    } else if (should_play_sound)
-//        play_sound(text_id);
-//
-//    should_play_sound = true;
-//}
+void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2) {
+    int id = new_message_id();
+    if (id < 0)
+        return;
+    data.total_messages++;
+    data.current_message_id = id;
+
+    city_message *msg = &data.messages[id];
+    msg->MM_text_id = template_id;
+    msg->eventmsg_title_id = title_id;
+    msg->eventmsg_body_id = body_id;
+    msg->eventmsg_phrase_id = phrase_id;
+    msg->is_read = 0;
+    msg->year = game_time_year();
+    msg->month = game_time_month();
+    msg->param1 = param1;
+    msg->param2 = param2;
+    msg->sequence = data.next_message_sequence++;
+
+    const event_ph_t *event = get_scenario_event(event_id);
+    if (event->is_active) {
+        msg->req_resource = event->request_list_item;
+        msg->req_amount = event->request_list_amount;
+        msg->req_months_left = event->months_left;
+    } else {
+        msg->req_resource = event->item_1; // TODO
+        msg->req_amount = event->amount_FIXED; // TODO
+        msg->req_months_left = event->months_initial;
+    }
+
+    const event_ph_t *parent_event = get_scenario_event(parent_event_id);
+    msg->req_resource_past = parent_event->request_list_item;
+    msg->req_amount_past = parent_event->request_list_amount;
+
+    // default for sound info / template
+    int text_id = city_message_get_text_id(template_id);
+
+    if (use_popup && window_is(WINDOW_CITY))
+        show_message_popup(id);
+    else if (use_popup) {
+        // add to queue to be processed when player returns to city
+        enqueue_message(msg->sequence);
+    } else if (should_play_sound)
+        play_sound(text_id);
+
+    should_play_sound = true;
+}
 void city_message_post(bool use_popup, int message_id, int param1, int param2) {
 //    return;
 

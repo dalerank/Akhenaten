@@ -291,13 +291,13 @@ static int draw_background(void) {
     draw_title(y_line, 11);
     int requests = scenario_requests_active_count();
     if (requests == 0)
-        lang_text_draw(61, text_b + 0, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+        lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_GREEN);
     else if (requests == 1)
-        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_GREEN);
+        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_WHITE);
     else if (requests == 2)
-        lang_text_draw(61, text_b + 2, X_OFFSET, y_line, FONT_NORMAL_RED);
+        lang_text_draw(61, text_b + 1, X_OFFSET, y_line, FONT_NORMAL_RED);
     else
-        lang_text_draw(61, text_b + 3, X_OFFSET, y_line, FONT_NORMAL_RED);
+        lang_text_draw(61, text_b + 0, X_OFFSET, y_line, FONT_NORMAL_RED);
     y_line += 20;
 
     // nilometer
