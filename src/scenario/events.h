@@ -51,7 +51,11 @@ enum {
 
     EVENT_TRIGGER_ALREADY_FIRED = 4,
 
+    EVENT_TRIGGER_UNK_REQ_8 = 8,
+
     EVENT_TRIGGER_BY_RATING = 10,
+
+    EVENT_TRIGGER_UNK_REQ_12 = 12,
 };
 
 enum {
@@ -70,10 +74,11 @@ enum {
 };
 
 enum {
-    EVENT_TIMER_STATE_INITIAL = 0,
-    EVENT_TIMER_STATE_MISSED_ONCE = 1,
+    EVENT_STATE_INITIAL = 0,
+    EVENT_STATE_IN_PROGRESS = 1,
+    EVENT_STATE_FINISHED = 2,
     //
-    EVENT_TIMER_STATE_MISSED_COMPLETELY = 4,
+    EVENT_STATE_FAILED = 4,
 };
 
 enum {
@@ -94,17 +99,22 @@ enum {
     EVENT_ACTION_DEFEAT = 3,
 };
 
+#define MAX_EVENTS 150
+#define NUM_AUTO_PHRASE_VARIANTS 54
+#define NUM_PHRASES 601
+#define MAX_EVENTMSG_TEXT_DATA NUM_PHRASES * 200
+
 typedef struct {
     int num_total_header;
     int __unk01;
     int event_id;
     int type;
     int month;
-    int __unk03;
+    int request_list_item;
     int item_1;
     int item_2;
     int item_3;
-    int __unk04;
+    int request_list_amount;
     int amount_FIXED;
     int amount_MIN;
     int amount_MAX;
@@ -122,7 +132,7 @@ typedef struct {
     int __unk07;
     int months_initial;
     int months_left;
-    int timer_trigger_state;
+    int event_state;
     int in_progress;
     int __unk11;
     int festival_deity;
@@ -133,7 +143,7 @@ typedef struct {
     // ...
     int on_tooLate_action;
     int on_defeat_action;
-    int event_source_faction;
+    int sender_faction;
     int __unk13_i8;
     int __unk14;
     int route_FIXED;

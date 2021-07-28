@@ -34,7 +34,8 @@
 33:Paint
 34:Lamps
   35:Marble
-36:[????]
+    36:Deben
+    37:Troops
 
 
 house inventory:

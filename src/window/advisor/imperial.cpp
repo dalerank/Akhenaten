@@ -53,13 +53,13 @@ static void draw_request(int index, const scenario_request *request) {
     if (index >= 5)
         return;
 
-    button_border_draw(38, 96 + 42 * index, 560, 40, 0);
-    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);
+    button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 110, 100 + 42 * index);
-    lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
+    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
+    int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE);
+    lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
 
-    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
+    width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
     lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
 
     if (request->resource == RESOURCE_DENARII) {
@@ -183,20 +183,22 @@ static void draw_foreground(void) {
     lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
 
     // Request buttons
-    if (get_request_status(0))
-        button_border_draw(38, 96, 560, 40, focus_button_id == 4);
+    for (int i = 0; i < 5; i++) {
+        if (get_request_status(i))
+            button_border_draw(38, 96 + i * 42, 560, 42, focus_button_id == (4 + i));
+    }
 
-    if (get_request_status(1))
-        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-
-    if (get_request_status(2))
-        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-
-    if (get_request_status(3))
-        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-
-    if (get_request_status(4))
-        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
+//    if (get_request_status(1))
+//        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
+//
+//    if (get_request_status(2))
+//        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
+//
+//    if (get_request_status(3))
+//        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
+//
+//    if (get_request_status(4))
+//        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
 
 }
 

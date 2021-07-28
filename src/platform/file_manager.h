@@ -54,6 +54,6 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode);
  * @param filename The file to remove
  * @return true if removal was successful, false otherwise
  */
-int platform_file_manager_remove_file(const char *filename);
+bool platform_file_manager_remove_file(const char *filename);
 
 #endif // PLATFORM_FILE_MANAGER_H

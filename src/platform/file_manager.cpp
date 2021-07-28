@@ -184,7 +184,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
     return fp;
 }
 
-int platform_file_manager_remove_file(const char *filename) {
+bool platform_file_manager_remove_file(const char *filename) {
     wchar_t *wfile = utf8_to_wchar(filename);
     int result = _wremove(wfile);
     free(wfile);

@@ -20,7 +20,7 @@ typedef struct {
 
 void scenario_request_init(void);
 
-void scenario_request_process(void);
+void scenario_request_process_C3(void);
 void scenario_request_dispatch(int id);
 
 int scenario_requests_active_count();

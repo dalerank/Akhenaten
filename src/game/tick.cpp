@@ -78,7 +78,7 @@ static void advance_month(void) {
     scenario_distant_battle_process();
     if (GAME_ENV == ENGINE_ENV_C3) {
         scenario_invasion_process();
-        scenario_request_process();
+        scenario_request_process_C3();
         scenario_demand_change_process();
         scenario_price_change_process();
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) // Pharaoh uses its own event system

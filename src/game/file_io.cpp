@@ -59,7 +59,7 @@
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
-static int savegame_version;
+static int savegame_version[2];
 
 typedef struct {
     buffer *buf;
@@ -465,9 +465,9 @@ static void init_savegame_data(bool expanded) {
         }
         case ENGINE_ENV_PHARAOH: {
             state->SCENARIO.mission_index = create_savegame_piece(4, false, "SCENARIO.mission_index");
-            state->file_version = create_savegame_piece(4, false, "file_version");
+            state->file_version = create_savegame_piece(8, false, "file_version");
 //                state->unk01 = create_savegame_piece(3, false, ""); // 3 bytes
-            state->junk1 = create_savegame_piece(6004, false, "junk1"); // ?????
+            state->junk1 = create_savegame_piece(6000, false, "junk1"); // ?????
 
             state->image_grid = create_savegame_piece(207936, true, "image_grid");                         // (228²) * 4 <<
             state->edge_grid = create_savegame_piece(51984, true, "edge_grid");                            // (228²) * 1
@@ -734,7 +734,8 @@ static void scenario_save_to_state(scenario_state *file) {
 //    file->end_marker->skip(4);
 }
 static void savegame_load_from_state(savegame_state *state) {
-//    savegame_version = state->file_version->read_i32();
+    savegame_version[0] = state->file_version->read_i32();
+    savegame_version[1] = state->file_version->read_i32();
 
     scenario_load_state(&state->SCENARIO);
 //    scenario_settings_load_state(state->scenario_campaign_mission,
@@ -823,7 +824,7 @@ static void savegame_load_from_state(savegame_state *state) {
 //    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state) {
-    state->file_version->write_i32(savegame_version);
+    state->file_version->write_i32(savegame_version[0]);
 
     scenario_save_state(&state->SCENARIO);
 //    scenario_settings_save_state(state->scenario_campaign_mission,
@@ -1018,8 +1019,9 @@ static void savegame_write_to_file(FILE *fp) {
     }
 }
 
-int game_file_io_read_scenario(const char *filename) {
-    return 0;
+bool game_file_io_read_scenario(const char *filename) {
+    // TODO
+    return false;
 //    log_info("Loading scenario", filename, 0);
 //    init_scenario_data();
 //    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
@@ -1038,8 +1040,9 @@ int game_file_io_read_scenario(const char *filename) {
 //    scenario_load_from_state(&scenario_data.state);
 //    return 1;
 }
-int game_file_io_write_scenario(const char *filename) {
-    return 0;
+bool game_file_io_write_scenario(const char *filename) {
+    // TODO
+    return false;
 //    log_info("Saving scenario", filename, 0);
 //    init_scenario_data();
 //    scenario_save_to_state(&scenario_data.state);
@@ -1055,7 +1058,7 @@ int game_file_io_write_scenario(const char *filename) {
 //    file_close(fp);
 //    return 1;
 }
-int game_file_io_read_saved_game(const char *filename, int offset) {
+bool game_file_io_read_saved_game(const char *filename, int offset) {
     if (file_has_extension(filename, "pak")) {
         log_info("Loading saved game.", filename, 0);
         init_savegame_data(false);
@@ -1070,7 +1073,7 @@ int game_file_io_read_saved_game(const char *filename, int offset) {
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
-        return 0;
+        return false;
     }
     if (offset)
         fseek(fp, offset, SEEK_SET);
@@ -1080,12 +1083,12 @@ int game_file_io_read_saved_game(const char *filename, int offset) {
     file_close(fp);
     if (!result) {
         log_error("Unable to load game, unable to read savefile.", 0, 0);
-        return 0;
+        return false;
     }
     savegame_load_from_state(&savegame_data.state);
-    return 1;
+    return true;
 }
-int game_file_io_write_saved_game(const char *filename) {
+bool game_file_io_write_saved_game(const char *filename) {
     init_savegame_data(true);
 
     log_info("Saving game", filename, 0);
@@ -1095,13 +1098,13 @@ int game_file_io_write_saved_game(const char *filename) {
     FILE *fp = file_open(filename, "wb");
     if (!fp) {
         log_error("Unable to save game", 0, 0);
-        return 0;
+        return false;
     }
     savegame_write_to_file(fp);
     file_close(fp);
-    return 1;
+    return true;
 }
-int game_file_io_delete_saved_game(const char *filename) {
+bool game_file_io_delete_saved_game(const char *filename) {
     log_info("Deleting game", filename, 0);
     int result = file_remove(filename);
     if (!result)

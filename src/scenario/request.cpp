@@ -11,6 +11,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/data.h"
+#include "events.h"
 
 void scenario_request_init(void) {
     for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
@@ -22,7 +23,7 @@ void scenario_request_init(void) {
     }
 }
 
-void scenario_request_process(void) {
+void scenario_request_process_C3(void) {
     for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
         if (!scenario.requests[i].resource || scenario.requests[i].state > REQUEST_STATE_DISPATCHED_LATE)
             continue;
@@ -39,7 +40,7 @@ void scenario_request_process(void) {
                     city_ratings_change_favor(scenario.requests[i].favor / 2);
                 }
                 scenario.requests[i].state = REQUEST_STATE_RECEIVED;
-                scenario.requests[i].visible = 0;
+                scenario.requests[i].visible = false;
             }
         } else {
             // normal or overdue
@@ -59,7 +60,7 @@ void scenario_request_process(void) {
                     if (scenario.requests[i].months_to_comply <= 0) {
                         city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_IGNORED;
-                        scenario.requests[i].visible = 0;
+                        scenario.requests[i].visible = false;
                         city_ratings_reduce_favor_missed_request(5);
                     }
                 }
@@ -75,7 +76,7 @@ void scenario_request_process(void) {
                     return;
                 if (game_time_year() == year + scenario.requests[i].year &&
                     game_time_month() == scenario.requests[i].month) {
-                    scenario.requests[i].visible = 1;
+                    scenario.requests[i].visible = true;
                     if (city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount)
                         scenario.requests[i].can_comply_dialog_shown = 1;
 
@@ -83,9 +84,8 @@ void scenario_request_process(void) {
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
                     else if (scenario.requests[i].resource == RESOURCE_TROOPS_C3)
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
-                    else {
+                    else
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
-                    }
                 }
             }
         }
@@ -122,20 +122,51 @@ int scenario_requests_active_count() {
 
 const scenario_request *scenario_request_get(int id) {
     static scenario_request request;
-    request.id = id;
-    request.amount = scenario.requests[id].amount;
-    request.resource = scenario.requests[id].resource;
-    request.state = scenario.requests[id].state;
-    request.months_to_comply = scenario.requests[id].months_to_comply;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        request.id = id;
+        request.amount = scenario.requests[id].amount;
+        request.resource = scenario.requests[id].resource;
+        request.state = scenario.requests[id].state;
+        request.months_to_comply = scenario.requests[id].months_to_comply;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        request.id = id;
+        auto event = get_scenario_event(id);
+        request.amount = event->request_list_amount;
+        request.resource = event->request_list_item;
+        request.state = event->event_state;
+        request.months_to_comply = event->months_left;
+    }
     return &request;
 }
 const scenario_request *scenario_request_get_visible(int index) {
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
-        if (scenario.requests[i].resource && scenario.requests[i].visible &&
-            scenario.requests[i].state <= 1) {
-            if (index == 0)
-                return scenario_request_get(i);
-            index--; // I have no idea
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+            if (scenario.requests[i].resource && scenario.requests[i].visible &&
+                scenario.requests[i].state <= 1) {
+                if (index == 0)
+                    return scenario_request_get(i);
+                index--; // I have no idea
+            }
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        int event_index = -1;
+        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+            const event_ph_t *event;
+            do {
+                event_index++;
+                if (event_index >= *scenario.events.num_of_events)
+                    return 0;
+                event = get_scenario_event(event_index);
+            } while (event->type != EVENT_TYPE_REQUEST || event->in_progress == 0);
+
+            if (event->event_state <= 1)
+//            if (scenario.requests[i].resource && scenario.requests[i].visible &&
+//                scenario.requests[i].state <= 1)
+            {
+                if (index == 0)
+                    return scenario_request_get(event_index);
+                index--;
+            }
         }
     }
     return 0;
@@ -143,10 +174,20 @@ const scenario_request *scenario_request_get_visible(int index) {
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
     int index = start_index;
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
-        if (scenario.requests[i].resource && scenario.requests[i].visible) {
-            callback(index, scenario_request_get(i));
-            index++;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+            if (scenario.requests[i].resource && scenario.requests[i].visible) {
+                callback(index, scenario_request_get(i));
+                index++;
+            }
+        }
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+            auto request = scenario_request_get_visible(i);
+            if (request) {
+                callback(index, request);
+                index++;
+            }
         }
     }
     return index;

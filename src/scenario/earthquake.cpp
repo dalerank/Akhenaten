@@ -50,7 +50,7 @@ void scenario_earthquake_init(void) {
             data.max_delay = 6;
             break;
     }
-    data.state = EVENT_NOT_STARTED;
+    data.state = EVENT_STATE_INITIAL;
     for (int i = 0; i < 4; i++) {
         data.expand[i].x = scenario.earthquake_point.x;
         data.expand[i].y = scenario.earthquake_point.y;
@@ -93,23 +93,23 @@ void scenario_earthquake_process(void) {
     if (scenario.earthquake.severity == EARTHQUAKE_NONE ||
         scenario.earthquake_point.x == -1 || scenario.earthquake_point.y == -1)
         return;
-    if (data.state == EVENT_NOT_STARTED) {
+    if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year &&
             game_time_month() == data.month) {
-            data.state = EVENT_IN_PROGRESS;
+            data.state = EVENT_STATE_IN_PROGRESS;
             data.duration = 0;
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
             city_message_post(true, MESSAGE_EARTHQUAKE, 0,
                               map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
-    } else if (data.state == EVENT_IN_PROGRESS) {
+    } else if (data.state == EVENT_STATE_IN_PROGRESS) {
         data.delay++;
         if (data.delay >= data.max_delay) {
             data.delay = 0;
             data.duration++;
             if (data.duration >= data.max_duration)
-                data.state = EVENT_FINISHED;
+                data.state = EVENT_STATE_FINISHED;
 
             int dx, dy, index;
             switch (random_byte() & 0xf) {
@@ -208,7 +208,7 @@ void scenario_earthquake_process(void) {
 }
 
 int scenario_earthquake_is_in_progress(void) {
-    return data.state == EVENT_IN_PROGRESS;
+    return data.state == EVENT_STATE_IN_PROGRESS;
 }
 
 void scenario_earthquake_save_state(buffer *buf) {

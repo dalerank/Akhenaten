@@ -69,10 +69,10 @@ void file_remove_extension(uint8_t *filename) {
     }
 }
 
-int file_exists(const char *filename, int localizable) {
+bool file_exists(const char *filename, int localizable) {
     return NULL != dir_get_file(filename, localizable);
 }
 
-int file_remove(const char *filename) {
+bool file_remove(const char *filename) {
     return platform_file_manager_remove_file(filename);
 }

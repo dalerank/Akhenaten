@@ -68,13 +68,13 @@ void file_remove_extension(uint8_t *filename);
  * @param localizable Whether the file may be localized (see core/dir.h)
  * @return boolean true if the file exists, false otherwise
  */
-int file_exists(const char *filename, int localizable);
+bool file_exists(const char *filename, int localizable);
 
 /**
  * Remove a file
  * @param filename Filename to remove
  * @return boolean true if the file removal was successful, false otherwise
  */
-int file_remove(const char *filename);
+bool file_remove(const char *filename);
 
 #endif // CORE_FILE_H

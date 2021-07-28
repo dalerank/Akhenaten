@@ -135,12 +135,6 @@ static void write_to_body_text_buffer(const uint8_t *in, uint8_t **out) {
     int size = string_length(in);
     memcpy(*out, in, size);
     *out += size;
-//    for (int c = 0; c < 200; c++) {
-//        if (*in == '\0')
-//            return;
-//        **curr_byte = *(in + c);
-//        *curr_byte++;
-//    }
 }
 static void eventmsg_template_fill_in_tag(uint8_t *curr_byte, uint8_t **curr_byte_out, const city_message *msg, bool details_from_past_events) {
 
@@ -199,11 +193,6 @@ static void eventmsg_template_fill_in_tag(uint8_t *curr_byte, uint8_t **curr_byt
     }
 }
 static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, bool phrase_modifier) {
-//    *data.body_text = '\0';
-
-//    uint8_t *template_ptr = data.body_template;
-//    uint8_t *full_ptr = data.body_text;
-
     auto msg = city_message_get(data.message_id);
 
     uint8_t *curr_byte_out = out_ptr;
@@ -224,11 +213,9 @@ static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, b
         } else {
             memcpy(curr_byte_out, curr_byte, 1);
             curr_byte_out++;
-//            *out_ptr = *curr_byte;
             if ((char)*curr_byte == '\0')
                 return;
         }
-//        out_ptr++;
     }
 }
 static void set_city_message(int year, int month,
@@ -368,17 +355,18 @@ static void draw_city_message_text(const lang_message *msg) {
                                        data.x_text + 8, data.y_text + 56, 16 * data.text_width_blocks - 16,
                                        data.text_height_blocks - 1, 0);
             if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-                const scenario_request *request = scenario_request_get(player_message.param1);
+                // in C3, the data is fetched from the request structure.
+                // in Pharaoh, the data is stored with the message
+//                const scenario_request *request = scenario_request_get(player_message.param1);
+                auto city_msg = city_message_get(data.message_id);
                 int y_offset = data.y_text + 86 + lines * 16;
-                text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE);
-                image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5);
-                lang_text_draw(23, request->resource,
-                               data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
-                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-                    int width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x_text + 200, y_offset,
-                                                      FONT_NORMAL_WHITE);
+                image_draw(resource_image(city_msg->req_resource), data.x_text + 8, y_offset - 4);
+                int width = text_draw_number(stack_proper_quantity(city_msg->req_amount, city_msg->req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE);
+                lang_text_draw(23, city_msg->req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE);
+//                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
+                    width = lang_text_draw_amount(8, 4, city_msg->req_months_left, data.x_text + 200, y_offset, FONT_NORMAL_WHITE);
                     lang_text_draw(12, 2, data.x_text + 200 + width, y_offset, FONT_NORMAL_WHITE);
-                }
+//                }
             }
             break;
         }
