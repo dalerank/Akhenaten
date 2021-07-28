@@ -23,7 +23,7 @@ static image_button buttons[] = {
 };
 
 static struct {
-    popup_dialog_type type;
+    int popup_text_offset;
     int custom_text_group;
     int custom_text_id;
     int ok_clicked;
@@ -31,13 +31,12 @@ static struct {
     int has_buttons;
 } data;
 
-static int init(popup_dialog_type type, int custom_text_group, int custom_text_id,
-                void (*close_func)(bool accepted), int has_ok_cancel_buttons) {
+static int init(int type, int custom_text_group, int custom_text_id, void (*close_func)(bool accepted), int has_ok_cancel_buttons) {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
-    data.type = type;
+    data.popup_text_offset = type;
     data.custom_text_group = custom_text_group;
     data.custom_text_id = custom_text_id;
     data.ok_clicked = 0;
@@ -50,13 +49,12 @@ static void draw_background(void) {
     window_draw_underlying_window();
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 10);
-    if (data.type >= 0) {
-        lang_text_draw_centered(GROUP, data.type, 80, 100, 480, FONT_LARGE_BLACK);
-        if (lang_text_get_width(GROUP, data.type + 1, FONT_NORMAL_BLACK) >= 420)
-            lang_text_draw_multiline(GROUP, data.type + 1, 110, 140, 420, FONT_NORMAL_BLACK);
-        else {
-            lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
-        }
+    if (data.popup_text_offset >= 0) {
+        lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK);
+        if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK) >= 420)
+            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, 110, 140, 420, FONT_NORMAL_BLACK);
+        else
+            lang_text_draw_centered(GROUP, data.popup_text_offset + 1, 80, 140, 480, FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
         lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
@@ -96,8 +94,7 @@ static void confirm(void) {
     data.close_func(1);
 }
 
-void window_popup_dialog_show(popup_dialog_type type,
-                              void (*close_func)(bool accepted), int has_ok_cancel_buttons) {
+void window_popup_dialog_show(int type, void (*close_func)(bool accepted), int has_ok_cancel_buttons) {
     if (init(type, 0, 0, close_func, has_ok_cancel_buttons)) {
         window_type window = {
                 WINDOW_POPUP_DIALOG,
@@ -108,8 +105,7 @@ void window_popup_dialog_show(popup_dialog_type type,
         window_show(&window);
     }
 }
-void window_popup_dialog_show_confirmation(int text_group, int text_id,
-                                           void (*close_func)(bool accepted)) {
+void window_popup_dialog_show_confirmation(int text_group, int text_id, void (*close_func)(bool accepted)) {
     if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, 1)) {
         window_type window = {
                 WINDOW_POPUP_DIALOG,

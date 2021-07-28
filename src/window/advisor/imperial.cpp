@@ -49,6 +49,34 @@ static generic_button imperial_buttons[] = {
 static int focus_button_id;
 static int selected_request_id;
 
+static int get_request_status(int index) {
+    int num_requests = 0;
+    if (city_military_months_until_distant_battle() > 0 &&
+        !city_military_distant_battle_roman_army_is_traveling_forth()) {
+        num_requests = 1; // if there's an army request, display that first?
+        if (index == 0) {
+            if (city_military_total_legions() <= 0)
+                return STATUS_NO_LEGIONS_AVAILABLE;
+            else if (city_military_empire_service_legions() <= 0)
+                return STATUS_NO_LEGIONS_SELECTED;
+            else
+                return STATUS_CONFIRM_SEND_LEGIONS;
+        }
+    }
+    const scenario_request *request = scenario_request_get_visible(index - num_requests);
+    if (request) {
+        if ((request->resource == RESOURCE_DENARII && GAME_ENV == ENGINE_ENV_C3) ||
+            (request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_PHARAOH)) {
+            if (city_finance_treasury() <= request->amount)
+                return STATUS_NOT_ENOUGH_RESOURCES;
+        } else {
+            if (city_resource_count(request->resource) < request->amount)
+                return STATUS_NOT_ENOUGH_RESOURCES;
+        }
+        return request->id + 1;
+    }
+    return 0;
+}
 static void draw_request(int index, const scenario_request *request) {
     if (index >= 5)
         return;
@@ -130,39 +158,8 @@ static int draw_background(void) {
     if (!num_requests)
         lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE);
 
-
     return ADVISOR_HEIGHT;
 }
-
-static int get_request_status(int index) {
-    int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0 &&
-        !city_military_distant_battle_roman_army_is_traveling_forth()) {
-        num_requests = 1; // if there's an army request, display that first?
-        if (index == 0) {
-            if (city_military_total_legions() <= 0)
-                return STATUS_NO_LEGIONS_AVAILABLE;
-            else if (city_military_empire_service_legions() <= 0)
-                return STATUS_NO_LEGIONS_SELECTED;
-            else
-                return STATUS_CONFIRM_SEND_LEGIONS;
-        }
-    }
-    const scenario_request *request = scenario_request_get_visible(index - num_requests);
-    if (request) {
-        if ((request->resource == RESOURCE_DENARII && GAME_ENV == ENGINE_ENV_C3) ||
-            (request->resource == RESOURCE_GOLD && GAME_ENV == ENGINE_ENV_PHARAOH)) {
-            if (city_finance_treasury() <= request->amount)
-                return STATUS_NOT_ENOUGH_RESOURCES;
-        } else {
-            if (city_resource_count(request->resource) < request->amount)
-                return STATUS_NOT_ENOUGH_RESOURCES;
-        }
-        return request->id + 1;
-    }
-    return 0;
-}
-
 static void draw_foreground(void) {
     inner_panel_draw(64, 324, 32, 6);
 
@@ -209,33 +206,29 @@ static int handle_mouse(const mouse *m) {
 static void button_donate_to_city(int param1, int param2) {
     window_donate_to_city_show();
 }
-
 static void button_set_salary(int param1, int param2) {
     window_set_salary_show();
 }
-
 static void button_gift_to_emperor(int param1, int param2) {
     window_gift_to_emperor_show();
 }
 
 static void confirm_nothing(bool accepted) {
 }
-
 static void confirm_send_troops(bool accepted) {
     if (accepted) {
         formation_legions_dispatch_to_distant_battle();
         window_empire_show();
     }
 }
-
 static void confirm_send_goods(bool accepted) {
     if (accepted)
         scenario_request_dispatch(selected_request_id);
 
 }
-
 static void button_request(int index, int param2) {
     int status = get_request_status(index);
+    // in C3, the enums are offset by two! (I have not fixed this)
     if (status) {
         city_military_clear_empire_service_legions();
         switch (status) {
