@@ -102,9 +102,8 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign) {
         num_digits = 8;
     else if (value < 1000000000)
         num_digits = 9;
-    else {
-        num_digits = 0;
-    }
+    else
+        num_digits = 10;
 
     total_chars += num_digits;
 

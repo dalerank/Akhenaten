@@ -81,8 +81,10 @@ static void advance_month(void) {
         scenario_request_process_C3();
         scenario_demand_change_process();
         scenario_price_change_process();
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) // Pharaoh uses its own event system
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // Pharaoh uses its own event system
+        random_generate_next(); // TODO: find out the source / reason for this
         scenario_event_process();
+    }
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
@@ -240,6 +242,8 @@ static void advance_tick(void) {
             break;
         case 44:
             building_maintenance_check_fire_collapse();
+            if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                random_generate_next(); // TODO: find out the source / reason for this
             break;
         case 45:
             figure_generate_criminals();

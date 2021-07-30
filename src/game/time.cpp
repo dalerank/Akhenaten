@@ -1,3 +1,4 @@
+#include <scenario/property.h>
 #include "time.h"
 
 static time_data data;
@@ -25,6 +26,9 @@ int game_time_month(void) {
 }
 int game_time_year(void) {
     return data.year;
+}
+int game_time_year_since_start(void) {
+    return data.year - scenario_property_start_year();
 }
 
 int game_time_absolute_day() {

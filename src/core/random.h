@@ -5,6 +5,23 @@
 
 #include "core/buffer.h"
 
+#define MAX_RANDOM 100
+
+typedef struct random_data {
+    uint32_t iv1;
+    uint32_t iv2;
+    int8_t random1_3bit;
+    int8_t random1_7bit;
+    int16_t random1_15bit;
+    int8_t random2_3bit;
+    int8_t random2_7bit;
+    int16_t random2_15bit;
+    int pool_index;
+    int32_t pool[MAX_RANDOM];
+} random_data;
+
+random_data *give_me_da_random_data();
+
 /**
  * @file
  * Random number generation.
@@ -49,6 +66,8 @@ int16_t random_short(void);
  * @return Random integer from the pool
  */
 int32_t random_from_pool(int index);
+
+int32_t random_within_composite_field_bounds(int16_t *field_out, int16_t field_fixed, int16_t field_min, int16_t field_max, int32_t last);
 
 /**
  * Save data to buffer

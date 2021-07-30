@@ -3,20 +3,15 @@
 #include <string.h>
 //#include <cmath>
 
-#define MAX_RANDOM 100
+static random_data data;
 
-static struct {
-    uint32_t iv1;
-    uint32_t iv2;
-    int8_t random1_3bit;
-    int8_t random1_7bit;
-    int16_t random1_15bit;
-    int8_t random2_3bit;
-    int8_t random2_7bit;
-    int16_t random2_15bit;
-    int pool_index;
-    int32_t pool[MAX_RANDOM];
-} data;
+//static int updates = 0;
+//static int updates2 = 0;
+
+random_data *give_me_da_random_data() {
+//    int a = updates - 173 - updates2;
+    return &data;
+}
 
 void random_init(void) {
     memset(&data, 0, sizeof(data));
@@ -45,6 +40,8 @@ void random_generate_next(void) {
     data.random2_3bit = data.iv2 & 0x7;
     data.random2_7bit = data.iv2 & 0x7f;
     data.random2_15bit = data.iv2 & 0x7fff;
+
+//    updates++;
 }
 
 void random_generate_pool(void) {
@@ -67,9 +64,7 @@ int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-int32_t random_within_composite_field_bounds(int16_t *field_composite, int32_t last) {
-    long long lVar1;
-    unsigned long long uVar2;
+int32_t random_within_composite_field_bounds(int16_t *field_out, int16_t field_fixed, int16_t field_min, int16_t field_max, int32_t last) {
 //    int in_EAX;
 //    uint32_t uVar3;
 //    uint32_t uVar4;
@@ -77,20 +72,23 @@ int32_t random_within_composite_field_bounds(int16_t *field_composite, int32_t l
 //    uint32_t uVar6;
 
     // first operation (check)
-    int16_t field_fixed = field_composite[1];
+//    int16_t field_fixed = field_composite[1];
     if (field_fixed == -1) {
-        if ((field_composite[2] > -1) && (field_composite[3] > -1)) { //&&
+        if ((field_min > -1) && (field_max > -1)) { //&&
 //            (last = ((int)field_composite[3] - (int)field_composite[2]) + 1, last == 1))
 //            goto LAB_004488d5;
-            int next = ((int)field_composite[3] - (int)field_composite[2]) + 1;
-            if (next == 1) {
-                *field_composite = field_fixed;
-                return last;
-            }
+
+            if (field_max == field_min) goto LAB_004488d5;
+
+//            int next = ((int)field_max - (int)field_min) + 1;
+//            if (next == 1) {
+//                *field_out = field_fixed;
+//                return last;
+//            }
         }
     }
     else {
-        if (field_composite[2] == -1) goto LAB_004488d5;
+        if (field_max == -1) goto LAB_004488d5;
     }
 
     // random shuffle
@@ -122,35 +120,37 @@ int32_t random_within_composite_field_bounds(int16_t *field_composite, int32_t l
 //    R_DAT_00d3a35c = DAT_00d3a370 & 7;
 //    _DAT_00d3a358 = DAT_00d3a370 & 0x7f;
 //    _DAT_00d3a354 = DAT_00d3a370 & 0x7fff;
-    random_generate_next();
+    random_generate_next(); //updates2++;
 
     // second operation
-    int iVar3;
-    field_fixed = field_composite[1];
+    long long lVar1;
+    unsigned long long uVar2;
+    int determinant;
+//    field_fixed = field_composite[1];
     if (field_fixed < 0) {
-        lVar1 = (long long)((int)field_composite[3] - (int)field_composite[2]);
+        lVar1 = (long long)((int)field_max - (int)field_min);
         uVar2 = (unsigned long long)data.random1_15bit; //_DAT_00d3a360
-        *field_composite = (short)((long long)uVar2 % lVar1) + field_composite[2];
+        *field_out = (short)((long long)uVar2 % lVar1) + field_min;
         return (uint32_t)((unsigned long long)uVar2 / lVar1);
     }
-    if (field_composite[2] < 0)
-        iVar3 = 1;
+    if (field_min < 0)
+        determinant = 1;
     else
-        iVar3 = (-1 < field_composite[3]) + 2;
+        determinant = (-1 < field_max) + 2;
 
     // final composition
-    last = (int32_t)((unsigned long long)data.random1_15bit / (unsigned long long)(long long)iVar3); //_DAT_00d3a360
-    iVar3 = (int32_t)((unsigned long long)data.random1_15bit % (unsigned long long)(long long)iVar3); //_DAT_00d3a360
-    if (iVar3 != 0) {
-        if (iVar3 == 1) {
-            *field_composite = field_composite[2];
+    last = (int32_t)((unsigned long long)data.random1_15bit / (unsigned long long)(long long)determinant); //_DAT_00d3a360
+    determinant = (int32_t)((unsigned long long)data.random1_15bit % (unsigned long long)(long long)determinant); //_DAT_00d3a360
+    if (determinant != 0) {
+        if (determinant == 1) {
+            *field_out = field_min;
             return last;
         }
-        *field_composite = field_composite[3];
-        return (int32_t)(uint16_t)field_composite[3];
+        *field_out = field_max;
+        return (int32_t)(uint16_t)field_max;
     }
     LAB_004488d5:
-    *field_composite = field_fixed;
+    *field_out = field_fixed;
     return last;
 }
 
@@ -211,6 +211,12 @@ int random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
 void random_load_state(buffer *buf) {
     data.iv1 = buf->read_u32();
     data.iv2 = buf->read_u32();
+    data.random1_3bit = data.iv1 & 0x7;
+    data.random1_7bit = data.iv1 & 0x7f;
+    data.random1_15bit = data.iv1 & 0x7fff;
+    data.random2_3bit = data.iv2 & 0x7;
+    data.random2_7bit = data.iv2 & 0x7f;
+    data.random2_15bit = data.iv2 & 0x7fff;
 }
 
 void random_save_state(buffer *buf) {

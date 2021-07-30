@@ -1,5 +1,6 @@
 #include <tgmath.h>
 #include <city/floods.h>
+#include <core/random.h>
 #include "city.h"
 
 #include "building/menu.h"
@@ -186,17 +187,34 @@ static struct {
 
 static void draw_debug_ui(int x, int y) {
     auto time = give_me_da_time();
-    uint8_t str[10];
+    uint8_t str[100];
 
     /////// TIME
     if (true) {
-        draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
+        draw_debug_line(str, x, y + 15, 50, "tick:", time->tick); draw_debug_line(str, x + 80, y + 15, 50, "iscycle:", game_time_absolute_tick() % 25 == 0);
         draw_debug_line(str, x, y + 25, 50, "day:", time->day);
         draw_debug_line(str, x, y + 35, 50, "month:", time->month);
         draw_debug_line(str, x, y + 45, 50, "year:", time->year);
         draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
         draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
     }
+
+    /////// RANDOM
+    if (true) {
+        auto randm = give_me_da_random_data();
+
+        int cl = 60;
+        draw_debug_line(str, x, y + 85, cl, "iv1:", randm->iv1);
+        draw_debug_line(str, x, y + 95, cl, "iv2:", randm->iv2);
+        draw_debug_line(str, x, y + 105, cl, "1_3b:", randm->random1_3bit);
+        draw_debug_line(str, x, y + 115, cl, "1_7b:", randm->random1_7bit);
+        draw_debug_line(str, x, y + 125, cl, "1_15b:", randm->random1_15bit);
+        draw_debug_line(str, x, y + 135, cl, "2_3b:", randm->random2_3bit);
+        draw_debug_line(str, x, y + 145, cl, "2_7b:", randm->random2_7bit);
+        draw_debug_line(str, x, y + 155, cl, "2_15b:", randm->random2_15bit);
+    }
+
+    y += 90;
 
     /////// FLOODS
     if (true) {

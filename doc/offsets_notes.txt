@@ -430,6 +430,14 @@ bricks?? --> monuments
 
 ====================
 
+rand. updates:
+1 x tick
+
+
+
+
+====================
+
 150: early june
 165: late june
 180: early july

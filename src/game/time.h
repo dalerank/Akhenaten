@@ -32,6 +32,12 @@ void game_time_init(int year);
 int game_time_year(void);
 
 /**
+ * The current game year count since the starting year
+ *
+ */
+int game_time_year_since_start(void);
+
+/**
  * The current game month within the year
  */
 int game_time_month(void);

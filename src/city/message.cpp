@@ -168,19 +168,20 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->sequence = data.next_message_sequence++;
 
     const event_ph_t *event = get_scenario_event(event_id);
-    if (event->is_active) {
-        msg->req_resource = event->item_THISTIME;
-        msg->req_amount = event->amount_THISTIME;
+    msg->req_resource = event->item_THISTIME;
+    msg->req_amount = event->amount_THISTIME;
+    msg->req_city = event->city_or_marker_THISTIME - 1;
+    if (event->is_active)
         msg->req_months_left = event->months_left;
-    } else {
-        msg->req_resource = event->item_1; // TODO
-        msg->req_amount = event->amount_FIXED; // TODO
+    else
+//        msg->req_resource = event->item_1; // TODO
+//        msg->req_amount = event->amount_FIXED; // TODO
         msg->req_months_left = event->months_initial;
-    }
 
     const event_ph_t *parent_event = get_scenario_event(parent_event_id);
     msg->req_resource_past = parent_event->item_THISTIME;
     msg->req_amount_past = parent_event->amount_THISTIME;
+    msg->req_city_past = parent_event->city_or_marker_THISTIME - 1;
 
     // default for sound info / template
     int text_id = city_message_get_text_id(template_id);
