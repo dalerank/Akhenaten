@@ -252,11 +252,18 @@ enum {
     MESSAGE_CURSE_BAST_NOEFFECT = 335 - 99,
     MESSAGE_SMALL_CURSE_BAST = 294 - 99,
 
+    MESSAGE_FLOOD_MEDIOCRE = 342 - 99,
+    MESSAGE_FLOOD_POOR = 343 - 99,
+    MESSAGE_FLOOD_FAIL = 344 - 99,
+    MESSAGE_FLOOD_POOR_OSIRIS = 345 - 99,
+    MESSAGE_FLOOD_MEDIOCRE_OSIRIS = 346 - 99,
+    MESSAGE_FLOOD_GOOD = 347 - 99,
+    MESSAGE_FLOOD_EXCELLENT = 348 - 99,
+    MESSAGE_FLOOD_PERFECT = 349 - 99,
 };
 
 typedef struct {
     int sequence;
-//    int message_type;
     int MM_text_id;
     int year;
     int month;

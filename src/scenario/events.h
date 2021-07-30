@@ -56,11 +56,11 @@ enum {
 
     EVENT_TRIGGER_ALREADY_FIRED = 4,
 
-    EVENT_TRIGGER_UNK_REQ_8 = 8,
+    EVENT_TRIGGER_ACTIVATED_8 = 8,
 
     EVENT_TRIGGER_BY_RATING = 10,
 
-    EVENT_TRIGGER_UNK_REQ_12 = 12,
+    EVENT_TRIGGER_ACTIVATED_12 = 12,
 };
 
 enum {
@@ -110,19 +110,19 @@ typedef struct {
     int event_id;
     int type;
     int month;
-    int request_list_item;
+    int item_THISTIME;
     int item_1;
     int item_2;
     int item_3;
-    int request_list_amount;
+    int amount_THISTIME;
     int amount_FIXED;
     int amount_MIN;
     int amount_MAX;
-    int __unk05;
+    int year_or_month_THISTIME;
     int year_or_month_FIXED;
     int year_or_month_MIN;
     int year_or_month_MAX;
-    int __unk06;
+    int city_or_marker_THISTIME;
     int city_or_marker_FIXED;
     int city_or_marker_MIN;
     int city_or_marker_MAX;
@@ -145,7 +145,7 @@ typedef struct {
     int on_defeat_action;
     int sender_faction;
     int __unk13_i8;
-    int __unk14;
+    int route_THISTIME;
     int route_FIXED;
     int route_MIN;
     int route_MAX;

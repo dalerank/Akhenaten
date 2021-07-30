@@ -705,31 +705,31 @@ static void init_savegame_data(bool expanded) {
     }
 }
 
-static void scenario_load_from_state(scenario_state *file) {
-    map_image_load_state(file->graphic_ids);
-    map_terrain_load_state(file->terrain);
-    map_property_load_state(file->bitfields, file->edge);
-    map_random_load_state(file->random);
-    map_elevation_load_state(file->elevation);
-    city_view_load_scenario_state(file->camera);
+static void scenario_load_from_state(scenario_state *state) {
+    map_image_load_state(state->graphic_ids);
+    map_terrain_load_state(state->terrain);
+    map_property_load_state(state->bitfields, state->edge);
+    map_random_load_state(state->random);
+    map_elevation_load_state(state->elevation);
+    city_view_load_scenario_state(state->camera);
 
-    random_load_state(file->random_iv);
+    random_load_state(state->random_iv);
 
-    scenario_load_state(&file->SCENARIO);
+    scenario_load_state(&state->SCENARIO);
 
 //    file->end_marker->skip(4);
 }
-static void scenario_save_to_state(scenario_state *file) {
-    map_image_save_state(file->graphic_ids);
-    map_terrain_save_state(file->terrain);
-    map_property_save_state(file->bitfields, file->edge);
-    map_random_save_state(file->random);
-    map_elevation_save_state(file->elevation);
-    city_view_save_scenario_state(file->camera);
+static void scenario_save_to_state(scenario_state *state) {
+    map_image_save_state(state->graphic_ids);
+    map_terrain_save_state(state->terrain);
+    map_property_save_state(state->bitfields, state->edge);
+    map_random_save_state(state->random);
+    map_elevation_save_state(state->elevation);
+    city_view_save_scenario_state(state->camera);
 
-    random_save_state(file->random_iv);
+    random_save_state(state->random_iv);
 
-    scenario_save_state(&file->SCENARIO);
+    scenario_save_state(&state->SCENARIO);
 
 //    file->end_marker->skip(4);
 }

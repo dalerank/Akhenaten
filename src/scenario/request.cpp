@@ -141,8 +141,8 @@ const scenario_request *scenario_request_get(int id) {
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         request.id = id;
         auto event = get_scenario_event(id);
-        request.amount = event->request_list_amount;
-        request.resource = event->request_list_item;
+        request.amount = event->amount_THISTIME;
+        request.resource = event->item_THISTIME;
         request.state = event->event_state;
         request.months_to_comply = event->months_left;
     }

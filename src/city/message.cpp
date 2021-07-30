@@ -96,7 +96,6 @@ static int new_message_id(void) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         if (!data.messages[i].MM_text_id)
             return i;
-
     }
     return -1;
 }
@@ -170,8 +169,8 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
 
     const event_ph_t *event = get_scenario_event(event_id);
     if (event->is_active) {
-        msg->req_resource = event->request_list_item;
-        msg->req_amount = event->request_list_amount;
+        msg->req_resource = event->item_THISTIME;
+        msg->req_amount = event->amount_THISTIME;
         msg->req_months_left = event->months_left;
     } else {
         msg->req_resource = event->item_1; // TODO
@@ -180,8 +179,8 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     }
 
     const event_ph_t *parent_event = get_scenario_event(parent_event_id);
-    msg->req_resource_past = parent_event->request_list_item;
-    msg->req_amount_past = parent_event->request_list_amount;
+    msg->req_resource_past = parent_event->item_THISTIME;
+    msg->req_amount_past = parent_event->amount_THISTIME;
 
     // default for sound info / template
     int text_id = city_message_get_text_id(template_id);

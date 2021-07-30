@@ -8,6 +8,7 @@
 #include "city/data_private.h"
 #include "scenario/data.h"
 #include "buildings.h"
+#include "message.h"
 
 static floods_data data;
 
@@ -121,6 +122,21 @@ void floodplains_tick_update() {
         // contracting done, resting
         data.state = FLOOD_STATE_RESTING;
         data.flood_progress = 30;
+        if (cycle == cycle_flooding_end + 18 && game_time_tick() == 0) {
+            // send nilometer message!
+            if (data.quality_next == 100)
+                city_message_post(true, MESSAGE_FLOOD_PERFECT, 0, 0);
+            else if (data.quality_next >= 75)
+                city_message_post(true, MESSAGE_FLOOD_EXCELLENT, 0, 0);
+            else if (data.quality_next >= 50)
+                city_message_post(true, MESSAGE_FLOOD_GOOD, 0, 0);
+            else if (data.quality_next >= 25)
+                city_message_post(true, MESSAGE_FLOOD_MEDIOCRE, 0, 0);
+            else if (data.quality_next > 0)
+                city_message_post(true, MESSAGE_FLOOD_POOR, 0, 0);
+            else
+                city_message_post(true, MESSAGE_FLOOD_FAIL, 0, 0);
+        }
     } else {
         // flooding over, farmlands available again
         data.state = FLOOD_STATE_FARMABLE;

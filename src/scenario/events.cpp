@@ -1,5 +1,6 @@
 #include <core/lang.h>
 #include <game/time.h>
+#include <ios>
 #include "data.h"
 #include "event_phrases.h"
 #include "city/message.h"
@@ -26,29 +27,40 @@ const int get_scenario_events_num() {
     return *data.num_of_events;
 }
 
-event_ph_t *create_scenario_event() {
+event_ph_t *create_scenario_event(const event_ph_t *donor) {
     if (*data.num_of_events < MAX_EVENTS) {
         (*data.num_of_events)++;
-        return &data.event_list[*data.num_of_events - 1];
+        int event_id = *data.num_of_events - 1;
+        event_ph_t *new_event = &data.event_list[event_id];
+
+        // if parent event is supplied, clone it into the new event
+        if (donor != nullptr)
+            memcpy(new_event, donor, sizeof(event_ph_t));
+        new_event->event_id = event_id;
+        return new_event;
     }
     return nullptr;
 }
-static bool create_request_active_event(const event_ph_t *parent) {
-    event_ph_t *child = create_scenario_event();
+static bool create_triggered_active_event(const event_ph_t *parent, int months_left, int trigger_type) {
+    event_ph_t *child = create_scenario_event(parent);
     if (child) {
 
-        child->type = EVENT_TYPE_REQUEST;
-        child->subtype = parent->subtype;
+//        child->type = parent->type;
+//        child->subtype = parent->subtype;
         child->event_state = EVENT_STATE_INITIAL;
         child->is_active = 1;
-        child->event_trigger_type = EVENT_TRIGGER_UNK_REQ_8;
+        child->event_trigger_type = trigger_type;
         if (parent->amount_FIXED != -1)
-            child->request_list_amount = parent->amount_FIXED;
+            child->amount_THISTIME = parent->amount_FIXED;
         else
-            child->request_list_amount = parent->amount_FIXED; // TODO: multiple choice
-        child->request_list_item = parent->item_1; // TODO: multiple choice
-        child->months_initial = parent->months_initial;
-        child->months_left = parent->months_initial;
+            child->amount_THISTIME = parent->amount_FIXED; // TODO: multiple choice
+        child->item_THISTIME = parent->item_1; // TODO: multiple choice
+//        child->months_initial = parent->months_initial;
+        child->months_left = months_left;
+
+        // calculate date of activation
+        child->year_or_month_THISTIME = months_left / 12;
+        child->month = months_left % 12;
 
         return true;
     }
@@ -72,38 +84,18 @@ uint8_t *get_eventmsg_text(int group_id, int index) {
     return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
 }
 
-//static void post_event_message(int event_id, int caller_event_id) {
-//
-//    auto event = get_scenario_event(event_id);
-//
-////    auto s = lang_get_string(9, 2);
-//    auto s = get_eventmsg_text(0, 0);
-//    auto l = string_length(s);
-//
-//    int p;
-//    p = PHRASE_egyptian_city_attacked_title_P; // 0
-//    p = PHRASE_acknowledgement_reason_C; // 160
-//    p = PHRASE_acknowledgement_no_reason_A; // 161
-//    p = PHRASE_acknowledgement_no_reason_B; // 162
-//
-//    // temp for debugging
-//    city_message_post(true, MESSAGE_WORKERS_NEEDED, 0, 0);
-//}
-
-
-static void post_eventmsg_request() {
-
-}
-
 static void event_process(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO) {
     if (!is_valid_event_index(id))
         return;
 
     event_ph_t *event = &data.event_list[id];
 
-    // can not invoke event from an event if trigger is set to global update
-    // also, can not invoke from global update if trigger is set to event only
+    // must be a valid event type;
+    // also, can not invoke event from an event if trigger is set to global update;
+    // also, can not invoke from global update if trigger is set to event only;
     // also, events with 'EVENT_TRIGGER_ALREADY_FIRED' can not fire again.
+    if (event->type == EVENT_TYPE_NONE)
+        return;
     if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger)
         return;
     if (event->event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT && via_event_trigger)
@@ -114,12 +106,43 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     // action to fire next (determined by handler)
     int chain_action_next = EVENT_ACTION_NONE;
 
+    // create follow-up "actual" active events when triggered
+    // (very convoluted and annoying way in which Pharaoh events work...)
+    if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT) {
+        if (event->type == EVENT_TYPE_REQUEST)
+            create_triggered_active_event(event, event->months_initial + 1, EVENT_TRIGGER_ACTIVATED_8);
+        else
+            create_triggered_active_event(event, event->year_or_month_THISTIME, EVENT_TRIGGER_ACTIVATED_12);
+        return;
+    }
+
     // for common events - check if the time period is correct
-    bool event_should_fire = false;
-    if (event->month == game_time_month())
-        event_should_fire = true;
-    if (via_event_trigger)
-        event_should_fire = true; // ignore time entirely if it's being called by a parent event
+//    bool event_should_fire = false;
+//    if (via_event_trigger) {
+//        if (event->event_trigger_type == EVENT_TRIGGER_ACTIVATED_8 || event->event_trigger_type == EVENT_TRIGGER_ACTIVATED_12) {
+//            if (event->year_or_month_THISTIME == game_time_month()
+//                && event->year == game_time_month())
+////                event_should_fire = true;
+////            event_should_fire = true;
+//        }
+//    } else {
+//            event_should_fire = true;
+//    }
+
+    // check if the trigger time has come
+    switch (event->event_trigger_type) {
+        case EVENT_TRIGGER_ACTIVATED_8: // for REQUESTS: ignore specific time of the year
+            break;
+        default:
+            if (event->year_or_month_THISTIME != game_time_year()
+                || event->month != game_time_month())
+                return;
+            break;
+    }
+
+    // advance remaining time
+    if (event->months_left > 0)
+        event->months_left--;
 
     // main event handler!!!
     switch (event->type) {
@@ -127,16 +150,16 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
             int faction_mod = 0;
             if (event->sender_faction == EVENT_FACTION_REQUEST_FROM_CITY)
                 faction_mod = 1;
-            if (!event->is_active && event_should_fire) { // facade -- master event
-                create_request_active_event(event);
-                chain_action_next = EVENT_ACTION_COMPLETED;
-                // initial message
-                city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
-                                       PHRASE_general_request_title_P + faction_mod,
-                                       PHRASE_general_request_initial_announcement_P + faction_mod,
-                                       PHRASE_general_request_no_reason_P_A + faction_mod * 3, id, 0);
-            } else { // active request event
+            if (event->is_active) { // active request event
                 if (event->event_state == EVENT_STATE_INITIAL) {
+                    if (event->months_left == event->months_initial) {
+                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
+                                               PHRASE_general_request_title_P + faction_mod,
+                                               PHRASE_general_request_initial_announcement_P + faction_mod,
+                                               PHRASE_general_request_no_reason_P_A + faction_mod * 3, id, 0);
+                    }
+
+
                     // reminder of 6 months left
                     if (event->months_left == 6) {
                         city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
@@ -155,10 +178,10 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
                 } else if (event->event_state == EVENT_STATE_OVERDUE) {
                     if (event->months_left == 6) {
                         // angry reminder of 6 months left
-                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
-                                               PHRASE_general_request_title_P + faction_mod,
-                                               PHRASE_general_request_warning_P + faction_mod,
-                                               PHRASE_general_request_no_reason_P_A + faction_mod * 3, id, 0);
+//                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
+//                                               PHRASE_general_request_title_P + faction_mod,
+//                                               PHRASE_general_request_warning_P + faction_mod,
+//                                               PHRASE_general_request_no_reason_P_A + faction_mod * 3, id, 0);
                     } else if (event->months_left == 0) {
                         event->event_state = EVENT_STATE_FAILED;
                         chain_action_next = EVENT_ACTION_REFUSED;
@@ -184,7 +207,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         case EVENT_TYPE_PRICE_INCREASE:
         case EVENT_TYPE_PRICE_DECREASE:
         case EVENT_TYPE_REPUTATION_INCREASE:
-            if (event_should_fire) {
+            if (true) {
                 city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
                                        PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I,
                                        PHRASE_rating_change_reason_I_A,
@@ -194,11 +217,11 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
             break;
         case EVENT_TYPE_REPUTATION_DECREASE:
         case EVENT_TYPE_CITY_STATUS_CHANGE:
-            if (event_should_fire)
+            if (true)
                 chain_action_next = EVENT_ACTION_COMPLETED;
             break;
         case EVENT_TYPE_MESSAGE: {
-            if (event_should_fire) {
+            if (true) {
 //                int title_id = -1;
 //                int body_id = -1;
                 int phrase_id = -1; // TODO
@@ -236,7 +259,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         case EVENT_TYPE_HAILSTORM:
         case EVENT_TYPE_BLOOD_RIVER:
         case EVENT_TYPE_CRIME_WAVE:
-            if (event_should_fire)
+            if (true)
                 chain_action_next = EVENT_ACTION_COMPLETED;
             break;
     }
@@ -263,24 +286,24 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
 }
 void scenario_event_process() {
     for (int i = 0; i < *data.num_of_events; i++) {
-        event_ph_t *event = &data.event_list[i];
-        if (event->type == EVENT_TYPE_NONE)
-            continue;
-        switch (event->event_trigger_type) {
-            case EVENT_TRIGGER_ONCE:
-            case EVENT_TRIGGER_RECURRING:
-                if (event->months_left >= 0)
-                    event->months_left--;
-                event_process(i, false, -1);
-//                if (event->months_left <= 0)
-//                    event_fire(i, false, -1);
-                break;
-            case EVENT_TRIGGER_ONLY_VIA_EVENT:
-                break;
-            case EVENT_TRIGGER_BY_RATING:
-                // TODO
-                break;
-        }
+//        event_ph_t *event = &data.event_list[i];
+//        if (event->type == EVENT_TYPE_NONE)
+//            continue;
+        event_process(i, false, -1);
+//        switch (event->event_trigger_type) {
+//            case EVENT_TRIGGER_ONCE:
+//            case EVENT_TRIGGER_RECURRING:
+//            case EVENT_TRIGGER_UNK_REQ_8:
+//                if (event->months_left >= 0)
+//                    event->months_left--;
+//                event_process(i, false, -1);
+//                break;
+//            case EVENT_TRIGGER_ONLY_VIA_EVENT:
+//                break;
+//            case EVENT_TRIGGER_BY_RATING:
+//                // TODO
+//                break;
+//        }
     }
 }
 
@@ -303,19 +326,19 @@ void scenario_events_load_state(buffer *buf) {
         event->event_id = buf->read_i16();
         event->type = buf->read_i8();
         event->month = buf->read_i8();
-            event->request_list_item = buf->read_i16();
+        event->item_THISTIME = buf->read_i16();
         event->item_1 = buf->read_i16();
         event->item_2 = buf->read_i16();
         event->item_3 = buf->read_i16();
-            event->request_list_amount = buf->read_i16(); // 07 --> 08
+        event->amount_THISTIME = buf->read_i16();
         event->amount_FIXED = buf->read_i16();
         event->amount_MIN = buf->read_i16();
         event->amount_MAX = buf->read_i16();
-            event->__unk05 = buf->read_i16();
+        event->year_or_month_THISTIME = buf->read_i16();
         event->year_or_month_FIXED = buf->read_i16();
         event->year_or_month_MIN = buf->read_i16();
         event->year_or_month_MAX = buf->read_i16();
-            event->__unk06 = buf->read_i16(); // 03 --> 07
+        event->city_or_marker_THISTIME = buf->read_i16(); // 04 --> 07
         event->city_or_marker_FIXED = buf->read_i16();
         event->city_or_marker_MIN = buf->read_i16();
         event->city_or_marker_MAX = buf->read_i16();
@@ -324,7 +347,7 @@ void scenario_events_load_state(buffer *buf) {
         event->event_trigger_type = buf->read_i16();
             event->__unk07 = buf->read_i16();
         event->months_initial = buf->read_i16();
-        event->months_left = buf->read_i16(); // 0B 00 ......   XX 00 --> 0C 00
+        event->months_left = buf->read_i16();
         event->event_state = buf->read_i16();
         event->is_active = buf->read_i16();
             event->__unk11 = buf->read_i16();
@@ -339,12 +362,12 @@ void scenario_events_load_state(buffer *buf) {
         event->on_defeat_action = buf->read_i16();
         event->sender_faction = buf->read_i8();
             event->__unk13_i8 = buf->read_i8();
-            event->__unk14 = buf->read_i16();
+        event->route_THISTIME = buf->read_i16();
         event->route_FIXED = buf->read_i16();
         event->route_MIN = buf->read_i16();
         event->route_MAX = buf->read_i16();
         event->subtype = buf->read_i8();
-            event->__unk15_i8 = buf->read_i8(); // 08 --> 05
+            event->__unk15_i8 = buf->read_i8(); // 07 --> 05
             event->__unk16 = buf->read_i16();
             event->__unk17 = buf->read_i16();
             event->__unk18 = buf->read_i16();

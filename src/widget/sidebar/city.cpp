@@ -199,7 +199,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// FLOODS
-    if (false) {
+    if (true) {
         auto floods = give_me_da_floods_data();
 
         int c_curr = floodplains_current_cycle();
