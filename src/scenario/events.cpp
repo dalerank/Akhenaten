@@ -79,24 +79,21 @@ event_ph_t *create_scenario_event(const event_ph_t *donor) {
     }
     return nullptr;
 }
-static bool create_triggered_active_event(const event_ph_t *parent, int months_left, int trigger_type) {
-    event_ph_t *child = create_scenario_event(parent);
+static bool create_triggered_active_event(const event_ph_t *master, const event_ph_t *parent, int trigger_type) {
+    event_ph_t *child = create_scenario_event(master);
     if (child) {
 
         child->event_state = EVENT_STATE_INITIAL;
-        child->is_active = 1;
         child->event_trigger_type = trigger_type;
 
         update_randomized_values(child);
 
-        // always so?
-        child->months_left = parent->months_initial + 1;
-
         // calculate date of activation
-        int month_origin_abs = parent->month + parent->year_or_month_THISTIME * 12; // field is YEARS in parent
-        int month_activation_abs = month_origin_abs + child->year_or_month_THISTIME; // field is MONTHS in child
-//        child->year_or_month_THISTIME = month_activation_abs / 12;
-        child->month = month_activation_abs % 12;
+        int month_abs_parent = parent->year_or_month_THISTIME * 12 + parent->month; // field is YEARS in parent
+        int month_abs_child = month_abs_parent + child->year_or_month_THISTIME; // field is MONTHS in child
+        child->year_or_month_THISTIME = month_abs_child / 12; // relinquish previous field (the child needs this for storing the YEAR)
+        child->month = month_abs_child % 12; // update proper month value relative to the year
+        child->months_left = month_abs_child - month_abs_parent;
 
         return true;
     }
@@ -142,36 +139,52 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
     // create follow-up "actual" active events when triggered
     // (very convoluted and annoying way in which Pharaoh events work...)
     if (event->event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT) {
+        if (!is_valid_event_index(caller_event_id))
+            return;
         if (event->type == EVENT_TYPE_REQUEST)
-            create_triggered_active_event(event, event->months_initial + 1, EVENT_TRIGGER_ACTIVATED_8);
+            create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
         else
-            create_triggered_active_event(event, event->year_or_month_THISTIME, EVENT_TRIGGER_ACTIVATED_12);
+            create_triggered_active_event(event, get_scenario_event(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
         return;
     }
 
     // check if the trigger time has come
     switch (event->event_trigger_type) {
-        case EVENT_TRIGGER_ACTIVATED_8: // for REQUESTS: ignore specific time of the year
-            break;
+//        case EVENT_TRIGGER_ACTIVATED_8: // for REQUESTS: ignore specific time of the year IF quest is active
+//            if (!event->is_active &&
+//                (event->year_or_month_THISTIME != game_time_year_since_start()
+//                || event->month != game_time_month()))
+//                return;
+//            break;
         default:
+            if (event->is_active) // for REQUESTS: ignore specific time of the year IF quest is active
+                break;
             if (event->year_or_month_THISTIME != game_time_year_since_start()
                 || event->month != game_time_month())
                 return;
             break;
     }
 
-    // advance remaining time
-    if (event->months_left > 0)
-        event->months_left--;
 
     // default action to fire next (determined by handler)
     int chain_action_next = EVENT_ACTION_COMPLETED; //EVENT_ACTION_NONE
     // main event handler!
     switch (event->type) {
         case EVENT_TYPE_REQUEST: {
-//            if (event->event_trigger_type != EVENT_TRIGGER_ACTIVATED_8) // "facade" controller / master event
-//                create_triggered_active_event(event, event->months_initial + 1, EVENT_TRIGGER_ACTIVATED_8);
-            if (event->is_active) { // active request event
+//            if (event->event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT) { // active request event
+                // advance remaining time
+            if (event->months_left > 0)
+                event->months_left--;
+
+            if (!event->is_active) {
+                event->months_left = event->months_initial;
+                event->is_active = 1;
+//                    if (event->months_left == 0) {
+//                        event->months_left = event->months_initial + 1;
+//                        event->is_active = 1;
+//                    }
+            }
+            if (event->is_active) {
                 chain_action_next = EVENT_ACTION_NONE;
                 int pharaoh_alt_shift = event->sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
                 if (event->event_state == EVENT_STATE_INITIAL) {
@@ -212,6 +225,7 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
                         // separately by the chain action events
                     }
                 }
+//                }
             }
             break;
         }
@@ -293,27 +307,21 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
             break;
     }
 
-//    // update random values for recurring events
-//    if (event->event_trigger_type == EVENT_TRIGGER_RECURRING)
-//        update_randomized_values(event);
-
     // disable if already done
     if (event->event_trigger_type == EVENT_TRIGGER_ONCE)
         event->event_state = EVENT_TRIGGER_ALREADY_FIRED;
 }
 void scenario_event_process() {
-    for (int i = 0; i < *data.num_of_events; i++) {
+    // main event update loop
+    for (int i = 0; i < *data.num_of_events; i++)
         event_process(i, false, -1);
-    }
 
-    // update random values for recurring events
+    // secondly, update random value fields for recurring events
     for (int i = 0; i < *data.num_of_events; i++) {
         auto event = &data.event_list[i];
         if (event->event_trigger_type == EVENT_TRIGGER_RECURRING)
             update_randomized_values(event);
     }
-
-//    auto d = give_me_da_random_data();
 }
 
 ///////

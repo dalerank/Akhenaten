@@ -5,11 +5,7 @@
 
 static random_data data;
 
-//static int updates = 0;
-//static int updates2 = 0;
-
 random_data *give_me_da_random_data() {
-//    int a = updates - 173 - updates2;
     return &data;
 }
 
@@ -40,8 +36,6 @@ void random_generate_next(void) {
     data.random2_3bit = data.iv2 & 0x7;
     data.random2_7bit = data.iv2 & 0x7f;
     data.random2_15bit = data.iv2 & 0x7fff;
-
-//    updates++;
 }
 
 void random_generate_pool(void) {
@@ -65,68 +59,20 @@ int32_t random_from_pool(int index) {
 }
 
 int32_t random_within_composite_field_bounds(int16_t *field_out, int16_t field_fixed, int16_t field_min, int16_t field_max, int32_t last) {
-//    int in_EAX;
-//    uint32_t uVar3;
-//    uint32_t uVar4;
-//    uint32_t uVar5;
-//    uint32_t uVar6;
-
-    // first operation (check)
-//    int16_t field_fixed = field_composite[1];
     if (field_fixed == -1) {
-        if ((field_min > -1) && (field_max > -1)) { //&&
-//            (last = ((int)field_composite[3] - (int)field_composite[2]) + 1, last == 1))
-//            goto LAB_004488d5;
-
+        if ((field_min > -1) && (field_max > -1)) {
             if (field_max == field_min) goto LAB_004488d5;
-
-//            int next = ((int)field_max - (int)field_min) + 1;
-//            if (next == 1) {
-//                *field_out = field_fixed;
-//                return last;
-//            }
         }
     }
     else {
         if (field_max == -1) goto LAB_004488d5;
     }
-
-    // random shuffle
-//    (&DAT_00d3a1b8)[DAT_00d3a1b4] = DAT_00d3a364;
-//    DAT_00d3a1b4 = DAT_00d3a1b4 + 1;
-//    if (99 < DAT_00d3a1b4) {
-//        DAT_00d3a1b4 = 0;
-//    }
-//    iVar3 = 31;
-//    do {
-//        uVar3 = DAT_00d3a374 >> 4;
-//        uVar5 = DAT_00d3a374 & 1;
-//        uVar6 = DAT_00d3a370 >> 4;
-//        uVar4 = DAT_00d3a370 & 1;
-//        DAT_00d3a374 = DAT_00d3a374 >> 1;
-//        DAT_00d3a370 = DAT_00d3a370 >> 1;
-//        if ((uVar3 & 1) != uVar5) {
-//            DAT_00d3a374 = DAT_00d3a374 | 0x40000000;
-//        }
-//        if ((uVar6 & 1) != uVar4) {
-//            DAT_00d3a370 = DAT_00d3a370 | 0x40000000;
-//        }
-//        iVar3--;
-//    } while (iVar3 != 0);
-//
-//    R_DAT_00d3a368 = DAT_00d3a374 & 7;
-//    DAT_00d3a364 = DAT_00d3a374 & 0x7f;
-//    _DAT_00d3a360 = DAT_00d3a374 & 0x7fff;
-//    R_DAT_00d3a35c = DAT_00d3a370 & 7;
-//    _DAT_00d3a358 = DAT_00d3a370 & 0x7f;
-//    _DAT_00d3a354 = DAT_00d3a370 & 0x7fff;
-    random_generate_next(); //updates2++;
+    random_generate_next();
 
     // second operation
     long long lVar1;
     unsigned long long uVar2;
     int determinant;
-//    field_fixed = field_composite[1];
     if (field_fixed < 0) {
         lVar1 = (long long)((int)field_max - (int)field_min);
         uVar2 = (unsigned long long)data.random1_15bit; //_DAT_00d3a360
