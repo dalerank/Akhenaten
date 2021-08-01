@@ -141,10 +141,10 @@ const scenario_request *scenario_request_get(int id) {
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         request.id = id;
         auto event = get_scenario_event(id);
-        request.amount = event->amount_THISTIME;
-        request.resource = event->item_THISTIME;
+        request.amount = event->amount_fields[0];
+        request.resource = event->item_fields[0];
         request.state = event->event_state;
-        request.months_to_comply = event->months_left;
+        request.months_to_comply = event->quest_months_left;
     }
     return &request;
 }

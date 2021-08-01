@@ -67,7 +67,7 @@ int16_t random_short(void);
  */
 int32_t random_from_pool(int index);
 
-int32_t random_within_composite_field_bounds(int16_t *field_out, int16_t field_fixed, int16_t field_min, int16_t field_max, int32_t last);
+void randomize_event_fields(int16_t field[4], int32_t *seed);
 
 /**
  * Save data to buffer

@@ -29,36 +29,12 @@ const int get_scenario_events_num() {
 }
 
 static void update_randomized_values(event_ph_t *event) {
-    unsigned int r;
-    r = random_within_composite_field_bounds(&event->item_THISTIME,
-                                             event->item_1,
-                                             event->item_2,
-                                             event->item_3,
-                                             1);
-
-    r = random_within_composite_field_bounds(&event->amount_THISTIME,
-                                             event->amount_FIXED,
-                                             event->amount_MIN,
-                                             event->amount_MAX,
-                                             r);
-
-    r = random_within_composite_field_bounds(&event->year_or_month_THISTIME,
-                                             event->year_or_month_FIXED,
-                                             event->year_or_month_MIN,
-                                             event->year_or_month_MAX,
-                                             r);
-
-    r = random_within_composite_field_bounds(&event->city_or_marker_THISTIME,
-                                             event->city_or_marker_FIXED,
-                                             event->city_or_marker_MIN,
-                                             event->city_or_marker_MAX,
-                                             r);
-
-    r = random_within_composite_field_bounds(&event->route_THISTIME,
-                                             event->route_FIXED,
-                                             event->route_MIN,
-                                             event->route_MAX,
-                                             r);
+    int seed = 1; // not sure what this is used for...
+    randomize_event_fields(event->item_fields, &seed);
+    randomize_event_fields(event->amount_fields, &seed);
+    randomize_event_fields(event->time_fields, &seed);
+    randomize_event_fields(event->location_fields, &seed);
+    randomize_event_fields(event->route_fields, &seed);
 
     // some other unknown stuff also happens here.........
     random_generate_next();
@@ -89,11 +65,11 @@ static bool create_triggered_active_event(const event_ph_t *master, const event_
         update_randomized_values(child);
 
         // calculate date of activation
-        int month_abs_parent = parent->year_or_month_THISTIME * 12 + parent->month; // field is YEARS in parent
-        int month_abs_child = month_abs_parent + child->year_or_month_THISTIME; // field is MONTHS in child
-        child->year_or_month_THISTIME = month_abs_child / 12; // relinquish previous field (the child needs this for storing the YEAR)
+        int month_abs_parent = parent->time_fields[0] * 12 + parent->month; // field is YEARS in parent
+        int month_abs_child = month_abs_parent + child->time_fields[0]; // field is MONTHS in child
+        child->time_fields[0] = month_abs_child / 12; // relinquish previous field (the child needs this for storing the YEAR)
         child->month = month_abs_child % 12; // update proper month value relative to the year
-        child->months_left = month_abs_child - month_abs_parent;
+        child->quest_months_left = month_abs_child - month_abs_parent;
 
         return true;
     }
@@ -148,63 +124,46 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
         return;
     }
 
-    // check if the trigger time has come
-    switch (event->event_trigger_type) {
-//        case EVENT_TRIGGER_ACTIVATED_8: // for REQUESTS: ignore specific time of the year IF quest is active
-//            if (!event->is_active &&
-//                (event->year_or_month_THISTIME != game_time_year_since_start()
-//                || event->month != game_time_month()))
-//                return;
-//            break;
-        default:
-            if (event->is_active) // for REQUESTS: ignore specific time of the year IF quest is active
-                break;
-            if (event->year_or_month_THISTIME != game_time_year_since_start()
-                || event->month != game_time_month())
-                return;
-            break;
-    }
+    // check if the trigger time has come, if not return.
+    // for ACTIVE EVENTS (requests?): ignore specific time of the year IF quest is active
+    if (!event->is_active &&
+        (event->time_fields[0] != game_time_year_since_start() || event->month != game_time_month()))
+        return;
 
-
-    // default action to fire next (determined by handler)
-    int chain_action_next = EVENT_ACTION_COMPLETED; //EVENT_ACTION_NONE
-    // main event handler!
+    // ------ MAIN EVENT HANDLER
+    int chain_action_next = EVENT_ACTION_COMPLETED; // default action to fire next (determined by handler)
     switch (event->type) {
         case EVENT_TYPE_REQUEST: {
-//            if (event->event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT) { // active request event
-                // advance remaining time
-            if (event->months_left > 0)
-                event->months_left--;
+            // advance time
+            if (event->quest_months_left > 0)
+                event->quest_months_left--;
 
+            // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
+            // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
             if (!event->is_active) {
-                event->months_left = event->months_initial;
+                event->quest_months_left = event->months_initial;
                 event->is_active = 1;
-//                    if (event->months_left == 0) {
-//                        event->months_left = event->months_initial + 1;
-//                        event->is_active = 1;
-//                    }
             }
+            // handle request event immediately after activation!
             if (event->is_active) {
                 chain_action_next = EVENT_ACTION_NONE;
                 int pharaoh_alt_shift = event->sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
                 if (event->event_state == EVENT_STATE_INITIAL) {
-                    if (event->months_left == event->months_initial) {
+                    if (event->quest_months_left == event->months_initial) {
+                        // initial quest message
                         city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                                PHRASE_general_request_title_P + pharaoh_alt_shift,
                                                PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                                PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3, id, 0);
-                    }
-
-
-                    // reminder of 6 months left
-                    if (event->months_left == 6) {
+                    } else if (event->quest_months_left == 6) {
+                        // reminder of 6 months left
                         city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                                PHRASE_general_request_title_P + pharaoh_alt_shift,
                                                PHRASE_general_request_reminder_P + pharaoh_alt_shift,
                                                PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3, id, 0);
-                    } else if (event->months_left == 0) {
+                    } else if (event->quest_months_left == 0) {
                         event->event_state = EVENT_STATE_OVERDUE;
-                        event->months_left = 24; // hardcoded
+                        event->quest_months_left = 24; // hardcoded
                         // reprimand message
                         city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
                                                PHRASE_general_request_title_P + pharaoh_alt_shift,
@@ -212,20 +171,19 @@ static void event_process(int id, bool via_event_trigger, int chain_action_paren
                                                PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3, id, 0);
                     }
                 } else if (event->event_state == EVENT_STATE_OVERDUE) {
-                    if (event->months_left == 6) {
-                        // angry reminder of 6 months left
+                    if (event->quest_months_left == 6) {
+                        // angry reminder of 6 months left?
 //                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id, caller_event_id,
 //                                               PHRASE_general_request_title_P + faction_mod,
 //                                               PHRASE_general_request_warning_P + faction_mod,
 //                                               PHRASE_general_request_no_reason_P_A + faction_mod * 3, id, 0);
-                    } else if (event->months_left == 0) {
+                    } else if (event->quest_months_left == 0) {
                         event->event_state = EVENT_STATE_FAILED;
                         chain_action_next = EVENT_ACTION_REFUSED;
-                        // final reprimand is the "kingdom rating" messages - they are handled
-                        // separately by the chain action events
+                        // final reprimand is the "kingdom rating" messages???
+                        // -- these are handled SEPARATELY by the chained scenario events! --
                     }
                 }
-//                }
             }
             break;
         }
@@ -343,28 +301,28 @@ void scenario_events_load_state(buffer *buf) {
         event->event_id = buf->read_i16();
         event->type = buf->read_i8();
         event->month = buf->read_i8();
-        event->item_THISTIME = buf->read_i16();
-        event->item_1 = buf->read_i16();
-        event->item_2 = buf->read_i16();
-        event->item_3 = buf->read_i16();
-        event->amount_THISTIME = buf->read_i16();
-        event->amount_FIXED = buf->read_i16();
-        event->amount_MIN = buf->read_i16();
-        event->amount_MAX = buf->read_i16();
-        event->year_or_month_THISTIME = buf->read_i16();
-        event->year_or_month_FIXED = buf->read_i16();
-        event->year_or_month_MIN = buf->read_i16();
-        event->year_or_month_MAX = buf->read_i16();
-        event->city_or_marker_THISTIME = buf->read_i16(); // 04 --> 07
-        event->city_or_marker_FIXED = buf->read_i16();
-        event->city_or_marker_MIN = buf->read_i16();
-        event->city_or_marker_MAX = buf->read_i16();
+        event->item_fields[0] = buf->read_i16();
+        event->item_fields[1] = buf->read_i16();
+        event->item_fields[2] = buf->read_i16();
+        event->item_fields[3] = buf->read_i16();
+        event->amount_fields[0] = buf->read_i16();
+        event->amount_fields[1] = buf->read_i16();
+        event->amount_fields[2] = buf->read_i16();
+        event->amount_fields[3] = buf->read_i16();
+        event->time_fields[0] = buf->read_i16();
+        event->time_fields[1] = buf->read_i16();
+        event->time_fields[2] = buf->read_i16();
+        event->time_fields[3] = buf->read_i16();
+        event->location_fields[0] = buf->read_i16();
+        event->location_fields[1] = buf->read_i16();
+        event->location_fields[2] = buf->read_i16();
+        event->location_fields[3] = buf->read_i16();
         event->on_completed_action = buf->read_i16();
         event->on_refusal_action = buf->read_i16();
         event->event_trigger_type = buf->read_i16();
             event->__unk07 = buf->read_i16();
         event->months_initial = buf->read_i16();
-        event->months_left = buf->read_i16();
+        event->quest_months_left = buf->read_i16();
         event->event_state = buf->read_i16();
         event->is_active = buf->read_i16();
             event->__unk11 = buf->read_i16();
@@ -379,10 +337,10 @@ void scenario_events_load_state(buffer *buf) {
         event->on_defeat_action = buf->read_i16();
         event->sender_faction = buf->read_i8();
             event->__unk13_i8 = buf->read_i8();
-        event->route_THISTIME = buf->read_i16();
-        event->route_FIXED = buf->read_i16();
-        event->route_MIN = buf->read_i16();
-        event->route_MAX = buf->read_i16();
+        event->route_fields[0] = buf->read_i16();
+        event->route_fields[1] = buf->read_i16();
+        event->route_fields[2] = buf->read_i16();
+        event->route_fields[3] = buf->read_i16();
         event->subtype = buf->read_i8();
             event->__unk15_i8 = buf->read_i8(); // 07 --> 05
             event->__unk16 = buf->read_i16();
@@ -393,9 +351,9 @@ void scenario_events_load_state(buffer *buf) {
         event->on_refusal_msgAlt = buf->read_i8();
         event->on_tooLate_msgAlt = buf->read_i8();
         event->on_defeat_msgAlt = buf->read_i8();
-            event->__unk20_FIXED = buf->read_i16();
-            event->__unk20_MIN = buf->read_i16();
-            event->__unk20_MAX = buf->read_i16();
+            event->__unk20a = buf->read_i16();
+            event->__unk20b = buf->read_i16();
+            event->__unk20c = buf->read_i16();
             event->__unk21 = buf->read_i16();
             event->__unk22 = buf->read_i16();
     }

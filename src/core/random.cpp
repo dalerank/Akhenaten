@@ -58,46 +58,54 @@ int32_t random_from_pool(int index) {
     return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
-int32_t random_within_composite_field_bounds(int16_t *field_out, int16_t field_fixed, int16_t field_min, int16_t field_max, int32_t last) {
-    if (field_fixed == -1) {
-        if ((field_min > -1) && (field_max > -1)) {
-            if (field_max == field_min) goto LAB_004488d5;
+void randomize_event_fields(int16_t field[4], int32_t *seed) {
+
+    // original values
+    auto f_fixed = field[1];
+    auto f_min = field[2];
+    auto f_max = field[3];
+
+    // first operation
+    if (f_fixed == -1) {
+        if ((f_min > -1) && (f_max > -1) && (f_max == f_min)) {
+            field[0] = f_fixed;
+            return;
         }
+    } else if (f_max == -1) {
+        field[0] = f_fixed;
+        return;
     }
-    else {
-        if (field_max == -1) goto LAB_004488d5;
-    }
-    random_generate_next();
 
     // second operation
-    long long lVar1;
-    unsigned long long uVar2;
-    int determinant;
-    if (field_fixed < 0) {
-        lVar1 = (long long)((int)field_max - (int)field_min);
-        uVar2 = (unsigned long long)data.random1_15bit; //_DAT_00d3a360
-        *field_out = (short)((long long)uVar2 % lVar1) + field_min;
-        return (uint32_t)((unsigned long long)uVar2 / lVar1);
+    random_generate_next();
+    unsigned long long random_broche = data.random1_15bit; //_DAT_00d3a360
+    if (f_fixed < 0) {
+        int field_range = f_max - f_min;
+        *seed = (uint32_t)(random_broche / field_range);
+        field[0] = (random_broche % field_range) + f_min;
+        return;
     }
-    if (field_min < 0)
-        determinant = 1;
-    else
-        determinant = (-1 < field_max) + 2;
 
     // final composition
-    last = (int32_t)((unsigned long long)data.random1_15bit / (unsigned long long)(long long)determinant); //_DAT_00d3a360
-    determinant = (int32_t)((unsigned long long)data.random1_15bit % (unsigned long long)(long long)determinant); //_DAT_00d3a360
+    int determinant;
+    if (f_min < 0)
+        determinant = 1;
+    else
+        determinant = (-1 < f_max) + 2;
+    *seed = (int32_t)(random_broche / (unsigned long long)determinant);
+    determinant = (int32_t)(random_broche % (unsigned long long)determinant);
     if (determinant != 0) {
         if (determinant == 1) {
-            *field_out = field_min;
-            return last;
+            field[0] = f_min;
+            return;
         }
-        *field_out = field_max;
-        return (int32_t)(uint16_t)field_max;
+        *seed = (int32_t)(uint16_t)f_max;
+        field[0] = f_max;
+        return;
     }
-    LAB_004488d5:
-    *field_out = field_fixed;
-    return last;
+
+    // default value
+    field[0] = f_fixed;
 }
 
 void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist) {
