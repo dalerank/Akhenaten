@@ -291,7 +291,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// TUTORIAL
-    if (true) {auto flags = give_me_da_tut_flags();
+    if (false) {auto flags = give_me_da_tut_flags();
         const char* const flagnames[41] = {
                 "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
                 "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
