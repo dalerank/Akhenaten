@@ -8,6 +8,11 @@ int city_buildings_get_senate_id();
 void city_buildings_add_senate(building *senate);
 void city_buildings_remove_senate(building *senate);
 
+int city_buildings_has_mansion(void);
+int city_buildings_get_mansion_id();
+void city_buildings_add_mansion(building *mansion);
+void city_buildings_remove_mansion(building *mansion);
+
 int city_buildings_has_barracks(void);
 void city_buildings_add_barracks(building *barracks);
 void city_buildings_remove_barracks(building *barracks);

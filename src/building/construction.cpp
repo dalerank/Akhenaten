@@ -664,12 +664,15 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             // government
         case BUILDING_GOVERNORS_HOUSE:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_HOUSE));
+            city_buildings_add_mansion(b);
             break;
         case BUILDING_GOVERNORS_VILLA:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_VILLA));
+            city_buildings_add_mansion(b);
             break;
         case BUILDING_GOVERNORS_PALACE:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_PALACE));
+            city_buildings_add_mansion(b);
             break;
         case BUILDING_MISSION_POST:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MISSION_POST));

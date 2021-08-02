@@ -273,7 +273,7 @@ void city_view_go_to_tile_corner(int tile_x, int tile_y, bool validate) {
     int y = tile_y * HALF_TILE_HEIGHT_PIXELS;
     city_view_go_to_position(x, y, validate);
 }
-void city_view_go_to_tile_center(int tile_x, int tile_y, bool validate) {
+void city_view_go_to_tile(int tile_x, int tile_y, bool validate) {
     int x = (tile_x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (tile_y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
     city_view_go_to_position(x, y, validate);
@@ -388,18 +388,6 @@ static int get_center_grid_offset(void) {
 }
 
 void city_view_rotate_left(void) {
-    data.orientation += 2;
-    if (data.orientation > 6)
-        data.orientation = DIR_0_TOP_RIGHT;
-
-    int center_grid_offset = get_center_grid_offset();
-    if (center_grid_offset >= 0) {
-        int x, y;
-        city_view_grid_offset_to_xy_view(center_grid_offset, &x, &y);
-        city_view_go_to_tile_center(x, y, true);
-    }
-}
-void city_view_rotate_right(void) {
     data.orientation -= 2;
     if (data.orientation < 0)
         data.orientation = DIR_6_TOP_LEFT;
@@ -408,7 +396,19 @@ void city_view_rotate_right(void) {
     if (center_grid_offset >= 0) {
         int x, y;
         city_view_grid_offset_to_xy_view(center_grid_offset, &x, &y);
-        city_view_go_to_tile_center(x, y, true);
+        city_view_go_to_tile(x, y, true);
+    }
+}
+void city_view_rotate_right(void) {
+    data.orientation += 2;
+    if (data.orientation > 6)
+        data.orientation = DIR_0_TOP_RIGHT;
+
+    int center_grid_offset = get_center_grid_offset();
+    if (center_grid_offset >= 0) {
+        int x, y;
+        city_view_grid_offset_to_xy_view(center_grid_offset, &x, &y);
+        city_view_go_to_tile(x, y, true);
     }
 }
 

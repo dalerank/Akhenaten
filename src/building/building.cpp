@@ -317,6 +317,9 @@ void building::clear_related_data() {
     if (is_senate())
         city_buildings_remove_senate(this);
 
+    if (is_governor_palace())
+        city_buildings_remove_mansion(this);
+
     if (type == BUILDING_DOCK)
         city_buildings_remove_dock();
 

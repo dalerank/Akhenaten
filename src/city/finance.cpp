@@ -52,6 +52,7 @@ void city_finance_process_export(int price) {
 }
 
 #include "game/tutorial.h"
+#include "buildings.h"
 
 void city_finance_process_gold_extraction(int amount) {
     city_data.finance.treasury += amount;
@@ -248,7 +249,7 @@ static void pay_monthly_interest(void) {
 }
 
 static void pay_monthly_salary(void) {
-    if (!city_finance_out_of_money()) {
+    if (!city_finance_out_of_money() && city_buildings_has_mansion()) {
         city_data.finance.salary_so_far += city_data.emperor.salary_amount;
         city_data.emperor.personal_savings += city_data.emperor.salary_amount;
         city_data.finance.treasury -= city_data.emperor.salary_amount;

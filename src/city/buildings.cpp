@@ -28,6 +28,32 @@ void city_buildings_remove_senate(building *senate) {
     }
 }
 
+int city_buildings_has_mansion(void) {
+    return city_data.building.mansion_placed;
+}
+int city_buildings_get_mansion_id(void) {
+    if (!city_buildings_has_mansion())
+        return 0;
+    return city_data.building.mansion_building_id;
+}
+void city_buildings_add_mansion(building *mansion) {
+    city_data.building.mansion_placed = 1;
+    if (!city_data.building.mansion_grid_offset) {
+        city_data.building.mansion_building_id = mansion->id;
+        city_data.building.mansion_x = mansion->x;
+        city_data.building.mansion_y = mansion->y;
+        city_data.building.mansion_grid_offset = mansion->grid_offset;
+    }
+}
+void city_buildings_remove_mansion(building *mansion) {
+    if (mansion->grid_offset == city_data.building.mansion_grid_offset) {
+        city_data.building.mansion_grid_offset = 0;
+        city_data.building.mansion_x = 0;
+        city_data.building.mansion_y = 0;
+        city_data.building.mansion_placed = 0;
+    }
+}
+
 int city_buildings_has_barracks(void) {
     return city_data.building.barracks_placed;
 }

@@ -60,7 +60,7 @@ void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y);
 
 void city_view_go_to_position(int x, int y, bool validate);
 void city_view_go_to_tile_corner(int tile_x, int tile_y, bool validate);
-void city_view_go_to_tile_center(int tile_x, int tile_y, bool validate);
+void city_view_go_to_tile(int tile_x, int tile_y, bool validate);
 void city_view_go_to_grid_offset(int grid_offset);
 void city_view_scroll(int x, int y);
 
