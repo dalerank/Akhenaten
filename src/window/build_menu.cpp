@@ -117,7 +117,7 @@ static int set_submenu_for_type(int type) {
         case BUILDING_MENU_LARGE_TEMPLES:
             data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
             break;
-        case BUILDING_FORT:
+        case BUILDING_MENU_FORTS:
             data.selected_submenu = BUILD_MENU_FORTS;
             break;
         case BUILDING_MENU_MONUMENTS:
@@ -180,7 +180,7 @@ static void draw_menu_buttons(void) {
         if (type == BUILDING_DRAGGABLE_RESERVOIR)
             type = BUILDING_RESERVOIR;
         int cost = model_get_building(type)->cost;
-        if (type == BUILDING_FORT)
+        if (type == BUILDING_MENU_FORTS)
             cost = 0;
         if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)
             cost = model_get_building(BUILDING_SMALL_TEMPLE_CERES)->cost;

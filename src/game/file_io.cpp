@@ -738,11 +738,6 @@ static void savegame_load_from_state(savegame_state *state) {
     savegame_version[1] = state->file_version->read_i32();
 
     scenario_load_state(&state->SCENARIO);
-//    scenario_settings_load_state(state->scenario_campaign_mission,
-//                                 state->scenario_settings,
-//                                 state->scenario_is_custom,
-//                                 state->player_name,
-//                                 state->scenario_name);
 
     map_image_load_state(state->image_grid, terrain_ph_offset);
     map_building_load_state(state->building_grid, state->building_damage_grid);

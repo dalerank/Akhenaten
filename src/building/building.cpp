@@ -329,7 +329,7 @@ void building::clear_related_data() {
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
 
-    if (type == BUILDING_FORT)
+    if (type == BUILDING_MENU_FORTS)
         formation_legion_delete_for_fort(this);
 
     if (type == BUILDING_HIPPODROME)
@@ -505,7 +505,7 @@ int building::is_culture() {
     return 0;
 }
 int building::is_military() {
-    if (is_fort() || type == BUILDING_FORT_GROUND || type == BUILDING_FORT)
+    if (is_fort() || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
         return 1;
     if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
         return 1;
@@ -658,7 +658,7 @@ int building_is_culture(int type) {
     return 0;
 }
 int building_is_military(int type) {
-    if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT)
+    if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
         return 1;
     if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
         return 1;

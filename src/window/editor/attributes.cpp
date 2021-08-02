@@ -67,7 +67,7 @@ static input_box scenario_description_input = {92, 40, 19, 2, FONT_NORMAL_WHITE}
 
 static struct {
     int is_paused;
-    uint8_t brief_description[BRIEF_DESC_LENGTH];
+    uint8_t subtitle[BRIEF_DESC_LENGTH];
     int focus_button_id;
 } data;
 
@@ -75,8 +75,8 @@ static void start(void) {
     if (data.is_paused)
         input_box_resume(&scenario_description_input);
     else {
-        string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
-        input_box_start(&scenario_description_input, data.brief_description, BRIEF_DESC_LENGTH, 1);
+        string_copy(scenario_subtitle(), data.subtitle, BRIEF_DESC_LENGTH);
+        input_box_start(&scenario_description_input, data.subtitle, BRIEF_DESC_LENGTH, 1);
     }
 }
 
@@ -87,7 +87,7 @@ static void stop(int paused) {
         input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;
-    scenario_editor_update_brief_description(data.brief_description);
+    scenario_editor_update_subtitle(data.subtitle);
 }
 
 static void draw_background(void) {

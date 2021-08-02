@@ -122,7 +122,7 @@ static int get_height_id(void) {
             case BUILDING_LIBRARY:
             case BUILDING_GATEHOUSE:
             case BUILDING_TOWER:
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
             case BUILDING_MILITARY_ACADEMY:
             case BUILDING_MARKET:
             case BUILDING_GRANARY:
@@ -212,7 +212,7 @@ static int center_in_city(int element_width_pixels) {
 void highlight_waypoints(building *b) // highlight the 4 routing tiles for roams from this building
 {
     map_clear_highlights();
-    if (b->type == BUILDING_FORT || b->house_size) { // building doesn't send roamers
+    if (b->type == BUILDING_MENU_FORTS || b->house_size) { // building doesn't send roamers
         return;
     }
     int hx, hy, roadx, roady;
@@ -327,7 +327,7 @@ static void init(int grid_offset) {
             case BUILDING_FORT_GROUND:
                 context.building_id = b->prev_part_building_id;
                 // fallthrough
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
                 context.formation_id = b->formation_id;
                 break;
             case BUILDING_WAREHOUSE_SPACE:
@@ -672,7 +672,7 @@ static void draw_background(void) {
                 window_building_draw_military_academy(&context); break;
             case BUILDING_BARRACKS:
                 window_building_draw_barracks(&context); break;
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
                 window_building_draw_fort(&context); break;
             case BUILDING_BURNING_RUIN:
                 window_building_draw_burning_ruin(&context); break;

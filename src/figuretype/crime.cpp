@@ -268,7 +268,7 @@ int figure::figure_rioter_collapse_building() {
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_WAREHOUSE:
             case BUILDING_FORT_GROUND:
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
             case BUILDING_BURNING_RUIN:
                 continue;
         }

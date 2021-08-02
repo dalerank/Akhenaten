@@ -812,7 +812,7 @@ static void draw_fort(const map_tile *tile, int x, int y) {
         blocked = 1;
     }
 
-    int num_tiles_fort = building_properties_for_type(BUILDING_FORT)->size;
+    int num_tiles_fort = building_properties_for_type(BUILDING_MENU_FORTS)->size;
     num_tiles_fort *= num_tiles_fort;
     int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
     num_tiles_ground *= num_tiles_ground;

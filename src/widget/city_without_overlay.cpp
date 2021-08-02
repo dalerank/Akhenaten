@@ -1017,7 +1017,7 @@ static void draw_animation(int x, int y, int grid_offset) {
         case BUILDING_GRANITE_QUARRY:
         case BUILDING_SANDSTONE_QUARRY:
             break; // todo
-        case BUILDING_FORT:
+        case BUILDING_MENU_FORTS:
             draw_fort_anim(x, y, b);
             break;
         case BUILDING_GATEHOUSE:

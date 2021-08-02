@@ -34,8 +34,8 @@ void scenario_editor_create(int map_size) {
     scenario.map.grid_start = (grid_size[GAME_ENV] - scenario.map.height) / 2 * grid_size[GAME_ENV] +
                               (grid_size[GAME_ENV] - scenario.map.width) / 2;
 
-    string_copy(lang_get_string(44, 37), scenario.brief_description, MAX_BRIEF_DESCRIPTION);
-    string_copy(lang_get_string(44, 38), scenario.briefing, MAX_BRIEFING);
+    string_copy(lang_get_string(44, 37), scenario.subtitle, MAX_SUBTITLE);
+    string_copy(lang_get_string(44, 38), scenario.brief_description, MAX_BRIEF_DESCRIPTION);
 
     scenario.initial_funds = 1000;
     scenario.rescue_loan = 500;
@@ -304,9 +304,9 @@ void scenario_editor_cycle_climate(void) {
     scenario.is_saved = 0;
 }
 
-void scenario_editor_update_brief_description(const uint8_t *new_description) {
-    if (!string_equals(scenario.brief_description, new_description, 1)) {
-        string_copy(new_description, scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+void scenario_editor_update_subtitle(const uint8_t *new_description) {
+    if (!string_equals(scenario.subtitle, new_description, 1)) {
+        string_copy(new_description, scenario.subtitle, MAX_SUBTITLE);
         scenario.is_saved = 0;
     }
 }

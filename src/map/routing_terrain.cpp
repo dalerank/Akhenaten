@@ -103,7 +103,7 @@ static int get_land_type_noncitizen(int grid_offset) {
         case BUILDING_NATIVE_CROPS:
             type = NONCITIZEN_N1_BLOCKED;
             break;
-        case BUILDING_FORT:
+        case BUILDING_MENU_FORTS:
             type = NONCITIZEN_5_FORT;
             break;
         case BUILDING_GRANARY:

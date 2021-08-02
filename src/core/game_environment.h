@@ -50,8 +50,8 @@ const int MAX_ALLOWED_BUILDINGS[2] = {
 
 const int MAX_PLAYER_NAME = 32;
 const int MAX_SCENARIO_NAME = 65;
-const int MAX_BRIEF_DESCRIPTION = 64;
-const int MAX_BRIEFING = 522;
+const int MAX_SUBTITLE = 64;
+const int MAX_BRIEF_DESCRIPTION = 522;
 
 const int MAX_FORMATIONS[2] = {
         250,

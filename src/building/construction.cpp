@@ -1145,7 +1145,7 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
     // checks done!!!
     building *b;
     if (building_is_fort(type))
-        b = building_create(BUILDING_FORT, x, y);
+        b = building_create(BUILDING_MENU_FORTS, x, y);
     else
         b = building_create(type, x, y);
     game_undo_add_building(b);
@@ -1840,7 +1840,7 @@ static void set_warning(int *warning_id, int warning) {
 bool building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size) {
     if (data.required_terrain.meadow) {
         int can_place = false;
-        if (map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_MEADOW)) {
+        if (map_terrain_exists_tile_in_radius_with_type(x, y, size, 0, TERRAIN_MEADOW)) {
             set_warning(warning_id, WARNING_MEADOW_NEEDED);
             can_place = true;
         }

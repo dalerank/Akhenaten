@@ -1216,7 +1216,7 @@ bool building::figure_generate() {
                 spawn_figure_native_meeting(); break;
             case BUILDING_NATIVE_CROPS:
                 update_native_crop_progress(); break;
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
                 formation_legion_update_recruit_status(this); break;
             case BUILDING_BARRACKS:
                 spawn_figure_barracks(); break;

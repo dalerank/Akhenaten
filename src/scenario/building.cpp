@@ -83,7 +83,7 @@ bool scenario_building_allowed(int building_type) {
                 return scenario.allowed_buildings[ALLOWED_BUILDING_GATEHOUSE];
             case BUILDING_PREFECTURE:
                 return scenario.allowed_buildings[ALLOWED_BUILDING_PREFECTURE];
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
                 return scenario.allowed_buildings[ALLOWED_BUILDING_FORT];
             case BUILDING_MILITARY_ACADEMY:
                 return scenario.allowed_buildings[ALLOWED_BUILDING_MILITARY_ACADEMY];
@@ -164,7 +164,7 @@ bool scenario_building_allowed(int building_type) {
                 return scenario.allowed_buildings[25];
             case BUILDING_PERSONAL_MANSION:
             case BUILDING_FAMILY_MANSION:
-            case BUILDING_FAMILY_BEEG_PALACE:
+            case BUILDING_DYNASTY_MANSION:
                 return scenario.allowed_buildings[26];
             case BUILDING_ROADBLOCK:
                 return scenario.allowed_buildings[27];
@@ -218,7 +218,7 @@ bool scenario_building_allowed(int building_type) {
             case BUILDING_TEMPLE_COMPLEX_BAST:
                 return scenario.allowed_buildings[108];
         }
-    return false;
+    return true;
 }
 
 int scenario_building_image_native_hut(void) {

@@ -186,6 +186,7 @@ static int groupid_translation_table_ph[] = {
         235, 23 + 341, // zebra (crocodile)
 //        236, 236+341, // legionary
 //        237, 237+341, // cartpusher cart, multiple food
+        239, 8,
         243, 171 + 66,
         244, 306, // data/Pharaoh_Unloaded.sg3 Mapback.bmp
         246, 15 + 294, // data/Pharaoh_Unloaded.sg3 FE_Map Editor.bmp

@@ -21,7 +21,7 @@
 //
 //#define MAX_PLAYER_NAME 32
 //#define MAX_SCENARIO_NAME 65
-//#define MAX_BRIEF_DESCRIPTION 64
+//#define MAX_subtitle 64
 //#define MAX_BRIEFING 522
 
 //enum {
@@ -137,8 +137,8 @@ extern struct scenario_t {
 
     int rome_supplies_wheat;
     int image_id;
-    uint8_t brief_description[64];
-    uint8_t briefing[522];
+    uint8_t subtitle[64];
+    uint8_t brief_description[522];
     int enemy_id;
     int is_open_play;
     int open_play_scenario_id;

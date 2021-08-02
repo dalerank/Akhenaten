@@ -88,8 +88,8 @@ int scenario_image_id(void) {
     return scenario.image_id;
 }
 
-const uint8_t *scenario_brief_description(void) {
-    return scenario.brief_description;
+const uint8_t *scenario_subtitle(void) {
+    return scenario.subtitle;
 }
 
 int scenario_initial_funds(void) {

@@ -244,7 +244,7 @@ static void set_native_target_building(formation *m) {
             case BUILDING_NATIVE_CROPS:
             case BUILDING_NATIVE_MEETING:
             case BUILDING_WAREHOUSE:
-            case BUILDING_FORT:
+            case BUILDING_MENU_FORTS:
             case BUILDING_ROADBLOCK:
                 break;
             default: {

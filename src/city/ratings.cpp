@@ -63,7 +63,7 @@ void city_ratings_peace_building_destroyed(int type) {
         case BUILDING_PREFECTURE:
         case BUILDING_ENGINEERS_POST:
         case BUILDING_WELL:
-        case BUILDING_FORT:
+        case BUILDING_MENU_FORTS:
         case BUILDING_FORT_GROUND:
         case BUILDING_GATEHOUSE:
         case BUILDING_TOWER:

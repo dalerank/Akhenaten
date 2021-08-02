@@ -81,8 +81,8 @@ void scenario_save_state(scenario_data_buffers *SCENARIO) {
         SCENARIO->info1->write_i32(scenario.map.height);
         SCENARIO->info1->write_i32(scenario.map.grid_start);
         SCENARIO->info1->write_i32(scenario.map.grid_border_size);
+        SCENARIO->info1->write_raw(scenario.subtitle, MAX_SUBTITLE);
         SCENARIO->info1->write_raw(scenario.brief_description, MAX_BRIEF_DESCRIPTION);
-        SCENARIO->info1->write_raw(scenario.briefing, MAX_BRIEFING);
     }
 
     // request comply dialog
@@ -328,8 +328,8 @@ void scenario_load_state(scenario_data_buffers *SCENARIO) {
         scenario.map.grid_start = SCENARIO->info1->read_i32(); // 4
         scenario.map.grid_border_size = SCENARIO->info1->read_i32(); // 4
         // (64 + 522 = 576)
+        SCENARIO->info1->read_raw(scenario.subtitle, MAX_SUBTITLE);
         SCENARIO->info1->read_raw(scenario.brief_description, MAX_BRIEF_DESCRIPTION);
-        SCENARIO->info1->read_raw(scenario.briefing, MAX_BRIEFING);
     }
 
     // 5. map info 2 (6)
