@@ -226,13 +226,15 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
                             blocked = 1;
                         // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
                         // after starting the road placement. not perfect, but it works.
-                        if (queue_has(next_offset + map_grid_delta(-1, 0)) || queue_has(next_offset + map_grid_delta(1, 0)))
+                        int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
+                        if (d_x % 2 == 0)
                             blocked = 1;
                     }
                     if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
                         if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD))
                             blocked = 1;
-                        if (queue_has(next_offset + map_grid_delta(0, -1)) || queue_has(next_offset + map_grid_delta(0, 1)))
+                        int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
+                        if (d_y % 2 == 0)
                             blocked = 1;
                     }
                 }

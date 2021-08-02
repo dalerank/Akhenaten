@@ -767,10 +767,10 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
 //        }
 
-//        d = map_temp_grid_get(grid_offset, 0);
-//        if (d) {
+//        d = map_routing_distance(grid_offset);
+//        if (d > -1) {
 //            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
+//            text_draw_shadow(str, x + 25, y + 10, COLOR_WHITE);
 //        }
 
 //        d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
