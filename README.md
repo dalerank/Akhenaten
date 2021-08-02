@@ -1,8 +1,8 @@
 # Ozymandias 
 
 **Ozymandias** is a fork of the **Julius** project that intends to port the original Pharaoh
-to modern systems, like Julius and Augustus do for Caesar 3, as well as potentially any
-other game in the City Building series.
+to modern systems, like Julius and Augustus do for Caesar 3, as well as potentially other
+games in the City Building series.
 
 If you're looking for _Caesar 3_'s vanilla experience with modern machine compatibility,
 check out [Julius](https://github.com/bvschaik/julius).
@@ -15,23 +15,26 @@ The work is still in progress, so any help or support is appreciated. You can mo
 complete the first 5 training missions.
 
 What is working:
-- Main graphics
-- Main animations
+- Main graphics & menus
 - Loading original save files
+- Houses
+- Access to services
 - City messages
-- Empire map display
-- Campaign map progression
-- Service and religion
-- Workers
+- Empire map
+- Campaign missions progression
+- Camp workers
+- Floodplains and farms
+- Trading
+- Empire requests
 - (and more)
 
 What is not working:
 - Saving the game
-- Empire requests
 - Monuments
 - Some animals and resources
 - Irrigation
 - Combat
+- Health
 
 If you want a more complete list, check out the
 [TODO list on Notion](https://www.notion.so/Ozymandias-cfdc021c220b4d48b57bd431ed0f2a01).<br>

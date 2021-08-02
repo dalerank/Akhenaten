@@ -1033,21 +1033,23 @@ static void draw_animation(int x, int y, int grid_offset) {
         case BUILDING_BOOTH:
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
-            else
-                draw_entertainment_show_jugglers(b, x, y, color_mask);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                if (grid_offset == b->grid_offset)
+                    draw_entertainment_show_jugglers(b, x, y, color_mask);
+            }
             break;
         case BUILDING_BANDSTAND:
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
-            else {
-                if (building_get(b->prev_part_building_id)->type != b->type && grid_offset == b->grid_offset)
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
                     draw_entertainment_shows_musicians(b, x, y, color_mask);
             }
             break;
         case BUILDING_PAVILLION:
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
-            else {
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 if (grid_offset == b->grid_offset + map_grid_delta(0, 1))
                     draw_entertainment_shows_dancers(b, x, y, color_mask);
             }

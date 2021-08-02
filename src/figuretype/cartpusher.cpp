@@ -88,7 +88,18 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
             return advance_action(ACTION_DONE);
         else {
             building *dest = destination();
-            int accepting = building_warehouse_get_accepting_amount(resource_id, dest);
+
+            int accepting = 0;
+            switch (dest->type) {
+                case BUILDING_WAREHOUSE:
+                case BUILDING_WAREHOUSE_SPACE:
+                    accepting = building_warehouse_get_accepting_amount(resource_id, dest);
+                    break;
+                default:
+                    accepting = stack_proper_quantity(2 - dest->loads_stored, resource);
+                    break;
+            }
+
             int goal_to_deposit_max = fmin(carrying, accepting);
             int unload_single_turn = 1;
 
@@ -129,9 +140,12 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                         if (dest->loads_stored < 2) {
                             building_workshop_add_raw_material(dest);
                             unload_resource(100);
+                            if (i + 1 == times)
+                                advance_action(ACTION_DONE);
                         } else
                             return advance_action(ACTION_8_RECALCULATE);
                     }
+                    advance_action(ACTION_8_RECALCULATE);
                     break;
             }
         }
@@ -189,6 +203,10 @@ void figure::determine_deliveryman_destination() {
 
     destination_x = 0;
     destination_y = 0;
+
+    // before we start... check that resource is not empty.
+    if (resource_id == RESOURCE_NONE || get_carrying_amount() == 0)
+        return advance_action(ACTION_15_RETURNING2);
 
     // first: gold deliverers
     if (resource_id == RESOURCE_GOLD) {

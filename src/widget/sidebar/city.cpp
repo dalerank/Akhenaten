@@ -197,27 +197,27 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 45, 50, "year:", time->year);
         draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
         draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
+        y += 70;
     }
 
     /////// RANDOM
-    if (true) {
+    if (false) {
         auto randm = give_me_da_random_data();
 
         int cl = 60;
-        draw_debug_line(str, x, y + 85, cl, "iv1:", randm->iv1);
-        draw_debug_line(str, x, y + 95, cl, "iv2:", randm->iv2);
-        draw_debug_line(str, x, y + 105, cl, "1_3b:", randm->random1_3bit);
-        draw_debug_line(str, x, y + 115, cl, "1_7b:", randm->random1_7bit);
-        draw_debug_line(str, x, y + 125, cl, "1_15b:", randm->random1_15bit);
-        draw_debug_line(str, x, y + 135, cl, "2_3b:", randm->random2_3bit);
-        draw_debug_line(str, x, y + 145, cl, "2_7b:", randm->random2_7bit);
-        draw_debug_line(str, x, y + 155, cl, "2_15b:", randm->random2_15bit);
+        draw_debug_line(str, x, y + 15, cl, "iv1:", randm->iv1);
+        draw_debug_line(str, x, y + 25, cl, "iv2:", randm->iv2);
+        draw_debug_line(str, x, y + 35, cl, "1_3b:", randm->random1_3bit);
+        draw_debug_line(str, x, y + 45, cl, "1_7b:", randm->random1_7bit);
+        draw_debug_line(str, x, y + 55, cl, "1_15b:", randm->random1_15bit);
+        draw_debug_line(str, x, y + 65, cl, "2_3b:", randm->random2_3bit);
+        draw_debug_line(str, x, y + 75, cl, "2_7b:", randm->random2_7bit);
+        draw_debug_line(str, x, y + 85, cl, "2_15b:", randm->random2_15bit);
+        y += 90;
     }
 
-    y += 90;
-
     /////// FLOODS
-    if (true) {
+    if (false) {
         auto floods = give_me_da_floods_data();
 
         int c_curr = floodplains_current_cycle();
@@ -231,33 +231,33 @@ static void draw_debug_ui(int x, int y) {
         int c_plus28 = c_end + 28;
 
         int cl = 60;
-        draw_debug_line(str, x, y + 85, cl, "current:", c_curr); // current cycle
-
-        draw_debug_line(str, x, y + 95, cl, "t-49:", c_minus49); // 49 days prior
-        draw_debug_line(str, x, y + 105, cl, "t-27:", c_minus27); // 27 days prior
-        draw_debug_line(str, x, y + 115, cl, "start:", c_start); // flood start
-        draw_debug_line(str, x, y + 125, cl, "rest-1:", c_first_rest); // first rest period
-        draw_debug_line(str, x, y + 135, cl, "rest-2:", c_second_rest); // second rest period
-        draw_debug_line(str, x, y + 145, cl, "end:", c_end); // flood end
-        draw_debug_line(str, x, y + 155, cl, "final:", c_plus28); // lands farmable again
+        draw_debug_line(str, x, y + 15, cl, "current:", c_curr); // current cycle
+        draw_debug_line(str, x, y + 25, cl, "t-49:", c_minus49); // 49 days prior
+        draw_debug_line(str, x, y + 35, cl, "t-27:", c_minus27); // 27 days prior
+        draw_debug_line(str, x, y + 45, cl, "start:", c_start); // flood start
+        draw_debug_line(str, x, y + 55, cl, "rest-1:", c_first_rest); // first rest period
+        draw_debug_line(str, x, y + 65, cl, "rest-2:", c_second_rest); // second rest period
+        draw_debug_line(str, x, y + 75, cl, "end:", c_end); // flood end
+        draw_debug_line(str, x, y + 85, cl, "final:", c_plus28); // lands farmable again
 
         cl = 100;
-        draw_debug_line(str, x, y + 175, cl, "season_initial:", floods->season_initial);
-        draw_debug_line(str, x, y + 185, cl, "duration_initial:", floods->duration_initial);
-        draw_debug_line(str, x, y + 195, cl, "quality_initial:", floods->quality_initial);
-        draw_debug_line(str, x, y + 205, cl, "season:", floods->season);
-        draw_debug_line(str, x, y + 215, cl, "duration:", floods->duration);
-        draw_debug_line(str, x, y + 225, cl, "quality:", floods->quality);
-        draw_debug_line(str, x, y + 235, cl, "(unk00):", floods->unk00);
-        draw_debug_line(str, x, y + 245, cl, "quality_next:", floods->quality_next);
-        draw_debug_line(str, x, y + 255, cl, "quality_last:", floods->quality_last);
+        draw_debug_line(str, x, y + 105, cl, "season_initial:", floods->season_initial);
+        draw_debug_line(str, x, y + 115, cl, "duration_initial:", floods->duration_initial);
+        draw_debug_line(str, x, y + 125, cl, "quality_initial:", floods->quality_initial);
+        draw_debug_line(str, x, y + 135, cl, "season:", floods->season);
+        draw_debug_line(str, x, y + 145, cl, "duration:", floods->duration);
+        draw_debug_line(str, x, y + 155, cl, "quality:", floods->quality);
+        draw_debug_line(str, x, y + 165, cl, "(unk00):", floods->unk00);
+        draw_debug_line(str, x, y + 175, cl, "quality_next:", floods->quality_next);
+        draw_debug_line(str, x, y + 185, cl, "quality_last:", floods->quality_last);
 
         cl = 60;
-        draw_debug_line(str, x, y + 275, cl, "dat_30:", floods->flood_progress); // status 30 (???)
-        draw_debug_line(str, x, y + 285, cl, "(unk01):", floods->unk01); // ???
-        draw_debug_line(str, x, y + 295, cl, "state:", floods->state); // floodplains state
-        draw_debug_line(str, x, y + 305, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
-        draw_debug_line(str, x, y + 315, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
+        draw_debug_line(str, x, y + 205, cl, "dat_30:", floods->flood_progress); // status 30 (???)
+        draw_debug_line(str, x, y + 215, cl, "(unk01):", floods->unk01); // ???
+        draw_debug_line(str, x, y + 225, cl, "state:", floods->state); // floodplains state
+        draw_debug_line(str, x, y + 235, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
+        draw_debug_line(str, x, y + 245, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
+        y += 350;
     }
 
     /////// CAMERA
@@ -276,24 +276,22 @@ static void draw_debug_ui(int x, int y) {
         int max_y_pixel_offset;
         city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
-        draw_debug_line_double_left(str, x, y + 105, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
+        draw_debug_line_double_left(str, x, y + 15, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
+        draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
+        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", tx, ty);
+        draw_debug_line_double_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
-        draw_debug_line_double_left(str, x, y + 125, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
-        draw_debug_line_double_left(str, x, y + 135, 90, 40, "tile:", tx, ty);
-        draw_debug_line_double_left(str, x, y + 145, 90, 40, "---max:", real_max_x, real_max_y);
+        draw_debug_line_double_left(str, x, y + 65, 90, 40, "---min:", 0, 0);
+        draw_debug_line_double_left(str, x, y + 75, 90, 40, "pixel:", px, py);
+        draw_debug_line_double_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-        draw_debug_line_double_left(str, x, y + 165, 90, 40, "---min:", 0, 0);
-        draw_debug_line_double_left(str, x, y + 175, 90, 40, "pixel:", px, py);
-        draw_debug_line_double_left(str, x, y + 185, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
-
-        draw_debug_line_double_left(str, x, y + 205, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
-        draw_debug_line_double_left(str, x, y + 215, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
+        draw_debug_line_double_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
+        draw_debug_line_double_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
+        y += 120;
     }
 
     /////// TUTORIAL
-    x -= 10;
-    y += 150;
-    if (false) {auto flags = give_me_da_tut_flags();
+    if (true) {auto flags = give_me_da_tut_flags();
         const char* const flagnames[41] = {
                 "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
                 "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",
@@ -331,11 +329,11 @@ static void draw_debug_ui(int x, int y) {
             if (f)
                 color = COLOR_GREEN;
             string_from_int(str, i, 0);
-            text_draw_shadow(str, x + 13, y + 115 + i * 10, color);
-            text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 13 + 20, y + 115 + i * 10, color);
+            text_draw_shadow(str, x + 3, y + 115 + i * 10, color);
+            text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 3 + 20, y + 115 + i * 10, color);
             string_from_int(str, f, 0);
-            text_draw_shadow(str, x + 13 + 30, y + 115 + i * 10, color);
-            text_draw_shadow((uint8_t *) string_from_ascii(flagnames[i]), x + 13 + 45, y + 115 + i * 10, color);
+            text_draw_shadow(str, x + 3 + 30, y + 115 + i * 10, color);
+            text_draw_shadow((uint8_t *) string_from_ascii(flagnames[i]), x + 3 + 45, y + 115 + i * 10, color);
         }
     }
 }
