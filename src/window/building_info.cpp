@@ -281,7 +281,7 @@ static void init(int grid_offset) {
 
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE))
         context.terrain_type = TERRAIN_INFO_TREE;
-    else if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+    else if (!context.building_id && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         if (map_terrain_is(grid_offset, TERRAIN_WATER))
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
         else

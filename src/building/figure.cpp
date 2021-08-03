@@ -72,13 +72,10 @@ bool building::has_figure(int i, int figure_id) {
                 has_any = true;
         return has_any;
     } else {
-
-        // only check if there is a figure
-        if (figure_id < 0)
-            return (get_figureID(i) > 0);
-
         figure *f = get_figure(i);
         if (f->state && f->home() == this) { // check if figure belongs to this building...
+            if (figure_id < 0) // only check if there is a figure
+                return true;
             return (f->id == figure_id);
         } else { // decouple if figure does not belong to this building - assume cache is incorrect
             remove_figure(i);
@@ -743,7 +740,7 @@ void building::spawn_figure_mission_post() {
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (road_is_accessible) {
-        if (labor_category != 255) { // normal farms
+        if (!is_floodplain_farm()) { // normal farms
             common_spawn_labor_seeker(50);
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
@@ -1125,6 +1122,8 @@ void building::update_native_crop_progress() {
 void building::update_road_access() {
     // update building road access
     map_point road;
+    if (type == BUILDING_WORK_CAMP)
+        int a = 24;
     if (type == BUILDING_WAREHOUSE)
         road_is_accessible = map_has_road_access(x, y, 3, &road);
     else
