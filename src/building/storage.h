@@ -25,6 +25,11 @@ enum {
 };
 
 enum {
+    BAZAAR_ORDER_STATE_DONT_BUY = 0,
+    BAZAAR_ORDER_STATE_BUY = 1,
+};
+
+enum {
     OLD_STORAGE_STATE_ACCEPTING = 0,
     OLD_STORAGE_STATE_NOT_ACCEPTING = 1,
     OLD_STORAGE_STATE_GETTING = 2,
@@ -63,7 +68,7 @@ void building_storage_clear_all(void);
  * Creates a building storage
  * @return storage id, 0 when creation failed
  */
-int building_storage_create(void);
+int building_storage_create(int building_type);
 
 /**
  * Restores a building storage after undoing destruction.

@@ -440,7 +440,7 @@ static void add_warehouse(building *b) {
     int y_offset[9] = {0, 1, 0, 1, 2, 0, 2, 1, 2};
     int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
 
-    b->storage_id = building_storage_create();
+    b->storage_id = building_storage_create(BUILDING_WAREHOUSE);
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT))
         building_storage_accept_none(b->storage_id);
 
@@ -654,7 +654,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
             // distribution
         case BUILDING_GRANARY:
-            b->storage_id = building_storage_create();
+            b->storage_id = building_storage_create(BUILDING_GRANARY);
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GRANARY));
             map_tiles_update_area_roads(b->x, b->y, 5);
             break;

@@ -14,6 +14,7 @@
 static struct {
     resources_list resource_list;
     resources_list food_list;
+    resources_list market_goods_list;
 } available;
 
 int city_resource_count(int resource) {
@@ -26,6 +27,10 @@ const resources_list *city_resource_get_available(void) {
 const resources_list *city_resource_get_available_foods(void) {
     return &available.food_list;
 }
+const resources_list *city_resource_get_available_market_goods(void) {
+    return &available.market_goods_list;
+}
+
 
 int city_resource_multiple_wine_available(void) {
     return city_data.resource.wine_types_available >= 2;
@@ -201,20 +206,30 @@ void city_resource_determine_available(void) {
     }
     available.resource_list.size = 0;
     available.food_list.size = 0;
+    available.market_goods_list.size = 0;
 
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, true) ||
-            (i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
-            available.resource_list.items[available.resource_list.size++] = i;
-        }
-    }
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
-        if (i == RESOURCE_OLIVES || i == RESOURCE_VINES)
+        if (GAME_ENV == ENGINE_ENV_C3 && (i == RESOURCE_OLIVES || i == RESOURCE_VINES))
             continue;
 
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, true) ||
-            (i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
+            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
             available.food_list.items[available.food_list.size++] = i;
+            available.market_goods_list.items[available.market_goods_list.size++] = i;
+        }
+    }
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
+            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
+            available.resource_list.items[available.resource_list.size++] = i;
+            switch (i) {
+                case RESOURCE_POTTERY_PH:
+                case RESOURCE_BEER:
+                case RESOURCE_LINEN:
+                case RESOURCE_LUXURY_GOODS:
+                    available.market_goods_list.items[available.market_goods_list.size++] = i;
+                    break;
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
 int window_building_get_vertical_offset(building_info_context *c, int new_window_height) {
     new_window_height = new_window_height * 16;
     int old_window_height = c->height_blocks * 16;
+    c->height_blocks_submenu = new_window_height / 16;
     int y_offset = c->y_offset;
 
     int center = (old_window_height / 2) + y_offset;
@@ -46,6 +47,7 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
             new_window_y = height - new_window_height;
     }
 
+    c->y_offset_submenu = new_window_y;
     return new_window_y;
 }
 

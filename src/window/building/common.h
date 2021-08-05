@@ -45,8 +45,10 @@ typedef enum {
 typedef struct {
     int x_offset;
     int y_offset;
+    int y_offset_submenu;
     int width_blocks;
     int height_blocks;
+    int height_blocks_submenu;
     int help_id;
     int can_play_sound;
     int building_id;

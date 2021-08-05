@@ -39,15 +39,14 @@ void building_storage_reset_building_ids(void) {
             if (b->storage_id) {
                 if (data.storages[b->storage_id].building_id) {
                     // storage is already connected to a building: corrupt, create new
-                    b->storage_id = building_storage_create();
-                } else {
+                    b->storage_id = building_storage_create(b->type);
+                } else
                     data.storages[b->storage_id].building_id = i;
-                }
             }
         }
     }
 }
-int building_storage_create(void) {
+int building_storage_create(int building_type) {
     for (int i = 1; i < MAX_STORAGES[GAME_ENV]; i++) {
         if (!data.storages[i].in_use) {
             memset(&data.storages[i], 0, sizeof(struct data_storage));
@@ -63,10 +62,21 @@ int building_storage_create(void) {
                 const resources_list *list = city_resource_get_available();
                 for (int r = 0; r < list->size; r++) {
                     int resource = list->items[r];
-                    if (resource < 9)
-                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
-                    else
-                        data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                    switch (building_type) {
+                        case BUILDING_WAREHOUSE:
+                        case BUILDING_WAREHOUSE_SPACE:
+                            if (resource < 9)
+                                data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                            else
+                                data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                            break;
+                        case BUILDING_GRANARY:
+                            if (resource < 9)
+                                data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_ACCEPT;
+                            else
+                                data.storages[i].storage.resource_state[resource] = STORAGE_STATE_PHARAOH_REFUSE;
+                            break;
+                    }
                 }
             }
             return i;

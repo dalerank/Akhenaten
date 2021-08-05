@@ -737,10 +737,9 @@ static void draw_foreground(void) {
         window_building_draw_legion_info_foreground(&context);
 
     // general buttons
-    if (context.storage_show_special_orders) {
-        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
-        image_buttons_draw(context.x_offset, y_offset + 490, image_buttons_help_close, 2);
-    } else
+    if (context.storage_show_special_orders)
+        image_buttons_draw(context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2);
+    else
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_help_close, 2);
     if (context.can_go_to_advisor)
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40, image_buttons_advisor, 1);
@@ -802,8 +801,8 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     int button_id = 0;
     // general buttons
     if (context.storage_show_special_orders) {
-        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
-        button_id |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 490, image_buttons_help_close, 2,
+//        int y_offset = window_building_get_vertical_offset(&context, 28 + 5);
+        button_id |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset_submenu + 16 * context.height_blocks_submenu - 40, image_buttons_help_close, 2,
                                               &focus_image_button_id);
     } else {
         button_id |= image_buttons_handle_mouse(

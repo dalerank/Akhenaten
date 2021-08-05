@@ -104,22 +104,22 @@ static generic_button warehouse_distribution_permissions_buttons[] = {
         {0,   0, 20, 22, storage_toggle_permissions, button_none, 1, 0},
         {96,  0, 20, 22, storage_toggle_permissions, button_none, 2, 0},
         {228, 0, 20, 22, storage_toggle_permissions, button_none, 3, 0},
-
 };
 
 static generic_button granary_order_buttons[] = {
-        {0,   0, 304, 20, granary_orders, button_none, 0, 0},
-        {314, 0, 20,  20, granary_orders, button_none, 1, 0},
+        {0,   - 15 * 16, 304, 20, granary_orders, button_none, 0, 0},
+        {0,   -22 - 15 * 16, 304, 20, warehouse_orders, button_none, 1, 0},
+        {314, - 15 * 16, 20,  20, granary_orders, button_none, 2, 0},
 };
 
 static generic_button market_order_buttons[] = {
-        {314, 0, 20, 20, market_orders, button_none, 0, 0},
+        {314, - 15 * 16, 20, 20, market_orders, button_none, 0, 0},
 };
 
 static generic_button warehouse_order_buttons[] = {
         {0,    5 * 16,   304, 20, warehouse_orders, button_none, 0, 0},
         {0,   -22 + 5 * 16, 304, 20, warehouse_orders, button_none, 1, 0},
-        {314,  5 * 16,   20,  20, warehouse_orders, button_none, 2, 0},
+        {314,  5 * 16,   20,  20, warehouse_orders, button_none, 2, 0}, //
 };
 
 static struct {
@@ -149,68 +149,65 @@ enum {
     INSTR_OTHERS = 3,
 };
 
-static void draw_order_instruction(int instr_kind, const building_storage *storage, int resource, int x, int y) {
-    int state = storage->resource_state[resource];
+static void draw_order_instruction(int instr_kind, const building_storage *storage, int resource, int x, int y, int market_order = -1) {
 
     font_t font_nope = FONT_NORMAL_GREEN;
     font_t font_yes = FONT_NORMAL_WHITE;
     font_t font_get = FONT_NORMAL_RED;
 
-    int build_text_id = 0;
-    switch (instr_kind) {
-        case INSTR_STORAGE_YARD:
-            build_text_id = 29;
-            break;
-        case INSTR_GRANARY:
-            build_text_id = 30;
-            break;
-        case INSTR_DOCK:
-        case INSTR_OTHERS:
-            build_text_id = 32;
-            break;
-    }
-
-    switch (state) {
-        case STORAGE_STATE_PHARAOH_ACCEPT: {
-            int width = lang_text_draw(99, 18, x, y, font_yes);
-            int max_accept = storage->resource_max_accept[resource];
-            if (max_accept == 3200)
-                width += lang_text_draw(99, 28, x + width, y, font_yes);
-            else if (max_accept == 2400)
-                width += lang_text_draw(99, 27, x + width, y, font_yes);
-            else if (max_accept == 1600)
-                width += lang_text_draw(99, 26, x + width, y, font_yes);
-            else if (max_accept == 800)
-                width += lang_text_draw(99, 25, x + width, y, font_yes);
-            else
-                width += text_draw_number(max_accept, '@', " ", x + width, y, font_yes);
-            if (build_text_id > 0 && (max_accept == 2400 || max_accept == 1600 || max_accept == 800))
-                lang_text_draw(99, 29, x + width, y, font_yes);
-            break;
+    if (storage != nullptr)
+    {
+        switch (storage->resource_state[resource]) {
+            case STORAGE_STATE_PHARAOH_ACCEPT: {
+                int width = lang_text_draw(99, 18, x, y, font_yes);
+                int max_accept = storage->resource_max_accept[resource];
+                if (max_accept == 3200)
+                    width += lang_text_draw(99, 28, x + width, y, font_yes);
+                else if (max_accept == 2400)
+                    width += lang_text_draw(99, 27, x + width, y, font_yes);
+                else if (max_accept == 1600)
+                    width += lang_text_draw(99, 26, x + width, y, font_yes);
+                else if (max_accept == 800)
+                    width += lang_text_draw(99, 25, x + width, y, font_yes);
+                else
+                    width += text_draw_number(max_accept, '@', " ", x + width, y, font_yes);
+                if (max_accept == 2400 || max_accept == 1600 || max_accept == 800)
+                    lang_text_draw(99, 29, x + width, y, font_yes);
+                break;
+            }
+            case STORAGE_STATE_PHARAOH_REFUSE:
+                lang_text_draw(99, 8, x, y, font_nope);
+                break;
+            case STORAGE_STATE_PHARAOH_GET: {
+                int width = lang_text_draw(99, 19, x, y, font_get);
+                int max_get = storage->resource_max_get[resource];
+                if (max_get == 3200)
+                    width += lang_text_draw(99, 31, x + width, y, font_get);
+                else if (max_get == 2400)
+                    width += lang_text_draw(99, 27, x + width, y, font_get);
+                else if (max_get == 1600)
+                    width += lang_text_draw(99, 26, x + width, y, font_get);
+                else if (max_get == 800)
+                    width += lang_text_draw(99, 25, x + width, y, font_get);
+                else
+                    width += text_draw_number(max_get, '@', " ", x + width, y, font_get);
+                if (max_get == 2400 || max_get == 1600 || max_get == 800)
+                    lang_text_draw(99, 29, x + width, y, font_get);
+                break;
+            }
+            case STORAGE_STATE_PHARAOH_EMPTY:
+                lang_text_draw(99, 21, x, y, font_nope);
+                break;
         }
-        case STORAGE_STATE_PHARAOH_REFUSE:
-            lang_text_draw(99, 8, x, y, font_nope);
-            break;
-        case STORAGE_STATE_PHARAOH_GET: {
-            int width = lang_text_draw(99, 19, x, y, font_get);
-            int max_get = storage->resource_max_get[resource];
-            if (max_get == 3200)
-                width += lang_text_draw(99, 31, x + width, y, font_get);
-            else if (max_get == 2400)
-                width += lang_text_draw(99, 27, x + width, y, font_get);
-            else if (max_get == 1600)
-                width += lang_text_draw(99, 26, x + width, y, font_get);
-            else if (max_get == 800)
-                width += lang_text_draw(99, 25, x + width, y, font_get);
-            else
-                width += text_draw_number(max_get, '@', " ", x + width, y, font_get);
-            if (build_text_id > 0 && (max_get == 2400 || max_get == 1600 || max_get == 800))
-                lang_text_draw(99, 29, x + width, y, font_get);
-            break;
+    } else {
+        switch (market_order) {
+            case BAZAAR_ORDER_STATE_BUY:
+                lang_text_draw(97, 8, x, y, font_yes);
+                break;
+            case BAZAAR_ORDER_STATE_DONT_BUY:
+                lang_text_draw(97, 9, x, y, font_nope);
+                break;
         }
-        case STORAGE_STATE_PHARAOH_EMPTY:
-            lang_text_draw(99, 21, x, y, font_nope);
-            break;
     }
 }
 
@@ -331,15 +328,18 @@ void window_building_handle_mouse_market(const mouse *m, building_info_context *
             go_to_orders_button, 1, &data.focus_button_id);
 }
 void window_building_handle_mouse_market_orders(const mouse *m, building_info_context *c) {
-    int y_offset = window_building_get_vertical_offset(c, 28);
+    int y_offset = window_building_get_vertical_offset(c, 28 - 11);
+    data.resource_focus_button_id = 0;
 
+    // resources
+    int num_resources = city_resource_get_available_market_goods()->size;
     data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
-                                     orders_resource_buttons, INVENTORY_MAX,
-                                     &data.resource_focus_button_id))
+    if (generic_buttons_handle_mouse(m, c->x_offset + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id))
         return;
-    generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1,
-                                 &data.orders_focus_button_id);
+
+    // extra instructions
+    if (GAME_ENV == ENGINE_ENV_C3)
+        generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1, &data.orders_focus_button_id);
 }
 void window_building_draw_market(building_info_context *c) {
     c->help_id = 2;
@@ -424,42 +424,44 @@ void window_building_draw_market_foreground(building_info_context *c) {
                             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 void window_building_draw_market_orders(building_info_context *c) {
-    c->help_id = 3;
-    int y_offset = window_building_get_vertical_offset(c, 28);
-    outer_panel_draw(c->x_offset, y_offset, 29, 28);
-    lang_text_draw_centered(97, 0, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
+    c->help_id = 2;
+    int y_offset = window_building_get_vertical_offset(c, 28 - 11);
+    outer_panel_draw(c->x_offset, y_offset, 29, 28 - 11);
+    lang_text_draw_centered(97, 7, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21 - 10);
 }
 void window_building_draw_market_orders_foreground(building_info_context *c) {
-    int y_offset = window_building_get_vertical_offset(c, 28);
-
-    // todo: fetch map available foods?
-    int food1 = ALLOWED_FOODS(0);
-    int food2 = ALLOWED_FOODS(1);
-    int food3 = ALLOWED_FOODS(2);
-    int food4 = ALLOWED_FOODS(3);
-
-    int resources[] = {food1, food2, food3, food4, RESOURCE_WINE, RESOURCE_OIL_C3, RESOURCE_FURNITURE, RESOURCE_POTTERY_C3};
-
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
-
+    window_building_draw_market_orders(c);
     int line_x = c->x_offset + 215;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
+    int y_offset = window_building_get_vertical_offset(c, 28 - 11);
+
+    building *b = building_get(c->building_id);
+    const resources_list *list = city_resource_get_available_market_goods();
+    for (int i = 0; i < list->size; i++) {
         int line_y = 20*i;
-        int resource = resources[i];
+        int resource = list->items[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + line_y);
-        image_draw(image_id, c->x_offset + 408, y_offset + 46 + line_y);
-        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
-        button_border_draw(c->x_offset + 180, y_offset + 46 + line_y, 210, 22, data.resource_focus_button_id == i + 1);
-        building *b = building_get(c->building_id);
-        int state = is_good_accepted(i, b);
-        if (state)
-            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-        else
-            lang_text_draw(99, 8, line_x, y_offset + 51 + line_y, FONT_NORMAL_RED);
+
+        image_draw(image_id, c->x_offset + 25, y_offset + 48 + line_y);
+        lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
+        if (data.resource_focus_button_id - 1 == i)
+            button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
+
+        // order status
+        draw_order_instruction(INSTR_STORAGE_YARD, nullptr, resource, line_x, y_offset + 51 + line_y, is_good_accepted(i, b));
     }
+
+    // accept none button
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
+    }
+//    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//        button_border_draw(c->x_offset + 80, y_offset + 382 - 10 * 16, 16 * (c->width_blocks - 10), 20,
+//                           data.orders_focus_button_id == 2 ? 1 : 0);
+//        lang_text_draw_centered(99, 7, c->x_offset + 80, y_offset + 386 - 10 * 16,
+//                                16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+//    }
 }
 
 int window_building_handle_mouse_granary(const mouse *m, building_info_context *c) {
@@ -470,17 +472,29 @@ int window_building_handle_mouse_granary(const mouse *m, building_info_context *
             go_to_orders_button, 1, &data.focus_button_id);
 }
 int window_building_handle_mouse_granary_orders(const mouse *m, building_info_context *c) {
-    int y_offset = window_building_get_vertical_offset(c, 28);
+    int y_offset = window_building_get_vertical_offset(c, 28 - 15);
+    data.resource_focus_button_id = 0;
 
-    data.building_id = c->building_id;
-    if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
-                                     orders_resource_buttons, city_resource_get_available_foods()->size,
-                                     &data.resource_focus_button_id)) {
+    // arrows
+    bool handled = false;
+    if (image_buttons_handle_mouse(m, c->x_offset + 165, y_offset + 49, orders_decrease_arrows, 20, &data.decr_arrow_focus_button_id))
+        handled = true;
+    if (image_buttons_handle_mouse(m, c->x_offset + 165 + 18, y_offset + 49, orders_increase_arrows, 20, &data.decr_arrow_focus_button_id))
+        handled = true;
+    if (handled)
         return 1;
-    }
 
-    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 2,
-                                        &data.orders_focus_button_id);
+    // resources
+    int num_resources = city_resource_get_available_foods()->size;
+    data.building_id = c->building_id;
+    if (generic_buttons_handle_mouse(m, c->x_offset + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id))
+        return 1;
+
+    // extra instructions
+    if (GAME_ENV == ENGINE_ENV_C3)
+        return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 3, &data.orders_focus_button_id);
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, granary_order_buttons, 2, &data.orders_focus_button_id);
 }
 void window_building_draw_granary(building_info_context *c) {
     c->help_id = 3;
@@ -553,85 +567,57 @@ void window_building_draw_granary_foreground(building_info_context *c) {
 }
 void window_building_draw_granary_orders(building_info_context *c) {
     c->help_id = 3;
-    int y_offset = window_building_get_vertical_offset(c, 28);
-    outer_panel_draw(c->x_offset, y_offset, 29, 28);
+    int y_offset = window_building_get_vertical_offset(c, 28 - 15);
+    outer_panel_draw(c->x_offset, y_offset, 29, 28 - 15);
     lang_text_draw_centered(98, 6, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
+    inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21 - 15);
 }
 void window_building_draw_granary_orders_foreground(building_info_context *c) {
-    int y_offset = window_building_get_vertical_offset(c, 28);
+    window_building_draw_granary_orders(c);
     int line_x = c->x_offset + 215;
+    int y_offset = window_building_get_vertical_offset(c, 28 - 15);
 
-    // empty button
-    button_border_draw(c->x_offset + 80, y_offset + 404, 16 * (c->width_blocks - 10), 20,
-                       data.orders_focus_button_id == 1 ? 1 : 0);
-    const building_storage *storage = building_storage_get(building_get(c->building_id)->storage_id);
-    if (storage->empty_all) {
-        lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10),
-                                FONT_NORMAL_BLACK);
-        lang_text_draw_centered(98, 9, c->x_offset, y_offset + 384, 16 * c->width_blocks, FONT_NORMAL_BLACK);
-    } else {
-        lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408, 16 * (c->width_blocks - 10),
-                                FONT_NORMAL_BLACK);
-    }
-
-    // accept none button
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2);
-
+    int storage_id = building_get(c->building_id)->storage_id;
+    backup_storage_settings(storage_id);
+    const building_storage *storage = building_storage_get(storage_id);
     const resources_list *list = city_resource_get_available_foods();
     for (int i = 0; i < list->size; i++) {
         int line_y = 20*i;
         int resource = list->items[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + line_y);
-        image_draw(image_id, c->x_offset + 420, y_offset + 46 + line_y);
-        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
-        button_border_draw(c->x_offset + 180, y_offset + 46 + line_y, 210, 22, data.resource_focus_button_id == i + 1);
-        button_border_draw(c->x_offset + 390, y_offset + 46 + line_y, 28, 22,
-                           data.partial_resource_focus_button_id == i + 1);
 
+        image_draw(image_id, c->x_offset + 25, y_offset + 48 + line_y);
+        lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
+        if (data.resource_focus_button_id - 1 == i)
+            button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
+
+        // order status
+        draw_order_instruction(INSTR_STORAGE_YARD, storage, resource, line_x, y_offset + 51 + line_y);
+
+        // arrows
         int state = storage->resource_state[resource];
-//        if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
-//            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_full_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS) {
-//            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_3quarters_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_HALF) {
-//            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_half_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
-//            lang_text_draw(99, 7, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_quarter_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING)
-//            lang_text_draw(99, 8, line_x, y_offset + 51 + line_y, FONT_NORMAL_RED);
-//        else if (state == BUILDING_STORAGE_STATE_GETTING) {
-//            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + line_y);
-//            lang_text_draw(99, 9, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_full_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) {
-//            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + line_y);
-//            lang_text_draw(99, 9, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_3quarters_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_GETTING_HALF) {
-//            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + line_y);
-//            lang_text_draw(99, 9, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_half_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        } else if (state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
-//            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + line_y);
-//            lang_text_draw(99, 9, line_x, y_offset + 51 + line_y, FONT_NORMAL_WHITE);
-//            text_draw_centered(granary_quarter_button_text, c->x_offset + 394, y_offset + 51 + line_y, 20,
-//                               FONT_NORMAL_BLACK, 0);
-//        }
+        if (state == STORAGE_STATE_PHARAOH_ACCEPT || state == STORAGE_STATE_PHARAOH_GET) {
+            image_buttons_draw(c->x_offset + 165, y_offset + 49, orders_decrease_arrows, 1, i);
+            image_buttons_draw(c->x_offset + 165 + 18, y_offset + 49, orders_increase_arrows, 1, i);
+        }
+    }
 
+    // emptying button
+    button_border_draw(c->x_offset + 80, y_offset + 404 - 15 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
+    if (storage->empty_all)
+        lang_text_draw_centered(98, 8, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+    else
+        lang_text_draw_centered(98, 7, c->x_offset + 80, y_offset + 408 - 15 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+
+    // accept none button
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        draw_accept_none_button(c->x_offset + 394, y_offset + 404 - 15 * 16, data.orders_focus_button_id == 3);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        button_border_draw(c->x_offset + 80, y_offset + 382 - 15 * 16, 16 * (c->width_blocks - 10), 20,
+                           data.orders_focus_button_id == 2 ? 1 : 0);
+        lang_text_draw_centered(99, 7, c->x_offset + 80, y_offset + 386 - 15 * 16,
+                                16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
 }
 void window_building_get_tooltip_granary_orders(int *group_id, int *text_id) {
@@ -659,19 +645,14 @@ int window_building_handle_mouse_warehouse(const mouse *m, building_info_context
 }
 int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28 + 5);
-
     data.resource_focus_button_id = 0;
-//    window_invalidate();
-
-    int num_resources = city_resource_get_available()->size;
-    if (num_resources > 20)
-        num_resources = 20;
 
     bool handled = false;
 //    bool handled = scrollbar_handle_mouse(&scrollbar, m);
 //    if (handled)
 //        return handled;
 
+    // arrows
     if (image_buttons_handle_mouse(m, c->x_offset + 165, y_offset + 49, orders_decrease_arrows, 20, &data.decr_arrow_focus_button_id))
         handled = true;
     if (image_buttons_handle_mouse(m, c->x_offset + 165 + 18, y_offset + 49, orders_increase_arrows, 20, &data.decr_arrow_focus_button_id))
@@ -679,10 +660,15 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
     if (handled)
         return 1;
 
+    // resources
+    int num_resources = city_resource_get_available()->size;
+    if (num_resources > 20)
+        num_resources = 20;
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 205, y_offset + 46, orders_resource_buttons, num_resources, &data.resource_focus_button_id))
         return 1;
 
+    // extra instructions
     if (GAME_ENV == ENGINE_ENV_C3)
         return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, warehouse_order_buttons, 3, &data.orders_focus_button_id);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -824,10 +810,9 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c) 
 
     // emptying button
     button_border_draw(c->x_offset + 80, y_offset + 404 + 5 * 16, 16 * (c->width_blocks - 10), 20, data.orders_focus_button_id == 1 ? 1 : 0);
-    if (storage->empty_all) {
+    if (storage->empty_all)
         lang_text_draw_centered(99, 5, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-//        lang_text_draw_centered(99, 6, c->x_offset, y_offset + 426 + 5 * 16, 16 * c->width_blocks, FONT_SMALL_PLAIN);
-    } else
+    else
         lang_text_draw_centered(99, 4, c->x_offset + 80, y_offset + 408 + 5 * 16, 16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
     // trade center

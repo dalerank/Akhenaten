@@ -239,14 +239,17 @@ static void init(int text_id, int message_id, void (*background_callback)(void))
     data.message_id = message_id;
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        const city_message *city_msg = city_message_get(data.message_id);
-        if (city_msg->eventmsg_body_id != -1) {
-            data.is_eventmsg = true;
-            data.title_text = get_eventmsg_text(city_msg->eventmsg_title_id, 0);
-            data.body_template = get_eventmsg_text(city_msg->eventmsg_body_id, 0);
-            data.phrase_template = get_eventmsg_text(city_msg->eventmsg_phrase_id, 0);
-            eventmsg_template_combine(data.phrase_template, data.phrase_text, true);
-            eventmsg_template_combine(data.body_template, data.body_text, false);
+        if (message_id != -1) {
+            const city_message *city_msg = city_message_get(data.message_id);
+            if (city_msg->eventmsg_body_id != -1) {
+                data.is_eventmsg = true;
+                data.title_text = get_eventmsg_text(city_msg->eventmsg_title_id, 0);
+                data.body_template = get_eventmsg_text(city_msg->eventmsg_body_id, 0);
+                data.phrase_template = get_eventmsg_text(city_msg->eventmsg_phrase_id, 0);
+                eventmsg_template_combine(data.phrase_template, data.phrase_text, true);
+                eventmsg_template_combine(data.body_template, data.body_text, false);
+            } else
+                data.is_eventmsg = false;
         } else
             data.is_eventmsg = false;
     }

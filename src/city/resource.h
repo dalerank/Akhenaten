@@ -14,6 +14,7 @@ int city_resource_count(int resource);
 
 const resources_list *city_resource_get_available(void);
 const resources_list *city_resource_get_available_foods(void);
+const resources_list *city_resource_get_available_market_goods(void);
 
 int city_resource_multiple_wine_available(void);
 
