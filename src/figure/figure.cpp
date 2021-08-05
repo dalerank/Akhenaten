@@ -436,7 +436,14 @@ void figure::load(buffer *buf) {
     f->attacker_id2 = buf->read_i16();
     f->opponent_id = buf->read_i16();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        buf->skip(239);
+//        buf->skip(239);
+        buf->skip(7);
+        f->unk_fest_269 = buf->read_i16(); // 269
+        buf->skip(152);
+        f->unk_fest_ffff = buf->read_i16(); // -1
+        buf->skip(48);
+        f->festival_remaining_dances = buf->read_i8(); // 4
+        buf->skip(27);
         f->cart_image_id = buf->read_i16() + 18;
         buf->skip(2);
     }

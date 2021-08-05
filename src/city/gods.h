@@ -12,6 +12,7 @@ void city_gods_calculate_moods(int update_moods);
 int city_gods_calculate_least_happy(void);
 int city_god_happiness(int god_id);
 int city_god_wrath_bolts(int god_id);
+int city_god_happy_angels(int god_id);
 /**
  * @return God ID or -1 if no single god is the least happy
  */

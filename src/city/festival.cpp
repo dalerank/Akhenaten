@@ -1,3 +1,4 @@
+#include <core/random.h>
 #include "festival.h"
 
 #include "building/warehouse.h"
@@ -7,31 +8,30 @@
 #include "city/message.h"
 #include "city/sentiment.h"
 #include "core/config.h"
+#include "buildings.h"
 
 int city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;
 }
-
 int city_festival_months_since_last(void) {
     return city_data.festival.months_since_festival;
+}
+int city_festival_months_till_next(void) {
+    return city_data.festival.planned.months_to_go;
 }
 
 int city_festival_small_cost(void) {
     return city_data.festival.small_cost;
 }
-
 int city_festival_large_cost(void) {
     return city_data.festival.large_cost;
 }
-
 int city_festival_grand_cost(void) {
     return city_data.festival.grand_cost;
 }
-
 int city_festival_grand_alcohol(void) {
     return city_data.festival.grand_alcohol;
 }
-
 int city_festival_out_of_alcohol(void) {
     return city_data.festival.not_enough_alcohol;
 }
@@ -39,7 +39,6 @@ int city_festival_out_of_alcohol(void) {
 int city_festival_selected_god(void) {
     return city_data.festival.selected.god;
 }
-
 void city_festival_select_god(int god_id) {
     city_data.festival.selected.god = god_id;
 }
@@ -47,7 +46,6 @@ void city_festival_select_god(int god_id) {
 int city_festival_selected_size(void) {
     return city_data.festival.selected.size;
 }
-
 int city_festival_select_size(int size) {
     if (size == FESTIVAL_GRAND && city_data.festival.not_enough_alcohol)
         return 0;
@@ -143,10 +141,8 @@ void city_festival_update(void) {
         city_data.festival.planned.months_to_go--;
         if (city_data.festival.planned.months_to_go <= 0)
             throw_party();
-
     }
 }
-
 void city_festival_calculate_costs(void) {
     city_data.festival.small_cost = city_data.population.population / 20 + 10;
     city_data.festival.large_cost = city_data.population.population / 10 + 20;
@@ -166,5 +162,71 @@ void city_festival_calculate_costs(void) {
         if (city_data.festival.selected.size == FESTIVAL_GRAND) {
             city_data.festival.selected.size = FESTIVAL_LARGE;
         }
+    }
+}
+
+#include "core/image_group.h"
+
+void figure::festival_action() {
+    building *b = home();
+    switch(b->type) {
+        case BUILDING_TEMPLE_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            image_set_animation(GROUP_PRIEST_OSIRIS);
+            break;
+        case BUILDING_TEMPLE_RA:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+            image_set_animation(GROUP_PRIEST_RA);
+            break;
+        case BUILDING_TEMPLE_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+            image_set_animation(GROUP_PRIEST_PTAH);
+            break;
+        case BUILDING_TEMPLE_SETH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+            image_set_animation(GROUP_PRIEST_SETH);
+            break;
+        case BUILDING_TEMPLE_BAST:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            image_set_animation(GROUP_PRIEST_BAST);
+            break;
+        case BUILDING_JUGGLER_SCHOOL:
+            image_set_animation(GROUP_JUGGLERS);
+            break;
+        case BUILDING_CONSERVATORY:
+            image_set_animation(GROUP_MUSICIANS);
+            break;
+        case BUILDING_DANCE_SCHOOL:
+            image_set_animation(GROUP_DANCERS);
+            break;
+    }
+    switch (action_state) {
+        case 9: // is "dancing" on tile
+            festival_remaining_dances--;
+            advance_action(10);
+            break;
+        case 10: // goes to random spot on the square
+            if (!routing_path_id) {
+                if (festival_remaining_dances == 0 || !city_building_has_festival_square())
+                    return poof();
+
+                // choose a random tile on the festival square
+                int x, y;
+                int rand_x, rand_y;
+                city_building_get_festival_square_position(&x, &y);
+                int rand_seed = random_short();
+                do {
+                    int random_tile = rand_seed % 25;
+                    rand_x = x + random_tile % 5;
+                    rand_y = y + random_tile / 5;
+                    rand_seed++;
+                } while (rand_x == tile_x && rand_y == tile_y);
+                do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
+            } else
+                do_goto(destination_x, destination_y, TERRAIN_USAGE_ANY, 11);
+            break;
+        case 11: // reached a random spot on the square, now what?
+            advance_action(9);
+            break;
     }
 }

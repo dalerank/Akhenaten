@@ -25,6 +25,7 @@ static int get_land_type_citizen_building(int grid_offset) {
             type = CITIZEN_0_ROAD;
             break;
         case BUILDING_FORT_GROUND:
+        case BUILDING_FESTIVAL_SQUARE:
             type = CITIZEN_2_PASSABLE_TERRAIN;
             break;
         case BUILDING_TRIUMPHAL_ARCH:

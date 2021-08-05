@@ -353,6 +353,19 @@ static void update_god_moods(void) {
         if (god->wrath_bolts > 50)
             god->wrath_bolts = 50;
 
+        if (god->happiness <= 50)
+            god->happy_angels = 0;
+        else if (god->happiness > 60) {
+            if (god->happiness <= 80)
+                god->happy_angels += 1;
+            else if (god->happiness <= 90)
+                god->happy_angels += 2;
+            else
+                god->happy_angels += 5;
+        }
+        if (god->happy_angels > 50)
+            god->happy_angels = 50;
+
     }
     if (game_time_day() != 0)
         return;
@@ -539,8 +552,10 @@ int city_god_happiness(int god_id) {
     return city_data.religion.gods[god_id].happiness;
 }
 int city_god_wrath_bolts(int god_id) {
-    // TODO: lil angels icons
     return city_data.religion.gods[god_id].wrath_bolts;
+}
+int city_god_happy_angels(int god_id) {
+    return city_data.religion.gods[god_id].happy_angels;
 }
 int city_god_months_since_festival(int god_id) {
     return city_data.religion.gods[god_id].months_since_festival;

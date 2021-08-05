@@ -104,7 +104,7 @@ void figure::cart_update_image() {
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset() + 96;
-        cart_image_id = 0;
+//        cart_image_id = 0;
     } else
         sprite_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * anim_frame;
     if (cart_image_id) {

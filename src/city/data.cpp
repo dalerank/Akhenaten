@@ -651,7 +651,7 @@ static void load_main_data(buffer *buf) {
         city_data.building.senate_x = buf->read_u8();
         city_data.building.senate_y = buf->read_u8();
         city_data.building.senate_grid_offset = buf->read_i16();
-    } else {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         city_data.map.entry_point.x = buf->read_u16();
         city_data.map.entry_point.y = buf->read_u16();
         city_data.map.entry_point.grid_offset = buf->read_i32();
@@ -1125,10 +1125,16 @@ static void load_main_data(buffer *buf) {
         for (int i = 0; i < 232; i++)
             city_data.unused.unknown_464c[i] = buf->read_i8(); // i=48,68,72
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
-        buf->skip(132);
+        buf->skip(116);
+        city_data.building.festival_square_x = buf->read_i32();
+        city_data.building.festival_square_y = buf->read_i32();
+        buf->skip(8);
         city_data.finance.this_year.income.gold_extracted = buf->read_i32();
         buf->skip(96);
-        buf->skip(40);
+        city_data.building.festival_square_placed = buf->read_i16();
+        for (int i = 0; i < MAX_GODS; i++)
+            city_data.religion.gods[i].happy_angels = buf->read_i8();
+        buf->skip(33);
         buf->skip(2); // 2800 --> 0     granary space?
         buf->skip(30);
         buf->skip(2); // 400 --> 0      granary used (game meat)?

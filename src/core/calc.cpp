@@ -82,7 +82,6 @@ int calc_general_direction(int x_from, int y_from, int x_to, int y_to) {
             return DIR_6_TOP_LEFT;
         else if (y_from < y_to)
             return DIR_5_LEFT;
-
     }
     return DIR_8_NONE;
 }

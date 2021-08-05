@@ -217,7 +217,6 @@ bool figure::is_attacking_native() {
     return type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING;
 }
 void figure::figure_combat_handle_corpse() {
-//    state = FIGURE_STATE_DYING;
     if (wait_ticks < 0)
         wait_ticks = 0;
 

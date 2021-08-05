@@ -189,17 +189,23 @@ void city_buildings_set_mission_post_operational(void) {
 }
 
 int city_building_has_festival_square(void) {
-    return city_data.building.festival_building_id != 0;
+    return city_data.building.festival_square_placed;
 }
-int city_building_get_festival_square(void) {
-    return city_data.building.festival_building_id;
+void city_building_get_festival_square_position(int *x, int *y) {
+    *x = city_data.building.festival_square_x;
+    *y = city_data.building.festival_square_y;
 }
 void city_buildings_add_festival_square(building *square) {
-    // todo
+    city_data.building.festival_square_placed = 1;
+    city_data.building.festival_square_x = square->x;
+    city_data.building.festival_square_y = square->y;
 }
-void city_buildings_remove_festival_square(building *square) {
-    // todo
+void city_buildings_remove_festival_square(void) {
+    city_data.building.festival_square_x = -1;
+    city_data.building.festival_square_y = -1;
+    city_data.building.festival_square_placed = 0;
 }
+
 
 int city_buildings_unknown_value(void) {
     return city_data.building.unknown_value;

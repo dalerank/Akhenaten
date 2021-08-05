@@ -136,6 +136,10 @@ public:
     short attacker_id2;
     short opponent_id;
 
+    short unk_fest_269;
+    short unk_fest_ffff;
+    char festival_remaining_dances;
+
     //
 
     figure(int _id) {
@@ -336,6 +340,7 @@ public:
     void policeman_action();
     void magistrate_action();
     void water_carrier_action();
+    void festival_action();
 
     // migrant.c
     void update_direction_and_image();

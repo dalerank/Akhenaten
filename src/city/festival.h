@@ -3,6 +3,7 @@
 
 int city_festival_is_planned(void);
 int city_festival_months_since_last(void);
+int city_festival_months_till_next(void);
 
 int city_festival_small_cost(void);
 int city_festival_large_cost(void);

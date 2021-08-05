@@ -277,7 +277,8 @@ bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, sh
 void figure::action_perform() {
 //    return;
     if (action_state == 0)
-        poof(); // no action
+        set_state(FIGURE_STATE_DEAD);
+//        poof(); // no action
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);
@@ -485,6 +486,7 @@ void figure::action_perform() {
             case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;
             case 89: magistrate_action();               break;
+            case 91: festival_action();                 break;
             default:
                 break;
         }
