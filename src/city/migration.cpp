@@ -65,7 +65,6 @@ static void create_immigrants(int num_people) {
     city_data.migration.newcomers += city_data.migration.immigrated_today;
     if (immigrated == 0)
         city_data.migration.refused_immigrants_today += num_people;
-
 }
 
 static void create_emigrants(int num_people) {
@@ -84,10 +83,8 @@ static void create_migrants(void) {
             create_immigrants(
                     city_data.migration.immigration_amount_per_batch + city_data.migration.immigration_queue_size);
             city_data.migration.immigration_queue_size = 0;
-        } else {
-            // queue them for next round
+        } else // queue them for next round
             city_data.migration.immigration_queue_size += city_data.migration.immigration_amount_per_batch;
-        }
     }
     if (city_data.migration.emigration_amount_per_batch > 0) {
         if (city_data.migration.emigration_amount_per_batch >= 4)
@@ -99,10 +96,8 @@ static void create_migrants(void) {
                 city_data.migration.emigration_message_shown = 1;
 //                city_message_post(true, MESSAGE_EMIGRATION, 0, 0);
             }
-        } else {
-            // queue them for next round
+        } else // queue them for next round
             city_data.migration.emigration_queue_size += city_data.migration.emigration_amount_per_batch;
-        }
     }
     city_data.migration.immigration_amount_per_batch = 0;
     city_data.migration.emigration_amount_per_batch = 0;

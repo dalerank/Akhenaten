@@ -186,9 +186,8 @@ void figure::extinguish_fire() {
         burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
-    } else {
+    } else
         wait_ticks = 1;
-    }
     attack_direction = calc_general_direction(tile_x, tile_y, burn->x, burn->y);
     if (attack_direction >= 8)
         attack_direction = 0;
@@ -227,6 +226,7 @@ void figure::engineer_action() {
             advance_action(ACTION_10_GOING);
             break;
         case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
+        case 9:
             do_enterbuilding(true, home());
             break;
         case ACTION_10_GOING:
@@ -253,7 +253,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case ACTION_11_RETURNING_FROM_PATROL:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
-            do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
+            do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
@@ -465,11 +465,11 @@ void figure::water_carrier_action() {
     switch (action_state) {
         case ACTION_10_GOING:
         case FIGURE_ACTION_72_PREFECT_ROAMING:
-            do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+            do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
             break;
         case ACTION_11_RETURNING_FROM_PATROL:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
-            do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_71_PREFECT_ENTERING_EXITING);
+            do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
             terrain_usage = TERRAIN_USAGE_ANY;
@@ -488,7 +488,6 @@ void figure::water_carrier_action() {
             image_set_animation(GROUP_FIGURE_WATER_CARRIER, 104, 36);
             break;
     }
-
 }
 
 // Same as policeman, but can't fight

@@ -436,6 +436,7 @@ void window_building_draw_market_orders_foreground(building_info_context *c) {
     int y_offset = window_building_get_vertical_offset(c, 28 - 11);
 
     building *b = building_get(c->building_id);
+//    backup_storage_settings(storage_id); // TODO: market state backup
     const resources_list *list = city_resource_get_available_market_goods();
     for (int i = 0; i < list->size; i++) {
         int line_y = 20*i;

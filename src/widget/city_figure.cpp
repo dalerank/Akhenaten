@@ -27,6 +27,7 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 #include "widget/city_building_ghost.h"
 #include "building/properties.h"
 #include "figure/route.h"
+#include "window/city.h"
 
 //void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color = COLOR_WHITE) {
 //    text_draw_shadow((uint8_t*)string_from_ascii(text), x, y, COLOR_WHITE);
@@ -35,7 +36,8 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 void figure::draw_debug() {
 
-    return;
+    if (debug_range_1 % 2 == 0)
+        return;
 
     building *b = home();
     building *bdest = destination();

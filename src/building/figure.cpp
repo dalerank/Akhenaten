@@ -73,7 +73,7 @@ bool building::has_figure(int i, int figure_id) {
         return has_any;
     } else {
         figure *f = get_figure(i);
-        if (f->state && f->home() == this) { // check if figure belongs to this building...
+        if (f->state && (f->home() == this || f->immigrant_home() == this)) { // check if figure belongs to this building...
             if (figure_id < 0) // only check if there is a figure
                 return true;
             return (f->id == figure_id);

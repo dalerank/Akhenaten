@@ -175,6 +175,7 @@ static int groupid_translation_table_ph[] = {
         209, 9 + 341, // delivery boy
         210, 45 + 66, // bazaar (fancy)
         213, 17 + 66, // senet house
+        225, 111 + 66, // angery god bolt icon
         227, 97 + 66, // skull
         228, 180 + 341, // doctor (apothecary)
 //        229, 229+341, // patrician

@@ -347,9 +347,8 @@ static void update_god_moods(void) {
                 god->wrath_bolts += 1;
             else if (god->happiness >= 10)
                 god->wrath_bolts += 2;
-            else {
+            else
                 god->wrath_bolts += 5;
-            }
         }
         if (god->wrath_bolts > 50)
             god->wrath_bolts = 50;
@@ -540,6 +539,7 @@ int city_god_happiness(int god_id) {
     return city_data.religion.gods[god_id].happiness;
 }
 int city_god_wrath_bolts(int god_id) {
+    // TODO: lil angels icons
     return city_data.religion.gods[god_id].wrath_bolts;
 }
 int city_god_months_since_festival(int god_id) {

@@ -100,7 +100,6 @@ int house_population_create_immigrants(int num_people) {
         building *b = building_get(houses[i]);
         if (b->has_figure(2) && b->get_figure(2)->state != FIGURE_STATE_ALIVE)
             b->remove_figure(2);
-
     }
     // houses with plenty of room
     for (int i = 0; i < total_houses && to_immigrate > 0; i++) {

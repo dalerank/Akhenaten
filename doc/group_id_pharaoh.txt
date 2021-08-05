@@ -491,7 +491,7 @@ INFO: data/Pharaoh_General.sg3 group 107 -> id 2376
 INFO: data/Pharaoh_General.sg3 group 108 -> id 2530 sidebar main buttons (small)
 INFO: data/Pharaoh_General.sg3 group 109 -> id 2525 sidebar locust
 INFO: data/Pharaoh_General.sg3 group 110 -> id 2512 sidebar upper buttons
-INFO: data/Pharaoh_General.sg3 group 111 -> id 500
+INFO: data/Pharaoh_General.sg3 group 111 -> id 500 gods mood icons (bolt/lil angel)
 INFO: data/Pharaoh_General.sg3 group 112 -> id 2377
 INFO: data/Pharaoh_General.sg3 group 113 -> id 2060
 INFO: data/Pharaoh_General.sg3 group 114 -> id 1095

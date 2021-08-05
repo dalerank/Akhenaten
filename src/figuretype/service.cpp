@@ -69,9 +69,8 @@ void figure::tax_collector_action() {
                     action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
-                } else {
+                } else
                     poof();
-                }
             }
             break;
         case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:

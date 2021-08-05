@@ -863,12 +863,19 @@ static void load_main_data(buffer *buf) {
         buf->skip(5);
     for (int i = 0; i < MAX_GODS; i++)
         city_data.religion.gods[i].happiness = buf->read_i8();
-    for (int i = 0; i < MAX_GODS; i++)
-        city_data.religion.gods[i].wrath_bolts = buf->read_i8();
-    for (int i = 0; i < MAX_GODS; i++)
-        city_data.religion.gods[i].blessing_done = buf->read_i8();
-    for (int i = 0; i < MAX_GODS; i++)
-        city_data.religion.gods[i].small_curse_done = buf->read_i8();
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        for (int i = 0; i < MAX_GODS; i++)
+            city_data.religion.gods[i].wrath_bolts = buf->read_i8();
+        for (int i = 0; i < MAX_GODS; i++)
+            city_data.religion.gods[i].blessing_done = buf->read_i8();
+        for (int i = 0; i < MAX_GODS; i++)
+            city_data.religion.gods[i].small_curse_done = buf->read_i8();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        buf->skip(5);
+        for (int i = 0; i < MAX_GODS; i++)
+            city_data.religion.gods[i].wrath_bolts = buf->read_i8();
+        buf->skip(5);
+    }
     buf->skip(15);
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         buf->skip(35);

@@ -16,7 +16,6 @@ void figure::market_buyer_action() {
     switch (action_state) {
         case 8:
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
-
             if (do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING)) {
                 if (collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(destination()))
@@ -26,35 +25,11 @@ void figure::market_buyer_action() {
                         poof();
                 }
             }
-//            move_ticks(1);
-//            if (direction == DIR_FIGURE_AT_DESTINATION) {
-//                if (collecting_item_id > 3) {
-//                    if (!take_resource_from_warehouse(destination_building_id))
-//                        poof();
-//
-//                } else {
-//                    if (!take_food_from_granary(building_id, destination_building_id))
-//                        poof();
-//                }
-//                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-//                destination_x = source_x;
-//                destination_y = source_y;
-//            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST) {
-//                action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-//                destination_x = source_x;
-//                destination_y = source_y;
-//                route_remove();
-//            }
             break;
         case 9:
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
             do_returnhome();
-//            move_ticks(1);
-//            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_LOST)
-//                poof();
-//            else if (direction == DIR_FIGURE_REROUTE)
-//                route_remove();
             break;
     }
 }
@@ -87,12 +62,13 @@ int figure::take_food_from_granary(building *market, building *granary) {
 //    building *granary = building_get(granary);
 //    int market_units = building_get(market)->data.market.inventory[collecting_item_id];
     int market_units = market->data.market.inventory[collecting_item_id];
-    int max_units = (collecting_item_id == 0 ? 800 : 600) - market_units;
+    int max_units = (collecting_item_id == 0 ? 700 : 600) - market_units;
     int granary_units = granary->data.granary.resource_stored[resource];
     int num_loads;
-    if (granary_units >= 800)
-        num_loads = 8;
-    else if (granary_units >= 700)
+//    if (granary_units >= 800)
+//        num_loads = 8;
+//    else
+    if (granary_units >= 700)
         num_loads = 7;
     else if (granary_units >= 600)
         num_loads = 6;

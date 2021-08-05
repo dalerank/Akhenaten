@@ -362,7 +362,7 @@ static void draw_granary_stores(const building *b, int x, int y, color_t color_m
         int spot_y = 0;
         for (int r = 1; r < 9; r++) {
             if (b->data.granary.resource_stored[r] > 0) {
-                int spots_filled = floor((float)b->data.granary.resource_stored[r] / (float)400); // number of "spots" occupied by food
+                int spots_filled = ceil((float)(b->data.granary.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
                 if (spots_filled == 0 && b->data.granary.resource_stored[r] > 0)
                     spots_filled = 1;
                 for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {

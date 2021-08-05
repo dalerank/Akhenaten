@@ -107,8 +107,13 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
     }
 
     int bolts_ount = city_god_wrath_bolts(god);
-    for (int i = 0; i < bolts_ount / 10; i++)
-        image_draw(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+    if (bolts_ount > 0) {
+        for (int i = 0; i < bolts_ount / 10; i++)
+            image_draw(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+    } else {
+        for (int i = 0; i < -bolts_ount / 10; i++)
+            image_draw(image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
+    }
 }
 
 static int draw_background(void) {
