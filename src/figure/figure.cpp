@@ -36,7 +36,8 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
-    f->use_cross_country = 0;
+    f->use_cross_country = false;
+    f->terrain_usage = -1;
     f->is_friendly = true;
     f->created_sequence = data.created_sequence++;
     f->direction = dir;
@@ -391,28 +392,14 @@ void figure::load(buffer *buf) {
     f->trader_amount_bought = buf->read_u8();
     f->name = buf->read_i16(); // 6
     f->terrain_usage = buf->read_u8();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        f->is_boat = buf->read_u8();
-
-        f->resource_amount_full = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
-
-        // ignore partial loads (for now....)
-//        if (resource_quantity > 350)
-//            resource_quantity = 400;
-//        else if (resource_quantity > 250)
-//            resource_quantity = 300;
-//        else if (resource_quantity > 150)
-//            resource_quantity = 200;
-//        else if (resource_quantity > 50)
-//            resource_quantity = 100;
-//        else
-//            resource_quantity = 0;
-        f->resource_amount_loads = f->resource_amount_full / 100;
-
-    } else {
+    if (GAME_ENV == ENGINE_ENV_C3) {
         f->resource_amount_loads = buf->read_u8();
         f->resource_amount_full = f->resource_amount_loads * 100;
         f->is_boat = buf->read_u8();
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        f->is_boat = buf->read_u8();
+        f->resource_amount_full = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
+        f->resource_amount_loads = f->resource_amount_full / 100;
     }
     f->height_adjusted_ticks = buf->read_u8();
     f->current_height = buf->read_u8();
@@ -442,7 +429,7 @@ void figure::load(buffer *buf) {
         buf->skip(152);
         f->unk_fest_ffff = buf->read_i16(); // -1
         buf->skip(48);
-        f->festival_remaining_dances = buf->read_i8(); // 4
+        f->festival_remaining_dances = buf->read_i8();
         buf->skip(27);
         f->cart_image_id = buf->read_i16() + 18;
         buf->skip(2);

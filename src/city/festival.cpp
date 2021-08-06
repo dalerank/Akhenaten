@@ -82,6 +82,41 @@ void city_festival_schedule(void) {
 }
 
 static void throw_party(void) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+            building *b = building_get(i);
+            if (b->state != BUILDING_STATE_VALID)
+                continue;
+            switch(b->type) {
+                case BUILDING_TEMPLE_OSIRIS:
+                case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+                case BUILDING_TEMPLE_RA:
+                case BUILDING_TEMPLE_COMPLEX_RA:
+                case BUILDING_TEMPLE_PTAH:
+                case BUILDING_TEMPLE_COMPLEX_PTAH:
+                case BUILDING_TEMPLE_SETH:
+                case BUILDING_TEMPLE_COMPLEX_SETH:
+                case BUILDING_TEMPLE_BAST:
+                case BUILDING_TEMPLE_COMPLEX_BAST:
+                case BUILDING_JUGGLER_SCHOOL:
+                case BUILDING_CONSERVATORY:
+                case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
+//                    if (b->has_figure(0))
+//                        b->remove_figure(0);
+                    figure *f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, 10, 2, DIR_4_BOTTOM_LEFT);
+                    f->festival_remaining_dances = 10;
+
+                    // choose a random tile on the festival square
+                    int x, y;
+                    city_building_get_festival_square_position(&x, &y);
+                    f->do_goto(x + 2, y + 2, TERRAIN_USAGE_ROADS, 10);
+
+                    break;
+                }
+            }
+        }
+    }
+
     if (city_data.festival.first_festival_effect_months <= 0) {
         city_data.festival.first_festival_effect_months = 12;
         switch (city_data.festival.planned.size) {
@@ -128,7 +163,6 @@ static void throw_party(void) {
     city_data.festival.planned.size = FESTIVAL_NONE;
     city_data.festival.planned.months_to_go = 0;
 }
-
 void city_festival_update(void) {
     city_data.festival.months_since_festival++;
     if (city_data.festival.first_festival_effect_months)
@@ -167,7 +201,7 @@ void city_festival_calculate_costs(void) {
 
 #include "core/image_group.h"
 
-void figure::festival_action() {
+void figure::festival_guy_action() {
     building *b = home();
     switch(b->type) {
         case BUILDING_TEMPLE_OSIRIS:
@@ -191,13 +225,13 @@ void figure::festival_action() {
             image_set_animation(GROUP_PRIEST_BAST);
             break;
         case BUILDING_JUGGLER_SCHOOL:
-            image_set_animation(GROUP_JUGGLERS);
+            image_set_animation(GROUP_FIGURE_JUGGLER);
             break;
         case BUILDING_CONSERVATORY:
-            image_set_animation(GROUP_MUSICIANS);
+            image_set_animation(GROUP_FIGURE_MUSICIAN);
             break;
         case BUILDING_DANCE_SCHOOL:
-            image_set_animation(GROUP_DANCERS);
+            image_set_animation(GROUP_FIGURE_DANCER);
             break;
     }
     switch (action_state) {
@@ -206,24 +240,33 @@ void figure::festival_action() {
             advance_action(10);
             break;
         case 10: // goes to random spot on the square
-            if (!routing_path_id) {
-                if (festival_remaining_dances == 0 || !city_building_has_festival_square())
-                    return poof();
 
-                // choose a random tile on the festival square
-                int x, y;
-                int rand_x, rand_y;
-                city_building_get_festival_square_position(&x, &y);
-                int rand_seed = random_short();
-                do {
-                    int random_tile = rand_seed % 25;
-                    rand_x = x + random_tile % 5;
-                    rand_y = y + random_tile / 5;
-                    rand_seed++;
-                } while (rand_x == tile_x && rand_y == tile_y);
-                do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
-            } else
-                do_goto(destination_x, destination_y, TERRAIN_USAGE_ANY, 11);
+            // still going to the square center, first
+            if (terrain_usage == TERRAIN_USAGE_ROADS) {
+                if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ROADS, 10))
+                    terrain_usage = TERRAIN_USAGE_ANY;
+            } else {
+//                use_cross_country = true; // todo?
+                if (routing_path_id)
+                    do_goto(destination_x, destination_y, TERRAIN_USAGE_ANY, 11);
+                else {
+                    if (festival_remaining_dances == 0 || !city_building_has_festival_square())
+                        return poof();
+
+                    // choose a random tile on the festival square
+                    int x, y;
+                    int rand_x, rand_y;
+                    city_building_get_festival_square_position(&x, &y);
+                    int rand_seed = random_short();
+                    do {
+                        int random_tile = rand_seed % 25;
+                        rand_x = x + random_tile % 5;
+                        rand_y = y + random_tile / 5;
+                        rand_seed++;
+                    } while (rand_x == tile_x && rand_y == tile_y);
+                    do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);
+                }
+            }
             break;
         case 11: // reached a random spot on the square, now what?
             advance_action(9);

@@ -231,10 +231,12 @@ void figure::advance_route_tile(int roaming_enabled) {
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
         int type = building_get(map_building_at(target_grid_offset))->type;
         switch (type) {
-            case BUILDING_WAREHOUSE:
-            case BUILDING_GRANARY:
+            case BUILDING_WAREHOUSE_SPACE:
+//            case BUILDING_GRANARY:
             case BUILDING_TRIUMPHAL_ARCH:
             case BUILDING_FORT_GROUND:
+            case BUILDING_FESTIVAL_SQUARE:
+            case BUILDING_PLAZA:
                 break; // OK to walk
             default:
                 direction = DIR_FIGURE_REROUTE;

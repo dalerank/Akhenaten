@@ -673,11 +673,9 @@ void building_update_highest_id(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         if (all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
-
     }
     if (extra.highest_id_in_use > extra.highest_id_ever)
         extra.highest_id_ever = extra.highest_id_in_use;
-
 }
 void building_update_state(void) {
     bool land_recalc = false;

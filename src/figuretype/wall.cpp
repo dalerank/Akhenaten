@@ -43,7 +43,7 @@ static const int TOWER_SENTRY_FIRING_OFFSETS[] = {
 void figure::ballista_action() {
     building *b = home();
     terrain_usage = TERRAIN_USAGE_WALLS;
-    use_cross_country = 0;
+    use_cross_country = false;
     is_ghost = true;
     height_adjusted_ticks = 10;
     current_height = 45;
@@ -192,7 +192,7 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
 void figure::tower_sentry_action() {
     building *b = home();
 //    terrain_usage = TERRAIN_USAGE_WALLS;
-//    use_cross_country = 0;
+//    use_cross_country = false;
 //    is_ghost = true;
     height_adjusted_ticks = 10;
 //    max_roam_length = 800;

@@ -13,7 +13,7 @@
 void figure::indigenous_native_action() {
     building *b = home();
 //    terrain_usage = TERRAIN_USAGE_ANY;
-//    use_cross_country = 0;
+//    use_cross_country = false;
 //    max_roam_length = 800;
 //    if (b->state != BUILDING_STATE_VALID || b->figure_id != id)
 //        poof();

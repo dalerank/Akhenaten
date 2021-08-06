@@ -244,31 +244,35 @@ void building::spawn_figure_police() {
 void building::spawn_figure_actor_juggler() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        else
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (dest->id > 0)
+                create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        } else
             common_spawn_roamer(FIGURE_ACTOR, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 void building::spawn_figure_gladiator_musician() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        else
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (dest->id > 0)
+                create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        } else
             common_spawn_roamer(FIGURE_GLADIATOR, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 void building::spawn_figure_lion_tamer_dancer() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, 0, 0));
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        else
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (dest->id > 0)
+                create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        } else
             common_spawn_roamer(FIGURE_LION_TAMER, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
-void building::spawn_figure_chariot_senet_master() {
+void building::spawn_figure_chariot_senet() {
+    // todo
     common_spawn_roamer(FIGURE_CHARIOTEER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
 }
 
@@ -1174,7 +1178,7 @@ bool building::figure_generate() {
             case BUILDING_LION_HOUSE:
                 spawn_figure_lion_tamer_dancer(); break;
             case BUILDING_CHARIOT_MAKER:
-                spawn_figure_chariot_senet_master(); break;
+                spawn_figure_chariot_senet(); break;
             case BUILDING_AMPHITHEATER:
                 spawn_figure_amphitheater_bandstand(); break;
             case BUILDING_THEATER:

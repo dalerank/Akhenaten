@@ -137,7 +137,7 @@ void figure::missile_hit_target(int target_id, int legionary_type) {
 }
 
 void figure::explosion_cloud_action() {
-    use_cross_country = 1;
+    use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 44)
         poof();
@@ -151,7 +151,7 @@ void figure::explosion_cloud_action() {
     }
 }
 void figure::arrow_action() {
-    use_cross_country = 1;
+    use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 120)
         poof();
@@ -165,7 +165,7 @@ void figure::arrow_action() {
         poof();
 }
 void figure::spear_action() {
-    use_cross_country = 1;
+    use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 120)
         poof();
@@ -182,7 +182,7 @@ void figure::spear_action() {
     sprite_image_id = image_id_from_group(GROUP_FIGURE_MISSILE) + dir;
 }
 void figure::javelin_action() {
-    use_cross_country = 1;
+    use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 120)
         poof();
@@ -196,7 +196,7 @@ void figure::javelin_action() {
         poof();
 }
 void figure::bolt_action() {
-    use_cross_country = 1;
+    use_cross_country = true;
     progress_on_tile++;
     if (progress_on_tile > 120)
         poof();

@@ -161,7 +161,7 @@ void figure::entertainer_action() {
             }
             break;
         case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
-            use_cross_country = 1;
+            use_cross_country = true;
 //            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 int dst_building_id = 0;

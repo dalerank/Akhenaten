@@ -38,7 +38,6 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
         if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
             continue;
 
-
         if (b->loads_stored >= MAX_WEAPONS_BARRACKS)
             continue;
 

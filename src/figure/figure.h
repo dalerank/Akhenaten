@@ -41,7 +41,7 @@ public:
     short next_figure;
     unsigned char type;
 //    unsigned char resource_id;
-    unsigned char use_cross_country;
+    bool use_cross_country;
     bool is_friendly;
     unsigned char state;
     unsigned char faction_id; // 1 = city, 0 = enemy
@@ -340,7 +340,7 @@ public:
     void policeman_action();
     void magistrate_action();
     void water_carrier_action();
-    void festival_action();
+    void festival_guy_action();
 
     // migrant.c
     void update_direction_and_image();

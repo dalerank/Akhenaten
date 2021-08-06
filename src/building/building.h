@@ -246,7 +246,7 @@ public:
     void spawn_figure_actor_juggler();
     void spawn_figure_gladiator_musician();
     void spawn_figure_lion_tamer_dancer();
-    void spawn_figure_chariot_senet_master();
+    void spawn_figure_chariot_senet();
     void spawn_figure_amphitheater_bandstand();
     void spawn_figure_theater_booth();
     void spawn_figure_hippodrome_senet();

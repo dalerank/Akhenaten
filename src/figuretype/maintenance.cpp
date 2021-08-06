@@ -355,7 +355,7 @@ void figure::policeman_action() {
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-            use_cross_country = 1;
+            use_cross_country = true;
 //            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 if (map_building_at(grid_offset_figure) == homeID()) {
@@ -510,7 +510,7 @@ void figure::water_carrier_action() {
 //            break;
 //        case 9:
 //        case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-//            use_cross_country = 1;
+//            use_cross_country = true;
 //            is_ghost = true;
 //            if (move_ticks_cross_country(1) == 1) {
 //                if (map_building_at(grid_offset_figure) == building_id) {
@@ -574,7 +574,7 @@ void figure::water_carrier_action() {
 
 void figure::worker_action() {
     terrain_usage = TERRAIN_USAGE_ROADS;
-    use_cross_country = 0;
+    use_cross_country = false;
     max_roam_length = 384;
     building *b = home();
     building *b_dest = destination();

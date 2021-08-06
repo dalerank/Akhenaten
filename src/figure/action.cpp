@@ -261,14 +261,14 @@ bool figure::do_returnhome(int terrainchoice, short NEXT_ACTION) {
     return do_gotobuilding(home(), true, terrainchoice, NEXT_ACTION);
 }
 bool figure::do_exitbuilding(bool invisible, short NEXT_ACTION, short FAIL_ACTION) {
-    use_cross_country = 1;
+    use_cross_country = true;
     if (invisible)
         is_ghost = true;
     // "go to" home, but stop at road = go to entrance
     return do_gotobuilding(home(), true, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
 }
 bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, short FAIL_ACTION) {
-    use_cross_country = 1;
+    use_cross_country = true;
     if (invisible)
         is_ghost = true;
     return do_gotobuilding(b, false, TERRAIN_USAGE_ANY, NEXT_ACTION, FAIL_ACTION);
@@ -278,7 +278,6 @@ void figure::action_perform() {
 //    return;
     if (action_state == 0)
         set_state(FIGURE_STATE_DEAD);
-//        poof(); // no action
     if (state) {
         if (targeted_by_figure_id) {
             figure *attacker = figure_get(targeted_by_figure_id);
@@ -293,12 +292,12 @@ void figure::action_perform() {
         // reset values like cart image & max roaming length
         cart_image_id = 0;
         max_roam_length = 0;
-        use_cross_country = 0;
+        use_cross_country = false;
         is_ghost = false;
 
         // base lookup data
         auto action_properties = action_properties_lookup[type];
-        if (action_properties.terrain_usage != -1)
+        if (action_properties.terrain_usage != -1 && terrain_usage == -1)
             terrain_usage = action_properties.terrain_usage;
         max_roam_length = action_properties.max_roam_length;
         speed_multiplier = action_properties.speed_mult;
@@ -486,7 +485,8 @@ void figure::action_perform() {
             case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;
             case 89: magistrate_action();               break;
-            case 91: festival_action();                 break;
+            case 91:
+                festival_guy_action();                 break;
             default:
                 break;
         }

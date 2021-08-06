@@ -353,6 +353,7 @@ static void update_god_moods(void) {
         if (god->wrath_bolts > 50)
             god->wrath_bolts = 50;
 
+        // TODO: fix the numbers below
         if (god->happiness <= 50)
             god->happy_angels = 0;
         else if (god->happiness > 60) {

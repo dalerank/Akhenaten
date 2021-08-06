@@ -95,21 +95,45 @@ void figure::draw_debug() {
                 draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
                 draw_debug_line(str, coords.x, coords.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
             } else {
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_WHITE);
-                draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_WHITE);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_WHITE);
+                draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
+            }
+            draw_debug_line(str, coords.x, coords.y + 30, indent, "", terrain_usage, COLOR_WHITE);
+            switch (direction) {
+                case DIR_FIGURE_CAN_NOT_REACH:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_RED);
+                    break;
+                case DIR_FIGURE_REROUTE:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
+                    break;
+                case DIR_FIGURE_AT_DESTINATION:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_GREEN);
+                    break;
+                default:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_WHITE);
+                    break;
             }
 
             // draw path
             if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-                coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
-                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
-//        text_draw(str, coords.x, coords.y, FONT_LARGE_BLACK, COLOR_BLACK);
+                auto tile_coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
+                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, tile_coords.x, tile_coords.y);
                 int tx = tile_x;
                 int ty = tile_y;
-                coords = city_view_grid_offset_to_pixel(tx, ty);
-                image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
-                for (int i = routing_path_current_tile; i < routing_path_length; i++) {
+//                if (progress_on_tile >= 9) {
+//                    tx = previous_tile_x;
+//                    ty = previous_tile_y;
+//                }
+                tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x, tile_coords.y);
+                int starting_tile_index = routing_path_current_tile;
+//                int ending_tile_count = routing_path_length;
+                if (progress_on_tile > 1 && progress_on_tile < 10) {
+                    starting_tile_index--;
+//                    ending_tile_count--;
+                }
+                for (int i = starting_tile_index; i < routing_path_length; i++) {
                     auto pdir = figure_route_get_direction(routing_path_id, i);
                     switch (pdir) {
                         case 0:
@@ -141,12 +165,13 @@ void figure::draw_debug() {
                             ty--;
                             break;
                     }
-                    coords = city_view_grid_offset_to_pixel(tx, ty);
-                    image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+                    tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                    image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x, tile_coords.y);
                 }
-                coords = city_view_grid_offset_to_pixel(tx, ty);
-                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords.x, coords.y);
             }
+            coords.y += 50;
+            string_from_int(str, progress_on_tile, 0);
+            text_draw(str, coords.x, coords.y + 30, FONT_NORMAL_PLAIN, 0);
             break;
     }
 //    else {

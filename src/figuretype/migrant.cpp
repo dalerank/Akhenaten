@@ -130,6 +130,7 @@ void figure::emigrant_action() {
 //            is_ghost = in_building_wait_ticks ? 1 : 0;
             break;
         case FIGURE_ACTION_6_EMIGRANT_LEAVING:
+        case 10:
             const map_tile *exit = city_map_entry_point();
             do_goto(exit->x, exit->y, TERRAIN_USAGE_ANY);
             break;

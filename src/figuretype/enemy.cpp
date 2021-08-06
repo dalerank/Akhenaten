@@ -493,7 +493,7 @@ void figure::enemy53_axe_action() {
 }
 void figure::enemy_gladiator_action() {
 //    terrain_usage = TERRAIN_USAGE_ANY;
-//    use_cross_country = 0;
+//    use_cross_country = false;
 //    figure_image_increase_offset(12);
     if (scenario_gladiator_revolt_is_finished()) {
         // end of gladiator revolt: poof gladiators

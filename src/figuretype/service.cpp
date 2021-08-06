@@ -74,7 +74,7 @@ void figure::tax_collector_action() {
             }
             break;
         case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
-            use_cross_country = 1;
+            use_cross_country = true;
 //            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
                 if (has_home(map_building_at(grid_offset_figure))) {
