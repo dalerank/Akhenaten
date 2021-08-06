@@ -120,6 +120,7 @@ extern struct city_data_t {
     struct {
         int32_t treasury;
         int32_t tax_percentage;
+        int32_t estimated_tax_uncollected;
         int32_t estimated_tax_income;
         int32_t estimated_wages;
         finance_overview last_year;

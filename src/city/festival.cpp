@@ -69,7 +69,7 @@ void city_festival_schedule(void) {
         cost = city_data.festival.grand_cost;
     }
 
-    city_finance_process_sundry(cost);
+    city_finance_process_requests_and_festivals(cost);
 
     if (city_data.festival.selected.size == FESTIVAL_GRAND) {
         if (GAME_ENV == ENGINE_ENV_C3) {

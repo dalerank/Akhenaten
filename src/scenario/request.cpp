@@ -101,7 +101,7 @@ void scenario_request_dispatch(int id) {
     scenario.requests[id].visible = 0;
     int amount = scenario.requests[id].amount;
     if (scenario.requests[id].resource == RESOURCE_DENARII)
-        city_finance_process_sundry(amount);
+        city_finance_process_requests_and_festivals(amount);
     else if (scenario.requests[id].resource == RESOURCE_TROOPS_C3) {
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS_C3, amount);

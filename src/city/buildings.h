@@ -54,7 +54,7 @@ void city_buildings_set_mission_post_operational(void);
 int city_building_has_festival_square(void);
 void city_building_get_festival_square_position(int *x, int *y);
 void city_buildings_add_festival_square(building *square);
-void city_buildings_remove_festival_square(building *square);
+void city_buildings_remove_festival_square(void);
 
 int city_buildings_unknown_value(void);
 

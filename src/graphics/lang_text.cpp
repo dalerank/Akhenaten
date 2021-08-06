@@ -37,17 +37,17 @@ void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font) {
+int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font, const char *postfix) {
     int amount_offset = 1;
     if (amount == 1 || amount == -1)
         amount_offset = 0;
 
     int desc_offset_x;
     if (amount >= 0) {
-        desc_offset_x = text_draw_number(amount, ' ', " ",
+        desc_offset_x = text_draw_number(amount, ' ', postfix,
                                          x_offset, y_offset, font);
     } else {
-        desc_offset_x = text_draw_number(-amount, '-', " ",
+        desc_offset_x = text_draw_number(-amount, '-', postfix,
                                          x_offset, y_offset, font);
     }
     return desc_offset_x + lang_text_draw(group, number + amount_offset,

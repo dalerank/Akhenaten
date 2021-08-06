@@ -339,6 +339,9 @@ void building::clear_related_data() {
         city_buildings_remove_triumphal_arch();
         building_menu_update(BUILDSET_NORMAL);
     }
+
+    if (type == BUILDING_FESTIVAL_SQUARE)
+        city_buildings_remove_festival_square();
 }
 void building_clear_all(void) {
     for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {

@@ -256,8 +256,8 @@ static void save_main_data(buffer *main) {
     main->write_i32(city_data.finance.interest_so_far);
     main->write_i32(city_data.finance.last_year.expenses.interest);
     main->write_i32(city_data.finance.this_year.expenses.interest);
-    main->write_i32(city_data.finance.last_year.expenses.sundries);
-    main->write_i32(city_data.finance.this_year.expenses.sundries);
+    main->write_i32(city_data.finance.last_year.expenses.stolen);
+    main->write_i32(city_data.finance.this_year.expenses.stolen);
     main->write_i32(city_data.finance.last_year.expenses.construction);
     main->write_i32(city_data.finance.this_year.expenses.construction);
     main->write_i32(city_data.finance.last_year.expenses.salary);
@@ -782,8 +782,8 @@ static void load_main_data(buffer *buf) {
     city_data.finance.interest_so_far = buf->read_i32();
     city_data.finance.last_year.expenses.interest = buf->read_i32();
     city_data.finance.this_year.expenses.interest = buf->read_i32();
-    city_data.finance.last_year.expenses.sundries = buf->read_i32();
-    city_data.finance.this_year.expenses.sundries = buf->read_i32();
+    city_data.finance.last_year.expenses.stolen = buf->read_i32();
+    city_data.finance.this_year.expenses.stolen = buf->read_i32();
     city_data.finance.last_year.expenses.construction = buf->read_i32();
     city_data.finance.this_year.expenses.construction = buf->read_i32();
     city_data.finance.last_year.expenses.salary = buf->read_i32();
@@ -908,11 +908,15 @@ static void load_main_data(buffer *buf) {
         buf->skip(8);
     city_data.emperor.player_rank = buf->read_i32();
     city_data.emperor.personal_savings = buf->read_i32(); // ok
-    for (int i = 0; i < 2; i++)
-        city_data.unused.unknown_4374[i] = buf->read_i32();
-    city_data.finance.last_year.income.donated = buf->read_i32();
-    city_data.finance.this_year.income.donated = buf->read_i32();
+//    for (int i = 0; i < 2; i++)
+//        city_data.unused.unknown_4374[i] = buf->read_i32();
+//    city_data.finance.last_year.income.donated = buf->read_i32();
+//    city_data.finance.this_year.income.donated = buf->read_i32();
     if (GAME_ENV == ENGINE_ENV_C3) {
+        for (int i = 0; i < 2; i++)
+            city_data.unused.unknown_4374[i] = buf->read_i32();
+        city_data.finance.last_year.income.donated = buf->read_i32();
+        city_data.finance.this_year.income.donated = buf->read_i32();
         city_data.emperor.donate_amount = buf->read_i32();
         for (int i = 0; i < 10; i++)
             city_data.building.working_dock_ids[i] = buf->read_i16(); // at i == 9 <-- 6 became 5 (animals?)
@@ -927,6 +931,12 @@ static void load_main_data(buffer *buf) {
         city_data.building.senate_placed = buf->read_i16();
         city_data.building.working_wharfs = buf->read_i16();
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//        for (int i = 0; i < 2; i++)
+//            city_data.unused.unknown_4374[i] = buf->read_i32();
+        city_data.finance.last_year.income.donated = buf->read_i32();
+        city_data.finance.this_year.income.donated = buf->read_i32();
+        for (int i = 0; i < 2; i++)
+            city_data.unused.unknown_4374[i] = buf->read_i32();
         for (int i = 0; i < 10; i++)
             city_data.building.working_dock_ids[i] = buf->read_i16();
         buf->skip(2);
@@ -1125,7 +1135,11 @@ static void load_main_data(buffer *buf) {
         for (int i = 0; i < 232; i++)
             city_data.unused.unknown_464c[i] = buf->read_i8(); // i=48,68,72
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
-        buf->skip(116);
+        buf->skip(40);
+        city_data.finance.last_year.expenses.requests_and_festivals = buf->read_i32();
+        city_data.finance.this_year.expenses.requests_and_festivals = buf->read_i32();
+        buf->skip(72);
+        city_data.finance.estimated_tax_uncollected = buf->read_i32();
         city_data.building.festival_square_x = buf->read_i32();
         city_data.building.festival_square_y = buf->read_i32();
         buf->skip(8);

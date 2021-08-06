@@ -81,7 +81,6 @@ static void draw_buttons(void) {
     }
 
 }
-
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
@@ -102,7 +101,6 @@ static void draw_background(void) {
 
     graphics_reset_dialog();
 }
-
 static void draw_foreground(void) {
     graphics_in_dialog();
     draw_buttons();
@@ -127,22 +125,18 @@ static void button_god(int god, int param2) {
     city_festival_select_god(god);
     window_invalidate();
 }
-
 static void button_size(int size, int param2) {
     if (!city_finance_out_of_money()) {
         if (city_festival_select_size(size))
             window_invalidate();
     }
 }
-
 static void button_help(int param1, int param2) {
     window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
 }
-
 static void button_close(int param1, int param2) {
     window_advisors_show();
 }
-
 static void button_hold_festival(int param1, int param2) {
     if (city_finance_out_of_money())
         return;
