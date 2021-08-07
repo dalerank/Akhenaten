@@ -163,7 +163,7 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b) {
 const city_overlay *city_overlay_for_entertainment(void) {
     static city_overlay overlay = {
             OVERLAY_ENTERTAINMENT,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_entertainment,
             show_figure_entertainment,
             get_column_height_entertainment,
@@ -178,7 +178,7 @@ const city_overlay *city_overlay_for_entertainment(void) {
 const city_overlay *city_overlay_for_theater(void) {
     static city_overlay overlay = {
             OVERLAY_THEATER,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_theater,
             show_figure_theater,
             get_column_height_theater,
@@ -193,7 +193,7 @@ const city_overlay *city_overlay_for_theater(void) {
 const city_overlay *city_overlay_for_amphitheater(void) {
     static city_overlay overlay = {
             OVERLAY_AMPHITHEATER,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_amphitheater,
             show_figure_amphitheater,
             get_column_height_amphitheater,
@@ -208,7 +208,7 @@ const city_overlay *city_overlay_for_amphitheater(void) {
 const city_overlay *city_overlay_for_colosseum(void) {
     static city_overlay overlay = {
             OVERLAY_COLOSSEUM,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_colosseum,
             show_figure_colosseum,
             get_column_height_colosseum,
@@ -223,7 +223,7 @@ const city_overlay *city_overlay_for_colosseum(void) {
 const city_overlay *city_overlay_for_hippodrome(void) {
     static city_overlay overlay = {
             OVERLAY_HIPPODROME,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_hippodrome,
             show_figure_hippodrome,
             get_column_height_hippodrome,

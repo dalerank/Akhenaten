@@ -18,7 +18,7 @@ void figure_create_immigrant(building *house, int num_people) {
     f->action_state = FIGURE_ACTION_1_IMMIGRANT_CREATED;
     f->set_immigrant_home(house->id);
     house->set_figure(2, f->id);
-    f->wait_ticks = 10 + (house->house_figure_generation_delay & 0x7f);
+    f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
     f->migrant_num_people = num_people;
 }
 void figure_create_emigrant(building *house, int num_people) {

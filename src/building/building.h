@@ -47,7 +47,7 @@ public:
         short roadblock_exceptions;
         short barracks_priority;
     } subtype;
-    unsigned char road_network_id;
+    unsigned short road_network_id;
     unsigned short creation_sequence_index;
     short houses_covered;
     short percentage_houses_covered;
@@ -62,7 +62,7 @@ public:
 //    figure *figure_id2; // labor seeker or market buyer
 //    short immigrant_figure_id;
 //    short figure_id4; // tower ballista or burning ruin prefect
-    unsigned char figure_spawn_delay;
+    unsigned short figure_spawn_delay;
     unsigned char figure_roam_direction;
     unsigned char has_water_access;
     int prev_part_building_id;
@@ -78,7 +78,7 @@ public:
     short fire_risk;
     short fire_duration;
     unsigned char fire_proof; // cannot catch fire or collapse
-    unsigned char house_figure_generation_delay;
+    unsigned char map_random_7bit;
     unsigned char house_tax_coverage;
     short formation_id;
     union {

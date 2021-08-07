@@ -65,7 +65,7 @@ void building_maintenance_update_burning_ruins(void) {
             if (b->fire_duration & 7) // check spread every 8 ticks
                 continue;
         }
-        if ((b->house_figure_generation_delay & 3) != (random_byte() & 3))
+        if ((b->map_random_7bit & 3) != (random_byte() & 3))
             continue;
 
         int dir1 = fire_spread_direction - 1;

@@ -267,8 +267,8 @@ building *building_create(int type, int x, int y) {
     b->x = x;
     b->y = y;
     b->grid_offset = map_grid_offset(x, y);
-    b->house_figure_generation_delay = map_random_get(b->grid_offset) & 0x7f;
-    b->figure_roam_direction = b->house_figure_generation_delay & 6;
+    b->map_random_7bit = map_random_get(b->grid_offset) & 0x7f;
+    b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
     return b;

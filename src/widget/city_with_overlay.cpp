@@ -309,6 +309,8 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
         } else
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
     } else {
+        if (b->type == BUILDING_FESTIVAL_SQUARE)
+            return;
         int draw = 1;
         if (b->size == 3 && building_is_farm(b->type))
             draw = is_drawable_farm_corner(grid_offset);
@@ -330,7 +332,8 @@ static void draw_overlay_column(int x, int y, int height, int column_style) {
             else
                 image_id += COLUMN_COLOR_RED;
             break;
-        case COLUMN_TYPE_ACCESS:
+        case COLUMN_TYPE_WATER_ACCESS:
+            image_id += COLUMN_COLOR_BLUE;
             break;
     }
 
@@ -416,7 +419,7 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
             if (building_is_farm(b->type))
                 draw = is_drawable_farm_corner(grid_offset);
             if (draw)
-                draw_overlay_column(x, y, column_height, COLUMN_TYPE_RISK);
+                draw_overlay_column(x, y, column_height, overlay->column_type);
         }
     }
 }

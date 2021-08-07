@@ -54,7 +54,7 @@ static void destroy_on_fire(building *b, int plagued) {
         b->type = BUILDING_BURNING_RUIN;
         b->remove_figure(3);
         b->tax_income_or_storage = 0;
-        b->fire_duration = (b->house_figure_generation_delay & 7) + 1;
+        b->fire_duration = (b->map_random_7bit & 7) + 1;
         b->fire_proof = 1;
         b->size = 1;
         b->ruin_has_plague = plagued;
@@ -80,7 +80,7 @@ static void destroy_on_fire(building *b, int plagued) {
         unsigned char random = rand_int % 4; rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
-        ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
+        ruin->fire_duration = (ruin->map_random_7bit & 7) + 1;
         b->remove_figure(3);
         ruin->fire_proof = 1;
         ruin->ruin_has_plague = plagued;

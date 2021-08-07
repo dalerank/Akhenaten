@@ -76,7 +76,7 @@ static void generate_mugger(building *b) {
         int x_road, y_road;
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
-            f->wait_ticks = 10 + (b->house_figure_generation_delay & 0xf);
+            f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();
             int taxes_this_year = city_finance_overview_this_year()->income.taxes;
             if (taxes_this_year > 20) {
@@ -98,7 +98,7 @@ static void generate_protestor(building *b) {
         int x_road, y_road;
         if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
-            f->wait_ticks = 10 + (b->house_figure_generation_delay & 0xf);
+            f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();
         }
     }

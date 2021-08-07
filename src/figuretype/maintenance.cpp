@@ -1,3 +1,4 @@
+#include <core/config.h>
 #include "maintenance.h"
 
 #include "building/building.h"
@@ -423,7 +424,10 @@ void figure::magistrate_action() {
     }
 }
 void figure::water_carrier_action() {
-    fight_fire(); // todo
+    // TODO
+//    if (config_get(CONFIG_GP_CH_WATER_CARRIER_FIREFIGHT))
+//        if (fight_fire())
+//            image_set_animation(GROUP_FIGURE_PREFECT);
 
     building *b = home();
     switch (action_state) {
@@ -435,22 +439,15 @@ void figure::water_carrier_action() {
         case FIGURE_ACTION_73_PREFECT_RETURNING:
             do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
             break;
-        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-            terrain_usage = TERRAIN_USAGE_ANY;
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
-                action_state = FIGURE_ACTION_75_PREFECT_AT_FIRE;
-                route_remove();
-                roam_length = 0;
-                wait_ticks = 50;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
-            break;
-        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-            extinguish_fire();
-            direction = attack_direction;
-            image_set_animation(GROUP_FIGURE_WATER_CARRIER, 104, 36);
-            break;
+//        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
+//            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
+//                wait_ticks = 50;
+//            break;
+//        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
+//            extinguish_fire();
+//            direction = attack_direction;
+//            image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
+//            break;
     }
 }
 

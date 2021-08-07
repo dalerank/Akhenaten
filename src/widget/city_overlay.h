@@ -9,7 +9,7 @@
 
 enum {
     COLUMN_TYPE_RISK,
-    COLUMN_TYPE_ACCESS
+    COLUMN_TYPE_WATER_ACCESS
 };
 
 enum {

@@ -218,13 +218,43 @@
 2754: docker waiting
 2854: docker unloading
 
+// sprmain2
 
-
-
-
-
-
-
+1: snek
+289: snek ded
+295: snek extra
+391: lion
+695: lion sit
+727: scorpion
+973: cartload oil
+997: cartload henna
+1021: cartload paint
+1045: cartload lamps
+1069: cartload marble
+1077: ?? tombsculptor
+1173: ?? tombsculptor ded
+1181: frogs
+1397: frogs ded
+1403: frogs extra
+1475: hugecart copper
+1483: ?? tombrobber
+1579: ?? tombrobber ded
+1586: locusts
+1592: locusts isometric
+1616: ?? tombpainter
+1712: ?? tombpainter ded
+1719: ?? tombpainter extra
+1911: hugecart lamps
+1919: mummy
+2199: BLOOD warship
+2233: BLOOD warship splode
+2242: BLOOD warship waiting
+2250: BLOOD ferry
+2282: BLOOD ferry ded
+2293: BLOOD ferry waiting
+2301: BLOOD merchantship
+2333: BLOOD merchantship splode
+2344: BLOOD merchantship waiting
 
 
 

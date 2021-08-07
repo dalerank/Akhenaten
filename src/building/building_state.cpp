@@ -162,7 +162,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b) {
     buf->write_i16(b->fire_risk);
     buf->write_i16(b->fire_duration);
     buf->write_u8(b->fire_proof);
-    buf->write_u8(b->house_figure_generation_delay);
+    buf->write_u8(b->map_random_7bit);
     buf->write_u8(b->house_tax_coverage);
     buf->write_u8(0);
     buf->write_i16(b->formation_id);
@@ -331,8 +331,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     }
     b->type = buf->read_i16();
     b->subtype.house_level = buf->read_i16(); // which union field we use does not matter
-    b->road_network_id = buf->read_u8();
-    buf->skip(1);
+    b->road_network_id = buf->read_u16();
     b->creation_sequence_index = buf->read_u16();
     b->houses_covered = buf->read_i16();
     b->percentage_houses_covered = buf->read_i16();
@@ -349,24 +348,20 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
         b->road_access_x = buf->read_u16();
         b->road_access_y = buf->read_u16();
     }
-//    b->figure_id = buf->read_i16();
-//    b->figure_id2 = buf->read_i16(); // laborseeker
-//    b->immigrant_figure_id = buf->read_i16();
-//    b->figure_id4 = buf->read_i16();
     b->set_figure(0, buf->read_u16());
     b->set_figure(1, buf->read_u16());
     b->set_figure(2, buf->read_u16());
     b->set_figure(3, buf->read_u16());
-    b->figure_spawn_delay = buf->read_u8(); // 1 (workcamp 1)
-    buf->skip(1);
+    b->figure_spawn_delay = buf->read_u16();
     b->figure_roam_direction = buf->read_u8();
-    b->has_water_access = buf->read_u8(); // 16 bytes
+    b->has_water_access = buf->read_u8();
 
-    buf->skip(1);
-    buf->skip(1); // something related to fire/collapse risk...?
+    buf->skip(2); // something related to fire/collapse risk...?
     b->prev_part_building_id = buf->read_i16();
     b->next_part_building_id = buf->read_i16();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    if (GAME_ENV == ENGINE_ENV_C3)
+        b->loads_stored = buf->read_i16();
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int resource_quantity = buf->read_u16(); // 4772 >>>> 112 (resource amount! 2-bytes)
 
         // ignore partial loads (for now....)
@@ -382,8 +377,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
             resource_quantity = 0;
 
         b->loads_stored = resource_quantity / 100;
-    } else
-        b->loads_stored = buf->read_i16();
+    }
     buf->skip(1);
     b->has_well_access = buf->read_u8();
 
@@ -398,7 +392,7 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->fire_duration = buf->read_i16();
     b->fire_proof = buf->read_u8();
 
-    b->house_figure_generation_delay = buf->read_u8(); // 20 (workcamp 1)
+    b->map_random_7bit = buf->read_u8(); // 20 (workcamp 1)
     b->house_tax_coverage = buf->read_u8();
     buf->skip(1);
     b->formation_id = buf->read_i16();

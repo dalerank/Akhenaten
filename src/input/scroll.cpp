@@ -386,7 +386,7 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
 }
 
 static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
-    if (set_scroll_speed_from_drag(config_get(CONFIG_UI_SCROOL_KEEPDELTA) ? true : false))
+    if (set_scroll_speed_from_drag(config_get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
         return 1;
 
     int direction = get_direction(m);

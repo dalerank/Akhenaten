@@ -104,7 +104,7 @@ static int get_tooltip_academy(tooltip_context *c, const building *b) {
 const city_overlay *city_overlay_for_education(void) {
     static city_overlay overlay = {
             OVERLAY_EDUCATION,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_education,
             show_figure_education,
             get_column_height_education,
@@ -119,7 +119,7 @@ const city_overlay *city_overlay_for_education(void) {
 const city_overlay *city_overlay_for_school(void) {
     static city_overlay overlay = {
             OVERLAY_SCHOOL,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_school,
             show_figure_school,
             get_column_height_school,
@@ -134,7 +134,7 @@ const city_overlay *city_overlay_for_school(void) {
 const city_overlay *city_overlay_for_library(void) {
     static city_overlay overlay = {
             OVERLAY_LIBRARY,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_library,
             show_figure_library,
             get_column_height_library,
@@ -149,7 +149,7 @@ const city_overlay *city_overlay_for_library(void) {
 const city_overlay *city_overlay_for_academy(void) {
     static city_overlay overlay = {
             OVERLAY_ACADEMY,
-            COLUMN_TYPE_ACCESS,
+            COLUMN_TYPE_WATER_ACCESS,
             show_building_academy,
             show_figure_academy,
             get_column_height_academy,
