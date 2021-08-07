@@ -27,7 +27,6 @@ void figure_route_clean(void) {
             const figure *f = figure_get(figure_id);
             if (f->state != FIGURE_STATE_ALIVE || f->routing_path_id != i)
                 data.figure_ids[i] = 0;
-
         }
     }
 }
@@ -35,16 +34,11 @@ static int get_first_available(void) {
     for (int i = 1; i < MAX_ROUTES; i++) {
         if (data.figure_ids[i] == 0)
             return i;
-
     }
     return 0;
 }
 
 void figure::figure_route_add() {
-
-    if (type == 87)
-        int a = 24;
-
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;

@@ -31,50 +31,49 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
     }
 }
 
-int map_has_road_access(int x, int y, int size, map_point *road) {
+bool map_has_road_access(int x, int y, int size, map_point *road) {
     return map_has_road_access_rotation(0, x, y, size, road);
 }
-
-int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road) {
-//    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//        switch (rotation) {
-//            case 1:
-//                y = y - size + 1;
-//                break;
-//            case 2:
-//                x = x - size + 1;
-//                y = y - size + 1;
-//                break;
-//            case 3:
-//                x = x - size + 1;
-//                break;
-//            default:
-//                break;
-//        }
-//    else
-        switch (rotation) {
-            case 1:
-                x = x - size + 1;
-                break;
-            case 2:
-                x = x - size + 1;
-                y = y - size + 1;
-                break;
-            case 3:
-                y = y - size + 1;
-                break;
-            default:
-                break;
+bool burning_ruin_can_be_accessed(int x, int y, map_point *point) {
+    int base_offset = map_grid_offset(x, y);
+    for (const int *tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
+        int grid_offset = base_offset + *tile_delta;
+        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
+            map_terrain_is(grid_offset, TERRAIN_ROAD) ||
+            building_get(map_building_at(grid_offset))->type == BUILDING_FESTIVAL_SQUARE ||
+            (building_get(map_building_at(grid_offset))->type == BUILDING_BURNING_RUIN
+                && building_get(map_building_at(grid_offset))->fire_duration <= 0)) {
+            map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
+            return true;
         }
+    }
+    return false;
+}
+
+bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road) {
+    switch (rotation) {
+        case 1:
+            x = x - size + 1;
+            break;
+        case 2:
+            x = x - size + 1;
+            y = y - size + 1;
+            break;
+        case 3:
+            y = y - size + 1;
+            break;
+        default:
+            break;
+    }
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
     find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation) {

@@ -235,7 +235,7 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
             if (terrainchoice == TERRAIN_USAGE_ROADS)
                 found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
             if (!found_road) {
-                if (building_is_house(dest->type))
+                if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN)
                     found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
                 else
                     found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
@@ -247,6 +247,8 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
         }
         // found any road...?
         if (found_road) {
+            destination_x = x;
+            destination_y = y;
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)

@@ -392,8 +392,8 @@ public:
     void entertainer_update_image();
 
     // maintenance.c
-    int fight_enemy(int category, int max_distance);
-    int fight_fire();
+    bool fight_enemy(int category, int max_distance);
+    bool fight_fire();
     void extinguish_fire();
     int target_is_alive();
 

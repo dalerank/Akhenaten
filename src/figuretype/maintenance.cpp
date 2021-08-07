@@ -109,9 +109,9 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
 //    *distance = min_dist;
 //    return min_enemy_id;
 //}
-int figure::fight_enemy(int category, int max_distance) {
+bool figure::fight_enemy(int category, int max_distance) {
     if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
-        return 0;
+        return false;
 
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -122,11 +122,11 @@ int figure::fight_enemy(int category, int max_distance) {
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         case FIGURE_ACTION_77_PREFECT_AT_ENEMY:
-            return 0;
+            return false;
     }
     wait_ticks_next_target++;
     if (wait_ticks_next_target < 10)
-        return 0;
+        return false;
 
     wait_ticks_next_target = 0;
     int distance;
@@ -141,13 +141,13 @@ int figure::fight_enemy(int category, int max_distance) {
         enemy->targeted_by_figure_id = id;
         target_figure_created_sequence = enemy->created_sequence;
         route_remove();
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
-int figure::fight_fire() {
+bool figure::fight_fire() {
     if (building_list_burning_size() <= 0)
-        return 0;
+        return false;
 
     switch (action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -158,26 +158,26 @@ int figure::fight_fire() {
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         case FIGURE_ACTION_77_PREFECT_AT_ENEMY:
-            return 0;
+            return false;
     }
     wait_ticks_missile++;
     if (wait_ticks_missile < 20)
-        return 0;
+        return false;
 
     int distance;
     int ruin_id = building_maintenance_get_closest_burning_ruin(tile_x, tile_y, &distance);
     if (ruin_id > 0 && distance <= 25) {
         building *ruin = building_get(ruin_id);
         wait_ticks_missile = 0;
-        action_state = FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE;
+        advance_action(FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE);
         destination_x = ruin->road_access_x;
         destination_y = ruin->road_access_y;
         set_destination(ruin_id);
         route_remove();
         ruin->set_figure(3, id);
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 void figure::extinguish_fire() {
     building *burn = destination();
@@ -195,17 +195,9 @@ void figure::extinguish_fire() {
     wait_ticks--;
     if (wait_ticks <= 0) {
         wait_ticks_missile = 20;
-        if (!fight_fire()) {
-            building *b = home();
-            int x_road, y_road;
-            if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                destination_x = x_road;
-                destination_y = y_road;
-                route_remove();
-            } else
-                poof();
-        }
+        advance_action(FIGURE_ACTION_73_PREFECT_RETURNING);
+        if (!fight_fire()) // in Pharaoh, firemen teleport back instantly.
+            poof();
     }
 }
 int figure::target_is_alive() {
@@ -264,17 +256,12 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-            terrain_usage = TERRAIN_USAGE_ANY;
-            move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
-                action_state = FIGURE_ACTION_75_PREFECT_AT_FIRE;
-                route_remove();
-                roam_length = 0;
+        case 12:
+            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
                 wait_ticks = 50;
-            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
-                poof();
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
+        case 13:
             extinguish_fire();
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
@@ -300,38 +287,15 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 poof();
             break;
     }
-    // graphic id
-//    int dir;
-//    if (action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
-//        action_state == FIGURE_ACTION_150_ATTACK) {
-//        dir = attack_direction;
-//    } else if (direction < 8)
-//        dir = direction;
-//    else
-//        dir = previous_tile_direction;
-//    dir = figure_image_normalize_direction(dir);
+
     switch (action_state) {
-        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 8 * anim_frame;
+        default:
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) + dir + 96 + 8 * (anim_frame / 2);
-        case FIGURE_ACTION_150_ATTACK:
-            // FIXME: to fix fireman direction
-//            if (attack_image_offset >= 12) {
-//                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir + 8 * ((attack_image_offset - 12) / 2);
-//            } else {
-//                sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 104 + dir;
-//            }
+        case 13:
             direction = attack_direction;
             image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
             break;
-//        case FIGURE_ACTION_149_CORPSE:
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + 96 + figure_image_corpse_offset();
-//            break;
-//        default:
-//            sprite_image_id = image_id_from_group(GROUP_FIGURE_PREFECT) + dir + 8 * anim_frame;
-//            break;
     }
 }
 void figure::policeman_action() {

@@ -58,7 +58,7 @@ static int show_figure_damage(const figure *f) {
     return f->type == FIGURE_ENGINEER;
 }
 static int show_figure_crime(const figure *f) {
-    return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
+    return f->type == FIGURE_POLICEMAN || f->type == FIGURE_PROTESTER ||
            f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
 }
 static int show_figure_problems(const figure *f) {

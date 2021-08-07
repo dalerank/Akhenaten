@@ -232,13 +232,13 @@ bool building::spawn_patrician(bool spawned) {
     return common_spawn_roamer(FIGURE_PATRICIAN, 0);
 }
 void building::spawn_figure_engineers_post() {
-    common_spawn_roamer(FIGURE_ENGINEER, 100, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ENGINEER, 0, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 void building::spawn_figure_prefecture() {
-    common_spawn_roamer(FIGURE_PREFECT, 100, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_PREFECT, 0, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 void building::spawn_figure_police() {
-    common_spawn_roamer(FIGURE_POLICEMAN, 100, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_POLICEMAN, 0, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 
 void building::spawn_figure_actor_juggler() {
@@ -397,8 +397,13 @@ void building::spawn_figure_market() {
             if (dest->id) {
                 figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE);
                 f->collecting_item_id = data.market.fetch_inventory_id;
-            }
-            else {
+            } else if (data.market.inventory[0] > 0
+                 || data.market.inventory[1] > 0
+                 || data.market.inventory[2] > 0
+                 || data.market.inventory[3] > 0
+                 || data.market.inventory[4] > 0
+                 || data.market.inventory[5] > 0
+                 || data.market.inventory[6] > 0) { // do not spawn trader if bazaar is 100% empty!
                 // market trader
                 figure_spawn_delay++;
                 if (figure_spawn_delay > spawn_delay) {
@@ -1126,10 +1131,10 @@ void building::update_native_crop_progress() {
 void building::update_road_access() {
     // update building road access
     map_point road;
-    if (type == BUILDING_WORK_CAMP)
-        int a = 24;
     if (type == BUILDING_WAREHOUSE)
         road_is_accessible = map_has_road_access(x, y, 3, &road);
+    if (type == BUILDING_BURNING_RUIN)
+        road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
     else
         road_is_accessible = map_has_road_access(x, y, size, &road);
     road_access_x = road.x;

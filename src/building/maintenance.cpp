@@ -117,7 +117,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
                     min_occupied_dist = dist;
                     min_occupied_building_id = building_id;
                 }
-            } else if (dist < *distance) {
+            } else if (dist < *distance && b->road_is_accessible) {
                 *distance = dist;
                 min_free_building_id = building_id;
             }
@@ -181,7 +181,7 @@ void building_maintenance_check_fire_collapse(void) {
         /////// FIRE
         int random_building = (i + map_random_get(b->grid_offset)) & 7;
         if (random_building == random_global) {
-            b->fire_risk += model->fire_risk;
+            b->fire_risk += model->fire_risk * 10;
 //            if (!b->house_size)
 //                b->fire_risk += 50;
 //            else if (b->house_population <= 0)

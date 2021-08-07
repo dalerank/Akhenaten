@@ -4,9 +4,10 @@
 #include "building/roadblock.h"
 #include "map/point.h"
 
-int map_has_road_access(int x, int y, int size, map_point *road);
+bool map_has_road_access(int x, int y, int size, map_point *road);
+bool burning_ruin_can_be_accessed(int x, int y, map_point *point);
 
-int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road);
+bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road);
 
 int map_has_road_access_hippodrome(int x, int y, map_point *road);
 
