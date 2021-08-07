@@ -187,9 +187,9 @@ static int is_drawable_farm_corner(int grid_offset) {
     return 0;
 }
 
-static int draw_building_as_deleted(building *b) {
+static bool drawing_building_as_deleted(building *b) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
-        return 0;
+        return false;
 
     b = b->main();
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
@@ -212,7 +212,7 @@ static int has_adjacent_deletion(int grid_offset) {
     }
     for (int i = 0; i < total_adjacent_offsets; ++i) {
         if (map_property_is_deleted(grid_offset + adjacent_offset[i]) ||
-            draw_building_as_deleted(building_get(map_building_at(grid_offset + adjacent_offset[i])))) {
+                drawing_building_as_deleted(building_get(map_building_at(grid_offset + adjacent_offset[i])))) {
             return 1;
         }
     }
@@ -378,7 +378,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
     }
 }
 static void draw_building_top(int grid_offset, building *b, int x, int y) {
-    color_t color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
+    color_t color_mask = drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0;
     if (building_is_farm(b->type)) {
         if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
             ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
@@ -471,7 +471,7 @@ static void draw_animation(int x, int y, int grid_offset) {
     if (img->num_animation_sprites && draw) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *b = building_get(map_building_at(grid_offset));
-            int color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
+            int color_mask = drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0;
             if (b->type == BUILDING_GRANARY) {
                 ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1,
                                        x + img->sprite_offset_x,
@@ -554,7 +554,7 @@ static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
 
 }
 static void deletion_draw_animations(int x, int y, int grid_offset) {
-    if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
+    if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_get(map_building_at(grid_offset))))
         ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))

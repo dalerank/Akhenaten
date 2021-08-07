@@ -492,6 +492,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city_animations.cpp
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp

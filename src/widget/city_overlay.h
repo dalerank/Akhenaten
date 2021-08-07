@@ -33,7 +33,6 @@ typedef struct {
 } city_overlay;
 
 void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset);
-
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset);
 
 #endif // WIDGET_CITY_OVERLAY_H

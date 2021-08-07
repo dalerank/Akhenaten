@@ -248,48 +248,15 @@ static int terrain_on_water_overlay(void) {
     return
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
             TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_AQUEDUCT | TERRAIN_ELEVATION |
-            TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
+            TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_DUNE | TERRAIN_REEDS;
 }
 static void draw_footprint_water(int x, int y, int grid_offset) {
-//    if (!map_property_is_draw_tile(grid_offset))
-//        return;
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-//        if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-//            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
-//        else
         if (building_get(map_building_at(grid_offset))->type != BUILDING_ROADBLOCK)
             ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         else
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
     }
-//    else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
-//        // display groundwater
-//        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-//        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
-//    }
-//    else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-//        building *b = building_get(map_building_at(grid_offset));
-//        int terrain = map_terrain_get(grid_offset);
-//        if (b->id && (b->has_well_access || (b->house_size && b->has_water_access)))
-//            terrain |= TERRAIN_FOUNTAIN_RANGE;
-//
-//        int image_offset;
-//        switch (terrain & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
-//            case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
-//                image_offset = 24;
-//                break;
-//            case TERRAIN_GROUNDWATER:
-//                image_offset = 8;
-//                break;
-//            case TERRAIN_FOUNTAIN_RANGE:
-//                image_offset = 16;
-//                break;
-//            default:
-//                image_offset = 0;
-//                break;
-//        }
-//        city_with_overlay_draw_building_footprint(x, y, grid_offset, image_offset);
-//    }
     else {
         int terrain = map_terrain_get(grid_offset);
         building *b = building_get(map_building_at(grid_offset));
@@ -309,9 +276,6 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
                 case TERRAIN_GROUNDWATER:
                     image_id += 1;
                     break;
-//            default:
-//                image_id = map_image_at(grid_offset);
-//                break;
             }
             ImageDraw::isometric_footprint(image_id, x, y, 0);
         }
