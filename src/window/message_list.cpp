@@ -106,10 +106,10 @@ static void draw_messages(int total_messages) {
             image_type_offset = 4;
 
         if (msg->is_read) {
-            image_draw(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12,
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_MESSAGE_ICON) + 15 + image_type_offset, data.x_text + 12,
                        data.y_text + 6 + 20 * i);
         } else
-            image_draw(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12,
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12,
                        data.y_text + 6 + 20 * i);
         font_t font = FONT_NORMAL_WHITE;
         if (data.focus_button_id == i + 1)

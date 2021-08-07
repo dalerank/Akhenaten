@@ -83,7 +83,7 @@ static void draw_request(int index, const scenario_request *request) {
 
     button_border_draw(38, 96 + 42 * index, 560, 42, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 45, 103 + 42 * index);
     int width = text_draw_number(stack_proper_quantity(request->amount, request->resource), '@', " ", 65, 102 + 42 * index, FONT_NORMAL_WHITE);
     lang_text_draw(23, request->resource, 65 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
 
@@ -121,7 +121,7 @@ static int draw_background(void) {
     city_emperor_calculate_gift_costs();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
     text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
 
@@ -137,7 +137,7 @@ static int draw_background(void) {
         !city_military_distant_battle_roman_army_is_traveling_forth()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102,
                        FONT_NORMAL_WHITE);

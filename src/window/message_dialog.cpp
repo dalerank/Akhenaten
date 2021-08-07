@@ -337,7 +337,7 @@ static void draw_city_message_text(const lang_message *msg) {
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
-            image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
+            imagedrawnamespace::image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
             lang_text_draw(21, empire_city_get(player_message.param1)->name_id,
                            data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
             rich_text_draw(text,
@@ -346,7 +346,7 @@ static void draw_city_message_text(const lang_message *msg) {
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
-            image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
+            imagedrawnamespace::image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40);
             text_draw_money(player_message.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
             rich_text_draw(text,
                            data.x_text + 8, data.y_text + 86, 16 * data.text_width_blocks - 16,
@@ -363,7 +363,7 @@ static void draw_city_message_text(const lang_message *msg) {
 //                const scenario_request *request = scenario_request_get(player_message.param1);
                 auto city_msg = city_message_get(data.message_id);
                 int y_offset = data.y_text + 86 + lines * 16;
-                image_draw(resource_image(city_msg->req_resource), data.x_text + 8, y_offset - 4);
+                imagedrawnamespace::image_draw(resource_image(city_msg->req_resource), data.x_text + 8, y_offset - 4);
                 int width = text_draw_number(stack_proper_quantity(city_msg->req_amount, city_msg->req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE);
                 lang_text_draw(23, city_msg->req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE);
 //                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
@@ -402,7 +402,7 @@ static void draw_title(const lang_message *msg) {
     if (img) {
         int image_x = msg->image.x;
         int image_y = msg->image.y;
-        image_draw(image_id, data.x + image_x, data.y + image_y);
+        imagedrawnamespace::image_draw(image_id, data.x + image_x, data.y + image_y);
         if (data.y + image_y + img->height + 8 > data.y_text)
             data.y_text = data.y + image_y + img->height + 8;
 
@@ -521,7 +521,7 @@ static void draw_background_video(void) {
 
         const scenario_request *request = scenario_request_get(player_message.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE);
-        image_draw(
+        imagedrawnamespace::image_draw(
                 image_id_from_group(GROUP_RESOURCE_ICONS) + request->resource +
                 resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
                 data.x + 70, y_text - 5);

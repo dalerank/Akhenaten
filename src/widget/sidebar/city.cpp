@@ -405,21 +405,21 @@ static void refresh_build_menu_buttons(void) {
 static void draw_collapsed_background(void) {
     int x_offset = sidebar_common_get_x_offset_collapsed();
     if (GAME_ENV == ENGINE_ENV_C3)
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
 static void draw_expanded_background(int x_offset) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        image_draw(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
         widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
         draw_number_of_messages(x_offset);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        image_draw(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        imagedrawnamespace::image_draw(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
         widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
         // extra bar spacing on the right
@@ -428,8 +428,8 @@ static void draw_expanded_background(int x_offset) {
         int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
         int s_start = s_num * block_height;
         for (int i = 0; i < s_num; i++)
-            image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
         draw_number_of_messages(x_offset - 26);
     }
     draw_buttons_expanded(x_offset);

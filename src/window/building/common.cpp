@@ -75,7 +75,7 @@ static int get_employment_info_text_id(building_info_context *c, building *b, in
 }
 static void draw_employment_details(building_info_context *c, building *b, int y_offset, int text_id) {
     y_offset += c->y_offset;
-    image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 14,
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 14,
                c->x_offset + 40, y_offset + 6);
     if (text_id) {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
@@ -94,7 +94,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
 }
 static void draw_employment_farm_ph_details(building_info_context *c, building *b, int y_offset, int text_id) {
     y_offset += c->y_offset;
-    image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 14,
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 14,
                c->x_offset + 40, y_offset + 6);
     int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
 }

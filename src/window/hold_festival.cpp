@@ -69,7 +69,7 @@ static void draw_buttons(void) {
         resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
     }
 
-    image_draw(resource_image_id, 120 + width, 279);
+    imagedrawnamespace::image_draw(resource_image_id, 120 + width, 279);
 
     // greying out of buttons
     if (city_finance_out_of_money()) {
@@ -91,9 +91,9 @@ static void draw_background(void) {
     for (int god = 0; god < MAX_GODS; god++) {
         if (god == city_festival_selected_god()) {
             button_border_draw(100 * god + 66, 92, 90, 100, 1);
-            image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
         } else {
-            image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
         }
     }
     draw_buttons();

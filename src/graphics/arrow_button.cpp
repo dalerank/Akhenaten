@@ -26,7 +26,7 @@ void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons, bo
         else if (GAME_ENV == ENGINE_ENV_PHARAOH && !buttons[i].pressed)
             image_id += 1;
 
-        image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
+        imagedrawnamespace::image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
     }
 }
 

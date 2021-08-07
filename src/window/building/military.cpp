@@ -106,7 +106,7 @@ void window_building_draw_barracks(building_info_context *c) {
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64,
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64,
                c->y_offset + 38);
 
     building *b = building_get(c->building_id);
@@ -199,7 +199,7 @@ void window_building_draw_legion_info(building_info_context *c) {
     // standard icon at the top
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
     int icon_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
+    imagedrawnamespace::image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16);
     // standard flag
     image_id = image_id_from_group(GROUP_FIGURE_FORT_FLAGS);
     if (m->figure_type == FIGURE_FORT_JAVELIN)
@@ -211,11 +211,11 @@ void window_building_draw_legion_info(building_info_context *c) {
         image_id += 8;
 
     int flag_height = image_get(image_id)->height;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+    imagedrawnamespace::image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
                c->y_offset + 16 + icon_height);
     // standard pole and morale ball
     image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+    imagedrawnamespace::image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
                c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
@@ -271,7 +271,7 @@ void window_building_draw_legion_info(building_info_context *c) {
             offsets = OFFSETS_OTHER[index];
         }
         for (int i = 5 - c->formation_types; i < 5; i++) {
-            image_draw(image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i], c->x_offset + 21 + 85 * i,
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_FORT_FORMATIONS) + offsets[i], c->x_offset + 21 + 85 * i,
                        c->y_offset + 141);
         }
         window_building_draw_legion_info_foreground(c);

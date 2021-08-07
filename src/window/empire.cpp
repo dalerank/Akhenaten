@@ -179,7 +179,7 @@ static void draw_trade_route(int route_id, int effect) {
         auto route_point = obj->points[i];
 
         // first corner in pair
-        image_draw(image_id, data.x_draw_offset + route_point.x, data.y_draw_offset + route_point.y);
+        imagedrawnamespace::image_draw(image_id, data.x_draw_offset + route_point.x, data.y_draw_offset + route_point.y);
 
         // draw lines connecting the turns
         if (i < obj->num_points - 1) {
@@ -196,7 +196,7 @@ static void draw_trade_route(int route_id, int effect) {
             while (progress < len) {
                 int disp_x = data.x_draw_offset + route_point.x + scaled_x * progress;
                 int disp_y = data.y_draw_offset + route_point.y + scaled_y * progress;
-                image_draw(image_id, disp_x, disp_y);
+                imagedrawnamespace::image_draw(image_id, disp_x, disp_y);
                 progress += 1.0;
             }
         }
@@ -205,20 +205,20 @@ static void draw_trade_route(int route_id, int effect) {
 
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
-    image_draw(resource_get_icon(resource), x_offset + 1, y_offset + 1);
+    imagedrawnamespace::image_draw(resource_get_icon(resource), x_offset + 1, y_offset + 1);
 
     if (data.focus_resource == resource)
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 24, 1);
 
     switch (trade_max) {
         case 15:
-            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
             break;
         case 25:
-            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
             break;
         case 40:
-            image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
             break;
     }
 }
@@ -314,7 +314,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         lang_text_draw(47, 6 + city->is_sea_trade, x_offset + spacing + 40, y_offset + INFO_Y_FOOTER_1, FONT_OBJECT_INFO[GAME_ENV]);
         int image_id = image_id_from_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
         if (GAME_ENV == ENGINE_ENV_C3)
-            image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
+            imagedrawnamespace::image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
     }
 }
 static void draw_city_info(const empire_object *object) {
@@ -512,17 +512,17 @@ static void draw_empire_object(const empire_object *obj) {
         if (city_military_distant_battle_roman_months_traveled() != obj->distant_battle_travel_months)
             return;
     }
-    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    imagedrawnamespace::image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
     const image *img = image_get(image_id);
     if (img->animation_speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        image_draw(image_id + new_animation,
+        imagedrawnamespace::image_draw(image_id + new_animation,
                    data.x_draw_offset + x + img->sprite_offset_x,
                    data.y_draw_offset + y + img->sprite_offset_y);
     }
 }
 static void draw_invasion_warning(int x, int y, int image_id) {
-    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    imagedrawnamespace::image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
 }
 static void draw_map(void) {
     graphics_set_clip_rectangle(data.x_min + 16, data.y_min + 16, data.x_max - data.x_min - 32,
@@ -533,7 +533,7 @@ static void draw_map(void) {
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_id_from_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -544,9 +544,9 @@ static void draw_map(void) {
 static void draw_city_name(const empire_city *city) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         int image_base = image_id_from_group(GROUP_EMPIRE_PANELS);
-        image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
-        image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
-        image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
+        imagedrawnamespace::image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
+        imagedrawnamespace::image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
+        imagedrawnamespace::image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
         if (city) {
             lang_text_draw_centered(21, city->name_id,
                                     (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK);
@@ -588,32 +588,32 @@ static void draw_paneling(void) {
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
-        image_draw(image_base + 3, x, data.y_max - 140);
-        image_draw(image_base + 3, x, data.y_max - 100);
-        image_draw(image_base + 3, x, data.y_max - 60);
-        image_draw(image_base + 3, x, data.y_max - 20);
+        imagedrawnamespace::image_draw(image_base + 3, x, data.y_max - 140);
+        imagedrawnamespace::image_draw(image_base + 3, x, data.y_max - 100);
+        imagedrawnamespace::image_draw(image_base + 3, x, data.y_max - 60);
+        imagedrawnamespace::image_draw(image_base + 3, x, data.y_max - 20);
     }
 
     // horizontal bar borders
     for (int x = data.x_min; x < data.x_max; x += 86) {
-        image_draw(image_base + 1, x, data.y_min);
-        image_draw(image_base + 1, x, data.y_max - 140);
-        image_draw(image_base + 1, x, data.y_max - 16);
+        imagedrawnamespace::image_draw(image_base + 1, x, data.y_min);
+        imagedrawnamespace::image_draw(image_base + 1, x, data.y_max - 140);
+        imagedrawnamespace::image_draw(image_base + 1, x, data.y_max - 16);
     }
 
     // vertical bar borders
     for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        image_draw(image_base, data.x_min, y);
-        image_draw(image_base, data.x_max - 16, y);
+        imagedrawnamespace::image_draw(image_base, data.x_min, y);
+        imagedrawnamespace::image_draw(image_base, data.x_max - 16, y);
     }
 
     // crossbars
-    image_draw(image_base + 2, data.x_min, data.y_min);
-    image_draw(image_base + 2, data.x_min, data.y_max - 140);
-    image_draw(image_base + 2, data.x_min, data.y_max - 16);
-    image_draw(image_base + 2, data.x_max - 16, data.y_min);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 140);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 16);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_min, data.y_min);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_min, data.y_max - 140);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_min, data.y_max - 16);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_max - 16, data.y_min);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_max - 16, data.y_max - 140);
+    imagedrawnamespace::image_draw(image_base + 2, data.x_max - 16, data.y_max - 16);
 
     graphics_reset_clip_rectangle();
 }

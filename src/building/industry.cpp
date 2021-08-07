@@ -91,13 +91,13 @@ void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+            imagedrawnamespace::image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
                                   y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
     } else {
         for (int i = 4; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+            imagedrawnamespace::image_draw_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
                                   y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
     }

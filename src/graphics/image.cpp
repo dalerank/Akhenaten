@@ -724,13 +724,13 @@ static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
     draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
 }
 
-void image_draw(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
     if (!data)
         return;
     if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
-//        log_error("use image_draw_isometric_footprint for isometric!", 0, image_id);
+//        log_error("use imagedrawnamespace::image_draw_isometric_footprint for isometric!", 0, image_id);
         return;
     }
 
@@ -768,15 +768,15 @@ void image_draw(int image_id, int x, int y, color_t color_mask) {
     } else
         draw_uncompressed(img, data, x, y, color_mask, color_mask ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
 }
-void image_draw_sprite(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_sprite(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
-    image_draw(image_id, x - img->sprite_offset_x, y - img->sprite_offset_y, color_mask);
+    imagedrawnamespace::image_draw(image_id, x - img->sprite_offset_x, y - img->sprite_offset_y, color_mask);
 }
-void image_draw_from_below(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_from_below(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
-    image_draw(image_id, x - img->sprite_offset_x, y - img->height, color_mask);
+    imagedrawnamespace::image_draw(image_id, x - img->sprite_offset_x, y - img->height, color_mask);
 }
-void image_draw_enemy(int image_id, int x, int y) {
+void imagedrawnamespace::image_draw_enemy(int image_id, int x, int y) {
     if (image_id <= 0 || image_id >= 801)
         return;
     const image *img = image_get_enemy(image_id);
@@ -784,7 +784,7 @@ void image_draw_enemy(int image_id, int x, int y) {
     if (data)
         draw_compressed(img, data, x, y, img->height);
 }
-void image_draw_blend(int image_id, int x, int y, color_t color) {
+void imagedrawnamespace::image_draw_blend(int image_id, int x, int y, color_t color) {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
     if (!data)
@@ -799,7 +799,7 @@ void image_draw_blend(int image_id, int x, int y, color_t color) {
         draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
     }
 }
-void image_draw_blend_alpha(int image_id, int x, int y, color_t color) {
+void imagedrawnamespace::image_draw_blend_alpha(int image_id, int x, int y, color_t color) {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
     if (!data)
@@ -843,7 +843,7 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             break;
     }
 }
-void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color) {
+void imagedrawnamespace::image_draw_letter(font_t font, int letter_id, int x, int y, color_t color) {
     const image *img = image_letter(letter_id);
     const color_t *data = image_data_letter(letter_id);
     if (!data)
@@ -866,15 +866,15 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color) 
     } else
         draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
 }
-void image_draw_fullscreen_background(int image_id) {
+void imagedrawnamespace::image_draw_fullscreen_background(int image_id) {
     int s_width = screen_width();
     int s_height = screen_height();
     if (s_width > 1024 || s_height > 768)
         graphics_clear_screens();
 
-    image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
+    imagedrawnamespace::image_draw(image_id, (s_width - 1024) / 2, (s_height - 768) / 2);
 }
-void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
@@ -899,7 +899,7 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
             break;
     }
 }
-void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id, 1);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
@@ -926,7 +926,7 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
             break;
     }
 }
-void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_isometric_top(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
@@ -970,7 +970,7 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask) {
     else
         draw_compressed_and(img, data, x, y, height, color_mask);
 }
-void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask) {
+void imagedrawnamespace::image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)

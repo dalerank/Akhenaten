@@ -79,7 +79,7 @@ void scrollbar_draw(scrollbar_type *scrollbar) {
         if (scrollbar->is_dragging_scroll)
             offset = scrollbar->scroll_position_drag;
 
-        image_draw(image_id_from_group(GROUP_PANEL_BUTTON) + 39,
+        imagedrawnamespace::image_draw(image_id_from_group(GROUP_PANEL_BUTTON) + 39,
                    scrollbar->x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
                    scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
     }

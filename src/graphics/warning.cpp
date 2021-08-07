@@ -43,8 +43,8 @@ void warning_draw(void) {
         label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
-            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);
-            image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30,
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);
+            imagedrawnamespace::image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30,
                        top_offset + 2);
         }
         text_draw_centered(text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE, 0);

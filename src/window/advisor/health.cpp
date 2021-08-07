@@ -29,7 +29,7 @@ static int get_health_advice(void) {
 
 static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
+    imagedrawnamespace::image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
     if (city_population() >= 200)

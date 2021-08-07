@@ -53,7 +53,7 @@ static void init_draw_context(void) {
 static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         color_t color_mask = 0;
@@ -67,7 +67,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
 
             map_image_set(grid_offset, image_id);
         }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
     }
 }
 
@@ -76,7 +76,7 @@ static void draw_top(int x, int y, int grid_offset) {
         return;
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
-    image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
+    imagedrawnamespace::image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
 }
 
 static void draw_flags(int x, int y, int grid_offset) {
