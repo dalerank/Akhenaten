@@ -973,8 +973,7 @@ static void draw_animation(int x, int y, int grid_offset) {
 
     switch (b->type) {
         case BUILDING_BURNING_RUIN:
-            if (b->ruin_has_plague)
-                image_draw(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
+            draw_normal_anim(x, y, b, image_id, color_mask);
             break;
         case BUILDING_GRANARY:
             draw_granary_stores(b, x, y, color_mask);
@@ -1062,6 +1061,8 @@ static void draw_animation(int x, int y, int grid_offset) {
             break;
         default:
             draw_normal_anim(x, y, b, image_id, color_mask);
+            if (b->ruin_has_plague)
+                image_draw(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
             break;
     }
 

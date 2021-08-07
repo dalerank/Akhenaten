@@ -165,7 +165,7 @@ void city_finance_estimate_taxes(void) {
             city_data.taxes.yearly.collected_plebs + city_data.taxes.yearly.collected_patricians;
     city_data.finance.estimated_tax_income = city_data.finance.this_year.income.taxes + estimated_rest_of_year;
 
-
+    // TODO: fix this calculation
     int uncollected_patricians = calc_adjust_with_percentage(
             city_data.taxes.monthly.uncollected_patricians / 2,
             city_data.finance.tax_percentage);

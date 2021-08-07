@@ -128,15 +128,13 @@ void figure_generate_criminals(void) {
                 if (min_happiness <= 10) {
                     if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
                         generate_rioter(min_building);
-                    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+                    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                         generate_mugger(min_building);
-                    }
                 }
                 else if (min_happiness < 30)
                     generate_mugger(min_building);
                 else if (min_happiness < 50)
                     generate_protestor(min_building);
-
             }
         } else if (sentiment < 60) {
             if (random_byte() >= sentiment + 40) {
@@ -144,13 +142,11 @@ void figure_generate_criminals(void) {
                     generate_mugger(min_building);
                 else if (min_happiness < 50)
                     generate_protestor(min_building);
-
             }
         } else {
             if (random_byte() >= sentiment + 20) {
                 if (min_happiness < 50)
                     generate_protestor(min_building);
-
             }
         }
     }

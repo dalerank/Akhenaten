@@ -141,7 +141,7 @@ static void water_supply_coverage(building *b) {
     b->data.house.bathhouse = MAX_COVERAGE;
 }
 static void engineer_coverage(building *b, int *max_damage_seen) {
-    if (b->type == BUILDING_HIPPODROME)
+    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_WAREHOUSE_SPACE)
         b = b->main();
 
     if (b->damage_risk > *max_damage_seen)
@@ -150,7 +150,7 @@ static void engineer_coverage(building *b, int *max_damage_seen) {
     b->damage_risk = 0;
 }
 static void prefect_coverage(building *b, int *min_happiness_seen) {
-    if (b->type == BUILDING_HIPPODROME)
+    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_WAREHOUSE_SPACE)
         b = b->main();
 
     b->fire_risk = 0;
@@ -226,17 +226,17 @@ static void distribute_market_resources(building *b, building *market) {
         goods_no = 8;
 
 
-    if (model->furniture) {
+    if (model->jewelry_furniture) {
         market->data.market.furniture_demand = 10;
-        distribute_good(b, market, goods_no * model->furniture, INVENTORY_GOOD2);
+        distribute_good(b, market, goods_no * model->jewelry_furniture, INVENTORY_GOOD2);
     }
-    if (model->oil) {
+    if (model->linen_oil) {
         market->data.market.oil_demand = 10;
-        distribute_good(b, market, goods_no * model->oil, INVENTORY_GOOD3);
+        distribute_good(b, market, goods_no * model->linen_oil, INVENTORY_GOOD3);
     }
-    if (model->wine) {
+    if (model->beer_wine) {
         market->data.market.wine_demand = 10;
-        distribute_good(b, market, goods_no * model->wine, INVENTORY_GOOD4);
+        distribute_good(b, market, goods_no * model->beer_wine, INVENTORY_GOOD4);
     }
 }
 static int provide_market_goods(building *market, int x, int y) {

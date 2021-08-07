@@ -362,7 +362,8 @@ void building_state_load_from_buffer(buffer *buf, building *b) {
     b->figure_roam_direction = buf->read_u8();
     b->has_water_access = buf->read_u8(); // 16 bytes
 
-    buf->skip(2);
+    buf->skip(1);
+    buf->skip(1); // something related to fire/collapse risk...?
     b->prev_part_building_id = buf->read_i16();
     b->next_part_building_id = buf->read_i16();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {

@@ -18,6 +18,9 @@ typedef struct {
     int desirability_step_size; /**< Desirability step size */
     int desirability_range; /**< Max desirability range */
     int laborers; /**< Number of people a building employs */
+    // pharaoh
+    int fire_risk;
+    int damage_risk;
 } model_building;
 
 /**
@@ -31,17 +34,24 @@ typedef struct {
     int religion; /**< Number of gods required */
     int education; /**< Education required: 1 = school or library, 2 = school and library, 3 = school, library and academy */
     int food; /**< Food required (boolean) */
-    int mortuary; /**< Barber required (boolean) */
-    int magistrate; /**< Bathhouse required (boolean) */
+    int dentist; /**< Barber required (boolean) */
+    int physician; /**< Bathhouse required (boolean) */
     int health; /**< Health required: 1 = doctor or hospital, 2 = doctor and hospital */
     int food_types; /**< Number of food types required */
     int pottery; /**< Pottery required */
-    int oil; /**< Oil required */
-    int furniture; /**< Furniture required */
-    int wine; /**< Wine types required: 1 = any wine, 2 = two types of wine */
+    int linen_oil; /**< Oil required */
+    int jewelry_furniture; /**< Furniture required */
+    int beer_wine; /**< Wine types required: 1 = any wine, 2 = two types of wine */
+    // pharaoh
+    int crime_risk;
+    int crime_risk_base;
+    //
     int prosperity; /**< Prosperity contribution */
     int max_people; /**< Maximum people per tile (medium insula and lower) or per house (large insula and up) */
     int tax_multiplier; /**< Tax rate multiplier */
+    // pharaoh
+    int malaria_risk;
+    int disease_risk;
 } model_house;
 
 /**

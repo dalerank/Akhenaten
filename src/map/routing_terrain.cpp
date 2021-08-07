@@ -17,7 +17,7 @@ static int get_land_type_citizen_building(int grid_offset) {
     building *b = building_get(map_building_at(grid_offset));
     int type = CITIZEN_N1_BLOCKED;
     switch (b->type) {
-        case BUILDING_WAREHOUSE:
+//        case BUILDING_WAREHOUSE:
         case BUILDING_GATEHOUSE:
             type = CITIZEN_0_ROAD;
             break;
@@ -47,27 +47,27 @@ static int get_land_type_citizen_building(int grid_offset) {
                 }
             }
             break;
-        case BUILDING_GRANARY:
-            switch (map_property_multi_tile_xy(grid_offset)) {
-                case EDGE_X1Y0:
-                case EDGE_X0Y1:
-                case EDGE_X1Y1:
-                case EDGE_X2Y1:
-                case EDGE_X1Y2:
-                    type = CITIZEN_0_ROAD;
-                    break;
-            }
-            break;
-        case BUILDING_RESERVOIR:
-            switch (map_property_multi_tile_xy(grid_offset)) {
-                case EDGE_X1Y0:
-                case EDGE_X0Y1:
-                case EDGE_X2Y1:
-                case EDGE_X1Y2:
-                    type = CITIZEN_N4_RESERVOIR_CONNECTOR; // aqueduct connect points
-                    break;
-            }
-            break;
+//        case BUILDING_GRANARY:
+//            switch (map_property_multi_tile_xy(grid_offset)) {
+//                case EDGE_X1Y0:
+//                case EDGE_X0Y1:
+//                case EDGE_X1Y1:
+//                case EDGE_X2Y1:
+//                case EDGE_X1Y2:
+//                    type = CITIZEN_0_ROAD;
+//                    break;
+//            }
+//            break;
+//        case BUILDING_RESERVOIR:
+//            switch (map_property_multi_tile_xy(grid_offset)) {
+//                case EDGE_X1Y0:
+//                case EDGE_X0Y1:
+//                case EDGE_X2Y1:
+//                case EDGE_X1Y2:
+//                    type = CITIZEN_N4_RESERVOIR_CONNECTOR; // aqueduct connect points
+//                    break;
+//            }
+//            break;
     }
     return type;
 }

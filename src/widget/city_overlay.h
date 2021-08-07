@@ -12,6 +12,14 @@ enum {
     COLUMN_TYPE_ACCESS
 };
 
+enum {
+    COLUMN_COLOR_PLAIN = 0,
+    COLUMN_COLOR_YELLOW = 3,
+    COLUMN_COLOR_ORANGE = 6,
+    COLUMN_COLOR_RED = 9,
+    COLUMN_COLOR_BLUE = 12,
+};
+
 typedef struct {
     int type;
     int column_type;

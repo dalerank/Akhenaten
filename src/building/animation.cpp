@@ -13,6 +13,8 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
         return 0;
 
     switch (b->type) {
+        case BUILDING_BURNING_RUIN:
+            break;
         case BUILDING_WAREHOUSE_SPACE:
             return 0;
             break;

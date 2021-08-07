@@ -231,7 +231,7 @@ void figure::advance_route_tile(int roaming_enabled) {
     } else if (map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
         int type = building_get(map_building_at(target_grid_offset))->type;
         switch (type) {
-            case BUILDING_WAREHOUSE_SPACE:
+//            case BUILDING_WAREHOUSE_SPACE:
 //            case BUILDING_GRANARY:
             case BUILDING_TRIUMPHAL_ARCH:
             case BUILDING_FORT_GROUND:

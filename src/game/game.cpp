@@ -183,7 +183,7 @@ bool game_init(void) {
     }
 
     if (!model_load()) {
-        errlog("unable to load model.txt");
+        errlog("unable to load model data");
         return false;
     }
 

@@ -104,7 +104,7 @@ static int groupid_translation_table_ph[] = {
         117, 6 + 341, // prefect (fireman)
         118, 12 + 341, // homeless
         119, 35, // burning ruins (tent)
-        120, 35, // burning ruins (generic)
+        120, 36, // burning ruins (generic)
         121, 8 + 341, // prefect with water (fireman)
         122, 122 + 66, // linen
         123, 123 + 66, // weapons

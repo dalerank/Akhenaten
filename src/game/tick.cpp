@@ -242,8 +242,6 @@ static void advance_tick(void) {
             break;
         case 44:
             building_maintenance_check_fire_collapse();
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                random_generate_next(); // TODO: find out the source / reason for this
             break;
         case 45:
             figure_generate_criminals();

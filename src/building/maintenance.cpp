@@ -26,13 +26,13 @@
 #include "map/tiles.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
+#include "model.h"
 
 static int fire_spread_direction = 0;
 
 void building_maintenance_update_fire_direction(void) {
     fire_spread_direction = random_byte() & 7;
 }
-
 void building_maintenance_update_burning_ruins(void) {
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
@@ -99,7 +99,6 @@ void building_maintenance_update_burning_ruins(void) {
         map_routing_update_land();
 
 }
-
 int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
     int min_free_building_id = 0;
     int min_occupied_building_id = 0;
@@ -132,7 +131,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
 }
 
 static void collapse_building(building *b) {
-    return; // TODO: get fire values and logic working before enabling
+//    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse())
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
@@ -140,9 +139,8 @@ static void collapse_building(building *b) {
     game_undo_disable();
     building_destroy_by_collapse(b);
 }
-
 static void fire_building(building *b) {
-    return; // TODO: get fire values and logic working before enabling
+//    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire())
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
@@ -156,63 +154,52 @@ void building_maintenance_check_fire_collapse(void) {
 
     int climate = scenario_property_climate();
     int recalculate_terrain = 0;
+    random_generate_next();
     int random_global = random_byte() & 7;
     int max_id = building_get_highest_id();
     for (int i = 1; i <= max_id; i++) {
         building *b = building_get(i);
-
-        // todo: improve collapse-proof/dynamic fire & collapse risk per building
-
         if (b->state != BUILDING_STATE_VALID || b->fire_proof)
             continue;
         if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
             continue;
-        int random_building = (i + map_random_get(b->grid_offset)) & 7;
-        // damage
-        b->damage_risk += random_building == random_global ? 3 : 1;
-        if (tutorial_extra_damage_risk())
-            b->damage_risk += 5;
 
-        if (b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT)
-            b->damage_risk = 0;
-        switch (b->type) {
-            case BUILDING_APOTHECARY:
-            case BUILDING_DENTIST:
-            case BUILDING_ROADBLOCK:
-            case BUILDING_BRICKS_WORKSHOP:
-            case BUILDING_CARPENTERS_GUILD:
-            case BUILDING_CATTLE_RANCH:
-            case BUILDING_CHARIOTS_WORKSHOP:
-            case BUILDING_CONSERVATORY:
-            case BUILDING_DANCE_SCHOOL:
-            case BUILDING_BARLEY_FARM:
-                b->damage_risk = 0;
-        }
-        if (b->damage_risk > 200) {
+        const model_building *model = model_get_building(b->type);
+
+        /////// COLLAPSE
+        int damage_risk_increase = model->damage_risk;
+        if (tutorial_extra_damage_risk())
+            damage_risk_increase += 5;
+
+        b->damage_risk += damage_risk_increase;
+        if (b->damage_risk > 1000) {
             collapse_building(b);
             recalculate_terrain = 1;
             continue;
         }
-        // fire
+
+        /////// FIRE
+        int random_building = (i + map_random_get(b->grid_offset)) & 7;
         if (random_building == random_global) {
-            if (!b->house_size)
-                b->fire_risk += 5;
-            else if (b->house_population <= 0)
-                b->fire_risk = 0;
-            else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
-                b->fire_risk += 10;
-            else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
-                b->fire_risk += 5;
-            else
-                b->fire_risk += 2;
-            if (tutorial_extra_fire_risk())
-                b->fire_risk += 5;
-            if (climate == CLIMATE_NORTHERN)
-                b->fire_risk = 0;
-            else if (climate == CLIMATE_DESERT)
-                b->fire_risk += 3;
+            b->fire_risk += model->fire_risk;
+//            if (!b->house_size)
+//                b->fire_risk += 50;
+//            else if (b->house_population <= 0)
+//                b->fire_risk = 0;
+//            else if (b->subtype.house_level <= HOUSE_LARGE_SHACK)
+//                b->fire_risk += 100;
+//            else if (b->subtype.house_level <= HOUSE_GRAND_INSULA)
+//                b->fire_risk += 50;
+//            else
+//                b->fire_risk += 20;
+//            if (tutorial_extra_fire_risk())
+//                b->fire_risk += 50;
+//            if (climate == CLIMATE_NORTHERN)
+//                b->fire_risk = 0;
+//            else if (climate == CLIMATE_DESERT)
+//                b->fire_risk += 30;
         }
-        if (b->fire_risk > 100) {
+        if (b->fire_risk > 1000) {
             fire_building(b);
             recalculate_terrain = 1;
         }
@@ -220,7 +207,6 @@ void building_maintenance_check_fire_collapse(void) {
     if (recalculate_terrain)
         map_routing_update_land();
 }
-
 void building_maintenance_check_rome_access(void) {
     const map_tile *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);

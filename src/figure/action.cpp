@@ -309,8 +309,14 @@ void figure::action_perform() {
         figure *leader = figure_get(leading_figure_id);
         switch (type) {
             case FIGURE_IMMIGRANT:
-//                if (b_imm->state != BUILDING_STATE_VALID || b_imm->immigrant_figure_id != id || !b_imm->house_size)
-//                    return poof();
+//                if (b_imm->state != BUILDING_STATE_VALID)
+//                    poof();
+//                if (!b_imm->house_size)
+//                    poof();
+//                if (!b_imm->has_figure(2, id))
+//                    poof();
+                if (b_imm->type == BUILDING_BURNING_RUIN)
+                    poof();
                 break;
             case FIGURE_ENGINEER:
             case FIGURE_PREFECT:

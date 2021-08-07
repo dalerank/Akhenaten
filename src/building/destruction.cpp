@@ -17,6 +17,7 @@
 #include "sound/effect.h"
 
 #include <string.h>
+#include <core/random.h>
 
 static void destroy_on_fire(building *b, int plagued) {
     game_undo_disable();
@@ -40,9 +41,13 @@ static void destroy_on_fire(building *b, int plagued) {
     if (b->size >= 2 && b->size <= 5)
         num_tiles = b->size * b->size;
     else {
-        num_tiles = 0;
+        if (b->house_size > 1)
+            num_tiles = b->house_size * b->house_size;
+        else
+            num_tiles = 0;
     }
     map_building_tiles_remove(b->id, b->x, b->y);
+    unsigned int rand_int = random_short();
     if (map_terrain_is(b->grid_offset, TERRAIN_WATER))
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     else {
@@ -56,14 +61,8 @@ static void destroy_on_fire(building *b, int plagued) {
         memset(&b->data, 0, 42);
 
         // FIXME: possible can't render image & fire animation
-        int image_id;
-        if (was_tent)
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
-        else {
-//            int random = map_random_get(b->grid_offset) & 3;
-//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9;
-        }
+        unsigned char random = rand_int % 4; rand_int *= rand_int;
+        int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
     }
     static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5,
@@ -78,16 +77,8 @@ static void destroy_on_fire(building *b, int plagued) {
 
         // FIXME: possible can't render image & fire animation
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
-        int image_id;
-        if (was_tent)
-//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT);
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_TENT) + 27;
-        else {
-//            int random = map_random_get(ruin->grid_offset) & 3;
-//            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-            image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9;
-        }
-
+        unsigned char random = rand_int % 4; rand_int *= rand_int;
+        int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
         b->remove_figure(3);
@@ -96,7 +87,6 @@ static void destroy_on_fire(building *b, int plagued) {
     }
     if (waterside_building)
         map_routing_update_water();
-
 }
 static void destroy_linked_parts(building *b, int on_fire) {
     building *part = b;

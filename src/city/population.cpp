@@ -367,15 +367,15 @@ int *calculate_houses_demanding_goods(int *housing_type_counts) {
             houses_demanding_goods[0] += housing_type_counts[i];
 
 
-        if (model->furniture)
+        if (model->jewelry_furniture)
             houses_demanding_goods[1] += housing_type_counts[i];
 
 
-        if (model->oil)
+        if (model->linen_oil)
             houses_demanding_goods[2] += housing_type_counts[i];
 
 
-        if (model->wine)
+        if (model->beer_wine)
             houses_demanding_goods[3] += housing_type_counts[i];
 
     }
