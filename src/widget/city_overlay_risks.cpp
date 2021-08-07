@@ -223,19 +223,19 @@ static void draw_footprint_native(int x, int y, int grid_offset) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
+        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, 0);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
         city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
     else {
         if (map_property_is_native_land(grid_offset))
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0);
         else {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         }
     }
 }
@@ -248,7 +248,7 @@ static void draw_top_native(int x, int y, int grid_offset) {
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
 
-            imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         }
     } else if (map_building_at(grid_offset))
         city_with_overlay_draw_building_top(x, y, grid_offset);

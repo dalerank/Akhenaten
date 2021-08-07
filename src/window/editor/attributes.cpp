@@ -116,7 +116,7 @@ static void draw_foreground(void) {
         lang_text_draw_year(scenario_property_start_year() + request.year, 222, 165, FONT_NORMAL_BLACK);
         int width = text_draw_number(request.amount, '@', " ", 312, 165, FONT_NORMAL_BLACK);
         int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
+        ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
     } else {
         lang_text_draw_centered(44, 19, 212, 165, 250, FONT_NORMAL_BLACK);
     }
@@ -154,7 +154,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK);
 
     button_border_draw(18, 278, 184, 144, 0);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
+    ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
 
     arrow_buttons_draw(0, 0, image_arrows, 2);
 

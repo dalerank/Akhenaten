@@ -86,7 +86,7 @@ static void draw_foreground(void) {
         lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
     }
     if (data.selected_submenu > 0) {
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
+        ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
         for (int i = 0; i < data.num_submenu_items; i++) {
             label_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10,
                        data.submenu_focus_button_id == i + 1 ? 1 : 2);

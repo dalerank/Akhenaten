@@ -77,7 +77,7 @@ static void draw_foreground(void) {
 
     outer_panel_draw(32, 128, 36, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 58 - 16, 136);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 58 - 16, 136);
     lang_text_draw(23, data.resource, 92 - 16, 137, FONT_LARGE_BLACK);
 
     if (empire_can_produce_resource(data.resource, true)) {

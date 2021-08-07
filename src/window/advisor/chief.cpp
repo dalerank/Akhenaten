@@ -26,7 +26,7 @@
 #define X_OFFSET 185
 
 static void draw_title(int y, int text_id) {
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BULLET), 26, y + 1);
+    ImageDraw::img_generic(image_id_from_group(GROUP_BULLET), 26, y + 1);
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE);
 }
 
@@ -34,7 +34,7 @@ static int draw_background(void) {
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
 
     lang_text_draw(61, 0, 60, 12, FONT_LARGE_BLACK);
     inner_panel_draw(17, 60, 38, 17);

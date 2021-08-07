@@ -17,7 +17,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
@@ -78,7 +78,7 @@ static void draw_raw_material(building_info_context *c, int help_id, const char 
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
@@ -115,7 +115,7 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
@@ -124,7 +124,8 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
     width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32, c->y_offset + 56);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32,
+                           c->y_offset + 56);
     width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
     if (b->loads_stored < 1)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
@@ -224,7 +225,8 @@ void window_building_draw_hunting_lodge(building_info_context *c) {
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c->x_offset + 32, c->y_offset + 56);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c->x_offset + 32,
+                           c->y_offset + 56);
     int width = lang_text_draw(group_id, 13, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
     if (b->loads_stored < 1)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
@@ -365,9 +367,9 @@ void window_building_draw_wharf(building_info_context *c) {
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT_C3 +
-                                   resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
-               c->x_offset + 10, c->y_offset + 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT_C3 +
+                           resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
+                           c->x_offset + 10, c->y_offset + 10);
 
     building *b = building_get(c->building_id);
 

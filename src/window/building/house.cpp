@@ -28,7 +28,7 @@ static void draw_vacant_lot(building_info_context *c) {
 }
 static void draw_population_info(building_info_context *c, int y_offset) {
     building *b = building_get(c->building_id);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
+    ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 13, c->x_offset + 34, y_offset + 4);
     int width = text_draw_number(b->house_population, '@', " ", c->x_offset + 50, y_offset + 14, FONT_NORMAL_GREEN);
     width += lang_text_draw(127, 20, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_GREEN);
 
@@ -112,41 +112,41 @@ void window_building_draw_house(building_info_context *c) {
     int food4 = ALLOWED_FOODS(3);
 
     if (food1) { // wheat
-        imagedrawnamespace::image_draw(resource_image + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
+        ImageDraw::img_generic(resource_image + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
         text_draw_number(b->data.house.inventory[0], '@', " ", c->x_offset + 64, c->y_offset + Y_FOODS + 4,
                          FONT_NORMAL_BLACK);
     }
     if (food2) { // vegetables
-        imagedrawnamespace::image_draw(resource_image + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
+        ImageDraw::img_generic(resource_image + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
         text_draw_number(b->data.house.inventory[1], '@', " ", c->x_offset + 174, c->y_offset + Y_FOODS + 4,
                          FONT_NORMAL_BLACK);
     }
     if (food3) { // fruit
-        imagedrawnamespace::image_draw(resource_image + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
+        ImageDraw::img_generic(resource_image + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
         text_draw_number(b->data.house.inventory[2], '@', " ", c->x_offset + 284, c->y_offset + Y_FOODS + 4,
                          FONT_NORMAL_BLACK);
     }
     if (food4) { // meat/fish
-        imagedrawnamespace::image_draw(resource_image + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
+        ImageDraw::img_generic(resource_image + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
         text_draw_number(b->data.house.inventory[3], '@', " ", c->x_offset + 394, c->y_offset + Y_FOODS + 4,
                          FONT_NORMAL_BLACK);
     }
 
     // goods inventory
     // pottery
-    imagedrawnamespace::image_draw(resource_image + INV_RESOURCES[GAME_ENV][0], c->x_offset + 32, c->y_offset + Y_GOODS);
+    ImageDraw::img_generic(resource_image + INV_RESOURCES[GAME_ENV][0], c->x_offset + 32, c->y_offset + Y_GOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_GOOD1], '@', " ", c->x_offset + 64, c->y_offset + Y_GOODS + 4,
                      FONT_NORMAL_BLACK);
     // furniture
-    imagedrawnamespace::image_draw(resource_image + INV_RESOURCES[GAME_ENV][1], c->x_offset + 142, c->y_offset + Y_GOODS);
+    ImageDraw::img_generic(resource_image + INV_RESOURCES[GAME_ENV][1], c->x_offset + 142, c->y_offset + Y_GOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_GOOD2], '@', " ", c->x_offset + 174, c->y_offset + Y_GOODS + 4,
                      FONT_NORMAL_BLACK);
     // oil
-    imagedrawnamespace::image_draw(resource_image + INV_RESOURCES[GAME_ENV][2], c->x_offset + 252, c->y_offset + Y_GOODS);
+    ImageDraw::img_generic(resource_image + INV_RESOURCES[GAME_ENV][2], c->x_offset + 252, c->y_offset + Y_GOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_GOOD3], '@', " ", c->x_offset + 284, c->y_offset + Y_GOODS + 4,
                      FONT_NORMAL_BLACK);
     // wine
-    imagedrawnamespace::image_draw(resource_image + INV_RESOURCES[GAME_ENV][3], c->x_offset + 362, c->y_offset + Y_GOODS);
+    ImageDraw::img_generic(resource_image + INV_RESOURCES[GAME_ENV][3], c->x_offset + 362, c->y_offset + Y_GOODS);
     text_draw_number(b->data.house.inventory[INVENTORY_GOOD4], '@', " ", c->x_offset + 394, c->y_offset + Y_GOODS + 4,
                      FONT_NORMAL_BLACK);
 

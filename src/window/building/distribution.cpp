@@ -306,8 +306,8 @@ void window_building_draw_dock_orders_foreground(building_info_context *c) {
         int resource = i + 1;
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        imagedrawnamespace::image_draw(image_id, c->x_offset + 32, y_offset + 46 + line_y);
-        imagedrawnamespace::image_draw(image_id, c->x_offset + 408, y_offset + 46 + line_y);
+        ImageDraw::img_generic(image_id, c->x_offset + 32, y_offset + 46 + line_y);
+        ImageDraw::img_generic(image_id, c->x_offset + 408, y_offset + 46 + line_y);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + line_y, 210, 22, data.resource_focus_button_id == i + 1);
         building *b = building_get(c->building_id);
@@ -371,46 +371,46 @@ void window_building_draw_market(building_info_context *c) {
 
         if (food1) {
             font = is_good_accepted(0, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-            imagedrawnamespace::image_draw(image_id + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
+            ImageDraw::img_generic(image_id + food1, c->x_offset + 32, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[0], '@', " ",
                              c->x_offset + 64, c->y_offset + Y_FOODS + 4, font);
         }
         if (food2) {
             font = is_good_accepted(1, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-            imagedrawnamespace::image_draw(image_id + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
+            ImageDraw::img_generic(image_id + food2, c->x_offset + 142, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[1], '@', " ",
                              c->x_offset + 174, c->y_offset + Y_FOODS + 4, font);
         }
         if (food3) {
             font = is_good_accepted(2, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-            imagedrawnamespace::image_draw(image_id + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
+            ImageDraw::img_generic(image_id + food3, c->x_offset + 252, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[2], '@', " ",
                              c->x_offset + 284, c->y_offset + Y_FOODS + 4, font);
         }
         if (food4) {
             font = is_good_accepted(3, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-            imagedrawnamespace::image_draw(image_id + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
+            ImageDraw::img_generic(image_id + food4, c->x_offset + 362, c->y_offset + Y_FOODS);
             text_draw_number(b->data.market.inventory[3], '@', " ",
                              c->x_offset + 394, c->y_offset + Y_FOODS + 4, font);
         }
         // good stocks
         font = is_good_accepted(INVENTORY_GOOD1, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        imagedrawnamespace::image_draw(image_id + INV_RESOURCES[GAME_ENV][0], c->x_offset + 32, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][0], c->x_offset + 32, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD1], '@', " ",
                          c->x_offset + 64, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD2, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        imagedrawnamespace::image_draw(image_id + INV_RESOURCES[GAME_ENV][1], c->x_offset + 142, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][1], c->x_offset + 142, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD2], '@', " ",
                          c->x_offset + 174, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD3, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        imagedrawnamespace::image_draw(image_id + INV_RESOURCES[GAME_ENV][2], c->x_offset + 252, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][2], c->x_offset + 252, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD3], '@', " ",
                          c->x_offset + 284, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD4, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        imagedrawnamespace::image_draw(image_id + INV_RESOURCES[GAME_ENV][3], c->x_offset + 362, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][3], c->x_offset + 362, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD4], '@', " ",
                          c->x_offset + 394, c->y_offset + Y_GOODS + 4, font);
     }
@@ -444,7 +444,7 @@ void window_building_draw_market_orders_foreground(building_info_context *c) {
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
 
-        imagedrawnamespace::image_draw(image_id, c->x_offset + 25, y_offset + 48 + line_y);
+        ImageDraw::img_generic(image_id, c->x_offset + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
         if (data.resource_focus_button_id - 1 == i)
             button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
@@ -527,26 +527,26 @@ void window_building_draw_granary(building_info_context *c) {
 
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS);
         if (food1) { // wheat
-            imagedrawnamespace::image_draw(image_id + food1, c->x_offset + 34, c->y_offset + 68);
+            ImageDraw::img_generic(image_id + food1, c->x_offset + 34, c->y_offset + 68);
             width = text_draw_number(b->data.granary.resource_stored[food1], '@', " ", c->x_offset + 68,
                                      c->y_offset + 75, FONT_NORMAL_BLACK);
             lang_text_draw(23, food1, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
         }
         if (food2) { // fruit
-            imagedrawnamespace::image_draw(image_id + food2, c->x_offset + 240, c->y_offset + 68);
+            ImageDraw::img_generic(image_id + food2, c->x_offset + 240, c->y_offset + 68);
             width = text_draw_number(b->data.granary.resource_stored[food2], '@', " ",
                                      c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK);
             lang_text_draw(23, food2, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
         }
         if (food3) { // vegetables
-            imagedrawnamespace::image_draw(image_id + food3, c->x_offset + 34, c->y_offset + 92);
+            ImageDraw::img_generic(image_id + food3, c->x_offset + 34, c->y_offset + 92);
             width = text_draw_number(b->data.granary.resource_stored[food3], '@', " ", c->x_offset + 68,
                                      c->y_offset + 99, FONT_NORMAL_BLACK);
             lang_text_draw(23, food3, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
         }
         if (food4) { // meat/fish
-            imagedrawnamespace::image_draw(image_id + food4,
-                       c->x_offset + 240, c->y_offset + 92);
+            ImageDraw::img_generic(image_id + food4,
+                                   c->x_offset + 240, c->y_offset + 92);
             width = text_draw_number(b->data.granary.resource_stored[food4], '@', " ",
                                      c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
             lang_text_draw(23, food4, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
@@ -588,7 +588,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c) {
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                        resource_image_offset(resource, RESOURCE_IMAGE_ICON);
 
-        imagedrawnamespace::image_draw(image_id, c->x_offset + 25, y_offset + 48 + line_y);
+        ImageDraw::img_generic(image_id, c->x_offset + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
         if (data.resource_focus_button_id - 1 == i)
             button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);
@@ -701,7 +701,7 @@ void window_building_draw_warehouse(building_info_context *c) {
             }
             int amount = building_warehouse_get_amount(b, resource);
             int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-            imagedrawnamespace::image_draw(image_id, x, y);
+            ImageDraw::img_generic(image_id, x, y);
             int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
             lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
@@ -717,7 +717,7 @@ void window_building_draw_warehouse(building_info_context *c) {
             if (loads) {
                 int amount = stack_proper_quantity(loads, resource);
                 int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-                imagedrawnamespace::image_draw(image_id, x, y);
+                ImageDraw::img_generic(image_id, x, y);
                 int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_NORMAL_BLACK);
                 lang_text_draw(23, resource, x + 24 + width, y + 7, FONT_NORMAL_BLACK);
                 y += 24;
@@ -736,9 +736,9 @@ void window_building_draw_warehouse(building_info_context *c) {
     figure *cartpusher = b->get_figure(0);
     if (cartpusher->state == FIGURE_STATE_ALIVE) {
         int resource = cartpusher->get_resource();
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
-                                       resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                   c->x_offset + 32, c->y_offset + 220);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
+                               resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+                               c->x_offset + 32, c->y_offset + 220);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 223,
                                  16 * (c->width_blocks - 6), FONT_NORMAL_GREEN);
     } else if (b->num_workers) {
@@ -793,7 +793,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c) 
 
         int resource = list->items[i];
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        imagedrawnamespace::image_draw(image_id, c->x_offset + 25, y_offset + 48 + line_y);
+        ImageDraw::img_generic(image_id, c->x_offset + 25, y_offset + 48 + line_y);
         lang_text_draw(23, resource, c->x_offset + 52, y_offset + 50 + line_y, FONT_NORMAL_WHITE);
         if (data.resource_focus_button_id - 1 == i)
             button_border_draw(line_x - 10, y_offset + 46 + line_y, orders_resource_buttons[i].width, orders_resource_buttons[i].height, true);

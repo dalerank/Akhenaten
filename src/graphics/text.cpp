@@ -264,7 +264,7 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
             else {
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height, def->line_height);
-                imagedrawnamespace::image_draw_letter(font, letter_id, current_x, y - height, color);
+                ImageDraw::img_letter(font, letter_id, current_x, y - height, color);
                 width = def->letter_spacing + img->width;
             }
             if (input_cursor.capture && input_cursor.position == input_cursor.cursor_position) {

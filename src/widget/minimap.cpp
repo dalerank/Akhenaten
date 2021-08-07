@@ -131,7 +131,7 @@ static int draw_figure(int x_view, int y_view, int grid_offset) {
 }
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
     if (grid_offset < 0) {
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_MINIMAP_BLACK), x_view, y_view);
+        ImageDraw::img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), x_view, y_view);
         return;
     }
 
@@ -182,19 +182,19 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
             switch (map_property_multi_tile_size(grid_offset)) {
                 case 1:
-                    imagedrawnamespace::image_draw(image_id, x_view, y_view);
+                    ImageDraw::img_generic(image_id, x_view, y_view);
                     break;
                 case 2:
-                    imagedrawnamespace::image_draw(image_id + 1, x_view, y_view - 1);
+                    ImageDraw::img_generic(image_id + 1, x_view, y_view - 1);
                     break;
                 case 3:
-                    imagedrawnamespace::image_draw(image_id + 2, x_view, y_view - 2);
+                    ImageDraw::img_generic(image_id + 2, x_view, y_view - 2);
                     break;
                 case 4:
-                    imagedrawnamespace::image_draw(image_id + 3, x_view, y_view - 3);
+                    ImageDraw::img_generic(image_id + 3, x_view, y_view - 3);
                     break;
                 case 5:
-                    imagedrawnamespace::image_draw(image_id + 4, x_view, y_view - 4);
+                    ImageDraw::img_generic(image_id + 4, x_view, y_view - 4);
                     break;
             }
         }
@@ -230,7 +230,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        imagedrawnamespace::image_draw(image_id, x_view, y_view);
+        ImageDraw::img_generic(image_id, x_view, y_view);
     }
 }
 static void draw_viewport_rectangle(void) {

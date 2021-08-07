@@ -258,7 +258,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
 //            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
 //        else
         if (building_get(map_building_at(grid_offset))->type != BUILDING_ROADBLOCK)
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         else
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
     }
@@ -313,7 +313,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
 //                image_id = map_image_at(grid_offset);
 //                break;
             }
-            imagedrawnamespace::image_draw_isometric_footprint(image_id, x, y, 0);
+            ImageDraw::isometric_footprint(image_id, x, y, 0);
         }
     }
 }
@@ -325,7 +325,7 @@ static void draw_top_water(int x, int y, int grid_offset) {
             color_t color_mask = 0;
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
-            imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         }
     } else if (map_building_at(grid_offset))
         city_with_overlay_draw_building_top(x, y, grid_offset);
@@ -379,21 +379,21 @@ static void draw_footprint_desirability(int x, int y, int grid_offset) {
         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset))
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display empty land/groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         if (has_deleted_building(grid_offset))
             color_mask = COLOR_MASK_RED;
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-                                                      color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
+                                                     color_mask);
     } else
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 static void draw_top_desirability(int x, int y, int grid_offset) {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
@@ -401,7 +401,7 @@ static void draw_top_desirability(int x, int y, int grid_offset) {
         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset))
-            imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // groundwater, no top needed
@@ -410,10 +410,10 @@ static void draw_top_desirability(int x, int y, int grid_offset) {
             color_mask = COLOR_MASK_RED;
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        imagedrawnamespace::image_draw_isometric_top_from_draw_tile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-                                                color_mask);
+        ImageDraw::isometric_top_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
+                                               color_mask);
     } else
-        imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 const city_overlay *city_overlay_for_desirability(void) {
     static city_overlay overlay = {

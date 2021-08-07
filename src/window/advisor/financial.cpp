@@ -29,7 +29,7 @@ static void draw_row(int group, int number, int *y, int value_last_year, int val
 }
 static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
     lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
     inner_panel_draw(64, 48, 34, 5);

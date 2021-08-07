@@ -148,7 +148,7 @@ void figure::draw_trader(building_info_context *c) {
                                           '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_GREEN);
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                imagedrawnamespace::image_draw(image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
         }
@@ -161,7 +161,7 @@ void figure::draw_trader(building_info_context *c) {
                                           '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_GREEN);
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                imagedrawnamespace::image_draw(image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
         }
@@ -173,7 +173,7 @@ void figure::draw_trader(building_info_context *c) {
             if (city->buys_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                imagedrawnamespace::image_draw(image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
         }
@@ -184,7 +184,7 @@ void figure::draw_trader(building_info_context *c) {
             if (city->sells_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-                imagedrawnamespace::image_draw(image_id, c->x_offset + 40 + width, y_base - 3);
+                ImageDraw::img_generic(image_id, c->x_offset + 40 + width, y_base - 3);
                 width += 25;
             }
         }
@@ -267,26 +267,26 @@ void figure::draw_enemy(building_info_context *c) {
             }
             break;
     }
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BIG_PEOPLE) + image_id - 1, c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(image_id_from_group(GROUP_BIG_PEOPLE) + image_id - 1, c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     lang_text_draw(37, scenario_property_enemy() + 20, c->x_offset + 92, c->y_offset + 149, FONT_NORMAL_GREEN);
 }
 void figure::draw_animal(building_info_context *c) {
-    imagedrawnamespace::image_draw(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
     lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_GREEN);
 }
 void figure::draw_cartpusher(building_info_context *c) {
-    imagedrawnamespace::image_draw(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_GREEN);
 
     if (action_state != FIGURE_ACTION_132_DOCKER_IDLING && resource_id) {
         int resource = resource_id;
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) +
-                                       resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                   c->x_offset + 92 + width, c->y_offset + 135);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) +
+                               resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+                               c->x_offset + 92 + width, c->y_offset + 135);
     }
 
     int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
@@ -330,7 +330,7 @@ void figure::draw_cartpusher(building_info_context *c) {
     }
 }
 void figure::draw_market_buyer(building_info_context *c) {
-    imagedrawnamespace::image_draw(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(big_people_image(type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = lang_text_draw(64, type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_GREEN);
@@ -338,14 +338,14 @@ void figure::draw_market_buyer(building_info_context *c) {
     if (action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_GREEN);
         int resource = inventory_to_resource_id(collecting_item_id);
-        imagedrawnamespace::image_draw(
+        ImageDraw::img_generic(
                 image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                 resource_image_offset(resource, RESOURCE_IMAGE_ICON),
                 c->x_offset + 90 + width, c->y_offset + 135);
     } else if (action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_GREEN);
         int resource = inventory_to_resource_id(collecting_item_id);
-        imagedrawnamespace::image_draw(
+        ImageDraw::img_generic(
                 image_id_from_group(GROUP_RESOURCE_ICONS) + resource +
                 resource_image_offset(resource, RESOURCE_IMAGE_ICON),
                 c->x_offset + 90 + width, c->y_offset + 135);
@@ -361,7 +361,7 @@ void figure::draw_normal_figure(building_info_context *c) {
         action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
         image_id = image_id_from_group(GROUP_BIG_PEOPLE) + 18;
     }
-    imagedrawnamespace::image_draw(image_id, c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(image_id, c->x_offset + 28, c->y_offset + 112);
 
     int16_t name_group_id = 254;
     if (GAME_ENV == ENGINE_ENV_C3) {

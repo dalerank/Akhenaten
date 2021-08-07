@@ -53,7 +53,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, in
                 image_id += 1;
         } else
             image_id += 3;
-        imagedrawnamespace::image_draw(image_id, x + btn->x_offset, y + btn->y_offset);
+        ImageDraw::img_generic(image_id, x + btn->x_offset, y + btn->y_offset);
     }
 }
 

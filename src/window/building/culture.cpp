@@ -68,7 +68,8 @@ static void draw_temple(building_info_context *c, const char *sound_file, int gr
     inner_panel_draw(c->x_offset + 16, c->y_offset + 56, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 62);
     if (c->has_road_access)
-        imagedrawnamespace::image_draw(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190, c->y_offset + 16 * c->height_blocks - 118);
+        ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190,
+                               c->y_offset + 16 * c->height_blocks - 118);
     else
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
 }
@@ -78,7 +79,8 @@ static void draw_shrine(building_info_context *c, const char *sound_file, int te
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(161, text_id, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
     if (c->has_road_access)
-        imagedrawnamespace::image_draw(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190, c->y_offset + 16 * c->height_blocks - 148);
+        ImageDraw::img_generic(image_offset + image_id_from_group(GROUP_PANEL_WINDOWS), c->x_offset + 190,
+                               c->y_offset + 16 * c->height_blocks - 148);
     else
         window_building_draw_description_at(c, 16 * c->height_blocks - 128, 69, 25);
 }

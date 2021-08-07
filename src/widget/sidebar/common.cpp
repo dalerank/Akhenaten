@@ -23,10 +23,10 @@ void sidebar_common_draw_relief(int x_offset, int y_offset, int image, int is_co
     int y_max = screen_height();
     while (y_offset < y_max) {
         if (GAME_ENV == ENGINE_ENV_C3 && y_max - y_offset <= 120) {
-            imagedrawnamespace::image_draw(image_base + image_offset + is_collapsed, x_offset, y_offset);
+            ImageDraw::img_generic(image_base + image_offset + is_collapsed, x_offset, y_offset);
             y_offset += 120;
         } else {
-            imagedrawnamespace::image_draw(image_base + image_offset + image_offset + is_collapsed, x_offset, y_offset + 6);
+            ImageDraw::img_generic(image_base + image_offset + image_offset + is_collapsed, x_offset, y_offset + 6);
             y_offset += 285;
         }
     }

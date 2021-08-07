@@ -257,27 +257,27 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     if (b->type == BUILDING_SENATE_UPGRADED) {
         // rating flags
         int image_id = image_id_from_group(GROUP_BUILDING_SENATE);
-        imagedrawnamespace::image_draw(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
-        imagedrawnamespace::image_draw(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
-        imagedrawnamespace::image_draw(image_id + 3, x + 198, y + 27 - city_rating_peace() / 2, color_mask);
-        imagedrawnamespace::image_draw(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
+        ImageDraw::img_generic(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);
+        ImageDraw::img_generic(image_id + 2, x + 168, y + 36 - city_rating_prosperity() / 2, color_mask);
+        ImageDraw::img_generic(image_id + 3, x + 198, y + 27 - city_rating_peace() / 2, color_mask);
+        ImageDraw::img_generic(image_id + 4, x + 228, y + 19 - city_rating_favor() / 2, color_mask);
         // unemployed
         image_id = image_id_from_group(GROUP_FIGURE_HOMELESS);
         int unemployment_pct = city_labor_unemployment_percentage_for_senate();
         if (unemployment_pct > 0)
-            imagedrawnamespace::image_draw(image_id + 108, x + 80, y, color_mask);
+            ImageDraw::img_generic(image_id + 108, x + 80, y, color_mask);
 
         if (unemployment_pct > 5)
-            imagedrawnamespace::image_draw(image_id + 104, x + 230, y - 30, color_mask);
+            ImageDraw::img_generic(image_id + 104, x + 230, y - 30, color_mask);
 
         if (unemployment_pct > 10)
-            imagedrawnamespace::image_draw(image_id + 107, x + 100, y + 20, color_mask);
+            ImageDraw::img_generic(image_id + 107, x + 100, y + 20, color_mask);
 
         if (unemployment_pct > 15)
-            imagedrawnamespace::image_draw(image_id + 106, x + 235, y - 10, color_mask);
+            ImageDraw::img_generic(image_id + 106, x + 235, y - 10, color_mask);
 
         if (unemployment_pct > 20)
-            imagedrawnamespace::image_draw(image_id + 106, x + 66, y + 20, color_mask);
+            ImageDraw::img_generic(image_id + 106, x + 66, y + 20, color_mask);
 
     }
 }
@@ -288,23 +288,23 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         switch (b->type) {
             case BUILDING_WINE_WORKSHOP:
                 if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-                    imagedrawnamespace::image_draw(image_base, x + 45, y + 23, color_mask);
+                    ImageDraw::img_generic(image_base, x + 45, y + 23, color_mask);
                 break;
             case BUILDING_OIL_WORKSHOP:
                 if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-                    imagedrawnamespace::image_draw(image_base + 1, x + 35, y + 15, color_mask);
+                    ImageDraw::img_generic(image_base + 1, x + 35, y + 15, color_mask);
                 break;
             case BUILDING_WEAPONS_WORKSHOP:
                 if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-                    imagedrawnamespace::image_draw(image_base + 3, x + 46, y + 24, color_mask);
+                    ImageDraw::img_generic(image_base + 3, x + 46, y + 24, color_mask);
                 break;
             case BUILDING_FURNITURE_WORKSHOP:
                 if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-                    imagedrawnamespace::image_draw(image_base + 2, x + 48, y + 19, color_mask);
+                    ImageDraw::img_generic(image_base + 2, x + 48, y + 19, color_mask);
                 break;
             case BUILDING_POTTERY_WORKSHOP:
                 if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
-                    imagedrawnamespace::image_draw(image_base + 4, x + 47, y + 24, color_mask);
+                    ImageDraw::img_generic(image_base + 4, x + 47, y + 24, color_mask);
                 break;
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -312,7 +312,7 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         switch (b->type) {
             case BUILDING_HUNTING_LODGE:
                 if (b->loads_stored > 0)
-                    imagedrawnamespace::image_draw(image_base + b->loads_stored - 1, x + 61, y + 14, color_mask);
+                    ImageDraw::img_generic(image_base + b->loads_stored - 1, x + 61, y + 14, color_mask);
                 break;
         }
     }
@@ -337,25 +337,25 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
             image_dockers += 2;
 
         const image *img = image_get(image_dockers);
-        imagedrawnamespace::image_draw(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
+        ImageDraw::img_generic(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
     }
 }
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
-    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
+    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
 static void draw_granary_stores(const building *b, int x, int y, color_t color_mask) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x, y + 60, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int last_spot_filled = 0;
         int spot_x = 0;
@@ -369,8 +369,9 @@ static void draw_granary_stores(const building *b, int x, int y, color_t color_m
                     // draw sprite on each granary "spot"
                     spot_x = granary_offsets_ph[spot][0];
                     spot_y = granary_offsets_ph[spot][1];
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + spot_x, y - 74 + spot_y,
-                                                   color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 2 + r, x + 110 + spot_x,
+                                           y - 74 + spot_y,
+                                           color_mask);
                 }
                 last_spot_filled += spots_filled;
             }
@@ -393,42 +394,47 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
         // first building part
         switch (orientation) {
             case DIR_0_TOP_RIGHT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
+                                       color_mask);
                 break;
             case DIR_2_BOTTOM_RIGHT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
                 break;
             case DIR_4_BOTTOM_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
+                                       color_mask);
                 break;
             case DIR_6_TOP_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
         }
     } else if ((building_part == 1) && population > 100) {
         // middle building part
         switch (orientation) {
             case DIR_0_TOP_RIGHT:
             case DIR_4_BOTTOM_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79,
+                                       color_mask);
                 break;
             case DIR_2_BOTTOM_RIGHT:
             case DIR_6_TOP_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
         }
     } else if ((building_part == 2) && population > 1000) {
         // last building part
         switch (orientation) {
             case DIR_0_TOP_RIGHT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
+                                       color_mask);
                 break;
             case DIR_2_BOTTOM_RIGHT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
                 break;
             case DIR_4_BOTTOM_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
+                                       color_mask);
                 break;
             case DIR_6_TOP_LEFT:
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
                 break;
         }
     }
@@ -440,9 +446,9 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     if (img->num_animation_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
-        imagedrawnamespace::image_draw(image_id + 1,
-                   x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
-                   draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
+        ImageDraw::img_generic(image_id + 1,
+                               x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
+                               draw_building_as_deleted(b) ? COLOR_MASK_RED : 0
         );
     }
 }
@@ -458,8 +464,8 @@ static void draw_ph_worker(int direction, int action, int x, int y) {
         case 2: // harvesting
             action_offset = 312; break;
     }
-    imagedrawnamespace::image_draw_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
-                          8 * (ph_crops_worker_frame%26 / 2), x, y + 15, 0);
+    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
+                          8 * (ph_crops_worker_frame % 26 / 2), x, y + 15, 0);
 }
 static void draw_farm_crops(building *b, int x, int y) {
     draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
@@ -489,7 +495,7 @@ static void draw_farm_crops(building *b, int x, int y) {
 
 static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0) {
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
         return;
     }
     building_construction_record_view_position(x, y, grid_offset);
@@ -536,7 +542,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
 //        if (!map_grid_is_inside(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1))
 //            color_mask = COLOR_MASK_RED;
 
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
         if (building_id) {
             building *b = building_get(building_id);
             if (building_is_farm(b->type) && map_terrain_is(grid_offset, TERRAIN_BUILDING))
@@ -549,7 +555,7 @@ static void draw_outside_map(int x, int y, int grid_offset) {
 //        if (grid_offset == -2)
 //            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_GRASS_PH), x, y, COLOR_GREEN);
 //        else
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
     }
 }
 static void draw_top(int x, int y, int grid_offset) {
@@ -561,7 +567,7 @@ static void draw_top(int x, int y, int grid_offset) {
     if (draw_building_as_deleted(b) || (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)))
         color_mask = COLOR_MASK_RED;
 
-    imagedrawnamespace::image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
+    ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
 }
 static void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
@@ -858,9 +864,10 @@ static void draw_normal_anim(int x, int y, building *b, int sprite_id, int color
     }
     const image *base = image_get(base_id);
     if (base_id != sprite_id)
-        imagedrawnamespace::image_draw_sprite(sprite_id + animation_offset, x, y, color_mask);
+        ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
     else
-        imagedrawnamespace::image_draw(sprite_id + animation_offset, x + base->sprite_offset_x, y + base->sprite_offset_y - base->height + ydiff, color_mask);
+        ImageDraw::img_generic(sprite_id + animation_offset, x + base->sprite_offset_x,
+                               y + base->sprite_offset_y - base->height + ydiff, color_mask);
 }
 static void draw_fort_anim(int x, int y, building *b) {
     if (map_property_is_draw_tile(b->grid_offset)) {
@@ -877,8 +884,8 @@ static void draw_fort_anim(int x, int y, building *b) {
                 break;
         }
         if (offset)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5,
-                       draw_building_as_deleted(b) ? COLOR_MASK_RED : 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5,
+                                   draw_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
 static void draw_gatehouse_anim(int x, int y, building *b) {
@@ -892,27 +899,27 @@ static void draw_gatehouse_anim(int x, int y, building *b) {
         int color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
         if (b->subtype.orientation == 1) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                imagedrawnamespace::image_draw(image_id, x - 22, y - 80, color_mask);
+                ImageDraw::img_generic(image_id, x - 22, y - 80, color_mask);
             else
-                imagedrawnamespace::image_draw(image_id + 1, x - 18, y - 81, color_mask);
+                ImageDraw::img_generic(image_id + 1, x - 18, y - 81, color_mask);
         } else if (b->subtype.orientation == 2) {
             if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                imagedrawnamespace::image_draw(image_id + 1, x - 18, y - 81, color_mask);
+                ImageDraw::img_generic(image_id + 1, x - 18, y - 81, color_mask);
             else
-                imagedrawnamespace::image_draw(image_id, x - 22, y - 80, color_mask);
+                ImageDraw::img_generic(image_id, x - 22, y - 80, color_mask);
         }
     }
 }
 static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color_mask) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
 
         if (b->type == BUILDING_THEATER && b->num_workers > 0)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
 
         if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0)
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
 
         if (b->type == BUILDING_HIPPODROME && b->main()->num_workers > 0 &&
             city_entertainment_hippodrome_has_race())
@@ -954,7 +961,7 @@ static void draw_animation(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     building *b = building_get(map_building_at(grid_offset));
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
-        imagedrawnamespace::image_draw(image_id + 17, x - 5, y - 42);
+        ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
     if (b->type == 0 || b->state != BUILDING_STATE_VALID)
         return;
     // draw in red if necessary
@@ -988,7 +995,7 @@ static void draw_animation(int x, int y, int grid_offset) {
                 draw_normal_anim(x + 77, y - 109, b, image_id, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 draw_normal_anim(x + 21, y + 24, b, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
-                imagedrawnamespace::image_draw(image_id + 17, x - 5, y - 42, color_mask);
+                ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);
             }
             break;
         case BUILDING_DOCK:
@@ -1025,8 +1032,8 @@ static void draw_animation(int x, int y, int grid_offset) {
         case BUILDING_WELL:
                 if (map_water_supply_is_well_unnecessary(b->id, 3) == WELL_NECESSARY) {
                     const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->sprite_offset_x,
-                               y + img->sprite_offset_y - 20, color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->sprite_offset_x,
+                                           y + img->sprite_offset_y - 20, color_mask);
                 }
             break;
         case BUILDING_BOOTH:
@@ -1062,7 +1069,7 @@ static void draw_animation(int x, int y, int grid_offset) {
         default:
             draw_normal_anim(x, y, b, image_id, color_mask);
             if (b->ruin_has_plague)
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
             break;
     }
 
@@ -1092,7 +1099,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset) {
 }
 static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
-        imagedrawnamespace::image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);

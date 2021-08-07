@@ -225,21 +225,21 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
         image_base += 4;
 
     if (b->size == 1)
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_base, x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_base, x, y, color_mask);
     else if (b->size == 2) {
         const int x_tile_offset[] = {30, 0, 60, 30};
         const int y_tile_offset[] = {-15, 0, 0, 15};
         for (int i = 0; i < 4; i++) {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i],
-                                                          color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i],
+                                                         color_mask);
         }
     } else if (b->size == 3) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
         const int x_tile_offset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
         const int y_tile_offset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
         for (int i = 0; i < 9; i++) {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                          y + y_tile_offset[i], color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                         y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 4) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
@@ -262,8 +262,8 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
                 45
         };
         for (int i = 0; i < 16; i++) {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                          y + y_tile_offset[i], color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                         y + y_tile_offset[i], color_mask);
         }
     } else if (b->size == 5) {
         const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
@@ -290,8 +290,8 @@ static void draw_flattened_building_footprint(const building *b, int x, int y, i
                 60
         };
         for (int i = 0; i < 25; i++) {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                          y + y_tile_offset[i], color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
+                                                         y + y_tile_offset[i], color_mask);
         }
     }
 }
@@ -303,11 +303,11 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     if (overlay->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
-                imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
             else if (map_property_is_draw_tile(grid_offset))
-                imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         } else
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     } else {
         if (b->type == BUILDING_FESTIVAL_SQUARE)
             return;
@@ -342,14 +342,14 @@ static void draw_overlay_column(int x, int y, int height, int column_style) {
 
     int capital_height = image_get(image_id)->height;
     // base
-    imagedrawnamespace::image_draw(image_id + 2, x + 9, y - 8);
+    ImageDraw::img_generic(image_id + 2, x + 9, y - 8);
     if (height) {
         // column
         for (int i = 1; i < height; i++) {
-            imagedrawnamespace::image_draw(image_id + 1, x + 17, y - 8 - 10 * i + 13);
+            ImageDraw::img_generic(image_id + 1, x + 17, y - 8 - 10 * i + 13);
         }
         // capital
-        imagedrawnamespace::image_draw(image_id, x + 5, y - 8 - capital_height - 10 * (height - 1) + 13);
+        ImageDraw::img_generic(image_id, x + 5, y - 8 - capital_height - 10 * (height - 1) + 13);
     }
 }
 
@@ -357,7 +357,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
     building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (overlay->draw_custom_footprint)
         overlay->draw_custom_footprint(x, y, grid_offset);
     else if (map_property_is_draw_tile(grid_offset)) {
@@ -365,45 +365,45 @@ static void draw_footprint(int x, int y, int grid_offset) {
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             // display groundwater
             int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(image_id, x, y,
-                                                          map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            ImageDraw::isometric_footprint_from_drawtile(image_id, x, y,
+                                                         map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y,
-                                                          map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y,
+                                                         map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         }
         else if (terrain & TERRAIN_BUILDING)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else
-            imagedrawnamespace::image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
 }
 static void draw_building_top(int grid_offset, building *b, int x, int y) {
     color_t color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
     if (building_is_farm(b->type)) {
         if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
-            imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         else if (map_property_is_draw_tile(grid_offset))
-            imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
         return;
     }
     if (b->type == BUILDING_GRANARY) {
         const image *img = image_get(map_image_at(grid_offset));
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x,
-                   y + img->sprite_offset_y - 30 - (img->height - 90));
+        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1, x + img->sprite_offset_x,
+                               y + img->sprite_offset_y - 30 - (img->height - 90));
         if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400) {
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60);
             if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50);
             if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50);
             if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62);
         }
     }
     if (b->type == BUILDING_WAREHOUSE)
-        imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42);
-    imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42);
+    ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
     building *b = building_get(map_building_at(grid_offset));
@@ -436,7 +436,7 @@ static void draw_top(int x, int y, int grid_offset) {
                     color_mask = COLOR_MASK_RED;
 
                 // terrain
-                imagedrawnamespace::image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+                ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
             }
         }
     }
@@ -473,18 +473,18 @@ static void draw_animation(int x, int y, int grid_offset) {
             building *b = building_get(map_building_at(grid_offset));
             int color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
             if (b->type == BUILDING_GRANARY) {
-                imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 1,
-                           x + img->sprite_offset_x,
-                           y + 60 + img->sprite_offset_y - img->height,
-                                               color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 1,
+                                       x + img->sprite_offset_x,
+                                       y + 60 + img->sprite_offset_y - img->height,
+                                       color_mask);
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400)
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < 1800)
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask);
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < 1200)
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask);
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < 600)
-                    imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
+                    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask);
             } else {
                 int animation_offset = building_animation_offset(b, image_id, grid_offset, 0);
                 if (animation_offset > 0) {
@@ -508,10 +508,10 @@ static void draw_animation(int x, int y, int grid_offset) {
                             ydiff = 90;
                             break;
                     }
-                    imagedrawnamespace::image_draw(image_id + animation_offset,
-                               x + img->sprite_offset_x,
-                               y + ydiff + img->sprite_offset_y - img->height,
-                                                   color_mask);
+                    ImageDraw::img_generic(image_id + animation_offset,
+                                           x + img->sprite_offset_x,
+                                           y + ydiff + img->sprite_offset_y - img->height,
+                                           color_mask);
                 }
             }
         }
@@ -555,7 +555,7 @@ static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
 }
 static void deletion_draw_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || draw_building_as_deleted(building_get(map_building_at(grid_offset))))
-        imagedrawnamespace::image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);

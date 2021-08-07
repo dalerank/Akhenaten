@@ -410,7 +410,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
 }
 
 static void draw_flat_tile(int x, int y, color_t color_mask) {
-    imagedrawnamespace::image_draw_blend(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
 }
 static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
@@ -423,11 +423,11 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
     }
 }
 void draw_building(int image_id, int x, int y, color_t color_mask) {
-    imagedrawnamespace::image_draw_isometric_footprint(image_id, x, y, color_mask);
-    imagedrawnamespace::image_draw_isometric_top(image_id, x, y, color_mask);
+    ImageDraw::isometric_footprint(image_id, x, y, color_mask);
+    ImageDraw::isometric_top(image_id, x, y, color_mask);
 }
 static void draw_fountain_range(int x, int y, int grid_offset) {
-    imagedrawnamespace::image_draw_blend_alpha(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
 static void draw_warehouse(int image_id, int x, int y) {
@@ -436,8 +436,8 @@ static void draw_warehouse(int image_id, int x, int y) {
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
             draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-            imagedrawnamespace::image_draw(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4,
-                       y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4,
+                                   y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
         } else
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
     }
@@ -450,16 +450,18 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         // fields
         if (GAME_ENV == ENGINE_ENV_C3) {
             for (int i = 4; i < 9; i++)
-                imagedrawnamespace::image_draw_isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+                ImageDraw::isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
+                                               COLOR_MASK_GREEN);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
     } else if (type == BUILDING_WAREHOUSE)
         draw_warehouse(image_id, x, y);
     else if (type == BUILDING_GRANARY) {
         if (GAME_ENV == ENGINE_ENV_C3) {
-            imagedrawnamespace::image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
+            ImageDraw::isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
             const image *img = image_get(image_id + 1);
-            imagedrawnamespace::image_draw(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64,
+                                   COLOR_MASK_GREEN);
         } else
             draw_building(image_id, x, y);
     } else if (type == BUILDING_HOUSE_VACANT_LOT)
@@ -468,9 +470,11 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         draw_building(image_id, x, y);
         const image *img = image_get(image_id + 1);
         if (image_id == image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH))
-            imagedrawnamespace::image_draw(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51,
+                                   COLOR_MASK_GREEN);
         else
-            imagedrawnamespace::image_draw(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56,
+                                   COLOR_MASK_GREEN);
     } else if (type == BUILDING_WELL) {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
             city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
@@ -531,7 +535,7 @@ static void draw_single_reservoir(int x, int y, int has_water) {
         const image *img = image_get(image_id);
         int x_water = x - 58 + img->sprite_offset_x - 2;
         int y_water = y + img->sprite_offset_y - (img->height - 90);
-        imagedrawnamespace::image_draw(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
+        ImageDraw::img_generic(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
     }
 }
 static void draw_first_reservoir_range(int x, int y, int grid_offset) {
@@ -539,14 +543,14 @@ static void draw_first_reservoir_range(int x, int y, int grid_offset) {
         reservoir_range_data.offsets[reservoir_range_data.total] = grid_offset;
         reservoir_range_data.total++;
     }
-    imagedrawnamespace::image_draw_blend_alpha(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 static void draw_second_reservoir_range(int x, int y, int grid_offset) {
     for (int i = 0; i < reservoir_range_data.total; ++i) {
         if (reservoir_range_data.offsets[i] == grid_offset)
             return;
     }
-    imagedrawnamespace::image_draw_blend_alpha(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
     int map_x = tile->x - 1;
@@ -704,7 +708,7 @@ static void draw_fountain(const map_tile *tile, int x, int y) {
         draw_building(image_id, x, y);
         if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
             const image *img = image_get(image_id);
-            imagedrawnamespace::image_draw(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
     }
 }
@@ -742,7 +746,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y) {
         draw_building(image_id, x, y);
         if (has_water) {
             const image *img = image_get(image_id);
-            imagedrawnamespace::image_draw(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            ImageDraw::img_generic(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
         }
     }
 }
@@ -1133,7 +1137,7 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
         switch (type) {
             case BUILDING_BOOTH:
                 for (int i = 0; i < size * size; i++)
-                    imagedrawnamespace::image_draw_isometric_footprint(image_id_from_group(GROUP_BOOTH_SQUARE) + i,
+                    ImageDraw::isometric_footprint(image_id_from_group(GROUP_BOOTH_SQUARE) + i,
                                                    x + ((i % size) - (i / size)) * 30,
                                                    y + ((i % size) + (i / size)) * 15,
                                                    COLOR_MASK_GREEN);
@@ -1154,7 +1158,7 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
                 break;
             case BUILDING_BANDSTAND:
                 for (int i = 0; i < size * size; i++)
-                    imagedrawnamespace::image_draw_isometric_footprint(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i,
+                    ImageDraw::isometric_footprint(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i,
                                                    x + ((i % size) - (i / size)) * 30,
                                                    y + ((i % size) + (i / size)) * 15,
                                                    COLOR_MASK_GREEN);
@@ -1183,7 +1187,7 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
                 break;
             case BUILDING_PAVILLION:
                 for (int i = 0; i < size * size; i++)
-                    imagedrawnamespace::image_draw_isometric_footprint(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
+                    ImageDraw::isometric_footprint(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
                                                    x + ((i % size) - (i / size)) * 30,
                                                    y + ((i % size) + (i / size)) * 15,
                                                    COLOR_MASK_GREEN);
@@ -1240,7 +1244,7 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
                 break;
             case BUILDING_FESTIVAL_SQUARE:
                 for (int i = 0; i < size * size; i++)
-                    imagedrawnamespace::image_draw_isometric_footprint(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
+                    ImageDraw::isometric_footprint(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
                                                    x + ((i % size) - (i / size)) * 30,
                                                    y + ((i % size) + (i / size)) * 15,
                                                    COLOR_MASK_GREEN);
