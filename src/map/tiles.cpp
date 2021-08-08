@@ -949,7 +949,7 @@ static void set_floodplain_edges_image(int x, int y, int grid_offset) {
 static void set_floodplain_land_tiles_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)
     && !map_terrain_is(grid_offset, TERRAIN_BUILDING) && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        int growth = map_get_growth(grid_offset);
+        int growth = map_get_floodplain_growth(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + growth;
         int fertility_index = 0;
 
@@ -1012,14 +1012,14 @@ int floodplain_growth_advance = 0;
 static void advance_floodplain_growth_tile(int x, int y, int grid_offset, int order) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING)
         || map_terrain_is(grid_offset, TERRAIN_ROAD) || map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-        map_set_growth(grid_offset, 0);
+        map_set_floodplain_growth(grid_offset, 0);
         set_floodplain_land_tiles_image(x, y, grid_offset);
         refresh_river_at(x, y, grid_offset);
         return;
     }
-    int growth_current = map_get_growth(grid_offset);
+    int growth_current = map_get_floodplain_growth(grid_offset);
     if (growth_current < PH_FLOODPLAIN_GROWTH_MAX - 1) {
-        map_set_growth(grid_offset, growth_current + 1);
+        map_set_floodplain_growth(grid_offset, growth_current + 1);
         set_floodplain_land_tiles_image(x, y, grid_offset);
         refresh_river_at(x, y, grid_offset);
     }

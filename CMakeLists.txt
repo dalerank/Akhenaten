@@ -337,8 +337,9 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/properties.cpp
     ${PROJECT_SOURCE_DIR}/src/figure/route.cpp
     ${PROJECT_SOURCE_DIR}/src/figure/service.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/sound.cpp
     ${PROJECT_SOURCE_DIR}/src/figure/trader.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/sound.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/figure_draw.cpp
 )
 set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/animal.cpp
@@ -471,23 +472,22 @@ set(SOUND_FILES
 )
 set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
-    ${PROJECT_SOURCE_DIR}/src/figure/figure_draw.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_with_overlay.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_without_overlay.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/input_box.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city/city_draw.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.cpp
+        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp

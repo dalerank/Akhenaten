@@ -26,8 +26,8 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
-#include "widget/city_with_overlay.h"
-#include "widget/city_without_overlay.h"
+#include "widget/city/city_draw.h"
+#include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
@@ -98,10 +98,6 @@ static int adjust_offset_for_orientation(int grid_offset, int size) {
             return grid_offset;
     }
 }
-
-
-
-
 
 void widget_city_draw(void) {
     if (config_get(CONFIG_UI_ZOOM)) {

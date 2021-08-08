@@ -5,7 +5,7 @@
 #include <graphics/graphics.h>
 #include <map/routing.h>
 #include <map/road_network.h>
-#include "city_without_overlay.h"
+#include "tile_draw.h"
 
 #include "building/animation.h"
 #include "building/construction.h"
@@ -20,7 +20,6 @@
 #include "city/view.h"
 #include "core/config.h"
 #include "core/time.h"
-#include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -193,8 +192,7 @@ static struct {
     int highlighted_formation;
     pixel_coordinate *selected_figure_coord;
 } draw_context;
-
-static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation) {
+void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation) {
     draw_context.advance_water_animation = 0;
     if (!selected_figure_id) {
         time_millis now = time_get_millis();
@@ -211,6 +209,7 @@ static void init_draw_context(int selected_figure_id, pixel_coordinate *figure_c
     draw_context.selected_figure_coord = figure_coord;
     draw_context.highlighted_formation = highlighted_formation;
 }
+
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();
     if (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)))
@@ -241,7 +240,7 @@ static int has_adjacent_deletion(int grid_offset) {
     return 0;
 }
 
-static void draw_footprint(int x, int y, int grid_offset) {
+void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0) {
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
         return;
@@ -290,7 +289,7 @@ static void draw_footprint(int x, int y, int grid_offset) {
         ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
     }
 }
-static void draw_top(int x, int y, int grid_offset) {
+void draw_top(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         return;
     building *b = building_get(map_building_at(grid_offset));
@@ -301,7 +300,7 @@ static void draw_top(int x, int y, int grid_offset) {
 
     ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
 }
-static void draw_figures(int x, int y, int grid_offset) {
+void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -340,7 +339,7 @@ static void print_temp_sum(int x, int y, int arr[], int n, color_t color = COLOR
 
 void draw_debug(int x, int y, int grid_offset) {
 
-    int MM = abs(debug_range_2) % 6;
+    int MM = abs(debug_range_2) % 16;
     if (MM == 0)
         return;
 
@@ -350,44 +349,64 @@ void draw_debug(int x, int y, int grid_offset) {
     int b_id = map_building_at(grid_offset);
     building *b = building_get(b_id);
 
+    int x0 = x + 8;
+    int x1 = x0 + 30;
+    int x2 = x1 + 30;
+    x += 15;
+
     switch (MM) {
         case 1: // BUILDINGS IDS AND SIZES
             if (b_id && b->grid_offset == grid_offset) {
-                draw_debug_line(str, x, y + 0, 0, "",  b_id, COLOR_WHITE);
-                draw_debug_line(str, x, y + 10, 0, "",  b->type, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, x, y + 20, 0, "",  b->size, COLOR_GREEN);
-                draw_debug_line(str, x, y + 30, 0, "",  map_property_multi_tile_size(grid_offset), COLOR_GREEN);
-                draw_debug_line(str, x, y + 40, 0, "",  map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
+                draw_debug_line(str, x0, y + 0, 0, "",  b_id, COLOR_WHITE);
+                draw_debug_line(str, x0, y + 10, 0, "",  b->type, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, x1, y + 0, 0, "",  b->size, COLOR_GREEN);
+                draw_debug_line(str, x1, y + 10, 0, "",  map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
             }
             break;
-        case 2:
+        case 2: // DRAW-TILES
+                if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                    if (map_property_is_draw_tile(grid_offset))
+                        draw_debug_line(str, x, y + 10, 0, "", b_id, COLOR_GREEN);
+                    else
+                        draw_debug_line(str, x, y + 10, 0, "", b_id, COLOR_LIGHT_RED);
+                } else if (!map_property_is_draw_tile(grid_offset))
+                    draw_debug_line(str, x, y + 10, 0, "", 0, COLOR_LIGHT_BLUE);
             break;
-        case 3:
+        case 3: // ROADS
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                d = map_road_network_get(grid_offset);
+                draw_debug_line(str, x, y + 10, 10, "R", d, COLOR_WHITE);
+            }
             break;
-        case 4:
+        case 4: // ROUTING DISTANCE
+            d = map_routing_distance(grid_offset);
+            if (d > 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE);
+            else if (d == 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 5:
+        case 5: // MOISTURE
+            d = map_moisture_get(grid_offset);
+            if (d & MOISTURE_GRASS)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE);
+            else if (d & MOISTURE_TRANSITION)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
+            else if (d & MOISTURE_SHORE_TALLGRASS)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_GREEN);
             break;
+        case 6: // PROPER GRASS LEVEL
+            d = map_grasslevel_get(grid_offset);
+            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_GREEN); break;
+        case 7: // FERTILITY & SOIL DEPLETION
+            d = map_get_fertility(grid_offset);
+            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE); break;
+        case 8: // FLOODPLAIN GROWTH
+            d = map_get_floodplain_growth(grid_offset);
+            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE); break;
+        case 9: // FLOODPLAIN SHORE ORDER
+            d = map_get_floodplain_shoreorder(grid_offset);
+            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
     }
-    
-    
-    // draw terrain data
-    uint32_t tile_data = map_moisture_get(grid_offset);
-    int flag_data = 0;
-    int bin_tile_data = 0;
-    int br = tile_data;
-    int i = 0;
-    while (br > 0) {
-        // storing remainder in binary
-        if (br % 2) {
-            bin_tile_data += (br % 2) * pow(10, i);
-            flag_data += i + 1;
-        }
-
-        br = br / 2;
-        i++;
-    }
-
 
         if (b_id && false && b->grid_offset == grid_offset) {
             string_from_int(str, b_id, 0);
@@ -458,82 +477,7 @@ void draw_debug(int x, int y, int grid_offset) {
         }
 
 
-//        d = map_get_shoreorder(grid_offset);
-//        string_from_int(str, d, 0);
-//        text_draw_shadow(str, x + 15, y + 10, COLOR_GREEN);
 
-//        d = map_image_at(grid_offset) - 14252;
-//        if (d > 200 && d <= 1514 && true) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
-//        }
-        d = map_moisture_get(grid_offset);
-        if (d && false) {
-            if (d & MOISTURE_TRANSITION) {
-                string_from_int(str, d-MOISTURE_TRANSITION, 0);
-                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
-            }
-//            if (d & MOISTURE_TALLGRASS) {
-//                string_from_int(str, d-MOISTURE_TALLGRASS, 0);
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_RED);
-//            } else
-                else if (d & MOISTURE_GRASS) {
-                string_from_int(str, (d-MOISTURE_GRASS)/8, 0);
-                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
-            }
-//                else if (d & MOISTURE_TRANSITION) {
-//                string_from_int(str, d-MOISTURE_TRANSITION, 0);
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
-//            }
-//            string_from_int(str, tile_data, 0);
-//            text_draw_shadow(str, x + 13, y, COLOR_WHITE);
-
-//            int m = (d+1)/8;
-//            string_from_int(str, m, 0);
-//            if ((d+1)%8 == 0)
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
-//            else
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_RED);
-        }
-//        d = map_grasslevel_get(grid_offset);
-//        if (d) {
-//            if (d >= 16) {
-//                string_from_int(str, d, 0);
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_BLUE);
-//            } else {
-//                string_from_int(str, d, 0);
-//                text_draw_shadow(str, x + 13, y + 10, COLOR_GREEN);
-//            }
-//        }
-
-//        d = map_get_fertility(grid_offset);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
-//        }
-
-//        d = map_get_growth(grid_offset);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
-//        }
-
-//        d = map_routing_distance(grid_offset);
-//        if (d > -1) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 25, y + 10, COLOR_WHITE);
-//        }
-
-//        d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
-//        if (d) {
-//            text_draw_shadow((uint8_t *) string_from_ascii("b"), x + 30, y + 15, COLOR_WHITE);
-//        }
-
-//        d = map_road_network_get(grid_offset);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 25, y + 10, COLOR_GREEN);
-//        }
 
 //        d = map_sprite_animation_at(grid_offset);
 //        if (d) {
@@ -541,33 +485,6 @@ void draw_debug(int x, int y, int grid_offset) {
 //            text_draw_shadow(str, x + 25, y + 10, COLOR_WHITE);
 //        }
 
-//        d = map_get_shoreorder(grid_offset);
-//        if (d) {
-//            string_from_int(str, d, 0);
-//            text_draw_shadow(str, x + 13, y + 15, COLOR_WHITE);
-//        }
-
-//        d = map_terrain_get(grid_offset);
-//        if (d & TERRAIN_ROAD) {
-//            text_draw_shadow((uint8_t *) string_from_ascii("R"), x + 30, y + 15, COLOR_WHITE);
-//        }
-
-//        d = map_property_is_draw_tile(grid_offset);
-//        if (!d) {
-//            text_draw_shadow((uint8_t *) string_from_ascii("N"), x + 30, y + 15, COLOR_RED);
-//        }
-
-
-//        string_from_int(str, flag_data, 0);
-//        text_draw_shadow(str, x + 15, y + 5, COLOR_WHITE);
-
-//        string_from_int(str, map_moisture_get(grid_offset), 0);
-
-//        string_from_int(str, flag_data, 0);
-//        string_from_int(str, tile_data, 0);
-//        string_from_int(str, grid_offset, 0);
-//        text_draw_shadow(str, x + 15, y + 15, COLOR_GREEN);
-//    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
 
 }
 void draw_debug_figures(int x, int y, int grid_offset) {
@@ -585,11 +502,11 @@ void draw_debug_figures(int x, int y, int grid_offset) {
 static int should_draw_top_before_deletion(int grid_offset) {
     return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
 }
-static void deletion_draw_terrain_top(int x, int y, int grid_offset) {
+void deletion_draw_top(int x, int y, int grid_offset) {
     if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
 }
-static void draw_elevated_figures(int x, int y, int grid_offset) {
+void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
@@ -602,7 +519,7 @@ static void draw_elevated_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
-static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
+void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_get(map_building_at(grid_offset))))
         ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
 
@@ -611,49 +528,4 @@ static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
 
     draw_figures(x, y, grid_offset);
     draw_ornaments(x, y, grid_offset);
-}
-static void deletion_draw_remaining(int x, int y, int grid_offset) {
-    draw_elevated_figures(x, y, grid_offset);
-//    draw_hippodrome_ornaments(x, y, grid_offset);
-}
-
-void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
-    int highlighted_formation = 0;
-    if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
-        highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
-        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle)
-            highlighted_formation = 0;
-    }
-    init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
-
-//    city_view_foreach_map_tile(draw_outside_map);
-//    int x;
-//    int y;
-//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
-//    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
-
-    // do this for EVERY tile (not just valid ones)
-    // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_footprint);
-
-    if (!city_building_ghost_mark_deleting(tile)) {
-        city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
-                draw_top,
-                draw_ornaments,
-                draw_figures);
-        if (!selected_figure_id)
-            city_building_ghost_draw(tile);
-    } else {
-        city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
-                deletion_draw_terrain_top,
-                deletion_draw_figures_animations,
-                deletion_draw_remaining);
-    }
-
-    // finally, draw these on top of everything else
-    city_view_foreach_valid_map_tile(
-            draw_debug,
-            draw_debug_figures);
 }

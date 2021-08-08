@@ -12,7 +12,7 @@
 #include "graphics/menu.h"
 #include "graphics/window.h"
 #include "map/grid.h"
-#include "widget/city_without_overlay.h"
+#include "widget/city/tile_draw.h"
 
 #include "png.h"
 

@@ -24,7 +24,7 @@
 #include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
-#include "widget/city_with_overlay.h"
+#include "widget/city/city_draw.h"
 #include "widget/top_menu.h"
 #include "widget/sidebar/city.h"
 #include "window/advisors.h"

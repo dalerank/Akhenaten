@@ -116,11 +116,11 @@ void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
 int map_floodplain_rebuild_shoreorder();
-uint8_t map_get_shoreorder(int grid_offset);
-uint8_t map_get_growth(int grid_offset);
+uint8_t map_get_floodplain_shoreorder(int grid_offset);
+uint8_t map_get_floodplain_growth(int grid_offset);
 uint8_t map_get_fertility(int grid_offset);
 uint8_t map_get_fertility_average(int grid_offset);
-void map_set_growth(int grid_offset, int growth);
+void map_set_floodplain_growth(int grid_offset, int growth);
 void map_soil_depletion(int grid_offset, int malus);
 
 void map_soil_fertility_load_state(buffer *buf);
@@ -144,8 +144,5 @@ bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
 
 void map_temp_grid_load(buffer *buf, int g);
 int64_t map_temp_grid_get(int grid_offset, int g);
-
-uint8_t map_get_floodplain_growth(int grid_offset);
-uint8_t map_get_floodplain_fertility(int grid_offset);
 
 #endif // MAP_TERRAIN_H

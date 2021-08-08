@@ -601,4 +601,5 @@ void draw_ornaments(int x, int y, int grid_offset) {
     // specific buildings
     draw_senate_rating_flags(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
+//    draw_hippodrome_ornaments(x, y, grid_offset);
 }
