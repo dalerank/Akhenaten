@@ -141,7 +141,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
     int terrain = map_terrain_get(grid_offset);
     // exception for fort ground: display as empty land
     if (terrain & TERRAIN_BUILDING) {
-        if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT_GROUND)
+        if (building_at(grid_offset)->type == BUILDING_FORT_GROUND)
             terrain = 0;
 
     }
@@ -149,7 +149,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
     if (terrain & TERRAIN_BUILDING) {
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id;
-            building *b = building_get(map_building_at(grid_offset));
+            building *b = building_at(grid_offset);
             if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
             else if (b->type == BUILDING_RESERVOIR || b->type == BUILDING_WELL)

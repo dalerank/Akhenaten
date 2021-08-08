@@ -239,7 +239,7 @@ static int has_deleted_building(int grid_offset) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
-    building *b = building_get(map_building_at(grid_offset));
+    building *b = building_at(grid_offset);
     b = b->main();
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
@@ -252,14 +252,14 @@ static int terrain_on_water_overlay(void) {
 }
 static void draw_footprint_water(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-        if (building_get(map_building_at(grid_offset))->type != BUILDING_ROADBLOCK)
+        if (building_at(grid_offset)->type != BUILDING_ROADBLOCK)
             ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
         else
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
     }
     else {
         int terrain = map_terrain_get(grid_offset);
-        building *b = building_get(map_building_at(grid_offset));
+        building *b = building_at(grid_offset);
         if (terrain & TERRAIN_BUILDING &&
             (building_is_house(b->type))
             || b->type == BUILDING_WELL

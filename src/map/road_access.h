@@ -17,7 +17,7 @@ int map_has_road_access_temple_complex(int x, int y, map_point *road);
 
 //int map_has_road_access_granary(int x, int y, map_point *road);
 
-int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
+bool map_closest_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
 
 int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
 

@@ -1,9 +1,12 @@
 #ifndef WIDGET_CITY_WITH_OVERLAY_H
 #define WIDGET_CITY_WITH_OVERLAY_H
 
+#include <widget/city_overlay.h>
 #include "graphics/tooltip.h"
 #include "map/point.h"
 #include "widget/city.h"
+
+const city_overlay *get_city_overlay(void);
 
 /**
  * Update the internal state after changing overlay

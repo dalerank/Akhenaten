@@ -16,8 +16,8 @@
 #include <city/labor.h>
 #include <building/industry.h>
 #include <map/terrain.h>
-#include "ornaments.h"
 #include "building/building.h"
+#include "city_draw.h"
 
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();
@@ -439,7 +439,7 @@ static void draw_warehouse_ornaments(const building *b, int x, int y, color_t co
 static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    building *b = building_get(map_building_at(grid_offset));
+    building *b = building_at(grid_offset);
     if (img->num_animation_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
@@ -486,7 +486,7 @@ void draw_ornaments(int x, int y, int grid_offset) {
 //        ph_crops_worker_frame = 0;
 
     int image_id = map_image_at(grid_offset);
-    building *b = building_get(map_building_at(grid_offset));
+    building *b = building_at(grid_offset);
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
     if (b->type == 0 || b->state != BUILDING_STATE_VALID)
@@ -602,4 +602,13 @@ void draw_ornaments(int x, int y, int grid_offset) {
     draw_senate_rating_flags(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 //    draw_hippodrome_ornaments(x, y, grid_offset);
+}
+void draw_ornaments_overlay(int x, int y, int grid_offset) {
+    int b_id = map_building_at(grid_offset);
+    if (b_id) {
+        const building *b = building_at(grid_offset);
+        if (get_city_overlay()->show_building(b))
+            draw_ornaments(x, y, grid_offset);
+    } else
+        draw_ornaments(x, y, grid_offset);
 }

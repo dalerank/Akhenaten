@@ -17,6 +17,7 @@
 #include "sound/city.h"
 #include "sound/effect.h"
 #include "widget/map_editor_tool.h"
+#include "widget/city/tile_draw.h"
 
 static struct {
     map_tile current_tile;
@@ -47,35 +48,6 @@ static void init_draw_context(void) {
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
     draw_context.image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
     draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
-}
-
-static void draw_footprint(int x, int y, int grid_offset) {
-    if (grid_offset < 0) {
-        // Outside map: draw black tile
-        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
-    } else if (map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset_figure and leftmost tile -> draw
-        color_t color_mask = 0;
-        int image_id = map_image_at(grid_offset);
-        if (draw_context.advance_water_animation &&
-            image_id >= draw_context.image_id_water_first &&
-            image_id <= draw_context.image_id_water_last) {
-            image_id++;
-            if (image_id > draw_context.image_id_water_last)
-                image_id = draw_context.image_id_water_first;
-
-            map_image_set(grid_offset, image_id);
-        }
-        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
-    }
-}
-
-static void draw_top(int x, int y, int grid_offset) {
-    if (!map_property_is_draw_tile(grid_offset))
-        return;
-    int image_id = map_image_at(grid_offset);
-    color_t color_mask = 0;
-    ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
 }
 
 static void draw_flags(int x, int y, int grid_offset) {

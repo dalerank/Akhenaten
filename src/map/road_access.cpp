@@ -18,9 +18,9 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
-            building_get(map_building_at(grid_offset))->type != BUILDING_GATEHOUSE) {
+            building_at(grid_offset)->type != BUILDING_GATEHOUSE) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-                if (building_get(map_building_at(grid_offset))->type == BUILDING_ROADBLOCK) continue;
+                if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) continue;
                 int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
                 if (road_index < *min_value) {
                     *min_value = road_index;
@@ -40,9 +40,9 @@ bool burning_ruin_can_be_accessed(int x, int y, map_point *point) {
         int grid_offset = base_offset + *tile_delta;
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
             map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-            building_get(map_building_at(grid_offset))->type == BUILDING_FESTIVAL_SQUARE ||
-            (building_get(map_building_at(grid_offset))->type == BUILDING_BURNING_RUIN
-                && building_get(map_building_at(grid_offset))->fire_duration <= 0)) {
+            building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE ||
+            (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
+                && building_at(grid_offset)->fire_duration <= 0)) {
             map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
             return true;
         }
@@ -102,34 +102,7 @@ int map_has_road_access_temple_complex(int x, int y, map_point *road) {
     return map_has_road_access_hippodrome(x, y, road);
 }
 
-//int map_has_road_access_granary(int x, int y, map_point *road) {
-//    int rx = -1, ry = -1;
-//    if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD) &&
-//        (building_get(map_building_at(map_grid_offset(x + 1, y - 1)))->type != BUILDING_ROADBLOCK)) {
-//        rx = x + 1;
-//        ry = y - 1;
-//    } else if (map_terrain_is(map_grid_offset(x + 3, y + 1), TERRAIN_ROAD) &&
-//               (building_get(map_building_at(map_grid_offset(x + 3, y + 1)))->type != BUILDING_ROADBLOCK)) {
-//        rx = x + 3;
-//        ry = y + 1;
-//    } else if (map_terrain_is(map_grid_offset(x + 1, y + 3), TERRAIN_ROAD) &&
-//               (building_get(map_building_at(map_grid_offset(x + 1, y + 3)))->type != BUILDING_ROADBLOCK)) {
-//        rx = x + 1;
-//        ry = y + 3;
-//    } else if (map_terrain_is(map_grid_offset(x - 1, y + 1), TERRAIN_ROAD) &&
-//               (building_get(map_building_at(map_grid_offset(x - 1, y + 1)))->type != BUILDING_ROADBLOCK)) {
-//        rx = x - 1;
-//        ry = y + 1;
-//    }
-//    if (rx >= 0 && ry >= 0) {
-//        if (road)
-//            map_point_store_result(rx, ry, road);
-//        return 1;
-//    }
-//    return 0;
-//}
-
-static int road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
+static bool road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
@@ -137,24 +110,24 @@ static int road_within_radius(int x, int y, int size, int radius, int *x_road, i
         for (int xx = x_min; xx <= x_max; xx++) {
             if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_ROAD)) {
                 // Don't spawn walkers on roadblocks
-                if (building_get(map_building_at(map_grid_offset(xx, yy)))->type == BUILDING_ROADBLOCK) continue;
+                if (building_at(xx, yy)->type == BUILDING_ROADBLOCK) continue;
                 if (x_road && y_road) {
                     *x_road = xx;
                     *y_road = yy;
                 }
-                return 1;
+                return true;
             }
         }
     }
-    return 0;
+    return false;
 }
 
-int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
+bool map_closest_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
     for (int r = 1; r <= radius; r++) {
         if (road_within_radius(x, y, size, r, x_road, y_road))
-            return 1;
+            return true;
     }
-    return 0;
+    return false;
 }
 
 static int reachable_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
@@ -303,7 +276,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
     if (map_terrain_is(grid_offset, TERRAIN_WATER) && map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
         return 0;
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        building *b = building_get(map_building_at(grid_offset));
+        building *b = building_at(grid_offset);
         if (b->type == BUILDING_GATEHOUSE)
             is_road = 0;
 
@@ -382,7 +355,7 @@ int map_has_adjacent_granary_road(int grid_offset) {
     tiles[2] = grid_offset + map_grid_delta(0, 1);
     tiles[3] = grid_offset + map_grid_delta(-1, 0);
     for (int i = 0; i < 4; i++) {
-        if (building_get(map_building_at(tiles[i]))->type != BUILDING_GRANARY) continue;
+        if (building_at(tiles[i])->type != BUILDING_GRANARY) continue;
         switch (map_property_multi_tile_xy(tiles[i])) {
             case EDGE_X1Y0:
             case EDGE_X0Y1:
