@@ -1,8 +1,8 @@
 #include <core/string.h>
 
 #include "city/view.h"
-#include "figure/formation.h"
-#include "figure/image.h"
+#include "formation.h"
+#include "image.h"
 #include "figuretype/editor.h"
 #include "graphics/image.h"
 #include "graphics/text.h"
@@ -23,7 +23,7 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
     }
 }
 
-#include "building_ghost.h"
+#include "widget/city/building_ghost.h"
 #include "building/properties.h"
 #include "figure/route.h"
 #include "window/city.h"

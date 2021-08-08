@@ -474,7 +474,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city/city_figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/figure/figure_draw.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
