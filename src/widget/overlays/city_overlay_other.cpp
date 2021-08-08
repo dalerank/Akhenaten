@@ -251,8 +251,10 @@ static int terrain_on_water_overlay(void) {
             TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_DUNE | TERRAIN_REEDS;
 }
 static void draw_footprint_water(int x, int y, int grid_offset) {
+    // roads, bushes, dunes, etc. are drawn normally
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-        if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) // draw roadblocks as flattened tiles
+        // (except for roadblocks on roads, draw these as flattened tiles)
+        if (building_at(grid_offset)->type == BUILDING_ROADBLOCK)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else
             ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
@@ -260,13 +262,15 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
     else {
         int terrain = map_terrain_get(grid_offset);
         building *b = building_at(grid_offset);
+        // draw houses, wells and water supplies either fully or flattened
         if (terrain & TERRAIN_BUILDING &&
             (building_is_house(b->type))
             || b->type == BUILDING_WELL
             || b->type == BUILDING_WATER_SUPPLY) {
-            if (map_property_is_draw_tile(grid_offset)) // draw houses, wells and water supplies
+            if (map_property_is_draw_tile(grid_offset))
                 city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         } else {
+            // draw groundwater levels
             int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
             switch (map_terrain_get(grid_offset) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
                 case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:

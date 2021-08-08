@@ -6,11 +6,6 @@
 #include "input/mouse.h"
 #include "city/view.h"
 
-//typedef struct {
-//    int x;
-//    int y;
-//} pixel_coordinate;
-
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 

@@ -478,16 +478,16 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city/city_draw.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_other.cpp
-        ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_risks.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_risks.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_education.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_entertainment.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_health.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/overlays/city_overlay_other.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/common.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp

@@ -352,7 +352,7 @@ static void draw_farm_crops(building *b, int x, int y) {
 
 /////// ORNAMENTS
 
-static int granary_offsets_ph[][2] = {
+static const int granary_offsets_ph[][2] = {
         {0, 0},
         {16, 9},
         {35, 18},

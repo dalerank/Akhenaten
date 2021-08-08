@@ -6,7 +6,7 @@
 #include <map/routing.h>
 #include <map/road_network.h>
 #include <map/random.h>
-#include <widget/city_overlay_risks.h>
+#include <widget/overlays/city_overlay_risks.h>
 #include "tile_draw.h"
 
 #include "building/animation.h"
@@ -38,7 +38,6 @@
 #include "graphics/text.h"
 #include "core/string.h"
 #include "map/property.h"
-#include "city_draw.h"
 #include "game/state.h"
 #include "ornaments.h"
 
@@ -112,8 +111,7 @@ static const int ADJACENT_OFFSETS_C3[2][4][7] = {
     }
   }
 };
-static
-const int ADJACENT_OFFSETS_PH[2][4][7] = {
+static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {
     {
       OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2), OFFSET_PH(1, -2)
@@ -236,7 +234,7 @@ static bool has_adjacent_deletion(int grid_offset) {
         case ENGINE_ENV_C3:
             adjacent_offset = ADJACENT_OFFSETS_C3[size - 2][city_view_orientation() / 2];
             break;
-        case ENGINE_ENV_PHARAOH:
+        case ENGINE_ENV_PHARAOH: // TODO: get rid of this garbage
             adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][city_view_orientation() / 2];
             break;
     }

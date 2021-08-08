@@ -1,3 +1,4 @@
+#include <widget/overlays/city_overlay.h>
 #include "city.h"
 
 #include "building/construction.h"
@@ -24,7 +25,6 @@
 #include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
-#include "widget/city/city_draw.h"
 #include "widget/top_menu.h"
 #include "widget/sidebar/city.h"
 #include "window/advisors.h"
@@ -124,10 +124,10 @@ static void show_overlay(int overlay) {
     exit_military_command();
     if (game_state_overlay() == overlay)
         game_state_set_overlay(OVERLAY_NONE);
-    else {
+    else
         game_state_set_overlay(overlay);
-    }
-    city_with_overlay_update();
+
+    select_city_overlay();
     window_invalidate();
 }
 static void cycle_legion(void) {
@@ -192,7 +192,7 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->toggle_overlay) {
         exit_military_command();
         game_state_toggle_overlay();
-        city_with_overlay_update();
+        select_city_overlay();
         window_invalidate();
     }
     if (h->show_advisor)
