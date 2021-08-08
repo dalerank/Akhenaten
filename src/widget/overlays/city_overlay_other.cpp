@@ -256,7 +256,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
         // (except for roadblocks on roads, draw these as flattened tiles)
         if (building_at(grid_offset)->type == BUILDING_ROADBLOCK)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
-        else
+        else if (map_property_is_draw_tile(grid_offset))
             ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
     else {

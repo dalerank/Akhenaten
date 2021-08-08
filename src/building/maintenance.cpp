@@ -181,7 +181,7 @@ void building_maintenance_check_fire_collapse(void) {
         /////// FIRE
         int random_building = (i + map_random_get(b->grid_offset)) & 7;
         if (random_building == random_global) {
-            b->fire_risk += model->fire_risk * 10;
+            b->fire_risk += model->fire_risk;
 //            if (!b->house_size)
 //                b->fire_risk += 50;
 //            else if (b->house_population <= 0)

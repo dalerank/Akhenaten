@@ -36,8 +36,8 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 void figure::draw_debug() {
 
-    int MM = abs(debug_range_1) % 6;
-    if (MM == 0)
+    int DB1 = abs(debug_range_1) % 6;
+    if (DB1 == 0)
         return;
 
     building *b = home();
@@ -51,7 +51,7 @@ void figure::draw_debug() {
     coords.y -= 80;
     int indent = 0;
 
-    switch (MM) {
+    switch (DB1) {
         case 1: // ACTION & STATE IDS
             draw_debug_line(str, coords.x, coords.y, indent, "", id, COLOR_WHITE);
             draw_debug_line(str, coords.x, coords.y + 10, indent, "", type, COLOR_LIGHT_BLUE);

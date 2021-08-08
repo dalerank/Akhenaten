@@ -596,8 +596,8 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
 
 void draw_debug(int x, int y, int grid_offset) {
 
-    int MM = abs(debug_range_2) % 16;
-    if (MM == 0)
+    int DB2 = abs(debug_range_2) % 16;
+    if (DB2 == 0)
         return;
 
     // globals
@@ -611,7 +611,7 @@ void draw_debug(int x, int y, int grid_offset) {
     int x2 = x1 + 30;
     x += 15;
 
-    switch (MM) {
+    switch (DB2) {
         case 1: // BUILDINGS IDS AND SIZES
             if (b_id && b->grid_offset == grid_offset) {
                 draw_debug_line(str, x0, y + 0, 0, "",  b_id, COLOR_WHITE);
