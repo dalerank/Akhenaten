@@ -25,6 +25,11 @@ typedef struct {
     int save_file;
     int rotate_building;
     int building;
+    // debug
+    int debug_1_up;
+    int debug_1_down;
+    int debug_2_up;
+    int debug_2_down;
 } hotkeys;
 
 void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);

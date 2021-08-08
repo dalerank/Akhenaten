@@ -161,12 +161,17 @@ static void toggle_pause(void) {
 }
 
 int debug_range_1 = 0;
+int debug_range_2 = 0;
 
 static void handle_hotkeys(const hotkeys *h) {
-    if (h->decrease_game_speed)
+    if (h->debug_1_up)
         debug_range_1+=1;
-    if (h->increase_game_speed)
+    if (h->debug_1_down)
         debug_range_1-=1;
+    if (h->debug_2_up)
+        debug_range_2+=1;
+    if (h->debug_2_down)
+        debug_range_2-=1;
 //    if (debug_range_1 < 0)
 //        debug_range_1 = 0;
 //    if (debug_range_1 > 20)
@@ -175,12 +180,12 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->toggle_pause)
         toggle_pause();
 
-//    if (h->decrease_game_speed) {
-//        setting_decrease_game_speed();
-//    }
-//    if (h->increase_game_speed) {
-//        setting_increase_game_speed();
-//    }
+    if (h->decrease_game_speed) {
+        setting_decrease_game_speed();
+    }
+    if (h->increase_game_speed) {
+        setting_increase_game_speed();
+    }
     if (h->show_overlay)
         show_overlay(h->show_overlay);
 

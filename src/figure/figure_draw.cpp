@@ -1,4 +1,5 @@
 #include <core/string.h>
+#include <cmath>
 
 #include "city/view.h"
 #include "formation.h"
@@ -35,7 +36,7 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
 
 void figure::draw_debug() {
 
-    int MM = debug_range_1 % 6;
+    int MM = abs(debug_range_1) % 6;
     if (MM == 0)
         return;
 
@@ -51,7 +52,7 @@ void figure::draw_debug() {
     int indent = 0;
 
     switch (MM) {
-        case 1:
+        case 1: // ACTION & STATE IDS
             draw_debug_line(str, coords.x, coords.y, indent, "", id, COLOR_WHITE);
             draw_debug_line(str, coords.x, coords.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
             draw_debug_line(str, coords.x, coords.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
@@ -71,24 +72,7 @@ void figure::draw_debug() {
             string_from_int(str, routing_path_current_tile, 0);
             text_draw(str, coords.x+30, coords.y+30, FONT_NORMAL_PLAIN, 0);
             break;
-        case 2:
-            if (resource_id) {
-                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_GREEN);
-                if (resource_amount_full > 0)
-                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_GREEN);
-                else
-                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_WHITE);
-            } else {
-                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_LIGHT_RED);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_LIGHT_RED);
-            }
-            break;
-        case 3:
-            draw_debug_line(str, coords.x, coords.y, indent, "",  unk_fest_269, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 10, indent, "",  unk_fest_ffff, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
-            break;
-        case 4:
+        case 2: // ROUTING
             if (routing_path_id) {
                 draw_debug_line(str, coords.x, coords.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
                 draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
@@ -165,32 +149,32 @@ void figure::draw_debug() {
                                            tile_coords.y);
                 }
             }
+
             coords.y += 50;
             string_from_int(str, progress_on_tile, 0);
             text_draw(str, coords.x, coords.y + 30, FONT_NORMAL_PLAIN, 0);
             break;
-    }
-//    else {
-//        text_draw_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+10, COLOR_GREEN);
-//        text_draw_shadow((uint8_t*)string_from_ascii("-"), coords.x+40, coords.y+20, COLOR_GREEN);
-//    }
-
-//    coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
-//    draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 33, coords.x, coords.y, COLOR_MASK_NONE);
-//    text_draw(str, coords.x, coords.y, FONT_NORMAL_BLACK, 0);
-
-
-    if (false && b->type) {
-        const building_properties *props = building_properties_for_type(b->type);
-        coords = city_view_grid_offset_to_pixel(b->grid_offset);
-        draw_building(image_id_from_group(props->image_group) + props->image_offset, coords.x, coords.y);
-//        draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords.x, coords.y);
-//        imagedrawnamespace::image_draw_namespace::image_draw(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
-    }
-    if (false && bdest->type) {
-        const building_properties *props = building_properties_for_type(bdest->type);
-        coords = city_view_grid_offset_to_pixel(bdest->grid_offset);
-        draw_building(image_id_from_group(props->image_group) + props->image_offset, coords.x, coords.y, COLOR_MASK_RED);
+        case 3: // RESOURCE CARRY
+            coords.y += 30;
+            if (resource_id) {
+                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_GREEN);
+                if (resource_amount_full > 0)
+                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_GREEN);
+                else
+                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_WHITE);
+            } else {
+                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_LIGHT_RED);
+                draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_LIGHT_RED);
+            }
+            break;
+        case 4: // (empty)
+            break;
+        case 5: // FESTIVAL
+            coords.y += 30;
+            draw_debug_line(str, coords.x, coords.y, indent, "",  unk_fest_269, COLOR_WHITE);
+            draw_debug_line(str, coords.x, coords.y + 10, indent, "",  unk_fest_ffff, COLOR_WHITE);
+            draw_debug_line(str, coords.x, coords.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
+            break;
     }
 }
 
@@ -451,4 +435,5 @@ void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coo
         if (!is_enemy_image && highlight)
             ImageDraw::img_alpha_blended(sprite_image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
     }
+//    draw_debug();
 }

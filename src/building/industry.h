@@ -5,9 +5,9 @@
 #include "map/point.h"
 #include "graphics/image.h"
 
-int get_farm_image(int grid_offset);
-int get_crops_image(int type, int growth);
-void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);
+//int get_farm_image(int grid_offset);
+//int get_crops_image(int type, int growth);
+//void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);
 
 int building_determine_worker_needed();
 

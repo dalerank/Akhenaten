@@ -241,46 +241,6 @@ static int has_adjacent_deletion(int grid_offset) {
     return 0;
 }
 
-int ph_crops_worker_frame = 0;
-static void draw_ph_worker(int direction, int action, int x, int y) {
-    int action_offset = 0;
-    switch (action) {
-        case 0: // tiling
-            action_offset = 104; break;
-        case 1: // seeding
-            action_offset = 208; break;
-        case 2: // harvesting
-            action_offset = 312; break;
-    }
-    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
-                          8 * (ph_crops_worker_frame % 26 / 2), x, y + 15, 0);
-}
-static void draw_farm_crops(building *b, int x, int y) {
-    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
-    x += 60;
-    y -= 30;
-    if (b->num_workers > 0) {
-        if (b->data.industry.progress < 400)
-            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, x + 30, y + 30);
-        else if (b->data.industry.progress < 450)
-            draw_ph_worker(1, 0, x + 60, y + 15);
-        else if (b->data.industry.progress < 650)
-            draw_ph_worker(2, 0, x + 90, y + 30);
-        else if (b->data.industry.progress < 900)
-            draw_ph_worker(3, 0, x + 0, y + 15);
-        else if (b->data.industry.progress < 1100)
-            draw_ph_worker(4, 0, x + 30, y + 30);
-        else if (b->data.industry.progress < 1350)
-            draw_ph_worker(5, 0, x + 60, y + 45);
-        else if (b->data.industry.progress < 1550)
-            draw_ph_worker(6, 0, x + -30, y + 30);
-        else if (b->data.industry.progress < 1800)
-            draw_ph_worker(0, 0, x + 0, y + 45);
-        else if (b->data.industry.progress < 2000)
-            draw_ph_worker(1, 0, x + 30, y + 60);
-    }
-}
-
 static void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0) {
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
@@ -328,11 +288,6 @@ static void draw_footprint(int x, int y, int grid_offset) {
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
 
         ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (building_is_farm(b->type) && map_terrain_is(grid_offset, TERRAIN_BUILDING))
-                draw_farm_crops(b, x, y);
-        }
     }
 }
 static void draw_top(int x, int y, int grid_offset) {
@@ -385,42 +340,54 @@ static void print_temp_sum(int x, int y, int arr[], int n, color_t color = COLOR
 
 void draw_debug(int x, int y, int grid_offset) {
 
-    // draw terrain data
-    if (true) {
-        uint32_t tile_data = map_moisture_get(grid_offset);
-        uint8_t str[10];
-        int flag_data = 0;
-        int bin_tile_data = 0;
-        int br = tile_data;
-        int i = 0;
-        while (br > 0) {
-            // storing remainder in binary
-            if (br % 2) {
-                bin_tile_data += (br % 2) * pow(10, i);
-                flag_data += i + 1;
-            }
+    int MM = abs(debug_range_2) % 6;
+    if (MM == 0)
+        return;
 
-            br = br / 2;
-            i++;
+    // globals
+    int d = 0;
+    uint8_t str[30];
+    int b_id = map_building_at(grid_offset);
+    building *b = building_get(b_id);
+
+    switch (MM) {
+        case 1: // BUILDINGS IDS AND SIZES
+            if (b_id && b->grid_offset == grid_offset) {
+                draw_debug_line(str, x, y + 0, 0, "",  b_id, COLOR_WHITE);
+                draw_debug_line(str, x, y + 10, 0, "",  b->type, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, x, y + 20, 0, "",  b->size, COLOR_GREEN);
+                draw_debug_line(str, x, y + 30, 0, "",  map_property_multi_tile_size(grid_offset), COLOR_GREEN);
+                draw_debug_line(str, x, y + 40, 0, "",  map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
+            }
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+    }
+    
+    
+    // draw terrain data
+    uint32_t tile_data = map_moisture_get(grid_offset);
+    int flag_data = 0;
+    int bin_tile_data = 0;
+    int br = tile_data;
+    int i = 0;
+    while (br > 0) {
+        // storing remainder in binary
+        if (br % 2) {
+            bin_tile_data += (br % 2) * pow(10, i);
+            flag_data += i + 1;
         }
 
-        int d = 0;
-        int b_id = map_building_at(grid_offset);
-        building *b = building_get(b_id);
+        br = br / 2;
+        i++;
+    }
 
-//        if (b_id) {
-////            string_from_int(str, b->type, 0);
-////            text_draw_shadow(str, x + 13, y, COLOR_GREEN);
-//
-//            string_from_int(str, map_terrain_is(grid_offset, TERRAIN_BUILDING), 0);
-//            text_draw_shadow(str, x + 17, y + 5, COLOR_RED);
-//
-//            string_from_int(str, map_property_multi_tile_size(grid_offset), 0);
-//            text_draw_shadow(str, x + 17, y + 15, COLOR_GREEN);
-//
-//            string_from_int(str, map_property_multi_tile_xy(grid_offset), 0);
-//            text_draw_shadow(str, x + 33, y + 15, COLOR_WHITE);
-//        }
 
         if (b_id && false && b->grid_offset == grid_offset) {
             string_from_int(str, b_id, 0);
@@ -601,8 +568,9 @@ void draw_debug(int x, int y, int grid_offset) {
 //        string_from_int(str, grid_offset, 0);
 //        text_draw_shadow(str, x + 15, y + 15, COLOR_GREEN);
 //    text_draw(str, x, y, FONT_NORMAL_PLAIN, 0);
-    }
 
+}
+void draw_debug_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -650,10 +618,6 @@ static void deletion_draw_remaining(int x, int y, int grid_offset) {
 }
 
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
-    ph_crops_worker_frame++;
-    if (ph_crops_worker_frame >= 13 * 16)
-        ph_crops_worker_frame = 0;
-
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
@@ -668,25 +632,28 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
 //    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
 //    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
 
-    int should_mark_deleting = city_building_ghost_mark_deleting(tile);
+    // do this for EVERY tile (not just valid ones)
+    // to recalculate the pixel lookup offsets
     city_view_foreach_map_tile(draw_footprint);
-    if (!should_mark_deleting) {
+
+    if (!city_building_ghost_mark_deleting(tile)) {
         city_view_foreach_valid_map_tile(
+                nullptr,//draw_footprint,
                 draw_top,
                 draw_ornaments,
-                draw_figures
-        );
+                draw_figures);
         if (!selected_figure_id)
             city_building_ghost_draw(tile);
-        city_view_foreach_valid_map_tile(
-                draw_elevated_figures,
-                nullptr,
-                draw_debug
-        );
     } else {
-        city_view_foreach_map_tile(deletion_draw_terrain_top);
-        city_view_foreach_map_tile(deletion_draw_figures_animations);
-        city_view_foreach_map_tile(deletion_draw_remaining);
-        city_view_foreach_map_tile(draw_debug);
+        city_view_foreach_valid_map_tile(
+                nullptr,//draw_footprint,
+                deletion_draw_terrain_top,
+                deletion_draw_figures_animations,
+                deletion_draw_remaining);
     }
+
+    // finally, draw these on top of everything else
+    city_view_foreach_valid_map_tile(
+            draw_debug,
+            draw_debug_figures);
 }

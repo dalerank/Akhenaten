@@ -440,7 +440,7 @@ static void draw_top(int x, int y, int grid_offset) {
         }
     }
 }
-static void draw_ornaments(int x, int y, int grid_offset) {
+static void draw_ornaments_temp(int x, int y, int grid_offset) {
     int draw = 0;
     if (map_building_at(grid_offset)) {
         int btype = building_get(map_building_at(grid_offset))->type;
@@ -559,7 +559,7 @@ static void deletion_draw_animations(int x, int y, int grid_offset) {
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
 
-    draw_ornaments(x, y, grid_offset);
+    draw_ornaments_temp(x, y, grid_offset);
 }
 
 void city_with_overlay_draw(const map_tile *tile) {
@@ -572,8 +572,7 @@ void city_with_overlay_draw(const map_tile *tile) {
         city_view_foreach_valid_map_tile(
                 draw_figures,
                 draw_top,
-                draw_ornaments
-        );
+                draw_ornaments_temp);
         city_building_ghost_draw(tile);
         city_view_foreach_map_tile(draw_elevated_figures);
     } else {

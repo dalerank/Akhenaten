@@ -99,6 +99,10 @@ static int adjust_offset_for_orientation(int grid_offset, int size) {
     }
 }
 
+
+
+
+
 void widget_city_draw(void) {
     if (config_get(CONFIG_UI_ZOOM)) {
         update_zoom_level();

@@ -14,6 +14,8 @@
 #include <city/buildings.h>
 #include <city/ratings.h>
 #include <city/labor.h>
+#include <building/industry.h>
+#include <map/terrain.h>
 #include "ornaments.h"
 #include "building/building.h"
 
@@ -225,6 +227,128 @@ static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t 
     }
 }
 
+static const int X_VIEW_OFFSETS[9] = {
+        0, 30, 60,
+        -30, 0, 30,
+        -60, -30, 0
+};
+
+static const int Y_VIEW_OFFSETS[9] = {
+        30, 45, 60,
+        45, 60, 75,
+        60, 75, 90
+};
+int get_farm_image(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
+        int fert_average = map_get_fertility_average(grid_offset);
+        int fertility_index = 0;
+        if (fert_average < 13)
+            fertility_index = 0;
+        else if (fert_average < 25)
+            fertility_index = 1;
+        else if (fert_average < 38)
+            fertility_index = 2;
+        else if (fert_average < 50)
+            fertility_index = 3;
+        else if (fert_average < 63)
+            fertility_index = 4;
+        else if (fert_average < 75)
+            fertility_index = 5;
+        else if (fert_average < 87)
+            fertility_index = 6;
+        else
+            fertility_index = 7;
+        return base + fertility_index;
+    } else
+        return image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
+}
+int get_crops_image(int type, int growth) {
+    int base = 0;
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        base = image_id_from_group(GROUP_BUILDING_FARMLAND);
+        return (type - BUILDING_BARLEY_FARM) * 5 + growth;
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        base = image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
+        switch (type) {
+            case BUILDING_BARLEY_FARM:
+                return base + 6 * 0 + growth;
+            case BUILDING_FLAX_FARM:
+                return base + 6 * 6 + growth;
+            case BUILDING_GRAIN_FARM:
+                return base + 6 * 2 + growth;
+            case BUILDING_LETTUCE_FARM:
+                return base + 6 * 3 + growth;
+            case BUILDING_POMEGRANATES_FARM:
+                return base + 6 * 4 + growth;
+            case BUILDING_CHICKPEAS_FARM:
+                return base + 6 * 5 + growth;
+            case BUILDING_FIGS_FARM:
+                return base + 6 * 1 + growth;
+//            case BUILDING_HENNA_FARM:
+//                return base + 6 * 0 + growth;
+        }
+    }
+    return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
+}
+void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
+    int image_crops = get_crops_image(type, 0);
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        for (int i = 0; i < 9; i++) {
+            int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
+            ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                      y + Y_VIEW_OFFSETS[i] - 30, color_mask);
+        }
+    } else {
+        for (int i = 4; i < 9; i++) {
+            int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
+            ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                      y + Y_VIEW_OFFSETS[i] - 30, color_mask);
+        }
+    }
+
+}
+
+int ph_crops_worker_frame = 0;
+static void draw_ph_worker(int direction, int action, int x, int y) {
+    int action_offset = 0;
+    switch (action) {
+        case 0: // tiling
+            action_offset = 104; break;
+        case 1: // seeding
+            action_offset = 208; break;
+        case 2: // harvesting
+            action_offset = 312; break;
+    }
+    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
+                          8 * (ph_crops_worker_frame % 26 / 2), x, y + 15, 0);
+}
+static void draw_farm_crops(building *b, int x, int y) {
+    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
+    x += 60;
+    y -= 30;
+    if (b->num_workers > 0) {
+        if (b->data.industry.progress < 400)
+            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, x + 30, y + 30);
+        else if (b->data.industry.progress < 450)
+            draw_ph_worker(1, 0, x + 60, y + 15);
+        else if (b->data.industry.progress < 650)
+            draw_ph_worker(2, 0, x + 90, y + 30);
+        else if (b->data.industry.progress < 900)
+            draw_ph_worker(3, 0, x + 0, y + 15);
+        else if (b->data.industry.progress < 1100)
+            draw_ph_worker(4, 0, x + 30, y + 30);
+        else if (b->data.industry.progress < 1350)
+            draw_ph_worker(5, 0, x + 60, y + 45);
+        else if (b->data.industry.progress < 1550)
+            draw_ph_worker(6, 0, x + -30, y + 30);
+        else if (b->data.industry.progress < 1800)
+            draw_ph_worker(0, 0, x + 0, y + 45);
+        else if (b->data.industry.progress < 2000)
+            draw_ph_worker(1, 0, x + 30, y + 60);
+    }
+}
+
 /////// ORNAMENTS
 
 static int granary_offsets_ph[][2] = {
@@ -355,6 +479,12 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
 }
 
 void draw_ornaments(int x, int y, int grid_offset) {
+
+    // advance crop workers animation frames for Pharaoh
+//    ph_crops_worker_frame++;
+//    if (ph_crops_worker_frame >= 13 * 16)
+//        ph_crops_worker_frame = 0;
+
     int image_id = map_image_at(grid_offset);
     building *b = building_get(map_building_at(grid_offset));
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
@@ -404,7 +534,7 @@ void draw_ornaments(int x, int y, int grid_offset) {
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
-//            draw_farm_crops(b, x, y);
+            draw_farm_crops(b, x, y);
             break;
         case BUILDING_WATER_LIFT:
             break; // todo

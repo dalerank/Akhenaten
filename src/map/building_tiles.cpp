@@ -1,3 +1,4 @@
+#include <widget/city/ornaments.h>
 #include "building_tiles.h"
 
 #include "building/building.h"
