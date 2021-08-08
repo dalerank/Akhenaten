@@ -252,10 +252,10 @@ static int terrain_on_water_overlay(void) {
 }
 static void draw_footprint_water(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-        if (building_at(grid_offset)->type != BUILDING_ROADBLOCK)
-            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
-        else
+        if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) // draw roadblocks as flattened tiles
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+        else
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
     else {
         int terrain = map_terrain_get(grid_offset);
@@ -264,7 +264,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
             (building_is_house(b->type))
             || b->type == BUILDING_WELL
             || b->type == BUILDING_WATER_SUPPLY) {
-            if (map_property_is_draw_tile(grid_offset))
+            if (map_property_is_draw_tile(grid_offset)) // draw houses, wells and water supplies
                 city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         } else {
             int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);

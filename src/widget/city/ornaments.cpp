@@ -1,3 +1,5 @@
+#include "ornaments.h"
+
 #include <map/image.h>
 #include <map/building.h>
 #include <graphics/image.h>
@@ -17,7 +19,6 @@
 #include <building/industry.h>
 #include <map/terrain.h>
 #include "building/building.h"
-#include "city_draw.h"
 
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();
@@ -478,9 +479,12 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     }
 }
 
-void draw_ornaments(int x, int y, int grid_offset) {
+void draw_ornaments_and_animations(int x, int y, int grid_offset) {
+    // tile must contain image draw data
+    if (!map_property_is_draw_tile(grid_offset))
+        return;
 
-    // advance crop workers animation frames for Pharaoh
+    // TODO: advance crop workers animation frames for Pharaoh
 //    ph_crops_worker_frame++;
 //    if (ph_crops_worker_frame >= 13 * 16)
 //        ph_crops_worker_frame = 0;
@@ -495,13 +499,6 @@ void draw_ornaments(int x, int y, int grid_offset) {
     int color_mask = 0;
     if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
-
-    // TODO: bridges
-    if (!map_property_is_draw_tile(grid_offset)) {
-//    if (map_sprite_bridge_at(grid_offset))
-//        city_draw_bridge(x, y, grid_offset);
-        return;
-    }
 
     switch (b->type) {
         case BUILDING_BURNING_RUIN:
@@ -602,13 +599,4 @@ void draw_ornaments(int x, int y, int grid_offset) {
     draw_senate_rating_flags(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
 //    draw_hippodrome_ornaments(x, y, grid_offset);
-}
-void draw_ornaments_overlay(int x, int y, int grid_offset) {
-    int b_id = map_building_at(grid_offset);
-    if (b_id) {
-        const building *b = building_at(grid_offset);
-        if (get_city_overlay()->show_building(b))
-            draw_ornaments(x, y, grid_offset);
-    } else
-        draw_ornaments(x, y, grid_offset);
 }

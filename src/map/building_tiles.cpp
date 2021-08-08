@@ -1,4 +1,5 @@
 #include <widget/city/tile_draw.h>
+#include <widget/city/ornaments.h>
 #include "building_tiles.h"
 
 #include "building/building.h"

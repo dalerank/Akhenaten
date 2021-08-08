@@ -172,8 +172,8 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     city_view_foreach_map_tile(draw_footprint);
 
     if (!city_building_ghost_mark_deleting(tile)) {
+        city_view_foreach_map_tile(draw_footprint);
         city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
                 draw_top,
                 draw_ornaments,
                 draw_figures);
@@ -181,7 +181,6 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             city_building_ghost_draw(tile);
     } else {
         city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures);
@@ -202,7 +201,6 @@ void city_with_overlay_draw(const map_tile *tile) {
 
     if (!city_building_ghost_mark_deleting(tile)) {
         city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
                 draw_top_overlay,
                 draw_ornaments_overlay,
                 draw_figures_overlay);
@@ -210,11 +208,8 @@ void city_with_overlay_draw(const map_tile *tile) {
         city_view_foreach_map_tile(draw_elevated_figures);
     } else {
         city_view_foreach_valid_map_tile(
-                nullptr,//draw_footprint,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
-//                draw_figures,
-//                deletion_draw_animations,
                 draw_elevated_figures_overlay);
     }
 }

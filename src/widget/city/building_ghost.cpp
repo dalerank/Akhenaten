@@ -28,6 +28,7 @@
 #include "scenario/property.h"
 #include "widget/city/bridges.h"
 #include "tile_draw.h"
+#include "ornaments.h"
 
 #define MAX_TILES 25
 
@@ -411,7 +412,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
 }
 
 static void draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
@@ -428,7 +429,7 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
     ImageDraw::isometric_top(image_id, x, y, color_mask);
 }
 static void draw_fountain_range(int x, int y, int grid_offset) {
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
 
 static void draw_warehouse(int image_id, int x, int y) {
@@ -544,14 +545,14 @@ static void draw_first_reservoir_range(int x, int y, int grid_offset) {
         reservoir_range_data.offsets[reservoir_range_data.total] = grid_offset;
         reservoir_range_data.total++;
     }
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
 static void draw_second_reservoir_range(int x, int y, int grid_offset) {
     for (int i = 0; i < reservoir_range_data.total; ++i) {
         if (reservoir_range_data.offsets[i] == grid_offset)
             return;
     }
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
 static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
     int map_x = tile->x - 1;

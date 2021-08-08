@@ -40,11 +40,9 @@
 #include "map/property.h"
 #include "city_draw.h"
 #include "game/state.h"
+#include "ornaments.h"
 
-//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
-
-static
-const int ADJACENT_OFFSETS_C3[2][4][7] = {
+static const int ADJACENT_OFFSETS_C3[2][4][7] = {
   {
     {
       OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2), OFFSET_C3(1, -2)
@@ -290,113 +288,40 @@ static bool is_drawable_farm_corner(int grid_offset) {
     return false;
 }
 
-static void draw_flattened_building_footprint(const building *b, int x, int y, int image_offset, color_t color_mask) {
-    int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY) + image_offset;
-    if (b->house_size)
-        image_base += 4;
+void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color_t color_mask) {
+    int image_base = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT) + image_offset;
 
-    if (b->size == 1)
-        ImageDraw::isometric_footprint_from_drawtile(image_base, x, y, color_mask);
-    else if (b->size == 2) {
-        const int x_tile_offset[] = {30, 0, 60, 30};
-        const int y_tile_offset[] = {-15, 0, 0, 15};
-        for (int i = 0; i < 4; i++) {
-            ImageDraw::isometric_footprint_from_drawtile(image_base + i, x + x_tile_offset[i], y + y_tile_offset[i],
-                                                         color_mask);
-        }
-    } else if (b->size == 3) {
-        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 3, 3, 3};
-        const int x_tile_offset[] = {60, 30, 90, 0, 60, 120, 30, 90, 60};
-        const int y_tile_offset[] = {-30, -15, -15, 0, 0, 0, 15, 15, 30};
-        for (int i = 0; i < 9; i++) {
-            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                         y + y_tile_offset[i], color_mask);
-        }
-    } else if (b->size == 4) {
-        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 3, 3, 3, 3, 3, 3};
-        const int x_tile_offset[] = {
-                90,
-                60, 120,
-                30, 90, 150,
-                0, 60, 120, 180,
-                30, 90, 150,
-                60, 120,
-                90
-        };
-        const int y_tile_offset[] = {
-                -45,
-                -30, -30,
-                -15, -15, -15,
-                0, 0, 0, 0,
-                15, 15, 15,
-                30, 30,
-                45
-        };
-        for (int i = 0; i < 16; i++) {
-            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                         y + y_tile_offset[i], color_mask);
-        }
-    } else if (b->size == 5) {
-        const int image_tile_offset[] = {0, 1, 2, 1, 3, 2, 1, 3, 3, 2, 1, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
-        const int x_tile_offset[] = {
-                120,
-                90, 150,
-                60, 120, 180,
-                30, 90, 150, 210,
-                0, 60, 120, 180, 240,
-                30, 90, 150, 210,
-                60, 120, 180,
-                90, 150,
-                120
-        };
-        const int y_tile_offset[] = {
-                -60,
-                -45, -45,
-                -30, -30, -30,
-                -15, -15, -15, -15,
-                0, 0, 0, 0, 0,
-                15, 15, 15, 15,
-                30, 30, 30,
-                45, 45,
-                60
-        };
-        for (int i = 0; i < 25; i++) {
-            ImageDraw::isometric_footprint_from_drawtile(image_base + image_tile_offset[i], x + x_tile_offset[i],
-                                                         y + y_tile_offset[i], color_mask);
+    for (int xx = 0; xx < size_x; xx++) {
+        for (int yy = 0; yy < size_y; yy++) {
+
+            int t_x = x + (30 * xx) + (30 * yy);
+            int t_y = y + (15 * xx) - (15 * yy);
+
+            // tile shape -- image offset
+            // (0 = top corner, 1 = left edge, 2 = right edge, 3 = any other case)
+            int shape_offset = 3;
+            if (xx == 0) {
+                shape_offset = 1;
+                if (yy == size_y - 1)
+                    shape_offset = 0;
+            } else if (yy == size_y - 1)
+                shape_offset = 2;
+
+            ImageDraw::isometric_footprint_from_drawtile(image_base + shape_offset, t_x, t_y, color_mask);
         }
     }
 }
-void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset) {
-    int building_id = map_building_at(grid_offset);
-    if (!building_id)
-        return;
-    building *b = building_get(building_id);
-    if (get_city_overlay()->show_building(b)) {
-        if (building_is_farm(b->type)) {
-            if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
-                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
-            else if (map_property_is_draw_tile(grid_offset))
-                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
-        } else
-            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
-    } else {
-        if (b->type == BUILDING_FESTIVAL_SQUARE)
-            return;
-        int draw = 1;
-        if (b->size == 3 && building_is_farm(b->type))
-            draw = is_drawable_farm_corner(grid_offset);
-        if (draw)
-            draw_flattened_building_footprint(b, x, y, image_offset, 0);
-    }
+void draw_flattened_footprint_building(const building *b, int x, int y, int image_offset, color_t color_mask) {
+    return (draw_flattened_footprint_anysize(x, y, b->size, b->size, image_offset, color_mask));
 }
 
 /////////
 
 void draw_footprint(int x, int y, int grid_offset) {
-    if (grid_offset < 0) {
-        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
-        return;
-    }
+    // black tile outside of map
+    if (grid_offset < 0)
+        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+
     building_construction_record_view_position(x, y, grid_offset);
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
@@ -436,7 +361,7 @@ void draw_footprint(int x, int y, int grid_offset) {
             map_image_set(grid_offset, image_id);
         }
         if (map_property_is_constructing(grid_offset))
-            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY);
+            image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
 
         ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
     }
@@ -455,6 +380,11 @@ void draw_top(int x, int y, int grid_offset) {
         color_mask = COLOR_MASK_RED;
 
     ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
+}
+void draw_ornaments(int x, int y, int grid_offset) {
+    // defined separately in ornaments.cpp
+    // cuz it's too much stuff.
+    draw_ornaments_and_animations(x, y, grid_offset);
 }
 void draw_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
@@ -477,14 +407,6 @@ void draw_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
-
-static bool should_draw_top_before_deletion(int grid_offset) {
-    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
-}
-void deletion_draw_top(int x, int y, int grid_offset) {
-    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
-        draw_top(x, y, grid_offset);
-}
 void draw_elevated_figures(int x, int y, int grid_offset) {
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
@@ -498,9 +420,17 @@ void draw_elevated_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
+
+static bool should_draw_top_before_deletion(int grid_offset) {
+    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
+}
+void deletion_draw_top(int x, int y, int grid_offset) {
+    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
+        draw_top(x, y, grid_offset);
+}
 void deletion_draw_figures_animations(int x, int y, int grid_offset) {
     if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_at(grid_offset)))
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED);
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_top(x, y, grid_offset);
@@ -553,6 +483,41 @@ void draw_top_overlay(int x, int y, int grid_offset) {
         }
     }
 }
+void draw_ornaments_overlay(int x, int y, int grid_offset) {
+    int b_id = map_building_at(grid_offset);
+    if (b_id) {
+        const building *b = building_at(grid_offset);
+        if (get_city_overlay()->show_building(b))
+            draw_ornaments(x, y, grid_offset);
+    } else
+        draw_ornaments(x, y, grid_offset);
+}
+void draw_figures_overlay(int x, int y, int grid_offset) {
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
+        if (!f->is_ghost && get_city_overlay()->show_figure(f))
+            f->city_draw_figure(x, y, 0);
+
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
+        else
+            figure_id = 0;
+    }
+}
+void draw_elevated_figures_overlay(int x, int y, int grid_offset) {
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id > 0) {
+        figure *f = figure_get(figure_id);
+        if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && get_city_overlay()->show_figure(f))
+            f->city_draw_figure(x, y, 0);
+
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
+        else
+            figure_id = 0;
+    }
+}
 
 static void draw_overlay_column(int x, int y, int height, int column_style) {
     int image_id = image_id_from_group(GROUP_OVERLAY_COLUMN);
@@ -587,6 +552,29 @@ static void draw_overlay_column(int x, int y, int height, int column_style) {
         ImageDraw::img_generic(image_id, x + 5, y - 8 - capital_height - 10 * (height - 1) + 13);
     }
 }
+void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset) {
+    int building_id = map_building_at(grid_offset);
+    if (!building_id)
+        return;
+    building *b = building_get(building_id);
+    if (get_city_overlay()->show_building(b)) {
+        if (building_is_farm(b->type)) {
+            if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
+                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
+            else if (map_property_is_draw_tile(grid_offset))
+                ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
+        } else
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
+    } else {
+        if (b->type == BUILDING_FESTIVAL_SQUARE)
+            return;
+        int draw = 1;
+        if (b->size == 3 && building_is_farm(b->type))
+            draw = is_drawable_farm_corner(grid_offset);
+        if (draw)
+            draw_flattened_footprint_building(b, x, y, image_offset, 0);
+    }
+}
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
     building *b = building_at(grid_offset);
     if (get_city_overlay()->type == OVERLAY_PROBLEMS)
@@ -603,33 +591,6 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
             if (draw)
                 draw_overlay_column(x, y, column_height, get_city_overlay()->column_type);
         }
-    }
-}
-
-void draw_figures_overlay(int x, int y, int grid_offset) {
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id) {
-        figure *f = figure_get(figure_id);
-        if (!f->is_ghost && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(x, y, 0);
-
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
-    }
-}
-void draw_elevated_figures_overlay(int x, int y, int grid_offset) {
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id > 0) {
-        figure *f = figure_get(figure_id);
-        if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(x, y, 0);
-
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
     }
 }
 

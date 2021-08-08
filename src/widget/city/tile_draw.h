@@ -3,11 +3,12 @@
 
 #include "city/view.h"
 #include "graphics/color.h"
+#include "building/building.h"
 
 void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, int highlighted_formation);
 
-int get_farm_image(int grid_offset);
-void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);
+void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color_t color_mask);
+void draw_flattened_footprint_building(const building *b, int x, int y, int image_offset, color_t color_mask);
 
 void draw_footprint(int x, int y, int grid_offset);
 void draw_top(int x, int y, int grid_offset);
