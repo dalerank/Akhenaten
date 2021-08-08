@@ -16,7 +16,6 @@
 #include "map/property.h"
 #include "sound/city.h"
 #include "sound/effect.h"
-#include "widget/city_figure.h"
 #include "widget/map_editor_tool.h"
 
 static struct {

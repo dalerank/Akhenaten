@@ -471,9 +471,10 @@ set(SOUND_FILES
 )
 set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/city.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_bridge.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_building_ghost.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_figure.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/city_figure.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_education.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_entertainment.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city_overlay_health.cpp
@@ -492,7 +493,6 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/editor.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/extra.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.cpp
-    ${PROJECT_SOURCE_DIR}/src/widget/city_animations.cpp
 )
 set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/advisors.cpp

@@ -31,9 +31,8 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "sound/city.h"
-#include "widget/city_bridge.h"
-#include "widget/city_building_ghost.h"
-#include "widget/city_figure.h"
+#include "widget/city/bridges.h"
+#include "widget/city/building_ghost.h"
 
 //#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
 
@@ -373,7 +372,7 @@ static void draw_figures(int x, int y, int grid_offset) {
 #include "graphics/text.h"
 #include "core/string.h"
 #include "map/property.h"
-#include "city_animations.h"
+#include "widget/city/ornaments.h"
 
 static void print_temp_sum(int x, int y, int arr[], int n, color_t color = COLOR_RED) {
     uint8_t str[10];
@@ -643,7 +642,7 @@ static void deletion_draw_figures_animations(int x, int y, int grid_offset) {
         draw_top(x, y, grid_offset);
 
     draw_figures(x, y, grid_offset);
-    draw_animation(x, y, grid_offset);
+    draw_ornaments(x, y, grid_offset);
 }
 static void deletion_draw_remaining(int x, int y, int grid_offset) {
     draw_elevated_figures(x, y, grid_offset);
@@ -674,7 +673,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile(
                 draw_top,
-                draw_animation,
+                draw_ornaments,
                 draw_figures
         );
         if (!selected_figure_id)

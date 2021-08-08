@@ -1,4 +1,4 @@
-#include "city_building_ghost.h"
+#include "building_ghost.h"
 
 #include "building/construction.h"
 #include "building/count.h"
@@ -26,7 +26,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 #include "scenario/property.h"
-#include "widget/city_bridge.h"
+#include "widget/city/bridges.h"
 
 #define MAX_TILES 25
 

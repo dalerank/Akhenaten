@@ -14,7 +14,7 @@
 #include <city/buildings.h>
 #include <city/ratings.h>
 #include <city/labor.h>
-#include "city_animations.h"
+#include "ornaments.h"
 #include "building/building.h"
 
 static bool drawing_building_as_deleted(building *b) {
@@ -354,7 +354,7 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     }
 }
 
-void draw_animation(int x, int y, int grid_offset) {
+void draw_ornaments(int x, int y, int grid_offset) {
     int image_id = map_image_at(grid_offset);
     building *b = building_get(map_building_at(grid_offset));
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
@@ -366,14 +366,12 @@ void draw_animation(int x, int y, int grid_offset) {
     if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset))
         color_mask = COLOR_MASK_RED;
 
-
     // TODO: bridges
     if (!map_property_is_draw_tile(grid_offset)) {
 //    if (map_sprite_bridge_at(grid_offset))
 //        city_draw_bridge(x, y, grid_offset);
         return;
     }
-
 
     switch (b->type) {
         case BUILDING_BURNING_RUIN:
