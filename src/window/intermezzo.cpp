@@ -101,23 +101,23 @@ static void draw_background(void) {
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
         if (scenario_is_custom())
-            image_draw(image_base + 1, x_offset, y_offset);
+            ImageDraw::img_generic(image_base + 1, x_offset, y_offset);
         else {
             if (GAME_ENV == ENGINE_ENV_C3)
-                image_draw(image_base + 1 + 2 * mission, x_offset, y_offset);
+                ImageDraw::img_generic(image_base + 1 + 2 * mission, x_offset, y_offset);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                image_draw(image_base + 1 + (mission >= 20), x_offset, y_offset);
+                ImageDraw::img_generic(image_base + 1 + (mission >= 20), x_offset, y_offset);
         }
     } else if (data.type == INTERMEZZO_FIRED)
-        image_draw(image_base, x_offset, y_offset);
+        ImageDraw::img_generic(image_base, x_offset, y_offset);
     else if (data.type == INTERMEZZO_WON) {
         if (scenario_is_custom())
-            image_draw(image_base + 2, x_offset, y_offset);
+            ImageDraw::img_generic(image_base + 2, x_offset, y_offset);
         else
             if (GAME_ENV == ENGINE_ENV_C3)
-                image_draw(image_base + 2 + 2 * mission, x_offset, y_offset);
+                ImageDraw::img_generic(image_base + 2 + 2 * mission, x_offset, y_offset);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                image_draw(image_base, x_offset, y_offset);
+                ImageDraw::img_generic(image_base, x_offset, y_offset);
     }
 }
 

@@ -239,7 +239,7 @@ static int has_deleted_building(int grid_offset) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
-    building *b = building_get(map_building_at(grid_offset));
+    building *b = building_at(grid_offset);
     b = b->main();
     return b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset));
 }
@@ -248,51 +248,21 @@ static int terrain_on_water_overlay(void) {
     return
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
             TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_AQUEDUCT | TERRAIN_ELEVATION |
-            TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
+            TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_DUNE | TERRAIN_REEDS;
 }
 static void draw_footprint_water(int x, int y, int grid_offset) {
-//    if (!map_property_is_draw_tile(grid_offset))
-//        return;
+    // roads, bushes, dunes, etc. are drawn normally
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-//        if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
-//            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
-//        else
-        if (building_get(map_building_at(grid_offset))->type != BUILDING_ROADBLOCK)
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0);
-        else
+        // (except for roadblocks on roads, draw these as flattened tiles)
+        if (building_at(grid_offset)->type == BUILDING_ROADBLOCK)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+        else if (map_property_is_draw_tile(grid_offset))
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
-//    else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
-//        // display groundwater
-//        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-//        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0);
-//    }
-//    else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-//        building *b = building_get(map_building_at(grid_offset));
-//        int terrain = map_terrain_get(grid_offset);
-//        if (b->id && (b->has_well_access || (b->house_size && b->has_water_access)))
-//            terrain |= TERRAIN_FOUNTAIN_RANGE;
-//
-//        int image_offset;
-//        switch (terrain & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
-//            case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
-//                image_offset = 24;
-//                break;
-//            case TERRAIN_GROUNDWATER:
-//                image_offset = 8;
-//                break;
-//            case TERRAIN_FOUNTAIN_RANGE:
-//                image_offset = 16;
-//                break;
-//            default:
-//                image_offset = 0;
-//                break;
-//        }
-//        city_with_overlay_draw_building_footprint(x, y, grid_offset, image_offset);
-//    }
     else {
         int terrain = map_terrain_get(grid_offset);
-        building *b = building_get(map_building_at(grid_offset));
+        building *b = building_at(grid_offset);
+        // draw houses, wells and water supplies either fully or flattened
         if (terrain & TERRAIN_BUILDING &&
             (building_is_house(b->type))
             || b->type == BUILDING_WELL
@@ -300,6 +270,7 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
             if (map_property_is_draw_tile(grid_offset))
                 city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         } else {
+            // draw groundwater levels
             int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
             switch (map_terrain_get(grid_offset) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
                 case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
@@ -309,11 +280,8 @@ static void draw_footprint_water(int x, int y, int grid_offset) {
                 case TERRAIN_GROUNDWATER:
                     image_id += 1;
                     break;
-//            default:
-//                image_id = map_image_at(grid_offset);
-//                break;
             }
-            image_draw_isometric_footprint(image_id, x, y, 0);
+            ImageDraw::isometric_footprint(image_id, x, y, 0);
         }
     }
 }
@@ -325,7 +293,7 @@ static void draw_top_water(int x, int y, int grid_offset) {
             color_t color_mask = 0;
             if (map_property_is_deleted(grid_offset) && map_property_multi_tile_size(grid_offset) == 1)
                 color_mask = COLOR_MASK_RED;
-            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         }
     } else if (map_building_at(grid_offset))
         city_with_overlay_draw_building_top(x, y, grid_offset);
@@ -379,21 +347,21 @@ static void draw_footprint_desirability(int x, int y, int grid_offset) {
         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset))
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display empty land/groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         if (has_deleted_building(grid_offset))
             color_mask = COLOR_MASK_RED;
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_footprint_from_draw_tile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-                                                      color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
+                                                     color_mask);
     } else
-        image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 static void draw_top_desirability(int x, int y, int grid_offset) {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
@@ -401,7 +369,7 @@ static void draw_top_desirability(int x, int y, int grid_offset) {
         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset))
-            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // groundwater, no top needed
@@ -410,10 +378,10 @@ static void draw_top_desirability(int x, int y, int grid_offset) {
             color_mask = COLOR_MASK_RED;
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
-        image_draw_isometric_top_from_draw_tile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-                                                color_mask);
+        ImageDraw::isometric_top_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
+                                               color_mask);
     } else
-        image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
+        ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 const city_overlay *city_overlay_for_desirability(void) {
     static city_overlay overlay = {

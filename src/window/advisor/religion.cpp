@@ -64,7 +64,7 @@ static int get_festival_advice(void) {
 
 static void draw_festival_info(int y_offset) {
     inner_panel_draw(48, 252 + y_offset, 34, 6);
-    image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
+    ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
 //    lang_text_draw(58, 17, 52, 224 + y_offset, FONT_LARGE_BLACK);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE);
@@ -127,9 +127,9 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
     }
 
     for (int i = 0; i < city_god_wrath_bolts(god) / 10; i++)
-        image_draw(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+        ImageDraw::img_generic(image_id_from_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
     for (int i = 0; i < city_god_happy_angels(god) / 10; i++)
-        image_draw(image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
+        ImageDraw::img_generic(image_id_from_group(GROUP_GOD_ANGEL), 10 * i + width + 460, y_offset - 4);
 }
 
 static int draw_background(void) {
@@ -143,7 +143,7 @@ static int draw_background(void) {
         lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
     }
 
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 
     lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
 

@@ -299,6 +299,13 @@ int building_find(int type);
 building *building_get(int id);
 building *building_create(int type, int x, int y);
 
+building *building_at(int grid_offset);
+building *building_at(int x, int y);
+building *building_at(map_point point);
+bool building_exists_at(int grid_offset, building *b);
+bool building_exists_at(int x, int y, building *b);
+bool building_exists_at(map_point point, building *b);
+
 void building_clear_all(void);
 //void building_totals_add_corrupted_house(int unfixable);
 

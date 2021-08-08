@@ -194,12 +194,12 @@ static void init(void) {
 
 
 void window_advisors_draw_dialog_background(void) {
-    image_draw_fullscreen_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
+    ImageDraw::img_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
     if (GAME_ENV == ENGINE_ENV_C3)
-        image_draw(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
+        ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        image_draw(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
+        ImageDraw::img_generic(image_id_from_group(GROUP_MENU_ADVISOR_LAYOUT), 0, 432);
 
     for (int i = 0; i < 14; i++) {
         int selected_offset = 0;
@@ -208,7 +208,7 @@ void window_advisors_draw_dialog_background(void) {
                 break;
             if (current_advisor && i == (current_advisor % 13) - 1)
                 selected_offset = 13;
-            image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
+            ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
         }
 //        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
 //            image_buttons_draw(0, 440, advisor_buttons_PH, 14);

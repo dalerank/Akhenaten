@@ -1,3 +1,5 @@
+#include <widget/city/building_ghost.h>
+#include <widget/overlays/city_overlay.h>
 #include "city.h"
 
 #include "building/construction.h"
@@ -26,8 +28,7 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
-#include "widget/city_with_overlay.h"
-#include "widget/city_without_overlay.h"
+#include "widget/city/tile_draw.h"
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
@@ -99,6 +100,68 @@ static int adjust_offset_for_orientation(int grid_offset, int size) {
     }
 }
 
+void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
+    int highlighted_formation = 0;
+    if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
+        highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
+        if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle)
+            highlighted_formation = 0;
+    }
+    init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
+
+//    city_view_foreach_map_tile(draw_outside_map);
+//    int x;
+//    int y;
+//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
+//    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
+
+    // do this for EVERY tile (not just valid ones)
+    // to recalculate the pixel lookup offsets
+    city_view_foreach_map_tile(draw_footprint);
+
+    if (!city_building_ghost_mark_deleting(tile)) {
+        city_view_foreach_map_tile(draw_footprint);
+        city_view_foreach_valid_map_tile(
+                draw_top,
+                draw_ornaments,
+                draw_figures);
+        if (!selected_figure_id)
+            city_building_ghost_draw(tile);
+    } else {
+        city_view_foreach_valid_map_tile(
+                deletion_draw_top,
+                deletion_draw_figures_animations,
+                draw_elevated_figures);
+    }
+
+    // finally, draw these on top of everything else
+    city_view_foreach_valid_map_tile(
+            draw_debug,
+            draw_debug_figures);
+}
+void widget_city_draw_with_overlay(const map_tile *tile) {
+    if (!select_city_overlay())
+        return;
+
+    // do this for EVERY tile (not just valid ones)
+    // to recalculate the pixel lookup offsets
+    city_view_foreach_map_tile(draw_footprint_overlay);
+
+    if (!city_building_ghost_mark_deleting(tile)) {
+        city_view_foreach_valid_map_tile(
+                draw_top_overlay,
+                draw_ornaments_overlay,
+                draw_figures_overlay);
+        city_building_ghost_draw(tile);
+        city_view_foreach_map_tile(draw_elevated_figures);
+    } else {
+        city_view_foreach_valid_map_tile(
+                deletion_draw_top,
+                deletion_draw_figures_animations,
+                draw_elevated_figures_overlay);
+    }
+}
+
 void widget_city_draw(void) {
     if (config_get(CONFIG_UI_ZOOM)) {
         update_zoom_level();
@@ -107,16 +170,16 @@ void widget_city_draw(void) {
     set_city_scaled_clip_rectangle();
 
     if (game_state_overlay())
-        city_with_overlay_draw(&data.current_tile);
+        widget_city_draw_with_overlay(&data.current_tile);
     else
-        city_without_overlay_draw(0, 0, &data.current_tile);
+        widget_city_draw_without_overlay(0, 0, &data.current_tile);
 
     graphics_set_active_canvas(CANVAS_UI);
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
     set_city_scaled_clip_rectangle();
 
-    city_without_overlay_draw(figure_id, coord, &data.current_tile);
+    widget_city_draw_without_overlay(figure_id, coord, &data.current_tile);
 
     graphics_reset_clip_rectangle();
 }
@@ -514,7 +577,7 @@ void widget_city_get_tooltip(tooltip_context *c) {
     // overlay tooltips
     if (overlay != OVERLAY_NONE) {
         c->text_group = 66;
-        c->text_id = city_with_overlay_get_tooltip_text(c, grid_offset);
+        c->text_id = widget_city_overlay_get_tooltip_text(c, grid_offset);
         if (c->text_id) {
             c->type = TOOLTIP_OVERLAY;
             c->high_priority = 1;

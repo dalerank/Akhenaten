@@ -383,7 +383,7 @@ int map_floodplain_rebuild_shoreorder() {
             if ((order == 1 && map_terrain_is(current_tile, TERRAIN_WATER) && !map_terrain_is(current_tile, TERRAIN_FLOODPLAIN)) || // loop through every water tile
                 (order > 1 && // or, through every floodplain tile of the previous round
                  map_terrain_is(current_tile, TERRAIN_FLOODPLAIN) &&
-                 map_get_shoreorder(current_tile) == order - 1)) {
+                        map_get_floodplain_shoreorder(current_tile) == order - 1)) {
 
                 // loop through for a 3x3 area around the tile
                 int x_min = all_river_tiles_x[i] - 1;
@@ -407,7 +407,7 @@ int map_floodplain_rebuild_shoreorder() {
 //                                map_grid_set(&terrain_floodplain_fertility, grid_offset, this_fert);
 
                             // only do new order cache tiles
-                            if (map_get_shoreorder(grid_offset) == 0) {
+                            if (map_get_floodplain_shoreorder(grid_offset) == 0) {
                                 map_grid_set(&terrain_floodplain_shoreorder, grid_offset, order);
 
                                 // add current tile to temp list of offsets
@@ -442,7 +442,7 @@ int map_floodplain_rebuild_shoreorder() {
     int temp_cache_howmany = 0;
     for (int i = 0; i < floodplain_total_tiles; i++) {
         int offset = all_floodplain_tiles[i];
-        if (map_get_shoreorder(offset) == 0) {
+        if (map_get_floodplain_shoreorder(offset) == 0) {
             map_grid_set(&terrain_floodplain_shoreorder, offset, 30);
             // add current tile to temp list of offsets
             temp_cache_buffer[temp_cache_howmany] = offset;
@@ -470,10 +470,10 @@ int map_floodplain_rebuild_shoreorder() {
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-uint8_t map_get_shoreorder(int grid_offset) {
+uint8_t map_get_floodplain_shoreorder(int grid_offset) {
     return map_grid_get(&terrain_floodplain_shoreorder, grid_offset);
 }
-uint8_t map_get_growth(int grid_offset) {
+uint8_t map_get_floodplain_growth(int grid_offset) {
     return map_grid_get(&terrain_floodplain_growth, grid_offset);
 }
 uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
@@ -482,7 +482,7 @@ uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
     // calculate and add malus
     int malus = map_grid_get(&terrain_floodplain_soil_depletion, grid_offset);
     if (malus != 0)
-        fert_value += map_grid_get(&terrain_floodplain_soil_depletion, grid_offset);
+        fert_value += malus;
 
     return max(0, min(99, fert_value));
 }
@@ -492,7 +492,7 @@ uint8_t map_get_fertility_average(int grid_offset) {
           + map_get_fertility(grid_offset + 228) + map_get_fertility(grid_offset + 229) + map_get_fertility(grid_offset + 230)
           + map_get_fertility(grid_offset + 228 + 228) + map_get_fertility(grid_offset + 229 + 228) + map_get_fertility(grid_offset + 230 + 228)) / 9;
 }
-void map_set_growth(int grid_offset, int growth) {
+void map_set_floodplain_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6)
         map_grid_set(&terrain_floodplain_growth, grid_offset, growth);
 }

@@ -1,3 +1,4 @@
+#include <widget/overlays/city_overlay.h>
 #include "city.h"
 
 #include "building/construction.h"
@@ -24,7 +25,6 @@
 #include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
-#include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
 #include "widget/sidebar/city.h"
 #include "window/advisors.h"
@@ -91,7 +91,7 @@ static void draw_cancel_construction(void) {
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
-    image_draw(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
     city_view_dirty = 1;
 }
 static void draw_foreground(void) {
@@ -124,10 +124,10 @@ static void show_overlay(int overlay) {
     exit_military_command();
     if (game_state_overlay() == overlay)
         game_state_set_overlay(OVERLAY_NONE);
-    else {
+    else
         game_state_set_overlay(overlay);
-    }
-    city_with_overlay_update();
+
+    select_city_overlay();
     window_invalidate();
 }
 static void cycle_legion(void) {
@@ -161,12 +161,17 @@ static void toggle_pause(void) {
 }
 
 int debug_range_1 = 0;
+int debug_range_2 = 0;
 
 static void handle_hotkeys(const hotkeys *h) {
-    if (h->decrease_game_speed)
+    if (h->debug_1_up)
         debug_range_1+=1;
-    if (h->increase_game_speed)
+    if (h->debug_1_down)
         debug_range_1-=1;
+    if (h->debug_2_up)
+        debug_range_2+=1;
+    if (h->debug_2_down)
+        debug_range_2-=1;
 //    if (debug_range_1 < 0)
 //        debug_range_1 = 0;
 //    if (debug_range_1 > 20)
@@ -175,19 +180,19 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->toggle_pause)
         toggle_pause();
 
-//    if (h->decrease_game_speed) {
-//        setting_decrease_game_speed();
-//    }
-//    if (h->increase_game_speed) {
-//        setting_increase_game_speed();
-//    }
+    if (h->decrease_game_speed) {
+        setting_decrease_game_speed();
+    }
+    if (h->increase_game_speed) {
+        setting_increase_game_speed();
+    }
     if (h->show_overlay)
         show_overlay(h->show_overlay);
 
     if (h->toggle_overlay) {
         exit_military_command();
         game_state_toggle_overlay();
-        city_with_overlay_update();
+        select_city_overlay();
         window_invalidate();
     }
     if (h->show_advisor)

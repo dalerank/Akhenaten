@@ -67,7 +67,8 @@ static void draw_housing_table() {
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE);
 
     for (int i = 0; i <= 3; i++) {
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54,
+                               y_offset + 260 + (23 * i));
         text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK);
     }
@@ -80,8 +81,8 @@ static int draw_background(void) {
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     inner_panel_draw(24, 60, 32, 16);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 555, 265);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 555, 265);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);

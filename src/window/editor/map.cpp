@@ -34,7 +34,7 @@ static void draw_cancel_construction(void) {
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
-    image_draw(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
     city_view_dirty = 1;
 }
 

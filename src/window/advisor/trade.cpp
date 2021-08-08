@@ -60,7 +60,7 @@ static int draw_background(void) {
     city_resource_determine_available();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
     int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
@@ -76,7 +76,7 @@ static void draw_foreground(void) {
         int y_offset = 22 * (i - scrollbar.scroll_position);
         int resource = list->items[i];
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
+        ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
 
         font_t font_color = FONT_NORMAL_WHITE;
         if (city_resource_is_mothballed(resource))

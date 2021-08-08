@@ -17,7 +17,7 @@ static void draw_logo(void) {
     graphics_clear_screens();
 
     graphics_in_dialog();
-    image_draw(image_id_from_group(GROUP_LOGO), 0, 0);
+    ImageDraw::img_generic(image_id_from_group(GROUP_LOGO), 0, 0);
     lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }

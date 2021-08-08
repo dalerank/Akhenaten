@@ -96,7 +96,8 @@ void city_view_save_scenario_state(buffer *camera);
 void city_view_load_scenario_state(buffer *camera);
 
 void city_view_foreach_map_tile(map_callback *callback);
-void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3);
+void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2 = nullptr, map_callback *callback3 = nullptr,
+                                      map_callback *callback4 = nullptr, map_callback *callback5 = nullptr, map_callback *callback6 = nullptr);
 void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_callback *callback);
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles,
                                     int height_tiles, map_callback *callback);

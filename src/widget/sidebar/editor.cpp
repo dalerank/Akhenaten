@@ -133,7 +133,7 @@ static void draw_status(void) {
 void widget_sidebar_editor_draw_background(void) {
     int image_base = image_id_from_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = sidebar_common_get_x_offset_expanded();
-    image_draw(image_base, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+    ImageDraw::img_generic(image_base, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     draw_buttons();
     widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();

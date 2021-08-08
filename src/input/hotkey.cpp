@@ -284,12 +284,27 @@ static void add_definition(const hotkey_mapping *mapping) {
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_ROADBLOCK;
             break;
+        case HOTKEY_DEBUG_1_UP:
+            def->action = &data.hotkey_state.debug_1_up;
+            def->repeatable = 1;
+            break;
+        case HOTKEY_DEBUG_1_DOWN:
+            def->action = &data.hotkey_state.debug_1_down;
+            def->repeatable = 1;
+            break;
+        case HOTKEY_DEBUG_2_UP:
+            def->action = &data.hotkey_state.debug_2_up;
+            def->repeatable = 1;
+            break;
+        case HOTKEY_DEBUG_2_DOWN:
+            def->action = &data.hotkey_state.debug_2_down;
+            def->repeatable = 1;
+            break;
         default:
             def->action = 0;
     }
     if (def->action)
         data.num_definitions++;
-
 }
 
 static void add_arrow(const hotkey_mapping *mapping) {
@@ -367,9 +382,8 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings) {
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
             action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
             add_arrow(&mappings[i]);
-        } else {
+        } else
             add_definition(&mappings[i]);
-        }
     }
 }
 
@@ -393,13 +407,11 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
         arrow_definition *arrow = &data.arrows[i];
         if (arrow->key == key)
             arrow->action(1);
-
     }
     for (int i = 0; i < data.num_definitions; i++) {
         hotkey_definition *def = &data.definitions[i];
         if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable))
             *(def->action) = def->value;
-
     }
 }
 

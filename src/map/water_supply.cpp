@@ -108,7 +108,7 @@ static void fill_aqueducts_from_offset(int grid_offset) {
         for (int i = 0; i < 4; i++) {
             const int ADJACENT_OFFSETS[] = {-grid_size[GAME_ENV], 1, grid_size[GAME_ENV], -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
-            building *b = building_get(map_building_at(new_offset));
+            building *b = building_at(new_offset);
             if (b->id && b->type == BUILDING_RESERVOIR) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);

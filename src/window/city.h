@@ -10,5 +10,6 @@ void window_city_show(void);
 void window_city_military_show(int legion_formation_id);
 
 extern int debug_range_1;
+extern int debug_range_2;
 
 #endif // WINDOW_CITY_H

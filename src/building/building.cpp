@@ -21,6 +21,7 @@
 #include "menu.h"
 
 #include <string.h>
+#include <map/building.h>
 
 static building all_buildings[5000];
 
@@ -272,6 +273,52 @@ building *building_create(int type, int x, int y) {
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
     return b;
+}
+
+building *building_at(int grid_offset) {
+    return building_get(map_building_at(grid_offset));
+}
+building *building_at(int x, int y) {
+    return building_get(map_building_at(map_grid_offset(x, y)));
+}
+building *building_at(map_point point) {
+    return building_get(map_building_at(map_grid_offset(point.x, point.y)));
+}
+bool building_exists_at(int grid_offset, building *b) {
+    b = nullptr;
+    int b_id = map_building_at(grid_offset);
+    if (b_id > 0) {
+        b = building_get(b_id);
+        if (b->state > BUILDING_STATE_UNUSED)
+            return true;
+        else
+            b = nullptr;
+    }
+    return false;
+}
+bool building_exists_at(int x, int y, building *b) {
+    b = nullptr;
+    int b_id = map_building_at(map_grid_offset(x, y));
+    if (b_id > 0) {
+        b = building_get(b_id);
+        if (b->state > BUILDING_STATE_UNUSED)
+            return true;
+        else
+            b = nullptr;
+    }
+    return false;
+}
+bool building_exists_at(map_point point, building *b) {
+    b = nullptr;
+    int b_id = map_building_at(map_grid_offset(point.x, point.y));
+    if (b_id > 0) {
+        b = building_get(b_id);
+        if (b->state > BUILDING_STATE_UNUSED)
+            return true;
+        else
+            b = nullptr;
+    }
+    return false;
 }
 
 building *building::main() {

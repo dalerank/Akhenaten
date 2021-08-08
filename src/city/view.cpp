@@ -558,67 +558,41 @@ void city_view_foreach_map_tile(map_callback *callback) {
         y_view++;
     }
 }
-void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3) {
+void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3,
+                                      map_callback *callback4, map_callback *callback5, map_callback *callback6) {
     int odd = 0;
     int y_view = data.camera.tile_internal.y - 8;
     int y_graphic = data.viewport.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel_offset_internal.y;
     int x_graphic, x_view;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (y_view >= 0 && y_view < MAP_TILE_UPPER_LIMIT_Y()) {
-            if (callback1) {
-                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
-                if (odd)
-                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
-                else {
-                    x_graphic += data.viewport.x;
-                }
-                x_view = data.camera.tile_internal.x - 4;
-                for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (x_view >= 0 && x_view < MAP_TILE_UPPER_LIMIT_X()) {
-                        int grid_offset = view_tile_to_grid_offset_lookup[x_view][y_view];
-                        if (grid_offset >= 0)
+
+            x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
+            if (odd)
+                x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
+            else
+                x_graphic += data.viewport.x;
+            x_view = data.camera.tile_internal.x - 4;
+            for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
+                if (x_view >= 0 && x_view < MAP_TILE_UPPER_LIMIT_X()) {
+                    int grid_offset = view_tile_to_grid_offset_lookup[x_view][y_view];
+                    if (grid_offset >= 0) {
+                        if (callback1)
                             callback1(x_graphic, y_graphic, grid_offset);
-
-                    }
-                    x_graphic += TILE_WIDTH_PIXELS;
-                    x_view++;
-                }
-            }
-            if (callback2) {
-                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
-                if (odd)
-                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
-                else
-                    x_graphic += data.viewport.x;
-                x_view = data.camera.tile_internal.x - 4;
-                for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (x_view >= 0 && x_view < MAP_TILE_UPPER_LIMIT_X()) {
-                        int grid_offset = view_tile_to_grid_offset_lookup[x_view][y_view];
-                        if (grid_offset >= 0)
+                        if (callback2)
                             callback2(x_graphic, y_graphic, grid_offset);
-                    }
-                    x_graphic += TILE_WIDTH_PIXELS;
-                    x_view++;
-                }
-            }
-            if (callback3) {
-                x_graphic = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
-                if (odd)
-                    x_graphic += data.viewport.x - HALF_TILE_WIDTH_PIXELS;
-                else {
-                    x_graphic += data.viewport.x;
-                }
-                x_view = data.camera.tile_internal.x - 4;
-                for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                    if (x_view >= 0 && x_view < MAP_TILE_UPPER_LIMIT_X()) {
-                        int grid_offset = view_tile_to_grid_offset_lookup[x_view][y_view];
-                        if (grid_offset >= 0)
+                        if (callback3)
                             callback3(x_graphic, y_graphic, grid_offset);
-
+                        if (callback4)
+                            callback4(x_graphic, y_graphic, grid_offset);
+                        if (callback5)
+                            callback5(x_graphic, y_graphic, grid_offset);
+                        if (callback6)
+                            callback6(x_graphic, y_graphic, grid_offset);
                     }
-                    x_graphic += TILE_WIDTH_PIXELS;
-                    x_view++;
                 }
+                x_graphic += TILE_WIDTH_PIXELS;
+                x_view++;
             }
         }
         odd = 1 - odd;

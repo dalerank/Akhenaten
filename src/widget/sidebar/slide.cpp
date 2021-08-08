@@ -52,8 +52,8 @@ static void draw_sliding_foreground(void) {
 
         int s_start = s_end - ceil((float) s_end / (float) block_width) * block_width;
         for (int i = 0; s_start + i * block_width < s_end; i++)
-            image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 
     data.back_sidebar_draw();

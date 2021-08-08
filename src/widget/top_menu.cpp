@@ -225,27 +225,27 @@ static void refresh_background(void) {
 
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 0; i * block_width < s_width; i++)
-            image_draw(image_base + i % 8, i * block_width, 0);
+            ImageDraw::img_generic(image_base + i % 8, i * block_width, 0);
 
         // black panels for funds/pop/time
         if (s_width < 800)
-            image_draw(image_base + 14, 336, 0);
+            ImageDraw::img_generic(image_base + 14, 336, 0);
         else if (s_width < 1024) {
-            image_draw(image_base + 14, 336, 0);
-            image_draw(image_base + 14, 456, 0);
-            image_draw(image_base + 14, 648, 0);
+            ImageDraw::img_generic(image_base + 14, 336, 0);
+            ImageDraw::img_generic(image_base + 14, 456, 0);
+            ImageDraw::img_generic(image_base + 14, 648, 0);
         } else {
-            image_draw(image_base + 14, 480, 0);
-            image_draw(image_base + 14, 624, 0);
-            image_draw(image_base + 14, 840, 0);
+            ImageDraw::img_generic(image_base + 14, 480, 0);
+            ImageDraw::img_generic(image_base + 14, 624, 0);
+            ImageDraw::img_generic(image_base + 14, 840, 0);
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         block_width = 96;
         int s_end = s_width - 1000 - 24 + city_view_is_sidebar_collapsed() * (162 - 18);
         int s_start = s_end - ceil((float) s_end / (float) block_width) * block_width;
         for (int i = 0; s_start + i * block_width < s_end; i++)
-            image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_start + (i * block_width), 0);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 8, s_end, 0);
     }
 }
 void widget_top_menu_draw(int force) {
@@ -274,10 +274,12 @@ void widget_top_menu_draw(int force) {
                                             FONT_NORMAL_GREEN, 0);
         // Orientation icon
         if (orientation_button_pressed) {
-            image_draw(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, data.offset_rotate, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3,
+                                   data.offset_rotate, 0);
             orientation_button_pressed--;
         } else
-            image_draw(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, data.offset_rotate, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state,
+                                   data.offset_rotate, 0);
     }
     if (s_width < 800) {
         if (GAME_ENV == ENGINE_ENV_C3) {

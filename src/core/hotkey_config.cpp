@@ -80,6 +80,11 @@ static const char *ini_keys[] = {
         "resize_to_1024",
         "save_screenshot",
         "save_city_screenshot",
+        //
+        "debug_range1_up",
+        "debug_range1_down",
+        "debug_range2_up",
+        "debug_range2_down"
 };
 
 static struct {
@@ -176,6 +181,11 @@ void init_defaults(void) {
     set_mapping(KEY_F12, KEY_MOD_NONE, HOTKEY_SAVE_SCREENSHOT);
     set_mapping(KEY_F12, KEY_MOD_ALT, HOTKEY_SAVE_SCREENSHOT); // mac specific
     set_mapping(KEY_F12, KEY_MOD_CTRL, HOTKEY_SAVE_CITY_SCREENSHOT);
+    //
+    set_mapping(KEY_PAGEUP, KEY_MOD_CTRL, HOTKEY_DEBUG_1_UP);
+    set_mapping(KEY_PAGEUP, KEY_MOD_CTRL, HOTKEY_DEBUG_1_DOWN);
+    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_2_UP);
+    set_mapping(KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_2_DOWN);
 }
 
 const hotkey_mapping *hotkey_for_action(int action, int index) {

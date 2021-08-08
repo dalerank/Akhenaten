@@ -259,7 +259,7 @@ int figure::figure_rioter_collapse_building() {
         if (!map_building_at(grid_offset))
             continue;
 
-        building *b = building_get(map_building_at(grid_offset));
+        building *b = building_at(grid_offset);
         switch (b->type) {
             case BUILDING_WAREHOUSE_SPACE:
             case BUILDING_WAREHOUSE:

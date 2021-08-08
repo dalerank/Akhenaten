@@ -1157,7 +1157,7 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
     if (building_is_floodplain_farm(b)) {
         for (int _y = b->y; _y < b->y + b->size; _y++)
             for (int _x = b->x; _x < b->x + b->size; _x++)
-                map_set_growth(map_grid_offset(_x, _y), 0);
+                map_set_floodplain_growth(map_grid_offset(_x, _y), 0);
     }
     return true;
 }

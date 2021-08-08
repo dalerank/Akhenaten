@@ -36,11 +36,11 @@ static void draw_rating_column(int x_offset, int y_offset, int value, int has_re
 //        if (value < 30)
 //            has_reached = 0;
     }
-    image_draw(image_base, x_offset - 4, y);
+    ImageDraw::img_generic(image_base, x_offset - 4, y);
     for (int i = 0; i < 2 * value_to_draw; i++)
-        image_draw(image_base + 1, x_offset + 11, --y);
+        ImageDraw::img_generic(image_base + 1, x_offset + 11, --y);
     if (has_reached)
-        image_draw(image_base + 2, x_offset - 6, y - 50);
+        ImageDraw::img_generic(image_base + 2, x_offset - 6, y - 50);
 }
 
 static void draw_rating(int id, int value, int open_play, int goal) {
@@ -58,7 +58,7 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 
 static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
     if (!winning_population() || scenario_is_open_play())
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
@@ -66,7 +66,7 @@ static int draw_background(void) {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }
-    image_draw(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
 
     int open_play = scenario_is_open_play();
 

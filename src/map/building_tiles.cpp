@@ -1,3 +1,5 @@
+#include <widget/city/tile_draw.h>
+#include <widget/city/ornaments.h>
 #include "building_tiles.h"
 
 #include "building/building.h"
@@ -51,7 +53,8 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
         map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
         map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        image_draw_isometric_footprint(crop_image_id + (growth < 4 ? growth : 4), map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 0);
+        ImageDraw::isometric_footprint(crop_image_id + (growth < 4 ? growth : 4), map_grid_offset_to_x(grid_offset),
+                                       map_grid_offset_to_y(grid_offset), 0);
 }
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {
@@ -245,7 +248,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
             if (map_building_at(grid_offset) != building_id)
                 continue;
 
-            if (building_id && building_get(map_building_at(grid_offset))->type != BUILDING_BURNING_RUIN)
+            if (building_id && building_at(grid_offset)->type != BUILDING_BURNING_RUIN)
                 map_set_rubble_building_type(grid_offset, b->type);
             else if (!building_id && map_terrain_get(grid_offset) & TERRAIN_WALL)
                 map_set_rubble_building_type(grid_offset, BUILDING_WALL);

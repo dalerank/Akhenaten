@@ -186,11 +186,79 @@ static struct {
 #include "core/string.h"
 
 static void draw_debug_ui(int x, int y) {
-    auto time = give_me_da_time();
-    uint8_t str[100];
+    uint8_t str[300];
+
+    /////// DEBUG PAGES NAME
+    if (true) {
+        y += 13;
+        int DB1 = abs(debug_range_1) % 6;
+        int DB2 = abs(debug_range_2) % 16;
+
+        color_t col = COLOR_GREEN;
+
+        switch (DB1) {
+            case 1:
+                text_draw_shadow((uint8_t *) string_from_ascii("ACTION / STATE IDS"), x, y, col);
+                break;
+            case 2:
+                text_draw_shadow((uint8_t *) string_from_ascii("ROUTING"), x, y, col);
+                break;
+            case 3:
+                text_draw_shadow((uint8_t *) string_from_ascii("RESOURCES / CARRYING"), x, y, col);
+                break;
+            case 4:
+                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y, col);
+                break;
+            case 5:
+                text_draw_shadow((uint8_t *) string_from_ascii("FESTIVAL"), x, y, col);
+                break;
+        }
+        y += 3;
+        switch (DB2) {
+            case 1:
+                text_draw_shadow((uint8_t *) string_from_ascii("BUILDINGS IDS AND SIZES"), x, y + 10, col);
+                break;
+            case 2:
+                text_draw_shadow((uint8_t *) string_from_ascii("DRAW-TILES"), x, y + 10, col);
+                break;
+            case 3:
+                text_draw_shadow((uint8_t *) string_from_ascii("ROADS"), x, y + 10, col);
+                break;
+            case 4:
+                text_draw_shadow((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, col);
+                break;
+            case 5:
+                text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col);
+                break;
+            case 6:
+                text_draw_shadow((uint8_t *) string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, col);
+                break;
+            case 7:
+                text_draw_shadow((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, col);
+                break;
+            case 8:
+                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN GROWTH"), x, y + 10, col);
+                break;
+            case 9:
+                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, col);
+                break;
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col);
+                break;
+                break;
+        }
+        y += 10;
+    }
 
     /////// TIME
     if (true) {
+        auto time = give_me_da_time();
+
         draw_debug_line(str, x, y + 15, 50, "tick:", time->tick); draw_debug_line(str, x + 80, y + 15, 50, "iscycle:", game_time_absolute_tick() % 25 == 0);
         draw_debug_line(str, x, y + 25, 50, "day:", time->day);
         draw_debug_line(str, x, y + 35, 50, "month:", time->month);
@@ -405,21 +473,21 @@ static void refresh_build_menu_buttons(void) {
 static void draw_collapsed_background(void) {
     int x_offset = sidebar_common_get_x_offset_collapsed();
     if (GAME_ENV == ENGINE_ENV_C3)
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
 static void draw_expanded_background(int x_offset) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        image_draw(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
         widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
         draw_number_of_messages(x_offset);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        image_draw(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
         widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
         // extra bar spacing on the right
@@ -428,8 +496,9 @@ static void draw_expanded_background(int x_offset) {
         int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
         int s_start = s_num * block_height;
         for (int i = 0; i < s_num; i++)
-            image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, s_start + i * block_height);
-        image_draw(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
+            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162,
+                                   s_start + i * block_height);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
         draw_number_of_messages(x_offset - 26);
     }
     draw_buttons_expanded(x_offset);

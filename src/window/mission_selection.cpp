@@ -49,9 +49,9 @@ static struct {
 static void draw_background(void) {
     int rank = scenario_campaign_rank();
 
-    image_draw_fullscreen_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
+    ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
-    image_draw(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    ImageDraw::img_generic(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
     if (data.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
@@ -74,14 +74,14 @@ static void draw_foreground(void) {
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     int image_id = image_id_from_group(GROUP_SELECT_MISSION_BUTTON);
     if (data.choice == 0) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else if (data.choice == 1) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
     } else {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
+        ImageDraw::img_generic(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
+        ImageDraw::img_generic(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
     }
     graphics_reset_dialog();
 }

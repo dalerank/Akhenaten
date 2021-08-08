@@ -145,7 +145,7 @@ static void prepare_for_merge(int building_id, int num_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         int house_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(house_offset, TERRAIN_BUILDING)) {
-            building *house = building_get(map_building_at(house_offset));
+            building *house = building_at(house_offset);
             if (house->id != building_id && house->house_size) {
                 merge_data.population += house->house_population;
                 for (int inv = 0; inv < INVENTORY_MAX; inv++) {
@@ -189,7 +189,7 @@ void building_house_merge(building *house) {
     for (int i = 0; i < 4; i++) {
         int tile_offset = house->grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-            building *other_house = building_get(map_building_at(tile_offset));
+            building *other_house = building_at(tile_offset);
             if (other_house->id == house->id)
                 num_house_tiles++;
             else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size &&
@@ -213,7 +213,7 @@ int building_house_can_expand(building *house, int num_tiles) {
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = base_offset + house_tile_offsets(i);
             if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                building *other_house = building_get(map_building_at(tile_offset));
+                building *other_house = building_at(tile_offset);
                 if (other_house->id == house->id)
                     ok_tiles++;
                 else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size) {
@@ -238,7 +238,7 @@ int building_house_can_expand(building *house, int num_tiles) {
             if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
                 ok_tiles++;
             else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                building *other_house = building_get(map_building_at(tile_offset));
+                building *other_house = building_at(tile_offset);
                 if (other_house->id == house->id)
                     ok_tiles++;
                 else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size) {
@@ -263,7 +263,7 @@ int building_house_can_expand(building *house, int num_tiles) {
             if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
                 ok_tiles++;
             else if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-                building *other_house = building_get(map_building_at(tile_offset));
+                building *other_house = building_at(tile_offset);
                 if (other_house->id == house->id)
                     ok_tiles++;
                 else if (other_house->state == BUILDING_STATE_VALID && other_house->house_size) {
@@ -373,7 +373,7 @@ static void split(building *house, int num_tiles) {
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
-            building *other_house = building_get(map_building_at(tile_offset));
+            building *other_house = building_at(tile_offset);
             if (other_house->id != house->id && other_house->house_size) {
                 if (other_house->house_is_merged == 1)
                     split_size2(other_house, other_house->type);
