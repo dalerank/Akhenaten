@@ -69,7 +69,7 @@ int string_to_int(const uint8_t *str) {
 
     return result;
 }
-int string_from_int(uint8_t *dst, int value, int force_plus_sign) {
+int string_from_int(uint8_t *dst, int value, bool force_plus_sign) {
     int total_chars = 0;
     if (value >= 0) {
         if (force_plus_sign) {

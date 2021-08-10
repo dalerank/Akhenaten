@@ -597,5 +597,6 @@ int64_t map_temp_grid_get(int grid_offset, int g) {
 //        case 3:
 //            return map_grid_get(&terrain_floodplain_soil_depletion, grid_offset); break;
     }
+    return 0;
 }
 

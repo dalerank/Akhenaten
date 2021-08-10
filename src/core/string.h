@@ -46,7 +46,7 @@ int string_to_int(const uint8_t *str);
  * @param force_plus_sign Force plus sign in front of positive value
  * @return Total number of characters written to dst
  */
-int string_from_int(uint8_t *dst, int value, int force_plus_sign);
+int string_from_int(uint8_t *dst, int value, bool force_plus_sign = false);
 
 /**
  * Compares the two strings case insensitively, used exclusively for filenames

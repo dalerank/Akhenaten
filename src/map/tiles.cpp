@@ -1047,7 +1047,10 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
     int b_id = map_building_at(grid_offset);
     building *b = building_get(b_id);
 
+    // tile is changing between flooded and unflooded?
     if (flooded != map_terrain_is(grid_offset, TERRAIN_WATER)) {
+
+        // tile is FLOODING
         if (floodplain_is_flooding == 1) {
             map_terrain_add(grid_offset, TERRAIN_WATER);
 
@@ -1062,7 +1065,14 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
                         map_property_set_multi_tile_size(_offset, 1);
                         refresh_river_at(_x, _y, _offset);
                     }
+
+            // flood roads
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                map_terrain_remove(grid_offset, TERRAIN_ROAD);
+                map_terrain_add(grid_offset, TERRAIN_SUBMERGED_ROAD);
+            }
         }
+        // tile is RESURFACING
         else if (floodplain_is_flooding == -1) {
             map_terrain_remove(grid_offset, TERRAIN_WATER);
 
@@ -1081,6 +1091,12 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
 //                            map_terrain_add(_offset, TERRAIN_BUILDING);
 //                            map_property_set_multi_tile_size(_offset, b->size);
 //                        }
+            }
+
+            // resurface roads
+            if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
+                map_terrain_remove(grid_offset, TERRAIN_SUBMERGED_ROAD);
+                map_terrain_add(grid_offset, TERRAIN_ROAD);
             }
         }
         refresh_river_at(x, y, grid_offset);

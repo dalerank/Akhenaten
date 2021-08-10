@@ -633,6 +633,9 @@ void draw_debug(int x, int y, int grid_offset) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 d = map_road_network_get(grid_offset);
                 draw_debug_line(str, x, y + 10, 10, "R", d, COLOR_WHITE);
+            } else if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
+                d = map_road_network_get(grid_offset);
+                draw_debug_line(str, x, y + 10, 10, "R", d, COLOR_LIGHT_BLUE);
             }
             break;
         case 4: // ROUTING DISTANCE
@@ -642,7 +645,13 @@ void draw_debug(int x, int y, int grid_offset) {
             else if (d == 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 5: // MOISTURE
+        case 5: // ????
+//            if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
+//                d = map_terrain_get(grid_offset);
+//                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_RED);
+//            }
+            break;
+        case 6: // MOISTURE
             d = map_moisture_get(grid_offset);
             if (d & MOISTURE_GRASS)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE);
@@ -651,16 +660,16 @@ void draw_debug(int x, int y, int grid_offset) {
             else if (d & MOISTURE_SHORE_TALLGRASS)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_GREEN);
             break;
-        case 6: // PROPER GRASS LEVEL
+        case 7: // PROPER GRASS LEVEL
             d = map_grasslevel_get(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_GREEN); break;
-        case 7: // FERTILITY & SOIL DEPLETION
+        case 8: // FERTILITY & SOIL DEPLETION
             d = map_get_fertility(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE); break;
-        case 8: // FLOODPLAIN GROWTH
+        case 9: // FLOODPLAIN GROWTH
             d = map_get_floodplain_growth(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE); break;
-        case 9: // FLOODPLAIN SHORE ORDER
+        case 10: // FLOODPLAIN SHORE ORDER
             d = map_get_floodplain_shoreorder(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
     }

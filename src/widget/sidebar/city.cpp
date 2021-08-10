@@ -196,6 +196,10 @@ static void draw_debug_ui(int x, int y) {
 
         color_t col = COLOR_GREEN;
 
+        string_from_int(str, DB1);
+        text_draw_shadow(str, x, y, col);
+        text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 14, y, col);
+        x += 20;
         switch (DB1) {
             case 1:
                 text_draw_shadow((uint8_t *) string_from_ascii("ACTION / STATE IDS"), x, y, col);
@@ -214,6 +218,11 @@ static void draw_debug_ui(int x, int y) {
                 break;
         }
         y += 3;
+        x -= 20;
+        string_from_int(str, DB2);
+        text_draw_shadow(str, x, y + 10, col);
+        text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 14, y + 10, col);
+        x += 20;
         switch (DB2) {
             case 1:
                 text_draw_shadow((uint8_t *) string_from_ascii("BUILDINGS IDS AND SIZES"), x, y + 10, col);
@@ -228,21 +237,23 @@ static void draw_debug_ui(int x, int y) {
                 text_draw_shadow((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, col);
                 break;
             case 5:
-                text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col);
+                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col);
                 break;
             case 6:
-                text_draw_shadow((uint8_t *) string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, col);
+                text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col);
                 break;
             case 7:
-                text_draw_shadow((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, col);
+                text_draw_shadow((uint8_t *) string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, col);
                 break;
             case 8:
-                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN GROWTH"), x, y + 10, col);
+                text_draw_shadow((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, col);
                 break;
             case 9:
-                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, col);
+                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN GROWTH"), x, y + 10, col);
                 break;
             case 10:
+                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, col);
+                break;
             case 11:
             case 12:
             case 13:
