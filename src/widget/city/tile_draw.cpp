@@ -716,6 +716,14 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
+        case 12:
+            if (b_id && b->grid_offset == grid_offset) {
+                draw_debug_line(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
+                draw_debug_line(str, x1, y + 10, 0, "", b->houses_covered, COLOR_WHITE);
+                draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_GREEN);
+                draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
+            }
+            break;
     }
 }
 void draw_debug_figures(int x, int y, int grid_offset) {

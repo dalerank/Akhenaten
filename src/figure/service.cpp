@@ -415,17 +415,8 @@ int figure::figure_service_provide_coverage() {
     if (has_home()) {
         b = home()->main();
         b->houses_covered += houses_serviced;
-//        for (int i = 0; i < 99; i++) {
-//            // set for each of the building parts
-//            b->houses_covered += houses_serviced;
-//            if (b->houses_covered > 300)
-//                b->houses_covered = 300;
-//
-//            // continue down the chain
-//            b = b->next();
-//            if (b->id <= 0)
-//                break;
-//        }
+        if (b->houses_covered >= 300)
+            b->houses_covered = 300;
     }
     return 0;
 }

@@ -169,6 +169,8 @@ void building::common_spawn_labor_seeker(int min_houses) {
             houses_covered = 2 * min_houses;
         else
             houses_covered = 0;
+        if (houses_covered >= 300)
+            houses_covered = 300;
     } else if (houses_covered <= min_houses) {
         if (has_figure(1)) // no figure slot available!
             return;
@@ -229,16 +231,16 @@ void building::spawn_figure_work_camp() {
 }
 
 bool building::spawn_patrician(bool spawned) {
-    return common_spawn_roamer(FIGURE_PATRICIAN, 0);
+    return common_spawn_roamer(FIGURE_PATRICIAN, 50);
 }
 void building::spawn_figure_engineers_post() {
-    common_spawn_roamer(FIGURE_ENGINEER, 0, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ENGINEER, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 void building::spawn_figure_prefecture() {
-    common_spawn_roamer(FIGURE_PREFECT, 0, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_PREFECT, 50, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 void building::spawn_figure_police() {
-    common_spawn_roamer(FIGURE_POLICEMAN, 0, FIGURE_ACTION_70_PREFECT_CREATED);
+    common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 
 void building::spawn_figure_actor_juggler() {
@@ -248,7 +250,7 @@ void building::spawn_figure_actor_juggler() {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else
-            common_spawn_roamer(FIGURE_ACTOR, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+            common_spawn_roamer(FIGURE_ACTOR, 50,FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 void building::spawn_figure_gladiator_musician() {
@@ -258,7 +260,7 @@ void building::spawn_figure_gladiator_musician() {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else
-            common_spawn_roamer(FIGURE_GLADIATOR, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+            common_spawn_roamer(FIGURE_GLADIATOR, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 void building::spawn_figure_lion_tamer_dancer() {
@@ -268,7 +270,7 @@ void building::spawn_figure_lion_tamer_dancer() {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
         } else
-            common_spawn_roamer(FIGURE_LION_TAMER, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+            common_spawn_roamer(FIGURE_LION_TAMER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 void building::spawn_figure_chariot_senet() {

@@ -56,7 +56,7 @@ void house_service_decay_houses_covered(void) {
         if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
             if (building_is_farm(b->type))
                 b->data.industry.labor_days_left--;
-            else
+            else if (b->houses_covered > 0)
                 b->houses_covered--;
 
             if (b->houses_covered == 255)

@@ -13,17 +13,17 @@
 
 #define MAX_CATS 10
 
-typedef enum {
-    LABOR_CATEGORY_FOOD_PRODUCTION = 1, // todo: wrong index...
-    LABOR_CATEGORY_INDUSTRY_COMMERCE = 0,
-    LABOR_CATEGORY_ENTERTAINMENT = 6,
-    LABOR_CATEGORY_RELIGION = 8,
-    LABOR_CATEGORY_EDUCATION = 7,
-    LABOR_CATEGORY_WATER_HEALTH = 3,
-    LABOR_CATEGORY_INFRASTRUCTURE = 2,
-    LABOR_CATEGORY_GOVERNMENT = 4,
-    LABOR_CATEGORY_MILITARY = 5,
-} labor_category;
+enum {
+    LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
+    LABOR_CATEGORY_INDUSTRY_COMMERCE = 1,
+    LABOR_CATEGORY_ENTERTAINMENT = 2,
+    LABOR_CATEGORY_RELIGION = 3,
+    LABOR_CATEGORY_EDUCATION = 4,
+    LABOR_CATEGORY_WATER_HEALTH = 5,
+    LABOR_CATEGORY_INFRASTRUCTURE = 6,
+    LABOR_CATEGORY_GOVERNMENT = 7,
+    LABOR_CATEGORY_MILITARY = 8,
+};
 
 static int CATEGORY_FOR_int_arr[] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
@@ -52,30 +52,194 @@ static int CATEGORY_FOR_int_arr[] = {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //230
 };
 static int CATEGORY_FOR_int_arr_PH[] = {
+        // houses
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
-        6, 6, 6, 6, 6, 6, 6, 6, -1, -1, // 30
-        -1, -1, -1, -1, -1, -1, 7, 7, 7, 7, // 40
-        0, 7, 7, 7, -1, 2, -1, 5, 5, 5, // 50
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, // 60
-        1, 1, 1, -1, 0, 1, 1, -1, -1, -1, // 70
-        7, 2, -1, -1, -1, -1, 4, -1, -1, -1, // 80
-        1, -1, -1, -1, 5, 5, -1, -1, -1, -1, // 90
-        1, 1, 1, 1, 1, 1, 0, 0, 0, 0, // 100
-        0, 0, 0, 0, 0, 1, -1, -1, -1, -1, // 110
+
+        2, // bandstand
+        2, // booth
+        2, // senet house
+        2, // pavillion
+        2, // conservatory
+        2, // dance school
+        2, // juggler school
+
+        -1, -1, -1,
+
+        -1, // charioteers (fort)
+
+        -1, -1, -1,
+
+        -1, // archers (fort)
+        -1, // infantry (fort)
+        5, // apothecary
+        5, // mortuary
+
+        -1,
+
+        5, // dentist
+        
+		-1,
+		
+        4, // school
+		
+        -1,
+		
+		4, // library
+		
+		-1,
+		
+		6, // police station
+		
+		-1, -1, -1, -1,
+        
+		3, 3, 3, 3, 3, // temples
+		3, 3, 3, 3, 3, // temple complexes
+        1, // market
+		1, // granary
+		1, // warehouse
+		-1, // warehouse space
+		1, // shipyard
+		1, // dock
+		0, // fishing wharf
+		-1, -1, -1, // mansions
+        
+		-1,
+		
+		6, // engineer
+		-1, -1, // bridges
+		
+		-1, -1, 
+		
+		7, 7, // tax collector
+		
+		-1, -1, // 80
+		
+        1, // water lift (2)
+		
+		-1,
+		
+		-1, // well
+		
+		-1,
+		
+		8, // military academy
+		8, // recruiter
+		
+		-1, -1, -1, -1, // 90
+		
+        0, 0, 0, 0, 0, 0, // farms
+		1, 1, // quarries
+		1, // timber
+		1, // clay pit
+        1, // beer
+		1, // linen
+		1, // weapons
+		1, // luxury goods
+		1, //  potter
+		0, // hunting's lodge
+		
+		-1, -1, -1, -1, // 110
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //120
-        -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, //130
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //140
+        -1, -1, -1, -1, -1, -1,
+		
+		6, // ferry
+		
+		-1,
+		
+		-1, // roadblock
+		
+		-1, //130
+		
+        -1, -1, -1, -1, -1, // shrines
+		-1, -1, -1, -1, -1, //140
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //150
-        0, 0, -1, -1, -1, -1, -1, 2, -1, -1, //160
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //170
-        3, 5, 5, -1, 4, -1, -1, 4, 4, 4, //180
-        1, 1, 1, 1, 1, 0, 1, -1, -1, 1, //190
-        -1, -1, -1, 0, 0, 0, 3, -1, -1, -1, //200
-        -1, -1, -1, -1, -1, -1, 0, 0, -1, -1, //210
-        -1, 0, -1, -1, 1, -1, 6, -1, -1, -1, //220
-        -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, //230
+        -1,
+		
+		1, // gold mine
+		1, // gems quarry
+		
+		-1, -1, -1, -1,
+		
+		6, // firehouse
+		
+		-1,
+		
+		-1, // wall
+		
+        -1,
+		
+		-1, //gatehouse
+		
+		-1,
+		
+		8, //tower
+		
+		-1, -1, -1,
+		
+		1, 1, 1, // guilds
+		
+        5, // water supply
+		8, // transport wharf
+		8, // warship wharf
+		-1, // pyramid
+		7, // courthouse
+		
+		-1, -1,
+		
+		7, 7, 7, // town palace
+		
+        -1, -1, -1, -1,
+		
+		0, // cattle ranch
+		1, // reed gatherers
+		0, // figs farm
+		
+		-1, -1,
+		
+		0, // workcamp
+		
+        -1, -1,
+		
+		-1, // gatehouse (2)
+		
+		1, // papyrus
+		1, // bricks
+		1, // chariots
+		5, // physician
+		
+		-1, -1,
+		
+		-1, // festival square
+        -1, // sphynx
+		
+		-1, -1, -1, -1, -1,
+		
+		1, // granite
+		1, // copper
+		
+		-1, -1, //210
+        -1,
+		
+		1, // sandstone
+		-1, // mausoleum
+		
+		-1,
+		
+		1, // henna farm
+		-1, // alex. library
+		2, // zoo
+		-1, // caesareum
+		-1, // pharos lighth.
+		-1, // small r. tomb
+        -1, // abu simbel
+		1, // artisans guild
+		0, // lamps
+		0, // paint
+		-1, // medium r. tomb
+		-1, // large r. tomb
+		-1, // grand r. tomb
 };
 
 #include "building/industry.h"
@@ -95,7 +259,7 @@ const int CATEGORY_FOR_building(building *b) {
 }
 
 static struct {
-    labor_category category;
+    int category;
     int workers;
 } DEFAULT_PRIORITY[MAX_CATS] = {
         {LABOR_CATEGORY_INFRASTRUCTURE,    3},
