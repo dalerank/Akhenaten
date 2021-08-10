@@ -622,103 +622,30 @@ static const color_t *tile_data(const color_t *data, int index) {
     return &data[900 * index];
 }
 
-static void draw_footprint_size1(int image_id, int x, int y, color_t color_mask) {
-    const color_t *data = image_data(image_id);
-    draw_footprint_tile(tile_data(data, 0), x, y, color_mask);
-}
-static void draw_footprint_size2(int image_id, int x, int y, color_t color_mask) {
+static void draw_footprint_size_any(int image_id, int x, int y, int size, color_t color_mask) {
     const color_t *data = image_data(image_id);
 
+    // The offsets alternate very annoyingly.
+    // The y offsets grow by 15 each "batch"
+    // while for each "batch" there are multiple
+    // x offsets, 60p apart from each other,
+    // symmetric around the x axis.
+    // What an absolute mess!
     int index = 0;
-    draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
+    for (int k = 0; k < (size * 2) - 1; k++) {
 
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
+        int k_limit = k;
+        if (k >= size - 1)
+            k_limit = 2 * size - 2 - k;
 
-    draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
-}
-static void draw_footprint_size3(int image_id, int x, int y, color_t color_mask) {
-    const color_t *data = image_data(image_id);
+        for (int j = -30 * k_limit; j <= 30 * k_limit; j += 60) {
 
-    int index = 0;
-    draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
+            int x_offset = j;
+            int y_offset = k * 15;
 
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 30, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
-}
-static void draw_footprint_size4(int image_id, int x, int y, color_t color_mask) {
-    const color_t *data = image_data(image_id);
-
-    int index = 0;
-    draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 30, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 90, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 90, y + 45, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 60, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
-}
-static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask) {
-    const color_t *data = image_data(image_id);
-
-    int index = 0;
-    draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 15, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 15, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 30, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 30, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 90, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 45, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 90, y + 45, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 120, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 60, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 120, y + 60, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 90, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 90, y + 75, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 60, y + 90, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x, y + 90, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 60, y + 90, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x - 30, y + 105, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x + 30, y + 105, color_mask);
-
-    draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
+            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
+        }
+    }
 }
 
 static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color) {
@@ -853,23 +780,9 @@ void ImageDraw::isometric_footprint(int image_id, int x, int y, color_t color_ma
             draw_modded_footprint(image_id, x, y, color_mask);
         return;
     }
-    switch (img->width) {
-        case 58:
-            draw_footprint_size1(image_id, x, y, color_mask);
-            break;
-        case 118:
-            draw_footprint_size2(image_id, x, y, color_mask);
-            break;
-        case 178:
-            draw_footprint_size3(image_id, x, y, color_mask);
-            break;
-        case 238:
-            draw_footprint_size4(image_id, x, y, color_mask);
-            break;
-        case 298:
-            draw_footprint_size5(image_id, x, y, color_mask);
-            break;
-    }
+
+    int tile_size = (img->width + 2) / 60;
+    draw_footprint_size_any(image_id, x, y, tile_size, color_mask);
 }
 void ImageDraw::isometric_footprint_from_drawtile(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id, 1);
@@ -877,26 +790,14 @@ void ImageDraw::isometric_footprint_from_drawtile(int image_id, int x, int y, co
         if (img->draw.type == IMAGE_TYPE_MOD)
             draw_modded_footprint(image_id, x, y, color_mask);
         else
-            draw_footprint_size1(image_id, x, y, color_mask);
+            draw_footprint_size_any(image_id, x, y, 1, color_mask);
         return;
     }
-    switch (img->width) {
-        case 58:
-            draw_footprint_size1(image_id, x, y, color_mask);
-            break;
-        case 118:
-            draw_footprint_size2(image_id, x + 30, y - 15, color_mask);
-            break;
-        case 178:
-            draw_footprint_size3(image_id, x + 60, y - 30, color_mask);
-            break;
-        case 238:
-            draw_footprint_size4(image_id, x + 90, y - 45, color_mask);
-            break;
-        case 298:
-            draw_footprint_size5(image_id, x + 120, y - 60, color_mask);
-            break;
-    }
+
+    int tile_size = (img->width + 2) / 60;
+    x += 30 * (tile_size - 1);
+    y -= 15 * (tile_size - 1);
+    draw_footprint_size_any(image_id, x, y, tile_size, color_mask);
 }
 void ImageDraw::isometric_top(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
@@ -910,32 +811,11 @@ void ImageDraw::isometric_top(int image_id, int x, int y, color_t color_mask) {
     const color_t *data = &image_data(image_id)[img->draw.uncompressed_length];
 
     int height = img->height;
-    switch (img->width) {
-        case 58:
-            y -= img->height - 30;
-            height -= 16;
-            break;
-        case 118:
-            x -= 30;
-            y -= img->height - 60;
-            height -= 31;
-            break;
-        case 178:
-            x -= 60;
-            y -= img->height - 90;
-            height -= 46;
-            break;
-        case 238:
-            x -= 90;
-            y -= img->height - 120;
-            height -= 61;
-            break;
-        case 298:
-            x -= 120;
-            y -= img->height - 150;
-            height -= 76;
-            break;
-    }
+    int tile_size = (img->width + 2) / 60;
+
+    x -= 30 * (tile_size - 1);
+    y -= img->height - 30 * tile_size;
+    height -= 1 + 15 * tile_size;
     if (!color_mask)
         draw_compressed(img, data, x, y, height);
     else
@@ -946,7 +826,6 @@ void ImageDraw::isometric_top_from_drawtile(int image_id, int x, int y, color_t 
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
         if (img->draw.type == IMAGE_TYPE_MOD)
             draw_modded_top(image_id, x, y, color_mask);
-
         return;
     }
     if (!img->draw.has_compressed_part)
@@ -954,28 +833,10 @@ void ImageDraw::isometric_top_from_drawtile(int image_id, int x, int y, color_t 
     const color_t *data = &image_data(image_id)[img->draw.uncompressed_length];
 
     int height = img->height;
-    switch (img->width) {
-        case 58:
-            y -= img->height - 30;
-            height -= 16;
-            break;
-        case 118:
-            y -= img->height - 45;
-            height -= 31;
-            break;
-        case 178:
-            y -= img->height - 60;
-            height -= 46;
-            break;
-        case 238:
-            y -= img->height - 75;
-            height -= 61;
-            break;
-        case 298:
-            y -= img->height - 90;
-            height -= 76;
-            break;
-    }
+    int tile_size = (img->width + 2) / 60;
+
+    y -= img->height - 15 * (tile_size + 1);
+    height -= 1 + 15 * tile_size;
     if (!color_mask)
         draw_compressed(img, data, x, y, height);
     else
