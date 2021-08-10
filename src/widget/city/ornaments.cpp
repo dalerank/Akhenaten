@@ -18,6 +18,7 @@
 #include <city/labor.h>
 #include <building/industry.h>
 #include <map/terrain.h>
+#include <game/time.h>
 #include "building/building.h"
 
 static bool drawing_building_as_deleted(building *b) {
@@ -310,8 +311,7 @@ void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_
 
 }
 
-int ph_crops_worker_frame = 0;
-static void draw_ph_worker(int direction, int action, int x, int y) {
+static void draw_ph_worker(int direction, int action, int frame_offset, int x, int y) {
     int action_offset = 0;
     switch (action) {
         case 0: // tiling
@@ -321,32 +321,39 @@ static void draw_ph_worker(int direction, int action, int x, int y) {
         case 2: // harvesting
             action_offset = 312; break;
     }
-    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + action_offset + direction +
-                          8 * (ph_crops_worker_frame % 26 / 2), x, y + 15, 0);
+    int final_offset = action_offset + direction + 8 * (frame_offset - 1);
+    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, x, y + 15, 0);
 }
 static void draw_farm_crops(building *b, int x, int y) {
     draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
+}
+static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
+    int animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+
+    int direction = 0;
+    int action = 0;
+
     x += 60;
     y -= 30;
     if (b->num_workers > 0) {
         if (b->data.industry.progress < 400)
-            draw_ph_worker(ph_crops_worker_frame%128 / 16, 1, x + 30, y + 30);
+            draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, x + 30, y + 30);
         else if (b->data.industry.progress < 450)
-            draw_ph_worker(1, 0, x + 60, y + 15);
+            draw_ph_worker(1, 0, animation_offset, x + 60, y + 15);
         else if (b->data.industry.progress < 650)
-            draw_ph_worker(2, 0, x + 90, y + 30);
+            draw_ph_worker(2, 0, animation_offset, x + 90, y + 30);
         else if (b->data.industry.progress < 900)
-            draw_ph_worker(3, 0, x + 0, y + 15);
+            draw_ph_worker(3, 0, animation_offset, x + 0, y + 15);
         else if (b->data.industry.progress < 1100)
-            draw_ph_worker(4, 0, x + 30, y + 30);
+            draw_ph_worker(4, 0, animation_offset, x + 30, y + 30);
         else if (b->data.industry.progress < 1350)
-            draw_ph_worker(5, 0, x + 60, y + 45);
+            draw_ph_worker(5, 0, animation_offset, x + 60, y + 45);
         else if (b->data.industry.progress < 1550)
-            draw_ph_worker(6, 0, x + -30, y + 30);
+            draw_ph_worker(6, 0, animation_offset, x + -30, y + 30);
         else if (b->data.industry.progress < 1800)
-            draw_ph_worker(0, 0, x + 0, y + 45);
+            draw_ph_worker(0, 0, animation_offset, x + 0, y + 45);
         else if (b->data.industry.progress < 2000)
-            draw_ph_worker(1, 0, x + 30, y + 60);
+            draw_ph_worker(1, 0, animation_offset, x + 30, y + 60);
     }
 }
 
@@ -531,8 +538,10 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
-            if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 draw_farm_crops(b, x, y);
+                draw_farm_workers(b, grid_offset,x, y);
+            }
             break;
         case BUILDING_WATER_LIFT:
             break; // todo

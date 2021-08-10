@@ -401,8 +401,15 @@ void figure::action_perform() {
         } else {
             if (outside_road_ticks < 255)
                 outside_road_ticks++;
-            if (terrain_usage == TERRAIN_USAGE_ROADS && outside_road_ticks > 100) // walkers outside of roads for too long?
-                poof();
+            if (!is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+                kill();
+            if (is_boat && !map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+                kill();
+            if (terrain_usage == TERRAIN_USAGE_ROADS) // walkers outside of roads for too long?
+                if (destination_x && destination_y && outside_road_ticks > 100) // dudes with destination have a bit of lee way
+                    poof();
+                if (!destination_x && !destination_y && state == FIGURE_STATE_ALIVE && outside_road_ticks > 0)
+                    poof();
         }
 
         ////////////

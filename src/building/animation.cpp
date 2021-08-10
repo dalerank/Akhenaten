@@ -8,6 +8,43 @@
 #include "map/sprite.h"
 #include "core/game_environment.h"
 
+int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
+//    const image *img = image_get(image_id);
+//    if (!max_frames)
+//        max_frames = img->num_animation_sprites;
+//    int anim_speed = img->animation_speed_id;
+    if (!game_animation_should_advance(anim_speed))
+        return map_sprite_animation_at(grid_offset) & 0x7f;
+
+    // advance animation
+    int new_sprite = 0;
+//    bool is_reverse = false;
+//    if (img->animation_can_reverse) {
+//        if (map_sprite_animation_at(grid_offset) & 0x80)
+//            is_reverse = true;
+//
+//        int current_sprite = map_sprite_animation_at(grid_offset) & 0x7f;
+//        if (is_reverse) {
+//            new_sprite = current_sprite - 1;
+//            if (new_sprite < 1) {
+//                new_sprite = 1;
+//                is_reverse = false;
+//            }
+//        } else {
+//            new_sprite = current_sprite + 1;
+//            if (new_sprite > max_frames) {
+//                new_sprite = max_frames;
+//                is_reverse = true;
+//            }
+//        }
+//    } else // Absolutely normal case
+    new_sprite = map_sprite_animation_at(grid_offset) + 1;
+    if (new_sprite > max_frames)
+        new_sprite = 1;
+
+    map_sprite_animation_set(grid_offset, new_sprite);
+    return new_sprite;
+}
 int building_animation_offset(building *b, int image_id, int grid_offset, int max_frames) {
     if (building_is_workshop(b->type) && (b->loads_stored <= 0 || b->num_workers <= 0))
         return 0;
@@ -94,7 +131,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
 
     // advance animation
     int new_sprite = 0;
-    int is_reverse = 0;
+    bool is_reverse = false;
     if (b->type == BUILDING_WINE_WORKSHOP) {
         // exception for wine...
         int pct_done = calc_percentage(b->data.industry.progress, 400);
@@ -126,20 +163,20 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
         }
     } else if (img->animation_can_reverse) {
         if (map_sprite_animation_at(grid_offset) & 0x80)
-            is_reverse = 1;
+            is_reverse = true;
 
         int current_sprite = map_sprite_animation_at(grid_offset) & 0x7f;
         if (is_reverse) {
             new_sprite = current_sprite - 1;
             if (new_sprite < 1) {
                 new_sprite = 1;
-                is_reverse = 0;
+                is_reverse = false;
             }
         } else {
             new_sprite = current_sprite + 1;
             if (new_sprite > max_frames) {
                 new_sprite = max_frames;
-                is_reverse = 1;
+                is_reverse = true;
             }
         }
     } else {
