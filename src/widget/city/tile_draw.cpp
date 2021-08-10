@@ -612,15 +612,11 @@ void draw_debug(int x, int y, int grid_offset) {
     x += 15;
 
     switch (DB2) {
-        case 1: // BUILDINGS IDS AND SIZES
+        case 1: // BUILDING IDS
             if (b_id && b->grid_offset == grid_offset) {
                 bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
-                draw_debug_line(str, x1, y + 0, 0, "", b->size, red ? COLOR_LIGHT_RED : COLOR_GREEN);
-                draw_debug_line(str, x1, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), red ? COLOR_LIGHT_RED : COLOR_GREEN);
-                draw_debug_line(str, x0, y + 20, 0, "", b->road_access_x, b->road_is_accessible ? COLOR_WHITE : COLOR_LIGHT_RED);
-                draw_debug_line(str, x1, y + 20, 0, "", b->road_access_y, b->road_is_accessible ? COLOR_WHITE : COLOR_LIGHT_RED);
                 if (!b->is_main())
                     text_draw_shadow((uint8_t *)string_from_ascii("sub"), x0, y - 10, COLOR_RED);
                 //
@@ -645,16 +641,20 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
-        case 2: // DRAW-TILES
+        case 2: // DRAW-TILES AND SIZES
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                     if (map_property_is_draw_tile(grid_offset))
-                        draw_debug_line(str, x, y + 10, 0, "", b_id, COLOR_GREEN);
+                        draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
                     else
-                        draw_debug_line(str, x, y + 10, 0, "", b_id, COLOR_LIGHT_RED);
+                        draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_RED);
                 } else if (!map_property_is_draw_tile(grid_offset))
-                    draw_debug_line(str, x, y + 10, 0, "", 0, COLOR_LIGHT_BLUE);
+                    draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
             break;
         case 3: // ROADS
+            if (b_id && b->grid_offset == grid_offset) {
+                draw_debug_line(str, x0, y + 5, 0, "", b->road_access_x, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
+                draw_debug_line(str, x0, y + 15, 0, "", b->road_access_y, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
+            }
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 d = map_road_network_get(grid_offset);
                 draw_debug_line(str, x, y + 10, 10, "R", d, COLOR_WHITE);
@@ -670,13 +670,12 @@ void draw_debug(int x, int y, int grid_offset) {
             else if (d == 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 5: //
+        case 5: // SPRITE FRAMES
             d = map_sprite_animation_at(grid_offset);
             if (d) {
                 string_from_int(str, d, 0);
                 text_draw_shadow(str, x, y + 10, COLOR_WHITE);
             }
-
             break;
         case 6: // MOISTURE
             d = map_moisture_get(grid_offset);

@@ -115,14 +115,14 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
     }
 }
 
-static void draw_normal_anim(int x, int y, building *b, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
+static void draw_normal_anim(int x, int y, building *b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
     if (!base_id)
-        base_id = map_image_at(b->grid_offset);
-    int animation_offset = building_animation_offset(b, base_id, b->grid_offset, max_frames);
+        base_id = map_image_at(grid_offset);
+    int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
     if (animation_offset == 0)
         return;
     int ydiff = 0;
-    switch (map_property_multi_tile_size(b->grid_offset)) {
+    switch (map_property_multi_tile_size(grid_offset)) {
         case 1:
             ydiff = 30;
             break;
@@ -328,10 +328,9 @@ static void draw_farm_crops(building *b, int x, int y) {
     draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
 }
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
+    if (!building_is_floodplain_farm(b))
+        return;
     int animation_offset = generic_sprite_offset(grid_offset, 13, 1);
-
-    int direction = 0;
-    int action = 0;
 
     x += 60;
     y -= 30;
@@ -491,11 +490,6 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         return;
 
-    // TODO: advance crop workers animation frames for Pharaoh
-//    ph_crops_worker_frame++;
-//    if (ph_crops_worker_frame >= 13 * 16)
-//        ph_crops_worker_frame = 0;
-
     int image_id = map_image_at(grid_offset);
     building *b = building_at(grid_offset);
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
@@ -509,21 +503,21 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
 
     switch (b->type) {
         case BUILDING_BURNING_RUIN:
-            draw_normal_anim(x, y, b, image_id, color_mask);
+            draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
             break;
         case BUILDING_GRANARY:
             draw_granary_stores(b, x, y, color_mask);
             if (GAME_ENV == ENGINE_ENV_C3)
-                draw_normal_anim(x + 77, y - 109, b, image_id + 5, color_mask);
+                draw_normal_anim(x + 77, y - 109, b, grid_offset, image_id + 5, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                draw_normal_anim(x + 114, y + 2, b, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
+                draw_normal_anim(x + 114, y + 2, b, grid_offset, image_id_from_group(GROUP_GRANARY_ANIM_PH) - 1, color_mask);
             break;
         case BUILDING_WAREHOUSE:
             draw_warehouse_ornaments(b, x, y, color_mask);
             if (GAME_ENV == ENGINE_ENV_C3)
-                draw_normal_anim(x + 77, y - 109, b, image_id, color_mask);
+                draw_normal_anim(x + 77, y - 109, b, grid_offset, image_id, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                draw_normal_anim(x + 21, y + 24, b, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
+                draw_normal_anim(x + 21, y + 24, b, grid_offset, image_id_from_group(GROUP_WAREHOUSE_ANIM_PH) - 1, color_mask);
                 ImageDraw::img_generic(image_id + 17, x - 5, y - 42, color_mask);
             }
             break;
@@ -548,7 +542,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
         case BUILDING_GOLD_MINE:
         case BUILDING_COPPER_MINE:
         case BUILDING_GEMSTONE_MINE:
-            draw_normal_anim(x + 54, y + 15, b, image_id_from_group(GROUP_MINES) - 1, color_mask);
+            draw_normal_anim(x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_MINES) - 1, color_mask);
             break;
         case BUILDING_STONE_QUARRY:
         case BUILDING_LIMESTONE_QUARRY:
@@ -593,13 +587,13 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             }
             break;
         case BUILDING_CONSERVATORY:
-            draw_normal_anim(x + 82, y + 14, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12, color_mask);
+            draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12, color_mask);
             break;
         case BUILDING_DANCE_SCHOOL:
-            draw_normal_anim(x + 104, y, b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1, color_mask);
+            draw_normal_anim(x + 104, y, b, grid_offset, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1, color_mask);
             break;
         default:
-            draw_normal_anim(x, y, b, image_id, color_mask);
+            draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);
             if (b->ruin_has_plague)
                 ImageDraw::img_generic(image_id_from_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
             break;

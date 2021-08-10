@@ -225,15 +225,15 @@ static void draw_debug_ui(int x, int y) {
         x += 20;
         switch (DB2) {
             case 1:
-                text_draw_shadow((uint8_t *) string_from_ascii("BUILDINGS IDS AND SIZES"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("BUILDING IDS"), x, y + 10, col); break;
             case 2:
-                text_draw_shadow((uint8_t *) string_from_ascii("DRAW-TILES"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("DRAW-TILES AND SIZES"), x, y + 10, col); break;
             case 3:
                 text_draw_shadow((uint8_t *) string_from_ascii("ROADS"), x, y + 10, col); break;
             case 4:
                 text_draw_shadow((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, col); break;
             case 5:
-                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("SPRITE FRAMES"), x, y + 10, col); break;
             case 6:
                 text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col); break;
             case 7:
@@ -253,6 +253,7 @@ static void draw_debug_ui(int x, int y) {
                 text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col); break;
         }
         y += 10;
+        x -= 20;
     }
 
     /////// TIME

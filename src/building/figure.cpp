@@ -1131,12 +1131,17 @@ void building::update_native_crop_progress() {
 void building::update_road_access() {
     // update building road access
     map_point road;
-    if (type == BUILDING_WAREHOUSE)
-        road_is_accessible = map_has_road_access(x, y, 3, &road);
-    if (type == BUILDING_BURNING_RUIN)
-        road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
-    else
-        road_is_accessible = map_has_road_access(x, y, size, &road);
+    switch (type) {
+        case BUILDING_WAREHOUSE:
+            road_is_accessible = map_has_road_access(x, y, 3, &road);
+            break;
+        case BUILDING_BURNING_RUIN:
+            road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
+            break;
+        default:
+            road_is_accessible = map_has_road_access(x, y, size, &road);
+            break;
+    }
     road_access_x = road.x;
     road_access_y = road.y;
 }
