@@ -205,7 +205,7 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
 static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15, b, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1,
+        draw_normal_anim(x + 30, y + 15, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_THEATER));
     }
 }
@@ -214,17 +214,17 @@ static void draw_entertainment_shows_musicians(building *b, int x, int y, color_
     if (main->data.entertainment.days2) {
         building *next_tile = b->next();
         if (next_tile->type == BUILDING_BANDSTAND && next_tile->grid_offset == (b->grid_offset + 1))
-            draw_normal_anim(x + 48, y + 12, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
+            draw_normal_anim(x + 48, y + 12, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
                              color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
         else
-            draw_normal_anim(x + 20, y + 12, b, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
+            draw_normal_anim(x + 20, y + 12, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
                              color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
     }
 }
 static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        draw_normal_anim(x + 64, y, b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
+        draw_normal_anim(x + 64, y, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_LION_HOUSE));
     }
 }
