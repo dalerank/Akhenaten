@@ -313,7 +313,7 @@ int building_is_house(int type);
 int building_is_fort(int type);
 int building_is_defense_ph(int type);
 int building_is_farm(int type);
-int building_is_floodplain_farm(building *b);
+int building_is_floodplain_farm(const building *b);
 int building_is_workshop(int type);
 int building_is_extractor(int type);
 int building_is_monument(int type);

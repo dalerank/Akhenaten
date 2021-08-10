@@ -579,7 +579,7 @@ int building_is_farm(int type) {
     return (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM)
            || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
 }
-int building_is_floodplain_farm(building *b) {
+int building_is_floodplain_farm(const building *b) {
     return (GAME_ENV == ENGINE_ENV_PHARAOH
             && building_is_farm(b->type)
             && map_terrain_is(b->grid_offset, TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255

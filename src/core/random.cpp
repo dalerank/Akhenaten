@@ -136,7 +136,7 @@ void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int 
 }
 
 // please email me if you have a better name for this
-int random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
+bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
 
     // let's not make our life harder.
     v -= minimum;
@@ -144,9 +144,9 @@ int random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
     minimum = 0;
 
     if (v <= minimum)
-        return 0;
+        return false;
     if (v >= maximum)
-        return 1;
+        return true;
 
     int length = maximum - minimum;
     int max_length = uint16_t(-1);
@@ -157,9 +157,9 @@ int random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
     rand_short = rand_short / det;
 
     if (v < rand_short)
-        return 0;
+        return false;
     else
-        return 1;
+        return true;
 }
 
 void random_load_state(buffer *buf) {

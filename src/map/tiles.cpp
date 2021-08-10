@@ -1042,12 +1042,12 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
     int min = floodplain_flood_tick - 150;
     int max = floodplain_flood_tick + 50;
     int v = (order + 1) * 25; // every cycle (25 ticks) the order increases or decreases by one.
-    int flooded = !random_bool_lerp_scalar_int(min, max, v);
+    bool flooded = !random_bool_lerp_scalar_int(min, max, v);
 
     int b_id = map_building_at(grid_offset);
     building *b = building_get(b_id);
 
-    // tile is changing between flooded and unflooded?
+    // tile is updating!
     if (flooded != map_terrain_is(grid_offset, TERRAIN_WATER)) {
 
         // tile is FLOODING
@@ -1057,7 +1057,10 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
             map_soil_depletion(grid_offset, 0);
 
             // hide building
-            if (b_id && b->state == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING))
+            if (b_id && b->state == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                b->data.industry.progress = 0;
+                b->data.industry.labor_state = 0;
+                b->data.industry.labor_days_left = 0;
                 for (int _y = b->y; _y < b->y + b->size; _y++)
                     for (int _x = b->x; _x < b->x + b->size; _x++) {
                         int _offset = map_grid_offset(_x, _y);
@@ -1065,6 +1068,7 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
                         map_property_set_multi_tile_size(_offset, 1);
                         refresh_river_at(_x, _y, _offset);
                     }
+            }
 
             // flood roads
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
@@ -1078,19 +1082,14 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
 
             // bring back flooded buildings
             if (b_id && b->state == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                int still_flooded = 0;
+                // check if any other tile of the farm is still submerged
+                bool still_flooded = false;
                 for (int _y = b->y; _y < b->y + b->size; _y++)
                     for (int _x = b->x; _x < b->x + b->size; _x++)
                         if (map_terrain_is(map_grid_offset(_x, _y), TERRAIN_WATER))
-                            still_flooded = 1;
+                            still_flooded = true;
                 if (!still_flooded)
                     map_building_tiles_add_farm(b_id, b->x, b->y, 0, 0);
-//                    for (int _y = b->y; _y < b->y + b->size; _y++)
-//                        for (int _x = b->x; _x < b->x + b->size; _x++) {
-//                            int _offset = map_grid_offset(_x, _y);
-//                            map_terrain_add(_offset, TERRAIN_BUILDING);
-//                            map_property_set_multi_tile_size(_offset, b->size);
-//                        }
             }
 
             // resurface roads

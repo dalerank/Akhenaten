@@ -531,7 +531,8 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
-            draw_farm_crops(b, x, y);
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING))
+                draw_farm_crops(b, x, y);
             break;
         case BUILDING_WATER_LIFT:
             break; // todo

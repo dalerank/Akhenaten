@@ -614,10 +614,25 @@ void draw_debug(int x, int y, int grid_offset) {
     switch (DB2) {
         case 1: // BUILDINGS IDS AND SIZES
             if (b_id && b->grid_offset == grid_offset) {
-                draw_debug_line(str, x0, y + 0, 0, "",  b_id, COLOR_WHITE);
-                draw_debug_line(str, x0, y + 10, 0, "",  b->type, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, x1, y + 0, 0, "",  b->size, COLOR_GREEN);
-                draw_debug_line(str, x1, y + 10, 0, "",  map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
+                bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
+                draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
+                draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
+                draw_debug_line(str, x1, y + 0, 0, "", b->size, red ? COLOR_LIGHT_RED : COLOR_GREEN);
+                draw_debug_line(str, x1, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), red ? COLOR_LIGHT_RED : COLOR_GREEN);
+                if (!b->is_main())
+                    text_draw_shadow((uint8_t *)string_from_ascii("sub"), x0, y - 10, COLOR_RED);
+                //
+
+                if (building_is_floodplain_farm(b)) {
+                    string_from_int(str, b->data.industry.progress, 0);
+                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
+                    string_from_int(str, b->data.industry.progress / 250 * 100, 0);
+                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
+                    string_from_int(str, b->data.industry.labor_state, 0);
+                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_WHITE);
+                    string_from_int(str, b->data.industry.labor_days_left, 0);
+                    text_draw_shadow(str, x0 + 45, y + 45, COLOR_WHITE);
+                }
             }
             break;
         case 2: // DRAW-TILES
@@ -645,11 +660,25 @@ void draw_debug(int x, int y, int grid_offset) {
             else if (d == 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 5: // ????
-//            if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD)) {
-//                d = map_terrain_get(grid_offset);
-//                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_RED);
-//            }
+        case 5: // FLOODPLAINS TERRAIN
+            d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    if (map_terrain_is(grid_offset, TERRAIN_SUBMERGED_ROAD))
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff777777);
+                    else if (map_building_at(grid_offset) > 0)
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff550000);
+                    else
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff007700);
+                } else {
+                    if (map_terrain_is(grid_offset, TERRAIN_ROAD))
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xffffffff);
+                    else if (map_building_at(grid_offset) > 0)
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xffaa0000);
+                    else
+                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff00ff00);
+                }
+            }
             break;
         case 6: // MOISTURE
             d = map_moisture_get(grid_offset);
@@ -675,17 +704,7 @@ void draw_debug(int x, int y, int grid_offset) {
     }
 
         if (b_id && false && b->grid_offset == grid_offset) {
-            string_from_int(str, b_id, 0);
-            text_draw_shadow(str, x + 10, y - 10, COLOR_LIGHT_BLUE);
 
-            if (!b->is_main())
-                text_draw_shadow((uint8_t *)string_from_ascii("s"), x + 30, y - 10, COLOR_LIGHT_RED);
-//            else
-//                text_draw_shadow((uint8_t *)string_from_ascii("M"), x + 30, y - 10, COLOR_LIGHT_RED);
-
-            string_from_int(str, b->type, 0);
-            text_draw_shadow(str, x + 10, y, COLOR_WHITE);
-//
 //            string_from_int(str, b->road_is_accessible, 0);
 //            if (b->road_is_accessible)
 //                text_draw_shadow(str, x + 10, y + 10, COLOR_GREEN);
@@ -715,24 +734,24 @@ void draw_debug(int x, int y, int grid_offset) {
                 string_from_int(str, b->data.entertainment.days3_or_play, 0);
                 text_draw_shadow(str, x + 10, y + 30, COLOR_GREEN);
             }
-            if (b->data.industry.progress && false) {
-                string_from_int(str, b->data.industry.progress, 0);
-                text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
-//                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
-//                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
-                string_from_int(str, b->data.industry.labor_state, 0);
-                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
-                string_from_int(str, b->data.industry.labor_days_left, 0);
-                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
-            }
-//            if (building_is_floodplain_farm(b)) {
+//            if (b->data.industry.progress && false) {
+//                string_from_int(str, b->data.industry.progress, 0);
+//                text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
 ////                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
 ////                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
-////                string_from_int(str, b->data.industry.labor_state, 0);
-////                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
-////                string_from_int(str, b->data.industry.labor_days_left, 0);
-////                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
+//                string_from_int(str, b->data.industry.labor_state, 0);
+//                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
+//                string_from_int(str, b->data.industry.labor_days_left, 0);
+//                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
 //            }
+////            if (building_is_floodplain_farm(b)) {
+//////                string_from_int(str, b->data.farm.progress / 250 * 100, 0);
+//////                text_draw_shadow(str, x + 65, y + 5, COLOR_GREEN);
+//////                string_from_int(str, b->data.industry.labor_state, 0);
+//////                text_draw_shadow(str, x + 40, y + 15, COLOR_GREEN);
+//////                string_from_int(str, b->data.industry.labor_days_left, 0);
+//////                text_draw_shadow(str, x + 65, y + 15, COLOR_GREEN);
+////            }
             if (b->figure_spawn_delay && false) {
                 string_from_int(str, b->figure_spawn_delay, 0);
                 text_draw_shadow(str, x + 40, y + 5, COLOR_GREEN);
