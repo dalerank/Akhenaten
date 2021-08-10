@@ -121,24 +121,7 @@ static void draw_normal_anim(int x, int y, building *b, int grid_offset, int spr
     int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames);
     if (animation_offset == 0)
         return;
-    int ydiff = 0;
-    switch (map_property_multi_tile_size(grid_offset)) {
-        case 1:
-            ydiff = 30;
-            break;
-        case 2:
-            ydiff = 45;
-            break;
-        case 3:
-            ydiff = 60;
-            break;
-        case 4:
-            ydiff = 75;
-            break;
-        case 5:
-            ydiff = 90;
-            break;
-    }
+    int ydiff = 15 * (map_property_multi_tile_size(grid_offset) + 1);
     const image *base = image_get(base_id);
     if (base_id != sprite_id)
         ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);

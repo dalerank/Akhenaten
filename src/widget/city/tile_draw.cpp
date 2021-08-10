@@ -114,7 +114,11 @@ static const int ADJACENT_OFFSETS_C3[2][4][7] = {
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {
     {
-      OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(0, -2), OFFSET_PH(1, -2)
+      OFFSET_PH(-1, 0),
+      OFFSET_PH(-1, -1),
+      OFFSET_PH(-1, -2),
+      OFFSET_PH(0, -2),
+      OFFSET_PH(1, -2)
     }, {
       OFFSET_PH(0, -1),
       OFFSET_PH(1, -1),
@@ -137,11 +141,13 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   },
   {
     {
-      OFFSET_PH(-1, 0), OFFSET_PH(-1, -1), OFFSET_PH(-1, -2), OFFSET_PH(-1, -3), OFFSET_PH(0, -3), OFFSET_PH(
-        1,
-        -3), OFFSET_PH(
-        2,
-        -3)
+      OFFSET_PH(-1, 0),
+      OFFSET_PH(-1, -1),
+      OFFSET_PH(-1, -2),
+      OFFSET_PH(-1, -3),
+      OFFSET_PH(0, -3),
+      OFFSET_PH(1, -3),
+      OFFSET_PH(2, -3)
     },
     {
       OFFSET_PH(0, -1),
@@ -149,11 +155,8 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
       OFFSET_PH(2, -1),
       OFFSET_PH(3, -1),
       OFFSET_PH(3, 0),
-      OFFSET_PH(3,
-        1),
-      OFFSET_PH(
-        3,
-        2)
+      OFFSET_PH(3, 1),
+      OFFSET_PH(3, 2)
     },
     {
       OFFSET_PH(1, 0),
@@ -161,11 +164,8 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
       OFFSET_PH(1, 2),
       OFFSET_PH(1, 3),
       OFFSET_PH(0, 3),
-      OFFSET_PH(-1,
-        3),
-      OFFSET_PH(
-        -2,
-        3)
+      OFFSET_PH(-1, 3),
+      OFFSET_PH(-2, 3)
     },
     {
       OFFSET_PH(0, 1),
@@ -173,11 +173,8 @@ static const int ADJACENT_OFFSETS_PH[2][4][7] = {
       OFFSET_PH(-2, 1),
       OFFSET_PH(-3, 1),
       OFFSET_PH(-3, 0),
-      OFFSET_PH(-3,
-        -1),
-      OFFSET_PH(
-        -3,
-        -2)
+      OFFSET_PH(-3,-1),
+      OFFSET_PH(-3, -2)
     }
   }
 };
@@ -643,9 +640,10 @@ void draw_debug(int x, int y, int grid_offset) {
             break;
         case 2: // DRAW-TILES AND SIZES
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                    if (map_property_is_draw_tile(grid_offset))
+                    if (map_property_is_draw_tile(grid_offset)) {
                         draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
-                    else
+                        draw_debug_line(str, x1, y + 10, 0, "", b->size, COLOR_WHITE);
+                    } else
                         draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_RED);
                 } else if (!map_property_is_draw_tile(grid_offset))
                     draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);

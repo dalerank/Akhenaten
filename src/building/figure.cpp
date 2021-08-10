@@ -1139,6 +1139,8 @@ void building::update_road_access() {
             road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
             break;
         default:
+            if (id == 17)
+                int a = 4;
             road_is_accessible = map_has_road_access(x, y, size, &road);
             break;
     }

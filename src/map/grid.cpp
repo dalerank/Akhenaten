@@ -11,172 +11,6 @@ static const int DIRECTION_DELTA_C3[] = {-OFFSET_C3(0, 1), OFFSET_C3(1, -1), 1, 
 static const int DIRECTION_DELTA_PH[] = {-OFFSET_PH(0, 1), OFFSET_PH(1, -1), 1, OFFSET_PH(1, 1), OFFSET_PH(0, 1),
                                          OFFSET_PH(-1, 1), -1, -OFFSET_PH(1, 1)};
 
-// [7][0][1]
-// [6]   [2]
-// [5][4][3]
-
-static const int ADJACENT_OFFSETS_C3[][21] = {
-    {
-        0
-    },
-    {
-        OFFSET_C3(0, -1),
-        OFFSET_C3(1, 0),
-        OFFSET_C3(0, 1),
-        OFFSET_C3(-1, 0),
-        0
-    },
-    {
-        OFFSET_C3(0, -1),
-        OFFSET_C3(1, -1),
-        OFFSET_C3(2, 0),
-        OFFSET_C3(2, 1),
-        OFFSET_C3(1, 2),
-        OFFSET_C3(0, 2),
-        OFFSET_C3(-1, 1),
-        OFFSET_C3(-1, 0),
-        0
-    },
-    {
-        OFFSET_C3(0, -1),
-        OFFSET_C3(1, -1),
-        OFFSET_C3(2, -1),
-        OFFSET_C3(3, 0),
-        OFFSET_C3(3, 1),
-        OFFSET_C3(3, 2),
-        OFFSET_C3(2, 3),
-        OFFSET_C3(1, 3),
-        OFFSET_C3(0, 3),
-        OFFSET_C3(-1, 2),
-        OFFSET_C3(-1, 1),
-        OFFSET_C3(-1, 0),
-        0
-    },
-    {
-        OFFSET_C3(0, -1),
-        OFFSET_C3(1, -1),
-        OFFSET_C3(2, -1),
-        OFFSET_C3(3, -1),
-        OFFSET_C3(4, 0),
-        OFFSET_C3(4, 1),
-        OFFSET_C3(4, 2),
-        OFFSET_C3(4, 3),
-        OFFSET_C3(3, 4),
-        OFFSET_C3(2, 4),
-        OFFSET_C3(1, 4),
-        OFFSET_C3(0, 4),
-        OFFSET_C3(-1, 3),
-        OFFSET_C3(-1, 2),
-        OFFSET_C3(-1, 1),
-        OFFSET_C3(-1, 0),
-        0
-    },
-    {
-        OFFSET_C3(0, -1),
-        OFFSET_C3(1, -1),
-        OFFSET_C3(2, -1),
-        OFFSET_C3(3, -1),
-        OFFSET_C3(4, -1),
-        OFFSET_C3(5, 0),
-        OFFSET_C3(5, 1),
-        OFFSET_C3(5, 2),
-        OFFSET_C3(5, 3),
-        OFFSET_C3(5, 4),
-        OFFSET_C3(4, 5),
-        OFFSET_C3(3, 5),
-        OFFSET_C3(2, 5),
-        OFFSET_C3(1, 5),
-        OFFSET_C3(0, 5),
-        OFFSET_C3(-1, 4),
-        OFFSET_C3(-1, 3),
-        OFFSET_C3(-1, 2),
-        OFFSET_C3(-1, 1),
-        OFFSET_C3(-1, 0),
-        0
-    },
-};
-static
-const int ADJACENT_OFFSETS_PH[][21] = {
-    {
-        0
-    },
-    {
-        OFFSET_PH(0, -1),
-        OFFSET_PH(1, 0),
-        OFFSET_PH(0, 1),
-        OFFSET_PH(-1, 0),
-        0
-    },
-    {
-        OFFSET_PH(0, -1),
-        OFFSET_PH(1, -1),
-        OFFSET_PH(2, 0),
-        OFFSET_PH(2, 1),
-        OFFSET_PH(1, 2),
-        OFFSET_PH(0, 2),
-        OFFSET_PH(-1, 1),
-        OFFSET_PH(-1, 0),
-        0
-    },
-    {
-        OFFSET_PH(0, -1),
-        OFFSET_PH(1, -1),
-        OFFSET_PH(2, -1),
-        OFFSET_PH(3, 0),
-        OFFSET_PH(3, 1),
-        OFFSET_PH(3, 2),
-        OFFSET_PH(2, 3),
-        OFFSET_PH(1, 3),
-        OFFSET_PH(0, 3),
-        OFFSET_PH(-1, 2),
-        OFFSET_PH(-1, 1),
-        OFFSET_PH(-1, 0),
-        0
-    },
-    {
-        OFFSET_PH(0, -1),
-        OFFSET_PH(1, -1),
-        OFFSET_PH(2, -1),
-        OFFSET_PH(3, -1),
-        OFFSET_PH(4, 0),
-        OFFSET_PH(4, 1),
-        OFFSET_PH(4, 2),
-        OFFSET_PH(4, 3),
-        OFFSET_PH(3, 4),
-        OFFSET_PH(2, 4),
-        OFFSET_PH(1, 4),
-        OFFSET_PH(0, 4),
-        OFFSET_PH(-1, 3),
-        OFFSET_PH(-1, 2),
-        OFFSET_PH(-1, 1),
-        OFFSET_PH(-1, 0),
-        0
-    },
-    {
-        OFFSET_PH(0, -1),
-        OFFSET_PH(1, -1),
-        OFFSET_PH(2, -1),
-        OFFSET_PH(3, -1),
-        OFFSET_PH(4, -1),
-        OFFSET_PH(5, 0),
-        OFFSET_PH(5, 1),
-        OFFSET_PH(5, 2),
-        OFFSET_PH(5, 3),
-        OFFSET_PH(5, 4),
-        OFFSET_PH(4, 5),
-        OFFSET_PH(3, 5),
-        OFFSET_PH(2, 5),
-        OFFSET_PH(1, 5),
-        OFFSET_PH(0, 5),
-        OFFSET_PH(-1, 4),
-        OFFSET_PH(-1, 3),
-        OFFSET_PH(-1, 2),
-        OFFSET_PH(-1, 1),
-        OFFSET_PH(-1, 0),
-        0
-    },
-};
-
 #include <stdlib.h>
 #include "core/game_environment.h"
 #include <cassert>
@@ -546,12 +380,38 @@ int map_view_tile_inside_map_area(int x, int y) {
     return 0; // outside viewable area
 }
 
+static int offsets_array[150];
 const int *map_grid_adjacent_offsets(int size) {
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return ADJACENT_OFFSETS_C3[size];
-        case ENGINE_ENV_PHARAOH:
-            return ADJACENT_OFFSETS_PH[size];
+
+    int array_size = (size + 1) * 4;
+
+    for (int i = 0; i <= array_size; i++) {
+
+        int x = 0;
+        int y = 0;
+        if (i < 1 * (size + 1)) {
+            x = i;
+            y = -1;
+        } else if (i < 2 * (size + 1)) {
+            x = size + 1;
+            y = i % (size + 1);
+        } else if (i < 3 * (size + 1)) {
+            x = size - (i % (size + 1));
+            y = size + 1;
+        } else if (i < 2 * (size + 1)) {
+            x = -1;
+            y = size - (i % (size + 1));
+        }
+
+        switch (GAME_ENV) {
+            case ENGINE_ENV_C3:
+                offsets_array[i] = OFFSET_C3(x, y);
+                break;
+            case ENGINE_ENV_PHARAOH:
+                offsets_array[i] = OFFSET_PH(x, y);
+                break;
+        }
     }
+    return offsets_array;
 }
 
