@@ -300,10 +300,10 @@ void figure::load(buffer *buf) {
     f->is_enemy_image = buf->read_u8();
     f->flotsam_visible = buf->read_u8();
     f->sprite_image_id = buf->read_i16() + 18;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        buf->skip(2);
-    else
+    if (GAME_ENV == ENGINE_ENV_C3)
         f->cart_image_id = buf->read_i16();
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        buf->skip(2);
     f->next_figure = buf->read_i16();
     f->type = buf->read_u8();
     f->resource_id = buf->read_u8();

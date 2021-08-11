@@ -224,6 +224,7 @@ public:
     bool has_figure(int i, int figure_id = -1);
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, int _type);
+    int get_figure_slot(figure *f);
 
     figure *create_figure_generic(int _type, int created_action, int slot, int created_dir);
     figure *create_roaming_figure(int _type, int created_action = FIGURE_ACTION_125_ROAMING, int slot = 0);

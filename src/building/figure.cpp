@@ -98,6 +98,14 @@ bool building::has_figure_of_type(int i, int _type) {
     else
         return (get_figure(i)->type == _type);
 }
+int building::get_figure_slot(figure *f) {
+    // seatrch through all the slots, check if figure matches
+    for (int i = 0; i < MAX_FIGURES_PER_BUILDING; i++) {
+        if (has_figure(i, f))
+            return i;
+    }
+    return -1;
+}
 
 figure *building::create_figure_generic(int _type, int created_action, int slot, int created_dir) {
     figure *f = figure_create(_type, road_access_x, road_access_y, created_dir);
@@ -393,20 +401,25 @@ void building::spawn_figure_market() {
         common_spawn_labor_seeker(50);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
-        if (!has_figure_of_type(0, FIGURE_MARKET_TRADER) && !has_figure_of_type(0, FIGURE_MARKET_BUYER)) {
-            // market buyer
+
+        // market buyer
+        if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             building *dest = building_get(building_market_get_storage_destination(this));
             if (dest->id) {
-                figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE);
+                figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, 1);
                 f->collecting_item_id = data.market.fetch_inventory_id;
-            } else if (data.market.inventory[0] > 0
+            }
+        }
+
+        // market trader
+        if (!has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
+            if (data.market.inventory[0] > 0
                  || data.market.inventory[1] > 0
                  || data.market.inventory[2] > 0
                  || data.market.inventory[3] > 0
                  || data.market.inventory[4] > 0
                  || data.market.inventory[5] > 0
                  || data.market.inventory[6] > 0) { // do not spawn trader if bazaar is 100% empty!
-                // market trader
                 figure_spawn_delay++;
                 if (figure_spawn_delay > spawn_delay) {
                     figure_spawn_delay = 0;
