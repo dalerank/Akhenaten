@@ -264,11 +264,13 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
             continue;
 
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers < 75) {
-            if (understaffed)
-                *understaffed += 1;
-            continue;
+        if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            if (pct_workers < 75) {
+                if (understaffed)
+                    *understaffed += 1;
+                continue;
+            }
         }
         const building_storage *s = building_storage_get(b->storage_id);
         if (building_granary_is_not_accepting(resource, b) || s->empty_all)

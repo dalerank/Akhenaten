@@ -18,6 +18,7 @@
 #include "scenario/property.h"
 
 #include <math.h>
+#include <core/config.h>
 
 int building_warehouse_get_space_info(building *warehouse) {
     int total_loads = 0;
@@ -339,11 +340,13 @@ int building_warehouse_for_storing(building *src, int x, int y, int resource, in
         if (building_warehouse_is_not_accepting(resource, dest) || s->empty_all)
             continue;
 
-        int pct_workers = calc_percentage(dest->num_workers, model_get_building(dest->type)->laborers);
-        if (pct_workers < 100) {
-            if (understaffed)
-                *understaffed += 1;
-            continue;
+        if (!config_get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+            int pct_workers = calc_percentage(dest->num_workers, model_get_building(dest->type)->laborers);
+            if (pct_workers < 100) {
+                if (understaffed)
+                    *understaffed += 1;
+                continue;
+            }
         }
         int dist = warehouse_is_this_space_the_best(b, x, y, resource, distance_from_entry);
         if (dist > 0 && dist < min_dist) {
