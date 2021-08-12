@@ -38,7 +38,7 @@ static int try_import_resource(building *warehouse, int resource, int city_id) {
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0) {
-            if (space->loads_stored && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource) {
+            if (space->stored_full_amount && space->stored_full_amount < 400 && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
                 building_warehouse_space_add_import(space, resource);
                 return 1;
@@ -69,7 +69,7 @@ static int try_export_resource(building *warehouse, int resource, int city_id) {
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id > 0) {
-            if (space->loads_stored && space->subtype.warehouse_resource_id == resource) {
+            if (space->stored_full_amount && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
                 building_warehouse_space_remove_export(space, resource);
                 return 1;
@@ -117,7 +117,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
                 if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE)
                     distance_penalty -= 8;
 
-                if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored < 4)
+                if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_full_amount < 400)
                     distance_penalty -= 4;
 
             }
@@ -178,7 +178,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
         building *space = b;
         for (int s = 0; s < 8; s++) {
             space = space->next();
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0)
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->stored_full_amount > 0)
                 distance_penalty--;
 
         }
@@ -235,7 +235,7 @@ int figure::deliver_import_resource(building *dock) {
     if (!warehouse_id)
         return 0;
 
-    ship->unload_resource(100);
+    ship->dump_resource(100);
     set_destination(warehouse_id);
     wait_ticks = 0;
     action_state = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;

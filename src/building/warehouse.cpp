@@ -21,7 +21,7 @@
 #include <core/config.h>
 
 int building_warehouse_get_space_info(building *warehouse) {
-    int total_loads = 0;
+    int total_amounts = 0;
     int empty_spaces = 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
@@ -29,31 +29,31 @@ int building_warehouse_get_space_info(building *warehouse) {
         if (space->id <= 0)
             return 0;
         if (space->subtype.warehouse_resource_id)
-            total_loads += space->loads_stored;
+            total_amounts += space->stored_full_amount;
         else
             empty_spaces++;
     }
     if (empty_spaces > 0)
         return WAREHOUSE_ROOM;
-    else if (total_loads < 32)
+    else if (total_amounts < 3200)
         return WAREHOUSE_SOME_ROOM;
     else
         return WAREHOUSE_FULL;
 }
 int building_warehouse_get_amount(building *warehouse, int resource) {
-    int loads = 0;
+    int total = 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = space->next();
         if (space->id <= 0)
             return 0;
         if (space->subtype.warehouse_resource_id && space->subtype.warehouse_resource_id == resource)
-            loads += space->loads_stored;
+            total += space->stored_full_amount;
     }
-    return loads;
+    return total;
 }
 
-int building_warehouse_add_resource(building *b, int resource) {
+int building_warehouse_add_resource(building *b, int resource, int amount) {
     if (b->id <= 0)
         return -1;
 
@@ -61,41 +61,53 @@ int building_warehouse_add_resource(building *b, int resource) {
     if (building_warehouse_is_not_accepting(resource, main))
         return -1;
 
-    // check building itself
-    int find_space = 0;
+    // check the initial provided space itself, first
+    bool look_for_space = false;
     if (b->subtype.warehouse_resource_id && b->subtype.warehouse_resource_id != resource)
-        find_space = 1;
-    else if (b->loads_stored >= 4)
-        find_space = 1;
+        look_for_space = true;
+    else if (b->stored_full_amount >= 400)
+        look_for_space = true;
     else if (b->type == BUILDING_WAREHOUSE)
-        find_space = 1;
+        look_for_space = true;
 
-    if (find_space) {
-        int space_found = 0;
-        building *space = b->main();
-        for (int i = 0; i < 8; i++) {
-            space = space->next();
-            if (!space->id)
-                return -1;
-
-            if (!space->subtype.warehouse_resource_id || space->subtype.warehouse_resource_id == resource) {
-                if (space->loads_stored < 4) {
-                    space_found = 1;
-                    b = space;
-                    break;
+    // repeat until no space left... easier than calculating all amounts by hand.
+    int amount_left = amount;
+    int amount_last_turn = amount;
+    while (amount_left > 0) {
+        if (look_for_space) {
+            bool space_found = false;
+            building *space = b->main();
+            for (int i = 0; i < 8; i++) {
+                space = space->next();
+                if (!space->id)
+                    return -1;
+                if (!space->subtype.warehouse_resource_id || space->subtype.warehouse_resource_id == resource) {
+                    if (space->stored_full_amount < 400) {
+                        space_found = true;
+                        b = space;
+                        break;
+                    }
                 }
             }
+            if (!space_found)
+                return -1; // no space found at all!
         }
-        if (!space_found)
-            return -1;
-
+        city_resource_add_to_warehouse(resource, 1);
+        b->subtype.warehouse_resource_id = resource;
+        int space_on_tile = 400 - b->stored_full_amount;
+        int unloading_amount = fmin(space_on_tile, amount_left);
+        b->stored_full_amount += unloading_amount;
+        space_on_tile -= unloading_amount;
+        if (space_on_tile == 0)
+            look_for_space = true;
+        tutorial_on_add_to_warehouse();
+        building_warehouse_space_set_image(b, resource);
+        amount_last_turn = amount_left;
+        amount_left -= unloading_amount;
+        if (amount_left == amount_last_turn)
+            return amount_left;
     }
-    city_resource_add_to_warehouse(resource, 1);
-    b->subtype.warehouse_resource_id = resource;
-    b->loads_stored++;
-    tutorial_on_add_to_warehouse();
-    building_warehouse_space_set_image(b, resource);
-    return 1;
+    return amount_left;
 }
 int building_warehouse_remove_resource(building *warehouse, int resource, int amount) {
     // returns amount still needing removal
@@ -111,17 +123,17 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
         if (space->id <= 0)
             continue;
 
-        if (space->subtype.warehouse_resource_id != resource || space->loads_stored <= 0)
+        if (space->subtype.warehouse_resource_id != resource || space->stored_full_amount <= 0)
             continue;
 
-        if (space->loads_stored > amount) {
+        if (space->stored_full_amount > amount) {
             city_resource_remove_from_warehouse(resource, amount);
-            space->loads_stored -= amount;
+            space->stored_full_amount -= amount;
             amount = 0;
         } else {
-            city_resource_remove_from_warehouse(resource, space->loads_stored);
-            amount -= space->loads_stored;
-            space->loads_stored = 0;
+            city_resource_remove_from_warehouse(resource, space->stored_full_amount);
+            amount -= space->stored_full_amount;
+            space->stored_full_amount = 0;
             space->subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         building_warehouse_space_set_image(space, resource);
@@ -134,18 +146,18 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount) {
     building *space = warehouse;
     for (int i = 0; i < 8 && amount > 0; i++) {
         space = space->next();
-        if (space->id <= 0 || space->loads_stored <= 0)
+        if (space->id <= 0 || space->stored_full_amount <= 0)
             continue;
 
         int resource = space->subtype.warehouse_resource_id;
-        if (space->loads_stored > amount) {
+        if (space->stored_full_amount > amount) {
             city_resource_remove_from_warehouse(resource, amount);
-            space->loads_stored -= amount;
+            space->stored_full_amount -= amount;
             amount = 0;
         } else {
-            city_resource_remove_from_warehouse(resource, space->loads_stored);
-            amount -= space->loads_stored;
-            space->loads_stored = 0;
+            city_resource_remove_from_warehouse(resource, space->stored_full_amount);
+            amount -= space->stored_full_amount;
+            space->stored_full_amount = 0;
             space->subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         building_warehouse_space_set_image(space, resource);
@@ -153,18 +165,18 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount) {
 }
 void building_warehouse_space_set_image(building *space, int resource) {
     int image_id;
-    if (space->loads_stored <= 0)
+    if (space->stored_full_amount <= 0)
         image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     else {
         image_id = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
                    4 * (resource - 1) + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE) +
-                   space->loads_stored - 1;
+                   ceil((float)space->stored_full_amount / 100.0) - 1;
     }
     map_image_set(space->grid_offset, image_id);
 }
 void building_warehouse_space_add_import(building *space, int resource) {
-    city_resource_add_to_warehouse(resource, 1);
-    space->loads_stored++;
+    city_resource_add_to_warehouse(resource, 100);
+    space->stored_full_amount += 100;
     space->subtype.warehouse_resource_id = resource;
 
     int price = trade_price_buy(resource);
@@ -173,9 +185,9 @@ void building_warehouse_space_add_import(building *space, int resource) {
     building_warehouse_space_set_image(space, resource);
 }
 void building_warehouse_space_remove_export(building *space, int resource) {
-    city_resource_remove_from_warehouse(resource, 1);
-    space->loads_stored--;
-    if (space->loads_stored <= 0)
+    city_resource_remove_from_warehouse(resource, 100);
+    space->stored_full_amount -= 100;
+    if (space->stored_full_amount <= 0)
         space->subtype.warehouse_resource_id = RESOURCE_NONE;
 
 
@@ -194,7 +206,7 @@ void building_warehouses_add_resource(int resource, int amount) {
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             city_resource_set_last_used_warehouse(building_id);
-            while (amount && building_warehouse_add_resource(b, resource))
+            while (amount && building_warehouse_add_resource(b, resource, 100))
                 amount--;
         }
     }
@@ -269,7 +281,7 @@ static int warehouse_is_this_space_the_best(building *space, int x, int y, int r
     building *check = b;
     while (check->next_part_building_id) {
         check = check->next();
-        if (check->subtype.warehouse_resource_id == resource && check->loads_stored < 4) {
+        if (check->subtype.warehouse_resource_id == resource && check->stored_full_amount < 400) {
             if (check == space)
                 return calc_distance_with_penalty(space->x, space->y, x, y, distance_from_entry, space->distance_from_entry);
             else
@@ -375,21 +387,20 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
         if (i == src->id)
             continue;
 
-        int loads_stored = 0;
+        int amounts_stored = 0;
         building *space = b;
         const building_storage *s = building_storage_get(b->storage_id);
         for (int t = 0; t < 8; t++) {
             space = space->next();
-            if (space->id > 0 && space->loads_stored > 0) {
+            if (space->id > 0 && space->stored_full_amount > 0) {
                 if (space->subtype.warehouse_resource_id == resource)
-                    loads_stored += space->loads_stored;
-
+                    amounts_stored += space->stored_full_amount;
             }
         }
-        if (loads_stored > 0 && !building_warehouse_is_gettable(resource, b)) {
+        if (amounts_stored > 0 && !building_warehouse_is_gettable(resource, b)) {
             int dist = calc_distance_with_penalty(b->x, b->y, src->x, src->y,
                                                   src->distance_from_entry, b->distance_from_entry);
-            dist -= 4 * loads_stored;
+            dist -= 4 * (amounts_stored / 100);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building = b;
@@ -399,11 +410,9 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
     if (min_building) {
         if (dst)
             map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
-
         return min_building->id;
-    } else {
+    } else
         return 0;
-    }
 }
 
 static int determine_granary_accept_foods(int resources[8], int road_network) {
@@ -471,19 +480,15 @@ static int determine_granary_get_foods(int resources[8], int road_network) {
 static int contains_non_stockpiled_food(building *space, const int *resources) {
     if (space->id <= 0)
         return 0;
-
-    if (space->loads_stored <= 0)
+    if (space->stored_full_amount <= 0)
         return 0;
-
     int resource = space->subtype.warehouse_resource_id;
     if (city_resource_is_stockpiled(resource))
         return 0;
-
     if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
         resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3) {
         if (resources[resource] > 0)
             return 1;
-
     }
     return 0;
 }
@@ -499,26 +504,26 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
         if (!building_warehouse_is_getting(r, warehouse) || city_resource_is_stockpiled(r))
             continue;
-        int loads_stored = 0; // total loads of resource in warehouse!
+        int total_stored = 0; // total amounts of resource in warehouse!
         int room = 0; // total potential room for resource!
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
             if (space->id > 0) {
-                if (space->loads_stored <= 0) // this space (tile) is empty! FREE REAL ESTATE
+                if (space->stored_full_amount <= 0) // this space (tile) is empty! FREE REAL ESTATE
                     room += 4;
                 if (space->subtype.warehouse_resource_id == r) { // found a space (tile) with resource on it!
-                    loads_stored += space->loads_stored; // add loads to total, if any!
-                    room += 4 - space->loads_stored; // add room to total, if any!
+                    total_stored += space->stored_full_amount; // add loads to total, if any!
+                    room += 400 - space->stored_full_amount; // add room to total, if any!
                 }
             }
         }
 
         int requesting = building_warehouse_get_accepting_amount(r, warehouse) / 100;
-        int lacking = requesting - loads_stored;
+        int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
-        if (room >= 0 && lacking > 0 && city_resource_count(r) - loads_stored > 0) {
+        if (room >= 0 && lacking > 0 && city_resource_count(r) - total_stored > 0) {
             if (!building_warehouse_for_getting(warehouse, r, 0)) // any other place contain this resource..?
                 continue;
             *resource = r;
@@ -536,14 +541,14 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
         building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3,
                                                  warehouse->road_network_id, warehouse->distance_from_entry, 0));
-        int barracks_want = MAX_WEAPONS_BARRACKS - barracks->loads_stored;
+        int barracks_want = (100 * MAX_WEAPONS_BARRACKS) - barracks->stored_full_amount;
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
             int available = 0;
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = space->next();
-                if (space->id > 0 && space->loads_stored > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
-                    available += space->loads_stored;
+                if (space->id > 0 && space->stored_full_amount > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
+                    available += space->stored_full_amount;
                 }
             }
             if (available > 0) {
@@ -557,7 +562,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = space->next();
-        if (space->id > 0 && space->loads_stored > 0) {
+        if (space->id > 0 && space->stored_full_amount > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
                 int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
                 if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
@@ -611,9 +616,9 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         space = warehouse;
         for (int i = 0; i < 8; i++) {
             space = space->next();
-            if (space->id > 0 && space->loads_stored > 0) {
+            if (space->id > 0 && space->stored_full_amount > 0) {
                 *resource = space->subtype.warehouse_resource_id;
-                *amount = space->loads_stored;
+                *amount = space->stored_full_amount;
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }

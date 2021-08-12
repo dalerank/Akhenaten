@@ -71,7 +71,7 @@ void building_industry_update_production(void) {
             else
                 int a = 2;
         }
-        if (b->subtype.workshop_type && !b->loads_stored)
+        if (b->subtype.workshop_type && !b->stored_full_amount)
             continue;
         if (b->data.industry.curse_days_left)
             b->data.industry.curse_days_left--;
@@ -130,10 +130,10 @@ int building_industry_has_produced_resource(building *b) {
 void building_industry_start_new_production(building *b) {
     b->data.industry.progress = 0;
     if (b->subtype.workshop_type) {
-        if (b->loads_stored) {
-            if (b->loads_stored > 1)
+        if (b->stored_full_amount) {
+            if (b->stored_full_amount > 100)
                 b->data.industry.has_raw_materials = 1;
-            b->loads_stored--;
+            b->stored_full_amount -= 100;
         }
     }
     if (building_is_farm(b->type))
@@ -171,9 +171,9 @@ void building_farm_deplete_soil(const building *b) {
     update_farm_image(b);
 }
 
-void building_workshop_add_raw_material(building *b) {
+void building_workshop_add_raw_material(building *b, int amount) {
     if (b->id > 0 && building_is_workshop(b->type))
-        b->loads_stored++; // BUG: any raw material accepted
+        b->stored_full_amount += amount; // BUG: any raw material accepted
 }
 int building_get_workshop_for_raw_material_with_room(int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst) {
     if (city_resource_is_stockpiled(resource))
@@ -193,9 +193,9 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         if (!b->has_road_access || b->distance_from_entry <= 0)
             continue;
 
-        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->loads_stored < 2) {
+        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->stored_full_amount < 200) {
             int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
-            if (b->loads_stored > 0)
+            if (b->stored_full_amount > 0)
                 dist += 20;
 
             if (dist < min_dist) {
@@ -229,7 +229,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
             continue;
 
         if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
-            int dist = 10 * b->loads_stored +
+            int dist = 10 * (b->stored_full_amount / 100) +
                        calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;

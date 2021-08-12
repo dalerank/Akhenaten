@@ -94,7 +94,7 @@ int ALLOWED_FOODS(int i);
 bool is_food_allowed(int resource);
 void set_allowed_food(int i, int resource);
 int stack_units_by_resource(int resource);
-int stack_proper_quantity(int loads, int resource);
+int stack_proper_quantity(int full, int resource);
 
 const int INV_RESOURCES[2][20] = {
     {

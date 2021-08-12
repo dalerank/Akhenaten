@@ -46,7 +46,7 @@ int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
     return new_sprite;
 }
 int building_animation_offset(building *b, int image_id, int grid_offset, int max_frames) {
-    if (building_is_workshop(b->type) && (b->loads_stored <= 0 || b->num_workers <= 0))
+    if (building_is_workshop(b->type) && (b->stored_full_amount <= 0 || b->num_workers <= 0))
         return 0;
 
     switch (b->type) {

@@ -35,7 +35,7 @@ void figure::load_resource(int amount, int resource) {
     resource_amount_full = amount;
     resource_amount_loads = amount / 100;
 }
-int figure::unload_resource(int amount) {
+int figure::dump_resource(int amount) {
     amount = fmin(amount, resource_amount_full);
     resource_amount_full -= amount;
     resource_amount_loads -= amount / 100;
@@ -96,36 +96,40 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                     accepting = building_warehouse_get_accepting_amount(resource_id, dest);
                     break;
                 default:
-                    accepting = stack_proper_quantity(2 - dest->loads_stored, resource);
+                    accepting = 200 - dest->stored_full_amount;
+//                    accepting = stack_proper_quantity(2 - dest->loads_stored, resource);
                     break;
             }
 
-            int goal_to_deposit_max = fmin(carrying, accepting);
-            int unload_single_turn = 1;
+            int total_depositable = fmin(carrying, accepting);
+            if (total_depositable <= 0)
+                return advance_action(ACTION_8_RECALCULATE);
 
+            int max_single_turn = 100;
             if (true) // TODO: more than 100 at once?????
-                unload_single_turn = 4;
+                max_single_turn = total_depositable;
 
-            int amount_to_unload = fmin(goal_to_deposit_max, unload_single_turn * 100);
-            int times = amount_to_unload / 100;
+            int amount_single_turn = fmin(total_depositable, max_single_turn);
+            int times = total_depositable / amount_single_turn;
 
             switch (dest->type) {
                 case BUILDING_GRANARY:
-                    if (building_granary_add_resource(dest, resource_id, 0, amount_to_unload) != -1)
-                        unload_resource(amount_to_unload);
+                    if (building_granary_add_resource(dest, resource_id, 0, amount_single_turn) != -1)
+                        dump_resource(amount_single_turn);
                     else
                         return advance_action(ACTION_8_RECALCULATE);
                     break;
                 case BUILDING_BARRACKS:
                     for (int i = 0; i < times; i++) { // do one by one...
                         dest->barracks_add_weapon();
-                        unload_resource(100); // assume barracks will ALWAYS accept a weapon
+                        dump_resource(amount_single_turn); // assume barracks will ALWAYS accept a weapon
                     }
                 case BUILDING_WAREHOUSE:
                 case BUILDING_WAREHOUSE_SPACE:
                     for (int i = 0; i < times; i++) { // do one by one...
-                        if (building_warehouse_add_resource(dest, resource_id) != -1)
-                            unload_resource(100);
+                        int amount_refused = building_warehouse_add_resource(dest, resource_id, amount_single_turn);
+                        if (amount_refused != -1)
+                            dump_resource(amount_single_turn - amount_refused);
                         else
                             return advance_action(ACTION_8_RECALCULATE);
                     }
@@ -133,13 +137,13 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                 case BUILDING_VILLAGE_PALACE:
                 case BUILDING_TOWN_PALACE:
                 case BUILDING_CITY_PALACE:
-                    city_finance_process_gold_extraction(amount_to_unload);
+                    city_finance_process_gold_extraction(amount_single_turn);
                     break;
                 default: // workshop
                     for (int i = 0; i < times; i++) { // do one by one...
-                        if (dest->loads_stored < 2) {
-                            building_workshop_add_raw_material(dest);
-                            unload_resource(100);
+                        if (dest->stored_full_amount < 200) {
+                            building_workshop_add_raw_material(dest, 100);
+                            dump_resource(100);
                             if (i + 1 == times)
                                 advance_action(ACTION_DONE);
                         } else

@@ -189,10 +189,10 @@ void city_resource_calculate_warehouse_stocks(void) {
         if (warehouse->has_road_access) {
             b->has_road_access = warehouse->has_road_access;
             if (b->subtype.warehouse_resource_id) {
-                int loads = b->loads_stored;
+                int amounts = b->stored_full_amount;
                 int resource = b->subtype.warehouse_resource_id;
-                city_data.resource.stored_in_warehouses[resource] += loads;
-                city_data.resource.space_in_warehouses[resource] += 4 - loads;
+                city_data.resource.stored_in_warehouses[resource] += amounts;
+                city_data.resource.space_in_warehouses[resource] += 400 - amounts;
             } else {
                 city_data.resource.space_in_warehouses[RESOURCE_NONE] += 4;
             }
@@ -319,13 +319,13 @@ void city_resource_calculate_workshop_stocks(void) {
         b->has_road_access = 0;
         if (map_has_road_access(b->x, b->y, b->size, 0)) {
             b->has_road_access = 1;
-            int room = 2 - b->loads_stored;
+            int room = 200 - b->stored_full_amount;
             if (room < 0)
                 room = 0;
 
             int workshop_resource = b->subtype.workshop_type;
             city_data.resource.space_in_workshops[workshop_resource] += room;
-            city_data.resource.stored_in_workshops[workshop_resource] += b->loads_stored;
+            city_data.resource.stored_in_workshops[workshop_resource] += b->stored_full_amount;
         }
     }
 }

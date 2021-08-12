@@ -110,11 +110,10 @@ void window_building_draw_barracks(building_info_context *c) {
                            c->y_offset + 38);
 
     building *b = building_get(c->building_id);
-    if (b->loads_stored < 1)
+    if (b->stored_full_amount < 100)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
-    else {
-        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
-    }
+    else
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
@@ -124,7 +123,7 @@ void window_building_draw_barracks(building_info_context *c) {
         window_building_draw_description_at(c, 70, 136, 4);
     else {
         int offset = 0;
-        if (b->loads_stored > 0)
+        if (b->stored_full_amount > 0)
             offset = 4;
 
         if (c->worker_percentage >= 100)

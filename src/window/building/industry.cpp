@@ -127,10 +127,10 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32,
                            c->y_offset + 56);
     width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
-    if (b->loads_stored < 1)
+    if (b->stored_full_amount < 100)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
     else
-        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
@@ -138,7 +138,7 @@ static void draw_workshop(building_info_context *c, int help_id, const char *sou
         window_building_draw_description_at(c, 86, group_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
-    else if (b->loads_stored <= 0)
+    else if (b->stored_full_amount <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
     else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);
@@ -228,10 +228,10 @@ void window_building_draw_hunting_lodge(building_info_context *c) {
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_GAMEMEAT, c->x_offset + 32,
                            c->y_offset + 56);
     int width = lang_text_draw(group_id, 13, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
-    if (b->loads_stored < 1)
+    if (b->stored_full_amount < 100)
         lang_text_draw_amount(8, 10, 0, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
     else
-        lang_text_draw_amount(8, 10, b->loads_stored * 100, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 60 + width, c->y_offset + 60, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
@@ -239,7 +239,7 @@ void window_building_draw_hunting_lodge(building_info_context *c) {
         window_building_draw_description_at(c, 86, group_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
-    else if (b->loads_stored <= 0)
+    else if (b->stored_full_amount <= 0)
         window_building_draw_description_at(c, 86, group_id, 11);
     else if (c->worker_percentage >= 100)
         window_building_draw_description_at(c, 86, group_id, 6);

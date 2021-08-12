@@ -369,7 +369,7 @@ public:
     void set_resource(int resource);
     int get_resource() const;
     void load_resource(int amount, int resource);
-    int unload_resource(int amount);
+    int dump_resource(int amount);
     int get_carrying_amount();
     void determine_deliveryman_destination();
     void determine_deliveryman_destination_food();

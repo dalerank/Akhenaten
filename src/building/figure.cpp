@@ -219,11 +219,11 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one) {
     // no checking for work force? doesn't matter anyways.... there's no instance
     // in the game that allows cartpushers to spawn before the workers disappear!
     if (road_is_accessible) {
-        while (loads_stored) {
-            int loads_to_carry = fmin(loads_stored, 4);
-            create_cartpusher(output_resource_id, loads_to_carry * 100);
-            loads_stored -= loads_to_carry;
-            if (only_one || loads_stored == 0) // done once, or out of goods?
+        while (stored_full_amount) {
+            int amounts_to_carry = fmin(stored_full_amount, 800);
+            create_cartpusher(output_resource_id, amounts_to_carry);
+            stored_full_amount -= amounts_to_carry;
+            if (only_one || stored_full_amount == 0) // done once, or out of goods?
                 return true;
         }
     }
@@ -397,11 +397,7 @@ void building::spawn_figure_market() {
     set_market_graphic();
     check_labor_problem();
 
-    if (road_is_accessible) {
-        common_spawn_labor_seeker(50);
-        int pct_workers = worker_percentage();
-        int spawn_delay = figure_spawn_timer();
-
+    if (common_spawn_figure_trigger(50)) {
         // market buyer
         if (!has_figure_of_type(1, FIGURE_MARKET_BUYER)) {
             building *dest = building_get(building_market_get_storage_destination(this));
@@ -412,14 +408,15 @@ void building::spawn_figure_market() {
         }
 
         // market trader
+        int spawn_delay = figure_spawn_timer();
         if (!has_figure_of_type(0, FIGURE_MARKET_TRADER)) {
             if (data.market.inventory[0] > 0
-                 || data.market.inventory[1] > 0
-                 || data.market.inventory[2] > 0
-                 || data.market.inventory[3] > 0
-                 || data.market.inventory[4] > 0
-                 || data.market.inventory[5] > 0
-                 || data.market.inventory[6] > 0) { // do not spawn trader if bazaar is 100% empty!
+                || data.market.inventory[1] > 0
+                || data.market.inventory[2] > 0
+                || data.market.inventory[3] > 0
+                || data.market.inventory[4] > 0
+                || data.market.inventory[5] > 0
+                || data.market.inventory[6] > 0) { // do not spawn trader if bazaar is 100% empty!
                 figure_spawn_delay++;
                 if (figure_spawn_delay > spawn_delay) {
                     figure_spawn_delay = 0;
@@ -992,7 +989,7 @@ bool building::can_spawn_hunter() { // no cache because fuck the system (also I 
         if (hunters_total >= huntables)
             break;
     }
-    if (hunters_total < huntables && hunters_this_lodge < 3 && hunters_this_lodge + loads_stored < 5)
+    if (hunters_total < huntables && hunters_this_lodge < 3 && hunters_this_lodge + (stored_full_amount / 100) < 5)
         return true;
     return false;
 }

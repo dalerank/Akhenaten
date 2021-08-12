@@ -20,7 +20,7 @@ void building_bless_farms(void);
 void building_curse_farms(int big_curse);
 void building_farm_deplete_soil(const building *b);
 
-void building_workshop_add_raw_material(building *b);
+void building_workshop_add_raw_material(building *b, int amount);
 
 int building_get_workshop_for_raw_material(int x, int y, int resource, int distance_from_entry, int road_network_id,
                                            map_point *dst);

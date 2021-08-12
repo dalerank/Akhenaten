@@ -67,7 +67,8 @@ public:
     unsigned char has_water_access;
     int prev_part_building_id;
     int next_part_building_id;
-    short loads_stored;
+//    short stored_loads_c3;
+    short stored_full_amount;
     unsigned char has_well_access;
     short num_workers;
     unsigned char labor_category;

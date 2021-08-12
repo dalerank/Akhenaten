@@ -358,23 +358,23 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         image_base = image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL);
         switch (b->type) {
             case BUILDING_WINE_WORKSHOP:
-                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base, x + 45, y + 23, color_mask);
                 break;
             case BUILDING_OIL_WORKSHOP:
-                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 1, x + 35, y + 15, color_mask);
                 break;
             case BUILDING_WEAPONS_WORKSHOP:
-                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 3, x + 46, y + 24, color_mask);
                 break;
             case BUILDING_FURNITURE_WORKSHOP:
-                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 2, x + 48, y + 19, color_mask);
                 break;
             case BUILDING_POTTERY_WORKSHOP:
-                if (b->loads_stored >= 2 || b->data.industry.has_raw_materials)
+                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 4, x + 47, y + 24, color_mask);
                 break;
         }
@@ -382,8 +382,8 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         image_base = image_id_from_group(GROUP_EMPIRE_RESOURCES);
         switch (b->type) {
             case BUILDING_HUNTING_LODGE:
-                if (b->loads_stored > 0)
-                    ImageDraw::img_generic(image_base + b->loads_stored - 1, x + 61, y + 14, color_mask);
+                if (b->stored_full_amount > 0)
+                    ImageDraw::img_generic(image_base + ceil((float)b->stored_full_amount / 100.0) - 1, x + 61, y + 14, color_mask);
                 break;
         }
     }

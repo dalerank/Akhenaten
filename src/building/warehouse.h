@@ -23,7 +23,7 @@ int building_warehouse_get_space_info(building *warehouse);
 
 int building_warehouse_get_amount(building *warehouse, int resource);
 
-int building_warehouse_add_resource(building *b, int resource);
+int building_warehouse_add_resource(building *b, int resource, int amount);
 
 
 bool building_warehouse_is_accepting(int resource, building *b);
