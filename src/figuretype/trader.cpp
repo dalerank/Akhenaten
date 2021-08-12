@@ -336,7 +336,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
 void figure::go_to_next_warehouse(int x_src, int y_src, int distance_to_entry) {
     map_point dst;
     int warehouse_id = get_closest_warehouse(x_src, y_src, empire_city_id, distance_to_entry, &dst);
-    if (warehouse_id) {
+    if (warehouse_id && warehouse_id != destinationID()) {
         set_destination(warehouse_id);
         action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
         destination_x = dst.x;
@@ -424,7 +424,7 @@ void figure::trade_caravan_action() {
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(empire_city_id), resource);
                         trader_record_sold_resource(trader_id, resource);
-                        trader_sell(1);
+                        trader_sell(100);
                     } else
                         move_on++;
                 } else
@@ -436,19 +436,7 @@ void figure::trade_caravan_action() {
             break;
         case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
         case 11:
-            move_ticks(1);
-            switch (direction) {
-                case DIR_FIGURE_NONE:
-                    action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-                    poof();
-                    break;
-                case DIR_FIGURE_REROUTE:
-                    route_remove();
-                    break;
-                case DIR_FIGURE_CAN_NOT_REACH:
-                    poof();
-                    break;
-            }
+            do_goto(destination_x, destination_y, TERRAIN_USAGE_PREFER_ROADS);
             break;
     }
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);

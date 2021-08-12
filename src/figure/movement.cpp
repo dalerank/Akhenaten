@@ -374,6 +374,7 @@ void figure::follow_ticks(int num_ticks) {
             int found_dir = calc_general_direction(tile_x, tile_y, leader->previous_tile_x, leader->previous_tile_y);
             if (found_dir >= 8) {
                 anim_frame = 0;
+                progress_on_tile--;
                 continue;
             }
             previous_tile_direction = direction;
