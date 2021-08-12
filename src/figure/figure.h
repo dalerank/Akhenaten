@@ -80,7 +80,7 @@ public:
     unsigned char outside_road_ticks;
     short max_roam_length;
     short roam_length;
-    unsigned char roam_wander_freely;
+    bool roam_wander_freely;
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
@@ -249,7 +249,7 @@ public:
     void draw_map_flag(int x, int y);
 
     // movement.c
-    void advance_tick();
+    void advance_figure_tick();
     void set_target_height_bridge();
     int get_permission_for_int();
     void move_to_next_tile();
@@ -257,7 +257,7 @@ public:
     void advance_route_tile(int roaming_enabled);
     void init_roaming_from_building(int roam_dir);
     void roam_set_direction();
-    void move_ticks(int num_ticks, int roaming_enabled = false);
+    void move_ticks(int num_ticks, bool roaming_enabled = false);
     void move_ticks_tower_sentry(int num_ticks);
     void roam_ticks(int num_ticks);
     void follow_ticks(int num_ticks);

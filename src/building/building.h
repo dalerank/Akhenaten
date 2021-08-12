@@ -71,7 +71,7 @@ public:
     short stored_full_amount;
     unsigned char has_well_access;
     short num_workers;
-    unsigned char labor_category;
+    char labor_category;
     unsigned char output_resource_id;
     unsigned char has_road_access;
     unsigned char house_criminal_active;

@@ -1123,9 +1123,6 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
             break;
     }
 
-    // for debugging...
-    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, map_grid_offset(x, y));
-
     // check if terrain is fully suitable for construction
     if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception)) {
         city_warning_show(WARNING_CLEAR_LAND_NEEDED);
@@ -1193,6 +1190,9 @@ static bool attempt_placing_on_shore(int type, int x, int y, int shore_size, boo
 int building_attempt_placing_and_return_cost(int type, int x_start, int y_start, int x_end, int y_end) {
     int x = x_end;
     int y = y_end;
+
+    // for debugging...
+    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, map_grid_offset(x, y));
 
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)

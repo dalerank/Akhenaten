@@ -96,8 +96,8 @@ static int CATEGORY_FOR_int_arr_PH[] = {
         
 		3, 3, 3, 3, 3, // temples
 		3, 3, 3, 3, 3, // temple complexes
-        1, // market
-		1, // granary
+        0, // market
+		0, // granary
 		1, // warehouse
 		-1, // warehouse space
 		1, // shipyard
@@ -152,7 +152,7 @@ static int CATEGORY_FOR_int_arr_PH[] = {
 		
 		-1, //130
 		
-        -1, -1, -1, -1, -1, // shrines
+        3, 3, 3, 3, 3, // shrines
 		-1, -1, -1, -1, -1, //140
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //150
         -1,
@@ -253,7 +253,7 @@ const int CATEGORY_FOR_building(building *b) {
         return CATEGORY_FOR_int_arr[type];
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (map_terrain_is(b->grid_offset, TERRAIN_FLOODPLAIN) && building_is_farm(type))
-            return 255;
+            return -1;
         return CATEGORY_FOR_int_arr_PH[type];
     }
 }

@@ -1,6 +1,8 @@
 #ifndef CITY_LABOR_H
 #define CITY_LABOR_H
 
+#include "buildings.h"
+
 typedef struct {
     int workers_needed;
     int workers_allocated;
@@ -22,6 +24,8 @@ void city_labor_change_wages(int amount);
 int city_labor_wages_rome(void);
 int city_labor_raise_wages_rome(void);
 int city_labor_lower_wages_rome(void);
+
+const int CATEGORY_FOR_building(building *b);
 
 const labor_category_data *city_labor_category(int category);
 

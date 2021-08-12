@@ -73,31 +73,6 @@ void figure::draw_debug() {
             text_draw(str, coords.x+30, coords.y+30, FONT_NORMAL_PLAIN, 0);
             break;
         case 2: // ROUTING
-            if (routing_path_id) {
-                draw_debug_line(str, coords.x, coords.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
-            } else {
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
-            }
-            draw_debug_line(str, coords.x, coords.y + 30, indent, "", terrain_usage, COLOR_WHITE);
-            switch (direction) {
-                case DIR_FIGURE_CAN_NOT_REACH:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_RED);
-                    break;
-                case DIR_FIGURE_REROUTE:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
-                    break;
-                case DIR_FIGURE_AT_DESTINATION:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_GREEN);
-                    break;
-                default:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_WHITE);
-                    break;
-            }
-
             // draw path
             if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
                 auto tile_coords = city_view_grid_offset_to_pixel(destination()->x, destination()->y);
@@ -148,6 +123,34 @@ void figure::draw_debug() {
                     ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                            tile_coords.y);
                 }
+            }
+
+            // the rest of values, on top of all else
+            if (!max_roam_length) {
+                draw_debug_line(str, coords.x, coords.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
+                draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
+                draw_debug_line(str, coords.x, coords.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
+            } else {
+                draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, coords.x + 15, coords.y + 10, 10, ":", roam_turn_direction,
+                                !roam_turn_direction ? COLOR_LIGHT_BLUE : 0xff777777);
+                draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
+            }
+            draw_debug_line(str, coords.x, coords.y + 30, indent, "", terrain_usage, COLOR_WHITE);
+            switch (direction) {
+                case DIR_FIGURE_CAN_NOT_REACH:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_RED);
+                    break;
+                case DIR_FIGURE_REROUTE:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
+                    break;
+                case DIR_FIGURE_AT_DESTINATION:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_GREEN);
+                    break;
+                default:
+                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_WHITE);
+                    break;
             }
 
             coords.y += 50;
@@ -307,10 +310,10 @@ void figure::adjust_pixel_offset(int *x, int *y) {
 //        }
 
         int adjusted_progress = progress_on_tile;
-        if (progress_on_tile > 9)
-            adjusted_progress -= 16;
-        else
-            adjusted_progress -= 1;
+        if (progress_on_tile >= 8)
+            adjusted_progress -= 15;
+//        else
+//            adjusted_progress -= 1;
 
         switch (dir) {
             case DIR_0_TOP_RIGHT:

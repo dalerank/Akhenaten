@@ -717,8 +717,11 @@ void draw_debug(int x, int y, int grid_offset) {
             }
             break;
         case 12:
-            if (b_id && b->grid_offset == grid_offset) {
-                draw_debug_line(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
+            if (b_id && b->grid_offset == grid_offset && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
+                if (b->labor_category != CATEGORY_FOR_building(b))
+                    draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED);
+                else
+                    draw_debug_line(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
                 draw_debug_line(str, x1, y + 10, 0, "", b->houses_covered, COLOR_WHITE);
                 draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_GREEN);
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);

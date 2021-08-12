@@ -77,7 +77,6 @@ static int provide_service(int x, int y, int *data, void (*callback)(building *,
                 callback(b, data);
                 if (b->house_size && b->house_population > 0)
                     serviced++;
-
             }
         }
     }
@@ -272,8 +271,6 @@ building *figure::get_entertainment_building() {
 }
 int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
-//    int x = x;
-//    int y = y;
     building *b;
     switch (type) {
         case FIGURE_PATRICIAN:

@@ -8,10 +8,10 @@
 #include "map/building.h"
 
 static struct {
-    int paused;
+    bool paused;
     int current_overlay;
     int previous_overlay;
-} data = {0, OVERLAY_NONE, OVERLAY_NONE};
+} data = {false, OVERLAY_NONE, OVERLAY_NONE};
 
 void game_state_init(void) {
     city_victory_reset();
@@ -24,7 +24,7 @@ void game_state_init(void) {
 
     city_warning_clear_all();
 }
-int game_state_is_paused(void) {
+bool game_state_is_paused(void) {
     return data.paused;
 }
 void game_state_unpause(void) {

@@ -96,19 +96,20 @@ static void add_house_population(building *house, int num_people) {
 void figure::immigrant_action() {
     building *b = immigrant_home();
     switch (action_state) {
-        case ACTION_8_RECALCULATE:
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
+        case ACTION_8_RECALCULATE:
 //            is_ghost = true;
             anim_frame = 0;
             wait_ticks--;
             if (wait_ticks <= 0)
                 advance_action(FIGURE_ACTION_2_IMMIGRANT_ARRIVING);
             break;
-        case 9: // arriving
         case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
+        case 9: // arriving
             do_gotobuilding(immigrant_home(), true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE);
             break;
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
+        case 10:
             if (do_enterbuilding(false, immigrant_home()))
                 add_house_population(b, migrant_num_people);
 //            is_ghost = in_building_wait_ticks ? 1 : 0;

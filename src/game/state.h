@@ -31,7 +31,7 @@ enum {
 
 void game_state_init(void);
 
-int game_state_is_paused(void);
+bool game_state_is_paused(void);
 
 void game_state_toggle_paused(void);
 

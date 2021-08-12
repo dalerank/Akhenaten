@@ -1,4 +1,5 @@
 #include <scenario/events.h>
+#include <window/city.h>
 #include "game.h"
 
 #include "building/construction.h"
@@ -83,7 +84,7 @@ static bool reload_language(int is_editor, int reload_images) {
 }
 
 static int get_elapsed_ticks(void) {
-    if (game_state_is_paused())
+    if (game_state_is_paused() || !city_has_loaded)
         return 0;
 
     int game_speed_index = 0;
@@ -113,7 +114,6 @@ static int get_elapsed_ticks(void) {
 
     if (scroll_in_progress() && !scroll_is_smooth())
         return 0;
-
 
     time_millis now = time_get_millis();
     time_millis diff = now - last_update;

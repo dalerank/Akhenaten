@@ -163,6 +163,8 @@ static void toggle_pause(void) {
 int debug_range_1 = 0;
 int debug_range_2 = 0;
 
+bool city_has_loaded = false;
+
 static void handle_hotkeys(const hotkeys *h) {
     if (h->debug_1_up)
         debug_range_1+=1;
@@ -246,6 +248,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 //            return;
     }
     widget_city_handle_input(m, h);
+    city_has_loaded = true;
 }
 static void handle_input_military(const mouse *m, const hotkeys *h) {
     handle_hotkeys(h);
@@ -284,6 +287,7 @@ void window_city_show(void) {
             get_tooltip
     };
     window_show(&window);
+    city_has_loaded = false;
 }
 void window_city_military_show(int legion_formation_id) {
     selected_legion_formation_id = legion_formation_id;
