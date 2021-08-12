@@ -71,7 +71,7 @@ public:
     } formation_position_y;
     short __unused_24;
     short wait_ticks;
-    unsigned short action_state;
+    short action_state;
     unsigned char progress_on_tile;
     short routing_path_id;
     short routing_path_current_tile;
@@ -136,8 +136,19 @@ public:
     short attacker_id2;
     short opponent_id;
 
-    short unk_fest_269;
-    short unk_fest_ffff;
+    // pharaoh
+
+    // 7 bytes 00 00 00 00 00 00 00
+    short unk_ph1_269;
+    short unk_ph2_00;
+    short market_lady_resource_image_offset;
+    // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF
+    short market_lady_returning_home_id;
+    // 14 bytes 00 00 00 00 00 00 00 ...
+    short market_lady_bought_amount;
+    // 115 bytes
+    char unk_ph3_6;
+    short unk_ph4_ffff;
     char festival_remaining_dances;
 
     //
@@ -264,11 +275,11 @@ public:
     void action_perform();
     void advance_action(short NEXT_ACTION);
     bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
-    bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_gotobuilding(building *dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = 0);
-    bool do_exitbuilding(bool invisible, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
-    bool do_enterbuilding(bool invisible, building *b, short NEXT_ACTION = 0, short FAIL_ACTION = 0);
+    bool do_goto(int x, int y, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_gotobuilding(building *dest, bool stop_at_road = true, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_returnhome(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1);
+    bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
+    bool do_enterbuilding(bool invisible, building *b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
     void immigrant_action();
     void emigrant_action();

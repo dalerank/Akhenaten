@@ -178,8 +178,8 @@ void figure::draw_debug() {
             break;
         case 5: // FESTIVAL
             coords.y += 30;
-            draw_debug_line(str, coords.x, coords.y, indent, "",  unk_fest_269, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 10, indent, "",  unk_fest_ffff, COLOR_WHITE);
+            draw_debug_line(str, coords.x, coords.y, indent, "", unk_ph1_269, COLOR_WHITE);
+            draw_debug_line(str, coords.x, coords.y + 10, indent, "", unk_ph4_ffff, COLOR_WHITE);
             draw_debug_line(str, coords.x, coords.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
             break;
     }

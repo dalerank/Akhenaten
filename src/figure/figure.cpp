@@ -425,9 +425,16 @@ void figure::load(buffer *buf) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
 //        buf->skip(239);
         buf->skip(7);
-        f->unk_fest_269 = buf->read_i16(); // 269
-        buf->skip(152);
-        f->unk_fest_ffff = buf->read_i16(); // -1
+        f->unk_ph1_269 = buf->read_i16(); // 269
+        f->unk_ph2_00 = buf->read_i16(); // 0
+        f->market_lady_resource_image_offset = buf->read_i32(); // 03 00 00 00
+        buf->skip(12); // FF FF FF FF FF ...
+        f->market_lady_returning_home_id = buf->read_i16(); // 26
+        buf->skip(14); // 00 00 00 00 00 00 00 ...
+        f->market_lady_bought_amount = buf->read_i16(); // 200
+        buf->skip(115);
+        f->unk_ph3_6 = buf->read_i8(); // 6
+        f->unk_ph4_ffff = buf->read_i16(); // -1
         buf->skip(48);
         f->festival_remaining_dances = buf->read_i8();
         buf->skip(27);

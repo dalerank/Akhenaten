@@ -278,7 +278,7 @@ bool figure::do_enterbuilding(bool invisible, building *b, short NEXT_ACTION, sh
 
 void figure::action_perform() {
 //    return;
-    if (action_state == 0)
+    if (action_state < 0)
         set_state(FIGURE_STATE_DEAD);
     if (state) {
         if (targeted_by_figure_id) {

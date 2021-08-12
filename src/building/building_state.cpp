@@ -220,16 +220,31 @@ static void read_type_data(buffer *buf, building *b) {
         b->data.house.evolve_text_id = buf->read_u8();
     } else if (b->type == BUILDING_MARKET) {
         buf->skip(2);
-        for (int i = 0; i < INVENTORY_MAX; i++) {
-            b->data.market.inventory[i] = buf->read_i16();
+        if (GAME_ENV == ENGINE_ENV_C3) {
+            for (int i = 0; i < INVENTORY_MAX; i++)
+                b->data.market.inventory[i] = buf->read_i16();
+            b->data.market.pottery_demand = buf->read_i16();
+            b->data.market.furniture_demand = buf->read_i16();
+            b->data.market.oil_demand = buf->read_i16();
+            b->data.market.wine_demand = buf->read_i16();
+            buf->skip(6);
+            b->data.market.fetch_inventory_id = buf->read_u8();
+            buf->skip(9);
+        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//            buf->skip(8);
+            b->data.market.pottery_demand = buf->read_i16();
+            b->data.market.furniture_demand = buf->read_i16();
+            b->data.market.oil_demand = buf->read_i16();
+            b->data.market.wine_demand = buf->read_i16();
+            for (int i = 0; i < INVENTORY_MAX; i++)
+                b->data.market.inventory[i] = buf->read_i32();
+//            buf->skip(6);
+            b->data.market.fetch_inventory_id = buf->read_u8();
+            buf->skip(7);
+//            buf->skip(6);
+//            b->data.market.fetch_inventory_id = buf->read_u8();
+//            buf->skip(9);
         }
-        b->data.market.pottery_demand = buf->read_i16();
-        b->data.market.furniture_demand = buf->read_i16();
-        b->data.market.oil_demand = buf->read_i16();
-        b->data.market.wine_demand = buf->read_i16();
-        buf->skip(6);
-        b->data.market.fetch_inventory_id = buf->read_u8();
-        buf->skip(9);
     } else if (b->type == BUILDING_GRANARY) {
         buf->skip(2);
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
