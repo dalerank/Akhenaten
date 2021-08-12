@@ -247,6 +247,7 @@ static void draw_debug_ui(int x, int y) {
             case 11:
                 text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, col); break;
             case 12:
+                text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
             case 13:
             case 14:
             case 15:

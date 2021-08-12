@@ -716,7 +716,7 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
-        case 12:
+        case 12: // LABOR
             if (b_id && b->grid_offset == grid_offset && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 if (b->labor_category != CATEGORY_FOR_building(b))
                     draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED);

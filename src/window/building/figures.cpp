@@ -432,7 +432,7 @@ void window_building_prepare_figure_list(building_info_context *c) {
 
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figure_ids[i], &coord);
-            graphics_save_to_buffer(coord.x, coord.y, 48, 48, data.figure_images[i]);
+            graphics_save_to_buffer(coord.x - 25, coord.y - 45, 48, 48, data.figure_images[i]);
         }
         graphics_set_active_canvas(CANVAS_UI);
         widget_city_draw();
