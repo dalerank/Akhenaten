@@ -245,8 +245,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max)
                 trade_max = trade_now;
-            trade_now = stack_proper_quantity(trade_now, resource);
-            trade_max = stack_proper_quantity(trade_max, resource);
+            trade_now = stack_proper_quantity(trade_now * 100, resource);
+            trade_max = stack_proper_quantity(trade_max * 100, resource);
 
             int text_width = text_draw_number(trade_now, '@', "",
                                               x_offset + column_offset + 150, y_offset + INFO_Y_TRADED + row_offset, traded_font);
@@ -271,8 +271,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             int trade_now = trade_route_traded(city->route_id, resource);
             if (trade_now > trade_max)
                 trade_max = trade_now;
-            trade_now = stack_proper_quantity(trade_now, resource);
-            trade_max = stack_proper_quantity(trade_max, resource);
+            trade_now = stack_proper_quantity(trade_now * 100, resource);
+            trade_max = stack_proper_quantity(trade_max * 100, resource);
 
             int text_width = text_draw_number(trade_now, '@', "",
                                               x_offset + column_offset + 150, y_offset + INFO_Y_TRADED + row_offset, traded_font);
@@ -292,6 +292,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
 
             int trade_max = trade_route_limit(city->route_id, resource);
+            trade_max = stack_proper_quantity(trade_max * 100, resource);
             draw_trade_resource(resource, trade_max, x_offset + spacing + 80, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
             spacing += 32;
         }
@@ -304,6 +305,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 continue;
 
             int trade_max = trade_route_limit(city->route_id, resource);
+            trade_max = stack_proper_quantity(trade_max * 100, resource);
             draw_trade_resource(resource, trade_max, x_offset + spacing + 80, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV]);
             spacing += 32;
         }

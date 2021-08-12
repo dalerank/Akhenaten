@@ -151,7 +151,7 @@ static int trader_get_buy_resource(building *warehouse, int city_id) {
         int resource = space->subtype.warehouse_resource_id;
         if (space->stored_full_amount >= 100 && empire_can_export_resource_to_city(city_id, resource)) {
             // update stocks
-            city_resource_remove_from_warehouse(resource, 1);
+            city_resource_remove_from_warehouse(resource, 100);
             space->stored_full_amount -= 100;
             if (space->stored_full_amount <= 0)
                 space->subtype.warehouse_resource_id = RESOURCE_NONE;

@@ -112,7 +112,7 @@ public:
     signed char x_offset_cart;
     signed char y_offset_cart;
     unsigned char empire_city_id;
-    unsigned char trader_amount_bought;
+    unsigned short trader_amount_bought;
     short name;
     char terrain_usage;
     unsigned char is_boat; // 1 for boat, 2 for flotsam

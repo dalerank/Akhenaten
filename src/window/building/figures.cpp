@@ -95,7 +95,7 @@ void figure::draw_trader(building_info_context *c) {
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_NORMAL_GREEN);
 
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 132, FONT_NORMAL_GREEN);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8, c->x_offset + 40 + width, c->y_offset + 132,
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? 1200 : 800, c->x_offset + 40 + width, c->y_offset + 132,
                           FONT_NORMAL_GREEN);
 
     int trader_id = f->trader_id;
@@ -128,9 +128,8 @@ void figure::draw_trader(building_info_context *c) {
             case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
                 if (trader_has_traded(trader_id))
                     text_id = 11;
-                else {
+                else
                     text_id = 13;
-                }
                 break;
             default:
                 text_id = 11;
