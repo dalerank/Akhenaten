@@ -19,7 +19,7 @@ static int MAX_FIGURES[] = {5000, 2000};
 class figure {
 private:
     unsigned char resource_id;
-    unsigned char resource_amount_loads;
+//    unsigned char resource_amount_loads;
     unsigned short resource_amount_full; // full load counter
 
     short home_building_id;
@@ -389,8 +389,8 @@ public:
     void figure_delivery_boy_action();
 
     // trader.c
-    void trader_buy(int loads);
-    void trader_sell(int loads);
+    void trader_buy(int amounts);
+    void trader_sell(int amounts);
     int trader_total_bought();
     int trader_total_sold();
     int get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point *warehouse);

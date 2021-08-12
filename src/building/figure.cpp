@@ -929,8 +929,8 @@ void building::spawn_figure_warehouse() {
                         break;
                     case WAREHOUSE_TASK_DELIVERING:
                     case WAREHOUSE_TASK_EMPTYING:
-                        amount = fmin(amount, 4);
-                        f->load_resource(amount * 100, resource);
+                        amount = fmin(amount, 400);
+                        f->load_resource(amount, resource);
                         building_warehouse_remove_resource(this, resource, amount);
                         break;
                 }

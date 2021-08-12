@@ -155,18 +155,11 @@ void figure::draw_debug() {
             text_draw(str, coords.x, coords.y + 30, FONT_NORMAL_PLAIN, 0);
             break;
         case 3: // RESOURCE CARRY
-//            coords.y += 30;
             if (resource_id) {
                 draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_GREEN);
-                if (resource_amount_full > 0)
-                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_GREEN);
-                else
-                    draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, COLOR_WHITE);
-            } else {
-                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, 0xff777777);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, 0xff777777);
+                draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, resource_amount_full ? COLOR_GREEN : 0xff777777);
+                draw_debug_line(str, coords.x, coords.y + 20, indent, "",  collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : 0xff777777);
             }
-            draw_debug_line(str, coords.x, coords.y + 20, indent, "",  collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : 0xff777777);
             break;
         case 4: // BUILDING DATA
             draw_debug_line(str, coords.x + 0, coords.y, indent, "",  homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);

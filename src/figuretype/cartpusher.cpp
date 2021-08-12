@@ -33,12 +33,12 @@ int figure::get_resource() const {
 void figure::load_resource(int amount, int resource) {
     resource_id = resource;
     resource_amount_full = amount;
-    resource_amount_loads = amount / 100;
+//    resource_amount_loads = amount / 100;
 }
 int figure::dump_resource(int amount) {
     amount = fmin(amount, resource_amount_full);
     resource_amount_full -= amount;
-    resource_amount_loads -= amount / 100;
+//    resource_amount_loads -= amount / 100;
 
     // automatically clear field if carrying nothing
     if (resource_amount_full == 0)

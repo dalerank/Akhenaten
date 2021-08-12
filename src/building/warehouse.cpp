@@ -519,7 +519,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             }
         }
 
-        int requesting = building_warehouse_get_accepting_amount(r, warehouse) / 100;
+        int requesting = building_warehouse_get_accepting_amount(r, warehouse);
         int lacking = requesting - total_stored;
 
         // determine if there's enough room for more to accept, depending on "get up to..." settings!
@@ -567,7 +567,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
                 int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
                 if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
                     *resource = space->subtype.warehouse_resource_id;
-                    *amount = 1; // always one load only for industry!!
+                    *amount = 100; // always one load only for industry!!
                     return WAREHOUSE_TASK_DELIVERING;
                 }
             }
@@ -581,7 +581,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
-                *amount = 1; // always one load only for granaries?
+                *amount = 100; // always one load only for granaries?
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }
@@ -594,7 +594,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             space = space->next();
             if (contains_non_stockpiled_food(space, granary_resources)) {
                 *resource = space->subtype.warehouse_resource_id;
-                *amount = 1; // always one load only for granaries?
+                *amount = 100; // always one load only for granaries?
                 return WAREHOUSE_TASK_DELIVERING;
             }
         }
