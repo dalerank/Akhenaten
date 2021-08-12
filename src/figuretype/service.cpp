@@ -106,7 +106,7 @@ void figure::tax_collector_action() {
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;

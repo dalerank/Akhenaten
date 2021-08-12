@@ -165,11 +165,11 @@ void figure::set_next_tile_and_direction() {
             direction = figure_route_get_direction(routing_path_id, routing_path_current_tile);
         else { // at destination!!
             route_remove();
-            direction = DIR_FIGURE_AT_DESTINATION;
+            direction = DIR_FIGURE_NONE;
         }
     } else { // no path possible - should be at destination
         direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
-        if (direction != DIR_FIGURE_AT_DESTINATION) {
+        if (direction != DIR_FIGURE_NONE) {
             if (!roam_wander_freely) // this is because the road network was cutoff from the "randomized direction" target
                 roam_wander_freely = true;
             else // all other cases
@@ -245,16 +245,12 @@ void figure::advance_route_tile(int roaming_enabled) {
         direction = DIR_FIGURE_REROUTE;
 }
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
-//    if (!is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
-//        kill();
-//    if (is_boat && !map_terrain_is(grid_offset_figure, TERRAIN_WATER))
-//        kill();
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 15)
-            progress_on_tile = 0;
-        if (progress_on_tile == 0) { // tile center
+        if (progress_on_tile == 8) // tile edge reached
+            move_to_next_tile();
+        if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
 
             // update route
@@ -267,14 +263,14 @@ void figure::move_ticks(int num_ticks, bool roaming_enabled) {
             routing_path_current_tile++;
             previous_tile_direction = direction;
         }
-        if (progress_on_tile == 8) // tile edge reached
-            move_to_next_tile();
+        if (progress_on_tile > 14) // wrap around
+            progress_on_tile = 0;
         advance_figure_tick();
     }
 }
 
 void figure::init_roaming_from_building(int roam_dir) {
-    progress_on_tile = 15;
+    progress_on_tile = 14;
     roam_wander_freely = false;
     roam_ticks_until_next_turn = -1;
     roam_turn_direction = 2;
@@ -360,7 +356,7 @@ void figure::move_ticks_tower_sentry(int num_ticks) {
         if (progress_on_tile < 15)
             advance_figure_tick();
         else
-            progress_on_tile = 15;
+            progress_on_tile = 14;
     }
 }
 void figure::follow_ticks(int num_ticks) {
@@ -371,9 +367,9 @@ void figure::follow_ticks(int num_ticks) {
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 15)
-            progress_on_tile = 0;
-        if (progress_on_tile == 0) { // tile center
+        if (progress_on_tile == 8) // tile edge reached
+            move_to_next_tile();
+        if (progress_on_tile >= 15) { // tile center
             figure_service_provide_coverage();
             int found_dir = calc_general_direction(tile_x, tile_y, leader->previous_tile_x, leader->previous_tile_y);
             if (found_dir >= 8) {
@@ -383,33 +379,34 @@ void figure::follow_ticks(int num_ticks) {
             previous_tile_direction = direction;
             direction = found_dir;
         }
-        if (progress_on_tile == 8) // tile edge reached
-            move_to_next_tile();
+        if (progress_on_tile > 14) // wrap around
+            progress_on_tile = 0;
         advance_figure_tick();
     }
 }
 void figure::roam_ticks(int num_ticks) {
     route_remove(); // refresh path to check if road network is disconnected
-    if (!roam_wander_freely) {
-        move_ticks(num_ticks, true);
-        if (direction == DIR_FIGURE_AT_DESTINATION)
-            roam_wander_freely = true;
-        else if (direction == DIR_FIGURE_REROUTE)
-            roam_wander_freely = true;
-
-        if (roam_wander_freely) { // keep going in same direction until turn
-            roam_ticks_until_next_turn = 100;
-            direction = previous_tile_direction;
-        } else
-            return;
-    }
+    // TODO: this mess... eventually.
+//    if (!roam_wander_freely) {
+//        move_ticks(num_ticks, true);
+//        if (direction == DIR_FIGURE_AT_DESTINATION)
+//            roam_wander_freely = true;
+//        else if (direction == DIR_FIGURE_REROUTE)
+//            roam_wander_freely = true;
+//
+//        if (roam_wander_freely) { // keep going in same direction until turn
+//            roam_ticks_until_next_turn = 100;
+//            direction = previous_tile_direction;
+//        } else
+//            return;
+//    }
     // no destination: walk to end of tile and pick a direction
     while (num_ticks > 0) {
         num_ticks--;
         progress_on_tile++;
-        if (progress_on_tile == 15)
-            progress_on_tile = 0;
-        if (progress_on_tile == 0) { // tile center
+        if (progress_on_tile == 8) // tile edge reached
+            move_to_next_tile();
+        if (progress_on_tile >= 15) { // tile center
             if (figure_service_provide_coverage())
                 return;
             int came_from_direction = (previous_tile_direction + 4) % 8;
@@ -454,7 +451,7 @@ void figure::roam_ticks(int num_ticks) {
             } else if (adjacent_road_tiles == 2) {
                 if (roam_ticks_until_next_turn == -1) {
                     roam_set_direction();
-                    came_from_direction = -1;
+//                    came_from_direction = -1; // TODO?
                 }
                 // 1. continue in the same direction
                 // 2. turn in the direction given by roam_turn_direction
@@ -489,8 +486,8 @@ void figure::roam_ticks(int num_ticks) {
             routing_path_current_tile++;
             previous_tile_direction = direction;
         }
-        if (progress_on_tile == 8) // tile edge reached
-            move_to_next_tile();
+        if (progress_on_tile > 14) // wrap around
+            progress_on_tile = 0;
         advance_figure_tick();
     }
 }

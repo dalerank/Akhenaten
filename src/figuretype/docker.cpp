@@ -365,7 +365,7 @@ void figure::docker_action() {
         case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
 //            set_cart_graphic();
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -379,7 +379,7 @@ void figure::docker_action() {
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
             cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -393,7 +393,7 @@ void figure::docker_action() {
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
 //            set_cart_graphic();
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE;
                 wait_ticks = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
@@ -408,7 +408,7 @@ void figure::docker_action() {
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
 //            set_cart_graphic();
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_132_DOCKER_IDLING;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();

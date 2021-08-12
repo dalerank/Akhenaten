@@ -219,7 +219,7 @@ void figure::tower_sentry_action() {
             break;
         case FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                 destination_x = source_x;
                 destination_y = source_y;
@@ -249,7 +249,7 @@ void figure::tower_sentry_action() {
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
@@ -264,7 +264,7 @@ void figure::tower_sentry_action() {
 //            is_ghost = false;
             height_adjusted_ticks = 0;
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 map_figure_remove();
                 source_x = tile_x = b->x;
                 source_y = tile_y = b->y;

@@ -22,7 +22,7 @@ void figure::indigenous_native_action() {
     switch (action_state) {
         case FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
                 destination_x = source_x;
                 destination_y = source_y;
@@ -32,7 +32,7 @@ void figure::indigenous_native_action() {
             break;
         case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
+            if (direction == DIR_FIGURE_NONE ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
@@ -66,7 +66,7 @@ void figure::indigenous_native_action() {
             city_figures_add_attacking_native();
             terrain_usage = TERRAIN_USAGE_ENEMY;
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
+            if (direction == DIR_FIGURE_NONE ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_158_NATIVE_CREATED;

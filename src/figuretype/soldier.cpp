@@ -394,7 +394,7 @@ void figure::soldier_action() {
             destination_y = formation_position_y.soldier;
             destination_grid_offset = map_grid_offset(destination_x, destination_y);
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -407,7 +407,7 @@ void figure::soldier_action() {
             destination_x = source_x;
             destination_y = source_y;
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH)
+            if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -423,7 +423,7 @@ void figure::soldier_action() {
             }
             destination_grid_offset = map_grid_offset(destination_x, destination_y);
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
                 anim_frame = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
@@ -463,7 +463,7 @@ void figure::soldier_action() {
             m->has_military_training = 1;
             formation_at_rest = 1;
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -475,7 +475,7 @@ void figure::soldier_action() {
             formation_at_rest = 0;
             if (find_mop_up_target()) {
                 move_ticks(speed_factor);
-                if (direction == DIR_FIGURE_AT_DESTINATION) {
+                if (direction == DIR_FIGURE_NONE) {
                     figure *target = figure_get(target_figure_id);
                     destination_x = target->tile_x;
                     destination_y = target->tile_y;
@@ -493,7 +493,7 @@ void figure::soldier_action() {
             destination_x = exit->x;
             destination_y = exit->y;
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE)
@@ -511,7 +511,7 @@ void figure::soldier_action() {
             destination_y = formation_position_y.soldier;
             destination_grid_offset = map_grid_offset(destination_x, destination_y);
             move_ticks(speed_factor);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();

@@ -200,7 +200,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
     }
 
     // check if destination is reached/figure is lost/etc.
-    if (direction == DIR_FIGURE_AT_DESTINATION) {
+    if (direction == DIR_FIGURE_NONE) {
         advance_action(NEXT_ACTION);
         direction = previous_tile_direction;
         return true;

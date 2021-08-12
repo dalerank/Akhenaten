@@ -93,7 +93,7 @@ void figure::enemy_marching(const formation *m) {
         wait_ticks = 50;
         destination_x = m->destination_x + formation_position_x.enemy;
         destination_y = m->destination_y + formation_position_y.enemy;
-        if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) == DIR_FIGURE_AT_DESTINATION) {
+        if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
         }
@@ -101,7 +101,7 @@ void figure::enemy_marching(const formation *m) {
         route_remove();
     }
     move_ticks(speed_multiplier);
-    if (direction == DIR_FIGURE_AT_DESTINATION ||
+    if (direction == DIR_FIGURE_NONE ||
         direction == DIR_FIGURE_REROUTE ||
         direction == DIR_FIGURE_CAN_NOT_REACH) {
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
@@ -141,7 +141,7 @@ void figure::enemy_fighting(const formation *m) {
     }
     if (target_id > 0) {
         move_ticks(speed_multiplier);
-        if (direction == DIR_FIGURE_AT_DESTINATION) {
+        if (direction == DIR_FIGURE_NONE) {
             figure *target = figure_get(target_figure_id);
             destination_x = target->tile_x;
             destination_y = target->tile_y;
@@ -166,7 +166,7 @@ void figure::enemy_action(formation *m) {
             destination_x = source_x;
             destination_y = source_y;
             move_ticks(speed_multiplier);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
+            if (direction == DIR_FIGURE_NONE ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
@@ -533,7 +533,7 @@ void figure::enemy_gladiator_action() {
             city_figures_set_gladiator_revolt();
             terrain_usage = TERRAIN_USAGE_ENEMY;
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION ||
+            if (direction == DIR_FIGURE_NONE ||
                 direction == DIR_FIGURE_REROUTE ||
                 direction == DIR_FIGURE_CAN_NOT_REACH) {
                 action_state = FIGURE_ACTION_158_NATIVE_CREATED;

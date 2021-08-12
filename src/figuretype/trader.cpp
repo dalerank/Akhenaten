@@ -438,7 +438,7 @@ void figure::trade_caravan_action() {
         case 11:
             move_ticks(1);
             switch (direction) {
-                case DIR_FIGURE_AT_DESTINATION:
+                case DIR_FIGURE_NONE:
                     action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
                     poof();
                     break;
@@ -476,7 +476,7 @@ void figure::native_trader_action() {
     switch (action_state) {
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -491,7 +491,7 @@ void figure::native_trader_action() {
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION || direction == DIR_FIGURE_CAN_NOT_REACH)
+            if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -589,7 +589,7 @@ void figure::trade_ship_action() {
         case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -647,7 +647,7 @@ void figure::trade_ship_action() {
         case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION)
+            if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
             else if (direction == DIR_FIGURE_REROUTE)
                 route_remove();
@@ -678,7 +678,7 @@ void figure::trade_ship_action() {
         case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
                 poof();
             } else if (direction == DIR_FIGURE_REROUTE)

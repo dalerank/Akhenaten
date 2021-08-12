@@ -99,7 +99,7 @@ void figure::flotsam_action() {
                 move_ticks(1);
 //                is_ghost = false;
                 height_adjusted_ticks = 0;
-                if (direction == DIR_FIGURE_AT_DESTINATION ||
+                if (direction == DIR_FIGURE_NONE ||
                     direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
                     action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
                 }
@@ -223,7 +223,7 @@ void figure::fishing_boat_action() {
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 map_point tile;
                 if (map_water_find_alternative_fishing_boat_tile(this, &tile)) {
                     route_remove();
@@ -253,7 +253,7 @@ void figure::fishing_boat_action() {
         case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
                 wait_ticks = 0;
             } else if (direction == DIR_FIGURE_REROUTE)
@@ -288,7 +288,7 @@ void figure::fishing_boat_action() {
         case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
             move_ticks(1);
             height_adjusted_ticks = 0;
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
                 wait_ticks = 0;
                 b->figure_spawn_delay = 1;

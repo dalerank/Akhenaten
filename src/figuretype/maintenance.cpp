@@ -246,7 +246,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case ACTION_11_RETURNING_FROM_PATROL:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
-            do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
+            do_returnhome(TERRAIN_USAGE_ROADS);
             break;
         case 9:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
@@ -279,7 +279,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                     poof();
             }
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 figure *target = figure_get(target_figure_id);
                 destination_x = target->tile_x;
                 destination_y = target->tile_y;
@@ -352,7 +352,7 @@ void figure::policeman_action() {
         case ACTION_11_RETURNING_EMPTY:
         case FIGURE_ACTION_73_PREFECT_RETURNING:
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
                 set_cross_country_destination(b->x, b->y);
                 roam_length = 0;
@@ -373,7 +373,7 @@ void figure::policeman_action() {
                     poof();
             }
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 figure *target = figure_get(target_figure_id);
                 destination_x = target->tile_x;
                 destination_y = target->tile_y;

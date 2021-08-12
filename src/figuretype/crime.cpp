@@ -212,7 +212,7 @@ void figure::rioter_action() {
         case FIGURE_ACTION_121_RIOTER_MOVING:
 //            figure_image_increase_offset(12);
             move_ticks(1);
-            if (direction == DIR_FIGURE_AT_DESTINATION) {
+            if (direction == DIR_FIGURE_NONE) {
                 int x_tile, y_tile;
                 int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {

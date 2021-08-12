@@ -41,6 +41,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->is_friendly = true;
     f->created_sequence = data.created_sequence++;
     f->direction = dir;
+//    f->direction = DIR_FIGURE_NONE;
     f->roam_length = 0;
     f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
     f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
@@ -49,7 +50,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->grid_offset_figure = map_grid_offset(x, y);
     f->cross_country_x = 15 * x;
     f->cross_country_y = 15 * y;
-    f->progress_on_tile = 15;
+    f->progress_on_tile = 14;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     f->map_figure_add();

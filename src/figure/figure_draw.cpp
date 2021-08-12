@@ -85,7 +85,7 @@ void figure::draw_debug() {
                 ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                        tile_coords.y);
                 int starting_tile_index = routing_path_current_tile;
-                if (progress_on_tile > 1 && progress_on_tile < 10) // adjust half-tile offset
+                if (progress_on_tile >= 0 && progress_on_tile < 8) // adjust half-tile offset
                     starting_tile_index--;
                 for (int i = starting_tile_index; i < routing_path_length; i++) {
                     auto pdir = figure_route_get_direction(routing_path_id, i);
@@ -126,15 +126,13 @@ void figure::draw_debug() {
             }
 
             // the rest of values, on top of all else
-            if (!max_roam_length) {
+            if (routing_path_id) {
                 draw_debug_line(str, coords.x, coords.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
                 draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
                 draw_debug_line(str, coords.x, coords.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
             } else {
                 draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
                 draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, coords.x + 15, coords.y + 10, 10, ":", roam_turn_direction,
-                                !roam_turn_direction ? COLOR_LIGHT_BLUE : 0xff777777);
                 draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
             }
             draw_debug_line(str, coords.x, coords.y + 30, indent, "", terrain_usage, COLOR_WHITE);
@@ -145,13 +143,15 @@ void figure::draw_debug() {
                 case DIR_FIGURE_REROUTE:
                     draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
                     break;
-                case DIR_FIGURE_AT_DESTINATION:
+                case DIR_FIGURE_NONE:
                     draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_GREEN);
                     break;
                 default:
                     draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_WHITE);
                     break;
             }
+            draw_debug_line(str, coords.x + 10, coords.y + 40, 5, ":", roam_turn_direction,
+                            roam_turn_direction ? COLOR_LIGHT_BLUE : 0xff777777);
 
             coords.y += 50;
             string_from_int(str, progress_on_tile, 0);
