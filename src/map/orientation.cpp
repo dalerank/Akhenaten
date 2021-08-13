@@ -1,4 +1,5 @@
 #include <building/construction.h>
+#include <cmath>
 #include "orientation.h"
 
 #include "building/rotation.h"
@@ -452,40 +453,16 @@ void map_orientation_update_buildings(void) {
                             offsets_by_orientation[0] = b_delta_m1_0;
                             break;
                     }
-                    
-                    building *b2;
 
                     for (int j = 0; j < 4; ++j) {
-                        b2 = building_at(offsets_by_orientation[j]);
-                        if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == offsets_by_orientation[j] && b2->main() == b->main()) {
-                            map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
+                        auto neighbor = building_at(offsets_by_orientation[j]);
+                        if (neighbor->type == BUILDING_BANDSTAND
+                            && neighbor->grid_offset == offsets_by_orientation[j]
+                            && neighbor->main() == b->main()) {
+                            map_image_set(neighbor->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
                             continue;
                         }
                     }
-//                    // check at delta 0, -1
-//                    b2 = building_at(b_delta_0_m1);
-//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_0_m1 && b2->main() == b->main()) {
-//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 0);
-//                        continue;
-//                    }
-//                    // check at delta 0, 1
-//                    b2 = building_at(b_delta_0_1);
-//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_0_1 && b2->main() == b->main()) {
-//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1);
-//                        continue;
-//                    }
-//                    // check at delta 1, 0
-//                    b2 = building_at(b_delta_1_0);
-//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_1_0 && b2->main() == b->main()) {
-//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2);
-//                        continue;
-//                    }
-//                    // check at delta -1, 0
-//                    b2 = building_at(b_delta_m1_0);
-//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_m1_0 && b2->main() == b->main()) {
-//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3);
-//                        continue;
-//                    }
                 }
                 break;
         }
@@ -567,15 +544,16 @@ const uint8_t FESTIVAL_ROAD_POSITIONS[5][5] = {
 };
 
 int map_orientation_for_venue(int x, int y, int mode, int *building_orientation) {
-    switch (city_view_orientation()) {
-        case DIR_2_BOTTOM_RIGHT:
+    int map_orientation = city_view_orientation();
+    switch (map_orientation) {
+        case 2: // east
             x -= (mode + 1);
             break;
-        case DIR_4_BOTTOM_LEFT:
+        case 4: // south
             x -= (mode + 1);
             y -= (mode + 1);
             break;
-        case DIR_6_TOP_LEFT:
+        case 6: // west
             y -= (mode + 1);
             break;
     }
@@ -658,11 +636,11 @@ int map_orientation_for_venue(int x, int y, int mode, int *building_orientation)
                         break;
                 }
                 if (map_terrain_is(offset_1, TERRAIN_ROAD) || map_terrain_is(offset_2, TERRAIN_ROAD)) {
-                    *building_orientation = orientation_check;
+                    *building_orientation = abs(orientation_check + (8 - map_orientation)) % 8;
                     return 1;
                 }
             } else {
-                *building_orientation = orientation_check;
+                *building_orientation = abs(orientation_check + (8 - map_orientation)) % 8;
                 return 1;
             }
         }

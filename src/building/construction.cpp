@@ -259,12 +259,6 @@ static void add_temple_complex(building *b) {
 }
 
 static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {
-//    if (!update_only ||
-//        (map_terrain_is(grid_offset, TERRAIN_ROAD)))
-//        return;
-//        map_image_set(grid_offset, image_id);
-//        map_image_set(grid_offset, image_id_from_group(GROUP_SUNKEN_TILE) + 20);
-
     if (!update_only) {
         map_image_set(grid_offset, image_id);
         map_terrain_add(grid_offset, TERRAIN_BUILDING);
@@ -415,17 +409,9 @@ static void add_entertainment_venue(building *b) {
             image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
             break;
     }
+
     // add underlying plaza first
     map_add_venue_plaza_tiles(b->id, size, b->x, b->y, image_id, false);
-//    for (int dy = 0; dy < size; dy++) {
-//        for (int dx = 0; dx < size; dx++) {
-//            int grid_offset = map_grid_offset(b->x + dx, b->y + dy);
-//            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-//            map_building_set(grid_offset, b->id);
-//            map_property_clear_constructing(grid_offset);
-//            map_image_set(grid_offset, image_id + dx + (dy * size));
-//        }
-//    }
 
     // add additional building parts, update graphics accordingly
     switch (b->type) {

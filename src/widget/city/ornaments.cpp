@@ -188,8 +188,8 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
 static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_THEATER_SHOW) - 1,
-                         color_mask, image_id_from_group(GROUP_BUILDING_THEATER));
+        draw_normal_anim(x + 30, y + 15, b, b->grid_offset, image_id_from_group(GROUP_JUGGLERS_SHOW) - 1,
+                         color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
 static void draw_entertainment_shows_musicians(building *b, int x, int y, int direction, color_t color_mask) {
@@ -199,13 +199,13 @@ static void draw_entertainment_shows_musicians(building *b, int x, int y, int di
         switch (direction) {
             case 0:
                 draw_normal_anim(x + 20, y + 12, b, b->grid_offset,
-                                 image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
-                                 color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+                                 image_id_from_group(GROUP_MUSICIANS_SHOW) - 1,
+                                 color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
                 break;
             case 1:
                 draw_normal_anim(x + 48, y + 12, b, b->grid_offset,
-                                 image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
-                                 color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+                                 image_id_from_group(GROUP_MUSICIANS_SHOW) - 1 + 12,
+                                 color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
                 break;
         }
     }
@@ -213,8 +213,8 @@ static void draw_entertainment_shows_musicians(building *b, int x, int y, int di
 static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        draw_normal_anim(x + 64, y, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1,
-                         color_mask, image_id_from_group(GROUP_BUILDING_LION_HOUSE));
+        draw_normal_anim(x + 64, y, b, b->grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1,
+                         color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
 
@@ -573,7 +573,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) //
+                if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION))
                     draw_entertainment_shows_dancers(b, x, y, color_mask);
             }
             break;
