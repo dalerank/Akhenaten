@@ -284,9 +284,9 @@ void figure::save(buffer *buf) {
     buf->write_u8(f->phrase_sequence_exact);
     buf->write_i8(f->phrase_id);
     buf->write_u8(f->phrase_sequence_city);
+    buf->write_u8(f->__unused_6f);
     buf->write_u8(f->trader_id);
     buf->write_u8(f->wait_ticks_next_target);
-    buf->write_u8(f->__unused_6f);
     buf->write_i16(f->target_figure_id);
     buf->write_i16(f->targeted_by_figure_id);
     buf->write_u16(f->created_sequence);
@@ -413,9 +413,9 @@ void figure::load(buffer *buf) {
     f->phrase_sequence_exact = buf->read_u8();
     f->phrase_id = buf->read_i8();
     f->phrase_sequence_city = buf->read_u8();
+    f->__unused_6f = buf->read_u8();
     f->trader_id = buf->read_u8();
     f->wait_ticks_next_target = buf->read_u8();
-    f->__unused_6f = buf->read_u8();
     f->target_figure_id = buf->read_i16();
     f->targeted_by_figure_id = buf->read_i16();
     f->created_sequence = buf->read_u16();
