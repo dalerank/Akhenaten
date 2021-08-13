@@ -591,6 +591,15 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
 
 /////////
 
+static int north_tile_grid_offset(int x, int y) {
+    int grid_offset = map_grid_offset(x, y);
+    int size = map_property_multi_tile_size(grid_offset);
+    for (int i = 0; i < size && map_property_multi_tile_x(grid_offset); i++)
+        grid_offset += map_grid_delta(-1, 0);
+    for (int i = 0; i < size && map_property_multi_tile_y(grid_offset); i++)
+        grid_offset += map_grid_delta(0, -1);
+    return grid_offset;
+}
 void draw_debug(int x, int y, int grid_offset) {
 
     int DB2 = abs(debug_range_2) % 16;
@@ -669,6 +678,10 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
         case 5: // SPRITE FRAMES
+            if (grid_offset == map_grid_offset(b->x, b->y))
+                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
+            if (grid_offset == north_tile_grid_offset(b->x, b->y))
+                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
             d = map_sprite_animation_at(grid_offset);
             if (d) {
                 string_from_int(str, d, 0);
@@ -726,6 +739,9 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_GREEN);
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
             }
+            break;
+        case 13:
+            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
             break;
     }
 }

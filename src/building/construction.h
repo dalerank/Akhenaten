@@ -3,7 +3,9 @@
 
 #include "building/type.h"
 
-int building_construction_place_building(int type, int x, int y);
+void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only);
+
+//int building_construction_place_building(int type, int x, int y);
 
 void building_construction_set_type(int type);
 

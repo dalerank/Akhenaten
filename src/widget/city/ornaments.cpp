@@ -192,16 +192,22 @@ static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t 
                          color_mask, image_id_from_group(GROUP_BUILDING_THEATER));
     }
 }
-static void draw_entertainment_shows_musicians(building *b, int x, int y, color_t color_mask) {
+static void draw_entertainment_shows_musicians(building *b, int x, int y, int direction, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days2) {
         building *next_tile = b->next();
-        if (next_tile->type == BUILDING_BANDSTAND && next_tile->grid_offset == (b->grid_offset + 1))
-            draw_normal_anim(x + 48, y + 12, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
-                             color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
-        else
-            draw_normal_anim(x + 20, y + 12, b, b->grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
-                             color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+        switch (direction) {
+            case 0:
+                draw_normal_anim(x + 20, y + 12, b, b->grid_offset,
+                                 image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1,
+                                 color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+                break;
+            case 1:
+                draw_normal_anim(x + 48, y + 12, b, b->grid_offset,
+                                 image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12,
+                                 color_mask, image_id_from_group(GROUP_BUILDING_COLOSSEUM), 12);
+                break;
+        }
     }
 }
 static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t color_mask) {
@@ -549,7 +555,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (grid_offset == b->grid_offset)
+                if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BOOTH))
                     draw_entertainment_show_jugglers(b, x, y, color_mask);
             }
             break;
@@ -557,15 +563,17 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (grid_offset == b->grid_offset && building_get(b->prev_part_building_id)->type != b->type)
-                    draw_entertainment_shows_musicians(b, x, y, color_mask);
+                if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1)
+                    draw_entertainment_shows_musicians(b, x, y, 0, color_mask);
+                else if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2)
+                    draw_entertainment_shows_musicians(b, x, y, 1, color_mask);
             }
             break;
         case BUILDING_PAVILLION:
             if (GAME_ENV == ENGINE_ENV_C3)
                 draw_entertainment_shows_c3(b, x, y, color_mask);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (grid_offset == b->grid_offset + map_grid_delta(0, 1))
+                if (map_image_at(grid_offset) == image_id_from_group(GROUP_BUILDING_PAVILLION)) //
                     draw_entertainment_shows_dancers(b, x, y, color_mask);
             }
             break;

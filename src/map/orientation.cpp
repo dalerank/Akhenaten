@@ -1,3 +1,4 @@
+#include <building/construction.h>
 #include "orientation.h"
 
 #include "building/rotation.h"
@@ -16,6 +17,8 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "image.h"
+#include "building.h"
 
 static void determine_leftmost_tile(void) {
     int orientation = city_view_orientation();
@@ -383,6 +386,107 @@ void map_orientation_update_buildings(void) {
                         break;
                 }
                 map_water_add_building(i, b->x, b->y, 3, image_id);
+                break;
+            case BUILDING_BOOTH:
+            case BUILDING_BANDSTAND:
+            case BUILDING_PAVILLION:
+            case BUILDING_FESTIVAL_SQUARE:
+                // only update the plaza tiles for the main venue
+                if (b->is_main()) {
+                    int size = -1;
+                    int plaza_image_id = 0;
+                    switch (b->type) {
+                        case BUILDING_BOOTH:
+                            size = 2;
+                            plaza_image_id = image_id_from_group(GROUP_BOOTH_SQUARE);
+                            break;
+                        case BUILDING_BANDSTAND:
+                            size = 3;
+                            plaza_image_id = image_id_from_group(GROUP_BANDSTAND_SQUARE);
+                            break;
+                        case BUILDING_PAVILLION:
+                            size = 4;
+                            plaza_image_id = image_id_from_group(GROUP_PAVILLION_SQUARE);
+                            break;
+                        case BUILDING_FESTIVAL_SQUARE:
+                            size = 5;
+                            plaza_image_id = image_id_from_group(GROUP_FESTIVAL_SQUARE);
+                            break;
+                    }
+                    map_add_venue_plaza_tiles(b->id, size,
+                                              map_grid_offset_to_x(b->data.entertainment.booth_corner_grid_offset),
+                                              map_grid_offset_to_y(b->data.entertainment.booth_corner_grid_offset),
+                                              plaza_image_id, true);
+                }
+                // additionally, correct bandstand graphics
+                if (b->type == BUILDING_BANDSTAND) {
+                    int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);
+                    int b_delta_0_1 = b->grid_offset - map_grid_delta(0, 1);
+                    int b_delta_1_0 = b->grid_offset - map_grid_delta(1, 0);
+                    int b_delta_m1_0 = b->grid_offset - map_grid_delta(-1, 0);
+
+                    int offsets_by_orientation[4];
+                    switch (map_orientation) {
+                        case 0: // north
+                            offsets_by_orientation[0] = b_delta_0_m1;
+                            offsets_by_orientation[1] = b_delta_0_1;
+                            offsets_by_orientation[2] = b_delta_1_0;
+                            offsets_by_orientation[3] = b_delta_m1_0;
+                            break;
+                        case 2: // east
+                            offsets_by_orientation[3] = b_delta_0_m1;
+                            offsets_by_orientation[2] = b_delta_0_1;
+                            offsets_by_orientation[0] = b_delta_1_0;
+                            offsets_by_orientation[1] = b_delta_m1_0;
+                            break;
+                        case 4: // south
+                            offsets_by_orientation[1] = b_delta_0_m1;
+                            offsets_by_orientation[0] = b_delta_0_1;
+                            offsets_by_orientation[3] = b_delta_1_0;
+                            offsets_by_orientation[2] = b_delta_m1_0;
+                            break;
+                        case 6: // west
+                            offsets_by_orientation[2] = b_delta_0_m1;
+                            offsets_by_orientation[3] = b_delta_0_1;
+                            offsets_by_orientation[1] = b_delta_1_0;
+                            offsets_by_orientation[0] = b_delta_m1_0;
+                            break;
+                    }
+                    
+                    building *b2;
+
+                    for (int j = 0; j < 4; ++j) {
+                        b2 = building_at(offsets_by_orientation[j]);
+                        if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == offsets_by_orientation[j] && b2->main() == b->main()) {
+                            map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
+                            continue;
+                        }
+                    }
+//                    // check at delta 0, -1
+//                    b2 = building_at(b_delta_0_m1);
+//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_0_m1 && b2->main() == b->main()) {
+//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 0);
+//                        continue;
+//                    }
+//                    // check at delta 0, 1
+//                    b2 = building_at(b_delta_0_1);
+//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_0_1 && b2->main() == b->main()) {
+//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1);
+//                        continue;
+//                    }
+//                    // check at delta 1, 0
+//                    b2 = building_at(b_delta_1_0);
+//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_1_0 && b2->main() == b->main()) {
+//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 2);
+//                        continue;
+//                    }
+//                    // check at delta -1, 0
+//                    b2 = building_at(b_delta_m1_0);
+//                    if (b2->type == BUILDING_BANDSTAND && b2->grid_offset == b_delta_m1_0 && b2->main() == b->main()) {
+//                        map_image_set(b2->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + 3);
+//                        continue;
+//                    }
+                }
                 break;
         }
     }

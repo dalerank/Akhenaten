@@ -258,6 +258,59 @@ static void add_temple_complex(building *b) {
     }
 }
 
+static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {
+//    if (!update_only ||
+//        (map_terrain_is(grid_offset, TERRAIN_ROAD)))
+//        return;
+//        map_image_set(grid_offset, image_id);
+//        map_image_set(grid_offset, image_id_from_group(GROUP_SUNKEN_TILE) + 20);
+
+    if (!update_only) {
+        map_image_set(grid_offset, image_id);
+        map_terrain_add(grid_offset, TERRAIN_BUILDING);
+        map_building_set(grid_offset, building_id);
+        map_property_clear_constructing(grid_offset);
+    } else {
+        if (building_get(building_id)->type == BUILDING_FESTIVAL_SQUARE || map_terrain_is(grid_offset, TERRAIN_ROAD))
+            map_image_set(grid_offset, image_id);
+    }
+}
+void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only) {
+    switch (city_view_orientation()) {
+        case 0: // north
+            for (int dy = 0; dy < size; dy++) {
+                for (int dx = 0; dx < size; dx++) {
+                    int grid_offset = map_grid_offset(x + dx, y + dy);
+                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
+                }
+            }
+            break;
+        case 2: // east
+            for (int dy = 0; dy < size; dy++) {
+                for (int dx = 0; dx < size; dx++) {
+                    int grid_offset = map_grid_offset(x + size - 1 - dy, y + dx);
+                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
+                }
+            }
+            break;
+        case 4: // south
+            for (int dy = 0; dy < size; dy++) {
+                for (int dx = 0; dx < size; dx++) {
+                    int grid_offset = map_grid_offset(x + size - 1 - dx, y + size - 1 - dy);
+                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
+                }
+            }
+            break;
+        case 6: // west
+            for (int dy = 0; dy < size; dy++) {
+                for (int dx = 0; dx < size; dx++) {
+                    int grid_offset = map_grid_offset(x + dy, y + size - 1 - dx);
+                    set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
+                }
+            }
+            break;
+    }
+}
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
     int x = main->x + dx;
     int y = main->y + dy;
@@ -293,10 +346,10 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
             map_tiles_update_all_gardens();
             break;
         case BUILDING_BOOTH:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_THEATER));
+            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BOOTH));
             break;
         case BUILDING_BANDSTAND:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_AMPHITHEATER) + orientation);
+            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
             if (orientation == 1)
                 latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
             else if (orientation == 2)
@@ -321,30 +374,24 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
                 default:
                     return;
             }
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM));
+            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_PAVILLION));
             map_property_set_multi_tile_size(grid_offset, 2);
             map_property_set_multi_tile_xy(grid_offset, x, y, x == x_leftmost && y == y_leftmost);
             break;
     }
-//    map_image_set(booth_offset, image_id_from_group(GROUP_BUILDING_THEATER));
-//    map_building_set(booth_offset, booth->id);
 }
 static void add_entertainment_venue(building *b) {
     b->data.entertainment.booth_corner_grid_offset = b->grid_offset;
-//    const building_properties *props = building_properties_for_type(b->type);
     int size = 0;
     switch (b->type) {
         case BUILDING_BOOTH:
             size = 2; break;
         case BUILDING_BANDSTAND:
             size = 3; break;
-            break;
         case BUILDING_PAVILLION:
             size = 4; break;
-            break;
         case BUILDING_FESTIVAL_SQUARE:
             size = 5; break;
-            break;
     }
     if (!map_grid_is_inside(b->x, b->y, size))
         return;
@@ -369,15 +416,16 @@ static void add_entertainment_venue(building *b) {
             break;
     }
     // add underlying plaza first
-    for (int dy = 0; dy < size; dy++) {
-        for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(b->x + dx, b->y + dy);
-            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-            map_building_set(grid_offset, b->id);
-            map_property_clear_constructing(grid_offset);
-            map_image_set(grid_offset, image_id + dx + (dy * size));
-        }
-    }
+    map_add_venue_plaza_tiles(b->id, size, b->x, b->y, image_id, false);
+//    for (int dy = 0; dy < size; dy++) {
+//        for (int dx = 0; dx < size; dx++) {
+//            int grid_offset = map_grid_offset(b->x + dx, b->y + dy);
+//            map_terrain_add(grid_offset, TERRAIN_BUILDING);
+//            map_building_set(grid_offset, b->id);
+//            map_property_clear_constructing(grid_offset);
+//            map_image_set(grid_offset, image_id + dx + (dy * size));
+//        }
+//    }
 
     // add additional building parts, update graphics accordingly
     switch (b->type) {
