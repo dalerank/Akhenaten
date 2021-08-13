@@ -373,7 +373,7 @@ static int is_fully_blocked(int map_x, int map_y, int type, int building_size, i
         return 1;
     if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
         return 1;
-    if (type == BUILDING_PLAZA && !map_terrain_is(grid_offset, TERRAIN_ROAD))
+    if (type == BUILDING_PLAZA && (!map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_tiles_is_paved_road(grid_offset)))
         return 1;
     if (((type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) || type == BUILDING_ROADBLOCK) &&
         !map_terrain_is(grid_offset, TERRAIN_ROAD))
