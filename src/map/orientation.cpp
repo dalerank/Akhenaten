@@ -242,51 +242,8 @@ void map_orientation_update_buildings(void) {
                                               plaza_image_id, true);
                 }
                 // additionally, correct bandstand graphics
-                if (b->type == BUILDING_BANDSTAND) {
+                if (b->type == BUILDING_BANDSTAND)
                     map_add_bandstand_tiles(b);
-//                    int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);
-//                    int b_delta_0_1 = b->grid_offset - map_grid_delta(0, 1);
-//                    int b_delta_1_0 = b->grid_offset - map_grid_delta(1, 0);
-//                    int b_delta_m1_0 = b->grid_offset - map_grid_delta(-1, 0);
-//
-//                    int offsets_by_orientation[4];
-//                    switch (map_orientation) {
-//                        case 0: // north
-//                            offsets_by_orientation[0] = b_delta_0_m1;
-//                            offsets_by_orientation[1] = b_delta_0_1;
-//                            offsets_by_orientation[2] = b_delta_1_0;
-//                            offsets_by_orientation[3] = b_delta_m1_0;
-//                            break;
-//                        case 2: // east
-//                            offsets_by_orientation[3] = b_delta_0_m1;
-//                            offsets_by_orientation[2] = b_delta_0_1;
-//                            offsets_by_orientation[0] = b_delta_1_0;
-//                            offsets_by_orientation[1] = b_delta_m1_0;
-//                            break;
-//                        case 4: // south
-//                            offsets_by_orientation[1] = b_delta_0_m1;
-//                            offsets_by_orientation[0] = b_delta_0_1;
-//                            offsets_by_orientation[3] = b_delta_1_0;
-//                            offsets_by_orientation[2] = b_delta_m1_0;
-//                            break;
-//                        case 6: // west
-//                            offsets_by_orientation[2] = b_delta_0_m1;
-//                            offsets_by_orientation[3] = b_delta_0_1;
-//                            offsets_by_orientation[1] = b_delta_1_0;
-//                            offsets_by_orientation[0] = b_delta_m1_0;
-//                            break;
-//                    }
-//
-//                    for (int j = 0; j < 4; ++j) {
-//                        auto neighbor = building_at(offsets_by_orientation[j]);
-//                        if (neighbor->type == BUILDING_BANDSTAND
-//                            && neighbor->grid_offset == offsets_by_orientation[j]
-//                            && neighbor->main() == b->main()) {
-//                            map_image_set(neighbor->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
-//                            continue;
-//                        }
-//                    }
-                }
                 break;
         }
     }
