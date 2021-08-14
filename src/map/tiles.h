@@ -49,7 +49,13 @@ void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max);
 
 void map_tiles_update_all_elevation(void);
 
-int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain);
+enum {
+    CLEAR_LAND_DONT_CHECK_FIGURES = 0,
+    CLEAR_LAND_CHECK_FIGURES_OUTSIDE_ROAD = 1,
+    CLEAR_LAND_CHECK_FIGURES_ANYWHERE = 2
+};
+
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain, int check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE);
 
 void map_tiles_add_entry_exit_flags(void);
 void map_tiles_remove_entry_exit_flags(void);

@@ -34,7 +34,7 @@ static int aqueduct_include_construction = 0;
 //#include <chrono>
 #include "SDL_log.h"
 
-static int is_clear(int x, int y, int size, int allowed_terrain, int check_image) {
+static int is_clear(int x, int y, int size, int allowed_terrain, bool check_image, int check_figures = 2) {
     if (!map_grid_is_inside(x, y, size))
         return 0;
 
@@ -43,8 +43,14 @@ static int is_clear(int x, int y, int size, int allowed_terrain, int check_image
             int grid_offset = map_grid_offset(x + dx, y + dy);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR & allowed_terrain))
                 return 0;
-            else if (map_has_figure_at(grid_offset))
-                return 0;
+            else if (check_figures && map_has_figure_at(grid_offset)) {
+                // check for figures in the way?
+                if (check_figures = CLEAR_LAND_CHECK_FIGURES_ANYWHERE)
+                    return 0;
+                else if (check_figures == CLEAR_LAND_CHECK_FIGURES_OUTSIDE_ROAD
+                    && !map_terrain_is(grid_offset, TERRAIN_ROAD))
+                    return 0;
+            }
             else if (check_image && map_image_at(grid_offset))
                 return 0;
             if (allowed_terrain & TERRAIN_FLOODPLAIN) {
@@ -55,8 +61,8 @@ static int is_clear(int x, int y, int size, int allowed_terrain, int check_image
     }
     return 1;
 }
-int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain) {
-    return is_clear(x, y, size, disallowed_terrain, 0);
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain, int check_figures) {
+    return is_clear(x, y, size, disallowed_terrain, false, check_figures);
 }
 static void foreach_map_tile(void (*callback)(int x, int y, int grid_offset)) {
     int grid_offset = map_data.start_offset;

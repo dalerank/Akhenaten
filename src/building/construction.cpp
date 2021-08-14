@@ -1134,16 +1134,21 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
 static bool attempt_placing_generic(int type, int x, int y, int orientation, int terrain_exception = TERRAIN_NONE) {
     // by default, get size from building's properties
     int size = building_properties_for_type(type)->size;
+    int check_figures = 2;
     switch (type) { // special cases
         case BUILDING_WAREHOUSE:
             size = 3; break;
         case BUILDING_BOOTH:
+            check_figures = 1;
             size = 2; break;
         case BUILDING_BANDSTAND:
+            check_figures = 1;
             size = 3; break;
         case BUILDING_PAVILLION:
+            check_figures = 1;
             size = 4; break;
         case BUILDING_FESTIVAL_SQUARE:
+            check_figures = 1;
             size = 5; break;
     }
 
@@ -1162,7 +1167,7 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
     }
 
     // check if terrain is fully suitable for construction
-    if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception)) {
+    if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception, check_figures)) {
         city_warning_show(WARNING_CLEAR_LAND_NEEDED);
         return false;
     }
