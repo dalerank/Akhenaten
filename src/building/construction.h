@@ -2,7 +2,9 @@
 #define BUILDING_CONSTRUCTION_H
 
 #include "building/type.h"
+#include "building/building.h"
 
+void map_add_bandstand_tiles(building *b);
 void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only);
 
 //int building_construction_place_building(int type, int x, int y);

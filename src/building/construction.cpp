@@ -258,6 +258,50 @@ static void add_temple_complex(building *b) {
     }
 }
 
+void map_add_bandstand_tiles(building *b) {
+    int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);
+    int b_delta_0_1 = b->grid_offset - map_grid_delta(0, 1);
+    int b_delta_1_0 = b->grid_offset - map_grid_delta(1, 0);
+    int b_delta_m1_0 = b->grid_offset - map_grid_delta(-1, 0);
+
+    int offsets_by_orientation[4];
+    switch (city_view_orientation()) {
+        case 0: // north
+            offsets_by_orientation[0] = b_delta_0_m1;
+            offsets_by_orientation[1] = b_delta_0_1;
+            offsets_by_orientation[2] = b_delta_1_0;
+            offsets_by_orientation[3] = b_delta_m1_0;
+            break;
+        case 2: // east
+            offsets_by_orientation[3] = b_delta_0_m1;
+            offsets_by_orientation[2] = b_delta_0_1;
+            offsets_by_orientation[0] = b_delta_1_0;
+            offsets_by_orientation[1] = b_delta_m1_0;
+            break;
+        case 4: // south
+            offsets_by_orientation[1] = b_delta_0_m1;
+            offsets_by_orientation[0] = b_delta_0_1;
+            offsets_by_orientation[3] = b_delta_1_0;
+            offsets_by_orientation[2] = b_delta_m1_0;
+            break;
+        case 6: // west
+            offsets_by_orientation[2] = b_delta_0_m1;
+            offsets_by_orientation[3] = b_delta_0_1;
+            offsets_by_orientation[1] = b_delta_1_0;
+            offsets_by_orientation[0] = b_delta_m1_0;
+            break;
+    }
+
+    for (int j = 0; j < 4; ++j) {
+        auto neighbor = building_at(offsets_by_orientation[j]);
+        if (neighbor->type == BUILDING_BANDSTAND
+            && neighbor->grid_offset == offsets_by_orientation[j]
+            && neighbor->main() == b->main()) {
+            map_image_set(neighbor->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
+            continue;
+        }
+    }
+}
 static void set_underlying_venue_plaza_tile(int grid_offset, int building_id, int image_id, bool update_only) {
     if (!update_only) {
         map_image_set(grid_offset, image_id);
@@ -309,6 +353,7 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
     int x = main->x + dx;
     int y = main->y + dy;
     int grid_offset = map_grid_offset(x, y);
+    building *this_venue = main;
     if (main_venue) { // this is the main venue building!!
         if (type != main->type)
             return; // hmmm, this shouldn't happen
@@ -318,18 +363,18 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
     } else if (type == BUILDING_GARDENS) { // add gardens
         map_terrain_add(grid_offset, TERRAIN_GARDEN);
     } else { // extra venue
-        building *extra_venue = building_create(type, x, y);
+        this_venue = building_create(type, x, y);
         building *parent = main; // link venue to last one in the chain
         while (parent->next_part_building_id)
             parent = building_get(parent->next_part_building_id);
-        parent->next_part_building_id = extra_venue->id;
-        extra_venue->prev_part_building_id = parent->id;
+        parent->next_part_building_id = this_venue->id;
+        this_venue->prev_part_building_id = parent->id;
 
-        map_building_set(grid_offset, extra_venue->id);
+        map_building_set(grid_offset, this_venue->id);
         if (type == BUILDING_PAVILLION) {
-            map_building_set(grid_offset + map_grid_delta(1, 0), extra_venue->id);
-            map_building_set(grid_offset + map_grid_delta(1, 1), extra_venue->id);
-            map_building_set(grid_offset + map_grid_delta(0, 1), extra_venue->id);
+            map_building_set(grid_offset + map_grid_delta(1, 0), this_venue->id);
+            map_building_set(grid_offset + map_grid_delta(1, 1), this_venue->id);
+            map_building_set(grid_offset + map_grid_delta(0, 1), this_venue->id);
         }
     }
 
@@ -348,6 +393,7 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
                 latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
             else if (orientation == 2)
                 latch_on_venue(BUILDING_BANDSTAND, main, dx + 1, dy, 3);
+            map_add_bandstand_tiles(this_venue);
             break;
         case BUILDING_PAVILLION:
             switch (city_view_orientation()) {
@@ -561,19 +607,19 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1);
             break;
             // entertainment
-        case BUILDING_AMPHITHEATER:
-            if (GAME_ENV == ENGINE_ENV_C3)
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
-            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                add_entertainment_venue(b);
-            break;
-        case BUILDING_THEATER:
+        case BUILDING_THEATER: // GROUP_BUILDING_BOOTH
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_THEATER));
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_entertainment_venue(b);
             break;
-        case BUILDING_COLOSSEUM:
+        case BUILDING_AMPHITHEATER: // BUILDING_BANDSTAND
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+                add_entertainment_venue(b);
+            break;
+        case BUILDING_COLOSSEUM: // BUILDING_PAVILLION
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_COLOSSEUM));
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -1141,8 +1187,18 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
 static bool attempt_placing_generic(int type, int x, int y, int orientation, int terrain_exception = TERRAIN_NONE) {
     // by default, get size from building's properties
     int size = building_properties_for_type(type)->size;
-    if (type == BUILDING_WAREHOUSE)
-        size = 3; // special case
+    switch (type) { // special cases
+        case BUILDING_WAREHOUSE:
+            size = 3; break;
+        case BUILDING_BOOTH:
+            size = 2; break;
+        case BUILDING_BANDSTAND:
+            size = 3; break;
+        case BUILDING_PAVILLION:
+            size = 4; break;
+        case BUILDING_FESTIVAL_SQUARE:
+            size = 5; break;
+    }
 
     // correct building placement for city orientations
     switch (city_view_orientation()) {
@@ -1382,17 +1438,17 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
                 int orientation = 0;
                 int booth_warning = 0;
                 if (type == BUILDING_BOOTH)
-                    booth_warning = map_orientation_for_venue(x, y, 0, &orientation);
+                    booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 0, &orientation);
                 if (type == BUILDING_BANDSTAND)
-                    booth_warning = map_orientation_for_venue(x, y, 1, &orientation);
+                    booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 1, &orientation);
                 if (type == BUILDING_PAVILLION)
-                    booth_warning = map_orientation_for_venue(x, y, 2, &orientation);
+                    booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 2, &orientation);
                 if (type == BUILDING_FESTIVAL_SQUARE) {
                     if (city_building_has_festival_square()) {
                         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
                         return 0;
                     }
-                    booth_warning = map_orientation_for_venue(x, y, 3, &orientation);
+                    booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 3, &orientation);
                 }
                 if (booth_warning != 1) {
                     if (booth_warning == -1)
