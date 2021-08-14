@@ -118,77 +118,77 @@ static void add_fort(int type, building *fort) {
     fort->formation_id = formation_legion_create_for_fort(fort);
     ground->formation_id = fort->formation_id;
 }
-static void add_hippodrome(building *b) {
-    int image1 = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-    int image2 = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-    city_buildings_add_hippodrome();
-
-    building_rotation_force_two_orientations();
-    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
-    building *part1 = b;
-
-    part1->prev_part_building_id = 0;
-    int image_id;
-    switch (orientation) {
-        case DIR_0_TOP_RIGHT:
-            image_id = image2;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            image_id = image1 + 4;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            image_id = image2 + 4;
-            break;
-        case DIR_6_TOP_LEFT:
-            image_id = image1;
-            break;
-        default:
-            return;
-    }
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-    int x_offset, y_offset;
-    building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset, &y_offset);
-    building *part2 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
-    game_undo_add_building(part2);
-
-    part2->prev_part_building_id = part1->id;
-    part1->next_part_building_id = part2->id;
-    part2->next_part_building_id = 0;
-    switch (orientation) {
-        case DIR_0_TOP_RIGHT:
-        case DIR_4_BOTTOM_LEFT:
-            image_id = image2 + 2;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-        case DIR_6_TOP_LEFT:
-            image_id = image1 + 2;
-            break;
-    }
-    map_building_tiles_add(part2->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
-
-    building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset, &y_offset);
-    building *part3 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
-    game_undo_add_building(part3);
-
-    part3->prev_part_building_id = part2->id;
-    part2->next_part_building_id = part3->id;
-    part3->next_part_building_id = 0;
-    switch (orientation) {
-        case DIR_0_TOP_RIGHT:
-            image_id = image2 + 4;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            image_id = image1;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            image_id = image2;
-            break;
-        case DIR_6_TOP_LEFT:
-            image_id = image1 + 4;
-            break;
-    }
-    map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
-}
+//static void add_hippodrome(building *b) {
+//    int image1 = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
+//    int image2 = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
+//    city_buildings_add_hippodrome();
+//
+//    building_rotation_force_two_orientations();
+//    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
+//    building *part1 = b;
+//
+//    part1->prev_part_building_id = 0;
+//    int image_id;
+//    switch (orientation) {
+//        case DIR_0_TOP_RIGHT:
+//            image_id = image2;
+//            break;
+//        case DIR_2_BOTTOM_RIGHT:
+//            image_id = image1 + 4;
+//            break;
+//        case DIR_4_BOTTOM_LEFT:
+//            image_id = image2 + 4;
+//            break;
+//        case DIR_6_TOP_LEFT:
+//            image_id = image1;
+//            break;
+//        default:
+//            return;
+//    }
+//    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+//    int x_offset, y_offset;
+//    building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset, &y_offset);
+//    building *part2 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
+//    game_undo_add_building(part2);
+//
+//    part2->prev_part_building_id = part1->id;
+//    part1->next_part_building_id = part2->id;
+//    part2->next_part_building_id = 0;
+//    switch (orientation) {
+//        case DIR_0_TOP_RIGHT:
+//        case DIR_4_BOTTOM_LEFT:
+//            image_id = image2 + 2;
+//            break;
+//        case DIR_2_BOTTOM_RIGHT:
+//        case DIR_6_TOP_LEFT:
+//            image_id = image1 + 2;
+//            break;
+//    }
+//    map_building_tiles_add(part2->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
+//
+//    building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset, &y_offset);
+//    building *part3 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
+//    game_undo_add_building(part3);
+//
+//    part3->prev_part_building_id = part2->id;
+//    part2->next_part_building_id = part3->id;
+//    part3->next_part_building_id = 0;
+//    switch (orientation) {
+//        case DIR_0_TOP_RIGHT:
+//            image_id = image2 + 4;
+//            break;
+//        case DIR_2_BOTTOM_RIGHT:
+//            image_id = image1;
+//            break;
+//        case DIR_4_BOTTOM_LEFT:
+//            image_id = image2;
+//            break;
+//        case DIR_6_TOP_LEFT:
+//            image_id = image1 + 4;
+//            break;
+//    }
+//    map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
+//}
 
 static building *add_temple_complex_element(int x, int y, int size, int image_id, building *prev) {
     building *b = building_create(prev->type, x, y);
@@ -206,12 +206,12 @@ static building *add_temple_complex_element(int x, int y, int size, int image_id
 // TODO: Fix the orientation
 static void add_temple_complex(building *b) {
     auto properties = building_properties_for_type(b->type);
-    int temple_complex_image_id = properties->image_group;
+//    int temple_complex_image_id = properties->image_group;
     building_rotation_force_two_orientations();
     int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
 
     int empty = 0;
-    int main1 = image_id_from_group(temple_complex_image_id);
+    int main1 = image_id_from_group(IMAGE_COLLECTION_MASTABA, properties->image_group);
     int main2 = main1 + 6;
     int main3 = main1 + 12;
     int tile0 = main1 + 22;
@@ -554,21 +554,21 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1);
             break;
             // entertainment
-        case BUILDING_THEATER: // GROUP_BUILDING_BOOTH
+        case BUILDING_BOOTH: // BUILDING_THEATER
             if (GAME_ENV == ENGINE_ENV_C3)
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_THEATER));
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BOOTH));
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_entertainment_venue(b);
             break;
-        case BUILDING_AMPHITHEATER: // BUILDING_BANDSTAND
+        case BUILDING_BANDSTAND: // BUILDING_AMPHITHEATER
             if (GAME_ENV == ENGINE_ENV_C3)
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_AMPHITHEATER));
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BANDSTAND));
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_entertainment_venue(b);
             break;
-        case BUILDING_COLOSSEUM: // BUILDING_PAVILLION
+        case BUILDING_PAVILLION: // BUILDING_COLOSSEUM
             if (GAME_ENV == ENGINE_ENV_C3)
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_COLOSSEUM));
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_PAVILLION));
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_entertainment_venue(b);
             break;
@@ -577,13 +577,13 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             city_buildings_add_festival_square(b);
             break;
         case BUILDING_GLADIATOR_SCHOOL:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GLADIATOR_SCHOOL));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_CONSERVATORY));
             break;
         case BUILDING_LION_HOUSE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_LION_HOUSE));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_DANCE_SCHOOL));
             break;
         case BUILDING_ACTOR_COLONY:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ACTOR_COLONY));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_JUGGLER_SCHOOL));
             break;
         case BUILDING_CHARIOT_MAKER:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_CHARIOT_MAKER));
@@ -603,13 +603,13 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_DOCTOR));
             break;
         case BUILDING_HOSPITAL:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_HOSPITAL));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MORTUARY));
             break;
         case BUILDING_BATHHOUSE:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER));
             break;
-        case BUILDING_BARBER:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BARBER));
+        case BUILDING_DENTIST:
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_DENTIST));
             break;
             // education
         case BUILDING_SCHOOL:
@@ -623,7 +623,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
             // security
         case BUILDING_PREFECTURE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_PREFECTURE));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_POLICE_STATION));
             break;
             // farms
         case BUILDING_WHEAT_FARM:
@@ -665,16 +665,16 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
             // workshops
         case BUILDING_WINE_WORKSHOP:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_WINE_WORKSHOP));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BEER_WORKSHOP));
             break;
         case BUILDING_OIL_WORKSHOP:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_OIL_WORKSHOP));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_LINEN_WORKSHOP));
             break;
         case BUILDING_WEAPONS_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_WEAPONS_WORKSHOP));
             break;
         case BUILDING_FURNITURE_WORKSHOP:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_FURNITURE_WORKSHOP));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_JEWELS_WORKSHOP));
             break;
         case BUILDING_POTTERY_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_POTTERY_WORKSHOP));
@@ -708,7 +708,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ENGINEERS_POST));
             break;
         case BUILDING_FORUM:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_FORUM));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TAX_COLLECTOR));
             break;
             // water
         case BUILDING_FOUNTAIN:
@@ -723,54 +723,49 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
             // religion
         case BUILDING_SMALL_TEMPLE_CERES:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_CERES));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_OSIRIS));
             break;
         case BUILDING_SMALL_TEMPLE_NEPTUNE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_NEPTUNE));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_RA));
             break;
         case BUILDING_SMALL_TEMPLE_MERCURY:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MERCURY));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_PTAH));
             break;
         case BUILDING_SMALL_TEMPLE_MARS:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MARS));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_SETH));
             break;
         case BUILDING_SMALL_TEMPLE_VENUS:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_VENUS));
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_BAST));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_CERES) + 1);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_OSIRIS) + 1);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
-            }
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_RA) + 1);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
-            }
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_PTAH) + 1);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
-            }
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_MARS) + 1);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_SETH) + 1);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
-            }
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_VENUS) + 1);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (GAME_ENV == ENGINE_ENV_C3)
+                add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_BAST) + 1);
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
-            }
             break;
         case BUILDING_ORACLE:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ORACLE));
@@ -852,10 +847,10 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
                 case BUILDING_VILLAGE_PALACE:
                     add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_VILLAGE_PALACE));
                     break;
-                case GROUP_BUILDING_TOWN_PALACE:
+                case BUILDING_TOWN_PALACE:
                     add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TOWN_PALACE));
                     break;
-                case GROUP_BUILDING_CITY_PALACE:
+                case BUILDING_CITY_PALACE:
                     add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_CITY_PALACE));
                     break;
                 case BUILDING_SENATE_UPGRADED:
@@ -873,7 +868,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
         case BUILDING_HIPPODROME:
             if (GAME_ENV == ENGINE_ENV_C3) {
-                add_hippodrome(b);
+//                add_hippodrome(b);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_SENET_HOUSE));
             break;
@@ -906,7 +901,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             }
         default:
             auto p = building_properties_for_type(type);
-            add_building_tiles_image(b, image_id_from_group(p->image_group) + p->image_offset);
+            add_building_tiles_image(b, image_id_from_group(IMAGE_COLLECTION_GENERAL, p->image_group) + p->image_offset);
             break;
     }
     map_routing_update_land();

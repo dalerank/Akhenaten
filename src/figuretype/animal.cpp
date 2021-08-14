@@ -274,13 +274,13 @@ void figure::wolf_action() {
     }
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 96 + figure_image_corpse_offset();
     else if (action_state == FIGURE_ACTION_150_ATTACK)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 104 + dir + 8 * (attack_image_offset / 4);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 104 + dir + 8 * (attack_image_offset / 4);
     else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + 152 + dir;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + 152 + dir;
     else
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_WOLF) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_OSTRICH) + dir + 8 * anim_frame;
 }
 void figure::ostrich_action() {
     const formation *m = formation_get(formation_id);
@@ -446,11 +446,11 @@ void figure::zebra_action() {
     }
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + 96 + figure_image_corpse_offset();
     else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + dir;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
     else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_ZEBRA) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim_frame;
     }
 }
 

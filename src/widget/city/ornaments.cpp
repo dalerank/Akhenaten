@@ -55,64 +55,64 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
 }
 static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask) {
     // get which part of the hippodrome is getting checked
-    int building_part;
-    if (b->prev_part_building_id == 0) {
-        building_part = 0; // part 1, no previous building
-    } else if (b->next_part_building_id == 0) {
-        building_part = 2; // part 3, no next building
-    } else {
-        building_part = 1; // part 2
-    }
-    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-    int population = city_population();
-    if ((building_part == 0) && population > 2000) {
-        // first building part
-        switch (orientation) {
-            case DIR_0_TOP_RIGHT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
-                                       color_mask);
-                break;
-            case DIR_2_BOTTOM_RIGHT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
-                break;
-            case DIR_4_BOTTOM_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
-                                       color_mask);
-                break;
-            case DIR_6_TOP_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
-        }
-    } else if ((building_part == 1) && population > 100) {
-        // middle building part
-        switch (orientation) {
-            case DIR_0_TOP_RIGHT:
-            case DIR_4_BOTTOM_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79,
-                                       color_mask);
-                break;
-            case DIR_2_BOTTOM_RIGHT:
-            case DIR_6_TOP_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
-        }
-    } else if ((building_part == 2) && population > 1000) {
-        // last building part
-        switch (orientation) {
-            case DIR_0_TOP_RIGHT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
-                                       color_mask);
-                break;
-            case DIR_2_BOTTOM_RIGHT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
-                break;
-            case DIR_4_BOTTOM_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
-                                       color_mask);
-                break;
-            case DIR_6_TOP_LEFT:
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
-                break;
-        }
-    }
+//    int building_part;
+//    if (b->prev_part_building_id == 0) {
+//        building_part = 0; // part 1, no previous building
+//    } else if (b->next_part_building_id == 0) {
+//        building_part = 2; // part 3, no next building
+//    } else {
+//        building_part = 1; // part 2
+//    }
+//    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
+//    int population = city_population();
+//    if ((building_part == 0) && population > 2000) {
+//        // first building part
+//        switch (orientation) {
+//            case DIR_0_TOP_RIGHT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
+//                                       color_mask);
+//                break;
+//            case DIR_2_BOTTOM_RIGHT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+//                break;
+//            case DIR_4_BOTTOM_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
+//                                       color_mask);
+//                break;
+//            case DIR_6_TOP_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+//        }
+//    } else if ((building_part == 1) && population > 100) {
+//        // middle building part
+//        switch (orientation) {
+//            case DIR_0_TOP_RIGHT:
+//            case DIR_4_BOTTOM_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79,
+//                                       color_mask);
+//                break;
+//            case DIR_2_BOTTOM_RIGHT:
+//            case DIR_6_TOP_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
+//        }
+//    } else if ((building_part == 2) && population > 1000) {
+//        // last building part
+//        switch (orientation) {
+//            case DIR_0_TOP_RIGHT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
+//                                       color_mask);
+//                break;
+//            case DIR_2_BOTTOM_RIGHT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
+//                break;
+//            case DIR_4_BOTTOM_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
+//                                       color_mask);
+//                break;
+//            case DIR_6_TOP_LEFT:
+//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
+//                break;
+//        }
+//    }
 }
 
 static void draw_normal_anim(int x, int y, building *b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
@@ -171,18 +171,18 @@ static void draw_gatehouse_anim(int x, int y, building *b) {
     }
 }
 static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color_mask) {
-    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
-        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
-
-    if (b->type == BUILDING_THEATER && b->num_workers > 0)
-        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
-
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0)
-        ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW), x + 70, y - 90, color_mask);
-
-    if (b->type == BUILDING_HIPPODROME && b->main()->num_workers > 0 &&
-        city_entertainment_hippodrome_has_race())
-        draw_hippodrome_spectators(b, x, y, color_mask);
+//    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0)
+//        ImageDraw::img_generic(image_id_from_group(GROUP_DANCERS_SHOW), x + 36, y - 47, color_mask);
+//
+//    if (b->type == BUILDING_THEATER && b->num_workers > 0)
+//        ImageDraw::img_generic(image_id_from_group(GROUP_JUGGLERS_SHOW), x + 34, y - 22, color_mask);
+//
+//    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0)
+//        ImageDraw::img_generic(image_id_from_group(GROUP_MUSICIANS_SHOW), x + 70, y - 90, color_mask);
+//
+//    if (b->type == BUILDING_HIPPODROME && b->main()->num_workers > 0 &&
+//        city_entertainment_hippodrome_has_race())
+//        draw_hippodrome_spectators(b, x, y, color_mask);
 }
 
 static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t color_mask) {
@@ -578,10 +578,10 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             }
             break;
         case BUILDING_CONSERVATORY:
-            draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_BUILDING_COLOSSEUM_SHOW) - 1 + 12, color_mask);
+            draw_normal_anim(x + 82, y + 14, b, grid_offset, image_id_from_group(GROUP_MUSICIANS_SHOW) - 1 + 12, color_mask);
             break;
         case BUILDING_DANCE_SCHOOL:
-            draw_normal_anim(x + 104, y, b, grid_offset, image_id_from_group(GROUP_BUILDING_AMPHITHEATER_SHOW) - 1, color_mask);
+            draw_normal_anim(x + 104, y, b, grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1, color_mask);
             break;
         default:
             draw_normal_anim(x, y, b, grid_offset, image_id, color_mask);

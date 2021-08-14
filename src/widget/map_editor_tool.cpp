@@ -66,9 +66,8 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, int type
         int image_id;
         if (type == BUILDING_NATIVE_CROPS)
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
-        else {
-            image_id = image_id_from_group(props->image_group) + props->image_offset;
-        }
+        else
+            image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
         draw_building_image(image_id, x_view, y_view);
     }
 }

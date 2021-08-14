@@ -6,6 +6,7 @@
 typedef struct {
     int size;
     int fire_proof;
+    int image_collection;
     int image_group;
     int image_offset;
 } building_properties;

@@ -228,7 +228,7 @@ public:
     void route_remove();
 
     // image.c
-    void image_set_animation(int group, int offset = 0, int max_frames = 12, int duration = 1);
+    void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1);
     void figure_image_update();
     void figure_image_set_cart_offset(int direction);
     int figure_image_corpse_offset();

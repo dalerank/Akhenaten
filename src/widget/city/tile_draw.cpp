@@ -740,8 +740,11 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
             }
             break;
-        case 13:
+        case 13: // TERRAIN FIELD
             draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
+            break;
+        case 14: // IMAGE FIELD
+            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED); break;
             break;
     }
 }

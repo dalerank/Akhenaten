@@ -94,13 +94,13 @@ void figure::entertainer_update_image() {
     }
     int image_id;
     if (type == FIGURE_ACTOR)
-        image_id = image_id_from_group(GROUP_FIGURE_ACTOR);
+        image_id = image_id_from_group(GROUP_FIGURE_JUGGLER);
     else if (type == FIGURE_GLADIATOR)
-        image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR);
+        image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN);
     else if (type == FIGURE_LION_TAMER) {
-        image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER);
+        image_id = image_id_from_group(GROUP_FIGURE_DANCER);
         if (wait_ticks_missile >= 96)
-            image_id = image_id_from_group(GROUP_FIGURE_LION_TAMER_WHIP);
+            image_id = image_id_from_group(GROUP_FIGURE_DANCER_WHIP);
         cart_image_id = image_id_from_group(GROUP_FIGURE_LION);
     } else
         return;

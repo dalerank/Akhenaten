@@ -77,7 +77,7 @@ int image_load_main(int climate_id, int is_editor, int force_reload);
 int image_load_fonts(encoding_type encoding);
 int image_load_enemy(int enemy_id);
 
-int image_id_from_group(int group);
+int image_id_from_group(int collectiion, int group);
 
 const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);

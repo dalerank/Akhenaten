@@ -490,7 +490,8 @@ int imagepak::get_entry_count() {
 }
 int imagepak::get_id(int group) {
     if (group >= groups_num)
-        group = 0;
+        return -1;
+//        group = 0;
     int image_id = group_image_ids[group];
     return image_id + id_shift_overall;
 }
@@ -504,45 +505,87 @@ const image *imagepak::get_image(int id, bool relative) {
 
 #include "window/city.h"
 
-int image_groupid_translation(int table[], int group) {
-    if (group == 246)
-        int a = 2;
-
-    if (group > 99999)
-        group -= 99999;
-    else
-        for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
-            if (table[i] == group)
-                return table[i + 1];
-        }
-
-    // missing entry!!!!
-    return group;
-}
-int image_id_from_group(int group) {
+//int image_groupid_translation(int table[], int group) {
+//    if (group == 246)
+//        int a = 2;
+//
+//    if (group > 99999)
+//        group -= 99999;
+//    else
+//        for (int i = 0; table[i] < GROUP_MAX_GROUP; i += 2) {
+//            if (table[i] == group)
+//                return table[i + 1];
+//        }
+//
+//    // missing entry!!!!
+//    return group;
+//}
+static imagepak *pak_from_collection_id(int collection) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            return data.main->get_id(group);
+            return data.main; // only one for Caesar III
         case ENGINE_ENV_PHARAOH:
-            group = image_groupid_translation(groupid_translation_table_ph, group);
-            if (group == 999999) //
-                return data.main->get_id(0);
-            else if (group < 67)
-                return data.ph_terrain->get_id(group);
-            else if (group < 295)
-                return data.main->get_id(group - 66);// + 2000;
-            else if (group < 333)
-                return data.ph_unloaded->get_id(group - 294);// + 5000;
-            else if (group < 341)
-                return data.font->get_id(group - 332);// + 6000;
-            else if (group < 555)
-                return data.ph_sprmain->get_id(group - 341);// + 8000;
-            else if (group < 611)
-                return data.ph_sprambient->get_id(group - 555);// + ????;
-
-            return data.empire->get_id(1);
+            switch (collection) {
+                case IMAGE_COLLECTION_TERRAIN:
+                    return data.ph_terrain;
+                case IMAGE_COLLECTION_GENERAL:
+                    return data.main;
+                case IMAGE_COLLECTION_UNLOADED:
+                    return data.ph_unloaded;
+                case IMAGE_COLLECTION_EMPIRE:
+                    return data.empire;
+                case IMAGE_COLLECTION_SPR_MAIN:
+                    return data.ph_sprmain;
+                case IMAGE_COLLECTION_SPR_AMBIENT:
+                    return data.ph_sprambient;
+                    /////
+                case IMAGE_COLLECTION_ENEMY:
+                    return data.enemy;
+                case IMAGE_COLLECTION_FONT:
+                    return data.font;
+                    /////
+                case IMAGE_COLLECTION_EXPANSION:
+                    return data.ph_expansion;
+                case IMAGE_COLLECTION_EXPANSION_SPR:
+                    return data.ph_sprmain2;
+                    /////
+                case IMAGE_COLLECTION_MASTABA:
+                    return data.ph_mastaba;
+            }
+            break;
     }
-    return -1;
+    return nullptr;
+}
+int image_id_from_group(int collection, int group) {
+    imagepak *pak = pak_from_collection_id(collection);
+    if (pak == nullptr)
+        return -1;
+    return pak->get_id(group);
+
+//    switch (GAME_ENV) {
+//        case ENGINE_ENV_C3:
+//            collection = 0;
+//            return data.main->get_id(group);
+//        case ENGINE_ENV_PHARAOH:
+//            group = image_groupid_translation(groupid_translation_table_ph, group);
+//            if (group == 999999) //
+//                return data.main->get_id(0);
+//            else if (group < 67)
+//                return data.ph_terrain->get_id(group);
+//            else if (group < 295)
+//                return data.main->get_id(group - 66);// + 2000;
+//            else if (group < 333)
+//                return data.ph_unloaded->get_id(group - 294);// + 5000;
+//            else if (group < 341)
+//                return data.font->get_id(group - 332);// + 6000;
+//            else if (group < 555)
+//                return data.ph_sprmain->get_id(group - 341);// + 8000;
+//            else if (group < 611)
+//                return data.ph_sprambient->get_id(group - 555);// + ????;
+//
+//            return data.empire->get_id(1);
+//    }
+//    return -1;
 }
 const image *image_get(int id, int mode) {
     switch (GAME_ENV) {

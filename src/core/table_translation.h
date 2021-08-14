@@ -3,21 +3,21 @@
 
 static int groupid_translation_table_ph[] = {
         0, 999999, // data/Pharaoh_General.sg3 system.bmp
-        1, 1, // data/Pharaoh_Terrain.sg3 Land1a.bmp
-        2, 2, // data/Pharaoh_Terrain.sg3 Land1a.bmp
-        3, 3, // data/Pharaoh_Terrain.sg3 Land1a.bmp
+//        1, 1, // data/Pharaoh_Terrain.sg3 Land1a.bmp
+//        2, 2, // data/Pharaoh_Terrain.sg3 Land1a.bmp
+//        3, 3, // data/Pharaoh_Terrain.sg3 Land1a.bmp
         11, 11 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         12, 121 + 66, // data/Pharaoh_General.sg3 paneling.bmp
-        13, 155, // data/Pharaoh_General.sg3 paneling.bmp
-        14, 308, // data/Pharaoh_Unloaded.sg3 title.bmp
+        13, 89 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        14, 14 + 294, // data/Pharaoh_Unloaded.sg3 title.bmp
         15, 15 + 66, // data/Pharaoh_General.sg3 paneling.bmp
-        16, 333, // data/Pharaoh_Fonts.sg3 fonts.bmp
+        16, 1 + 332, // data/Pharaoh_Fonts.sg3 fonts.bmp
         19, 9, // irrigation ditch
-        20, 20, // data/Pharaoh_Terrain.sg3 Land2a.bmp
-        21, 21, // data/Pharaoh_Terrain.sg3 Land2a.bmp
+//        20, 20, // data/Pharaoh_Terrain.sg3 Land2a.bmp
+//        21, 21, // data/Pharaoh_Terrain.sg3 Land2a.bmp
         22, 22 + 66, // data/Pharaoh_General.sg3 Commerce.bmp
         23, 23 + 66, // well
-        24, 24, // data/Pharaoh_Terrain.sg3 Land2a.bmp
+//        24, 24, // data/Pharaoh_Terrain.sg3 Land2a.bmp
         25, 50, // water lift
         26, 26 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
         27, 27 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
@@ -65,7 +65,7 @@ static int groupid_translation_table_ph[] = {
         77, 26, // shipwright
         78, 49, // dock
         79, 18, // fishing wharf
-        80, 316, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
+        80, 22 + 294, // data/Pharaoh_Unloaded.sg3 map_panels.BMP
         81, 81 + 66, // architect post
         82, 82 + 66, // Warehouse top sprite
         83, 83 + 66, // Empty warehouse
@@ -80,7 +80,7 @@ static int groupid_translation_table_ph[] = {
         92, 136 + 66,
         93, 93 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         94, 94 + 66, // data/Pharaoh_General.sg3 paneling.bmp
-        95, 315, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
+        95, 21 + 294, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
         96, 96 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         97, 77 + 341, // cartpusher cart
         98, 130 + 341, // actor (juggler)
@@ -116,32 +116,32 @@ static int groupid_translation_table_ph[] = {
         129, 129 + 66, // empire resources
         130, 20 + 555, // merchant caravan
         131, 52 + 341, // migrant cart (donkey)
-        132, 198, // data/Pharaoh_General.sg3 paneling.bmp
-        133, 199, // data/Pharaoh_General.sg3 paneling.bmp
-        134, 200, // data/Pharaoh_General.sg3 paneling.bmp
+        132, 132 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        133, 133 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        134, 134 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         135, 45, // data/Pharaoh_Terrain.sg3 Land2a.bmp
-        136, 305, // data/Pharaoh_Unloaded.sg3 Senate.bmp
-        137, 203, // data/Pharaoh_General.sg3 paneling.bmp
+        136, 11 + 294, // data/Pharaoh_Unloaded.sg3 Senate.bmp
+        137, 137 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         138, 46, // data/Pharaoh_Terrain.sg3 Land1a.bmp
-        141, 207, // data/Pharaoh_General.sg3 radar.bmp
-        142, 208, // data/Pharaoh_General.sg3 radar.bmp
-        143, 209, // data/Pharaoh_General.sg3 radar.bmp
-        144, 210, // data/Pharaoh_General.sg3 radar.bmp
-        145, 211, // data/Pharaoh_General.sg3 radar.bmp
-        146, 212, // data/Pharaoh_General.sg3 radar.bmp
-        147, 213, // data/Pharaoh_General.sg3 radar.bmp
-        148, 214, // data/Pharaoh_General.sg3 radar.bmp
-        149, 215, // data/Pharaoh_General.sg3 radar.bmp
+        141, 141 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        142, 142 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        143, 143 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        144, 144 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        145, 145 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        146, 146 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        147, 147 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        148, 148 + 66, // data/Pharaoh_General.sg3 radar.bmp
+        149, 149 + 66, // data/Pharaoh_General.sg3 radar.bmp
         150, 150 + 66,
         151, 151 + 66,
         152, 152 + 66,
-        154, 205, // data/Pharaoh_General.sg3 Sprites.bmp
-        157, 223, // data/Pharaoh_General.sg3 paneling.bmp
-        158, 224, // data/Pharaoh_General.sg3 paneling.bmp
+        154, 139 + 66, // data/Pharaoh_General.sg3 Sprites.bmp
+        157, 157 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        158, 158 + 66, // data/Pharaoh_General.sg3 paneling.bmp
         159, 10 + 294, // data/Pharaoh_Unloaded.sg3 History1A.bmp
-        160, 303, // data/Pharaoh_Unloaded.sg3 scoreb.BMP
-        161, 302, // data/Pharaoh_Unloaded.sg3 Briefing1a.bmp
-        162, 301, // data/Pharaoh_Unloaded.sg3 C3title.BMP
+        160, 9 + 294, // data/Pharaoh_Unloaded.sg3 scoreb.BMP
+        161, 8 + 294, // data/Pharaoh_Unloaded.sg3 Briefing1a.bmp
+        162, 7 + 294, // data/Pharaoh_Unloaded.sg3 C3title.BMP
         163, 161 + 341, //lion (hyena?)
         164, 63, // bridge
         165, 34 + 341, //ship
@@ -150,22 +150,22 @@ static int groupid_translation_table_ph[] = {
         169, 50, // data/Pharaoh_Terrain.sg3 transport.BMP
         170, 63, // data/Pharaoh_Terrain.sg3 transport.BMP
         171, 55 + 555, // docker workers
-        172, 238, // data/Pharaoh_General.sg3 empire_panels.bmp
+        172, 172 + 66, // data/Pharaoh_General.sg3 empire_panels.bmp
         173, 205 + 66, // empire resources
-        174, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
-        177, 243, // data/Pharaoh_General.sg3 empire_bits.BMP
-        178, 244, // data/Pharaoh_General.sg3 empire_bits.BMP
-        183, 249, // data/Pharaoh_General.sg3 Housng1a.bmp
-        186, 300, // data/Pharaoh_Unloaded.sg3 Demo1.bmp
-        187, 299, // data/Pharaoh_Unloaded.sg3 Demo2.bmp
-        188, 298, // data/Pharaoh_Unloaded.sg3 Demo3.bmp
-        189, 255, // data/Pharaoh_General.sg3 paneling.bmp
-        190, 319, // data/Pharaoh_Unloaded.sg3 'Portraits.BMP', comment: 'New Big Persons'
+        174, 177 + 66, // data/Pharaoh_General.sg3 empire_bits.BMP
+        177, 177 + 66, // data/Pharaoh_General.sg3 empire_bits.BMP
+        178, 178 + 66, // data/Pharaoh_General.sg3 empire_bits.BMP
+        183, 183 + 66, // data/Pharaoh_General.sg3 Housng1a.bmp
+        186, 6 + 294, // data/Pharaoh_Unloaded.sg3 Demo1.bmp
+        187, 5 + 294, // data/Pharaoh_Unloaded.sg3 Demo2.bmp
+        188, 4 + 294, // data/Pharaoh_Unloaded.sg3 Demo3.bmp
+        189, 189 + 66, // data/Pharaoh_General.sg3 paneling.bmp
+        190, 25 + 294, // data/Pharaoh_Unloaded.sg3 'Portraits.BMP', comment: 'New Big Persons'
         191, 7 + 555, // Jugglers
         192, 6 + 555, // Dancers
         193, 9 + 555, // Musicians
-        195, 296, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
-        197, 295, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
+        195, 2 + 294, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
+        197, 1 + 294, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
         199, 106 + 66,
         201, 173 + 66, // military academy
         202, 66 + 66, // fort
@@ -189,14 +189,14 @@ static int groupid_translation_table_ph[] = {
 //        237, 237+341, // cartpusher cart, multiple food
         239, 8,
         243, 171 + 66,
-        244, 306, // data/Pharaoh_Unloaded.sg3 Mapback.bmp
+        244, 12 + 294, // data/Pharaoh_Unloaded.sg3 Mapback.bmp
         246, 15 + 294, // data/Pharaoh_Unloaded.sg3 FE_Map Editor.bmp
-        247, 322, // data/Pharaoh_Unloaded.sg3 Picture9.bmp
+        247, 28 + 294, // data/Pharaoh_Unloaded.sg3 Picture9.bmp
 //        250, // cartpusher cart, multiple resources
-        251, 311, // data/Pharaoh_Unloaded.sg3 Load1.bmp
-        252, 312, // data/Pharaoh_Unloaded.sg3 0_fired.BMP
-        253, 313, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
-        259, 259, // data/Pharaoh_General.sg3 paneling.bmp
+        251, 17 + 294, // data/Pharaoh_Unloaded.sg3 Load1.bmp
+        252, 18 + 294, // data/Pharaoh_Unloaded.sg3 0_fired.BMP
+        253, 19 + 294, // data/Pharaoh_Unloaded.sg3 panelwindows.BMP
+//        259, 259, // data/Pharaoh_General.sg3 paneling.bmp
         300, 117 + 66,
 };
 
