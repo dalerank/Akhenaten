@@ -24,177 +24,177 @@ enum {
     MULTIBYTE_IN_FONT = 2
 };
 
-typedef struct font_files_collection {
-    const char CYRILLIC_FONTS_555[NAME_SIZE];
-    const char CYRILLIC_FONTS_SG2[NAME_SIZE];
-    const char TRAD_CHINESE_FONTS_555[NAME_SIZE];
-    const char KOREAN_FONTS_555[NAME_SIZE];
-} font_files_collection;
-font_files_collection ffcs[] = {
-        {
-                "C3_fonts.sg2",
-                "C3_fonts.555",
-                "rome.555",
-                "korean.555",
-        },
-        {
-                "",
-                "",
-                "",
-                ""
-        }
-};
-
-struct graphics_files_collection {
-    const char C3_MAIN_555[3][NAME_SIZE];
-    const char C3_MAIN_SG2[3][NAME_SIZE];
-    const char C3_EDITOR_555[3][NAME_SIZE];
-    const char C3_EDITOR_SG2[3][NAME_SIZE];
-    const char C3_EMPIRE_555[NAME_SIZE];
-    const char C3_ENEMY_555[20][NAME_SIZE];
-    const char C3_ENEMY_SG2[20][NAME_SIZE];
-    const char PH_MAIN_555[NAME_SIZE];
-    const char PH_MAIN_SG3[NAME_SIZE];
-    const char PH_UNLOADED_555[NAME_SIZE];
-    const char PH_UNLOADED_SG3[NAME_SIZE];
-    const char PH_TERRAIN_555[NAME_SIZE];
-    const char PH_TERRAIN_SG3[NAME_SIZE];
-    const char PH_FONTS_555[NAME_SIZE];
-    const char PH_FONTS_SG3[NAME_SIZE];
-    const char PH_EDITOR_GRAPHICS_555[NAME_SIZE];
-    const char PH_EDITOR_GRAPHICS_SG3[NAME_SIZE];
-    const char PH_EMPIRE_555[NAME_SIZE];
-    const char PH_EMPIRE_SG3[NAME_SIZE];
-    const char PH_ENEMY_555[20][NAME_SIZE];
-    const char PH_ENEMY_SG2[20][NAME_SIZE];
-    const char PH_EXPANSION_555[NAME_SIZE];
-    const char PH_EXPANSION_SG3[NAME_SIZE];
-    const char PH_SPRMAIN_555[NAME_SIZE];
-    const char PH_SPRMAIN_SG3[NAME_SIZE];
-    const char PH_SPRMAIN2_555[NAME_SIZE];
-    const char PH_SPRMAIN2_SG3[NAME_SIZE];
-    const char PH_SPRAMBIENT_555[NAME_SIZE];
-    const char PH_SPRAMBIENT_SG3[NAME_SIZE];
-
-} gfc = {
-        {
-                "c3.555",
-                "c3_north.555",
-                "c3_south.555"
-        },
-        {
-                "c3.sg2",
-                "c3_north.sg2",
-                "c3_south.sg2"
-        },
-        {
-                "c3map.555",
-                "c3map_north.555",
-                "c3map_south.555"
-        },
-        {
-                "c3map.sg2",
-                "c3map_north.sg2",
-                "c3map_south.sg2"
-        },
-        "The_empire.555",
-        {
-                "goths.555",
-                "Etruscan.555",
-                "Etruscan.555",
-                "carthage.555",
-                "Greek.555",
-                "Greek.555",
-                "egyptians.555",
-                "Persians.555",
-                "Phoenician.555",
-                "celts.555",
-                "celts.555",
-                "celts.555",
-                "Gaul.555",
-                "Gaul.555",
-                "goths.555",
-                "goths.555",
-                "goths.555",
-                "Phoenician.555",
-                "North African.555",
-                "Phoenician.555",
-        },
-        {
-                "goths.sg2",
-                "Etruscan.sg2",
-                "Etruscan.sg2",
-                "carthage.sg2",
-                "Greek.sg2",
-                "Greek.sg2",
-                "egyptians.sg2",
-                "Persians.sg2",
-                "Phoenician.sg2",
-                "celts.sg2",
-                "celts.sg2",
-                "celts.sg2",
-                "Gaul.sg2",
-                "Gaul.sg2",
-                "goths.sg2",
-                "goths.sg2",
-                "goths.sg2",
-                "Phoenician.sg2",
-                "North African.sg2",
-                "Phoenician.sg2",
-        },
-        "data/Pharaoh_General.555",
-        "data/Pharaoh_General.sg3",
-        "data/Pharaoh_Unloaded.555",
-        "data/Pharaoh_Unloaded.sg3",
-        "data/Pharaoh_Terrain.555",
-        "data/Pharaoh_Terrain.sg3",
-        "data/Pharaoh_Fonts.555",
-        "data/Pharaoh_Fonts.sg3",
-        "",
-        "",
-        "data/Empire.555",
-        "data/Empire.sg3",
-        {
-                "data/Assyrian.555",
-                "data/Egyptian.555",
-                "data/Canaanite.555",
-                "data/Enemy_1.555",
-                "data/Hittite.555",
-                "data/Hyksos.555",
-                "data/Kushite.555",
-                "data/Libian.555",
-                "data/Mitani.555",
-                "data/Nubian.555",
-                "data/Persian.555",
-                "data/Phoenician.555",
-                "data/Roman.555",
-                "data/SeaPeople.555"
-        },
-        {
-                "data/Assyrian.sg3",
-                "data/Egyptian.sg3",
-                "data/Canaanite.sg3",
-                "data/Enemy_1.sg3",
-                "data/Hittite.sg3",
-                "data/Hyksos.sg3",
-                "data/Kushite.sg3",
-                "data/Libian.sg3",
-                "data/Mitani.sg3",
-                "data/Nubian.sg3",
-                "data/Persian.sg3",
-                "data/Phoenician.sg3",
-                "data/Roman.sg3",
-                "data/SeaPeople.sg3"
-        },
-        "data/Expansion.555",
-        "data/Expansion.sg3",
-        "data/SprMain.555",
-        "data/SprMain.sg3",
-        "data/SprMain2.555",
-        "data/SprMain2.sg3",
-        "data/SprAmbient.555",
-        "data/SprAmbient.sg3",
-};
+//typedef struct font_files_collection {
+//    const char CYRILLIC_FONTS_555[NAME_SIZE];
+//    const char CYRILLIC_FONTS_SG2[NAME_SIZE];
+//    const char TRAD_CHINESE_FONTS_555[NAME_SIZE];
+//    const char KOREAN_FONTS_555[NAME_SIZE];
+//} font_files_collection;
+//font_files_collection ffcs[] = {
+//        {
+//                "C3_fonts.sg2",
+//                "C3_fonts.555",
+//                "rome.555",
+//                "korean.555",
+//        },
+//        {
+//                "",
+//                "",
+//                "",
+//                ""
+//        }
+//};
+//
+//struct graphics_files_collection {
+//    const char C3_MAIN_555[3][NAME_SIZE];
+//    const char C3_MAIN_SG2[3][NAME_SIZE];
+//    const char C3_EDITOR_555[3][NAME_SIZE];
+//    const char C3_EDITOR_SG2[3][NAME_SIZE];
+//    const char C3_EMPIRE_555[NAME_SIZE];
+//    const char C3_ENEMY_555[20][NAME_SIZE];
+//    const char C3_ENEMY_SG2[20][NAME_SIZE];
+//    const char PH_MAIN_555[NAME_SIZE];
+//    const char PH_MAIN_SG3[NAME_SIZE];
+//    const char PH_UNLOADED_555[NAME_SIZE];
+//    const char PH_UNLOADED_SG3[NAME_SIZE];
+//    const char PH_TERRAIN_555[NAME_SIZE];
+//    const char PH_TERRAIN_SG3[NAME_SIZE];
+//    const char PH_FONTS_555[NAME_SIZE];
+//    const char PH_FONTS_SG3[NAME_SIZE];
+//    const char PH_EDITOR_GRAPHICS_555[NAME_SIZE];
+//    const char PH_EDITOR_GRAPHICS_SG3[NAME_SIZE];
+//    const char PH_EMPIRE_555[NAME_SIZE];
+//    const char PH_EMPIRE_SG3[NAME_SIZE];
+//    const char PH_ENEMY_555[20][NAME_SIZE];
+//    const char PH_ENEMY_SG2[20][NAME_SIZE];
+//    const char PH_EXPANSION_555[NAME_SIZE];
+//    const char PH_EXPANSION_SG3[NAME_SIZE];
+//    const char PH_SPRMAIN_555[NAME_SIZE];
+//    const char PH_SPRMAIN_SG3[NAME_SIZE];
+//    const char PH_SPRMAIN2_555[NAME_SIZE];
+//    const char PH_SPRMAIN2_SG3[NAME_SIZE];
+//    const char PH_SPRAMBIENT_555[NAME_SIZE];
+//    const char PH_SPRAMBIENT_SG3[NAME_SIZE];
+//
+//} gfc = {
+//        {
+//                "c3.555",
+//                "c3_north.555",
+//                "c3_south.555"
+//        },
+//        {
+//                "c3.sg2",
+//                "c3_north.sg2",
+//                "c3_south.sg2"
+//        },
+//        {
+//                "c3map.555",
+//                "c3map_north.555",
+//                "c3map_south.555"
+//        },
+//        {
+//                "c3map.sg2",
+//                "c3map_north.sg2",
+//                "c3map_south.sg2"
+//        },
+//        "The_empire.555",
+//        {
+//                "goths.555",
+//                "Etruscan.555",
+//                "Etruscan.555",
+//                "carthage.555",
+//                "Greek.555",
+//                "Greek.555",
+//                "egyptians.555",
+//                "Persians.555",
+//                "Phoenician.555",
+//                "celts.555",
+//                "celts.555",
+//                "celts.555",
+//                "Gaul.555",
+//                "Gaul.555",
+//                "goths.555",
+//                "goths.555",
+//                "goths.555",
+//                "Phoenician.555",
+//                "North African.555",
+//                "Phoenician.555",
+//        },
+//        {
+//                "goths.sg2",
+//                "Etruscan.sg2",
+//                "Etruscan.sg2",
+//                "carthage.sg2",
+//                "Greek.sg2",
+//                "Greek.sg2",
+//                "egyptians.sg2",
+//                "Persians.sg2",
+//                "Phoenician.sg2",
+//                "celts.sg2",
+//                "celts.sg2",
+//                "celts.sg2",
+//                "Gaul.sg2",
+//                "Gaul.sg2",
+//                "goths.sg2",
+//                "goths.sg2",
+//                "goths.sg2",
+//                "Phoenician.sg2",
+//                "North African.sg2",
+//                "Phoenician.sg2",
+//        },
+//        "data/Pharaoh_General.555",
+//        "data/Pharaoh_General.sg3",
+//        "data/Pharaoh_Unloaded.555",
+//        "data/Pharaoh_Unloaded.sg3",
+//        "data/Pharaoh_Terrain.555",
+//        "data/Pharaoh_Terrain.sg3",
+//        "data/Pharaoh_Fonts.555",
+//        "data/Pharaoh_Fonts.sg3",
+//        "",
+//        "",
+//        "data/Empire.555",
+//        "data/Empire.sg3",
+//        {
+//                "data/Assyrian.555",
+//                "data/Egyptian.555",
+//                "data/Canaanite.555",
+//                "data/Enemy_1.555",
+//                "data/Hittite.555",
+//                "data/Hyksos.555",
+//                "data/Kushite.555",
+//                "data/Libian.555",
+//                "data/Mitani.555",
+//                "data/Nubian.555",
+//                "data/Persian.555",
+//                "data/Phoenician.555",
+//                "data/Roman.555",
+//                "data/SeaPeople.555"
+//        },
+//        {
+//                "data/Assyrian.sg3",
+//                "data/Egyptian.sg3",
+//                "data/Canaanite.sg3",
+//                "data/Enemy_1.sg3",
+//                "data/Hittite.sg3",
+//                "data/Hyksos.sg3",
+//                "data/Kushite.sg3",
+//                "data/Libian.sg3",
+//                "data/Mitani.sg3",
+//                "data/Nubian.sg3",
+//                "data/Persian.sg3",
+//                "data/Phoenician.sg3",
+//                "data/Roman.sg3",
+//                "data/SeaPeople.sg3"
+//        },
+//        "data/Expansion.555",
+//        "data/Expansion.sg3",
+//        "data/SprMain.555",
+//        "data/SprMain.sg3",
+//        "data/SprMain2.555",
+//        "data/SprMain2.sg3",
+//        "data/SprAmbient.555",
+//        "data/SprAmbient.sg3",
+//};
 
 static image DUMMY_IMAGE;
 
@@ -334,6 +334,7 @@ static const color_t *load_external_data(const image *img) {
 }
 
 #include <cassert>
+#include "core/string.h"
 
 imagepak::imagepak() {
     initialized = false;
@@ -345,14 +346,39 @@ imagepak::imagepak() {
 bool imagepak::check_initialized() {
     return initialized == 0;
 }
-int imagepak::load_555(const char *filename_555, const char *filename_sgx, int shift) {
+int imagepak::load_pak_files(const char *filename_partial, int shift) {
+
+    // construct proper filepaths
+    int str_index = 0;
+    uint8_t filename_full[100];
+
+    // add "data/" if loading paks in Pharaoh
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        string_copy(string_from_ascii("data/"), filename_full, 6);
+        str_index += 5;
+    }
+
+    // copy file name over
+    string_copy((const uint8_t*)filename_partial, &filename_full[str_index], string_length((const uint8_t*)filename_partial) + 1);
+    str_index = string_length(filename_full);
+
+    // split in .555 and .sg3 filename strings
+    uint8_t filename_555[100];
+    uint8_t filename_sgx[100];
+    string_copy(filename_full, filename_555, str_index + 1);
+    string_copy(filename_full, filename_sgx, str_index + 1);
+
+    // add extension
+    string_copy(string_from_ascii(".555"), &filename_555[str_index], 5);
+    string_copy(string_from_ascii(".sg3"), &filename_sgx[str_index], 5);
+
     // prepare sgx data
     buffer *buf = new buffer(SCRATCH_DATA_SIZE);
-    if (!io_read_file_into_buffer(filename_sgx, MAY_BE_LOCALIZED, buf,
+    if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, buf,
                                   SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return 0;
     int HEADER_SIZE = 0;
-    if (file_has_extension(filename_sgx, "sg2"))
+    if (file_has_extension((const char*)filename_sgx, "sg2"))
         HEADER_SIZE = 20680; // sg2 has 100 bitmap entries
     else
         HEADER_SIZE = 40680; //
@@ -363,7 +389,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
     // allocate arrays
     entries_num = (size_t) header_data[4] + 1;
     id_shift_overall = shift;
-    name = filename_sgx;
+    name = (const char*)filename_sgx;
     if (check_initialized()) {
         initialized = false;
         delete images;
@@ -452,7 +478,7 @@ int imagepak::load_555(const char *filename_555, const char *filename_sgx, int s
 
     // prepare bitmap data
     buf->clear();
-    int data_size = io_read_file_into_buffer(filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
     if (!data_size)
         return 0;
 
@@ -625,47 +651,88 @@ int image_load_main(int climate_id, int is_editor, int force_reload) {
     const char *filename_sgx;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
-            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
-            if (!data.main->load_555(filename_555, filename_sgx))
-                return 0;
-            data.current_climate = climate_id;
+//            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
+//            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
+//            if (!data.main->load_555(filename_555, filename_sgx))
+//                return 0;
+//            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_555;
-            filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_SG3;
-            if (!data.ph_expansion->load_555(gfc.PH_EXPANSION_555, gfc.PH_EXPANSION_SG3, -200)) return 0;
-            if (!data.ph_sprmain->load_555(gfc.PH_SPRMAIN_555, gfc.PH_SPRMAIN_SG3, 700)) return 0;
-            if (!data.ph_unloaded->load_555(gfc.PH_UNLOADED_555, gfc.PH_UNLOADED_SG3, 11025)) return 0;
-            if (!data.main->load_555(filename_555, filename_sgx, 11706)) return 0;
+//            filename_555 = is_editor ? gfc.PH_EDITOR_GRAPHICS_555 : gfc.PH_MAIN_555;
+//            filename_sgx = is_editor ? gfc.PH_EDITOR_GRAPHICS_SG3 : gfc.PH_MAIN_SG3;
+            if (!data.ph_expansion->load_pak_files("Expansion", -200)) return 0;
+            if (!data.ph_sprmain->load_pak_files("SprMain", 700)) return 0;
+            if (!data.ph_unloaded->load_pak_files("Pharaoh_Unloaded", 11025)) return 0;
+            if (!data.main->load_pak_files("Pharaoh_General", 11706)) return 0;
             // ???? 539-long gap?
-            if (!data.ph_terrain->load_555(gfc.PH_TERRAIN_555, gfc.PH_TERRAIN_SG3, 14252)) return 0;
+            if (!data.ph_terrain->load_pak_files("Pharaoh_Terrain", 14252)) return 0;
             // ???? 64-long gap?
-            if (!data.ph_sprambient->load_555(gfc.PH_SPRAMBIENT_555, gfc.PH_SPRAMBIENT_SG3, 15766+64)) return 0;
-            if (!data.font->load_555(gfc.PH_FONTS_555, gfc.PH_FONTS_SG3, 18764)) return 0;
-            if (!data.empire->load_555(gfc.PH_EMPIRE_555, gfc.PH_EMPIRE_SG3, 18764+1541)) return 0;
+            if (!data.ph_sprambient->load_pak_files("SprAmbient", 15766 + 64)) return 0;
+            if (!data.font->load_pak_files("Pharaoh_Fonts", 18764)) return 0;
+            if (!data.empire->load_pak_files("Empire", 18764 + 1541)) return 0;
             break;
     }
 
     data.is_editor = is_editor;
     return 1;
 }
+
+const char* enemy_file_names_c3[20] = {
+        "goths",
+        "Etruscan",
+        "Etruscan",
+        "carthage",
+        "Greek",
+        "Greek",
+        "egyptians",
+        "Persians",
+        "Phoenician",
+        "celts",
+        "celts",
+        "celts",
+        "Gaul",
+        "Gaul",
+        "goths",
+        "goths",
+        "goths",
+        "Phoenician",
+        "North African",
+        "Phoenician"
+};
+const char* enemy_file_names_ph[20] = {
+        "Assyrian",
+        "Egyptian",
+        "Canaanite",
+        "Enemy_1",
+        "Hittite",
+        "Hyksos",
+        "Kushite",
+        "Libian",
+        "Mitani",
+        "Nubian",
+        "Persian",
+        "Phoenician",
+        "Roman",
+        "SeaPeople",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+};
+
 int image_load_enemy(int enemy_id) {
-    const char *filename_555;
-    const char *filename_sgx;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            filename_555 = gfc.C3_ENEMY_555[enemy_id];
-            filename_sgx = gfc.C3_ENEMY_SG2[enemy_id];
+            if (!data.enemy->load_pak_files(enemy_file_names_c3[enemy_id]))
+                return 0;
             break;
         case ENGINE_ENV_PHARAOH:
-            filename_555 = gfc.PH_ENEMY_555[enemy_id];
-            filename_sgx = gfc.PH_ENEMY_SG2[enemy_id];
+            if (!data.enemy->load_pak_files(enemy_file_names_ph[enemy_id]))
+                return 0;
             break;
     }
-
-    if (!data.enemy->load_555(filename_555, filename_sgx))
-        return 0;
     return 1;
 }
 int image_load_fonts(encoding_type encoding) {

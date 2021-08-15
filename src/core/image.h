@@ -64,7 +64,7 @@ public:
 
     imagepak();
 
-    int load_555(const char *filename_555, const char *filename_sgx, int shift = 0);
+    int load_pak_files(const char *filename_partial, int shift = 0);
 
     int get_entry_count();
     int get_id(int group);

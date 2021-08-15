@@ -3,7 +3,7 @@
 #include "game/system.h"
 
 #define JULIUS_VERSION "0.0.2"
-#define JULIUS_VERSION_SUFFIX "-20210808-00b2548b-dirty"
+#define JULIUS_VERSION_SUFFIX "-20210815-979b72d7-dirty"
 
 const char *system_version(void)
 {
