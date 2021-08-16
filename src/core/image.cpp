@@ -434,7 +434,7 @@ static imagepak *pak_from_collection_id(int collection) {
                 case IMAGE_COLLECTION_EXPANSION_SPR:
                     return data.ph_sprmain2;
                     /////
-                case IMAGE_COLLECTION_MASTABA:
+                case IMAGE_COLLECTION_MONUMENT:
                     return data.ph_mastaba;
             }
             break;

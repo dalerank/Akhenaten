@@ -282,6 +282,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/rotation.cpp
     ${PROJECT_SOURCE_DIR}/src/building/storage.cpp
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/monuments.cpp
 )
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/buildings.cpp

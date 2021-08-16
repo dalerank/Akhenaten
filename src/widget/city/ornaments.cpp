@@ -230,45 +230,6 @@ static const int Y_VIEW_OFFSETS[9] = {
         60, 75, 90
 };
 
-int get_statue_image(int type, int orientation, int variant) {
-    int image_id = 0;
-
-    if (orientation > 3)
-        orientation = 0;
-    if (variant > 3)
-        orientation = 0;
-
-    if (variant < 2) {
-        switch (type) {
-            case BUILDING_SMALL_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_1);
-                break;
-            case BUILDING_MEDIUM_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_1);
-                break;
-            case BUILDING_LARGE_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_1);
-                break;
-        }
-        image_id += variant * 4 + orientation;
-    } else {
-        switch (type) {
-            case BUILDING_SMALL_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_2);
-                break;
-            case BUILDING_MEDIUM_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_2);
-                break;
-            case BUILDING_LARGE_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_2);
-                break;
-        }
-        variant -= 2;
-        image_id += variant * 4 + orientation;
-    }
-    return image_id;
-}
-
 int get_farm_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);

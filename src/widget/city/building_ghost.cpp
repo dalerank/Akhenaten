@@ -30,6 +30,7 @@
 #include "widget/city/bridges.h"
 #include "tile_draw.h"
 #include "ornaments.h"
+#include "building/monuments.h"
 
 #define MAX_TILES 25
 

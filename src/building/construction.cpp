@@ -1,7 +1,6 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
-#include <widget/city/ornaments.h>
 #include "construction.h"
 
 #include "building/construction_clear.h"
@@ -42,6 +41,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "monuments.h"
 
 struct reservoir_info {
     int cost;
@@ -212,7 +212,7 @@ static void add_temple_complex(building *b) {
     int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
 
     int empty = 0;
-    int main1 = image_id_from_group(IMAGE_COLLECTION_MASTABA, properties->image_group);
+    int main1 = image_id_from_group(IMAGE_COLLECTION_MONUMENT, properties->image_group);
     int main2 = main1 + 6;
     int main3 = main1 + 12;
     int tile0 = main1 + 22;

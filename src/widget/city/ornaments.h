@@ -3,8 +3,6 @@
 
 #include "graphics/color.h"
 
-int get_statue_image(int type, int orientation, int variant);
-
 int get_farm_image(int grid_offset);
 void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask);
 
