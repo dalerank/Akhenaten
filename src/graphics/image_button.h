@@ -20,6 +20,7 @@ typedef struct {
     short height;
     short button_type;
     unsigned int image_collection;
+    unsigned int image_group;
     short image_offset;
     void (*left_click_handler)(int param1, int param2);
     void (*right_click_handler)(int param1, int param2);

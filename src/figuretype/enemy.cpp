@@ -551,11 +551,11 @@ void figure::enemy_gladiator_action() {
     dir = figure_image_normalize_direction(dir);
 
     if (action_state == FIGURE_ACTION_150_ATTACK || direction == DIR_FIGURE_ATTACK)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (anim_frame / 2);
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + dir + 104 + 8 * (anim_frame / 2);
     else if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + 96 + figure_image_corpse_offset();
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + 96 + figure_image_corpse_offset();
     else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_GLADIATOR) + dir + 8 * anim_frame;
+        sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + dir + 8 * anim_frame;
     }
 }
 void figure::enemy_caesar_legionary_action() {

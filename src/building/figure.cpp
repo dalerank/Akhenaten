@@ -438,7 +438,7 @@ void building::set_bathhouse_graphic() {
     if (has_water_access && num_workers) {
         if (map_desirability_get(grid_offset) <= 30) {
             map_building_tiles_add(id, x, y, size,
-                                   image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
+                                   image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
         } else {
             map_building_tiles_add(id, x, y, size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
@@ -635,10 +635,10 @@ void building::set_water_supply_graphic() {
         return;
     if (map_desirability_get(grid_offset) <= 30) {
         map_building_tiles_add(id, x, y, size,
-                               image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
     } else {
         map_building_tiles_add(id, x, y, size,
-                               image_id_from_group(GROUP_BUILDING_BATHHOUSE_WATER) + 2, TERRAIN_BUILDING);
+                               image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
     }
 }
 void building::spawn_figure_watersupply() {

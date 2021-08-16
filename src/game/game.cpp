@@ -72,11 +72,11 @@ static bool reload_language(int is_editor, int reload_images) {
     }
     encoding_type encoding = update_encoding();
 
-    if (!image_load_fonts(encoding)) {
+    if (!image_load_font_paks(encoding)) {
         errlog("unable to load font graphics");
         return false;
     }
-    if (!image_load_main(CLIMATE_CENTRAL, is_editor, reload_images)) {
+    if (!image_load_main_paks(CLIMATE_CENTRAL, is_editor, reload_images)) {
         errlog("unable to load main graphics");
         return false;
     }
@@ -138,43 +138,12 @@ bool game_pre_init(void) {
     return true;
 }
 bool game_init(void) {
-//    if (!image_init()) {
-//        errlog("unable to init graphics");
-//        return 0;
-//    }
-
-
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-
-
-
-
-
-
-    if (!image_load_main(CLIMATE_CENTRAL, 0, 0)) {
+    if (!image_load_main_paks(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return false;
     }
-    if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
-        errlog("unable to load enemy graphics");
-        return false;
-    }
     int missing_fonts = 0;
-    if (!image_load_fonts(encoding_get())) {
+    if (!image_load_font_paks(encoding_get())) {
         errlog("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;

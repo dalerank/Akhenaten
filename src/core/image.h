@@ -55,7 +55,7 @@ class imagepak {
     uint32_t header_data[10];
     uint16_t *group_image_ids;
     image *images;
-    color_t *data;
+    color_t *image_data;
 
     bool check_initialized();
 
@@ -64,7 +64,7 @@ public:
 
     imagepak();
 
-    int load_555(const char *filename_555, const char *filename_sgx, int shift = 0);
+    bool load_pak(const char *filename_partial, int index_shift = 0);
 
     int get_entry_count();
     int get_id(int group);
@@ -73,11 +73,11 @@ public:
 
 extern int terrain_ph_offset;
 
-int image_load_main(int climate_id, int is_editor, int force_reload);
-int image_load_fonts(encoding_type encoding);
-int image_load_enemy(int enemy_id);
+bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
+bool image_load_font_paks(encoding_type encoding);
+bool image_load_enemy_paks(int enemy_id);
 
-int image_id_from_group(int group);
+int image_id_from_group(int collectiion, int group);
 
 const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);

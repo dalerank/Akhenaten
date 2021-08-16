@@ -307,7 +307,7 @@ static struct {
 } reservoir_range_data;
 
 static int get_building_image_id(int map_x, int map_y, int type, const building_properties *props) {
-    int image_id = image_id_from_group(props->image_group) + props->image_offset;
+    int image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
     if (type == BUILDING_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;
@@ -700,58 +700,58 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
     }
 }
 static void draw_fountain(const map_tile *tile, int x, int y) {
-    if (city_finance_out_of_money())
-        draw_flat_tile(x, y, COLOR_MASK_RED);
-    else {
-        int image_id = image_id_from_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
-            city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-                                            draw_fountain_range);
-
-        draw_building(image_id, x, y);
-        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
-            const image *img = image_get(image_id);
-            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
-        }
-    }
+//    if (city_finance_out_of_money())
+//        draw_flat_tile(x, y, COLOR_MASK_RED);
+//    else {
+//        int image_id = image_id_from_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
+//        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
+//            city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
+//                                            draw_fountain_range);
+//
+//        draw_building(image_id, x, y);
+//        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
+//            const image *img = image_get(image_id);
+//            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+//        }
+//    }
 }
 static void draw_bathhouse(const map_tile *tile, int x, int y) {
-    int grid_offset = tile->grid_offset;
-    int num_tiles = 4;
-    int blocked_tiles[4];
-    int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
-    int fully_blocked = 0;
-    if (city_finance_out_of_money()) {
-        fully_blocked = 1;
-        blocked = 1;
-    }
-
-    if (blocked)
-        draw_partially_blocked(x, y, fully_blocked, num_tiles, blocked_tiles);
-    else {
-        int image_id = image_id_from_group(building_properties_for_type(BUILDING_BATHHOUSE)->image_group);
-        int has_water = 0;
-        int orientation_index = city_view_orientation() / 2;
-        for (int i = 0; i < num_tiles; i++) {
-            int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
-            switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
-                    break;
-                case ENGINE_ENV_PHARAOH:
-                    tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
-                    break;
-            }
-            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER))
-                has_water = 1;
-
-        }
-        draw_building(image_id, x, y);
-        if (has_water) {
-            const image *img = image_get(image_id);
-            ImageDraw::img_generic(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
-        }
-    }
+//    int grid_offset = tile->grid_offset;
+//    int num_tiles = 4;
+//    int blocked_tiles[4];
+//    int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
+//    int fully_blocked = 0;
+//    if (city_finance_out_of_money()) {
+//        fully_blocked = 1;
+//        blocked = 1;
+//    }
+//
+//    if (blocked)
+//        draw_partially_blocked(x, y, fully_blocked, num_tiles, blocked_tiles);
+//    else {
+//        int image_id = image_id_from_group(building_properties_for_type(BUILDING_BATHHOUSE)->image_group);
+//        int has_water = 0;
+//        int orientation_index = city_view_orientation() / 2;
+//        for (int i = 0; i < num_tiles; i++) {
+//            int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
+//            switch (GAME_ENV) {
+//                case ENGINE_ENV_C3:
+//                    tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
+//                    break;
+//                case ENGINE_ENV_PHARAOH:
+//                    tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
+//                    break;
+//            }
+//            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER))
+//                has_water = 1;
+//
+//        }
+//        draw_building(image_id, x, y);
+//        if (has_water) {
+//            const image *img = image_get(image_id);
+//            ImageDraw::img_generic(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+//        }
+//    }
 }
 static void draw_bridge(const map_tile *tile, int x, int y, int type) {
     int length, direction;
@@ -862,64 +862,64 @@ static void draw_fort(const map_tile *tile, int x, int y) {
     }
 }
 static void draw_hippodrome(const map_tile *tile, int x, int y) {
-    int fully_blocked = 0;
-    int blocked = 0;
-    if (city_buildings_has_hippodrome() || city_finance_out_of_money()) {
-        fully_blocked = 1;
-        blocked = 1;
-    }
-    int num_tiles = 25;
-
-    building_rotation_force_two_orientations();
-    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
-    int grid_offset1 = tile->grid_offset;
-    int grid_offset2 = grid_offset1 + building_rotation_get_delta_with_rotation(5);
-    int grid_offset3 = grid_offset1 + building_rotation_get_delta_with_rotation(10);
-
-    int blocked_tiles1[25];
-    int blocked_tiles2[25];
-    int blocked_tiles3[25];
-    blocked += is_blocked_for_building(grid_offset1, num_tiles, blocked_tiles1);
-    blocked += is_blocked_for_building(grid_offset2, num_tiles, blocked_tiles2);
-    blocked += is_blocked_for_building(grid_offset3, num_tiles, blocked_tiles3);
-
-    int x_part1 = x;
-    int y_part1 = y;
-    int x_part2 = x_part1 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
-    int y_part2 = y_part1 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
-    int x_part3 = x_part2 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
-    int y_part3 = y_part2 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
-    if (blocked) {
-        draw_partially_blocked(x_part1, y_part1, fully_blocked, num_tiles, blocked_tiles1);
-        draw_partially_blocked(x_part2, y_part2, fully_blocked, num_tiles, blocked_tiles2);
-        draw_partially_blocked(x_part3, y_part3, fully_blocked, num_tiles, blocked_tiles3);
-    } else {
-        if (orientation_index == 0) {
-            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-            // part 1, 2, 3
-            draw_building(image_id, x_part1, y_part1);
-            draw_building(image_id + 2, x_part2, y_part2);
-            draw_building(image_id + 4, x_part3, y_part3);
-        } else if (orientation_index == 1) {
-            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-            // part 3, 2, 1
-            draw_building(image_id, x_part3, y_part3);
-            draw_building(image_id + 2, x_part2, y_part2);
-            draw_building(image_id + 4, x_part1, y_part1);
-        } else if (orientation_index == 2) {
-            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-            // part 1, 2, 3
-            draw_building(image_id + 4, x_part1, y_part1);
-            draw_building(image_id + 2, x_part2, y_part2);
-            draw_building(image_id, x_part3, y_part3);
-        } else if (orientation_index == 3) {
-            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-            // part 3, 2, 1
-            draw_building(image_id + 4, x_part3, y_part3);
-            draw_building(image_id + 2, x_part2, y_part2);
-            draw_building(image_id, x_part1, y_part1);
-        }
-    }
+//    int fully_blocked = 0;
+//    int blocked = 0;
+//    if (city_buildings_has_hippodrome() || city_finance_out_of_money()) {
+//        fully_blocked = 1;
+//        blocked = 1;
+//    }
+//    int num_tiles = 25;
+//
+//    building_rotation_force_two_orientations();
+//    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+//    int grid_offset1 = tile->grid_offset;
+//    int grid_offset2 = grid_offset1 + building_rotation_get_delta_with_rotation(5);
+//    int grid_offset3 = grid_offset1 + building_rotation_get_delta_with_rotation(10);
+//
+//    int blocked_tiles1[25];
+//    int blocked_tiles2[25];
+//    int blocked_tiles3[25];
+//    blocked += is_blocked_for_building(grid_offset1, num_tiles, blocked_tiles1);
+//    blocked += is_blocked_for_building(grid_offset2, num_tiles, blocked_tiles2);
+//    blocked += is_blocked_for_building(grid_offset3, num_tiles, blocked_tiles3);
+//
+//    int x_part1 = x;
+//    int y_part1 = y;
+//    int x_part2 = x_part1 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
+//    int y_part2 = y_part1 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
+//    int x_part3 = x_part2 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
+//    int y_part3 = y_part2 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
+//    if (blocked) {
+//        draw_partially_blocked(x_part1, y_part1, fully_blocked, num_tiles, blocked_tiles1);
+//        draw_partially_blocked(x_part2, y_part2, fully_blocked, num_tiles, blocked_tiles2);
+//        draw_partially_blocked(x_part3, y_part3, fully_blocked, num_tiles, blocked_tiles3);
+//    } else {
+//        if (orientation_index == 0) {
+//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
+//            // part 1, 2, 3
+//            draw_building(image_id, x_part1, y_part1);
+//            draw_building(image_id + 2, x_part2, y_part2);
+//            draw_building(image_id + 4, x_part3, y_part3);
+//        } else if (orientation_index == 1) {
+//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
+//            // part 3, 2, 1
+//            draw_building(image_id, x_part3, y_part3);
+//            draw_building(image_id + 2, x_part2, y_part2);
+//            draw_building(image_id + 4, x_part1, y_part1);
+//        } else if (orientation_index == 2) {
+//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
+//            // part 1, 2, 3
+//            draw_building(image_id + 4, x_part1, y_part1);
+//            draw_building(image_id + 2, x_part2, y_part2);
+//            draw_building(image_id, x_part3, y_part3);
+//        } else if (orientation_index == 3) {
+//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
+//            // part 3, 2, 1
+//            draw_building(image_id + 4, x_part3, y_part3);
+//            draw_building(image_id + 2, x_part2, y_part2);
+//            draw_building(image_id, x_part1, y_part1);
+//        }
+//    }
 }
 // TODO: to fix orientation and blocked grid
 static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
@@ -933,7 +933,7 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
     // 25 max tiles at the moment to check blocked tiles
     const int num_tiles = 16;
     auto properties = building_properties_for_type(type);
-    int temple_complex_image_id = properties->image_group;
+//    int temple_complex_image_id = properties->image_group;
 
     building_rotation_force_two_orientations();
     int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
@@ -942,7 +942,7 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
         // TBD
     } else {
         int empty = 0;
-        int main1 = image_id_from_group(temple_complex_image_id);
+        int main1 = image_id_from_group(properties->image_collection, properties->image_group);
         int main2 = main1 + 6;
         int main3 = main1 + 12;
         int tile0 = main1 + 22;
@@ -1017,7 +1017,7 @@ static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type) {
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
     } else {
         const building_properties *props = building_properties_for_type(type);
-        int image_id = image_id_from_group(props->image_group) + props->image_offset + dir_relative;
+        int image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset + dir_relative;
         draw_building(image_id, x, y);
     }
 }

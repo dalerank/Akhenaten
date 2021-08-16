@@ -899,6 +899,16 @@ static void savegame_save_to_state(savegame_state *state) {
 
 #include "SDL.h"
 
+#ifdef _WIN32
+#  ifdef _WIN64
+#    define PRI_SIZET PRIu64
+#  else
+#    define PRI_SIZET PRIu32
+#  endif
+#else
+#  define PRI_SIZET "zu"
+#endif
+
 int findex;
 char *fname;
 
@@ -916,13 +926,8 @@ void log_hex(file_piece *piece, int i, int offs) {
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-#ifdef _WIN32
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%i) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
             offs, hexstr, piece->buf->size(), fname);
-#else
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%zu) %s", piece->compressed ? "(C)" : "---", i + 1, savegame_data.num_pieces,
-            offs, hexstr, piece->buf->size(), fname);
-#endif
 }
 static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer

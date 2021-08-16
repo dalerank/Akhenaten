@@ -312,6 +312,11 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
+void draw_empty_tile_debug(int x, int y, int grid_offset) {
+    if (!map_property_is_draw_tile(grid_offset))
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+};
+
 void draw_footprint(int x, int y, int grid_offset) {
     // black tile outside of map
     if (grid_offset < 0)
@@ -740,8 +745,11 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
             }
             break;
-        case 13:
+        case 13: // TERRAIN FIELD
             draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
+            break;
+        case 14: // IMAGE FIELD
+            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED); break;
             break;
     }
 }

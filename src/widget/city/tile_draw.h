@@ -10,6 +10,8 @@ void init_draw_context(int selected_figure_id, pixel_coordinate *figure_coord, i
 void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int image_offset, color_t color_mask);
 void draw_flattened_footprint_building(const building *b, int x, int y, int image_offset, color_t color_mask);
 
+void draw_empty_tile_debug(int x, int y, int grid_offset);
+
 void draw_footprint(int x, int y, int grid_offset);
 void draw_top(int x, int y, int grid_offset);
 void draw_ornaments(int x, int y, int grid_offset);

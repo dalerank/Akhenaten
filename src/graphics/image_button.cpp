@@ -45,7 +45,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons, in
             }
         }
 
-        int image_id = image_id_from_group(btn->image_collection) + btn->image_offset;
+        int image_id = image_id_from_group(btn->image_collection, btn->image_group) + btn->image_offset;
         if (btn->enabled) {
             if (btn->pressed)
                 image_id += 2;

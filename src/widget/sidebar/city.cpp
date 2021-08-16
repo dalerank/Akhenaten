@@ -52,21 +52,21 @@ static void button_rotate(int clockwise, int param2);
 
 static image_button buttons_overlays_collapse_sidebar[][2] = {
         {
-                {127, 5, 31, 20, IB_NORMAL, 90,  0, button_collapse_expand, button_none, 0, 0, 1},
-                {4, 3, 117, 31, IB_NORMAL, 93, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
+                {127, 5, 31, 20, IB_NORMAL, 0, 90,  0, button_collapse_expand, button_none, 0, 0, 1},
+                {4, 3, 117, 31, IB_NORMAL, 0, 93, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
         },
         {
-                {128, 0, 31, 20, IB_NORMAL, 176, 7, button_collapse_expand, button_none, 0, 0, 1},
+                {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
 //        {4 - 15 - 5, 2, 117, 20, IB_NORMAL, 93, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
         }
 };
 
 static image_button button_expand_sidebar[][1] = {
         {
-                {6, 4, 31, 20, IB_NORMAL, 90,  4,  button_collapse_expand, button_none, 0, 0, 1}
+                {6, 4, 31, 20, IB_NORMAL, 0, 90,  4,  button_collapse_expand, button_none, 0, 0, 1}
         },
         {
-                {8, 0, 31, 20, IB_NORMAL, 176, 10, button_collapse_expand, button_none, 0, 0, 1}
+                {8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}
         }
 };
 
@@ -249,7 +249,9 @@ static void draw_debug_ui(int x, int y) {
             case 12:
                 text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
             case 13:
+                text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN FIELD"), x, y + 10, col); break;
             case 14:
+                text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
             case 15:
                 text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col); break;
         }

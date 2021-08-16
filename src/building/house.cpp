@@ -32,6 +32,7 @@ static const int HOUSE_TILE_OFFSETS_PH[] = {
 
 
 static const struct {
+    int collection;
     int group;
     int offset;
     int num_types;
@@ -107,7 +108,7 @@ void building_house_change_to(building *house, int type) {
     tutorial_on_house_evolve(type - BUILDING_HOUSE_VACANT_LOT);
     house->type = type;
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].group);
+    int image_id = image_id_from_group(HOUSE_IMAGE[house->subtype.house_level].collection, HOUSE_IMAGE[house->subtype.house_level].group);
     if (house->house_is_merged) {
         image_id += 4;
         if (HOUSE_IMAGE[house->subtype.house_level].offset)
@@ -165,7 +166,7 @@ static void merge(building *b) {
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = image_id_from_group(HOUSE_IMAGE[b->subtype.house_level].group) + 4;
+    int image_id = image_id_from_group(HOUSE_IMAGE[b->subtype.house_level].collection, HOUSE_IMAGE[b->subtype.house_level].group) + 4;
     if (HOUSE_IMAGE[b->subtype.house_level].offset)
         image_id += 1;
 
@@ -287,7 +288,7 @@ int building_house_can_expand(building *house, int num_tiles) {
 }
 
 static int house_image_group(int level) {
-    return image_id_from_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
+    return image_id_from_group(HOUSE_IMAGE[level].collection, HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
 static void create_house_tile(int type, int x, int y, int image_id, int population, const int *inventory) {

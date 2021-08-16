@@ -30,8 +30,8 @@ static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 #include "core/image.h"
 #include "game/resource.h"
 
-void figure::image_set_animation(int group, int offset, int max_frames, int duration) {
-    anim_base = image_id_from_group(group);
+void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
+    anim_base = image_id_from_group(collection, group);
     anim_offset = offset;
     anim_max_frames = max_frames;
     if (duration <= 0)
