@@ -508,24 +508,16 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
 //            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            // ????
-//            overall_pak_load_index_shift = 700;                                                               // 700
-            if (!data.ph_sprmain->load_pak("SprMain", 700)) return false;                  // 11025
-            if (!data.ph_unloaded->load_pak("Pharaoh_Unloaded", 0)) return false;          // 11707
-            if (!data.main->load_pak("Pharaoh_General", -1)) return false;                 // 14252
-            if (!data.ph_terrain->load_pak("Pharaoh_Terrain", -200)) return false;         // 15767
-            // ????
-//            overall_pak_load_index_shift += 64;                                                               // 15831
-            if (!data.ph_sprambient->load_pak("SprAmbient", 64)) return false;             // 18765
-            if (!data.font->load_pak("Pharaoh_Fonts", 0)) return false;                    // 20305
-            if (!data.empire->load_pak("Empire", 0)) return false;                         // 20506
-            // ????
-//            overall_pak_load_index_shift += 177;                                                              // 20683
-            if (!data.ph_sprmain2->load_pak("SprMain2", 177)) return false;                // 23035
-            if (!data.ph_expansion->load_pak("Expansion", 0)) return false;                // 23935
-            // ????
-            if (!data.ph_mastaba->load_pak("Mastaba", -200)) return false;                 // 24163
-
+            if (!data.ph_sprmain->load_pak("SprMain", 700)) return false;                  // 700   --> 11025
+            if (!data.ph_unloaded->load_pak("Pharaoh_Unloaded", 0)) return false;          // 11025 --> 11707 (-1)
+            if (!data.main->load_pak("Pharaoh_General", -1)) return false;                 // 11706 --> 14252 (-200)
+            if (!data.ph_terrain->load_pak("Pharaoh_Terrain", -200)) return false;         // 14252 --> 15767 (+64)
+            if (!data.ph_sprambient->load_pak("SprAmbient", 64)) return false;             // 15831 --> 18765
+            if (!data.font->load_pak("Pharaoh_Fonts", 0)) return false;                    // 18765 --> 20305
+            if (!data.empire->load_pak("Empire", 0)) return false;                         // 20305 --> 20506 (+177)
+            if (!data.ph_sprmain2->load_pak("SprMain2", 177)) return false;                // 20683 --> 23035
+            if (!data.ph_expansion->load_pak("Expansion", 0)) return false;                // 23035 --> 23935 (-200)
+            if (!data.ph_mastaba->load_pak("Mastaba", -200)) return false;                 // 23735 --> 24163
             break;
     }
 
