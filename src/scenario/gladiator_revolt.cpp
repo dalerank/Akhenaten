@@ -25,7 +25,7 @@ void scenario_gladiator_revolt_process(void) {
         return;
     if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
-            if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0) {
+            if (building_count_active(BUILDING_CONSERVATORY) > 0) {
                 data.state = EVENT_STATE_IN_PROGRESS;
                 city_message_post(true, MESSAGE_GLADIATOR_REVOLT, 0, 0);
             } else {

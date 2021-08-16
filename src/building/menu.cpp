@@ -13,23 +13,23 @@ static const int MENU_int[][BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
                 {BUILDING_HOUSE_VACANT_LOT, 0},
                 {BUILDING_CLEAR_LAND, 0},
                 {BUILDING_ROAD, 0},
-                {BUILDING_DRAGGABLE_RESERVOIR, BUILDING_AQUEDUCT, BUILDING_FOUNTAIN, BUILDING_WELL, 0},
-                {BUILDING_BARBER, BUILDING_BATHHOUSE, BUILDING_DOCTOR, BUILDING_HOSPITAL, 0},
-                {BUILDING_MENU_SMALL_TEMPLES, BUILDING_MENU_LARGE_TEMPLES, BUILDING_ORACLE, 0},
-                {BUILDING_SCHOOL, BUILDING_ACADEMY, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
-                {BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_HIPPODROME,
-                 BUILDING_ACTOR_COLONY, BUILDING_GLADIATOR_SCHOOL, BUILDING_LION_HOUSE, BUILDING_CHARIOT_MAKER, 0},
-                {BUILDING_FORUM, BUILDING_SENATE_UPGRADED, BUILDING_GOVERNORS_HOUSE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_PALACE,
+                {BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, BUILDING_MENU_BEAUTIFICATION, BUILDING_WELL, 0},
+                {BUILDING_DENTIST, BUILDING_MENU_MONUMENTS, BUILDING_APOTHECARY, BUILDING_MORTUARY, 0},
+                {BUILDING_MENU_TEMPLES, BUILDING_MENU_TEMPLE_COMPLEX, BUILDING_ORACLE, 0},
+                {BUILDING_SCHOOL, BUILDING_MENU_WATER_CROSSINGS, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
+                {BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_SENET_HOUSE,
+                        BUILDING_JUGGLER_SCHOOL, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_CHARIOT_MAKER, 0},
+                {BUILDING_TAX_COLLECTOR, BUILDING_SENATE_UPGRADED, BUILDING_PERSONAL_MANSION, BUILDING_FAMILY_MANSION, BUILDING_DYNASTY_MANSION,
                  BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_ROADBLOCK, BUILDING_TRIUMPHAL_ARCH, 0},
-                {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_ENGINEERS_POST, BUILDING_LOW_BRIDGE, BUILDING_SHIP_BRIDGE, BUILDING_SHIPYARD, BUILDING_DOCK, BUILDING_WHARF, 0},
-                {BUILDING_WALL, BUILDING_TOWER,              BUILDING_GATEHOUSE,  BUILDING_PREFECTURE, BUILDING_MENU_FORTS,       BUILDING_MILITARY_ACADEMY,  BUILDING_BARRACKS,      0},
-                {BUILDING_MENU_FARMS, BUILDING_MENU_RAW_MATERIALS, BUILDING_MENU_WORKSHOPS, BUILDING_MARKET, BUILDING_GRANARY, BUILDING_WAREHOUSE, 0},
-                {BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM, BUILDING_OLIVE_FARM, BUILDING_VINES_FARM, BUILDING_PIG_FARM, 0},
-                {BUILDING_CLAY_PIT, BUILDING_MARBLE_QUARRY, BUILDING_IRON_MINE, BUILDING_TIMBER_YARD, 0},
-                {BUILDING_WINE_WORKSHOP, BUILDING_OIL_WORKSHOP, BUILDING_WEAPONS_WORKSHOP, BUILDING_FURNITURE_WORKSHOP, BUILDING_POTTERY_WORKSHOP, 0},
-                {BUILDING_MENU_SMALL_TEMPLES, BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_SMALL_TEMPLE_MARS, BUILDING_SMALL_TEMPLE_VENUS, 0},
-                {BUILDING_MENU_LARGE_TEMPLES, BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_VENUS, 0},
-                {BUILDING_FORT_LEGIONARIES, BUILDING_FORT_JAVELIN, BUILDING_FORT_MOUNTED, 0},
+                {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_ENGINEERS_POST, BUILDING_LOW_BRIDGE, BUILDING_SHIP_BRIDGE, BUILDING_SHIPYARD, BUILDING_DOCK, BUILDING_FISHING_WHARF, 0},
+                {BUILDING_WALL, BUILDING_TOWER,              BUILDING_GATEHOUSE, BUILDING_POLICE_STATION, BUILDING_MENU_FORTS, BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, 0},
+                {BUILDING_MENU_FARMS, BUILDING_MENU_RAW_MATERIALS, BUILDING_MENU_GUILDS, BUILDING_MARKET, BUILDING_GRANARY, BUILDING_WAREHOUSE, 0},
+                {BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_GRAIN_FARM, BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM, 0},
+                {BUILDING_CLAY_PIT, BUILDING_STONE_QUARRY, BUILDING_LIMESTONE_QUARRY, BUILDING_TIMBER_YARD, 0},
+                {BUILDING_BEER_WORKSHOP, BUILDING_LINEN_WORKSHOP, BUILDING_WEAPONS_WORKSHOP, BUILDING_JEWELS_WORKSHOP, BUILDING_POTTERY_WORKSHOP, 0},
+                {BUILDING_MENU_TEMPLES, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_BAST, 0},
+                {BUILDING_MENU_TEMPLE_COMPLEX, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST, 0},
+                {BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_ARCHERS, BUILDING_FORT_INFANTRY, 0},
 
                 {0},
                 {0},
@@ -151,11 +151,11 @@ static void enable_building(int type, bool enabled = true) {
         if (building_is_shrine(type))
             enable_building(BUILDING_MENU_SHRINES);
         if (building_is_temple(type))
-            enable_building(BUILDING_MENU_SMALL_TEMPLES);
+            enable_building(BUILDING_MENU_TEMPLES);
         if (building_is_large_temple(type))
-            enable_building(BUILDING_MENU_LARGE_TEMPLES);
+            enable_building(BUILDING_MENU_TEMPLE_COMPLEX);
         if (building_is_guild(type))
-            enable_building(BUILDING_MENU_LARGE_TEMPLES);
+            enable_building(BUILDING_MENU_TEMPLE_COMPLEX);
         if (building_is_beautification(type))
             enable_building(BUILDING_MENU_BEAUTIFICATION);
         if (building_is_water_crossing(type))
@@ -166,13 +166,13 @@ static void enable_building(int type, bool enabled = true) {
     }
 }
 static void enable_cycling_temples_if_allowed(int type) {
-    int sub = (type == BUILDING_MENU_SMALL_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
+    int sub = (type == BUILDING_MENU_TEMPLES) ? BUILD_MENU_SMALL_TEMPLES : BUILD_MENU_LARGE_TEMPLES;
     menu_enabled[sub][0] = 1;
 }
 static void enable_if_allowed(int type) {
     if (scenario_building_allowed(type)) {
         enable_building(type, true);
-        if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES)
+        if (type == BUILDING_MENU_TEMPLES || type == BUILDING_MENU_TEMPLE_COMPLEX)
             enable_cycling_temples_if_allowed(type);
     } else
         enable_building(type, false);
@@ -199,22 +199,22 @@ static int disable_crafted_if_unavailable(int type, int resource, int resource2 
 static void disable_resources() {
     if (GAME_ENV == ENGINE_ENV_C3) {
         int farms = 0;
-        farms += disable_raw_if_unavailable(BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
-        farms += disable_raw_if_unavailable(BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
-        farms += disable_raw_if_unavailable(BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
-        farms += disable_raw_if_unavailable(BUILDING_PIG_FARM, RESOURCE_MEAT_C3);
-        farms += disable_raw_if_unavailable(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
-        farms += disable_raw_if_unavailable(BUILDING_VINES_FARM, RESOURCE_VINES);
+        farms += disable_raw_if_unavailable(BUILDING_BARLEY_FARM, RESOURCE_WHEAT);
+        farms += disable_raw_if_unavailable(BUILDING_FLAX_FARM, RESOURCE_VEGETABLES);
+        farms += disable_raw_if_unavailable(BUILDING_GRAIN_FARM, RESOURCE_FRUIT);
+        farms += disable_raw_if_unavailable(BUILDING_CHICKPEAS_FARM, RESOURCE_MEAT_C3);
+        farms += disable_raw_if_unavailable(BUILDING_LETTUCE_FARM, RESOURCE_OLIVES);
+        farms += disable_raw_if_unavailable(BUILDING_POMEGRANATES_FARM, RESOURCE_VINES);
         farms += disable_raw_if_unavailable(BUILDING_CLAY_PIT, RESOURCE_CLAY);
         farms += disable_raw_if_unavailable(BUILDING_TIMBER_YARD, RESOURCE_TIMBER_C3);
-        farms += disable_raw_if_unavailable(BUILDING_IRON_MINE, RESOURCE_IRON);
-        farms += disable_raw_if_unavailable(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE_C3);
+        farms += disable_raw_if_unavailable(BUILDING_LIMESTONE_QUARRY, RESOURCE_IRON);
+        farms += disable_raw_if_unavailable(BUILDING_STONE_QUARRY, RESOURCE_MARBLE_C3);
 //        if (!farms) // todo: monuments
 //            enable_building(BUILDING_WORK_CAMP, false);
         disable_crafted_if_unavailable(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY_C3);
-        disable_crafted_if_unavailable(BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
-        disable_crafted_if_unavailable(BUILDING_OIL_WORKSHOP, RESOURCE_OIL_C3);
-        disable_crafted_if_unavailable(BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
+        disable_crafted_if_unavailable(BUILDING_JEWELS_WORKSHOP, RESOURCE_FURNITURE);
+        disable_crafted_if_unavailable(BUILDING_LINEN_WORKSHOP, RESOURCE_OIL_C3);
+        disable_crafted_if_unavailable(BUILDING_BEER_WORKSHOP, RESOURCE_WINE);
         disable_crafted_if_unavailable(BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS_C3);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         disable_raw_if_unavailable(BUILDING_BARLEY_FARM, RESOURCE_BARLEY);
@@ -348,7 +348,7 @@ void building_menu_update(int build_set) {
             building_menu_disable_all();
             break;
         case BUILDSET_TUT1_FIRE_C3:
-            enable_building(BUILDING_PREFECTURE);
+            enable_building(BUILDING_POLICE_STATION);
             enable_building(BUILDING_MARKET);
             break;
         case BUILDSET_TUT1_FIRE_PH:
@@ -373,14 +373,14 @@ void building_menu_update(int build_set) {
         case BUILDSET_TUT2_START:
             building_menu_disable_all();
             if (GAME_ENV == ENGINE_ENV_C3) {
-                enable_building(BUILDING_PREFECTURE);
+                enable_building(BUILDING_POLICE_STATION);
                 enable_building(BUILDING_ENGINEERS_POST);
                 enable_building(BUILDING_SENATE_UPGRADED);
                 enable_building(BUILDING_ROADBLOCK);
                 enable_building(BUILDING_MARKET);
                 enable_building(BUILDING_GRANARY);
                 enable_building(BUILDING_MENU_FARMS);
-                enable_building(BUILDING_MENU_SMALL_TEMPLES);
+                enable_building(BUILDING_MENU_TEMPLES);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 enable_building(BUILDING_FIREHOUSE);
                 enable_building(BUILDING_ENGINEERS_POST);
@@ -401,22 +401,22 @@ void building_menu_update(int build_set) {
             enable_building(BUILDING_JUGGLER_SCHOOL);
             break;
         case BUILDSET_TUT2_UP_TO_250:
-            enable_building(BUILDING_DRAGGABLE_RESERVOIR);
-            enable_building(BUILDING_AQUEDUCT);
-            enable_building(BUILDING_FOUNTAIN);
+            enable_building(BUILDING_WATER_LIFT);
+            enable_building(BUILDING_IRRIGATION_DITCH);
+            enable_building(BUILDING_MENU_BEAUTIFICATION);
             break;
         case BUILDSET_TUT2_UP_TO_450:
             enable_building(BUILDING_GARDENS);
-            enable_building(BUILDING_ACTOR_COLONY);
-            enable_building(BUILDING_THEATER);
-            enable_building(BUILDING_BATHHOUSE);
+            enable_building(BUILDING_JUGGLER_SCHOOL);
+            enable_building(BUILDING_BOOTH);
+            enable_building(BUILDING_MENU_MONUMENTS);
             enable_building(BUILDING_SCHOOL);
             break;
         case BUILDSET_TUT2_AFTER_450:
             enable_building(BUILDING_MENU_RAW_MATERIALS);
-            enable_building(BUILDING_MENU_WORKSHOPS);
+            enable_building(BUILDING_MENU_GUILDS);
             enable_building(BUILDING_WAREHOUSE);
-            enable_building(BUILDING_FORUM);
+            enable_building(BUILDING_TAX_COLLECTOR);
             enable_building(BUILDING_BOOTH);
             enable_building(BUILDING_JUGGLER_SCHOOL);
             break;

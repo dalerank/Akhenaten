@@ -278,7 +278,7 @@ void figure::docker_action() {
     if (b->state != BUILDING_STATE_VALID)
         poof();
 
-    if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF)
+    if (b->type != BUILDING_DOCK && b->type != BUILDING_FISHING_WHARF)
         poof();
 
     if (b->data.dock.num_ships)

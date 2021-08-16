@@ -20,10 +20,10 @@ static int is_problem_cartpusher(figure *fig) {
 void overlay_problems_prepare_building(building *b) {
     if (b->house_size)
         return;
-    if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
+    if (b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_MENU_MONUMENTS) {
         if (!b->has_water_access)
             b->show_on_problem_overlay = 1;
-    } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
+    } else if (b->type >= BUILDING_BARLEY_FARM && b->type <= BUILDING_CLAY_PIT) {
         if (is_problem_cartpusher(b->get_figure(0)))
             b->show_on_problem_overlay = 1;
     } else if (building_is_workshop(b->type)) {

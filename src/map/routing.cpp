@@ -276,7 +276,7 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
         if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
             return 1;
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            if (building_at(grid_offset)->type == BUILDING_RESERVOIR)
+            if (building_at(grid_offset)->type == BUILDING_WATER_LIFT2)
                 return 1;
         }
         return 0;

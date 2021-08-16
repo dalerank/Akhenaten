@@ -35,10 +35,10 @@ static void increase_industry_count(int resource, int active) {
 }
 
 static void limit_hippodrome(void) {
-    if (data.buildings[BUILDING_HIPPODROME].total > 1)
-        data.buildings[BUILDING_HIPPODROME].total = 1;
-    if (data.buildings[BUILDING_HIPPODROME].active > 1)
-        data.buildings[BUILDING_HIPPODROME].active = 1;
+    if (data.buildings[BUILDING_SENET_HOUSE].total > 1)
+        data.buildings[BUILDING_SENET_HOUSE].total = 1;
+    if (data.buildings[BUILDING_SENET_HOUSE].active > 1)
+        data.buildings[BUILDING_SENET_HOUSE].active = 1;
 }
 
 void building_entertainment_update() {
@@ -52,10 +52,10 @@ void building_entertainment_update() {
         switch (type) {
             // SPECIAL TREATMENT
             // entertainment venues
-            case BUILDING_THEATER:
-            case BUILDING_AMPHITHEATER:
-            case BUILDING_COLOSSEUM:
-            case BUILDING_HIPPODROME:
+            case BUILDING_BOOTH:
+            case BUILDING_BANDSTAND:
+            case BUILDING_PAVILLION:
+            case BUILDING_SENET_HOUSE:
                 is_entertainment_venue = 1;
                 break;
         }
@@ -70,7 +70,7 @@ void building_entertainment_update() {
                 --b->data.entertainment.days2;
                 ++shows;
             }
-            if (type != BUILDING_THEATER && b->data.entertainment.days3_or_play > 0) {
+            if (type != BUILDING_BOOTH && b->data.entertainment.days3_or_play > 0) {
                 --b->data.entertainment.days3_or_play;
                 ++shows;
             }
@@ -92,35 +92,35 @@ void building_count_update(void) {
         switch (type) {
             // SPECIAL TREATMENT
             // entertainment venues
-            case BUILDING_THEATER:
+            case BUILDING_BOOTH:
                 increase_count(type, b->num_workers > 0);
                 break;
-            case BUILDING_AMPHITHEATER:
+            case BUILDING_BANDSTAND:
                 increase_count(type, b->num_workers > 0);
-                increase_count(BUILDING_THEATER, b->num_workers > 0);
+                increase_count(BUILDING_BOOTH, b->num_workers > 0);
                 break;
-            case BUILDING_COLOSSEUM:
+            case BUILDING_PAVILLION:
                 increase_count(type, b->num_workers > 0);
-                increase_count(BUILDING_AMPHITHEATER, b->num_workers > 0);
-                increase_count(BUILDING_THEATER, b->num_workers > 0);
+                increase_count(BUILDING_BANDSTAND, b->num_workers > 0);
+                increase_count(BUILDING_BOOTH, b->num_workers > 0);
                 break;
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
                 increase_count(type, b->num_workers > 0);
                 break;
 
-            case BUILDING_BARRACKS:
+            case BUILDING_RECRUITER:
                 city_buildings_set_barracks(i);
                 increase_count(type, b->num_workers > 0);
                 break;
 
-            case BUILDING_HOSPITAL:
+            case BUILDING_MORTUARY:
                 increase_count(type, b->num_workers > 0);
                 city_health_add_hospital_workers(b->num_workers);
                 break;
 
                 // water
-            case BUILDING_RESERVOIR:
-            case BUILDING_FOUNTAIN:
+            case BUILDING_WATER_LIFT2:
+            case BUILDING_MENU_BEAUTIFICATION:
                 increase_count(type, b->has_water_access);
                 break;
 
@@ -128,36 +128,36 @@ void building_count_update(void) {
                 // education
             case BUILDING_SCHOOL:
             case BUILDING_LIBRARY:
-            case BUILDING_ACADEMY:
+            case BUILDING_MENU_WATER_CROSSINGS:
                 // health
-            case BUILDING_BARBER:
-            case BUILDING_BATHHOUSE:
-            case BUILDING_DOCTOR:
+            case BUILDING_DENTIST:
+            case BUILDING_MENU_MONUMENTS:
+            case BUILDING_APOTHECARY:
                 // government
-            case BUILDING_FORUM:
-            case BUILDING_FORUM_UPGRADED:
+            case BUILDING_TAX_COLLECTOR:
+            case BUILDING_TAX_COLLECTOR_UPGRADED:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
                 // entertainment schools
-            case BUILDING_ACTOR_COLONY:
-            case BUILDING_GLADIATOR_SCHOOL:
-            case BUILDING_LION_HOUSE:
+            case BUILDING_JUGGLER_SCHOOL:
+            case BUILDING_CONSERVATORY:
+            case BUILDING_DANCE_SCHOOL:
             case BUILDING_CHARIOT_MAKER:
                 // distribution
             case BUILDING_MARKET:
                 // military
             case BUILDING_MILITARY_ACADEMY:
                 // religion
-            case BUILDING_SMALL_TEMPLE_CERES:
-            case BUILDING_SMALL_TEMPLE_NEPTUNE:
-            case BUILDING_SMALL_TEMPLE_MERCURY:
-            case BUILDING_SMALL_TEMPLE_MARS:
-            case BUILDING_SMALL_TEMPLE_VENUS:
-            case BUILDING_LARGE_TEMPLE_CERES:
-            case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            case BUILDING_LARGE_TEMPLE_MERCURY:
-            case BUILDING_LARGE_TEMPLE_MARS:
-            case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_TEMPLE_OSIRIS:
+            case BUILDING_TEMPLE_RA:
+            case BUILDING_TEMPLE_PTAH:
+            case BUILDING_TEMPLE_SETH:
+            case BUILDING_TEMPLE_BAST:
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
             case BUILDING_ORACLE:
                 increase_count(type, b->num_workers > 0);
                 break;
@@ -171,7 +171,7 @@ void building_count_update(void) {
                 break;
 
                 // water-side
-            case BUILDING_WHARF:
+            case BUILDING_FISHING_WHARF:
                 if (b->num_workers > 0)
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
                 break;
@@ -184,28 +184,28 @@ void building_count_update(void) {
         // industry
         if (GAME_ENV == ENGINE_ENV_C3) {
             switch (b->type) {
-                case BUILDING_WHEAT_FARM:
+                case BUILDING_BARLEY_FARM:
                     increase_industry_count(RESOURCE_WHEAT, b->num_workers > 0);
                     break;
-                case BUILDING_VEGETABLE_FARM:
+                case BUILDING_FLAX_FARM:
                     increase_industry_count(RESOURCE_VEGETABLES, b->num_workers > 0);
                     break;
-                case BUILDING_FRUIT_FARM:
+                case BUILDING_GRAIN_FARM:
                     increase_industry_count(RESOURCE_FRUIT, b->num_workers > 0);
                     break;
-                case BUILDING_OLIVE_FARM:
+                case BUILDING_LETTUCE_FARM:
                     increase_industry_count(RESOURCE_OLIVES, b->num_workers > 0);
                     break;
-                case BUILDING_VINES_FARM:
+                case BUILDING_POMEGRANATES_FARM:
                     increase_industry_count(RESOURCE_VINES, b->num_workers > 0);
                     break;
-                case BUILDING_PIG_FARM:
+                case BUILDING_CHICKPEAS_FARM:
                     increase_industry_count(RESOURCE_MEAT_C3, b->num_workers > 0);
                     break;
-                case BUILDING_MARBLE_QUARRY:
+                case BUILDING_STONE_QUARRY:
                     increase_industry_count(RESOURCE_MARBLE_C3, b->num_workers > 0);
                     break;
-                case BUILDING_IRON_MINE:
+                case BUILDING_LIMESTONE_QUARRY:
                     increase_industry_count(RESOURCE_IRON, b->num_workers > 0);
                     break;
                 case BUILDING_TIMBER_YARD:
@@ -214,16 +214,16 @@ void building_count_update(void) {
                 case BUILDING_CLAY_PIT:
                     increase_industry_count(RESOURCE_CLAY, b->num_workers > 0);
                     break;
-                case BUILDING_WINE_WORKSHOP:
+                case BUILDING_BEER_WORKSHOP:
                     increase_industry_count(RESOURCE_WINE, b->num_workers > 0);
                     break;
-                case BUILDING_OIL_WORKSHOP:
+                case BUILDING_LINEN_WORKSHOP:
                     increase_industry_count(RESOURCE_OIL_C3, b->num_workers > 0);
                     break;
                 case BUILDING_WEAPONS_WORKSHOP:
                     increase_industry_count(RESOURCE_WEAPONS_C3, b->num_workers > 0);
                     break;
-                case BUILDING_FURNITURE_WORKSHOP:
+                case BUILDING_JEWELS_WORKSHOP:
                     increase_industry_count(RESOURCE_FURNITURE, b->num_workers > 0);
                     break;
                 case BUILDING_POTTERY_WORKSHOP:
@@ -338,75 +338,75 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
         industry->write_i32(data.industry[i].active);
 
     // culture 1
-    culture1->write_i32(data.buildings[BUILDING_THEATER].total);
-    culture1->write_i32(data.buildings[BUILDING_THEATER].active);
-    culture1->write_i32(data.buildings[BUILDING_AMPHITHEATER].total);
-    culture1->write_i32(data.buildings[BUILDING_AMPHITHEATER].active);
-    culture1->write_i32(data.buildings[BUILDING_COLOSSEUM].total);
-    culture1->write_i32(data.buildings[BUILDING_COLOSSEUM].active);
-    culture1->write_i32(data.buildings[BUILDING_HIPPODROME].total);
-    culture1->write_i32(data.buildings[BUILDING_HIPPODROME].active);
+    culture1->write_i32(data.buildings[BUILDING_BOOTH].total);
+    culture1->write_i32(data.buildings[BUILDING_BOOTH].active);
+    culture1->write_i32(data.buildings[BUILDING_BANDSTAND].total);
+    culture1->write_i32(data.buildings[BUILDING_BANDSTAND].active);
+    culture1->write_i32(data.buildings[BUILDING_PAVILLION].total);
+    culture1->write_i32(data.buildings[BUILDING_PAVILLION].active);
+    culture1->write_i32(data.buildings[BUILDING_SENET_HOUSE].total);
+    culture1->write_i32(data.buildings[BUILDING_SENET_HOUSE].active);
     culture1->write_i32(data.buildings[BUILDING_SCHOOL].total);
     culture1->write_i32(data.buildings[BUILDING_SCHOOL].active);
     culture1->write_i32(data.buildings[BUILDING_LIBRARY].total);
     culture1->write_i32(data.buildings[BUILDING_LIBRARY].active);
-    culture1->write_i32(data.buildings[BUILDING_ACADEMY].total);
-    culture1->write_i32(data.buildings[BUILDING_ACADEMY].active);
-    culture1->write_i32(data.buildings[BUILDING_BARBER].total);
-    culture1->write_i32(data.buildings[BUILDING_BARBER].active);
-    culture1->write_i32(data.buildings[BUILDING_BATHHOUSE].total);
-    culture1->write_i32(data.buildings[BUILDING_BATHHOUSE].active);
-    culture1->write_i32(data.buildings[BUILDING_DOCTOR].total);
-    culture1->write_i32(data.buildings[BUILDING_DOCTOR].active);
-    culture1->write_i32(data.buildings[BUILDING_HOSPITAL].total);
-    culture1->write_i32(data.buildings[BUILDING_HOSPITAL].active);
-    culture1->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_CERES].total);
-    culture1->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_NEPTUNE].total);
-    culture1->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_MERCURY].total);
-    culture1->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_MARS].total);
-    culture1->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_VENUS].total);
-    culture1->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_CERES].total);
-    culture1->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].total);
-    culture1->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_MERCURY].total);
-    culture1->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_MARS].total);
-    culture1->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_VENUS].total);
+    culture1->write_i32(data.buildings[BUILDING_MENU_WATER_CROSSINGS].total);
+    culture1->write_i32(data.buildings[BUILDING_MENU_WATER_CROSSINGS].active);
+    culture1->write_i32(data.buildings[BUILDING_DENTIST].total);
+    culture1->write_i32(data.buildings[BUILDING_DENTIST].active);
+    culture1->write_i32(data.buildings[BUILDING_MENU_MONUMENTS].total);
+    culture1->write_i32(data.buildings[BUILDING_MENU_MONUMENTS].active);
+    culture1->write_i32(data.buildings[BUILDING_APOTHECARY].total);
+    culture1->write_i32(data.buildings[BUILDING_APOTHECARY].active);
+    culture1->write_i32(data.buildings[BUILDING_MORTUARY].total);
+    culture1->write_i32(data.buildings[BUILDING_MORTUARY].active);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_OSIRIS].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_RA].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_PTAH].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_SETH].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_BAST].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_OSIRIS].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_RA].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_PTAH].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_SETH].total);
+    culture1->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_BAST].total);
     culture1->write_i32(data.buildings[BUILDING_ORACLE].total);
 
     // culture 2
-    culture2->write_i32(data.buildings[BUILDING_ACTOR_COLONY].total);
-    culture2->write_i32(data.buildings[BUILDING_ACTOR_COLONY].active);
-    culture2->write_i32(data.buildings[BUILDING_GLADIATOR_SCHOOL].total);
-    culture2->write_i32(data.buildings[BUILDING_GLADIATOR_SCHOOL].active);
-    culture2->write_i32(data.buildings[BUILDING_LION_HOUSE].total);
-    culture2->write_i32(data.buildings[BUILDING_LION_HOUSE].active);
+    culture2->write_i32(data.buildings[BUILDING_JUGGLER_SCHOOL].total);
+    culture2->write_i32(data.buildings[BUILDING_JUGGLER_SCHOOL].active);
+    culture2->write_i32(data.buildings[BUILDING_CONSERVATORY].total);
+    culture2->write_i32(data.buildings[BUILDING_CONSERVATORY].active);
+    culture2->write_i32(data.buildings[BUILDING_DANCE_SCHOOL].total);
+    culture2->write_i32(data.buildings[BUILDING_DANCE_SCHOOL].active);
     culture2->write_i32(data.buildings[BUILDING_CHARIOT_MAKER].total);
     culture2->write_i32(data.buildings[BUILDING_CHARIOT_MAKER].active);
 
     // culture 3
-    culture3->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_CERES].active);
-    culture3->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_NEPTUNE].active);
-    culture3->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_MERCURY].active);
-    culture3->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_MARS].active);
-    culture3->write_i32(data.buildings[BUILDING_SMALL_TEMPLE_VENUS].active);
-    culture3->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_CERES].active);
-    culture3->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].active);
-    culture3->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_MERCURY].active);
-    culture3->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_MARS].active);
-    culture3->write_i32(data.buildings[BUILDING_LARGE_TEMPLE_VENUS].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_OSIRIS].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_RA].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_PTAH].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_SETH].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_BAST].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_OSIRIS].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_RA].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_PTAH].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_SETH].active);
+    culture3->write_i32(data.buildings[BUILDING_TEMPLE_COMPLEX_BAST].active);
 
     // military
     military->write_i32(data.buildings[BUILDING_MILITARY_ACADEMY].total);
     military->write_i32(data.buildings[BUILDING_MILITARY_ACADEMY].active);
-    military->write_i32(data.buildings[BUILDING_BARRACKS].total);
-    military->write_i32(data.buildings[BUILDING_BARRACKS].active);
+    military->write_i32(data.buildings[BUILDING_RECRUITER].total);
+    military->write_i32(data.buildings[BUILDING_RECRUITER].active);
 
     // support
     support->write_i32(data.buildings[BUILDING_MARKET].total);
     support->write_i32(data.buildings[BUILDING_MARKET].active);
-    support->write_i32(data.buildings[BUILDING_RESERVOIR].total);
-    support->write_i32(data.buildings[BUILDING_RESERVOIR].active);
-    support->write_i32(data.buildings[BUILDING_FOUNTAIN].total);
-    support->write_i32(data.buildings[BUILDING_FOUNTAIN].active);
+    support->write_i32(data.buildings[BUILDING_WATER_LIFT2].total);
+    support->write_i32(data.buildings[BUILDING_WATER_LIFT2].active);
+    support->write_i32(data.buildings[BUILDING_MENU_BEAUTIFICATION].total);
+    support->write_i32(data.buildings[BUILDING_MENU_BEAUTIFICATION].active);
 }
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support) {
     // industry
@@ -416,73 +416,73 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
         data.industry[i].active = industry->read_i32();
 
     // culture 1
-    data.buildings[BUILDING_THEATER].total = culture1->read_i32();
-    data.buildings[BUILDING_THEATER].active = culture1->read_i32();
-    data.buildings[BUILDING_AMPHITHEATER].total = culture1->read_i32();
-    data.buildings[BUILDING_AMPHITHEATER].active = culture1->read_i32();
-    data.buildings[BUILDING_COLOSSEUM].total = culture1->read_i32();
-    data.buildings[BUILDING_COLOSSEUM].active = culture1->read_i32();
-    data.buildings[BUILDING_HIPPODROME].total = culture1->read_i32();
-    data.buildings[BUILDING_HIPPODROME].active = culture1->read_i32();
+    data.buildings[BUILDING_BOOTH].total = culture1->read_i32();
+    data.buildings[BUILDING_BOOTH].active = culture1->read_i32();
+    data.buildings[BUILDING_BANDSTAND].total = culture1->read_i32();
+    data.buildings[BUILDING_BANDSTAND].active = culture1->read_i32();
+    data.buildings[BUILDING_PAVILLION].total = culture1->read_i32();
+    data.buildings[BUILDING_PAVILLION].active = culture1->read_i32();
+    data.buildings[BUILDING_SENET_HOUSE].total = culture1->read_i32();
+    data.buildings[BUILDING_SENET_HOUSE].active = culture1->read_i32();
     data.buildings[BUILDING_SCHOOL].total = culture1->read_i32();
     data.buildings[BUILDING_SCHOOL].active = culture1->read_i32();
     data.buildings[BUILDING_LIBRARY].total = culture1->read_i32();
     data.buildings[BUILDING_LIBRARY].active = culture1->read_i32();
-    data.buildings[BUILDING_ACADEMY].total = culture1->read_i32();
-    data.buildings[BUILDING_ACADEMY].active = culture1->read_i32();
-    data.buildings[BUILDING_BARBER].total = culture1->read_i32();
-    data.buildings[BUILDING_BARBER].active = culture1->read_i32();
-    data.buildings[BUILDING_BATHHOUSE].total = culture1->read_i32();
-    data.buildings[BUILDING_BATHHOUSE].active = culture1->read_i32();
-    data.buildings[BUILDING_DOCTOR].total = culture1->read_i32();
-    data.buildings[BUILDING_DOCTOR].active = culture1->read_i32();
-    data.buildings[BUILDING_HOSPITAL].total = culture1->read_i32();
-    data.buildings[BUILDING_HOSPITAL].active = culture1->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_CERES].total = culture1->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_NEPTUNE].total = culture1->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_MERCURY].total = culture1->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_MARS].total = culture1->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_VENUS].total = culture1->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_CERES].total = culture1->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].total = culture1->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_MERCURY].total = culture1->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_MARS].total = culture1->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_VENUS].total = culture1->read_i32();
+    data.buildings[BUILDING_MENU_WATER_CROSSINGS].total = culture1->read_i32();
+    data.buildings[BUILDING_MENU_WATER_CROSSINGS].active = culture1->read_i32();
+    data.buildings[BUILDING_DENTIST].total = culture1->read_i32();
+    data.buildings[BUILDING_DENTIST].active = culture1->read_i32();
+    data.buildings[BUILDING_MENU_MONUMENTS].total = culture1->read_i32();
+    data.buildings[BUILDING_MENU_MONUMENTS].active = culture1->read_i32();
+    data.buildings[BUILDING_APOTHECARY].total = culture1->read_i32();
+    data.buildings[BUILDING_APOTHECARY].active = culture1->read_i32();
+    data.buildings[BUILDING_MORTUARY].total = culture1->read_i32();
+    data.buildings[BUILDING_MORTUARY].active = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_OSIRIS].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_RA].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_PTAH].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_SETH].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_BAST].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_OSIRIS].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_RA].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_PTAH].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_SETH].total = culture1->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_BAST].total = culture1->read_i32();
     data.buildings[BUILDING_ORACLE].total = culture1->read_i32();
 
     // culture 2
-    data.buildings[BUILDING_ACTOR_COLONY].total = culture2->read_i32();
-    data.buildings[BUILDING_ACTOR_COLONY].active = culture2->read_i32();
-    data.buildings[BUILDING_GLADIATOR_SCHOOL].total = culture2->read_i32();
-    data.buildings[BUILDING_GLADIATOR_SCHOOL].active = culture2->read_i32();
-    data.buildings[BUILDING_LION_HOUSE].total = culture2->read_i32();
-    data.buildings[BUILDING_LION_HOUSE].active = culture2->read_i32();
+    data.buildings[BUILDING_JUGGLER_SCHOOL].total = culture2->read_i32();
+    data.buildings[BUILDING_JUGGLER_SCHOOL].active = culture2->read_i32();
+    data.buildings[BUILDING_CONSERVATORY].total = culture2->read_i32();
+    data.buildings[BUILDING_CONSERVATORY].active = culture2->read_i32();
+    data.buildings[BUILDING_DANCE_SCHOOL].total = culture2->read_i32();
+    data.buildings[BUILDING_DANCE_SCHOOL].active = culture2->read_i32();
     data.buildings[BUILDING_CHARIOT_MAKER].total = culture2->read_i32();
     data.buildings[BUILDING_CHARIOT_MAKER].active = culture2->read_i32();
 
     // culture 3
-    data.buildings[BUILDING_SMALL_TEMPLE_CERES].active = culture3->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_NEPTUNE].active = culture3->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_MERCURY].active = culture3->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_MARS].active = culture3->read_i32();
-    data.buildings[BUILDING_SMALL_TEMPLE_VENUS].active = culture3->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_CERES].active = culture3->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].active = culture3->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_MERCURY].active = culture3->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_MARS].active = culture3->read_i32();
-    data.buildings[BUILDING_LARGE_TEMPLE_VENUS].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_OSIRIS].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_RA].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_PTAH].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_SETH].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_BAST].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_OSIRIS].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_RA].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_PTAH].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_SETH].active = culture3->read_i32();
+    data.buildings[BUILDING_TEMPLE_COMPLEX_BAST].active = culture3->read_i32();
 
     // military
     data.buildings[BUILDING_MILITARY_ACADEMY].total = military->read_i32();
     data.buildings[BUILDING_MILITARY_ACADEMY].active = military->read_i32();
-    data.buildings[BUILDING_BARRACKS].total = military->read_i32();
-    data.buildings[BUILDING_BARRACKS].active = military->read_i32();
+    data.buildings[BUILDING_RECRUITER].total = military->read_i32();
+    data.buildings[BUILDING_RECRUITER].active = military->read_i32();
 
     // support
     data.buildings[BUILDING_MARKET].total = support->read_i32();
     data.buildings[BUILDING_MARKET].active = support->read_i32();
-    data.buildings[BUILDING_RESERVOIR].total = support->read_i32();
-    data.buildings[BUILDING_RESERVOIR].active = support->read_i32();
-    data.buildings[BUILDING_FOUNTAIN].total = support->read_i32();
-    data.buildings[BUILDING_FOUNTAIN].active = support->read_i32();
+    data.buildings[BUILDING_WATER_LIFT2].total = support->read_i32();
+    data.buildings[BUILDING_WATER_LIFT2].active = support->read_i32();
+    data.buildings[BUILDING_MENU_BEAUTIFICATION].total = support->read_i32();
+    data.buildings[BUILDING_MENU_BEAUTIFICATION].active = support->read_i32();
 }

@@ -228,6 +228,9 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->rotate_building)
         building_rotation_rotate_by_hotkey();
 
+    if (h->change_building_variant)
+        building_rotation_variant_by_hotkey();
+
     if (h->building) {
         if (scenario_building_allowed(h->building)) {
             building_construction_cancel();

@@ -649,6 +649,19 @@ INFO: data/Pharaoh_Unloaded.sg3 group 36 -> id 272
 INFO: data/Pharaoh_Unloaded.sg3 group 37 -> id 279
 INFO: data/Pharaoh_Unloaded.sg3 group 38 -> id 285
 
+INFO: data/Mastaba.sg3 group 1 -> id 201
+INFO: data/Mastaba.sg3 group 2 -> id 360
+INFO: data/Mastaba.sg3 group 3 -> id 381
+INFO: data/Mastaba.sg3 group 4 -> id 390
+INFO: data/Mastaba.sg3 group 5 -> id 399
+INFO: data/Mastaba.sg3 group 6 -> id 408
+INFO: data/Mastaba.sg3 group 7 -> id 417
+INFO: data/Mastaba.sg3 group 8 -> id 380
+INFO: data/Mastaba.sg3 group 9 -> id 421
+INFO: data/Mastaba.sg3 group 10 -> id 423
+INFO: data/Mastaba.sg3 group 11 -> id 425
+INFO: data/Mastaba.sg3 group 12 -> id 312
+
 INFO: data/Pharaoh_Fonts.sg3 group 1 -> id 201
 INFO: data/Pharaoh_Fonts.sg3 group 2 -> id 335
 INFO: data/Pharaoh_Fonts.sg3 group 3 -> id 1273

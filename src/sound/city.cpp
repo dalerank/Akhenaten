@@ -213,8 +213,8 @@ void sound_city_mark_building_view(building *b, int direction) {
     int channel = int_TO_CHANNEL_ID[type];
     if (!channel)
         return;
-    if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
-        type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND ||
+        type == BUILDING_CONSERVATORY || type == BUILDING_SENET_HOUSE) {
         // entertainment is shut off when caesar invades
         if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0)
             return;

@@ -1185,7 +1185,7 @@ bool building::figure_generate() {
                 spawn_figure_tower(); break;
             case BUILDING_ENGINEERS_POST:
                 spawn_figure_engineers_post(); break;
-            case BUILDING_PREFECTURE:
+            case BUILDING_POLICE_STATION:
                 if (GAME_ENV == ENGINE_ENV_PHARAOH)
                     spawn_figure_police();
                 else
@@ -1195,45 +1195,45 @@ bool building::figure_generate() {
                 spawn_figure_prefecture(); break;
             case BUILDING_WATER_SUPPLY:
                 spawn_figure_watersupply(); break;
-            case BUILDING_ACTOR_COLONY:
+            case BUILDING_JUGGLER_SCHOOL:
                 spawn_figure_actor_juggler(); break;
-            case BUILDING_GLADIATOR_SCHOOL:
+            case BUILDING_CONSERVATORY:
                 spawn_figure_gladiator_musician(); break;
-            case BUILDING_LION_HOUSE:
+            case BUILDING_DANCE_SCHOOL:
                 spawn_figure_lion_tamer_dancer(); break;
             case BUILDING_CHARIOT_MAKER:
                 spawn_figure_chariot_senet(); break;
-            case BUILDING_AMPHITHEATER:
+            case BUILDING_BANDSTAND:
                 spawn_figure_amphitheater_bandstand(); break;
-            case BUILDING_THEATER:
+            case BUILDING_BOOTH:
                 spawn_figure_theater_booth(); break;
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
                 spawn_figure_hippodrome_senet(); break;
-            case BUILDING_COLOSSEUM:
+            case BUILDING_PAVILLION:
                 spawn_figure_colosseum_pavillion(); break;
             case BUILDING_MARKET:
                 spawn_figure_market(); break;
             case BUILDING_PHYSICIAN:
                 spawn_figure_physician(); break;
-            case BUILDING_BATHHOUSE:
+            case BUILDING_MENU_MONUMENTS:
                 spawn_figure_bathhouse(); break;
             case BUILDING_SCHOOL:
                 spawn_figure_school(); break;
             case BUILDING_LIBRARY:
                 spawn_figure_library(); break;
-            case BUILDING_ACADEMY:
+            case BUILDING_MENU_WATER_CROSSINGS:
                 spawn_figure_academy(); break;
-            case BUILDING_BARBER:
+            case BUILDING_DENTIST:
                 spawn_figure_barber(); break;
-            case BUILDING_DOCTOR:
+            case BUILDING_APOTHECARY:
                 spawn_figure_doctor(); break;
-            case BUILDING_HOSPITAL:
+            case BUILDING_MORTUARY:
                 spawn_figure_hospital(); break;
             case BUILDING_MISSION_POST:
                 spawn_figure_mission_post(); break;
             case BUILDING_DOCK:
                 spawn_figure_dock(); break;
-            case BUILDING_WHARF:
+            case BUILDING_FISHING_WHARF:
                 spawn_figure_wharf(); break;
             case BUILDING_SHIPYARD:
                 spawn_figure_shipyard(); break;
@@ -1245,7 +1245,7 @@ bool building::figure_generate() {
                 update_native_crop_progress(); break;
             case BUILDING_MENU_FORTS:
                 formation_legion_update_recruit_status(this); break;
-            case BUILDING_BARRACKS:
+            case BUILDING_RECRUITER:
                 spawn_figure_barracks(); break;
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
@@ -1270,7 +1270,7 @@ void building_figure_generate(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id))
+        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id))
             continue;
 
         b->update_road_access();

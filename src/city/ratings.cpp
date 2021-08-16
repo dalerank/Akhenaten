@@ -60,7 +60,7 @@ void city_ratings_peace_building_destroyed(int type) {
     switch (type) {
         case BUILDING_HOUSE_SMALL_TENT:
         case BUILDING_HOUSE_LARGE_TENT:
-        case BUILDING_PREFECTURE:
+        case BUILDING_POLICE_STATION:
         case BUILDING_ENGINEERS_POST:
         case BUILDING_WELL:
         case BUILDING_MENU_FORTS:

@@ -65,6 +65,7 @@ static const char *ini_keys[] = {
         "load_file",
         "save_file",
         "rotate_building",
+        "change_building_variant",
         "go_to_bookmark_1",
         "go_to_bookmark_2",
         "go_to_bookmark_3",
@@ -160,6 +161,7 @@ void init_defaults(void) {
     set_layout_mapping("O", KEY_O, KEY_MOD_CTRL, HOTKEY_LOAD_FILE);
     set_layout_mapping("S", KEY_S, KEY_MOD_CTRL, HOTKEY_SAVE_FILE);
     set_layout_mapping("R", KEY_R, KEY_MOD_NONE, HOTKEY_ROTATE_BUILDING);
+    set_layout_mapping("R", KEY_R, KEY_MOD_CTRL, HOTKEY_CHANGE_BUILDING_VARIANT);
     set_mapping(KEY_F1, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_1);
     set_mapping(KEY_F2, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_2);
     set_mapping(KEY_F3, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_3);

@@ -445,24 +445,24 @@ void city_gods_calculate_moods(int update_moods) {
         int num_temples = 0;
         switch (i) {
             case GOD_CERES:
-                num_temples = building_count_total(BUILDING_SMALL_TEMPLE_CERES) +
-                              building_count_total(BUILDING_LARGE_TEMPLE_CERES);
+                num_temples = building_count_total(BUILDING_TEMPLE_OSIRIS) +
+                              building_count_total(BUILDING_TEMPLE_COMPLEX_OSIRIS);
                 break;
             case GOD_NEPTUNE:
-                num_temples = building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE) +
-                              building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE);
+                num_temples = building_count_total(BUILDING_TEMPLE_RA) +
+                              building_count_total(BUILDING_TEMPLE_COMPLEX_RA);
                 break;
             case GOD_MERCURY:
-                num_temples = building_count_total(BUILDING_SMALL_TEMPLE_MERCURY) +
-                              building_count_total(BUILDING_LARGE_TEMPLE_MERCURY);
+                num_temples = building_count_total(BUILDING_TEMPLE_PTAH) +
+                              building_count_total(BUILDING_TEMPLE_COMPLEX_PTAH);
                 break;
             case GOD_MARS:
-                num_temples = building_count_total(BUILDING_SMALL_TEMPLE_MARS) +
-                              building_count_total(BUILDING_LARGE_TEMPLE_MARS);
+                num_temples = building_count_total(BUILDING_TEMPLE_SETH) +
+                              building_count_total(BUILDING_TEMPLE_COMPLEX_SETH);
                 break;
             case GOD_VENUS:
-                num_temples = building_count_total(BUILDING_SMALL_TEMPLE_VENUS) +
-                              building_count_total(BUILDING_LARGE_TEMPLE_VENUS);
+                num_temples = building_count_total(BUILDING_TEMPLE_BAST) +
+                              building_count_total(BUILDING_TEMPLE_COMPLEX_BAST);
                 break;
         }
         if (num_temples == max_temples)

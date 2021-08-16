@@ -6,7 +6,7 @@
 
 int resource_image_offset(int resource, int type) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        if (resource == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF)) {
+        if (resource == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF)) {
             switch (type) {
                 case RESOURCE_IMAGE_STORAGE:
                     return 40;

@@ -3,7 +3,7 @@
 #include "game/state.h"
 
 static int show_building_education(const building *b) {
-    return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_ACADEMY;
+    return b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY || b->type == BUILDING_MENU_WATER_CROSSINGS;
 }
 
 static int show_building_school(const building *b) {
@@ -15,7 +15,7 @@ static int show_building_library(const building *b) {
 }
 
 static int show_building_academy(const building *b) {
-    return b->type == BUILDING_ACADEMY;
+    return b->type == BUILDING_MENU_WATER_CROSSINGS;
 }
 
 static int show_figure_education(const figure *f) {

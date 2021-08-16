@@ -127,7 +127,7 @@ int building_construction_place_wall(bool measure_only, int x_start, int y_start
 int building_construction_place_aqueduct(int x_start, int y_start, int x_end, int y_end, int *cost) {
     game_undo_restore_map(0);
 
-    int item_cost = model_get_building(BUILDING_AQUEDUCT)->cost;
+    int item_cost = model_get_building(BUILDING_IRRIGATION_DITCH)->cost;
     *cost = 0;
     int blocked = 0;
     int grid_offset = map_grid_offset(x_start, y_start);

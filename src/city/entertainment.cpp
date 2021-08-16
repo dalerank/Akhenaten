@@ -48,13 +48,13 @@ void city_entertainment_calculate_shows(void) {
             continue;
 
         switch (b->type) {
-            case BUILDING_THEATER: // booth
+            case BUILDING_BOOTH: // booth
                 if (b->data.entertainment.days1)
                     city_data.entertainment.theater_shows++;
                 else
                     city_data.entertainment.theater_no_shows_weighted++;
                 break;
-            case BUILDING_AMPHITHEATER: // bandstand
+            case BUILDING_BANDSTAND: // bandstand
                 if (b->data.entertainment.days1)
                     city_data.entertainment.theater_shows++;
                 else
@@ -64,7 +64,7 @@ void city_entertainment_calculate_shows(void) {
                 else
                     city_data.entertainment.amphitheater_no_shows_weighted++;
                 break;
-            case BUILDING_COLOSSEUM: // pavillion
+            case BUILDING_PAVILLION: // pavillion
                 if (b->data.entertainment.days1)
                     city_data.entertainment.theater_shows++;
                 else
@@ -78,7 +78,7 @@ void city_entertainment_calculate_shows(void) {
                 else
                     city_data.entertainment.colosseum_no_shows_weighted++;
                 break;
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
                 if (b->data.entertainment.days1)
                     city_data.entertainment.hippodrome_shows++;
                 else

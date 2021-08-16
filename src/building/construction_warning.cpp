@@ -31,17 +31,17 @@ static void check_road_access(int type, int x, int y, int size) {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-        case BUILDING_FOUNTAIN:
+        case BUILDING_MENU_BEAUTIFICATION:
         case BUILDING_WELL:
-        case BUILDING_RESERVOIR:
+        case BUILDING_WATER_LIFT2:
         case BUILDING_GATEHOUSE:
         case BUILDING_ROADBLOCK:
         case BUILDING_TRIUMPHAL_ARCH:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_MENU_FORTS:
-        case BUILDING_FORT_LEGIONARIES:
-        case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_INFANTRY:
             return;
     }
 
@@ -50,7 +50,7 @@ static void check_road_access(int type, int x, int y, int size) {
         has_road = 1;
     else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, size, 0))
         has_road = 1;
-    else if (type == BUILDING_HIPPODROME && map_has_road_access_hippodrome(x, y, 0))
+    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
         has_road = 1;
     else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, 0))
         has_road = 1;
@@ -64,12 +64,12 @@ static void check_road_access(int type, int x, int y, int size) {
 
 static void check_water(int type, int x, int y) {
     if (!has_warning) {
-        if (type == BUILDING_FOUNTAIN || type == BUILDING_BATHHOUSE) {
+        if (type == BUILDING_MENU_BEAUTIFICATION || type == BUILDING_MENU_MONUMENTS) {
             int grid_offset = map_grid_offset(x, y);
             int has_water = 0;
             if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;
-            else if (type == BUILDING_BATHHOUSE) {
+            else if (type == BUILDING_MENU_MONUMENTS) {
                 if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_GROUNDWATER) ||
                     map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_GROUNDWATER) ||
                     map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GROUNDWATER)) {
@@ -101,14 +101,14 @@ static void check_market(int type) {
 
 static void check_barracks(int type) {
     if (!has_warning) {
-        if (building_is_fort(type) && building_count_active(BUILDING_BARRACKS) <= 0)
+        if (building_is_fort(type) && building_count_active(BUILDING_RECRUITER) <= 0)
             show(WARNING_BUILD_BARRACKS);
 
     }
 }
 
 static void check_weapons_access(int type) {
-    if (!has_warning && type == BUILDING_BARRACKS) {
+    if (!has_warning && type == BUILDING_RECRUITER) {
         if (city_resource_count(RESOURCE_WEAPONS_C3) <= 0)
             show(WARNING_WEAPONS_NEEDED);
 
@@ -124,31 +124,31 @@ static void check_wall(int type, int x, int y, int size) {
 }
 
 static void check_actor_access(int type) {
-    if (!has_warning && type == BUILDING_THEATER) {
-        if (building_count_active(BUILDING_ACTOR_COLONY) <= 0)
+    if (!has_warning && type == BUILDING_BOOTH) {
+        if (building_count_active(BUILDING_JUGGLER_SCHOOL) <= 0)
             show(WARNING_BUILD_ACTOR_COLONY);
 
     }
 }
 
 static void check_gladiator_access(int type) {
-    if (!has_warning && type == BUILDING_AMPHITHEATER) {
-        if (building_count_active(BUILDING_GLADIATOR_SCHOOL) <= 0)
+    if (!has_warning && type == BUILDING_BANDSTAND) {
+        if (building_count_active(BUILDING_CONSERVATORY) <= 0)
             show(WARNING_BUILD_GLADIATOR_SCHOOL);
 
     }
 }
 
 static void check_lion_access(int type) {
-    if (!has_warning && type == BUILDING_COLOSSEUM) {
-        if (building_count_active(BUILDING_LION_HOUSE) <= 0)
+    if (!has_warning && type == BUILDING_PAVILLION) {
+        if (building_count_active(BUILDING_DANCE_SCHOOL) <= 0)
             show(WARNING_BUILD_LION_HOUSE);
 
     }
 }
 
 static void check_charioteer_access(int type) {
-    if (!has_warning && type == BUILDING_HIPPODROME) {
+    if (!has_warning && type == BUILDING_SENET_HOUSE) {
         if (building_count_active(BUILDING_CHARIOT_MAKER) <= 0)
             show(WARNING_BUILD_CHARIOT_MAKER);
 
@@ -172,7 +172,7 @@ static void check_iron_access(int type) {
 }
 
 static void check_vines_access(int type) {
-    if (type == BUILDING_WINE_WORKSHOP &&
+    if (type == BUILDING_BEER_WORKSHOP &&
         building_count_industry_active(RESOURCE_VINES) <= 0) {
         if (city_resource_count(RESOURCE_WINE) <= 0 && city_resource_count(RESOURCE_VINES) <= 0) {
             show(WARNING_VINES_NEEDED);
@@ -188,7 +188,7 @@ static void check_vines_access(int type) {
 }
 
 static void check_olives_access(int type) {
-    if (type == BUILDING_OIL_WORKSHOP &&
+    if (type == BUILDING_LINEN_WORKSHOP &&
         building_count_industry_active(RESOURCE_OLIVES) <= 0) {
         if (city_resource_count(RESOURCE_OIL_C3) <= 0 && city_resource_count(RESOURCE_OLIVES) <= 0) {
             show(WARNING_OLIVES_NEEDED);
@@ -204,7 +204,7 @@ static void check_olives_access(int type) {
 }
 
 static void check_timber_access(int type) {
-    if (type == BUILDING_FURNITURE_WORKSHOP &&
+    if (type == BUILDING_JEWELS_WORKSHOP &&
         building_count_industry_active(RESOURCE_TIMBER_C3) <= 0) {
         if (city_resource_count(RESOURCE_FURNITURE) <= 0 && city_resource_count(RESOURCE_TIMBER_C3) <= 0) {
             show(WARNING_TIMBER_NEEDED);
@@ -270,8 +270,8 @@ void building_construction_warning_check_food_stocks(int type) {
 }
 
 void building_construction_warning_check_reservoir(int type) {
-    if (!has_warning && type == BUILDING_RESERVOIR) {
-        if (building_count_active(BUILDING_RESERVOIR))
+    if (!has_warning && type == BUILDING_WATER_LIFT2) {
+        if (building_count_active(BUILDING_WATER_LIFT2))
             show(WARNING_CONNECT_TO_RESERVOIR);
         else {
             show(WARNING_PLACE_RESERVOIR_NEXT_TO_WATER);

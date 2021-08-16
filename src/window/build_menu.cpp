@@ -95,8 +95,8 @@ static int get_sidebar_x_offset(void) {
     return view_x + view_width;
 }
 static int is_all_button(int type) {
-    return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
-           (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
+    return (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
+           (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
 static int set_submenu_for_type(int type) {
     int current_menu = data.selected_submenu;
@@ -108,13 +108,13 @@ static int set_submenu_for_type(int type) {
             data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
             break;
 //        case BUILDING_MENU_GUILDS:
-        case BUILDING_MENU_WORKSHOPS:
+        case BUILDING_MENU_GUILDS:
             data.selected_submenu = BUILD_MENU_WORKSHOPS;
             break;
-        case BUILDING_MENU_SMALL_TEMPLES:
+        case BUILDING_MENU_TEMPLES:
             data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
             break;
-        case BUILDING_MENU_LARGE_TEMPLES:
+        case BUILDING_MENU_TEMPLE_COMPLEX:
             data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
             break;
         case BUILDING_MENU_FORTS:
@@ -177,15 +177,15 @@ static void draw_menu_buttons(void) {
         else
             lang_text_draw_centered(28, type, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176,
                                     font);
-        if (type == BUILDING_DRAGGABLE_RESERVOIR)
-            type = BUILDING_RESERVOIR;
+        if (type == BUILDING_WATER_LIFT)
+            type = BUILDING_WATER_LIFT2;
         int cost = model_get_building(type)->cost;
         if (type == BUILDING_MENU_FORTS)
             cost = 0;
-        if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)
-            cost = model_get_building(BUILDING_SMALL_TEMPLE_CERES)->cost;
-        if (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES)
-            cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
+        if (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)
+            cost = model_get_building(BUILDING_TEMPLE_OSIRIS)->cost;
+        if (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES)
+            cost = model_get_building(BUILDING_TEMPLE_COMPLEX_OSIRIS)->cost;
         if (cost)
             text_draw_money(cost, x_offset - 82 - label_offset, data.y_offset + 114 + 24 * i, font);
     }

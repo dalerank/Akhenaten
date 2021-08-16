@@ -229,6 +229,46 @@ static const int Y_VIEW_OFFSETS[9] = {
         45, 60, 75,
         60, 75, 90
 };
+
+int get_statue_image(int type, int orientation, int variant) {
+    int image_id = 0;
+
+    // this is to combat the default building rotation value (0)
+    orientation++;
+    if (orientation > 3)
+        orientation = 0;
+
+    if (variant < 2) {
+        switch (type) {
+            case BUILDING_SMALL_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_1);
+                break;
+            case BUILDING_MEDIUM_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_1);
+                break;
+            case BUILDING_LARGE_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_1);
+                break;
+        }
+        image_id += variant * 4 + orientation;
+    } else { // TODO: Cleopatra expansion
+        switch (type) {
+            case BUILDING_SMALL_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_1);
+                break;
+            case BUILDING_MEDIUM_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_1);
+                break;
+            case BUILDING_LARGE_STATUE:
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_1);
+                break;
+        }
+        variant -= 2;
+        image_id += variant * 4 + orientation;
+    }
+    return image_id;
+}
+
 int get_farm_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
@@ -363,11 +403,11 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
     if (GAME_ENV == ENGINE_ENV_C3) {
         image_base = image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL);
         switch (b->type) {
-            case BUILDING_WINE_WORKSHOP:
+            case BUILDING_BEER_WORKSHOP:
                 if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base, x + 45, y + 23, color_mask);
                 break;
-            case BUILDING_OIL_WORKSHOP:
+            case BUILDING_LINEN_WORKSHOP:
                 if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 1, x + 35, y + 15, color_mask);
                 break;
@@ -375,7 +415,7 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
                 if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 3, x + 46, y + 24, color_mask);
                 break;
-            case BUILDING_FURNITURE_WORKSHOP:
+            case BUILDING_JEWELS_WORKSHOP:
                 if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
                     ImageDraw::img_generic(image_base + 2, x + 48, y + 19, color_mask);
                 break;
@@ -438,7 +478,7 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
     building *b = building_at(grid_offset);
     if (img->num_animation_sprites
         && map_property_is_draw_tile(grid_offset)
-        && b->type == BUILDING_HIPPODROME) {
+        && b->type == BUILDING_SENET_HOUSE) {
         ImageDraw::img_generic(image_id + 1,
                                x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
                                drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0

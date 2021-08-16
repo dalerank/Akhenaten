@@ -92,12 +92,12 @@ static void contaminate_water(void) {
 static void destroy_iron_mine(void) {
     if (scenario.random_events.iron_mine_collapse) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            if (building_find(BUILDING_IRON_MINE) < MAX_BUILDINGS[GAME_ENV]) {
+            if (building_find(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS[GAME_ENV]) {
                 city_finance_process_requests_and_festivals(250);
                 city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
             }
         } else {
-            int grid_offset = building_destroy_first_of_type(BUILDING_IRON_MINE);
+            int grid_offset = building_destroy_first_of_type(BUILDING_LIMESTONE_QUARRY);
             if (grid_offset)
                 city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
 

@@ -372,7 +372,7 @@ static int is_fully_blocked(int map_x, int map_y, int type, int building_size, i
         return 1;
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate())
         return 1;
-    if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
+    if (type == BUILDING_RECRUITER && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
         return 1;
     if (type == BUILDING_PLAZA && (!map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_tiles_is_paved_road(grid_offset)))
         return 1;
@@ -447,7 +447,15 @@ static void draw_warehouse(int image_id, int x, int y) {
 }
 
 static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
-    if (building_is_farm(type)) {
+    if (building_is_statue(type)) {
+
+        // todo: correct for alt version and rotation
+        int variant = building_rotation_get_building_variant();
+        int orientation = building_rotation_get_rotation();
+
+        image_id = get_statue_image(type, orientation, variant);
+        draw_building(image_id, x, y);
+    } else if (building_is_farm(type)) {
         image_id = get_farm_image(grid_offset);
         draw_building(image_id, x, y);
         // fields
@@ -1306,32 +1314,32 @@ void city_building_ghost_draw(const map_tile *tile) {
     // update road required based on timer
     building_rotation_update_road_orientation();
     switch (type) {
-        case BUILDING_DRAGGABLE_RESERVOIR:
+        case BUILDING_WATER_LIFT:
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
 //                draw_draggable_waterlift(tile, x, y);
                 draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
             else
                 draw_draggable_reservoir(tile, x, y);
             break;
-        case BUILDING_AQUEDUCT:
+        case BUILDING_IRRIGATION_DITCH:
             draw_aqueduct(tile, x, y);
             break;
-        case BUILDING_FOUNTAIN:
+        case BUILDING_MENU_BEAUTIFICATION:
             draw_fountain(tile, x, y);
             break;
-        case BUILDING_BATHHOUSE:
+        case BUILDING_MENU_MONUMENTS:
             draw_bathhouse(tile, x, y);
             break;
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE:
             draw_bridge(tile, x, y, type);
             break;
-        case BUILDING_FORT_LEGIONARIES:
-        case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_INFANTRY:
             draw_fort(tile, x, y);
             break;
-        case BUILDING_HIPPODROME:
+        case BUILDING_SENET_HOUSE:
             if (GAME_ENV == ENGINE_ENV_C3) {
                 draw_hippodrome(tile, x, y);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -1339,7 +1347,7 @@ void city_building_ghost_draw(const map_tile *tile) {
             }
             break;
         case BUILDING_SHIPYARD:
-        case BUILDING_WHARF:
+        case BUILDING_FISHING_WHARF:
             draw_shipyard_wharf(tile, x, y, type);
             break;
         case BUILDING_DOCK:

@@ -55,11 +55,11 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
         case BUILDING_WAREHOUSE_SPACE:
             return 0;
             break;
-        case BUILDING_FOUNTAIN:
+        case BUILDING_MENU_BEAUTIFICATION:
             if (b->num_workers <= 0 || !b->has_water_access)
                 return 0;
             break;
-        case BUILDING_RESERVOIR:
+        case BUILDING_WATER_LIFT2:
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 if (b->num_workers <= 0) {
                     return 0;
@@ -97,8 +97,8 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
 //            if (b->num_workers <= 0)
 //                return 0;
 //            break;
-        case BUILDING_MARBLE_QUARRY:
-        case BUILDING_GLADIATOR_SCHOOL:
+        case BUILDING_STONE_QUARRY:
+        case BUILDING_CONSERVATORY:
             if (b->num_workers <= 0) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH)
                     return 0;
@@ -132,7 +132,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
     // advance animation
     int new_sprite = 0;
     bool is_reverse = false;
-    if (b->type == BUILDING_WINE_WORKSHOP) {
+    if (b->type == BUILDING_BEER_WORKSHOP) {
         // exception for wine...
         int pct_done = calc_percentage(b->data.industry.progress, 400);
         if (pct_done <= 0)

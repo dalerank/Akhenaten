@@ -34,7 +34,7 @@ static void destroy_on_fire(building *b, int plagued) {
     b->clear_related_data();
 
     int waterside_building = 0;
-    if (b->type == BUILDING_DOCK || b->type == BUILDING_WHARF || b->type == BUILDING_SHIPYARD)
+    if (b->type == BUILDING_DOCK || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_SHIPYARD)
         waterside_building = 1;
 
     int num_tiles;

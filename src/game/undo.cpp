@@ -160,22 +160,22 @@ static void add_building_to_terrain(building *b) {
         int image_offset;
         switch (b->type) {
             default:
-            case BUILDING_WHEAT_FARM:
+            case BUILDING_BARLEY_FARM:
                 image_offset = 0;
                 break;
-            case BUILDING_VEGETABLE_FARM:
+            case BUILDING_FLAX_FARM:
                 image_offset = 5;
                 break;
-            case BUILDING_FRUIT_FARM:
+            case BUILDING_GRAIN_FARM:
                 image_offset = 10;
                 break;
-            case BUILDING_OLIVE_FARM:
+            case BUILDING_LETTUCE_FARM:
                 image_offset = 15;
                 break;
-            case BUILDING_VINES_FARM:
+            case BUILDING_POMEGRANATES_FARM:
                 image_offset = 20;
                 break;
-            case BUILDING_PIG_FARM:
+            case BUILDING_CHICKPEAS_FARM:
                 image_offset = 25;
                 break;
         }
@@ -186,7 +186,7 @@ static void add_building_to_terrain(building *b) {
     } else {
         int size = building_properties_for_type(b->type)->size;
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
-        if (b->type == BUILDING_WHARF)
+        if (b->type == BUILDING_FISHING_WHARF)
             b->data.industry.fishing_boat_id = 0;
     }
     b->state = BUILDING_STATE_VALID;
@@ -269,7 +269,7 @@ void game_undo_perform(void) {
         map_image_restore();
         map_property_restore();
         map_property_clear_constructing_and_deleted();
-    } else if (data.type == BUILDING_AQUEDUCT || data.type == BUILDING_ROAD ||
+    } else if (data.type == BUILDING_IRRIGATION_DITCH || data.type == BUILDING_ROAD ||
                data.type == BUILDING_WALL) {
         map_terrain_restore();
         map_aqueduct_restore();
@@ -284,7 +284,7 @@ void game_undo_perform(void) {
         map_property_restore();
         restore_map_images();
     } else if (data.num_buildings) {
-        if (data.type == BUILDING_DRAGGABLE_RESERVOIR) {
+        if (data.type == BUILDING_WATER_LIFT) {
             map_terrain_restore();
             map_aqueduct_restore();
             restore_map_images();
@@ -293,7 +293,7 @@ void game_undo_perform(void) {
             if (data.buildings[i].id) {
                 building *b = building_get(data.buildings[i].id);
                 if (b->type == BUILDING_ORACLE ||
-                    (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
+                    (b->type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && b->type <= BUILDING_TEMPLE_COMPLEX_BAST))
                     building_warehouses_add_resource(RESOURCE_MARBLE_C3, 2);
 
                 b->state = BUILDING_STATE_UNDO;
@@ -332,7 +332,7 @@ void game_undo_reduce_time_available(void) {
     data.timeout_ticks--;
     switch (data.type) {
         case BUILDING_CLEAR_LAND:
-        case BUILDING_AQUEDUCT:
+        case BUILDING_IRRIGATION_DITCH:
         case BUILDING_ROAD:
         case BUILDING_WALL:
         case BUILDING_LOW_BRIDGE:

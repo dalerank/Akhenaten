@@ -277,7 +277,7 @@ const labor_category_data *city_labor_category(int category) {
     return &city_data.labor.categories[category];
 }
 static int is_industry_disabled(building *b) {
-    if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP)
+    if (b->type < BUILDING_BARLEY_FARM || b->type > BUILDING_POTTERY_WORKSHOP)
         return 0;
 
     int resource = b->output_resource_id;
@@ -350,7 +350,7 @@ static int should_have_workers(building *b, int category, int check_access) {
 
 
     if (category == LABOR_CATEGORY_ENTERTAINMENT) {
-        if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
+        if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)
             return 0;
 
     } else if (category == LABOR_CATEGORY_FOOD_PRODUCTION || category == LABOR_CATEGORY_INDUSTRY_COMMERCE) {

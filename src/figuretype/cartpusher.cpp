@@ -119,7 +119,7 @@ void figure::cartpusher_do_deliver(bool warehouseman, int ACTION_DONE) {
                     else
                         return advance_action(ACTION_8_RECALCULATE);
                     break;
-                case BUILDING_BARRACKS:
+                case BUILDING_RECRUITER:
                     for (int i = 0; i < times; i++) { // do one by one...
                         dest->barracks_add_weapon();
                         dump_resource(amount_single_turn); // assume barracks will ALWAYS accept a weapon
@@ -236,7 +236,7 @@ void figure::determine_deliveryman_destination() {
         building *src_building = home();
         building *dst_building = destination();
         int src_int = src_building->type;
-        if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) || src_int == BUILDING_WHARF)
+        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF)
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             set_destination(0);
@@ -261,7 +261,7 @@ void figure::determine_deliveryman_destination() {
         building *src_building = home();
         building *dst_building = destination();
         int src_int = src_building->type;
-        if ((src_int >= BUILDING_WHEAT_FARM && src_int <= BUILDING_PIG_FARM) || src_int == BUILDING_WHARF)
+        if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF)
             dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             set_destination(0);
@@ -282,7 +282,7 @@ void figure::determine_deliveryman_destination_food() {
     if (dst_building_id && config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
         building *dst_building = building_get(dst_building_id);
-        if ((b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) || b->type == BUILDING_WHARF)
+        if ((b->type >= BUILDING_BARLEY_FARM && b->type <= BUILDING_CHICKPEAS_FARM) || b->type == BUILDING_FISHING_WHARF)
             dist = calc_distance_with_penalty(b->x, b->y, dst_building->x, dst_building->y, b->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             dst_building_id = 0;

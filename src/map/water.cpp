@@ -233,7 +233,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile) {
     building *wharf = 0;
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WHARF) {
+        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_FISHING_WHARF) {
             int wharf_boat_id = b->data.industry.fishing_boat_id;
             if (!wharf_boat_id || wharf_boat_id == boat->id) {
                 wharf = b;

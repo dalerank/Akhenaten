@@ -213,14 +213,14 @@ void city_resource_determine_available(void) {
             continue;
 
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
-            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
+            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF))) {
             available.food_list.items[available.food_list.size++] = i;
             available.market_goods_list.items[available.market_goods_list.size++] = i;
         }
     }
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
-            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_WHARF))) {
+            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF))) {
             available.resource_list.items[available.resource_list.size++] = i;
             switch (i) {
                 case RESOURCE_POTTERY_PH:

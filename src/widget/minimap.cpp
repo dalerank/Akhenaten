@@ -152,7 +152,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
             building *b = building_at(grid_offset);
             if (b->house_size)
                 image_id = image_id_from_group(GROUP_MINIMAP_HOUSE);
-            else if (b->type == BUILDING_RESERVOIR || b->type == BUILDING_WELL)
+            else if (b->type == BUILDING_WATER_LIFT2 || b->type == BUILDING_WELL)
                 image_id = image_id_from_group(GROUP_MINIMAP_AQUEDUCT);
             else if (terrain & TERRAIN_ROAD) {
                 if (b->type == BUILDING_ROADBLOCK)

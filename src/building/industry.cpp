@@ -79,7 +79,7 @@ void building_industry_update_production(void) {
             if (b->data.industry.blessing_days_left)
                 b->data.industry.blessing_days_left--;
 
-            if (b->type == BUILDING_MARBLE_QUARRY)
+            if (b->type == BUILDING_STONE_QUARRY)
                 b->data.industry.progress += b->num_workers / 2;
             else if (building_is_floodplain_farm(b)) {
                 int fert = map_get_fertility_average(b->grid_offset);
@@ -107,7 +107,7 @@ void building_industry_update_wheat_production(void) {
             continue;
         if (b->houses_covered <= 0 || b->num_workers <= 0)
             continue;
-        if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curse_days_left) {
+        if (b->type == BUILDING_BARLEY_FARM && !b->data.industry.curse_days_left) {
             b->data.industry.progress += b->num_workers;
             if (b->data.industry.blessing_days_left)
                 b->data.industry.progress += b->num_workers;

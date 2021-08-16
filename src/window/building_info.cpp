@@ -86,39 +86,39 @@ static int get_height_id(void) {
             return 5;
 
         switch (b->type) {
-            case BUILDING_SMALL_TEMPLE_CERES:
-            case BUILDING_SMALL_TEMPLE_NEPTUNE:
-            case BUILDING_SMALL_TEMPLE_MERCURY:
-            case BUILDING_SMALL_TEMPLE_MARS:
-            case BUILDING_SMALL_TEMPLE_VENUS:
-            case BUILDING_LARGE_TEMPLE_CERES:
-            case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            case BUILDING_LARGE_TEMPLE_MERCURY:
-            case BUILDING_LARGE_TEMPLE_MARS:
-            case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_TEMPLE_OSIRIS:
+            case BUILDING_TEMPLE_RA:
+            case BUILDING_TEMPLE_PTAH:
+            case BUILDING_TEMPLE_SETH:
+            case BUILDING_TEMPLE_BAST:
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
             case BUILDING_ORACLE:
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:
-            case BUILDING_GLADIATOR_SCHOOL:
-            case BUILDING_LION_HOUSE:
-            case BUILDING_ACTOR_COLONY:
+            case BUILDING_CONSERVATORY:
+            case BUILDING_DANCE_SCHOOL:
+            case BUILDING_JUGGLER_SCHOOL:
             case BUILDING_CHARIOT_MAKER:
-            case BUILDING_DOCTOR:
-            case BUILDING_HOSPITAL:
-            case BUILDING_BATHHOUSE:
-            case BUILDING_BARBER:
+            case BUILDING_APOTHECARY:
+            case BUILDING_MORTUARY:
+            case BUILDING_MENU_MONUMENTS:
+            case BUILDING_DENTIST:
             case BUILDING_BURNING_RUIN:
-            case BUILDING_RESERVOIR:
+            case BUILDING_WATER_LIFT2:
             case BUILDING_NATIVE_HUT:
             case BUILDING_NATIVE_MEETING:
             case BUILDING_NATIVE_CROPS:
             case BUILDING_MISSION_POST:
-            case BUILDING_PREFECTURE:
+            case BUILDING_POLICE_STATION:
             case BUILDING_ENGINEERS_POST:
             case BUILDING_FIREHOUSE:
             case BUILDING_SCHOOL:
-            case BUILDING_ACADEMY:
+            case BUILDING_MENU_WATER_CROSSINGS:
             case BUILDING_LIBRARY:
             case BUILDING_GATEHOUSE:
             case BUILDING_TOWER:
@@ -128,30 +128,30 @@ static int get_height_id(void) {
             case BUILDING_GRANARY:
             case BUILDING_SHIPYARD:
             case BUILDING_DOCK:
-            case BUILDING_WHARF:
-            case BUILDING_GOVERNORS_HOUSE:
-            case BUILDING_GOVERNORS_VILLA:
-            case BUILDING_GOVERNORS_PALACE:
-            case BUILDING_FORUM:
+            case BUILDING_FISHING_WHARF:
+            case BUILDING_PERSONAL_MANSION:
+            case BUILDING_FAMILY_MANSION:
+            case BUILDING_DYNASTY_MANSION:
+            case BUILDING_TAX_COLLECTOR:
             case BUILDING_ROADBLOCK:
-            case BUILDING_FORUM_UPGRADED:
-            case BUILDING_WINE_WORKSHOP:
-            case BUILDING_OIL_WORKSHOP:
+            case BUILDING_TAX_COLLECTOR_UPGRADED:
+            case BUILDING_BEER_WORKSHOP:
+            case BUILDING_LINEN_WORKSHOP:
             case BUILDING_WEAPONS_WORKSHOP:
-            case BUILDING_FURNITURE_WORKSHOP:
+            case BUILDING_JEWELS_WORKSHOP:
             case BUILDING_POTTERY_WORKSHOP:
                 return 1;
 
-            case BUILDING_THEATER:
-            case BUILDING_HIPPODROME:
-            case BUILDING_COLOSSEUM:
+            case BUILDING_BOOTH:
+            case BUILDING_SENET_HOUSE:
+            case BUILDING_PAVILLION:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
-            case BUILDING_FOUNTAIN:
+            case BUILDING_MENU_BEAUTIFICATION:
                 return 2;
 
-            case BUILDING_BARRACKS:
-            case BUILDING_AMPHITHEATER:
+            case BUILDING_RECRUITER:
+            case BUILDING_BANDSTAND:
                 return 3;
 
             case BUILDING_WELL:
@@ -331,7 +331,7 @@ static void init(int grid_offset) {
                 context.formation_id = b->formation_id;
                 break;
             case BUILDING_WAREHOUSE_SPACE:
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:
             case BUILDING_TEMPLE_COMPLEX_RA:
             case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -340,7 +340,7 @@ static void init(int grid_offset) {
                 b = b->main();
                 context.building_id = b->id;
                 break;
-            case BUILDING_BARRACKS:
+            case BUILDING_RECRUITER:
                 context.barracks_soldiers_requested = formation_legion_recruits_needed();
                 context.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
                 break;
@@ -358,7 +358,7 @@ static void init(int grid_offset) {
 //                    context.has_road_access = 1;
 //
 //                break;
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
                 if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
                     context.has_road_access = 1;
 
@@ -502,17 +502,17 @@ static void draw_background(void) {
         if (building_is_house(building_get(context.building_id)->type))
             window_building_draw_house(&context);
         else switch (building_get(context.building_id)->type) {
-            case BUILDING_WHEAT_FARM:
+            case BUILDING_BARLEY_FARM:
                 window_building_draw_wheat_farm(&context); break;
-            case BUILDING_VEGETABLE_FARM:
+            case BUILDING_FLAX_FARM:
                 window_building_draw_vegetable_farm(&context); break;
-            case BUILDING_FRUIT_FARM:
+            case BUILDING_GRAIN_FARM:
                 window_building_draw_fruit_farm(&context); break;
-            case BUILDING_OLIVE_FARM:
+            case BUILDING_LETTUCE_FARM:
                 window_building_draw_olive_farm(&context); break;
-            case BUILDING_VINES_FARM:
+            case BUILDING_POMEGRANATES_FARM:
                 window_building_draw_vines_farm(&context); break;
-            case BUILDING_PIG_FARM:
+            case BUILDING_CHICKPEAS_FARM:
                 window_building_draw_pig_farm(&context); break;
             case BUILDING_FIGS_FARM:
                 window_building_draw_fig_farm(&context); break;
@@ -520,21 +520,21 @@ static void draw_background(void) {
                 window_building_draw_henna_farm(&context); break;
             case BUILDING_HUNTING_LODGE:
                 window_building_draw_hunting_lodge(&context); break;
-            case BUILDING_MARBLE_QUARRY:
+            case BUILDING_STONE_QUARRY:
                 window_building_draw_marble_quarry(&context); break;
-            case BUILDING_IRON_MINE:
+            case BUILDING_LIMESTONE_QUARRY:
                 window_building_draw_iron_mine(&context); break;
             case BUILDING_TIMBER_YARD:
                 window_building_draw_timber_yard(&context); break;
             case BUILDING_CLAY_PIT:
                 window_building_draw_clay_pit(&context); break;
-            case BUILDING_WINE_WORKSHOP:
+            case BUILDING_BEER_WORKSHOP:
                 window_building_draw_wine_workshop(&context); break;
-            case BUILDING_OIL_WORKSHOP:
+            case BUILDING_LINEN_WORKSHOP:
                 window_building_draw_oil_workshop(&context); break;
             case BUILDING_WEAPONS_WORKSHOP:
                 window_building_draw_weapons_workshop(&context); break;
-            case BUILDING_FURNITURE_WORKSHOP:
+            case BUILDING_JEWELS_WORKSHOP:
                 window_building_draw_furniture_workshop(&context); break;
             case BUILDING_POTTERY_WORKSHOP:
                 window_building_draw_pottery_workshop(&context); break;
@@ -556,51 +556,51 @@ static void draw_background(void) {
                 else
                     window_building_draw_warehouse(&context);
                 break;
-            case BUILDING_AMPHITHEATER:
+            case BUILDING_BANDSTAND:
                 window_building_draw_amphitheater(&context); break;
-            case BUILDING_THEATER:
+            case BUILDING_BOOTH:
                 window_building_draw_theater(&context); break;
-            case BUILDING_HIPPODROME:
+            case BUILDING_SENET_HOUSE:
                 window_building_draw_hippodrome(&context); break;
-            case BUILDING_COLOSSEUM:
+            case BUILDING_PAVILLION:
                 window_building_draw_colosseum(&context); break;
-            case BUILDING_GLADIATOR_SCHOOL:
+            case BUILDING_CONSERVATORY:
                 window_building_draw_gladiator_school(&context); break;
-            case BUILDING_LION_HOUSE:
+            case BUILDING_DANCE_SCHOOL:
                 window_building_draw_lion_house(&context); break;
-            case BUILDING_ACTOR_COLONY:
+            case BUILDING_JUGGLER_SCHOOL:
                 window_building_draw_actor_colony(&context); break;
             case BUILDING_CHARIOT_MAKER:
                 window_building_draw_chariot_maker(&context); break;
-            case BUILDING_DOCTOR:
+            case BUILDING_APOTHECARY:
                 window_building_draw_clinic(&context); break;
-            case BUILDING_HOSPITAL:
+            case BUILDING_MORTUARY:
                 window_building_draw_hospital(&context); break;
             case BUILDING_PHYSICIAN:
-            case BUILDING_BATHHOUSE:
+            case BUILDING_MENU_MONUMENTS:
                 window_building_draw_bathhouse(&context); break;
-            case BUILDING_BARBER:
+            case BUILDING_DENTIST:
                 window_building_draw_barber(&context); break;
             case BUILDING_SCHOOL:
                 window_building_draw_school(&context); break;
-            case BUILDING_ACADEMY:
+            case BUILDING_MENU_WATER_CROSSINGS:
                 window_building_draw_academy(&context); break;
             case BUILDING_LIBRARY:
                 window_building_draw_library(&context); break;
-            case BUILDING_SMALL_TEMPLE_CERES:
-            case BUILDING_LARGE_TEMPLE_CERES:
+            case BUILDING_TEMPLE_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
                 window_building_draw_temple_ceres(&context); break;
-            case BUILDING_SMALL_TEMPLE_NEPTUNE:
-            case BUILDING_LARGE_TEMPLE_NEPTUNE:
+            case BUILDING_TEMPLE_RA:
+            case BUILDING_TEMPLE_COMPLEX_RA:
                 window_building_draw_temple_neptune(&context); break;
-            case BUILDING_SMALL_TEMPLE_MERCURY:
-            case BUILDING_LARGE_TEMPLE_MERCURY:
+            case BUILDING_TEMPLE_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
                 window_building_draw_temple_mercury(&context); break;
-            case BUILDING_SMALL_TEMPLE_MARS:
-            case BUILDING_LARGE_TEMPLE_MARS:
+            case BUILDING_TEMPLE_SETH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
                 window_building_draw_temple_mars(&context); break;
-            case BUILDING_SMALL_TEMPLE_VENUS:
-            case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_TEMPLE_BAST:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
                 window_building_draw_temple_venus(&context); break;
             case BUILDING_SHRINE_OSIRIS:
                 window_building_draw_shrine_osiris(&context); break;
@@ -615,12 +615,12 @@ static void draw_background(void) {
 
             case BUILDING_ORACLE:
                 window_building_draw_oracle(&context); break;
-            case BUILDING_GOVERNORS_HOUSE:
-            case BUILDING_GOVERNORS_VILLA:
-            case BUILDING_GOVERNORS_PALACE:
+            case BUILDING_PERSONAL_MANSION:
+            case BUILDING_FAMILY_MANSION:
+            case BUILDING_DYNASTY_MANSION:
                 window_building_draw_governor_home(&context); break;
-            case BUILDING_FORUM:
-            case BUILDING_FORUM_UPGRADED:
+            case BUILDING_TAX_COLLECTOR:
+            case BUILDING_TAX_COLLECTOR_UPGRADED:
                 window_building_draw_forum(&context); break;
             case BUILDING_COURTHOUSE:
                 window_building_draw_courthouse(&context); break;
@@ -640,11 +640,11 @@ static void draw_background(void) {
                 else
                     window_building_draw_dock(&context);
                 break;
-            case BUILDING_WHARF:
+            case BUILDING_FISHING_WHARF:
                 window_building_draw_wharf(&context); break;
-            case BUILDING_RESERVOIR:
+            case BUILDING_WATER_LIFT2:
                 window_building_draw_reservoir(&context); break;
-            case BUILDING_FOUNTAIN:
+            case BUILDING_MENU_BEAUTIFICATION:
                 window_building_draw_fountain(&context); break;
             case BUILDING_WATER_SUPPLY:
                 window_building_draw_water_supply(&context); break;
@@ -656,7 +656,7 @@ static void draw_background(void) {
                 window_building_draw_statue(&context); break;
             case BUILDING_TRIUMPHAL_ARCH:
                 window_building_draw_triumphal_arch(&context); break;
-            case BUILDING_PREFECTURE:
+            case BUILDING_POLICE_STATION:
                 window_building_draw_prefect(&context); break;
             case BUILDING_ROADBLOCK:
                 if (context.storage_show_special_orders)
@@ -670,7 +670,7 @@ static void draw_background(void) {
                 window_building_draw_tower(&context); break;
             case BUILDING_MILITARY_ACADEMY:
                 window_building_draw_military_academy(&context); break;
-            case BUILDING_BARRACKS:
+            case BUILDING_RECRUITER:
                 window_building_draw_barracks(&context); break;
             case BUILDING_MENU_FORTS:
                 window_building_draw_fort(&context); break;
@@ -729,7 +729,7 @@ static void draw_foreground(void) {
                 else
                     window_building_draw_dock_foreground(&context);
                 break;
-            case BUILDING_BARRACKS:
+            case BUILDING_RECRUITER:
                 window_building_draw_barracks_foreground(&context);
                 break;
         }
@@ -779,7 +779,7 @@ static int handle_specific_building_info_mouse(const mouse *m) {
                 else
                     return window_building_handle_mouse_dock(m, &context);
                 break;
-            case  BUILDING_BARRACKS:
+            case  BUILDING_RECRUITER:
                 return window_building_handle_mouse_barracks(m, &context);
             case  BUILDING_GRANARY:
                 if (context.storage_show_special_orders)

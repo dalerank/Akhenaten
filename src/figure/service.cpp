@@ -140,7 +140,7 @@ static void water_supply_coverage(building *b) {
     b->data.house.bathhouse = MAX_COVERAGE;
 }
 static void engineer_coverage(building *b, int *max_damage_seen) {
-    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_WAREHOUSE_SPACE)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_WAREHOUSE_SPACE)
         b = b->main();
 
     if (b->damage_risk > *max_damage_seen)
@@ -149,7 +149,7 @@ static void engineer_coverage(building *b, int *max_damage_seen) {
     b->damage_risk = 0;
 }
 static void prefect_coverage(building *b, int *min_happiness_seen) {
-    if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_WAREHOUSE_SPACE)
+    if (b->type == BUILDING_SENET_HOUSE || b->type == BUILDING_WAREHOUSE_SPACE)
         b = b->main();
 
     b->fire_risk = 0;
@@ -323,24 +323,24 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_PRIEST:
             tutorial_on_religion();
             switch (home()->type) {
-                case BUILDING_SMALL_TEMPLE_CERES:
-                case BUILDING_LARGE_TEMPLE_CERES:
+                case BUILDING_TEMPLE_OSIRIS:
+                case BUILDING_TEMPLE_COMPLEX_OSIRIS:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_ceres);
                     break;
-                case BUILDING_SMALL_TEMPLE_NEPTUNE:
-                case BUILDING_LARGE_TEMPLE_NEPTUNE:
+                case BUILDING_TEMPLE_RA:
+                case BUILDING_TEMPLE_COMPLEX_RA:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_neptune);
                     break;
-                case BUILDING_SMALL_TEMPLE_MERCURY:
-                case BUILDING_LARGE_TEMPLE_MERCURY:
+                case BUILDING_TEMPLE_PTAH:
+                case BUILDING_TEMPLE_COMPLEX_PTAH:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mercury);
                     break;
-                case BUILDING_SMALL_TEMPLE_MARS:
-                case BUILDING_LARGE_TEMPLE_MARS:
+                case BUILDING_TEMPLE_SETH:
+                case BUILDING_TEMPLE_COMPLEX_SETH:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mars);
                     break;
-                case BUILDING_SMALL_TEMPLE_VENUS:
-                case BUILDING_LARGE_TEMPLE_VENUS:
+                case BUILDING_TEMPLE_BAST:
+                case BUILDING_TEMPLE_COMPLEX_BAST:
                     houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_venus);
                     break;
                 default:
@@ -349,19 +349,19 @@ int figure::figure_service_provide_coverage() {
             break;
         case FIGURE_ACTOR:
             b = get_entertainment_building();
-            if (b->type == BUILDING_THEATER)
+            if (b->type == BUILDING_BOOTH)
                 houses_serviced = provide_culture(tile_x, tile_y, theater_coverage);
-            else if (b->type == BUILDING_AMPHITHEATER) {
+            else if (b->type == BUILDING_BANDSTAND) {
                 houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
             }
             break;
         case FIGURE_GLADIATOR:
             b = get_entertainment_building();
-            if (b->type == BUILDING_AMPHITHEATER) {
+            if (b->type == BUILDING_BANDSTAND) {
                 houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
-            } else if (b->type == BUILDING_COLOSSEUM) {
+            } else if (b->type == BUILDING_PAVILLION) {
                 houses_serviced = provide_entertainment(tile_x, tile_y,
                                                         b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
             }

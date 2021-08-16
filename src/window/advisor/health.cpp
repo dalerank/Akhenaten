@@ -44,28 +44,28 @@ static int draw_background(void) {
     inner_panel_draw(32, 108, 36, 5);
 
     // bathhouses
-    lang_text_draw_amount(8, 24, building_count_total(BUILDING_BATHHOUSE), 40, 112, FONT_NORMAL_GREEN);
-    text_draw_number_centered(building_count_active(BUILDING_BATHHOUSE), 150, 112, 100, FONT_NORMAL_GREEN);
+    lang_text_draw_amount(8, 24, building_count_total(BUILDING_MENU_MONUMENTS), 40, 112, FONT_NORMAL_GREEN);
+    text_draw_number_centered(building_count_active(BUILDING_MENU_MONUMENTS), 150, 112, 100, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 290, 112, 120, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 440, 112, 160, FONT_NORMAL_GREEN);
 
     // barbers
-    lang_text_draw_amount(8, 26, building_count_total(BUILDING_BARBER), 40, 132, FONT_NORMAL_GREEN);
-    text_draw_number_centered(building_count_active(BUILDING_BARBER), 150, 132, 100, FONT_NORMAL_GREEN);
+    lang_text_draw_amount(8, 26, building_count_total(BUILDING_DENTIST), 40, 132, FONT_NORMAL_GREEN);
+    text_draw_number_centered(building_count_active(BUILDING_DENTIST), 150, 132, 100, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 290, 132, 120, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 440, 132, 160, FONT_NORMAL_GREEN);
 
     // clinics
-    lang_text_draw_amount(8, 28, building_count_total(BUILDING_DOCTOR), 40, 152, FONT_NORMAL_GREEN);
-    text_draw_number_centered(building_count_active(BUILDING_DOCTOR), 150, 152, 100, FONT_NORMAL_GREEN);
+    lang_text_draw_amount(8, 28, building_count_total(BUILDING_APOTHECARY), 40, 152, FONT_NORMAL_GREEN);
+    text_draw_number_centered(building_count_active(BUILDING_APOTHECARY), 150, 152, 100, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 290, 152, 120, FONT_NORMAL_GREEN);
     lang_text_draw_centered(56, 2, 440, 152, 160, FONT_NORMAL_GREEN);
 
     // hospitals
-    lang_text_draw_amount(8, 30, building_count_total(BUILDING_HOSPITAL), 40, 172, FONT_NORMAL_GREEN);
-    text_draw_number_centered(building_count_active(BUILDING_HOSPITAL), 150, 172, 100, FONT_NORMAL_GREEN);
+    lang_text_draw_amount(8, 30, building_count_total(BUILDING_MORTUARY), 40, 172, FONT_NORMAL_GREEN);
+    text_draw_number_centered(building_count_active(BUILDING_MORTUARY), 150, 172, 100, FONT_NORMAL_GREEN);
 
-    int width = text_draw_number(1000 * building_count_active(BUILDING_HOSPITAL), '@', " ", 280, 172,
+    int width = text_draw_number(1000 * building_count_active(BUILDING_MORTUARY), '@', " ", 280, 172,
                                  FONT_NORMAL_GREEN);
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_GREEN);
 

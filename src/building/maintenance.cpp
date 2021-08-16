@@ -161,7 +161,7 @@ void building_maintenance_check_fire_collapse(void) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->fire_proof)
             continue;
-        if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)
+        if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)
             continue;
 
         const model_building *model = model_get_building(b->type);
@@ -270,7 +270,7 @@ void building_maintenance_check_rome_access(void) {
             b->distance_from_entry = main_building->distance_from_entry;
             b->road_access_x = main_building->road_access_x;
             b->road_access_y = main_building->road_access_y;
-        } else if (b->type == BUILDING_HIPPODROME) {
+        } else if (b->type == BUILDING_SENET_HOUSE) {
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road);

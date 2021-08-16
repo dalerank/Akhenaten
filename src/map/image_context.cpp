@@ -602,7 +602,7 @@ static void set_terrain_reservoir(int grid_offset, int direction, int multi_tile
     int offset = grid_offset + map_grid_direction_delta(direction);
     if (map_terrain_is(offset, TERRAIN_BUILDING)) {
         building *b = building_at(offset);
-        if (b->type == BUILDING_RESERVOIR && map_property_multi_tile_xy(offset) == multi_tile_mask) {
+        if (b->type == BUILDING_WATER_LIFT2 && map_property_multi_tile_xy(offset) == multi_tile_mask) {
             tiles[direction] = 1;
             return;
         }

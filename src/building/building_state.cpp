@@ -5,7 +5,7 @@
 
 static int is_industry_type(const building *b) {
     return b->output_resource_id || b->type == BUILDING_NATIVE_CROPS
-           || b->type == BUILDING_SHIPYARD || b->type == BUILDING_WHARF;
+           || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
 }
 
 static void write_type_data(buffer *buf, const building *b) {

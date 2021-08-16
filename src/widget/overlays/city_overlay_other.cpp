@@ -17,21 +17,21 @@
 
 static int show_building_religion(const building *b) {
     return
-            b->type == BUILDING_ORACLE || b->type == BUILDING_SMALL_TEMPLE_CERES ||
-            b->type == BUILDING_SMALL_TEMPLE_NEPTUNE || b->type == BUILDING_SMALL_TEMPLE_MERCURY ||
-            b->type == BUILDING_SMALL_TEMPLE_MARS || b->type == BUILDING_SMALL_TEMPLE_VENUS ||
-            b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_NEPTUNE ||
-            b->type == BUILDING_LARGE_TEMPLE_MERCURY || b->type == BUILDING_LARGE_TEMPLE_MARS ||
-            b->type == BUILDING_LARGE_TEMPLE_VENUS;
+            b->type == BUILDING_ORACLE || b->type == BUILDING_TEMPLE_OSIRIS ||
+            b->type == BUILDING_TEMPLE_RA || b->type == BUILDING_TEMPLE_PTAH ||
+            b->type == BUILDING_TEMPLE_SETH || b->type == BUILDING_TEMPLE_BAST ||
+            b->type == BUILDING_TEMPLE_COMPLEX_OSIRIS || b->type == BUILDING_TEMPLE_COMPLEX_RA ||
+            b->type == BUILDING_TEMPLE_COMPLEX_PTAH || b->type == BUILDING_TEMPLE_COMPLEX_SETH ||
+            b->type == BUILDING_TEMPLE_COMPLEX_BAST;
 }
 static int show_building_food_stocks(const building *b) {
-    return b->type == BUILDING_MARKET || b->type == BUILDING_WHARF || b->type == BUILDING_GRANARY;
+    return b->type == BUILDING_MARKET || b->type == BUILDING_FISHING_WHARF || b->type == BUILDING_GRANARY;
 }
 static int show_building_tax_income(const building *b) {
-    return b->type == BUILDING_FORUM || b->type == BUILDING_SENATE_UPGRADED;
+    return b->type == BUILDING_TAX_COLLECTOR || b->type == BUILDING_SENATE_UPGRADED;
 }
 static int show_building_water(const building *b) {
-    return b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN || b->type == BUILDING_RESERVOIR || b->type == BUILDING_WATER_SUPPLY;
+    return b->type == BUILDING_WELL || b->type == BUILDING_MENU_BEAUTIFICATION || b->type == BUILDING_WATER_LIFT2 || b->type == BUILDING_WATER_SUPPLY;
 }
 static int show_building_desirability(const building *b) {
     return 0;

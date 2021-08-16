@@ -1,6 +1,7 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
+#include <widget/city/ornaments.h>
 #include "construction.h"
 
 #include "building/construction_clear.h"
@@ -94,11 +95,11 @@ static void add_fort(int type, building *fort) {
     fort->prev_part_building_id = 0;
     map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT),
                            TERRAIN_BUILDING);
-    if (type == BUILDING_FORT_LEGIONARIES)
+    if (type == BUILDING_FORT_CHARIOTEERS)
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
-    else if (type == BUILDING_FORT_JAVELIN)
+    else if (type == BUILDING_FORT_ARCHERS)
         fort->subtype.fort_figure_type = FIGURE_FORT_JAVELIN;
-    else if (type == BUILDING_FORT_MOUNTED)
+    else if (type == BUILDING_FORT_INFANTRY)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
 
 
@@ -576,13 +577,13 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_entertainment_venue(b);
             city_buildings_add_festival_square(b);
             break;
-        case BUILDING_GLADIATOR_SCHOOL:
+        case BUILDING_CONSERVATORY:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_CONSERVATORY));
             break;
-        case BUILDING_LION_HOUSE:
+        case BUILDING_DANCE_SCHOOL:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_DANCE_SCHOOL));
             break;
-        case BUILDING_ACTOR_COLONY:
+        case BUILDING_JUGGLER_SCHOOL:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_JUGGLER_SCHOOL));
             break;
         case BUILDING_CHARIOT_MAKER:
@@ -590,22 +591,24 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             break;
             // statues
         case BUILDING_SMALL_STATUE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_STATUE));
-            break;
         case BUILDING_MEDIUM_STATUE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_STATUE) + 1);
-            break;
-        case BUILDING_LARGE_STATUE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_STATUE) + 2);
+        case BUILDING_LARGE_STATUE: {
+
+                // todo: correct for alt version and rotation
+                int variant = building_rotation_get_building_variant();
+                int orientation = building_rotation_get_rotation();
+
+                add_building_tiles_image(b, get_statue_image(type, orientation, variant));
+            }
             break;
             // health
-        case BUILDING_DOCTOR:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_DOCTOR));
+        case BUILDING_APOTHECARY:
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_APOTHECARY));
             break;
-        case BUILDING_HOSPITAL:
+        case BUILDING_MORTUARY:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MORTUARY));
             break;
-        case BUILDING_BATHHOUSE:
+        case BUILDING_MENU_MONUMENTS:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER));
             break;
         case BUILDING_DENTIST:
@@ -615,33 +618,33 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_SCHOOL:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_SCHOOL));
             break;
-        case BUILDING_ACADEMY:
+        case BUILDING_MENU_WATER_CROSSINGS:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ACADEMY));
             break;
         case BUILDING_LIBRARY:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_LIBRARY));
             break;
             // security
-        case BUILDING_PREFECTURE:
+        case BUILDING_POLICE_STATION:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_POLICE_STATION));
             break;
             // farms
-        case BUILDING_WHEAT_FARM:
+        case BUILDING_BARLEY_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, 0, 0);
             break;
-        case BUILDING_VEGETABLE_FARM:
+        case BUILDING_FLAX_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV], 0);
             break;
-        case BUILDING_FRUIT_FARM:
+        case BUILDING_GRAIN_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 2, 0);
             break;
-        case BUILDING_OLIVE_FARM:
+        case BUILDING_LETTUCE_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 3, 0);
             break;
-        case BUILDING_VINES_FARM:
+        case BUILDING_POMEGRANATES_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 4, 0);
             break;
-        case BUILDING_PIG_FARM:
+        case BUILDING_CHICKPEAS_FARM:
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 5, 0);
             break;
         case BUILDING_FIGS_FARM:
@@ -651,11 +654,11 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 7, 0);
             break;
             // industry
-        case BUILDING_MARBLE_QUARRY:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MARBLE_QUARRY));
+        case BUILDING_STONE_QUARRY:
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_STONE_QUARRY));
             break;
-        case BUILDING_IRON_MINE:
-            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_IRON_MINE));
+        case BUILDING_LIMESTONE_QUARRY:
+            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_LIMESTONE_QUARRY));
             break;
         case BUILDING_TIMBER_YARD:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TIMBER_YARD));
@@ -664,16 +667,16 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_CLAY_PIT));
             break;
             // workshops
-        case BUILDING_WINE_WORKSHOP:
+        case BUILDING_BEER_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BEER_WORKSHOP));
             break;
-        case BUILDING_OIL_WORKSHOP:
+        case BUILDING_LINEN_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_LINEN_WORKSHOP));
             break;
         case BUILDING_WEAPONS_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_WEAPONS_WORKSHOP));
             break;
-        case BUILDING_FURNITURE_WORKSHOP:
+        case BUILDING_JEWELS_WORKSHOP:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_JEWELS_WORKSHOP));
             break;
         case BUILDING_POTTERY_WORKSHOP:
@@ -689,15 +692,15 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MARKET));
             break;
             // government
-        case BUILDING_GOVERNORS_HOUSE:
+        case BUILDING_PERSONAL_MANSION:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_HOUSE));
             city_buildings_add_mansion(b);
             break;
-        case BUILDING_GOVERNORS_VILLA:
+        case BUILDING_FAMILY_MANSION:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_VILLA));
             city_buildings_add_mansion(b);
             break;
-        case BUILDING_GOVERNORS_PALACE:
+        case BUILDING_DYNASTY_MANSION:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_GOVERNORS_PALACE));
             city_buildings_add_mansion(b);
             break;
@@ -707,11 +710,11 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_ENGINEERS_POST:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ENGINEERS_POST));
             break;
-        case BUILDING_FORUM:
+        case BUILDING_TAX_COLLECTOR:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TAX_COLLECTOR));
             break;
             // water
-        case BUILDING_FOUNTAIN:
+        case BUILDING_MENU_BEAUTIFICATION:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_FOUNTAIN_1));
             break;
         case BUILDING_WELL:
@@ -722,46 +725,46 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_MILITARY_ACADEMY));
             break;
             // religion
-        case BUILDING_SMALL_TEMPLE_CERES:
+        case BUILDING_TEMPLE_OSIRIS:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_OSIRIS));
             break;
-        case BUILDING_SMALL_TEMPLE_NEPTUNE:
+        case BUILDING_TEMPLE_RA:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_RA));
             break;
-        case BUILDING_SMALL_TEMPLE_MERCURY:
+        case BUILDING_TEMPLE_PTAH:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_PTAH));
             break;
-        case BUILDING_SMALL_TEMPLE_MARS:
+        case BUILDING_TEMPLE_SETH:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_SETH));
             break;
-        case BUILDING_SMALL_TEMPLE_VENUS:
+        case BUILDING_TEMPLE_BAST:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_BAST));
             break;
-        case BUILDING_LARGE_TEMPLE_CERES:
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_OSIRIS) + 1);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
             break;
-        case BUILDING_LARGE_TEMPLE_NEPTUNE:
+        case BUILDING_TEMPLE_COMPLEX_RA:
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_RA) + 1);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
             break;
-        case BUILDING_LARGE_TEMPLE_MERCURY:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_PTAH) + 1);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
             break;
-        case BUILDING_LARGE_TEMPLE_MARS:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_SETH) + 1);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_temple_complex(b);
             break;
-        case BUILDING_LARGE_TEMPLE_VENUS:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
             if (GAME_ENV == ENGINE_ENV_C3)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TEMPLE_BAST) + 1);
             else if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -782,7 +785,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             map_water_add_building(b->id, b->x, b->y, 2,
                                    image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
             break;
-        case BUILDING_WHARF:
+        case BUILDING_FISHING_WHARF:
             b->data.industry.orientation = waterside_orientation_abs;
             map_water_add_building(b->id, b->x, b->y, 2,
                                    image_id_from_group(GROUP_BUILDING_WHARF) + waterside_orientation_rel);
@@ -859,22 +862,22 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             }
             city_buildings_add_senate(b);
             break;
-        case BUILDING_BARRACKS:
+        case BUILDING_RECRUITER:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_BARRACKS));
             city_buildings_add_barracks(b);
             break;
         case BUILDING_WAREHOUSE:
             add_warehouse(b);
             break;
-        case BUILDING_HIPPODROME:
+        case BUILDING_SENET_HOUSE:
             if (GAME_ENV == ENGINE_ENV_C3) {
 //                add_hippodrome(b);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
                 add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_SENET_HOUSE));
             break;
-        case BUILDING_FORT_LEGIONARIES:
-        case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_CHARIOTEERS:
+        case BUILDING_FORT_ARCHERS:
+        case BUILDING_FORT_INFANTRY:
             add_fort(type, b);
             break;
             // native buildings (unused, I think)
@@ -891,8 +894,8 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_DISTRIBUTION_CENTER_UNUSED:
             city_buildings_add_distribution_center(b);
             break;
-        case BUILDING_DRAGGABLE_RESERVOIR:
-        case BUILDING_RESERVOIR:
+        case BUILDING_WATER_LIFT:
+        case BUILDING_WATER_LIFT2:
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 b->data.industry.orientation = waterside_orientation_abs;
                 map_water_add_building(b->id, b->x, b->y, 2,
@@ -1067,7 +1070,7 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
 
     if (!distance) {
         if (info->place_reservoir_at_end == PLACE_RESERVOIR_YES)
-            info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
+            info->cost = model_get_building(BUILDING_WATER_LIFT2)->cost;
 
         return 1;
     }
@@ -1115,13 +1118,13 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
     building_construction_place_aqueduct_for_reservoir(0, x_start + x_aq_start, y_start + y_aq_start,
                                                        x_end + x_aq_end, y_end + y_aq_end, &aq_items);
     if (info->place_reservoir_at_start == PLACE_RESERVOIR_YES)
-        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
+        info->cost += model_get_building(BUILDING_WATER_LIFT2)->cost;
 
     if (info->place_reservoir_at_end == PLACE_RESERVOIR_YES)
-        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
+        info->cost += model_get_building(BUILDING_WATER_LIFT2)->cost;
 
     if (aq_items)
-        info->cost += aq_items * model_get_building(BUILDING_AQUEDUCT)->cost;
+        info->cost += aq_items * model_get_building(BUILDING_IRRIGATION_DITCH)->cost;
 
     return 1;
 }
@@ -1272,7 +1275,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
             placement_cost *= length;
             break;
         }
-        case BUILDING_AQUEDUCT: {
+        case BUILDING_IRRIGATION_DITCH: {
             int cost;
             if (!building_construction_place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
                 city_warning_show(WARNING_CLEAR_LAND_NEEDED);
@@ -1283,7 +1286,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
             map_routing_update_land();
             break;
         }
-        case BUILDING_DRAGGABLE_RESERVOIR: { // doubles as BUILDING_WATER_LIFT
+        case BUILDING_WATER_LIFT: { // doubles as BUILDING_WATER_LIFT
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 if (!attempt_placing_on_shore(type, x, y, 2, false))
                     return 0;
@@ -1296,21 +1299,21 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
                 return 0;
             }
             if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
-                building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
+                building *reservoir = building_create(BUILDING_WATER_LIFT2, x_start - 1, y_start - 1);
                 game_undo_add_building(reservoir);
                 map_building_tiles_add(reservoir->id, x_start - 1, y_start - 1, 3,
                                        image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
                 map_aqueduct_set(map_grid_offset(x_start - 1, y_start - 1), 0);
             }
             if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
-                building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
+                building *reservoir = building_create(BUILDING_WATER_LIFT2, x_end - 1, y_end - 1);
                 game_undo_add_building(reservoir);
                 map_building_tiles_add(reservoir->id, x_end - 1, y_end - 1, 3,
                                        image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
                 map_aqueduct_set(map_grid_offset(x_end - 1, y_end - 1), 0);
                 if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) &&
                     info.place_reservoir_at_start == PLACE_RESERVOIR_NO)
-                    building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
+                    building_construction_warning_check_reservoir(BUILDING_WATER_LIFT2);
             }
             placement_cost = info.cost;
             map_tiles_update_all_aqueducts(0);
@@ -1410,7 +1413,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
                     return 0;
             }
             break;
-        case BUILDING_WHARF:
+        case BUILDING_FISHING_WHARF:
             if (!attempt_placing_on_shore(type, x, y, 2, false))
                 return 0;
             break;
@@ -1437,7 +1440,7 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
             if (!attempt_placing_generic(type, x, y, 0))
                 return 0;
             break;
-        case BUILDING_BARRACKS:
+        case BUILDING_RECRUITER:
             if (city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
                 city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
                 return 0;
@@ -1445,12 +1448,12 @@ int building_attempt_placing_and_return_cost(int type, int x_start, int y_start,
             if (!attempt_placing_generic(type, x, y, 0))
                 return 0;
             break;
-        case BUILDING_WHEAT_FARM:
-        case BUILDING_VEGETABLE_FARM:
-        case BUILDING_FRUIT_FARM:
-        case BUILDING_OLIVE_FARM:
-        case BUILDING_VINES_FARM:
-        case BUILDING_PIG_FARM:
+        case BUILDING_BARLEY_FARM:
+        case BUILDING_FLAX_FARM:
+        case BUILDING_GRAIN_FARM:
+        case BUILDING_LETTUCE_FARM:
+        case BUILDING_POMEGRANATES_FARM:
+        case BUILDING_CHICKPEAS_FARM:
         case BUILDING_FIGS_FARM:
         case BUILDING_HENNA_FARM:
             if (!attempt_placing_generic(type, x, y, 0, TERRAIN_FLOODPLAIN))
@@ -1513,7 +1516,7 @@ bool building_check_preliminary_warnings(int type, int x_start, int y_start, int
 
     // check if enemy is nearby
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
-        if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT)
+        if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_IRRIGATION_DITCH)
             game_undo_restore_map(0);
         else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS)
             game_undo_restore_map(1);
@@ -1583,18 +1586,18 @@ void building_construction_set_type(int type) { // select building for construct
         data.start.grid_offset = false;
 
         switch (type) {
-            case BUILDING_WHEAT_FARM:
-            case BUILDING_VEGETABLE_FARM:
-            case BUILDING_FRUIT_FARM:
-            case BUILDING_OLIVE_FARM:
-            case BUILDING_VINES_FARM:
-            case BUILDING_PIG_FARM:
+            case BUILDING_BARLEY_FARM:
+            case BUILDING_FLAX_FARM:
+            case BUILDING_GRAIN_FARM:
+            case BUILDING_LETTUCE_FARM:
+            case BUILDING_POMEGRANATES_FARM:
+            case BUILDING_CHICKPEAS_FARM:
             case BUILDING_FIGS_FARM:
             case BUILDING_HENNA_FARM:
                 data.required_terrain.meadow = true;
                 break;
-            case BUILDING_MARBLE_QUARRY:
-            case BUILDING_IRON_MINE:
+            case BUILDING_STONE_QUARRY:
+            case BUILDING_LIMESTONE_QUARRY:
             case BUILDING_GRANITE_QUARRY:
             case BUILDING_SANDSTONE_QUARRY:
                 data.required_terrain.rock = true;
@@ -1615,11 +1618,11 @@ void building_construction_set_type(int type) { // select building for construct
             case BUILDING_TOWER:
                 data.required_terrain.wall = true;
                 break;
-            case BUILDING_MENU_SMALL_TEMPLES:
-                data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
+            case BUILDING_MENU_TEMPLES:
+                data.sub_type = BUILDING_TEMPLE_OSIRIS;
                 break;
-            case BUILDING_MENU_LARGE_TEMPLES:
-                data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
+            case BUILDING_MENU_TEMPLE_COMPLEX:
+                data.sub_type = BUILDING_TEMPLE_COMPLEX_OSIRIS;
                 break;
             case BUILDING_WELL:
             case BUILDING_WATER_SUPPLY:
@@ -1672,13 +1675,13 @@ bool building_construction_is_draggable(void) {
     switch (data.type) {
         case BUILDING_CLEAR_LAND:
         case BUILDING_ROAD:
-        case BUILDING_AQUEDUCT:
+        case BUILDING_IRRIGATION_DITCH:
         case BUILDING_WALL:
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
         case BUILDING_HOUSE_VACANT_LOT:
             return true;
-        case BUILDING_DRAGGABLE_RESERVOIR:
+        case BUILDING_WATER_LIFT:
             if (GAME_ENV == ENGINE_ENV_C3)
                 return true;
             else
@@ -1701,8 +1704,8 @@ void building_construction_start(int x, int y, int grid_offset) {
                 can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, data.start.x,
                                                                          data.start.y);
                 break;
-            case BUILDING_AQUEDUCT:
-            case BUILDING_DRAGGABLE_RESERVOIR:
+            case BUILDING_IRRIGATION_DITCH:
+            case BUILDING_WATER_LIFT:
                 can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, data.start.x,
                                                                          data.start.y);
                 break;
@@ -1766,10 +1769,10 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
         if (length > 1) current_cost *= length;
-    } else if (type == BUILDING_AQUEDUCT) {
+    } else if (type == BUILDING_IRRIGATION_DITCH) {
         building_construction_place_aqueduct(data.start.x, data.start.y, x, y, &current_cost);
         map_tiles_update_all_aqueducts(0);
-    } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
+    } else if (type == BUILDING_WATER_LIFT) {
         struct reservoir_info info;
         place_reservoir_and_aqueducts(1, data.start.x, data.start.y, x, y, &info);
         current_cost = info.cost;
@@ -1796,7 +1799,7 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
-    } else if (type == BUILDING_HIPPODROME) {
+    } else if (type == BUILDING_SENET_HOUSE) {
         int x_offset_1, y_offset_1;
         building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset_1, &y_offset_1);
         int x_offset_2, y_offset_2;
@@ -1806,7 +1809,7 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
             map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL)) {
             mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
-    } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
+    } else if (type == BUILDING_SHIPYARD || type == BUILDING_FISHING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0))
             data.draw_as_constructing = 1;
     } else if (type == BUILDING_DOCK) {
@@ -1820,7 +1823,7 @@ void building_construction_update(int x, int y, int grid_offset) {// update ghos
         // never mark as constructing; todo?
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
-            !(type == BUILDING_BARRACKS && city_buildings_has_barracks() &&
+            !(type == BUILDING_RECRUITER && city_buildings_has_barracks() &&
               !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
             int size = building_properties_for_type(type)->size;
@@ -1850,15 +1853,15 @@ void building_construction_finalize(void) { // confirm final placement
     building_consume_resources(type);
 
     // advance temple picker (C3 only)
-    if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
+    if (data.type == BUILDING_MENU_TEMPLES) {
         data.sub_type++;
-        if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS)
-            data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
+        if (data.sub_type > BUILDING_TEMPLE_BAST)
+            data.sub_type = BUILDING_TEMPLE_OSIRIS;
     }
-    if (data.type == BUILDING_MENU_LARGE_TEMPLES) {
+    if (data.type == BUILDING_MENU_TEMPLE_COMPLEX) {
         data.sub_type++;
-        if (data.sub_type > BUILDING_LARGE_TEMPLE_VENUS)
-            data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
+        if (data.sub_type > BUILDING_TEMPLE_COMPLEX_BAST)
+            data.sub_type = BUILDING_TEMPLE_COMPLEX_OSIRIS;
     }
 
     // finilize process

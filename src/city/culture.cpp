@@ -82,10 +82,10 @@ void city_culture_update_coverage(void) {
     int population = city_data.population.population;
 
     // entertainment
-    coverage.theater = top(calc_percentage(400 * building_count_active(BUILDING_THEATER), population));
-    coverage.amphitheater = top(calc_percentage(700 * building_count_active(BUILDING_AMPHITHEATER), population));
-    coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_COLOSSEUM), population));
-    if (building_count_active(BUILDING_HIPPODROME) <= 0)
+    coverage.theater = top(calc_percentage(400 * building_count_active(BUILDING_BOOTH), population));
+    coverage.amphitheater = top(calc_percentage(700 * building_count_active(BUILDING_BANDSTAND), population));
+    coverage.colosseum = top(calc_percentage(1200 * building_count_active(BUILDING_PAVILLION), population));
+    if (building_count_active(BUILDING_SENET_HOUSE) <= 0)
         coverage.hippodrome = 0;
     else
         coverage.hippodrome = 100;
@@ -94,28 +94,28 @@ void city_culture_update_coverage(void) {
     int oracles = building_count_total(BUILDING_ORACLE);
     coverage.religion[GOD_CERES] = top(calc_percentage(
             500 * oracles +
-            750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES),
+            750 * building_count_active(BUILDING_TEMPLE_OSIRIS) +
+            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS),
             population));
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
             500 * oracles +
-            750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE),
+            750 * building_count_active(BUILDING_TEMPLE_RA) +
+            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_RA),
             population));
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
             500 * oracles +
-            750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY),
+            750 * building_count_active(BUILDING_TEMPLE_PTAH) +
+            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH),
             population));
     coverage.religion[GOD_MARS] = top(calc_percentage(
             500 * oracles +
-            750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS),
+            750 * building_count_active(BUILDING_TEMPLE_SETH) +
+            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_SETH),
             population));
     coverage.religion[GOD_VENUS] = top(calc_percentage(
             500 * oracles +
-            750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
-            1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS),
+            750 * building_count_active(BUILDING_TEMPLE_BAST) +
+            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_BAST),
             population));
     coverage.oracle = top(calc_percentage(500 * oracles, population));
 
@@ -135,11 +135,11 @@ void city_culture_update_coverage(void) {
     coverage.library = top(calc_percentage(
             800 * building_count_active(BUILDING_LIBRARY), population));
     coverage.academy = top(calc_percentage(
-            100 * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
+            100 * building_count_active(BUILDING_MENU_WATER_CROSSINGS), city_population_academy_age()));
 
     // health
     coverage.hospital = top(calc_percentage(
-            1000 * building_count_active(BUILDING_HOSPITAL), population));
+            1000 * building_count_active(BUILDING_MORTUARY), population));
 }
 
 void city_culture_calculate(void) {

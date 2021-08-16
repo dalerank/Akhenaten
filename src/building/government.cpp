@@ -8,9 +8,9 @@
 void building_government_distribute_treasury(void) {
     int units =
             5 * building_count_active(BUILDING_SENATE) +
-            1 * building_count_active(BUILDING_FORUM) +
+            1 * building_count_active(BUILDING_TAX_COLLECTOR) +
             8 * building_count_active(BUILDING_SENATE_UPGRADED) +
-            2 * building_count_active(BUILDING_FORUM_UPGRADED);
+            2 * building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
     int amount_per_unit;
     int remainder;
     int treasury = city_finance_treasury();
@@ -45,7 +45,7 @@ void building_government_distribute_treasury(void) {
                     b->tax_income_or_storage = 5 * amount_per_unit;
                 }
                 break;
-            case BUILDING_FORUM_UPGRADED:
+            case BUILDING_TAX_COLLECTOR_UPGRADED:
                 if (remainder && !(
                         building_count_active(BUILDING_SENATE_UPGRADED) ||
                         building_count_active(BUILDING_SENATE))) {
@@ -55,11 +55,11 @@ void building_government_distribute_treasury(void) {
                     b->tax_income_or_storage = 2 * amount_per_unit;
                 }
                 break;
-            case BUILDING_FORUM:
+            case BUILDING_TAX_COLLECTOR:
                 if (remainder && !(
                         building_count_active(BUILDING_SENATE_UPGRADED) ||
                         building_count_active(BUILDING_SENATE) ||
-                        building_count_active(BUILDING_FORUM_UPGRADED))) {
+                        building_count_active(BUILDING_TAX_COLLECTOR_UPGRADED))) {
                     b->tax_income_or_storage = amount_per_unit + remainder;
                     remainder = 0;
                 } else {

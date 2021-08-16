@@ -167,16 +167,16 @@ void figure::entertainer_action() {
                 int dst_building_id = 0;
                 switch (type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, 0);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                         break;
                     case FIGURE_LION_TAMER: // dancer
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_COLOSSEUM, 0, 0);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_PAVILLION, 0, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_HIPPODROME, 0, 0);
+                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_SENET_HOUSE, 0, 0);
                         break;
                 }
                 if (dst_building_id) { // todo: summarize

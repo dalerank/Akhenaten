@@ -22,15 +22,15 @@
 static const int ENEMY_ATTACK_PRIORITY[4][100] = {
         {
                 BUILDING_GRANARY,          BUILDING_WAREHOUSE,       BUILDING_MARKET,
-                                                                                              BUILDING_WHEAT_FARM,          BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
-                                                                                                                                                                                   BUILDING_OLIVE_FARM, BUILDING_VINES_FARM,        BUILDING_PIG_FARM, 0
+                BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_GRAIN_FARM,
+                BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM, 0
         },
         {
                 BUILDING_SENATE_UPGRADED,  BUILDING_SENATE,
-                                                                     BUILDING_FORUM_UPGRADED, BUILDING_FORUM,               0
+                BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_TAX_COLLECTOR, 0
         },
         {
-                BUILDING_GOVERNORS_PALACE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_HOUSE,
+                BUILDING_DYNASTY_MANSION, BUILDING_FAMILY_MANSION, BUILDING_PERSONAL_MANSION,
                                                                                               BUILDING_HOUSE_LUXURY_PALACE, BUILDING_HOUSE_LARGE_PALACE,
                                                                                                                                                      BUILDING_HOUSE_MEDIUM_PALACE, BUILDING_HOUSE_SMALL_PALACE,
                                                                                                                                                                                                         BUILDING_HOUSE_GRAND_VILLA, BUILDING_HOUSE_LARGE_VILLA,
@@ -43,7 +43,7 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
                 BUILDING_HOUSE_LARGE_TENT, BUILDING_HOUSE_SMALL_TENT, 0
         },
         {
-                BUILDING_MILITARY_ACADEMY, BUILDING_PREFECTURE,      0
+                BUILDING_MILITARY_ACADEMY, BUILDING_POLICE_STATION, 0
         }
 };
 

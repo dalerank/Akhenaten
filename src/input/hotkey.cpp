@@ -160,6 +160,9 @@ static void add_definition(const hotkey_mapping *mapping) {
         case HOTKEY_ROTATE_BUILDING:
             def->action = &data.hotkey_state.rotate_building;
             break;
+        case HOTKEY_CHANGE_BUILDING_VARIANT:
+            def->action = &data.hotkey_state.change_building_variant;
+            break;
         case HOTKEY_GO_TO_BOOKMARK_1:
             def->action = &data.hotkey_state.go_to_bookmark;
             def->value = 1;
@@ -242,7 +245,7 @@ static void add_definition(const hotkey_mapping *mapping) {
             break;
         case HOTKEY_BUILD_PREFECTURE:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_PREFECTURE;
+            def->value = BUILDING_POLICE_STATION;
             break;
         case HOTKEY_BUILD_GRANARY:
             def->action = &data.hotkey_state.building;
@@ -266,19 +269,19 @@ static void add_definition(const hotkey_mapping *mapping) {
             break;
         case HOTKEY_BUILD_RESERVOIR:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_DRAGGABLE_RESERVOIR;
+            def->value = BUILDING_WATER_LIFT;
             break;
         case HOTKEY_BUILD_AQUEDUCT:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_AQUEDUCT;
+            def->value = BUILDING_IRRIGATION_DITCH;
             break;
         case HOTKEY_BUILD_FOUNTAIN:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_FOUNTAIN;
+            def->value = BUILDING_MENU_BEAUTIFICATION;
             break;
         case HOTKEY_BUILD_DOCTOR:
             def->action = &data.hotkey_state.building;
-            def->value = BUILDING_DOCTOR;
+            def->value = BUILDING_APOTHECARY;
             break;
         case HOTKEY_BUILD_ROADBLOCK:
             def->action = &data.hotkey_state.building;
@@ -355,9 +358,8 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings) {
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN ||
             action == HOTKEY_ARROW_LEFT || action == HOTKEY_ARROW_RIGHT) {
             total_arrows++;
-        } else {
+        } else
             total_definitions++;
-        }
     }
     if (!allocate_mapping_memory(total_definitions, total_arrows))
         return;

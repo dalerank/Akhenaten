@@ -537,7 +537,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         }
     }
     // deliver weapons to barracks
-    if (building_count_active(BUILDING_BARRACKS) > 0 && city_military_has_legionary_legions() &&
+    if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
         building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3,
                                                  warehouse->road_network_id, warehouse->distance_from_entry, 0));

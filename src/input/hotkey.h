@@ -24,6 +24,7 @@ typedef struct {
     int load_file;
     int save_file;
     int rotate_building;
+    int change_building_variant;
     int building;
     // debug
     int debug_1_up;

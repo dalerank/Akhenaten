@@ -3,19 +3,19 @@
 #include "game/state.h"
 
 static int show_building_barber(const building *b) {
-    return b->type == BUILDING_BARBER;
+    return b->type == BUILDING_DENTIST;
 }
 
 static int show_building_bathhouse(const building *b) {
-    return b->type == BUILDING_BATHHOUSE;
+    return b->type == BUILDING_MENU_MONUMENTS;
 }
 
 static int show_building_clinic(const building *b) {
-    return b->type == BUILDING_DOCTOR;
+    return b->type == BUILDING_APOTHECARY;
 }
 
 static int show_building_hospital(const building *b) {
-    return b->type == BUILDING_HOSPITAL;
+    return b->type == BUILDING_MORTUARY;
 }
 
 static int show_figure_barber(const figure *f) {
