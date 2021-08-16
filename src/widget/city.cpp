@@ -115,13 +115,14 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
 //    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
 
+
     // do this for EVERY tile (not just valid ones)
     // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_footprint);
+    city_view_foreach_map_tile(draw_empty_tile_debug);
 
     if (!city_building_ghost_mark_deleting(tile)) {
-        city_view_foreach_map_tile(draw_footprint);
         city_view_foreach_valid_map_tile(
+                draw_footprint,
                 draw_top,
                 draw_ornaments,
                 draw_figures);
@@ -129,6 +130,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
             city_building_ghost_draw(tile);
     } else {
         city_view_foreach_valid_map_tile(
+                draw_footprint,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures);
@@ -145,10 +147,11 @@ void widget_city_draw_with_overlay(const map_tile *tile) {
 
     // do this for EVERY tile (not just valid ones)
     // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_footprint_overlay);
+    city_view_foreach_map_tile(draw_empty_tile_debug);
 
     if (!city_building_ghost_mark_deleting(tile)) {
         city_view_foreach_valid_map_tile(
+                draw_footprint_overlay,
                 draw_top_overlay,
                 draw_ornaments_overlay,
                 draw_figures_overlay);
@@ -156,6 +159,7 @@ void widget_city_draw_with_overlay(const map_tile *tile) {
         city_view_foreach_map_tile(draw_elevated_figures);
     } else {
         city_view_foreach_valid_map_tile(
+                draw_footprint_overlay,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures_overlay);

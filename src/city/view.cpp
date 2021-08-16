@@ -547,7 +547,8 @@ void city_view_foreach_map_tile(map_callback *callback) {
                             x_graphic,
                             y_graphic
                     };
-                    callback(x_graphic, y_graphic, grid_offset);
+                    if (callback)
+                        callback(x_graphic, y_graphic, grid_offset);
                 }
                 x_graphic += TILE_WIDTH_PIXELS;
                 x_view++;

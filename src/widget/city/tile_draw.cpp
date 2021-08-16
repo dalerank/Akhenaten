@@ -312,6 +312,11 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
+void draw_empty_tile_debug(int x, int y, int grid_offset) {
+    if (!map_property_is_draw_tile(grid_offset))
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+};
+
 void draw_footprint(int x, int y, int grid_offset) {
     // black tile outside of map
     if (grid_offset < 0)

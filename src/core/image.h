@@ -64,7 +64,7 @@ public:
 
     imagepak();
 
-    int load_pak_files(const char *filename_partial, int shift = 0);
+    int load_pak(const char *filename_partial, int index_shift = 0);
 
     int get_entry_count();
     int get_id(int group);
@@ -73,9 +73,9 @@ public:
 
 extern int terrain_ph_offset;
 
-int image_load_main(int climate_id, int is_editor, int force_reload);
-int image_load_fonts(encoding_type encoding);
-int image_load_enemy(int enemy_id);
+bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
+bool image_load_font_paks(encoding_type encoding);
+bool image_load_enemy_paks(int enemy_id);
 
 int image_id_from_group(int collectiion, int group);
 
