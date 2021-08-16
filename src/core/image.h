@@ -55,7 +55,7 @@ class imagepak {
     uint32_t header_data[10];
     uint16_t *group_image_ids;
     image *images;
-    color_t *data;
+    color_t *image_data;
 
     bool check_initialized();
 
@@ -64,7 +64,7 @@ public:
 
     imagepak();
 
-    int load_pak(const char *filename_partial, int index_shift = 0);
+    bool load_pak(const char *filename_partial, int index_shift = 0);
 
     int get_entry_count();
     int get_id(int group);

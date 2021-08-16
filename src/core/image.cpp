@@ -32,6 +32,8 @@ static struct {
     int fonts_enabled;
     int font_base_offset;
 
+    std::vector<imagepak*> pak_list;
+
     imagepak *main;
     imagepak *ph_terrain;
     imagepak *ph_unloaded;
@@ -52,6 +54,8 @@ static struct {
         0,
         0,
         0,
+
+        {},
 
         new imagepak,
         new imagepak,
@@ -171,7 +175,7 @@ using milli = std::chrono::milliseconds;
 imagepak::imagepak() {
     initialized = false;
     images = nullptr;
-    data = nullptr;
+    image_data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
 }
@@ -179,8 +183,10 @@ bool imagepak::check_initialized() {
     return initialized == 0;
 }
 
+#include <algorithm>
+
 static int overall_pak_load_index_shift = 0;
-int imagepak::load_pak(const char *filename_partial, int index_shift) {
+bool imagepak::load_pak(const char *filename_partial, int index_shift) {
     //////////////////////
     auto TIME_HEADER = std::chrono::high_resolution_clock::now();
 
@@ -213,9 +219,8 @@ int imagepak::load_pak(const char *filename_partial, int index_shift) {
 
     // prepare sgx data
     buffer *buf = new buffer(SCRATCH_DATA_SIZE);
-    if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, buf,
-                                  SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
-        return 0;
+    if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
+        return false;
     int HEADER_SIZE = 0;
     if (file_has_extension((const char*)filename_sgx, "sg2"))
         HEADER_SIZE = 20680; // sg2 has 100 bitmap entries
@@ -232,10 +237,10 @@ int imagepak::load_pak(const char *filename_partial, int index_shift) {
     if (check_initialized()) {
         initialized = false;
         delete images;
-        delete data;
+        delete image_data;
     }
     images = new image[entries_num];
-    data = new color_t[entries_num * 10000];
+    image_data = new color_t[entries_num * 10000];
     initialized = true;
 
     buf->skip(40); // skip remaining 40 bytes
@@ -331,14 +336,14 @@ int imagepak::load_pak(const char *filename_partial, int index_shift) {
     buf->clear();
     int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
     if (!data_size)
-        return 0;
+        return false;
 
     //////////////////////
     auto TIME_BMP_CONVERT = std::chrono::high_resolution_clock::now();
 
     // convert bitmap data for image pool
-    color_t *start_dst = data;
-    color_t *dst = data;
+    color_t *start_dst = image_data;
+    color_t *dst = image_data;
     dst++; // make sure img->offset > 0
     for (int i = 0; i < entries_num; i++) {
         image *img = &images[i];
@@ -357,12 +362,16 @@ int imagepak::load_pak(const char *filename_partial, int index_shift) {
 
         img->draw.offset = img_offset;
         img->draw.uncompressed_length /= 2;
-        img->draw.data = &data[img_offset];
+        img->draw.data = &image_data[img_offset];
 //        SDL_Log("Loading... %s : %i", filename_555, i);
     }
 
     // advance global index
     overall_pak_load_index_shift += entries_num - 1;
+
+    // add pak to listed cache for parsing
+    if(std::find(data.pak_list.begin(), data.pak_list.end(), this) == data.pak_list.end())
+        data.pak_list.push_back(this);
 
     //////////////////////
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
@@ -373,7 +382,7 @@ int imagepak::load_pak(const char *filename_partial, int index_shift) {
             groups_num,
             std::chrono::duration_cast<milli>(TIME_FINISH - TIME_HEADER));
 
-    return 1;
+    return true;
 }
 
 int imagepak::get_entry_count() {
@@ -439,38 +448,14 @@ int image_id_from_group(int collection, int group) {
     return pak->get_id(group);
 }
 const image *image_get(int id, int mode) {
-    switch (GAME_ENV) {
-//        case ENGINE_ENV_C3:
-//            if (id >= data.main->get_entry_count() && id < data.main->get_entry_count() + MAX_MODDED_IMAGES)
-////                return mods_get_image(id);
-//                return nullptr;
-//            else if (id >= 0)
-//                return data.main->get_image(id);
-//            else
-//                return nullptr;
-        case ENGINE_ENV_PHARAOH: // todo: mods
-            const image *img;
-            img = data.ph_expansion->get_image(id);
-            if (img != nullptr) return img;
-            img = data.ph_sprmain->get_image(id);
-            if (img != nullptr) return img;
-            img = data.ph_unloaded->get_image(id);
-            if (img != nullptr) return img;
-            img = data.main->get_image(id);
-            if (img != nullptr) return img;
-            img = data.ph_terrain->get_image(id);
-            if (img != nullptr) return img;
-            img = data.font->get_image(id);
-            if (img != nullptr) return img;
-            img = data.ph_sprambient->get_image(id);
-            if (img != nullptr) return img;
-            img = data.empire->get_image(id);
-            if (img != nullptr) return img;
-
-            // default
-            return data.ph_terrain->get_image(image_id_from_group(GROUP_TERRAIN_BLACK), false);
+    const image *img;
+    for (int i = 0; i < data.pak_list.size(); ++i) {
+        auto pak = data.pak_list.at(i);
+        img = pak->get_image(id);
+        if (img != nullptr) return img;
     }
-//    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
+    // default (failure)
+    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
     return nullptr;
 }
 const image *image_letter(int letter_id) {
@@ -508,6 +493,7 @@ const color_t *image_data_enemy(int id) {
 }
 
 bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
+    overall_pak_load_index_shift = 0;
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
         return true;
 
@@ -522,21 +508,24 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
 //            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            // ???? 700-long gap?
-            overall_pak_load_index_shift += 700;                                                                // 700
-            if (!data.ph_sprmain->load_pak("SprMain", 0)) return false;                    // 11025
-            if (!data.ph_unloaded->load_pak("Pharaoh_Unloaded", 0)) return false;          // 11706
-            if (!data.main->load_pak("Pharaoh_General", -1)) return false;                 // 14252
-            if (!data.ph_terrain->load_pak("Pharaoh_Terrain", -200)) return false;         // 15766
-            // ???? 64-long gap?
-            overall_pak_load_index_shift += 64;                                                                 // 15830
-            if (!data.ph_sprambient->load_pak("SprAmbient", 0)) return false;              // 18764
-            if (!data.font->load_pak("Pharaoh_Fonts", 0)) return false;                    // 20304
-            if (!data.empire->load_pak("Empire", 0)) return false;                         // 20505
             // ????
-            overall_pak_load_index_shift += 177;                                                                // 20682
-            if (!data.ph_sprmain2->load_pak("SprMain2", 0)) return false;                  // 23034
-            if (!data.ph_expansion->load_pak("Expansion", 0)) return false;
+//            overall_pak_load_index_shift = 700;                                                               // 700
+            if (!data.ph_sprmain->load_pak("SprMain", 700)) return false;                  // 11025
+            if (!data.ph_unloaded->load_pak("Pharaoh_Unloaded", 0)) return false;          // 11707
+            if (!data.main->load_pak("Pharaoh_General", -1)) return false;                 // 14252
+            if (!data.ph_terrain->load_pak("Pharaoh_Terrain", -200)) return false;         // 15767
+            // ????
+//            overall_pak_load_index_shift += 64;                                                               // 15831
+            if (!data.ph_sprambient->load_pak("SprAmbient", 64)) return false;             // 18765
+            if (!data.font->load_pak("Pharaoh_Fonts", 0)) return false;                    // 20305
+            if (!data.empire->load_pak("Empire", 0)) return false;                         // 20506
+            // ????
+//            overall_pak_load_index_shift += 177;                                                              // 20683
+            if (!data.ph_sprmain2->load_pak("SprMain2", 177)) return false;                // 23035
+            if (!data.ph_expansion->load_pak("Expansion", 0)) return false;                // 23935
+            // ????
+            if (!data.ph_mastaba->load_pak("Mastaba", -200)) return false;                 // 24163
+
             break;
     }
 

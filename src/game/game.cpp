@@ -138,39 +138,8 @@ bool game_pre_init(void) {
     return true;
 }
 bool game_init(void) {
-//    if (!image_init()) {
-//        errlog("unable to init graphics");
-//        return 0;
-//    }
-
-
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-//    image_load_main(CLIMATE_CENTRAL, 0, 0);
-
-
-
-
-
-
     if (!image_load_main_paks(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
-        return false;
-    }
-    if (!image_load_enemy_paks(ENEMY_0_BARBARIAN)) {
-        errlog("unable to load enemy graphics");
         return false;
     }
     int missing_fonts = 0;
