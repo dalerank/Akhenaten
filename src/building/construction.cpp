@@ -592,14 +592,8 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
             // statues
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
-        case BUILDING_LARGE_STATUE: {
-
-                // todo: correct for alt version and rotation
-                int variant = building_rotation_get_building_variant();
-                int orientation = building_rotation_get_rotation();
-
-                add_building_tiles_image(b, get_statue_image(type, orientation, variant));
-            }
+        case BUILDING_LARGE_STATUE:
+            add_building_tiles_image(b, get_statue_image(type, building_rotation_get_rotation() + 1, building_rotation_get_building_variant()));
             break;
             // health
         case BUILDING_APOTHECARY:

@@ -233,9 +233,9 @@ static const int Y_VIEW_OFFSETS[9] = {
 int get_statue_image(int type, int orientation, int variant) {
     int image_id = 0;
 
-    // this is to combat the default building rotation value (0)
-    orientation++;
     if (orientation > 3)
+        orientation = 0;
+    if (variant > 3)
         orientation = 0;
 
     if (variant < 2) {
@@ -251,16 +251,16 @@ int get_statue_image(int type, int orientation, int variant) {
                 break;
         }
         image_id += variant * 4 + orientation;
-    } else { // TODO: Cleopatra expansion
+    } else {
         switch (type) {
             case BUILDING_SMALL_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_1);
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_SMALL_2);
                 break;
             case BUILDING_MEDIUM_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_1);
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_MEDIUM_2);
                 break;
             case BUILDING_LARGE_STATUE:
-                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_1);
+                image_id = image_id_from_group(GROUP_BUILDING_STATUE_LARGE_2);
                 break;
         }
         variant -= 2;

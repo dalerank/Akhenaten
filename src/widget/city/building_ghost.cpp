@@ -447,15 +447,7 @@ static void draw_warehouse(int image_id, int x, int y) {
 }
 
 static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
-    if (building_is_statue(type)) {
-
-        // todo: correct for alt version and rotation
-        int variant = building_rotation_get_building_variant();
-        int orientation = building_rotation_get_rotation();
-
-        image_id = get_statue_image(type, orientation, variant);
-        draw_building(image_id, x, y);
-    } else if (building_is_farm(type)) {
+    if (building_is_farm(type)) {
         image_id = get_farm_image(grid_offset);
         draw_building(image_id, x, y);
         // fields
@@ -486,6 +478,9 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         else
             ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56,
                                    COLOR_MASK_GREEN);
+    } else if (building_is_statue(type)) {
+        image_id = get_statue_image(type, building_rotation_get_rotation() + 1, building_rotation_get_building_variant());
+        draw_building(image_id, x, y);
     } else if (type == BUILDING_WELL) {
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
             city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
