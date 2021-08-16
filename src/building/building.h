@@ -161,6 +161,9 @@ public:
             unsigned char devolve_delay;
             unsigned char evolve_text_id;
         } house;
+        struct {
+            unsigned char variant;
+        } beautification;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

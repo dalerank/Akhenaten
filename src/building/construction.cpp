@@ -1180,6 +1180,8 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
         b = building_create(BUILDING_MENU_FORTS, x, y);
     else
         b = building_create(type, x, y);
+    if (building_is_statue(type))
+        b->data.beautification.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
     game_undo_add_building(b);
     if (b->id <= 0) // building creation failed????
         return false;

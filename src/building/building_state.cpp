@@ -315,7 +315,8 @@ static void read_type_data(buffer *buf, building *b) {
             b->data.entertainment.days1 = buf->read_u8();
             b->data.entertainment.days2 = buf->read_u8();
             b->data.entertainment.days3_or_play = buf->read_u8();
-            buf->skip(20);
+            b->data.beautification.variant = buf->read_u8();
+            buf->skip(19);
             b->data.entertainment.ph_unk00_u32 = buf->read_u32(); //  5 for latched booth??
             b->data.entertainment.ph_unk01_u8 = buf->read_u8();   // 50 ???
             b->data.entertainment.ph_unk02_u8 = buf->read_u8();   //  2 for latched booth??

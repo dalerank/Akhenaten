@@ -1,4 +1,5 @@
 #include <building/construction.h>
+#include <building/monuments.h>
 #include "orientation.h"
 
 #include "building/rotation.h"
@@ -114,74 +115,6 @@ void map_orientation_update_buildings(void) {
                 map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
-            case BUILDING_SENET_HOUSE: {
-                // get which part of the hippodrome is getting checked
-                // TODO
-//                int building_part;
-//                if (b->prev_part_building_id == 0) {
-//                    building_part = 0; // part 1, no previous building
-//                } else if (b->next_part_building_id == 0) {
-//                    building_part = 2; // part 3, no next building
-//                } else {
-//                    building_part = 1; // part 2
-//                }
-//                map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-//                if (map_orientation == DIR_0_TOP_RIGHT) {
-//                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-//                    switch (building_part) {
-//                        case 0:
-//                            image_id += 0;
-//                            break; // part 1
-//                        case 1:
-//                            image_id += 2;
-//                            break; // part 2
-//                        case 2:
-//                            image_id += 4;
-//                            break; // part 3, same for switch cases below
-//                    }
-//                } else if (map_orientation == DIR_4_BOTTOM_LEFT) {
-//                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-//                    switch (building_part) {
-//                        case 0:
-//                            image_id += 4;
-//                            break;
-//                        case 1:
-//                            image_id += 2;
-//                            break;
-//                        case 2:
-//                            image_id += 0;
-//                            break;
-//                    }
-//                } else if (map_orientation == DIR_6_TOP_LEFT) {
-//                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-//                    switch (building_part) {
-//                        case 0:
-//                            image_id += 0;
-//                            break;
-//                        case 1:
-//                            image_id += 2;
-//                            break;
-//                        case 2:
-//                            image_id += 4;
-//                            break;
-//                    }
-//                } else { // DIR_2_BOTTOM_RIGHT
-//                    image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-//                    switch (building_part) {
-//                        case 0:
-//                            image_id += 4;
-//                            break;
-//                        case 1:
-//                            image_id += 2;
-//                            break;
-//                        case 2:
-//                            image_id += 0;
-//                            break;
-//                    }
-//                }
-//                map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-                break;
-            }
             case BUILDING_SHIPYARD:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
                 image_id = image_id_from_group(GROUP_BUILDING_SHIPYARD) + image_offset;
@@ -244,6 +177,12 @@ void map_orientation_update_buildings(void) {
                 // additionally, correct bandstand graphics
                 if (b->type == BUILDING_BANDSTAND)
                     map_add_bandstand_tiles(b);
+                break;
+            case BUILDING_LARGE_STATUE:
+            case BUILDING_MEDIUM_STATUE:
+            case BUILDING_SMALL_STATUE:
+                map_building_tiles_add(i, b->x, b->y, b->size,
+                                       get_statue_image_from_value(b->type, b->data.beautification.variant, map_orientation), TERRAIN_BUILDING);
                 break;
         }
     }

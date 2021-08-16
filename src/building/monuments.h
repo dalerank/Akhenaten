@@ -17,6 +17,9 @@ enum {
 };
 
 int get_statue_image(int type, int orientation, int variant);
+int get_statue_image_from_value(int type, int combined, int map_orientation);
+int get_statue_variant_value(int orientation, int variant);
+
 int get_monument_part_image(int part, int orientation, int level);
 
 #endif //OZYMANDIAS_MONUMENTS_H

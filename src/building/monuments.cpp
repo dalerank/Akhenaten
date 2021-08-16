@@ -5,10 +5,14 @@
 int get_statue_image(int type, int orientation, int variant) {
     int image_id = 0;
 
-    if (orientation > 3)
-        orientation = 0;
-    if (variant > 3)
-        orientation = 0;
+    while (orientation < 0)
+        orientation += 4;
+    while (orientation > 3)
+        orientation -= 4;
+    while (variant < 0)
+        variant += 4;
+    while (variant > 3)
+        variant -= 4;
 
     if (variant < 2) {
         switch (type) {
@@ -39,6 +43,16 @@ int get_statue_image(int type, int orientation, int variant) {
         image_id += variant * 4 + orientation;
     }
     return image_id;
+}
+int get_statue_image_from_value(int type, int combined, int map_orientation) {
+
+    int orientation = combined % 4 - (map_orientation / 2);
+    int variant = combined / 16;
+
+    return get_statue_image(type, orientation - 1, variant);
+}
+int get_statue_variant_value(int orientation, int variant) {
+    int combined = variant * 16 + orientation + 2;
 }
 
 int get_monument_part_image(int part, int orientation, int level) {

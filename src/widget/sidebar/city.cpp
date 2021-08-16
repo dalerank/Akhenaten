@@ -253,7 +253,7 @@ static void draw_debug_ui(int x, int y) {
             case 14:
                 text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
             case 15:
-                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN 8BIT GRID"), x, y + 10, col); break;
         }
         y += 10;
         x -= 20;
