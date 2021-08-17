@@ -939,7 +939,7 @@ static void load_main_data(buffer *buf) {
             city_data.unused.unknown_4374[i] = buf->read_i32();
         for (int i = 0; i < 10; i++)
             city_data.building.working_dock_ids[i] = buf->read_i16();
-        buf->skip(2);
+        city_data.building.temple_complex_placed = buf->read_i16();
         city_data.figure.animals = buf->read_i16();
         for (int i = 0; i < 3; i++)
             city_data.unused.unknown_439c[i] = buf->read_i16();
@@ -1135,7 +1135,8 @@ static void load_main_data(buffer *buf) {
         for (int i = 0; i < 232; i++)
             city_data.unused.unknown_464c[i] = buf->read_i8(); // i=48,68,72
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
-        buf->skip(40);
+        city_data.building.temple_complex_id = buf->read_i32();
+        buf->skip(36);
         city_data.finance.last_year.expenses.requests_and_festivals = buf->read_i32();
         city_data.finance.this_year.expenses.requests_and_festivals = buf->read_i32();
         buf->skip(72);

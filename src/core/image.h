@@ -56,12 +56,12 @@ class imagepak {
     image *images;
     color_t *image_data;
 
-    bool load_pak(const char *filename_partial, int index_shift, bool active_pak);
+    bool load_pak(const char *filename_partial, int starting_index);
 
 public:
     int id_shift_overall = 0;
 
-    imagepak(const char *filename_partial, int index_shift, bool active_pak = true);
+    imagepak(const char *filename_partial, int starting_index);
     ~imagepak();
 
     int get_entry_count();
@@ -74,8 +74,8 @@ extern int terrain_ph_offset;
 void image_data_init();
 
 bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
-bool image_load_font_paks(encoding_type encoding);
-bool image_load_enemy_paks(int enemy_id);
+bool image_set_font_pak(encoding_type encoding);
+bool image_set_enemy_pak(int enemy_id);
 
 int image_id_from_group(int collectiion, int group);
 

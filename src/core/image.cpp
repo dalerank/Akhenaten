@@ -40,12 +40,14 @@ static struct {
 
     imagepak *expansion;
     imagepak *sprmain2;
-    imagepak *monument;
-    imagepak *temple;
 
-    std::vector<imagepak*> monument_paks;
     std::vector<imagepak*> temple_paks;
+    std::vector<imagepak*> monument_paks;
+    std::vector<imagepak*> enemy_paks;
+//    std::vector<imagepak*> font_paks;
 
+    imagepak *temple;
+    imagepak *monument;
     imagepak *enemy;
     imagepak *empire;
     imagepak *font;
@@ -147,23 +149,20 @@ static const color_t *load_external_data(const image *img) {
 
 using milli = std::chrono::milliseconds;
 
-imagepak::imagepak(const char *filename_partial, int index_shift, bool active_pak) {
+imagepak::imagepak(const char *filename_partial, int starting_index) {
     images = nullptr;
     image_data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
 
-    load_pak(filename_partial, index_shift, active_pak);
+    load_pak(filename_partial, starting_index);
 }
 imagepak::~imagepak() {
     delete images;
     delete image_data;
 }
 
-#include <algorithm>
-
-static int overall_pak_load_index_shift = 0;
-bool imagepak::load_pak(const char *filename_partial, int index_shift, bool active_pak) {
+bool imagepak::load_pak(const char *filename_partial, int starting_index) {
 
     //////////////////////////////////////////////////////////////////
     auto TIME_START = std::chrono::high_resolution_clock::now();
@@ -215,16 +214,15 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift, bool acti
     buf->skip(40); // skip remaining 40 bytes
 
     // adjust global index (depends on the pak)
-    id_shift_overall = overall_pak_load_index_shift + index_shift;
+    id_shift_overall = starting_index;
 
     // parse groups (always a fixed 300 pool)
     groups_num = 0;
     for (int i = 0; i < 300; i++) {
         group_image_ids[i] = buf->read_u16();
-        if (group_image_ids[i] != 0 || i == 0) {
+        if (group_image_ids[i] != 0 || i == 0)
             groups_num++;
-//            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
-        }
+//        SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
     }
 
     // parse bitmap names;
@@ -332,10 +330,6 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift, bool acti
         img->draw.data = &image_data[img_offset];
 //        SDL_Log("Loading... %s : %i", filename_555, i);
     }
-
-    // advance global index
-    if (active_pak)
-        overall_pak_load_index_shift += index_shift + entries_num - 1;
 
     //////////////////////////////////////////////////////////////////
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
@@ -484,51 +478,6 @@ void image_data_init() {
     data.pak_list.push_back(&data.monument);
 }
 
-bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
-    overall_pak_load_index_shift = 0;
-    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
-        return true;
-
-    const char *filename_555;
-    const char *filename_sgx;
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-//            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
-//            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
-//            if (!data.main->load_555(filename_555, filename_sgx))
-//                return 0;
-//            data.current_climate = climate_id;
-            break;
-        case ENGINE_ENV_PHARAOH:
-            data.sprmain = new imagepak("SprMain", 700);                  // 700   --> 11025
-            data.unloaded = new imagepak("Pharaoh_Unloaded", 0);          // 11025 --> 11707 (-1)
-            data.main = new imagepak("Pharaoh_General", -1);              // 11706 --> 14252 (-200)
-            data.terrain = new imagepak("Pharaoh_Terrain", -200);         // 14252 --> 15767 (+64)
-
-            // the 5 Temple Complex paks.
-            data.temple_paks.push_back(new imagepak("Temple_nile", 0, false));
-            data.temple_paks.push_back(new imagepak("Temple_ra", 0, false));
-            data.temple_paks.push_back(new imagepak("Temple_ptah", 0, false));
-            data.temple_paks.push_back(new imagepak("Temple_seth", 0, false));
-            data.temple_paks.push_back(new imagepak("Temple_bast", 0, false));
-
-            data.sprambient = new imagepak("SprAmbient", 64);             // 15831 --> 18765
-            data.font = new imagepak("Pharaoh_Fonts", 0);                 // 18765 --> 20305
-            data.empire = new imagepak("Empire", 0);                      // 20305 --> 20506 (+177)
-            data.sprmain2 = new imagepak("SprMain2", 177);                // 20683 --> 23035
-            data.expansion = new imagepak("Expansion", 0);                // 23035 --> 23935 (-200)
-
-            // the various Monument paks.                                                      // 23735 --> 24163
-            data.monument_paks.push_back(new imagepak("Mastaba", -200, false));
-            data.monument_paks.push_back(new imagepak("Pyramid", -200, false));
-            data.monument_paks.push_back(new imagepak("bent_pyramid", -200, false));
-            break;
-    }
-
-    data.is_editor = is_editor;
-    return true;
-}
-
 const char* enemy_file_names_c3[20] = {
         "goths",
         "Etruscan",
@@ -574,19 +523,89 @@ const char* enemy_file_names_ph[20] = {
         ""
 };
 
-bool image_load_enemy_paks(int enemy_id) {
+bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
+        return true;
+
+    const char *filename_555;
+    const char *filename_sgx;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-//            if (!data.enemy->load_pak(enemy_file_names_c3[enemy_id], 0))
-//                return false;
+//            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
+//            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
+//            if (!data.main->load_555(filename_555, filename_sgx))
+//                return 0;
+//            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            data.enemy = new imagepak(enemy_file_names_ph[enemy_id], 0);
+
+            // Pharaoh loads every image into a global listed cache; however, some
+            // display systems use discordant indexes; The sprites cached in the
+            // save files, for examples, appear to start at 700 while the terrain
+            // system displays them starting at the immediate index after the first
+            // pak has ended (683).
+            // Moreover, the monuments, temple complexes, and enemies all make use
+            // of a single shared index, which is swapped in "real time" for the
+            // correct pak in use by the mission, or even depending on buildings
+            // present on the map, like the Temple Complexes.
+            // What an absolute mess!
+
+            data.unloaded = new imagepak("Pharaoh_Unloaded", 0);    // 0     --> 682
+            data.sprmain = new imagepak("SprMain", 700);                              // 700   --> 11007
+            // <--- original enemy pak in here                                                               // 11008 --> 11866
+            data.main = new imagepak("Pharaoh_General", 11906 - 200);                 // 11906 --> 11866
+            data.terrain = new imagepak("Pharaoh_Terrain", 14452 -200);               // 14252 --> 15767 (+64)
+            // <--- original temple complex pak here
+            data.sprambient = new imagepak("SprAmbient", 15831);                      // 15831 --> 18765
+            data.font = new imagepak("Pharaoh_Fonts", 18765);                         // 18765 --> 20305
+            data.empire = new imagepak("Empire", 20305);                              // 20305 --> 20506 (+177)
+            data.sprmain2 = new imagepak("SprMain2", 20683);                          // 20683 --> 23035
+            data.expansion = new imagepak("Expansion", 23035);                        // 23035 --> 23935 (-200)
+            // <--- original pyramid pak in here                                                             // 23735 --> 24163
+
+            // the 5 Temple Complex paks.
+            data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
+            data.temple_paks.push_back(new imagepak("Temple_ra", 15591));
+            data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));
+            data.temple_paks.push_back(new imagepak("Temple_seth", 15591));
+            data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
+
+            // the various Monument paks.
+            data.monument_paks.push_back(new imagepak("Mastaba", 23735));
+            data.monument_paks.push_back(new imagepak("Pyramid", 23735));
+            data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
+
+            // the various Enemy paks.
+            for (int i = 0; i < 20; ++i) {
+                if (enemy_file_names_ph[i] != "")
+                    data.enemy_paks.push_back(new imagepak(enemy_file_names_ph[i], 11026));
+            }
+
+            // (set the first in the bunch as active initially, just for defaults)
+            data.temple = data.temple_paks.at(0);
+            data.monument = data.monument_paks.at(0);
+            data.enemy = data.enemy_paks.at(0);
             break;
     }
+
+    data.is_editor = is_editor;
     return true;
 }
-bool image_load_font_paks(encoding_type encoding) {
+
+bool image_set_enemy_pak(int enemy_id) {
+    data.enemy = data.enemy_paks.at(enemy_id);
+//    switch (GAME_ENV) {
+//        case ENGINE_ENV_C3:
+////            if (!data.enemy->load_pak(enemy_file_names_c3[enemy_id], 0))
+////                return false;
+//            break;
+//        case ENGINE_ENV_PHARAOH:
+//            data.enemy = new imagepak(enemy_file_names_ph[enemy_id], 11026);
+//            break;
+//    }
+    return true;
+}
+bool image_set_font_pak(encoding_type encoding) {
     // TODO?
     if (encoding == ENCODING_CYRILLIC)
         return false;

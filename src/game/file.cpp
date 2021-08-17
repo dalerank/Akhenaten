@@ -183,7 +183,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     scenario_price_change_init();
     building_menu_update(BUILDSET_NORMAL);
     image_load_main_paks(scenario_property_climate(), 0, 0);
-    image_load_enemy_paks(scenario_property_enemy());
+    image_set_enemy_pak(scenario_property_enemy());
 
     city_data_init_scenario();
     game_state_unpause();
@@ -260,7 +260,7 @@ static void initialize_saved_game(void) {
     if (GAME_ENV == ENGINE_ENV_C3) // TODO?
         image_load_main_paks(scenario_property_climate(), 0, 0);
 
-    image_load_enemy_paks(scenario_property_enemy());
+    image_set_enemy_pak(scenario_property_enemy());
     city_military_determine_distant_battle_city();
     map_tiles_determine_gardens();
 

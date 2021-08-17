@@ -72,7 +72,7 @@ static bool reload_language(int is_editor, int reload_images) {
     }
     encoding_type encoding = update_encoding();
 
-    if (!image_load_font_paks(encoding)) {
+    if (!image_set_font_pak(encoding)) {
         errlog("unable to load font graphics");
         return false;
     }
@@ -144,7 +144,7 @@ bool game_init(void) {
         return false;
     }
     int missing_fonts = 0;
-    if (!image_load_font_paks(encoding_get())) {
+    if (!image_set_font_pak(encoding_get())) {
         errlog("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
             missing_fonts = 1;

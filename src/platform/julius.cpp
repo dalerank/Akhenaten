@@ -242,7 +242,7 @@ static void setup(const julius_args *args) {
     // init SDL and some other stuff
     signal(SIGSEGV, handler);
     setup_logging();
-    SDL_Log("Augustus version %s", system_version());
+    SDL_Log("Ozymandias version %s", system_version());
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
         exit(-1);
