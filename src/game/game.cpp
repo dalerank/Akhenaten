@@ -138,6 +138,7 @@ bool game_pre_init(void) {
     return true;
 }
 bool game_init(void) {
+    image_data_init();
     if (!image_load_main_paks(CLIMATE_CENTRAL, 0, 0)) {
         errlog("unable to load main graphics");
         return false;

@@ -24,63 +24,36 @@ enum {
     MULTIBYTE_IN_FONT = 2
 };
 
-//static image DUMMY_IMAGE;
-
 static struct {
     int current_climate;
-    int is_editor;
-    int fonts_enabled;
+    bool is_editor;
+    bool fonts_enabled;
     int font_base_offset;
 
-    std::vector<imagepak*> pak_list;
+    std::vector<imagepak**> pak_list;
 
     imagepak *main;
-    imagepak *ph_terrain;
-    imagepak *ph_unloaded;
-    imagepak *ph_sprmain;
-    imagepak *ph_sprambient;
+    imagepak *terrain;
+    imagepak *unloaded;
+    imagepak *sprmain;
+    imagepak *sprambient;
 
-    imagepak *ph_expansion;
-    imagepak *ph_sprmain2;
-    imagepak *ph_mastaba;
+    imagepak *expansion;
+    imagepak *sprmain2;
+    imagepak *monument;
+    imagepak *temple;
+
+    std::vector<imagepak*> monument_paks;
+    std::vector<imagepak*> temple_paks;
 
     imagepak *enemy;
     imagepak *empire;
     imagepak *font;
 
     color_t *tmp_image_data;
-} data = {
-        -1,
-        0,
-        0,
-        0,
-
-        {},
-
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-        new imagepak,
-
-        new color_t[SCRATCH_DATA_SIZE - 4000000]
-};
+} data;
 
 int terrain_ph_offset = 0;
-
-//void mem_test_leak(int j = 100) {
-//    uint8_t *td;
-//    for (j = 0; j < 1; j++) {
-//        td = new uint8_t[100000];
-//        delete td;
-//    }
-//}
 
 static color_t to_32_bit(uint16_t c) {
     return ALPHA_OPAQUE |
@@ -165,6 +138,8 @@ static const color_t *load_external_data(const image *img) {
     return data.tmp_image_data;
 }
 
+//////////////////////// IMAGEPAK
+
 #include <cassert>
 #include <chrono>
 #include <cinttypes>
@@ -172,26 +147,27 @@ static const color_t *load_external_data(const image *img) {
 
 using milli = std::chrono::milliseconds;
 
-imagepak::imagepak() {
-    initialized = false;
+imagepak::imagepak(const char *filename_partial, int index_shift, bool active_pak) {
     images = nullptr;
     image_data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
+
+    load_pak(filename_partial, index_shift, active_pak);
 }
-bool imagepak::check_initialized() {
-    return initialized == 0;
+imagepak::~imagepak() {
+    delete images;
+    delete image_data;
 }
 
 #include <algorithm>
 
 static int overall_pak_load_index_shift = 0;
-bool imagepak::load_pak(const char *filename_partial, int index_shift) {
-    //////////////////////
-    auto TIME_HEADER = std::chrono::high_resolution_clock::now();
+bool imagepak::load_pak(const char *filename_partial, int index_shift, bool active_pak) {
 
-    // adjust global index (depends on the pak)
-    overall_pak_load_index_shift += index_shift;
+    //////////////////////////////////////////////////////////////////
+    auto TIME_START = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
 
     // construct proper filepaths
     int str_index = 0;
@@ -232,21 +208,14 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift) {
 
     // allocate arrays
     entries_num = (size_t) header_data[4] + 1;
-    id_shift_overall = overall_pak_load_index_shift;
     name = (const char*)filename_sgx;
-    if (check_initialized()) {
-        initialized = false;
-        delete images;
-        delete image_data;
-    }
     images = new image[entries_num];
     image_data = new color_t[entries_num * 10000];
-    initialized = true;
 
     buf->skip(40); // skip remaining 40 bytes
 
-    //////////////////////
-    auto TIME_GROUPS = std::chrono::high_resolution_clock::now();
+    // adjust global index (depends on the pak)
+    id_shift_overall = overall_pak_load_index_shift + index_shift;
 
     // parse groups (always a fixed 300 pool)
     groups_num = 0;
@@ -258,19 +227,19 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift) {
         }
     }
 
-    //////////////////////
-    auto TIME_BMP_NAMES = std::chrono::high_resolution_clock::now();
-
-    // parse bitmap names
-    int num_bmp_names = (int) header_data[5];
+    // parse bitmap names;
+    // every line is 200 chars - 97 entries in the original c3.sg2
+    // header (100 for good measure) and 18 in Pharaoh_General.sg3
+    int num_bmp_names = (int)header_data[5];
     char bmp_names[num_bmp_names][200];
-    buf->read_raw(bmp_names, 200 * num_bmp_names); // every line is 200 chars - 97 entries in the original c3.sg2 header (100 for good measure) and 18 in Pharaoh_General.sg3
+    buf->read_raw(bmp_names, 200 * num_bmp_names);
 
     // move on to the rest of the content
     buf->set_offset(HEADER_SIZE);
 
-    //////////////////////
-    auto TIME_DATA = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
+    auto TIME_HEADER = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
 
     // fill in image data
     int bmp_lastbmp = 0;
@@ -316,8 +285,9 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift) {
         int f = 1;
     }
 
-    //////////////////////
-    auto TIME_BMP_OFFSETS = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
+    auto TIME_DATA = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
 
     // fill in bmp offset data
     int offset = 4;
@@ -337,9 +307,6 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift) {
     int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
     if (!data_size)
         return false;
-
-    //////////////////////
-    auto TIME_BMP_CONVERT = std::chrono::high_resolution_clock::now();
 
     // convert bitmap data for image pool
     color_t *start_dst = image_data;
@@ -367,20 +334,18 @@ bool imagepak::load_pak(const char *filename_partial, int index_shift) {
     }
 
     // advance global index
-    overall_pak_load_index_shift += entries_num - 1;
+    if (active_pak)
+        overall_pak_load_index_shift += index_shift + entries_num - 1;
 
-    // add pak to listed cache for parsing
-    if(std::find(data.pak_list.begin(), data.pak_list.end(), this) == data.pak_list.end())
-        data.pak_list.push_back(this);
-
-    //////////////////////
+    //////////////////////////////////////////////////////////////////
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
 
     SDL_Log("Loading image collection from file '%s' ---- %i images, %i groups, %" PRIu64 " milliseconds.",
             filename_sgx,
             entries_num,
             groups_num,
-            std::chrono::duration_cast<milli>(TIME_FINISH - TIME_HEADER));
+            std::chrono::duration_cast<milli>(TIME_FINISH - TIME_START));
 
     return true;
 }
@@ -403,6 +368,8 @@ const image *imagepak::get_image(int id, bool relative) {
     return &images[id];
 }
 
+////////////////////////
+
 #include "window/city.h"
 
 static imagepak *pak_from_collection_id(int collection) {
@@ -412,17 +379,17 @@ static imagepak *pak_from_collection_id(int collection) {
         case ENGINE_ENV_PHARAOH:
             switch (collection) {
                 case IMAGE_COLLECTION_TERRAIN:
-                    return data.ph_terrain;
+                    return data.terrain;
                 case IMAGE_COLLECTION_GENERAL:
                     return data.main;
                 case IMAGE_COLLECTION_UNLOADED:
-                    return data.ph_unloaded;
+                    return data.unloaded;
                 case IMAGE_COLLECTION_EMPIRE:
                     return data.empire;
                 case IMAGE_COLLECTION_SPR_MAIN:
-                    return data.ph_sprmain;
+                    return data.sprmain;
                 case IMAGE_COLLECTION_SPR_AMBIENT:
-                    return data.ph_sprambient;
+                    return data.sprambient;
                     /////
                 case IMAGE_COLLECTION_ENEMY:
                     return data.enemy;
@@ -430,12 +397,12 @@ static imagepak *pak_from_collection_id(int collection) {
                     return data.font;
                     /////
                 case IMAGE_COLLECTION_EXPANSION:
-                    return data.ph_expansion;
+                    return data.expansion;
                 case IMAGE_COLLECTION_EXPANSION_SPR:
-                    return data.ph_sprmain2;
+                    return data.sprmain2;
                     /////
                 case IMAGE_COLLECTION_MONUMENT:
-                    return data.ph_mastaba;
+                    return data.monument;
             }
             break;
     }
@@ -450,9 +417,12 @@ int image_id_from_group(int collection, int group) {
 const image *image_get(int id, int mode) {
     const image *img;
     for (int i = 0; i < data.pak_list.size(); ++i) {
-        auto pak = data.pak_list.at(i);
-        img = pak->get_image(id);
-        if (img != nullptr) return img;
+        imagepak *pak = *(data.pak_list.at(i));
+        if (pak == nullptr)
+            continue;
+        img = (pak)->get_image(id);
+        if (img != nullptr)
+            return img;
     }
     // default (failure)
     return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
@@ -492,6 +462,28 @@ const color_t *image_data_enemy(int id) {
     return NULL;
 }
 
+void image_data_init() {
+    data.current_climate = -1;
+    data.is_editor = false;
+    data.fonts_enabled = false;
+    data.font_base_offset = 0;
+
+    data.tmp_image_data = new color_t[SCRATCH_DATA_SIZE - 4000000];
+
+    // add paks to parsing list cache
+    data.pak_list.push_back(&data.sprmain);
+    data.pak_list.push_back(&data.unloaded);
+    data.pak_list.push_back(&data.main);
+    data.pak_list.push_back(&data.terrain);
+    data.pak_list.push_back(&data.temple);
+    data.pak_list.push_back(&data.sprambient);
+    data.pak_list.push_back(&data.font);
+    data.pak_list.push_back(&data.empire);
+    data.pak_list.push_back(&data.sprmain2);
+    data.pak_list.push_back(&data.expansion);
+    data.pak_list.push_back(&data.monument);
+}
+
 bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
     overall_pak_load_index_shift = 0;
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
@@ -508,16 +500,28 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
 //            data.current_climate = climate_id;
             break;
         case ENGINE_ENV_PHARAOH:
-            if (!data.ph_sprmain->load_pak("SprMain", 700)) return false;                  // 700   --> 11025
-            if (!data.ph_unloaded->load_pak("Pharaoh_Unloaded", 0)) return false;          // 11025 --> 11707 (-1)
-            if (!data.main->load_pak("Pharaoh_General", -1)) return false;                 // 11706 --> 14252 (-200)
-            if (!data.ph_terrain->load_pak("Pharaoh_Terrain", -200)) return false;         // 14252 --> 15767 (+64)
-            if (!data.ph_sprambient->load_pak("SprAmbient", 64)) return false;             // 15831 --> 18765
-            if (!data.font->load_pak("Pharaoh_Fonts", 0)) return false;                    // 18765 --> 20305
-            if (!data.empire->load_pak("Empire", 0)) return false;                         // 20305 --> 20506 (+177)
-            if (!data.ph_sprmain2->load_pak("SprMain2", 177)) return false;                // 20683 --> 23035
-            if (!data.ph_expansion->load_pak("Expansion", 0)) return false;                // 23035 --> 23935 (-200)
-            if (!data.ph_mastaba->load_pak("Mastaba", -200)) return false;                 // 23735 --> 24163
+            data.sprmain = new imagepak("SprMain", 700);                  // 700   --> 11025
+            data.unloaded = new imagepak("Pharaoh_Unloaded", 0);          // 11025 --> 11707 (-1)
+            data.main = new imagepak("Pharaoh_General", -1);              // 11706 --> 14252 (-200)
+            data.terrain = new imagepak("Pharaoh_Terrain", -200);         // 14252 --> 15767 (+64)
+
+            // the 5 Temple Complex paks.
+            data.temple_paks.push_back(new imagepak("Temple_nile", 0, false));
+            data.temple_paks.push_back(new imagepak("Temple_ra", 0, false));
+            data.temple_paks.push_back(new imagepak("Temple_ptah", 0, false));
+            data.temple_paks.push_back(new imagepak("Temple_seth", 0, false));
+            data.temple_paks.push_back(new imagepak("Temple_bast", 0, false));
+
+            data.sprambient = new imagepak("SprAmbient", 64);             // 15831 --> 18765
+            data.font = new imagepak("Pharaoh_Fonts", 0);                 // 18765 --> 20305
+            data.empire = new imagepak("Empire", 0);                      // 20305 --> 20506 (+177)
+            data.sprmain2 = new imagepak("SprMain2", 177);                // 20683 --> 23035
+            data.expansion = new imagepak("Expansion", 0);                // 23035 --> 23935 (-200)
+
+            // the various Monument paks.                                                      // 23735 --> 24163
+            data.monument_paks.push_back(new imagepak("Mastaba", -200, false));
+            data.monument_paks.push_back(new imagepak("Pyramid", -200, false));
+            data.monument_paks.push_back(new imagepak("bent_pyramid", -200, false));
             break;
     }
 
@@ -573,17 +577,17 @@ const char* enemy_file_names_ph[20] = {
 bool image_load_enemy_paks(int enemy_id) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            if (!data.enemy->load_pak(enemy_file_names_c3[enemy_id]))
-                return false;
+//            if (!data.enemy->load_pak(enemy_file_names_c3[enemy_id], 0))
+//                return false;
             break;
         case ENGINE_ENV_PHARAOH:
-            if (!data.enemy->load_pak(enemy_file_names_ph[enemy_id]))
-                return false;
+            data.enemy = new imagepak(enemy_file_names_ph[enemy_id], 0);
             break;
     }
     return true;
 }
 bool image_load_font_paks(encoding_type encoding) {
+    // TODO?
     if (encoding == ENCODING_CYRILLIC)
         return false;
     else if (encoding == ENCODING_TRADITIONAL_CHINESE)

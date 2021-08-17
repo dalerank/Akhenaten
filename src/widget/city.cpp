@@ -121,16 +121,16 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     city_view_foreach_map_tile(draw_empty_tile_debug);
 
     if (!city_building_ghost_mark_deleting(tile)) {
+        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint,
                 draw_top,
                 draw_ornaments,
                 draw_figures);
         if (!selected_figure_id)
             city_building_ghost_draw(tile);
     } else {
+        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures);
@@ -150,16 +150,16 @@ void widget_city_draw_with_overlay(const map_tile *tile) {
     city_view_foreach_map_tile(draw_empty_tile_debug);
 
     if (!city_building_ghost_mark_deleting(tile)) {
+        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint_overlay,
                 draw_top_overlay,
                 draw_ornaments_overlay,
                 draw_figures_overlay);
         city_building_ghost_draw(tile);
         city_view_foreach_map_tile(draw_elevated_figures);
     } else {
+        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint_overlay,
                 deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures_overlay);

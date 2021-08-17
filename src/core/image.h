@@ -48,7 +48,6 @@ typedef struct {
 } image;
 
 class imagepak {
-    bool initialized;
     const char *name;
     int entries_num;
     int groups_num;
@@ -57,14 +56,13 @@ class imagepak {
     image *images;
     color_t *image_data;
 
-    bool check_initialized();
+    bool load_pak(const char *filename_partial, int index_shift, bool active_pak);
 
 public:
     int id_shift_overall = 0;
 
-    imagepak();
-
-    bool load_pak(const char *filename_partial, int index_shift = 0);
+    imagepak(const char *filename_partial, int index_shift, bool active_pak = true);
+    ~imagepak();
 
     int get_entry_count();
     int get_id(int group);
@@ -72,6 +70,8 @@ public:
 };
 
 extern int terrain_ph_offset;
+
+void image_data_init();
 
 bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
 bool image_load_font_paks(encoding_type encoding);
