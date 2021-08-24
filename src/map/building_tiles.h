@@ -3,6 +3,14 @@
 
 #include "building/building.h"
 
+struct tile_graphics_query {
+    int x;
+    int y;
+    int size;
+    int image_id;
+    int building_id;
+};
+
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain);
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress);
 int map_building_tiles_add_aqueduct(int x, int y);

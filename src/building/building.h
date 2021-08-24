@@ -163,7 +163,8 @@ public:
         } house;
         struct {
             unsigned char variant;
-        } beautification;
+            unsigned char temple_complex_attachments;
+        } monuments;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
@@ -332,6 +333,7 @@ bool building_is_guild(int type);
 bool building_is_statue(int type);
 bool building_is_beautification(int type);
 bool building_is_water_crossing(int type);
+bool building_is_industry_type(const building *b);
 
 bool building_is_industry(int type);
 bool building_is_food_category(int type);

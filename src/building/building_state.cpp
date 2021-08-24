@@ -3,11 +3,6 @@
 #include "game/resource.h"
 #include "core/game_environment.h"
 
-static int is_industry_type(const building *b) {
-    return b->output_resource_id || b->type == BUILDING_NATIVE_CROPS
-           || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
-}
-
 static void write_type_data(buffer *buf, const building *b) {
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -78,7 +73,7 @@ static void write_type_data(buffer *buf, const building *b) {
             buf->write_i16(b->data.dock.docker_ids[i]);
         }
         buf->write_i16(b->data.dock.trade_ship_id);
-    } else if (is_industry_type(b)) {
+    } else if (building_is_industry_type(b)) {
         buf->write_i16(b->data.industry.progress);
         for (int i = 0; i < 12; i++) {
             buf->write_u8(0);
@@ -270,7 +265,7 @@ static void read_type_data(buffer *buf, building *b) {
         for (int i = 0; i < 3; i++)
             b->data.dock.docker_ids[i] = buf->read_i16();
         b->data.dock.trade_ship_id = buf->read_i16();
-    } else if (is_industry_type(b)) {
+    } else if (building_is_industry_type(b)) {
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             for (int i = 0; i < 2; i++)
                 b->data.industry.unk_2[i] = buf->read_u8();
@@ -302,6 +297,10 @@ static void read_type_data(buffer *buf, building *b) {
                 b->data.industry.unk_12[i] = buf->read_u8();
             b->data.industry.worker_id = buf->read_u8();
         }
+    } else if (building_is_statue(b->type) || building_is_large_temple(b->type)) {
+        buf->skip(87);
+        b->data.monuments.temple_complex_attachments = buf->read_u8();
+        b->data.monuments.variant = buf->read_u8();
     } else {
         buf->skip(26);
         if (GAME_ENV == ENGINE_ENV_C3) {
@@ -315,8 +314,7 @@ static void read_type_data(buffer *buf, building *b) {
             b->data.entertainment.days1 = buf->read_u8();
             b->data.entertainment.days2 = buf->read_u8();
             b->data.entertainment.days3_or_play = buf->read_u8();
-            b->data.beautification.variant = buf->read_u8();
-            buf->skip(19);
+            buf->skip(20);
             b->data.entertainment.ph_unk00_u32 = buf->read_u32(); //  5 for latched booth??
             b->data.entertainment.ph_unk01_u8 = buf->read_u8();   // 50 ???
             b->data.entertainment.ph_unk02_u8 = buf->read_u8();   //  2 for latched booth??

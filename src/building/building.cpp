@@ -653,6 +653,10 @@ bool building_is_water_crossing(int type) {
            || type == BUILDING_LOW_BRIDGE
            || type == BUILDING_SHIP_BRIDGE;
 }
+bool building_is_industry_type(const building *b) {
+    return b->output_resource_id || b->type == BUILDING_NATIVE_CROPS
+           || b->type == BUILDING_SHIPYARD || b->type == BUILDING_FISHING_WHARF;
+}
 
 bool building_is_industry(int type) {
     if (building_is_extractor(type))

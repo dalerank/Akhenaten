@@ -433,7 +433,6 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
 static void draw_fountain_range(int x, int y, int grid_offset) {
     ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
-
 static void draw_warehouse(int image_id, int x, int y) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
@@ -444,6 +443,37 @@ static void draw_warehouse(int image_id, int x, int y) {
                                    y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
         } else
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+    }
+}
+
+static void draw_generic_multi_tile_set(const map_tile *tile, int x, int y, int *image_set, int set_size_x, int set_size_y, int starting_x, int starting_y, int terrain = TERRAIN_ALL) {
+    bool fully_blocked = false;
+
+    // first, check if it's fully blocked or not
+    for (int _y = 0; _y < set_size_y; _y++) {
+        for (int _x = 0; _x < set_size_x; _x++) {
+            if (!map_building_tiles_are_clear(tile->x + _x, tile->y + _y, 1, terrain))
+                fully_blocked = true;
+        }
+    }
+
+    // finally, draw the graphics
+    int (*image_array)[set_size_y][set_size_x] = (int(*)[set_size_y][set_size_x])image_set;
+    for (int _y = 0; _y < set_size_y; _y++) {
+        for (int _x = 0; _x < set_size_x; _x++) {
+
+            int current_tile = (*image_array)[_y][_x];
+            int current_x = x + _x * 30 - _y * 30;
+            int current_y = y + _x * 15 + _y * 15;
+
+            int blocked_tile = 0;
+            int current_grid_offset = map_grid_offset(tile->x + _x, tile->y + _y);
+            is_blocked_for_building(current_grid_offset, 1, &blocked_tile);
+            if (fully_blocked)
+                draw_partially_blocked(current_x, current_y, false, 1, &blocked_tile);
+            else if (current_tile > 0)
+                draw_building(current_tile, current_x, current_y);
+        }
     }
 }
 
@@ -865,79 +895,24 @@ static void draw_fort(const map_tile *tile, int x, int y) {
         }
     }
 }
-static void draw_hippodrome(const map_tile *tile, int x, int y) {
-//    int fully_blocked = 0;
-//    int blocked = 0;
-//    if (city_buildings_has_hippodrome() || city_finance_out_of_money()) {
-//        fully_blocked = 1;
-//        blocked = 1;
-//    }
-//    int num_tiles = 25;
-//
-//    building_rotation_force_two_orientations();
-//    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
-//    int grid_offset1 = tile->grid_offset;
-//    int grid_offset2 = grid_offset1 + building_rotation_get_delta_with_rotation(5);
-//    int grid_offset3 = grid_offset1 + building_rotation_get_delta_with_rotation(10);
-//
-//    int blocked_tiles1[25];
-//    int blocked_tiles2[25];
-//    int blocked_tiles3[25];
-//    blocked += is_blocked_for_building(grid_offset1, num_tiles, blocked_tiles1);
-//    blocked += is_blocked_for_building(grid_offset2, num_tiles, blocked_tiles2);
-//    blocked += is_blocked_for_building(grid_offset3, num_tiles, blocked_tiles3);
-//
-//    int x_part1 = x;
-//    int y_part1 = y;
-//    int x_part2 = x_part1 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
-//    int y_part2 = y_part1 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
-//    int x_part3 = x_part2 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
-//    int y_part3 = y_part2 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
-//    if (blocked) {
-//        draw_partially_blocked(x_part1, y_part1, fully_blocked, num_tiles, blocked_tiles1);
-//        draw_partially_blocked(x_part2, y_part2, fully_blocked, num_tiles, blocked_tiles2);
-//        draw_partially_blocked(x_part3, y_part3, fully_blocked, num_tiles, blocked_tiles3);
-//    } else {
-//        if (orientation_index == 0) {
-//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-//            // part 1, 2, 3
-//            draw_building(image_id, x_part1, y_part1);
-//            draw_building(image_id + 2, x_part2, y_part2);
-//            draw_building(image_id + 4, x_part3, y_part3);
-//        } else if (orientation_index == 1) {
-//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-//            // part 3, 2, 1
-//            draw_building(image_id, x_part3, y_part3);
-//            draw_building(image_id + 2, x_part2, y_part2);
-//            draw_building(image_id + 4, x_part1, y_part1);
-//        } else if (orientation_index == 2) {
-//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-//            // part 1, 2, 3
-//            draw_building(image_id + 4, x_part1, y_part1);
-//            draw_building(image_id + 2, x_part2, y_part2);
-//            draw_building(image_id, x_part3, y_part3);
-//        } else if (orientation_index == 3) {
-//            int image_id = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-//            // part 3, 2, 1
-//            draw_building(image_id + 4, x_part3, y_part3);
-//            draw_building(image_id + 2, x_part2, y_part2);
-//            draw_building(image_id, x_part1, y_part1);
-//        }
-//    }
-}
-// TODO: to fix orientation and blocked grid
+
 static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
-    int fully_blocked = 0;
-    int blocked = 0;
+    bool fully_blocked = false;
+    bool blocked = false;
     if (/*city_buildings_has_temple_complex(type) ||*/ city_finance_out_of_money()) {
-        fully_blocked = 1;
-        blocked = 1;
+        fully_blocked = true;
+        blocked = true;
     }
+
     // size of every big item 3x3, in general 7x13
     // 25 max tiles at the moment to check blocked tiles
     const int num_tiles = 16;
-    auto properties = building_properties_for_type(type);
-//    int temple_complex_image_id = properties->image_group;
+    int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type);
+    int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, type);
+    int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, type);
+    int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, type);
+    int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, type);
+    int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, type);
 
     building_rotation_force_two_orientations();
     int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
@@ -946,64 +921,42 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
         // TBD
     } else {
         int empty = 0;
-        int main1 = image_id_from_group(properties->image_collection, properties->image_group);
-        int main2 = main1 + 6;
-        int main3 = main1 + 12;
-        int tile0 = main1 + 22;
-        int tile1 = main1 + 23;
-        int tile2 = main1 + 24;
-        int tile3 = main1 + 25;
-        int tile4 = main1 + 26;
-        int tile5 = main1 + 28;
-        int tile6 = main1 + 30;
-        int tile7 = main1 + 31;
-        int tile8 = main1 + 34;
-        int tile9 = main1 + 35;
+        int main1 = main_image_id;
+        int main2 = oracle_image_id;
+        int main3 = altar_image_id;
 
-        int TEMPLE_COMPLEX_SCHEME[7][13] = {{tile5, tile5, tile1, tile5, tile5, tile1, tile5, tile5, tile0, tile2, tile3, tile2, tile3},
-                                            {  tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, tile6, tile6, tile6},
-                                            {  empty, empty, empty, empty, empty, empty, empty, empty, empty, tile0, tile7, tile7, tile7},
-                                            {  empty, empty, empty, empty, empty, empty, empty, empty, empty, tile1, tile1, tile1, tile1},
-                                            {  main1, empty, empty, main2, empty, empty, main3, empty, empty, tile0, tile8, tile8, tile8},
-                                            {  tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, tile9, tile9, tile9},
-                                            {  tile4, tile4, tile1, tile4, tile4, tile1, tile4, tile4, tile0, tile2, tile3, tile2, tile3}
-        };
+        int tile0 = flooring_image_id + 0;
+        int tile1 = flooring_image_id + 1;
+        int tile2 = flooring_image_id + 2;
+        int tile3 = flooring_image_id + 3;
+
+        int smst0 = statue1_image_id + 0; // north
+        int smst1 = statue1_image_id + 1; // east
+        int smst2 = statue1_image_id + 2; // south
+        int smst3 = statue1_image_id + 3; // west
+
+        int lst0A = statue2_image_id + 0; // north
+        int lst0B = statue2_image_id + 1;
+        int lst1A = statue2_image_id + 2; // east
+        int lst1B = statue2_image_id + 3;
+        int lst2A = statue2_image_id + 4; // south
+        int lst2B = statue2_image_id + 5;
+        int lst3A = statue2_image_id + 6; // west
+        int lst3B = statue2_image_id + 7;
 
         if (orientation_index == 0) {
-            // Start draw from the back
-            for (int i = 6; i >= 0; --i) {
-                for (int j = 0; j < 13; j++) {
-                    int current_tile = TEMPLE_COMPLEX_SCHEME[i][j];
-                    int current_x = x + j * 30 + i * 30;
-                    int current_y = y + j * 15 - i * 15;
-
-                    // TODO: find a way to check blocked tile with coordinates x, y currently only one tile is checking
-                    int blocked_tile = 0;
-                    if (is_blocked_for_building(tile->grid_offset, 1, &blocked_tile)) {
-                        draw_partially_blocked(current_x, current_y, fully_blocked, 1, &blocked_tile);
-                    } else if (current_tile > 0) {
-                        draw_building(current_tile, current_x, current_y);
-                    }
-                }
-            }
+            int TEMPLE_COMPLEX_SCHEME[7][13] = {
+                    {smst0, smst0, tile1, smst0, smst0, tile1, smst0, smst0, tile0, tile2, tile3, tile2, tile3},
+                    {tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, lst2B, lst2B, lst2B},
+                    {main1, empty, empty, main2, empty, empty, main3, empty, empty, tile0, lst2A, lst2A, lst2A},
+                    {empty, empty, empty, empty, empty, empty, empty, empty, empty, tile1, tile1, tile1, tile1},
+                    {empty, empty, empty, empty, empty, empty, empty, empty, empty, tile0, lst0B, lst0B, lst0B},
+                    {tile0, tile0, tile1, tile0, tile0, tile1, tile0, tile0, tile0, tile0, lst0A, lst0A, lst0A},
+                    {smst2, smst2, tile1, smst2, smst2, tile1, smst2, smst2, tile0, tile2, tile3, tile2, tile3},
+            };
+            draw_generic_multi_tile_set(tile, x, y, (int *) TEMPLE_COMPLEX_SCHEME, 13, 7, 0, 0);
         } else if (orientation_index == 1) {
-//            int image_id = image_id_from_group(temple_complex_image_id) + 3;
-//            // part 3, 2, 1
-//            draw_building(image_id + 12, x_part3, y_part3);
-//            draw_building(image_id + 6, x_part2, y_part2);
-//            draw_building(image_id, x_part1, y_part1);
-//        } else if (orientation_index == 2) {
-//            int image_id = image_id_from_group(temple_complex_image_id);
-//            // part 1, 2, 3
-//            draw_building(image_id + 6, x_part1, y_part1);
-//            draw_building(image_id + 12, x_part2, y_part2);
-//            draw_building(image_id, x_part3, y_part3);
-//        } else if (orientation_index == 3) {
-//            int image_id = image_id_from_group(temple_complex_image_id) + 3;
-//            // part 3, 2, 1
-//            draw_building(image_id + 12, x_part3, y_part3);
-//            draw_building(image_id + 6, x_part2, y_part2);
-//            draw_building(image_id, x_part1, y_part1);
+            // TODO: orientation
         }
     }
 }
@@ -1337,7 +1290,7 @@ void city_building_ghost_draw(const map_tile *tile) {
             break;
         case BUILDING_SENET_HOUSE:
             if (GAME_ENV == ENGINE_ENV_C3) {
-                draw_hippodrome(tile, x, y);
+//                draw_hippodrome(tile, x, y);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 draw_default(tile, x, y, type); // Senet house
             }

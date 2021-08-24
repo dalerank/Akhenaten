@@ -22,4 +22,6 @@ int get_statue_variant_value(int orientation, int variant);
 
 int get_monument_part_image(int part, int orientation, int level);
 
+int get_temple_complex_part(int type, int part, int orientation);
+
 #endif //OZYMANDIAS_MONUMENTS_H

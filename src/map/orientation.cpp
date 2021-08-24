@@ -182,7 +182,14 @@ void map_orientation_update_buildings(void) {
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_SMALL_STATUE:
                 map_building_tiles_add(i, b->x, b->y, b->size,
-                                       get_statue_image_from_value(b->type, b->data.beautification.variant, map_orientation), TERRAIN_BUILDING);
+                                       get_statue_image_from_value(b->type, b->data.monuments.variant, map_orientation), TERRAIN_BUILDING);
+                break;
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
+
                 break;
         }
     }

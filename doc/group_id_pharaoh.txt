@@ -662,6 +662,14 @@ INFO: data/Mastaba.sg3 group 10 -> id 423
 INFO: data/Mastaba.sg3 group 11 -> id 425
 INFO: data/Mastaba.sg3 group 12 -> id 312
 
+INFO: data/Temple_nile.sg3 group 1 -> id 201
+INFO: data/Temple_nile.sg3 group 2 -> id 207
+INFO: data/Temple_nile.sg3 group 3 -> id 213
+INFO: data/Temple_nile.sg3 group 4 -> id 223
+INFO: data/Temple_nile.sg3 group 5 -> id 227
+INFO: data/Temple_nile.sg3 group 6 -> id 231
+INFO: data/Temple_nile.sg3 group 7 -> id 219
+
 INFO: data/Pharaoh_Fonts.sg3 group 1 -> id 201
 INFO: data/Pharaoh_Fonts.sg3 group 2 -> id 335
 INFO: data/Pharaoh_Fonts.sg3 group 3 -> id 1273

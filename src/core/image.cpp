@@ -44,7 +44,7 @@ static struct {
     std::vector<imagepak*> temple_paks;
     std::vector<imagepak*> monument_paks;
     std::vector<imagepak*> enemy_paks;
-//    std::vector<imagepak*> font_paks;
+    std::vector<imagepak*> font_paks;
 
     imagepak *temple;
     imagepak *monument;
@@ -220,9 +220,10 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     groups_num = 0;
     for (int i = 0; i < 300; i++) {
         group_image_ids[i] = buf->read_u16();
-        if (group_image_ids[i] != 0 || i == 0)
+        if (group_image_ids[i] != 0 || i == 0) {
             groups_num++;
-//        SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+//            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
+        }
     }
 
     // parse bitmap names;
@@ -366,44 +367,60 @@ const image *imagepak::get_image(int id, bool relative) {
 
 #include "window/city.h"
 
-static imagepak *pak_from_collection_id(int collection) {
+static imagepak *pak_from_collection_id(int collection, int pak_cache_idx) {
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             return data.main; // only one for Caesar III
         case ENGINE_ENV_PHARAOH:
             switch (collection) {
+                case IMAGE_COLLECTION_UNLOADED:
+                    return data.unloaded;
                 case IMAGE_COLLECTION_TERRAIN:
                     return data.terrain;
                 case IMAGE_COLLECTION_GENERAL:
                     return data.main;
-                case IMAGE_COLLECTION_UNLOADED:
-                    return data.unloaded;
-                case IMAGE_COLLECTION_EMPIRE:
-                    return data.empire;
                 case IMAGE_COLLECTION_SPR_MAIN:
                     return data.sprmain;
                 case IMAGE_COLLECTION_SPR_AMBIENT:
                     return data.sprambient;
+                case IMAGE_COLLECTION_EMPIRE:
+                    return data.empire;
                     /////
-                case IMAGE_COLLECTION_ENEMY:
-                    return data.enemy;
                 case IMAGE_COLLECTION_FONT:
+                    if (pak_cache_idx < 0 || pak_cache_idx >= data.font_paks.size())
+                        return data.font;
+                    else
+                        return data.font_paks.at(pak_cache_idx);
                     return data.font;
+                    /////
+                case IMAGE_COLLECTION_TEMPLE:
+                    if (pak_cache_idx < 0 || pak_cache_idx >= data.temple_paks.size())
+                        return data.temple;
+                    else
+                        return data.temple_paks.at(pak_cache_idx);
+                case IMAGE_COLLECTION_MONUMENT:
+                    if (pak_cache_idx < 0 || pak_cache_idx >= data.monument_paks.size())
+                        return data.monument;
+                    else
+                        return data.monument_paks.at(pak_cache_idx);
+                case IMAGE_COLLECTION_ENEMY:
+                    if (pak_cache_idx < 0 || pak_cache_idx >= data.enemy_paks.size())
+                        return data.enemy;
+                    else
+                        return data.enemy_paks.at(pak_cache_idx);
                     /////
                 case IMAGE_COLLECTION_EXPANSION:
                     return data.expansion;
                 case IMAGE_COLLECTION_EXPANSION_SPR:
                     return data.sprmain2;
                     /////
-                case IMAGE_COLLECTION_MONUMENT:
-                    return data.monument;
             }
             break;
     }
     return nullptr;
 }
-int image_id_from_group(int collection, int group) {
-    imagepak *pak = pak_from_collection_id(collection);
+int image_id_from_group(int collection, int group, int pak_cache_idx) {
+    imagepak *pak = pak_from_collection_id(collection, pak_cache_idx);
     if (pak == nullptr)
         return -1;
     return pak->get_id(group);

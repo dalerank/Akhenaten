@@ -87,3 +87,7 @@ int get_monument_part_image(int part, int orientation, int level) {
             return image_id_from_group(GROUP_MONUMENT_EXTRA_BLOCKS) + orientation + level * 8 + 4;
     }
 }
+
+int get_temple_complex_part(int type, int part, int orientation) {
+
+}

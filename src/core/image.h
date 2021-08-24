@@ -77,7 +77,7 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
 bool image_set_font_pak(encoding_type encoding);
 bool image_set_enemy_pak(int enemy_id);
 
-int image_id_from_group(int collectiion, int group);
+int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 
 const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);

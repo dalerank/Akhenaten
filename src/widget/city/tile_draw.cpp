@@ -624,7 +624,7 @@ void draw_debug(int x, int y, int grid_offset) {
 
     switch (DB2) {
         case 1: // BUILDING IDS
-            if (b_id && b->grid_offset == grid_offset) {
+            if (b_id) {
                 bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);

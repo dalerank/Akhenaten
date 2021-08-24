@@ -119,77 +119,6 @@ static void add_fort(int type, building *fort) {
     fort->formation_id = formation_legion_create_for_fort(fort);
     ground->formation_id = fort->formation_id;
 }
-//static void add_hippodrome(building *b) {
-//    int image1 = image_id_from_group(GROUP_BUILDING_HIPPODROME_1);
-//    int image2 = image_id_from_group(GROUP_BUILDING_HIPPODROME_2);
-//    city_buildings_add_hippodrome();
-//
-//    building_rotation_force_two_orientations();
-//    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
-//    building *part1 = b;
-//
-//    part1->prev_part_building_id = 0;
-//    int image_id;
-//    switch (orientation) {
-//        case DIR_0_TOP_RIGHT:
-//            image_id = image2;
-//            break;
-//        case DIR_2_BOTTOM_RIGHT:
-//            image_id = image1 + 4;
-//            break;
-//        case DIR_4_BOTTOM_LEFT:
-//            image_id = image2 + 4;
-//            break;
-//        case DIR_6_TOP_LEFT:
-//            image_id = image1;
-//            break;
-//        default:
-//            return;
-//    }
-//    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-//    int x_offset, y_offset;
-//    building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset, &y_offset);
-//    building *part2 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
-//    game_undo_add_building(part2);
-//
-//    part2->prev_part_building_id = part1->id;
-//    part1->next_part_building_id = part2->id;
-//    part2->next_part_building_id = 0;
-//    switch (orientation) {
-//        case DIR_0_TOP_RIGHT:
-//        case DIR_4_BOTTOM_LEFT:
-//            image_id = image2 + 2;
-//            break;
-//        case DIR_2_BOTTOM_RIGHT:
-//        case DIR_6_TOP_LEFT:
-//            image_id = image1 + 2;
-//            break;
-//    }
-//    map_building_tiles_add(part2->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
-//
-//    building_rotation_get_offset_with_rotation(10, building_rotation_get_rotation(), &x_offset, &y_offset);
-//    building *part3 = building_create(BUILDING_HIPPODROME, b->x + x_offset, b->y + y_offset);
-//    game_undo_add_building(part3);
-//
-//    part3->prev_part_building_id = part2->id;
-//    part2->next_part_building_id = part3->id;
-//    part3->next_part_building_id = 0;
-//    switch (orientation) {
-//        case DIR_0_TOP_RIGHT:
-//            image_id = image2 + 4;
-//            break;
-//        case DIR_2_BOTTOM_RIGHT:
-//            image_id = image1;
-//            break;
-//        case DIR_4_BOTTOM_LEFT:
-//            image_id = image2;
-//            break;
-//        case DIR_6_TOP_LEFT:
-//            image_id = image1 + 4;
-//            break;
-//    }
-//    map_building_tiles_add(part3->id, b->x + x_offset, b->y + y_offset, b->size, image_id, TERRAIN_BUILDING);
-//}
 
 static building *add_temple_complex_element(int x, int y, int size, int image_id, building *prev) {
     building *b = building_create(prev->type, x, y);
@@ -1181,7 +1110,7 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
     else
         b = building_create(type, x, y);
     if (building_is_statue(type))
-        b->data.beautification.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
+        b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
     game_undo_add_building(b);
     if (b->id <= 0) // building creation failed????
         return false;
