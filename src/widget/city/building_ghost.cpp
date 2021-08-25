@@ -447,99 +447,6 @@ static void draw_warehouse(int image_id, int x, int y) {
     }
 }
 
-static void draw_generic_multi_tile_set(const map_tile *tile, int x, int y, int *image_set, int set_size_x, int set_size_y, int starting_x, int starting_y, int terrain = TERRAIN_ALL) {
-    bool blocked = false;
-    int orientation = city_view_orientation() / 2;
-
-    // first, check if it's fully blocked or not
-    switch (orientation) {
-        case 0:
-            for (int _y = 0; _y < set_size_y; _y++) {
-                int y_offset = _y - starting_y;
-                for (int _x = 0; _x < set_size_x; _x++) {
-                    int x_offset = _x - starting_x;
-                    if (!map_building_tiles_are_clear(tile->x + x_offset, tile->y + y_offset, 1, terrain))
-                        blocked = true;
-                }
-            }
-            break;
-        case 1:
-            for (int _y = 0; _y < set_size_y; _y++) {
-                int y_offset = _y - starting_y;
-                for (int _x = 0; _x < set_size_x; _x++) {
-                    int x_offset = _x - starting_x;
-                    if (!map_building_tiles_are_clear(tile->x - y_offset, tile->y + x_offset, 1, terrain))
-                        blocked = true;
-                }
-            }
-            break;
-        case 2:
-            for (int _y = 0; _y < set_size_y; _y++) {
-                int y_offset = _y - starting_y;
-                for (int _x = 0; _x < set_size_x; _x++) {
-                    int x_offset = _x - starting_x;
-                    if (!map_building_tiles_are_clear(tile->x - x_offset, tile->y - y_offset, 1, terrain))
-                        blocked = true;
-                }
-            }
-            break;
-        case 3:
-            for (int _y = 0; _y < set_size_y; _y++) {
-                int y_offset = _y - starting_y;
-                for (int _x = 0; _x < set_size_x; _x++) {
-                    int x_offset = _x - starting_x;
-                    if (!map_building_tiles_are_clear(tile->x + y_offset, tile->y - x_offset, 1, terrain))
-                        blocked = true;
-                }
-            }
-            break;
-    }
-
-    // finally, go over every single tile
-    int (*image_array)[set_size_y][set_size_x] = (int(*)[set_size_y][set_size_x])image_set;
-    for (int _y = 0; _y < set_size_y; _y++) {
-        for (int _x = 0; _x < set_size_x; _x++) {
-
-            int x_offset = _x - starting_x;
-            int y_offset = _y - starting_y;
-
-            // check if single tile is blocked
-            int blocked_tile = 0;
-            int current_grid_offset = 0;
-            switch (orientation) {
-                case 0:
-                    current_grid_offset = map_grid_offset(tile->x + x_offset, tile->y + y_offset);
-                    break;
-                case 1:
-                    current_grid_offset = map_grid_offset(tile->x - y_offset, tile->y + x_offset);
-                    break;
-                case 2:
-                    current_grid_offset = map_grid_offset(tile->x - x_offset, tile->y - y_offset);
-                    break;
-                case 3:
-                    current_grid_offset = map_grid_offset(tile->x + y_offset, tile->y - x_offset);
-                    break;
-            }
-            is_blocked_for_building(current_grid_offset, 1, &blocked_tile);
-
-            // get tile pixel coords
-            int current_x = x + x_offset * 30 - y_offset * 30;
-            int current_y = y + x_offset * 15 + y_offset * 15;
-
-            int image_id = (*image_array)[_y][_x];
-            auto img = image_get(image_id);
-            int tile_size = (img->width + 2) / 60;
-
-            // TODO: fix building tops obstructing other tiles
-            // draw image!
-            if (blocked)
-                draw_partially_blocked(current_x, current_y, false, 1, &blocked_tile);
-            else if (image_id > 0)
-                draw_building(image_id, current_x + 30 * (tile_size - 1), current_y - 15 * tile_size);
-        }
-    }
-}
-
 static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
     if (building_is_farm(type)) {
         image_id = get_farm_image(grid_offset);
@@ -1036,11 +943,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
                     {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
             };
-//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 0, 2);
             planner_reset_tiles(13, 7);
-            planner_set_pivot(0, 2);
             planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-            planner_draw_all(tile, x, y);
+            planner_set_pivot(0, 2);
             break;
         }
         case 1: { // NE
@@ -1059,11 +964,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
                     {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
             };
-//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 12);
             planner_reset_tiles(7, 13);
-            planner_set_pivot(2, 12);
             planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-            planner_draw_all(tile, x, y);
+            planner_set_pivot(2, 12);
             break;
         }
         case 2: { // NW
@@ -1077,11 +980,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
                     {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
             };
-//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 12, 2);
             planner_reset_tiles(13, 7);
-            planner_set_pivot(12, 2);
             planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-            planner_draw_all(tile, x, y);
+            planner_set_pivot(12, 2);
             break;
         }
         case 3: { // SW
@@ -1100,14 +1001,13 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
                     {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
             };
-//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 0);
             planner_reset_tiles(7, 13);
-            planner_set_pivot(2, 0);
             planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-            planner_draw_all(tile, x, y);
+            planner_set_pivot(2, 0);
             break;
         }
     }
+    planner_draw_all(tile, x, y);
 }
 static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
     // TODO: implement monuments

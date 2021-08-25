@@ -95,14 +95,9 @@ void planner_set_graphics_row(int row, int *image_ids, int total) {
 void planner_set_graphics_array(int *image_set, int size_x, int size_y) {
     int (*image_array)[size_y][size_x] = (int(*)[size_y][size_x])image_set;
 
-    for (int row = 0; row < size_y; ++row) {
+    // do it row by row...
+    for (int row = 0; row < size_y; ++row)
         planner_set_graphics_row(row, (*image_array)[row], size_x);
-//        for (int column = 0; column < size_x; ++column) {
-//            if (column > 29 || row > 29)
-//                return;
-//            int image_id = (*image_array)[row][column];
-//        }
-    }
 }
 
 void planner_set_tile_size(int row, int column, int size) {
@@ -117,34 +112,8 @@ void plannet_set_allowed_terrain(int row, int column, int terrain) {
 }
 
 void planner_check_obstructions() {
-//    int orientation = city_view_orientation() / 2;
     for (int row = 0; row < tile_max_y; row++) {
         for (int column = 0; column < tile_max_x; column++) {
-
-//            int tile_x = 0;
-//            int tile_y = 0;
-//
-//            // adjust checking tile coords depending on orientation
-//            int x_offset = (row - tile_pivot_x);
-//            int y_offset = (column - tile_pivot_y);
-//            switch (orientation) {
-//                case 0:
-//                    tile_x = cursor_tile->x + x_offset;
-//                    tile_y = cursor_tile->y + y_offset;
-//                    break;
-//                case 1:
-//                    tile_x = cursor_tile->x - y_offset;
-//                    tile_y = cursor_tile->y + x_offset;
-//                    break;
-//                case 2:
-//                    tile_x = cursor_tile->x - x_offset;
-//                    tile_y = cursor_tile->y - y_offset;
-//                    break;
-//                case 31:
-//                    tile_x = cursor_tile->x + y_offset;
-//                    tile_y = cursor_tile->y - x_offset;
-//                    break;
-//            }
 
             // check terrain at coords
             map_point current_tile = tile_coord_cache[row][column];
@@ -169,13 +138,6 @@ static void draw_flat_tile(int x, int y, color_t color_mask) {
 void planner_draw_blueprints(int x, int y, bool fully_blocked) {
     for (int row = 0; row < tile_max_y; row++) {
         for (int column = 0; column < tile_max_x; column++) {
-
-//            int x_offset = (row - tile_pivot_x);
-//            int y_offset = (column - tile_pivot_y);
-//
-//            // get tile pixel coords
-//            int current_x = x + x_offset * 30 - y_offset * 30;
-//            int current_y = y + x_offset * 15 + y_offset * 15;
 
             // draw tile!
             pixel_coordinate current_coord = pixel_coords_cache[row][column];
