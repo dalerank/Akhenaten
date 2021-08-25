@@ -2,7 +2,7 @@
 
 #include "city/data_private.h"
 
-int city_buildings_has_senate(void) {
+bool city_buildings_has_senate(void) {
     return city_data.building.senate_placed;
 }
 int city_buildings_get_senate_id(void) {
@@ -28,7 +28,7 @@ void city_buildings_remove_senate(building *senate) {
     }
 }
 
-int city_buildings_has_mansion(void) {
+bool city_buildings_has_mansion(void) {
     return city_data.building.mansion_placed;
 }
 int city_buildings_get_mansion_id(void) {
@@ -54,7 +54,7 @@ void city_buildings_remove_mansion(building *mansion) {
     }
 }
 
-int city_buildings_has_barracks(void) {
+bool city_buildings_has_barracks(void) {
     return city_data.building.barracks_placed;
 }
 void city_buildings_add_barracks(building *barracks) {
@@ -81,7 +81,7 @@ void city_buildings_set_barracks(int building_id) {
     city_data.building.barracks_building_id = building_id;
 }
 
-int city_buildings_has_distribution_center(void) {
+bool city_buildings_has_distribution_center(void) {
     return city_data.building.distribution_center_placed;
 }
 void city_buildings_add_distribution_center(building *center) {
@@ -109,7 +109,7 @@ void city_buildings_set_trade_center(int building_id) {
     city_data.building.trade_center_building_id = building_id;
 }
 
-int city_buildings_has_hippodrome(void) {
+bool city_buildings_has_hippodrome(void) {
     return city_data.building.hippodrome_placed;
 }
 void city_buildings_add_hippodrome(void) {
@@ -165,7 +165,7 @@ int city_buildings_shipyard_boats_requested(void) {
     return city_data.building.shipyard_boats_requested;
 }
 
-int city_buildings_has_working_dock(void) {
+bool city_buildings_has_working_dock(void) {
     return city_data.building.working_docks > 0;
 }
 int city_buildings_get_working_dock(int index) {
@@ -188,7 +188,7 @@ void city_buildings_set_mission_post_operational(void) {
     city_data.building.mission_post_operational = 1;
 }
 
-int city_building_has_festival_square(void) {
+bool city_building_has_festival_square(void) {
     return city_data.building.festival_square_placed;
 }
 void city_building_get_festival_square_position(int *x, int *y) {
@@ -196,16 +196,27 @@ void city_building_get_festival_square_position(int *x, int *y) {
     *y = city_data.building.festival_square_y;
 }
 void city_buildings_add_festival_square(building *square) {
-    city_data.building.festival_square_placed = 1;
+    city_data.building.festival_square_placed = true;
     city_data.building.festival_square_x = square->x;
     city_data.building.festival_square_y = square->y;
 }
 void city_buildings_remove_festival_square(void) {
     city_data.building.festival_square_x = -1;
     city_data.building.festival_square_y = -1;
-    city_data.building.festival_square_placed = 0;
+    city_data.building.festival_square_placed = false;
 }
 
+bool city_buildings_has_temple_complex(void) {
+    return city_data.building.temple_complex_placed;
+}
+void city_buildings_add_temple_complex(building *complex) {
+    city_data.building.temple_complex_placed = true;
+    city_data.building.temple_complex_id = complex->id;
+}
+void city_buildings_remove_temple_complex(void) {
+    city_data.building.temple_complex_id = 0;
+    city_data.building.temple_complex_placed = false;
+}
 
 int city_buildings_unknown_value(void) {
     return city_data.building.unknown_value;

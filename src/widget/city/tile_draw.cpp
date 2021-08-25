@@ -624,7 +624,7 @@ void draw_debug(int x, int y, int grid_offset) {
 
     switch (DB2) {
         case 1: // BUILDING IDS
-            if (b_id) {
+            if (b_id && map_property_is_draw_tile(grid_offset)) { //b->grid_offset == grid_offset
                 bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
@@ -663,7 +663,7 @@ void draw_debug(int x, int y, int grid_offset) {
                     draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
             break;
         case 3: // ROADS
-            if (b_id && b->grid_offset == grid_offset) {
+            if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->grid_offset == grid_offset
                 draw_debug_line(str, x0, y + 5, 0, "", b->road_access_x, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 draw_debug_line(str, x0, y + 15, 0, "", b->road_access_y, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
             }
@@ -735,7 +735,7 @@ void draw_debug(int x, int y, int grid_offset) {
             }
             break;
         case 12: // LABOR
-            if (b_id && b->grid_offset == grid_offset && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
+            if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 if (b->labor_category != CATEGORY_FOR_building(b))
                     draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED);
                 else
@@ -745,10 +745,28 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
             }
             break;
-        case 13: // TERRAIN FIELD
-            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
+        case 13: // STATUES & MONUMENTS
+            if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
+                switch (b->type) {
+                    case BUILDING_SMALL_STATUE:
+                    case BUILDING_MEDIUM_STATUE:
+                    case BUILDING_LARGE_STATUE:
+                        draw_debug_line(str, x1, y + 10, 0, "", b->data.monuments.variant, COLOR_WHITE);
+                        break;
+                        //
+                    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+                    case BUILDING_TEMPLE_COMPLEX_RA:
+                    case BUILDING_TEMPLE_COMPLEX_PTAH:
+                    case BUILDING_TEMPLE_COMPLEX_SETH:
+                    case BUILDING_TEMPLE_COMPLEX_BAST:
+                        draw_debug_line(str, x1, y + 10, 0, "", b->data.monuments.variant, COLOR_WHITE);
+                        draw_debug_line(str, x1, y + 20, 0, "", b->data.monuments.temple_complex_attachments, COLOR_LIGHT_BLUE);
+                        break;
+                }
+            }
             break;
         case 14: // IMAGE FIELD
+//            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
             draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED); break;
             break;
         case 15: // UNKNOWN 8BIT GRID

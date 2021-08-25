@@ -249,7 +249,7 @@ static void draw_debug_ui(int x, int y) {
             case 12:
                 text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
             case 13:
-                text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN FIELD"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("STATUES AND MONUMENTS"), x, y + 10, col); break;
             case 14:
                 text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
             case 15:
