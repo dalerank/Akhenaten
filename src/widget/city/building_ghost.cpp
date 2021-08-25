@@ -1,4 +1,5 @@
 #include <cmath>
+#include <building/construction_planner.h>
 #include "building_ghost.h"
 
 #include "building/construction.h"
@@ -982,8 +983,8 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
         fully_blocked = true;
         blocked = true;
     }
-    if (fully_blocked)
-        return;
+//    if (fully_blocked)
+//        return;
 
     // size of every big item 3x3, in general 7x13
     // 25 max tiles at the moment to check blocked tiles
@@ -1035,7 +1036,11 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
                     {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
             };
-            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 0, 2);
+//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 0, 2);
+            planner_reset_tiles(13, 7);
+            planner_set_pivot(0, 2);
+            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+            planner_draw_all(tile, x, y);
             break;
         }
         case 1: { // NE
@@ -1054,7 +1059,11 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
                     {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
             };
-            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 12);
+//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 12);
+            planner_reset_tiles(7, 13);
+            planner_set_pivot(2, 12);
+            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+            planner_draw_all(tile, x, y);
             break;
         }
         case 2: { // NW
@@ -1068,7 +1077,11 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
                     {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
             };
-            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 12, 2);
+//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 13, 7, 12, 2);
+            planner_reset_tiles(13, 7);
+            planner_set_pivot(12, 2);
+            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+            planner_draw_all(tile, x, y);
             break;
         }
         case 3: { // SW
@@ -1087,7 +1100,11 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
                     {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
             };
-            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 0);
+//            draw_generic_multi_tile_set(tile, x, y, (int *)TEMPLE_COMPLEX_SCHEME, 7, 13, 2, 0);
+            planner_reset_tiles(7, 13);
+            planner_set_pivot(2, 0);
+            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+            planner_draw_all(tile, x, y);
             break;
         }
     }

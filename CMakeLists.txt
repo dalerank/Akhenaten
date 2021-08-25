@@ -258,6 +258,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/building.cpp
     ${PROJECT_SOURCE_DIR}/src/building/building_state.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction_planner.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction_clear.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction_routed.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.cpp
