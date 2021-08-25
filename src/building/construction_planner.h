@@ -13,7 +13,7 @@ void planner_set_graphics_array(int *image_set, int size_x, int size_y);
 void planner_set_tile_size(int row, int column, int size);
 void plannet_set_allowed_terrain(int row, int column, int terrain);
 
-void planner_check_obstructions();
+void planner_update_obstructions();
 int planner_get_blocked_count();
 bool planner_is_obstructed();
 

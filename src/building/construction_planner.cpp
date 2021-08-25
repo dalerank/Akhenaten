@@ -1,4 +1,5 @@
 #include <map/building_tiles.h>
+#include <cmath>
 #include "construction_planner.h"
 
 #include "map/terrain.h"
@@ -68,7 +69,7 @@ void planner_update_coord_caches(const map_tile *cursor_tile, int x, int y) {
                     tile_x = cursor_tile->x - x_offset;
                     tile_y = cursor_tile->y - y_offset;
                     break;
-                case 31:
+                case 3:
                     tile_x = cursor_tile->x + y_offset;
                     tile_y = cursor_tile->y - x_offset;
                     break;
@@ -111,7 +112,7 @@ void plannet_set_allowed_terrain(int row, int column, int terrain) {
     tile_restricted_terrains[row][column] = terrain;
 }
 
-void planner_check_obstructions() {
+void planner_update_obstructions() {
     for (int row = 0; row < tile_max_y; row++) {
         for (int column = 0; column < tile_max_x; column++) {
 
@@ -150,25 +151,18 @@ void planner_draw_blueprints(int x, int y, bool fully_blocked) {
 }
 void planner_draw_graphics(int x, int y) {
 
-    // draw footprints first
-    for (int row = 0; row < tile_max_y; row++) {
-        for (int column = 0; column < tile_max_x; column++) {
+    // go through the tiles DIAGONALLY to render footprint and top correctly
+    for (int dg_y = 0; dg_y < tile_max_y + tile_max_x - 1; dg_y++) {
+        for (int dg_x = fmax(0, dg_y - tile_max_y + 1); dg_x < tile_max_x && dg_x < dg_y + 1; dg_x++) {
+
+            // extract proper row and column index from the mess above
+            int row = dg_y - dg_x;
+            int column = dg_x;
 
             int image_id = tile_graphics_array[row][column];
             if (image_id > 0) {
                 pixel_coordinate current_coord = pixel_coords_cache[row][column];
                 ImageDraw::isometric_footprint_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN);
-            }
-        }
-    }
-
-    // finally, draw tile top's
-    for (int row = 0; row < tile_max_y; row++) {
-        for (int column = 0; column < tile_max_x; column++) {
-
-            int image_id = tile_graphics_array[row][column];
-            if (image_id > 0) {
-                pixel_coordinate current_coord = pixel_coords_cache[row][column];
                 ImageDraw::isometric_top_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN);
             }
         }
@@ -177,7 +171,7 @@ void planner_draw_graphics(int x, int y) {
 
 void planner_draw_all(const map_tile *cursor_tile, int x, int y) {
     planner_update_coord_caches(cursor_tile, x, y);
-    planner_check_obstructions();
+    planner_update_obstructions();
     if (planner_is_obstructed())
         planner_draw_blueprints(x, y);
     else
