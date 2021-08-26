@@ -14,10 +14,10 @@ static pixel_coordinate pixel_coords_cache[30][30];
 
 void BuildPlanner::reset() {
     // set boundary size and reset pivot
-    tile_max_x = 0;
-    tile_max_y = 0;
-    tile_pivot_x = 0;
-    tile_pivot_y = 0;
+    size.x = 0;
+    size.y = 0;
+    pivot.x = 0;
+    pivot.y = 0;
     tiles_blocked_total = 0;
 
     // reset special requirements flags/params
@@ -27,8 +27,8 @@ void BuildPlanner::reset() {
     immediate_problem_warning = -1;
 }
 void BuildPlanner::init_tiles(int size_x, int size_y) {
-    tile_max_x = size_x;
-    tile_max_y = size_y;
+    size_x = size_x;
+    size_y = size_y;
     for (int row = 0; row < size_y; ++row) {
         for (int column = 0; column < size_x; ++column) {
             if (column > 29 || row > 29)
@@ -45,17 +45,17 @@ void BuildPlanner::init_tiles(int size_x, int size_y) {
     }
 }
 void BuildPlanner::set_pivot(int x, int y) {
-    tile_pivot_x = x;
-    tile_pivot_y = y;
+    pivot.x = x;
+    pivot.y = y;
 }
 void BuildPlanner::update_coord_caches(const map_tile *cursor_tile, int x, int y) {
     int orientation = city_view_orientation() / 2;
-    for (int row = 0; row < tile_max_y; row++) {
-        for (int column = 0; column < tile_max_x; column++) {
+    for (int row = 0; row < size.y; row++) {
+        for (int column = 0; column < size.x; column++) {
 
             // get tile offset
-            int x_offset = (column - tile_pivot_x);
-            int y_offset = (row - tile_pivot_y);
+            int x_offset = (column - pivot.x);
+            int y_offset = (row - pivot.y);
 
             // get abs. tile
             int tile_x = 0;
@@ -139,8 +139,8 @@ void BuildPlanner::dispatch_warnings() {
 }
 
 void BuildPlanner::update_obstructions_check() {
-    for (int row = 0; row < tile_max_y; row++) {
-        for (int column = 0; column < tile_max_x; column++) {
+    for (int row = 0; row < size.y; row++) {
+        for (int column = 0; column < size.x; column++) {
 
             // check terrain at coords
             map_point current_tile = tile_coord_cache[row][column];
@@ -154,9 +154,6 @@ void BuildPlanner::update_obstructions_check() {
         }
     }
 }
-int BuildPlanner::get_blocked_count() {
-    return tiles_blocked_total;
-}
 
 //////
 
@@ -164,8 +161,8 @@ void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
     ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
-    for (int row = 0; row < tile_max_y; row++) {
-        for (int column = 0; column < tile_max_x; column++) {
+    for (int row = 0; row < size.y; row++) {
+        for (int column = 0; column < size.x; column++) {
 
             // draw tile!
             pixel_coordinate current_coord = pixel_coords_cache[row][column];
@@ -179,8 +176,8 @@ void BuildPlanner::draw_blueprints(bool fully_blocked) {
 void BuildPlanner::draw_graphics() {
 
     // go through the tiles DIAGONALLY to render footprint and top correctly
-    for (int dg_y = 0; dg_y < tile_max_y + tile_max_x - 1; dg_y++) {
-        for (int dg_x = fmax(0, dg_y - tile_max_y + 1); dg_x < tile_max_x && dg_x < dg_y + 1; dg_x++) {
+    for (int dg_y = 0; dg_y < size.y + size.x - 1; dg_y++) {
+        for (int dg_x = fmax(0, dg_y - size.y + 1); dg_x < size.x && dg_x < dg_y + 1; dg_x++) {
 
             // extract proper row and column index from the mess above
             int row = dg_y - dg_x;
@@ -198,7 +195,7 @@ void BuildPlanner::draw_graphics() {
 
 //////
 
-void BuildPlanner::update_location(const map_tile *cursor_tile, int x, int y) {
+void BuildPlanner::update(const map_tile *cursor_tile, int x, int y) {
     update_coord_caches(cursor_tile, x, y);
     update_obstructions_check();
     update_requirements_check();

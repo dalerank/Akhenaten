@@ -21,10 +21,8 @@ enum PlannerReqs {
 
 extern class BuildPlanner {
 private:
-    int tile_max_x = 0;
-    int tile_max_y = 0;
-    int tile_pivot_x = 0;
-    int tile_pivot_y = 0;
+    map_point size;
+    map_point pivot;
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
     int tile_restricted_terrains[30][30] = {};
@@ -36,13 +34,6 @@ private:
     bool meets_special_requirements = false;
     int immediate_problem_warning = -1;
 
-    int building_type;
-    int building_size;
-//    int sub_type;
-    bool in_progress;
-    map_tile start;
-    map_tile end;
-    int cost;
 //    struct {
 //        bool meadow;
 //        bool rock;
@@ -72,8 +63,6 @@ private:
     void dispatch_warnings();
 
     void update_obstructions_check();
-    int get_blocked_count();
-    bool is_obstructed();
 
     void draw_flat_tile(int x, int y, color_t color_mask);
     void draw_blueprints(bool fully_blocked);
@@ -82,14 +71,21 @@ private:
     /////
 
 public:
+    int building_type;
+//    int building_size;
+//    int sub_type;
+    bool in_progress;
     bool draw_as_constructing;
+    map_tile start;
+    map_tile end;
+    int cost;
 
     void set_building_type(int type);
     void clear_building_type(void);
     int get_building_type(void);
 
-    int get_cost(void);
-    int get_size(int *x, int *y);
+//    int get_cost(void);
+    int get_total_drag_size(int *x, int *y);
 
     bool construction_in_progress(void);
     void construction_start(int x, int y, int grid_offset);
@@ -111,7 +107,7 @@ public:
 //    void construction_reset_draw_as_constructing(void);
 //    int construction_draw_as_constructing(void);
 
-    void update_location(const map_tile *cursor_tile, int x, int y);
+    void update(const map_tile *cursor_tile, int x, int y);
     void draw();
     bool place_check_attempt();
 } Planner;

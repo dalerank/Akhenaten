@@ -85,7 +85,7 @@ static void draw_paused_and_time_left(void) {
     }
 }
 static void draw_cancel_construction(void) {
-    if (!mouse_get()->is_touch || !Planner.get_building_type())
+    if (!mouse_get()->is_touch || !Planner.building_type)
         return;
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);

@@ -699,80 +699,26 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
 //}
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
-    int blocked = 0;
+    bool  blocked = false;
     if (Planner.construction_in_progress()) { // already dragging aqueduct
-        if (!Planner.get_cost()) // ???
-            blocked = 1;
+        if (!Planner.cost) // ???
+            blocked = true;
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) { // starting new aqueduct line
             blocked = !map_is_straight_road_for_aqueduct(grid_offset); // can't start over a road curve!
             if (map_property_is_plaza_or_earthquake(grid_offset)) // todo: plaza not allowing aqueducts? maybe?
-                blocked = 1;
+                blocked = true;
         } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) // terrain is not clear!
-            blocked = 1;
+            blocked = true;
     }
     if (city_finance_out_of_money()) // check sufficient funds to continue
-        blocked = 1;
+        blocked = true;
     if (blocked) // cannot draw!
         draw_flat_tile(x, y, COLOR_MASK_RED);
     else {
         const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1); // get starting tile
         draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), x, y);
     }
-}
-static void draw_fountain(const map_tile *tile, int x, int y) {
-//    if (city_finance_out_of_money())
-//        draw_flat_tile(x, y, COLOR_MASK_RED);
-//    else {
-//        int image_id = image_id_from_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
-//        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
-//            city_view_foreach_tile_in_range(tile->grid_offset, 1, scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-//                                            draw_fountain_range);
-//
-//        draw_building(image_id, x, y);
-//        if (map_terrain_is(tile->grid_offset, TERRAIN_GROUNDWATER)) {
-//            const image *img = image_get(image_id);
-//            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
-//        }
-//    }
-}
-static void draw_bathhouse(const map_tile *tile, int x, int y) {
-//    int grid_offset = tile->grid_offset;
-//    int num_tiles = 4;
-//    int blocked_tiles[4];
-//    int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
-//    int fully_blocked = 0;
-//    if (city_finance_out_of_money()) {
-//        fully_blocked = 1;
-//        blocked = 1;
-//    }
-//
-//    if (blocked)
-//        draw_partially_blocked(x, y, fully_blocked, num_tiles, blocked_tiles);
-//    else {
-//        int image_id = image_id_from_group(building_properties_for_type(BUILDING_BATHHOUSE)->image_group);
-//        int has_water = 0;
-//        int orientation_index = city_view_orientation() / 2;
-//        for (int i = 0; i < num_tiles; i++) {
-//            int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
-//            switch (GAME_ENV) {
-//                case ENGINE_ENV_C3:
-//                    tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
-//                    break;
-//                case ENGINE_ENV_PHARAOH:
-//                    tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
-//                    break;
-//            }
-//            if (map_terrain_is(tile_offset, TERRAIN_GROUNDWATER))
-//                has_water = 1;
-//
-//        }
-//        draw_building(image_id, x, y);
-//        if (has_water) {
-//            const image *img = image_get(image_id);
-//            ImageDraw::img_generic(image_id - 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
-//        }
-//    }
 }
 static void draw_bridge(const map_tile *tile, int x, int y, int type) {
     int length, direction;
@@ -1291,7 +1237,7 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
-    int construction_type = Planner.get_building_type();
+    int construction_type = Planner.building_type;
     if (!tile->grid_offset || Planner.draw_as_constructing ||
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
@@ -1305,13 +1251,13 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
 void city_building_ghost_draw(const map_tile *tile) {
     if (!tile->grid_offset || scroll_in_progress())
         return;
-    int type = Planner.get_building_type();
+    int type = Planner.building_type;
     if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
         return;
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
 
-    Planner.update_location(tile, x, y);
+    Planner.update(tile, x, y);
     Planner.draw();
     return;
 

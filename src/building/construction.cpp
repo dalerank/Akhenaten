@@ -1036,82 +1036,82 @@ static bool attempt_placing_generic(int type, int x, int y, int orientation, int
 
     ////////// TODO: TEMP!
 
-    return Planner.place_check_attempt();
+//    return Planner.place_check_attempt();
 
 
 
     //////////////////////////////////
 
-//    // by default, get size from building's properties
-//    int size = building_properties_for_type(type)->size;
-//    int check_figures = 2;
-//    switch (type) { // special cases
-//        case BUILDING_WAREHOUSE:
-//            size = 3; break;
-//        case BUILDING_BOOTH:
-//            check_figures = 1;
-//            size = 2; break;
-//        case BUILDING_BANDSTAND:
-//            check_figures = 1;
-//            size = 3; break;
-//        case BUILDING_PAVILLION:
-//            check_figures = 1;
-//            size = 4; break;
-//        case BUILDING_FESTIVAL_SQUARE:
-//            check_figures = 1;
-//            size = 5; break;
-//    }
-//
-//    // correct building placement for city orientations
-//    switch (city_view_orientation()) {
-//        case DIR_2_BOTTOM_RIGHT:
-//            x = x - size + 1;
-//            break;
-//        case DIR_4_BOTTOM_LEFT:
-//            x = x - size + 1;
-//            y = y - size + 1;
-//            break;
-//        case DIR_6_TOP_LEFT:
-//            y = y - size + 1;
-//            break;
-//    }
-//
-//    // check if terrain is fully suitable for construction
-//    if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception, check_figures)) {
-//        city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-//        return false;
-//    }
-//
-//    // extra terrain checks
-//    int warning_id = 0;
+    // by default, get size from building's properties
+    int size = building_properties_for_type(type)->size;
+    int check_figures = 2;
+    switch (type) { // special cases
+        case BUILDING_WAREHOUSE:
+            size = 3; break;
+        case BUILDING_BOOTH:
+            check_figures = 1;
+            size = 2; break;
+        case BUILDING_BANDSTAND:
+            check_figures = 1;
+            size = 3; break;
+        case BUILDING_PAVILLION:
+            check_figures = 1;
+            size = 4; break;
+        case BUILDING_FESTIVAL_SQUARE:
+            check_figures = 1;
+            size = 5; break;
+    }
+
+    // correct building placement for city orientations
+    switch (city_view_orientation()) {
+        case DIR_2_BOTTOM_RIGHT:
+            x = x - size + 1;
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            x = x - size + 1;
+            y = y - size + 1;
+            break;
+        case DIR_6_TOP_LEFT:
+            y = y - size + 1;
+            break;
+    }
+
+    // check if terrain is fully suitable for construction
+    if (!map_tiles_are_clear(x, y, size, TERRAIN_ALL - terrain_exception, check_figures)) {
+        city_warning_show(WARNING_CLEAR_LAND_NEEDED);
+        return false;
+    }
+
+    // extra terrain checks
+    int warning_id = 0;
 //    if (!building_construction_can_place_on_terrain(x, y, &warning_id, size)) {
 //        city_warning_show(warning_id);
 //        return false;
 //    }
-//
-//    // final generic checks
-//    building_construction_warning_generic_checks(type, x, y, size);
-//
-//    // checks done!!!
-//    building *b;
-//    if (building_is_fort(type))
-//        b = building_create(BUILDING_MENU_FORTS, x, y);
-//    else
-//        b = building_create(type, x, y);
-//    if (building_is_statue(type))
-//        b->monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
-//    game_undo_add_building(b);
-//    if (b->id <= 0) // building creation failed????
-//        return false;
-//    place_build_approved(type, b, size, orientation, orientation, (4 + orientation - city_view_orientation() / 2) % 4);
-//
-//    // reset grass growth when placing floodplain farms
-//    if (building_is_floodplain_farm(b)) {
-//        for (int _y = b->y; _y < b->y + b->size; _y++)
-//            for (int _x = b->x; _x < b->x + b->size; _x++)
-//                map_set_floodplain_growth(map_grid_offset(_x, _y), 0);
-//    }
-//    return true;
+
+    // final generic checks
+    building_construction_warning_generic_checks(type, x, y, size);
+
+    // checks done!!!
+    building *b;
+    if (building_is_fort(type))
+        b = building_create(BUILDING_MENU_FORTS, x, y);
+    else
+        b = building_create(type, x, y);
+    if (building_is_statue(type))
+        b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
+    game_undo_add_building(b);
+    if (b->id <= 0) // building creation failed????
+        return false;
+    place_build_approved(type, b, size, orientation, orientation, (4 + orientation - city_view_orientation() / 2) % 4);
+
+    // reset grass growth when placing floodplain farms
+    if (building_is_floodplain_farm(b)) {
+        for (int _y = b->y; _y < b->y + b->size; _y++)
+            for (int _x = b->x; _x < b->x + b->size; _x++)
+                map_set_floodplain_growth(map_grid_offset(_x, _y), 0);
+    }
+    return true;
 }
 static bool attempt_placing_on_shore(int type, int x, int y, int shore_size, bool need_open_water) {
     int orientation = 0;
@@ -1143,6 +1143,9 @@ static bool attempt_placing_on_shore(int type, int x, int y, int shore_size, boo
 }
 
 int building_attempt_placing_and_return_cost(int type, int x_start, int y_start, int x_end, int y_end) {
+
+    Planner.place_check_attempt();
+
     int x = x_end;
     int y = y_end;
 
@@ -1481,7 +1484,8 @@ void building_consume_resources(int type) {
 
 void BuildPlanner::set_building_type(int type) { // select building for construction, set up main terrain restrictions/requirements
     building_type = type;
-    building_size = building_properties_for_type(type)->size;
+    int prop_size = building_properties_for_type(type)->size;
+    size = {prop_size, prop_size};
 //    sub_type = BUILDING_NONE;
     in_progress = 0;
     start.x = 0;
@@ -1560,14 +1564,14 @@ void BuildPlanner::clear_building_type(void) {
 //    sub_type = BUILDING_NONE;
     building_type = BUILDING_NONE;
 }
-int BuildPlanner::get_building_type(void) {
-    return building_type;
-//    return sub_type ? sub_type : type;
-}
-int BuildPlanner::get_cost(void) {
-    return cost;
-}
-int BuildPlanner::get_size(int *x, int *y) {
+//int BuildPlanner::get_building_type(void) {
+//    return building_type;
+////    return sub_type ? sub_type : type;
+//}
+//int BuildPlanner::get_cost(void) {
+//    return cost;
+//}
+int BuildPlanner::get_total_drag_size(int *x, int *y) {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
         !construction_is_draggable() ||
         (building_type != BUILDING_CLEAR_LAND && !cost)) {
@@ -1616,21 +1620,18 @@ void BuildPlanner::construction_start(int x, int y, int grid_offset) {
     start.y = end.y = y;
 
     if (game_undo_start_build(building_type)) {
-        in_progress = 1;
-        int can_start = 1;
+        in_progress = true;
+        int can_start = true;
         switch (building_type) {
             case BUILDING_ROAD:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x,
-                                                                         start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x, start.y);
                 break;
             case BUILDING_IRRIGATION_DITCH:
-            case BUILDING_WATER_LIFT:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x,
-                                                                         start.y);
+//            case BUILDING_WATER_LIFT:
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x, start.y);
                 break;
             case BUILDING_WALL:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x,
-                                                                         start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x, start.y);
                 break;
             default:
                 break;
@@ -1753,44 +1754,44 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {// update
 }
 void BuildPlanner::construction_finalize(void) { // confirm final placement
     // TODO
-//    in_progress = 0;
+    in_progress = 0;
 //    int x_start = start.x;
 //    int y_start = start.y;
 //    int x_end = end.x;
 //    int y_end = end.y;
-////    int type = sub_type ? sub_type : type;
-//
-//    // preliminary, global checks
-//    if (!building_check_preliminary_warnings(building_type, x_start, y_start, x_end, y_end))
-//        return;
-//
-//    // attempt placing!
-//    int placement_cost = building_attempt_placing_and_return_cost(building_type, x_start, y_start, x_end, y_end);
+//    int type = sub_type ? sub_type : type;
+
+    // preliminary, global checks
+    if (!building_check_preliminary_warnings(building_type, start.x, start.y, end.x, end.y))
+        return;
+
+    // attempt placing!
+    int placement_cost = building_attempt_placing_and_return_cost(building_type, start.x, start.y, end.x, end.y);
+    if (placement_cost == 0)
+        return;
+
+    // consume resources for specific buildings (e.g. marble, granite)
+    building_consume_resources(building_type);
+
+//    // advance temple picker (C3 only)
+//    if (type == BUILDING_MENU_TEMPLES) {
+//        sub_type++;
+//        if (sub_type > BUILDING_TEMPLE_BAST)
+//            sub_type = BUILDING_TEMPLE_OSIRIS;
+//    }
+//    if (type == BUILDING_MENU_TEMPLE_COMPLEX) {
+//        sub_type++;
+//        if (sub_type > BUILDING_TEMPLE_COMPLEX_BAST)
+//            sub_type = BUILDING_TEMPLE_COMPLEX_OSIRIS;
+//    }
+
+    // finilize process
 //    if (placement_cost == 0)
 //        return;
-//
-//    // consume resources for specific buildings (e.g. marble, granite)
-//    building_consume_resources(building_type);
-//
-////    // advance temple picker (C3 only)
-////    if (type == BUILDING_MENU_TEMPLES) {
-////        sub_type++;
-////        if (sub_type > BUILDING_TEMPLE_BAST)
-////            sub_type = BUILDING_TEMPLE_OSIRIS;
-////    }
-////    if (type == BUILDING_MENU_TEMPLE_COMPLEX) {
-////        sub_type++;
-////        if (sub_type > BUILDING_TEMPLE_COMPLEX_BAST)
-////            sub_type = BUILDING_TEMPLE_COMPLEX_OSIRIS;
-////    }
-//
-//    // finilize process
-//    if (placement_cost == 0)
-//        return;
-//    formation_move_herds_away(x_end, y_end);
-//    city_finance_process_construction(placement_cost);
-//    game_undo_finish_build(placement_cost);
-//    map_tiles_update_region_empty_land(false, x_start - 2, y_start - 2, x_end + size + 2, y_end + size + 2);
+    formation_move_herds_away(end.x, end.y);
+    city_finance_process_construction(placement_cost);
+    game_undo_finish_build(placement_cost);
+    map_tiles_update_region_empty_land(false, start.x - 2, start.x - 2, end.x + size.x + 2, end.y + size.y + 2);
 }
 
 //static void set_warning(int *warning_id, int warning) {

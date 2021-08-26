@@ -237,7 +237,7 @@ int window_build_menu_image(void) {
     int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            if (Planner.get_building_type() == BUILDING_NONE)
+            if (Planner.building_type == BUILDING_NONE)
                 return image_base + 12;
             switch (data.selected_submenu) {
                 default:
@@ -285,7 +285,7 @@ int window_build_menu_image(void) {
             break;
         case ENGINE_ENV_PHARAOH:
             image_base = image_id_from_group(GROUP_PANEL_WINDOWS_PH);
-//            if (Planner.get_building_type() == BUILDING_NONE)
+//            if (Planner.building_type == BUILDING_NONE)
 //                return image_base;
             switch (data.selected_submenu) {
                 default:
