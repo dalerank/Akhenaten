@@ -55,6 +55,8 @@ private:
     void set_graphics_row(int row, int *image_ids, int total);
     void set_graphics_array(int *image_set, int size_x, int size_y);
 
+    void load_build_graphics(); // fills in data automatically
+
     void set_tile_size(int row, int column, int size);
     void set_allowed_terrain(int row, int column, int terrain);
 
@@ -80,7 +82,7 @@ public:
     map_tile end;
     int cost;
 
-    void set_building_type(int type);
+    void setup_build_type(int type);
     void clear_building_type(void);
     int get_building_type(void);
 
@@ -106,6 +108,11 @@ public:
 //
 //    void construction_reset_draw_as_constructing(void);
 //    int construction_draw_as_constructing(void);
+
+    int orientation;
+    int variant;
+
+    void update_orientations();
 
     void update(const map_tile *cursor_tile, int x, int y);
     void draw();

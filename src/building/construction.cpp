@@ -1482,27 +1482,23 @@ void building_consume_resources(int type) {
     }
 }
 
-void BuildPlanner::set_building_type(int type) { // select building for construction, set up main terrain restrictions/requirements
+void BuildPlanner::setup_build_type(int type) { // select building for construction, set up main terrain restrictions/requirements
     building_type = type;
-    int prop_size = building_properties_for_type(type)->size;
-    size = {prop_size, prop_size};
 //    sub_type = BUILDING_NONE;
+
+    // initial values
+    size = {0, 0};
     in_progress = 0;
     start.x = 0;
     start.y = 0;
     end.x = 0;
     end.y = 0;
+    orientation = 0;
+    variant = 0;
 
     if (type != BUILDING_NONE) {
-//        required_terrain.wall = false;
-//        required_terrain.water = false;
-//        required_terrain.groundwater = false;
-//        required_terrain.tree = false;
-//        required_terrain.rock = false;
-//        required_terrain.ore = false;
-//        required_terrain.meadow = false;
-//        start.grid_offset = false;
 
+        // set special requirements
         switch (type) {
             case BUILDING_BARLEY_FARM:
             case BUILDING_FLAX_FARM:
@@ -1533,12 +1529,14 @@ void BuildPlanner::set_building_type(int type) { // select building for construc
 //                if (GAME_ENV == ENGINE_ENV_C3)
 //                    required_terrain.tree = true;
 //                break;
-//            case BUILDING_CLAY_PIT:
+            case BUILDING_CLAY_PIT:
+                set_requirements(PlannerReqs::NearbyWater, 0);
 //                required_terrain.water = true;
-//                break;
-//            case BUILDING_TOWER:
+                break;
+            case BUILDING_TOWER:
+                set_requirements(PlannerReqs::Walls, 0);
 //                required_terrain.wall = true;
-//                break;
+                break;
 //            case BUILDING_MENU_TEMPLES:
 //                sub_type = BUILDING_TEMPLE_OSIRIS;
 //                break;
@@ -1557,6 +1555,9 @@ void BuildPlanner::set_building_type(int type) { // select building for construc
             default:
                 break;
         }
+
+        // set graphics
+        load_build_graphics();
     }
 }
 void BuildPlanner::clear_building_type(void) {
@@ -1648,7 +1649,7 @@ void BuildPlanner::construction_cancel(void) {
 
         in_progress = 0;
     } else {
-        BuildPlanner::set_building_type(BUILDING_NONE);
+        BuildPlanner::setup_build_type(BUILDING_NONE);
         widget_sidebar_city_release_build_buttons();
     }
     building_rotation_reset_rotation();

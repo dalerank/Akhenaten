@@ -69,6 +69,7 @@ void map_orientation_change(int counter_clockwise) {
 
     figure_tower_sentry_reroute();
     figure_hippodrome_horse_reroute();
+    Planner.update_orientations();
 }
 void map_orientation_update_buildings(void) {
     int map_orientation = city_view_orientation();

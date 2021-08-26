@@ -6,6 +6,7 @@
 #include "map/terrain.h"
 #include "city/view.h"
 #include "graphics/image.h"
+#include "rotation.h"
 
 BuildPlanner Planner;
 
@@ -27,10 +28,10 @@ void BuildPlanner::reset() {
     immediate_problem_warning = -1;
 }
 void BuildPlanner::init_tiles(int size_x, int size_y) {
-    size_x = size_x;
-    size_y = size_y;
-    for (int row = 0; row < size_y; ++row) {
-        for (int column = 0; column < size_x; ++column) {
+    size.x = size_x;
+    size.y = size_y;
+    for (int row = 0; row < size.y; ++row) {
+        for (int column = 0; column < size.x; ++column) {
             if (column > 29 || row > 29)
                 return;
             tile_graphics_array[row][column] = 0;
@@ -139,6 +140,7 @@ void BuildPlanner::dispatch_warnings() {
 }
 
 void BuildPlanner::update_obstructions_check() {
+    tiles_blocked_total = 0;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
 
@@ -146,6 +148,7 @@ void BuildPlanner::update_obstructions_check() {
             map_point current_tile = tile_coord_cache[row][column];
             int restricted_terrain = tile_restricted_terrains[row][column];
 
+            tile_blocked_array[row][column] = false;
             int grid_offset = map_grid_offset(current_tile.x, current_tile.y);
             if (!map_grid_is_inside(current_tile.x, current_tile.y, 1) || map_terrain_is(grid_offset, restricted_terrain & TERRAIN_NOT_CLEAR)) {
                 tile_blocked_array[row][column] = true;
@@ -194,6 +197,32 @@ void BuildPlanner::draw_graphics() {
 }
 
 //////
+
+void BuildPlanner::update_orientations() {
+
+    switch (building_type) {
+        case BUILDING_SMALL_STATUE:
+        case BUILDING_MEDIUM_STATUE:
+        case BUILDING_LARGE_STATUE:
+            orientation = building_rotation_get_rotation() + 1;
+            variant = building_rotation_get_building_variant();
+            break;
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            building_rotation_force_two_orientations();
+            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+            variant = 0;
+            break;
+        default:
+            orientation = 0;
+            variant = 0;
+            break;
+    }
+    load_build_graphics(); // reload graphics, tiles, etc.
+}
 
 void BuildPlanner::update(const map_tile *cursor_tile, int x, int y) {
     update_coord_caches(cursor_tile, x, y);

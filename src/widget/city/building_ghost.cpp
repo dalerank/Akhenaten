@@ -829,134 +829,143 @@ static void draw_fort(const map_tile *tile, int x, int y) {
     }
 }
 
-static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
-    bool fully_blocked = false;
-    bool blocked = false;
-    if (city_buildings_has_temple_complex() || city_finance_out_of_money()) {
-        fully_blocked = true;
-        blocked = true;
+void BuildPlanner::load_build_graphics() {
+    const building_properties *props = building_properties_for_type(building_type);
+    switch (building_type) {
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST: {
+            // size of every big item 3x3, in general 7x13
+            // 25 max tiles at the moment to check blocked tiles
+            int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, building_type);
+            int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, building_type);
+            int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, building_type);
+            int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, building_type);
+            int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, building_type);
+            int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, building_type);
+
+            int EMPTY = 0;
+            int mn_1A = main_image_id;
+            int mn_1B = main_image_id + 3;
+            int mn_2A = oracle_image_id;
+            int mn_2B = oracle_image_id + 3;
+            int mn_3A = altar_image_id;
+            int mn_3B = altar_image_id + 3;
+
+            int til_0 = flooring_image_id + 0;
+            int til_1 = flooring_image_id + 1;
+            int til_2 = flooring_image_id + 2;
+            int til_3 = flooring_image_id + 3;
+
+            int smst0 = statue1_image_id + 0; // north
+            int smst1 = statue1_image_id + 1; // east
+            int smst2 = statue1_image_id + 2; // south
+            int smst3 = statue1_image_id + 3; // west
+
+            int lst0A = statue2_image_id + 0; // north
+            int lst0B = statue2_image_id + 1;
+            int lst1A = statue2_image_id + 2; // east
+            int lst1B = statue2_image_id + 3;
+            int lst2A = statue2_image_id + 4; // south
+            int lst2B = statue2_image_id + 5;
+            int lst3A = statue2_image_id + 6; // west
+            int lst3B = statue2_image_id + 7;
+
+//            building_rotation_force_two_orientations();
+//            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+            switch (orientation) { // it goes counterclockwise.
+                case 0: { // SE
+                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
+                            {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
+                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
+                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
+                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
+                            {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
+                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
+                            {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
+                    };
+                    init_tiles(13, 7);
+                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+                    set_pivot(0, 2);
+                    break;
+                }
+                case 1: { // NE
+                    int TEMPLE_COMPLEX_SCHEME[13][7] = {
+                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                            {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                            {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+                            {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, mn_1B, EMPTY, EMPTY, til_0, smst1},
+                            {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, mn_2B, EMPTY, EMPTY, til_0, smst1},
+                            {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
+                    };
+                    init_tiles(7, 13);
+                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+                    set_pivot(2, 12);
+                    break;
+                }
+                case 2: { // NW
+                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
+
+                            {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
+                            {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                            {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                            {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                            {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
+                            {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                            {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+                    };
+                    init_tiles(13, 7);
+                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+                    set_pivot(12, 2);
+                    break;
+                }
+                case 3: { // SW
+                    int TEMPLE_COMPLEX_SCHEME[13][7] = {
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {til_1, til_1, mn_1B, EMPTY, EMPTY, til_1, til_1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {til_1, til_1, mn_2B, EMPTY, EMPTY, til_1, til_1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                            {til_0, til_0, mn_3B, EMPTY, EMPTY, til_0, til_0},
+                            {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                            {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                    };
+                    init_tiles(7, 13);
+                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+                    set_pivot(2, 0);
+                    break;
+                }
+            }
+            break;
+        }
+        default: // regular buildings
+            init_tiles(props->size, props->size);
+            int empty_row[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            int draw_row[] = {image_id_from_group(props->image_collection, props->image_group), 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            for (int row = 0; row < size.y; ++row) {
+                if (row == size.y - 1)
+                    set_graphics_row(row, draw_row, size.x);
+                else
+                    set_graphics_row(row, empty_row, size.x);
+            }
+            break;
     }
-//    if (fully_blocked)
-//        return;
-
-    // size of every big item 3x3, in general 7x13
-    // 25 max tiles at the moment to check blocked tiles
-    int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type);
-    int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, type);
-    int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, type);
-    int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, type);
-    int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, type);
-    int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, type);
-
-    building_rotation_force_two_orientations();
-    int orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
-
-    int EMPTY = 0;
-    int mn_1A = main_image_id;
-    int mn_1B = main_image_id + 3;
-    int mn_2A = oracle_image_id;
-    int mn_2B = oracle_image_id + 3;
-    int mn_3A = altar_image_id;
-    int mn_3B = altar_image_id + 3;
-
-    int til_0 = flooring_image_id + 0;
-    int til_1 = flooring_image_id + 1;
-    int til_2 = flooring_image_id + 2;
-    int til_3 = flooring_image_id + 3;
-
-    int smst0 = statue1_image_id + 0; // north
-    int smst1 = statue1_image_id + 1; // east
-    int smst2 = statue1_image_id + 2; // south
-    int smst3 = statue1_image_id + 3; // west
-
-    int lst0A = statue2_image_id + 0; // north
-    int lst0B = statue2_image_id + 1;
-    int lst1A = statue2_image_id + 2; // east
-    int lst1B = statue2_image_id + 3;
-    int lst2A = statue2_image_id + 4; // south
-    int lst2B = statue2_image_id + 5;
-    int lst3A = statue2_image_id + 6; // west
-    int lst3B = statue2_image_id + 7;
-
-    switch (orientation) { // it goes counterclockwise.
-        case 0: { // SE
-            int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                    {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
-                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
-                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
-                    {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
-                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
-                    {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
-            };
-//            BuildPlanner::init_tiles(13, 7);
-//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-//            BuildPlanner::set_pivot(0, 2);
-            break;
-        }
-        case 1: { // NE
-            int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                    {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, mn_1B, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, mn_2B, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
-            };
-//            BuildPlanner::init_tiles(7, 13);
-//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-//            BuildPlanner::set_pivot(2, 12);
-            break;
-        }
-        case 2: { // NW
-            int TEMPLE_COMPLEX_SCHEME[7][13] = {
-
-                    {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
-                    {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                    {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                    {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
-                    {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                    {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
-            };
-//            BuildPlanner::init_tiles(13, 7);
-//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-//            BuildPlanner::set_pivot(12, 2);
-            break;
-        }
-        case 3: { // SW
-            int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, mn_1B, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_1, til_1, mn_2B, EMPTY, EMPTY, til_1, til_1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                    {til_0, til_0, mn_3B, EMPTY, EMPTY, til_0, til_0},
-                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-            };
-//            BuildPlanner::init_tiles(7, 13);
-//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-//            BuildPlanner::set_pivot(2, 0);
-            break;
-        }
-    }
-
-//    BuildPlanner::update_all(tile, x, y);
-//    BuildPlanner::draw_ghost();
 }
+
 static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
     // TODO: implement monuments
 }
@@ -1249,7 +1258,7 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
     return 1;
 }
 void city_building_ghost_draw(const map_tile *tile) {
-    if (!tile->grid_offset || scroll_in_progress())
+    if (!tile->grid_offset) // || scroll_in_progress()
         return;
     int type = Planner.building_type;
     if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
