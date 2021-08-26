@@ -77,9 +77,9 @@ static int init(int submenu) {
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
 
 //    int type = building_menu_type(data.selected_submenu, item);
-//    building_construction_set_type(type);
+//    BuildPlanner::set_building_type(type);
 
-    building_construction_set_type(BUILDING_NONE);
+    Planner.set_building_type(BUILDING_NONE);
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
@@ -222,12 +222,12 @@ static void button_menu_item(int item) {
     widget_city_clear_current_tile();
 
     int type = building_menu_type(data.selected_submenu, item);
-    building_construction_set_type(type);
+    Planner.set_building_type(type);
 
     if (set_submenu_for_type(type)) {
         data.num_items = building_menu_count_items(data.selected_submenu);
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
-        building_construction_clear_type();
+        Planner.clear_building_type();
         window_invalidate();
     } else
         window_city_show();
@@ -237,7 +237,7 @@ int window_build_menu_image(void) {
     int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            if (building_construction_type() == BUILDING_NONE)
+            if (Planner.get_building_type() == BUILDING_NONE)
                 return image_base + 12;
             switch (data.selected_submenu) {
                 default:
@@ -285,7 +285,7 @@ int window_build_menu_image(void) {
             break;
         case ENGINE_ENV_PHARAOH:
             image_base = image_id_from_group(GROUP_PANEL_WINDOWS_PH);
-//            if (building_construction_type() == BUILDING_NONE)
+//            if (Planner.get_building_type() == BUILDING_NONE)
 //                return image_base;
             switch (data.selected_submenu) {
                 default:

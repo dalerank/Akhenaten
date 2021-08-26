@@ -322,7 +322,7 @@ void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0)
         return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 
-    building_construction_record_view_position(x, y, grid_offset);
+    Planner.construction_record_view_position(x, y, grid_offset);
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
@@ -442,7 +442,7 @@ void deletion_draw_figures_animations(int x, int y, int grid_offset) {
 /////////
 
 void draw_footprint_overlay(int x, int y, int grid_offset) {
-    building_construction_record_view_position(x, y, grid_offset);
+    Planner.construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);

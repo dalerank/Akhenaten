@@ -475,19 +475,19 @@ static void replay_map_confirmed(bool confirmed) {
 }
 static void menu_file_new_game(int param) {
     clear_state();
-    building_construction_clear_type();
+    Planner.clear_building_type();
     game_undo_disable();
     game_state_reset_overlay();
     window_main_menu_show(1);
 }
 static void menu_file_replay_map(int param) {
     clear_state();
-    building_construction_clear_type();
+    Planner.clear_building_type();
     window_popup_dialog_show_confirmation(1, 2, replay_map_confirmed);
 }
 static void menu_file_load_game(int param) {
     clear_state();
-    building_construction_clear_type();
+    Planner.clear_building_type();
     window_city_show();
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 }

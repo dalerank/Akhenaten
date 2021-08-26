@@ -112,7 +112,7 @@ void game_cheat_breakpoint() {
 
 void game_cheat_console() {
     if (data.is_cheating) {
-        building_construction_clear_type();
+        Planner.clear_building_type();
         window_city_show();
         window_console_show();
     }

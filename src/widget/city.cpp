@@ -188,15 +188,15 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
     graphics_reset_clip_rectangle();
 }
 int widget_city_draw_construction_cost_and_size(void) {
-    if (!building_construction_in_progress())
+    if (!Planner.construction_in_progress())
         return 0;
 
     if (scroll_in_progress())
         return 0;
 
     int size_x, size_y;
-    int cost = building_construction_cost();
-    int has_size = building_construction_size(&size_x, &size_y);
+    int cost = Planner.get_cost();
+    int has_size = Planner.get_size(&size_x, &size_y);
     if (!cost && !has_size)
         return 0;
 
@@ -233,19 +233,19 @@ int widget_city_draw_construction_cost_and_size(void) {
 
 static void build_start(const map_tile *tile) {
     if (tile->grid_offset) // Allow building on paused
-        building_construction_start(tile->x, tile->y, tile->grid_offset);
+        Planner.construction_start(tile->x, tile->y, tile->grid_offset);
 }
 static void build_move(const map_tile *tile) {
-    if (!building_construction_in_progress())
+    if (!Planner.construction_in_progress())
         return;
-    building_construction_update(tile->x, tile->y, tile->grid_offset);
+    Planner.construction_update(tile->x, tile->y, tile->grid_offset);
 }
 static void build_end(void) {
-    if (building_construction_in_progress()) {
-        if (building_construction_type() != BUILDING_NONE)
+    if (Planner.construction_in_progress()) {
+        if (Planner.get_building_type() != BUILDING_NONE)
             sound_effect_play(SOUND_EFFECT_BUILD);
 
-        building_construction_finalize();
+        Planner.construction_finalize();
     }
 }
 
@@ -293,7 +293,7 @@ static bool handle_legion_click(const map_tile *tile) {
     return false;
 }
 static bool handle_cancel_construction_button(const touch *t) {
-    if (!building_construction_type())
+    if (!Planner.get_building_type())
         return false;
 
     int x, y, width, height;
@@ -305,7 +305,7 @@ static bool handle_cancel_construction_button(const touch *t) {
         t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
         return false;
     }
-    building_construction_cancel();
+    Planner.construction_cancel();
     return true;
 }
 void widget_city_clear_current_tile(void) {
@@ -316,7 +316,7 @@ void widget_city_clear_current_tile(void) {
 }
 
 static void handle_touch_scroll(const touch *t) {
-    if (building_construction_type()) {
+    if (Planner.get_building_type()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
             city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
@@ -352,7 +352,7 @@ static void handle_touch_zoom(const touch *first, const touch *last) {
 }
 static void handle_first_touch(map_tile *tile) {
     const touch *first = get_earliest_touch();
-    int type = building_construction_type();
+    int type = Planner.get_building_type();
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile))
@@ -370,8 +370,8 @@ static void handle_first_touch(map_tile *tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (building_construction_is_draggable()) {
-        if (!building_construction_in_progress()) {
+    if (Planner.construction_is_draggable()) {
+        if (!Planner.construction_in_progress()) {
             if (first->has_started) {
                 build_start(tile);
                 data.new_start_grid_offset = 0;
@@ -385,7 +385,7 @@ static void handle_first_touch(map_tile *tile) {
             if (touch_not_click(first) && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
                 data.selected_tile.grid_offset = 0;
-                building_construction_cancel();
+                Planner.construction_cancel();
                 build_start(tile);
             }
             build_move(tile);
@@ -425,7 +425,7 @@ static void handle_last_touch(void) {
     if (!last->in_use)
         return;
     if (touch_was_click(last)) {
-        building_construction_cancel();
+        Planner.construction_cancel();
         return;
     }
     if (touch_not_click(last))
@@ -440,7 +440,7 @@ static void handle_touch(void) {
     }
 
     map_tile *tile = &data.current_tile;
-    if (!building_construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y))
+    if (!Planner.construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
 
 
@@ -455,8 +455,7 @@ static void handle_touch(void) {
     if (first->has_ended)
         data.capture_input = 0;
 
-
-    building_construction_reset_draw_as_constructing();
+    Planner.draw_as_constructing = false;
 }
 int widget_city_has_input(void) {
     return data.capture_input;
@@ -465,29 +464,29 @@ static void handle_mouse(const mouse *m) {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     zoom_map(m);
-    building_construction_reset_draw_as_constructing();
+    Planner.draw_as_constructing = false;
     if (m->left.went_down) {
         if (handle_legion_click(tile))
             return;
-        if (!building_construction_in_progress())
+        if (!Planner.construction_in_progress())
             build_start(tile);
 
         build_move(tile);
-    } else if (m->left.is_down || building_construction_in_progress())
+    } else if (m->left.is_down || Planner.construction_in_progress())
         build_move(tile);
 
     if (m->left.went_up)
         build_end();
 
-    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !building_construction_type())
+    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !Planner.get_building_type())
         scroll_drag_start(0);
 
     if (m->right.went_up) {
-        if (!building_construction_type()) {
+        if (!Planner.get_building_type()) {
             if (handle_right_click_allow_building_info(tile))
                 window_building_info_show(tile->grid_offset);
         } else
-            building_construction_cancel();
+            Planner.construction_cancel();
     }
 
     if (m->middle.went_up)
@@ -519,8 +518,8 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
         handle_mouse(m);
 
     if (h->escape_pressed) {
-        if (building_construction_type())
-            building_construction_cancel();
+        if (Planner.get_building_type())
+            Planner.construction_cancel();
         else
             hotkey_handle_escape();
     }

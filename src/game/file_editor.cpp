@@ -50,7 +50,7 @@
 
 void game_file_editor_clear_data(void) {
     city_victory_reset();
-    building_construction_clear_type();
+    Planner.clear_building_type();
     city_data_init();
     city_data_init_scenario();
     city_message_init_scenario();

@@ -145,7 +145,7 @@ void city_victory_check(void) {
         data.state = VICTORY_STATE_WON;
 
     if (data.state != VICTORY_STATE_NONE) {
-        building_construction_clear_type();
+        Planner.clear_building_type();
         if (data.state == VICTORY_STATE_LOST) {
             if (city_data.mission.fired_message_shown)
                 window_mission_end_show_fired();

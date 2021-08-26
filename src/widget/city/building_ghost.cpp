@@ -365,26 +365,26 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int *x
             *x = *y = 0;
     }
 }
-static int is_fully_blocked(int map_x, int map_y, int type, int building_size, int grid_offset) {
-    // determine x and y offset
-    int x = 0, y = 0;
-    get_building_base_xy(map_x, map_y, building_size, &x, &y);
-
-    if (!building_construction_can_place_on_terrain(x, y, 0, building_size))
-        return 1;
-    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate())
-        return 1;
-    if (type == BUILDING_RECRUITER && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
-        return 1;
-    if (type == BUILDING_PLAZA && (!map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_tiles_is_paved_road(grid_offset)))
-        return 1;
-    if (((type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) || type == BUILDING_ROADBLOCK) &&
-        !map_terrain_is(grid_offset, TERRAIN_ROAD))
-        return 1;
-    if (city_finance_out_of_money())
-        return 1;
-    return 0;
-}
+//static int is_fully_blocked(int map_x, int map_y, int type, int building_size, int grid_offset) {
+//    // determine x and y offset
+//    int x = 0, y = 0;
+//    get_building_base_xy(map_x, map_y, building_size, &x, &y);
+//
+//    if (!building_construction_can_place_on_terrain(x, y, 0, building_size))
+//        return 1;
+//    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate())
+//        return 1;
+//    if (type == BUILDING_RECRUITER && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS))
+//        return 1;
+//    if (type == BUILDING_PLAZA && (!map_terrain_is(grid_offset, TERRAIN_ROAD) || !map_tiles_is_paved_road(grid_offset)))
+//        return 1;
+//    if (((type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) || type == BUILDING_ROADBLOCK) &&
+//        !map_terrain_is(grid_offset, TERRAIN_ROAD))
+//        return 1;
+//    if (city_finance_out_of_money())
+//        return 1;
+//    return 0;
+//}
 static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
@@ -489,68 +489,68 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
     } else if (type != BUILDING_CLEAR_LAND)
         draw_building(image_id, x, y);
 }
-static void draw_default(const map_tile *tile, int x_view, int y_view, int type) {
+//static void draw_default(const map_tile *tile, int x_view, int y_view, int type) {
+////    const building_properties *props = building_properties_for_type(type);
+////    int building_size = (type == BUILDING_WAREHOUSE) ? 3 : props->size;
+////
+////    int image_array[10][10] = {
+////        {image_id_from_group(props->image_collection, props->image_group), 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////    };
+////    draw_generic_multi_tile_set(tile, x_view, y_view, (int *)image_array, building_size, building_size, 0, 0);
+//
 //    const building_properties *props = building_properties_for_type(type);
 //    int building_size = (type == BUILDING_WAREHOUSE) ? 3 : props->size;
 //
-//    int image_array[10][10] = {
-//        {image_id_from_group(props->image_collection, props->image_group), 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//    };
-//    draw_generic_multi_tile_set(tile, x_view, y_view, (int *)image_array, building_size, building_size, 0, 0);
-
-    const building_properties *props = building_properties_for_type(type);
-    int building_size = (type == BUILDING_WAREHOUSE) ? 3 : props->size;
-
-    // check if we can place building
-    int grid_offset = tile->grid_offset;
-    int fully_blocked = is_fully_blocked(tile->x, tile->y, type, building_size, grid_offset);
-    int blocked = fully_blocked;
-
-    int num_tiles = building_size * building_size;
-    int blocked_tiles[MAX_TILES];
-    int orientation_index = city_view_orientation() / 2;
-    for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
-        switch (GAME_ENV) {
-            case ENGINE_ENV_C3:
-                tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
-                break;
-            case ENGINE_ENV_PHARAOH:
-                tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
-                break;
-        }
-        int non_clear_terrain_at_tile = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
-        if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
-            type == BUILDING_PLAZA || (type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) ||
-            type == BUILDING_ROADBLOCK)
-            non_clear_terrain_at_tile &= ~TERRAIN_ROAD;
-        if (type == BUILDING_TOWER)
-            non_clear_terrain_at_tile &= ~TERRAIN_WALL;
-        if (building_is_farm(type))
-            non_clear_terrain_at_tile &= ~TERRAIN_FLOODPLAIN;
-        if (non_clear_terrain_at_tile || map_has_figure_at(tile_offset))
-            blocked_tiles[i] = blocked = 1;
-        else
-            blocked_tiles[i] = 0;
-        if (!building_is_farm(type) && map_terrain_exists_tile_in_radius_with_type(map_grid_offset_to_x(tile_offset), map_grid_offset_to_y(tile_offset), 1, 1, TERRAIN_FLOODPLAIN))
-            blocked_tiles[i] = blocked = 1;
-    }
-    if (blocked)
-        draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
-    else {
-        int image_id = get_building_image_id(tile->x, tile->y, type, props);
-        draw_regular_building(type, image_id, x_view, y_view, grid_offset);
-    }
-}
+//    // check if we can place building
+//    int grid_offset = tile->grid_offset;
+//    int fully_blocked = is_fully_blocked(tile->x, tile->y, type, building_size, grid_offset);
+//    int blocked = fully_blocked;
+//
+//    int num_tiles = building_size * building_size;
+//    int blocked_tiles[MAX_TILES];
+//    int orientation_index = city_view_orientation() / 2;
+//    for (int i = 0; i < num_tiles; i++) {
+//        int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
+//        switch (GAME_ENV) {
+//            case ENGINE_ENV_C3:
+//                tile_offset += TILE_GRID_OFFSETS_C3[orientation_index][i];
+//                break;
+//            case ENGINE_ENV_PHARAOH:
+//                tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
+//                break;
+//        }
+//        int non_clear_terrain_at_tile = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
+//        if (type == BUILDING_GATEHOUSE || type == BUILDING_GATEHOUSE_PH || type == BUILDING_TRIUMPHAL_ARCH ||
+//            type == BUILDING_PLAZA || (type == BUILDING_ROADBLOCK && GAME_ENV == ENGINE_ENV_C3) ||
+//            type == BUILDING_ROADBLOCK)
+//            non_clear_terrain_at_tile &= ~TERRAIN_ROAD;
+//        if (type == BUILDING_TOWER)
+//            non_clear_terrain_at_tile &= ~TERRAIN_WALL;
+//        if (building_is_farm(type))
+//            non_clear_terrain_at_tile &= ~TERRAIN_FLOODPLAIN;
+//        if (non_clear_terrain_at_tile || map_has_figure_at(tile_offset))
+//            blocked_tiles[i] = blocked = 1;
+//        else
+//            blocked_tiles[i] = 0;
+//        if (!building_is_farm(type) && map_terrain_exists_tile_in_radius_with_type(map_grid_offset_to_x(tile_offset), map_grid_offset_to_y(tile_offset), 1, 1, TERRAIN_FLOODPLAIN))
+//            blocked_tiles[i] = blocked = 1;
+//    }
+//    if (blocked)
+//        draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
+//    else {
+//        int image_id = get_building_image_id(tile->x, tile->y, type, props);
+//        draw_regular_building(type, image_id, x_view, y_view, grid_offset);
+//    }
+//}
 
 static void draw_single_reservoir(int x, int y, int has_water) {
     int image_id = image_id_from_group(GROUP_BUILDING_RESERVOIR);
@@ -576,132 +576,132 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
     }
     ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
-static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
-    int map_x = tile->x - 1;
-    int map_y = tile->y - 1;
-    int blocked = 0;
-    if (building_construction_in_progress()) {
-        if (!building_construction_cost())
-            blocked = 1;
-
-    } else {
-        if (map_building_is_reservoir(map_x, map_y))
-            blocked = 0;
-        else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL))
-            blocked = 1;
-
-    }
-    if (city_finance_out_of_money())
-        blocked = 1;
-
-    int draw_later = 0;
-    int x_start, y_start, offset;
-    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
-    int orientation_index = city_view_orientation() / 2;
-    if (building_construction_in_progress()) {
-        building_construction_get_view_position(&x_start, &y_start);
-        y_start -= 30;
-        if (blocked) {
-            for (int i = 0; i < 9; i++)
-                draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-        } else {
-            offset = building_construction_get_start_grid_offset();
-            if (offset != reservoir_range_data.last_grid_offset) {
-                reservoir_range_data.last_grid_offset = offset;
-                reservoir_range_data.total = 0;
-                reservoir_range_data.save_offsets = 1;
-            } else
-                reservoir_range_data.save_offsets = 0;
-            int map_x_start = map_grid_offset_to_x(offset) - 1;
-            int map_y_start = map_grid_offset_to_y(offset) - 1;
-            if (!has_water)
-                has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5,
-                                                                      TERRAIN_WATER);
-            switch (city_view_orientation()) {
-                case DIR_0_TOP_RIGHT:
-                    draw_later = map_x_start > map_x || map_y_start > map_y;
-                    break;
-                case DIR_2_BOTTOM_RIGHT:
-                    draw_later = map_x_start < map_x || map_y_start > map_y;
-                    break;
-                case DIR_4_BOTTOM_LEFT:
-                    draw_later = map_x_start < map_x || map_y_start < map_y;
-                    break;
-                case DIR_6_TOP_LEFT:
-                    draw_later = map_x_start > map_x || map_y_start < map_y;
-                    break;
-            }
-            if (!draw_later) {
-                if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                    switch (GAME_ENV) {
-                        case ENGINE_ENV_C3:
-                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3,
-                                                            10, draw_first_reservoir_range);
-                            city_view_foreach_tile_in_range(
-                                    tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10,
-                                    draw_second_reservoir_range);
-                            break;
-                        case ENGINE_ENV_PHARAOH:
-                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3,
-                                                            10, draw_first_reservoir_range);
-                            city_view_foreach_tile_in_range(
-                                    tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10,
-                                    draw_second_reservoir_range);
-                            break;
-                    }
-//                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
-//                    city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
-                }
-                draw_single_reservoir(x_start, y_start, has_water);
-            }
-        }
-    } else {
-        reservoir_range_data.last_grid_offset = -1;
-        reservoir_range_data.total = 0;
-    }
-    // mouse pointer = center tile of reservoir instead of north, correct here:
-    y -= 30;
-    if (blocked) {
-        for (int i = 0; i < 9; i++) {
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-        }
-    } else {
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
-            switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    if (draw_later)
-                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10,
-                                                        draw_first_reservoir_range);
-
-                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3,
-                                                    10, draw_second_reservoir_range);
-                    break;
-                case ENGINE_ENV_PHARAOH:
-
-                    if (draw_later)
-                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10,
-                                                        draw_first_reservoir_range);
-
-                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3,
-                                                    10, draw_second_reservoir_range);
-                    break;
-            }
-//            if (draw_later) {
-//                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+//static void draw_draggable_reservoir(const map_tile *tile, int x, int y) {
+//    int map_x = tile->x - 1;
+//    int map_y = tile->y - 1;
+//    int blocked = 0;
+//    if (Planner.construction_in_progress()) {
+//        if (!Planner.get_cost())
+//            blocked = 1;
+//
+//    } else {
+//        if (map_building_is_reservoir(map_x, map_y))
+//            blocked = 0;
+//        else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL))
+//            blocked = 1;
+//
+//    }
+//    if (city_finance_out_of_money())
+//        blocked = 1;
+//
+//    int draw_later = 0;
+//    int x_start, y_start, offset;
+//    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
+//    int orientation_index = city_view_orientation() / 2;
+//    if (Planner.construction_in_progress()) {
+//        building_construction_get_view_position(&x_start, &y_start);
+//        y_start -= 30;
+//        if (blocked) {
+//            for (int i = 0; i < 9; i++)
+//                draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+//        } else {
+//            offset = building_construction_get_start_grid_offset();
+//            if (offset != reservoir_range_data.last_grid_offset) {
+//                reservoir_range_data.last_grid_offset = offset;
+//                reservoir_range_data.total = 0;
+//                reservoir_range_data.save_offsets = 1;
+//            } else
+//                reservoir_range_data.save_offsets = 0;
+//            int map_x_start = map_grid_offset_to_x(offset) - 1;
+//            int map_y_start = map_grid_offset_to_y(offset) - 1;
+//            if (!has_water)
+//                has_water = map_terrain_exists_tile_in_area_with_type(map_x_start - 1, map_y_start - 1, 5,
+//                                                                      TERRAIN_WATER);
+//            switch (city_view_orientation()) {
+//                case DIR_0_TOP_RIGHT:
+//                    draw_later = map_x_start > map_x || map_y_start > map_y;
+//                    break;
+//                case DIR_2_BOTTOM_RIGHT:
+//                    draw_later = map_x_start < map_x || map_y_start > map_y;
+//                    break;
+//                case DIR_4_BOTTOM_LEFT:
+//                    draw_later = map_x_start < map_x || map_y_start < map_y;
+//                    break;
+//                case DIR_6_TOP_LEFT:
+//                    draw_later = map_x_start > map_x || map_y_start < map_y;
+//                    break;
 //            }
-//            city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
-        }
-        draw_single_reservoir(x, y, has_water);
-        if (draw_later)
-            draw_single_reservoir(x_start, y_start, has_water);
-
-    }
-}
+//            if (!draw_later) {
+//                if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+//                    switch (GAME_ENV) {
+//                        case ENGINE_ENV_C3:
+//                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3,
+//                                                            10, draw_first_reservoir_range);
+//                            city_view_foreach_tile_in_range(
+//                                    tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10,
+//                                    draw_second_reservoir_range);
+//                            break;
+//                        case ENGINE_ENV_PHARAOH:
+//                            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3,
+//                                                            10, draw_first_reservoir_range);
+//                            city_view_foreach_tile_in_range(
+//                                    tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10,
+//                                    draw_second_reservoir_range);
+//                            break;
+//                    }
+////                    city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+////                    city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+//                }
+//                draw_single_reservoir(x_start, y_start, has_water);
+//            }
+//        }
+//    } else {
+//        reservoir_range_data.last_grid_offset = -1;
+//        reservoir_range_data.total = 0;
+//    }
+//    // mouse pointer = center tile of reservoir instead of north, correct here:
+//    y -= 30;
+//    if (blocked) {
+//        for (int i = 0; i < 9; i++) {
+//            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
+//        }
+//    } else {
+//        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!Planner.construction_in_progress() || draw_later)) {
+//            switch (GAME_ENV) {
+//                case ENGINE_ENV_C3:
+//                    if (draw_later)
+//                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3, 10,
+//                                                        draw_first_reservoir_range);
+//
+//                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_C3[orientation_index], 3,
+//                                                    10, draw_second_reservoir_range);
+//                    break;
+//                case ENGINE_ENV_PHARAOH:
+//
+//                    if (draw_later)
+//                        city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3, 10,
+//                                                        draw_first_reservoir_range);
+//
+//                    city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS_PH[orientation_index], 3,
+//                                                    10, draw_second_reservoir_range);
+//                    break;
+//            }
+////            if (draw_later) {
+////                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+////            }
+////            city_view_foreach_tile_in_range(tile->grid_offset_figure + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+//        }
+//        draw_single_reservoir(x, y, has_water);
+//        if (draw_later)
+//            draw_single_reservoir(x_start, y_start, has_water);
+//
+//    }
+//}
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     int blocked = 0;
-    if (building_construction_in_progress()) { // already dragging aqueduct
-        if (!building_construction_cost()) // ???
+    if (Planner.construction_in_progress()) { // already dragging aqueduct
+        if (!Planner.get_cost()) // ???
             blocked = 1;
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) { // starting new aqueduct line
@@ -943,9 +943,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
                     {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
             };
-            planner_reset_tiles(13, 7);
-            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-            planner_set_pivot(0, 2);
+//            BuildPlanner::init_tiles(13, 7);
+//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+//            BuildPlanner::set_pivot(0, 2);
             break;
         }
         case 1: { // NE
@@ -964,9 +964,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
                     {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
             };
-            planner_reset_tiles(7, 13);
-            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-            planner_set_pivot(2, 12);
+//            BuildPlanner::init_tiles(7, 13);
+//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+//            BuildPlanner::set_pivot(2, 12);
             break;
         }
         case 2: { // NW
@@ -980,9 +980,9 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
                     {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
             };
-            planner_reset_tiles(13, 7);
-            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-            planner_set_pivot(12, 2);
+//            BuildPlanner::init_tiles(13, 7);
+//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+//            BuildPlanner::set_pivot(12, 2);
             break;
         }
         case 3: { // SW
@@ -1001,13 +1001,15 @@ static void draw_temple_complex(const map_tile *tile, int x, int y, int type) {
                     {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
                     {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
             };
-            planner_reset_tiles(7, 13);
-            planner_set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-            planner_set_pivot(2, 0);
+//            BuildPlanner::init_tiles(7, 13);
+//            BuildPlanner::set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
+//            BuildPlanner::set_pivot(2, 0);
             break;
         }
     }
-    planner_draw_all(tile, x, y);
+
+//    BuildPlanner::update_all(tile, x, y);
+//    BuildPlanner::draw_ghost();
 }
 static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
     // TODO: implement monuments
@@ -1289,12 +1291,12 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return 0;
 
-    int construction_type = building_construction_type();
-    if (!tile->grid_offset || building_construction_draw_as_constructing() ||
+    int construction_type = Planner.get_building_type();
+    if (!tile->grid_offset || Planner.draw_as_constructing ||
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
     }
-    if (!building_construction_in_progress())
+    if (!Planner.construction_in_progress())
         map_property_clear_constructing_and_deleted();
 
     map_building_tiles_mark_deleting(tile->grid_offset);
@@ -1303,84 +1305,88 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
 void city_building_ghost_draw(const map_tile *tile) {
     if (!tile->grid_offset || scroll_in_progress())
         return;
-    int type = building_construction_type();
-    if (building_construction_draw_as_constructing() || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
+    int type = Planner.get_building_type();
+    if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
         return;
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
 
+    Planner.update_location(tile, x, y);
+    Planner.draw();
+    return;
+
     // update road required based on timer
-    building_rotation_update_road_orientation();
-    switch (type) {
-        case BUILDING_WATER_LIFT:
-            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//                draw_draggable_waterlift(tile, x, y);
-                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
-            else
-                draw_draggable_reservoir(tile, x, y);
-            break;
-        case BUILDING_IRRIGATION_DITCH:
-            draw_aqueduct(tile, x, y);
-            break;
-        case BUILDING_MENU_BEAUTIFICATION:
-            draw_fountain(tile, x, y);
-            break;
-        case BUILDING_MENU_MONUMENTS:
-            draw_bathhouse(tile, x, y);
-            break;
-        case BUILDING_LOW_BRIDGE:
-        case BUILDING_SHIP_BRIDGE:
-            draw_bridge(tile, x, y, type);
-            break;
-        case BUILDING_FORT_CHARIOTEERS:
-        case BUILDING_FORT_ARCHERS:
-        case BUILDING_FORT_INFANTRY:
-            draw_fort(tile, x, y);
-            break;
-        case BUILDING_SENET_HOUSE:
-            if (GAME_ENV == ENGINE_ENV_C3) {
-//                draw_hippodrome(tile, x, y);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                draw_default(tile, x, y, type); // Senet house
-            break;
-        case BUILDING_SHIPYARD:
-        case BUILDING_FISHING_WHARF:
-            draw_shipyard_wharf(tile, x, y, type);
-            break;
-        case BUILDING_DOCK:
-            draw_dock(tile, x, y);
-            break;
-        case BUILDING_ROAD:
-            draw_road(tile, x, y);
-            break;
-        case BUILDING_BOOTH:
-        case BUILDING_BANDSTAND:
-        case BUILDING_PAVILLION:
-        case BUILDING_FESTIVAL_SQUARE:
-            draw_entertainment_venue(tile, x, y, type);
-            break;
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-            draw_temple_complex(tile, x, y, type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-            break;
-        case BUILDING_PYRAMID:
-        case BUILDING_SPHYNX:
-        case BUILDING_MAUSOLEUM:
-        case BUILDING_ALEXANDRIA_LIBRARY:
-        case BUILDING_CAESAREUM:
-        case BUILDING_PHAROS_LIGHTHOUSE:
-        case BUILDING_SMALL_ROYAL_TOMB:
-        case BUILDING_ABU_SIMBEL:
-        case BUILDING_MEDIUM_ROYAL_TOMB:
-        case BUILDING_LARGE_ROYAL_TOMB:
-        case BUILDING_GRAND_ROYAL_TOMB:
-            draw_monument_blueprint(tile, x, y, type);
-            break;
-        default:
-            draw_default(tile, x, y, type);
-            break;
-    }
+//    building_rotation_update_road_orientation();
+//    switch (type) {
+//        case BUILDING_WATER_LIFT:
+//            if (GAME_ENV == ENGINE_ENV_PHARAOH)
+////                draw_draggable_waterlift(tile, x, y);
+//                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
+//            else
+//                draw_draggable_reservoir(tile, x, y);
+//            break;
+//        case BUILDING_IRRIGATION_DITCH:
+//            draw_aqueduct(tile, x, y);
+//            break;
+//        case BUILDING_MENU_BEAUTIFICATION:
+//            draw_fountain(tile, x, y);
+//            break;
+//        case BUILDING_MENU_MONUMENTS:
+//            draw_bathhouse(tile, x, y);
+//            break;
+//        case BUILDING_LOW_BRIDGE:
+//        case BUILDING_SHIP_BRIDGE:
+//            draw_bridge(tile, x, y, type);
+//            break;
+//        case BUILDING_FORT_CHARIOTEERS:
+//        case BUILDING_FORT_ARCHERS:
+//        case BUILDING_FORT_INFANTRY:
+//            draw_fort(tile, x, y);
+//            break;
+//        case BUILDING_SENET_HOUSE:
+//            if (GAME_ENV == ENGINE_ENV_C3) {
+////                draw_hippodrome(tile, x, y);
+//            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//                draw_default(tile, x, y, type); // Senet house
+//            break;
+//        case BUILDING_SHIPYARD:
+//        case BUILDING_FISHING_WHARF:
+//            draw_shipyard_wharf(tile, x, y, type);
+//            break;
+//        case BUILDING_DOCK:
+//            draw_dock(tile, x, y);
+//            break;
+//        case BUILDING_ROAD:
+//            draw_road(tile, x, y);
+//            break;
+//        case BUILDING_BOOTH:
+//        case BUILDING_BANDSTAND:
+//        case BUILDING_PAVILLION:
+//        case BUILDING_FESTIVAL_SQUARE:
+//            draw_entertainment_venue(tile, x, y, type);
+//            break;
+//        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+//        case BUILDING_TEMPLE_COMPLEX_RA:
+//        case BUILDING_TEMPLE_COMPLEX_PTAH:
+//        case BUILDING_TEMPLE_COMPLEX_SETH:
+//        case BUILDING_TEMPLE_COMPLEX_BAST:
+//            draw_temple_complex(tile, x, y, type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
+//            break;
+//        case BUILDING_PYRAMID:
+//        case BUILDING_SPHYNX:
+//        case BUILDING_MAUSOLEUM:
+//        case BUILDING_ALEXANDRIA_LIBRARY:
+//        case BUILDING_CAESAREUM:
+//        case BUILDING_PHAROS_LIGHTHOUSE:
+//        case BUILDING_SMALL_ROYAL_TOMB:
+//        case BUILDING_ABU_SIMBEL:
+//        case BUILDING_MEDIUM_ROYAL_TOMB:
+//        case BUILDING_LARGE_ROYAL_TOMB:
+//        case BUILDING_GRAND_ROYAL_TOMB:
+//            draw_monument_blueprint(tile, x, y, type);
+//            break;
+//        default:
+//            draw_default(tile, x, y, type);
+//            break;
+//    }
 }
