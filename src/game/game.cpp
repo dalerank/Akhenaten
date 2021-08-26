@@ -109,7 +109,7 @@ static int get_elapsed_ticks(void) {
             game_speed_index = 3; // 70%, nice speed for flag animations
             break;
     }
-    if (Planner.construction_in_progress())
+    if (Planner.in_progress)
         return 0;
 
     if (scroll_in_progress() && !scroll_is_smooth())

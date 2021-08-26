@@ -188,7 +188,7 @@ void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
     graphics_reset_clip_rectangle();
 }
 bool widget_city_draw_construction_cost_and_size(void) {
-    if (!Planner.construction_in_progress())
+    if (!Planner.in_progress)
         return false;
 
     if (scroll_in_progress())
@@ -234,12 +234,12 @@ static void build_start(const map_tile *tile) {
         Planner.construction_start(tile->x, tile->y, tile->grid_offset);
 }
 static void build_move(const map_tile *tile) {
-    if (!Planner.construction_in_progress())
+    if (!Planner.in_progress)
         return;
     Planner.construction_update(tile->x, tile->y, tile->grid_offset);
 }
 static void build_end(void) {
-    if (Planner.construction_in_progress()) {
+    if (Planner.in_progress) {
         if (Planner.building_type != BUILDING_NONE)
             sound_effect_play(SOUND_EFFECT_BUILD);
 
@@ -369,7 +369,7 @@ static void handle_first_touch(map_tile *tile) {
         return;
 
     if (Planner.construction_is_draggable()) {
-        if (!Planner.construction_in_progress()) {
+        if (!Planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);
                 data.new_start_grid_offset = 0;
@@ -438,7 +438,7 @@ static void handle_touch(void) {
     }
 
     map_tile *tile = &data.current_tile;
-    if (!Planner.construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y))
+    if (!Planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
 
 
@@ -466,11 +466,11 @@ static void handle_mouse(const mouse *m) {
     if (m->left.went_down) {
         if (handle_legion_click(tile))
             return;
-        if (!Planner.construction_in_progress())
+        if (!Planner.in_progress)
             build_start(tile);
 
         build_move(tile);
-    } else if (m->left.is_down || Planner.construction_in_progress())
+    } else if (m->left.is_down || Planner.in_progress)
         build_move(tile);
 
     if (m->left.went_up)

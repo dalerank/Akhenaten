@@ -13,10 +13,12 @@ enum PlannerReqs {
     Trees =                 1 << 5,
     //
     Rock =                  1 << 8,
-    Road =                  1 << 9,
-    Intersection =          1 << 10,
-    Walls =                 1 << 11,
+    Ore =                   1 << 9,
+    Road =                  1 << 10,
+    Intersection =          1 << 11,
+    Walls =                 1 << 12,
     //
+    RiverAccess =           1 << 16,
 };
 
 extern class BuildPlanner {
@@ -32,18 +34,8 @@ private:
     long long requirement_flags = 0;
     int additional_req_param = 0;
     bool meets_special_requirements = false;
-    int immediate_problem_warning = -1;
+    int immediate_warning_id = -1;
 
-//    struct {
-//        bool meadow;
-//        bool rock;
-//        bool ore;
-//        bool tree;
-//        bool water;
-//        bool groundwater;
-//        bool wall;
-//    } required_terrain;
-//    int draw_as_constructing;
     int start_offset_x_view;
     int start_offset_y_view;
 
@@ -74,8 +66,6 @@ private:
 
 public:
     int building_type;
-//    int building_size;
-//    int sub_type;
     bool in_progress;
     bool draw_as_constructing;
     map_tile start;
@@ -86,10 +76,8 @@ public:
     void clear_building_type(void);
     int get_building_type(void);
 
-//    int get_cost(void);
     int get_total_drag_size(int *x, int *y);
 
-    bool construction_in_progress(void);
     void construction_start(int x, int y, int grid_offset);
 
     bool construction_is_draggable(void);
@@ -98,16 +86,7 @@ public:
     void construction_update(int x, int y, int grid_offset);
     void construction_finalize(void);
 
-//    void mark_construction(int x, int y, int size, int terrain, int absolute_xy);
-
-//    bool construction_can_place_on_terrain(int x, int y, int *warning_id, int size);
-//
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
-//    void construction_get_view_position(int *view_x, int *view_y);
-//    int construction_get_start_grid_offset(void);
-//
-//    void construction_reset_draw_as_constructing(void);
-//    int construction_draw_as_constructing(void);
 
     int orientation;
     int variant;

@@ -944,7 +944,7 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
     game_undo_restore_map(0);
 
     int distance = calc_maximum_distance(x_start, y_start, x_end, y_end);
-    if (measure_only && !Planner.construction_in_progress())
+    if (measure_only && !Planner.in_progress)
         distance = 0;
 
     if (distance > 0) {
@@ -1484,7 +1484,6 @@ void building_consume_resources(int type) {
 
 void BuildPlanner::setup_build_type(int type) { // select building for construction, set up main terrain restrictions/requirements
     building_type = type;
-//    sub_type = BUILDING_NONE;
 
     // initial values
     size = {0, 0};
@@ -1509,21 +1508,18 @@ void BuildPlanner::setup_build_type(int type) { // select building for construct
             case BUILDING_FIGS_FARM:
             case BUILDING_HENNA_FARM:
                 set_requirements(PlannerReqs::Meadow, 0);
-//                required_terrain.meadow = true;
                 break;
             case BUILDING_STONE_QUARRY:
             case BUILDING_LIMESTONE_QUARRY:
             case BUILDING_GRANITE_QUARRY:
             case BUILDING_SANDSTONE_QUARRY:
                 set_requirements(PlannerReqs::Rock, 0);
-//                required_terrain.rock = true;
                 break;
             case BUILDING_GOLD_MINE:
             case BUILDING_GEMSTONE_MINE:
             case BUILDING_COPPER_MINE:
-                set_requirements(PlannerReqs::Rock, 1);
-//                required_terrain.rock = true;
-//                required_terrain.ore = true;
+                set_requirements(PlannerReqs::Rock, 0);
+                set_requirements(PlannerReqs::Ore, 0);
                 break;
 //            case BUILDING_TIMBER_YARD:
 //                if (GAME_ENV == ENGINE_ENV_C3)
@@ -1531,26 +1527,16 @@ void BuildPlanner::setup_build_type(int type) { // select building for construct
 //                break;
             case BUILDING_CLAY_PIT:
                 set_requirements(PlannerReqs::NearbyWater, 0);
-//                required_terrain.water = true;
                 break;
             case BUILDING_TOWER:
                 set_requirements(PlannerReqs::Walls, 0);
-//                required_terrain.wall = true;
                 break;
-//            case BUILDING_MENU_TEMPLES:
-//                sub_type = BUILDING_TEMPLE_OSIRIS;
-//                break;
-//            case BUILDING_MENU_TEMPLE_COMPLEX:
-//                sub_type = BUILDING_TEMPLE_COMPLEX_OSIRIS;
-//                break;
             case BUILDING_WELL:
             case BUILDING_WATER_SUPPLY:
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
             case BUILDING_CITY_PALACE:
                 set_requirements(PlannerReqs::Groundwater, 0);
-//                if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//                    required_terrain.groundwater = true;
                 break;
             default:
                 break;
@@ -1565,13 +1551,6 @@ void BuildPlanner::clear_building_type(void) {
 //    sub_type = BUILDING_NONE;
     building_type = BUILDING_NONE;
 }
-//int BuildPlanner::get_building_type(void) {
-//    return building_type;
-////    return sub_type ? sub_type : type;
-//}
-//int BuildPlanner::get_cost(void) {
-//    return cost;
-//}
 int BuildPlanner::get_total_drag_size(int *x, int *y) {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
         !construction_is_draggable() ||
@@ -1591,9 +1570,6 @@ int BuildPlanner::get_total_drag_size(int *x, int *y) {
     *x = size_x;
     *y = size_y;
     return 1;
-}
-bool BuildPlanner::construction_in_progress(void) {
-    return in_progress;
 }
 bool BuildPlanner::construction_is_draggable(void) {
     switch (building_type) {
@@ -1800,52 +1776,6 @@ void BuildPlanner::construction_finalize(void) { // confirm final placement
 //        *warning_id = warning;
 //}
 //
-//bool building_construction_can_place_on_terrain(int x, int y, int *warning_id, int size) {
-//    if (required_terrain.meadow) {
-//        int can_place = false;
-//        if (map_terrain_exists_tile_in_radius_with_type(x, y, size, 0, TERRAIN_MEADOW)) {
-//            set_warning(warning_id, WARNING_MEADOW_NEEDED);
-//            can_place = true;
-//        }
-//        if (GAME_ENV == ENGINE_ENV_PHARAOH && map_terrain_all_tiles_in_radius_are(x, y, size, 0, TERRAIN_FLOODPLAIN)) {
-//            set_warning(warning_id, WARNING_MEADOW_NEEDED);
-//            can_place = true;
-//        }
-//        if (!can_place)
-//            return false;
-//    } else if (required_terrain.rock) {
-//        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_ROCK)) { // todo: add ore rock
-//            set_warning(warning_id, WARNING_ROCK_NEEDED);
-//            return false;
-//        }
-//        if (required_terrain.ore && !map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_ORE)) { // todo: add ore rock
-//            set_warning(warning_id, WARNING_ROCK_NEEDED);
-//            return false;
-//        }
-//    } else if (required_terrain.tree) {
-//        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
-//            set_warning(warning_id, WARNING_TREE_NEEDED);
-//            return false;
-//        }
-//    } else if (required_terrain.water) {
-//        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_WATER)
-//        && !map_terrain_exists_tile_in_radius_with_type(x, y, size, 3, TERRAIN_FLOODPLAIN)) { // todo: add inundable lands check
-//            set_warning(warning_id, WARNING_WATER_NEEDED);
-//            return false;
-//        }
-//    } else if (required_terrain.wall) {
-//        if (!map_terrain_all_tiles_in_radius_are(x, y, size, 0, TERRAIN_WALL)) {
-//            set_warning(warning_id, WARNING_WALL_NEEDED);
-//            return false;
-//        }
-//    } else if (required_terrain.groundwater) {
-//        if (!map_terrain_exists_tile_in_radius_with_type(x, y, size, 0, TERRAIN_GROUNDWATER)) {
-//            set_warning(warning_id, WARNING_GROUNDWATER_NEEDED);
-//            return false;
-//        }
-//    }
-//    return true;
-//}
 void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
     if (grid_offset == start.grid_offset) {
         start_offset_x_view = view_x;

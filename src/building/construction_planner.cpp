@@ -25,7 +25,7 @@ void BuildPlanner::reset() {
     requirement_flags = 0;
     additional_req_param = 0;
     meets_special_requirements = false;
-    immediate_problem_warning = -1;
+    immediate_warning_id = -1;
 }
 void BuildPlanner::init_tiles(int size_x, int size_y) {
     size.x = size_x;
@@ -50,6 +50,7 @@ void BuildPlanner::set_pivot(int x, int y) {
     pivot.y = y;
 }
 void BuildPlanner::update_coord_caches(const map_tile *cursor_tile, int x, int y) {
+    end = *cursor_tile;
     int orientation = city_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -122,21 +123,63 @@ void BuildPlanner::set_requirements(long long flags, int extra_param) {
     additional_req_param = extra_param;
 }
 void BuildPlanner::update_requirements_check() {
-    immediate_problem_warning = -1;
-
-    // TODO
-    immediate_problem_warning = WARNING_OUT_OF_MONEY;
-    meets_special_requirements = false;
-
-
-
-
-    // ...
+    immediate_warning_id = -1;
     meets_special_requirements = true;
+
+    if (requirement_flags & PlannerReqs::Groundwater) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_GROUNDWATER)) {
+            immediate_warning_id = WARNING_GROUNDWATER_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
+    if (requirement_flags & PlannerReqs::NearbyWater) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_WATER)
+            && !map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_FLOODPLAIN)) {
+            immediate_warning_id = WARNING_WATER_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
+    if (requirement_flags & PlannerReqs::Meadow) {
+        int can_place = false;
+        if (map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_MEADOW)) {
+            immediate_warning_id = WARNING_MEADOW_NEEDED;
+            can_place = true;
+        }
+        if (GAME_ENV == ENGINE_ENV_PHARAOH && map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_FLOODPLAIN)) {
+            immediate_warning_id = WARNING_MEADOW_NEEDED;
+            can_place = true;
+        }
+        if (!can_place)
+            meets_special_requirements = false;
+    }
+    if (requirement_flags & PlannerReqs::Rock) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ROCK)) {
+            immediate_warning_id = WARNING_ROCK_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
+    if (requirement_flags & PlannerReqs::Ore) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ORE)) {
+            immediate_warning_id = WARNING_ROCK_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
+    if (requirement_flags & PlannerReqs::Trees) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
+            immediate_warning_id = WARNING_TREE_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
+    if (requirement_flags & PlannerReqs::Walls) {
+        if (!map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_WALL)) {
+            immediate_warning_id = WARNING_WALL_NEEDED;
+            meets_special_requirements = false;
+        }
+    }
 }
 void BuildPlanner::dispatch_warnings() {
-    if (immediate_problem_warning > -1)
-        city_warning_show(immediate_problem_warning);
+    if (immediate_warning_id > -1)
+        city_warning_show(immediate_warning_id);
 }
 
 void BuildPlanner::update_obstructions_check() {
@@ -169,7 +212,7 @@ void BuildPlanner::draw_blueprints(bool fully_blocked) {
 
             // draw tile!
             pixel_coordinate current_coord = pixel_coords_cache[row][column];
-            if (tile_blocked_array[row][column])
+            if (tile_blocked_array[row][column] || fully_blocked)
                 draw_flat_tile(current_coord.x, current_coord.y, COLOR_MASK_RED);
             else
                 draw_flat_tile(current_coord.x, current_coord.y, COLOR_MASK_GREEN);

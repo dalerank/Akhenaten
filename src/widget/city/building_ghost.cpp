@@ -580,7 +580,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
 //    int map_x = tile->x - 1;
 //    int map_y = tile->y - 1;
 //    int blocked = 0;
-//    if (Planner.construction_in_progress()) {
+//    if (Planner.in_progress) {
 //        if (!Planner.get_cost())
 //            blocked = 1;
 //
@@ -598,7 +598,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
 //    int x_start, y_start, offset;
 //    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
 //    int orientation_index = city_view_orientation() / 2;
-//    if (Planner.construction_in_progress()) {
+//    if (Planner.in_progress) {
 //        building_construction_get_view_position(&x_start, &y_start);
 //        y_start -= 30;
 //        if (blocked) {
@@ -666,7 +666,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
 //            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
 //        }
 //    } else {
-//        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!Planner.construction_in_progress() || draw_later)) {
+//        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!Planner.in_progress || draw_later)) {
 //            switch (GAME_ENV) {
 //                case ENGINE_ENV_C3:
 //                    if (draw_later)
@@ -700,7 +700,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset) {
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool  blocked = false;
-    if (Planner.construction_in_progress()) { // already dragging aqueduct
+    if (Planner.in_progress) { // already dragging aqueduct
         if (!Planner.cost) // ???
             blocked = true;
     } else {
@@ -1251,7 +1251,7 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
     }
-    if (!Planner.construction_in_progress())
+    if (!Planner.in_progress)
         map_property_clear_constructing_and_deleted();
 
     map_building_tiles_mark_deleting(tile->grid_offset);
