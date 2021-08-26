@@ -1,24 +1,35 @@
-#ifndef OZYMANDIAS_CONSTRUCTION_PLANNER_H
-#define OZYMANDIAS_CONSTRUCTION_PLANNER_H
+#ifndef BUILDING_CONSTRUCTION_PLANNER_H
+#define BUILDING_CONSTRUCTION_PLANNER_H
+
+#include "building/type.h"
 
 #include "graphics/color.h"
 #include "map/point.h"
+#include "city/view.h"
 
 enum PlannerReqs {
     Groundwater =           1,
     Water =                 1 << 1,
     NearbyWater =           1 << 2,
     ShoreLine =             1 << 3,
-    Meadow =                1 << 4,
-    Trees =                 1 << 5,
+    RiverAccess =           1 << 4,
     //
+    Meadow =                1 << 6,
+    Trees =                 1 << 7,
     Rock =                  1 << 8,
     Ore =                   1 << 9,
     Road =                  1 << 10,
     Intersection =          1 << 11,
     Walls =                 1 << 12,
     //
-    RiverAccess =           1 << 16,
+    Resources =             1 << 16,
+    NoEnemyNearby =         1 << 17,
+};
+
+enum {
+    CAN_PLACE = 0,
+    CAN_NOT_PLACE = 1,
+    CAN_NOT_BUT_GREEN = 2,
 };
 
 extern class BuildPlanner {
@@ -31,10 +42,18 @@ private:
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
+    map_point tile_coord_cache[30][30];
+    pixel_coordinate pixel_coords_cache[30][30];
+
     long long requirement_flags = 0;
-    int additional_req_param = 0;
-    bool meets_special_requirements = false;
+    int additional_req_param1 = -1;
+    int additional_req_param2 = -1;
+    int additional_req_param3 = -1;
+//    bool meets_special_requirements = false;
+    int can_place = 0;
+
     int immediate_warning_id = -1;
+    int extra_warning_id = -1;
 
     int start_offset_x_view;
     int start_offset_y_view;
@@ -52,7 +71,7 @@ private:
     void set_tile_size(int row, int column, int size);
     void set_allowed_terrain(int row, int column, int terrain);
 
-    void set_requirements(long long flags, int extra_param);
+    void set_requirements(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_requirements_check();
     void dispatch_warnings();
 
@@ -73,18 +92,16 @@ public:
     int cost;
 
     void setup_build_type(int type);
-    void clear_building_type(void);
-    int get_building_type(void);
+    void clear_building_type();
 
     int get_total_drag_size(int *x, int *y);
 
+//    bool construction_is_draggable();
+
     void construction_start(int x, int y, int grid_offset);
-
-    bool construction_is_draggable(void);
-
-    void construction_cancel(void);
     void construction_update(int x, int y, int grid_offset);
-    void construction_finalize(void);
+    void construction_cancel();
+    void construction_finalize();
 
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
 
@@ -95,7 +112,7 @@ public:
 
     void update(const map_tile *cursor_tile, int x, int y);
     void draw();
-    bool place_check_attempt();
+    bool place();
 } Planner;
 
-#endif //OZYMANDIAS_CONSTRUCTION_PLANNER_H
+#endif // BUILDING_CONSTRUCTION_PLANNER_H

@@ -1,6 +1,6 @@
 #include "file.h"
 
-#include "building/construction.h"
+#include "building/Construction/planner.h"
 #include "building/granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"

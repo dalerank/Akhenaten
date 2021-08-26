@@ -344,6 +344,8 @@ bool building_is_entertainment(int type);
 bool building_is_culture(int type);
 bool building_is_military(int type);
 
+bool building_is_draggable(int type);
+
 int building_get_highest_id(void);
 void building_update_highest_id(void);
 void building_update_state(void);

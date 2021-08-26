@@ -1,6 +1,6 @@
 #include "build_menu.h"
 
-#include "building/construction.h"
+#include "building/Construction/planner.h"
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"

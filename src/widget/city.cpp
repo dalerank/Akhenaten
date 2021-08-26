@@ -2,7 +2,7 @@
 #include <widget/overlays/city_overlay.h>
 #include "city.h"
 
-#include "building/construction.h"
+#include "building/Construction/planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "city/view.h"
@@ -368,7 +368,7 @@ static void handle_first_touch(map_tile *tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (Planner.construction_is_draggable()) {
+    if (building_is_draggable(Planner.building_type)) {
         if (!Planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);

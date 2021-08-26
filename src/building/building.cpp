@@ -722,6 +722,26 @@ bool building_is_military(int type) {
     return 0;
 }
 
+bool building_is_draggable(int type) {
+    switch (type) {
+        case BUILDING_CLEAR_LAND:
+        case BUILDING_ROAD:
+        case BUILDING_IRRIGATION_DITCH:
+        case BUILDING_WALL:
+        case BUILDING_PLAZA:
+        case BUILDING_GARDENS:
+        case BUILDING_HOUSE_VACANT_LOT:
+            return true;
+        case BUILDING_WATER_LIFT:
+//            if (GAME_ENV == ENGINE_ENV_C3)
+//                return true;
+//            else
+            return false;
+        default:
+            return false;
+    }
+}
+
 int building_get_highest_id(void) {
     return extra.highest_id_in_use;
 }

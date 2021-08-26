@@ -1,7 +1,7 @@
 #include <widget/overlays/city_overlay.h>
 #include "city.h"
 
-#include "building/construction.h"
+#include "building/Construction/planner.h"
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/victory.h"
