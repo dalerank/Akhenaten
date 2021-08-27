@@ -97,7 +97,7 @@ static const char MISSION_SAVED_GAMES[][32] = {
 static void clear_scenario_data(void) {
     // clear data
     city_victory_reset();
-    Planner.clear_building_type();
+    Planner.reset();
     city_data_init();
     city_message_init_scenario();
     game_state_init();

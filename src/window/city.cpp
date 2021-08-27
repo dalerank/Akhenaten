@@ -234,7 +234,7 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->building) {
         if (scenario_building_allowed(h->building)) {
             Planner.construction_cancel();
-            Planner.setup_build_type(h->building);
+            Planner.load_building(h->building);
         }
     }
 }

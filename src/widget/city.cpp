@@ -126,8 +126,10 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
                 draw_top,
                 draw_ornaments,
                 draw_figures);
-        if (!selected_figure_id)
-            city_building_ghost_draw(tile);
+        if (!selected_figure_id) {
+            Planner.update(tile);
+            Planner.draw();
+        }
     } else {
         city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
@@ -155,8 +157,9 @@ void widget_city_draw_with_overlay(const map_tile *tile) {
                 draw_top_overlay,
                 draw_ornaments_overlay,
                 draw_figures_overlay);
-        city_building_ghost_draw(tile);
         city_view_foreach_map_tile(draw_elevated_figures);
+        Planner.update(tile);
+        Planner.draw();
     } else {
         city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
@@ -195,7 +198,7 @@ bool widget_city_draw_construction_cost_and_size(void) {
         return false;
 
     int size_x, size_y;
-    int cost = Planner.cost;
+    int cost = Planner.total_cost;
     int has_size = Planner.get_total_drag_size(&size_x, &size_y);
     if (!cost && !has_size)
         return false;

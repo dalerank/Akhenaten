@@ -497,7 +497,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool  blocked = false;
     if (Planner.in_progress) { // already dragging aqueduct
-        if (!Planner.cost) // ???
+        if (!Planner.total_cost) // ???
             blocked = true;
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) { // starting new aqueduct line
@@ -622,143 +622,6 @@ static void draw_fort(const map_tile *tile, int x, int y) {
             draw_building(image_id + 1, x_ground, y_ground);
             draw_building(image_id, x, y);
         }
-    }
-}
-
-void BuildPlanner::load_build_graphics() {
-    const building_properties *props = building_properties_for_type(building_type);
-    switch (building_type) {
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST: {
-            // size of every big item 3x3, in general 7x13
-            // 25 max tiles at the moment to check blocked tiles
-            int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, building_type);
-            int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, building_type);
-            int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, building_type);
-            int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, building_type);
-            int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, building_type);
-            int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, building_type);
-
-            int EMPTY = 0;
-            int mn_1A = main_image_id;
-            int mn_1B = main_image_id + 3;
-            int mn_2A = oracle_image_id;
-            int mn_2B = oracle_image_id + 3;
-            int mn_3A = altar_image_id;
-            int mn_3B = altar_image_id + 3;
-
-            int til_0 = flooring_image_id + 0;
-            int til_1 = flooring_image_id + 1;
-            int til_2 = flooring_image_id + 2;
-            int til_3 = flooring_image_id + 3;
-
-            int smst0 = statue1_image_id + 0; // north
-            int smst1 = statue1_image_id + 1; // east
-            int smst2 = statue1_image_id + 2; // south
-            int smst3 = statue1_image_id + 3; // west
-
-            int lst0A = statue2_image_id + 0; // north
-            int lst0B = statue2_image_id + 1;
-            int lst1A = statue2_image_id + 2; // east
-            int lst1B = statue2_image_id + 3;
-            int lst2A = statue2_image_id + 4; // south
-            int lst2B = statue2_image_id + 5;
-            int lst3A = statue2_image_id + 6; // west
-            int lst3B = statue2_image_id + 7;
-
-//            building_rotation_force_two_orientations();
-//            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
-            switch (orientation) { // it goes counterclockwise.
-                case 0: { // SE
-                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                            {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
-                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
-                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
-                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
-                            {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
-                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
-                            {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
-                    };
-                    init_tiles(13, 7);
-                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-                    set_pivot(0, 2);
-                    break;
-                }
-                case 1: { // NE
-                    int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                            {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                            {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                            {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, mn_1B, EMPTY, EMPTY, til_0, smst1},
-                            {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, mn_2B, EMPTY, EMPTY, til_0, smst1},
-                            {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
-                    };
-                    init_tiles(7, 13);
-                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-                    set_pivot(2, 12);
-                    break;
-                }
-                case 2: { // NW
-                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
-
-                            {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
-                            {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                            {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                            {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                            {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
-                            {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                            {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
-                    };
-                    init_tiles(13, 7);
-                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-                    set_pivot(12, 2);
-                    break;
-                }
-                case 3: { // SW
-                    int TEMPLE_COMPLEX_SCHEME[13][7] = {
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {til_1, til_1, mn_1B, EMPTY, EMPTY, til_1, til_1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {til_1, til_1, mn_2B, EMPTY, EMPTY, til_1, til_1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
-                            {til_0, til_0, mn_3B, EMPTY, EMPTY, til_0, til_0},
-                            {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
-                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                            {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
-                            {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
-                    };
-                    init_tiles(7, 13);
-                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-                    set_pivot(2, 0);
-                    break;
-                }
-            }
-            break;
-        }
-        default: // regular buildings
-            init_tiles(props->size, props->size);
-            int empty_row[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            int draw_row[] = {image_id_from_group(props->image_collection, props->image_group), 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            for (int row = 0; row < size.y; ++row) {
-                if (row == size.y - 1)
-                    set_graphics_row(row, draw_row, size.x);
-                else
-                    set_graphics_row(row, empty_row, size.x);
-            }
-            break;
     }
 }
 
@@ -1053,94 +916,94 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
     map_building_tiles_mark_deleting(tile->grid_offset);
     return 1;
 }
-void city_building_ghost_draw(const map_tile *tile) {
-    if (!tile->grid_offset) // || scroll_in_progress()
-        return;
-    int type = Planner.building_type;
-    if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
-        return;
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
-
-    Planner.update(tile, x, y);
-    Planner.draw();
-    return;
-
-    // update road required based on timer
-//    building_rotation_update_road_orientation();
-//    switch (type) {
-//        case BUILDING_WATER_LIFT:
-//            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-////                draw_draggable_waterlift(tile, x, y);
-//                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
-//            else
-//                draw_draggable_reservoir(tile, x, y);
-//            break;
-//        case BUILDING_IRRIGATION_DITCH:
-//            draw_aqueduct(tile, x, y);
-//            break;
-//        case BUILDING_MENU_BEAUTIFICATION:
-//            draw_fountain(tile, x, y);
-//            break;
-//        case BUILDING_MENU_MONUMENTS:
-//            draw_bathhouse(tile, x, y);
-//            break;
-//        case BUILDING_LOW_BRIDGE:
-//        case BUILDING_SHIP_BRIDGE:
-//            draw_bridge(tile, x, y, type);
-//            break;
-//        case BUILDING_FORT_CHARIOTEERS:
-//        case BUILDING_FORT_ARCHERS:
-//        case BUILDING_FORT_INFANTRY:
-//            draw_fort(tile, x, y);
-//            break;
-//        case BUILDING_SENET_HOUSE:
-//            if (GAME_ENV == ENGINE_ENV_C3) {
-////                draw_hippodrome(tile, x, y);
-//            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//                draw_default(tile, x, y, type); // Senet house
-//            break;
-//        case BUILDING_SHIPYARD:
-//        case BUILDING_FISHING_WHARF:
-//            draw_shipyard_wharf(tile, x, y, type);
-//            break;
-//        case BUILDING_DOCK:
-//            draw_dock(tile, x, y);
-//            break;
-//        case BUILDING_ROAD:
-//            draw_road(tile, x, y);
-//            break;
-//        case BUILDING_BOOTH:
-//        case BUILDING_BANDSTAND:
-//        case BUILDING_PAVILLION:
-//        case BUILDING_FESTIVAL_SQUARE:
-//            draw_entertainment_venue(tile, x, y, type);
-//            break;
-//        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-//        case BUILDING_TEMPLE_COMPLEX_RA:
-//        case BUILDING_TEMPLE_COMPLEX_PTAH:
-//        case BUILDING_TEMPLE_COMPLEX_SETH:
-//        case BUILDING_TEMPLE_COMPLEX_BAST:
-//            draw_temple_complex(tile, x, y, type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-//            break;
-//        case BUILDING_PYRAMID:
-//        case BUILDING_SPHYNX:
-//        case BUILDING_MAUSOLEUM:
-//        case BUILDING_ALEXANDRIA_LIBRARY:
-//        case BUILDING_CAESAREUM:
-//        case BUILDING_PHAROS_LIGHTHOUSE:
-//        case BUILDING_SMALL_ROYAL_TOMB:
-//        case BUILDING_ABU_SIMBEL:
-//        case BUILDING_MEDIUM_ROYAL_TOMB:
-//        case BUILDING_LARGE_ROYAL_TOMB:
-//        case BUILDING_GRAND_ROYAL_TOMB:
-//            draw_monument_blueprint(tile, x, y, type);
-//            break;
-//        default:
-//            draw_default(tile, x, y, type);
-//            break;
-//    }
-}
+//void city_building_ghost_draw(const map_tile *tile) {
+//    if (!tile->grid_offset) // || scroll_in_progress()
+//        return;
+//    int type = Planner.building_type;
+//    if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
+//        return;
+//    int x, y;
+//    city_view_get_selected_tile_pixels(&x, &y);
+//
+//    Planner.update(tile);
+//    Planner.draw();
+//    return;
+//
+//    // update road required based on timer
+////    building_rotation_update_road_orientation();
+////    switch (type) {
+////        case BUILDING_WATER_LIFT:
+////            if (GAME_ENV == ENGINE_ENV_PHARAOH)
+//////                draw_draggable_waterlift(tile, x, y);
+////                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
+////            else
+////                draw_draggable_reservoir(tile, x, y);
+////            break;
+////        case BUILDING_IRRIGATION_DITCH:
+////            draw_aqueduct(tile, x, y);
+////            break;
+////        case BUILDING_MENU_BEAUTIFICATION:
+////            draw_fountain(tile, x, y);
+////            break;
+////        case BUILDING_MENU_MONUMENTS:
+////            draw_bathhouse(tile, x, y);
+////            break;
+////        case BUILDING_LOW_BRIDGE:
+////        case BUILDING_SHIP_BRIDGE:
+////            draw_bridge(tile, x, y, type);
+////            break;
+////        case BUILDING_FORT_CHARIOTEERS:
+////        case BUILDING_FORT_ARCHERS:
+////        case BUILDING_FORT_INFANTRY:
+////            draw_fort(tile, x, y);
+////            break;
+////        case BUILDING_SENET_HOUSE:
+////            if (GAME_ENV == ENGINE_ENV_C3) {
+//////                draw_hippodrome(tile, x, y);
+////            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+////                draw_default(tile, x, y, type); // Senet house
+////            break;
+////        case BUILDING_SHIPYARD:
+////        case BUILDING_FISHING_WHARF:
+////            draw_shipyard_wharf(tile, x, y, type);
+////            break;
+////        case BUILDING_DOCK:
+////            draw_dock(tile, x, y);
+////            break;
+////        case BUILDING_ROAD:
+////            draw_road(tile, x, y);
+////            break;
+////        case BUILDING_BOOTH:
+////        case BUILDING_BANDSTAND:
+////        case BUILDING_PAVILLION:
+////        case BUILDING_FESTIVAL_SQUARE:
+////            draw_entertainment_venue(tile, x, y, type);
+////            break;
+////        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+////        case BUILDING_TEMPLE_COMPLEX_RA:
+////        case BUILDING_TEMPLE_COMPLEX_PTAH:
+////        case BUILDING_TEMPLE_COMPLEX_SETH:
+////        case BUILDING_TEMPLE_COMPLEX_BAST:
+////            draw_temple_complex(tile, x, y, type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
+////            break;
+////        case BUILDING_PYRAMID:
+////        case BUILDING_SPHYNX:
+////        case BUILDING_MAUSOLEUM:
+////        case BUILDING_ALEXANDRIA_LIBRARY:
+////        case BUILDING_CAESAREUM:
+////        case BUILDING_PHAROS_LIGHTHOUSE:
+////        case BUILDING_SMALL_ROYAL_TOMB:
+////        case BUILDING_ABU_SIMBEL:
+////        case BUILDING_MEDIUM_ROYAL_TOMB:
+////        case BUILDING_LARGE_ROYAL_TOMB:
+////        case BUILDING_GRAND_ROYAL_TOMB:
+////            draw_monument_blueprint(tile, x, y, type);
+////            break;
+////        default:
+////            draw_default(tile, x, y, type);
+////            break;
+////    }
+//}
 
 void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
     ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);

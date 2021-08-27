@@ -49,8 +49,7 @@ private:
     int additional_req_param1 = -1;
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
-//    bool meets_special_requirements = false;
-    int can_place = 0;
+    int can_place = CAN_PLACE;
 
     int immediate_warning_id = -1;
     int extra_warning_id = -1;
@@ -58,11 +57,7 @@ private:
     int start_offset_x_view;
     int start_offset_y_view;
 
-    void reset();
     void init_tiles(int size_x, int size_y);
-    void set_pivot(int x, int y);
-    void update_coord_caches(const map_tile *cursor_tile, int x, int y);
-
     void set_graphics_row(int row, int *image_ids, int total);
     void set_graphics_array(int *image_set, int size_x, int size_y);
 
@@ -72,11 +67,11 @@ private:
     void set_allowed_terrain(int row, int column, int terrain);
 
     void set_requirements(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void update_obstructions_check();
     void update_requirements_check();
     void dispatch_warnings();
 
-    void update_obstructions_check();
-
+    void update_coord_caches(const map_tile *cursor_tile, int x, int y);
     void draw_flat_tile(int x, int y, color_t color_mask);
     void draw_blueprints(bool fully_blocked);
     void draw_graphics();
@@ -89,14 +84,14 @@ public:
     bool draw_as_constructing;
     map_tile start;
     map_tile end;
-    int cost;
+    int total_cost;
+    int orientation;
+    int variant;
 
-    void setup_build_type(int type);
-    void clear_building_type();
+    void reset();
+    void load_building(int type);
 
     int get_total_drag_size(int *x, int *y);
-
-//    bool construction_is_draggable();
 
     void construction_start(int x, int y, int grid_offset);
     void construction_update(int x, int y, int grid_offset);
@@ -105,12 +100,9 @@ public:
 
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
 
-    int orientation;
-    int variant;
-
     void update_orientations();
 
-    void update(const map_tile *cursor_tile, int x, int y);
+    void update(const map_tile *cursor_tile);
     void draw();
     bool place();
 } Planner;

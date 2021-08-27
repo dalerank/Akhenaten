@@ -79,7 +79,7 @@ static int init(int submenu) {
 //    int type = building_menu_type(data.selected_submenu, item);
 //    BuildPlanner::set_building_type(type);
 
-    Planner.setup_build_type(BUILDING_NONE);
+    Planner.load_building(BUILDING_NONE);
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
@@ -222,12 +222,12 @@ static void button_menu_item(int item) {
     widget_city_clear_current_tile();
 
     int type = building_menu_type(data.selected_submenu, item);
-    Planner.setup_build_type(type);
+    Planner.load_building(type);
 
     if (set_submenu_for_type(type)) {
         data.num_items = building_menu_count_items(data.selected_submenu);
         data.y_offset = Y_MENU_OFFSETS[data.num_items];
-        Planner.clear_building_type();
+        Planner.reset();
         window_invalidate();
     } else
         window_city_show();
