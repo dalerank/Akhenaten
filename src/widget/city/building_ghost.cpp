@@ -901,9 +901,9 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
     }
 }
 
-int city_building_ghost_mark_deleting(const map_tile *tile) {
+bool city_building_ghost_mark_deleting(const map_tile *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
-        return 0;
+        return false;
 
     int construction_type = Planner.building_type;
     if (!tile->grid_offset || Planner.draw_as_constructing ||
@@ -914,97 +914,8 @@ int city_building_ghost_mark_deleting(const map_tile *tile) {
         map_property_clear_constructing_and_deleted();
 
     map_building_tiles_mark_deleting(tile->grid_offset);
-    return 1;
+    return true;
 }
-//void city_building_ghost_draw(const map_tile *tile) {
-//    if (!tile->grid_offset) // || scroll_in_progress()
-//        return;
-//    int type = Planner.building_type;
-//    if (Planner.draw_as_constructing || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND)
-//        return;
-//    int x, y;
-//    city_view_get_selected_tile_pixels(&x, &y);
-//
-//    Planner.update(tile);
-//    Planner.draw();
-//    return;
-//
-//    // update road required based on timer
-////    building_rotation_update_road_orientation();
-////    switch (type) {
-////        case BUILDING_WATER_LIFT:
-////            if (GAME_ENV == ENGINE_ENV_PHARAOH)
-//////                draw_draggable_waterlift(tile, x, y);
-////                draw_shipyard_wharf(tile, x, y, BUILDING_WATER_LIFT);
-////            else
-////                draw_draggable_reservoir(tile, x, y);
-////            break;
-////        case BUILDING_IRRIGATION_DITCH:
-////            draw_aqueduct(tile, x, y);
-////            break;
-////        case BUILDING_MENU_BEAUTIFICATION:
-////            draw_fountain(tile, x, y);
-////            break;
-////        case BUILDING_MENU_MONUMENTS:
-////            draw_bathhouse(tile, x, y);
-////            break;
-////        case BUILDING_LOW_BRIDGE:
-////        case BUILDING_SHIP_BRIDGE:
-////            draw_bridge(tile, x, y, type);
-////            break;
-////        case BUILDING_FORT_CHARIOTEERS:
-////        case BUILDING_FORT_ARCHERS:
-////        case BUILDING_FORT_INFANTRY:
-////            draw_fort(tile, x, y);
-////            break;
-////        case BUILDING_SENET_HOUSE:
-////            if (GAME_ENV == ENGINE_ENV_C3) {
-//////                draw_hippodrome(tile, x, y);
-////            } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-////                draw_default(tile, x, y, type); // Senet house
-////            break;
-////        case BUILDING_SHIPYARD:
-////        case BUILDING_FISHING_WHARF:
-////            draw_shipyard_wharf(tile, x, y, type);
-////            break;
-////        case BUILDING_DOCK:
-////            draw_dock(tile, x, y);
-////            break;
-////        case BUILDING_ROAD:
-////            draw_road(tile, x, y);
-////            break;
-////        case BUILDING_BOOTH:
-////        case BUILDING_BANDSTAND:
-////        case BUILDING_PAVILLION:
-////        case BUILDING_FESTIVAL_SQUARE:
-////            draw_entertainment_venue(tile, x, y, type);
-////            break;
-////        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-////        case BUILDING_TEMPLE_COMPLEX_RA:
-////        case BUILDING_TEMPLE_COMPLEX_PTAH:
-////        case BUILDING_TEMPLE_COMPLEX_SETH:
-////        case BUILDING_TEMPLE_COMPLEX_BAST:
-////            draw_temple_complex(tile, x, y, type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
-////            break;
-////        case BUILDING_PYRAMID:
-////        case BUILDING_SPHYNX:
-////        case BUILDING_MAUSOLEUM:
-////        case BUILDING_ALEXANDRIA_LIBRARY:
-////        case BUILDING_CAESAREUM:
-////        case BUILDING_PHAROS_LIGHTHOUSE:
-////        case BUILDING_SMALL_ROYAL_TOMB:
-////        case BUILDING_ABU_SIMBEL:
-////        case BUILDING_MEDIUM_ROYAL_TOMB:
-////        case BUILDING_LARGE_ROYAL_TOMB:
-////        case BUILDING_GRAND_ROYAL_TOMB:
-////            draw_monument_blueprint(tile, x, y, type);
-////            break;
-////        default:
-////            draw_default(tile, x, y, type);
-////            break;
-////    }
-//}
-
 void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
     ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }

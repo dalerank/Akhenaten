@@ -91,16 +91,15 @@ public:
     void reset();
     void load_building(int type);
 
-    int get_total_drag_size(int *x, int *y);
-
     void construction_start(int x, int y, int grid_offset);
     void construction_update(int x, int y, int grid_offset);
     void construction_cancel();
     void construction_finalize();
 
+    void update_orientations();
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
 
-    void update_orientations();
+    int get_total_drag_size(int *x, int *y);
 
     void update(const map_tile *cursor_tile);
     void draw();
