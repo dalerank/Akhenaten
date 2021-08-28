@@ -226,7 +226,7 @@ static building_properties properties[2][400] = {
                 {1, 1, GROUP_BUILDING_WAREHOUSE}, // storageyard (hut)
                 {1, 1, 0, 0}, // storageyard (space tile)
                 {3, 0, GROUP_BUILDING_SHIPYARD}, // shipwright
-                {3, 0, GROUP_BUILDING_DOCK_1}, // dock
+                {3, 0, GROUP_BUILDING_DOCK}, // dock
                 {2, 0, GROUP_BUILDING_FISHING_WHARF}, // wharf (fish)
                 {3, 0, GROUP_BUILDING_GOVERNORS_HOUSE},
                 {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},

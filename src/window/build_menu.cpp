@@ -178,7 +178,7 @@ static void draw_menu_buttons(void) {
             lang_text_draw_centered(28, type, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176,
                                     font);
         if (type == BUILDING_WATER_LIFT)
-            type = BUILDING_WATER_LIFT2;
+            type = BUILDING_WATER_LIFT;
         int cost = model_get_building(type)->cost;
         if (type == BUILDING_MENU_FORTS)
             cost = 0;

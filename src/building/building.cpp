@@ -769,7 +769,7 @@ void building_update_state(void) {
                 if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
                     wall_recalc = true;
                     road_recalc = true;
-                } else if (b->type == BUILDING_WATER_LIFT2)
+                } else if (b->type == BUILDING_WATER_LIFT)
                     aqueduct_recalc = true;
                 else if (b->type == BUILDING_GRANARY)
                     road_recalc = true;

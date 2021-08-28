@@ -78,7 +78,7 @@ private:
     void update_special_case_orientations_check();
     void dispatch_warnings();
 
-    void update_coord_caches(const map_tile *cursor_tile, int x, int y);
+    void update_coord_caches();
     void draw_flat_tile(int x, int y, color_t color_mask);
     void draw_blueprints(bool fully_blocked);
     void draw_graphics();

@@ -884,6 +884,12 @@ void BuildPlanner::draw_graphics() {
         case BUILDING_WAREHOUSE:
             return draw_warehouse(pixel.x, pixel.y);
             break;
+        case BUILDING_BOOTH:
+        case BUILDING_BANDSTAND:
+        case BUILDING_PAVILLION:
+        case BUILDING_FESTIVAL_SQUARE:
+            draw_entertainment_venue((const map_tile*)&end, pixel.x, pixel.y, build_type);
+            break;
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_GRAIN_FARM:

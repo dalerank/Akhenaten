@@ -663,37 +663,26 @@ static void place_build_approved(int type, building *b, int size, int orientatio
             map_tiles_update_all_plazas();
             break;
             // ships
-        case BUILDING_SHIPYARD:
+        case BUILDING_FERRY:
             b->data.industry.orientation = waterside_orientation_abs;
             map_water_add_building(b->id, b->x, b->y, 2,
-                                   image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
+                                   image_id_from_group(GROUP_BUILDING_FERRY) + waterside_orientation_rel);
             break;
         case BUILDING_FISHING_WHARF:
             b->data.industry.orientation = waterside_orientation_abs;
             map_water_add_building(b->id, b->x, b->y, 2,
                                    image_id_from_group(GROUP_BUILDING_FISHING_WHARF) + waterside_orientation_rel);
             break;
+        case BUILDING_SHIPYARD:
+            b->data.industry.orientation = waterside_orientation_abs;
+            map_water_add_building(b->id, b->x, b->y, 3,
+                                   image_id_from_group(GROUP_BUILDING_SHIPYARD) + waterside_orientation_rel);
+            break;
         case BUILDING_DOCK:
             city_buildings_add_dock();
             b->data.dock.orientation = waterside_orientation_abs;
-            {
-                int image_id;
-                switch (waterside_orientation_rel) {
-                    case 0:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_1);
-                        break;
-                    case 1:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_2);
-                        break;
-                    case 2:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_3);
-                        break;
-                    default:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_4);
-                        break;
-                }
-                map_water_add_building(b->id, b->x, b->y, size, image_id);
-            }
+            map_water_add_building(b->id, b->x, b->y, 3,
+                                   image_id_from_group(GROUP_BUILDING_DOCK) + waterside_orientation_rel);
             break;
             // defense
         case BUILDING_TOWER:
@@ -778,11 +767,10 @@ static void place_build_approved(int type, building *b, int size, int orientatio
             city_buildings_add_distribution_center(b);
             break;
         case BUILDING_WATER_LIFT:
-        case BUILDING_WATER_LIFT2:
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 b->data.industry.orientation = waterside_orientation_abs;
                 map_water_add_building(b->id, b->x, b->y, 2,
-                                       image_id_from_group(GROUP_BUILDING_RESERVOIR) + waterside_orientation_rel);
+                                       image_id_from_group(GROUP_BUILDING_WATER_LIFT) + waterside_orientation_rel);
                 break;
             }
         default:
@@ -952,7 +940,7 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
 
     if (!distance) {
         if (info->place_reservoir_at_end == PLACE_RESERVOIR_YES)
-            info->cost = model_get_building(BUILDING_WATER_LIFT2)->cost;
+            info->cost = model_get_building(BUILDING_WATER_LIFT)->cost;
 
         return 1;
     }
@@ -1000,10 +988,10 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
     building_construction_place_aqueduct_for_reservoir(0, x_start + x_aq_start, y_start + y_aq_start,
                                                        x_end + x_aq_end, y_end + y_aq_end, &aq_items);
     if (info->place_reservoir_at_start == PLACE_RESERVOIR_YES)
-        info->cost += model_get_building(BUILDING_WATER_LIFT2)->cost;
+        info->cost += model_get_building(BUILDING_WATER_LIFT)->cost;
 
     if (info->place_reservoir_at_end == PLACE_RESERVOIR_YES)
-        info->cost += model_get_building(BUILDING_WATER_LIFT2)->cost;
+        info->cost += model_get_building(BUILDING_WATER_LIFT)->cost;
 
     if (aq_items)
         info->cost += aq_items * model_get_building(BUILDING_IRRIGATION_DITCH)->cost;
@@ -1260,7 +1248,7 @@ void BuildPlanner::setup_build_flags() {
 //        case BUILDING_OBELYSK: // TODO
 //            set_requirements(PlannerReqs::Resources, RESOURCE_GRANITE, 200);
 //            break;
-        case BUILDING_WATER_LIFT2:
+        case BUILDING_WATER_LIFT:
         case BUILDING_FISHING_WHARF:
         case BUILDING_TRANSPORT_WHARF:
             set_flag(PlannerFlags::ShoreLine, 2);
@@ -1288,6 +1276,18 @@ void BuildPlanner::setup_build_flags() {
         case BUILDING_PLAZA:
             set_flag(PlannerFlags::Road, true, -1);
             set_flag(PlannerFlags::FancyRoad);
+            break;
+        case BUILDING_BOOTH:
+            set_flag(PlannerFlags::Intersection, 0, WARNING_BOOTH_ROAD_INTERSECTION_NEEDED);
+            break;
+        case BUILDING_BANDSTAND:
+            set_flag(PlannerFlags::Intersection, 1, WARNING_BOOTH_ROAD_INTERSECTION_NEEDED);
+            break;
+        case BUILDING_PAVILLION:
+            set_flag(PlannerFlags::Intersection, 2, WARNING_BOOTH_ROAD_INTERSECTION_NEEDED);
+            break;
+        case BUILDING_FESTIVAL_SQUARE:
+            set_flag(PlannerFlags::Intersection, 3, WARNING_FESTIVAL_ROAD_INTERSECTION_NEEDED);
             break;
         case BUILDING_CLEAR_LAND:
             set_flag(PlannerFlags::IgnoreNearbyEnemy);
@@ -1413,7 +1413,7 @@ void BuildPlanner::setup_build_graphics() {
             }
             break;
         }
-        case BUILDING_WATER_LIFT2:
+        case BUILDING_WATER_LIFT:
         case BUILDING_FISHING_WHARF:
         case BUILDING_DOCK:
         case BUILDING_SHIPYARD:
@@ -1434,6 +1434,18 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_WAREHOUSE:
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
             break;
+        case BUILDING_BOOTH:
+            init_tiles(2, 2); // TODO
+            break;
+        case BUILDING_BANDSTAND:
+            init_tiles(3, 3); // TODO
+            break;
+        case BUILDING_PAVILLION:
+            init_tiles(4, 4); // TODO
+            break;
+        case BUILDING_FESTIVAL_SQUARE:
+            init_tiles(5, 5); // TODO
+            break;
         default: // regular buildings
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group), props->size);
             break;
@@ -1452,7 +1464,7 @@ void BuildPlanner::update_obstructions_check() {
             // special cases
             if (special_flags & PlannerFlags::Meadow)
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
-            if (special_flags & PlannerFlags::Road)
+            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection)
                 restricted_terrain -= TERRAIN_ROAD;
             if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine)
                 restricted_terrain -= TERRAIN_WATER;
@@ -1575,9 +1587,20 @@ void BuildPlanner::update_special_case_orientations_check() {
             update_orientations();
         }
     }
+    if (special_flags & PlannerFlags::Intersection) {
+        bool match = map_orientation_for_venue_with_map_orientation(end.x, end.y, additional_req_param1, &dir_relative);
+        if (!match) {
+            immediate_warning_id = additional_req_param2;
+            can_place = CAN_NOT_PLACE;
+        } else if (orientation != dir_relative) {
+            orientation = dir_relative;
+            update_orientations();
+        }
+    }
 }
-void BuildPlanner::update_coord_caches(const map_tile *cursor_tile, int x, int y) {
-    end = *cursor_tile;
+void BuildPlanner::update_coord_caches() {
+    int x, y;
+    city_view_get_selected_tile_pixels(&x, &y);
     int orientation = city_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -1591,20 +1614,20 @@ void BuildPlanner::update_coord_caches(const map_tile *cursor_tile, int x, int y
             int tile_y = 0;
             switch (orientation) {
                 case 0:
-                    tile_x = cursor_tile->x + x_offset;
-                    tile_y = cursor_tile->y + y_offset;
+                    tile_x = end.x + x_offset;
+                    tile_y = end.y + y_offset;
                     break;
                 case 1:
-                    tile_x = cursor_tile->x - y_offset;
-                    tile_y = cursor_tile->y + x_offset;
+                    tile_x = end.x - y_offset;
+                    tile_y = end.y + x_offset;
                     break;
                 case 2:
-                    tile_x = cursor_tile->x - x_offset;
-                    tile_y = cursor_tile->y - y_offset;
+                    tile_x = end.x - x_offset;
+                    tile_y = end.y - y_offset;
                     break;
                 case 3:
-                    tile_x = cursor_tile->x + y_offset;
-                    tile_y = cursor_tile->y - x_offset;
+                    tile_x = end.x + y_offset;
+                    tile_y = end.y - x_offset;
                     break;
             }
 
@@ -1635,7 +1658,7 @@ void BuildPlanner::update_orientations() {
             orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
             variant = 0;
             break;
-        case BUILDING_WATER_LIFT2:
+        case BUILDING_WATER_LIFT:
         case BUILDING_FISHING_WHARF:
         case BUILDING_DOCK:
         case BUILDING_SHIPYARD:
@@ -1651,6 +1674,7 @@ void BuildPlanner::update_orientations() {
             return;
     }
     setup_build_graphics(); // reload graphics, tiles, etc.
+    update_coord_caches(); // refresh caches
 }
 void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
     if (grid_offset == start.grid_offset) {
@@ -1883,10 +1907,8 @@ int BuildPlanner::get_total_drag_size(int *x, int *y) {
 //////////////////////
 
 void BuildPlanner::update(const map_tile *cursor_tile) {
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
-
-    update_coord_caches(cursor_tile, x, y);
+    end = *cursor_tile;
+    update_coord_caches();
 
     immediate_warning_id = -1;
     can_place = CAN_PLACE;
@@ -1967,21 +1989,21 @@ bool BuildPlanner::place() {
                 return false;
             }
             if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
-                building *reservoir = building_create(BUILDING_WATER_LIFT2, start.x - 1, start.y - 1);
+                building *reservoir = building_create(BUILDING_WATER_LIFT, start.x - 1, start.y - 1);
                 game_undo_add_building(reservoir);
                 map_building_tiles_add(reservoir->id, start.x - 1, start.y - 1, 3,
-                                       image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+                                       image_id_from_group(GROUP_BUILDING_WATER_LIFT), TERRAIN_BUILDING);
                 map_aqueduct_set(map_grid_offset(start.x - 1, start.y - 1), 0);
             }
             if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
-                building *reservoir = building_create(BUILDING_WATER_LIFT2, end.x - 1, end.y - 1);
+                building *reservoir = building_create(BUILDING_WATER_LIFT, end.x - 1, end.y - 1);
                 game_undo_add_building(reservoir);
                 map_building_tiles_add(reservoir->id, end.x - 1, end.y - 1, 3,
-                                       image_id_from_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+                                       image_id_from_group(GROUP_BUILDING_WATER_LIFT), TERRAIN_BUILDING);
                 map_aqueduct_set(map_grid_offset(end.x - 1, end.y - 1), 0);
                 if (!map_terrain_exists_tile_in_area_with_type(start.x - 2, start.y - 2, 5, TERRAIN_WATER) &&
                     info.place_reservoir_at_start == PLACE_RESERVOIR_NO)
-                    building_construction_warning_check_reservoir(BUILDING_WATER_LIFT2);
+                    building_construction_warning_check_reservoir(BUILDING_WATER_LIFT);
             }
             placement_cost = info.cost;
             map_tiles_update_all_aqueducts(0);
@@ -2081,7 +2103,7 @@ bool BuildPlanner::place() {
                     return false;
             }
             break;
-        case BUILDING_WATER_LIFT2:
+//        case BUILDING_WATER_LIFT:
         case BUILDING_FISHING_WHARF:
         case BUILDING_DOCK:
         case BUILDING_SHIPYARD:

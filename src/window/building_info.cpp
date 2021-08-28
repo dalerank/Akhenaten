@@ -109,7 +109,7 @@ static int get_height_id(void) {
             case BUILDING_MENU_MONUMENTS:
             case BUILDING_DENTIST:
             case BUILDING_BURNING_RUIN:
-            case BUILDING_WATER_LIFT2:
+            case BUILDING_WATER_LIFT:
             case BUILDING_NATIVE_HUT:
             case BUILDING_NATIVE_MEETING:
             case BUILDING_NATIVE_CROPS:
@@ -642,7 +642,7 @@ static void draw_background(void) {
                 break;
             case BUILDING_FISHING_WHARF:
                 window_building_draw_wharf(&context); break;
-            case BUILDING_WATER_LIFT2:
+            case BUILDING_WATER_LIFT:
                 window_building_draw_reservoir(&context); break;
             case BUILDING_MENU_BEAUTIFICATION:
                 window_building_draw_fountain(&context); break;

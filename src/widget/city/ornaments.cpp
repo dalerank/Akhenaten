@@ -35,15 +35,15 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->grid_offset);
         int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_1))
+        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
             image_dockers += 0;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 1)
             image_dockers += 3;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 2)
             image_dockers += 6;
-        else {
+        else
             image_dockers += 9;
-        }
+
         if (num_dockers == 2)
             image_dockers += 1;
         else if (num_dockers == 3)

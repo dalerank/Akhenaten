@@ -37,7 +37,7 @@ static void check_road_access(int type, int x, int y, int size) {
         case BUILDING_LARGE_STATUE:
 //        case BUILDING_MENU_BEAUTIFICATION:
         case BUILDING_WELL:
-        case BUILDING_WATER_LIFT2:
+        case BUILDING_WATER_LIFT:
         case BUILDING_GATEHOUSE:
         case BUILDING_ROADBLOCK:
         case BUILDING_TRIUMPHAL_ARCH:
@@ -256,8 +256,8 @@ void building_construction_warning_check_food_stocks(int type) {
 }
 
 void building_construction_warning_check_reservoir(int type) {
-    if (!has_warning && type == BUILDING_WATER_LIFT2) {
-        if (building_count_active(BUILDING_WATER_LIFT2))
+    if (!has_warning && type == BUILDING_WATER_LIFT) {
+        if (building_count_active(BUILDING_WATER_LIFT))
             show(WARNING_CONNECT_TO_RESERVOIR);
         else
             show(WARNING_PLACE_RESERVOIR_NEXT_TO_WATER);
