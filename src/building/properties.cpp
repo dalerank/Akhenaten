@@ -161,7 +161,7 @@ static building_properties properties[2][400] = {
                 {2, 1, GROUP_WATER_LIFT}, // ??????? water lift ???????
                 {1, 0, 0, 0}, // irrigation ditch
                 {0, 0, 0, 0}, // clear land
-                {1, 0, 0, 0}, // houses vvvv
+                {1, 0, GROUP_BUILDING_HOUSE_VACANT_LOT}, // houses vvvv
                 {1, 0, 0, 0},
                 {1, 0, 0, 0},
                 {1, 0, 0, 0},

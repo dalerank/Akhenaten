@@ -38,7 +38,7 @@ private:
     map_point pivot;
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
-    int tile_restricted_terrains[30][30] = {};
+    unsigned int tile_terrain_exceptions[30][30] = {};
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
@@ -59,12 +59,15 @@ private:
 
     void init_tiles(int size_x, int size_y);
     void set_graphics_row(int row, int *image_ids, int total);
+    void set_tiles_building(int image_id, int size_xx);
     void set_graphics_array(int *image_set, int size_x, int size_y);
 
+    void load_build_requirements();
     void load_build_graphics(); // fills in data automatically
+    void load_build_terrain();
 
     void set_tile_size(int row, int column, int size);
-    void set_allowed_terrain(int row, int column, int terrain);
+    void set_allowed_terrain(int terrain, int row = -1, int column = -1);
 
     void set_requirements(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();

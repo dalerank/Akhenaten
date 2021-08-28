@@ -28,17 +28,18 @@ static void show(int warning) {
 
 static void check_road_access(int type, int x, int y, int size) {
     switch (type) {
+        case BUILDING_ROAD:
+        case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-        case BUILDING_MENU_BEAUTIFICATION:
+//        case BUILDING_MENU_BEAUTIFICATION:
         case BUILDING_WELL:
         case BUILDING_WATER_LIFT2:
         case BUILDING_GATEHOUSE:
         case BUILDING_ROADBLOCK:
         case BUILDING_TRIUMPHAL_ARCH:
-        case BUILDING_HOUSE_VACANT_LOT:
-        case BUILDING_MENU_FORTS:
+//        case BUILDING_MENU_FORTS:
         case BUILDING_FORT_CHARIOTEERS:
         case BUILDING_FORT_ARCHERS:
         case BUILDING_FORT_INFANTRY:

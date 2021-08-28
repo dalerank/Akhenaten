@@ -413,32 +413,35 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
 static void draw_fountain_range(int x, int y, int grid_offset) {
     ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
-static void draw_warehouse(int image_id, int x, int y) {
+static void draw_warehouse(int x, int y) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
-            draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4,
+            draw_building(image_id_from_group(GROUP_BUILDING_WAREHOUSE), x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
+            ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 5,
                                    y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_GREEN);
         } else
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
     }
 }
+static void draw_farm(int type, int x, int y, int grid_offset) {
+    int image_id = get_farm_image(grid_offset);
+    draw_building(image_id, x, y);
+    // fields
+    if (GAME_ENV == ENGINE_ENV_C3) {
+        for (int i = 4; i < 9; i++)
+            ImageDraw::isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
+                                           COLOR_MASK_GREEN);
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+        draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
+}
 
 static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
     if (building_is_farm(type)) {
-        image_id = get_farm_image(grid_offset);
-        draw_building(image_id, x, y);
-        // fields
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            for (int i = 4; i < 9; i++)
-                ImageDraw::isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
-                                               COLOR_MASK_GREEN);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
+        draw_farm(type, x, y, grid_offset);
     } else if (type == BUILDING_WAREHOUSE)
-        draw_warehouse(image_id, x, y);
+        draw_warehouse(x, y);
     else if (type == BUILDING_GRANARY) {
         if (GAME_ENV == ENGINE_ENV_C3) {
             ImageDraw::isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
@@ -469,30 +472,6 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         draw_building(image_id, x, y);
 }
 
-static void draw_single_reservoir(int x, int y, int has_water) {
-    int image_id = image_id_from_group(GROUP_BUILDING_RESERVOIR);
-    draw_building(image_id, x, y);
-    if (has_water) {
-        const image *img = image_get(image_id);
-        int x_water = x - 58 + img->sprite_offset_x - 2;
-        int y_water = y + img->sprite_offset_y - (img->height - 90);
-        ImageDraw::img_generic(image_id + 1, x_water, y_water, COLOR_MASK_GREEN);
-    }
-}
-static void draw_first_reservoir_range(int x, int y, int grid_offset) {
-    if (reservoir_range_data.save_offsets) {
-        reservoir_range_data.offsets[reservoir_range_data.total] = grid_offset;
-        reservoir_range_data.total++;
-    }
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
-}
-static void draw_second_reservoir_range(int x, int y, int grid_offset) {
-    for (int i = 0; i < reservoir_range_data.total; ++i) {
-        if (reservoir_range_data.offsets[i] == grid_offset)
-            return;
-    }
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
-}
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool  blocked = false;
@@ -934,6 +913,34 @@ void BuildPlanner::draw_blueprints(bool fully_blocked) {
 }
 void BuildPlanner::draw_graphics() {
 
+    // TODO: bring these all over the unified system
+    // special graphics buildings
+    pixel_coordinate pixel = pixel_coords_cache[0][0];
+    switch (building_type) {
+        case BUILDING_ROAD:
+            return draw_road((const map_tile*)&end, pixel.x, pixel.y);
+            break;
+        case BUILDING_IRRIGATION_DITCH:
+            return draw_aqueduct((const map_tile*)&end, pixel.x, pixel.y);
+            break;
+//        case BUILDING_WALL_PH:
+//            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
+//            break;
+        case BUILDING_WAREHOUSE:
+            return draw_warehouse(pixel.x, pixel.y);
+            break;
+        case BUILDING_BARLEY_FARM:
+        case BUILDING_FLAX_FARM:
+        case BUILDING_GRAIN_FARM:
+        case BUILDING_LETTUCE_FARM:
+        case BUILDING_POMEGRANATES_FARM:
+        case BUILDING_CHICKPEAS_FARM:
+        case BUILDING_FIGS_FARM:
+        case BUILDING_HENNA_FARM:
+            draw_farm(building_type, pixel.x, pixel.y, end.grid_offset);
+            break;
+    }
+
     // go through the tiles DIAGONALLY to render footprint and top correctly
     for (int dg_y = 0; dg_y < size.y + size.x - 1; dg_y++) {
         for (int dg_x = fmax(0, dg_y - size.y + 1); dg_x < size.x && dg_x < dg_y + 1; dg_x++) {
@@ -950,4 +957,20 @@ void BuildPlanner::draw_graphics() {
             }
         }
     }
+}
+
+void BuildPlanner::draw() {
+    // empty building
+    if (size.x < 1 || size.y < 1)
+        return;
+
+    if (can_place == CAN_NOT_PLACE)
+        // draw fully red (placement not allowed)
+        draw_blueprints(true);
+    else if (tiles_blocked_total > 0)
+        // draw green blueprint with red (blocked) tiles
+        draw_blueprints(false);
+    else
+        // draw normal building ghost (green)
+        draw_graphics();
 }
