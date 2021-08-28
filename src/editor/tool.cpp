@@ -333,7 +333,7 @@ static void place_building(const map_tile *tile) {
     }
 
     if (editor_tool_can_place_building(tile, size * size, 0)) {
-        building *b = building_create(type, tile->x, tile->y);
+        building *b = building_create(type, tile->x, tile->y, 0);
         map_building_tiles_add(b->id, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
     } else

@@ -303,7 +303,7 @@ public:
 
 int building_find(int type);
 building *building_get(int id);
-building *building_create(int type, int x, int y);
+building *building_create(int type, int x, int y, int orientation);
 
 building *building_at(int grid_offset);
 building *building_at(int x, int y);

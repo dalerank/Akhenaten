@@ -76,7 +76,7 @@ static void destroy_on_fire(building *b, int plagued) {
             continue;
 
         // FIXME: possible can't render image & fire animation
-        building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
+        building *ruin = building_create(BUILDING_BURNING_RUIN, x, y, 0);
         unsigned char random = rand_int % 4; rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
         map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);

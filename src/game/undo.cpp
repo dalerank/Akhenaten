@@ -310,7 +310,7 @@ void game_undo_perform(void) {
         int x = map_grid_offset_to_x(grid_offset);
         int y = map_grid_offset_to_y(grid_offset);
 
-        building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+        building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
         if (new_b->id > 0)
             map_building_tiles_add(new_b->id, x, y, 1, image_id_from_group(GROUP_BUILDING_HOUSE_TENT), TERRAIN_BUILDING);
 

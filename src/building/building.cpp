@@ -19,6 +19,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "menu.h"
+#include "monuments.h"
 
 #include <string.h>
 #include <map/building.h>
@@ -45,23 +46,9 @@ int building_find(int type) {
 building *building_get(int id) {
     return &all_buildings[id];
 }
-building *building_create(int type, int x, int y) {
-    building *b = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
-        if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
-            b = &all_buildings[i];
-            break;
-        }
-    }
-    if (!b) {
-        city_warning_show(WARNING_DATA_LIMIT_REACHED);
-        return &all_buildings[0];
-    }
 
+static void building_new_fill_in_data_for_type(building *b, int type, int x, int y, int orientation) {
     const building_properties *props = building_properties_for_type(type);
-
-    memset(&(b->data), 0, sizeof(b->data));
-
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
     b->unknown_value = city_buildings_unknown_value();
@@ -70,6 +57,14 @@ building *building_create(int type, int x, int y) {
     b->creation_sequence_index = extra.created_sequence++;
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
+
+    b->x = x;
+    b->y = y;
+    b->grid_offset = map_grid_offset(x, y);
+    b->map_random_7bit = map_random_get(b->grid_offset) & 0x7f;
+    b->figure_roam_direction = b->map_random_7bit & 6;
+    b->fire_proof = props->fire_proof;
+    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
 
     // house size
     b->house_size = 0;
@@ -88,64 +83,8 @@ building *building_create(int type, int x, int y) {
     else
         b->subtype.house_level = 0;
 
-    // input/output resources
-    if (GAME_ENV == ENGINE_ENV_C3)
-        switch (type) {
-            case BUILDING_BARLEY_FARM:
-                b->output_resource_id = RESOURCE_WHEAT;
-                break;
-            case BUILDING_FLAX_FARM:
-                b->output_resource_id = RESOURCE_VEGETABLES;
-                break;
-            case BUILDING_GRAIN_FARM:
-                b->output_resource_id = RESOURCE_FRUIT;
-                break;
-            case BUILDING_LETTUCE_FARM:
-                b->output_resource_id = RESOURCE_OLIVES;
-                break;
-            case BUILDING_POMEGRANATES_FARM:
-                b->output_resource_id = RESOURCE_VINES;
-                break;
-            case BUILDING_CHICKPEAS_FARM:
-                b->output_resource_id = RESOURCE_MEAT_C3;
-                break;
-            case BUILDING_STONE_QUARRY:
-                b->output_resource_id = RESOURCE_MARBLE_C3;
-                break;
-            case BUILDING_LIMESTONE_QUARRY:
-                b->output_resource_id = RESOURCE_IRON;
-                break;
-            case BUILDING_TIMBER_YARD:
-                b->output_resource_id = RESOURCE_TIMBER_C3;
-                break;
-            case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY;
-                break;
-            case BUILDING_BEER_WORKSHOP:
-                b->output_resource_id = RESOURCE_WINE;
-                b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE;
-                break;
-            case BUILDING_LINEN_WORKSHOP:
-                b->output_resource_id = RESOURCE_OIL_C3;
-                b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL;
-                break;
-            case BUILDING_WEAPONS_WORKSHOP:
-                b->output_resource_id = RESOURCE_WEAPONS_C3;
-                b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS;
-                break;
-            case BUILDING_JEWELS_WORKSHOP:
-                b->output_resource_id = RESOURCE_FURNITURE;
-                b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE;
-                break;
-            case BUILDING_POTTERY_WORKSHOP:
-                b->output_resource_id = RESOURCE_POTTERY_C3;
-                b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
-                break;
-            default:
-                b->output_resource_id = RESOURCE_NONE;
-                break;
-        }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+    // unique data
+    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (type) {
             case BUILDING_BARLEY_FARM:
                 b->output_resource_id = RESOURCE_BARLEY;
@@ -248,30 +187,57 @@ building *building_create(int type, int x, int y) {
                 b->output_resource_id = RESOURCE_PAINT;
 //                b->subtype.workshop_type = ??? todo
                 break;
+                //////////////
+            case BUILDING_GRANARY:
+                b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
+                b->storage_id = building_storage_create(BUILDING_GRANARY);
+                break;
+            case BUILDING_MARKET: // Set it as accepting all goods
+                b->subtype.market_goods = 0x0000;
+                break;
+            case BUILDING_WAREHOUSE:
+                b->subtype.orientation = building_rotation_get_rotation();
+                break;
+            case BUILDING_SMALL_STATUE:
+            case BUILDING_MEDIUM_STATUE:
+            case BUILDING_LARGE_STATUE:
+                b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
+                break;
+            case BUILDING_WATER_LIFT:
+            case BUILDING_FISHING_WHARF:
+            case BUILDING_TRANSPORT_WHARF:
+            case BUILDING_SHIPYARD:
+            case BUILDING_WARSHIP_WHARF:
+            case BUILDING_FERRY:
+                b->data.industry.orientation = orientation;
+                break;
+            case BUILDING_DOCK:
+                b->data.dock.orientation = orientation;
+                break;
+            case BUILDING_GATEHOUSE_PH:
+            case BUILDING_GATEHOUSE:
+                b->subtype.orientation = orientation;
+                break;
             default:
                 b->output_resource_id = RESOURCE_NONE;
                 break;
         }
-
-    if (type == BUILDING_GRANARY) {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
     }
-    if (type == BUILDING_MARKET) // Set it as accepting all goods
-        b->subtype.market_goods = 0x0000;
-
-    if (type == BUILDING_WAREHOUSE || type == BUILDING_SENET_HOUSE)
-        b->subtype.orientation = building_rotation_get_rotation();
-
-    b->x = x;
-    b->y = y;
-    b->grid_offset = map_grid_offset(x, y);
-    b->map_random_7bit = map_random_get(b->grid_offset) & 0x7f;
-    b->figure_roam_direction = b->map_random_7bit & 6;
-    b->fire_proof = props->fire_proof;
-    b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
+}
+building *building_create(int type, int x, int y, int orientation) {
+    building *b = 0;
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
+            b = &all_buildings[i];
+            break;
+        }
+    }
+    if (!b) {
+        city_warning_show(WARNING_DATA_LIMIT_REACHED);
+        return &all_buildings[0];
+    }
+    memset(&(b->data), 0, sizeof(b->data));
+    building_new_fill_in_data_for_type(b, type, x, y, orientation);
     return b;
 }
 

@@ -205,7 +205,7 @@ static building_properties properties[2][400] = {
                 {2, 0, GROUP_BUILDING_SCHOOL}, // school
                 {3, 0, 0, 0}, // water crossings
                 {3, 0, GROUP_BUILDING_LIBRARY}, // library
-                {4, 1, GROUP_BUILDING_FORT + 1}, // fort yard
+                {4, 1, GROUP_BUILDING_FORT, 1}, // fort yard
                 {1, 0, GROUP_BUILDING_POLICE_STATION}, // police
                 {3, 1, 0, 0},
                 {3, 1, GROUP_BUILDING_FORT}, // fort (main)
