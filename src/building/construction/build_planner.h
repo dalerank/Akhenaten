@@ -24,9 +24,11 @@ enum PlannerFlags {
     Walls =                 1 << 13,
     //
     Resources =             1 << 16,
-    NoEnemyNearby =         1 << 17,
+    IgnoreNearbyEnemy =         1 << 17,
     //
-    Draggable =             1 << 22,
+    Draggable =             1 << 21,
+    Ferry =                 1 << 22,
+    Bridge =                1 << 23,
 };
 
 enum {
@@ -70,9 +72,10 @@ private:
     void set_tile_size(int row, int column, int size);
     void set_allowed_terrain(int terrain, int row = -1, int column = -1);
 
-    void set_flags(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void set_flag(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();
     void update_requirements_check();
+    void update_special_case_orientations_check();
     void dispatch_warnings();
 
     void update_coord_caches(const map_tile *cursor_tile, int x, int y);

@@ -607,51 +607,6 @@ static void draw_fort(const map_tile *tile, int x, int y) {
 static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
     // TODO: implement monuments
 }
-static void draw_shipyard_wharf(const map_tile *tile, int x, int y, int type) {
-    int dir_absolute, dir_relative; // todo: water lift
-    int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute);
-    if (city_finance_out_of_money())
-        blocked = 999; // ????
-
-    if (blocked) {
-        for (int i = 0; i < 4; i++)
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-    } else {
-        const building_properties *props = building_properties_for_type(type);
-        int image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset + dir_relative;
-        draw_building(image_id, x, y);
-    }
-}
-static void draw_dock(const map_tile *tile, int x, int y) {
-    int dir_absolute, dir_relative;
-    int blocked = map_water_determine_orientation_size3(tile->x, tile->y, 1, &dir_absolute);
-    if (city_finance_out_of_money())
-        blocked = 1;
-    if (blocked) {
-        for (int i = 0; i < 9; i++)
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-    } else {
-        int image_id;
-        if (GAME_ENV == ENGINE_ENV_C3)
-            switch (dir_relative) {
-                case 0:
-                    image_id = image_id_from_group(GROUP_BUILDING_DOCK_1);
-                    break;
-                case 1:
-                    image_id = image_id_from_group(GROUP_BUILDING_DOCK_2);
-                    break;
-                case 2:
-                    image_id = image_id_from_group(GROUP_BUILDING_DOCK_3);
-                    break;
-                default:
-                    image_id = image_id_from_group(GROUP_BUILDING_DOCK_4);
-                    break;
-            }
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            image_id = image_id_from_group(GROUP_BUILDING_DOCK_1) + dir_relative;
-        draw_building(image_id, x, y);
-    }
-}
 static void draw_road(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     int blocked = 0;
