@@ -1,7 +1,7 @@
 #include <cmath>
 #include "building_ghost.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/count.h"
 #include "building/industry.h"
 #include "building/properties.h"
@@ -884,7 +884,7 @@ bool city_building_ghost_mark_deleting(const map_tile *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return false;
 
-    int construction_type = Planner.building_type;
+    int construction_type = Planner.build_type;
     if (!tile->grid_offset || Planner.draw_as_constructing ||
         scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
         return (construction_type == BUILDING_CLEAR_LAND);
@@ -916,7 +916,7 @@ void BuildPlanner::draw_graphics() {
     // TODO: bring these all over the unified system
     // special graphics buildings
     pixel_coordinate pixel = pixel_coords_cache[0][0];
-    switch (building_type) {
+    switch (build_type) {
         case BUILDING_ROAD:
             return draw_road((const map_tile*)&end, pixel.x, pixel.y);
             break;
@@ -937,7 +937,11 @@ void BuildPlanner::draw_graphics() {
         case BUILDING_CHICKPEAS_FARM:
         case BUILDING_FIGS_FARM:
         case BUILDING_HENNA_FARM:
-            draw_farm(building_type, pixel.x, pixel.y, end.grid_offset);
+            draw_farm(build_type, pixel.x, pixel.y, end.grid_offset);
+            break;
+        case BUILDING_WELL:
+            if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
+                city_view_foreach_tile_in_range(end.grid_offset, 1, 2, draw_fountain_range);
             break;
     }
 

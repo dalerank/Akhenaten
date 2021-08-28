@@ -7,7 +7,7 @@
 #include "map/point.h"
 #include "city/view.h"
 
-enum PlannerReqs {
+enum PlannerFlags {
     Groundwater =           1,
     Water =                 1 << 1,
     NearbyWater =           1 << 2,
@@ -20,10 +20,13 @@ enum PlannerReqs {
     Ore =                   1 << 9,
     Road =                  1 << 10,
     Intersection =          1 << 11,
-    Walls =                 1 << 12,
+    FancyRoad =             1 << 12,
+    Walls =                 1 << 13,
     //
     Resources =             1 << 16,
     NoEnemyNearby =         1 << 17,
+    //
+    Draggable =             1 << 22,
 };
 
 enum {
@@ -38,14 +41,13 @@ private:
     map_point pivot;
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
-    unsigned int tile_terrain_exceptions[30][30] = {};
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
     map_point tile_coord_cache[30][30];
     pixel_coordinate pixel_coords_cache[30][30];
 
-    long long requirement_flags = 0;
+    long long special_flags = 0;
     int additional_req_param1 = -1;
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
@@ -62,14 +64,13 @@ private:
     void set_tiles_building(int image_id, int size_xx);
     void set_graphics_array(int *image_set, int size_x, int size_y);
 
-    void load_build_requirements();
-    void load_build_graphics(); // fills in data automatically
-    void load_build_terrain();
+    void setup_build_flags();
+    void setup_build_graphics(); // fills in data automatically
 
     void set_tile_size(int row, int column, int size);
     void set_allowed_terrain(int terrain, int row = -1, int column = -1);
 
-    void set_requirements(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
+    void set_flags(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();
     void update_requirements_check();
     void dispatch_warnings();
@@ -82,7 +83,7 @@ private:
     /////
 
 public:
-    int building_type;
+    int build_type;
     bool in_progress;
     bool draw_as_constructing;
     map_tile start;
@@ -92,7 +93,7 @@ public:
     int variant;
 
     void reset();
-    void load_building(int type);
+    void setup_build(int type);
 
     void construction_start(int x, int y, int grid_offset);
     void construction_update(int x, int y, int grid_offset);
@@ -103,6 +104,7 @@ public:
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
 
     int get_total_drag_size(int *x, int *y);
+    bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
     void update(const map_tile *cursor_tile);
     void draw();

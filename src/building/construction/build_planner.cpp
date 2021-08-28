@@ -1,7 +1,7 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
-#include "planner.h"
+#include "build_planner.h"
 
 #include "clear.h"
 #include "routed.h"
@@ -1128,7 +1128,7 @@ void BuildPlanner::reset() {
 
     // reset build info
     total_cost = 0;
-    building_type = BUILDING_NONE;
+    build_type = BUILDING_NONE;
     in_progress = false;
     draw_as_constructing = false;
 
@@ -1148,7 +1148,7 @@ void BuildPlanner::reset() {
     variant = 0;
 
     // reset special requirements flags/params
-    requirement_flags = 0;
+    special_flags = 0;
     additional_req_param1 = -1;
     additional_req_param2 = -1;
     additional_req_param3 = -1;
@@ -1169,7 +1169,6 @@ void BuildPlanner::init_tiles(int size_x, int size_y) {
                 return;
             tile_graphics_array[row][column] = 0;
             tile_sizes_array[row][column] = 1; // reset tile size to 1 by default
-            tile_terrain_exceptions[row][column] = 0;
             tile_blocked_array[row][column] = false;
 
             // reset caches
@@ -1179,11 +1178,11 @@ void BuildPlanner::init_tiles(int size_x, int size_y) {
     }
 }
 
-void BuildPlanner::load_building(int type) { // select building for construction, set up main terrain restrictions/requirements
+void BuildPlanner::setup_build(int type) { // select building for construction, set up main terrain restrictions/requirements
 
     // initial data
     reset();
-    building_type = type;
+    build_type = type;
 
     // ignore empty building types
     switch (type) {
@@ -1203,12 +1202,11 @@ void BuildPlanner::load_building(int type) { // select building for construction
     }
 
     // load building data
-    load_build_requirements();
-    load_build_graphics();
-    load_build_terrain();
+    setup_build_flags();
+    setup_build_graphics();
 }
-void BuildPlanner::load_build_requirements() {
-    switch (building_type) {
+void BuildPlanner::setup_build_flags() {
+    switch (build_type) {
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:
         case BUILDING_GRAIN_FARM:
@@ -1217,32 +1215,32 @@ void BuildPlanner::load_build_requirements() {
         case BUILDING_CHICKPEAS_FARM:
         case BUILDING_FIGS_FARM:
         case BUILDING_HENNA_FARM:
-            set_requirements(PlannerReqs::Meadow);
+            set_flags(PlannerFlags::Meadow);
             break;
         case BUILDING_STONE_QUARRY:
         case BUILDING_LIMESTONE_QUARRY:
         case BUILDING_GRANITE_QUARRY:
         case BUILDING_SANDSTONE_QUARRY:
-            set_requirements(PlannerReqs::Rock);
+            set_flags(PlannerFlags::Rock);
             break;
         case BUILDING_GOLD_MINE:
         case BUILDING_GEMSTONE_MINE:
         case BUILDING_COPPER_MINE:
-            set_requirements(PlannerReqs::Rock);
-            set_requirements(PlannerReqs::Ore);
+            set_flags(PlannerFlags::Rock);
+            set_flags(PlannerFlags::Ore);
             break;
         case BUILDING_CLAY_PIT:
-            set_requirements(PlannerReqs::NearbyWater);
+            set_flags(PlannerFlags::NearbyWater);
             break;
         case BUILDING_TOWER:
-            set_requirements(PlannerReqs::Walls);
+            set_flags(PlannerFlags::Walls);
             break;
         case BUILDING_WELL:
         case BUILDING_WATER_SUPPLY:
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:
-            set_requirements(PlannerReqs::Groundwater);
+            set_flags(PlannerFlags::Groundwater);
             break;
 //        case BUILDING_LIBRARY: // TODO
 //            set_requirements(PlannerReqs::Resources, RESOURCE_PAPYRUS, 300);
@@ -1252,15 +1250,25 @@ void BuildPlanner::load_build_requirements() {
 //            break;
         case BUILDING_CLEAR_LAND:
         case BUILDING_ROAD:
+            set_flags(PlannerFlags::Road, false);
+            break;
+        case BUILDING_ROADBLOCK:
+            set_flags(PlannerFlags::Road, true, WARNING_ROADBLOCKS_ROAD_NEEDED);
+            break;
+        case BUILDING_PLAZA:
+            set_flags(PlannerFlags::Road, true, -1);
+            set_flags(PlannerFlags::FancyRoad);
             break;
         default:
-            set_requirements(PlannerReqs::NoEnemyNearby);
+            set_flags(PlannerFlags::NoEnemyNearby);
             break;
     }
+    if (building_is_draggable(build_type))
+        set_flags(PlannerFlags::Draggable);
 }
-void BuildPlanner::load_build_graphics() {
-    const building_properties *props = building_properties_for_type(building_type);
-    switch (building_type) {
+void BuildPlanner::setup_build_graphics() {
+    const building_properties *props = building_properties_for_type(build_type);
+    switch (build_type) {
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
@@ -1268,12 +1276,12 @@ void BuildPlanner::load_build_graphics() {
         case BUILDING_TEMPLE_COMPLEX_BAST: {
             // size of every big item 3x3, in general 7x13
             // 25 max tiles at the moment to check blocked tiles
-            int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, building_type);
-            int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, building_type);
-            int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, building_type);
-            int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, building_type);
-            int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, building_type);
-            int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, building_type);
+            int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, build_type);
+            int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, build_type);
+            int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, build_type);
+            int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, build_type);
+            int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, build_type);
+            int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, build_type);
 
             int EMPTY = 0;
             int mn_1A = main_image_id;
@@ -1378,33 +1386,13 @@ void BuildPlanner::load_build_graphics() {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-            set_tiles_building(get_statue_image(building_type, orientation, variant), props->size);
+            set_tiles_building(get_statue_image(build_type, orientation, variant), props->size);
             break;
         case BUILDING_WAREHOUSE:
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
             break;
         default: // regular buildings
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group), props->size);
-            break;
-    }
-}
-void BuildPlanner::load_build_terrain() {
-    switch (building_type) {
-        case BUILDING_BARLEY_FARM:
-        case BUILDING_FLAX_FARM:
-        case BUILDING_GRAIN_FARM:
-        case BUILDING_LETTUCE_FARM:
-        case BUILDING_POMEGRANATES_FARM:
-        case BUILDING_CHICKPEAS_FARM:
-        case BUILDING_FIGS_FARM:
-        case BUILDING_HENNA_FARM:
-            set_allowed_terrain(TERRAIN_FLOODPLAIN);
-            break;
-        case BUILDING_ROAD:
-            set_allowed_terrain(TERRAIN_FLOODPLAIN + TERRAIN_ROAD);
-            break;
-        case BUILDING_ROADBLOCK:
-            set_allowed_terrain(TERRAIN_ROAD);
             break;
     }
 }
@@ -1441,43 +1429,27 @@ void BuildPlanner::set_tile_size(int row, int column, int size) {
         return;
     tile_sizes_array[row][column] = size;
 }
-void BuildPlanner::set_allowed_terrain(int terrain, int row, int column) {
-    // out of bounds
-    if (row > 29 || column > 29)
-        return;
-
-    int min_row = row;
-    int max_row = row + 1;
-    int min_column = column;
-    int max_column = column + 1;
-
-    // default parameters = entire building range
-    if (row == -1) {
-        min_row = 0;
-        max_row = size.y;
-    }
-    if (column == -1) {
-        min_column = 0;
-        max_column = size.x;
-    }
-
-    // assign value to the above range
-    for (int r = min_row; r < max_row; ++r) {
-        for (int c = min_column; c < max_column; ++c) {
-            tile_terrain_exceptions[r][c] = terrain;
-        }
-    }
-}
-void BuildPlanner::set_requirements(long long flags, int param1, int param2, int param3) {
-    requirement_flags |= flags;
+void BuildPlanner::set_flags(long long flags, int param1, int param2, int param3) {
+    special_flags |= flags;
     additional_req_param1 = param1;
     additional_req_param2 = param2;
     additional_req_param3 = param3;
 }
+bool BuildPlanner::has_flag_set(int flag, int param1, int param2, int param3) {
+    if (param1 != -1 && additional_req_param1 != param1)
+        return false;
+    if (param2 != -1 && additional_req_param2 != param2)
+        return false;
+    if (param3 != -1 && additional_req_param3 != param3)
+        return false;
+    if (special_flags & flag)
+        return true;
+    return false;
+}
 
 void BuildPlanner::update_requirements_check() {
     // invalid build
-    if (building_type == BUILDING_NONE) {
+    if (build_type == BUILDING_NONE) {
         can_place = CAN_NOT_PLACE;
         return;
     }
@@ -1492,59 +1464,70 @@ void BuildPlanner::update_requirements_check() {
 
     /////// special requirements
     //
-    if (requirement_flags & PlannerReqs::Resources) {
+    if (special_flags & PlannerFlags::Resources) {
         if (city_resource_count(additional_req_param1) < additional_req_param2) {
             immediate_warning_id = additional_req_param3;
             can_place = CAN_NOT_BUT_GREEN;
         }
     }
-    if (requirement_flags & PlannerReqs::Groundwater) {
+    if (special_flags & PlannerFlags::Groundwater) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_GROUNDWATER)) {
             immediate_warning_id = WARNING_GROUNDWATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::NearbyWater) {
+    if (special_flags & PlannerFlags::NearbyWater) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_WATER)
             && !map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_WATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::Meadow) {
+    if (special_flags & PlannerFlags::Meadow) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_MEADOW_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::Rock) {
+    if (special_flags & PlannerFlags::Rock) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ROCK)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::Ore) {
+    if (special_flags & PlannerFlags::Ore) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ORE)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::Trees) {
+    if (special_flags & PlannerFlags::Trees) {
         if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             immediate_warning_id = WARNING_TREE_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::Walls) {
+    if (special_flags & PlannerFlags::Walls) {
         if (!map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_WALL)) {
             immediate_warning_id = WARNING_WALL_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
-    if (requirement_flags & PlannerReqs::NoEnemyNearby) {
+    if (special_flags & PlannerFlags::NoEnemyNearby) {
         if (has_nearby_enemy(start.x, start.y, end.x, end.y)) {
             immediate_warning_id = WARNING_ENEMY_NEARBY;
+            can_place = CAN_NOT_PLACE;
+        }
+    }
+    if (special_flags & PlannerFlags::Road && additional_req_param1 == true) {
+        if (!map_terrain_is(end.grid_offset, TERRAIN_ROAD)) {
+            immediate_warning_id = additional_req_param2;
+            can_place = CAN_NOT_PLACE;
+        }
+    }
+    if (special_flags & PlannerFlags::FancyRoad) {
+        if (!map_tiles_is_paved_road(end.grid_offset)) {
             can_place = CAN_NOT_PLACE;
         }
     }
@@ -1556,7 +1539,13 @@ void BuildPlanner::update_obstructions_check() {
 
             // check terrain at coords
             map_point current_tile = tile_coord_cache[row][column];
-            unsigned int restricted_terrain = TERRAIN_ALL - tile_terrain_exceptions[row][column];
+            unsigned int restricted_terrain = TERRAIN_ALL;
+
+            // special cases
+            if (special_flags & PlannerFlags::Meadow)
+                restricted_terrain -= TERRAIN_FLOODPLAIN;
+            if (special_flags & PlannerFlags::Road)
+                restricted_terrain -= TERRAIN_ROAD;
 
             tile_blocked_array[row][column] = false;
             int grid_offset = map_grid_offset(current_tile.x, current_tile.y);
@@ -1621,7 +1610,7 @@ void BuildPlanner::update_coord_caches(const map_tile *cursor_tile, int x, int y
     }
 }
 void BuildPlanner::update_orientations() {
-    switch (building_type) {
+    switch (build_type) {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
@@ -1642,7 +1631,7 @@ void BuildPlanner::update_orientations() {
             variant = 0;
             return;
     }
-    load_build_graphics(); // reload graphics, tiles, etc.
+    setup_build_graphics(); // reload graphics, tiles, etc.
 }
 void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
     if (grid_offset == start.grid_offset) {
@@ -1653,8 +1642,8 @@ void BuildPlanner::construction_record_view_position(int view_x, int view_y, int
 
 int BuildPlanner::get_total_drag_size(int *x, int *y) {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
-        !building_is_draggable(building_type) ||
-        (building_type != BUILDING_CLEAR_LAND && !total_cost)) {
+        !(special_flags & PlannerFlags::Draggable) ||
+        (build_type != BUILDING_CLEAR_LAND && !total_cost)) {
         return 0;
     }
     int size_x = end.x - start.x;
@@ -1677,10 +1666,10 @@ void BuildPlanner::construction_start(int x, int y, int grid_offset) {
     start.x = end.x = x;
     start.y = end.y = y;
 
-    if (game_undo_start_build(building_type)) {
+    if (game_undo_start_build(build_type)) {
         in_progress = true;
         int can_start = true;
-        switch (building_type) {
+        switch (build_type) {
             case BUILDING_ROAD:
                 can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x, start.y);
                 break;
@@ -1700,12 +1689,11 @@ void BuildPlanner::construction_start(int x, int y, int grid_offset) {
 }
 void BuildPlanner::construction_cancel() {
     map_property_clear_constructing_and_deleted();
-    if (in_progress && building_is_draggable(building_type)) {
-//        if (construction_is_draggable())
+    if (in_progress && special_flags & PlannerFlags::Draggable) {
         game_undo_restore_map(1);
         in_progress = false;
     } else {
-        load_building(BUILDING_NONE);
+        setup_build(BUILDING_NONE);
         widget_sidebar_city_release_build_buttons();
     }
     building_rotation_reset_rotation();
@@ -1720,52 +1708,52 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
         y = end.y;
         grid_offset = end.grid_offset;
     }
-    if (!building_type || city_finance_out_of_money()) {
+    if (!build_type || city_finance_out_of_money()) {
         total_cost = 0;
         return;
     }
     map_property_clear_constructing_and_deleted();
-    int current_cost = model_get_building(building_type)->cost;
+    int current_cost = model_get_building(build_type)->cost;
 
-    if (building_type == BUILDING_CLEAR_LAND) {
+    if (build_type == BUILDING_CLEAR_LAND) {
         int items_placed = last_items_cleared = building_construction_clear_land(1, start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_WALL) {
+    } else if (build_type == BUILDING_WALL) {
         int items_placed = building_construction_place_wall(1, start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_ROAD) {
+    } else if (build_type == BUILDING_ROAD) {
         int items_placed = building_construction_place_road(1, start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_PLAZA) {
+    } else if (build_type == BUILDING_PLAZA) {
         int items_placed = place_plaza(start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_GARDENS) {
+    } else if (build_type == BUILDING_GARDENS) {
         int items_placed = place_garden(start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_LOW_BRIDGE || building_type == BUILDING_SHIP_BRIDGE) {
+    } else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
         if (length > 1) current_cost *= length;
-    } else if (building_type == BUILDING_IRRIGATION_DITCH) {
+    } else if (build_type == BUILDING_IRRIGATION_DITCH) {
         building_construction_place_aqueduct(start.x, start.y, x, y, &current_cost);
         map_tiles_update_all_aqueducts(0);
-    } else if (building_type == BUILDING_WATER_LIFT) {
+    } else if (build_type == BUILDING_WATER_LIFT) {
         struct reservoir_info info;
         place_reservoir_and_aqueducts(1, start.x, start.y, x, y, &info);
         current_cost = info.cost;
         map_tiles_update_all_aqueducts(1);
         draw_as_constructing = 0;
-    } else if (building_type == BUILDING_HOUSE_VACANT_LOT) {
+    } else if (build_type == BUILDING_HOUSE_VACANT_LOT) {
         int items_placed = place_houses(1, start.x, start.y, x, y);
         if (items_placed >= 0) current_cost *= items_placed;
-    } else if (building_type == BUILDING_GATEHOUSE || building_type == BUILDING_GATEHOUSE_PH)
+    } else if (build_type == BUILDING_GATEHOUSE || build_type == BUILDING_GATEHOUSE_PH)
         mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
-    else if (building_type == BUILDING_ROADBLOCK) {
+    else if (build_type == BUILDING_ROADBLOCK) {
         // Don't show the footprint for roadblocks
-    } else if (building_type == BUILDING_TRIUMPHAL_ARCH)
+    } else if (build_type == BUILDING_TRIUMPHAL_ARCH)
         mark_construction(x, y, 3, ~TERRAIN_ROAD, 0);
-    else if (building_type == BUILDING_WAREHOUSE)
+    else if (build_type == BUILDING_WAREHOUSE)
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
-    else if (building_is_fort(building_type)) {
+    else if (building_is_fort(build_type)) {
         if (formation_get_num_legions_cached() < 6) {
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
                 map_building_tiles_are_clear(
@@ -1775,7 +1763,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
         }
-    } else if (building_type == BUILDING_SENET_HOUSE) {
+    } else if (build_type == BUILDING_SENET_HOUSE) {
         int x_offset_1, y_offset_1;
         building_rotation_get_offset_with_rotation(5, building_rotation_get_rotation(), &x_offset_1, &y_offset_1);
         int x_offset_2, y_offset_2;
@@ -1785,24 +1773,24 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
             map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL)) {
             mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
-    } else if (building_type == BUILDING_SHIPYARD || building_type == BUILDING_FISHING_WHARF) {
+    } else if (build_type == BUILDING_SHIPYARD || build_type == BUILDING_FISHING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0))
             draw_as_constructing = 1;
-    } else if (building_type == BUILDING_DOCK) {
+    } else if (build_type == BUILDING_DOCK) {
         if (!map_water_determine_orientation_size3(x, y, 1, 0))
             draw_as_constructing = 1;
-    } else if (requirement_flags & PlannerReqs::Meadow || requirement_flags & PlannerReqs::Rock || requirement_flags & PlannerReqs::Trees ||
-               requirement_flags & PlannerReqs::NearbyWater || requirement_flags & PlannerReqs::Walls || requirement_flags & PlannerReqs::Groundwater) {
+    } else if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::Rock || special_flags & PlannerFlags::Trees ||
+               special_flags & PlannerFlags::NearbyWater || special_flags & PlannerFlags::Walls || special_flags & PlannerFlags::Groundwater) {
         // never mark as constructing
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && (building_type == BUILDING_BOOTH || building_type == BUILDING_BANDSTAND
-                                                  || building_type == BUILDING_PAVILLION || building_type == BUILDING_FESTIVAL_SQUARE)) {
+    } else if (GAME_ENV == ENGINE_ENV_PHARAOH && (build_type == BUILDING_BOOTH || build_type == BUILDING_BANDSTAND
+                                                  || build_type == BUILDING_PAVILLION || build_type == BUILDING_FESTIVAL_SQUARE)) {
         // never mark as constructing; todo?
     } else {
-        if (!(building_type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
-            !(building_type == BUILDING_RECRUITER && city_buildings_has_barracks() &&
+        if (!(build_type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
+            !(build_type == BUILDING_RECRUITER && city_buildings_has_barracks() &&
               !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
-            !(building_type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
-            int size = building_properties_for_type(building_type)->size;
+            !(build_type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
+            int size = building_properties_for_type(build_type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
     }
@@ -1818,11 +1806,11 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     // attempt placing, restore terrain data on failure
     if (!place()) {
         map_property_clear_constructing_and_deleted();
-        if (building_type == BUILDING_WALL || building_type == BUILDING_ROAD || building_type == BUILDING_IRRIGATION_DITCH)
+        if (build_type == BUILDING_WALL || build_type == BUILDING_ROAD || build_type == BUILDING_IRRIGATION_DITCH)
             game_undo_restore_map(0);
-        else if (building_type == BUILDING_PLAZA || building_type == BUILDING_GARDENS)
+        else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS)
             game_undo_restore_map(1);
-        else if (building_type == BUILDING_LOW_BRIDGE || building_type == BUILDING_SHIP_BRIDGE)
+        else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_SHIP_BRIDGE)
             map_bridge_reset_building_length();
         else
             map_property_clear_constructing_and_deleted();
@@ -1831,10 +1819,10 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(building_type, end.x, end.y, size.x);
+    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x);
 
     // consume resources for specific buildings (e.g. marble, granite)
-    building_consume_resources(building_type);
+    building_consume_resources(build_type);
 
     formation_move_herds_away(end.x, end.y);
     city_finance_process_construction(total_cost);
@@ -1867,8 +1855,8 @@ bool BuildPlanner::place() {
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
-    int placement_cost = model_get_building(building_type)->cost;
-    switch (building_type) {
+    int placement_cost = model_get_building(build_type)->cost;
+    switch (build_type) {
         case BUILDING_CLEAR_LAND: {
             // BUG in original (keep this behaviour): if confirmation has to be asked (bridge/fort),
             // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
@@ -1896,7 +1884,7 @@ bool BuildPlanner::place() {
             break;
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE: {
-            int length = map_bridge_add(x, y, building_type == BUILDING_SHIP_BRIDGE);
+            int length = map_bridge_add(x, y, build_type == BUILDING_SHIP_BRIDGE);
             if (length <= 1) {
                 city_warning_show(WARNING_SHORE_NEEDED);
                 return false;
@@ -1917,7 +1905,7 @@ bool BuildPlanner::place() {
         }
         case BUILDING_WATER_LIFT: { // doubles as BUILDING_WATER_LIFT
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (!attempt_placing_on_shore(building_type, end.x, end.y, 2, false))
+                if (!attempt_placing_on_shore(build_type, end.x, end.y, 2, false))
                     return false;
                 break;
             }
@@ -1972,7 +1960,7 @@ bool BuildPlanner::place() {
 //                city_warning_show(WARNING_ROADBLOCKS_ROAD_NEEDED); // TODO
                 return false;
             }
-            if (!attempt_placing_generic(building_type, x, y, orientation, TERRAIN_ROAD))
+            if (!attempt_placing_generic(build_type, x, y, orientation, TERRAIN_ROAD))
                 return false;
             break;
         }
@@ -1984,7 +1972,7 @@ bool BuildPlanner::place() {
                 else
                     orientation = 3;
             }
-            if (!attempt_placing_generic(building_type, x, y, orientation, TERRAIN_ROAD))
+            if (!attempt_placing_generic(build_type, x, y, orientation, TERRAIN_ROAD))
                 return false;
             break;
         }
@@ -1994,7 +1982,7 @@ bool BuildPlanner::place() {
                 city_warning_show(WARNING_WALL_NEEDED);
                 return false;
             }
-            if (!attempt_placing_generic(building_type, x, y, 0, TERRAIN_WALL))
+            if (!attempt_placing_generic(build_type, x, y, 0, TERRAIN_WALL))
                 return false;
             break;
         case BUILDING_ROADBLOCK:
@@ -2002,7 +1990,7 @@ bool BuildPlanner::place() {
                 city_warning_show(WARNING_ROADBLOCKS_ROAD_NEEDED);
                 return false;
             }
-            if (!attempt_placing_generic(building_type, x, y, 0, TERRAIN_ROAD))
+            if (!attempt_placing_generic(build_type, x, y, 0, TERRAIN_ROAD))
                 return false;
             break;
         case BUILDING_BOOTH:
@@ -2011,18 +1999,18 @@ bool BuildPlanner::place() {
         case BUILDING_FESTIVAL_SQUARE:
             if (GAME_ENV == ENGINE_ENV_C3) {
                 // default behavior
-                if (!attempt_placing_generic(building_type, x, y, 0))
+                if (!attempt_placing_generic(build_type, x, y, 0))
                     return false;
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 int orientation = 0;
                 int booth_warning = 0;
-                if (building_type == BUILDING_BOOTH)
+                if (build_type == BUILDING_BOOTH)
                     booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 0, &orientation);
-                if (building_type == BUILDING_BANDSTAND)
+                if (build_type == BUILDING_BANDSTAND)
                     booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 1, &orientation);
-                if (building_type == BUILDING_PAVILLION)
+                if (build_type == BUILDING_PAVILLION)
                     booth_warning = map_orientation_for_venue_with_map_orientation(x, y, 2, &orientation);
-                if (building_type == BUILDING_FESTIVAL_SQUARE) {
+                if (build_type == BUILDING_FESTIVAL_SQUARE) {
                     if (city_building_has_festival_square()) {
                         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
                         return false;
@@ -2038,22 +2026,22 @@ bool BuildPlanner::place() {
                         city_warning_show(WARNING_CLEAR_LAND_NEEDED);
                     return false;
                 }
-                if (!attempt_placing_generic(building_type, x, y, orientation, TERRAIN_ROAD))
+                if (!attempt_placing_generic(build_type, x, y, orientation, TERRAIN_ROAD))
                     return false;
             }
             break;
         case BUILDING_FISHING_WHARF:
-            if (!attempt_placing_on_shore(building_type, x, y, 2, false))
+            if (!attempt_placing_on_shore(build_type, x, y, 2, false))
                 return false;
             break;
         case BUILDING_DOCK:
-            if (!attempt_placing_on_shore(building_type, x, y, 3, true))
+            if (!attempt_placing_on_shore(build_type, x, y, 3, true))
                 return false;
             break;
         case BUILDING_SHIPYARD: {
-            if (GAME_ENV == ENGINE_ENV_C3 && !attempt_placing_on_shore(building_type, x, y, 2, false)) // size 2 for C3
+            if (GAME_ENV == ENGINE_ENV_C3 && !attempt_placing_on_shore(build_type, x, y, 2, false)) // size 2 for C3
                 return false;
-            else if (GAME_ENV == ENGINE_ENV_PHARAOH && !attempt_placing_on_shore(building_type, x, y, 3, true)) // size 3 for Pharaoh
+            else if (GAME_ENV == ENGINE_ENV_PHARAOH && !attempt_placing_on_shore(build_type, x, y, 3, true)) // size 3 for Pharaoh
                 return false;
             break;
         }
@@ -2066,7 +2054,7 @@ bool BuildPlanner::place() {
                 city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
                 return false;
             }
-            if (!attempt_placing_generic(building_type, x, y, 0))
+            if (!attempt_placing_generic(build_type, x, y, 0))
                 return false;
             break;
         case BUILDING_RECRUITER:
@@ -2074,7 +2062,7 @@ bool BuildPlanner::place() {
                 city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
                 return false;
             }
-            if (!attempt_placing_generic(building_type, x, y, 0))
+            if (!attempt_placing_generic(build_type, x, y, 0))
                 return false;
             break;
         case BUILDING_BARLEY_FARM:
@@ -2085,7 +2073,7 @@ bool BuildPlanner::place() {
         case BUILDING_CHICKPEAS_FARM:
         case BUILDING_FIGS_FARM:
         case BUILDING_HENNA_FARM:
-            if (!attempt_placing_generic(building_type, x, y, 0, TERRAIN_FLOODPLAIN))
+            if (!attempt_placing_generic(build_type, x, y, 0, TERRAIN_FLOODPLAIN))
                 return false;
             break;
         case BUILDING_PYRAMID:
@@ -2104,7 +2092,7 @@ bool BuildPlanner::place() {
             break;
         default:
             int warning_id;
-            if (!attempt_placing_generic(building_type, x, y, 0))
+            if (!attempt_placing_generic(build_type, x, y, 0))
                 return false;
             break;
     }

@@ -2,7 +2,7 @@
 #include <window/city.h>
 #include "game.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/model.h"
 #include "core/config.h"
 #include "core/hotkey_config.h"

@@ -2,7 +2,7 @@
 #include <widget/overlays/city_overlay.h>
 #include "city.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "city/view.h"
@@ -243,7 +243,7 @@ static void build_move(const map_tile *tile) {
 }
 static void build_end(void) {
     if (Planner.in_progress) {
-        if (Planner.building_type != BUILDING_NONE)
+        if (Planner.build_type != BUILDING_NONE)
             sound_effect_play(SOUND_EFFECT_BUILD);
 
         Planner.construction_finalize();
@@ -294,7 +294,7 @@ static bool handle_legion_click(const map_tile *tile) {
     return false;
 }
 static bool handle_cancel_construction_button(const touch *t) {
-    if (!Planner.building_type)
+    if (!Planner.build_type)
         return false;
 
     int x, y, width, height;
@@ -317,7 +317,7 @@ void widget_city_clear_current_tile(void) {
 }
 
 static void handle_touch_scroll(const touch *t) {
-    if (Planner.building_type) {
+    if (Planner.build_type) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
             city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
@@ -353,7 +353,7 @@ static void handle_touch_zoom(const touch *first, const touch *last) {
 }
 static void handle_first_touch(map_tile *tile) {
     const touch *first = get_earliest_touch();
-    int type = Planner.building_type;
+    int type = Planner.build_type;
 
     if (touch_was_click(first)) {
         if (handle_cancel_construction_button(first) || handle_legion_click(tile))
@@ -371,7 +371,7 @@ static void handle_first_touch(map_tile *tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (building_is_draggable(Planner.building_type)) {
+    if (Planner.has_flag_set(PlannerFlags::Draggable)) {
         if (!Planner.in_progress) {
             if (first->has_started) {
                 build_start(tile);
@@ -479,11 +479,11 @@ static void handle_mouse(const mouse *m) {
     if (m->left.went_up)
         build_end();
 
-    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !Planner.building_type)
+    if (m->middle.went_down && input_coords_in_city(m->x, m->y) && !Planner.build_type)
         scroll_drag_start(0);
 
     if (m->right.went_up) {
-        if (!Planner.building_type) {
+        if (!Planner.build_type) {
             if (handle_right_click_allow_building_info(tile))
                 window_building_info_show(tile->grid_offset);
         } else
@@ -519,7 +519,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
         handle_mouse(m);
 
     if (h->escape_pressed) {
-        if (Planner.building_type)
+        if (Planner.build_type)
             Planner.construction_cancel();
         else
             hotkey_handle_escape();

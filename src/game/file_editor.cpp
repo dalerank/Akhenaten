@@ -1,6 +1,6 @@
 #include "file_editor.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/menu.h"
 #include "building/storage.h"
 #include "city/data.h"

@@ -279,7 +279,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/storage.cpp
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.cpp
     ${PROJECT_SOURCE_DIR}/src/building/monuments.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction/planner.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction/build_planner.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction/clear.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction/routed.cpp
     ${PROJECT_SOURCE_DIR}/src/building/construction/warnings.cpp

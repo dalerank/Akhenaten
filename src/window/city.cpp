@@ -1,7 +1,7 @@
 #include <widget/overlays/city_overlay.h>
 #include "city.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/victory.h"
@@ -85,7 +85,7 @@ static void draw_paused_and_time_left(void) {
     }
 }
 static void draw_cancel_construction(void) {
-    if (!mouse_get()->is_touch || !Planner.building_type)
+    if (!mouse_get()->is_touch || !Planner.build_type)
         return;
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
@@ -234,7 +234,7 @@ static void handle_hotkeys(const hotkeys *h) {
     if (h->building) {
         if (scenario_building_allowed(h->building)) {
             Planner.construction_cancel();
-            Planner.load_building(h->building);
+            Planner.setup_build(h->building);
         }
     }
 }

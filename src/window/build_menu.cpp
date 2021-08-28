@@ -1,6 +1,6 @@
 #include "build_menu.h"
 
-#include "building/Construction/planner.h"
+#include "building/Construction/build_planner.h"
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"
@@ -79,7 +79,7 @@ static int init(int submenu) {
 //    int type = building_menu_type(data.selected_submenu, item);
 //    BuildPlanner::set_building_type(type);
 
-    Planner.load_building(BUILDING_NONE);
+    Planner.setup_build(BUILDING_NONE);
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
@@ -222,7 +222,7 @@ static void button_menu_item(int item) {
     widget_city_clear_current_tile();
 
     int type = building_menu_type(data.selected_submenu, item);
-    Planner.load_building(type);
+    Planner.setup_build(type);
 
     if (set_submenu_for_type(type)) {
         data.num_items = building_menu_count_items(data.selected_submenu);
@@ -237,7 +237,7 @@ int window_build_menu_image(void) {
     int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
-            if (Planner.building_type == BUILDING_NONE)
+            if (Planner.build_type == BUILDING_NONE)
                 return image_base + 12;
             switch (data.selected_submenu) {
                 default:
