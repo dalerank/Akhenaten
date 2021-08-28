@@ -109,7 +109,7 @@ void building_count_update(void) {
                 break;
 
             case BUILDING_RECRUITER:
-                city_buildings_set_barracks(i);
+                city_buildings_set_recruiter(i);
                 increase_count(type, b->num_workers > 0);
                 break;
 

@@ -76,6 +76,7 @@ private:
     void update_obstructions_check();
     void update_requirements_check();
     void update_special_case_orientations_check();
+    void update_unique_only_one_check();
     void dispatch_warnings();
 
     void update_coord_caches();

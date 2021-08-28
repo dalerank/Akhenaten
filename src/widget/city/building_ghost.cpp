@@ -410,6 +410,7 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
     ImageDraw::isometric_footprint(image_id, x, y, color_mask);
     ImageDraw::isometric_top(image_id, x, y, color_mask);
 }
+
 static void draw_fountain_range(int x, int y, int grid_offset) {
     ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
 }
@@ -436,40 +437,56 @@ static void draw_farm(int type, int x, int y, int grid_offset) {
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
+static void draw_fort(const map_tile *tile, int x, int y) {
+    int fully_blocked = 0;
+    int blocked = 0;
+    if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
+        fully_blocked = 1;
+        blocked = 1;
+    }
 
-static void draw_regular_building(int type, int image_id, int x, int y, int grid_offset) {
-    if (building_is_farm(type)) {
-        draw_farm(type, x, y, grid_offset);
-    } else if (type == BUILDING_WAREHOUSE)
-        draw_warehouse(x, y);
-    else if (type == BUILDING_GRANARY) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            ImageDraw::isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
-            const image *img = image_get(image_id + 1);
-            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x - 32, y + img->sprite_offset_y - 64,
-                                   COLOR_MASK_GREEN);
-        } else
+    int num_tiles_fort = building_properties_for_type(BUILDING_MENU_FORTS)->size;
+    num_tiles_fort *= num_tiles_fort;
+    int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
+    num_tiles_ground *= num_tiles_ground;
+
+    int grid_offset_fort = tile->grid_offset;
+    int grid_offset_ground = grid_offset_fort;// + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
+    switch (GAME_ENV) {
+        case ENGINE_ENV_C3:
+            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_C3[building_rotation_get_rotation()][
+                    city_view_orientation() / 2];
+            break;
+        case ENGINE_ENV_PHARAOH:
+            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_PH[building_rotation_get_rotation()][
+                    city_view_orientation() / 2];
+            break;
+    }
+    int blocked_tiles_fort[MAX_TILES];
+    int blocked_tiles_ground[MAX_TILES];
+
+    blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
+    blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
+
+    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+    int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
+    int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
+
+    if (blocked) {
+        draw_partially_blocked(x, y, fully_blocked, num_tiles_fort, blocked_tiles_fort);
+        draw_partially_blocked(x_ground, y_ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
+    } else {
+        int image_id = image_id_from_group(GROUP_BUILDING_FORT);
+        if (orientation_index == 0 || orientation_index == 3) {
+            // draw fort first, then ground
             draw_building(image_id, x, y);
-    } else if (type == BUILDING_HOUSE_VACANT_LOT)
-        draw_building(image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), x, y);
-    else if (type == BUILDING_TRIUMPHAL_ARCH) {
-        draw_building(image_id, x, y);
-        const image *img = image_get(image_id + 1);
-        if (image_id == image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH))
-            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x + 4, y + img->sprite_offset_y - 51,
-                                   COLOR_MASK_GREEN);
-        else
-            ImageDraw::img_generic(image_id + 1, x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56,
-                                   COLOR_MASK_GREEN);
-    } else if (building_is_statue(type)) {
-        image_id = get_statue_image(type, building_rotation_get_rotation() + 1, building_rotation_get_building_variant());
-        draw_building(image_id, x, y);
-    } else if (type == BUILDING_WELL) {
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE))
-            city_view_foreach_tile_in_range(grid_offset, 1, 2, draw_fountain_range);
-        draw_building(image_id, x, y);
-    } else if (type != BUILDING_CLEAR_LAND)
-        draw_building(image_id, x, y);
+            draw_building(image_id + 1, x_ground, y_ground);
+        } else {
+            // draw ground first, then fort
+            draw_building(image_id + 1, x_ground, y_ground);
+            draw_building(image_id, x, y);
+        }
+    }
 }
 
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
@@ -494,6 +511,53 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
         const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1); // get starting tile
         draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), x, y);
     }
+}
+static void draw_road(const map_tile *tile, int x, int y) {
+    int grid_offset = tile->grid_offset;
+    int blocked = 0;
+    int image_id = 0;
+    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+        image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+        if (map_can_place_road_under_aqueduct(grid_offset))
+            image_id += map_get_aqueduct_with_road_image(grid_offset);
+        else
+            blocked = 1;
+    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN))
+        blocked = 1;
+    else {
+        if (GAME_ENV == ENGINE_ENV_C3)
+            image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
+            image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
+        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) &&
+            map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+            image_id++;
+        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
+                blocked = 1;
+        }
+        else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
+                blocked = 1;
+            else {
+                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
+                    if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
+                        blocked = 1;
+                    else
+                        image_id++;
+                }
+                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN) &&
+                    map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+                    blocked = 1;
+            }
+        }
+    }
+    if (city_finance_out_of_money())
+        blocked = 1;
+    if (blocked)
+        draw_flat_tile(x, y, COLOR_MASK_RED);
+    else
+        draw_building(image_id, x, y);
 }
 static void draw_bridge(const map_tile *tile, int x, int y, int type) {
     int length, direction;
@@ -551,108 +615,6 @@ static void draw_bridge(const map_tile *tile, int x, int y, int type) {
             }
         }
     }
-}
-static void draw_fort(const map_tile *tile, int x, int y) {
-    int fully_blocked = 0;
-    int blocked = 0;
-    if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
-        fully_blocked = 1;
-        blocked = 1;
-    }
-
-    int num_tiles_fort = building_properties_for_type(BUILDING_MENU_FORTS)->size;
-    num_tiles_fort *= num_tiles_fort;
-    int num_tiles_ground = building_properties_for_type(BUILDING_FORT_GROUND)->size;
-    num_tiles_ground *= num_tiles_ground;
-
-    int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = grid_offset_fort;// + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_C3[building_rotation_get_rotation()][
-                    city_view_orientation() / 2];
-            break;
-        case ENGINE_ENV_PHARAOH:
-            grid_offset_ground += FORT_GROUND_GRID_OFFSETS_PH[building_rotation_get_rotation()][
-                    city_view_orientation() / 2];
-            break;
-    }
-    int blocked_tiles_fort[MAX_TILES];
-    int blocked_tiles_ground[MAX_TILES];
-
-    blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
-    blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
-
-    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
-    int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
-    int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
-
-    if (blocked) {
-        draw_partially_blocked(x, y, fully_blocked, num_tiles_fort, blocked_tiles_fort);
-        draw_partially_blocked(x_ground, y_ground, fully_blocked, num_tiles_ground, blocked_tiles_ground);
-    } else {
-        int image_id = image_id_from_group(GROUP_BUILDING_FORT);
-        if (orientation_index == 0 || orientation_index == 3) {
-            // draw fort first, then ground
-            draw_building(image_id, x, y);
-            draw_building(image_id + 1, x_ground, y_ground);
-        } else {
-            // draw ground first, then fort
-            draw_building(image_id + 1, x_ground, y_ground);
-            draw_building(image_id, x, y);
-        }
-    }
-}
-
-static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
-    // TODO: implement monuments
-}
-static void draw_road(const map_tile *tile, int x, int y) {
-    int grid_offset = tile->grid_offset;
-    int blocked = 0;
-    int image_id = 0;
-    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-        image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-        if (map_can_place_road_under_aqueduct(grid_offset))
-            image_id += map_get_aqueduct_with_road_image(grid_offset);
-        else
-            blocked = 1;
-    } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN))
-        blocked = 1;
-    else {
-        if (GAME_ENV == ENGINE_ENV_C3)
-            image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
-        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            image_id = image_id_from_group(GROUP_TERRAIN_DIRT_ROAD);
-        if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) &&
-            map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
-            image_id++;
-        if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-            if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
-                blocked = 1;
-        }
-        else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
-                blocked = 1;
-            else {
-                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-                    if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
-                        blocked = 1;
-                    else
-                        image_id++;
-                }
-                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN) &&
-                    map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
-                    blocked = 1;
-            }
-        }
-    }
-    if (city_finance_out_of_money())
-        blocked = 1;
-    if (blocked)
-        draw_flat_tile(x, y, COLOR_MASK_RED);
-    else
-        draw_building(image_id, x, y);
 }
 
 static void draw_entertainment_venue(const map_tile *tile, int x, int y, int type) {
@@ -833,6 +795,9 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
                 break;
         }
     }
+}
+static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
+    // TODO: implement monuments
 }
 
 bool city_building_ghost_mark_deleting(const map_tile *tile) {

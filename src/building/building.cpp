@@ -362,7 +362,7 @@ void building::clear_related_data() {
         building_storage_delete(storage_id);
 
     if (is_senate())
-        city_buildings_remove_senate(this);
+        city_buildings_remove_palace(this);
 
     if (is_governor_palace())
         city_buildings_remove_mansion(this);
@@ -371,7 +371,7 @@ void building::clear_related_data() {
         city_buildings_remove_dock();
 
     if (type == BUILDING_RECRUITER)
-        city_buildings_remove_barracks(this);
+        city_buildings_remove_recruiter(this);
 
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
