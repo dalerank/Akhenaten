@@ -21,49 +21,6 @@
 
 #include "graphics/image.h"
 
-void map_set_tile_graphics(tile_graphics_query queries[], int queries_num, int terrain) {
-    int x_leftmost, y_leftmost;
-    switch (city_view_orientation()) {
-        case DIR_0_TOP_RIGHT:
-            x_leftmost = 0;
-            y_leftmost = 1;
-            break;
-        case DIR_2_BOTTOM_RIGHT:
-            x_leftmost = y_leftmost = 0;
-            break;
-        case DIR_4_BOTTOM_LEFT:
-            x_leftmost = 1;
-            y_leftmost = 0;
-            break;
-        case DIR_6_TOP_LEFT:
-            x_leftmost = y_leftmost = 1;
-            break;
-        default:
-            return;
-    }
-    for (int i = 0; i < queries_num; ++i) {
-        tile_graphics_query query = queries[i];
-        if (!map_grid_is_inside(query.x, query.y, query.size))
-            continue;
-
-        int x_proper = x_leftmost * (query.size - 1);
-        int y_proper = y_leftmost * (query.size - 1);
-        for (int dy = 0; dy < query.size; dy++) {
-            for (int dx = 0; dx < query.size; dx++) {
-                int grid_offset = map_grid_offset(query.x + dx, query.y + dy);
-                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-                map_terrain_add(grid_offset, terrain);
-                map_building_set(grid_offset, query.building_id);
-                map_property_clear_constructing(grid_offset);
-                map_property_set_multi_tile_size(grid_offset, query.size);
-                map_image_set(grid_offset, query.image_id);
-                map_property_set_multi_tile_xy(grid_offset, dx, dy,
-                                               dx == x_proper && dy == y_proper);
-            }
-        }
-    }
-}
-
 static int north_tile_grid_offset(int x, int y, int *size) {
     int grid_offset = map_grid_offset(x, y);
     *size = map_property_multi_tile_size(grid_offset);
@@ -101,10 +58,42 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
 }
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {
-    tile_graphics_query queries[] = {
-        {x, y, size, image_id, building_id} // single tile query list
-    };
-    map_set_tile_graphics(queries, 1, terrain);
+    int x_leftmost, y_leftmost;
+    switch (city_view_orientation()) {
+        case DIR_0_TOP_RIGHT:
+            x_leftmost = 0;
+            y_leftmost = 1;
+            break;
+        case DIR_2_BOTTOM_RIGHT:
+            x_leftmost = y_leftmost = 0;
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            x_leftmost = 1;
+            y_leftmost = 0;
+            break;
+        case DIR_6_TOP_LEFT:
+            x_leftmost = y_leftmost = 1;
+            break;
+        default:
+            return;
+    }
+    if (!map_grid_is_inside(x, y, size))
+        return;
+
+    int x_proper = x_leftmost * (size - 1);
+    int y_proper = y_leftmost * (size - 1);
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+            map_terrain_add(grid_offset, terrain);
+            map_building_set(grid_offset, building_id);
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, size);
+            map_image_set(grid_offset, image_id);
+            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_proper && dy == y_proper);
+        }
+    }
 }
 void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_offset, int progress) {
     if (GAME_ENV == ENGINE_ENV_C3) {
@@ -187,10 +176,6 @@ int map_building_tiles_add_aqueduct(int x, int y) {
     map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
     map_property_clear_constructing(grid_offset);
     return 1;
-}
-
-void map_add_temple_complex_tiles(building *b) {
-
 }
 
 void map_add_bandstand_tiles(building *b) {

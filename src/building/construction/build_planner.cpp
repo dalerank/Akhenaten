@@ -100,6 +100,34 @@ static void add_fort(int type, building *fort) {
     ground->formation_id = fort->formation_id;
 }
 
+void BuildPlanner::add_building_tiles_from_list(int building_id) {
+    for (int row = 0; row < size.y; ++row) {
+        for (int column = 0; column < size.x; ++column) {
+            int image_id = tile_graphics_array[row][column];
+            int size = tile_sizes_array[row][column];
+            map_tile tile = tile_coord_cache[row][column];
+
+            // correct for city orientation
+            switch (city_view_orientation() / 2) {
+                case 0:
+                    tile.y = tile.y - size + 1;
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    tile.x = tile.x - size + 1;
+                    break;
+                case 3:
+                    tile.x = tile.x - size + 1;
+                    tile.y = tile.y - size + 1;
+                    break;
+            }
+            if (image_id > 0 && size > 0)
+                map_building_tiles_add(building_id, tile.x, tile.y, size, image_id, TERRAIN_BUILDING);
+        }
+    }
+}
+
 static building *add_temple_complex_element(int x, int y, int size, int image_id, building *prev) {
     building *b = building_create(prev->type, x, y, 0);
     game_undo_add_building(b);
@@ -113,31 +141,9 @@ static building *add_temple_complex_element(int x, int y, int size, int image_id
     return b;
 }
 static void add_temple_complex(building *b, int orientation) {
+    Planner.add_building_tiles_from_list(b->id);
+//    add_temple_complex_element()
 
-
-
-
-
-//    if (orientation == 0) {
-//        b->size = 1;
-//        b->prev_part_building_id = 0;
-//        building *prev = b;
-//
-//        // Start draw from the back
-//        for (int i = 6; i >= 0; --i) {
-//            for (int j = 0; j < 13; j++) {
-//                int current_tile = TEMPLE_COMPLEX_SCHEME[i][j];
-//
-//                int current_size = 1;
-//                if (current_tile == main1 || current_tile == main2 || current_tile == main3)
-//                    current_size = 3;
-//
-//                if (current_tile > 0)
-//                    prev = add_temple_complex_element(b->x + j, b->y - i, current_size, current_tile, prev);
-//            }
-//        }
-//        prev->next_part_building_id = 0;
-//    }
 }
 
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
@@ -699,10 +705,6 @@ static bool place_building(int type, int x, int y, int orientation, int variant)
             break;
     }
 
-    // adjust pivot
-    x -= Planner.pivot.x;
-    y -= Planner.pivot.y;
-
     // create building
     last_created_building = nullptr;
     building *b;
@@ -800,6 +802,14 @@ void BuildPlanner::set_graphics_row(int row, int *image_ids, int total) {
         if (row > 29 || i > 29)
             return;
         tile_graphics_array[row][i] = image_ids[i];
+
+        // set sizes automatically as default
+        int tile_size = 0;
+        if (image_ids[i] != 0) {
+            auto img = image_get(image_ids[i]);
+            int tile_size = (img->width + 2) / 60;
+            set_tile_size(row, i, tile_size);
+        }
     }
 }
 void BuildPlanner::set_tiles_building(int image_id, int size_xx) {
@@ -1575,8 +1585,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
             game_undo_restore_map(1);
         else if (build_type == BUILDING_LOW_BRIDGE || build_type == BUILDING_SHIP_BRIDGE)
             map_bridge_reset_building_length();
-        else
-            map_property_clear_constructing_and_deleted();
         return;
     }
     if (last_created_building == nullptr) // this SHOULDN'T ever happen??
@@ -1725,7 +1733,7 @@ bool BuildPlanner::place() {
             }
             break;
         default:
-            if (!place_building(build_type, x, y, orientation, variant))
+            if (!place_building(build_type, north_tile.x, north_tile.y, orientation, variant))
                 return false;
             break;
     }
