@@ -402,7 +402,7 @@ static void add_warehouse(building *b) {
 static void add_building_tiles_image(building *b, int image_id) {
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
-static void place_building_tiles(building *b, int orientation) {
+static void place_building_tiles(building *b, int orientation, int variant) {
     int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
     switch (b->type) {
         // houses
@@ -474,7 +474,7 @@ static void place_building_tiles(building *b, int orientation) {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-            add_building_tiles_image(b, get_statue_image(b->type, building_rotation_get_rotation() + 1, building_rotation_get_building_variant()));
+            add_building_tiles_image(b, get_statue_image(b->type, orientation_rel, variant));
             break;
             // farms
         case BUILDING_BARLEY_FARM:
@@ -515,7 +515,12 @@ static void place_building_tiles(building *b, int orientation) {
 //            break;
             // ships
 
-        case BUILDING_WATER_LIFT:
+        case BUILDING_WATER_LIFT: {
+            auto props = building_properties_for_type(b->type);
+            map_water_add_building(b->id, b->x, b->y, props->size,
+                                   image_id_from_group(props->image_collection, props->image_group) + orientation_rel + 4 * variant);
+            break;
+        }
         case BUILDING_FISHING_WHARF:
         case BUILDING_TRANSPORT_WHARF:
         case BUILDING_SHIPYARD:
@@ -783,7 +788,7 @@ static int place_reservoir_and_aqueducts(bool measure_only, int x_start, int y_s
 }
 
 building *last_created_building = nullptr;
-static bool place_building(int type, int x, int y, int orientation, int terrain_exception = TERRAIN_NONE) {
+static bool place_building(int type, int x, int y, int orientation, int variant) {
 
     // by default, get size from building's properties
     int size = building_properties_for_type(type)->size;
@@ -828,7 +833,7 @@ static bool place_building(int type, int x, int y, int orientation, int terrain_
     game_undo_add_building(b);
     if (b->id <= 0) // building creation failed????
         return false;
-    place_building_tiles(b, orientation);
+    place_building_tiles(b, orientation, variant);
     last_created_building = b;
     return true;
 }
@@ -961,7 +966,7 @@ void BuildPlanner::setup_build(int type) { // select building for construction, 
             return;
     }
 
-    // special case
+    // leftover special cases....
     switch (build_type) {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
@@ -1018,6 +1023,9 @@ void BuildPlanner::setup_build_flags() {
 //            set_requirements(PlannerReqs::Resources, RESOURCE_GRANITE, 200);
 //            break;
         case BUILDING_WATER_LIFT:
+            set_flag(PlannerFlags::ShoreLine, 2);
+            set_flag(PlannerFlags::FloodplainShore, 2);
+            break;
         case BUILDING_FISHING_WHARF:
         case BUILDING_TRANSPORT_WHARF:
             set_flag(PlannerFlags::ShoreLine, 2);
@@ -1183,6 +1191,8 @@ void BuildPlanner::setup_build_graphics() {
             break;
         }
         case BUILDING_WATER_LIFT:
+            set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + orientation + variant * 4, props->size);
+            break;
         case BUILDING_FISHING_WHARF:
         case BUILDING_DOCK:
         case BUILDING_SHIPYARD:
@@ -1231,7 +1241,7 @@ void BuildPlanner::update_obstructions_check() {
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
-            if (special_flags & PlannerFlags::Meadow)
+            if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::FloodplainShore)
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection)
                 restricted_terrain -= TERRAIN_ROAD;
@@ -1346,7 +1356,18 @@ void BuildPlanner::update_special_case_orientations_check() {
 
     // for special buildings that require oriented terrain
     if (special_flags & PlannerFlags::ShoreLine) {
-        bool match = map_water_determine_orientation_generic(end.x, end.y, additional_req_param1, true, &dir_absolute);
+        bool match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute);
+        if (special_flags & PlannerFlags::FloodplainShore) {
+            variant = 0;
+            if (!match) {
+                match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute, true, TERRAIN_FLOODPLAIN);
+                if (match && !map_terrain_exists_tile_in_area_with_type(end.x, end.y, size.x, TERRAIN_WATER)) // correct for water
+                    variant = 1;
+                else
+                    match = false;
+            } else if (map_terrain_exists_tile_in_area_with_type(end.x, end.y, size.x, TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
+                match = false;
+        }
         dir_relative = (4 + dir_absolute - city_view_orientation() / 2) % 4;
         if (!match) {
             immediate_warning_id = WARNING_SHORE_NEEDED;
@@ -1599,7 +1620,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
         case BUILDING_DOCK:
         case BUILDING_WARSHIP_WHARF:
         case BUILDING_FERRY:
-            if (map_water_determine_orientation_generic(end.x, end.y, additional_req_param1, true, nullptr))
+            if (map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, nullptr))
                 draw_as_constructing = true;
             else
                 draw_as_constructing = false;
@@ -1794,70 +1815,8 @@ bool BuildPlanner::place() {
                 return false;
             }
             break;
-        case BUILDING_GATEHOUSE:
-        case BUILDING_GATEHOUSE_PH: { // TODO
-            if (!place_building(build_type, x, y, orientation, TERRAIN_ROAD))
-                return false;
-            break;
-        }
-        case BUILDING_TRIUMPHAL_ARCH: {
-            if (!place_building(build_type, x, y, orientation, TERRAIN_ROAD))
-                return false;
-            break;
-        }
-        case BUILDING_TOWER:
-        case BUILDING_TOWER_PH:
-            if (!place_building(build_type, x, y, 0, TERRAIN_WALL))
-                return false;
-            break;
-        case BUILDING_ROADBLOCK:
-            if (!place_building(build_type, x, y, 0, TERRAIN_ROAD))
-                return false;
-            break;
-        case BUILDING_BOOTH:
-        case BUILDING_BANDSTAND:
-        case BUILDING_PAVILLION:
-        case BUILDING_FESTIVAL_SQUARE:
-            if (!place_building(build_type, x, y, orientation, TERRAIN_ROAD))
-                return false;
-            break;
-        case BUILDING_WATER_LIFT:
-        case BUILDING_FISHING_WHARF:
-        case BUILDING_DOCK:
-        case BUILDING_SHIPYARD:
-        case BUILDING_WARSHIP_WHARF:
-        case BUILDING_TRANSPORT_WHARF:
-        case BUILDING_FERRY:
-            if (!place_building(build_type, x, y, orientation, TERRAIN_WATER))
-                return false;
-            break;
-        case BUILDING_BARLEY_FARM:
-        case BUILDING_FLAX_FARM:
-        case BUILDING_GRAIN_FARM:
-        case BUILDING_LETTUCE_FARM:
-        case BUILDING_POMEGRANATES_FARM:
-        case BUILDING_CHICKPEAS_FARM:
-        case BUILDING_FIGS_FARM:
-        case BUILDING_HENNA_FARM:
-            if (!place_building(build_type, x, y, 0, TERRAIN_FLOODPLAIN))
-                return false;
-            break;
-        case BUILDING_PYRAMID:
-        case BUILDING_SPHYNX:
-        case BUILDING_MAUSOLEUM:
-        case BUILDING_ALEXANDRIA_LIBRARY:
-        case BUILDING_CAESAREUM:
-        case BUILDING_PHAROS_LIGHTHOUSE:
-        case BUILDING_SMALL_ROYAL_TOMB:
-        case BUILDING_ABU_SIMBEL:
-        case BUILDING_MEDIUM_ROYAL_TOMB:
-        case BUILDING_LARGE_ROYAL_TOMB:
-        case BUILDING_GRAND_ROYAL_TOMB:
-            // TODO
-            return false;
-            break;
         default:
-            if (!place_building(build_type, x, y, 0))
+            if (!place_building(build_type, x, y, orientation, variant))
                 return false;
             break;
     }

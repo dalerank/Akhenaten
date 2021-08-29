@@ -13,6 +13,7 @@ enum PlannerFlags {
     NearbyWater =           1 << 2,
     ShoreLine =             1 << 3,
     RiverAccess =           1 << 4,
+    FloodplainShore =       1 << 5,
     //
     Meadow =                1 << 6,
     Trees =                 1 << 7,

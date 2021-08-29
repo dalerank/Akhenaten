@@ -57,7 +57,7 @@ static int blocked_land_terrain(void) {
             TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
 }
 
-bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust_xy, int *orientation_absolute) {
+bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int *orientation_absolute, bool adjacent, int shore_terrain) {
     if (adjust_xy) {
         switch (city_view_orientation()) {
             case DIR_0_TOP_RIGHT:
@@ -86,7 +86,7 @@ bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust
     int water_tiles[size][size];
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            water_tiles[row][column] = map_terrain_is(map_grid_offset(x + column, y + row), TERRAIN_WATER);
+            water_tiles[row][column] = map_terrain_is(map_grid_offset(x + column, y + row), shore_terrain);
         }
     }
 
@@ -94,8 +94,8 @@ bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust
     bool matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && row > 1 && (column > 0 && column < size - 1 && row < size - 1)) ||
-                (water_tiles[row][column] == false && row <= 1))
+            if ((water_tiles[row][column] == true && row > (!adjacent) && (column > 0 && column < size - 1 && row < size - 1)) ||
+                (water_tiles[row][column] == false && row <= (!adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -108,8 +108,8 @@ bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && column < size - 2 && (row > 0 && row < size - 1 && column > 0)) ||
-                (water_tiles[row][column] == false && column >= size - 2))
+            if ((water_tiles[row][column] == true && column < size - (1 + !adjacent) && (row > 0 && row < size - 1 && column > 0)) ||
+                (water_tiles[row][column] == false && column >= size - (1 + !adjacent) && (row >= adjacent && row <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -122,8 +122,8 @@ bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && row < size - 2 && (column > 0 && column < size - 1 && row > 0)) ||
-                (water_tiles[row][column] == false && row >= size - 2))
+            if ((water_tiles[row][column] == true && row < size - (1 + !adjacent) && (column > 0 && column < size - 1 && row > 0)) ||
+                (water_tiles[row][column] == false && row >= size - (1 + !adjacent) && (column >= adjacent && column <= size - (1 + adjacent))))
                 matches = false;
         }
     }
@@ -136,8 +136,8 @@ bool map_water_determine_orientation_generic(int x, int y, int size, bool adjust
     matches = true;
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            if ((water_tiles[row][column] == true && column > 1 && (row > 0 && row < size - 1 && column < size - 1)) ||
-                (water_tiles[row][column] == false && column <= 1))
+            if ((water_tiles[row][column] == true && column > (!adjacent) && (row > 0 && row < size - 1 && column < size - 1)) ||
+                (water_tiles[row][column] == false && column <= (!adjacent) && (row >= adjacent && row <= size - (1 + adjacent))))
                 matches = false;
         }
     }
