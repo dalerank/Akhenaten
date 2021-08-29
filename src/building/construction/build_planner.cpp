@@ -730,10 +730,9 @@ void BuildPlanner::reset() {
     draw_as_constructing = false;
 
     // set boundary size and reset pivot
-    size.x = 0;
-    size.y = 0;
-    pivot.x = 0;
-    pivot.y = 0;
+    size = {0, 0};
+    pivot = {0, 0};
+    building_placement_offset = {0, 0};
     tiles_blocked_total = 0;
 
     // position and orientation
@@ -860,6 +859,12 @@ void BuildPlanner::setup_build(int type) { // select building for construction, 
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
+            //
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
             orientation = 1;
             break;
     }
@@ -1006,22 +1011,9 @@ void BuildPlanner::setup_build_graphics() {
             int lst3A = statue2_image_id + 6; // west
             int lst3B = statue2_image_id + 7;
 
-            switch (orientation) { // it goes counterclockwise.
-                case 0: { // SE
-                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
-                            {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
-                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
-                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
-                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
-                            {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
-                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
-                            {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
-                    };
-                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-                    pivot = {0, 2};
-                    break;
-                }
-                case 1: { // NE
+            int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+            switch (orientation_rel) {
+                case 0: { // NE
                     int TEMPLE_COMPLEX_SCHEME[13][7] = {
                             {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
                             {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
@@ -1038,25 +1030,35 @@ void BuildPlanner::setup_build_graphics() {
                             {smst3, til_0, mn_3B, EMPTY, EMPTY, til_0, smst1},
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
-                    pivot = {2, 12};
+                    pivot = {2, 10};
+//                    switch (city_view_orientation() / 2) {
+//                        case 0:
+//                            building_placement_offset = {0, -2}; break;
+//                        case 1:
+//                            building_placement_offset = {2, 0}; break;
+//                        case 2:
+//                            building_placement_offset = {0, 2}; break;
+//                        case 3:
+//                            building_placement_offset = {-2, 0}; break;
+//                    }
                     break;
                 }
-                case 2: { // NW
+                case 1: { // SE
                     int TEMPLE_COMPLEX_SCHEME[7][13] = {
-
-                            {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
-                            {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                            {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                            {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-                            {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
-                            {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
-                            {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+                            {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
+                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
+                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
+                            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
+                            {mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
+                            {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
+                            {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
-                    pivot = {12, 2};
+                    pivot = {0, 2};
+//                    building_placement_offset = {0, 0}; // for all cases
                     break;
                 }
-                case 3: { // SW
+                case 2: { // SW
                     int TEMPLE_COMPLEX_SCHEME[13][7] = {
                             {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
                             {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
@@ -1074,6 +1076,31 @@ void BuildPlanner::setup_build_graphics() {
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
                     pivot = {2, 0};
+//                    building_placement_offset = {0, 0}; // for all cases
+                    break;
+                }
+                case 3: { // NW
+                    int TEMPLE_COMPLEX_SCHEME[7][13] = {
+                            {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
+                            {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                            {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                            {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                            {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
+                            {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                            {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+                    };
+                    set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
+                    pivot = {10, 2};
+//                    switch (city_view_orientation() / 2) {
+//                        case 0:
+//                            building_placement_offset = {-2, 0}; break;
+//                        case 1:
+//                            building_placement_offset = {0, -2}; break;
+//                        case 2:
+//                            building_placement_offset = {2, 0}; break;
+//                        case 3:
+//                            building_placement_offset = {0, 2}; break;
+//                    }
                     break;
                 }
             }
@@ -1392,8 +1419,9 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
-            building_rotation_force_two_orientations();
-            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+//            building_rotation_force_two_orientations();
+//            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+            orientation = building_rotation_get_rotation() + 1;
             variant = 0;
             break;
     }
@@ -1645,7 +1673,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // finally, go over the rest of the stuff for all building types
     formation_move_herds_away(end.x, end.y);
-    city_finance_process_construction(total_cost);
+//    city_finance_process_construction(total_cost); // TODO: TEMP
     game_undo_finish_build(total_cost);
     map_tiles_update_region_empty_land(false, start.x - 2, start.y - 2, end.x + size.x + 2, end.y + size.y + 2);
     map_routing_update_land();
@@ -1733,7 +1761,7 @@ bool BuildPlanner::place() {
             }
             break;
         default:
-            if (!place_building(build_type, north_tile.x, north_tile.y, orientation, variant))
+            if (!place_building(build_type, end.x + building_placement_offset.x, end.y + building_placement_offset.y, orientation, variant))
                 return false;
             break;
     }
