@@ -104,7 +104,7 @@ public:
     void construction_cancel();
     void construction_finalize();
 
-    void update_orientations();
+    void update_orientations(bool check_if_changed = true);
     void construction_record_view_position(int view_x, int view_y, int grid_offset);
 
     int get_total_drag_size(int *x, int *y);

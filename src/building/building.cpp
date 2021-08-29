@@ -187,7 +187,6 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
                 b->output_resource_id = RESOURCE_PAINT;
 //                b->subtype.workshop_type = ??? todo
                 break;
-                //////////////
             case BUILDING_GRANARY:
                 b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
                 b->storage_id = building_storage_create(BUILDING_GRANARY);
