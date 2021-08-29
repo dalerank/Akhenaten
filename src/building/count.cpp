@@ -109,7 +109,7 @@ void building_count_update(void) {
                 break;
 
             case BUILDING_RECRUITER:
-                city_buildings_set_barracks(i);
+                city_buildings_set_recruiter(i);
                 increase_count(type, b->num_workers > 0);
                 break;
 
@@ -119,7 +119,7 @@ void building_count_update(void) {
                 break;
 
                 // water
-            case BUILDING_WATER_LIFT2:
+            case BUILDING_WATER_LIFT:
             case BUILDING_MENU_BEAUTIFICATION:
                 increase_count(type, b->has_water_access);
                 break;
@@ -403,8 +403,8 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     // support
     support->write_i32(data.buildings[BUILDING_MARKET].total);
     support->write_i32(data.buildings[BUILDING_MARKET].active);
-    support->write_i32(data.buildings[BUILDING_WATER_LIFT2].total);
-    support->write_i32(data.buildings[BUILDING_WATER_LIFT2].active);
+    support->write_i32(data.buildings[BUILDING_WATER_LIFT].total);
+    support->write_i32(data.buildings[BUILDING_WATER_LIFT].active);
     support->write_i32(data.buildings[BUILDING_MENU_BEAUTIFICATION].total);
     support->write_i32(data.buildings[BUILDING_MENU_BEAUTIFICATION].active);
 }
@@ -481,8 +481,8 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     // support
     data.buildings[BUILDING_MARKET].total = support->read_i32();
     data.buildings[BUILDING_MARKET].active = support->read_i32();
-    data.buildings[BUILDING_WATER_LIFT2].total = support->read_i32();
-    data.buildings[BUILDING_WATER_LIFT2].active = support->read_i32();
+    data.buildings[BUILDING_WATER_LIFT].total = support->read_i32();
+    data.buildings[BUILDING_WATER_LIFT].active = support->read_i32();
     data.buildings[BUILDING_MENU_BEAUTIFICATION].total = support->read_i32();
     data.buildings[BUILDING_MENU_BEAUTIFICATION].active = support->read_i32();
 }

@@ -488,7 +488,7 @@ void tutorial_on_day_tick(void) {
         if (data.tutorial1.fire && !data.tutorial1.senate_built) {
             int population_almost = city_population() >= winning_population() - 20;
             if (!game_time_day() || population_almost) {
-                if (city_buildings_has_senate())
+                if (city_buildings_has_palace())
                     city_mission_tutorial_add_senate();
                 if (city_mission_tutorial_has_senate() || population_almost) {
                     data.tutorial1.senate_built = 1;

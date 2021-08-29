@@ -1,6 +1,6 @@
 #include "victory.h"
 
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "city/data_private.h"
 #include "city/figures.h"
 #include "city/finance.h"
@@ -145,7 +145,7 @@ void city_victory_check(void) {
         data.state = VICTORY_STATE_WON;
 
     if (data.state != VICTORY_STATE_NONE) {
-        building_construction_clear_type();
+        Planner.reset();
         if (data.state == VICTORY_STATE_LOST) {
             if (city_data.mission.fired_message_shown)
                 window_mission_end_show_fired();

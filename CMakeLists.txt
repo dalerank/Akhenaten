@@ -257,10 +257,6 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
     ${PROJECT_SOURCE_DIR}/src/building/building.cpp
     ${PROJECT_SOURCE_DIR}/src/building/building_state.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction_clear.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction_routed.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/construction_warning.cpp
     ${PROJECT_SOURCE_DIR}/src/building/count.cpp
     ${PROJECT_SOURCE_DIR}/src/building/destruction.cpp
     ${PROJECT_SOURCE_DIR}/src/building/dock.cpp
@@ -283,6 +279,10 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/storage.cpp
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.cpp
     ${PROJECT_SOURCE_DIR}/src/building/monuments.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction/build_planner.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction/clear.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction/routed.cpp
+    ${PROJECT_SOURCE_DIR}/src/building/construction/warnings.cpp
 )
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/buildings.cpp

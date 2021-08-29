@@ -1,6 +1,7 @@
 #include <tgmath.h>
 #include <city/floods.h>
 #include <core/random.h>
+#include <building/construction/build_planner.h>
 #include "city.h"
 
 #include "building/menu.h"
@@ -270,6 +271,20 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 55, 60, "abs. tick:", game_time_absolute_tick()); // absolute day of the year
         draw_debug_line(str, x, y + 65, 60, "abs. day:", game_time_absolute_day()); // absolute day of the year
         y += 70;
+    }
+
+    /////// BUILD PLANNER
+    if (true) {
+        int cl = 90;
+        draw_debug_line(str, x, y + 15, cl, "type:", Planner.build_type);
+        draw_debug_line(str, x, y + 25, cl, "in progress:", Planner.in_progress);
+        draw_debug_line(str, x, y + 35, cl, "draw as con.:", Planner.draw_as_constructing);
+        draw_debug_line(str, x, y + 45, cl, "orientation:", Planner.orientation);
+        draw_debug_line(str, x, y + 55, cl, "variant:", Planner.variant);
+        draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y);
+        draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y);
+        draw_debug_line(str, x, y + 85, cl, "cost:", Planner.total_cost);
+        y += 90;
     }
 
     /////// RANDOM

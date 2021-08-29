@@ -59,7 +59,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
             if (b->num_workers <= 0 || !b->has_water_access)
                 return 0;
             break;
-        case BUILDING_WATER_LIFT2:
+        case BUILDING_WATER_LIFT:
             if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 if (b->num_workers <= 0) {
                     return 0;

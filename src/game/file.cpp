@@ -1,6 +1,6 @@
 #include "file.h"
 
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "building/granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"
@@ -97,7 +97,7 @@ static const char MISSION_SAVED_GAMES[][32] = {
 static void clear_scenario_data(void) {
     // clear data
     city_victory_reset();
-    building_construction_clear_type();
+    Planner.reset();
     city_data_init();
     city_message_init_scenario();
     game_state_init();

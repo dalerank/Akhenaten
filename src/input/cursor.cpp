@@ -1,6 +1,6 @@
 #include "cursor.h"
 
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "game/system.h"
 
 static const cursor ARROW[] = {
@@ -370,7 +370,7 @@ const cursor *input_cursor_data(cursor_shape cursor_id, cursor_scale scale) {
 void input_cursor_update(window_id window) {
     if (window == WINDOW_CITY_MILITARY)
         system_set_cursor(CURSOR_SWORD);
-    else if (window == WINDOW_CITY && building_construction_type() == BUILDING_CLEAR_LAND)
+    else if (window == WINDOW_CITY && Planner.build_type == BUILDING_CLEAR_LAND)
         system_set_cursor(CURSOR_SHOVEL);
     else {
         system_set_cursor(CURSOR_ARROW);

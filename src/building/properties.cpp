@@ -158,10 +158,10 @@ static building_properties properties[2][400] = {
                 {0, 0, 0, 0},
                 {1, 0, 0, 0}, // road
                 {1, 0, 0, 0}, // wall (unused)
-                {2, 1, GROUP_WATER_LIFT}, // ??????? water lift ???????
+                {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
                 {1, 0, 0, 0}, // irrigation ditch
                 {0, 0, 0, 0}, // clear land
-                {1, 0, 0, 0}, // houses vvvv
+                {1, 0, GROUP_BUILDING_HOUSE_VACANT_LOT}, // houses vvvv
                 {1, 0, 0, 0},
                 {1, 0, 0, 0},
                 {1, 0, 0, 0},
@@ -205,7 +205,7 @@ static building_properties properties[2][400] = {
                 {2, 0, GROUP_BUILDING_SCHOOL}, // school
                 {3, 0, 0, 0}, // water crossings
                 {3, 0, GROUP_BUILDING_LIBRARY}, // library
-                {4, 1, GROUP_BUILDING_FORT + 1}, // fort yard
+                {4, 1, GROUP_BUILDING_FORT, 1}, // fort yard
                 {1, 0, GROUP_BUILDING_POLICE_STATION}, // police
                 {3, 1, 0, 0},
                 {3, 1, GROUP_BUILDING_FORT}, // fort (main)
@@ -216,18 +216,18 @@ static building_properties properties[2][400] = {
                 {3, 0, GROUP_BUILDING_TEMPLE_PTAH},
                 {3, 0, GROUP_BUILDING_TEMPLE_SETH},
                 {3, 0, GROUP_BUILDING_TEMPLE_BAST}, // temples ^^^^
-                {-1, 0, 0, 0}, // oz
-                {-1, 0, 0, 0}, // ra
-                {-1, 0, 0, 0}, // ptah
-                {-1, 0, 0, 0}, // seth
-                {-1, 0, 0, 0}, // temple complex ^^^^
+                {3, 0, 0, 0}, // oz
+                {3, 0, 0, 0}, // ra
+                {3, 0, 0, 0}, // ptah
+                {3, 0, 0, 0}, // seth
+                {3, 0, 0, 0}, // temple complex ^^^^
                 {2, 0, GROUP_BUILDING_MARKET}, // bazaar
                 {4, 0, GROUP_BUILDING_GRANARY}, // granary
                 {1, 1, GROUP_BUILDING_WAREHOUSE}, // storageyard (hut)
                 {1, 1, 0, 0}, // storageyard (space tile)
                 {3, 0, GROUP_BUILDING_SHIPYARD}, // shipwright
-                {3, 0, 0, 0}, // dock
-                {2, 0, 0, 0}, // wharf (fish)
+                {3, 0, GROUP_BUILDING_DOCK}, // dock
+                {2, 0, GROUP_BUILDING_FISHING_WHARF}, // wharf (fish)
                 {3, 0, GROUP_BUILDING_GOVERNORS_HOUSE},
                 {4, 0, GROUP_BUILDING_GOVERNORS_VILLA},
                 {5, 0, GROUP_BUILDING_GOVERNORS_PALACE}, // mansions ^^^
@@ -288,7 +288,7 @@ static building_properties properties[2][400] = {
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {4, 0, 0, 0},
-                {2, 1, 23, 0}, // ferry
+                {2, 1, GROUP_BUILDING_FERRY}, // ferry
                 {2, 0, 0, 0},
                 {1, 1, GROUP_BUILDING_ROADBLOCK}, // roadblock
                 {0, 0, 0, 0},

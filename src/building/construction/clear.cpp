@@ -1,4 +1,4 @@
-#include "construction_clear.h"
+#include "clear.h"
 
 #include "building/building.h"
 #include "city/warning.h"
@@ -16,7 +16,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "window/popup_dialog.h"
-#include "industry.h"
+#include "building/industry.h"
 
 static struct {
     int x_start;

@@ -98,7 +98,7 @@ expand_direction expand_delta(int i) {
 }
 
 static void create_vacant_lot(int x, int y, int image_id) {
-    building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+    building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
     b->house_population = 0;
     b->distance_from_entry = 0;
     map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
@@ -292,7 +292,7 @@ static int house_image_group(int level) {
 }
 
 static void create_house_tile(int type, int x, int y, int image_id, int population, const int *inventory) {
-    building *house = building_create(type, x, y);
+    building *house = building_create(type, x, y, 0);
     house->house_population = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         house->data.house.inventory[i] = inventory[i];

@@ -3,21 +3,21 @@
 
 #include "building/building.h"
 
-bool city_buildings_has_senate(void);
-int city_buildings_get_senate_id();
-void city_buildings_add_senate(building *senate);
-void city_buildings_remove_senate(building *senate);
+bool city_buildings_has_palace(void);
+int city_buildings_get_palace_id();
+void city_buildings_add_palace(building *palace);
+void city_buildings_remove_palace(building *palace);
 
 bool city_buildings_has_mansion(void);
 int city_buildings_get_mansion_id();
 void city_buildings_add_mansion(building *mansion);
 void city_buildings_remove_mansion(building *mansion);
 
-bool city_buildings_has_barracks(void);
-void city_buildings_add_barracks(building *barracks);
-void city_buildings_remove_barracks(building *barracks);
-int city_buildings_get_barracks(void);
-void city_buildings_set_barracks(int building_id);
+bool city_buildings_has_recruiter(void);
+void city_buildings_add_recruiter(building *recruiter);
+void city_buildings_remove_recruiter(building *recruiter);
+int city_buildings_get_recruiter(void);
+void city_buildings_set_recruiter(int building_id);
 
 bool city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building *center);

@@ -303,7 +303,7 @@ public:
 
 int building_find(int type);
 building *building_get(int id);
-building *building_create(int type, int x, int y);
+building *building_create(int type, int x, int y, int orientation);
 
 building *building_at(int grid_offset);
 building *building_at(int x, int y);
@@ -343,6 +343,8 @@ bool building_is_religion(int type);
 bool building_is_entertainment(int type);
 bool building_is_culture(int type);
 bool building_is_military(int type);
+
+bool building_is_draggable(int type);
 
 int building_get_highest_id(void);
 void building_update_highest_id(void);

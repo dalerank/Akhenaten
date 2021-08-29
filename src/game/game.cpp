@@ -2,7 +2,7 @@
 #include <window/city.h>
 #include "game.h"
 
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "building/model.h"
 #include "core/config.h"
 #include "core/hotkey_config.h"
@@ -109,7 +109,7 @@ static int get_elapsed_ticks(void) {
             game_speed_index = 3; // 70%, nice speed for flag animations
             break;
     }
-    if (building_construction_in_progress())
+    if (Planner.in_progress)
         return 0;
 
     if (scroll_in_progress() && !scroll_is_smooth())

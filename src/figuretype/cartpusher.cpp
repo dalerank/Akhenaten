@@ -214,7 +214,7 @@ void figure::determine_deliveryman_destination() {
 
     // first: gold deliverers
     if (resource_id == RESOURCE_GOLD) {
-        int senate_id = city_buildings_get_senate_id();
+        int senate_id = city_buildings_get_palace_id();
         building *b = building_get(senate_id);
         if (senate_id && b->state == BUILDING_STATE_VALID && b->num_workers >= 5) {
             set_destination(senate_id);

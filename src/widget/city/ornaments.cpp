@@ -35,15 +35,15 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
     if (num_dockers > 0) {
         int image_dock = map_image_at(b->grid_offset);
         int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_1))
+        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
             image_dockers += 0;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_2))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 1)
             image_dockers += 3;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK_3))
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 2)
             image_dockers += 6;
-        else {
+        else
             image_dockers += 9;
-        }
+
         if (num_dockers == 2)
             image_dockers += 1;
         else if (num_dockers == 3)
@@ -53,68 +53,6 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
         ImageDraw::img_generic(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
     }
 }
-static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask) {
-    // get which part of the hippodrome is getting checked
-//    int building_part;
-//    if (b->prev_part_building_id == 0) {
-//        building_part = 0; // part 1, no previous building
-//    } else if (b->next_part_building_id == 0) {
-//        building_part = 2; // part 3, no next building
-//    } else {
-//        building_part = 1; // part 2
-//    }
-//    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-//    int population = city_population();
-//    if ((building_part == 0) && population > 2000) {
-//        // first building part
-//        switch (orientation) {
-//            case DIR_0_TOP_RIGHT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
-//                                       color_mask);
-//                break;
-//            case DIR_2_BOTTOM_RIGHT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
-//                break;
-//            case DIR_4_BOTTOM_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
-//                                       color_mask);
-//                break;
-//            case DIR_6_TOP_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
-//        }
-//    } else if ((building_part == 1) && population > 100) {
-//        // middle building part
-//        switch (orientation) {
-//            case DIR_0_TOP_RIGHT:
-//            case DIR_4_BOTTOM_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 7, x + 122, y - 79,
-//                                       color_mask);
-//                break;
-//            case DIR_2_BOTTOM_RIGHT:
-//            case DIR_6_TOP_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
-//        }
-//    } else if ((building_part == 2) && population > 1000) {
-//        // last building part
-//        switch (orientation) {
-//            case DIR_0_TOP_RIGHT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 8, x + 119, y - 80,
-//                                       color_mask);
-//                break;
-//            case DIR_2_BOTTOM_RIGHT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 6, x, y - 72, color_mask);
-//                break;
-//            case DIR_4_BOTTOM_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_2) + 6, x + 147, y - 72,
-//                                       color_mask);
-//                break;
-//            case DIR_6_TOP_LEFT:
-//                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_HIPPODROME_1) + 8, x + 58, y - 79, color_mask);
-//                break;
-//        }
-//    }
-}
-
 static void draw_normal_anim(int x, int y, building *b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
@@ -314,8 +252,8 @@ static void draw_ph_worker(int direction, int action, int frame_offset, int x, i
     int final_offset = action_offset + direction + 8 * (frame_offset - 1);
     ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, x, y + 15, 0);
 }
-static void draw_farm_crops(building *b, int x, int y) {
-    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, 0);
+static void draw_farm_crops(building *b, int x, int y, int color_mask) {
+    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, color_mask);
 }
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     if (!building_is_floodplain_farm(b))
@@ -429,7 +367,7 @@ static void draw_granary_stores(const building *b, int x, int y, color_t color_m
     }
 }
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask) {
-    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
+    ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 5, y - 42, color_mask);
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
@@ -484,7 +422,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
     building *b = building_at(grid_offset);
     if (b->type == BUILDING_WAREHOUSE && b->state == BUILDING_STATE_CREATED)
         ImageDraw::img_generic(image_id + 17, x - 5, y - 42);
-    if (b->type == 0 || b->state != BUILDING_STATE_VALID)
+    if (b->type == 0 || b->state == BUILDING_STATE_UNUSED)
         return;
     // draw in red if necessary
     int color_mask = 0;
@@ -523,7 +461,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                draw_farm_crops(b, x, y);
+                draw_farm_crops(b, x, y, color_mask);
                 draw_farm_workers(b, grid_offset,x, y);
             }
             break;

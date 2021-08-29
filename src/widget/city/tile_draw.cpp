@@ -10,7 +10,7 @@
 #include "tile_draw.h"
 
 #include "building/animation.h"
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "building/dock.h"
 #include "building/rotation.h"
 #include "building/type.h"
@@ -322,7 +322,7 @@ void draw_footprint(int x, int y, int grid_offset) {
     if (grid_offset < 0)
         return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 
-    building_construction_record_view_position(x, y, grid_offset);
+    Planner.construction_record_view_position(x, y, grid_offset);
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
@@ -442,7 +442,7 @@ void deletion_draw_figures_animations(int x, int y, int grid_offset) {
 /////////
 
 void draw_footprint_overlay(int x, int y, int grid_offset) {
-    building_construction_record_view_position(x, y, grid_offset);
+    Planner.construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
@@ -624,6 +624,8 @@ void draw_debug(int x, int y, int grid_offset) {
 
     switch (DB2) {
         case 1: // BUILDING IDS
+            if (b_id && b->grid_offset == grid_offset)
+                draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, x - 15, y, COLOR_MASK_GREEN);
             if (b_id && map_property_is_draw_tile(grid_offset)) { //b->grid_offset == grid_offset
                 bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);

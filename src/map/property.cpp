@@ -119,7 +119,6 @@ void map_property_init_alternate_terrain(void) {
             int grid_offset = map_grid_offset(x, y);
             if (map_random_get(grid_offset) & 1)
                 map_property_set_alternate_terrain(grid_offset);
-
         }
     }
 }

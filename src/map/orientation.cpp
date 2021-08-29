@@ -1,4 +1,4 @@
-#include <building/construction.h>
+#include <building/Construction/build_planner.h>
 #include <building/monuments.h>
 #include "orientation.h"
 
@@ -69,6 +69,7 @@ void map_orientation_change(int counter_clockwise) {
 
     figure_tower_sentry_reroute();
     figure_hippodrome_horse_reroute();
+    Planner.update_orientations();
 }
 void map_orientation_update_buildings(void) {
     int map_orientation = city_view_orientation();
@@ -122,25 +123,12 @@ void map_orientation_update_buildings(void) {
                 break;
             case BUILDING_FISHING_WHARF:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
-                image_id = image_id_from_group(GROUP_BUILDING_WHARF) + image_offset;
+                image_id = image_id_from_group(GROUP_BUILDING_FISHING_WHARF) + image_offset;
                 map_water_add_building(i, b->x, b->y, 2, image_id);
                 break;
             case BUILDING_DOCK:
                 image_offset = (4 + b->data.dock.orientation - map_orientation / 2) % 4;
-                switch (image_offset) {
-                    case 0:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_1);
-                        break;
-                    case 1:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_2);
-                        break;
-                    case 2:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_3);
-                        break;
-                    default:
-                        image_id = image_id_from_group(GROUP_BUILDING_DOCK_4);
-                        break;
-                }
+                image_id = image_id_from_group(GROUP_BUILDING_DOCK) + image_offset;
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;
             case BUILDING_BOOTH:
@@ -269,7 +257,7 @@ const uint8_t FESTIVAL_ROAD_POSITIONS[5][5] = {
         {0, 0, 1, 0, 0},
 };
 
-int map_orientation_for_venue(int x, int y, int mode, int *building_orientation) {
+bool map_orientation_for_venue(int x, int y, int mode, int *building_orientation) {
     *building_orientation = 0;
     int num_correct_road_tiles[8] = {0,0,0,0,0,0,0,0};
 
@@ -279,7 +267,7 @@ int map_orientation_for_venue(int x, int y, int mode, int *building_orientation)
             int offset_check = grid_offset + map_grid_delta(x_delta, y_delta);
             int is_road = map_terrain_is(offset_check, TERRAIN_ROAD);
             if (map_terrain_is(offset_check, TERRAIN_BUILDING) || (map_terrain_is(offset_check, TERRAIN_NOT_CLEAR) && !is_road))
-                return 0;
+                return false;
             else {
                 for (int orientation_check = 0; orientation_check < 8; orientation_check++) {
                     int tile_road_checked_against = 0;
@@ -349,18 +337,16 @@ int map_orientation_for_venue(int x, int y, int mode, int *building_orientation)
                 }
                 if (map_terrain_is(offset_1, TERRAIN_ROAD) || map_terrain_is(offset_2, TERRAIN_ROAD)) {
                     *building_orientation = orientation_check;
-                    return 1;
+                    return true;
                 }
             } else {
                 *building_orientation = orientation_check;
-                return 1;
+                return true;
             }
         }
-    if (mode == 3)
-        return -2;
-    return -1;
+    return false;
 }
-int map_orientation_for_venue_with_map_orientation(int x, int y, int mode, int *building_orientation) {
+bool map_orientation_for_venue_with_map_orientation(int x, int y, int mode, int *building_orientation) {
     int map_orientation = city_view_orientation();
     switch (map_orientation) {
         case 2: // east

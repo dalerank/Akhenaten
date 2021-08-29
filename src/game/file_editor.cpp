@@ -1,6 +1,6 @@
 #include "file_editor.h"
 
-#include "building/construction.h"
+#include "building/Construction/build_planner.h"
 #include "building/menu.h"
 #include "building/storage.h"
 #include "city/data.h"
@@ -50,7 +50,7 @@
 
 void game_file_editor_clear_data(void) {
     city_victory_reset();
-    building_construction_clear_type();
+    Planner.reset();
     city_data_init();
     city_data_init_scenario();
     city_message_init_scenario();
