@@ -202,6 +202,13 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
             case BUILDING_LARGE_STATUE:
                 b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
                 break;
+            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+            case BUILDING_TEMPLE_COMPLEX_RA:
+            case BUILDING_TEMPLE_COMPLEX_PTAH:
+            case BUILDING_TEMPLE_COMPLEX_SETH:
+            case BUILDING_TEMPLE_COMPLEX_BAST:
+                b->data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
+                break;
             case BUILDING_WATER_LIFT:
             case BUILDING_FISHING_WHARF:
             case BUILDING_TRANSPORT_WHARF:

@@ -128,22 +128,38 @@ void BuildPlanner::add_building_tiles_from_list(int building_id) {
     }
 }
 
-static building *add_temple_complex_element(int x, int y, int size, int image_id, building *prev) {
-    building *b = building_create(prev->type, x, y, 0);
+static building *add_temple_complex_element(int x, int y, int orientation, building *prev) {
+    building *b = building_create(prev->type, x, y, orientation);
     game_undo_add_building(b);
 
-    b->size = size;
+    b->size = 3;
     b->grid_offset = map_grid_offset(b->x, b->y);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+    int image_id = map_image_at(map_grid_offset(x, y));
+    map_building_tiles_add(b->id, b->x, b->y, 3, image_id, TERRAIN_BUILDING);
 
     return b;
 }
 static void add_temple_complex(building *b, int orientation) {
     Planner.add_building_tiles_from_list(b->id);
-//    add_temple_complex_element()
-
+    map_point offset = {0, 0};
+    switch (orientation) {
+        case 0:
+            offset = {0, -3};
+            break;
+        case 1:
+            offset = {3, 0};
+            break;
+        case 2:
+            offset = {0, 3};
+            break;
+        case 3:
+            offset = {-3, 0};
+            break;
+    }
+    building *altar = add_temple_complex_element(b->x + offset.x, b->y + offset.y, orientation, b);
+    building *oracle = add_temple_complex_element(b->x + 2 * offset.x, b->y + 2 * offset.y, orientation, altar);
 }
 
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
@@ -732,7 +748,6 @@ void BuildPlanner::reset() {
     // set boundary size and reset pivot
     size = {0, 0};
     pivot = {0, 0};
-    building_placement_offset = {0, 0};
     tiles_blocked_total = 0;
 
     // position and orientation
@@ -974,7 +989,7 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST: {
+        case BUILDING_TEMPLE_COMPLEX_BAST: { // CHANGE: in the original game, the cursor does not always follow the main building's top tile
             // size of every big item 3x3, in general 7x13
             // 25 max tiles at the moment to check blocked tiles
             int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, build_type);
@@ -1031,16 +1046,6 @@ void BuildPlanner::setup_build_graphics() {
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
                     pivot = {2, 10};
-//                    switch (city_view_orientation() / 2) {
-//                        case 0:
-//                            building_placement_offset = {0, -2}; break;
-//                        case 1:
-//                            building_placement_offset = {2, 0}; break;
-//                        case 2:
-//                            building_placement_offset = {0, 2}; break;
-//                        case 3:
-//                            building_placement_offset = {-2, 0}; break;
-//                    }
                     break;
                 }
                 case 1: { // SE
@@ -1055,7 +1060,6 @@ void BuildPlanner::setup_build_graphics() {
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
                     pivot = {0, 2};
-//                    building_placement_offset = {0, 0}; // for all cases
                     break;
                 }
                 case 2: { // SW
@@ -1076,7 +1080,6 @@ void BuildPlanner::setup_build_graphics() {
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 7, 13);
                     pivot = {2, 0};
-//                    building_placement_offset = {0, 0}; // for all cases
                     break;
                 }
                 case 3: { // NW
@@ -1091,16 +1094,6 @@ void BuildPlanner::setup_build_graphics() {
                     };
                     set_graphics_array((int *)TEMPLE_COMPLEX_SCHEME, 13, 7);
                     pivot = {10, 2};
-//                    switch (city_view_orientation() / 2) {
-//                        case 0:
-//                            building_placement_offset = {-2, 0}; break;
-//                        case 1:
-//                            building_placement_offset = {0, -2}; break;
-//                        case 2:
-//                            building_placement_offset = {2, 0}; break;
-//                        case 3:
-//                            building_placement_offset = {0, 2}; break;
-//                    }
                     break;
                 }
             }
@@ -1418,13 +1411,12 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
         case BUILDING_TEMPLE_COMPLEX_RA:
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-//            building_rotation_force_two_orientations();
-//            orientation = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+        case BUILDING_TEMPLE_COMPLEX_BAST: // CHANGE: in the original game, only two orientations are allowed
             orientation = building_rotation_get_rotation() + 1;
             variant = 0;
             break;
     }
+    orientation = orientation % 4;
 
     // do not refresh graphics if nothing changed
     if (check_if_changed && orientation == prev_orientation && variant == prev_variant)
@@ -1761,7 +1753,7 @@ bool BuildPlanner::place() {
             }
             break;
         default:
-            if (!place_building(build_type, end.x + building_placement_offset.x, end.y + building_placement_offset.y, orientation, variant))
+            if (!place_building(build_type, end.x, end.y, orientation, variant))
                 return false;
             break;
     }

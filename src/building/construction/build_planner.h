@@ -95,7 +95,6 @@ public:
     int variant;
     map_point size;
     map_point pivot;
-    map_point building_placement_offset; // >:(
 
     map_tile north_tile;
     map_tile east_tile;
