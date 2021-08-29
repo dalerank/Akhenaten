@@ -40,14 +40,12 @@ enum {
 
 extern class BuildPlanner {
 private:
-    map_point size;
-    map_point pivot;
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
-    map_point tile_coord_cache[30][30];
+    map_tile tile_coord_cache[30][30];
     pixel_coordinate pixel_coords_cache[30][30];
 
     long long special_flags = 0;
@@ -71,7 +69,6 @@ private:
     void setup_build_graphics(); // fills in data automatically
 
     void set_tile_size(int row, int column, int size);
-    void set_allowed_terrain(int terrain, int row = -1, int column = -1);
 
     void set_flag(long long flags, int param1 = -1, int param2 = -1, int param3 = -1);
     void update_obstructions_check();
@@ -96,6 +93,13 @@ public:
     int total_cost;
     int orientation;
     int variant;
+    map_point size;
+    map_point pivot;
+
+    map_tile north_tile;
+    map_tile east_tile;
+    map_tile south_tile;
+    map_tile west_tile;
 
     void reset();
     void setup_build(int type);

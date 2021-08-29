@@ -382,19 +382,20 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
         }
     }
 }
-int map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy) {
+bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy) {
     if (!absolute_xy)
-        adjust_to_absolute_xy(&x, &y, size);
+        adjust_to_absolute_xy(&x, &y, size_x); // todo??
 
-    if (!map_grid_is_inside(x, y, size))
-        return 0;
+    if (!map_grid_is_inside(x, y, size_x))
+        return false;
+    if (!map_grid_is_inside(x, y, size_y))
+        return false;
 
-    for (int dy = 0; dy < size; dy++) {
-        for (int dx = 0; dx < size; dx++) {
+    for (int dy = 0; dy < size_y; dy++) {
+        for (int dx = 0; dx < size_x; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset) || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
-                return 0;
-
+                return false;
         }
     }
 
@@ -404,13 +405,13 @@ int map_building_tiles_mark_construction(int x, int y, int size, int terrain, in
 //    map_tiles_update_region_empty_land(x - 2, y - 2, x + size + 2, y + size + 2);
 
     // mark as being constructed
-    for (int dy = 0; dy < size; dy++) {
-        for (int dx = 0; dx < size; dx++) {
+    for (int dy = 0; dy < size_y; dy++) {
+        for (int dx = 0; dx < size_x; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
             map_property_mark_constructing(grid_offset);
         }
     }
-    return 1;
+    return true;
 }
 void map_building_tiles_mark_deleting(int grid_offset) {
     int building_id = map_building_at(grid_offset);

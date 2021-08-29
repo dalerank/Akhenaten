@@ -900,7 +900,7 @@ void BuildPlanner::draw() {
     else if (tiles_blocked_total > 0)
         // draw green blueprint with red (blocked) tiles
         draw_blueprints(false);
-    else
+    else if (!draw_as_constructing)
         // draw normal building ghost (green)
         draw_graphics();
 }

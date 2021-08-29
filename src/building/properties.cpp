@@ -216,11 +216,11 @@ static building_properties properties[2][400] = {
                 {3, 0, GROUP_BUILDING_TEMPLE_PTAH},
                 {3, 0, GROUP_BUILDING_TEMPLE_SETH},
                 {3, 0, GROUP_BUILDING_TEMPLE_BAST}, // temples ^^^^
-                {-1, 0, 0, 0}, // oz
-                {-1, 0, 0, 0}, // ra
-                {-1, 0, 0, 0}, // ptah
-                {-1, 0, 0, 0}, // seth
-                {-1, 0, 0, 0}, // temple complex ^^^^
+                {1, 0, 0, 0}, // oz
+                {1, 0, 0, 0}, // ra
+                {1, 0, 0, 0}, // ptah
+                {1, 0, 0, 0}, // seth
+                {1, 0, 0, 0}, // temple complex ^^^^
                 {2, 0, GROUP_BUILDING_MARKET}, // bazaar
                 {4, 0, GROUP_BUILDING_GRANARY}, // granary
                 {1, 1, GROUP_BUILDING_WAREHOUSE}, // storageyard (hut)

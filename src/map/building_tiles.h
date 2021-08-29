@@ -21,7 +21,7 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
 void map_building_tiles_remove(int building_id, int x, int y);
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size);
 void map_building_tiles_mark_deleting(int grid_offset);
-int map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy);
+bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy);
 int map_building_tiles_are_clear(int x, int y, int size, int terrain);
 
 #endif // MAP_BUILDING_TILES_H
