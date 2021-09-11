@@ -1,3 +1,4 @@
+#include <city/buildings.h>
 #include "build_menu.h"
 
 #include "building/Construction/build_planner.h"
@@ -172,11 +173,13 @@ static void draw_menu_buttons(void) {
                    data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         if (is_all_button(type))
-            lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176,
-                                    font);
-        else
-            lang_text_draw_centered(28, type, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176,
-                                    font);
+            lang_text_draw_centered(52, 19, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+        else if (type >= BUILDING_TEMPLE_COMPLEX_ALTAR && type <= BUILDING_TEMPLE_COMPLEX_ORACLE) {
+            building *b = building_get(city_buildings_get_temple_complex());
+            int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
+            lang_text_draw_centered(189, index, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
+        } else
+            lang_text_draw_centered(28, type, x_offset - label_margin + label_offset, data.y_offset + 113 + 24 * i, 176, font);
         if (type == BUILDING_WATER_LIFT)
             type = BUILDING_WATER_LIFT;
         int cost = model_get_building(type)->cost;

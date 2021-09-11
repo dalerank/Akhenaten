@@ -359,9 +359,6 @@ static void enable_gods(int flag) {
     }
 }
 
-void building_menu_update_monuments() {
-
-}
 void building_menu_update_temple_complexes() {
     if (!config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES)) {
         if (city_buildings_has_temple_complex()) {
@@ -396,6 +393,10 @@ void building_menu_update_temple_complexes() {
         // TODO...?
     }
 }
+void building_menu_update_monuments() {
+
+}
+
 void building_menu_update(int build_set) {
     // do this if loading normally from a save - tutorial stage will
     // be determined accordingly by the set flags!
