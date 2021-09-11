@@ -176,40 +176,16 @@ void map_orientation_update_buildings(void) {
             case BUILDING_TEMPLE_COMPLEX_PTAH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                if (b->is_main()) {
-//                    int orientation = 0;
-//                    switch (b->data.monuments.variant) { // I couldn't be arsed.
-//                        case 0:
-//                            orientation = 1;
-//                            break;
-//                        case 2:
-//                            orientation = 0;
-//                            break;
-//                        case 4:
-//                            orientation = 3;
-//                            break;
-//                        case 6:
-//                            orientation = 2;
-//                            break;
-//                    }
-//                    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
-                    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
-//                    switch (map_orientation) {
-//                        case 0:
-//                            offset = {0, 0};
-//                            break;
-//                        case 1:
-//                            offset = {-2, 0};
-//                            break;
-//                        case 2:
-//                            offset = {-2, -2};
-//                            break;
-//                        case 3:
-//                            offset = {0, -2};
-//                            break;
-//                    }
+                int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+                if (b->is_main()) { // main
                     map_add_temple_complex_tiles(b->type, b->x, b->y, orientation);
-                }
+
+                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 0, orientation, 0), TERRAIN_BUILDING);
+                } // oracle
+                else if (b->next_part_building_id)
+                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 1, orientation, 0), TERRAIN_BUILDING);
+                else // altar
+                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 2, orientation, 0), TERRAIN_BUILDING);
                 break;
         }
     }

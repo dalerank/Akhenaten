@@ -88,6 +88,6 @@ int get_monument_part_image(int part, int orientation, int level) {
     }
 }
 
-int get_temple_complex_part(int type, int part, int orientation) {
+int get_temple_complex_part_image(int type, int part, int orientation, int level) {
 
 }
