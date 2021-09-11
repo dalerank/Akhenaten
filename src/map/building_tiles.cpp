@@ -270,6 +270,125 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
     }
 }
 
+void map_add_temple_complex_tiles(int type, int x, int y, int orientation) {
+    int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type);
+    int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, type);
+    int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, type);
+    int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, type);
+    int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, type);
+    int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, type);
+
+    int EMPTY = 0;
+    int mn_1A = main_image_id;
+    int mn_1B = main_image_id + 3;
+    int mn_2A = oracle_image_id;
+    int mn_2B = oracle_image_id + 3;
+    int mn_3A = altar_image_id;
+    int mn_3B = altar_image_id + 3;
+
+    int til_0 = flooring_image_id + 0;
+    int til_1 = flooring_image_id + 1;
+    int til_2 = flooring_image_id + 2;
+    int til_3 = flooring_image_id + 3;
+
+    int smst0 = statue1_image_id + 0; // north
+    int smst1 = statue1_image_id + 1; // east
+    int smst2 = statue1_image_id + 2; // south
+    int smst3 = statue1_image_id + 3; // west
+
+    int lst0A = statue2_image_id + 0; // north
+    int lst0B = statue2_image_id + 1;
+    int lst1A = statue2_image_id + 2; // east
+    int lst1B = statue2_image_id + 3;
+    int lst2A = statue2_image_id + 4; // south
+    int lst2B = statue2_image_id + 5;
+    int lst3A = statue2_image_id + 6; // west
+    int lst3B = statue2_image_id + 7;
+
+    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+    switch (orientation) {
+        case 0: { // NE
+            int TEMPLE_COMPLEX_SCHEME[13][7] = {
+                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+                    {til_0, til_0, EMPTY, EMPTY, EMPTY, til_0, til_0},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {til_1, til_1, EMPTY, EMPTY, EMPTY, til_1, til_1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+            };
+            for (int row = 0; row < 13; ++row) {
+                for (int column = 0; column < 7; ++column) {
+                    map_image_set(map_grid_offset(x + column, y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                }
+            }
+            break;
+        }
+        case 1: { // SE
+            int TEMPLE_COMPLEX_SCHEME[7][13] = {
+                    {smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0, til_0, til_2, til_3, til_2, til_3},
+                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst2B, lst2B, lst2B},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst2A, lst2A, lst2A},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_1, til_1, til_1, til_1},
+                    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, til_0, lst0B, lst0B, lst0B},
+                    {til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0, til_0, til_0, lst0A, lst0A, lst0A},
+                    {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
+            };
+            for (int row = 0; row < 7; ++row) {
+                for (int column = 0; column < 13; ++column) {
+                    map_image_set(map_grid_offset(x + column, y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                }
+            }
+            break;
+        }
+        case 2: { // SW
+            int TEMPLE_COMPLEX_SCHEME[13][7] = {
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {til_1, til_1, mn_1B, EMPTY, EMPTY, til_1, til_1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {til_1, til_1, mn_2B, EMPTY, EMPTY, til_1, til_1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {smst3, til_0, EMPTY, EMPTY, EMPTY, til_0, smst1},
+                    {til_0, til_0, mn_3B, EMPTY, EMPTY, til_0, til_0},
+                    {til_2, til_0, til_0, til_1, til_0, til_0, til_2},
+                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+                    {til_2, lst1A, lst1B, til_1, lst3A, lst3B, til_2},
+                    {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
+            };
+            for (int row = 0; row < 13; ++row) {
+                for (int column = 0; column < 7; ++column) {
+                    map_image_set(map_grid_offset(x + column, y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                }
+            }
+        }
+        case 3: { // NW
+            int TEMPLE_COMPLEX_SCHEME[7][13] = {
+                    {til_3, til_2, til_3, til_2, til_0, smst0, smst0, til_1, smst0, smst0, til_1, smst0, smst0},
+                    {lst2B, lst2B, lst2B, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                    {lst2A, lst2A, lst2A, til_0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {til_1, til_1, til_1, til_1, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+                    {lst0B, lst0B, lst0B, til_0, mn_1A, EMPTY, EMPTY, mn_2A, EMPTY, EMPTY, mn_3A, EMPTY, EMPTY},
+                    {lst0A, lst0A, lst0A, til_0, til_0, til_0, til_0, til_1, til_0, til_0, til_1, til_0, til_0},
+                    {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
+            };
+            for (int row = 0; row < 7; ++row) {
+                for (int column = 0; column < 13; ++column) {
+                    map_image_set(map_grid_offset(x + column, y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                }
+            }
+            break;
+        }
+    }
+}
+
 void map_building_tiles_remove(int building_id, int x, int y) {
     if (!map_grid_is_inside(x, y, 1))
         return;

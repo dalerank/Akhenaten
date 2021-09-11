@@ -109,7 +109,7 @@ public:
     void construction_cancel();
     void construction_finalize();
 
-    void add_building_tiles_from_list(int building_id);
+    void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
     void construction_record_view_position(int view_x, int view_y, int grid_offset);

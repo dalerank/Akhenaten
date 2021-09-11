@@ -100,7 +100,7 @@ static void add_fort(int type, building *fort) {
     ground->formation_id = fort->formation_id;
 }
 
-void BuildPlanner::add_building_tiles_from_list(int building_id) {
+void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_only) {
     for (int row = 0; row < size.y; ++row) {
         for (int column = 0; column < size.x; ++column) {
             int image_id = tile_graphics_array[row][column];
@@ -122,8 +122,12 @@ void BuildPlanner::add_building_tiles_from_list(int building_id) {
                     tile.y = tile.y - size + 1;
                     break;
             }
-            if (image_id > 0 && size > 0)
-                map_building_tiles_add(building_id, tile.x, tile.y, size, image_id, TERRAIN_BUILDING);
+            if (image_id > 0 && size > 0) {
+                if (!graphics_only)
+                    map_building_tiles_add(building_id, tile.x, tile.y, size, image_id, TERRAIN_BUILDING);
+                else
+                    map_image_set(tile.grid_offset, image_id);
+            }
         }
     }
 }
@@ -142,7 +146,7 @@ static building *add_temple_complex_element(int x, int y, int orientation, build
     return b;
 }
 static void add_temple_complex(building *b, int orientation) {
-    Planner.add_building_tiles_from_list(b->id);
+    Planner.add_building_tiles_from_list(b->id, false);
     map_point offset = {0, 0};
     switch (orientation) {
         case 0:

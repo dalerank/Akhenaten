@@ -169,15 +169,47 @@ void map_orientation_update_buildings(void) {
             case BUILDING_LARGE_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_SMALL_STATUE:
-                map_building_tiles_add(i, b->x, b->y, b->size,
-                                       get_statue_image_from_value(b->type, b->data.monuments.variant, map_orientation), TERRAIN_BUILDING);
+                map_building_tiles_add(i, b->x, b->y, b->size, get_statue_image_from_value(b->type, b->data.monuments.variant, map_orientation), TERRAIN_BUILDING);
                 break;
             case BUILDING_TEMPLE_COMPLEX_OSIRIS:
             case BUILDING_TEMPLE_COMPLEX_RA:
             case BUILDING_TEMPLE_COMPLEX_PTAH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-
+                if (b->is_main()) {
+//                    int orientation = 0;
+//                    switch (b->data.monuments.variant) { // I couldn't be arsed.
+//                        case 0:
+//                            orientation = 1;
+//                            break;
+//                        case 2:
+//                            orientation = 0;
+//                            break;
+//                        case 4:
+//                            orientation = 3;
+//                            break;
+//                        case 6:
+//                            orientation = 2;
+//                            break;
+//                    }
+//                    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+                    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+//                    switch (map_orientation) {
+//                        case 0:
+//                            offset = {0, 0};
+//                            break;
+//                        case 1:
+//                            offset = {-2, 0};
+//                            break;
+//                        case 2:
+//                            offset = {-2, -2};
+//                            break;
+//                        case 3:
+//                            offset = {0, -2};
+//                            break;
+//                    }
+                    map_add_temple_complex_tiles(b->type, b->x, b->y, orientation);
+                }
                 break;
         }
     }
