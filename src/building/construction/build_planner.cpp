@@ -567,7 +567,7 @@ static void add_building(building *b, int orientation, int variant) {
 }
 
 static void mark_construction(int x, int y, int size_x, int size_y, int terrain, bool absolute_xy) {
-    if (map_building_tiles_mark_construction(x, y, size_x, size_y, terrain, absolute_xy))
+    if (Planner.can_be_placed() == CAN_PLACE && map_building_tiles_mark_construction(x, y, size_x, size_y, terrain, absolute_xy))
         Planner.draw_as_constructing = true;
 }
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
@@ -740,6 +740,10 @@ static bool place_building(int type, int x, int y, int orientation, int variant)
 }
 
 //////////////////////
+
+int BuildPlanner::can_be_placed() {
+    return can_place;
+}
 
 void BuildPlanner::reset() {
 
@@ -1324,6 +1328,17 @@ void BuildPlanner::update_unique_only_one_check() {
             break;
         case BUILDING_FESTIVAL_SQUARE:
             if (city_building_has_festival_square())
+                unique_already_placed = true;
+            break;
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            //
+        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+        case BUILDING_TEMPLE_COMPLEX_ORACLE:
+            if (city_buildings_has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
                 unique_already_placed = true;
             break;
     }

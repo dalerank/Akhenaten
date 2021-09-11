@@ -101,6 +101,8 @@ public:
     map_tile south_tile;
     map_tile west_tile;
 
+    int can_be_placed();
+
     void reset();
     void setup_build(int type);
 

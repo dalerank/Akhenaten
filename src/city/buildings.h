@@ -57,6 +57,7 @@ void city_buildings_add_festival_square(building *square);
 void city_buildings_remove_festival_square(void);
 
 bool city_buildings_has_temple_complex(void);
+int city_buildings_get_temple_complex(void);
 void city_buildings_add_temple_complex(building *complex);
 void city_buildings_remove_temple_complex(void);
 

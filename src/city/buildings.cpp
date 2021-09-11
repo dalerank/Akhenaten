@@ -1,3 +1,4 @@
+#include <building/menu.h>
 #include "buildings.h"
 
 #include "city/data_private.h"
@@ -209,13 +210,18 @@ void city_buildings_remove_festival_square(void) {
 bool city_buildings_has_temple_complex(void) {
     return city_data.building.temple_complex_placed;
 }
+int city_buildings_get_temple_complex(void) {
+    return city_data.building.temple_complex_id;
+}
 void city_buildings_add_temple_complex(building *complex) {
     city_data.building.temple_complex_placed = true;
     city_data.building.temple_complex_id = complex->id;
+    building_menu_update_temple_complexes();
 }
 void city_buildings_remove_temple_complex(void) {
     city_data.building.temple_complex_id = 0;
     city_data.building.temple_complex_placed = false;
+    building_menu_update_temple_complexes();
 }
 
 int city_buildings_unknown_value(void) {

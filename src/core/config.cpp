@@ -55,7 +55,9 @@ static const char *ini_keys[] = {
         "ui_keep_camera_inertia",
         "gameplay_change_watercarriers_firefight",
         "gameplay_change_cart_instant_unload",
-        "gameplay_change_understaffed_accept_goods"
+        "gameplay_change_understaffed_accept_goods",
+        "gameplay_change_multiple_temple_complexes",
+        "gameplay_change_multiple_monuments"
 
 };
 
@@ -111,6 +113,8 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
         true, // water carriers fight fires
         false, // instant cart unload for all units
         false, // understaffed buildings can accept goods
+        false, // multiple temple complexes
+        false, // multiple monuments
 
 };
 

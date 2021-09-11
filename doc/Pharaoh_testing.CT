@@ -84,7 +84,7 @@
       <ID>238</ID>
       <Description>"GENERAL"</Description>
       <Options moHideChildren="1"/>
-      <LastState Value="" RealAddress="00000000"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
         <CheatEntry>
@@ -103,6 +103,13 @@
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+B52D98</Address>
         </CheatEntry>
+        <CheatEntry>
+          <ID>1172</ID>
+          <Description>"Current building select"</Description>
+          <LastState Value="0" RealAddress="006049D8"/>
+          <VariableType>Byte</VariableType>
+          <Address>Pharaoh_testing.exe+2049D8</Address>
+        </CheatEntry>
       </CheatEntries>
     </CheatEntry>
     <CheatEntry>
@@ -115,7 +122,7 @@
         <CheatEntry>
           <ID>237</ID>
           <Description>"Past IV1_7BIT (index)"</Description>
-          <LastState Value="5" RealAddress="00D3A1B4"/>
+          <LastState Value="92" RealAddress="00D3A1B4"/>
           <Color>FF0000</Color>
           <VariableType>4 Bytes</VariableType>
           <Address>00d3a1b4</Address>
@@ -123,7 +130,7 @@
         <CheatEntry>
           <ID>258</ID>
           <Description>"Past IV1_7BIT (array)"</Description>
-          <LastState Value="70" RealAddress="00D3A1B8"/>
+          <LastState Value="29" RealAddress="00D3A1B8"/>
           <Color>FF0000</Color>
           <VariableType>4 Bytes</VariableType>
           <Address>00d3a1b8</Address>
@@ -131,7 +138,7 @@
         <CheatEntry>
           <ID>259</ID>
           <Description>"Past IV1_7BIT (current)"</Description>
-          <LastState Value="118" RealAddress="00D3A2D0"/>
+          <LastState Value="10" RealAddress="00D3A22C"/>
           <Color>FF0000</Color>
           <VariableType>4 Bytes</VariableType>
           <Address>00d3a1b8+[00d3a1b8]*4</Address>
@@ -153,42 +160,42 @@
         <CheatEntry>
           <ID>241</ID>
           <Description>"Random_iv1_3bit"</Description>
-          <LastState Value="6" RealAddress="00D3A368"/>
+          <LastState Value="1" RealAddress="00D3A368"/>
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+93A368</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>240</ID>
           <Description>"Random_iv1_7bit"</Description>
-          <LastState Value="14" RealAddress="00D3A364"/>
+          <LastState Value="25" RealAddress="00D3A364"/>
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+93A364</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>239</ID>
           <Description>"Random_iv1_15bit"</Description>
-          <LastState Value="16654" RealAddress="00D3A360"/>
+          <LastState Value="18073" RealAddress="00D3A360"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00d3a360</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>244</ID>
           <Description>"Random_iv2_3bit"</Description>
-          <LastState Value="5" RealAddress="00D3A35C"/>
+          <LastState Value="4" RealAddress="00D3A35C"/>
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+93A35C</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>243</ID>
           <Description>"Random_iv2_7bit"</Description>
-          <LastState Value="61" RealAddress="00D3A358"/>
+          <LastState Value="20" RealAddress="00D3A358"/>
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+93A358</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>242</ID>
           <Description>"Random_iv2_15bit"</Description>
-          <LastState Value="19389" RealAddress="00D3A354"/>
+          <LastState Value="7188" RealAddress="00D3A354"/>
           <VariableType>4 Bytes</VariableType>
           <Address>Pharaoh_testing.exe+93A354</Address>
         </CheatEntry>
@@ -304,14 +311,14 @@
             <CheatEntry>
               <ID>113</ID>
               <Description>"??? (address)"</Description>
-              <LastState Value="55229344" RealAddress="034AB010"/>
+              <LastState Value="55196544" RealAddress="034A2FE0"/>
               <VariableType>4 Bytes</VariableType>
               <Address>[00D37694]</Address>
             </CheatEntry>
             <CheatEntry>
               <ID>112</ID>
               <Description>"??? (address)"</Description>
-              <LastState Value="0" RealAddress="034AB6A0"/>
+              <LastState Value="0" RealAddress="034A3680"/>
               <VariableType>4 Bytes</VariableType>
               <Address>[00D37698]</Address>
             </CheatEntry>
@@ -502,14 +509,14 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>72</ID>
                   <Description>"DAT_005de75c"</Description>
-                  <LastState Value="457" RealAddress="005DE75C"/>
+                  <LastState Value="426" RealAddress="005DE75C"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>005de75c</Address>
                 </CheatEntry>
                 <CheatEntry>
                   <ID>74</ID>
                   <Description>"DAT_005de760"</Description>
-                  <LastState Value="457" RealAddress="005DE760"/>
+                  <LastState Value="426" RealAddress="005DE760"/>
                   <VariableType>8 Bytes</VariableType>
                   <Address>005de760</Address>
                 </CheatEntry>
@@ -2488,7 +2495,7 @@ writeInteger('START_ADDR', 0)
       <ID>318</ID>
       <Description>"BUILDINGS"</Description>
       <Options moHideChildren="1"/>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{ Game   : Pharaoh.exe
   Version:
@@ -2523,7 +2530,6 @@ unregistersymbol(BUILDING_ID)
         <CheatEntry>
           <ID>319</ID>
           <Description>"[BASE]"</Description>
-          <LastState Value="007989C8" RealAddress="012B0000"/>
           <ShowAsHex>1</ShowAsHex>
           <Color>FF0000</Color>
           <VariableType>4 Bytes</VariableType>
@@ -2532,7 +2538,6 @@ unregistersymbol(BUILDING_ID)
         <CheatEntry>
           <ID>320</ID>
           <Description>"[ID]"</Description>
-          <LastState Value="3" RealAddress="012B0004"/>
           <ShowAsSigned>1</ShowAsSigned>
           <Color>FF0000</Color>
           <VariableType>2 Bytes</VariableType>
@@ -4537,7 +4542,7 @@ unregistersymbol(FIGURE_ID)
       <ID>261</ID>
       <Description>"GODS"</Description>
       <Options moHideChildren="1"/>
-      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <LastState Value="" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
       <CheatEntries>
         <CheatEntry>
@@ -4729,7 +4734,7 @@ unregistersymbol(FIGURE_ID)
     <CheatEntry>
       <ID>1171</ID>
       <Description>"Map Image (debug)"</Description>
-      <LastState Value="14494" RealAddress="00B8E238"/>
+      <LastState Value="14493" RealAddress="00B8E238"/>
       <VariableType>4 Bytes</VariableType>
       <Address>Pharaoh_testing.exe+78E238</Address>
       <Hotkeys>
@@ -7552,14 +7557,12 @@ unregistersymbol(FIGURE_ID)
         <CheatEntry>
           <ID>1152</ID>
           <Description>"No description"</Description>
-          <LastState Value="189" RealAddress="07F2D977"/>
           <VariableType>Byte</VariableType>
           <Address>07F2D977</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1153</ID>
           <Description>"No description"</Description>
-          <LastState Value="0" RealAddress="07F2E175"/>
           <VariableType>Byte</VariableType>
           <Address>07F2E175</Address>
         </CheatEntry>
@@ -7580,50 +7583,54 @@ unregistersymbol(FIGURE_ID)
         <CheatEntry>
           <ID>1156</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F34961"/>
           <VariableType>Byte</VariableType>
           <Address>07F34961</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1157</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F4715D"/>
           <VariableType>Byte</VariableType>
           <Address>07F4715D</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1158</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F47161"/>
           <VariableType>Byte</VariableType>
           <Address>07F47161</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1159</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F4B14C"/>
           <VariableType>Byte</VariableType>
           <Address>07F4B14C</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1160</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F51974"/>
           <VariableType>Byte</VariableType>
           <Address>07F51974</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1161</ID>
           <Description>"No description"</Description>
+          <LastState Value="0" RealAddress="07F6BD67"/>
           <VariableType>Byte</VariableType>
           <Address>07F6BD67</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1162</ID>
           <Description>"No description"</Description>
-          <LastState Value="0" RealAddress="07F765BB"/>
           <VariableType>Byte</VariableType>
           <Address>07F765BB</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>1163</ID>
           <Description>"No description"</Description>
-          <LastState Value="0" RealAddress="07F7E597"/>
           <VariableType>Byte</VariableType>
           <Address>07F7E597</Address>
         </CheatEntry>

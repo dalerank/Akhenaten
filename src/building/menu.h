@@ -84,6 +84,9 @@ int building_menu_next_index(int submenu, int current_index);
 
 int building_menu_type(int submenu, int item);
 
+void building_menu_update_monuments();
+void building_menu_update_temple_complexes();
+
 /**
  * Checks whether the building menu has changed.
  * Also marks the change as 'seen'.
