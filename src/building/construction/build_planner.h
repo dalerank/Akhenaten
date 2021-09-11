@@ -23,9 +23,10 @@ enum PlannerFlags {
     Intersection =          1 << 11,
     FancyRoad =             1 << 12,
     Walls =                 1 << 13,
+    TempleUpgrade =         1 << 14,
     //
     Resources =             1 << 16,
-    IgnoreNearbyEnemy =         1 << 17,
+    IgnoreNearbyEnemy =     1 << 17,
     //
     Draggable =             1 << 21,
     Ferry =                 1 << 22,

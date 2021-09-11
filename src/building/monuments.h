@@ -1,6 +1,8 @@
 #ifndef OZYMANDIAS_MONUMENTS_H
 #define OZYMANDIAS_MONUMENTS_H
 
+#include "building.h"
+
 enum {
     MONUMENT_PYRAMID = 0,
     MONUMENT_MASTABA = 1
@@ -28,5 +30,6 @@ int get_statue_variant_value(int orientation, int variant);
 int get_monument_part_image(int part, int orientation, int level);
 
 int get_temple_complex_part_image(int type, int part, int orientation, int level);
+building *get_temple_complex_front_facing_part(building *b);
 
 #endif //OZYMANDIAS_MONUMENTS_H

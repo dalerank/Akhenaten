@@ -183,10 +183,6 @@ static void draw_menu_buttons(void) {
         int cost = model_get_building(type)->cost;
         if (type == BUILDING_MENU_FORTS)
             cost = 0;
-//        if (type == BUILDING_MENU_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES)
-//            cost = model_get_building(BUILDING_TEMPLE_OSIRIS)->cost;
-//        if (type == BUILDING_MENU_TEMPLE_COMPLEX && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES)
-//            cost = model_get_building(BUILDING_TEMPLE_COMPLEX_OSIRIS)->cost;
         if (cost)
             text_draw_money(cost, x_offset - 82 - label_offset, data.y_offset + 114 + 24 * i, font);
     }

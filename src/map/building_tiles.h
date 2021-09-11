@@ -11,6 +11,7 @@ void map_add_bandstand_tiles(building *b);
 void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int image_id, bool update_only);
 
 void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation);
+void map_building_tiles_add_temple_complex_parts(building *b);
 
 void map_building_tiles_remove(int building_id, int x, int y);
 void map_building_tiles_set_rubble(int building_id, int x, int y, int size);

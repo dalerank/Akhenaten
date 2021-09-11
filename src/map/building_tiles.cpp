@@ -1,5 +1,6 @@
 #include <widget/city/tile_draw.h>
 #include <widget/city/ornaments.h>
+#include <building/monuments.h>
 #include "building_tiles.h"
 
 #include "building/building.h"
@@ -271,22 +272,11 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
 }
 
 void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) {
-//    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
-
-//    int main_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_MAIN, type);
-//    int oracle_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ORACLE, type);
-//    int altar_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_ALTAR, type);
     int flooring_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_FLOORING, type);
     int statue1_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_1, type);
     int statue2_image_id = image_id_from_group(GROUP_BUILDING_TEMPLE_COMPLEX_STATUE_2, type);
 
     int EMPTY = 0;
-//    int mn_1A = main_image_id;
-//    int mn_1B = main_image_id + 3;
-//    int mn_2A = oracle_image_id;
-//    int mn_2B = oracle_image_id + 3;
-//    int mn_3A = altar_image_id;
-//    int mn_3B = altar_image_id + 3;
 
     // floor tiles
     int til_0 = flooring_image_id + 0;
@@ -428,6 +418,21 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             break;
         }
     }
+}
+void map_building_tiles_add_temple_complex_parts(building *b) {
+    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+    int orientation_binary = (1 + orientation_rel) % 2;
+    int part = 0; // default = main
+    if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
+        part = 1;
+    else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
+        part = 2;
+    map_building_tiles_add(b->id, b->x, b->y, b->size,
+       get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
+       TERRAIN_BUILDING);
+    if (b->next_part_building_id)
+        map_building_tiles_add_temple_complex_parts(b->next());
 }
 
 void map_building_tiles_remove(int building_id, int x, int y) {

@@ -109,3 +109,16 @@ int get_temple_complex_part_image(int type, int part, int orientation, int level
         }
     }
 }
+building *get_temple_complex_front_facing_part(building *b) {
+    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
+    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+
+    switch (orientation_rel) {
+        case 0:
+        case 3:
+            return b->main(); // the first part is the oracle
+        case 1:
+        case 2:
+            return b->main()->next()->next(); // the last part is the oracle
+    }
+}

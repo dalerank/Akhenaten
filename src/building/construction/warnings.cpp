@@ -45,6 +45,8 @@ static void check_road_access(int type, int x, int y, int size) {
         case BUILDING_FORT_CHARIOTEERS:
         case BUILDING_FORT_ARCHERS:
         case BUILDING_FORT_INFANTRY:
+        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+        case BUILDING_TEMPLE_COMPLEX_ORACLE:
             return;
     }
 

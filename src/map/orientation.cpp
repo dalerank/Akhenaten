@@ -176,27 +176,13 @@ void map_orientation_update_buildings(void) {
             case BUILDING_TEMPLE_COMPLEX_PTAH:
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
-                int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
-
-                // first, add the base tiles
-                if (b->is_main())
+                if (b->is_main()) {
+                    // first, add the base tiles
+                    int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
                     map_add_temple_complex_base_tiles(b->type, b->x, b->y, orientation);
-
-                // then, the main building parts
-                int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
-                int orientation_binary = (1 + orientation_rel) % 2;
-                int part = 0; // default = main
-                if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
-                    part = 1;
-                else { // front facing part (oracle)
-                    if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
-                        || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
-                        part = 2;
+                    // then, the main building parts
+                    map_building_tiles_add_temple_complex_parts(b);
                 }
-                map_building_tiles_add(i, b->x, b->y, b->size,
-                   get_temple_complex_part_image(b->type, part, orientation_binary, b->main()->data.monuments.temple_complex_attachments & part),
-                   TERRAIN_BUILDING);
-
                 break;
         }
     }

@@ -739,6 +739,40 @@ static bool place_building(int type, int x, int y, int orientation, int variant)
     return true;
 }
 
+static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
+    building *target = building_at(grid_offset)->main();
+    if (!building_at(grid_offset) || !building_is_large_temple(target->type))
+        return false;
+    if (target->data.monuments.temple_complex_attachments & upgrade_param)
+        return false;
+    target->data.monuments.temple_complex_attachments |= upgrade_param;
+    map_building_tiles_add_temple_complex_parts(target);
+    return true;
+}
+static map_tile temple_complex_part_target(building *main, int part) {
+    building *b = main;
+    if (part == 1)
+        b = b->next();
+    else if (part == 2)
+        b = get_temple_complex_front_facing_part(main);
+
+    int x = b->x;
+    int y = b->y;
+    switch (city_view_orientation() / 2) {
+        case 1: // east
+            x += 2;
+            break;
+        case 2: // south
+            x += 2;
+            y += 2;
+            break;
+        case 3: // west
+            y += 2;
+            break;
+    }
+    return {x, y, map_grid_offset(x, y)};
+}
+
 //////////////////////
 
 int BuildPlanner::can_be_placed() {
@@ -986,6 +1020,12 @@ void BuildPlanner::setup_build_flags() {
         case BUILDING_CLEAR_LAND:
             set_flag(PlannerFlags::IgnoreNearbyEnemy);
             break;
+        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+            set_flag(PlannerFlags::TempleUpgrade, 2);
+            break;
+        case BUILDING_TEMPLE_COMPLEX_ORACLE:
+            set_flag(PlannerFlags::TempleUpgrade, 1);
+            break;
     }
     if (building_is_draggable(build_type))
         set_flag(PlannerFlags::Draggable);
@@ -1107,6 +1147,11 @@ void BuildPlanner::setup_build_graphics() {
             }
             break;
         }
+        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+        case BUILDING_TEMPLE_COMPLEX_ORACLE:
+            init_tiles(3, 3);
+            set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset)->main()->type, additional_req_param1, orientation, 1), 3);
+            break;
         case BUILDING_WATER_LIFT:
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + orientation + variant * 4, props->size);
             break;
@@ -1164,6 +1209,8 @@ void BuildPlanner::update_obstructions_check() {
                 restricted_terrain -= TERRAIN_ROAD;
             if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine)
                 restricted_terrain -= TERRAIN_WATER;
+            if (special_flags & PlannerFlags::TempleUpgrade) // special case
+                return;
 
             tile_blocked_array[row][column] = false;
             int grid_offset = map_grid_offset(current_tile.x, current_tile.y);
@@ -1304,6 +1351,22 @@ void BuildPlanner::update_special_case_orientations_check() {
             update_orientations(false);
         }
     }
+    if (special_flags & PlannerFlags::TempleUpgrade) {
+        building *target = building_at(end.grid_offset)->main();
+        if (!building_at(end.grid_offset) || !building_is_large_temple(target->type)) {
+            immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
+            can_place = CAN_NOT_PLACE;
+        } else if (target->data.monuments.temple_complex_attachments & additional_req_param1) {
+            immediate_warning_id = WARNING_TEMPLE_UPGRADE_ONLY_ONE;
+            can_place = CAN_NOT_PLACE;
+        } else {
+            dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
+            dir_relative = (4 + dir_absolute - city_view_orientation() / 2) % 4;
+            orientation = (1 + dir_relative) % 2;
+            end = temple_complex_part_target(target, additional_req_param1);
+            update_orientations(false);
+        }
+    }
 }
 void BuildPlanner::update_unique_only_one_check() {
     bool unique_already_placed = false;
@@ -1335,9 +1398,8 @@ void BuildPlanner::update_unique_only_one_check() {
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
-            //
-        case BUILDING_TEMPLE_COMPLEX_ALTAR:
-        case BUILDING_TEMPLE_COMPLEX_ORACLE:
+//        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+//        case BUILDING_TEMPLE_COMPLEX_ORACLE:
             if (city_buildings_has_temple_complex() && !config_get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
                 unique_already_placed = true;
             break;
@@ -1348,8 +1410,11 @@ void BuildPlanner::update_unique_only_one_check() {
     }
 }
 void BuildPlanner::update_coord_caches() {
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
+    pixel_coordinate view_tile = city_view_grid_offset_to_pixel(end.grid_offset);
+    if (view_tile.x == 0 && view_tile.y == 0)
+        // this prevents graphics from being drawn on the top left corner
+        // of the screen when the current "end" tile isn't valid.
+        city_view_get_selected_tile_pixels(&view_tile.x, &view_tile.y);
     int orientation = city_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -1381,8 +1446,8 @@ void BuildPlanner::update_coord_caches() {
             }
 
             // get tile pixel coords
-            int current_x = x + x_offset * 30 - y_offset * 30;
-            int current_y = y + x_offset * 15 + y_offset * 15;
+            int current_x = view_tile.x + x_offset * 30 - y_offset * 30;
+            int current_y = view_tile.y + x_offset * 15 + y_offset * 15;
 
             // save values in cache
             tile_coord_cache[row][column] = {tile_x, tile_y, map_grid_offset(tile_x, tile_y)};
@@ -1626,8 +1691,6 @@ void BuildPlanner::construction_finalize() { // confirm final placement
             map_bridge_reset_building_length();
         return;
     }
-    if (last_created_building == nullptr) // this SHOULDN'T ever happen??
-        return;
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
@@ -1684,7 +1747,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // finally, go over the rest of the stuff for all building types
     formation_move_herds_away(end.x, end.y);
-//    city_finance_process_construction(total_cost); // TODO: TEMP
+    city_finance_process_construction(total_cost);
     game_undo_finish_build(total_cost);
     map_tiles_update_region_empty_land(false, start.x - 2, start.y - 2, end.x + size.x + 2, end.y + size.y + 2);
     map_routing_update_land();
@@ -1770,6 +1833,11 @@ bool BuildPlanner::place() {
                 city_warning_show(WARNING_CLEAR_LAND_NEEDED);
                 return false;
             }
+            break;
+        case BUILDING_TEMPLE_COMPLEX_ALTAR:
+        case BUILDING_TEMPLE_COMPLEX_ORACLE:
+            if (!attach_temple_upgrade(additional_req_param1, end.grid_offset))
+                return false;
             break;
         default:
             if (!place_building(build_type, end.x, end.y, orientation, variant))
