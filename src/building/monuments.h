@@ -16,6 +16,11 @@ enum {
     MONUMENT_PART_SIDES_2 = 6,
 };
 
+enum {
+    TEMPLE_COMPLEX_ALTAR_ATTACHMENT = 1,
+    TEMPLE_COMPLEX_ORACLE_ATTACHMENT = 2,
+};
+
 int get_statue_image(int type, int orientation, int variant);
 int get_statue_image_from_value(int type, int combined, int map_orientation);
 int get_statue_variant_value(int orientation, int variant);

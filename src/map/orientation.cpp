@@ -177,15 +177,70 @@ void map_orientation_update_buildings(void) {
             case BUILDING_TEMPLE_COMPLEX_SETH:
             case BUILDING_TEMPLE_COMPLEX_BAST:
                 int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
-                if (b->is_main()) { // main
-                    map_add_temple_complex_tiles(b->type, b->x, b->y, orientation);
 
-                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 0, orientation, 0), TERRAIN_BUILDING);
-                } // oracle
-                else if (b->next_part_building_id)
-                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 1, orientation, 0), TERRAIN_BUILDING);
-                else // altar
-                    map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 2, orientation, 0), TERRAIN_BUILDING);
+                // first, add the base tiles
+                if (b->is_main())
+                    map_add_temple_complex_base_tiles(b->type, b->x, b->y, orientation);
+
+                // then, the main building parts
+                int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+                int orientation_binary = (1 + orientation_rel) % 2;
+
+                int part = 0;
+                if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
+                    part = 1;
+                else { // oh boy...
+                    if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
+                        || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
+                        part = 2;
+//                    switch (map_orientation) {
+//                        case 0:
+//                            if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
+//                                || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
+//                                part = 2;
+//                            break;
+//                        case 1:
+//                            if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
+//                                || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
+//                                part = 2;
+////                            if (((orientation_rel == 2 || orientation_rel == 3) && b->prev_part_building_id)
+////                                || ((orientation_rel == 0 || orientation_rel == 1) && b->next_part_building_id))
+////                                part = 2;
+//                            break;
+//                        case 2:
+//                            if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
+//                                || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
+//                                part = 2;
+////                            if (((orientation_rel == 3 || orientation_rel == 0) && b->prev_part_building_id)
+////                                || ((orientation_rel == 1 || orientation_rel == 2) && b->next_part_building_id))
+////                                part = 2;
+//                            break;
+//                        case 3:
+//                            if (((orientation_rel == 1 || orientation_rel == 2) && b->prev_part_building_id)
+//                                || ((orientation_rel == 3 || orientation_rel == 0) && b->next_part_building_id))
+//                                part = 2;
+////                            if (((orientation_rel == 0 || orientation_rel == 1) && b->prev_part_building_id)
+////                                || ((orientation_rel == 2 || orientation_rel == 3) && b->next_part_building_id))
+////                                part = 2;
+//                            break;
+//                    }
+                }
+
+                switch (part) {
+                    case 0: // main
+                        map_building_tiles_add(i, b->x, b->y, b->size, get_temple_complex_part_image(b->type, 0, orientation_binary, 0), TERRAIN_BUILDING);
+                        break;
+                    case 1: // oracle
+                        map_building_tiles_add(i, b->x, b->y, b->size,
+                                               get_temple_complex_part_image(b->type, 1, orientation_binary, b->main()->data.monuments.temple_complex_attachments & TEMPLE_COMPLEX_ALTAR_ATTACHMENT),
+                                               TERRAIN_BUILDING);
+                        break;
+                    case 2: // altar
+                        map_building_tiles_add(i, b->x, b->y, b->size,
+                                               get_temple_complex_part_image(b->type, 2, orientation_binary, b->main()->data.monuments.temple_complex_attachments & TEMPLE_COMPLEX_ORACLE_ATTACHMENT),
+                                               TERRAIN_BUILDING);
+                        break;
+                }
                 break;
         }
     }
