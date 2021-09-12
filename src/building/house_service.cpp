@@ -53,20 +53,22 @@ void house_service_decay_tax_collector(void) {
 void house_service_decay_houses_covered(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
-            if (building_is_farm(b->type) && b->data.industry.labor_days_left > 0)
-                b->data.industry.labor_days_left--;
-            else if (b->houses_covered > 0)
+        if (b->state != BUILDING_STATE_UNUSED) { //b->type != BUILDING_TOWER
+            if (b->houses_covered > 0)
                 b->houses_covered--;
-
-            if (b->houses_covered == 255)
-                b->houses_covered = 0;
-            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                if (b->data.industry.labor_state == 2)
-                    b->data.industry.labor_state = 1;
-                if (b->data.industry.labor_days_left == 0)
-                    b->data.industry.labor_state = 0;
-            }
+//            if (building_is_farm(b->type) && b->data.industry.labor_days_left > 0)
+//                b->data.industry.labor_days_left--;
+////            else if (b->houses_covered > 0)
+////                b->houses_covered--;
+//
+////            if (b->houses_covered == 255)
+////                b->houses_covered = 0;
+//            if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//                if (b->data.industry.labor_state == 2)
+//                    b->data.industry.labor_state = 1;
+//                if (b->data.industry.labor_days_left == 0)
+//                    b->data.industry.labor_state = 0;
+//            }
         }
     }
 }

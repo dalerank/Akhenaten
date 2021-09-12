@@ -62,17 +62,11 @@ void building_industry_update_production(void) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
-        b->data.industry.has_raw_materials = 0;
-        if (b->num_workers <= 0) //b->houses_covered <= 0 ||
+        if (building_is_floodplain_farm(b))
             continue;
-        if (building_is_floodplain_farm(b)) {
-            if (b->data.industry.labor_days_left <= 0 || floodplains_is(FLOOD_STATE_IMMINENT))
-                continue;
-            else
-                int a = 2;
-        }
-//        else if (b->houses_covered <= 0 || b->num_workers <= 0)
-//            continue;
+        b->data.industry.has_raw_materials = 0;
+        if (b->num_workers <= 0)
+            continue;
         if (b->subtype.workshop_type && !b->stored_full_amount)
             continue;
         if (b->data.industry.curse_days_left)
@@ -83,10 +77,7 @@ void building_industry_update_production(void) {
 
             if (b->type == BUILDING_STONE_QUARRY)
                 b->data.industry.progress += b->num_workers / 2;
-            else if (building_is_floodplain_farm(b)) {
-                int fert = map_get_fertility_average(b->grid_offset);
-                b->data.industry.progress += fert * 0.16;
-            } else
+            else
                 b->data.industry.progress += b->num_workers;
             if (b->data.industry.blessing_days_left && building_is_farm(b->type))
                 b->data.industry.progress += b->num_workers;
@@ -94,10 +85,46 @@ void building_industry_update_production(void) {
             int max = max_progress(b);
             if (b->data.industry.progress > max)
                 b->data.industry.progress = max;
-
-            if (building_is_farm(b->type))
-                update_farm_image(b);
         }
+    }
+}
+void building_industry_floodplain_update_production(void) {
+    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
+            continue;
+        if (!building_is_floodplain_farm(b))
+            continue;
+
+        if (b->data.industry.curse_days_left) // TODO
+            b->data.industry.curse_days_left--;
+        else if (!floodplains_is(FLOOD_STATE_IMMINENT)) { // update production
+            if (b->num_workers > 0) {
+                if (b->data.industry.blessing_days_left)
+                    b->data.industry.blessing_days_left--;
+
+                int fert = map_get_fertility_average(b->grid_offset);
+                b->data.industry.progress += fert * 0.16;
+
+//            if (b->data.industry.blessing_days_left && building_is_farm(b->type)) // TODO
+//                b->data.industry.progress += b->num_workers;
+
+                // update progress
+                int max = max_progress(b);
+                if (b->data.industry.progress > max)
+                    b->data.industry.progress = max;
+
+                // update labor state
+                if (b->data.industry.labor_state == 2)
+                    b->data.industry.labor_state = 1;
+                if (b->data.industry.labor_days_left == 0)
+                    b->data.industry.labor_state = 0;
+                if (b->data.industry.labor_days_left > 0)
+                    b->data.industry.labor_days_left--;
+            }
+        } else // spawn cartpusher with food if it's harvest time
+            b->spawn_figure_farms();
+        update_farm_image(b);
     }
 }
 void building_industry_update_wheat_production(void) {
@@ -121,12 +148,7 @@ void building_industry_update_wheat_production(void) {
         }
     }
 }
-int building_industry_has_produced_resource(building *b) {
-    if (building_is_floodplain_farm(b)) {
-        if (floodplains_is(FLOOD_STATE_IMMINENT) && b->data.industry.progress > 0)
-            return floodplains_time_to_deliver();
-        return 0;
-    }
+bool building_industry_has_produced_resource(building *b) {
     return b->data.industry.progress >= max_progress(b);
 }
 void building_industry_start_new_production(building *b) {

@@ -277,6 +277,7 @@ public:
     void spawn_figure_senate();
     void spawn_figure_mission_post();
     void spawn_figure_industry();
+    void spawn_figure_farms();
     void spawn_figure_wharf();
     void spawn_figure_shipyard();
     void spawn_figure_dock();

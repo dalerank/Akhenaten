@@ -761,25 +761,36 @@ void building::spawn_figure_mission_post() {
 void building::spawn_figure_industry() {
     check_labor_problem();
     if (road_is_accessible) {
-        if (!is_floodplain_farm()) { // normal farms
+        common_spawn_labor_seeker(50);
+        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+            return;
+        if (building_industry_has_produced_resource(this)) {
+            building_industry_start_new_production(this);
+            create_cartpusher(output_resource_id, 100);
+        }
+    }
+}
+void building::spawn_figure_farms() {
+    if (is_floodplain_farm()) { // floodplain farms
+        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+            return;
+        if (data.industry.progress > 0 && floodplains_time_to_deliver()) {
+            create_cartpusher(output_resource_id, data.industry.progress / 2.5);
+            building_farm_deplete_soil(this);
+            data.industry.progress = 0;
+            data.industry.worker_id = 0;
+            data.industry.labor_state = 0;
+            data.industry.labor_days_left = 0;
+            num_workers = 0;
+        }
+    } else { // normal farms
+        if (road_is_accessible) {
             common_spawn_labor_seeker(50);
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
             if (building_industry_has_produced_resource(this)) {
                 building_industry_start_new_production(this);
                 create_cartpusher(output_resource_id, 100);
-            }
-        } else { // floodplain farms!!
-            if (has_figure_of_type(0, FIGURE_CART_PUSHER))
-                return;
-            if (building_industry_has_produced_resource(this)) {
-                create_cartpusher(output_resource_id, data.industry.progress / 2.5);
-                building_farm_deplete_soil(this);
-                data.industry.progress = 0;
-                data.industry.worker_id = 0;
-                data.industry.labor_state = 0;
-                data.industry.labor_days_left = 0;
-                num_workers = 0;
             }
         }
     }
@@ -1156,6 +1167,7 @@ void building::update_road_access() {
             road_is_accessible = map_has_road_access(x, y, size, &road);
             break;
     }
+    // TODO: Temple Complexes
     road_access_x = road.x;
     road_access_y = road.y;
 }
@@ -1166,7 +1178,7 @@ bool building::figure_generate() {
     if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE) {
         patrician_generated = spawn_patrician(patrician_generated);
     }
-    else if (is_farm() || is_workshop() || is_extractor())
+    else if (is_workshop() || is_extractor()) // farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
     else if (is_tax_collector())
         spawn_figure_tax_collector();

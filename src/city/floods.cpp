@@ -57,7 +57,7 @@ int floodplains_expected_month() {
 }
 
 int floodplains_time_to_deliver() {
-    return cycle >= floodplains_flooding_start_cycle() - 23;
+    return data.state == FLOOD_STATE_IMMINENT && cycle >= floodplains_flooding_start_cycle() - 23;
 }
 
 void floodplains_tick_update() {
