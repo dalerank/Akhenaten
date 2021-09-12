@@ -632,26 +632,6 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
                 if (!b->is_main())
                     text_draw_shadow((uint8_t *)string_from_ascii("sub"), x0, y - 10, COLOR_RED);
-                //
-
-                if (building_is_floodplain_farm(b)) {
-                    string_from_int(str, b->data.industry.progress, 0);
-                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
-                    string_from_int(str, b->data.industry.progress / 250 * 100, 0);
-                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
-                    string_from_int(str, b->data.industry.labor_state, 0);
-                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_WHITE);
-                    string_from_int(str, b->data.industry.labor_days_left, 0);
-                    text_draw_shadow(str, x0 + 45, y + 45, COLOR_WHITE);
-                }
-                if (b->data.entertainment.booth_corner_grid_offset) {
-                    string_from_int(str, b->data.entertainment.days1, 0);
-                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
-                    string_from_int(str, b->data.entertainment.days2, 0);
-                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
-                    string_from_int(str, b->data.entertainment.days3_or_play, 0);
-                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_GREEN);
-                }
             }
             break;
         case 2: // DRAW-TILES AND SIZES
@@ -739,12 +719,38 @@ void draw_debug(int x, int y, int grid_offset) {
         case 12: // LABOR
             if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 if (b->labor_category != CATEGORY_FOR_building(b))
-                    draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED);
+                    draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
                 else
                     draw_debug_line(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
-                draw_debug_line(str, x1, y + 10, 0, "", b->houses_covered, COLOR_WHITE);
-                draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_GREEN);
+                draw_debug_line(str, x1, y + 10, 0, "", b->houses_covered, COLOR_LIGHT_RED);
+                draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_LIGHT_BLUE);
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
+                //
+                if (building_is_floodplain_farm(b)) {
+                    draw_debug_line(str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
+                    draw_debug_line(str, x1, y + 30, 0, "", b->data.industry.progress / 250 * 100, COLOR_GREEN);
+                    draw_debug_line(str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
+                    draw_debug_line(str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
+//                    string_from_int(str, b->data.industry.progress, 0);
+//                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
+//                    string_from_int(str, b->data.industry.progress / 250 * 100, 0);
+//                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
+//                    string_from_int(str, b->data.industry.labor_state, 0);
+//                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_WHITE);
+//                    string_from_int(str, b->data.industry.labor_days_left, 0);
+//                    text_draw_shadow(str, x0 + 45, y + 45, COLOR_WHITE);
+                }
+                if (b->data.entertainment.booth_corner_grid_offset) {
+                    draw_debug_line(str, x0, y + 30, 0, "", b->data.entertainment.days1, COLOR_GREEN);
+                    draw_debug_line(str, x1, y + 30, 0, "", b->data.entertainment.days2, COLOR_GREEN);
+                    draw_debug_line(str, x0, y + 40, 0, "", b->data.entertainment.days3_or_play, COLOR_GREEN);
+//                    string_from_int(str, b->data.entertainment.days1, 0);
+//                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
+//                    string_from_int(str, b->data.entertainment.days2, 0);
+//                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
+//                    string_from_int(str, b->data.entertainment.days3_or_play, 0);
+//                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_GREEN);
+                }
             }
             break;
         case 13: // STATUES & MONUMENTS

@@ -382,157 +382,83 @@ void building_clear_all(void) {
 //}
 
 bool building::is_house() {
-    return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
+    return building_is_house(type);
 }
 bool building::is_fort() {
-    return type == BUILDING_FORT_CHARIOTEERS ||
-           type == BUILDING_FORT_ARCHERS ||
-           type == BUILDING_FORT_INFANTRY;
+    return building_is_fort(type);
 }
 bool building::is_defense_ph() {
-    return (type == BUILDING_WALL_PH
-            || type == BUILDING_GATEHOUSE_PH
-            || type == BUILDING_TOWER_PH);
+    return building_is_defense_ph(type);
 }
 bool building::is_farm() {
-    return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM)
-           || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
+    return building_is_farm(type);
 }
 bool building::is_floodplain_farm() {
-    return (GAME_ENV == ENGINE_ENV_PHARAOH
-            && is_farm()
-            && labor_category == 255); // b->data.industry.labor_state >= 1
+    return building_is_floodplain_farm(this);
 }
 bool building::is_workshop() {
-    return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
-           || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP)
-           || type == BUILDING_CATTLE_RANCH
-           || type == BUILDING_LAMP_WORKSHOP
-           || type == BUILDING_PAINT_WORKSHOP;
+    return building_is_workshop(type);
 }
 bool building::is_extractor() {
-    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
-           || type == BUILDING_GOLD_MINE
-           || type == BUILDING_GEMSTONE_MINE
-           || type == BUILDING_COPPER_MINE
-           || type == BUILDING_GRANITE_QUARRY
-           || type == BUILDING_SANDSTONE_QUARRY
-           || type == BUILDING_REED_GATHERER;
+    return building_is_extractor(type);
 }
 bool building::is_monument() {
-    switch (type) {
-        case BUILDING_PYRAMID:
-        case BUILDING_SPHYNX:
-        case BUILDING_MAUSOLEUM:
-        case BUILDING_ALEXANDRIA_LIBRARY:
-        case BUILDING_CAESAREUM:
-        case BUILDING_PHAROS_LIGHTHOUSE:
-        case BUILDING_SMALL_ROYAL_TOMB:
-        case BUILDING_ABU_SIMBEL:
-        case BUILDING_MEDIUM_ROYAL_TOMB:
-        case BUILDING_LARGE_ROYAL_TOMB:
-        case BUILDING_GRAND_ROYAL_TOMB:
-            return 1;
-        default:
-            return 0;
-    }
+    return building_is_monument(type);
 }
 bool building::is_senate() {
-    return ((type >= BUILDING_SENATE && type <= BUILDING_TAX_COLLECTOR_UPGRADED) ||
-            (type >= BUILDING_VILLAGE_PALACE && type <= BUILDING_CITY_PALACE));
+    return building_is_senate(type);
 }
 bool building::is_tax_collector() {
-    return (type >= BUILDING_TAX_COLLECTOR && type <= BUILDING_TAX_COLLECTOR_UPGRADED);
+    return building_is_tax_collector(type);
 }
 bool building::is_governor_palace() {
-    return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
+    return building_is_governor_palace(type);
 }
 bool building::is_temple() {
-    return (type >= BUILDING_TEMPLE_OSIRIS && type <= BUILDING_TEMPLE_BAST);
+    return building_is_temple(type);
 }
 bool building::is_large_temple() {
-    return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
+    return building_is_large_temple(type);
 }
 bool building::is_shrine() {
-    return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
+    return building_is_shrine(type);
 }
 bool building::is_guild() {
-    return (type >= BUILDING_CARPENTERS_GUILD && type <= BUILDING_STONEMASONS_GUILD);
+    return building_is_guild(type);
 }
 bool building::is_beautification() {
-    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE)
-           || type == BUILDING_GARDENS
-           || type == BUILDING_PLAZA;
+    return building_is_beautification(type);
 }
 bool building::is_water_crossing() {
-    return (type == BUILDING_FERRY)
-           || type == BUILDING_LOW_BRIDGE
-           || type == BUILDING_SHIP_BRIDGE;
+    return building_is_water_crossing(type);
 }
 
 bool building::is_industry() {
-    if (is_extractor())
-        return 1;
-    if (is_workshop())
-        return 1;
-    if (is_farm())
-        return 1;
-    if (is_guild())
-        return 1;
-    if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
-        return 1;
-    if (type == BUILDING_WAREHOUSE || type == BUILDING_WAREHOUSE_SPACE)
-        return 1;
-    return 0;
+    return building_is_industry(type);
 }
 bool building::is_food_category() {
-    if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
-        || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
-        return 1;
-    return 0;
+    return building_is_food_category(type);
 }
 bool building::is_infrastructure() {
-    if (type == BUILDING_ENGINEERS_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
-        return 1;
-    if (is_water_crossing())
-        return 1;
-    return 0;
+    return building_is_infrastructure(type);
 }
 bool building::is_administration() {
-    if (is_senate() || is_tax_collector() || is_governor_palace())
-        return 1;
-    if (type == BUILDING_COURTHOUSE)
-        return 1;
-    return 0;
+    return building_is_administration(type);
 }
 bool building::is_religion() {
-    if (is_temple() || is_large_temple() || is_shrine())
-        return 1;
-    if (type == BUILDING_FESTIVAL_SQUARE)
-        return 1;
-    return 0;
+    return building_is_religion(type);
 }
 bool building::is_entertainment() {
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION)
-        return 1;
-    if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL)
-        return 1;
-    if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO)
-        return 1;
-    return 0;
+    return building_is_entertainment(type);
 }
 bool building::is_culture() {
-    if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_MENU_WATER_CROSSINGS)
-        return 1;
-    return 0;
+    return building_is_culture(type);
 }
 bool building::is_military() {
-    if (is_fort() || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
-        return 1;
-    if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
-        return 1;
-    return 0;
+    return building_is_military(type);
 }
+
+///////////////
 
 bool building_is_house(int type) {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
@@ -585,9 +511,9 @@ bool building_is_monument(int type) {
         case BUILDING_MEDIUM_ROYAL_TOMB:
         case BUILDING_LARGE_ROYAL_TOMB:
         case BUILDING_GRAND_ROYAL_TOMB:
-            return 1;
+            return true;
         default:
-            return 0;
+            return false;
     }
 }
 bool building_is_senate(int type) {
@@ -632,66 +558,66 @@ bool building_is_industry_type(const building *b) {
 
 bool building_is_industry(int type) {
     if (building_is_extractor(type))
-        return 1;
+        return true;
     if (building_is_workshop(type))
-        return 1;
+        return true;
     if (building_is_farm(type))
-        return 1;
+        return true;
     if (building_is_guild(type))
-        return 1;
+        return true;
     if (type == BUILDING_DOCK || type == BUILDING_SHIPYARD)
-        return 1;
+        return true;
     if (type == BUILDING_WAREHOUSE || type == BUILDING_WAREHOUSE_SPACE)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_food_category(int type) {
     if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
         || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_infrastructure(int type) {
     if (type == BUILDING_ENGINEERS_POST || type == BUILDING_FIREHOUSE || type == BUILDING_POLICE_STATION)
-        return 1;
+        return true;
     if (building_is_water_crossing(type))
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_administration(int type) {
     if (building_is_senate(type) || building_is_tax_collector(type) || building_is_governor_palace(type))
-        return 1;
+        return true;
     if (type == BUILDING_COURTHOUSE)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_religion(int type) {
     if (building_is_temple(type) || building_is_large_temple(type) || building_is_shrine(type))
-        return 1;
+        return true;
     if (type == BUILDING_FESTIVAL_SQUARE)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_entertainment(int type) {
     if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_PAVILLION)
-        return 1;
+        return true;
     if (type == BUILDING_JUGGLER_SCHOOL || type == BUILDING_CONSERVATORY || type == BUILDING_DANCE_SCHOOL)
-        return 1;
+        return true;
     if (type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_culture(int type) {
     if (type == BUILDING_SCHOOL || type == BUILDING_LIBRARY || type == BUILDING_MENU_WATER_CROSSINGS)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 bool building_is_military(int type) {
     if (building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_MENU_FORTS)
-        return 1;
+        return true;
     if (type == BUILDING_MILITARY_ACADEMY || type == BUILDING_RECRUITER)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 bool building_is_draggable(int type) {

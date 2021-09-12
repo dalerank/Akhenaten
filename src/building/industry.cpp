@@ -63,7 +63,7 @@ void building_industry_update_production(void) {
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
         b->data.industry.has_raw_materials = 0;
-        if (b->labor_category != 255 && (b->houses_covered <= 0 || b->num_workers <= 0))
+        if (b->num_workers <= 0) //b->houses_covered <= 0 ||
             continue;
         if (building_is_floodplain_farm(b)) {
             if (b->data.industry.labor_days_left <= 0 || floodplains_is(FLOOD_STATE_IMMINENT))
@@ -71,6 +71,8 @@ void building_industry_update_production(void) {
             else
                 int a = 2;
         }
+//        else if (b->houses_covered <= 0 || b->num_workers <= 0)
+//            continue;
         if (b->subtype.workshop_type && !b->stored_full_amount)
             continue;
         if (b->data.industry.curse_days_left)

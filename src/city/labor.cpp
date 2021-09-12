@@ -541,12 +541,14 @@ static void allocate_workers_to_non_water_buildings(void) {
         int cat = CATEGORY_FOR_building(b);
         if (GAME_ENV == ENGINE_ENV_C3 && cat == LABOR_CATEGORY_WATER_HEALTH)
             continue;
-        if (cat == 255) {
+        if (building_is_floodplain_farm(b)) {
             if (b->data.industry.labor_state <= 0)
                 b->num_workers = 0;
             continue; // water is handled by allocate_workers_to_water(void) in C3
+        } else {
+            if (b->houses_covered <= 0)
+                b->num_workers = 0;
         }
-        b->num_workers = 0;
         if (!should_have_workers(b, cat, 0))
             continue;
         if (b->percentage_houses_covered > 0) {
