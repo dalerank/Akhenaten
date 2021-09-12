@@ -273,11 +273,10 @@ static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     y -= 30;
     if (b->num_workers > 0) {
         if (floodplains_is(FLOOD_STATE_IMMINENT)) {
-            int random_dir = (game_time_day() * map_random_get(b->grid_offset)) % 8;
-            int random_x = (game_time_day() * map_random_get(b->grid_offset)) % 3 + 1;
-            int random_y = (game_time_day() * map_random_get(b->grid_offset)) % 3;
-//            int x_offset = 0;
-//            int y_offset = 0;
+            int random_seed = game_time_day() * map_random_get(b->grid_offset);
+            int random_dir = random_seed % 8;
+            int random_x = random_seed % 3 + 1;
+            int random_y = random_seed % 3;
             int x_offset = (random_x - random_y) * 30;
             int y_offset = (random_y + random_x) * 15;
             draw_ph_worker(random_dir, 2, animation_offset, x + x_offset, y + y_offset);

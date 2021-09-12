@@ -731,25 +731,11 @@ void draw_debug(int x, int y, int grid_offset) {
                     draw_debug_line(str, x1, y + 30, 0, "", b->data.industry.progress / 250 * 100, COLOR_GREEN);
                     draw_debug_line(str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
                     draw_debug_line(str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
-//                    string_from_int(str, b->data.industry.progress, 0);
-//                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
-//                    string_from_int(str, b->data.industry.progress / 250 * 100, 0);
-//                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
-//                    string_from_int(str, b->data.industry.labor_state, 0);
-//                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_WHITE);
-//                    string_from_int(str, b->data.industry.labor_days_left, 0);
-//                    text_draw_shadow(str, x0 + 45, y + 45, COLOR_WHITE);
                 }
                 if (b->data.entertainment.booth_corner_grid_offset) {
                     draw_debug_line(str, x0, y + 30, 0, "", b->data.entertainment.days1, COLOR_GREEN);
                     draw_debug_line(str, x1, y + 30, 0, "", b->data.entertainment.days2, COLOR_GREEN);
                     draw_debug_line(str, x0, y + 40, 0, "", b->data.entertainment.days3_or_play, COLOR_GREEN);
-//                    string_from_int(str, b->data.entertainment.days1, 0);
-//                    text_draw_shadow(str, x0 + 0, y + 35, COLOR_GREEN);
-//                    string_from_int(str, b->data.entertainment.days2, 0);
-//                    text_draw_shadow(str, x0 + 45, y + 35, COLOR_GREEN);
-//                    string_from_int(str, b->data.entertainment.days3_or_play, 0);
-//                    text_draw_shadow(str, x0 + 0, y + 45, COLOR_GREEN);
                 }
             }
             break;
