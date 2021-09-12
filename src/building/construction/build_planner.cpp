@@ -747,6 +747,7 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
         return false;
     target->data.monuments.temple_complex_attachments |= upgrade_param;
     map_building_tiles_add_temple_complex_parts(target);
+    building_menu_update_temple_complexes();
     return true;
 }
 static map_tile temple_complex_part_target(building *main, int part) {

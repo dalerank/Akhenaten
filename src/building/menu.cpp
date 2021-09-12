@@ -371,14 +371,19 @@ void building_menu_update_temple_complexes() {
 
             // check if upgrades have been placed
             building *b = building_get(city_buildings_get_temple_complex());
-            if (b->data.monuments.temple_complex_attachments & 1) // altar
+            if (b->data.monuments.temple_complex_attachments & 2) // altar
                 toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
             else
                 toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, true);
-            if (b->data.monuments.temple_complex_attachments & 2) // oracle
+            if (b->data.monuments.temple_complex_attachments & 1) // oracle
                 toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);
             else
                 toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, true);
+
+            // all upgrades have been placed!
+            if (b->data.monuments.temple_complex_attachments == 1 + 2)
+                toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
+
         } else {
             enable_if_allowed(BUILDING_TEMPLE_COMPLEX_OSIRIS);
             enable_if_allowed(BUILDING_TEMPLE_COMPLEX_RA);
