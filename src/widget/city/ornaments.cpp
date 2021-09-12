@@ -19,6 +19,9 @@
 #include <building/industry.h>
 #include <map/terrain.h>
 #include <game/time.h>
+#include <city/floods.h>
+#include <core/random.h>
+#include <map/random.h>
 #include "building/building.h"
 
 static bool drawing_building_as_deleted(building *b) {
@@ -241,6 +244,8 @@ void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_
 
 static void draw_ph_worker(int direction, int action, int frame_offset, int x, int y) {
     int action_offset = 0;
+    if (floodplains_is(FLOOD_STATE_IMMINENT))
+        action = 2;
     switch (action) {
         case 0: // tiling
             action_offset = 104; break;
@@ -258,12 +263,26 @@ static void draw_farm_crops(building *b, int x, int y, int color_mask) {
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     if (!building_is_floodplain_farm(b))
         return;
-    int animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+    int animation_offset = 0;
+    if (floodplains_is(FLOOD_STATE_IMMINENT))
+        animation_offset = generic_sprite_offset(grid_offset, 15, 1);
+    else
+        animation_offset = generic_sprite_offset(grid_offset, 13, 1);
 
     x += 60;
     y -= 30;
     if (b->num_workers > 0) {
-        if (b->data.industry.progress < 400)
+        if (floodplains_is(FLOOD_STATE_IMMINENT)) {
+            int random_dir = (game_time_day() * map_random_get(b->grid_offset)) % 8;
+            int random_x = (game_time_day() * map_random_get(b->grid_offset)) % 3 + 1;
+            int random_y = (game_time_day() * map_random_get(b->grid_offset)) % 3;
+//            int x_offset = 0;
+//            int y_offset = 0;
+            int x_offset = (random_x - random_y) * 30;
+            int y_offset = (random_y + random_x) * 15;
+            draw_ph_worker(random_dir, 2, animation_offset, x + x_offset, y + y_offset);
+        }
+        else if (b->data.industry.progress < 400)
             draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, x + 30, y + 30);
         else if (b->data.industry.progress < 450)
             draw_ph_worker(1, 0, animation_offset, x + 60, y + 15);

@@ -64,6 +64,7 @@ void floodplains_tick_update() {
     int total_ticks = game_time_absolute_tick();
     cycle = total_ticks / 25;
     cycle_tick = total_ticks % 25;
+    // TODO: the cycles don't match up PERFECTLY with the original game... but close enough?
 
     // ???
 //    if (data.flood_progress == 0) {
