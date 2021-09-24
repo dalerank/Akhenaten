@@ -594,40 +594,8 @@ void building::spawn_figure_magistrate() {
     common_spawn_roamer(FIGURE_MAGISTRATE, 50);
 }
 void building::spawn_figure_temple() {
-    common_spawn_roamer(FIGURE_PRIEST, 50);
-//    check_labor_problem();
-//    if (has_figure_of_type(FIGURE_PRIEST) ||
-//        (building_is_large_temple(type) && prev_part_building_id)) {
-//        return;
-//    }
-//
-//    map_point road;
-//    if ((building_is_temple(type) && map_has_road_access(x, y, size, &road)) ||
-//        (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, &road))) {
-//
-//        spawn_labor_seeker(50);
-//        int pct_workers = worker_percentage();
-//        int spawn_delay;
-//        if (model_get_building(type)->laborers <= 0)
-//            spawn_delay = 7;
-//        else if (pct_workers >= 100)
-//            spawn_delay = 3;
-//        else if (pct_workers >= 75)
-//            spawn_delay = 7;
-//        else if (pct_workers >= 50)
-//            spawn_delay = 10;
-//        else if (pct_workers >= 25)
-//            spawn_delay = 15;
-//        else if (pct_workers >= 1)
-//            spawn_delay = 20;
-//        else
-//            return;
-//        figure_spawn_delay++;
-//        if (figure_spawn_delay > spawn_delay) {
-//            figure_spawn_delay = 0;
-//            create_roaming_figure(road.x, road.y, FIGURE_PRIEST);
-//        }
-//    }
+    if (is_main())
+        common_spawn_roamer(FIGURE_PRIEST, 50);
 }
 
 void building::set_water_supply_graphic() {
@@ -1161,7 +1129,16 @@ void building::update_road_access() {
         case BUILDING_BURNING_RUIN:
             road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
             break;
-
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            if (is_main()) {
+                int orientation = (5 - (data.monuments.variant / 2)) % 4;
+                road_is_accessible = map_has_road_access_temple_complex(x, y, orientation, false, &road);
+            }
+            break;
         default:
             if (id == 17)
                 int a = 4;

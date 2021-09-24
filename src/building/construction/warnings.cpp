@@ -26,7 +26,7 @@ static void show(int warning) {
     has_warning = true;
 }
 
-static void check_road_access(int type, int x, int y, int size) {
+static void check_road_access(int type, int x, int y, int size, int orientation) {
     switch (type) {
         case BUILDING_NONE:
         case BUILDING_CLEAR_LAND:
@@ -50,17 +50,17 @@ static void check_road_access(int type, int x, int y, int size) {
             return;
     }
 
-    int has_road = 0;
+    bool has_road = false;
     if (map_has_road_access(x, y, size, 0))
-        has_road = 1;
-    else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, size, 0))
-        has_road = 1;
-    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
-        has_road = 1;
-    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, 0))
-        has_road = 1;
-    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
-        has_road = 1;
+        has_road = true;
+    else if (type == BUILDING_WAREHOUSE && map_has_road_access(x, y, 3, 0))
+        has_road = true;
+//    else if (type == BUILDING_SENET_HOUSE && map_has_road_access_hippodrome(x, y, 0))
+//        has_road = true;
+    else if (building_is_large_temple(type) && map_has_road_access_temple_complex(x, y, orientation, true, 0))
+        has_road = true;
+//    else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0))
+//        has_road = true;
 
     if (!has_road)
         show(WARNING_ROAD_ACCESS_NEEDED);
@@ -224,7 +224,7 @@ static void check_clay_access(int type) {
     }
 }
 
-void building_construction_warning_generic_checks(int type, int x, int y, int size) {
+void building_construction_warning_generic_checks(int type, int x, int y, int size, int orientation) {
     building_construction_warning_check_food_stocks(type);
     check_workers(type);
     check_market(type);
@@ -245,7 +245,7 @@ void building_construction_warning_generic_checks(int type, int x, int y, int si
     check_timber_access(type);
     check_clay_access(type);
 
-    check_road_access(type, x, y, size);
+    check_road_access(type, x, y, size, orientation);
 }
 
 void building_construction_warning_check_food_stocks(int type) {

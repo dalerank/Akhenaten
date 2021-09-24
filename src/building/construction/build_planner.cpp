@@ -1695,7 +1695,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x);
+    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x, orientation);
 
     // update city building info with newly created
     // building for special/unique constructions

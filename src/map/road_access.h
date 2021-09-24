@@ -9,11 +9,11 @@ bool burning_ruin_can_be_accessed(int x, int y, map_point *point);
 
 bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road);
 
-int map_has_road_access_hippodrome(int x, int y, map_point *road);
+//int map_has_road_access_hippodrome(int x, int y, map_point *road);
 
-int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation);
+//int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation);
 
-int map_has_road_access_temple_complex(int x, int y, map_point *road);
+bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from_corner, map_point *road);
 
 //int map_has_road_access_granary(int x, int y, map_point *road);
 

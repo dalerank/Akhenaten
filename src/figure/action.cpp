@@ -232,6 +232,13 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
                 x = tile_x;
                 y = tile_y;
             }
+        } else if (building_is_large_temple(dest->type)) {
+            building *main = dest->main();
+            if (main->road_is_accessible) {
+                found_road = true;
+                x = main->road_access_x;
+                y = main->road_access_y;
+            }
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS)
                 found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);

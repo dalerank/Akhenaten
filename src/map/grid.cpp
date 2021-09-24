@@ -381,29 +381,26 @@ int map_view_tile_inside_map_area(int x, int y) {
 }
 
 static int offsets_array[150];
-const int *map_grid_adjacent_offsets(int size) {
+const int *map_grid_adjacent_offsets_xy(int sizex, int sizey) {
 
-    if (size == 2)
-        int a = 24;
-
-    int array_size = (size + 1) * 4;
-
+    int array_size = (sizex + 1) * 2 + (sizey + 1) * 2;
     for (int i = 0; i <= array_size; i++) {
 
         int x = 0;
         int y = 0;
-        if (i < 1 * (size + 1)) {
+
+        if (i < (sizex + 1)) {
             x = i;
             y = -1;
-        } else if (i < 2 * (size + 1)) {
-            x = size;
-            y = i % (size + 1);
-        } else if (i < 3 * (size + 1)) {
-            x = size - (i % (size + 1)) - 1;
-            y = size;
-        } else if (i < 4 * (size + 1)) {
+        } else if (i < (sizex + 1 + sizey + 1)) {
+            x = sizex;
+            y = i % (sizey + 1);
+        } else if (i < (sizex + 1 + sizey + 1 + sizex + 1)) {
+            x = sizex - (i % (sizex + 1)) - 1;
+            y = sizey;
+        } else if (i < (sizex + 1 + sizey + 1 + sizex + 1 + sizey + 1)) {
             x = -1;
-            y = size - (i % (size + 1)) - 1;
+            y = sizey - (i % (sizey + 1)) - 1;
         }
 
         switch (GAME_ENV) {
@@ -419,5 +416,44 @@ const int *map_grid_adjacent_offsets(int size) {
             offsets_array[i] = 0;
     }
     return offsets_array;
+}
+const int *map_grid_adjacent_offsets(int size) {
+
+    return map_grid_adjacent_offsets_xy(size, size);
+
+    //////////////
+
+//    int array_size = (size + 1) * 4;
+//    for (int i = 0; i <= array_size; i++) {
+//
+//        int x = 0;
+//        int y = 0;
+//        if (i < 1 * (size + 1)) {
+//            x = i;
+//            y = -1;
+//        } else if (i < 2 * (size + 1)) {
+//            x = size;
+//            y = i % (size + 1);
+//        } else if (i < 3 * (size + 1)) {
+//            x = size - (i % (size + 1)) - 1;
+//            y = size;
+//        } else if (i < 4 * (size + 1)) {
+//            x = -1;
+//            y = size - (i % (size + 1)) - 1;
+//        }
+//
+//        switch (GAME_ENV) {
+//            case ENGINE_ENV_C3:
+//                offsets_array[i] = OFFSET_C3(x, y);
+//                break;
+//            case ENGINE_ENV_PHARAOH:
+//                offsets_array[i] = OFFSET_PH(x, y);
+//                break;
+//        }
+//
+//        if (i == array_size)
+//            offsets_array[i] = 0;
+//    }
+//    return offsets_array;
 }
 

@@ -177,7 +177,6 @@ void city_resource_calculate_warehouse_stocks(void) {
                 b->has_road_access = 1;
             else if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0))
                 b->has_road_access = 2;
-
         }
     }
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {

@@ -358,28 +358,30 @@ static void init(int grid_offset) {
 //                    context.has_road_access = 1;
 //
 //                break;
-            case BUILDING_SENET_HOUSE:
-                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
-                    context.has_road_access = 1;
+//            case BUILDING_SENET_HOUSE:
+//                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
+//                    context.has_road_access = 1;
 
-            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            case BUILDING_TEMPLE_COMPLEX_RA:
-            case BUILDING_TEMPLE_COMPLEX_PTAH:
-            case BUILDING_TEMPLE_COMPLEX_SETH:
-            case BUILDING_TEMPLE_COMPLEX_BAST:
-                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
-                    context.has_road_access = 1;
-
-                break;
-            case BUILDING_WAREHOUSE:
-                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0))
-                    context.has_road_access = 1;
-
-                context.warehouse_space_text = building_warehouse_get_space_info(b);
-                break;
+//            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+//            case BUILDING_TEMPLE_COMPLEX_RA:
+//            case BUILDING_TEMPLE_COMPLEX_PTAH:
+//            case BUILDING_TEMPLE_COMPLEX_SETH:
+//            case BUILDING_TEMPLE_COMPLEX_BAST:
+//                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
+//                    context.has_road_access = 1;
+//
+//                break;
+//            case BUILDING_WAREHOUSE:
+//                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0))
+//                    context.has_road_access = 1;
+//
+//                context.warehouse_space_text = building_warehouse_get_space_info(b);
+//                break;
             default:
-                if (map_has_road_access(b->x, b->y, b->size, 0))
+                if (b->road_is_accessible)
                     context.has_road_access = 1;
+//                if (map_has_road_access(b->x, b->y, b->size, 0))
+//                    context.has_road_access = 1;
 
                 break;
         }

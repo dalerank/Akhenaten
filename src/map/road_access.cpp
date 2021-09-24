@@ -28,9 +28,9 @@ static bool road_tile_valid_access(int grid_offset) {
     return false;
 }
 
-static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *min_grid_offset) {
+static void find_minimum_road_tile_xy(int x, int y, int sizex, int sizey, int *min_value, int *min_grid_offset) {
     int base_offset = map_grid_offset(x, y);
-    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+    for (const int *tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
 
         if (!road_tile_valid_access(grid_offset))
@@ -40,18 +40,6 @@ static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *
             *min_value = road_index;
             *min_grid_offset = grid_offset;
         }
-
-//        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
-//            building_at(grid_offset)->type != BUILDING_GATEHOUSE) {
-//            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-//                if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) continue;
-//                int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
-//                if (road_index < *min_value) {
-//                    *min_value = road_index;
-//                    *min_grid_offset = grid_offset;
-//                }
-//            }
-//        }
     }
 }
 
@@ -64,26 +52,12 @@ bool burning_ruin_can_be_accessed(int x, int y, map_point *point) {
         int grid_offset = base_offset + *tile_delta;
 
         if (road_tile_valid_access(grid_offset) ||
-            (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
-             && building_at(grid_offset)->fire_duration <= 0)) {
+            (building_at(grid_offset)->type == BUILDING_BURNING_RUIN && building_at(grid_offset)->fire_duration <= 0)) {
             map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
             return true;
         }
-
-//        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
-//            map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-//            building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE ||
-//            (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
-//                && building_at(grid_offset)->fire_duration <= 0)) {
-//            map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
-//            return true;
-//        }
     }
     return false;
-}
-
-bool temple_complex_has_road_access(int x, int y, int orientation, map_point *road) {
-
 }
 
 bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road) {
@@ -103,7 +77,7 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_poin
     }
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
-    find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);
+    find_minimum_road_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
@@ -112,30 +86,70 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_poin
     return false;
 }
 
-int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation) {
+//int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int rotation) {
+//    int min_value = 12;
+//    int min_grid_offset = map_grid_offset(x, y);
+//    int x_offset, y_offset;
+//    building_rotation_get_offset_with_rotation(5, rotation, &x_offset, &y_offset);
+//    find_minimum_road_tile(x, y, 5, &min_value, &min_grid_offset);
+//    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
+//    building_rotation_get_offset_with_rotation(10, rotation, &x_offset, &y_offset);
+//    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
+//    if (min_value < 12) {
+//        if (road)
+//            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+//        return 1;
+//    }
+//    return 0;
+//}
+
+//int map_has_road_access_hippodrome(int x, int y, map_point *road) {
+//    return map_has_road_access_hippodrome_rotation(x, y, road, building_rotation_get_rotation());
+//}
+
+// TODO: fix getting road access for temple complex
+bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from_corner, map_point *road) {
+    int sizex = 7;
+    int sizey = 13;
+
+    // correct size for orientation
+    switch (orientation) {
+        case 1:
+        case 3:
+            sizex = 13;
+            sizey = 7;
+            break;
+    }
+
+    // correct offset if coords are from the main building part
+    if (!from_corner) {
+        switch (orientation) {
+            case 0:
+                x -= 2;
+                y -= 11;
+                break;
+            case 1:
+                y -= 2;
+                break;
+            case 2:
+                x -= 2;
+                break;
+            case 3:
+                x -= 11;
+                y -= 2;
+                break;
+        }
+    }
+
     int min_value = 12;
     int min_grid_offset = map_grid_offset(x, y);
-    int x_offset, y_offset;
-    building_rotation_get_offset_with_rotation(5, rotation, &x_offset, &y_offset);
-    find_minimum_road_tile(x, y, 5, &min_value, &min_grid_offset);
-    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
-    building_rotation_get_offset_with_rotation(10, rotation, &x_offset, &y_offset);
-    find_minimum_road_tile(x + x_offset, y + y_offset, 5, &min_value, &min_grid_offset);
+    find_minimum_road_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
             map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
-        return 1;
+        return true;
     }
-    return 0;
-}
-
-int map_has_road_access_hippodrome(int x, int y, map_point *road) {
-    return map_has_road_access_hippodrome_rotation(x, y, road, building_rotation_get_rotation());
-}
-
-// TODO: fix getting road access for temple complex
-int map_has_road_access_temple_complex(int x, int y, map_point *road) {
-    return map_has_road_access_hippodrome(x, y, road);
+    return false;
 }
 
 static bool road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road) {
