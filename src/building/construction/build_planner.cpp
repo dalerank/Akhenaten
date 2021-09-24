@@ -1678,7 +1678,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     in_progress = false;
 
     dispatch_warnings();
-    if (can_place != CAN_PLACE) // this is the FINAL check!
+    if (can_place != CAN_PLACE && !building_is_draggable(build_type)) // this is the FINAL check!
         return;
 
     // attempt placing, restore terrain data on failure

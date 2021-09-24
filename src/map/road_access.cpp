@@ -13,21 +13,45 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
+static bool road_tile_valid_access(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
+         (
+            !map_terrain_is(grid_offset, TERRAIN_BUILDING) || // general case -- no buildings over road!
+                                                                    // exceptions: vvv
+            building_at(grid_offset)->type == BUILDING_GATEHOUSE ||
+            building_at(grid_offset)->type == BUILDING_BOOTH ||
+            building_at(grid_offset)->type == BUILDING_BANDSTAND ||
+            building_at(grid_offset)->type == BUILDING_PAVILLION ||
+            building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE
+         ))
+        return true;
+    return false;
+}
+
 static void find_minimum_road_tile(int x, int y, int size, int *min_value, int *min_grid_offset) {
     int base_offset = map_grid_offset(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
-        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
-            building_at(grid_offset)->type != BUILDING_GATEHOUSE) {
-            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-                if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) continue;
-                int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
-                if (road_index < *min_value) {
-                    *min_value = road_index;
-                    *min_grid_offset = grid_offset;
-                }
-            }
+
+        if (!road_tile_valid_access(grid_offset))
+            continue;
+        int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
+        if (road_index < *min_value) {
+            *min_value = road_index;
+            *min_grid_offset = grid_offset;
         }
+
+//        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
+//            building_at(grid_offset)->type != BUILDING_GATEHOUSE) {
+//            if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+//                if (building_at(grid_offset)->type == BUILDING_ROADBLOCK) continue;
+//                int road_index = city_map_road_network_index(map_road_network_get(grid_offset));
+//                if (road_index < *min_value) {
+//                    *min_value = road_index;
+//                    *min_grid_offset = grid_offset;
+//                }
+//            }
+//        }
     }
 }
 
@@ -38,16 +62,28 @@ bool burning_ruin_can_be_accessed(int x, int y, map_point *point) {
     int base_offset = map_grid_offset(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
-        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
-            map_terrain_is(grid_offset, TERRAIN_ROAD) ||
-            building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE ||
+
+        if (road_tile_valid_access(grid_offset) ||
             (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
-                && building_at(grid_offset)->fire_duration <= 0)) {
+             && building_at(grid_offset)->fire_duration <= 0)) {
             map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
             return true;
         }
+
+//        if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) ||
+//            map_terrain_is(grid_offset, TERRAIN_ROAD) ||
+//            building_at(grid_offset)->type == BUILDING_FESTIVAL_SQUARE ||
+//            (building_at(grid_offset)->type == BUILDING_BURNING_RUIN
+//                && building_at(grid_offset)->fire_duration <= 0)) {
+//            map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
+//            return true;
+//        }
     }
     return false;
+}
+
+bool temple_complex_has_road_access(int x, int y, int orientation, map_point *road) {
+
 }
 
 bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road) {

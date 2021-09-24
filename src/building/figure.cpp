@@ -1161,6 +1161,7 @@ void building::update_road_access() {
         case BUILDING_BURNING_RUIN:
             road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
             break;
+
         default:
             if (id == 17)
                 int a = 4;
