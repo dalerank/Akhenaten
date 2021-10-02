@@ -645,7 +645,7 @@ static void draw_background(void) {
             case BUILDING_FISHING_WHARF:
                 window_building_draw_wharf(&context); break;
             case BUILDING_WATER_LIFT:
-                window_building_draw_reservoir(&context); break;
+                window_building_draw_water_lift(&context); break;
             case BUILDING_MENU_BEAUTIFICATION:
                 window_building_draw_fountain(&context); break;
             case BUILDING_WATER_SUPPLY:

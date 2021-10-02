@@ -272,6 +272,11 @@ static void initialize_saved_game(void) {
     building_count_update();
     city_resource_calculate_warehouse_stocks();
     city_resource_determine_available();
+    for (int i = 0; i < building_get_highest_id(); i++) {
+        building *b = building_get(i);
+        if (b->state)
+            b->update_road_access();
+    }
 
     game_state_unpause();
 }

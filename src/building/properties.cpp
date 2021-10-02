@@ -158,7 +158,7 @@ static building_properties properties[2][400] = {
                 {0, 0, 0, 0},
                 {1, 0, 0, 0}, // road
                 {1, 0, 0, 0}, // wall (unused)
-                {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
+                {0, 0, 0, 0},
                 {1, 0, 0, 0}, // irrigation ditch
                 {0, 0, 0, 0}, // clear land
                 {1, 0, GROUP_BUILDING_HOUSE_VACANT_LOT}, // houses vvvv
@@ -241,7 +241,7 @@ static building_properties properties[2][400] = {
                 {2, 0, GROUP_BUILDING_TAX_COLLECTOR}, // tax collectors ^^
                 {1, 1, 0, 0},
                 {2, 1, 0, 0},
-                {2, 1, GROUP_WATER_LIFT}, // water lift
+                {2, 1, GROUP_BUILDING_WATER_LIFT}, // ??????? water lift ???????
                 {1, 1, 0, 0},
                 {1, 1, GROUP_BUILDING_WELL}, // well
                 {1, 1, 0, 0},

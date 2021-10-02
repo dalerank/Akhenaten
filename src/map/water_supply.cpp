@@ -54,11 +54,11 @@ void map_water_supply_update_houses(void) {
         if (b->type == BUILDING_WELL)
             building_list_small_add(i);
         else if (b->house_size) {
-            b->has_water_access = 0;
+            b->has_water_access = false;
             b->has_well_access = 0;
             if (b->data.house.bathhouse || map_terrain_exists_tile_in_area_with_type(
                     b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
-                b->has_water_access = 1;
+                b->has_water_access = true;
             }
         }
     }
@@ -166,7 +166,7 @@ void map_water_supply_update_reservoir_fountain_C3(void) {
             if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER))
                 b->has_water_access = 2;
             else {
-                b->has_water_access = 0;
+                b->has_water_access = false;
             }
         }
     }
@@ -180,7 +180,7 @@ void map_water_supply_update_reservoir_fountain_C3(void) {
         for (int i = 0; i < total_reservoirs; i++) {
             building *b = building_get(reservoirs[i]);
             if (b->has_water_access == 2) {
-                b->has_water_access = 1;
+                b->has_water_access = true;
                 changed = 1;
                 for (int d = 0; d < 4; d++)
                     fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[d]);
@@ -211,12 +211,12 @@ void map_water_supply_update_reservoir_fountain_C3(void) {
             image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_GROUNDWATER) && b->num_workers) {
-            b->has_water_access = 1;
+            b->has_water_access = true;
             map_terrain_add_with_radius(b->x, b->y, 1,
                                         scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
                                         TERRAIN_FOUNTAIN_RANGE);
         } else
-            b->has_water_access = 0;
+            b->has_water_access = false;
     }
 }
 void map_water_supply_update_wells_PH(void) {

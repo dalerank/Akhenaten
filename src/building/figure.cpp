@@ -244,14 +244,14 @@ bool building::spawn_patrician(bool spawned) {
 void building::spawn_figure_engineers_post() {
     common_spawn_roamer(FIGURE_ENGINEER, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
-void building::spawn_figure_prefecture() {
+void building::spawn_figure_firehouse() {
     common_spawn_roamer(FIGURE_PREFECT, 50, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 void building::spawn_figure_police() {
     common_spawn_roamer(FIGURE_POLICEMAN, 50, FIGURE_ACTION_70_PREFECT_CREATED);
 }
 
-void building::spawn_figure_actor_juggler() {
+void building::spawn_figure_juggler() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -261,7 +261,7 @@ void building::spawn_figure_actor_juggler() {
             common_spawn_roamer(FIGURE_ACTOR, 50,FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
-void building::spawn_figure_gladiator_musician() {
+void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -271,7 +271,7 @@ void building::spawn_figure_gladiator_musician() {
             common_spawn_roamer(FIGURE_GLADIATOR, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
-void building::spawn_figure_lion_tamer_dancer() {
+void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
         building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, 0, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -281,12 +281,8 @@ void building::spawn_figure_lion_tamer_dancer() {
             common_spawn_roamer(FIGURE_LION_TAMER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
-void building::spawn_figure_chariot_senet() {
-    // todo
-    common_spawn_roamer(FIGURE_CHARIOTEER, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
-}
 
-void building::spawn_figure_theater_booth() {
+void building::spawn_figure_booth() {
     if (!is_main())
         return;
     if (common_spawn_figure_trigger(100)) {
@@ -294,7 +290,7 @@ void building::spawn_figure_theater_booth() {
             create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
-void building::spawn_figure_amphitheater_bandstand() {
+void building::spawn_figure_bandstand() {
     if (!is_main())
         return;
     if (common_spawn_figure_trigger(100)) {
@@ -304,7 +300,7 @@ void building::spawn_figure_amphitheater_bandstand() {
             create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
-void building::spawn_figure_colosseum_pavillion() {
+void building::spawn_figure_pavillion() {
     if (!is_main())
         return;
     if (common_spawn_figure_trigger(100)) {
@@ -316,7 +312,7 @@ void building::spawn_figure_colosseum_pavillion() {
             create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING);
     }
 }
-void building::spawn_figure_hippodrome_senet() {
+void building::spawn_figure_senet() {
     // TODO
 //    check_labor_problem();
 //    if (prev_part_building_id)
@@ -428,13 +424,18 @@ void building::spawn_figure_market() {
     }
 }
 
+void building::spawn_figure_water_lift() {
+    if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_WATER))
+        has_water_access = true;
+    common_spawn_figure_trigger(50);
+}
 void building::set_bathhouse_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
     if (map_terrain_exists_tile_in_area_with_type(x, y, size, TERRAIN_GROUNDWATER))
-        has_water_access = 1;
+        has_water_access = true;
     else
-        has_water_access = 0;
+        has_water_access = false;
     if (has_water_access && num_workers) {
         if (map_desirability_get(grid_offset) <= 30) {
             map_building_tiles_add(id, x, y, size,
@@ -528,23 +529,6 @@ void building::spawn_figure_library() {
 //        if (figure_spawn_delay > spawn_delay) {
 //            figure_spawn_delay = 0;
 //            create_roaming_figure(road.x, road.y, FIGURE_LIBRARIAN);
-//        }
-//    }
-}
-void building::spawn_figure_academy() {
-//    check_labor_problem();
-//    if (has_figure_of_type(FIGURE_TEACHER))
-//        return;
-//    map_point road;
-//    if (map_has_road_access(x, y, size, &road)) {
-//        spawn_labor_seeker(50);
-//        int spawn_delay = figure_spawn_timer();
-//        if (spawn_delay == -1)
-//            return;
-//        figure_spawn_delay++;
-//        if (figure_spawn_delay > spawn_delay) {
-//            figure_spawn_delay = 0;
-//            create_roaming_figure(road.x, road.y, FIGURE_TEACHER);
 //        }
 //    }
 }
@@ -688,38 +672,6 @@ void building::spawn_figure_tax_collector() {
 //            f->action_state = FIGURE_ACTION_40_TAX_COLLECTOR_CREATED;
 //            f->home() = b;
 //            figure_id = f->id;
-//        }
-//    }
-}
-void building::spawn_figure_senate() {
-    check_labor_problem();
-//    if (has_figure_of_type(FIGURE_MAGISTRATE))
-//        return;
-    map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
-        common_spawn_labor_seeker(50);
-//        int spawn_delay = default_spawn_delay();
-//        if (spawn_delay == -1)
-//            return;
-//        figure_spawn_delay++;
-//        if (figure_spawn_delay > spawn_delay) {
-//            figure_spawn_delay = 0;
-//            create_roaming_figure(road.x, road.y, FIGURE_MAGISTRATE);
-//        }
-    }
-}
-void building::spawn_figure_mission_post() {
-//    if (has_figure_of_type(FIGURE_MISSIONARY))
-//        return;
-//    map_point road;
-//    if (map_has_road_access(x, y, size, &road)) {
-//        if (city_population() > 0) {
-//            city_buildings_set_mission_post_operational();
-//            figure_spawn_delay++;
-//            if (figure_spawn_delay > 1) {
-//                figure_spawn_delay = 0;
-//                create_roaming_figure(road.x, road.y, FIGURE_MISSIONARY);
-//            }
 //        }
 //    }
 }
@@ -1161,7 +1113,7 @@ bool building::figure_generate() {
     else if (is_tax_collector())
         spawn_figure_tax_collector();
     else if (is_senate())
-        spawn_figure_senate();
+        common_spawn_figure_trigger(50);
     else if (is_temple() || is_large_temple())
         spawn_figure_temple();
     else {
@@ -1179,28 +1131,26 @@ bool building::figure_generate() {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH)
                     spawn_figure_police();
                 else
-                    spawn_figure_prefecture();
+                    spawn_figure_firehouse();
                 break;
             case BUILDING_FIREHOUSE:
-                spawn_figure_prefecture(); break;
+                spawn_figure_firehouse(); break;
             case BUILDING_WATER_SUPPLY:
                 spawn_figure_watersupply(); break;
             case BUILDING_JUGGLER_SCHOOL:
-                spawn_figure_actor_juggler(); break;
+                spawn_figure_juggler(); break;
             case BUILDING_CONSERVATORY:
-                spawn_figure_gladiator_musician(); break;
+                spawn_figure_musician(); break;
             case BUILDING_DANCE_SCHOOL:
-                spawn_figure_lion_tamer_dancer(); break;
-            case BUILDING_CHARIOT_MAKER:
-                spawn_figure_chariot_senet(); break;
+                spawn_figure_dancer(); break;
             case BUILDING_BANDSTAND:
-                spawn_figure_amphitheater_bandstand(); break;
+                spawn_figure_bandstand(); break;
             case BUILDING_BOOTH:
-                spawn_figure_theater_booth(); break;
+                spawn_figure_booth(); break;
             case BUILDING_SENET_HOUSE:
-                spawn_figure_hippodrome_senet(); break;
+                spawn_figure_senet(); break;
             case BUILDING_PAVILLION:
-                spawn_figure_colosseum_pavillion(); break;
+                spawn_figure_pavillion(); break;
             case BUILDING_MARKET:
                 spawn_figure_market(); break;
             case BUILDING_PHYSICIAN:
@@ -1211,16 +1161,16 @@ bool building::figure_generate() {
                 spawn_figure_school(); break;
             case BUILDING_LIBRARY:
                 spawn_figure_library(); break;
-            case BUILDING_MENU_WATER_CROSSINGS:
-                spawn_figure_academy(); break;
+            case BUILDING_WATER_LIFT:
+                spawn_figure_water_lift(); break;
             case BUILDING_DENTIST:
                 spawn_figure_barber(); break;
             case BUILDING_APOTHECARY:
                 spawn_figure_doctor(); break;
             case BUILDING_MORTUARY:
                 spawn_figure_hospital(); break;
-            case BUILDING_MISSION_POST:
-                spawn_figure_mission_post(); break;
+//            case BUILDING_MISSION_POST:
+//                spawn_figure_mission_post(); break;
             case BUILDING_DOCK:
                 spawn_figure_dock(); break;
             case BUILDING_FISHING_WHARF:

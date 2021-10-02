@@ -19,7 +19,7 @@ int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_
 void window_building_draw_burning_ruin(building_info_context *c);
 void window_building_draw_rubble(building_info_context *c);
 
-void window_building_draw_reservoir(building_info_context *c);
+void window_building_draw_water_lift(building_info_context *c);
 void window_building_draw_aqueduct(building_info_context *c);
 void window_building_draw_fountain(building_info_context *c);
 void window_building_draw_water_supply(building_info_context *c);

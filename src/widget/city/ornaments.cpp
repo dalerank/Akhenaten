@@ -33,29 +33,6 @@ static bool drawing_building_as_deleted(building *b) {
 
 /////// ANIMATIONS
 
-static void draw_dock_workers(const building *b, int x, int y, color_t color_mask) {
-    int num_dockers = building_dock_count_idle_dockers(b);
-    if (num_dockers > 0) {
-        int image_dock = map_image_at(b->grid_offset);
-        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
-            image_dockers += 0;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 1)
-            image_dockers += 3;
-        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 2)
-            image_dockers += 6;
-        else
-            image_dockers += 9;
-
-        if (num_dockers == 2)
-            image_dockers += 1;
-        else if (num_dockers == 3)
-            image_dockers += 2;
-
-        const image *img = image_get(image_dockers);
-        ImageDraw::img_generic(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
-    }
-}
 static void draw_normal_anim(int x, int y, building *b, int grid_offset, int sprite_id, int color_mask, int base_id = 0, int max_frames = 0) {
     if (!base_id)
         base_id = map_image_at(grid_offset);
@@ -69,6 +46,28 @@ static void draw_normal_anim(int x, int y, building *b, int grid_offset, int spr
     else
         ImageDraw::img_generic(sprite_id + animation_offset, x + base->sprite_offset_x,
                                y + base->sprite_offset_y - base->height + ydiff, color_mask);
+}
+static void draw_water_lift_anim(building *b, int x, int y, color_t color_mask) {
+    int orientation_rel = (b->data.industry.orientation - city_view_orientation()) % 4;
+    int anim_offset = 13 * orientation_rel;
+    x += 53;
+    y += 15;
+
+    switch (orientation_rel) {
+        case 1:
+            y -= 2;
+            break;
+        case 2:
+            x += 10;
+            y += 0;
+            break;
+        case 3:
+            x += 14;
+            y += 6;
+            break;
+    }
+
+    draw_normal_anim(x, y, b, b->grid_offset, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 static void draw_fort_anim(int x, int y, building *b) {
     if (map_property_is_draw_tile(b->grid_offset)) {
@@ -305,6 +304,29 @@ static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
             draw_ph_worker(1, 0, animation_offset, x + 30, y + 60);
     }
 }
+static void draw_dock_workers(building *b, int x, int y, color_t color_mask) {
+    int num_dockers = building_dock_count_idle_dockers(b);
+    if (num_dockers > 0) {
+        int image_dock = map_image_at(b->grid_offset);
+        int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
+        if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
+            image_dockers += 0;
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 1)
+            image_dockers += 3;
+        else if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK) + 2)
+            image_dockers += 6;
+        else
+            image_dockers += 9;
+
+        if (num_dockers == 2)
+            image_dockers += 1;
+        else if (num_dockers == 3)
+            image_dockers += 2;
+
+        const image *img = image_get(image_dockers);
+        ImageDraw::img_generic(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
+    }
+}
 
 /////// ORNAMENTS
 
@@ -488,7 +510,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             }
             break;
         case BUILDING_WATER_LIFT:
-            draw_normal_anim(x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_WATER_LIFT) - 1, color_mask);
+            draw_water_lift_anim(b, x, y, color_mask);
             break;
         case BUILDING_GOLD_MINE:
         case BUILDING_COPPER_MINE:
