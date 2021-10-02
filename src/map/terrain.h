@@ -32,7 +32,7 @@ enum {
         TERRAIN_UNK_02 = 0x200000,
         TERRAIN_UNK_03 = 0x400000,
         TERRAIN_UNK_04 = 0x800000,
-        TERRAIN_UNK_05 = 0x1000000,
+    TERRAIN_IRRIGATION_RANGE = 0x1000000,
     TERRAIN_DUNE = 0x2000000,
     TERRAIN_DEEPWATER = 0x4000000,
     TERRAIN_SUBMERGED_ROAD = 0x8000000,
@@ -42,14 +42,61 @@ enum {
         TERRAIN_UNK_10 = 0x80000000,
 
     // combined
+    TERRAIN_ALL = 0xffffffff,
     TERRAIN_WALL_OR_GATEHOUSE = TERRAIN_WALL | TERRAIN_GATEHOUSE,
-    TERRAIN_NOT_CLEAR = 0xd77f + 0xffff0000, // 1101011101111111 8 + 12 + 14
-    TERRAIN_CLEARABLE = 0xd17f, // 1101000101111111 8 + 10 + 11 + 12 + 14
-    TERRAIN_IMPASSABLE = 0xc75f, //0xc75f,
-    TERRAIN_IMPASSABLE_ENEMY = 0x1237,
-    TERRAIN_IMPASSABLE_WOLF = 0xd77f, //0xd73f,
-    TERRAIN_ALL = 0xffff + 0xffff0000,
-    TERRAIN_NOT_REMOVABLE = TERRAIN_ROCK | TERRAIN_FLOODPLAIN | TERRAIN_DUNE,
+    TERRAIN_NOT_CLEAR = TERRAIN_TREE
+            + TERRAIN_ROCK
+            + TERRAIN_WATER
+            + TERRAIN_BUILDING
+            + TERRAIN_SHRUB
+            + TERRAIN_GARDEN
+            + TERRAIN_ROAD
+              // ... //
+            + TERRAIN_AQUEDUCT
+            + TERRAIN_ELEVATION
+            + TERRAIN_ACCESS_RAMP
+              // ... //
+            + TERRAIN_RUBBLE
+              // ... //
+            + TERRAIN_WALL
+            + TERRAIN_GATEHOUSE
+            + TERRAIN_FLOODPLAIN
+              // ... //
+            + TERRAIN_REEDS
+              // ... //
+            + TERRAIN_ORE
+              // ... //
+            + TERRAIN_DUNE
+            + TERRAIN_DEEPWATER
+            + TERRAIN_SUBMERGED_ROAD,
+
+    TERRAIN_CLEARABLE = TERRAIN_NOT_CLEAR
+            - TERRAIN_ROCK
+            - TERRAIN_WATER
+            - TERRAIN_ELEVATION
+            - TERRAIN_FLOODPLAIN
+            - TERRAIN_REEDS
+            - TERRAIN_ORE
+            - TERRAIN_DUNE
+            - TERRAIN_DEEPWATER
+            - TERRAIN_SUBMERGED_ROAD,
+//    TERRAIN_NOT_REMOVABLE = TERRAIN_ROCK | TERRAIN_FLOODPLAIN | TERRAIN_DUNE,
+
+    TERRAIN_IMPASSABLE = TERRAIN_NOT_CLEAR
+            - TERRAIN_ROAD
+            - TERRAIN_GATEHOUSE
+            - TERRAIN_DEEPWATER
+            - TERRAIN_SUBMERGED_ROAD,
+
+    TERRAIN_IMPASSABLE_ENEMY = TERRAIN_IMPASSABLE
+            + TERRAIN_GATEHOUSE
+            - TERRAIN_BUILDING
+            - TERRAIN_FLOODPLAIN,
+
+    TERRAIN_IMPASSABLE_WOLF = TERRAIN_IMPASSABLE
+            + TERRAIN_GARDEN
+            + TERRAIN_GATEHOUSE
+            - TERRAIN_FLOODPLAIN,
 
     // Pharaoh moisture combinators
     MOISTURE_GRASS = 0x7,
@@ -132,7 +179,7 @@ int map_floodplain_rebuild_shoreorder();
 uint8_t map_get_floodplain_shoreorder(int grid_offset);
 uint8_t map_get_floodplain_growth(int grid_offset);
 uint8_t map_get_fertility(int grid_offset);
-uint8_t map_get_fertility_average(int grid_offset);
+uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_set_floodplain_growth(int grid_offset, int growth);
 void map_soil_depletion(int grid_offset, int malus);
 

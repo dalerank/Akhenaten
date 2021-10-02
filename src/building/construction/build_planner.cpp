@@ -1263,7 +1263,7 @@ void BuildPlanner::update_requirements_check() {
         }
     }
     if (special_flags & PlannerFlags::Meadow) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_MEADOW)
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_MEADOW_NEEDED;
             can_place = CAN_NOT_PLACE;

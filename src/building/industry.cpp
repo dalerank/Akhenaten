@@ -103,7 +103,7 @@ void building_industry_floodplain_update_production(void) {
                 if (b->data.industry.blessing_days_left)
                     b->data.industry.blessing_days_left--;
 
-                int fert = map_get_fertility_average(b->grid_offset);
+                int fert = map_get_fertility_for_farm(b->grid_offset);
                 b->data.industry.progress += fert * 0.16;
 
 //            if (b->data.industry.blessing_days_left && building_is_farm(b->type)) // TODO

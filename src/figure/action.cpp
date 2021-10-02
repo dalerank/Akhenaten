@@ -232,7 +232,7 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
                 x = tile_x;
                 y = tile_y;
             }
-        } else if (building_is_large_temple(dest->type)) {
+        } else if (building_is_large_temple(dest->type)) { // TODO: proper return home for temple complexes
             building *main = dest->main();
             if (main->road_is_accessible) {
                 found_road = true;

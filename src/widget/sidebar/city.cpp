@@ -242,15 +242,15 @@ static void draw_debug_ui(int x, int y) {
             case 8:
                 text_draw_shadow((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, col); break;
             case 9:
-                text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN GROWTH"), x, y + 10, col); break;
-            case 10:
                 text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, col); break;
-            case 11:
+            case 10:
                 text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, col); break;
-            case 12:
+            case 11:
                 text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
-            case 13:
+            case 12:
                 text_draw_shadow((uint8_t *) string_from_ascii("STATUES AND MONUMENTS"), x, y + 10, col); break;
+            case 13:
+                text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, col); break;
             case 14:
                 text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
             case 15:

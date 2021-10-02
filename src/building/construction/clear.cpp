@@ -70,7 +70,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                     continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) ||
                            (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&
-                           !map_terrain_is(grid_offset, TERRAIN_NOT_REMOVABLE) &&
+                           map_terrain_is(grid_offset, TERRAIN_CLEARABLE) &&
                            !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)))
                     items_placed++;
                 continue;
@@ -129,7 +129,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                     map_property_clear_plaza_or_earthquake(grid_offset);
 
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-                if (!map_terrain_is(grid_offset, TERRAIN_NOT_REMOVABLE))
+                if (map_terrain_is(grid_offset, TERRAIN_CLEARABLE))
                     items_placed++;
             }
         }

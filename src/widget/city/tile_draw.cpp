@@ -690,13 +690,10 @@ void draw_debug(int x, int y, int grid_offset) {
         case 8: // FERTILITY & SOIL DEPLETION
             d = map_get_fertility(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE); break;
-        case 9: // FLOODPLAIN GROWTH
-            d = map_get_floodplain_growth(grid_offset);
-            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE); break;
-        case 10: // FLOODPLAIN SHORE ORDER
+        case 9: // FLOODPLAIN SHORE ORDER
             d = map_get_floodplain_shoreorder(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
-        case 11: // FLOODPLAIN TERRAIN FLAGS
+        case 10: // FLOODPLAIN TERRAIN FLAGS
             d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
@@ -704,19 +701,30 @@ void draw_debug(int x, int y, int grid_offset) {
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xff777777);
                     else if (map_building_at(grid_offset) > 0)
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xff550000);
-                    else
-                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff007700);
+//                    else
+//                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff007700);
                 } else {
                     if (map_terrain_is(grid_offset, TERRAIN_ROAD))
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xffffffff);
                     else if (map_building_at(grid_offset) > 0)
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xffaa0000);
-                    else
-                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff00ff00);
+//                    else
+//                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff00ff00);
                 }
             }
+            if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+                if (map_terrain_is(grid_offset, TERRAIN_WATER))
+                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff557777);
+                else
+                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff5577ff);
+            } else if (map_terrain_is(grid_offset, TERRAIN_IRRIGATION_RANGE)) {
+                if (map_terrain_is(grid_offset, TERRAIN_WATER))
+                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff007777);
+                else
+                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff00ffff);
+            }
             break;
-        case 12: // LABOR
+        case 11: // LABOR
             if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 if (b->labor_category != CATEGORY_FOR_building(b))
                     draw_debug_line(str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
@@ -739,7 +747,7 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
-        case 13: // STATUES & MONUMENTS
+        case 12: // STATUES & MONUMENTS
             if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 switch (b->type) {
                     case BUILDING_SMALL_STATUE:
@@ -759,8 +767,9 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
+        case 13: // TERRAIN BIT FIELD
+            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
         case 14: // IMAGE FIELD
-//            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
             draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED); break;
             break;
         case 15: // UNKNOWN 8BIT GRID

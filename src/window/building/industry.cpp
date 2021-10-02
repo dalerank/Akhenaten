@@ -28,12 +28,11 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     width += lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
-    if (building_is_floodplain_farm(b)) {
-        int pct_fertility = calc_percentage(map_get_fertility_average(b->grid_offset), 100);
-        width += lang_text_draw(group_id, 12, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
-        width += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
-        lang_text_draw(group_id, 13, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
-    }
+    // fertility
+    int pct_fertility = map_get_fertility_for_farm(b->grid_offset);
+    width += lang_text_draw(group_id, 12, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
+    width += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
+    lang_text_draw(group_id, 13, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);

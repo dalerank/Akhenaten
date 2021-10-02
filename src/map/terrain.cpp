@@ -339,6 +339,7 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 #include "map/data.h"
 #include <stdlib.h>
 #include <city/data_private.h>
+#include <core/config.h>
 
 floodplain_order floodplain_offsets[30];
 
@@ -493,11 +494,37 @@ uint8_t map_get_fertility(int grid_offset) { // actual percentage integer [0-99]
 
     return max(0, min(99, fert_value));
 }
-uint8_t map_get_fertility_average(int grid_offset) {
-    // returns average of fertility in 3x3 square starting on the top-left corner
-    return (map_get_fertility(grid_offset) + map_get_fertility(grid_offset + 1) + map_get_fertility(grid_offset + 2)
-          + map_get_fertility(grid_offset + 228) + map_get_fertility(grid_offset + 229) + map_get_fertility(grid_offset + 230)
-          + map_get_fertility(grid_offset + 228 + 228) + map_get_fertility(grid_offset + 229 + 228) + map_get_fertility(grid_offset + 230 + 228)) / 9;
+
+static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size) {
+    // returns average of fertility in square starting on the top-left corner
+    int x_min = x;
+    int y_min = y;
+    int x_max = x_min + size - 1;
+    int y_max = y_min + size - 1;
+
+    int fert_total = 0;
+    map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            fert_total += map_get_fertility(grid_offset);
+            ++grid_offset;
+        }
+        grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
+    }
+    return fert_total / (size * size);
+}
+uint8_t map_get_fertility_for_farm(int grid_offset) {
+    int x = map_grid_offset_to_x(grid_offset);
+    int y = map_grid_offset_to_y(grid_offset);
+    bool is_irrigated = false;
+    if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE))
+        is_irrigated = map_terrain_exists_tile_in_area_with_type(x, y, 3, TERRAIN_IRRIGATION_RANGE);
+    else
+        is_irrigated = map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_IRRIGATION_RANGE);
+    int irrigation_bonus = 40;
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+        irrigation_bonus = 20;
+    return 2 + map_get_fertility_average(grid_offset, x, y, 3) + is_irrigated * irrigation_bonus;
 }
 void map_set_floodplain_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6)

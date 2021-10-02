@@ -174,7 +174,7 @@ static const int Y_VIEW_OFFSETS[9] = {
 int get_farm_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         int base = image_id_from_group(GROUP_BUILDING_FARMLAND);
-        int fert_average = map_get_fertility_average(grid_offset);
+        int fert_average = map_get_fertility_for_farm(grid_offset);
         int fertility_index = 0;
         if (fert_average < 13)
             fertility_index = 0;
@@ -226,17 +226,21 @@ int get_crops_image(int type, int growth) {
 }
 void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
     int image_crops = get_crops_image(type, 0);
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
             ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
                                       y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
-    } else {
+    } else { // on dry meadows
         for (int i = 4; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
-                                      y + Y_VIEW_OFFSETS[i] - 30, color_mask);
+            if (i == 4) {
+                ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[2] + 60,
+                                          y + Y_VIEW_OFFSETS[2] - 30, color_mask);
+            } else
+                ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
+                                          y + Y_VIEW_OFFSETS[i] - 30, color_mask);
         }
     }
 
@@ -484,7 +488,8 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
             }
             break;
         case BUILDING_WATER_LIFT:
-            break; // todo
+            draw_normal_anim(x + 54, y + 15, b, grid_offset, image_id_from_group(GROUP_WATER_LIFT) - 1, color_mask);
+            break;
         case BUILDING_GOLD_MINE:
         case BUILDING_COPPER_MINE:
         case BUILDING_GEMSTONE_MINE:
