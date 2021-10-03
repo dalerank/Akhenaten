@@ -664,24 +664,22 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
     int image_aqueduct = image_id_from_group(GROUP_BUILDING_AQUEDUCT); // 119 C3
     int water_offset = 0;
     int terrain_image = map_image_at(grid_offset);
-    if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + 15)
+    if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + IMAGE_CANAL_FULL_OFFSET)
         water_offset = 0; // has water
-    else { // has no water
-        water_offset = 15;
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            water_offset = 48;
-    }
+    else// has no water
+        water_offset = IMAGE_CANAL_FULL_OFFSET;
 
     // floodplains
     int floodplains_offset = 0;
-    if (terrain != 0 && GAME_ENV == ENGINE_ENV_PHARAOH)
-        floodplains_offset = 21;
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
+        floodplains_offset = IMAGE_CANAL_FLOODPLAIN_OFFSET;
 
     // curve/connection offset
     int image_offset = img->group_offset;
     if (is_road) {
-        int road_dir_right = map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD);
-        int is_paved = map_tiles_is_paved_road(grid_offset);
+        bool road_dir_right = map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD);
+        road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
+        bool is_paved = map_tiles_is_paved_road(grid_offset);
 
         switch (GAME_ENV) {
             case ENGINE_ENV_C3:
@@ -718,7 +716,7 @@ static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image
 }
 static void set_aqueduct(int grid_offset) {
     const terrain_image *img = map_image_context_get_aqueduct(grid_offset, aqueduct_include_construction);
-    int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+    bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
     if (is_road)
         map_property_clear_plaza_or_earthquake(grid_offset);
 

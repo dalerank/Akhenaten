@@ -31,6 +31,7 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
         case BUILDING_NONE:
         case BUILDING_CLEAR_LAND:
         case BUILDING_ROAD:
+        case BUILDING_IRRIGATION_DITCH:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:

@@ -69,9 +69,8 @@ void map_water_supply_update_houses(void) {
     }
 }
 
-const static int aqueduct_image_water_diff = 48;
 static void aqueducts_empty_all(void) {
-    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + aqueduct_image_water_diff;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -79,7 +78,7 @@ static void aqueducts_empty_all(void) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
                 if (image_id < image_without_water)
-                    map_image_set(grid_offset, image_id + aqueduct_image_water_diff);
+                    map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
             }
         }
     }
@@ -91,7 +90,7 @@ static void fill_aqueducts_from_offset(int grid_offset) {
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
-    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + aqueduct_image_water_diff;
+    int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     do {
         if (++guard >= grid_total_size[GAME_ENV])
             break;
@@ -99,7 +98,7 @@ static void fill_aqueducts_from_offset(int grid_offset) {
         map_aqueduct_set(grid_offset, 1);
         int image_id = map_image_at(grid_offset);
         if (image_id >= image_without_water)
-            map_image_set(grid_offset, image_id - aqueduct_image_water_diff);
+            map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
         map_terrain_add_with_radius(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;

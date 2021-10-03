@@ -996,6 +996,9 @@ void BuildPlanner::setup_build_flags() {
             set_flag(PlannerFlags::ShoreLine, 1);
             set_flag(PlannerFlags::Bridge);
             break;
+        case BUILDING_IRRIGATION_DITCH:
+            set_flag(PlannerFlags::Canals, false);
+            break;
         case BUILDING_ROAD:
             set_flag(PlannerFlags::Road, false);
             break;
@@ -1204,10 +1207,13 @@ void BuildPlanner::update_obstructions_check() {
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
-            if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::FloodplainShore)
+            if (special_flags & PlannerFlags::Meadow || special_flags & PlannerFlags::FloodplainShore
+            || special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals)
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
-            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection)
+            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Intersection || special_flags & PlannerFlags::Canals)
                 restricted_terrain -= TERRAIN_ROAD;
+            if (special_flags & PlannerFlags::Road || special_flags & PlannerFlags::Canals)
+                restricted_terrain -= TERRAIN_AQUEDUCT;
             if (special_flags & PlannerFlags::Water || special_flags & PlannerFlags::ShoreLine)
                 restricted_terrain -= TERRAIN_WATER;
             if (special_flags & PlannerFlags::TempleUpgrade) // special case
@@ -1301,6 +1307,12 @@ void BuildPlanner::update_requirements_check() {
     }
     if (special_flags & PlannerFlags::Road && additional_req_param1 == true) {
         if (!map_terrain_is(end.grid_offset, TERRAIN_ROAD)) {
+            immediate_warning_id = additional_req_param2;
+            can_place = CAN_NOT_PLACE;
+        }
+    }
+    if (special_flags & PlannerFlags::Canals && additional_req_param1 == true) {
+        if (!map_terrain_is(end.grid_offset, TERRAIN_AQUEDUCT)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
@@ -1599,13 +1611,13 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
     int items_placed = 1;
     switch (build_type) {
         case BUILDING_CLEAR_LAND:
-            items_placed = last_items_cleared = building_construction_clear_land(1, start.x, start.y, x, y);
+            items_placed = last_items_cleared = building_construction_clear_land(true, start.x, start.y, x, y);
             break;
         case BUILDING_WALL:
-            items_placed = building_construction_place_wall(1, start.x, start.y, x, y);
+            items_placed = building_construction_place_wall(true, start.x, start.y, x, y);
             break;
         case BUILDING_ROAD:
-            items_placed = building_construction_place_road(1, start.x, start.y, x, y);
+            items_placed = building_construction_place_road(true, start.x, start.y, x, y);
             break;
         case BUILDING_PLAZA:
             items_placed = place_plaza(start.x, start.y, x, y);
@@ -1614,7 +1626,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
             items_placed = place_garden(start.x, start.y, x, y);
             break;
         case BUILDING_IRRIGATION_DITCH:
-            items_placed = building_construction_place_aqueduct(start.x, start.y, x, y, &current_cost);
+            items_placed = building_construction_place_aqueduct(true, start.x, start.y, x, y);
             map_tiles_update_all_aqueducts(0);
             break;
         case BUILDING_LOW_BRIDGE:
@@ -1622,7 +1634,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
             items_placed = map_bridge_building_length();
             break;
         case BUILDING_HOUSE_VACANT_LOT:
-            items_placed = place_houses(1, start.x, start.y, x, y);
+            items_placed = place_houses(true, start.x, start.y, x, y);
             break;
         case BUILDING_GATEHOUSE_PH:
             mark_construction(x, y, 1, 3, ~TERRAIN_ROAD, false); // TODO
@@ -1787,7 +1799,7 @@ bool BuildPlanner::place() {
             // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
             // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
             // here when the user says yes.
-            int items_placed = building_construction_clear_land(0, start.x, start.y, end.x, end.y);
+            int items_placed = building_construction_clear_land(false, start.x, start.y, end.x, end.y);
             if (items_placed < 0)
                 items_placed = last_items_cleared;
             placement_cost *= items_placed;
@@ -1795,10 +1807,10 @@ bool BuildPlanner::place() {
             break;
         }
         case BUILDING_WALL:
-            placement_cost *= building_construction_place_wall(0, start.x, start.y, end.x, end.y);
+            placement_cost *= building_construction_place_wall(false, start.x, start.y, end.x, end.y);
             break;
         case BUILDING_ROAD:
-            placement_cost *= building_construction_place_road(0, start.x, start.y, end.x, end.y);
+            placement_cost *= building_construction_place_road(false, start.x, start.y, end.x, end.y);
             break;
         case BUILDING_PLAZA:
             placement_cost *= place_plaza(start.x, start.y, end.x, end.y);
@@ -1818,18 +1830,15 @@ bool BuildPlanner::place() {
             break;
         }
         case BUILDING_IRRIGATION_DITCH: {
-            int cost;
-            if (!building_construction_place_aqueduct(start.x, start.y, end.x, end.y, &cost)) {
-                city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-                return false;
+            placement_cost *= building_construction_place_aqueduct(false, start.x, start.y, end.x, end.y);
+            if (!placement_cost) {
+                map_tiles_update_all_aqueducts(0);
+                map_routing_update_land();
             }
-            placement_cost = cost;
-            map_tiles_update_all_aqueducts(0);
-            map_routing_update_land();
             break;
         }
         case BUILDING_HOUSE_VACANT_LOT:
-            placement_cost *= place_houses(0, start.x, start.y, end.x, end.y);
+            placement_cost *= place_houses(false, start.x, start.y, end.x, end.y);
             if (placement_cost == 0) {
                 city_warning_show(WARNING_CLEAR_LAND_NEEDED);
                 return false;

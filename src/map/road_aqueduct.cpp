@@ -11,72 +11,94 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
-int map_can_place_road_under_aqueduct(int grid_offset) {
+bool map_can_place_road_under_aqueduct(int grid_offset) {
+
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-    int check_y;
-    switch (image_id) {
-        case 0:
-        case 2:
-        case 8:
-        case 15:
-        case 17:
-        case 23:
-            check_y = 1;
-            break;
-        case 1:
-        case 3:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 16:
-        case 18:
-        case 24:
-        case 25:
-        case 26:
-        case 27:
-        case 28:
-        case 29:
-            check_y = 0;
-            break;
-        default: // not a straight aqueduct
-            return 0;
-    }
+    if (image_id != 0 && image_id != 1 && image_id != 48 && image_id != 49)
+        return false;
+
+    int check_y = image_id == 0 || image_id == 48;
     if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
         check_y = !check_y;
 
     if (check_y) {
-        int dy_up = map_grid_delta(0, -1);
-        int dy_down = map_grid_delta(0, 1);
-        if (map_terrain_is(grid_offset + dy_up, TERRAIN_ROAD) ||
-            map_routing_distance(grid_offset + dy_up) > 0) {
-            return 0;
-        }
-        if (map_terrain_is(grid_offset + dy_down, TERRAIN_ROAD) ||
-            map_routing_distance(grid_offset + dy_down) > 0) {
-            return 0;
+        if (map_routing_distance(grid_offset + map_grid_delta(0, -1)) > 0 ||
+            map_routing_distance(grid_offset + map_grid_delta(0, 1)) > 0) {
+            return false;
         }
     } else {
-        int dx_left = map_grid_delta(-1, 0);
-        int dx_right = map_grid_delta(1, 0);
-        if (map_terrain_is(grid_offset + dx_left, TERRAIN_ROAD) ||
-            map_routing_distance(grid_offset + dx_left) > 0) {
-            return 0;
-        }
-        if (map_terrain_is(grid_offset + dx_right, TERRAIN_ROAD) ||
-            map_routing_distance(grid_offset + dx_right) > 0) {
-            return 0;
+        if (map_routing_distance(grid_offset + map_grid_delta(-1, 0)) > 0 ||
+            map_routing_distance(grid_offset + map_grid_delta(1, 0)) > 0) {
+            return false;
         }
     }
-    return 1;
-}
+    return true;
 
-int map_can_place_aqueduct_on_road(int grid_offset) {
+
+//    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+//    int check_y;
+//    switch (image_id) {
+//        case 0:
+//        case 2:
+//        case 8:
+//        case 15:
+//        case 17:
+//        case 23:
+//            check_y = 1;
+//            break;
+//        case 1:
+//        case 3:
+//        case 9:
+//        case 10:
+//        case 11:
+//        case 12:
+//        case 13:
+//        case 14:
+//        case 16:
+//        case 18:
+//        case 24:
+//        case 25:
+//        case 26:
+//        case 27:
+//        case 28:
+//        case 29:
+//            check_y = 0;
+//            break;
+//        default: // not a straight aqueduct
+//            return 0;
+//    }
+//    if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
+//        check_y = !check_y;
+//
+//    if (check_y) {
+//        int dy_up = map_grid_delta(0, -1);
+//        int dy_down = map_grid_delta(0, 1);
+//        if (map_terrain_is(grid_offset + dy_up, TERRAIN_ROAD) ||
+//            map_routing_distance(grid_offset + dy_up) > 0) {
+//            return 0;
+//        }
+//        if (map_terrain_is(grid_offset + dy_down, TERRAIN_ROAD) ||
+//            map_routing_distance(grid_offset + dy_down) > 0) {
+//            return 0;
+//        }
+//    } else {
+//        int dx_left = map_grid_delta(-1, 0);
+//        int dx_right = map_grid_delta(1, 0);
+//        if (map_terrain_is(grid_offset + dx_left, TERRAIN_ROAD) ||
+//            map_routing_distance(grid_offset + dx_left) > 0) {
+//            return 0;
+//        }
+//        if (map_terrain_is(grid_offset + dx_right, TERRAIN_ROAD) ||
+//            map_routing_distance(grid_offset + dx_right) > 0) {
+//            return 0;
+//        }
+//    }
+//    return 1;
+}
+bool map_can_place_aqueduct_on_road(int grid_offset) {
     int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_TERRAIN_ROAD);
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50)
-        return 0;
+        return false;
 
     int check_y = image_id == 0 || image_id == 49;
     if (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT)
@@ -85,15 +107,15 @@ int map_can_place_aqueduct_on_road(int grid_offset) {
     if (check_y) {
         if (map_routing_distance(grid_offset + map_grid_delta(0, -1)) > 0 ||
             map_routing_distance(grid_offset + map_grid_delta(0, 1)) > 0) {
-            return 0;
+            return false;
         }
     } else {
         if (map_routing_distance(grid_offset + map_grid_delta(-1, 0)) > 0 ||
             map_routing_distance(grid_offset + map_grid_delta(1, 0)) > 0) {
-            return 0;
+            return false;
         }
     }
-    return 1;
+    return true;
 }
 
 int map_get_aqueduct_with_road_image(int grid_offset) {

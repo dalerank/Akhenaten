@@ -313,24 +313,45 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
     else
         return 1;
 }
-int map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
-    if (type == ROUTED_BUILDING_WALL) {
-        route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
-        return 1;
-    }
+bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
+//    if (type == ROUTED_BUILDING_WALL) {
+//        route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
+//        return true;
+//    }
     clear_distances();
     int source_offset = map_grid_offset(x, y);
-    if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD))
-        return 0;
-    if (map_terrain_is(source_offset, TERRAIN_ROAD) &&
-        type != ROUTED_BUILDING_ROAD && !map_can_place_aqueduct_on_road(source_offset))
-        return 0;
+//    if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD))
+//        return false;
+//    if (map_terrain_is(source_offset, TERRAIN_ROAD) &&
+//        type != ROUTED_BUILDING_ROAD && !map_can_place_aqueduct_on_road(source_offset))
+//        return false;
+//    ++stats.total_routes_calculated;
+
+    switch (type) {
+        case ROUTED_BUILDING_ROAD:
+            if (!map_can_place_initial_road_or_aqueduct(source_offset, false))
+                return false;
+            if (map_terrain_is(source_offset, TERRAIN_AQUEDUCT) && !map_can_place_road_under_aqueduct(source_offset))
+                return false;
+            route_queue(source_offset, -1, callback_calc_distance_build_road);
+            break;
+        case ROUTED_BUILDING_AQUEDUCT:
+            if (!map_can_place_initial_road_or_aqueduct(source_offset, true))
+                return false;
+            if (map_terrain_is(source_offset, TERRAIN_ROAD) && !map_can_place_aqueduct_on_road(source_offset))
+                return false;
+            route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
+            break;
+        case ROUTED_BUILDING_WALL:
+            route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
+            break;
+    }
+//    if (type == ROUTED_BUILDING_ROAD)
+//        route_queue(source_offset, -1, callback_calc_distance_build_road);
+//    else
+//        route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
     ++stats.total_routes_calculated;
-    if (type == ROUTED_BUILDING_ROAD)
-        route_queue(source_offset, -1, callback_calc_distance_build_road);
-    else
-        route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
-    return 1;
+    return true;
 }
 static int callback_delete_wall_aqueduct(int next_offset, int dist) {
     if (map_grid_get(&terrain_land_citizen, next_offset) < CITIZEN_0_ROAD) {
