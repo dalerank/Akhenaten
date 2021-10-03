@@ -702,15 +702,11 @@ void draw_debug(int x, int y, int grid_offset) {
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xff777777);
                     else if (map_building_at(grid_offset) > 0)
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xff550000);
-//                    else
-//                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff007700);
                 } else {
                     if (map_terrain_is(grid_offset, TERRAIN_ROAD))
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xffffffff);
                     else if (map_building_at(grid_offset) > 0)
                         draw_debug_line(str, x, y + 10, 0, "", d, 0xffaa0000);
-//                    else
-//                        draw_debug_line(str, x, y + 10, 0, "", d, 0xff00ff00);
                 }
             }
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {

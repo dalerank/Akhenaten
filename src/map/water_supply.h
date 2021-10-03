@@ -3,7 +3,7 @@
 
 void map_water_supply_update_houses(void);
 void map_water_supply_update_aqueducts(void);
-void map_water_supply_update_wells_PH(void);
+void map_water_supply_update_wells(void);
 
 enum {
     WELL_NECESSARY = 0,

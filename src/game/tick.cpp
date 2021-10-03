@@ -192,7 +192,7 @@ static void advance_tick(void) {
             break;
         case 27:
             map_water_supply_update_aqueducts();
-            map_water_supply_update_wells_PH();
+            map_water_supply_update_wells();
             break;
         case 28:
             map_water_supply_update_houses();
