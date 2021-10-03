@@ -679,25 +679,19 @@ void building_update_state(void) {
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 if (b->house_size)
                     city_population_remove_home_removed(b->house_population);
-
                 building_delete_UNSAFE(b);
             } else if (b->state == BUILDING_STATE_DELETED_BY_GAME)
                 building_delete_UNSAFE(b);
-
         }
     }
     if (wall_recalc)
         map_tiles_update_all_walls();
-
     if (aqueduct_recalc)
         map_tiles_update_all_aqueducts(0);
-
     if (land_recalc)
         map_routing_update_land();
-
     if (road_recalc)
         map_tiles_update_all_roads();
-
 }
 void building_update_desirability(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {

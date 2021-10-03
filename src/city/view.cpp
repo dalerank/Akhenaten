@@ -241,6 +241,9 @@ void city_view_init(void) {
 int city_view_orientation(void) {
     return data.orientation;
 }
+int city_view_relative_orientation(int orientation) {
+    return (4 + orientation - city_view_orientation() / 2) % 4;
+}
 void city_view_reset_orientation(void) {
     data.orientation = 0;
     calculate_lookup();

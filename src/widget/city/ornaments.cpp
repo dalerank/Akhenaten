@@ -48,7 +48,7 @@ static void draw_normal_anim(int x, int y, building *b, int grid_offset, int spr
                                y + base->sprite_offset_y - base->height + ydiff, color_mask);
 }
 static void draw_water_lift_anim(building *b, int x, int y, color_t color_mask) {
-    int orientation_rel = (b->data.industry.orientation - city_view_orientation()) % 4;
+    int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
     int anim_offset = 13 * orientation_rel;
     x += 53;
     y += 15;

@@ -424,11 +424,6 @@ void building::spawn_figure_market() {
     }
 }
 
-void building::spawn_figure_water_lift() {
-    if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_WATER))
-        has_water_access = true;
-    common_spawn_figure_trigger(50);
-}
 void building::set_bathhouse_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
@@ -1162,7 +1157,7 @@ bool building::figure_generate() {
             case BUILDING_LIBRARY:
                 spawn_figure_library(); break;
             case BUILDING_WATER_LIFT:
-                spawn_figure_water_lift(); break;
+                common_spawn_figure_trigger(50); break;
             case BUILDING_DENTIST:
                 spawn_figure_barber(); break;
             case BUILDING_APOTHECARY:

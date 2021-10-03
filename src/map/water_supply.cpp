@@ -153,71 +153,56 @@ static int OFFSET(int x, int y) {
     }
 }
 
-void map_water_supply_update_reservoir_fountain_C3(void) {
-    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_GROUNDWATER);
+void map_water_supply_update_aqueducts(void) {
+    map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
     // reservoirs
     set_all_aqueducts_to_no_water();
     building_list_large_clear(1);
+
+    const int CONNECTOR_OFFSETS[4][2] = {
+            { OFFSET(0, 2), OFFSET(1, 2) },
+            { OFFSET(-1, 0), OFFSET(-1, 1) },
+            { OFFSET(0, -1), OFFSET(1, -1) },
+            { OFFSET(2, 0), OFFSET(2, 1) }
+    };
+
     // mark reservoirs next to water
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WATER_LIFT) {
             building_list_large_add(i);
-            if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER))
-                b->has_water_access = 2;
-            else {
-                b->has_water_access = false;
-            }
-        }
-    }
-    int total_reservoirs = building_list_large_size();
-    const int *reservoirs = building_list_large_items();
-    // fill reservoirs from full ones
-    int changed = 1;
-    const int CONNECTOR_OFFSETS[] = {OFFSET(1, -1), OFFSET(3, 1), OFFSET(1, 3), OFFSET(-1, 1)};
-    while (changed == 1) {
-        changed = 0;
-        for (int i = 0; i < total_reservoirs; i++) {
-            building *b = building_get(reservoirs[i]);
-            if (b->has_water_access == 2) {
+            if (map_terrain_exists_tile_in_radius_with_type(b->x, b->y, 2, 1, TERRAIN_WATER)) {
                 b->has_water_access = true;
-                changed = 1;
-                for (int d = 0; d < 4; d++)
-                    fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[d]);
-            }
+                fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[b->data.industry.orientation][0]);
+                fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[b->data.industry.orientation][1]);
+                map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_IRRIGATION_RANGE);
+            } else
+                b->has_water_access = false;
         }
     }
+//    int total_reservoirs = building_list_large_size();
+//    const int *reservoirs = building_list_large_items();
+//    // fill reservoirs from full ones
+//    int changed = 1;
+//    const int CONNECTOR_OFFSETS[] = {OFFSET(1, -1), OFFSET(3, 1), OFFSET(1, 3), OFFSET(-1, 1)};
+//    while (changed == 1) {
+//        changed = 0;
+//        for (int i = 0; i < total_reservoirs; i++) {
+//            building *b = building_get(reservoirs[i]);
+//            if (b->has_water_access == 2) {
+//                b->has_water_access = true;
+//                changed = 1;
+//                for (int d = 0; d < 4; d++)
+//                    fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[d]);
+//            }
+//        }
+//    }
     // mark reservoir ranges
-    for (int i = 0; i < total_reservoirs; i++) {
-        building *b = building_get(reservoirs[i]);
-        if (b->has_water_access)
-            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_GROUNDWATER);
-    }
-    // fountains
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_MENU_BEAUTIFICATION)
-            continue;
-
-        int des = map_desirability_get(b->grid_offset);
-        int image_id;
-        if (des > 60)
-            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_4);
-        else if (des > 40)
-            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_3);
-        else if (des > 20)
-            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_2);
-        else
-            image_id = image_id_from_group(GROUP_BUILDING_FOUNTAIN_1);
-        map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        if (map_terrain_is(b->grid_offset, TERRAIN_GROUNDWATER) && b->num_workers) {
-            b->has_water_access = true;
-            map_terrain_add_with_radius(b->x, b->y, 1,
-                                        scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-                                        TERRAIN_FOUNTAIN_RANGE);
-        } else
-            b->has_water_access = false;
-    }
+//    for (int i = 0; i < total_reservoirs; i++) {
+//        building *b = building_get(reservoirs[i]);
+//        if (b->has_water_access)
+//            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_IRRIGATION_RANGE);
+//    }
 }
 void map_water_supply_update_wells_PH(void) {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);

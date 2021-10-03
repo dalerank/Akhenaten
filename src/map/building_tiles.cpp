@@ -421,7 +421,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
 }
 void map_building_tiles_add_temple_complex_parts(building *b) {
     int orientation = (5 - (b->data.monuments.variant / 2)) % 4;
-    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+    int orientation_rel = city_view_relative_orientation(orientation);
     int orientation_binary = (1 + orientation_rel) % 2;
     int part = 0; // default = main
     if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar

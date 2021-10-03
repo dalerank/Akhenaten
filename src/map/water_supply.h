@@ -2,7 +2,7 @@
 #define MAP_WATER_SUPPLY_H
 
 void map_water_supply_update_houses(void);
-void map_water_supply_update_reservoir_fountain_C3(void);
+void map_water_supply_update_aqueducts(void);
 void map_water_supply_update_wells_PH(void);
 
 enum {

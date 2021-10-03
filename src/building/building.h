@@ -258,7 +258,6 @@ public:
     void spawn_figure_pavillion();
     void set_market_graphic();
     void spawn_figure_market();
-    void spawn_figure_water_lift();
     void set_bathhouse_graphic();
     void spawn_figure_bathhouse();
     void spawn_figure_school();

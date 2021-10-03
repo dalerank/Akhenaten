@@ -399,7 +399,7 @@ static void add_building_tiles_image(building *b, int image_id) {
     map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
 static void add_building(building *b, int orientation, int variant) {
-    int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+    int orientation_rel = city_view_relative_orientation(orientation);
     switch (b->type) {
         // houses
         case BUILDING_HOUSE_LARGE_TENT:
@@ -1075,7 +1075,7 @@ void BuildPlanner::setup_build_graphics() {
             int lst3A = statue2_image_id + 6; // west
             int lst3B = statue2_image_id + 7;
 
-            int orientation_rel = (4 + orientation - city_view_orientation() / 2) % 4;
+            int orientation_rel = city_view_relative_orientation(orientation);
             switch (orientation_rel) {
                 case 0: { // NE
                     int TEMPLE_COMPLEX_SCHEME[13][7] = {
@@ -1333,7 +1333,7 @@ void BuildPlanner::update_special_case_orientations_check() {
             } else if (map_terrain_exists_tile_in_area_with_type(end.x, end.y, size.x, TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
                 match = false;
         }
-        dir_relative = (4 + dir_absolute - city_view_orientation() / 2) % 4;
+        dir_relative = city_view_relative_orientation(dir_absolute);
         if (!match) {
             immediate_warning_id = WARNING_SHORE_NEEDED;
             can_place = CAN_NOT_PLACE;
@@ -1362,7 +1362,7 @@ void BuildPlanner::update_special_case_orientations_check() {
             can_place = CAN_NOT_PLACE;
         } else {
             dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
-            dir_relative = (4 + dir_absolute - city_view_orientation() / 2) % 4;
+            dir_relative = city_view_relative_orientation(dir_absolute);
             orientation = (1 + dir_relative) % 2;
             end = temple_complex_part_target(target, additional_req_param1);
             update_orientations(false);

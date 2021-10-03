@@ -45,6 +45,7 @@ view_data *city_view_data_unsafe();
 void city_view_init(void);
 
 int city_view_orientation(void);
+int city_view_relative_orientation(int orientation);
 void city_view_reset_orientation(void);
 
 int city_view_get_scale(void);
