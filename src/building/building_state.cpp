@@ -301,7 +301,7 @@ static void read_type_data(buffer *buf, building *b) {
         buf->skip(87);
         b->data.monuments.temple_complex_attachments = buf->read_u8();
         b->data.monuments.variant = buf->read_u8();
-    } else if (b->type == BUILDING_WATER_LIFT) {
+    } else if (b->type == BUILDING_WATER_LIFT || b->type == BUILDING_FERRY) {
         buf->skip(88);
         b->data.industry.orientation = buf->read_u8();
     } else {
