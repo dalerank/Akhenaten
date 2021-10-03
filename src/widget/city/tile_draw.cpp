@@ -7,6 +7,7 @@
 #include <map/road_network.h>
 #include <map/random.h>
 #include <widget/overlays/city_overlay_risks.h>
+#include <map/aqueduct.h>
 #include "tile_draw.h"
 
 #include "building/animation.h"
@@ -713,10 +714,11 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+                int a = map_aqueduct_at(grid_offset);
                 if (map_terrain_is(grid_offset, TERRAIN_WATER))
-                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff557777);
+                    draw_debug_line(str, x, y + 10, 0, "", a, 0xff557777);
                 else
-                    draw_debug_line(str, x, y + 10, 0, "", d, 0xff5577ff);
+                    draw_debug_line(str, x, y + 10, 0, "", a, 0xff5577ff);
             } else if (map_terrain_is(grid_offset, TERRAIN_IRRIGATION_RANGE)) {
                 if (map_terrain_is(grid_offset, TERRAIN_WATER))
                     draw_debug_line(str, x, y + 10, 0, "", d, 0xff007777);
