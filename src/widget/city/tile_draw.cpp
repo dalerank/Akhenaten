@@ -665,16 +665,12 @@ void draw_debug(int x, int y, int grid_offset) {
             else if (d == 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 5: // SPRITE FRAMES
-            if (grid_offset == map_grid_offset(b->x, b->y))
-                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
-            if (grid_offset == north_tile_grid_offset(b->x, b->y))
-                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
-            d = map_sprite_animation_at(grid_offset);
-            if (d) {
-                string_from_int(str, d, 0);
-                text_draw_shadow(str, x, y + 10, COLOR_WHITE);
-            }
+        case 5: // CITIZEN ROUTING GRID
+            d = map_citizen_grid(grid_offset);
+            if (d > 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_WHITE);
+            else
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
         case 6: // MOISTURE
             d = map_moisture_get(grid_offset);
@@ -745,7 +741,20 @@ void draw_debug(int x, int y, int grid_offset) {
                 }
             }
             break;
-        case 12: // STATUES & MONUMENTS
+        case 12: // SPRITE FRAMES
+
+            if (grid_offset == map_grid_offset(b->x, b->y))
+                draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
+            if (grid_offset == north_tile_grid_offset(b->x, b->y))
+                ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
+            d = map_sprite_animation_at(grid_offset);
+            if (d) {
+                string_from_int(str, d, 0);
+                text_draw_shadow(str, x, y + 10, COLOR_WHITE);
+            }
+
+            // STATUES & MONUMENTS
+
             if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != -1 || building_is_floodplain_farm(b))) {
                 switch (b->type) {
                     case BUILDING_SMALL_STATUE:

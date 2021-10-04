@@ -366,7 +366,7 @@ static void get_building_base_xy(int map_x, int map_y, int building_size, int *x
 }
 static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_tiles) {
     int orientation_index = city_view_orientation() / 2;
-    int blocked = 0;
+    bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset;// + TILE_GRID_OFFSETS[orientation_index][i];
         switch (GAME_ENV) {
@@ -377,15 +377,15 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
                 tile_offset += TILE_GRID_OFFSETS_PH[orientation_index][i];
                 break;
         }
-        int tile_blocked = 0;
+        bool tile_blocked = false;
         if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR))
-            tile_blocked = 1;
+            tile_blocked = true;
         if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0
             || map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 0)
-            tile_blocked = 1;
+            tile_blocked = true;
 
         if (map_has_figure_at(tile_offset))
-            tile_blocked = 1;
+            tile_blocked = true;
 
         blocked_tiles[i] = tile_blocked;
         blocked += tile_blocked;
@@ -438,11 +438,11 @@ static void draw_farm(int type, int x, int y, int grid_offset) {
         draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
 static void draw_fort(const map_tile *tile, int x, int y) {
-    int fully_blocked = 0;
-    int blocked = 0;
+    bool fully_blocked = false;
+    bool blocked = false;
     if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
-        fully_blocked = 1;
-        blocked = 1;
+        fully_blocked = true;
+        blocked = true;
     }
 
     int num_tiles_fort = building_properties_for_type(BUILDING_MENU_FORTS)->size;
@@ -514,16 +514,16 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
 }
 static void draw_road(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
-    int blocked = 0;
+    bool blocked = false;
     int image_id = 0;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
         image_id = image_id_from_group(GROUP_BUILDING_AQUEDUCT);
         if (map_can_place_road_under_aqueduct(grid_offset))
             image_id += map_get_aqueduct_with_road_image(grid_offset);
         else
-            blocked = 1;
+            blocked = true;
     } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR - TERRAIN_FLOODPLAIN))
-        blocked = 1;
+        blocked = true;
     else {
         if (GAME_ENV == ENGINE_ENV_C3)
             image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
@@ -534,26 +534,26 @@ static void draw_road(const map_tile *tile, int x, int y) {
             image_id++;
         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) // inundated floodplains
-                blocked = 1;
+                blocked = true;
         }
         else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
             if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
-                blocked = 1;
+                blocked = true;
             else {
                 if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
                     if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
-                        blocked = 1;
+                        blocked = true;
                     else
                         image_id++;
                 }
                 if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN) &&
                     map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
-                    blocked = 1;
+                    blocked = true;
             }
         }
     }
     if (city_finance_out_of_money())
-        blocked = 1;
+        blocked = true;
     if (blocked)
         draw_flat_tile(x, y, COLOR_MASK_RED);
     else
@@ -567,14 +567,14 @@ static void draw_bridge(const map_tile *tile, int x, int y, int type) {
     if (dir < 0)
         dir += 8;
 
-    int blocked = 0;
+    bool blocked = false;
     if (type == BUILDING_SHIP_BRIDGE && length < 5)
-        blocked = 1;
+        blocked = true;
     else if (!end_grid_offset)
-        blocked = 1;
+        blocked = true;
 
     if (city_finance_out_of_money())
-        blocked = 1;
+        blocked = true;
 
     int x_delta, y_delta;
     switch (dir) {

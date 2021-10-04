@@ -159,6 +159,43 @@ static int queue_has(int offset) {
     return 0;
 }
 
+static bool can_place_on_crossing_no_neighboring(int grid_offset, int terrain_underneath, int terrain_to_avoid, int d_x, int d_y, bool adjacent) {
+    // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
+    // after starting the road placement. not perfect, but it works.
+    d_x++;
+    d_y++;
+    if (adjacent) {
+        if (map_terrain_has_adjacent_y_with_type(grid_offset, terrain_underneath)) {
+            if (map_terrain_has_adjacent_x_with_type(grid_offset, terrain_to_avoid))
+                return false;
+            if (d_x % 2 == 0)
+                return false;
+        }
+        if (map_terrain_has_adjacent_x_with_type(grid_offset, terrain_underneath)) {
+            if (map_terrain_has_adjacent_y_with_type(grid_offset, terrain_to_avoid))
+                return false;
+            if (d_y % 2 == 0)
+                return false;
+        }
+    } else {
+        if (!map_terrain_is(grid_offset, terrain_underneath))
+            return true;
+        if (map_terrain_has_adjacent_x_with_type(grid_offset, terrain_underneath)) {
+            if (map_terrain_has_adjacent_x_with_type(grid_offset, terrain_to_avoid))
+                return false;
+            if (d_x % 2 == 0)
+                return false;
+        }
+        if (map_terrain_has_adjacent_y_with_type(grid_offset, terrain_underneath)) {
+            if (map_terrain_has_adjacent_y_with_type(grid_offset, terrain_to_avoid))
+                return false;
+            if (d_y % 2 == 0)
+                return false;
+        }
+    }
+    return true;
+}
+
 static void callback_calc_distance(int next_offset, int dist) {
     if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD)
         enqueue(next_offset, dist);
@@ -201,43 +238,30 @@ static void callback_calc_distance_build_wall(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 static void callback_calc_distance_build_road(int next_offset, int dist) {
-    int blocked = 0;
+    bool blocked = false;
+    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
+    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
         case CITIZEN_N3_AQUEDUCT:
-            if (!map_can_place_road_under_aqueduct(next_offset)) {
-                map_grid_set(&routing_distance, next_offset, -1);
-                blocked = 1;
-            }
+            if (!map_can_place_road_under_aqueduct(next_offset))
+                blocked = true;
+            if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_AQUEDUCT, TERRAIN_ROAD, d_x, d_y, false))
+                blocked = true;
+//            if (d_x % 2 == 0 xor d_y % 2 == 0)
+//                if ((d_x != 0 && d_y != 0) || map_terrain_is(next_offset, TERRAIN_AQUEDUCT))
+//                    blocked = true;
             break;
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
             if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_BUILDING))
-                blocked = 1;
+                blocked = true;
             break;
         default:
-//            if (map_terrain_is(next_offset, TERRAIN_BUILDING))
-//                blocked = 1;
             if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
-                    blocked = 1;
-                else {
-                    if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
-                        if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_ROAD))
-                            blocked = 1;
-                        // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
-                        // after starting the road placement. not perfect, but it works.
-                        int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
-                        if (d_x % 2 == 0)
-                            blocked = 1;
-                    }
-                    if (map_terrain_has_adjacent_x_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
-                        if (map_terrain_has_adjacent_y_with_type(next_offset, TERRAIN_ROAD))
-                            blocked = 1;
-                        int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
-                        if (d_y % 2 == 0)
-                            blocked = 1;
-                    }
-                }
+                    blocked = true;
+                else if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, d_x, d_y, true))
+                    blocked = true;
             }
             break;
     }
@@ -245,87 +269,89 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
-    int blocked = 0;
+    bool blocked = false;
+    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
+    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
-        case CITIZEN_N3_AQUEDUCT:
+//        case CITIZEN_N3_AQUEDUCT:
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
+            if (!map_can_place_road_under_aqueduct(next_offset))
+                blocked = true;
+            if (d_x % 2 == 0 xor d_y % 2 == 0)
+                if ((d_x != 0 && d_y != 0) || map_terrain_is(next_offset, TERRAIN_ROAD))
+                    blocked = true;
+            break;
         case CITIZEN_N1_BLOCKED: // non-empty land
-            blocked = 1;
+            blocked = true;
             break;
         default:
             if (map_terrain_is(next_offset, TERRAIN_BUILDING)) {
                 if (map_grid_get(&terrain_land_citizen, next_offset) != CITIZEN_N4_RESERVOIR_CONNECTOR)
-                    blocked = 1;
+                    blocked = true;
             }
             break;
     }
-    if (map_terrain_is(next_offset, TERRAIN_ROAD) && !map_can_place_aqueduct_on_road(next_offset)) {
-        map_grid_set(&routing_distance, next_offset, -1);
-        blocked = 1;
-    }
+//    if (map_terrain_is(next_offset, TERRAIN_ROAD)) {
+////        map_grid_set(&routing_distance, next_offset, -1);
+////        blocked = true;
+//        if (!map_can_place_road_under_aqueduct(next_offset))
+//            blocked = true;
+//        if (d_x % 2 == 0 xor d_y % 2 == 0)
+//            blocked = true;
+//    }
     if (!blocked)
         enqueue(next_offset, dist);
 }
-static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
+static bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
     if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N1_BLOCKED && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         // not open land, can only if:
         // - aqueduct should be placed, and:
         // - land is a reservoir building OR an aqueduct
-        if (!is_aqueduct)
-            return 0;
+        if (!is_aqueduct && !map_can_place_road_under_aqueduct(grid_offset))
+            return false;
         if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
-            return 1;
+            return true;
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
             if (building_at(grid_offset)->type == BUILDING_WATER_LIFT)
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_2_PASSABLE_TERRAIN) {
         // rubble, access ramp, garden
-        return 0;
+        return false;
     } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N3_AQUEDUCT) {
-        if (is_aqueduct)
-            return 0;
+        if (is_aqueduct && !map_can_place_aqueduct_on_road(grid_offset))
+            return false;
         if (map_can_place_road_under_aqueduct(grid_offset))
-            return 1;
-        return 0;
+            return true;
+        return false;
     } else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         // on a corner of the floodplains edge: nope
         if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
-            return 0;
+            return false;
         else {
             // on the edge of floodplains: maybe?
             if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
-                    return 0;
+                    return false;
             }
             if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
                 if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
-                    return 0;
+                    return false;
             }
         }
-        return 1;
+        return true;
     }
 // TODO: herd breeeding grounds
 //    else if (is_aqueduct && formation_herd_breeding_ground_at(x, y, 1)) {
 //        return 0;
 //    }
     else
-        return 1;
+        return true;
 }
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
-//    if (type == ROUTED_BUILDING_WALL) {
-//        route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
-//        return true;
-//    }
     clear_distances();
     int source_offset = map_grid_offset(x, y);
-//    if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD))
-//        return false;
-//    if (map_terrain_is(source_offset, TERRAIN_ROAD) &&
-//        type != ROUTED_BUILDING_ROAD && !map_can_place_aqueduct_on_road(source_offset))
-//        return false;
-//    ++stats.total_routes_calculated;
 
     switch (type) {
         case ROUTED_BUILDING_ROAD:
@@ -346,10 +372,6 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
             route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
             break;
     }
-//    if (type == ROUTED_BUILDING_ROAD)
-//        route_queue(source_offset, -1, callback_calc_distance_build_road);
-//    else
-//        route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
     ++stats.total_routes_calculated;
     return true;
 }
@@ -368,12 +390,12 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
 }
 
-bool figure::is_fighting_friendly() {
-    return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
-}
-bool figure::is_fighting_enemy() {
-    return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
-}
+    bool figure::is_fighting_friendly() {
+        return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+    }
+    bool figure::is_fighting_enemy() {
+        return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+    }
 static int has_fighting_friendly(int grid_offset) {
     return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_FRIENDLY);
 }
@@ -485,6 +507,9 @@ void map_routing_block(int x, int y, int size) {
 }
 int map_routing_distance(int grid_offset) {
     return map_grid_get(&routing_distance, grid_offset);
+}
+int map_citizen_grid(int grid_offset) {
+    return map_grid_get(&terrain_land_citizen, grid_offset);
 }
 
 void map_routing_save_state(buffer *buf) {

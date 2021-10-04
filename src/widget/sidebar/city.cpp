@@ -234,7 +234,7 @@ static void draw_debug_ui(int x, int y) {
             case 4:
                 text_draw_shadow((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, col); break;
             case 5:
-                text_draw_shadow((uint8_t *) string_from_ascii("SPRITE FRAMES"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("CITIZEN ROUTING GRID"), x, y + 10, col); break;
             case 6:
                 text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col); break;
             case 7:
@@ -248,7 +248,7 @@ static void draw_debug_ui(int x, int y) {
             case 11:
                 text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
             case 12:
-                text_draw_shadow((uint8_t *) string_from_ascii("STATUES AND MONUMENTS"), x, y + 10, col); break;
+                text_draw_shadow((uint8_t *) string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, col); break;
             case 13:
                 text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, col); break;
             case 14:

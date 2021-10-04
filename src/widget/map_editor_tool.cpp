@@ -74,10 +74,10 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, int type
 
 static void draw_road(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
-    int blocked = 0;
+    bool blocked = false;
     int image_id = 0;
     if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
-        blocked = 1;
+        blocked = true;
     else {
         image_id = image_id_from_group(GROUP_TERRAIN_ROAD);
         if (!map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD) &&

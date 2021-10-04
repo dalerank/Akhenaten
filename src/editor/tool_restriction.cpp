@@ -139,7 +139,7 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
 }
 
 int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blocked_tiles) {
-    int blocked = 0;
+    bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile->grid_offset;// + TILE_GRID_OFFSETS[i];
         switch (GAME_ENV) {
@@ -152,7 +152,7 @@ int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blo
         }
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (forbidden_terrain || map_has_figure_at(tile_offset)) {
-            blocked = 1;
+            blocked = true;
             if (blocked_tiles) blocked_tiles[i] = 1;
         } else {
             if (blocked_tiles) blocked_tiles[i] = 0;

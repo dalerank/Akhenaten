@@ -72,24 +72,25 @@ static int get_land_type_citizen_building(int grid_offset) {
     return type;
 }
 static int get_land_type_citizen_aqueduct(int grid_offset) {
-    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
-    if (image_id <= 3)
-        return CITIZEN_N3_AQUEDUCT;
-    else if (image_id <= 7)
-        return CITIZEN_N1_BLOCKED;
-    else if (image_id <= 9)
-        return CITIZEN_N3_AQUEDUCT;
-    else if (image_id <= 14)
-        return CITIZEN_N1_BLOCKED;
-    else if (image_id <= 18)
-        return CITIZEN_N3_AQUEDUCT;
-    else if (image_id <= 22)
-        return CITIZEN_N1_BLOCKED;
-    else if (image_id <= 24)
-        return CITIZEN_N3_AQUEDUCT;
-    else {
-        return CITIZEN_N1_BLOCKED;
-    }
+    return CITIZEN_N3_AQUEDUCT;
+//    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
+//    if (image_id <= 3)
+//        return CITIZEN_N3_AQUEDUCT;
+//    else if (image_id <= 7)
+//        return CITIZEN_N1_BLOCKED;
+//    else if (image_id <= 9)
+//        return CITIZEN_N3_AQUEDUCT;
+//    else if (image_id <= 14)
+//        return CITIZEN_N1_BLOCKED;
+//    else if (image_id <= 18)
+//        return CITIZEN_N3_AQUEDUCT;
+//    else if (image_id <= 22)
+//        return CITIZEN_N1_BLOCKED;
+//    else if (image_id <= 24)
+//        return CITIZEN_N3_AQUEDUCT;
+//    else {
+//        return CITIZEN_N1_BLOCKED;
+//    }
 }
 static int get_land_type_noncitizen(int grid_offset) {
     int type = NONCITIZEN_1_BUILDING;
@@ -207,8 +208,7 @@ void map_routing_update_land_citizen(void) {
             } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (!map_building_at(grid_offset)) {
                     // shouldn't happen
-                    map_grid_set(&terrain_land_noncitizen, grid_offset,
-                                 CITIZEN_4_CLEAR_TERRAIN); // BUG: should be citizen grid?
+                    map_grid_set(&terrain_land_noncitizen, grid_offset, CITIZEN_4_CLEAR_TERRAIN); // BUG: should be citizen grid?
                     map_terrain_remove(grid_offset, TERRAIN_BUILDING);
                     map_image_set(grid_offset, (map_random_get(grid_offset) & 7) +
                                                image_id_from_group(GROUP_TERRAIN_EMPTY_LAND));
