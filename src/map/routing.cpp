@@ -1,4 +1,5 @@
 #include <cmath>
+#include <figure/formation_herd.h>
 #include "routing.h"
 
 #include "building/building.h"
@@ -247,17 +248,17 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
                 blocked = true;
             if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_AQUEDUCT, TERRAIN_ROAD, d_x, d_y, false))
                 blocked = true;
-//            if (d_x % 2 == 0 xor d_y % 2 == 0)
-//                if ((d_x != 0 && d_y != 0) || map_terrain_is(next_offset, TERRAIN_AQUEDUCT))
-//                    blocked = true;
             break;
         case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
-            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_BUILDING))
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
+                || map_terrain_is(next_offset, TERRAIN_WATER)
+                || map_terrain_is(next_offset, TERRAIN_BUILDING))
                 blocked = true;
             break;
         default:
-            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN) && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) {
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
+                && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) { // on the EDGE of floodplains
                 if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
                     blocked = true;
                 else if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, d_x, d_y, true))
@@ -273,81 +274,78 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
     int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
-//        case CITIZEN_N3_AQUEDUCT:
-        case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
-            if (!map_can_place_road_under_aqueduct(next_offset))
+        case CITIZEN_0_ROAD: // rubble, garden, access ramp
+            if (!map_can_place_aqueduct_on_road(next_offset))
                 blocked = true;
-            if (d_x % 2 == 0 xor d_y % 2 == 0)
-                if ((d_x != 0 && d_y != 0) || map_terrain_is(next_offset, TERRAIN_ROAD))
-                    blocked = true;
+            if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_ROAD, TERRAIN_AQUEDUCT, d_x, d_y, false))
+                blocked = true;
             break;
+        case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
         case CITIZEN_N1_BLOCKED: // non-empty land
-            blocked = true;
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
+                || map_terrain_is(next_offset, TERRAIN_WATER)
+                || map_terrain_is(next_offset, TERRAIN_BUILDING))
+                blocked = true;
             break;
         default:
-            if (map_terrain_is(next_offset, TERRAIN_BUILDING)) {
-                if (map_grid_get(&terrain_land_citizen, next_offset) != CITIZEN_N4_RESERVOIR_CONNECTOR)
+            if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
+                && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) { // on the EDGE of floodplains
+                if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
+                    blocked = true;
+                else if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, d_x, d_y, true))
                     blocked = true;
             }
             break;
     }
-//    if (map_terrain_is(next_offset, TERRAIN_ROAD)) {
-////        map_grid_set(&routing_distance, next_offset, -1);
-////        blocked = true;
-//        if (!map_can_place_road_under_aqueduct(next_offset))
-//            blocked = true;
-//        if (d_x % 2 == 0 xor d_y % 2 == 0)
-//            blocked = true;
-//    }
     if (!blocked)
         enqueue(next_offset, dist);
 }
 static bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
-    if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N1_BLOCKED && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-        // not open land, can only if:
-        // - aqueduct should be placed, and:
-        // - land is a reservoir building OR an aqueduct
-        if (!is_aqueduct && !map_can_place_road_under_aqueduct(grid_offset))
+
+    switch (map_grid_get(&terrain_land_citizen, grid_offset)) {
+        case CITIZEN_N1_BLOCKED:
+            // not open land, can only if:
+            // - aqueduct should be placed, and:
+            // - land is a reservoir building OR an aqueduct
+            if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+                return false;
+            }
+            break;
+        case CITIZEN_2_PASSABLE_TERRAIN:
             return false;
-        if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
-            return true;
-        if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            if (building_at(grid_offset)->type == BUILDING_WATER_LIFT)
-                return true;
-        }
-        return false;
-    } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_2_PASSABLE_TERRAIN) {
-        // rubble, access ramp, garden
-        return false;
-    } else if (map_grid_get(&terrain_land_citizen, grid_offset) == CITIZEN_N3_AQUEDUCT) {
-        if (is_aqueduct && !map_can_place_aqueduct_on_road(grid_offset))
-            return false;
-        if (map_can_place_road_under_aqueduct(grid_offset))
-            return true;
-        return false;
-    } else if (map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-        // on a corner of the floodplains edge: nope
-        if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1)
-            return false;
-        else {
-            // on the edge of floodplains: maybe?
-            if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-                if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_ROAD))
+            break;
+        case CITIZEN_0_ROAD:
+            if (is_aqueduct) {
+                if (!map_can_place_aqueduct_on_road(grid_offset))
+                    return false;
+                if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_ROAD, TERRAIN_AQUEDUCT, 0, 0, false))
                     return false;
             }
-            if (map_terrain_has_adjacent_y_with_type(grid_offset, TERRAIN_FLOODPLAIN)) {
-                if (map_terrain_has_adjacent_x_with_type(grid_offset, TERRAIN_ROAD))
+            break;
+        case CITIZEN_N3_AQUEDUCT:
+            if (!is_aqueduct) {
+                if (!map_can_place_road_under_aqueduct(grid_offset))
+                    return false;
+                if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_AQUEDUCT, TERRAIN_ROAD, 0, 0, false))
                     return false;
             }
-        }
-        return true;
+            break;
+        default:
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 1) // floodplain CORNER
+                return false;
+            else { // floodplain EDGES
+                if (is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, 0, 0, true))
+                    return false;
+                if (!is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
+                    return false;
+            }
+            break;
     }
-// TODO: herd breeeding grounds
-//    else if (is_aqueduct && formation_herd_breeding_ground_at(x, y, 1)) {
-//        return 0;
-//    }
-    else
-        return true;
+
+    // herd spawn points
+    if (formation_herd_breeding_ground_at(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1))
+        return false;
+    return true;
 }
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
     clear_distances();
@@ -390,12 +388,12 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
 }
 
-    bool figure::is_fighting_friendly() {
-        return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
-    }
-    bool figure::is_fighting_enemy() {
-        return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
-    }
+bool figure::is_fighting_friendly() {
+    return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+}
+bool figure::is_fighting_enemy() {
+    return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+}
 static int has_fighting_friendly(int grid_offset) {
     return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_FRIENDLY);
 }

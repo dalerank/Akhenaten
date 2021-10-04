@@ -174,9 +174,12 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
 }
 int map_building_tiles_add_aqueduct(int x, int y) {
     int grid_offset = map_grid_offset(x, y);
+    int tile_set = 0;
+    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+        tile_set = 1;
     map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
     map_property_clear_constructing(grid_offset);
-    return 1;
+    return tile_set;
 }
 
 void map_add_bandstand_tiles(building *b) {
