@@ -511,7 +511,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
     if (blocked) // cannot draw!
         draw_flat_tile(x, y, COLOR_MASK_RED);
     else {
-        const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 1); // get starting tile
+        const terrain_image *img = map_image_context_get_aqueduct(grid_offset); // get starting tile
         draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), x, y);
     }
 }

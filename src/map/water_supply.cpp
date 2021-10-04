@@ -69,7 +69,13 @@ void map_water_supply_update_houses(void) {
     }
 }
 
-static void aqueducts_empty_all(void) {
+static unsigned int river_access_canal_offsets[300] = {};
+static int river_access_canal_offsets_total = 0;
+
+static void canals_empty_all(void) {
+    // reset river access counters
+    river_access_canal_offsets_total = 0;
+
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
@@ -79,12 +85,18 @@ static void aqueducts_empty_all(void) {
                 int image_id = map_image_at(grid_offset);
                 if (image_id < image_without_water)
                     map_image_set(grid_offset, image_id + IMAGE_CANAL_FULL_OFFSET);
+
+                // check if canal has river access
+                if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) > 0) {
+                    river_access_canal_offsets[river_access_canal_offsets_total] = grid_offset;
+                    river_access_canal_offsets_total++;
+                }
             }
         }
     }
 }
 
-static void fill_aqueducts_from_offset(int grid_offset) {
+static void fill_canals_from_offset(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
         return;
     memset(&queue, 0, sizeof(queue));
@@ -147,36 +159,62 @@ static int OFFSET(int x, int y) {
     }
 }
 
-void map_water_supply_update_aqueducts(void) {
-    // first, reset all aqueducts (set to empty)
-    map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
-    aqueducts_empty_all();
-    building_list_large_clear(1);
+static void update_canals_from_river() {
+    for (int i = 0; i < river_access_canal_offsets_total; ++i) {
+        int grid_offset = river_access_canal_offsets[i];
+        fill_canals_from_offset(grid_offset);
+    }
+}
+static void update_canals_from_water_lifts() {
 
     // cached grid offsets for water lift outputs
-    const int CONNECTOR_OFFSETS[4][2] = {
+    const int OUTPUT_OFFSETS[4][2] = {
             { OFFSET(0, 2), OFFSET(1, 2) },
             { OFFSET(-1, 0), OFFSET(-1, 1) },
             { OFFSET(0, -1), OFFSET(1, -1) },
             { OFFSET(2, 0), OFFSET(2, 1) }
     };
+    const int INPUT_OFFSETS[4][2] = {
+            { OFFSET(0, -1), OFFSET(1, -1) },
+            { OFFSET(2, 0), OFFSET(2, 1) },
+            { OFFSET(0, 2), OFFSET(1, 2) },
+            { OFFSET(-1, 0), OFFSET(-1, 1) }
+    };
 
-    // mark reservoirs next to water
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WATER_LIFT) {
             building_list_large_add(i);
-            if (map_terrain_exists_tile_in_radius_with_type(b->x, b->y, 2, 1, TERRAIN_WATER)) {
+
+            // check if has access to water
+            b->has_water_access = false;
+            int input_offset_0 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][0];
+            int input_offset_1 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][1];
+            if (map_aqueduct_at(input_offset_0) || map_terrain_is(input_offset_0, TERRAIN_WATER))
                 b->has_water_access = true;
-                fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[b->data.industry.orientation][0]);
-                fill_aqueducts_from_offset(b->grid_offset + CONNECTOR_OFFSETS[b->data.industry.orientation][1]);
+            if (map_aqueduct_at(input_offset_1) || map_terrain_is(input_offset_1, TERRAIN_WATER))
+                b->has_water_access = true;
+
+            // checks done, update
+            if (b->has_water_access) {
+                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
+                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
                 map_terrain_add_with_radius(b->x, b->y, 2, 2, TERRAIN_IRRIGATION_RANGE);
-            } else
-                b->has_water_access = false;
+            }
         }
     }
 }
-void map_water_supply_update_wells(void) {
+void map_update_canals(void) {
+    // first, reset all canals
+    map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
+    canals_empty_all();
+    building_list_large_clear(1);
+
+    // fill canals!
+    update_canals_from_river();
+    update_canals_from_water_lifts();
+}
+void map_update_wells_range(void) {
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
     int total_wells = building_list_small_size();
     const int *wells = building_list_small_items();

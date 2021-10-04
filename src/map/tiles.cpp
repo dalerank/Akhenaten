@@ -661,12 +661,15 @@ int map_tiles_set_wall(int x, int y) {
 }
 
 int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image *img) {
+    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+        return 0;
+    }
     int image_aqueduct = image_id_from_group(GROUP_BUILDING_AQUEDUCT); // 119 C3
     int water_offset = 0;
     int terrain_image = map_image_at(grid_offset);
     if (terrain_image >= image_aqueduct && terrain_image < image_aqueduct + IMAGE_CANAL_FULL_OFFSET)
         water_offset = 0; // has water
-    else// has no water
+    else // has no water
         water_offset = IMAGE_CANAL_FULL_OFFSET;
 
     // floodplains
@@ -710,12 +713,15 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
     return image_id_from_group(GROUP_BUILDING_AQUEDUCT) + water_offset + floodplains_offset + image_offset;
 }
 static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image *img) {
-    map_image_set(grid_offset, get_aqueduct_image(grid_offset, is_road, 0, img));
-    map_property_set_multi_tile_size(grid_offset, 1);
-    map_property_mark_draw_tile(grid_offset);
+    int image_id = get_aqueduct_image(grid_offset, is_road, 0, img);
+    if (image_id) {
+        map_image_set(grid_offset, image_id);
+        map_property_set_multi_tile_size(grid_offset, 1);
+        map_property_mark_draw_tile(grid_offset);
+    }
 }
 static void set_aqueduct(int grid_offset) {
-    const terrain_image *img = map_image_context_get_aqueduct(grid_offset, aqueduct_include_construction);
+    const terrain_image *img = map_image_context_get_aqueduct(grid_offset);
     bool is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
     if (is_road)
         map_property_clear_plaza_or_earthquake(grid_offset);
@@ -757,15 +763,12 @@ int map_tiles_is_paved_road(int grid_offset) {
 
     return 0;
 }
-static void set_road_with_aqueduct_image(int grid_offset) {
-    set_aqueduct_image(grid_offset, 1, map_image_context_get_aqueduct(grid_offset, 0));
-}
 static void set_road_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_ROAD) ||
         map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING))
         return;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-        set_road_with_aqueduct_image(grid_offset);
+        set_aqueduct_image(grid_offset, 1, map_image_context_get_aqueduct(grid_offset));
         return;
     }
     if (map_property_is_plaza_or_earthquake(grid_offset))
@@ -1264,7 +1267,6 @@ static int get_access_ramp_image_offset(int x, int y) {
 static void set_elevation_aqueduct_image(int grid_offset) {
     if (map_aqueduct_at(grid_offset) <= 15 && !map_terrain_is(grid_offset, TERRAIN_BUILDING))
         set_aqueduct(grid_offset);
-
 }
 static void set_elevation_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_ACCESS_RAMP) && !map_image_at(grid_offset)) {

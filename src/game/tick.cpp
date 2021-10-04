@@ -191,8 +191,8 @@ static void advance_tick(void) {
             city_labor_update();
             break;
         case 27:
-            map_water_supply_update_aqueducts();
-            map_water_supply_update_wells();
+            map_update_wells_range();
+            map_update_canals();
             break;
         case 28:
             map_water_supply_update_houses();

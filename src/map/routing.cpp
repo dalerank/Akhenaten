@@ -290,10 +290,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
         default:
             if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
                 && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) { // on the EDGE of floodplains
-                if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1) // floodplain CORNER
-                    blocked = true;
-                else if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, d_x, d_y, true))
-                    blocked = true;
+                blocked = true; // CAN NOT place canals on floodplain edges directly in Pharaoh
             }
             break;
     }
@@ -306,7 +303,7 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
             // not open land, can only if:
             // - aqueduct should be placed, and:
             // - land is a reservoir building OR an aqueduct
-            if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 return false;
             }
             break;
@@ -335,9 +332,9 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
                 if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1) // floodplain CORNER
                     return false;
                 else { // floodplain EDGES
-                    if (is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, 0, 0, true))
-                        return false;
-                    if (!is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
+                    if (is_aqueduct)
+                        return false; // CAN NOT place canals on floodplain edges directly in Pharaoh
+                    else if (!can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
                         return false;
                 }
             }
