@@ -348,7 +348,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// CAMERA
-    if (false) {
+    if (true) {
         int tx, ty;
         int px, py;
         city_view_get_camera_tile(&tx, &ty);

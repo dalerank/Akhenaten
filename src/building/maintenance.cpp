@@ -321,6 +321,7 @@ void building_maintenance_check_rome_access(void) {
         // parts of city disconnected
         city_warning_show(WARNING_CITY_BOXED_IN);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
-        city_view_go_to_grid_offset(problem_grid_offset);
+        // TODO: TEMP
+//        city_view_go_to_grid_offset(problem_grid_offset);
     }
 }
