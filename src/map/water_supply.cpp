@@ -80,7 +80,7 @@ static void canals_empty_all(void) {
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+            if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
                 if (image_id < image_without_water)
@@ -97,7 +97,7 @@ static void canals_empty_all(void) {
 }
 
 static void fill_canals_from_offset(int grid_offset) {
-    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset, TERRAIN_WATER))
         return;
     memset(&queue, 0, sizeof(queue));
     int guard = 0;

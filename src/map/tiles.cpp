@@ -661,9 +661,9 @@ int map_tiles_set_wall(int x, int y) {
 }
 
 int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain_image *img) {
-    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+    if (map_terrain_is(grid_offset, TERRAIN_WATER))
         return 0;
-    }
+
     int image_aqueduct = image_id_from_group(GROUP_BUILDING_AQUEDUCT); // 119 C3
     int water_offset = 0;
     int terrain_image = map_image_at(grid_offset);
@@ -867,60 +867,60 @@ void map_tiles_update_all_reed_fields() {
 #include "game/time.h"
 
 static void set_water_image(int x, int y, int grid_offset) {
-//    if ((map_terrain_get(grid_offset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
-        const terrain_image *img = map_image_context_get_shore(grid_offset);
-        int image_id = image_id_from_group(GROUP_TERRAIN_WATER) + img->group_offset + img->item_offset;
-        if (GAME_ENV == ENGINE_ENV_C3 && map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_BUILDING)) {
-            // fortified shore
-            int base = image_id_from_group(GROUP_TERRAIN_WATER_SHORE);
-            switch (img->group_offset) {
-                case 8:
-                    image_id = base + 10;
-                    break;
-                case 12:
-                    image_id = base + 11;
-                    break;
-                case 16:
-                    image_id = base + 9;
-                    break;
-                case 20:
-                    image_id = base + 8;
-                    break;
-                case 24:
-                    image_id = base + 18;
-                    break;
-                case 28:
-                    image_id = base + 16;
-                    break;
-                case 32:
-                    image_id = base + 19;
-                    break;
-                case 36:
-                    image_id = base + 17;
-                    break;
-                case 50:
-                    image_id = base + 12;
-                    break;
-                case 51:
-                    image_id = base + 14;
-                    break;
-                case 52:
-                    image_id = base + 13;
-                    break;
-                case 53:
-                    image_id = base + 15;
-                    break;
-            }
+//    return;
+    const terrain_image *img = map_image_context_get_shore(grid_offset);
+    int image_id = image_id_from_group(GROUP_TERRAIN_WATER) + img->group_offset + img->item_offset;
+    if (GAME_ENV == ENGINE_ENV_C3 && map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_BUILDING)) {
+        // fortified shore
+        int base = image_id_from_group(GROUP_TERRAIN_WATER_SHORE);
+        switch (img->group_offset) {
+            case 8:
+                image_id = base + 10;
+                break;
+            case 12:
+                image_id = base + 11;
+                break;
+            case 16:
+                image_id = base + 9;
+                break;
+            case 20:
+                image_id = base + 8;
+                break;
+            case 24:
+                image_id = base + 18;
+                break;
+            case 28:
+                image_id = base + 16;
+                break;
+            case 32:
+                image_id = base + 19;
+                break;
+            case 36:
+                image_id = base + 17;
+                break;
+            case 50:
+                image_id = base + 12;
+                break;
+            case 51:
+                image_id = base + 14;
+                break;
+            case 52:
+                image_id = base + 13;
+                break;
+            case 53:
+                image_id = base + 15;
+                break;
         }
-        if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)
-            && map_terrain_exists_tile_in_radius_with_exact(x, y, 1, 1, TERRAIN_GROUNDWATER))
-            return;
-        map_image_set(grid_offset, image_id);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
-//    }
+    }
+    if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)
+        && map_terrain_exists_tile_in_radius_with_exact(x, y, 1, 1, TERRAIN_GROUNDWATER))
+        return;
+    map_image_set(grid_offset, image_id);
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
 }
 static void set_deepwater_image(int grid_offset) {
+//    return;
     const terrain_image *img = map_image_context_get_river(grid_offset);
     int image_id = image_id_from_group(GROUP_TERRAIN_DEEPWATER) + img->group_offset + img->item_offset;
     map_image_set(grid_offset, image_id);
