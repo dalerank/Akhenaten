@@ -735,6 +735,17 @@ void map_tiles_update_all_aqueducts(int include_construction) {
 void map_tiles_update_region_aqueducts(int x_min, int y_min, int x_max, int y_max) {
     foreach_region_tile(x_min, y_min, x_max, y_max, update_aqueduct_tile);
 }
+int map_tiles_set_aqueduct(int x, int y) {
+    int grid_offset = map_grid_offset(x, y);
+    int tile_set = 0;
+    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
+        tile_set = 1;
+    map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
+    map_property_clear_constructing(grid_offset);
+
+    foreach_region_tile(x - 1, y - 1, x + 1, y + 1, update_aqueduct_tile);
+    return tile_set;
+}
 
 int map_tiles_is_paved_road(int grid_offset) {
     int desirability = map_desirability_get(grid_offset);
@@ -951,8 +962,11 @@ static void set_floodplain_edges_image(int x, int y, int grid_offset) {
     }
 }
 static void set_floodplain_land_tiles_image(int x, int y, int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)
-    && !map_terrain_is(grid_offset, TERRAIN_BUILDING) && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
+    && !map_terrain_is(grid_offset, TERRAIN_WATER)
+    && !map_terrain_is(grid_offset, TERRAIN_BUILDING)
+    && !map_terrain_is(grid_offset, TERRAIN_ROAD)
+    && !map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
         int growth = map_get_floodplain_growth(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + growth;
         int fertility_index = 0;

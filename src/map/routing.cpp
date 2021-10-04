@@ -290,7 +290,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
         default:
             if (!map_terrain_is(next_offset, TERRAIN_FLOODPLAIN)
                 && map_terrain_has_adjecent_with_type(next_offset, TERRAIN_FLOODPLAIN)) { // on the EDGE of floodplains
-                if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1)
+                if (map_terrain_count_directly_adjacent_with_type(next_offset, TERRAIN_FLOODPLAIN) != 1) // floodplain CORNER
                     blocked = true;
                 else if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, d_x, d_y, true))
                     blocked = true;
@@ -300,8 +300,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     if (!blocked)
         enqueue(next_offset, dist);
 }
-static bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
-
+bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
     switch (map_grid_get(&terrain_land_citizen, grid_offset)) {
         case CITIZEN_N1_BLOCKED:
             // not open land, can only if:
@@ -331,13 +330,16 @@ static bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqued
             }
             break;
         default:
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) > 1) // floodplain CORNER
-                return false;
-            else { // floodplain EDGES
-                if (is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, 0, 0, true))
+            if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)
+                && map_terrain_has_adjecent_with_type(grid_offset, TERRAIN_FLOODPLAIN)) { // on the EDGE of floodplains
+                if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) != 1) // floodplain CORNER
                     return false;
-                if (!is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
-                    return false;
+                else { // floodplain EDGES
+                    if (is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_AQUEDUCT, 0, 0, true))
+                        return false;
+                    if (!is_aqueduct && !can_place_on_crossing_no_neighboring(grid_offset, TERRAIN_FLOODPLAIN, TERRAIN_ROAD, 0, 0, true))
+                        return false;
+                }
             }
             break;
     }

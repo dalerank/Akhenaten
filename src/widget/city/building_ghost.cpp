@@ -1,4 +1,5 @@
 #include <cmath>
+#include <map/routing.h>
 #include "building_ghost.h"
 
 #include "building/Construction/build_planner.h"
@@ -492,6 +493,8 @@ static void draw_fort(const map_tile *tile, int x, int y) {
 static void draw_aqueduct(const map_tile *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool  blocked = false;
+    if (!map_can_place_initial_road_or_aqueduct(tile->grid_offset, true))
+        blocked = true;
     if (Planner.in_progress) { // already dragging aqueduct
         if (!Planner.total_cost) // ???
             blocked = true;

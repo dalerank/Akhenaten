@@ -172,15 +172,6 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         growth = 0;
     set_crop_tile(building_id, x, y, 2, 0, crop_image_offset, growth);
 }
-int map_building_tiles_add_aqueduct(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
-    int tile_set = 0;
-    if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT))
-        tile_set = 1;
-    map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
-    map_property_clear_constructing(grid_offset);
-    return tile_set;
-}
 
 void map_add_bandstand_tiles(building *b) {
     int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);

@@ -14,6 +14,7 @@ void map_routing_calculate_distances(int x, int y);
 void map_routing_calculate_distances_water_boat(int x, int y);
 void map_routing_calculate_distances_water_flotsam(int x, int y);
 
+bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct);
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y);
 
 void map_routing_delete_first_wall_or_aqueduct(int x, int y);

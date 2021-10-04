@@ -4,7 +4,7 @@
 #include "core/buffer.h"
 
 #define IMAGE_CANAL_FULL_OFFSET 48
-#define IMAGE_CANAL_FLOODPLAIN_OFFSET 12
+#define IMAGE_CANAL_FLOODPLAIN_OFFSET 21
 
 int map_aqueduct_at(int grid_offset);
 
