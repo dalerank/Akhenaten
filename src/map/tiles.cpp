@@ -96,7 +96,7 @@ static void foreach_river_tile(void (*callback)(int x, int y, int grid_offset)) 
 //    SDL_Log("Average time: %i (%i cycles)", clock_total / clock_count, clock_count);
 }
 static void foreach_floodplain_order(int order, void (*callback)(int x, int y, int grid_offset, int order)) {
-    if (order < 0 || order >= 30)
+    if (order < -1 || order >= 30)
         return;
     floodplain_order *order_cache = &floodplain_offsets[order];
     for (int i = 0; i < order_cache->amount; i++) {
@@ -818,27 +818,14 @@ int map_tiles_set_road(int x, int y) {
     return tile_set;
 }
 
-static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
-
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            if (map_grasslevel_get(map_grid_offset(xx, yy)) < 12)
-                return true;
-        }
-    }
-    return false;
-}
-
 static void set_meadow_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_MEADOW) && !map_terrain_is(grid_offset, FORBIDDEN_TERRAIN_MEADOW)) {
 
         int ph_grass = map_grasslevel_get(grid_offset);
         int meadow_density = 0;
-        if (map_get_fertility(grid_offset) > 80)
+        if (map_get_fertility(grid_offset, FERT_WITH_MALUS) > 70)
             meadow_density = 2;
-        else if (map_get_fertility(grid_offset) > 40)
+        else if (map_get_fertility(grid_offset, FERT_WITH_MALUS) > 40)
             meadow_density = 1;
 
         int random = map_random_get(grid_offset) % 8;
@@ -998,7 +985,7 @@ static void set_floodplain_land_tiles_image(int x, int y, int grid_offset) {
         int image_id = image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + growth;
         int fertility_index = 0;
 
-        int fertility_value = map_get_fertility(grid_offset); // todo
+        int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS); // todo
         if (true) {
             if (fertility_value < 25)
                 fertility_index = 0;
@@ -1100,7 +1087,7 @@ static void floodplain_update_inundation_row(int x, int y, int grid_offset, int 
         if (floodplain_is_flooding == 1) {
             map_terrain_add(grid_offset, TERRAIN_WATER);
 
-            map_soil_depletion(grid_offset, 0);
+            map_soil_set_depletion(grid_offset, 0);
 
             // hide building
             if (b_id && b->state == BUILDING_STATE_VALID && map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -1152,7 +1139,7 @@ void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {
     floodplain_is_flooding = is_flooding;
     if (floodplain_is_flooding == 0)
         return;
-    for (int i = 0; i < 30; i++)
+    for (int i = -1; i < 30; i++)
         foreach_floodplain_order(i, floodplain_update_inundation_row);
 }
 
@@ -1411,6 +1398,19 @@ static void remove_entry_exit_flag(const map_tile *tile) {
 void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_entry_flag());
     remove_entry_exit_flag(city_map_exit_flag());
+}
+
+static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (map_grasslevel_get(map_grid_offset(xx, yy)) < 12)
+                return true;
+        }
+    }
+    return false;
 }
 
 static void clear_empty_land_image(int x, int y, int grid_offset) {

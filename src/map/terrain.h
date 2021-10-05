@@ -175,16 +175,22 @@ void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
+enum {
+    FERT_NO_MALUS = 0,
+    FERT_WITH_MALUS = 1,
+    FERT_ONLY_MALUS = 2
+};
+
 int map_floodplain_rebuild_shoreorder();
-uint8_t map_get_floodplain_shoreorder(int grid_offset);
+int8_t map_get_floodplain_shoreorder(int grid_offset);
 uint8_t map_get_floodplain_growth(int grid_offset);
-uint8_t map_get_fertility(int grid_offset);
+int map_get_fertility(int grid_offset, int tally_type);
 uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_set_floodplain_growth(int grid_offset, int growth);
-void map_soil_depletion(int grid_offset, int malus);
+void map_soil_set_depletion(int grid_offset, int malus);
 
 void map_soil_fertility_load_state(buffer *buf);
-void map_soil_depletion_load_state(buffer *buf);
+void map_soil_unk_grid_load_state(buffer *buf);
 
 void map_terrain_backup(void);
 void map_terrain_restore(void);

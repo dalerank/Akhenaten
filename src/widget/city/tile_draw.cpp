@@ -685,11 +685,21 @@ void draw_debug(int x, int y, int grid_offset) {
             d = map_grasslevel_get(grid_offset);
             if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_GREEN); break;
         case 8: // FERTILITY & SOIL DEPLETION
-            d = map_get_fertility(grid_offset);
-            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE); break;
+            d = map_get_fertility(grid_offset, FERT_WITH_MALUS);
+            if (d) {
+                int n = map_get_fertility(grid_offset, FERT_NO_MALUS);
+                if (d == n || map_terrain_is(grid_offset, TERRAIN_MEADOW))
+                    draw_debug_line(str, x, y + 5, 0, "", d, COLOR_LIGHT_GREEN);
+                else {
+                    draw_debug_line(str, x, y + 5, 0, "", d, COLOR_LIGHT_BLUE);
+                    d = map_get_fertility(grid_offset, FERT_ONLY_MALUS);
+                    draw_debug_line(str, x, y + 15, 0, "", d, COLOR_LIGHT_RED);
+                }
+            }
+            break;
         case 9: // FLOODPLAIN SHORE ORDER
             d = map_get_floodplain_shoreorder(grid_offset);
-            if (d) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
+            if (d > -1) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
         case 10: // FLOODPLAIN TERRAIN FLAGS
             d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {

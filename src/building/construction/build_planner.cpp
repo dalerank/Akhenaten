@@ -1335,6 +1335,8 @@ void BuildPlanner::update_special_case_orientations_check() {
     if (special_flags & PlannerFlags::ShoreLine) {
         bool match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute);
         if (special_flags & PlannerFlags::FloodplainShore) {
+            // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
+            // it looks off, but it's legit!
             variant = 0;
             if (!match) {
                 match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute, true, TERRAIN_FLOODPLAIN);

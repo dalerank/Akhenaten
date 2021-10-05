@@ -20,6 +20,7 @@
 #include <math.h>
 #include <city/floods.h>
 #include <map/grid.h>
+#include <core/config.h>
 
 static int max_progress(const building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
@@ -188,10 +189,21 @@ void building_curse_farms(int big_curse) {
 }
 void building_farm_deplete_soil(const building *b) {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
-    int malus = (float)b->data.industry.progress / (float)MAX_PROGRESS_FARM_PH * (float)-100;
-    for (int _y = b->y; _y < b->y + b->size; _y++)
-        for (int _x = b->x; _x < b->x + b->size; _x++)
-            map_soil_depletion(map_grid_offset(_x, _y), malus);
+    if (config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+        int malus = (float) b->data.industry.progress / (float) MAX_PROGRESS_FARM_PH * (float) -100;
+        for (int _y = b->y; _y < b->y + b->size; _y++)
+            for (int _x = b->x; _x < b->x + b->size; _x++)
+                map_soil_set_depletion(map_grid_offset(_x, _y), malus);
+    }
+    else {
+        for (int _y = b->y; _y < b->y + b->size; _y++)
+            for (int _x = b->x; _x < b->x + b->size; _x++) {
+                int new_fert = map_get_fertility(map_grid_offset(_x, _y), FERT_WITH_MALUS) * 0.2f;
+                int malus = new_fert - map_get_fertility(map_grid_offset(_x, _y), FERT_NO_MALUS);
+                map_soil_set_depletion(map_grid_offset(_x, _y), malus);
+            }
+    }
+
     update_farm_image(b);
 }
 

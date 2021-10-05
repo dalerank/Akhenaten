@@ -59,6 +59,7 @@ static const char *ini_keys[] = {
         "gameplay_change_understaffed_accept_goods",
         "gameplay_change_multiple_temple_complexes",
         "gameplay_change_multiple_monuments"
+        "gameplay_change_soil_depletion",
 
 };
 
@@ -117,6 +118,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
         false, // understaffed buildings can accept goods
         false, // multiple temple complexes
         false, // multiple monuments
+        true, // deplation soil change
 
 };
 

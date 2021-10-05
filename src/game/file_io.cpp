@@ -263,7 +263,7 @@ typedef struct {
     buffer *soil_fertility_grid = new buffer;
     buffer *GRID02_8BIT = new buffer;
     buffer *GRID03_32BIT = new buffer;
-    buffer *soil_depletion_grid = new buffer;
+    buffer *soil_unk_grid = new buffer;
 } savegame_state;
 
 static struct {
@@ -686,7 +686,7 @@ static void init_savegame_data(bool expanded) {
             // 64 bytes     00 00 00 00 ???
             state->junk16 = create_savegame_piece(64, false, "junk16"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->soil_depletion_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
+            state->soil_unk_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, false, "junk17");
@@ -807,7 +807,7 @@ static void savegame_load_from_state(savegame_state *state) {
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         map_soil_fertility_load_state(state->soil_fertility_grid);
-        map_soil_depletion_load_state(state->soil_depletion_grid);
+        map_soil_unk_grid_load_state(state->soil_unk_grid);
         map_moisture_load_state(state->moisture_grid);
         empire_load_internal_ph(state->empire_map_objects, state->empire_map_routes);
 
