@@ -777,7 +777,7 @@ void draw_debug(int x, int y, int grid_offset) {
         case 13: // TERRAIN BIT FIELD
             draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
         case 14: // IMAGE FIELD
-            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset), COLOR_LIGHT_RED); break;
+            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED); break;
             break;
         case 15: // UNKNOWN 8BIT GRID
             draw_debug_line(str, x, y + 10, 0, "", map_temp_grid_get(grid_offset, 1), COLOR_LIGHT_RED); break;

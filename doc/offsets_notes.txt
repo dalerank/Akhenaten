@@ -165,6 +165,17 @@ no lookup: 12.113/44.497 entries
 129 61
 15 56
 
+================
+
+meadows
+
+1456 -- 1467
+1468 -- 1479
+1480 -- 1491
+
+1492 -- 1499 SHORT      : inner tiles
+1500 -- 1507 TALL       : tall grass?
+1508 -- 1515 SHORT 2    : outer edge
 
 ================
 

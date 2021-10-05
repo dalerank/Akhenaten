@@ -679,8 +679,13 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
 
     // curve/connection offset
     int image_offset = img->group_offset;
+    // TODO: some edge cases with roads don't perfectly match up with original game (not really a priority?)
     if (is_road) {
-        bool road_dir_right = map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD);
+        bool road_dir_right = false;
+        if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD))
+            road_dir_right = true;
+        if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_ROAD))
+            road_dir_right = true;
         road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
         bool is_paved = map_tiles_is_paved_road(grid_offset);
 
@@ -765,7 +770,7 @@ static void set_road_image(int x, int y, int grid_offset) {
         map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_BUILDING))
         return;
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-        set_aqueduct_image(x, y, grid_offset); // TODO: some edge cases don't perfectly match up with original game (not really a priority?)
+        set_aqueduct_image(x, y, grid_offset);
         return;
     }
     if (map_property_is_plaza_or_earthquake(grid_offset))
@@ -813,32 +818,56 @@ int map_tiles_set_road(int x, int y) {
     return tile_set;
 }
 
+static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (map_grasslevel_get(map_grid_offset(xx, yy)) < 12)
+                return true;
+        }
+    }
+    return false;
+}
+
 static void set_meadow_image(int x, int y, int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_MEADOW) && !map_terrain_is(grid_offset, FORBIDDEN_TERRAIN_MEADOW)) {
-        int random = map_random_get(grid_offset) & 3;
-        int image_id = image_id_from_group(GROUP_TERRAIN_MEADOW);
-        if (map_terrain_has_only_meadow_in_ring(x, y, 2))
-            map_image_set(grid_offset, image_id + random + 8);
-        else if (map_terrain_has_only_meadow_in_ring(x, y, 1))
-            map_image_set(grid_offset, image_id + random + 4);
-        else
-            map_image_set(grid_offset, image_id + random);
+
+        int ph_grass = map_grasslevel_get(grid_offset);
+        int meadow_density = 0;
+        if (map_get_fertility(grid_offset) > 80)
+            meadow_density = 2;
+        else if (map_get_fertility(grid_offset) > 40)
+            meadow_density = 1;
+
+        int random = map_random_get(grid_offset) % 8;
+        if (ph_grass == 0) { // for no grass at all
+            if (meadow_density == 2)
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_INNER) + random);
+            else if (meadow_density == 0)
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_OUTER) + random);
+            else
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_WITH_GRASS) + 12);
+        } else if (ph_grass == 12) { // for fully grown grass
+            if (meadow_density == 2)
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_TALLGRASS) + random);
+            else
+                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_WITH_GRASS) + 12 * meadow_density + ph_grass - 1);
+        }
+        else // for grass transitions
+            map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_WITH_GRASS) + 12 * meadow_density + ph_grass - 1);
 
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
         map_aqueduct_set(grid_offset, 0);
     }
 }
-static void update_meadow_tile(int x, int y, int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_MEADOW) && !map_terrain_is(grid_offset, FORBIDDEN_TERRAIN_MEADOW))
-        foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_meadow_image);
-
-}
 void map_tiles_update_all_meadow(void) {
-    foreach_map_tile(update_meadow_tile);
+    foreach_map_tile(set_meadow_image);
 }
 void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) {
-    foreach_region_tile(x_min, y_min, x_max, y_max, update_meadow_tile);
+    foreach_region_tile(x_min, y_min, x_max, y_max, set_meadow_image);
 }
 
 static void set_reeds_tile(int x, int y, int grid_offset) {
@@ -1302,7 +1331,7 @@ static void set_elevation_image(int x, int y, int grid_offset) {
 //                else if (terrain & TERRAIN_AQUEDUCT)
 //                    set_elevation_aqueduct_image(grid_offset);
                 else if (terrain & TERRAIN_MEADOW)
-                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW) + (map_random_get(grid_offset) & 3));
+                    map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_MEADOW_STATIC_OUTER) + (map_random_get(grid_offset) & 3));
                 else
                     map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7));
             }
@@ -1384,19 +1413,6 @@ void map_tiles_remove_entry_exit_flags(void) {
     remove_entry_exit_flag(city_map_exit_flag());
 }
 
-static bool map_has_nonfull_grassland_in_radius(int x, int y, int size, int radius, int terrain) {
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
-
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            if (map_grasslevel_get(map_grid_offset(xx, yy)) < 12)
-                return true;
-        }
-    }
-    return false;
-}
-
 static void clear_empty_land_image(int x, int y, int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         map_image_set(grid_offset, 0);
@@ -1446,7 +1462,7 @@ static void set_empty_land_pass1(int x, int y, int grid_offset) {
 static void set_empty_land_pass2(int x, int y, int grid_offset) {
     // second pass:
     int ph_grass = map_grasslevel_get(grid_offset);
-    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) && ph_grass >= 0) {
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR + TERRAIN_MEADOW) && ph_grass >= 0) {
         int image_base = image_id_from_group(GROUP_TERRAIN_GRASS_PH);
         if (ph_grass && ph_grass <= 11)
             return set_empty_land_image(x, y, 1, image_base + ph_grass - 1 + 12 * (map_random_get(grid_offset) % 3));
@@ -1454,10 +1470,10 @@ static void set_empty_land_pass2(int x, int y, int grid_offset) {
 
             // check for non-clear terrain tiles in a radius around it
             int closest_radius_not_fullgrass = 3;
-            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR))
+            if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_NOT_CLEAR + TERRAIN_MEADOW))
                 closest_radius_not_fullgrass = 1;
-            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_NOT_CLEAR)
-                || map_has_nonfull_grassland_in_radius(x, y, 1, 1, TERRAIN_NOT_CLEAR)) // for lower grass level transition
+            else if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_NOT_CLEAR + TERRAIN_MEADOW)
+                || map_has_nonfull_grassland_in_radius(x, y, 1, 1, TERRAIN_NOT_CLEAR + TERRAIN_MEADOW)) // for lower grass level transition
                 closest_radius_not_fullgrass = 2;
 
             switch (closest_radius_not_fullgrass) {
