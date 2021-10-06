@@ -137,6 +137,8 @@ figure *building::create_figure_with_destination(int _type, building *destinatio
     return f;
 }
 figure *building::create_cartpusher(int resource_id, int quantity, int created_action, int slot) {
+    // TODO: industry cartpushers do not spawn in the correct place?
+
     figure *f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->load_resource(quantity, resource_id);
     f->set_destination(0);
@@ -698,6 +700,8 @@ void building::spawn_figure_farm_harvests() {
     int progress = data.industry.progress;
     if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
         progress = (progress / 20) * 20;
+    // In OG Pharaoh, the progress value gets counted as if it was rounded
+    // down to the lowest 20 points. No idea why! But here's as an option.
 
     if (is_floodplain_farm()) { // floodplain farms
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))

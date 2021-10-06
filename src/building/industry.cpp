@@ -59,12 +59,14 @@ int building_determine_worker_needed() {
     return 0; // temp
 }
 
+static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
+
 void building_industry_update_production(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
-        if (building_is_floodplain_farm(b))
+        if (building_is_farm(b->type))
             continue;
         b->data.industry.has_raw_materials = 0;
         if (b->num_workers <= 0)
@@ -102,14 +104,17 @@ void building_industry_update_farms(void) {
             b->data.industry.curse_days_left--;
         if (b->data.industry.blessing_days_left)
             b->data.industry.blessing_days_left--;
+//        if (b->data.industry.blessing_days_left && building_is_farm(b->type))
+//            b->data.industry.progress += b->num_workers;
 
         bool is_floodplain = building_is_floodplain_farm(b);
         int fert = map_get_fertility_for_farm(b->grid_offset);
+        int progress_step = (float)fert * produce_uptick_per_day; // 0.16f
 
-        if (is_floodplain) {
+        if (is_floodplain) { // floodplain farms
             // advance production
             if (b->data.industry.labor_days_left > 0)
-                b->data.industry.progress += (float)fert * 0.16;
+                b->data.industry.progress += progress_step;
             // update labor state
             if (b->data.industry.labor_state == 2)
                 b->data.industry.labor_state = 1;
@@ -117,15 +122,11 @@ void building_industry_update_farms(void) {
                 b->data.industry.labor_state = 0;
             if (b->data.industry.labor_days_left > 0)
                 b->data.industry.labor_days_left--;
-        } else {
+        } else { // meadow farms
             // advance production
             if (b->num_workers > 0)
-                b->data.industry.progress += (float)fert * 0.16f * ((float)b->num_workers / 10.0f);
+                b->data.industry.progress += progress_step * ((float)b->num_workers / 10.0f);
         }
-
-        // TODO
-//        if (b->data.industry.blessing_days_left && building_is_farm(b->type))
-//            b->data.industry.progress += b->num_workers;
 
         // clamp progress
         int max = max_progress(b);

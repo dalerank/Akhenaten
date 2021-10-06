@@ -636,19 +636,23 @@ void draw_debug(int x, int y, int grid_offset) {
             }
             break;
         case 2: // DRAW-TILES AND SIZES
-                if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                    if (map_property_is_draw_tile(grid_offset)) {
-                        draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
-                        draw_debug_line(str, x1, y + 10, 0, "", b->size, COLOR_WHITE);
-                    } else
-                        draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_RED);
-                } else if (!map_property_is_draw_tile(grid_offset))
-                    draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                if (map_property_is_draw_tile(grid_offset)) {
+                    draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_GREEN);
+                    draw_debug_line(str, x1, y + 10, 0, "", b->size, COLOR_WHITE);
+                } else
+                    draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_RED);
+            } else if (!map_property_is_draw_tile(grid_offset))
+                draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
             break;
         case 3: // ROADS
             if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->grid_offset == grid_offset
                 draw_debug_line(str, x0, y + 5, 0, "", b->road_access_x, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 draw_debug_line(str, x0, y + 15, 0, "", b->road_access_y, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
+                if (b->road_is_accessible) {
+                    auto tile_coords = city_view_grid_offset_to_pixel(b->road_access_x, b->road_access_y);
+                    draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords.x, tile_coords.y, COLOR_MASK_GREEN);
+                }
             }
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 d = map_road_network_get(grid_offset);
@@ -738,11 +742,13 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_LIGHT_BLUE);
                 draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
                 //
-                if (building_is_floodplain_farm(b)) {
+                if (building_is_farm(b->type)) {
                     draw_debug_line(str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
-                    draw_debug_line(str, x1, y + 30, 0, "", b->data.industry.progress / 250 * 100, COLOR_GREEN);
-                    draw_debug_line(str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
-                    draw_debug_line(str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
+                    draw_debug_line(str, x1 + 10, y + 30, 0, "", b->data.industry.progress / 2.5, COLOR_GREEN);
+                    if (building_is_floodplain_farm(b)) {
+                        draw_debug_line(str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
+                        draw_debug_line(str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);
+                    }
                 }
                 if (b->data.entertainment.booth_corner_grid_offset) {
                     draw_debug_line(str, x0, y + 30, 0, "", b->data.entertainment.days1, COLOR_GREEN);
