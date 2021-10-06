@@ -436,7 +436,7 @@ static void draw_farm(int type, int x, int y, int grid_offset) {
             ImageDraw::isometric_footprint(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
                                            COLOR_MASK_GREEN);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        draw_ph_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
+        draw_farm_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
 static void draw_fort(const map_tile *tile, int x, int y) {
     bool fully_blocked = false;

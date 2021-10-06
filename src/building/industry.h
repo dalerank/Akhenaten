@@ -12,10 +12,12 @@
 int building_determine_worker_needed();
 
 void building_industry_update_production(void);
-void building_industry_floodplain_update_production(void);
+void building_industry_update_farms(void);
 void building_industry_update_wheat_production(void);
 bool building_industry_has_produced_resource(building *b);
 void building_industry_start_new_production(building *b);
+
+bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);
 
 void building_bless_farms(void);
 void building_curse_farms(int big_curse);

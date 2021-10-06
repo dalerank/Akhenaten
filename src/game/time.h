@@ -11,6 +11,21 @@ typedef struct time_data {
     int total_days;
 } time_data;
 
+enum {
+    MONTH_JANUARY = 0,
+    MONTH_FEBRUARY = 1,
+    MONTH_MARCH = 2,
+    MONTH_APRIL = 3,
+    MONTH_MAY = 4,
+    MONTH_JUNE = 5,
+    MONTH_JULY = 6,
+    MONTH_AUGUST = 7,
+    MONTH_SEPTEMPTER = 8,
+    MONTH_OCTOBER = 9,
+    MONTH_NOVEMBER = 10,
+    MONTH_DECEMBER = 11,
+};
+
 /**
  * @file
  * Game time.

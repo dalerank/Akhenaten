@@ -53,6 +53,7 @@ static const char *ini_keys[] = {
         ///
 
         "gameplay_fix_irrigation_range",
+        "gameplay_fix_farm_produce_quantity",
         "ui_keep_camera_inertia",
         "gameplay_change_watercarriers_firefight",
         "gameplay_change_cart_instant_unload",
@@ -112,6 +113,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
         /////
 
         true, // irrigation range fix
+        true, // farm produce quantity
         true, // camera scroll keep delta speed
         true, // water carriers fight fires
         false, // instant cart unload for all units

@@ -213,7 +213,7 @@ static void advance_tick(void) {
             building_count_update();
             building_entertainment_update();
             city_culture_update_coverage();
-            building_industry_floodplain_update_production();
+            building_industry_update_farms();
             break;
         case 34:
             building_government_distribute_treasury();

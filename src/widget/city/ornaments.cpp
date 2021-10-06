@@ -158,16 +158,23 @@ static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t 
     }
 }
 
-static const int X_VIEW_OFFSETS[9] = {
-        0, 30, 60,
-        -30, 0, 30,
-        -60, -30, 0
+static const int FARM_TILE_OFFSETS_FLOODPLAIN[9][2] = {
+        {0, 30},
+        {30, 45},
+        {60, 60},
+        {-30, 45},
+        {0, 60},
+        {30, 75},
+        {-60, 60},
+        {-30, 75},
+        {0, 90}
 };
-
-static const int Y_VIEW_OFFSETS[9] = {
-        30, 45, 60,
-        45, 60, 75,
-        60, 75, 90
+static const int FARM_TILE_OFFSETS_MEADOW[5][2] = {
+        {-60, 60},
+        {-30, 75},
+        {0, 90},
+        {30, 75},
+        {60, 60}
 };
 
 int get_farm_image(int grid_offset) {
@@ -223,26 +230,22 @@ int get_crops_image(int type, int growth) {
     }
     return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
 }
-void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
+void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, color_t color_mask) {
     int image_crops = get_crops_image(type, 0);
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
-                                      y + Y_VIEW_OFFSETS[i] - 30, color_mask);
+            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0] + 60,
+                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1] - 30, color_mask);
         }
     } else { // on dry meadows
-        for (int i = 4; i < 9; i++) {
-            int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            if (i == 4) {
-                ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[2] + 60,
-                                          y + Y_VIEW_OFFSETS[2] - 30, color_mask);
-            } else
-                ImageDraw::img_from_below(image_crops + growth_offset, x + X_VIEW_OFFSETS[i] + 60,
-                                          y + Y_VIEW_OFFSETS[i] - 30, color_mask);
+        for (int i = 0; i < 5; i++) {
+            int growth_offset = fmin(5, fmax(0, (progress - i*400)/100));
+
+            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_MEADOW[i][0] + 60,
+                                      y + FARM_TILE_OFFSETS_MEADOW[i][1] - 30, color_mask);
         }
     }
-
 }
 
 static void draw_ph_worker(int direction, int action, int frame_offset, int x, int y) {
@@ -259,9 +262,6 @@ static void draw_ph_worker(int direction, int action, int frame_offset, int x, i
     }
     int final_offset = action_offset + direction + 8 * (frame_offset - 1);
     ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, x, y + 15, 0);
-}
-static void draw_farm_crops(building *b, int x, int y, int color_mask) {
-    draw_ph_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, color_mask);
 }
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     if (!building_is_floodplain_farm(b))
@@ -505,7 +505,7 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                draw_farm_crops(b, x, y, color_mask);
+                draw_farm_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, color_mask);
                 draw_farm_workers(b, grid_offset,x, y);
             }
             break;

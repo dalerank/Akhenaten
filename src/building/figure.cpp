@@ -686,11 +686,24 @@ void building::spawn_figure_industry() {
     }
 }
 void building::spawn_figure_farms() {
+    bool is_floodplain = building_is_floodplain_farm(this);
+    if (!is_floodplain) {// only for meadow farms
+        common_spawn_labor_seeker(50);
+        if (building_farm_time_to_deliver(false, output_resource_id)) // UGH!!
+            spawn_figure_farm_harvests();
+    }
+}
+void building::spawn_figure_farm_harvests() {
+
+    int progress = data.industry.progress;
+    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
+        progress = (progress / 20) * 20;
+
     if (is_floodplain_farm()) { // floodplain farms
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
-        if (data.industry.progress > 0 && floodplains_time_to_deliver()) {
-            create_cartpusher(output_resource_id, data.industry.progress / 2.5);
+        if (road_is_accessible && data.industry.progress > 0) {
+            create_cartpusher(output_resource_id, progress / 2.5);
             building_farm_deplete_soil(this);
             data.industry.progress = 0;
             data.industry.worker_id = 0;
@@ -700,13 +713,10 @@ void building::spawn_figure_farms() {
         }
     } else { // normal farms
         if (road_is_accessible) {
-            common_spawn_labor_seeker(50);
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
-            if (building_industry_has_produced_resource(this)) {
-                building_industry_start_new_production(this);
-                create_cartpusher(output_resource_id, 100);
-            }
+            create_cartpusher(output_resource_id, progress / 2.5);
+            building_industry_start_new_production(this);
         }
     }
 }
@@ -1178,6 +1188,15 @@ bool building::figure_generate() {
                 spawn_figure_native_meeting(); break;
             case BUILDING_NATIVE_CROPS:
                 update_native_crop_progress(); break;
+            case BUILDING_BARLEY_FARM:
+            case BUILDING_FLAX_FARM:
+            case BUILDING_GRAIN_FARM:
+            case BUILDING_LETTUCE_FARM:
+            case BUILDING_POMEGRANATES_FARM:
+            case BUILDING_CHICKPEAS_FARM:
+            case BUILDING_FIGS_FARM:
+            case BUILDING_HENNA_FARM:
+                spawn_figure_farms(); break;
             case BUILDING_MENU_FORTS:
                 formation_legion_update_recruit_status(this); break;
             case BUILDING_RECRUITER:

@@ -1059,9 +1059,9 @@ static void advance_floodplain_growth_tile(int x, int y, int grid_offset, int or
 }
 void map_advance_floodplain_growth() {
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
-    foreach_floodplain_order(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(-1 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(11 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(23 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
     if (floodplain_growth_advance >= 12)

@@ -56,10 +56,6 @@ int floodplains_expected_month() {
     return (data.season_initial / 15) - 10;
 }
 
-int floodplains_time_to_deliver() {
-    return data.state == FLOOD_STATE_IMMINENT && cycle >= floodplains_flooding_start_cycle() - 23;
-}
-
 void floodplains_tick_update() {
     int total_ticks = game_time_absolute_tick();
     cycle = total_ticks / 25;

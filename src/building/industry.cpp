@@ -21,6 +21,7 @@
 #include <city/floods.h>
 #include <map/grid.h>
 #include <core/config.h>
+#include <game/time.h>
 
 static int max_progress(const building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
@@ -89,42 +90,53 @@ void building_industry_update_production(void) {
         }
     }
 }
-void building_industry_floodplain_update_production(void) {
+void building_industry_update_farms(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
-        if (!building_is_floodplain_farm(b))
+        if (!building_is_farm(b->type))
             continue;
 
         if (b->data.industry.curse_days_left) // TODO
             b->data.industry.curse_days_left--;
-        else if (!floodplains_is(FLOOD_STATE_IMMINENT)) { // update production
-            if (b->num_workers > 0) {
-                if (b->data.industry.blessing_days_left)
-                    b->data.industry.blessing_days_left--;
+        if (b->data.industry.blessing_days_left)
+            b->data.industry.blessing_days_left--;
 
-                int fert = map_get_fertility_for_farm(b->grid_offset);
-                b->data.industry.progress += fert * 0.16;
+        bool is_floodplain = building_is_floodplain_farm(b);
+        int fert = map_get_fertility_for_farm(b->grid_offset);
 
-//            if (b->data.industry.blessing_days_left && building_is_farm(b->type)) // TODO
-//                b->data.industry.progress += b->num_workers;
+        if (is_floodplain) {
+            // advance production
+            if (b->data.industry.labor_days_left > 0)
+                b->data.industry.progress += (float)fert * 0.16;
+            // update labor state
+            if (b->data.industry.labor_state == 2)
+                b->data.industry.labor_state = 1;
+            if (b->data.industry.labor_days_left == 0)
+                b->data.industry.labor_state = 0;
+            if (b->data.industry.labor_days_left > 0)
+                b->data.industry.labor_days_left--;
+        } else {
+            // advance production
+            if (b->num_workers > 0)
+                b->data.industry.progress += (float)fert * 0.16f * ((float)b->num_workers / 10.0f);
+        }
 
-                // update progress
-                int max = max_progress(b);
-                if (b->data.industry.progress > max)
-                    b->data.industry.progress = max;
+        // TODO
+//        if (b->data.industry.blessing_days_left && building_is_farm(b->type))
+//            b->data.industry.progress += b->num_workers;
 
-                // update labor state
-                if (b->data.industry.labor_state == 2)
-                    b->data.industry.labor_state = 1;
-                if (b->data.industry.labor_days_left == 0)
-                    b->data.industry.labor_state = 0;
-                if (b->data.industry.labor_days_left > 0)
-                    b->data.industry.labor_days_left--;
-            }
-        } else // spawn cartpusher with food if it's harvest time
-            b->spawn_figure_farms();
+        // clamp progress
+        int max = max_progress(b);
+        if (b->data.industry.progress > max)
+            b->data.industry.progress = max;
+        if (b->data.industry.progress < 0)
+            b->data.industry.progress = 0;
+
+        // for floodplain farms: harvest is invoked here!
+        if (is_floodplain && building_farm_time_to_deliver(true))
+            b->spawn_figure_farm_harvests();
         update_farm_image(b);
     }
 }
@@ -163,6 +175,37 @@ void building_industry_start_new_production(building *b) {
     }
     if (building_is_farm(b->type))
         update_farm_image(b);
+}
+
+static bool farm_harvesting_month_for_produce(int resource_id, int month) {
+    switch (resource_id) {
+        // annual meadow farms
+        case RESOURCE_CHICKPEAS:
+        case RESOURCE_LETTUCE:
+            return (month == MONTH_APRIL); break;
+        case RESOURCE_FIGS:
+            return (month == MONTH_SEPTEMPTER); break;
+        case RESOURCE_FLAX:
+            return (month == MONTH_DECEMBER); break;
+
+        // biannual meadow farms
+        case RESOURCE_GRAIN:
+            return (month == MONTH_JANUARY || month == MONTH_MAY); break;
+        case RESOURCE_BARLEY:
+            return (month == MONTH_FEBRUARY || month == MONTH_AUGUST); break;
+        case RESOURCE_POMEGRANATES:
+            return (month == MONTH_JUNE || month == MONTH_NOVEMBER); break;
+    }
+    return false;
+}
+bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
+    if (floodplains)
+        return floodplains_is(FLOOD_STATE_IMMINENT) && floodplains_current_cycle() >= floodplains_flooding_start_cycle() - 23;
+    else {
+        if (game_time_day() < 2 && farm_harvesting_month_for_produce(resource_id, game_time_month()))
+            return true;
+        return false;
+    }
 }
 
 void building_bless_farms(void) {
