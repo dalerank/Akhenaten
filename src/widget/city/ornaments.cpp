@@ -159,23 +159,28 @@ static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t 
 }
 
 static const int FARM_TILE_OFFSETS_FLOODPLAIN[9][2] = {
+        {60, 0},
+        {90, 15},
+        {120, 30},
+        {30, 15},
+        {60, 30},
+        {90, 45},
+        {0, 30},
+        {30, 45},
+        {60, 60}
+};
+static const int FARM_TILE_OFFSETS_MEADOW[5][2] = {
         {0, 30},
         {30, 45},
         {60, 60},
-        {-30, 45},
-        {0, 60},
-        {30, 75},
-        {-60, 60},
-        {-30, 75},
-        {0, 90}
+        {90, 45},
+        {120, 30}
 };
-static const int FARM_TILE_OFFSETS_MEADOW[5][2] = {
-        {-60, 60},
-        {-30, 75},
-        {0, 90},
-        {30, 75},
-        {60, 60}
-};
+
+static pixel_coordinate farm_tile_coords(int x, int y, int tile_x, int tile_y) {
+    int tile_id = 3 * abs(tile_y) + abs(tile_x);
+    return {x + FARM_TILE_OFFSETS_FLOODPLAIN[tile_id][0], y + FARM_TILE_OFFSETS_FLOODPLAIN[tile_id][1]};
+}
 
 int get_farm_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
@@ -235,73 +240,85 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
     if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
-            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0] + 60,
-                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1] - 30, color_mask);
+            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0],
+                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1], color_mask);
         }
     } else { // on dry meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*400)/100));
 
-            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_MEADOW[i][0] + 60,
-                                      y + FARM_TILE_OFFSETS_MEADOW[i][1] - 30, color_mask);
+            ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_MEADOW[i][0],
+                                      y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask);
         }
     }
 }
 
-static void draw_ph_worker(int direction, int action, int frame_offset, int x, int y) {
+static void draw_ph_worker(int direction, int action, int frame_offset, pixel_coordinate coords) {
     int action_offset = 0;
-    if (floodplains_is(FLOOD_STATE_IMMINENT))
-        action = 2;
     switch (action) {
         case 0: // tiling
             action_offset = 104; break;
         case 1: // seeding
             action_offset = 208; break;
         case 2: // harvesting
+            coords.y += 10;
             action_offset = 312; break;
     }
     int final_offset = action_offset + direction + 8 * (frame_offset - 1);
-    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, x, y + 15, 0);
+    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, coords.x, coords.y, 0);
 }
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
-    if (!building_is_floodplain_farm(b))
+    if (b->num_workers == 0)
         return;
-    int animation_offset = 0;
-    if (floodplains_is(FLOOD_STATE_IMMINENT))
-        animation_offset = generic_sprite_offset(grid_offset, 15, 1);
-    else
-        animation_offset = generic_sprite_offset(grid_offset, 13, 1);
 
-    x += 60;
-    y -= 30;
-    if (b->num_workers > 0) {
+    x += 30;
+    y -= 15;
+    int animation_offset = 0;
+    int random_seed = 1234.567f * (1 + game_time_day()) * map_random_get(b->grid_offset);
+    int d = random_seed % 8;
+    if (building_is_floodplain_farm(b)) {
         if (floodplains_is(FLOOD_STATE_IMMINENT)) {
-            int random_seed = game_time_day() * map_random_get(b->grid_offset);
-            int random_dir = random_seed % 8;
-            int random_x = random_seed % 3 + 1;
-            int random_y = random_seed % 3;
-            int x_offset = (random_x - random_y) * 30;
-            int y_offset = (random_y + random_x) * 15;
-            draw_ph_worker(random_dir, 2, animation_offset, x + x_offset, y + y_offset);
-        }
+            animation_offset = generic_sprite_offset(grid_offset, 15, 1);
+            int random_x = random_seed % 3;
+            int random_y = int(1234.567f * random_seed) % 3;
+            auto coords = farm_tile_coords(x, y, random_x, random_y);
+            draw_ph_worker(d, 2, animation_offset, coords);
+        } else {
+            animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+            if (b->data.industry.progress < 400)
+                draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset,
+                               farm_tile_coords(x, y, 1, 1));
+            else if (b->data.industry.progress < 450)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 1, 0));
+            else if (b->data.industry.progress < 700)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 0));
+            else if (b->data.industry.progress < 900)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 0, 1));
+            else if (b->data.industry.progress < 1100)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 1, 1));
+            else if (b->data.industry.progress < 1350)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 1));
+            else if (b->data.industry.progress < 1550)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 0, 2));
+            else if (b->data.industry.progress < 1800)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 1, 2));
+            else if (b->data.industry.progress < 2000)
+                draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 2));
+         }
+    } else {
+        animation_offset = generic_sprite_offset(grid_offset, 13, 1);
+        if (b->data.industry.progress < 100)
+            draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, farm_tile_coords(x, y, 1, 1));
         else if (b->data.industry.progress < 400)
-            draw_ph_worker(game_time_absolute_tick() % 128 / 16, 1, animation_offset, x + 30, y + 30);
-        else if (b->data.industry.progress < 450)
-            draw_ph_worker(1, 0, animation_offset, x + 60, y + 15);
-        else if (b->data.industry.progress < 650)
-            draw_ph_worker(2, 0, animation_offset, x + 90, y + 30);
-        else if (b->data.industry.progress < 900)
-            draw_ph_worker(3, 0, animation_offset, x + 0, y + 15);
-        else if (b->data.industry.progress < 1100)
-            draw_ph_worker(4, 0, animation_offset, x + 30, y + 30);
-        else if (b->data.industry.progress < 1350)
-            draw_ph_worker(5, 0, animation_offset, x + 60, y + 45);
-        else if (b->data.industry.progress < 1550)
-            draw_ph_worker(6, 0, animation_offset, x + -30, y + 30);
-        else if (b->data.industry.progress < 1800)
-            draw_ph_worker(0, 0, animation_offset, x + 0, y + 45);
+            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 0, 2));
+        else if (b->data.industry.progress < 800)
+            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 1, 2));
+        else if (b->data.industry.progress < 1200)
+            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 2));
+        else if (b->data.industry.progress < 1600)
+            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 1));
         else if (b->data.industry.progress < 2000)
-            draw_ph_worker(1, 0, animation_offset, x + 30, y + 60);
+            draw_ph_worker(d, 0, animation_offset, farm_tile_coords(x, y, 2, 0));
     }
 }
 static void draw_dock_workers(building *b, int x, int y, color_t color_mask) {

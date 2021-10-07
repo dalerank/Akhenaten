@@ -740,11 +740,13 @@ void draw_debug(int x, int y, int grid_offset) {
                     draw_debug_line(str, x0, y + 10, 0, "", b->labor_category, COLOR_WHITE);
                 draw_debug_line(str, x1, y + 10, 0, "", b->houses_covered, COLOR_LIGHT_RED);
                 draw_debug_line(str, x0, y + 20, 0, "", b->num_workers, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, x1, y + 20, 0, "", b->worker_percentage(), COLOR_LIGHT_BLUE);
+                draw_debug_line(str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
                 //
                 if (building_is_farm(b->type)) {
+                    draw_debug_line(str, x1 + 40, y + 20, 40, "fert.", map_get_fertility_for_farm(b->grid_offset), COLOR_FONT_ORANGE_LIGHT);
                     draw_debug_line(str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
-                    draw_debug_line(str, x1 + 10, y + 30, 0, "", b->data.industry.progress / 2.5, COLOR_GREEN);
+                    draw_debug_line(str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
+                    draw_debug_line(str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);
                     if (building_is_floodplain_farm(b)) {
                         draw_debug_line(str, x0, y + 40, 0, "", b->data.industry.labor_state, COLOR_WHITE);
                         draw_debug_line(str, x1, y + 40, 0, "", b->data.industry.labor_days_left, COLOR_WHITE);

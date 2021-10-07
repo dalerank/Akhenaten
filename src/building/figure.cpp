@@ -696,18 +696,11 @@ void building::spawn_figure_farms() {
     }
 }
 void building::spawn_figure_farm_harvests() {
-
-    int progress = data.industry.progress;
-    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
-        progress = (progress / 20) * 20;
-    // In OG Pharaoh, the progress value gets counted as if it was rounded
-    // down to the lowest 20 points. No idea why! But here's as an option.
-
     if (is_floodplain_farm()) { // floodplain farms
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
         if (road_is_accessible && data.industry.progress > 0) {
-            create_cartpusher(output_resource_id, progress / 2.5);
+            create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
             data.industry.progress = 0;
             data.industry.worker_id = 0;
@@ -719,7 +712,7 @@ void building::spawn_figure_farm_harvests() {
         if (road_is_accessible) {
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
-            create_cartpusher(output_resource_id, progress / 2.5);
+            create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_industry_start_new_production(this);
         }
     }

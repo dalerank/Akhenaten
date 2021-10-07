@@ -61,6 +61,16 @@ int building_determine_worker_needed() {
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
+int farm_expected_produce(const building *b) {
+    int progress = b->data.industry.progress;
+    if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
+        progress = (progress / 20) * 20;
+    // In OG Pharaoh, the progress value gets counted as if it was rounded
+    // down to the lowest 20 points. No idea why! But here's as an option.
+
+    return progress / 2.5;
+}
+
 void building_industry_update_production(void) {
     for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
         building *b = building_get(i);

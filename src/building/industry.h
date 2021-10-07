@@ -11,6 +11,8 @@
 
 int building_determine_worker_needed();
 
+int farm_expected_produce(const building *b);
+
 void building_industry_update_production(void);
 void building_industry_update_farms(void);
 void building_industry_update_wheat_production(void);
