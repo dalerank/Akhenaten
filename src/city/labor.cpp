@@ -344,28 +344,23 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians) {
                 city_data.population.working_age, city_data.population.percentage_plebs);
     }
 }
-static int should_have_workers(building *b, int category, int check_access) {
+static bool should_have_workers(building *b, int category, int check_access) {
     if (category < 0)
-        return 0;
-
+        return false;
 
     if (category == LABOR_CATEGORY_ENTERTAINMENT) {
         if (b->type == BUILDING_SENET_HOUSE && b->prev_part_building_id)
-            return 0;
-
+            return false;
     } else if (category == LABOR_CATEGORY_FOOD_PRODUCTION || category == LABOR_CATEGORY_INDUSTRY_COMMERCE) {
         if (is_industry_disabled(b))
-            return 0;
-
+            return false;
     }
     // engineering and water are always covered in C3
     if (GAME_ENV == ENGINE_ENV_C3 && (category == LABOR_CATEGORY_INFRASTRUCTURE || category == LABOR_CATEGORY_WATER_HEALTH))
-        return 1;
-
+        return true;
     if (check_access)
         return b->houses_covered > 0 ? 1 : 0;
-
-    return 1;
+    return true;
 }
 static void calculate_workers_needed_per_category(void) {
     for (int cat = 0; cat < MAX_CATS; cat++) {

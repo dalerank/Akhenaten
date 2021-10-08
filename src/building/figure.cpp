@@ -689,7 +689,7 @@ void building::spawn_figure_industry() {
 }
 void building::spawn_figure_farms() {
     bool is_floodplain = building_is_floodplain_farm(this);
-    if (!is_floodplain) {// only for meadow farms
+    if (!is_floodplain && road_is_accessible) { // only for meadow farms
         common_spawn_labor_seeker(50);
         if (building_farm_time_to_deliver(false, output_resource_id)) // UGH!!
             spawn_figure_farm_harvests();
@@ -697,6 +697,10 @@ void building::spawn_figure_farms() {
 }
 void building::spawn_figure_farm_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
+        // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
+        // from the previous harvest is still alive. The farm will get "stuck"
+        // and remain in active production till flooded, though the farm worker
+        // still displays with the harvesting animation.
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
         if (road_is_accessible && data.industry.progress > 0) {
@@ -708,7 +712,7 @@ void building::spawn_figure_farm_harvests() {
             data.industry.labor_days_left = 0;
             num_workers = 0;
         }
-    } else { // normal farms
+    } else { // meadow farms
         if (road_is_accessible) {
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;

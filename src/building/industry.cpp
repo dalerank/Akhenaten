@@ -231,15 +231,16 @@ void building_bless_farms(void) {
     }
 }
 void building_curse_farms(int big_curse) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
-            b->data.industry.progress = 0;
-            b->data.industry.blessing_days_left = 0;
-            b->data.industry.curse_days_left = big_curse ? 48 : 4;
-            update_farm_image(b);
-        }
-    }
+    // TODO
+//    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+//        building *b = building_get(i);
+//        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
+//            b->data.industry.progress = 0;
+//            b->data.industry.blessing_days_left = 0;
+//            b->data.industry.curse_days_left = big_curse ? 48 : 4;
+//            update_farm_image(b);
+//        }
+//    }
 }
 void building_farm_deplete_soil(const building *b) {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
