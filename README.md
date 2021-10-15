@@ -23,7 +23,7 @@ What is working:
 - Empire map
 - Campaign missions progression
 - Camp workers
-- Floodplains and farms
+- Floodplains, farming & irrigation
 - Trading
 - Empire requests
 - (and more)
@@ -32,7 +32,6 @@ What is not working:
 - Saving the game
 - Monuments
 - Some animals and resources
-- Irrigation
 - Combat
 - Health
 
