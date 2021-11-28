@@ -2,7 +2,7 @@
 #include <map/routing.h>
 #include "building_ghost.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "building/count.h"
 #include "building/industry.h"
 #include "building/properties.h"

@@ -2,7 +2,7 @@
 #include <widget/overlays/city_overlay.h>
 #include "city.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "city/view.h"

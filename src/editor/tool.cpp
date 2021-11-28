@@ -1,6 +1,6 @@
 #include "tool.h"
 
-#include "building/Construction/routed.h"
+#include "building/construction/routed.h"
 #include "core/image.h"
 #include "core/image_group_editor.h"
 #include "core/random.h"

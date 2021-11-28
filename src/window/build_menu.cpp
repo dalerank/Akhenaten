@@ -1,7 +1,7 @@
 #include <city/buildings.h>
 #include "build_menu.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "building/model.h"
 #include "city/view.h"
 #include "graphics/generic_button.h"
