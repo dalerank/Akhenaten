@@ -93,7 +93,8 @@ public:
     map_tile start;
     map_tile end;
     int total_cost;
-    int orientation;
+    int relative_orientation;
+    int absolute_orientation;
     int variant;
     map_point size;
     map_point pivot;

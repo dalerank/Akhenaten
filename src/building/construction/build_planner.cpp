@@ -798,7 +798,7 @@ void BuildPlanner::reset() {
     start.y = 0;
     end.x = 0;
     end.y = 0;
-    orientation = 0;
+    relative_orientation = 0;
     variant = 0;
 
     // reset special requirements flags/params
@@ -923,7 +923,8 @@ void BuildPlanner::setup_build(int type) { // select building for construction, 
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST:
-            orientation = 1;
+            relative_orientation = 1; // force these buildings to start in a specific orientation
+            update_orientations(false);
             break;
     }
 
@@ -1078,8 +1079,8 @@ void BuildPlanner::setup_build_graphics() {
             int lst3A = statue2_image_id + 6; // west
             int lst3B = statue2_image_id + 7;
 
-            int orientation_rel = city_view_relative_orientation(orientation);
-            switch (orientation_rel) {
+//            int orientation_rel = city_view_relative_orientation(orientation_rel);
+            switch (relative_orientation) {
                 case 0: { // NE
                     int TEMPLE_COMPLEX_SCHEME[13][7] = {
                             {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
@@ -1154,10 +1155,10 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_TEMPLE_COMPLEX_ALTAR:
         case BUILDING_TEMPLE_COMPLEX_ORACLE:
             init_tiles(3, 3);
-            set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset)->main()->type, additional_req_param1, orientation, 1), 3);
+            set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset)->main()->type, additional_req_param1, relative_orientation, 1), 3);
             break;
         case BUILDING_WATER_LIFT:
-            set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + orientation + variant * 4, props->size);
+            set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation + variant * 4, props->size);
             break;
         case BUILDING_FISHING_WHARF:
         case BUILDING_DOCK:
@@ -1165,7 +1166,7 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_WARSHIP_WHARF:
         case BUILDING_TRANSPORT_WHARF:
         case BUILDING_FERRY:
-            set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + orientation, props->size);
+            set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation, props->size);
             break;
         case BUILDING_LOW_BRIDGE:
         case BUILDING_SHIP_BRIDGE:
@@ -1174,7 +1175,7 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-            set_tiles_building(get_statue_image(build_type, orientation, variant), props->size);
+            set_tiles_building(get_statue_image(build_type, relative_orientation, variant), props->size);
             break;
         case BUILDING_WAREHOUSE:
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group), 3);
@@ -1351,8 +1352,8 @@ void BuildPlanner::update_special_case_orientations_check() {
         if (!match) {
             immediate_warning_id = WARNING_SHORE_NEEDED;
             can_place = CAN_NOT_PLACE;
-        } else if (orientation != dir_relative) {
-            orientation = dir_relative;
+        } else if (relative_orientation != dir_relative) {
+            relative_orientation = dir_relative;
             update_orientations(false);
         }
     }
@@ -1361,8 +1362,8 @@ void BuildPlanner::update_special_case_orientations_check() {
         if (!match) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
-        } else if (orientation != dir_relative) {
-            orientation = dir_relative;
+        } else if (relative_orientation != dir_relative) {
+            relative_orientation = dir_relative;
             update_orientations(false);
         }
     }
@@ -1377,7 +1378,7 @@ void BuildPlanner::update_special_case_orientations_check() {
         } else {
             dir_absolute = (5 - (target->data.monuments.variant / 2)) % 4;
             dir_relative = city_view_relative_orientation(dir_absolute);
-            orientation = (1 + dir_relative) % 2;
+            relative_orientation = (1 + dir_relative) % 2;
             end = temple_complex_part_target(target, additional_req_param1);
             update_orientations(false);
         }
@@ -1497,13 +1498,13 @@ void BuildPlanner::update_coord_caches() {
     }
 }
 void BuildPlanner::update_orientations(bool check_if_changed) {
-    int prev_orientation = orientation;
+    int prev_orientation = relative_orientation;
     int prev_variant = variant;
     switch (build_type) {
         case BUILDING_SMALL_STATUE:
         case BUILDING_MEDIUM_STATUE:
         case BUILDING_LARGE_STATUE:
-            orientation = building_rotation_get_rotation() + 1;
+            relative_orientation = building_rotation_get_rotation() + 1;
             variant = building_rotation_get_building_variant();
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -1511,14 +1512,15 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
         case BUILDING_TEMPLE_COMPLEX_PTAH:
         case BUILDING_TEMPLE_COMPLEX_SETH:
         case BUILDING_TEMPLE_COMPLEX_BAST: // CHANGE: in the original game, only two orientations are allowed
-            orientation = building_rotation_get_rotation() + 1;
+            relative_orientation = building_rotation_get_rotation() + 1;
             variant = 0;
             break;
     }
-    orientation = orientation % 4;
+    relative_orientation = relative_orientation % 4;
+    absolute_orientation = city_view_absolute_orientation(relative_orientation);
 
     // do not refresh graphics if nothing changed
-    if (check_if_changed && orientation == prev_orientation && variant == prev_variant)
+    if (check_if_changed && relative_orientation == prev_orientation && variant == prev_variant)
         return;
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches(); // refresh caches
@@ -1709,7 +1711,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x, orientation);
+    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x, relative_orientation);
 
     // update city building info with newly created
     // building for special/unique constructions
@@ -1852,7 +1854,7 @@ bool BuildPlanner::place() {
                 return false;
             break;
         default:
-            if (!place_building(build_type, end.x, end.y, orientation, variant))
+            if (!place_building(build_type, end.x, end.y, absolute_orientation, variant))
                 return false;
             break;
     }

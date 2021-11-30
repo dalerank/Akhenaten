@@ -279,7 +279,7 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 15, cl, "type:", Planner.build_type);
         draw_debug_line(str, x, y + 25, cl, "in progress:", Planner.in_progress);
         draw_debug_line(str, x, y + 35, cl, "draw as con.:", Planner.draw_as_constructing);
-        draw_debug_line(str, x, y + 45, cl, "orientation:", Planner.orientation);
+        draw_debug_line(str, x, y + 45, cl, "orientation:", Planner.absolute_orientation); draw_debug_line(str, x + 40, y + 45, cl, "", Planner.relative_orientation);
         draw_debug_line(str, x, y + 55, cl, "variant:", Planner.variant);
         draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y);
         draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y);
