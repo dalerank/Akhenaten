@@ -1,0 +1,349 @@
+/*
+Theme Name: Pharaoh Heaven
+Version: 1.0
+Requires at least: 4.7
+Requires PHP: 5.2.4
+Author: Heavengames
+Description: Theme for Pharaoh Heaven.
+*/
+body {
+	margin: 0;
+	padding: 0;
+	color: #000;
+    background: url(images/bkg_lhs.jpg) repeat-y, #cab99d url(images/bkg_page.jpg) repeat;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 10pt;
+    line-height: 1.2;
+}
+
+/* Header: logo and banner */
+header.site-header {
+	height: 280px;
+	text-align: center;
+    background: url(images/phhgs.jpg) no-repeat 28px 0, url(images/phtutmask.jpg) no-repeat 5px 138px;
+}
+
+h1.site-logo, h1.site-logo a {
+	width: 350px;
+	height: 174px;
+}
+h1.site-logo {
+	margin: 0 auto 5px;
+}
+h1.site-logo a {
+	background: url(images/logo_phmain.jpg) no-repeat;
+	display: block;
+}
+h1.site-logo a span {
+	display: none;
+}
+
+.ad-banner-wrap {
+    padding-left: 160px;
+}
+.ad-banner {
+    margin: auto;
+}
+
+/* Main area: sidebars and content */
+#main {
+    display: flex;
+}
+#left-bar {
+	width: 170px;
+    flex: none;
+}
+#right-bar {
+	width: 160px;
+    flex: none;
+}
+#right-bar nav.secondary-nav {
+    background:
+        url(images/side_topbkg.jpg) no-repeat top,
+        url(images/side_botbkg.jpg) no-repeat bottom,
+        url(images/side_midbkg.jpg) repeat-y top;
+    padding: 90px 20px 40px;
+}
+
+main#site-content {
+    flex: 1;
+    overflow: auto;
+    padding: 0 20px 20px;
+}
+
+.nav-trigger, .nav-trigger-label {
+    display: none;
+}
+
+/* Footer */
+.copyright {
+    font-size: 8pt;
+    text-align: center;
+    color: #800040;
+    padding: 0 180px;
+}
+
+@media screen and (max-width: 899px) {
+    body {
+        background: #cab99d url(images/bkg_page.jpg);
+    }
+    header.site-header {
+        background: none;
+        height: auto;
+    }
+    #main {
+        display: block;
+    }
+    #left-bar {
+        width: auto;
+    }
+    #left-bar nav.main-nav {
+        width: 160px;
+    }
+    .main-nav {
+        position: absolute;
+    }
+    #right-bar {
+        display: none;
+    }
+    .main-nav {
+        width: 170px;
+        margin-left: -200px;
+        background: url(images/bkg_lhs.jpg) repeat-y;
+        transition: margin-left 0.5s;
+        z-index: 10;
+    }
+    .nav-trigger + .nav-trigger-label:before {
+        content: "Show ";
+    }
+    .nav-trigger:checked + .nav-trigger-label:before {
+        content: "Hide ";
+    }
+    .nav-trigger:checked ~ .main-nav {
+        margin-left: 0;
+    }
+    .nav-trigger-label {
+        margin-top: 5px;
+        padding: 10px 20px;
+        width: 130px;
+        display: inline-block;
+        background: url(images/bkg_lhs.jpg) repeat-y;
+        color: #FFFF99;
+        font-weight: bold;
+    }
+    .nav-trigger-label:hover {
+        cursor: pointer;
+    }
+    .copyright {
+        padding: 0 10px;
+    }
+}
+
+@media screen and (max-width: 899px) {
+    .ad-banner-wrap {
+        padding: 0px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    h1.site-logo, h1.site-logo a {
+        width: auto;
+        background-size: contain;
+    }
+}
+
+/* Content styles */
+h1 {
+    font-size: 2em;
+    margin: 15px 0;
+}
+h2 {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+a:link, a:visited, a:active {
+    text-decoration: underline;
+}
+a:hover {
+    text-decoration: underline;
+    color: #f00;
+}
+
+img {
+    border: 0px;
+}
+
+img.border {
+    border: 1px solid #000;
+}
+
+/* Navigation styles */
+nav.main-nav, nav.secondary-nav {
+    font-family: Tahoma;
+    font-size: 8.5pt;
+    color: #FFFF99;
+}
+
+nav.main-nav {
+    padding: 20px 0px 20px 10px;
+}
+nav.main-nav h2 {
+    margin: 4px 0 0;
+}
+nav.main-nav img {
+    height: 31px;
+}
+nav.main-nav ul, nav.secondary-nav ul, nav.main-nav li, nav.secondary-nav li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+nav.main-nav li {
+    padding-left: 10px;
+}
+nav.secondary-nav {
+    text-align: center;
+}
+nav.main-nav a:link, nav.secondary-nav a:link {
+    color: #FFFF99;
+}
+nav.main-nav a:visited, nav.secondary-nav a:visited {
+    color: #CCCC66;
+}
+nav.main-nav a:hover, nav.secondary-nav a:hover {
+    color: #dddd11;
+    text-decoration: underline;
+}
+nav.main-nav .search-form input {
+    max-width: 100%;
+    margin: 0.5em 0;
+}
+
+/* Special content styles */
+.commodities {
+    overflow-x: auto;
+}
+.commodities table,
+.commodities tr,
+.commodities th,
+.commodities td {
+    border: 1px solid #664411;
+    border-collapse: collapse;
+}
+.commodities th {
+    text-align: left;
+}
+
+table td.inactive {
+    color: #999;
+}
+
+table.buildings {
+    clear: both;
+    width: 100%;
+}
+table.buildings td {
+    text-align: center;
+}
+table.buildings td.note {
+    text-align: left;
+}
+
+table.buildings td.left {
+    text-align: left;
+}
+table.buildings td.right {
+    text-align: right;
+}
+
+article.post.type-post {
+    padding-left: 35px;
+    background: url(images/pyramid.jpg) no-repeat 0px 0px;
+}
+article.post.type-post h2 {
+    margin-bottom: 5px;
+}
+article.post.type-post .post-meta {
+    margin-top: 0;
+    font-size: 8pt;
+}
+
+figure.wp-block-image.walkthrough-map {
+    float: right;
+    margin: 0;
+}
+figure.wp-block-image.walkthrough-map img {
+    border: 1px solid #000;
+}
+
+/* Wordpress overrides */
+/* Table styling */
+figure.wp-block-table {
+    margin: 0;
+}
+figure.wp-block-table table,
+figure.wp-block-table tr,
+figure.wp-block-table th,
+figure.wp-block-table td {
+    border: 1px solid #664411;
+    border-collapse: collapse;
+}
+
+/* Images */
+figure.aligncenter figcaption {
+    text-align: center;
+}
+.wp-block-image {
+    margin-left: 0;
+    margin-right: 0;
+}
+/* Don't squash images on small widths */
+.wp-block-image img {
+    height: auto;
+}
+
+/* Image galleries */
+figure.wp-block-gallery {
+    display: block;
+    text-align: center;
+    max-width: 900px;
+}
+figure.wp-block-gallery .blocks-gallery-grid {
+    justify-content: center;
+}
+figure.wp-block-gallery .blocks-gallery-item {
+    max-width: 300px;
+}
+
+.wp-block-gallery .blocks-gallery-image figcaption,
+.wp-block-gallery .blocks-gallery-item figcaption {
+	/* Let click on caption pass through to the image */
+	pointer-events: none;
+}
+
+/* Advertisement */
+.ad-banner {
+    width: 728px;
+    height: 90px;
+}
+.ad-skyscraper {
+    width: 160px;
+    height: 600px;
+}
+@media screen and (max-width: 749px) {
+    .ad-banner {
+        width: 300px;
+        height: 250px;
+    }
+}
+
+@media print {
+    #left-bar { display: none }
+    #right-bar { display: none }
+    .ad-banner-wrap { display: none }
+    header.site-header { height: auto }
+    h1.site-logo, h1.site-logo a { width: auto; height: auto; background: none; }
+    h1.site-logo a span { display: block; }
+    .copyright { padding: 0; }
+}
