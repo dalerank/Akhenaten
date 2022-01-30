@@ -5,7 +5,7 @@
 #include "core/direction.h"
 #include "core/time.h"
 #include "map/grid.h"
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 
 static int rotation = 0;
 static int road_orientation = 1;

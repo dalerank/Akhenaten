@@ -11,7 +11,7 @@
 #include "tile_draw.h"
 
 #include "building/animation.h"
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "building/dock.h"
 #include "building/rotation.h"
 #include "building/type.h"

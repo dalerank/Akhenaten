@@ -1,6 +1,6 @@
 #include "file.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "building/granary.h"
 #include "building/maintenance.h"
 #include "building/menu.h"
@@ -206,7 +206,7 @@ static void load_empire_data(int is_custom_scenario, int empire_id) {
 }
 
 /**
- * search for hippodrome buildings, all three pieces should have the same subtype.orientation 
+ * search for hippodrome buildings, all three pieces should have the same subtype.orientation
  */
 static void check_hippodrome_compatibility(building *b) {
     // if we got the middle part of the hippodrome

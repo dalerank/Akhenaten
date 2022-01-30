@@ -1,6 +1,6 @@
 #include "cursor.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "game/system.h"
 
 static const cursor ARROW[] = {

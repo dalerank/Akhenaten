@@ -1,6 +1,6 @@
 #include "victory.h"
 
-#include "building/Construction/build_planner.h"
+#include "building/construction/build_planner.h"
 #include "city/data_private.h"
 #include "city/figures.h"
 #include "city/finance.h"
