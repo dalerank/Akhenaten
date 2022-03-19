@@ -50,9 +50,9 @@ static struct {
 static int big_people_image(int type) {
     int result = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        result = image_id_from_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
+        result = image_id_from_group(GROUP_PORTRAITS) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        result = image_id_from_group(GROUP_BIG_PEOPLE) + type;
+        result = image_id_from_group(GROUP_PORTRAITS) + type;
     }
     return result;
 }
@@ -273,7 +273,7 @@ void figure::draw_enemy(building_info_context *c) {
             }
             break;
     }
-    ImageDraw::img_generic(image_id_from_group(GROUP_BIG_PEOPLE) + image_id - 1, c->x_offset + 28, c->y_offset + 112);
+    ImageDraw::img_generic(image_id_from_group(GROUP_PORTRAITS) + image_id - 1, c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(name_group_id(), name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     lang_text_draw(37, scenario_property_enemy() + 20, c->x_offset + 92, c->y_offset + 149, FONT_NORMAL_GREEN);
@@ -372,7 +372,7 @@ void figure::draw_normal_figure(building_info_context *c) {
     int image_id = big_people_image(type);
     if (action_state == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE ||
         action_state == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
-        image_id = image_id_from_group(GROUP_BIG_PEOPLE) + 18;
+        image_id = image_id_from_group(GROUP_PORTRAITS) + 18;
     }
     ImageDraw::img_generic(image_id, c->x_offset + 28, c->y_offset + 112);
 

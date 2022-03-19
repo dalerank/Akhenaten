@@ -288,7 +288,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// RANDOM
-    if (false) {
+    if (true) {
         auto randm = give_me_da_random_data();
 
         int cl = 60;
@@ -348,7 +348,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// CAMERA
-    if (true) {
+    if (false) {
         int tx, ty;
         int px, py;
         city_view_get_camera_tile(&tx, &ty);

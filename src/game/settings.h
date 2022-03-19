@@ -89,6 +89,7 @@ int setting_last_advisor(void);
 void setting_set_last_advisor(int advisor);
 
 const uint8_t *setting_player_name(void);
+const char *setting_player_name_utf8(void);
 void setting_set_player_name(const uint8_t *player_name);
 
 int setting_personal_savings_for_mission(int mission_id);

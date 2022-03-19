@@ -280,7 +280,7 @@ static int get_message_image_id(const lang_message *msg) {
         return 0;
     else if (data.text_id == 0) {
         // message id = 0 ==> "about": fixed image position
-        return image_id_from_group(GROUP_BIG_PEOPLE);
+        return image_id_from_group(GROUP_PORTRAITS);
     } else {
         return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
     }

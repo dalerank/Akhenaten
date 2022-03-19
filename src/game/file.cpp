@@ -72,6 +72,7 @@
 #include "sound/city.h"
 #include "sound/music.h"
 #include "undo.h"
+#include "player_scores.h"
 
 #include <string.h>
 #include <building/count.h>

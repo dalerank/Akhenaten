@@ -1,3 +1,4 @@
+#include <game/player_scores.h>
 #include "new_career.h"
 
 #include "core/image_group.h"
@@ -32,16 +33,18 @@ static uint8_t player_name[32];
 static void init(void) {
     setting_clear_personal_savings();
     scenario_settings_init();
-    string_copy(lang_get_string(9, 5), player_name, 32);
+//    string_copy(lang_get_string(9, 5), player_name, 32);
+//    string_copy(0, player_name, 32);
+    encoding_from_utf8("", player_name, 0);
     input_box_start(&player_name_input, player_name, 32, 1);
 }
 
-static void draw_background(void) {
-    graphics_clear_screens();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-    graphics_reset_dialog();
-}
+//static void draw_background(void) {
+//    graphics_clear_screens();
+//    graphics_in_dialog();
+//    ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
+//    graphics_reset_dialog();
+//}
 static void draw_foreground(void) {
     graphics_in_dialog();
     outer_panel_draw(128, 160, 24, 8);
@@ -62,7 +65,8 @@ static void button_back(int param1, int param2) {
 static void start_mission(int param1, int param2) {
     input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
-    window_mission_selection_show();
+//    window_mission_selection_show();
+    window_go_back();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
@@ -81,7 +85,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 void window_new_career_show(void) {
     window_type window = {
             WINDOW_NEW_CAREER,
-            draw_background,
+            window_draw_underlying_window,
             draw_foreground,
             handle_input
     };

@@ -34,7 +34,7 @@ const dir_listing *dir_append_files_with_extension(const char *extension);
  * Finds all subdirectories
  * @return Directory listing
  */
-const dir_listing *dir_find_all_subdirectories(void);
+const dir_listing *dir_find_all_subdirectories(const char *dir = 0);
 
 /**
  * Get the case sensitive and localized filename of the file

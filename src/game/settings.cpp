@@ -1,3 +1,4 @@
+#include <core/encoding.h>
 #include "settings.h"
 
 #include "city/constants.h"
@@ -37,7 +38,8 @@ static struct {
     int pyramid_speedup;
     // persistent game state
     int last_advisor;
-    uint8_t player_name[32];
+    uint8_t player_name[MAX_PLAYER_NAME];
+    char player_name_utf8[MAX_PLAYER_NAME];
     // personal savings
     int personal_savings[MAX_PERSONAL_SAVINGS];
     // file data
@@ -356,8 +358,12 @@ void setting_set_last_advisor(int advisor) {
 const uint8_t *setting_player_name(void) {
     return data.player_name;
 }
+const char *setting_player_name_utf8(void) {
+    return data.player_name_utf8;
+}
 void setting_set_player_name(const uint8_t *player_name) {
     string_copy(player_name, data.player_name, MAX_PLAYER_NAME);
+    encoding_to_utf8(player_name, data.player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 
 int setting_personal_savings_for_mission(int mission_id) {

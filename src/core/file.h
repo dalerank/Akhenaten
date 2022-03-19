@@ -18,6 +18,11 @@
 
 #define FILE_NAME_MAX 300
 
+typedef struct {
+    char extension[4];
+    char last_loaded_file[FILE_NAME_MAX];
+} file_type_data;
+
 /**
  * Wrapper for fopen converting filename to path in current working directory
  * @param filename Filename

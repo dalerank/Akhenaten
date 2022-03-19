@@ -19,7 +19,7 @@
 #include "window/config.h"
 #include "window/file_dialog.h"
 #include "window/new_career.h"
-#include "window/family_selection.h"
+#include "window/player_selection.h"
 #include "window/family_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
@@ -52,9 +52,8 @@ static void draw_version_string(void) {
         graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
         graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
-    } else {
+    } else
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
-    }
 }
 static void draw_background(void) {
     graphics_clear_screens();
@@ -82,13 +81,13 @@ static void draw_foreground(void) {
         case ENGINE_ENV_PHARAOH:
             for (int i = 0; i < MAX_BUTTONS; i++)
                 large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_GREEN); // play/new career
-//            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_GREEN); // family scores
-            lang_text_draw_centered(1, 3, 192, 146, 256, FONT_NORMAL_GREEN); // family scores
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN); // cck/"mission" editor
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN); // "assignment" editor
-            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN); // options
-            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_GREEN); // quit
+            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_BLACK); // play/new career
+            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_BLACK); // family scores
+//            lang_text_draw_centered(1, 3, 192, 146, 256, FONT_NORMAL_BLACK); // load game
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK); // cck/"mission" editor
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK); // "assignment" editor
+            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK); // options
+            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_BLACK); // quit
             break;
     }
 
@@ -98,7 +97,6 @@ static void draw_foreground(void) {
 static void confirm_exit(bool accepted) {
     if (accepted)
         system_exit();
-
 }
 static void button_click(int type, int param2) {
     if (type == 1)
@@ -107,9 +105,9 @@ static void button_click(int type, int param2) {
                 window_new_career_show();
                 break;
             case ENGINE_ENV_PHARAOH:
-//                window_family_selection_show();
+                window_player_selection_show();
 //                window_family_menu_show();
-                window_new_career_show();
+//                window_new_career_show();
                 break;
         }
     else if (type == 2)

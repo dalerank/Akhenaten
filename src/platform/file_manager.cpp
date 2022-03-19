@@ -97,9 +97,9 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
 
     if (!dir || !*dir || strcmp(dir, ".") == 0)
         current_dir = CURRENT_DIR;
-    else {
+    else
         current_dir = set_dir_name(dir);
-    }
+
     fs_dir_type *d = fs_dir_open(current_dir);
     if (!d)
         return LIST_ERROR;
@@ -109,7 +109,19 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
     struct stat file_info;
     while ((entry = fs_dir_read(d))) {
         const char *name = dir_entry_name(entry);
-        if (stat(name, &file_info) != -1) {
+        const char *fullname;
+
+        // When the current directory is a folder different than the working directory, stat() fails.
+        // Since fstat() doesn't work for some reason and I'm afraid of touching things further,
+        // I'll just concatenate the subdirectory name to the filename!
+        if (dir == 0)
+            fullname = name;
+        else {
+            char full_rel_name[256];
+            snprintf(full_rel_name, sizeof(full_rel_name), "%s%s", dir, name);
+            fullname = full_rel_name;
+        }
+        if (stat(fullname, &file_info) != -1) {
             int m = file_info.st_mode;
             if ((!(type & TYPE_FILE) && is_file(m)) ||
                 (!(type & TYPE_DIR) && S_ISDIR(m)) ||
@@ -124,8 +136,10 @@ int platform_file_manager_list_directory_contents(const char *dir, int type, con
                 continue;
             }
             match = callback(name);
-        } else if (file_has_extension(name, extension))
+        } else if (file_has_extension(name, extension)) {
+            log_error("platform_file_manager_list_directory_contents:", strerror(errno), errno);
             match = callback(name);
+        }
 
         if (match == LIST_MATCH)
             break;

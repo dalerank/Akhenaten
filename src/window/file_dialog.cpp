@@ -26,6 +26,7 @@
 #include "window/editor/map.h"
 
 #include <string.h>
+#include <game/settings.h>
 
 #define NUM_FILES_IN_VIEW 12
 #define MAX_FILE_WINDOW_TEXT_WIDTH (18 * INPUT_BOX_BLOCK_SIZE)
@@ -59,11 +60,6 @@ static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
 
 static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE};
 
-typedef struct {
-    char extension[4];
-    char last_loaded_file[FILE_NAME_MAX];
-} file_type_data;
-
 static struct {
     time_millis message_not_exist_start_time;
     file_type type;
@@ -80,7 +76,7 @@ static file_type_data saved_game_data = {"sav"};
 static file_type_data saved_game_data_expanded = {"svx"};
 static file_type_data scenario_data = {"map"};
 
-static int double_click = 0;
+static int double_click = false;
 
 static void init(file_type type, file_dialog_type dialog_type) {
     data.type = type;
@@ -110,13 +106,16 @@ static void init(file_type type, file_dialog_type dialog_type) {
                 data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
             break;
         case ENGINE_ENV_PHARAOH:
+            char folder_name[FILE_NAME_MAX] = "Save/";
+            strcat(folder_name, setting_player_name_utf8());
+            strcat(folder_name, "/");
             if (type == FILE_TYPE_SCENARIO)
                 data.file_list = dir_find_files_with_extension("Maps/", scenario_data.extension);
             else if (data.dialog_type != FILE_DIALOG_SAVE) {
-                data.file_list = dir_find_files_with_extension("Save/Banderus/", data.file_data->extension);
+                data.file_list = dir_find_files_with_extension(folder_name, data.file_data->extension);
                 data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
             } else
-                data.file_list = dir_find_files_with_extension("Save/Banderus/", saved_game_data_expanded.extension);
+                data.file_list = dir_find_files_with_extension(folder_name, saved_game_data_expanded.extension);
             break;
     }
 
@@ -188,7 +187,9 @@ static void button_ok_cancel(int is_ok, int param2) {
 //    const char *fn = get_chosen_filename();
     switch (GAME_ENV) {
         case ENGINE_ENV_PHARAOH:
-            strcat(filename, "Save/Banderus/");
+            strcat(filename, "Save/");
+            strcat(filename, setting_player_name_utf8());
+            strcat(filename, "/");
     }
     strcat(filename, get_chosen_filename());
 
@@ -243,7 +244,7 @@ static void button_ok_cancel(int is_ok, int param2) {
         }
     }
 
-    strncpy(data.file_data->last_loaded_file, filename, FILE_NAME_MAX - 1);
+    strncpy(data.file_data->last_loaded_file, get_chosen_filename(), FILE_NAME_MAX - 1);
 }
 static void button_select_file(int index, int param2) {
     if (index < data.file_list->num_files) {
@@ -253,7 +254,7 @@ static void button_select_file(int index, int param2) {
         data.message_not_exist_start_time = 0;
     }
     if (data.dialog_type != FILE_DIALOG_DELETE && double_click) {
-        double_click = 0;
+        double_click = false;
         button_ok_cancel(1, 0);
     }
 }
