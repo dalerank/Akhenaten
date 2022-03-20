@@ -163,62 +163,6 @@ void text_fill_in_tags(const uint8_t *src, uint8_t *dst, text_tag_substitution *
         }
     }
 }
-static void eventmsg_template_fill_in_tag(uint8_t *curr_byte, uint8_t **curr_byte_out, const city_message *msg, bool details_from_past_events) {
-    // TODO: rewrite using the above function, swap_tag(...)
-    auto greeting_index = index_of_string(curr_byte, (const uint8_t *)"[greeting]", 200);
-    auto playername_index = index_of_string(curr_byte, (const uint8_t *)"[player_name]", 200);
-    auto phrase_index = index_of_string(curr_byte, (const uint8_t *)"[reason_phrase]", 200);
-    auto city_name_index = index_of_string(curr_byte, (const uint8_t *)"[city_name]", 200);
-    auto army_name_index = index_of_string(curr_byte, (const uint8_t *)"[a_foreign_army]", 200);
-    auto amount_index = index_of_string(curr_byte, (const uint8_t *)"[amount]", 200);
-    auto amount_granted_index = index_of_string(curr_byte, (const uint8_t *)"[amount_granted]", 200);
-    auto item_index = index_of_string(curr_byte, (const uint8_t *)"[item]", 200);
-    auto time_alloted_index = index_of_string(curr_byte, (const uint8_t *)"[time_allotted]", 200);
-    auto time_until_attack_index = index_of_string(curr_byte, (const uint8_t *)"[time_until_attack]", 200);
-    auto travel_time_index = index_of_string(curr_byte, (const uint8_t *)"[travel_time]", 200);
-    auto god_index = index_of_string(curr_byte, (const uint8_t *)"[god]", 200);
-
-    if (!greeting_index) {
-        write_to_body_text_buffer(lang_get_string(32, 11 + scenario_campaign_rank()), curr_byte_out);
-    } else if (!playername_index) {
-        write_to_body_text_buffer(scenario_player_name(), curr_byte_out);
-    } else if (!phrase_index) {
-        write_to_body_text_buffer(data.phrase_text, curr_byte_out);
-    } else if (!city_name_index) {
-        empire_city *city;
-        if (details_from_past_events)
-            city = empire_city_get(msg->req_city_past);
-        else
-            city = empire_city_get(msg->req_city);
-        write_to_body_text_buffer(lang_get_string(195, city->name_id), curr_byte_out);
-    } else if (!army_name_index) {
-        // TODO
-    } else if (!amount_index) {
-        uint8_t nn[6];
-        if (details_from_past_events)
-            string_from_int(nn, stack_proper_quantity(msg->req_amount_past, msg->req_resource_past), false);
-        else
-            string_from_int(nn, stack_proper_quantity(msg->req_amount, msg->req_resource), false);
-        write_to_body_text_buffer(nn, curr_byte_out);
-    } else if (!amount_granted_index) {
-
-    } else if (!item_index) {
-        if (details_from_past_events)
-            write_to_body_text_buffer(lang_get_string(23, 54 + msg->req_resource_past), curr_byte_out);
-        else
-            write_to_body_text_buffer(lang_get_string(23, 54 + msg->req_resource), curr_byte_out);
-    } else if (!time_alloted_index) {
-        uint8_t nn[6];
-        string_from_int(nn, msg->req_months_left, false);
-        write_to_body_text_buffer(nn, curr_byte_out);
-    } else if (!time_until_attack_index) {
-        // TODO
-    } else if (!travel_time_index) {
-        // TODO
-    } else if (!god_index) {
-        // TODO
-    }
-}
 static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, bool phrase_modifier) {
     auto msg = city_message_get(data.message_id);
 
@@ -248,29 +192,6 @@ static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, b
             {"[god]", (uint8_t*)""}, // TODO
     };
     text_fill_in_tags(template_ptr, out_ptr, tags, 12);
-
-//    uint8_t *curr_byte_out = out_ptr;
-//    memset(curr_byte_out, 0, 1);
-//    for (int c = 0; c < 1000; c++) {
-//        uint8_t *curr_byte = template_ptr + c;
-//
-//        if ((char)*curr_byte == '[') { // found an opening bracket
-//            uint8_t *tag_end_ptr = curr_byte + index_of(curr_byte, ']', 200);
-//            int size = tag_end_ptr - curr_byte;
-//
-//            // needs to go over all the possible tags...
-//            eventmsg_template_fill_in_tag(curr_byte, &curr_byte_out, msg, phrase_modifier);
-//
-//            // go to the end of the tag, then resume
-//            curr_byte += size;
-//            c += size;
-//        } else {
-//            memcpy(curr_byte_out, curr_byte, 1);
-//            curr_byte_out++;
-//            if ((char)*curr_byte == '\0')
-//                return;
-//        }
-//    }
 }
 static void set_city_message(int year, int month,
                              int param1, int param2,

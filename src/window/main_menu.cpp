@@ -106,8 +106,6 @@ static void button_click(int type, int param2) {
                 break;
             case ENGINE_ENV_PHARAOH:
                 window_player_selection_show();
-//                window_family_menu_show();
-//                window_new_career_show();
                 break;
         }
     else if (type == 2)
@@ -116,8 +114,7 @@ static void button_click(int type, int param2) {
                 window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
                 break;
             case ENGINE_ENV_PHARAOH:
-//                window_family_scores_show();
-                window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+//                window_family_scores_show(); // TODO
                 break;
         }
     else if (type == 3)

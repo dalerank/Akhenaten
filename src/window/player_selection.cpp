@@ -129,11 +129,8 @@ static void draw_foreground(void) {
     for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
         encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
         font_t font = FONT_NORMAL_BLACK_ON_DARK;
-        if (is_selected_name(i)) {
+        if (is_selected_name(i))
             font = FONT_NORMAL_WHITE_ON_DARK;
-//            if (data.focus_button_id == i + 1)
-//                font = FONT_NORMAL_BLUE;
-        }
         else if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_YELLOW;
         text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);

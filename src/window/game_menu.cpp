@@ -1,5 +1,8 @@
 #include "game_menu.h"
 #include "message_dialog.h"
+#include "file_dialog.h"
+#include "mission_selection.h"
+#include "mission_briefing.h"
 
 #include <graphics/window.h>
 #include <graphics/graphics.h>
@@ -73,8 +76,11 @@ static void button_click(int param1, int param2) {
         case 0: // resume mission
             break;
         case 1: // choose mission
+            graphics_reset_dialog();
+            window_mission_selection_show();
             break;
         case 2: // load save
+            window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
             break;
         case 3: // custom mission
             break;
@@ -84,6 +90,7 @@ static void button_click(int param1, int param2) {
         case 5: // explore history (?)
             break;
         case 6: // begin family history
+            window_mission_briefing_show();
             break;
     }
 }

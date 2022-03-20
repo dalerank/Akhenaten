@@ -1,4 +1,5 @@
 #include <game/player_scores.h>
+#include <core/game_environment.h>
 #include "new_career.h"
 
 #include "core/image_group.h"
@@ -19,12 +20,12 @@
 #include "window/mission_selection.h"
 #include "player_selection.h"
 
-static void start_mission(int param1, int param2);
+static void confirm_new_player_name(int param1, int param2);
 static void button_back(int param1, int param2);
 
 static image_button image_buttons[] = {
         {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,       8, button_back,   button_none, 0, 0, 1},
-        {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, start_mission, button_none, 1, 0, 1}
+        {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, confirm_new_player_name, button_none, 1, 0, 1}
 };
 
 static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
@@ -55,12 +56,17 @@ static void button_back(int param1, int param2) {
     input_box_stop(&player_name_input);
     window_go_back();
 }
-static void start_mission(int param1, int param2) {
+static void confirm_new_player_name(int param1, int param2) {
     input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
-//    window_mission_selection_show();
-    window_go_back();
-    window_player_selection_init();
+    if (GAME_ENV == ENGINE_ENV_C3)
+        window_mission_selection_show();
+    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+        // in OG Pharaoh, creating a new player name automatically opens the
+        // game selection menu; here we first go back to the player list instead
+        window_go_back();
+        window_player_selection_init();
+    }
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
@@ -69,12 +75,11 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0))
         return;
     if (input_box_is_accepted(&player_name_input)) {
-        start_mission(0, 0);
+        confirm_new_player_name(0, 0);
         return;
     }
     if (input_go_back_requested(m, h))
         button_back(0, 0);
-
 }
 void window_new_career_show(void) {
     window_type window = {
