@@ -27,12 +27,12 @@ static void draw_foreground(void) {
 
     outer_panel_draw(48, 80, 24, 12);
 
-    lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK);
+    lang_text_draw_centered(153, 0, 48, 94, 384, FONT_LARGE_BLACK_ON_LIGHT);
 
-    lang_text_draw_centered(153, setting_difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(153, setting_difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(153, setting_gods_enabled() ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK_ON_LIGHT);
     arrow_buttons_draw(288, 80, arrow_buttons, 3);
-    lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

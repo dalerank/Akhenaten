@@ -650,23 +650,23 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color_
 
 static void draw_multibyte_letter(font_t font, const image *img, const color_t *data, int x, int y, color_t color) {
     switch (font) {
-        case FONT_NORMAL_WHITE:
+        case FONT_NORMAL_WHITE_ON_DARK:
             draw_uncompressed(img, data, x + 1, y + 1, 0x311c10, DRAW_TYPE_BLEND_ALPHA);
             draw_uncompressed(img, data, x, y, COLOR_WHITE, DRAW_TYPE_BLEND_ALPHA);
             break;
-        case FONT_NORMAL_RED:
+        case FONT_NORMAL_YELLOW:
             draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_BLEND_ALPHA);
             draw_uncompressed(img, data, x, y, 0x731408, DRAW_TYPE_BLEND_ALPHA);
             break;
-        case FONT_NORMAL_GREEN:
+        case FONT_NORMAL_BLACK_ON_DARK:
             draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_BLEND_ALPHA);
             draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_BLEND_ALPHA);
             break;
         case FONT_NORMAL_PLAIN:
             draw_uncompressed(img, data, x, y + 2, color, DRAW_TYPE_BLEND_ALPHA);
             break;
-        case FONT_NORMAL_BLACK:
-        case FONT_LARGE_BLACK:
+        case FONT_NORMAL_BLACK_ON_LIGHT:
+        case FONT_LARGE_BLACK_ON_LIGHT:
             draw_uncompressed(img, data, x + 1, y + 1, 0xcead9c, DRAW_TYPE_BLEND_ALPHA);
             draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
             break;

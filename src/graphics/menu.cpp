@@ -13,7 +13,7 @@ void menu_bar_draw(menu_bar_item *items, int num_items) {
     short x_offset = TOP_MENU_BASE_X_OFFSET;
     for (int i = 0; i < num_items; i++) {
         items[i].x_start = x_offset;
-        x_offset += lang_text_draw(items[i].text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_GREEN);
+        x_offset += lang_text_draw(items[i].text_group, 0, x_offset, MENU_BASE_TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_DARK);
         items[i].x_end = x_offset;
         x_offset += 32; // spacing
     }
@@ -48,7 +48,7 @@ static void calculate_menu_dimensions(menu_bar_item *menu) {
             continue;
 
         int width_pixels = lang_text_get_width(
-                sub->text_group, sub->text_number, FONT_NORMAL_BLACK);
+                sub->text_group, sub->text_number, FONT_NORMAL_BLACK_ON_LIGHT);
         if (width_pixels > max_width)
             max_width = width_pixels;
 
@@ -80,11 +80,11 @@ void menu_draw(menu_bar_item *menu, int focus_item_id) {
                                        menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 lang_text_draw(sub->text_group, sub->text_number,
-                               menu->x_start + 8, y_offset, FONT_NORMAL_RED);
+                               menu->x_start + 8, y_offset, FONT_NORMAL_YELLOW);
             }
         } else {
             lang_text_draw(sub->text_group, sub->text_number,
-                           menu->x_start + 8, y_offset, FONT_NORMAL_BLACK);
+                           menu->x_start + 8, y_offset, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         y_offset += MENU_ITEM_HEIGHT;
     }
@@ -126,7 +126,7 @@ void menu_update_text(menu_bar_item *menu, int index, int text_number) {
     menu->items[index].text_number = text_number;
     if (menu->calculated_width_blocks > 0) {
         int item_width = lang_text_get_width(
-                menu->items[index].text_group, text_number, FONT_NORMAL_BLACK);
+                menu->items[index].text_group, text_number, FONT_NORMAL_BLACK_ON_LIGHT);
         int blocks = (item_width + 8) / 16 + 1;
         if (blocks > menu->calculated_width_blocks)
             menu->calculated_width_blocks = blocks;

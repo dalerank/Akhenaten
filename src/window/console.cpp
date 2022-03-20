@@ -22,7 +22,7 @@ static image_button image_buttons[] = {
         {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, send_command, button_none, 1, 0, 1}
 };
 
-static input_box command_input = {160, 208, 20, 2, FONT_NORMAL_WHITE};
+static input_box command_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
 static char command[MAX_COMMAND_SIZE] = "";
 
@@ -33,9 +33,9 @@ static void init(void) {
 static void draw_foreground(void) {
     graphics_in_dialog();
     outer_panel_draw(128, 160, 24, 8);
-    text_draw_centered((uint8_t *) "Console", 128, 172, 384, FONT_LARGE_BLACK, 0);
-    lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
-    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK);
+    text_draw_centered((uint8_t *) "Console", 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK_ON_LIGHT);
     input_box_draw(&command_input);
 
     image_buttons_draw(159, 249, image_buttons, 2);

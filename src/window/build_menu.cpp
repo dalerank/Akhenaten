@@ -161,13 +161,13 @@ static void draw_menu_buttons(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         label_offset = 20;
 
-    font_t font = FONT_NORMAL_GREEN;
+    font_t font = FONT_NORMAL_BLACK_ON_DARK;
     int item_index = -1;
     for (int i = 0; i < data.num_items; i++) {
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            font = FONT_NORMAL_BLACK;
+            font = FONT_NORMAL_BLACK_ON_LIGHT;
         if (data.focus_button_id == i + 1)
-            font = FONT_NORMAL_GREEN;
+            font = FONT_NORMAL_BLACK_ON_DARK;
         item_index = building_menu_next_index(data.selected_submenu, item_index);
         label_draw(x_offset - label_margin, data.y_offset + 110 + 24 * i, label_width,
                    data.focus_button_id == i + 1 ? 1 : 2);

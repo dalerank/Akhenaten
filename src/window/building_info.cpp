@@ -490,7 +490,7 @@ static void draw_mothball_button(int x, int y, int focused) {
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     building *b = building_get(context.building_id);
     if (b->state == BUILDING_STATE_VALID)
-        text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
 }
 static void draw_background(void) {

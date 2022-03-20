@@ -75,11 +75,11 @@ static void draw_scenario_list(void) {
     char file[FILE_NAME_MAX];
     uint8_t displayable_file[FILE_NAME_MAX];
     for (int i = 0; i < MAX_SCENARIOS; i++) {
-        font_t font = FONT_NORMAL_GREEN;
+        font_t font = FONT_NORMAL_BLACK_ON_DARK;
         if (data.focus_button_id == i + 1)
-            font = FONT_NORMAL_WHITE;
+            font = FONT_NORMAL_WHITE_ON_DARK;
         else if (!data.focus_button_id && data.selected_item == i + scrollbar.scroll_position)
-            font = FONT_NORMAL_WHITE;
+            font = FONT_NORMAL_WHITE_ON_DARK;
 
         strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
@@ -95,13 +95,13 @@ static void draw_scenario_info(void) {
 
     ImageDraw::img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
 
-    text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width + 10);
-    text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width + 10, FONT_LARGE_BLACK,
+    text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK_ON_LIGHT, scenario_info_width + 10);
+    text_draw_centered(data.selected_scenario_display, scenario_info_x, 25, scenario_info_width + 10, FONT_LARGE_BLACK_ON_LIGHT,
                        0);
-    text_draw_centered(scenario_subtitle(), scenario_info_x, 60, scenario_info_width, FONT_NORMAL_WHITE, 0);
-    lang_text_draw_year(scenario_property_start_year(), scenario_criteria_x, 90, FONT_LARGE_BLACK);
+    text_draw_centered(scenario_subtitle(), scenario_info_x, 60, scenario_info_width, FONT_NORMAL_WHITE_ON_DARK, 0);
+    lang_text_draw_year(scenario_property_start_year(), scenario_criteria_x, 90, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_centered(44, 77 + scenario_property_climate(), scenario_info_x, 150, scenario_info_width,
-                            FONT_NORMAL_BLACK);
+                            FONT_NORMAL_BLACK_ON_LIGHT);
 
     // map size
     int text_id;
@@ -125,7 +125,7 @@ static void draw_scenario_info(void) {
             text_id = 126;
             break;
     }
-    lang_text_draw_centered(44, text_id, scenario_info_x, 170, scenario_info_width, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, text_id, scenario_info_x, 170, scenario_info_width, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // military
     int num_invasions = scenario_invasion_count();
@@ -140,53 +140,53 @@ static void draw_scenario_info(void) {
     else {
         text_id = 116;
     }
-    lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw_centered(32, 11 + scenario_property_player_rank(), scenario_info_x, 210, scenario_info_width,
-                            FONT_NORMAL_BLACK);
+                            FONT_NORMAL_BLACK_ON_LIGHT);
     if (scenario_is_open_play()) {
         if (scenario_open_play_id() < 12)
             lang_text_draw_multiline(145, scenario_open_play_id(), scenario_info_x + 10, 270, scenario_info_width - 10,
-                                     FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
 
     } else {
-        lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK_ON_LIGHT);
         int width;
         if (winning_culture()) {
             width = text_draw_number(winning_culture(), '@', " ", scenario_criteria_x, 290,
-                                     FONT_NORMAL_BLACK);
-            lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (winning_prosperity()) {
             width = text_draw_number(winning_prosperity(), '@', " ", scenario_criteria_x, 306,
-                                     FONT_NORMAL_BLACK);
-            lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (winning_peace()) {
-            width = text_draw_number(winning_peace(), '@', " ", scenario_criteria_x, 322, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK);
+            width = text_draw_number(winning_peace(), '@', " ", scenario_criteria_x, 322, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (winning_favor()) {
-            width = text_draw_number(winning_favor(), '@', " ", scenario_criteria_x, 338, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
+            width = text_draw_number(winning_favor(), '@', " ", scenario_criteria_x, 338, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (winning_population()) {
             width = text_draw_number(winning_population(), '@', " ", scenario_criteria_x, 354,
-                                     FONT_NORMAL_BLACK);
-            lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (scenario_criteria_time_limit_enabled()) {
             width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ", scenario_criteria_x, 370,
-                                     FONT_NORMAL_BLACK);
-            lang_text_draw(44, 134, scenario_criteria_x + width, 370, FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 134, scenario_criteria_x + width, 370, FONT_NORMAL_BLACK_ON_LIGHT);
         }
         if (scenario_criteria_survival_enabled()) {
             width = text_draw_number(scenario_criteria_survival_years(), '@', " ", scenario_criteria_x, 386,
-                                     FONT_NORMAL_BLACK);
-            lang_text_draw(44, 135, scenario_criteria_x + width, 386, FONT_NORMAL_BLACK);
+                                     FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(44, 135, scenario_criteria_x + width, 386, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
-    lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 static void draw_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_CCK_BACKGROUND));

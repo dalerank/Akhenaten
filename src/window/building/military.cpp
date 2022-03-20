@@ -55,7 +55,7 @@ static void draw_priority_buttons(int x, int y, int buttons) {
         int priority = barracks->barracks_get_priority();
         button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
         if (priority == i)
-            text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK, 0);
+            text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     }
 }
@@ -64,7 +64,7 @@ void window_building_draw_wall(building_info_context *c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/wall.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(139, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(139, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
 }
 
@@ -72,7 +72,7 @@ void window_building_draw_gatehouse(building_info_context *c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(90, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(90, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
 }
 
@@ -80,7 +80,7 @@ void window_building_draw_tower(building_info_context *c) {
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(91, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(91, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building *b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -105,15 +105,15 @@ void window_building_draw_barracks(building_info_context *c) {
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, c->x_offset + 64,
                            c->y_offset + 38);
 
     building *b = building_get(c->building_id);
     if (b->stored_full_amount < 100)
-        lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     else
-        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->stored_full_amount, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     if (!c->has_road_access)
         window_building_draw_description_at(c, 70, 69, 25);
@@ -138,9 +138,9 @@ void window_building_draw_barracks(building_info_context *c) {
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    lang_text_draw(50, 21, c->x_offset + 46, c->y_offset + 204, FONT_NORMAL_BLACK); // "Priority"
-    lang_text_draw(91, 0, c->x_offset + 46, c->y_offset + 224, FONT_NORMAL_BLACK); // "Tower"
-    lang_text_draw(89, 0, c->x_offset + 46, c->y_offset + 244, FONT_NORMAL_BLACK); // "Fort"
+    lang_text_draw(50, 21, c->x_offset + 46, c->y_offset + 204, FONT_NORMAL_BLACK_ON_LIGHT); // "Priority"
+    lang_text_draw(91, 0, c->x_offset + 46, c->y_offset + 224, FONT_NORMAL_BLACK_ON_LIGHT); // "Tower"
+    lang_text_draw(89, 0, c->x_offset + 46, c->y_offset + 244, FONT_NORMAL_BLACK_ON_LIGHT); // "Fort"
 
 }
 
@@ -163,7 +163,7 @@ void window_building_draw_military_academy(building_info_context *c) {
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(135, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(135, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     building *b = building_get(c->building_id);
     if (!c->has_road_access)
@@ -183,7 +183,7 @@ void window_building_draw_fort(building_info_context *c) {
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
 }
@@ -193,7 +193,7 @@ void window_building_draw_legion_info(building_info_context *c) {
     const formation *m = formation_get(c->formation_id);
     c->help_id = 87;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
 
     // standard icon at the top
     int image_id = image_id_from_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
@@ -218,10 +218,10 @@ void window_building_draw_legion_info(building_info_context *c) {
                            c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
-    lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK);
-    text_draw_number(m->num_figures, '@', " ", c->x_offset + 294, c->y_offset + 60, FONT_NORMAL_BLACK);
+    lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(m->num_figures, '@', " ", c->x_offset + 294, c->y_offset + 60, FONT_NORMAL_BLACK_ON_LIGHT);
     // health
-    lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
+    lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK_ON_LIGHT);
     int health = calc_percentage(m->total_damage, m->max_total_damage);
     if (health <= 0)
         text_id = 26;
@@ -238,16 +238,16 @@ void window_building_draw_legion_info(building_info_context *c) {
     else {
         text_id = 32;
     }
-    lang_text_draw(138, text_id, c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK);
+    lang_text_draw(138, text_id, c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK_ON_LIGHT);
     // military training
-    lang_text_draw(138, 25, c->x_offset + 100, c->y_offset + 100, FONT_NORMAL_BLACK);
-    lang_text_draw(18, m->has_military_training, c->x_offset + 300, c->y_offset + 100, FONT_NORMAL_BLACK);
+    lang_text_draw(138, 25, c->x_offset + 100, c->y_offset + 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(18, m->has_military_training, c->x_offset + 300, c->y_offset + 100, FONT_NORMAL_BLACK_ON_LIGHT);
     // morale
     if (m->cursed_by_mars)
-        lang_text_draw(138, 59, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
+        lang_text_draw(138, 59, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
-        lang_text_draw(138, 36, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK);
-        lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
+        lang_text_draw(138, 36, c->x_offset + 100, c->y_offset + 120, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw(138, 37 + m->morale / 5, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     if (m->num_figures) {
         // layout
@@ -395,15 +395,15 @@ void window_building_draw_legion_info_foreground(building_info_context *c) {
             }
             break;
     }
-    lang_text_draw(138, title_id, c->x_offset + 24, c->y_offset + 236, FONT_NORMAL_WHITE);
+    lang_text_draw(138, title_id, c->x_offset + 24, c->y_offset + 236, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 252, 16 * (c->width_blocks - 4),
-                             FONT_NORMAL_GREEN);
+                             FONT_NORMAL_BLACK_ON_DARK);
 
     if (!m->is_at_fort) {
         button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2,
                            c->y_offset + 16 * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
         lang_text_draw_centered(138, 58, c->x_offset + 16 * (c->width_blocks - 18) / 2,
-                                c->y_offset + 16 * c->height_blocks - 39, 288, FONT_NORMAL_BLACK);
+                                c->y_offset + 16 * c->height_blocks - 39, 288, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 

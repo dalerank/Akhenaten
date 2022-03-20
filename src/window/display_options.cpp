@@ -42,14 +42,14 @@ static void draw_foreground(void) {
     label_draw(128, 208, 14, data.focus_button_id == 4 ? 1 : 2);
     label_draw(128, 232, 14, data.focus_button_id == 5 ? 1 : 2);
 
-    lang_text_draw_centered(42, 0, 128, 94, 224, FONT_LARGE_BLACK);
+    lang_text_draw_centered(42, 0, 128, 94, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
-    lang_text_draw_centered(42, setting_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(42, setting_fullscreen() ? 2 : 1, 128, 140, 224, FONT_NORMAL_BLACK_ON_DARK);
 
-    lang_text_draw_centered(42, 3, 128, 164, 224, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(42, 4, 128, 188, 224, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(42, 5, 128, 212, 224, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(42, 6, 128, 236, 224, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(42, 3, 128, 164, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, 4, 128, 188, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, 5, 128, 212, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(42, 6, 128, 236, 224, FONT_NORMAL_BLACK_ON_DARK);
 
     graphics_reset_dialog();
 }

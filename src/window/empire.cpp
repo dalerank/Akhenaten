@@ -42,8 +42,8 @@ const static int EMPIRE_HEIGHT[2] = {
         1600+136+20,
 };
 const static font_t FONT_OBJECT_INFO[2] = {
-        FONT_NORMAL_GREEN,
-        FONT_NORMAL_BLACK
+        FONT_NORMAL_BLACK_ON_DARK,
+        FONT_NORMAL_BLACK_ON_LIGHT
 };
 
 static void button_help(int param1, int param2);
@@ -352,16 +352,16 @@ static void draw_city_info(const empire_object *object) {
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (city->type) {
             case EMPIRE_CITY_PH_OURS:
-                lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
             case EMPIRE_CITY_PH_PHARAOH:
-                lang_text_draw_centered(47, 19, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(47, 19, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
             case EMPIRE_CITY_PH_EGYPT:
-                lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
             case EMPIRE_CITY_PH_FOREIGN:
-                lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
             case EMPIRE_CITY_PH_PHARAOH_TRADE:
             case EMPIRE_CITY_PH_EGYPT_TRADE:
@@ -551,17 +551,17 @@ static void draw_city_name(const empire_city *city) {
         ImageDraw::img_generic(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
         if (city) {
             lang_text_draw_centered(21, city->name_id,
-                                    (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK);
+                                    (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK_ON_LIGHT);
         }
     }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (city) {
             if (setting_city_names_style() == CITIES_OLD_NAMES)
                 lang_text_draw_centered(195, city->name_id,
-                                        (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK);
+                                        (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
             else
                 lang_text_draw_centered(21, city->name_id,
-                                        (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK);
+                                        (data.x_min + data.x_max - 332) / 2 + 32, data.y_max - INFO_Y_CITY_NAME, 268, FONT_LARGE_BLACK_ON_LIGHT);
         }
     }
 }

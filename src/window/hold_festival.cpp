@@ -48,19 +48,19 @@ static int focus_image_button_id;
 static void draw_buttons(void) {
     // small festival
     button_border_draw(102, 216, 430, 26, focus_button_id == 6);
-    int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, city_festival_small_cost(), 110 + width, 224, FONT_NORMAL_BLACK);
+    int width = lang_text_draw(58, 31, 110, 224, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_amount(8, 0, city_festival_small_cost(), 110 + width, 224, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // large festival
     button_border_draw(102, 246, 430, 26, focus_button_id == 7);
-    width = lang_text_draw(58, 32, 110, 254, FONT_NORMAL_BLACK);
-    lang_text_draw_amount(8, 0, city_festival_large_cost(), 110 + width, 254, FONT_NORMAL_BLACK);
+    width = lang_text_draw(58, 32, 110, 254, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_amount(8, 0, city_festival_large_cost(), 110 + width, 254, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // grand festival
     button_border_draw(102, 276, 430, 26, focus_button_id == 8);
-    width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK);
-    width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK);
-    width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK);
+    width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
+    width += lang_text_draw_amount(8, 10, city_festival_grand_alcohol(), 120 + width, 284, FONT_NORMAL_BLACK_ON_LIGHT);
 
     int resource_image_id = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
@@ -87,7 +87,7 @@ static void draw_background(void) {
     graphics_in_dialog();
 
     outer_panel_draw(48, 48, 34, 20);
-    lang_text_draw_centered(58, 25 + city_festival_selected_god(), 48, 60, 544, FONT_LARGE_BLACK);
+    lang_text_draw_centered(58, 25 + city_festival_selected_god(), 48, 60, 544, FONT_LARGE_BLACK_ON_LIGHT);
     for (int god = 0; god < MAX_GODS; god++) {
         if (god == city_festival_selected_god()) {
             button_border_draw(100 * god + 66, 92, 90, 100, 1);
@@ -97,7 +97,7 @@ static void draw_background(void) {
         }
     }
     draw_buttons();
-    lang_text_draw(58, 30 + city_festival_selected_size(), 180, 322, FONT_NORMAL_BLACK);
+    lang_text_draw(58, 30 + city_festival_selected_size(), 180, 322, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

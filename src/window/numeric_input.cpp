@@ -68,7 +68,7 @@ static void draw_number_button(int x, int y, int number, int is_selected) {
     uint8_t number_string[2];
     number_string[0] = '0' + number;
     number_string[1] = 0;
-    text_draw_centered(number_string, x, y, 25, FONT_LARGE_PLAIN, color);
+    text_draw_centered(number_string, x, y, 25, FONT_NORMAL_BLUE, color);
 }
 
 static void draw_foreground(void) {
@@ -76,7 +76,7 @@ static void draw_foreground(void) {
 
     graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
     if (data.num_digits > 0)
-        text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_LARGE_PLAIN, COLOR_FONT_RED);
+        text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
 
 
     draw_number_button(data.x + 21, data.y + 51, 1, data.focus_button_id == 1);

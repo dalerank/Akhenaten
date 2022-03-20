@@ -22,16 +22,16 @@ static arrow_button arrow_buttons_taxes[] = {
 static int arrow_button_focus;
 
 static void draw_row(int group, int number, int *y, int value_last_year, int value_this_year) {
-    lang_text_draw(group, number, 80, *y, FONT_NORMAL_BLACK);
-    text_draw_number(value_last_year, '@', " ", 290, *y, FONT_NORMAL_BLACK);
-    text_draw_number(value_this_year, '@', " ", 430, *y, FONT_NORMAL_BLACK);
+    lang_text_draw(group, number, 80, *y, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(value_last_year, '@', " ", 290, *y, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(value_this_year, '@', " ", 430, *y, FONT_NORMAL_BLACK_ON_LIGHT);
     *y += 15;
 }
 static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
 
-    lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
+    lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(64, 48, 34, 5);
 
     int treasury = city_finance_treasury();
@@ -40,27 +40,27 @@ static int draw_background(void) {
 
     int width;
     if (treasury < 0) {
-        width = lang_text_draw(60, 3, 70, 58, FONT_NORMAL_RED);
-        lang_text_draw_amount(8, 0, -treasury, 72 + width, 58, FONT_NORMAL_RED);
+        width = lang_text_draw(60, 3, 70, 58, FONT_NORMAL_YELLOW);
+        lang_text_draw_amount(8, 0, -treasury, 72 + width, 58, FONT_NORMAL_YELLOW);
     } else {
-        width = lang_text_draw(60, 2, 70, 58, FONT_NORMAL_WHITE);
-        lang_text_draw_amount(8, 0, treasury, 72 + width, 58, FONT_NORMAL_WHITE);
+        width = lang_text_draw(60, 2, 70, 58, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_amount(8, 0, treasury, 72 + width, 58, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     // tax percentage and estimated income
-    lang_text_draw(60, 1, 70, 81, FONT_NORMAL_WHITE);
-    width = text_draw_percentage(city_finance_tax_percentage(), 240, 81, FONT_NORMAL_WHITE);
-    width += lang_text_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE);
-    lang_text_draw_amount(8, 0, city_finance_estimated_tax_income(), 240 + width, 81, FONT_NORMAL_WHITE);
+    lang_text_draw(60, 1, 70, 81, FONT_NORMAL_WHITE_ON_DARK);
+    width = text_draw_percentage(city_finance_tax_percentage(), 240, 81, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(60, 4, 240 + width, 81, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_amount(8, 0, city_finance_estimated_tax_income(), 240 + width, 81, FONT_NORMAL_WHITE_ON_DARK);
 
     // percentage taxpayers
-    width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE);
-    width += lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE);
-    lang_text_draw_amount(60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE, "Db");
+    width = text_draw_percentage(city_finance_percentage_taxed_people(), 70, 103, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(60, 5, 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_amount(60, 22, city_finance_estimated_tax_uncollected(), 70 + width, 103, FONT_NORMAL_WHITE_ON_DARK, "Db");
 
     // table headers
-    lang_text_draw(60, 6, 270, 133, FONT_NORMAL_BLACK);
-    lang_text_draw(60, 7, 400, 133, FONT_NORMAL_BLACK);
+    lang_text_draw(60, 6, 270, 133, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(60, 7, 400, 133, FONT_NORMAL_BLACK_ON_LIGHT);
 
     ///////// INCOMES
 
@@ -82,10 +82,10 @@ static int draw_background(void) {
     draw_row(60, 12, &line_y, last_year->expenses.wages, this_year->expenses.wages);
     draw_row(60, 13, &line_y, last_year->expenses.construction, this_year->expenses.construction);
     // interest (with percentage)
-    width = lang_text_draw(60, 14, 80, line_y, FONT_NORMAL_BLACK);
-    text_draw_percentage(10, 80 + width, line_y, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 290, line_y, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 430, line_y, FONT_NORMAL_BLACK);
+    width = lang_text_draw(60, 14, 80, line_y, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_percentage(10, 80 + width, line_y, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(last_year->expenses.interest, '@', " ", 290, line_y, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(last_year->expenses.interest, '@', " ", 430, line_y, FONT_NORMAL_BLACK_ON_LIGHT);
     line_y += 15;
     draw_row(60, 15, &line_y, last_year->expenses.salary, this_year->expenses.salary);
     draw_row(60, 16, &line_y, last_year->expenses.stolen, this_year->expenses.stolen);

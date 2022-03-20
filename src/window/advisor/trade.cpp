@@ -62,9 +62,9 @@ static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 4, 10, 10);
 
-    lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
-    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 1, 60, 38, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
+    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(54, 1, 60, 38, FONT_NORMAL_BLACK_ON_LIGHT);
 
     return ADVISOR_HEIGHT;
 }
@@ -78,9 +78,9 @@ static void draw_foreground(void) {
         int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 24, y_offset + 58);
 
-        font_t font_color = FONT_NORMAL_WHITE;
+        font_t font_color = FONT_NORMAL_WHITE_ON_DARK;
         if (city_resource_is_mothballed(resource))
-            font_color = FONT_NORMAL_RED;
+            font_color = FONT_NORMAL_YELLOW;
 
         // resource name and amount in warehouses
         lang_text_draw(23, resource, 46, y_offset + 61, font_color);
@@ -91,7 +91,7 @@ static void draw_foreground(void) {
         if (city_resource_is_stockpiled(resource))
             lang_text_draw_centered(54, 3, 210, y_offset + 61, 100, font_color);
         else if (city_resource_is_mothballed(resource))
-            lang_text_draw_centered(18, 5, 210, y_offset + 61, 100, FONT_NORMAL_RED);
+            lang_text_draw_centered(18, 5, 210, y_offset + 61, 100, FONT_NORMAL_YELLOW);
 
         int trade_status = city_int(resource);
         int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
@@ -108,11 +108,11 @@ static void draw_foreground(void) {
                 else if (can_import && can_export)
                     lang_text_draw(54, 33, IMPORT_EXPORT_X, y_offset + 61, font_color);
                 else if (could_import && !could_export)
-                    lang_text_draw(54, 34, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    lang_text_draw(54, 34, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_BLACK_ON_DARK);
                 else if (!could_import && could_export)
-                    lang_text_draw(54, 35, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    lang_text_draw(54, 35, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_BLACK_ON_DARK);
                 else if (could_import && could_export)
-                    lang_text_draw(54, 36, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_GREEN);
+                    lang_text_draw(54, 36, IMPORT_EXPORT_X, y_offset + 61, FONT_NORMAL_BLACK_ON_DARK);
                 break;
             }
             case TRADE_STATUS_IMPORT: { // importing
@@ -147,11 +147,11 @@ static void draw_foreground(void) {
 
     // prices
     button_border_draw(98, 396, 200, 24, focus_button_id == 2);
-    lang_text_draw_centered(54, 30, 100, 402, 200, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(54, 30, 100, 402, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // map
     button_border_draw(398, 396, 200, 24, focus_button_id == 1);
-    lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(54, 2, 400, 402, 200, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
 static int handle_mouse(const mouse *m) {

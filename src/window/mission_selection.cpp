@@ -52,11 +52,11 @@ static void draw_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
-    lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
+    lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (data.choice)
-        lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
-        lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();
 }

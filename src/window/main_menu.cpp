@@ -20,7 +20,7 @@
 #include "window/file_dialog.h"
 #include "window/new_career.h"
 #include "window/player_selection.h"
-#include "window/family_menu.h"
+#include "window/game_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
@@ -71,23 +71,23 @@ static void draw_foreground(void) {
         case ENGINE_ENV_C3:
             for (int i = 0; i < MAX_BUTTONS; i++)
                 large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_GREEN);
-            lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_BLACK_ON_DARK);
             break;
         case ENGINE_ENV_PHARAOH:
             for (int i = 0; i < MAX_BUTTONS; i++)
                 large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_BLACK); // play/new career
-            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_BLACK); // family scores
+            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_BLACK_ON_LIGHT); // play/new career
+            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_BLACK_ON_LIGHT); // family scores
 //            lang_text_draw_centered(1, 3, 192, 146, 256, FONT_NORMAL_BLACK); // load game
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK); // cck/"mission" editor
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK); // "assignment" editor
-            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK); // options
-            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_BLACK); // quit
+            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK_ON_LIGHT); // cck/"mission" editor
+            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK_ON_LIGHT); // "assignment" editor
+            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK_ON_LIGHT); // options
+            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_BLACK_ON_LIGHT); // quit
             break;
     }
 
@@ -131,7 +131,7 @@ static void button_click(int type, int param2) {
     else if (type == 5)
         window_config_show();
     else if (type == 6)
-        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
+        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 2);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {

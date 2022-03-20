@@ -38,7 +38,7 @@ static generic_button buttons[] = {
 static int focus_button_id;
 
 static int get_dialog_width(void) {
-    int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK);
+    int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK_ON_LIGHT);
     if (dialog_width < MIN_DIALOG_WIDTH) dialog_width = MIN_DIALOG_WIDTH;
     if (dialog_width % 16 != 0) {
         // make sure the width is a multiple of 16
@@ -54,25 +54,25 @@ static void draw_foreground(void) {
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 32, dialog_width / 16, 25);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_get_gold(), dialog_x + 16, 48);
-    lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK);
+    lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(144, 80, 22, 15);
 
     for (int rank = 0; rank < 11; rank++) {
-        font_t font = focus_button_id == rank + 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+        font_t font = focus_button_id == rank + 2 ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
         int width = lang_text_draw(52, rank + 4, 176, 90 + 20 * rank, font);
         text_draw_money(city_emperor_salary_for_rank(rank), 176 + width, 90 + 20 * rank, font);
     }
 
     if (!city_victory_has_won()) {
         if (city_emperor_salary_rank() <= city_emperor_rank())
-            lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(52, 76, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
         else
-            lang_text_draw_multiline(52, 71, 152, 336, 336, FONT_NORMAL_BLACK);
+            lang_text_draw_multiline(52, 71, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
     } else
-        lang_text_draw_multiline(52, 77, 152, 336, 336, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(52, 77, 152, 336, 336, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(240, 395, 160, 20, focus_button_id == 1);
-    lang_text_draw_centered(13, 4, 176, 400, 288, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(13, 4, 176, 400, 288, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

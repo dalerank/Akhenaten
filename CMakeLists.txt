@@ -579,7 +579,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.cpp
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.cpp
         ${PROJECT_SOURCE_DIR}/src/window/player_selection.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/family_menu.cpp
+        ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp

@@ -54,33 +54,33 @@ static void draw_request(int index, const scenario_request *request) {
         return;
 
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
-    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);
+    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_offset, 110, 100 + 42 * index);
-    lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
+    lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
-    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE);
-    lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
-        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+        width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         if (treasury < request->amount)
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         }
     } else {
         // normal goods request
         int amount_stored = city_resource_count(request->resource);
-        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
+        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         if (amount_stored < request->amount)
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
         }
     }
 }
@@ -95,12 +95,12 @@ static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
-    text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
+    text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
-    int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK);
+    int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    lang_text_draw_multiline(52, city_rating_favor() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(52, city_rating_favor() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 90, 36, 14);
 
@@ -110,9 +110,9 @@ static int draw_background(void) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
         ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + military_resource, 50, 106);
-        width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
+        width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE_ON_DARK);
         lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id, 80 + width, 102,
-                       FONT_NORMAL_WHITE);
+                       FONT_NORMAL_WHITE_ON_DARK);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
         if (enemy_strength < 46)
@@ -122,13 +122,13 @@ static int draw_background(void) {
         else {
             strength_text_id = 75;
         }
-        width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE);
-        lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE);
+        width = lang_text_draw(52, strength_text_id, 80, 120, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_amount(8, 4, city_military_months_until_distant_battle(), 80 + width, 120, FONT_NORMAL_WHITE_ON_DARK);
         num_requests = 1;
     }
     num_requests = scenario_request_foreach_visible(num_requests, draw_request);
     if (!num_requests)
-        lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(52, 21, 64, 160, 512, FONT_NORMAL_WHITE_ON_DARK);
 
 
     return ADVISOR_HEIGHT;
@@ -168,21 +168,21 @@ static int get_request_status(int index) {
 static void draw_foreground(void) {
     inner_panel_draw(64, 324, 32, 6);
 
-    lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BROWN);
+    lang_text_draw(32, city_emperor_rank(), 72, 338, FONT_LARGE_BLACK_ON_DARK);
 
-    int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE);
-    text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(52, 1, 72, 372, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_money(city_emperor_personal_savings(), 80 + width, 372, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(320, 367, 250, 20, focus_button_id == 1);
-    lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE);
+    lang_text_draw_centered(52, 2, 320, 372, 250, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
-    width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE);
-    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE);
-    lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE);
+    width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE_ON_DARK);
+    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE_ON_DARK);
 
     button_border_draw(320, 341, 250, 20, focus_button_id == 3);
-    lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
+    lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE_ON_DARK);
 
     // Request buttons
     if (get_request_status(0))

@@ -47,11 +47,11 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 //    int value = city_rating_culture();
     int enabled = !open_play && goal;
     button_border_draw(rating_buttons[id].x, rating_buttons[id].y, rating_buttons[id].width, rating_buttons[id].height, focus_button_id == SELECTED_RATING_CULTURE);
-    lang_text_draw_centered(53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK);
-    text_draw_number_centered(value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK);
+    lang_text_draw_centered(53, 1 + id, rating_buttons[id].x, rating_buttons[id].y + 8, rating_buttons[id].width, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered(value, rating_buttons[id].x, rating_buttons[id].y + 21, rating_buttons[id].width, FONT_LARGE_BLACK_ON_LIGHT);
     int width = text_draw_number(enabled ? goal : 0,
-                                 '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK);
-    lang_text_draw(53, 5, rating_buttons[id].x + 5 + width, rating_buttons[id].y + 45, FONT_NORMAL_BLACK);
+                                 '@', " ", rating_buttons[id].x + 5, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(53, 5, rating_buttons[id].x + 5 + width, rating_buttons[id].y + 45, FONT_NORMAL_BLACK_ON_LIGHT);
     int has_reached = !enabled || value >= goal;
     draw_rating_column(rating_buttons[id].x + 30, rating_buttons[id].y, value, has_reached);
 }
@@ -59,12 +59,12 @@ static void draw_rating(int id, int value, int open_play, int goal) {
 static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
-    int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
+    int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     if (!winning_population() || scenario_is_open_play())
-        lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
+        lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     else {
-        width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
-        text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
+        width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
+        text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     ImageDraw::img_generic(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
 
@@ -83,39 +83,39 @@ static int draw_background(void) {
     inner_panel_draw(box_x, box_y, 35, 5);
     switch (city_rating_selected()) {
         case SELECTED_RATING_CULTURE:
-            lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            lang_text_draw(53, 1, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
             if (city_rating_culture() <= 90) {
                 lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(),
-                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
-                lang_text_draw_multiline(53, 50, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                lang_text_draw_multiline(53, 50, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
         case SELECTED_RATING_PROSPERITY:
-            lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            lang_text_draw(53, 2, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
             if (city_rating_prosperity() <= 90) {
                 lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
-                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
-                lang_text_draw_multiline(53, 51, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                lang_text_draw_multiline(53, 51, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
         case SELECTED_RATING_PEACE:
-            lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
             if (city_rating_peace() <= 90) {
                 lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
-                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
-                lang_text_draw_multiline(53, 52, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                lang_text_draw_multiline(53, 52, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
         case SELECTED_RATING_FAVOR:
-            lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE);
+            lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
             if (city_rating_favor() <= 90) {
                 lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
-                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                                         box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
-                lang_text_draw_multiline(53, 53, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE);
+                lang_text_draw_multiline(53, 53, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
         default:
-            lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE);
+            lang_text_draw_centered(53, 8, box_x + 8, 380, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
     }
 

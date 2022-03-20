@@ -328,36 +328,36 @@ static void draw_background(void) {
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
-    text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
-    text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     text_draw_centered(data.language_options[data.selected_language_option],
-                       language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK, 0);
+                       language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         text_draw(translation_for(checkbox_buttons[data.starting_option + i].parameter2), 44,
-                  FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK, 0);
+                  FIRST_BUTTON_Y + BUTTON_SPACING * i + TEXT_Y_OFFSET, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
         generic_button *btn = &checkbox_buttons[value];
         if (data.config_values[btn->parameter1].new_value)
-            text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK, 0);
+            text_draw(string_from_ascii("x"), btn->x + 6, btn->y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     }
 
     for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
         text_draw_centered(translation_for(bottom_buttons[i].parameter2), bottom_buttons[i].x, bottom_buttons[i].y + 9,
-                           bottom_buttons[i].width, FONT_NORMAL_BLACK, 0);
+                           bottom_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
     for (int i = 0; i < sizeof(page_buttons) / sizeof(*page_buttons); i++) {
         text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6,
-                           page_buttons[i].width, FONT_NORMAL_BLACK, 0);
+                           page_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     if (GAME_ENV==ENGINE_ENV_C3) { // TODO: temporary fix to mitigate translation exception
         text_draw_label_and_number_centered((const char *) translation_for(TR_CONFIG_PAGE_LABEL), data.page + 1, "", 60,
-                                            416, 85, FONT_NORMAL_BLACK, 0);
+                                            416, 85, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     //text_draw_centered(translation_for(TR_CONFIG_PAGE_LABEL), 80, 415, 30, FONT_NORMAL_BLACK, 0);

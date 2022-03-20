@@ -169,10 +169,10 @@ static int draw_extra_info_objective(int x_offset, int y_offset, int text_group,
                 break;
             }
         }
-        text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE, 0);
+        text_draw(tmp, x_offset + 11, y_offset, FONT_NORMAL_WHITE_ON_DARK, 0);
     } else
-        lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
-    font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
+        lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    font_t font = obj->value >= obj->target ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW;
     int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + EXTRA_INFO_LINE_SPACE, font);
     text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font);
     return EXTRA_INFO_LINE_SPACE * 2;
@@ -187,10 +187,10 @@ static void draw_extra_info_panel(void) {
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
 
-        lang_text_draw(45, 2, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+        lang_text_draw(45, 2, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         y_current_line += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
-        text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line, FONT_NORMAL_GREEN);
+        text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
@@ -200,13 +200,13 @@ static void draw_extra_info_panel(void) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
         if (GAME_ENV == ENGINE_ENV_C3)
-            lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+            lang_text_draw(68, 148, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         else
-            lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE);
+            lang_text_draw(68, 135, data.x_offset + 11, y_current_line, FONT_NORMAL_WHITE_ON_DARK);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
-        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_GREEN);
-        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_GREEN);
+        int text_width = text_draw_percentage(data.unemployment_percentage, data.x_offset + 11, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
+        text_draw_number(data.unemployment_amount, '(', ")", data.x_offset + 11 + text_width, y_current_line, FONT_NORMAL_BLACK_ON_DARK);
 
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
     }

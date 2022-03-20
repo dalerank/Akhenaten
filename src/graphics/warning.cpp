@@ -11,7 +11,7 @@
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
 static int determine_width(const uint8_t *text) {
-    int width = text_get_width(text, FONT_NORMAL_BLACK);
+    int width = text_get_width(text, FONT_NORMAL_BLACK_ON_LIGHT);
     if (width <= 100)
         return 200;
     else if (width <= 200)
@@ -48,7 +48,7 @@ void warning_draw(void) {
             ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, center + box_width / 2 - 30,
                                    top_offset + 2);
         }
-        text_draw_centered(text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE, 0);
+        text_draw_centered(text, center - box_width / 2 + 1, top_offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
     city_warning_clear_outdated();
 }

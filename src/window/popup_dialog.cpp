@@ -50,29 +50,28 @@ static void draw_background(void) {
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 10);
     if (data.popup_text_offset >= 0) {
-        lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK);
-        if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK) >= 420)
-            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, 110, 140, 420, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(GROUP, data.popup_text_offset, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        if (lang_text_get_width(GROUP, data.popup_text_offset + 1, FONT_NORMAL_BLACK_ON_LIGHT) >= 420)
+            lang_text_draw_multiline(GROUP, data.popup_text_offset + 1, 110, 140, 420, FONT_NORMAL_BLACK_ON_LIGHT);
         else
-            lang_text_draw_centered(GROUP, data.popup_text_offset + 1, 80, 140, 480, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(GROUP, data.popup_text_offset + 1, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);
-        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT);
+        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
     graphics_in_dialog();
-    if (data.has_buttons)
-        image_buttons_draw(80, 80, buttons, 2);
-    else {
-        lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK);
-    }
+    if (data.has_buttons) // this can be 0, 1 or 2
+        image_buttons_draw(80, 80, buttons, data.has_buttons);
+    else
+        lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
-    if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0))
+    if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, data.has_buttons, 0))
         return;
     if (input_go_back_requested(m, h)) {
         data.close_func(0);

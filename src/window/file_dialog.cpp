@@ -58,7 +58,7 @@ static generic_button file_buttons[] = {
 
 static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
 
-static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE};
+static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
 static struct {
     time_millis message_not_exist_start_time;
@@ -135,19 +135,19 @@ static void draw_foreground(void) {
     // title
     if (data.message_not_exist_start_time &&
         time_get_millis() - data.message_not_exist_start_time < NOT_EXIST_MESSAGE_TIMEOUT)
-        lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK);
+        lang_text_draw_centered(43, 2, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
     else if (data.dialog_type == FILE_DIALOG_DELETE)
-        lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK);
+        lang_text_draw_centered(43, 6, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
     else {
         int text_id = data.dialog_type + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
-        lang_text_draw_centered(43, text_id, 160, 50, 304, FONT_LARGE_BLACK);
+        lang_text_draw_centered(43, text_id, 160, 50, 304, FONT_LARGE_BLACK_ON_LIGHT);
     }
-    lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK);
+    lang_text_draw(43, 5, 224, 342, FONT_NORMAL_BLACK_ON_LIGHT);
 
     for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
-        font_t font = FONT_NORMAL_GREEN;
+        font_t font = FONT_NORMAL_BLACK_ON_DARK;
         if (data.focus_button_id == i + 1)
-            font = FONT_NORMAL_WHITE;
+            font = FONT_NORMAL_WHITE_ON_DARK;
 
         encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], file, FILE_NAME_MAX);
         //file_remove_extension(file);

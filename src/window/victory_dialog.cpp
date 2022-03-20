@@ -28,12 +28,12 @@ static void draw_background(void) {
 
     outer_panel_draw(48, 128, 34, 15);
     if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
-        lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
-        lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
-        lang_text_draw_centered(32, scenario_campaign_rank() + 1, 48, 194, 544, FONT_LARGE_BLACK);
+        lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK_ON_LIGHT);
+        lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_centered(32, scenario_campaign_rank() + 1, 48, 194, 544, FONT_LARGE_BLACK_ON_LIGHT);
     } else {
-        text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
-        lang_text_draw_multiline(62, 26, 64, 175, 480, FONT_NORMAL_BLACK);
+        text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK_ON_LIGHT, 0);
+        lang_text_draw_multiline(62, 26, 64, 175, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();
 }
@@ -44,22 +44,22 @@ static void draw_foreground(void) {
     if (city_victory_state() == VICTORY_STATE_WON) {
         large_label_draw(80, 240, 30, focus_button_id == 1);
         if (scenario_campaign_rank() < 10 || scenario_is_custom())
-            lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
         else {
-            lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_BLACK_ON_DARK);
         }
         if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
             // Continue for 2/5 years
             large_label_draw(80, 272, 30, focus_button_id == 2);
-            lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_BLACK_ON_DARK);
 
             large_label_draw(80, 304, 30, focus_button_id == 3);
-            lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_BLACK_ON_DARK);
         }
     } else {
         // lost
         large_label_draw(80, 224, 30, focus_button_id == 1);
-        lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(62, 6, 80, 230, 480, FONT_NORMAL_BLACK_ON_DARK);
     }
     graphics_reset_dialog();
 }

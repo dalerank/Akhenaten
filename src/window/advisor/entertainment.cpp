@@ -62,10 +62,10 @@ static int get_festival_advice(void) {
 }
 
 static void draw_entertainer(int type, int y_offset, int venue, int shows, int coverage, int entertain_coeff) {
-    font_t font = FONT_NORMAL_WHITE;
+    font_t font = FONT_NORMAL_WHITE_ON_DARK;
 
     if (!is_building_enabled(venue)) {
-        font = FONT_NORMAL_RED;
+        font = FONT_NORMAL_YELLOW;
         lang_text_draw(58, 47 + type, 40, y_offset, font);
         lang_text_draw_centered(58, 51, 150, y_offset, 100, font);
         lang_text_draw_centered(58, 51, 230, y_offset, 100, font);
@@ -92,16 +92,16 @@ static void draw_entertainer(int type, int y_offset, int venue, int shows, int c
 static void draw_festival_info(void) {
     inner_panel_draw(48, 252, 34, 6);
     ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255);
-    lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK);
+    lang_text_draw(58, 17, 52, 224, FONT_LARGE_BLACK_ON_LIGHT);
 
-    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE);
-    lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(58, 15, 112 + width, 260, FONT_NORMAL_WHITE_ON_DARK);
     if (city_festival_is_planned())
-        lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(58, 34, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     else {
-        lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(58, 16, 102, 284, 300, FONT_NORMAL_WHITE_ON_DARK);
     }
-    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE);
+    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 static int draw_background(void) {
     city_gods_calculate_moods(0);
@@ -110,14 +110,14 @@ static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
 
-    lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK);
+    lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
     // headers
-    lang_text_draw(58, 1, 180, 42, FONT_NORMAL_BLACK); // working
-    lang_text_draw(58, 55, 180, 56, FONT_NORMAL_BLACK); // stages
-    lang_text_draw(58, 2, 260, 56, FONT_NORMAL_BLACK); // shows
-    lang_text_draw(58, 3, PEOPLE_OFFSET + 10, 56, FONT_NORMAL_BLACK); // can entertain
-    lang_text_draw_centered(58, 4, COVERAGE_OFFSET, 56, COVERAGE_WIDTH, FONT_NORMAL_BLACK); // city coverage
+    lang_text_draw(58, 1, 180, 42, FONT_NORMAL_BLACK_ON_LIGHT); // working
+    lang_text_draw(58, 55, 180, 56, FONT_NORMAL_BLACK_ON_LIGHT); // stages
+    lang_text_draw(58, 2, 260, 56, FONT_NORMAL_BLACK_ON_LIGHT); // shows
+    lang_text_draw(58, 3, PEOPLE_OFFSET + 10, 56, FONT_NORMAL_BLACK_ON_LIGHT); // can entertain
+    lang_text_draw_centered(58, 4, COVERAGE_OFFSET, 56, COVERAGE_WIDTH, FONT_NORMAL_BLACK_ON_LIGHT); // city coverage
 
     inner_panel_draw(32, 70, 36, 8); //5
 
@@ -130,7 +130,7 @@ static int draw_background(void) {
     draw_entertainer(3, y_offset + y_dist * 3, BUILDING_SENET_HOUSE, city_entertainment_hippodrome_shows(), city_culture_coverage_hippodrome(), 0);
     draw_entertainer(9, y_offset + y_dist * 4, BUILDING_ZOO, 0, 0, 0);
 
-    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 208, 512, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(58, 7 + get_entertainment_advice(), 60, 208, 512, FONT_NORMAL_BLACK_ON_LIGHT);
 
     return ADVISOR_HEIGHT;
 }

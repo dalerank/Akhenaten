@@ -34,15 +34,15 @@ static void draw_foreground(void) {
 
     outer_panel_draw(128, 44, 20, 10);
 
-    lang_text_draw_centered(44, 13, 138, 56, 320, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 3, 128, 178, 320, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(44, 13, 138, 56, 320, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(13, 3, 128, 178, 320, FONT_NORMAL_BLACK_ON_LIGHT);
 
     int start_year = scenario_property_start_year();
     button_border_draw(158, 100, 100, 30, focus_button_id == 1);
-    lang_text_draw_centered(20, start_year >= 0 ? 1 : 0, 158, 110, 100, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(20, start_year >= 0 ? 1 : 0, 158, 110, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw(278, 100, 120, 30, focus_button_id == 2);
-    text_draw_number_centered(start_year >= 0 ? start_year : -start_year, 278, 110, 120, FONT_NORMAL_BLACK);
+    text_draw_number_centered(start_year >= 0 ? start_year : -start_year, 278, 110, 120, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

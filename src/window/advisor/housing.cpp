@@ -41,8 +41,8 @@ static void draw_housing_table() {
 
     for (int i = 0; i <= 11; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 70, y_offset + (20 * rows), FONT_NORMAL_GREEN);
-            text_draw_number(housing_type_counts[i], '@', " ", 215, y_offset + (20 * rows), FONT_NORMAL_WHITE);
+            width = lang_text_draw(29, i, 70, y_offset + (20 * rows), FONT_NORMAL_BLACK_ON_DARK);
+            text_draw_number(housing_type_counts[i], '@', " ", 215, y_offset + (20 * rows), FONT_NORMAL_WHITE_ON_DARK);
             rows += 1;
         }
     }
@@ -51,26 +51,26 @@ static void draw_housing_table() {
 
     for (int i = 12; i <= 19; i++) {
         if (housing_type_counts[i]) {
-            width = lang_text_draw(29, i, 270, y_offset + (20 * rows), FONT_NORMAL_GREEN);
-            text_draw_number(housing_type_counts[i], '@', " ", 450, y_offset + (20 * rows), FONT_NORMAL_WHITE);
+            width = lang_text_draw(29, i, 270, y_offset + (20 * rows), FONT_NORMAL_BLACK_ON_DARK);
+            text_draw_number(housing_type_counts[i], '@', " ", 450, y_offset + (20 * rows), FONT_NORMAL_WHITE_ON_DARK);
             rows += 1;
         }
     }
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset + 180, FONT_NORMAL_GREEN, 0);
-    text_draw_number(calculate_total_housing_buildings(), '@', " ", 450, y_offset + 180, FONT_NORMAL_WHITE);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset + 180, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw_number(calculate_total_housing_buildings(), '@', " ", 450, y_offset + 180, FONT_NORMAL_WHITE_ON_DARK);
 
-    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_GREEN, 0);
-    text_draw_number(city_population_open_housing_capacity(), '@', " ", 450, y_offset + 200, FONT_NORMAL_WHITE);
+    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw_number(city_population_open_housing_capacity(), '@', " ", 450, y_offset + 200, FONT_NORMAL_WHITE_ON_DARK);
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_GREEN, 0);
-    text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
 
     for (int i = 0; i <= 3; i++) {
         ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54,
                                y_offset + 260 + (23 * i));
-        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
-        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK);
+        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
 }
@@ -84,16 +84,16 @@ static int draw_background(void) {
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 10, 10);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, 555, 265);
 
-    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
+    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < 58; i++) {
         val = i / 2;
         graphics_draw_vertical_line(545 + i, 260 + 50 - val, 260 + 50, COLOR_RED);
     }
 
-    text_draw(translation_for(TR_ADVISOR_ADVISOR_HEADER_HOUSING), 60, 12, FONT_LARGE_BLACK, 0);
-    text_draw_centered(translation_for(TR_ADVISOR_BUTTON_GRAPHS), 545, 315, 61, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_ADVISOR_ADVISOR_HEADER_HOUSING), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered(translation_for(TR_ADVISOR_BUTTON_GRAPHS), 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     draw_housing_table();
 

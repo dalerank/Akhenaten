@@ -25,7 +25,8 @@
 #include "window/city.h"
 #include "window/editor/map.h"
 #include "window/new_career.h"
-#include "window/family_menu.h"
+#include "window/game_menu.h"
+#include "popup_dialog.h"
 
 #include <string.h>
 #include <game/settings.h>
@@ -68,14 +69,43 @@ static struct {
     int focus_button_id;
     const dir_listing *file_list;
 
-    int selected_player_list_index;
     uint8_t selected_player[MAX_PLAYER_NAME];
+    char selected_player_utf8[MAX_PLAYER_NAME];
 } data;
 
 static int double_click = false;
 
-static void init() {
+static void clear_selectd_name() {
+    strcpy(data.selected_player_utf8, "");
+    encoding_from_utf8(data.selected_player_utf8, data.selected_player, MAX_PLAYER_NAME);
+}
+static void select_name_slot(int index) {
+    if (index == -1 || index > data.file_list->num_files)
+        clear_selectd_name();
+    else {
+        strcpy(data.selected_player_utf8, data.file_list->files[scrollbar.scroll_position + index]);
+        encoding_from_utf8(data.selected_player_utf8, data.selected_player, MAX_PLAYER_NAME);
+    }
+}
+static bool is_selected_name(int index) {
+    return strcmp(data.file_list->files[scrollbar.scroll_position + index], data.selected_player_utf8) == 0;
+}
+static bool is_valid_selected_player() {
+    if (strcmp(data.selected_player_utf8, "") == 0)
+        return false;
+    for (int i = 0; i < data.file_list->num_files; ++i) {
+        if (strcmp(data.selected_player_utf8, data.file_list->files[i]) == 0)
+            return true;
+    }
+    return false;
+}
+
+void window_player_selection_init() {
     data.file_list = dir_find_all_subdirectories("Save/");
+
+    string_copy(setting_player_name(), data.selected_player, MAX_PLAYER_NAME);
+    encoding_to_utf8(data.selected_player, data.selected_player_utf8, MAX_PLAYER_NAME, 0);
+
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
 }
 
@@ -87,32 +117,36 @@ static void draw_background(void) {
 }
 static void draw_foreground(void) {
     graphics_in_dialog();
-    uint8_t file[FILE_NAME_MAX];
 
     outer_panel_draw(128, 40, 24, 21);
     inner_panel_draw(144, FILE_LIST_Y - 8, 20, 13);
 
     // title
-    lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK);
+    lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK_ON_LIGHT);
 
     // family names
+    uint8_t list_name[FILE_NAME_MAX];
     for (int i = 0; i < NUM_FILES_IN_VIEW; i++) {
-        font_t font = FONT_NORMAL_GREEN;
-        if (data.focus_button_id == i + 1 || data.selected_player_list_index == i + 1)
-            font = FONT_NORMAL_WHITE;
-
-        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], file, FILE_NAME_MAX);
-        text_ellipsize(file, font, MAX_FILE_WINDOW_TEXT_WIDTH);
-        text_draw(file, 160, FILE_LIST_Y + 2 + (16 * i), font, 0);
+        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
+        font_t font = FONT_NORMAL_BLACK_ON_DARK;
+        if (is_selected_name(i)) {
+            font = FONT_NORMAL_WHITE_ON_DARK;
+//            if (data.focus_button_id == i + 1)
+//                font = FONT_NORMAL_BLUE;
+        }
+        else if (data.focus_button_id == i + 1)
+            font = FONT_NORMAL_YELLOW;
+        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
+        text_draw(list_name, 160, FILE_LIST_Y + 2 + (16 * i), font, 0);
     }
 
     // buttons
     for (int i = NUM_FILES_IN_VIEW; i < NUM_FILES_IN_VIEW + 4; i++) {
         button_border_draw(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height,data.focus_button_id == i + 1 ? 1 : 0);
         if (i - NUM_FILES_IN_VIEW < 3)
-            lang_text_draw_centered(292, i - NUM_FILES_IN_VIEW, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(292, i - NUM_FILES_IN_VIEW, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
         else
-            lang_text_draw_centered(292, 4, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(292, 4, buttons[i].x, buttons[i].y + 6, buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     scrollbar_draw(&scrollbar);
@@ -120,16 +154,22 @@ static void draw_foreground(void) {
     graphics_reset_dialog();
 }
 
+static void confirm_nothing(bool accepted) {
+}
+static void confirm_delete_player(bool accepted) {
+
+}
 static void button_select_file(int index, int param2) {
     if (index < data.file_list->num_files) {
-        data.selected_player_list_index = index + 1;
-        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + index], data.selected_player, MAX_PLAYER_NAME);
+        select_name_slot(index);
         setting_set_player_name(data.selected_player);
         if (double_click) {
             double_click = false;
             button_click(2, 0);
         }
     }
+    else
+        clear_selectd_name();
 }
 static void button_click(int param1, int param2) {
     switch (param1) {
@@ -137,8 +177,16 @@ static void button_click(int param1, int param2) {
             window_new_career_show();
             break;
         case 1: // delete player
+            if (!is_valid_selected_player())
+                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, 1);
+            else
+                window_popup_dialog_show(POPUP_DIALOG_DELETE_DYNASTY, confirm_delete_player, 2);
             break;
         case 2: // proceed with selected player
+            if (!is_valid_selected_player())
+                window_popup_dialog_show(POPUP_DIALOG_NO_DYNASTY, confirm_nothing, 1);
+            else
+                window_game_menu_show();
             break;
         case 3: // back to main menu
             window_go_back();
@@ -155,10 +203,10 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     double_click = m->left.double_click;
 
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, NUM_FILES_IN_VIEW + 4, &data.focus_button_id) ||
-        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, NUM_FILES_IN_VIEW + 4, &data.focus_button_id))
         return;
-    }
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+        return;
 }
 
 void window_player_selection_show(void) {
@@ -168,6 +216,6 @@ void window_player_selection_show(void) {
             draw_foreground,
             handle_input
     };
-    init();
+    window_player_selection_init();
     window_show(&window);
 }

@@ -60,7 +60,7 @@ static void draw_status(void) {
 
     int selected_tool = editor_tool_type();
     int brush_size = editor_tool_brush_size() - 1;
-    lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE);
+    lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE_ON_DARK);
     switch (selected_tool) {
         case TOOL_GRASS:
         case TOOL_TREES:
@@ -70,7 +70,7 @@ static void draw_status(void) {
         case TOOL_MEADOW:
         case TOOL_RAISE_LAND:
         case TOOL_LOWER_LAND:
-            lang_text_draw(48, brush_size, text_offset, 194, FONT_NORMAL_GREEN);
+            lang_text_draw(48, brush_size, text_offset, 194, FONT_NORMAL_BLACK_ON_DARK);
             break;
         default:
             break;
@@ -79,7 +79,7 @@ static void draw_status(void) {
     map_point entry = scenario_map_entry();
     map_point exit = scenario_map_exit();
     int people_text;
-    font_t people_font = FONT_NORMAL_RED;
+    font_t people_font = FONT_NORMAL_YELLOW;
     if (entry.x == -1) {
         if (exit.x == -1)
             people_text = 60;
@@ -90,7 +90,7 @@ static void draw_status(void) {
         people_text = 61;
     else {
         people_text = 62;
-        people_font = FONT_NORMAL_GREEN;
+        people_font = FONT_NORMAL_BLACK_ON_DARK;
     }
     lang_text_draw(44, people_text, text_offset, 224, people_font);
 
@@ -98,34 +98,34 @@ static void draw_status(void) {
     exit = scenario_map_river_exit();
     if (entry.x != -1 || exit.x != -1) {
         if (entry.x == -1)
-            lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_RED);
+            lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_YELLOW);
         else if (exit.x == -1)
-            lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_RED);
+            lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_YELLOW);
         else {
-            lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_GREEN);
+            lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
 
     int invasion_points = scenario_editor_count_invasion_points();
     if (invasion_points == 1)
-        lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_GREEN);
+        lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_BLACK_ON_DARK);
     else if (invasion_points > 1) {
-        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN);
-        lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_GREEN);
+        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         editor_invasion first_invasion;
         scenario_editor_invasion_get(0, &first_invasion);
         if (first_invasion.type)
-            lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_RED);
+            lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_YELLOW);
 
     }
 
     if (scenario_editor_earthquake_severity() > 0) {
         map_point earthquake = scenario_editor_earthquake_point();
         if (earthquake.x == -1 || earthquake.y == -1)
-            lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_RED);
+            lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_YELLOW);
         else {
-            lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_GREEN);
+            lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
 }

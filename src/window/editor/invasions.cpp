@@ -48,9 +48,9 @@ static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
-    lang_text_draw(44, 15, 20, 12, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(152, 2, 32, 376, 576, FONT_NORMAL_BLACK);
+    lang_text_draw(44, 15, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(152, 2, 32, 376, 576, FONT_NORMAL_BLACK_ON_LIGHT);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -65,12 +65,12 @@ static void draw_foreground(void) {
         editor_invasion invasion;
         scenario_editor_invasion_get(i, &invasion);
         if (invasion.type) {
-            text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK);
-            lang_text_draw_year(scenario_property_start_year() + invasion.year, x + 60, y + 6, FONT_NORMAL_BLACK);
-            int width = text_draw_number(invasion.amount, '@', " ", x + 120, y + 6, FONT_NORMAL_BLACK);
-            lang_text_draw(34, invasion.type, x + 115 + width, y + 6, FONT_NORMAL_BLACK);
+            text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + invasion.year, x + 60, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            int width = text_draw_number(invasion.amount, '@', " ", x + 120, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw(34, invasion.type, x + 115 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 

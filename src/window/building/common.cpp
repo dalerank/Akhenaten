@@ -79,24 +79,24 @@ static void draw_employment_details(building_info_context *c, building *b, int y
                            c->x_offset + 40, y_offset + 6);
     if (text_id) {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
-                                          c->x_offset + 60, y_offset + 10, FONT_NORMAL_GREEN);
+                                          c->x_offset + 60, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-                                  c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_GREEN);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_GREEN);
-        lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_GREEN);
+                                  c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
-                                          c->x_offset + 60, y_offset + 16, FONT_NORMAL_GREEN);
+                                          c->x_offset + 60, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
         width += text_draw_number(model_get_building(b->type)->laborers, '(', "",
-                                  c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_GREEN);
-        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_GREEN);
+                                  c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 static void draw_employment_farm_ph_details(building_info_context *c, building *b, int y_offset, int text_id) {
     y_offset += c->y_offset;
     ImageDraw::img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 14,
                            c->x_offset + 40, y_offset + 6);
-    int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
+    int width = lang_text_draw_multiline(177, text_id, c->x_offset + 70, y_offset + 10, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_DARK);
 }
 void window_building_draw_employment(building_info_context *c, int y_offset) {
     building *b = building_get(c->building_id);
@@ -117,11 +117,11 @@ void window_building_draw_employment_flood_farm(building_info_context *c, int y_
 }
 void window_building_draw_description(building_info_context *c, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56,
-                             16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+                             16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id) {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset,
-                             16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+                             16 * (c->width_blocks - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 void window_building_play_sound(building_info_context *c, const char *sound_file) {
     if (c->can_play_sound) {

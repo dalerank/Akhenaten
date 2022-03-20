@@ -280,20 +280,20 @@ static void print_society_info(void) {
 
 
     // Housing prosperity cap
-    width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent patricians
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 360, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 360, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent impoverished
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 378, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 378, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 378, FONT_NORMAL_WHITE_ON_DARK);
 
     // Average tax
-    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 396, FONT_NORMAL_WHITE, 0);
-    text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 396, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
 }
 
 static void print_census_info(void) {
@@ -301,20 +301,20 @@ static void print_census_info(void) {
     int width;
 
     // Average age
-    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_AGE), 75, 342, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_population_average_age(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_AGE), 75, 342, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_number(city_population_average_age(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
 
     // Percent working age
-    width = text_draw(translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), 75, 360, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(city_population_percent_in_workforce(), 75 + width, 360, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENT_IN_WORKFORCE), 75, 360, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_percentage(city_population_percent_in_workforce(), 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
 
     // Yearly births
-    width = text_draw(translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), 75, 378, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), 75, 378, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_number(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE_ON_DARK);
 
     // Yearly deaths
-    width = text_draw(translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), 75, 396, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), 75, 396, FONT_NORMAL_WHITE_ON_DARK, 0);
+    text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
 }
 
 static void print_history_info(void) {
@@ -322,36 +322,36 @@ static void print_history_info(void) {
 
     // food stores
     if (scenario_property_rome_supplies_wheat())
-        lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 11, 75, 342, FONT_NORMAL_WHITE_ON_DARK);
     else {
-        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE);
+        width = lang_text_draw_amount(8, 6, city_resource_operating_granaries(), 70, 342, FONT_NORMAL_WHITE_ON_DARK);
         if (city_resource_food_supply_months() > 0) {
-            width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE);
-            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 70 + width, 342, FONT_NORMAL_WHITE);
+            width += lang_text_draw(55, 12, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw_amount(8, 4, city_resource_food_supply_months(), 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
         } else if (city_resource_food_stored() > city_resource_food_needed() / 2)
-            lang_text_draw(55, 13, 70 + width, 342, FONT_NORMAL_WHITE);
+            lang_text_draw(55, 13, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
         else if (city_resource_food_stored() > 0)
-            lang_text_draw(55, 15, 70 + width, 342, FONT_NORMAL_WHITE);
+            lang_text_draw(55, 15, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
         else {
-            lang_text_draw(55, 14, 70 + width, 342, FONT_NORMAL_WHITE);
+            lang_text_draw(55, 14, 70 + width, 342, FONT_NORMAL_WHITE_ON_DARK);
         }
     }
 
     // food types eaten
-    width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE);
-    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE);
+    width = lang_text_draw(55, 16, 75, 360, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number(city_resource_food_types_available(), '@', " ", 75 + width, 360, FONT_NORMAL_WHITE_ON_DARK);
 
     // immigration
     int newcomers = city_migration_newcomers();
     if (newcomers >= 5) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE);
-        lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
+        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
     } else if (city_migration_no_room_for_immigrants()) {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(55, 19, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
     } else if (city_migration_percentage() < 80) {
-        lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 25, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
         int text_id;
         switch (city_migration_int()) {
             case NO_IMMIGRATION_LOW_WAGES:
@@ -377,15 +377,15 @@ static void print_history_info(void) {
                 break;
         }
         if (text_id)
-            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE);
+            lang_text_draw(55, text_id, 75, 396, FONT_NORMAL_WHITE_ON_DARK);
 
     } else {
-        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE);
-        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE);
+        lang_text_draw(55, 24, 75, 378, FONT_NORMAL_WHITE_ON_DARK);
+        width = text_draw_number(newcomers, '@', " ", 70, 396, FONT_NORMAL_WHITE_ON_DARK);
         if (newcomers == 1)
-            lang_text_draw(55, 18, 70 + width, 396, FONT_NORMAL_WHITE);
+            lang_text_draw(55, 18, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
         else {
-            lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
+            lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE_ON_DARK);
         }
     }
 }
@@ -404,17 +404,17 @@ static int draw_background(void) {
     int graph_order = city_population_graph_order();
     // Title: depends on big graph shown
     if (graph_order < 2)
-        lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK);
+        lang_text_draw(55, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     else if (graph_order < 4)
-        lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK);
+        lang_text_draw(55, 1, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     else {
-        lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
+        lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
     }
 
     ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
 
-    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
+    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);
@@ -487,10 +487,10 @@ static int draw_background(void) {
             break;
     }
 
-    text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK, 0);
-    lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK);
+    text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
     big_graph(1, 64, 64);
     top_graph(0, 505, 63);

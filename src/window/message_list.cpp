@@ -76,7 +76,7 @@ static void draw_background(void) {
     data.text_height_blocks = data.height_blocks - 9;
 
     outer_panel_draw(0, 32, data.width_blocks, data.height_blocks);
-    lang_text_draw_centered(63, 0, 0, 48, 16 * data.width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(63, 0, 0, 48, 16 * data.width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
 
     if (city_message_count() > 0) {
@@ -84,11 +84,11 @@ static void draw_background(void) {
         lang_text_draw(63, 3, data.x_text + 180, data.y_text - 12, FONT_SMALL_PLAIN);
         lang_text_draw_multiline(63, 4,
                                  data.x_text + 50, data.y_text + 12 + 16 * data.text_height_blocks,
-                                 16 * data.text_width_blocks - 100, FONT_NORMAL_BLACK);
+                                 16 * data.text_width_blocks - 100, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
         lang_text_draw_multiline(63, 1,
                                  data.x_text + 16, data.y_text + 80,
-                                 16 * data.text_width_blocks - 48, FONT_NORMAL_GREEN);
+                                 16 * data.text_width_blocks - 48, FONT_NORMAL_BLACK_ON_DARK);
     }
     graphics_reset_dialog();
 }
@@ -111,14 +111,14 @@ static void draw_messages(int total_messages) {
         } else
             ImageDraw::img_generic(image_id_from_group(GROUP_MESSAGE_ICON) + 14 + image_type_offset, data.x_text + 12,
                                    data.y_text + 6 + 20 * i);
-        font_t font = FONT_NORMAL_WHITE;
+        font_t font = FONT_NORMAL_WHITE_ON_DARK;
         if (data.focus_button_id == i + 1)
-            font = FONT_NORMAL_RED;
+            font = FONT_NORMAL_YELLOW;
 
         if (false) {
             int o = -100;
             int oo = 45;
-            font_t f = FONT_LARGE_PLAIN;
+            font_t f = FONT_NORMAL_BLUE;
             color_t c = COLOR_WHITE;
             uint8_t str[10];
 

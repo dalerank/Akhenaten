@@ -67,14 +67,14 @@ static void draw_festival_info(int y_offset) {
     ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 15, 460, 255 + y_offset);
 //    lang_text_draw(58, 17, 52, 224 + y_offset, FONT_LARGE_BLACK);
 
-    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE);
-    lang_text_draw(58, 15, 112 + width, 260 + y_offset, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(58, 15, 112 + width, 260 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
     if (city_festival_is_planned()) {
         int size = city_festival_selected_size();
         int months_left = city_festival_months_till_next();
         int planned_month = game_time_month() + months_left;
-        width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE);
-        lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE);
+        width = lang_text_draw(58, 34, 102, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw(160, planned_month, 102 + width, 284 + y_offset, FONT_NORMAL_WHITE_ON_DARK);
         switch (size) {
             case FESTIVAL_SMALL:
                 size = 10;
@@ -86,10 +86,10 @@ static void draw_festival_info(int y_offset) {
                 size = 31;
                 break;
         }
-        lang_text_draw_multiline(295, size + months_left - 1, 56, 305 + y_offset, 400, FONT_NORMAL_WHITE);
+        lang_text_draw_multiline(295, size + months_left - 1, 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
     } else {
-        lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE);
-        lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(58, 16, 102, 284 + y_offset, 300, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
 static void draw_god_row(int god, int y_offset, int small_temple, int large_temple, int shrine) {
@@ -97,15 +97,15 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
 //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
     int is_known = is_god_known(god);
-    font_t font = FONT_NORMAL_WHITE;
+    font_t font = FONT_NORMAL_WHITE_ON_DARK;
     if (is_known == GOD_STATUS_UNKNOWN)
-        font = FONT_NORMAL_RED;
+        font = FONT_NORMAL_YELLOW;
 //    else if (is_known == GOD_STATUS_PATRON)
 //        font = FONT_NORMAL_RED;
 
     lang_text_draw(157, god, 40, y_offset, font); // god name
     lang_text_draw(187, is_known, 100, y_offset, font); // unknown/known deity?
-    lang_text_draw(158, god, 40, y_offset + 20, FONT_NORMAL_GREEN); // god description
+    lang_text_draw(158, god, 40, y_offset + 20, FONT_NORMAL_BLACK_ON_DARK); // god description
 
     int width = 0;
     if (is_known == GOD_STATUS_UNKNOWN) {
@@ -140,22 +140,22 @@ static int draw_background(void) {
     } else {
         height_blocks = 27; //20
         outer_panel_draw(0, 0, 40, height_blocks);
-        lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(59, 43, 60, 256, 520, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
 
-    lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
+    lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK_ON_LIGHT);
 
     // table header
-    lang_text_draw(59, 5, 180, 32, FONT_NORMAL_BLACK); // temple
-    lang_text_draw(59, 2, 170, 46, FONT_NORMAL_BLACK); // complexes
-    lang_text_draw(59, 1, 250, 46, FONT_NORMAL_BLACK); // tempes
-    lang_text_draw(28, 150, 320, 46, FONT_NORMAL_BLACK); // shrines
-    lang_text_draw(59, 6, 390, 18, FONT_NORMAL_BLACK); // months
-    lang_text_draw(59, 8, 400, 32, FONT_NORMAL_BLACK); // since
-    lang_text_draw(59, 7, 390, 46, FONT_NORMAL_BLACK); // festival
-    lang_text_draw(59, 3, 460, 46, FONT_NORMAL_BLACK); // appeasement
+    lang_text_draw(59, 5, 180, 32, FONT_NORMAL_BLACK_ON_LIGHT); // temple
+    lang_text_draw(59, 2, 170, 46, FONT_NORMAL_BLACK_ON_LIGHT); // complexes
+    lang_text_draw(59, 1, 250, 46, FONT_NORMAL_BLACK_ON_LIGHT); // tempes
+    lang_text_draw(28, 150, 320, 46, FONT_NORMAL_BLACK_ON_LIGHT); // shrines
+    lang_text_draw(59, 6, 390, 18, FONT_NORMAL_BLACK_ON_LIGHT); // months
+    lang_text_draw(59, 8, 400, 32, FONT_NORMAL_BLACK_ON_LIGHT); // since
+    lang_text_draw(59, 7, 390, 46, FONT_NORMAL_BLACK_ON_LIGHT); // festival
+    lang_text_draw(59, 3, 460, 46, FONT_NORMAL_BLACK_ON_LIGHT); // appeasement
 
     inner_panel_draw(32, 60, 36, 13);
 
@@ -173,7 +173,7 @@ static int draw_background(void) {
 
     city_gods_calculate_least_happy();
 
-    lang_text_draw_multiline(59, 9 + get_religion_advice(), 60, 273, 512, FONT_NORMAL_BLACK); // 21
+    lang_text_draw_multiline(59, 9 + get_religion_advice(), 60, 273, 512, FONT_NORMAL_BLACK_ON_LIGHT); // 21
 
     draw_festival_info(68);
 

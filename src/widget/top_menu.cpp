@@ -261,7 +261,7 @@ void widget_top_menu_draw(int force) {
     int treasury = city_finance_treasury();
     if (treasury < 0)
         treasure_color = COLOR_FONT_RED;
-    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
+    font_t treasure_font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW;
     int s_width = screen_width();
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         data.offset_funds = s_width - 540;
@@ -271,7 +271,7 @@ void widget_top_menu_draw(int force) {
 
 
         lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date - 2, 5, 110,
-                                            FONT_NORMAL_GREEN, 0);
+                                            FONT_NORMAL_BLACK_ON_DARK, 0);
         // Orientation icon
         if (orientation_button_pressed) {
             ImageDraw::img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3,
@@ -291,10 +291,10 @@ void widget_top_menu_draw(int force) {
             int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
             text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
-            width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
-            text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_GREEN);
+            width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_DARK);
+            text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_DARK);
 
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_GREEN, 0);
+            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_BLACK_ON_DARK, 0);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             // TODO: draw for 800x600 resolution
         }
@@ -318,9 +318,9 @@ void widget_top_menu_draw(int force) {
             int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
             text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width + 100, 5, treasure_font, 0);
 
-            width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_GREEN);
+            width = lang_text_draw(6, 1, data.offset_population + 2 + 100, 5, FONT_NORMAL_BLACK_ON_DARK);
             text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width + 100, 5,
-                             FONT_NORMAL_GREEN);
+                             FONT_NORMAL_BLACK_ON_DARK);
         }
     } else {
         if (GAME_ENV == ENGINE_ENV_C3) {
@@ -341,8 +341,8 @@ void widget_top_menu_draw(int force) {
             int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);
             text_draw_number_colored(treasury, '@', " ", data.offset_funds + 7 + width, 5, treasure_font, 0);
 
-            width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_GREEN);
-            text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_GREEN);
+            width = lang_text_draw(6, 1, data.offset_population + 2, 5, FONT_NORMAL_BLACK_ON_DARK);
+            text_draw_number(city_population(), '@', " ", data.offset_population + 7 + width, 5, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
     drawn.treasury = treasury;

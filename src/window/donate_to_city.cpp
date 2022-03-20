@@ -46,17 +46,17 @@ static void draw_background(void) {
 
     outer_panel_draw(64, 160, 32, 10);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + resource_get_gold(), 80, 176);
-    lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK);
+    lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw(112, 208, 26, 4);
 
-    text_draw_number_centered(0, 124, 221, 64, FONT_NORMAL_WHITE);
-    text_draw_number_centered(500, 204, 221, 64, FONT_NORMAL_WHITE);
-    text_draw_number_centered(2000, 284, 221, 64, FONT_NORMAL_WHITE);
-    text_draw_number_centered(5000, 364, 221, 64, FONT_NORMAL_WHITE);
-    lang_text_draw_centered(52, 19, 444, 221, 64, FONT_NORMAL_WHITE);
+    text_draw_number_centered(0, 124, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(500, 204, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(2000, 284, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw_number_centered(5000, 364, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw_centered(52, 19, 444, 221, 64, FONT_NORMAL_WHITE_ON_DARK);
 
-    int width = lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(52, 17, 128, 248, FONT_NORMAL_WHITE_ON_DARK);
 
     int button_start = 128 + width + 10;
     if (button_start < 240)
@@ -65,10 +65,10 @@ static void draw_background(void) {
     arrow_buttons[0].x_offset = button_start;
     arrow_buttons[1].x_offset = arrow_buttons[0].x_offset + arrow_buttons[0].size;
 
-    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE);
+    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE_ON_DARK);
 
-    lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK);
-    lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

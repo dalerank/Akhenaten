@@ -428,15 +428,15 @@ static void draw_debug_ui(int x, int y) {
 static void draw_overlay_text(int x_offset) {
     if (GAME_ENV == ENGINE_ENV_C3) {
         if (game_state_overlay())
-            lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_BLACK_ON_DARK);
         else
-            lang_text_draw_centered(6, 4, x_offset, 32, 117, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(6, 4, x_offset, 32, 117, FONT_NORMAL_BLACK_ON_DARK);
     }
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         if (game_state_overlay())
-            lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_DARK);
         else
-            lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {

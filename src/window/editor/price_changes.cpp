@@ -52,9 +52,9 @@ static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
-    lang_text_draw(44, 95, 20, 12, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(152, 3, 32, 376, 576, FONT_NORMAL_BLACK);
+    lang_text_draw(44, 95, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(152, 3, 32, 376, 576, FONT_NORMAL_BLACK_ON_LIGHT);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -69,14 +69,14 @@ static void draw_foreground(void) {
         editor_price_change price_change;
         scenario_editor_price_change_get(i, &price_change);
         if (price_change.year) {
-            text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK);
-            lang_text_draw_year(scenario_property_start_year() + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK);
+            text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
             ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 140, y + 3);
-            int width = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK);
-            text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK);
+            int width = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(44, 102, x, y + 6, 290, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(44, 102, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 

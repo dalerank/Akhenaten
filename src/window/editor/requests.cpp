@@ -52,9 +52,9 @@ static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
-    lang_text_draw(44, 14, 20, 12, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK);
-    lang_text_draw_multiline(152, 1, 32, 376, 576, FONT_NORMAL_BLACK);
+    lang_text_draw(44, 14, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_multiline(152, 1, 32, 376, 576, FONT_NORMAL_BLACK_ON_LIGHT);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -69,13 +69,13 @@ static void draw_foreground(void) {
         editor_request request;
         scenario_editor_request_get(i, &request);
         if (request.resource) {
-            text_draw_number(request.year, '+', " ", x + 20, y + 6, FONT_NORMAL_BLACK);
-            lang_text_draw_year(scenario_property_start_year() + request.year, x + 80, y + 6, FONT_NORMAL_BLACK);
-            int width = text_draw_number(request.amount, '@', " ", x + 180, y + 6, FONT_NORMAL_BLACK);
+            text_draw_number(request.year, '+', " ", x + 20, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            lang_text_draw_year(scenario_property_start_year() + request.year, x + 80, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            int width = text_draw_number(request.amount, '@', " ", x + 180, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
             ImageDraw::img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 190 + width, y + 3);
         } else {
-            lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 

@@ -17,6 +17,7 @@
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
 #include "window/mission_selection.h"
+#include "player_selection.h"
 
 static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
@@ -26,31 +27,23 @@ static image_button image_buttons[] = {
         {305, 0, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, start_mission, button_none, 1, 0, 1}
 };
 
-static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE};
+static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
 static uint8_t player_name[32];
 
 static void init(void) {
     setting_clear_personal_savings();
     scenario_settings_init();
-//    string_copy(lang_get_string(9, 5), player_name, 32);
-//    string_copy(0, player_name, 32);
     encoding_from_utf8("", player_name, 0);
     input_box_start(&player_name_input, player_name, 32, 1);
 }
 
-//static void draw_background(void) {
-//    graphics_clear_screens();
-//    graphics_in_dialog();
-//    ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-//    graphics_reset_dialog();
-//}
 static void draw_foreground(void) {
     graphics_in_dialog();
     outer_panel_draw(128, 160, 24, 8);
-    lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK);
-    lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK);
-    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(31, 0, 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK_ON_LIGHT);
     input_box_draw(&player_name_input);
 
     image_buttons_draw(159, 249, image_buttons, 2);
@@ -67,6 +60,7 @@ static void start_mission(int param1, int param2) {
     setting_set_player_name(player_name);
 //    window_mission_selection_show();
     window_go_back();
+    window_player_selection_init();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {

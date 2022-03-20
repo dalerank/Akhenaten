@@ -199,20 +199,20 @@ static void draw_city_info(const empire_city *city) {
     int x_offset = data.x_min + 28;
     int y_offset = data.y_max - 85;
 
-    int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE);
+    int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE_ON_DARK);
 
     switch (city->type) {
         case EMPIRE_CITY_DISTANT_ROMAN:
         case EMPIRE_CITY_VULNERABLE_ROMAN:
-            lang_text_draw(47, 12, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
+            lang_text_draw(47, 12, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             break;
         case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_FOREIGN:
         case EMPIRE_CITY_FUTURE_ROMAN:
-            lang_text_draw(47, 0, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
+            lang_text_draw(47, 0, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             break;
         case EMPIRE_CITY_OURS: {
-            width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
+            width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             int resource_x_offset = x_offset + 30 + width;
             for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
                 if (empire_object_city_sells_resource(city->empire_object_id, r)) {
@@ -223,7 +223,7 @@ static void draw_city_info(const empire_city *city) {
             break;
         }
         case EMPIRE_CITY_TRADE: {
-            width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
+            width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             int resource_x_offset = x_offset + 30 + width;
             for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
                 if (empire_object_city_sells_resource(city->empire_object_id, r)) {
@@ -232,7 +232,7 @@ static void draw_city_info(const empire_city *city) {
                 }
             }
             resource_x_offset += 50;
-            resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_GREEN);
+            resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             resource_x_offset += 10;
             for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
                 if (empire_object_city_buys_resource(city->empire_object_id, r)) {
@@ -252,12 +252,12 @@ static void draw_panel_buttons(const empire_city *city) {
         draw_city_info(city);
     else {
         lang_text_draw_centered(150, scenario_empire_id(), data.x_min, data.y_max - 85, data.x_max - data.x_min,
-                                FONT_NORMAL_GREEN);
+                                FONT_NORMAL_BLACK_ON_DARK);
     }
-    lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
+    lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_BLACK_ON_DARK);
 
     button_border_draw(data.x_min + 104, data.y_max - 52, 100, 24, data.focus_button_id == 1);
-    lang_text_draw_centered(44, 7, data.x_min + 104, data.y_max - 45, 100, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(44, 7, data.x_min + 104, data.y_max - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
 }
 
 static void draw_foreground(void) {

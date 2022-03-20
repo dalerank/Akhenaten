@@ -53,10 +53,10 @@ static void draw_foreground(void) {
     label_draw(144, 262, 12, data.focus_button_id == 2 ? 1 : 2);
 
     // title
-    lang_text_draw_centered(45, 0, 96, 92, 288, FONT_LARGE_BLACK);
+    lang_text_draw_centered(45, 0, 96, 92, 288, FONT_LARGE_BLACK_ON_LIGHT);
     // ok/cancel label texts
-    lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_BLACK_ON_DARK);
+    lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
     // game speed
     lang_text_draw(45, 2, 112, 146, FONT_NORMAL_PLAIN);
     text_draw_percentage(setting_game_speed(), 328, 146, FONT_NORMAL_PLAIN);

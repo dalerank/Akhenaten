@@ -18,16 +18,16 @@ static void draw_background(void) {
 
     graphics_shade_rect(33, 53, 574, 334, 0);
     outer_panel_draw(16, 144, 38, 11);
-    lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK);
-    lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK_ON_LIGHT);
     for (int i = 1; i < 16; i++) {
         int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
         text_draw_number_centered(trade_price_buy(i), 120 + 30 * i, 229, 30, FONT_SMALL_PLAIN);
         text_draw_number_centered(trade_price_sell(i), 120 + 30 * i, 254, 30, FONT_SMALL_PLAIN);
     }
-    lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }

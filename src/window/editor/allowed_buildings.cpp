@@ -76,8 +76,8 @@ static void draw_foreground(void) {
 
     outer_panel_draw(16, 32, 38, 26);
 
-    lang_text_draw(44, 47, 26, 42, FONT_LARGE_BLACK);
-    lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK);
+    lang_text_draw(44, 47, 26, 42, FONT_LARGE_BLACK_ON_LIGHT);
+    lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK_ON_LIGHT);
     for (int i = 1; i <= 47; i++) {
         int x, y;
         if (i <= 16) {
@@ -92,7 +92,7 @@ static void draw_foreground(void) {
         }
         button_border_draw(x, y, 190, 18, focus_button_id == i);
         if (scenario_editor_is_building_allowed(i))
-            lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK_ON_LIGHT);
         else {
             lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         }
