@@ -37,3 +37,8 @@ distribution/
 *.ods#
 
 *.lnk
+
+# Tools
+/tools/*
+!/tools/*.zip
+!/tools/*.7z
