@@ -51,7 +51,6 @@ static void draw_background() {
     ImageDraw::img_generic(image_id_from_group(GROUP_GAME_MENU), 0, 0);
     graphics_reset_dialog();
 }
-
 static void draw_foreground() {
     graphics_in_dialog();
     outer_panel_draw(128, 56, 24, 19);

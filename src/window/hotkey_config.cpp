@@ -185,7 +185,7 @@ static void init(void) {
 static void draw_background(void) {
     graphics_clear_screen(CANVAS_UI);
 
-    ImageDraw::img_background(image_id_from_group(GROUP_CONFIG));
+    ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);

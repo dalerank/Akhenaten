@@ -66,7 +66,7 @@ static int draw_background(void) {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     }
-    ImageDraw::img_generic(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_RATINGS_BACKGROUND), 60, 48 - 10);
 
     int open_play = scenario_is_open_play();
 

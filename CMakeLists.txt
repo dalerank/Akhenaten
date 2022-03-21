@@ -378,7 +378,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/time.cpp
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
     ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
-        ${PROJECT_SOURCE_DIR}/src/game/player_scores.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/player_data.cpp
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp
@@ -578,8 +578,9 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.cpp
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.cpp
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.cpp
-        ${PROJECT_SOURCE_DIR}/src/window/player_selection.cpp
-        ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/player_selection.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
+        ${PROJECT_SOURCE_DIR}/src/window/records.cpp
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp

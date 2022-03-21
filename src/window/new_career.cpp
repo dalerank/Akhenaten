@@ -1,4 +1,4 @@
-#include <game/player_scores.h>
+#include <game/player_data.h>
 #include <core/game_environment.h>
 #include "new_career.h"
 
@@ -64,6 +64,7 @@ static void confirm_new_player_name(int param1, int param2) {
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         // in OG Pharaoh, creating a new player name automatically opens the
         // game selection menu; here we first go back to the player list instead
+        player_data_new(player_name);
         window_go_back();
         window_player_selection_init();
     }

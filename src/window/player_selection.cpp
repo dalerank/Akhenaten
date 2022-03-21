@@ -10,7 +10,7 @@
 #include "core/time.h"
 #include "game/file.h"
 #include "game/file_editor.h"
-#include "game/player_scores.h"
+#include "game/player_data.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -41,21 +41,21 @@ static void button_click(int param1, int param2);
 static void button_select_file(int index, int param2);
 static void on_scroll(void);
 
-#define FILE_LIST_Y 100
+#define LIST_Y 100
 
 static generic_button buttons[] = {
-        {160, FILE_LIST_Y + 16 * 0, 288, 16, button_select_file, button_none, 0, 0},
-        {160, FILE_LIST_Y + 16 * 1, 288, 16, button_select_file, button_none, 1, 0},
-        {160, FILE_LIST_Y + 16 * 2, 288, 16, button_select_file, button_none, 2, 0},
-        {160, FILE_LIST_Y + 16 * 3, 288, 16, button_select_file, button_none, 3, 0},
-        {160, FILE_LIST_Y + 16 * 4, 288, 16, button_select_file, button_none, 4, 0},
-        {160, FILE_LIST_Y + 16 * 5, 288, 16, button_select_file, button_none, 5, 0},
-        {160, FILE_LIST_Y + 16 * 6, 288, 16, button_select_file, button_none, 6, 0},
-        {160, FILE_LIST_Y + 16 * 7, 288, 16, button_select_file, button_none, 7, 0},
-        {160, FILE_LIST_Y + 16 * 8, 288, 16, button_select_file, button_none, 8, 0},
-        {160, FILE_LIST_Y + 16 * 9, 288, 16, button_select_file, button_none, 9, 0},
-        {160, FILE_LIST_Y + 16 * 10, 288, 16, button_select_file, button_none, 10, 0},
-        {160, FILE_LIST_Y + 16 * 11, 288, 16, button_select_file, button_none, 11, 0},
+        {160, LIST_Y + 16 * 0,  288, 16, button_select_file, button_none, 0,  0},
+        {160, LIST_Y + 16 * 1,  288, 16, button_select_file, button_none, 1,  0},
+        {160, LIST_Y + 16 * 2,  288, 16, button_select_file, button_none, 2,  0},
+        {160, LIST_Y + 16 * 3,  288, 16, button_select_file, button_none, 3,  0},
+        {160, LIST_Y + 16 * 4,  288, 16, button_select_file, button_none, 4,  0},
+        {160, LIST_Y + 16 * 5,  288, 16, button_select_file, button_none, 5,  0},
+        {160, LIST_Y + 16 * 6,  288, 16, button_select_file, button_none, 6,  0},
+        {160, LIST_Y + 16 * 7,  288, 16, button_select_file, button_none, 7,  0},
+        {160, LIST_Y + 16 * 8,  288, 16, button_select_file, button_none, 8,  0},
+        {160, LIST_Y + 16 * 9,  288, 16, button_select_file, button_none, 9,  0},
+        {160, LIST_Y + 16 * 10, 288, 16, button_select_file, button_none, 10, 0},
+        {160, LIST_Y + 16 * 11, 288, 16, button_select_file, button_none, 11, 0},
 
         {144, 306, 126, 25, button_click, button_none, 0, 0},
         {274, 306, 126, 25, button_click, button_none, 1, 0},
@@ -63,7 +63,7 @@ static generic_button buttons[] = {
         {192, 336, 256, 25, button_click, button_none, 3, 0},
 };
 
-static scrollbar_type scrollbar = {464, FILE_LIST_Y - 8, 206, on_scroll};
+static scrollbar_type scrollbar = {464, LIST_Y - 8, 208, on_scroll};
 
 static struct {
     int focus_button_id;
@@ -119,7 +119,7 @@ static void draw_foreground(void) {
     graphics_in_dialog();
 
     outer_panel_draw(128, 40, 24, 21);
-    inner_panel_draw(144, FILE_LIST_Y - 8, 20, 13);
+    inner_panel_draw(144, LIST_Y - 8, 20, 13);
 
     // title
     lang_text_draw_centered(292, 3, 160, 60, 304, FONT_LARGE_BLACK_ON_LIGHT);
@@ -134,7 +134,7 @@ static void draw_foreground(void) {
         else if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_YELLOW;
         text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
-        text_draw(list_name, 160, FILE_LIST_Y + 2 + (16 * i), font, 0);
+        text_draw(list_name, 160, LIST_Y + 2 + (16 * i), font, 0);
     }
 
     // buttons
@@ -154,7 +154,8 @@ static void draw_foreground(void) {
 static void confirm_nothing(bool accepted) {
 }
 static void confirm_delete_player(bool accepted) {
-
+    if (accepted)
+        player_data_delete(data.selected_player);
 }
 static void button_select_file(int index, int param2) {
     if (index < data.file_list->num_files) {

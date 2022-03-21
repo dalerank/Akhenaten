@@ -23,6 +23,7 @@
 #include "window/game_menu.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
+#include "records.h"
 
 static void button_click(int type, int param2);
 
@@ -99,36 +100,43 @@ static void confirm_exit(bool accepted) {
         system_exit();
 }
 static void button_click(int type, int param2) {
-    if (type == 1)
-        switch (GAME_ENV) {
-            case ENGINE_ENV_C3:
-                window_new_career_show();
-                break;
-            case ENGINE_ENV_PHARAOH:
-                window_player_selection_show();
-                break;
-        }
-    else if (type == 2)
-        switch (GAME_ENV) {
-            case ENGINE_ENV_C3:
-                window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-                break;
-            case ENGINE_ENV_PHARAOH:
-//                window_family_scores_show(); // TODO
-                break;
-        }
-    else if (type == 3)
-        window_cck_selection_show();
-    else if (type == 4)
-        if (!editor_is_present() || !game_init_editor())
-            window_plain_message_dialog_show(
-                    TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
-        else
-            sound_music_play_editor();
-    else if (type == 5)
-        window_config_show();
-    else if (type == 6)
-        window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 2);
+    switch (type) {
+        case 1:
+            switch (GAME_ENV) {
+                case ENGINE_ENV_C3:
+                    window_new_career_show();
+                    break;
+                case ENGINE_ENV_PHARAOH:
+                    window_player_selection_show();
+                    break;
+            }
+            break;
+        case 2:
+            switch (GAME_ENV) {
+                case ENGINE_ENV_C3:
+                    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+                    break;
+                case ENGINE_ENV_PHARAOH:
+                    window_records_show(); // TODO
+                    break;
+            }
+            break;
+        case 3:
+            window_cck_selection_show();
+            break;
+        case 4:
+            if (!editor_is_present() || !game_init_editor())
+                window_plain_message_dialog_show(TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+            else
+                sound_music_play_editor();
+            break;
+        case 5:
+            window_config_show();
+            break;
+        case 6:
+            window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 2);
+            break;
+    }
 }
 
 static void handle_input(const mouse *m, const hotkeys *h) {
