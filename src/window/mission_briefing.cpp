@@ -19,7 +19,7 @@
 #include "sound/speech.h"
 #include "window/city.h"
 #include "window/intermezzo.h"
-#include "window/mission_selection.h"
+#include "window/mission_next.h"
 
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
@@ -174,7 +174,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 static void button_back(int param1, int param2) {
     if (!data.is_review) {
         sound_speech_stop();
-        window_mission_selection_show();
+        window_mission_next_selection_show();
     }
 }
 static void button_start_mission(int param1, int param2) {

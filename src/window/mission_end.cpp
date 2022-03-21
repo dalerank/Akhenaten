@@ -22,7 +22,7 @@
 #include "sound/speech.h"
 #include "window/intermezzo.h"
 #include "window/main_menu.h"
-#include "window/mission_selection.h"
+#include "window/mission_next.h"
 #include "window/victory_video.h"
 
 static void button_fired(int param1, int param2);
@@ -131,7 +131,7 @@ static void advance_to_next_mission(void) {
         }
     } else {
         scenario_set_campaign_mission(game_mission_peaceful());
-        window_mission_selection_show();
+        window_mission_next_selection_show();
     }
 }
 
@@ -155,7 +155,7 @@ static void button_fired(int param1, int param2) {
     if (scenario_is_custom())
         window_main_menu_show(1);
     else {
-        window_mission_selection_show();
+        window_mission_next_selection_show();
     }
 }
 

@@ -21,7 +21,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "widget/input_box.h"
+//#include "widget/input_box.h"
 #include "window/city.h"
 #include "window/editor/map.h"
 #include "window/new_career.h"
@@ -133,7 +133,7 @@ static void draw_foreground(void) {
             font = FONT_NORMAL_WHITE_ON_DARK;
         else if (data.focus_button_id == i + 1)
             font = FONT_NORMAL_YELLOW;
-        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
+//        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
         text_draw(list_name, 160, LIST_Y + 2 + (16 * i), font, 0);
     }
 
@@ -209,7 +209,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
 void window_player_selection_show(void) {
     window_type window = {
-            WINDOW_FAMILY_SELECTION,
+            WINDOW_PLAYER_SELECTION,
             draw_background,
             draw_foreground,
             handle_input

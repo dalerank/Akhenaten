@@ -1,17 +1,28 @@
 #include <core/buffer.h>
 #include <core/io.h>
+#include <cstring>
 #include "player_data.h"
 
 #include "scenario/property.h"
 
 #define JAS_FILE_SIZE 7600
 #define JAS_CHUNK_SIZE 76
-#define MAX_JAS_CHUNKS 100
+#define MAX_JAS_ENTRIES 100
+
+#define DAT_FILE_SIZE 19100
+#define DAT_CHUNK_SIZE 64
+#define DAT_CHUNKS_USED 56
+#define DAT_MAP_NAME_SIZE 50
+#define DAT_MAP_NAMES_USED 53
+#define MAX_DAT_ENTRIES 100
 
 static struct {
-    player_record highscores[MAX_JAS_CHUNKS];
+    player_record highscores[MAX_JAS_ENTRIES];
     int num_highscore_entries;
     buffer *jas_file = new buffer(JAS_FILE_SIZE);
+
+    player_progression_data player_progression;
+    buffer *dat_file = new buffer(DAT_FILE_SIZE);
 } data;
 
 uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity,
@@ -37,7 +48,7 @@ uint32_t records_calc_score(player_record *score) {
 }
 player_record records_get(int rank) {
     // go through the list of records, return the nth non-empty record
-    for (int i = 0; i < MAX_JAS_CHUNKS; ++i) {
+    for (int i = 0; i < MAX_JAS_ENTRIES; ++i) {
         if (data.highscores[i].nonempty)
             if (rank > 0)
                 rank--;
@@ -72,30 +83,80 @@ static void load_jas_chunk(buffer *buf, player_record *record) {
     if (record->nonempty)
         data.num_highscore_entries++;
 }
-static void load_dat_chunk(buffer *buf) {
-    // TODO
-}
-void player_data_load() {
-    // Player scores (highscore.jas)
+void records_load() {
+    // highscore.jas
     data.jas_file->clear();
     data.jas_file->reset_offset();
     data.num_highscore_entries = 0;
     int size = io_read_file_into_buffer("Save/highscore.jas", NOT_LOCALIZED, data.jas_file, JAS_FILE_SIZE);
     if (!size)
         return;
-    for (int i = 0; i < MAX_JAS_CHUNKS; ++i)
+    // jas record chunks
+    for (int i = 0; i < MAX_JAS_ENTRIES; ++i)
         load_jas_chunk(data.jas_file, &data.highscores[i]);
-
-    // Player campaign data (<player>.dat)
-    // TODO
 }
 
-player_progression player_data_get(const uint8_t *player_name) {
-    // TODO
+///
+
+const player_progression_data *player_data_get() {
+    return (const player_progression_data*)&data.player_progression;
 }
 void player_data_new(const uint8_t *player_name) {
     // TODO
 }
 void player_data_delete(const uint8_t *player_name) {
     // TODO
+}
+
+static void load_dat_map_chunks(buffer *buf, int index) {
+    auto chunk = data.player_progression.map_data[index];
+    chunk.unk00 = buf->read_i8();
+    chunk.unk01 = buf->read_u8();
+    chunk.unk02 = buf->read_u16();
+    chunk.unk03 = buf->read_u32();
+    //
+    chunk.unk04 = buf->read_i32();
+    chunk.unk05 = buf->read_i32();
+    chunk.unk06 = buf->read_i32();
+    chunk.unk07 = buf->read_i32();
+    chunk.unk08 = buf->read_i32();
+    chunk.unk09 = buf->read_i32();
+    //
+    chunk.unk10 = buf->read_u32();
+    chunk.unk11 = buf->read_u32();
+    chunk.unk12 = buf->read_i16();
+    chunk.unk13 = buf->read_u16();
+    chunk.unk14 = buf->read_u32();
+    chunk.unk15 = buf->read_u32();
+    chunk.unk16 = buf->read_i16();
+    chunk.unk17 = buf->read_u16();
+    //
+    chunk.unk18 = buf->read_u32();
+    chunk.mission_completed = buf->read_u8();
+    chunk.unk19 = buf->read_u8();
+    chunk.unk20 = buf->read_u8();
+    chunk.unk21 = buf->read_u8();
+
+}
+void player_data_load(const uint8_t *player_name) {
+    // <player>.dat
+    data.dat_file->clear();
+    data.dat_file->reset_offset();
+    char file_path[256];
+    snprintf(file_path, sizeof(file_path), "%s%s", "Save/", (const char*)player_name);
+    int size = io_read_file_into_buffer(file_path, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
+    if (!size)
+        return;
+
+    // map data chunks
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i)
+        load_dat_map_chunks(data.dat_file, i);
+    // unknown 32-bit field
+    data.dat_file->skip(4);
+    // map names
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i)
+        data.dat_file->read_raw(data.player_progression.map_data[i].map_name, DAT_MAP_NAME_SIZE);
+    // unknown 32-bit field & rest of unused file
+    data.dat_file->skip(4);
+    data.dat_file->skip(7692);
 }

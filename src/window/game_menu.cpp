@@ -1,8 +1,10 @@
 #include "game_menu.h"
 #include "message_dialog.h"
 #include "file_dialog.h"
-#include "mission_selection.h"
+#include "mission_next.h"
 #include "mission_briefing.h"
+#include "player_selection.h"
+#include "map_selection.h"
 
 #include <graphics/window.h>
 #include <graphics/graphics.h>
@@ -14,6 +16,7 @@
 #include <core/lang.h>
 #include <game/settings.h>
 #include <graphics/text.h>
+#include <game/player_data.h>
 
 static void button_click(int param1, int param2);
 
@@ -38,9 +41,19 @@ static struct {
 
     bool to_begin_history;
     bool has_saved_games;
+
+    uint8_t player_name[256];
+    uint8_t player_name_title[256];
 } data;
 
 static void init() {
+    string_copy(setting_player_name(), data.player_name, MAX_PLAYER_NAME);
+    text_tag_substitution tags[] = {
+            {"[player_name]", data.player_name}
+    };
+    text_fill_in_tags(lang_get_string(293, 5), data.player_name_title, tags, 1);
+
+    player_data_load(data.player_name);
     data.to_begin_history = true;
     data.has_saved_games = false;
 }
@@ -56,12 +69,7 @@ static void draw_foreground() {
     outer_panel_draw(128, 56, 24, 19);
 
     // title
-    uint8_t player_name_title[256];
-    text_tag_substitution tags[] = {
-        {"[player_name]", setting_player_name()}
-    };
-    text_fill_in_tags(lang_get_string(293, 5), player_name_title, tags, 1);
-    text_draw_centered(player_name_title, 170, 80, 304, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered(data.player_name_title, 170, 80, 304, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     // buttons
     for (int i = 0; i < 5; i++) {
@@ -76,14 +84,16 @@ static void button_click(int param1, int param2) {
             break;
         case 1: // choose mission
             graphics_reset_dialog();
-            window_mission_selection_show();
+            window_map_selection_show(MAP_SELECTION_CAMPAIGN);
             break;
         case 2: // load save
             window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
             break;
         case 3: // custom mission
+            window_map_selection_show(MAP_SELECTION_CUSTOM);
             break;
         case 4: // back
+            window_player_selection_init();
             window_go_back();
             break;
         case 5: // explore history (?)
@@ -94,8 +104,10 @@ static void button_click(int param1, int param2) {
     }
 }
 static void handle_input(const mouse *m, const hotkeys *h) {
-    if (input_go_back_requested(m, h))
+    if (input_go_back_requested(m, h)) {
+        window_player_selection_init();
         window_go_back();
+    }
     const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, 7, &data.focus_button_id))
         return;
@@ -103,7 +115,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
 void window_game_menu_show(void) {
     window_type window = {
-            WINDOW_FAMILY_SELECTION,
+            WINDOW_GAME_SELECTION,
             draw_background,
             draw_foreground,
             handle_input

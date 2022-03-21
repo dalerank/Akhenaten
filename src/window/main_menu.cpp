@@ -15,7 +15,7 @@
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "sound/music.h"
-#include "window/cck_selection.h"
+#include "window/map_selection.h"
 #include "window/config.h"
 #include "window/file_dialog.h"
 #include "window/new_career.h"
@@ -31,13 +31,18 @@ static void button_click(int type, int param2);
 
 static int focus_button_id;
 
+#define BUTTONS_X 192
+#define BUTTONS_Y 125
+#define BUTTONS_WIDTH 256
+#define BUTTONS_HEIGHT 25
+
 static generic_button buttons[] = {
-        {192, 100, 256, 25, button_click, button_none, 1, 0},
-        {192, 140, 256, 25, button_click, button_none, 2, 0},
-        {192, 180, 256, 25, button_click, button_none, 3, 0},
-        {192, 220, 256, 25, button_click, button_none, 4, 0},
-        {192, 260, 256, 25, button_click, button_none, 5, 0},
-        {192, 300, 256, 25, button_click, button_none, 6, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 0, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 1, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 1, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 2, 0},
+//        {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 3, 0},
+//        {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 4, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 2, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 5, 0},
+        {BUTTONS_X, BUTTONS_Y + 40 * 3, BUTTONS_WIDTH, BUTTONS_HEIGHT, button_click, button_none, 6, 0},
 };
 
 static void draw_version_string(void) {
@@ -63,33 +68,43 @@ static void draw_background(void) {
     graphics_reset_dialog();
     if (window_is(WINDOW_MAIN_MENU))
         draw_version_string();
-
 }
 static void draw_foreground(void) {
     graphics_in_dialog();
 
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            for (int i = 0; i < MAX_BUTTONS; i++)
+        case ENGINE_ENV_C3: {
+            int groups[6][2] = {
+                    {30, 1},
+                    {30, 2},
+                    {30, 3},
+                    {9,  8},
+                    {2,  0},
+                    {30, 5},
+            };
+            for (int i = 0; i < MAX_BUTTONS; i++) {
                 large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(30, 1, 192, 106, 256, FONT_NORMAL_BLACK_ON_DARK);
-            lang_text_draw_centered(30, 2, 192, 146, 256, FONT_NORMAL_BLACK_ON_DARK);
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK_ON_DARK);
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK_ON_DARK);
-            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK_ON_DARK);
-            lang_text_draw_centered(30, 5, 192, 306, 256, FONT_NORMAL_BLACK_ON_DARK);
+                lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH,
+                                        FONT_NORMAL_BLACK_ON_DARK);
+            }
             break;
-        case ENGINE_ENV_PHARAOH:
-            for (int i = 0; i < MAX_BUTTONS; i++)
+        }
+        case ENGINE_ENV_PHARAOH: {
+            int groups[6][2] = {
+                    {30, 0},
+                    {30, 5}, //{1, 3},
+//                    {30, 3},
+//                    {9,  8},
+                    {2,  0},
+                    {30, 4},
+            };
+            for (int i = 0; i < 4; i++) {
                 large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-            lang_text_draw_centered(30, 0, 192, 106, 256, FONT_NORMAL_BLACK_ON_LIGHT); // play/new career
-            lang_text_draw_centered(30, 5, 192, 146, 256, FONT_NORMAL_BLACK_ON_LIGHT); // family scores
-//            lang_text_draw_centered(1, 3, 192, 146, 256, FONT_NORMAL_BLACK); // load game
-            lang_text_draw_centered(30, 3, 192, 186, 256, FONT_NORMAL_BLACK_ON_LIGHT); // cck/"mission" editor
-            lang_text_draw_centered(9, 8, 192, 226, 256, FONT_NORMAL_BLACK_ON_LIGHT); // "assignment" editor
-            lang_text_draw_centered(2, 0, 192, 266, 256, FONT_NORMAL_BLACK_ON_LIGHT); // options
-            lang_text_draw_centered(30, 4, 192, 306, 256, FONT_NORMAL_BLACK_ON_LIGHT); // quit
+                lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH,
+                                        FONT_NORMAL_BLACK_ON_LIGHT);
+            }
             break;
+        }
     }
 
     graphics_reset_dialog();
@@ -122,7 +137,7 @@ static void button_click(int type, int param2) {
             }
             break;
         case 3:
-            window_cck_selection_show();
+            window_map_selection_show(MAP_SELECTION_CUSTOM);
             break;
         case 4:
             if (!editor_is_present() || !game_init_editor())

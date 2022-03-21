@@ -1,4 +1,4 @@
-#include "mission_selection.h"
+#include "mission_next.h"
 
 #include "core/image_group.h"
 #include "game/mission.h"
@@ -51,7 +51,7 @@ static void draw_background(void) {
 
     ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    ImageDraw::img_generic(image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (data.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -143,7 +143,7 @@ static void button_start(int param1, int param2) {
     window_mission_briefing_show();
 }
 
-void window_mission_selection_show(void) {
+void window_mission_next_selection_show(void) {
     if (!game_mission_has_choice()) {
         window_mission_briefing_show();
         return;

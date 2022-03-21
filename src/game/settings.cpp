@@ -126,6 +126,7 @@ static void load_settings(buffer *buf) {
 void settings_load(void) {
     load_default_settings();
 
+    // TODO: load <Pharaoh.inf>
     int size = io_read_file_into_buffer("c3.inf", NOT_LOCALIZED, data.inf_file, INF_SIZE);
     if (!size)
         return;

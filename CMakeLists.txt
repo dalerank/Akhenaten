@@ -541,7 +541,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.cpp
     ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.cpp
     ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/cck_selection.cpp
+        ${PROJECT_SOURCE_DIR}/src/window/map_selection.cpp
     ${PROJECT_SOURCE_DIR}/src/window/city.cpp
     ${PROJECT_SOURCE_DIR}/src/window/config.cpp
     ${PROJECT_SOURCE_DIR}/src/window/console.cpp
@@ -563,7 +563,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/message_list.cpp
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.cpp
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.cpp
-    ${PROJECT_SOURCE_DIR}/src/window/mission_selection.cpp
+        ${PROJECT_SOURCE_DIR}/src/window/mission_next.cpp
     ${PROJECT_SOURCE_DIR}/src/window/new_career.cpp
     ${PROJECT_SOURCE_DIR}/src/window/numeric_input.cpp
     ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.cpp

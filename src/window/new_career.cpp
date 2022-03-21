@@ -17,7 +17,7 @@
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "widget/input_box.h"
-#include "window/mission_selection.h"
+#include "window/mission_next.h"
 #include "player_selection.h"
 
 static void confirm_new_player_name(int param1, int param2);
@@ -60,7 +60,7 @@ static void confirm_new_player_name(int param1, int param2) {
     input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
     if (GAME_ENV == ENGINE_ENV_C3)
-        window_mission_selection_show();
+        window_mission_next_selection_show();
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         // in OG Pharaoh, creating a new player name automatically opens the
         // game selection menu; here we first go back to the player list instead

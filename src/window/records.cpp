@@ -26,7 +26,7 @@ static struct {
 } data;
 
 void init() {
-    player_data_load();
+    records_load();
     scrollbar_init(&scrollbar, 0, records_count() - LIST_MAX_SIZE);
 }
 
@@ -92,7 +92,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
 void window_records_show(void) {
     window_type window = {
-            WINDOW_FAMILY_SELECTION,
+            WINDOW_PLAYER_SELECTION,
             draw_background,
             draw_foreground,
             handle_input
