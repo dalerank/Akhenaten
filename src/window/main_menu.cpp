@@ -15,7 +15,7 @@
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "sound/music.h"
-#include "window/map_selection.h"
+#include "window/scenario_selection.h"
 #include "window/config.h"
 #include "window/file_dialog.h"
 #include "window/new_career.h"
@@ -137,7 +137,7 @@ static void button_click(int type, int param2) {
             }
             break;
         case 3:
-            window_map_selection_show(MAP_SELECTION_CUSTOM);
+            window_scenario_selection_show(MAP_SELECTION_CUSTOM);
             break;
         case 4:
             if (!editor_is_present() || !game_init_editor())

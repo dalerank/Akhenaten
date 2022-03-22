@@ -40,7 +40,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 #SET(CMAKE_RC_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}")
 SET(CMAKE_CXX_FLAGS "-std=c++0x -Wno-c++11-narrowing" ${CMAKE_CXX_FLAGS})
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 14)
 
 #SET_SOURCE_FILES_PROPERTIES(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 #list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS c)
@@ -459,6 +459,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/screen.cpp
 #    ${PROJECT_SOURCE_DIR}/src/graphics/screenshot.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/scrollbar.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/scroll_list_panel.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/text.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/tooltip.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/video.cpp
@@ -541,7 +542,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.cpp
     ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.cpp
     ${PROJECT_SOURCE_DIR}/src/window/editor/win_criteria.cpp
-        ${PROJECT_SOURCE_DIR}/src/window/map_selection.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/scenario_selection.cpp
     ${PROJECT_SOURCE_DIR}/src/window/city.cpp
     ${PROJECT_SOURCE_DIR}/src/window/config.cpp
     ${PROJECT_SOURCE_DIR}/src/window/console.cpp
@@ -563,7 +564,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/message_list.cpp
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.cpp
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.cpp
-        ${PROJECT_SOURCE_DIR}/src/window/mission_next.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/mission_next.cpp
     ${PROJECT_SOURCE_DIR}/src/window/new_career.cpp
     ${PROJECT_SOURCE_DIR}/src/window/numeric_input.cpp
     ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.cpp
@@ -580,7 +581,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/victory_video.cpp
     ${PROJECT_SOURCE_DIR}/src/window/player_selection.cpp
     ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
-        ${PROJECT_SOURCE_DIR}/src/window/records.cpp
+    ${PROJECT_SOURCE_DIR}/src/window/records.cpp
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp

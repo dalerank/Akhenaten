@@ -4,7 +4,7 @@
 #include "mission_next.h"
 #include "mission_briefing.h"
 #include "player_selection.h"
-#include "map_selection.h"
+#include "scenario_selection.h"
 
 #include <graphics/window.h>
 #include <graphics/graphics.h>
@@ -84,13 +84,13 @@ static void button_click(int param1, int param2) {
             break;
         case 1: // choose mission
             graphics_reset_dialog();
-            window_map_selection_show(MAP_SELECTION_CAMPAIGN);
+            window_scenario_selection_show(MAP_SELECTION_CAMPAIGN);
             break;
         case 2: // load save
             window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
             break;
         case 3: // custom mission
-            window_map_selection_show(MAP_SELECTION_CUSTOM);
+            window_scenario_selection_show(MAP_SELECTION_CUSTOM);
             break;
         case 4: // back
             window_player_selection_init();

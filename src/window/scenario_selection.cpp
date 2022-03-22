@@ -1,4 +1,4 @@
-#include "map_selection.h"
+#include "scenario_selection.h"
 
 #include "core/dir.h"
 #include "core/encoding.h"
@@ -23,6 +23,7 @@
 #include "window/city.h"
 
 #include <string.h>
+#include <graphics/scroll_list_panel.h>
 
 #define MAX_SCENARIOS 15
 
@@ -33,54 +34,74 @@ static void on_scroll(void);
 static image_button start_button =
         {600, 440, 27, 27, IB_NORMAL, GROUP_BUTTON_EXCLAMATION, 4, button_start_scenario, button_none, 1, 0, 1};
 
-static generic_button file_buttons[] = {
-        {18, 220, 252, 16, button_select_item, button_none, 0,  0},
-        {18, 236, 252, 16, button_select_item, button_none, 1,  0},
-        {18, 252, 252, 16, button_select_item, button_none, 2,  0},
-        {18, 268, 252, 16, button_select_item, button_none, 3,  0},
-        {18, 284, 252, 16, button_select_item, button_none, 4,  0},
-        {18, 300, 252, 16, button_select_item, button_none, 5,  0},
-        {18, 316, 252, 16, button_select_item, button_none, 6,  0},
-        {18, 332, 252, 16, button_select_item, button_none, 7,  0},
-        {18, 348, 252, 16, button_select_item, button_none, 8,  0},
-        {18, 364, 252, 16, button_select_item, button_none, 9,  0},
-        {18, 380, 252, 16, button_select_item, button_none, 10, 0},
-        {18, 396, 252, 16, button_select_item, button_none, 11, 0},
-        {18, 412, 252, 16, button_select_item, button_none, 12, 0},
-        {18, 428, 252, 16, button_select_item, button_none, 13, 0},
-        {18, 444, 252, 16, button_select_item, button_none, 14, 0},
-};
+//#define LIST_X 18
+//#define LIST_Y 220
+//#define LIST_WIDTH 16
 
-static scrollbar_type scrollbar = {276, 210, 256, on_scroll, 8, 1};
+// These braced-init-list initializations work ONLY in C++14.
+// C++11 allows for EITHER complete initialization, or partial
+// initialization without default member values!
+scrollable_list_ui_params ui_params = {
+        .x = 16,
+        .y = 210,
+        .blocks_x = 16,
+        .blocks_y = MAX_SCENARIOS + 1,
+        .scrollbar_margin_x = 10,
+        .draw_scrollbar_always = true
+};
+scroll_list_panel *scroll_list = new scroll_list_panel(MAX_SCENARIOS, 1000, button_select_item, button_select_item, ui_params,
+                                                       true, "Maps/", "map");
+
+//static generic_button file_buttons[] = {
+//        {LIST_X, LIST_Y + 16 * 0, LIST_WIDTH * 16, 16, button_select_item, button_none, 0,  0},
+//        {LIST_X, LIST_Y + 16 * 1, LIST_WIDTH * 16, 16, button_select_item, button_none, 1,  0},
+//        {LIST_X, LIST_Y + 16 * 2, LIST_WIDTH * 16, 16, button_select_item, button_none, 2,  0},
+//        {LIST_X, LIST_Y + 16 * 3, LIST_WIDTH * 16, 16, button_select_item, button_none, 3,  0},
+//        {LIST_X, LIST_Y + 16 * 4, LIST_WIDTH * 16, 16, button_select_item, button_none, 4,  0},
+//        {LIST_X, LIST_Y + 16 * 5, LIST_WIDTH * 16, 16, button_select_item, button_none, 5,  0},
+//        {LIST_X, LIST_Y + 16 * 6, LIST_WIDTH * 16, 16, button_select_item, button_none, 6,  0},
+//        {LIST_X, LIST_Y + 16 * 7, LIST_WIDTH * 16, 16, button_select_item, button_none, 7,  0},
+//        {LIST_X, LIST_Y + 16 * 8, LIST_WIDTH * 16, 16, button_select_item, button_none, 8,  0},
+//        {LIST_X, LIST_Y + 16 * 9, LIST_WIDTH * 16, 16, button_select_item, button_none, 9,  0},
+//        {LIST_X, LIST_Y + 16 * 10, LIST_WIDTH * 16, 16, button_select_item, button_none, 10, 0},
+//        {LIST_X, LIST_Y + 16 * 11, LIST_WIDTH * 16, 16, button_select_item, button_none, 11, 0},
+//        {LIST_X, LIST_Y + 16 * 12, LIST_WIDTH * 16, 16, button_select_item, button_none, 12, 0},
+//        {LIST_X, LIST_Y + 16 * 13, LIST_WIDTH * 16, 16, button_select_item, button_none, 13, 0},
+//        {LIST_X, LIST_Y + 16 * 14, LIST_WIDTH * 16, 16, button_select_item, button_none, 14, 0},
+//};
+
+//static scrollbar_type scrollbar = {LIST_X + LIST_WIDTH * 16 + 4, LIST_Y - 12, (MAX_SCENARIOS + 1) * 16, on_scroll, 8, 1};
 
 static struct {
     map_selection_dialog_type dialog;
 
-    int focus_button_id;
-    int selected_item;
+//    int focus_button_id;
+//    int selected_item;
     char selected_scenario_filename[FILE_NAME_MAX];
     uint8_t selected_scenario_display[FILE_NAME_MAX];
 
-    const dir_listing *scenarios;
+//    const dir_listing *scenarios;
 } data;
 
 static void init(map_selection_dialog_type dialog_type) {
-    data.focus_button_id = 0;
+//    data.focus_button_id = 0;
+    scroll_list->unfocus();
     data.dialog = dialog_type;
+    scroll_list->refresh_dir_list();
     switch (dialog_type) {
         case MAP_SELECTION_CCK_LEGACY:
         case MAP_SELECTION_CUSTOM:
             scenario_set_custom(2);
-            data.scenarios = dir_find_files_with_extension("Maps/", "map");
-            button_select_item(0, 0);
-            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+//            data.scenarios = dir_find_files_with_extension("Maps/", "map");
+//            button_select_item(0, 0);
+//            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
             break;
         case MAP_SELECTION_CAMPAIGN:
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             scenario_set_custom(0);
-            data.scenarios = dir_find_files_with_extension(".", "map"); // TODO
-            button_select_item(0, 0);
-            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+//            data.scenarios = dir_find_files_with_extension(".", "map"); // TODO
+//            button_select_item(0, 0);
+//            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
             break;
     }
 }
@@ -101,21 +122,22 @@ static void draw_scenario_thumbnail() {
     }
 }
 static void draw_scenario_list(void) {
-    inner_panel_draw(16, 210, 16, 16);
-    char file[FILE_NAME_MAX];
-    uint8_t displayable_file[FILE_NAME_MAX];
-    for (int i = 0; i < MAX_SCENARIOS; i++) {
-        font_t font = FONT_NORMAL_BLACK_ON_DARK;
-        if (data.selected_item == i + scrollbar.scroll_position)
-            font = FONT_NORMAL_WHITE_ON_DARK;
-        else if (data.focus_button_id == i + 1)
-            font = FONT_NORMAL_YELLOW;
-        strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
-        encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
-        file_remove_extension(displayable_file);
-        text_ellipsize(displayable_file, font, 240);
-        text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
-    }
+//    scroll_list->draw();
+//    inner_panel_draw(LIST_X - 2, LIST_Y - 10, LIST_WIDTH, MAX_SCENARIOS + 1);
+//    char file[FILE_NAME_MAX];
+//    uint8_t displayable_file[FILE_NAME_MAX];
+//    for (int i = 0; i < MAX_SCENARIOS; i++) {
+//        font_t font = FONT_NORMAL_BLACK_ON_DARK;
+//        if (data.selected_item == i + scrollbar.scroll_position)
+//            font = FONT_NORMAL_WHITE_ON_DARK;
+//        else if (data.focus_button_id == i + 1)
+//            font = FONT_NORMAL_YELLOW;
+//        strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
+//        encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
+//        file_remove_extension(displayable_file);
+//        text_ellipsize(displayable_file, font, 240);
+//        text_draw(displayable_file, LIST_X + 6, LIST_Y + 16 * i, font, 0);
+//    }
 }
 static void draw_scenario_info(void) {
     const int scenario_info_x = 335;
@@ -231,7 +253,8 @@ static void draw_background(void) {
     }
     graphics_in_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
-        draw_scenario_list();
+        scroll_list->draw();
+//        draw_scenario_list();
     }
     draw_scenario_info();
     graphics_reset_dialog();
@@ -239,18 +262,19 @@ static void draw_background(void) {
 static void draw_foreground(void) {
     graphics_in_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
-        scrollbar_draw(&scrollbar);
-        draw_scenario_list();
+        scroll_list->draw();
+//        scrollbar_draw(&scrollbar);
+//        draw_scenario_list();
     }
     image_buttons_draw(0, 0, &start_button, 1);
     graphics_reset_dialog();
 }
 
 static void button_select_item(int index, int param2) {
-    if (index >= data.scenarios->num_files)
+    if (index >= scroll_list->get_total_entries())
         return;
-    data.selected_item = scrollbar.scroll_position + index;
-    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
+//    data.selected_item = scrollbar.scroll_position + index;
+    strcpy(data.selected_scenario_filename, scroll_list->get_selected_entry_text_utf8());
     game_file_load_scenario_data(data.selected_scenario_filename);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
     file_remove_extension(data.selected_scenario_display);
@@ -268,12 +292,13 @@ static void on_scroll(void) {
 }
 static void handle_input(const mouse *m, const hotkeys *h) {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
-        return;
+    scroll_list->input_handle(m_dialog);
+//    if (scrollbar_handle_mouse(&scrollbar, m_dialog))
+//        return;
     if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0))
         return;
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id))
-        return;
+//    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id))
+//        return;
     if (h->enter_pressed) {
         button_start_scenario(0, 0);
         return;
@@ -281,7 +306,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
     if (input_go_back_requested(m, h))
         window_go_back();
 }
-void window_map_selection_show(map_selection_dialog_type dialog_type) {
+void window_scenario_selection_show(map_selection_dialog_type dialog_type) {
     // city construction kit
     window_type window = {
             WINDOW_CCK_SELECTION,
