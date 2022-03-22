@@ -45,36 +45,37 @@ private:
 
     scrollbar_type scrollbar;
 
-    const dir_listing *files_list;
+    const dir_listing *file_finder;
     const char *files_dir;
     const char *files_ext;
-    bool using_dir_list;
+    bool using_file_finder;
 
     void (*custom_text_render)(int button_index, const uint8_t *text, int x, int y, font_t font);
     bool using_custom_text_render = false;
+
+    bool WAS_DRAWN = false;
 
 public:
     scrollable_list_ui_params ui_params;
 
     void select(const char* button_text);
-    void select(uint8_t* button_text);
-    void select_by_button(int button_id);
+    void select_by_button_id(int button_id);
     void select_entry(int entry_idx);
     void unselect();
     void unfocus();
-    int get_focus_button_id();
+    int get_focused_button_id();
     int get_selected_button_id();
     int get_focused_entry_idx();
     int get_selected_entry_idx();
     int get_total_entries();
-    const char* get_entry_text_utf8(int index);
-    const uint8_t* get_entry_text(int index);
-    const char* get_selected_entry_text_utf8();
-    const uint8_t* get_selected_entry_text();
-    int get_entry_idx(const char* button_text);
+    const char* get_entry_text_by_idx(int index);
+    const char* get_selected_entry_text();
+    int get_entry_idx(const char *button_text);
+    bool has_entry(const char *button_text);
 
-    void change_dir_path(const char *dir);
-    void refresh_dir_list();
+    void change_file_path(const char *dir, const char *ext = nullptr);
+    void refresh_file_finder();
+    void refresh_scrollbar_position();
 
     void draw();
     int input_handle(const mouse *m);

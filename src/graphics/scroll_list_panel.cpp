@@ -9,10 +9,7 @@
 void scroll_list_panel::select(const char *button_text) {
     return select_entry(get_entry_idx(button_text));
 }
-void scroll_list_panel::select(uint8_t *button_text) {
-    return select((const char*)button_text);
-}
-void scroll_list_panel::select_by_button(int button_id) {
+void scroll_list_panel::select_by_button_id(int button_id) {
     return select_entry(button_id - 1 + scrollbar.scroll_position);
 }
 void scroll_list_panel::select_entry(int entry_idx) {
@@ -24,7 +21,7 @@ void scroll_list_panel::unselect() {
 void scroll_list_panel::unfocus() {
     focus_button_id = 0;
 }
-int scroll_list_panel::get_focus_button_id() {
+int scroll_list_panel::get_focused_button_id() {
     return focus_button_id;
 }
 int scroll_list_panel::get_selected_button_id() {
@@ -39,62 +36,67 @@ int scroll_list_panel::get_selected_entry_idx() {
 int scroll_list_panel::get_total_entries() {
     return num_total_entries;
 }
-const char* scroll_list_panel::get_entry_text_utf8(int index) {
-    if (using_dir_list) {
-        return files_list->files[index];
+const char* scroll_list_panel::get_entry_text_by_idx(int index) {
+    if (using_file_finder) {
+        return file_finder->files[index];
     }
     return "";
 }
-const uint8_t* scroll_list_panel::get_entry_text(int index) {
-    if (using_dir_list) {
-        return (uint8_t*)files_list->files[index];
-    }
-    return (uint8_t*)"";
-}
-const char* scroll_list_panel::get_selected_entry_text_utf8() {
-    return get_entry_text_utf8(get_selected_entry_idx());
-}
-const uint8_t* scroll_list_panel::get_selected_entry_text() {
-    return get_entry_text(get_selected_entry_idx());
+const char* scroll_list_panel::get_selected_entry_text() {
+    return get_entry_text_by_idx(get_selected_entry_idx());
 }
 int scroll_list_panel::get_entry_idx(const char* button_text) {
-    if (using_dir_list) {
+    if (using_file_finder) {
         for (int i = 0; i < num_total_entries; ++i) {
-            auto txt = get_entry_text_utf8(i);
+            auto txt = get_entry_text_by_idx(i);
             if (strcmp(txt, button_text) == 0)
                 return i;
         }
     }
     return -1;
 }
-
-void scroll_list_panel::change_dir_path(const char *dir) {
-    files_dir = dir;
-    refresh_dir_list();
+bool scroll_list_panel::has_entry(const char* button_text) {
+    return (get_entry_idx(button_text) > -1);
 }
-void scroll_list_panel::refresh_dir_list() {
+
+void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
+    files_dir = dir;
+    if (ext != nullptr)
+        files_ext = ext;
+    refresh_file_finder();
+}
+void scroll_list_panel::refresh_file_finder() {
     unfocus();
-    if (!using_dir_list)
+    if (!using_file_finder)
         return;
     if (strcmp(files_ext, "folders") == 0)
-        files_list = dir_find_all_subdirectories(files_dir);
+        file_finder = dir_find_all_subdirectories(files_dir);
     else
-        files_list = dir_find_files_with_extension(files_dir, files_ext);
-    num_total_entries = files_list->num_files;
+        file_finder = dir_find_files_with_extension(files_dir, files_ext);
+    num_total_entries = file_finder->num_files;
     scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
+}
+void scroll_list_panel::refresh_scrollbar_position() {
+    while (scrollbar.scroll_position + num_buttons >= num_total_entries)
+        --scrollbar.scroll_position;
+    if (scrollbar.scroll_position < 0)
+        scrollbar.scroll_position = 0;
 }
 
 static void on_scroll(void) {
     window_invalidate();
 }
 int scroll_list_panel::input_handle(const mouse *m) {
+    if (!WAS_DRAWN)
+        return 0;
+    WAS_DRAWN = false;
     if (scrollbar_handle_mouse(&scrollbar, m))
         return 0;
     int handled_button_id = generic_buttons_handle_mouse(m, 0, 0, list_buttons, num_buttons, &focus_button_id);
     if (handled_button_id > 0) {
         generic_button *button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
-            select_by_button(handled_button_id);
+            select_by_button_id(handled_button_id);
             left_click_callback(button->parameter1, button->parameter2);
             if (m->left.double_click)
                 double_click_callback(button->parameter1, button->parameter2);
@@ -121,8 +123,8 @@ void scroll_list_panel::draw() {
         int text_pos_x = button_pos_x + ui_params.text_padding_x;
         int text_pos_y = button_pos_y + ui_params.text_padding_y;
 
-        if (using_dir_list) {
-            strcpy(text_utf8, files_list->files[i + scrollbar.scroll_position]);
+        if (using_file_finder) {
+            strcpy(text_utf8, file_finder->files[i + scrollbar.scroll_position]);
             encoding_from_utf8(text_utf8, text, FILE_NAME_MAX);
             file_remove_extension(text);
         }
@@ -136,6 +138,7 @@ void scroll_list_panel::draw() {
         }
     }
     scrollbar_draw(&scrollbar);
+    WAS_DRAWN = true;
 }
 
 scroll_list_panel::scroll_list_panel(int n_buttons,
@@ -180,10 +183,10 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
     scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
 
     // init dir_listing
-    using_dir_list = use_file_finder;
+    using_file_finder = use_file_finder;
     files_dir = dir;
     files_ext = ext;
-    refresh_dir_list();
+    refresh_file_finder();
 }
 scroll_list_panel::~scroll_list_panel() {
 

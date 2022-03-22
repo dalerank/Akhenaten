@@ -76,22 +76,18 @@ static struct {
 } data;
 
 static void init(map_selection_dialog_type dialog_type) {
-    panel->refresh_dir_list();
+    panel->refresh_file_finder();
     data.dialog = dialog_type;
     switch (dialog_type) {
         case MAP_SELECTION_CCK_LEGACY:
         case MAP_SELECTION_CUSTOM:
             scenario_set_custom(2);
-//            data.scenarios = dir_find_files_with_extension("Maps/", "map");
-//            button_select_item(0, 0);
-//            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+            panel->change_file_path("Maps/", "map");
             break;
         case MAP_SELECTION_CAMPAIGN:
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             scenario_set_custom(0);
-//            data.scenarios = dir_find_files_with_extension(".", "map"); // TODO
-//            button_select_item(0, 0);
-//            scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+            panel->change_file_path(".", ""); // TODO
             break;
     }
 }
@@ -240,7 +236,7 @@ static void draw_foreground(void) {
 static void button_select_item(int index, int param2) {
     if (index >= panel->get_total_entries())
         return;
-    strcpy(data.selected_scenario_filename, panel->get_selected_entry_text_utf8());
+    strcpy(data.selected_scenario_filename, panel->get_selected_entry_text());
     game_file_load_scenario_data(data.selected_scenario_filename);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
     file_remove_extension(data.selected_scenario_display);
@@ -257,6 +253,8 @@ static void on_scroll(void) {
     window_invalidate();
 }
 static void handle_input(const mouse *m, const hotkeys *h) {
+    if (input_go_back_requested(m, h))
+        window_go_back();
     const mouse *m_dialog = mouse_in_dialog(m);
     if (panel->input_handle(m_dialog))
         return;
@@ -268,8 +266,6 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         button_start_scenario(0, 0);
         return;
     }
-    if (input_go_back_requested(m, h))
-        window_go_back();
 }
 void window_scenario_selection_show(map_selection_dialog_type dialog_type) {
     // city construction kit
