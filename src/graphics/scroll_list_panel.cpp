@@ -7,16 +7,19 @@
 #include "window.h"
 
 void scroll_list_panel::select(const char *button_text) {
-    // TODO
+    return select_entry(get_entry_idx(button_text));
 }
 void scroll_list_panel::select(uint8_t *button_text) {
-    // TODO
+    return select((const char*)button_text);
 }
-void scroll_list_panel::select(int button_id) {
-    selected_entry_idx = button_id - 1 + scrollbar.scroll_position;
+void scroll_list_panel::select_by_button(int button_id) {
+    return select_entry(button_id - 1 + scrollbar.scroll_position);
+}
+void scroll_list_panel::select_entry(int entry_idx) {
+    selected_entry_idx = entry_idx;
 }
 void scroll_list_panel::unselect() {
-    selected_entry_idx = 0;
+    selected_entry_idx = -1;
 }
 void scroll_list_panel::unfocus() {
     focus_button_id = 0;
@@ -54,14 +57,33 @@ const char* scroll_list_panel::get_selected_entry_text_utf8() {
 const uint8_t* scroll_list_panel::get_selected_entry_text() {
     return get_entry_text(get_selected_entry_idx());
 }
+int scroll_list_panel::get_entry_idx(const char* button_text) {
+    if (using_dir_list) {
+        for (int i = 0; i < num_total_entries; ++i) {
+            auto txt = get_entry_text_utf8(i);
+            if (strcmp(txt, button_text) == 0)
+                return i;
+        }
+    }
+    return -1;
+}
 
+void scroll_list_panel::change_dir_path(const char *dir) {
+    files_dir = dir;
+    refresh_dir_list();
+}
 void scroll_list_panel::refresh_dir_list() {
+    unfocus();
     if (!using_dir_list)
         return;
-    files_list = dir_find_files_with_extension(files_dir, files_ext);
+    if (strcmp(files_ext, "folders") == 0)
+        files_list = dir_find_all_subdirectories(files_dir);
+    else
+        files_list = dir_find_files_with_extension(files_dir, files_ext);
     num_total_entries = files_list->num_files;
     scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
 }
+
 static void on_scroll(void) {
     window_invalidate();
 }
@@ -72,11 +94,12 @@ int scroll_list_panel::input_handle(const mouse *m) {
     if (handled_button_id > 0) {
         generic_button *button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
-            select(handled_button_id);
+            select_by_button(handled_button_id);
             left_click_callback(button->parameter1, button->parameter2);
-        } else if (m->right.went_up) {
+            if (m->left.double_click)
+                double_click_callback(button->parameter1, button->parameter2);
+        } else if (m->right.went_up)
             right_click_callback(button->parameter1, button->parameter2);
-        }
         return handled_button_id;
     }
     return 0;
@@ -115,10 +138,11 @@ void scroll_list_panel::draw() {
     scrollbar_draw(&scrollbar);
 }
 
-scroll_list_panel::scroll_list_panel(int n_buttons, int max_entries,
+scroll_list_panel::scroll_list_panel(int n_buttons,
                                      void (*lmb)(int param1, int param2),
                                      void (*rmb)(int param1, int param2),
-                                     scrollable_list_ui_params params, bool use_dir_list, const char *dir, const char *ext) {
+                                     void (*dmb)(int param1, int param2),
+                                     scrollable_list_ui_params params, bool use_file_finder, const char *dir, const char *ext) {
     // gather the UI params
     ui_params = params;
     if (ui_params.buttons_size_x == -1)
@@ -128,9 +152,10 @@ scroll_list_panel::scroll_list_panel(int n_buttons, int max_entries,
 
     // init dynamic button list
     num_buttons = n_buttons;
-    num_total_entries = max_entries;
+    num_total_entries = 0;
     left_click_callback = lmb;
     right_click_callback = rmb;
+    double_click_callback = dmb;
     for (int i = 0; i < num_buttons; ++i) {
         int button_pos_x = ui_params.x + ui_params.buttons_margin_x;
         int button_pos_y = ui_params.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
@@ -138,18 +163,10 @@ scroll_list_panel::scroll_list_panel(int n_buttons, int max_entries,
         list_buttons[i].y = button_pos_y;
         list_buttons[i].width = ui_params.buttons_size_x;
         list_buttons[i].height = ui_params.buttons_size_y;
-        list_buttons[i].left_click_handler = button_none;
-        list_buttons[i].right_click_handler = button_none;
+        list_buttons[i].left_click_handler = button_none;   // These are fired manually after intercepting the mouse state along
+        list_buttons[i].right_click_handler = button_none;  // with the button id returned by the external input handlers.
         list_buttons[i].parameter1 = i;
         list_buttons[i].parameter2 = i;
-//        generic_button btn = {
-//                short(ui_params.x + ui_params.buttons_margin_x),
-//                short(ui_params.y + ui_params.buttons_margin_y + DEFAULT_BLOCK_SIZE * i),
-//                (short)ui_params.buttons_size_x, (short)ui_params.buttons_size_y,
-//                callback_none, callback_none,
-//                i, i
-//        };
-//        list_buttons[i] = btn;
     }
 
     // init scrollbar
@@ -163,7 +180,7 @@ scroll_list_panel::scroll_list_panel(int n_buttons, int max_entries,
     scrollbar_init(&scrollbar, 0, num_total_entries - num_buttons);
 
     // init dir_listing
-    using_dir_list = use_dir_list;
+    using_dir_list = use_file_finder;
     files_dir = dir;
     files_ext = ext;
     refresh_dir_list();

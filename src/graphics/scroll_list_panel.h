@@ -23,32 +23,13 @@ struct scrollable_list_ui_params {
     int scrollbar_margin_x = 0;
     int scrollbar_margin_top = 0;
     int scrollbar_margin_bottom = 0;
-    int scrollbar_dot_padding = 8;
+    int scrollbar_dot_padding = 0;
     bool thin_scrollbar = false;
     bool draw_scrollbar_always = false;
     bool draw_paneling = true;
     font_t font_asleep = FONT_NORMAL_BLACK_ON_DARK;
     font_t font_focus = FONT_NORMAL_YELLOW;
     font_t font_selected = FONT_NORMAL_WHITE_ON_DARK;
-
-//    scrollable_list_ui_params() :
-//        x(0),
-//        y(0),
-//        blocks_x(10),
-//        blocks_y(10),
-//        buttons_size_x(-1),
-//        buttons_size_y(16),
-//        buttons_margin_x(2),
-//        buttons_margin_y(10),
-//        text_padding_x(6),
-//        text_padding_y(0),
-//        text_max_width(-1),
-//        text_centered(false),
-//        draw_paneling(true),
-//        draw_scrollbar_always(false),
-//        font_asleep(FONT_NORMAL_BLACK_ON_DARK),
-//        font_focus(FONT_NORMAL_YELLOW),
-//        font_selected(FONT_NORMAL_WHITE_ON_DARK) {}
 };
 
 class scroll_list_panel {
@@ -60,6 +41,7 @@ private:
     int selected_entry_idx = 0;
     void (*left_click_callback)(int param1, int param2);
     void (*right_click_callback)(int param1, int param2);
+    void (*double_click_callback)(int param1, int param2);
 
     scrollbar_type scrollbar;
 
@@ -76,7 +58,8 @@ public:
 
     void select(const char* button_text);
     void select(uint8_t* button_text);
-    void select(int button_id);
+    void select_by_button(int button_id);
+    void select_entry(int entry_idx);
     void unselect();
     void unfocus();
     int get_focus_button_id();
@@ -88,16 +71,19 @@ public:
     const uint8_t* get_entry_text(int index);
     const char* get_selected_entry_text_utf8();
     const uint8_t* get_selected_entry_text();
+    int get_entry_idx(const char* button_text);
 
+    void change_dir_path(const char *dir);
     void refresh_dir_list();
 
     void draw();
     int input_handle(const mouse *m);
 
-    scroll_list_panel(int n_buttons, int max_entries,
-                      void (*left_click_handler)(int param1, int param2),
-                      void (*right_click_handler)(int param1, int param2),
-                      scrollable_list_ui_params params, bool use_dir_list, const char *dir = ".", const char *ext = "");
+    scroll_list_panel(int n_buttons,
+                      void (*lmb)(int param1, int param2),
+                      void (*rmb)(int param1, int param2),
+                      void (*dmb)(int param1, int param2),
+                      scrollable_list_ui_params params, bool use_file_finder, const char *dir = ".", const char *ext = "");
     ~scroll_list_panel();
 };
 
