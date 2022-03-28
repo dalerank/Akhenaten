@@ -17,11 +17,11 @@ int scenario_campaign_rank(void);
 
 void scenario_set_campaign_rank(int rank);
 
-int scenario_campaign_mission(void);
+int scenario_campaign_scenario_id(void);
 
-void scenario_set_campaign_mission(int mission);
+void scenario_set_campaign_scenario(int scenario_id);
 
-bool scenario_is_tutorial(int rank);
+bool scenario_is_mission_rank(int rank);
 int scenario_is_tutorial_before_mission_5(void);
 int scenario_starting_favor(void);
 

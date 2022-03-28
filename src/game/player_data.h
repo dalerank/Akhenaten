@@ -4,6 +4,41 @@
 #include <stdint-gcc.h>
 #include "core/game_environment.h"
 
+#define MAX_DAT_ENTRIES 100
+#define DAT_MAP_NAME_SIZE 50
+
+// no idea what these top chunks are for. the game uses the RECORDS table
+// further below to check which missions are unlocked, not these chunks.
+typedef struct {
+    int8_t campaign_idx = -1;           // FF           :: xx          >> campaign period number
+    uint8_t campaign_idx_2 = 0;         // 00           :: 00          >> 0 if single mission, increasing # if choosable
+    uint16_t unk02 = 0;                 // 00 00        :: AC 4F       >> always the same
+    uint32_t unk03 = 0;                 // 00 00 00 00  :: 00 00 00 00 >> always 0?
+
+    int32_t mission_n_200 = -1;         // FF FF FF FF  :: C8 00 00 00 >> starts from 200, goes up with mission number
+    int32_t mission_n_A = -1;           // FF FF FF FF  :: xx 00 00 00 >> mission number
+    int32_t mission_n_B = -1;           // FF FF FF FF  :: xx 00 00 00 >> mission number (2)
+    int32_t mission_n_unk = -1;         // FF FF FF FF  :: FF FF FF FF >> always -1?
+
+    // unknown 32-byte sequence -- these always change together at
+    // semi-random intervals, almost always increasing the values
+    int32_t unk08 = -1;                 // FF FF FF FF
+    int32_t unk09 = -1;                 // FF FF FF FF
+    uint32_t unk10 = 32;                // 32 00 00 00
+    uint32_t unk11 = 32;                // 32 00 00 00
+    int16_t unk12 = -1;                 // FF FF
+    uint16_t unk13 = 0;                 // 00 00
+    uint32_t unk14 = 64;                // 64 00 00 00
+    uint32_t unk15 = 64;                // 64 00 00 00
+    int16_t unk16 = -1;                 // FF FF
+    uint16_t unk17 = 0;                 // 00 00
+
+    uint32_t unk18 = 0;                 // 00 00 00 00  :: 02 00 00 00 >> either 0 or 2
+    uint8_t mission_completed = 0;      // 00           :: 00          >> 0 if never completed, 1 if completed before
+    uint16_t unk19 = 0;                 // 00 00        :: FB 19       >> always the same
+    uint8_t unk20 = 0;                  // 00           :: 00          >> always 0?
+} player_unused_scenario_data;
+
 typedef struct {
     uint32_t score = 0;
     uint32_t mission_idx = 0;
@@ -21,47 +56,20 @@ typedef struct {
 
 } player_record;
 
+///
+
 uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity, float r_kingdom, float months, float difficulty);
-uint32_t records_calc_score(player_record *score);
+uint32_t records_calc_score(const player_record *record);
+const player_record *highscores_get(int rank);
+int highscores_count();
 
-player_record records_get(int rank);
-int records_count();
-void records_load();
+void highscores_load();
 
-typedef struct {
-    struct {
-        uint8_t map_name[50];
+///
 
-        int8_t unk00 = -1;
-        uint8_t unk01 = 0;
-        uint16_t unk02 = 0;
-        uint32_t unk03 = 0;
+const player_record *player_get_scenario_record(int scenario_id);
+const char *player_get_last_autosave();
 
-        int32_t unk04 = -1;
-        int32_t unk05 = -1;
-        int32_t unk06 = -1;
-        int32_t unk07 = -1;
-        int32_t unk08 = -1;
-        int32_t unk09 = -1;
-
-        uint32_t unk10 = 32;
-        uint32_t unk11 = 32;
-        int16_t unk12 = -1;
-        uint16_t unk13 = 0;
-        uint32_t unk14 = 64;
-        uint32_t unk15 = 64;
-        int16_t unk16 = -1;
-        uint16_t unk17 = 0;
-
-        uint32_t unk18 = 0;
-        uint8_t mission_completed = 0;
-        uint8_t unk19 = 0;
-        uint8_t unk20 = 0;
-        uint8_t unk21 = 0;
-    } map_data[100];
-} player_progression_data;
-
-const player_progression_data *player_data_get();
 void player_data_new(const uint8_t *player_name);
 void player_data_delete(const uint8_t *player_name);
 void player_data_load(const uint8_t *player_name);

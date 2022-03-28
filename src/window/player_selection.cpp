@@ -27,6 +27,7 @@
 #include "window/new_career.h"
 #include "window/game_menu.h"
 #include "popup_dialog.h"
+#include "main_menu.h"
 
 #include <string.h>
 #include <game/settings.h>
@@ -155,7 +156,7 @@ static void button_click(int param1, int param2) {
                 window_game_menu_show();
             break;
         case 3: // back to main menu
-            window_go_back();
+            window_main_menu_show(false);
             break;
     }
 }
@@ -165,7 +166,7 @@ static void on_scroll(void) {
 }
 static void handle_input(const mouse *m, const hotkeys *h) {
     if (input_go_back_requested(m, h))
-        window_go_back();
+        window_main_menu_show(false);
 
     const mouse *m_dialog = mouse_in_dialog(m);
     if (panel->input_handle(m_dialog))

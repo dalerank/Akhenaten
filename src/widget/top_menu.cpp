@@ -1,4 +1,5 @@
 #include <tgmath.h>
+#include <window/game_menu.h>
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
@@ -478,7 +479,7 @@ static void menu_file_new_game(int param) {
     Planner.reset();
     game_undo_disable();
     game_state_reset_overlay();
-    window_main_menu_show(1);
+    window_game_menu_show();
 }
 static void menu_file_replay_map(int param) {
     clear_state();

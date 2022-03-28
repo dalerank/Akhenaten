@@ -338,7 +338,7 @@ static void init_savegame_data(bool expanded) {
     savegame_state *state = &savegame_data.state;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3: {
-            state->SCENARIO.mission_index = create_savegame_piece(4, false, "scenario_campaign_mission");
+            state->SCENARIO.mission_index = create_savegame_piece(4, false, "scenario_campaign_scenario_id");
             state->file_version = create_savegame_piece(4, false, "file_version");
             state->image_grid = create_savegame_piece(52488, true, "image_grid");
             state->edge_grid = create_savegame_piece(26244, true, "edge_grid");

@@ -59,6 +59,27 @@ bool scroll_list_panel::has_entry(const char* button_text) {
     return (get_entry_idx(button_text) > -1);
 }
 
+void scroll_list_panel::set_file_finder_usage(bool use) {
+    using_file_finder = use;
+    refresh_file_finder();
+}
+void scroll_list_panel::clear_entry_list() {
+    if (using_file_finder)
+        return;
+    num_total_entries = 0;
+    unfocus();
+    unselect();
+}
+void scroll_list_panel::add_entry(const char *entry_text) {
+//    if (strlen(entry_text) < (FILE_NAME_MAX))
+//        strcpy(manual_entry_list[num_total_entries], entry_text);
+//    else {
+//        strcpy(manual_entry_list[num_total_entries], "");
+//        strncat(manual_entry_list[num_total_entries], entry_text, FILE_NAME_MAX-1);
+//    }
+    strncpy(manual_entry_list[num_total_entries], entry_text, FILE_NAME_MAX - 1);
+    num_total_entries++;
+}
 void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
     files_dir = dir;
     if (ext != nullptr)
@@ -66,9 +87,9 @@ void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
     refresh_file_finder();
 }
 void scroll_list_panel::refresh_file_finder() {
-    unfocus();
     if (!using_file_finder)
         return;
+    unfocus();
     if (strcmp(files_ext, "folders") == 0)
         file_finder = dir_find_all_subdirectories(files_dir);
     else
@@ -127,6 +148,12 @@ void scroll_list_panel::draw() {
             strcpy(text_utf8, file_finder->files[i + scrollbar.scroll_position]);
             encoding_from_utf8(text_utf8, text, FILE_NAME_MAX);
             file_remove_extension(text);
+        } else {
+            if (i < num_total_entries)
+                strcpy(text_utf8, manual_entry_list[i + scrollbar.scroll_position]);
+            else
+                strcpy(text_utf8, "");
+            encoding_from_utf8(text_utf8, text, FILE_NAME_MAX);
         }
 
         if (using_custom_text_render)

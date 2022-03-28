@@ -165,7 +165,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
 
 }
-void window_main_menu_show(int restart_music) {
+void window_main_menu_show(bool restart_music) {
     if (restart_music)
         sound_music_play_intro();
     window_type window = {

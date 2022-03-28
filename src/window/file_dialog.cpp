@@ -61,7 +61,6 @@ static struct {
     file_type type;
     file_dialog_type dialog_type;
     int focus_button_id;
-//    const dir_listing *file_list;
 
     file_type_data *file_data;
     uint8_t typed_name[FILE_NAME_MAX];
@@ -277,12 +276,10 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         input_box_stop(&file_name_input);
         window_go_back();
     }
-
     if (input_box_is_accepted(&file_name_input)) {
         button_ok_cancel(1, 0);
         return;
     }
-
     const mouse *m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &file_name_input) ||
         panel->input_handle(m_dialog) ||

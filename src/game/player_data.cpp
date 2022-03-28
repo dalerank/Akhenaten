@@ -12,21 +12,34 @@
 #define DAT_FILE_SIZE 19100
 #define DAT_CHUNK_SIZE 64
 #define DAT_CHUNKS_USED 56
-#define DAT_MAP_NAME_SIZE 50
 #define DAT_MAP_NAMES_USED 53
-#define MAX_DAT_ENTRIES 100
+#define DAT_ENTRIES_PHARAOH 38
+#define DAT_ENTRIES_CLEOPATRA 15
+
+#define MAX_AUTOSAVE_PATH 64
+
+player_record dummy_record;
 
 static struct {
+    // highscores.jas
     player_record highscores[MAX_JAS_ENTRIES];
     int num_highscore_entries;
     buffer *jas_file = new buffer(JAS_FILE_SIZE);
 
-    player_progression_data player_progression;
+    //<player>.dat
+    player_unused_scenario_data unused_data[MAX_DAT_ENTRIES];
+    int unk38;
+    uint8_t scenario_names[MAX_DAT_ENTRIES][DAT_MAP_NAME_SIZE];
+    int unk35;
+    char last_autosave_path[MAX_AUTOSAVE_PATH];
+    int unk00;
+    player_record player_scenario_records[MAX_DAT_ENTRIES];
     buffer *dat_file = new buffer(DAT_FILE_SIZE);
 } data;
 
-uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity,
-                            float r_kingdom, float months, float difficulty) {
+///
+
+uint32_t records_calc_score(float unkn, float funds, float population, float r_culture, float r_prosperity, float r_kingdom, float months, float difficulty) {
     // I have *NO CLUE* how this value works. It's just black magic.
     // In missions where it's zero, the formula checks out correctly.
     unkn = 0.0;
@@ -36,33 +49,32 @@ uint32_t records_calc_score(float unkn, float funds, float population, float r_c
             population * 0.002 * (r_culture + r_prosperity + r_kingdom)
     );
 }
-uint32_t records_calc_score(player_record *score) {
-    return records_calc_score(score->unk09,
-                              score->final_funds,
-                              score->final_population,
-                              score->rating_culture,
-                              score->rating_prosperity,
-                              score->rating_kingdom,
-                              score->completion_months,
-                              score->difficulty);
+uint32_t records_calc_score(const player_record *record) {
+    return records_calc_score(record->unk09,
+                              record->final_funds,
+                              record->final_population,
+                              record->rating_culture,
+                              record->rating_prosperity,
+                              record->rating_kingdom,
+                              record->completion_months,
+                              record->difficulty);
 }
-player_record records_get(int rank) {
+const player_record *highscores_get(int rank) {
     // go through the list of records, return the nth non-empty record
     for (int i = 0; i < MAX_JAS_ENTRIES; ++i) {
         if (data.highscores[i].nonempty)
             if (rank > 0)
                 rank--;
             else
-                return data.highscores[i];
+                return &data.highscores[i];
     }
-    player_record dummy;
-    return dummy; // return empty record when reached the end of the list
+    return &dummy_record; // return empty record when reached the end of the list
 }
-int records_count() {
+int highscores_count() {
     return data.num_highscore_entries;
 }
 
-static void load_jas_chunk(buffer *buf, player_record *record) {
+static void load_jas_record_chunk(buffer *buf, player_record *record) {
     record->score = buf->read_u32();
     record->mission_idx = buf->read_u32();
     buf->read_raw(record->player_name, MAX_PLAYER_NAME);
@@ -83,7 +95,7 @@ static void load_jas_chunk(buffer *buf, player_record *record) {
     if (record->nonempty)
         data.num_highscore_entries++;
 }
-void records_load() {
+void highscores_load() {
     // highscore.jas
     data.jas_file->clear();
     data.jas_file->reset_offset();
@@ -91,37 +103,40 @@ void records_load() {
     int size = io_read_file_into_buffer("Save/highscore.jas", NOT_LOCALIZED, data.jas_file, JAS_FILE_SIZE);
     if (!size)
         return;
-    // jas record chunks
-    for (int i = 0; i < MAX_JAS_ENTRIES; ++i)
-        load_jas_chunk(data.jas_file, &data.highscores[i]);
+
+    for (int i = 0; i < MAX_JAS_ENTRIES; ++i) // highscores
+        load_jas_record_chunk(data.jas_file, &data.highscores[i]);
 }
 
 ///
 
-const player_progression_data *player_data_get() {
-    return (const player_progression_data*)&data.player_progression;
+const player_record *player_get_scenario_record(int scenario_id) {
+    return &data.player_scenario_records[scenario_id];
 }
+const char *player_get_last_autosave() {
+    return data.last_autosave_path;
+}
+
 void player_data_new(const uint8_t *player_name) {
     // TODO
 }
 void player_data_delete(const uint8_t *player_name) {
     // TODO
 }
-
-static void load_dat_map_chunks(buffer *buf, int index) {
-    auto chunk = data.player_progression.map_data[index];
-    chunk.unk00 = buf->read_i8();
-    chunk.unk01 = buf->read_u8();
+static void load_unused_dat_chunk(buffer *buf, int index) {
+    auto chunk = data.unused_data[index];
+    chunk.campaign_idx = buf->read_i8();
+    chunk.campaign_idx_2 = buf->read_u8();
     chunk.unk02 = buf->read_u16();
     chunk.unk03 = buf->read_u32();
     //
-    chunk.unk04 = buf->read_i32();
-    chunk.unk05 = buf->read_i32();
-    chunk.unk06 = buf->read_i32();
-    chunk.unk07 = buf->read_i32();
+    chunk.mission_n_200 = buf->read_i32();
+    chunk.mission_n_A = buf->read_i32();
+    chunk.mission_n_B = buf->read_i32();
+    chunk.mission_n_unk = buf->read_i32();
+    //
     chunk.unk08 = buf->read_i32();
     chunk.unk09 = buf->read_i32();
-    //
     chunk.unk10 = buf->read_u32();
     chunk.unk11 = buf->read_u32();
     chunk.unk12 = buf->read_i16();
@@ -133,9 +148,8 @@ static void load_dat_map_chunks(buffer *buf, int index) {
     //
     chunk.unk18 = buf->read_u32();
     chunk.mission_completed = buf->read_u8();
-    chunk.unk19 = buf->read_u8();
+    chunk.unk19 = buf->read_u16();
     chunk.unk20 = buf->read_u8();
-    chunk.unk21 = buf->read_u8();
 
 }
 void player_data_load(const uint8_t *player_name) {
@@ -143,20 +157,21 @@ void player_data_load(const uint8_t *player_name) {
     data.dat_file->clear();
     data.dat_file->reset_offset();
     char file_path[256];
-    snprintf(file_path, sizeof(file_path), "%s%s", "Save/", (const char*)player_name);
+    snprintf(file_path, sizeof(file_path), "%s%s.dat", "Save/", (const char*)player_name);
     int size = io_read_file_into_buffer(file_path, NOT_LOCALIZED, data.dat_file, DAT_FILE_SIZE);
     if (!size)
         return;
 
-    // map data chunks
-    for (int i = 0; i < MAX_DAT_ENTRIES; ++i)
-        load_dat_map_chunks(data.dat_file, i);
-    // unknown 32-bit field
-    data.dat_file->skip(4);
-    // map names
-    for (int i = 0; i < MAX_DAT_ENTRIES; ++i)
-        data.dat_file->read_raw(data.player_progression.map_data[i].map_name, DAT_MAP_NAME_SIZE);
-    // unknown 32-bit field & rest of unused file
-    data.dat_file->skip(4);
-    data.dat_file->skip(7692);
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // unused(?) scenario data chunks
+        load_unused_dat_chunk(data.dat_file, i);
+    data.unk38 = data.dat_file->read_i32(); // number of fields for the Pharaoh main campaign? (38)
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // map names
+        data.dat_file->read_raw(data.scenario_names[i], DAT_MAP_NAME_SIZE);
+    data.unk35 = data.dat_file->read_i32(); // unknown 32-bit field (35)
+    char raw_autosave_path[MAX_AUTOSAVE_PATH];
+    data.dat_file->read_raw(raw_autosave_path, MAX_AUTOSAVE_PATH); // path to last autosave_replay.sav file
+    strcpy(data.last_autosave_path, dir_get_file(raw_autosave_path, NOT_LOCALIZED));
+    data.unk00 == data.dat_file->read_i32(); // unknown 32-bit field (0)
+    for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // scenario records
+        load_jas_record_chunk(data.dat_file, &data.player_scenario_records[i]);
 }

@@ -324,7 +324,7 @@ static void update_god_moods(void) {
         else if (god->happiness > god->target_happiness)
             god->happiness--;
 
-        if (scenario_is_tutorial(1)) {
+        if (scenario_is_mission_rank(1)) {
             if (god->happiness < 50)
                 god->happiness = 50;
 

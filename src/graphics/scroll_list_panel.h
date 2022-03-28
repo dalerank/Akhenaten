@@ -2,10 +2,12 @@
 #define OZYMANDIAS_SCROLL_LIST_PANEL_H
 
 #include <core/dir.h>
+#include <vector>
 #include "generic_button.h"
 #include "scrollbar.h"
 
 #define MAX_BUTTONS_IN_SCROLLABLE_LIST 50
+#define MAX_MANUAL_ENTRIES 300
 
 struct scrollable_list_ui_params {
     int x = 0;
@@ -50,10 +52,12 @@ private:
     const char *files_ext;
     bool using_file_finder;
 
+    char manual_entry_list[FILE_NAME_MAX][MAX_MANUAL_ENTRIES];
+
     void (*custom_text_render)(int button_index, const uint8_t *text, int x, int y, font_t font);
     bool using_custom_text_render = false;
 
-    bool WAS_DRAWN = false;
+    bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
 
 public:
     scrollable_list_ui_params ui_params;
@@ -73,6 +77,11 @@ public:
     int get_entry_idx(const char *button_text);
     bool has_entry(const char *button_text);
 
+    void set_file_finder_usage(bool use);
+    void clear_entry_list();
+    void add_entry(const char *entry_text);
+//    void remove_entry(const char *entry_text); // TODO: nope.
+//    void remove_entry(int index); // TODO: nope.
     void change_file_path(const char *dir, const char *ext = nullptr);
     void refresh_file_finder();
     void refresh_scrollbar_position();

@@ -58,7 +58,7 @@ void tutorial_init(void) {
     std::fill_n(tut_passed, 10, 1);
 
     for (int t = 1; t <= 10; t++) {
-        if (scenario_is_tutorial(t))
+        if (scenario_is_mission_rank(t))
             for (int i = t - 1; i < 10; i++)
                 tut_passed[i] = 0;
     }
@@ -124,15 +124,15 @@ void tutorial_init(void) {
 
 tutorial_availability tutorial_advisor_availability(void) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_tutorial(1))
+        if (scenario_is_mission_rank(1))
             return NOT_AVAILABLE;
-        else if (scenario_is_tutorial(2) && !data.tutorial2.population_250_reached)
+        else if (scenario_is_mission_rank(2) && !data.tutorial2.population_250_reached)
             return NOT_AVAILABLE_YET;
         else
             return AVAILABLE;
     }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial(1))
+        if (scenario_is_mission_rank(1))
             return NOT_AVAILABLE;
         else
             return AVAILABLE;
@@ -140,9 +140,9 @@ tutorial_availability tutorial_advisor_availability(void) {
 }
 tutorial_availability tutorial_empire_availability(void) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_tutorial(1))
+        if (scenario_is_mission_rank(1))
             return NOT_AVAILABLE;
-        else if (scenario_is_tutorial(2) && !data.tutorial2.population_250_reached)
+        else if (scenario_is_mission_rank(2) && !data.tutorial2.population_250_reached)
             return NOT_AVAILABLE_YET;
         else
             return AVAILABLE;
@@ -223,13 +223,13 @@ void tutorial_menu_update(int tut) {
 
 int tutorial_get_population_cap(int current_cap) {
     return current_cap; //temp
-    if (scenario_is_tutorial(1)) {
+    if (scenario_is_mission_rank(1)) {
         if (!data.tutorial1.fire ||
             !data.tutorial1.collapse ||
             !data.tutorial1.senate_built) {
             return 80;
         }
-    } else if (scenario_is_tutorial(2)) {
+    } else if (scenario_is_mission_rank(2)) {
         if (!data.tutorial2.granary_built)
             return 150;
         else if (!data.tutorial2.pottery_made)
@@ -240,7 +240,7 @@ int tutorial_get_population_cap(int current_cap) {
 }
 int tutorial_get_immediate_goal_text(void) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_tutorial(1)) {
+        if (scenario_is_mission_rank(1)) {
             if (!data.tutorial1.fire && !data.tutorial1.crime)
                 return 17;
             else if (!data.tutorial1.collapse)
@@ -249,7 +249,7 @@ int tutorial_get_immediate_goal_text(void) {
                 return 19;
             else
                 return 20;
-        } else if (scenario_is_tutorial(2)) {
+        } else if (scenario_is_mission_rank(2)) {
             if (!data.tutorial2.granary_built)
                 return 21;
             else if (!data.tutorial2.population_250_reached)
@@ -263,31 +263,31 @@ int tutorial_get_immediate_goal_text(void) {
         }
         return 0;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial(1)) {
+        if (scenario_is_mission_rank(1)) {
             if (!data.pharaoh.population_150_reached)
                 return 21;
             else if (!data.pharaoh.gamemeat_400_stored)
                 return 19;
             else
                 return 20;
-        } else if (scenario_is_tutorial(2)) {
+        } else if (scenario_is_mission_rank(2)) {
             if (!data.pharaoh.gold_mined_500)
                 return 24;
             else if (!data.pharaoh.temples_built)
                 return 23;
             else
                 return 22;
-        } else if (scenario_is_tutorial(3)) {
+        } else if (scenario_is_mission_rank(3)) {
             if (!data.pharaoh.figs_800_stored)
                 return 28;
             else if (!data.pharaoh.pottery_made)
                 return 27;
             else
                 return 26;
-        } else if (scenario_is_tutorial(4)) {
+        } else if (scenario_is_mission_rank(4)) {
             if (!data.pharaoh.beer_made)
                 return 33;
-        } else if (scenario_is_tutorial(5)) {
+        } else if (scenario_is_mission_rank(5)) {
             if (!data.pharaoh.spacious_apartment)
                 return 31;
             else if (!data.pharaoh.papyrus_made)
@@ -301,7 +301,7 @@ int tutorial_get_immediate_goal_text(void) {
     }
 }
 int tutorial_adjust_request_year(int *year) {
-    if (scenario_is_tutorial(2)) {
+    if (scenario_is_mission_rank(2)) {
         if (!data.tutorial2.pottery_made)
             return 0;
 
@@ -311,12 +311,12 @@ int tutorial_adjust_request_year(int *year) {
 }
 int tutorial_extra_fire_risk(void) {
     return !data.tutorial1.fire &&
-        scenario_is_tutorial(1); // Fix for extra fire risk in late tutorials
+            scenario_is_mission_rank(1); // Fix for extra fire risk in late tutorials
 }
 int tutorial_extra_damage_risk(void) {
     return data.tutorial1.fire &&
-        !data.tutorial1.collapse &&
-        scenario_is_tutorial(1); // Fix for extra damage risk in late tutorials
+           !data.tutorial1.collapse &&
+            scenario_is_mission_rank(1); // Fix for extra damage risk in late tutorials
 }
 int tutorial_handle_fire(void) {
     if (data.tutorial1.fire || data.pharaoh.fire)
@@ -364,12 +364,12 @@ void tutorial_on_filled_granary(int quantity) {
         building_menu_update(BUILDSET_TUT2_UP_TO_250);
         post_message(MESSAGE_TUTORIAL_WATER);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial(1) && !data.pharaoh.gamemeat_400_stored && quantity >= 400) {
+        if (scenario_is_mission_rank(1) && !data.pharaoh.gamemeat_400_stored && quantity >= 400) {
             data.pharaoh.gamemeat_400_stored = 1;
             building_menu_update(BUILDSET_TUT1_WATER);
             post_message(MESSAGE_TUTORIAL_CLEAN_WATER);
         }
-        if (scenario_is_tutorial(3) && !data.pharaoh.figs_800_stored && quantity >= 800) {
+        if (scenario_is_mission_rank(3) && !data.pharaoh.figs_800_stored && quantity >= 800) {
             data.pharaoh.figs_800_stored = 1;
             building_menu_update(BUILDSET_TUT3_INDUSTRY);
             post_message(MESSAGE_TUTORIAL_INDUSTRY);
@@ -428,38 +428,38 @@ void tutorial_on_house_evolve(int level) {
     }
 }
 void tutorial_starting_message() {
-    if (scenario_is_tutorial(1) && !data.pharaoh.tut1_start) {
+    if (scenario_is_mission_rank(1) && !data.pharaoh.tut1_start) {
         post_message(MESSAGE_TUTORIAL_HOUSING_AND_ROADS);
         data.pharaoh.tut1_start = 1;
     }
-    if (scenario_is_tutorial(2) && !data.pharaoh.tut2_start) {
+    if (scenario_is_mission_rank(2) && !data.pharaoh.tut2_start) {
         post_message(MESSAGE_TUTORIAL_GOLD_AND_CRIME);
         data.pharaoh.tut2_start = 1;
     }
-    if (scenario_is_tutorial(3) && !data.pharaoh.tut3_start) {
+    if (scenario_is_mission_rank(3) && !data.pharaoh.tut3_start) {
         post_message(MESSAGE_TUTORIAL_FARMING_ALONG_THE_NILE);
         data.pharaoh.tut3_start = 1;
     }
-    if (scenario_is_tutorial(4) && !data.pharaoh.tut4_start) {
+    if (scenario_is_mission_rank(4) && !data.pharaoh.tut4_start) {
         post_message(MESSAGE_TUTORIAL_DEVELOPING_CULTURE);
         data.pharaoh.tut4_start = 1;
     }
-    if (scenario_is_tutorial(5) && !data.pharaoh.tut5_start) {
+    if (scenario_is_mission_rank(5) && !data.pharaoh.tut5_start) {
         post_message(MESSAGE_TUTORIAL_GETTING_STARTED);
         data.pharaoh.tut5_start = 1;
     }
-    if (scenario_is_tutorial(6) && !data.pharaoh.tut6_start) {
+    if (scenario_is_mission_rank(6) && !data.pharaoh.tut6_start) {
         post_message(MESSAGE_TUTORIAL_SOLDIERS_AND_FORT);
         data.pharaoh.tut6_start = 1;
     }
-    if (scenario_is_tutorial(7) && !data.pharaoh.tut7_start) {
-        if (scenario_campaign_mission() == 6)
+    if (scenario_is_mission_rank(7) && !data.pharaoh.tut7_start) {
+        if (scenario_campaign_scenario_id() == 6)
             post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE);
         else
             post_message(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2);
         data.pharaoh.tut7_start = 1;
     }
-    if (scenario_is_tutorial(8) && !data.pharaoh.tut8_start) {
+    if (scenario_is_mission_rank(8) && !data.pharaoh.tut8_start) {
         post_message(MESSAGE_TUTORIAL_THE_FINER_THINGS);
         data.pharaoh.tut8_start = 1;
     }
@@ -498,7 +498,7 @@ void tutorial_on_day_tick(void) {
             }
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial(1)) {
+        if (scenario_is_mission_rank(1)) {
             if (!data.pharaoh.population_150_reached && city_population() >= 150) {
                 data.pharaoh.population_150_reached = 1;
                 building_menu_update(BUILDSET_TUT1_FOOD);
@@ -508,7 +508,7 @@ void tutorial_on_day_tick(void) {
     }
 }
 void tutorial_on_month_tick(void) {
-    if (scenario_is_tutorial(3)) {
+    if (scenario_is_mission_rank(3)) {
         if (game_time_month() == 5)
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS,
                                                  1200);

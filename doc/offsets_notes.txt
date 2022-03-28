@@ -137,6 +137,34 @@ DIF 4 -> + 1 = 5 -> / 3 = 1.6666666 -> * 35514.0235495 = 59190.0386573
 
 ==================
 
+MAP PROGRESSION / SELECTION
+
+1) when in normal game, progress as normal.
+2) there is NO text string for "need to unlock" mission
+3) the only message is "you can only replay missions
+you successfully completed"
+4) the "you can only replay" can not account for missions
+that you can choose, so you'd be forced to go back to play
+the WHOLE campaign just to get them, or hope you saved the
+game at the right time
+5) 
+
+- game menu:
+  BEGIN FAMILY HISTORY / RESUME FAMILY HISTORY
+  EXPLORE HISTORY
+  LOAD SAVED GAME
+  CUSTOM MISSIONS
+  RETURN TO FAMILY REGISTRY
+  
+- explore history:
+  1) select the campaign from the classic menu list
+  2) show a list of missions in the campaign/period
+  3) (hovering over them shows a map, perhaps?)
+  4) choose if you "REPLAY AS FAMILY" or "PLAY CASUALLY"
+  5) if not beaten before, "REPLAY AS F." shows error
+
+==================
+
 first one in the list is always null
 
 type 0 is OURS

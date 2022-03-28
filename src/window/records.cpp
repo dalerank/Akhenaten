@@ -26,8 +26,8 @@ static struct {
 } data;
 
 void init() {
-    records_load();
-    scrollbar_init(&scrollbar, 0, records_count() - LIST_MAX_SIZE);
+    highscores_load();
+    scrollbar_init(&scrollbar, 0, highscores_count() - LIST_MAX_SIZE);
 }
 
 static void draw_background(void) {
@@ -45,20 +45,20 @@ static void draw_foreground(void) {
     // high scores
     font_t font = FONT_SMALL_BLACK;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
-        player_record record = records_get(scrollbar.scroll_position + i);
-        if (record.nonempty) {
-            text_draw_number(record.score, '@', " ", LIST_X + 10, LIST_Y + 16 * i, font);
-            text_draw_number(records_calc_score(&record), '@', " ", LIST_X + 80, LIST_Y + 16 * i, font);
-            text_draw_number(record.mission_idx, '@', " ", LIST_X + 150, LIST_Y + 16 * i, font);
-            text_draw_number(record.rating_culture, '@', " ", LIST_X + 180, LIST_Y + 16 * i, font);
-            text_draw_number(record.rating_prosperity, '@', " ", LIST_X + 220, LIST_Y + 16 * i, font);
-            text_draw_number(record.rating_kingdom, '@', " ", LIST_X + 260, LIST_Y + 16 * i, font);
-            text_draw_number(record.final_population, '@', " ", LIST_X + 310, LIST_Y + 16 * i, font);
-            text_draw_number(record.final_funds, '@', " ", LIST_X + 360, LIST_Y + 16 * i, font);
-            text_draw_number(record.completion_months, '@', " ", LIST_X + 410, LIST_Y + 16 * i, font);
-            text_draw_number(record.difficulty, '@', " ", LIST_X + 440, LIST_Y + 16 * i, font);
-            text_draw_number(record.unk09, '@', " ", LIST_X + 475, LIST_Y + 16 * i, font);
-            if (record.score_is_valid)
+        const player_record *record = highscores_get(scrollbar.scroll_position + i);
+        if (record->nonempty) {
+            text_draw_number(record->score, '@', " ", LIST_X + 10, LIST_Y + 16 * i, font);
+            text_draw_number(records_calc_score(record), '@', " ", LIST_X + 80, LIST_Y + 16 * i, font);
+            text_draw_number(record->mission_idx, '@', " ", LIST_X + 150, LIST_Y + 16 * i, font);
+            text_draw_number(record->rating_culture, '@', " ", LIST_X + 180, LIST_Y + 16 * i, font);
+            text_draw_number(record->rating_prosperity, '@', " ", LIST_X + 220, LIST_Y + 16 * i, font);
+            text_draw_number(record->rating_kingdom, '@', " ", LIST_X + 260, LIST_Y + 16 * i, font);
+            text_draw_number(record->final_population, '@', " ", LIST_X + 310, LIST_Y + 16 * i, font);
+            text_draw_number(record->final_funds, '@', " ", LIST_X + 360, LIST_Y + 16 * i, font);
+            text_draw_number(record->completion_months, '@', " ", LIST_X + 410, LIST_Y + 16 * i, font);
+            text_draw_number(record->difficulty, '@', " ", LIST_X + 440, LIST_Y + 16 * i, font);
+            text_draw_number(record->unk09, '@', " ", LIST_X + 475, LIST_Y + 16 * i, font);
+            if (record->score_is_valid)
                 text_draw((uint8_t *)"V", LIST_X + 510, LIST_Y + 16 * i, font, 0);
             else
                 text_draw((uint8_t *)"-", LIST_X + 510, LIST_Y + 16 * i, font, 0);

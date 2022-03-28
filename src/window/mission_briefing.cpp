@@ -68,7 +68,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
 
     graphics_in_dialog();
-    int text_id = 200 + scenario_campaign_mission();
+    int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message *msg = lang_get_message(text_id);
 
     outer_panel_draw(16, 32, 38, 27);
@@ -76,8 +76,8 @@ static void draw_background(void) {
     text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (!data.is_review && game_mission_has_choice())
-        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
+//    if (!data.is_review && game_mission_has_choice())
+//        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 96, 33, 6);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);

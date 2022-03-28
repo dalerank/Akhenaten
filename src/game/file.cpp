@@ -307,7 +307,7 @@ static int load_campaign_mission(int mission_id) {
 }
 
 static int start_scenario(const uint8_t *scenario_name, const char *scenario_file) {
-    int mission = scenario_campaign_mission();
+    int mission = scenario_campaign_scenario_id();
     int rank = scenario_campaign_rank();
     map_bookmarks_clear();
     if (scenario_is_custom()) {
@@ -316,10 +316,10 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
         scenario_set_player_name(setting_player_name());
     } else if (!load_campaign_mission(mission))
         return 0;
-    scenario_set_campaign_mission(mission);
+    scenario_set_campaign_scenario(mission);
     scenario_set_campaign_rank(rank);
 
-    if (scenario_is_tutorial(1))
+    if (scenario_is_mission_rank(1))
         setting_set_personal_savings_for_mission(0, 0);
 
     scenario_settings_init_mission();

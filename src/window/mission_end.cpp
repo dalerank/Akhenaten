@@ -58,7 +58,7 @@ static void draw_won(void) {
     if (scenario_is_custom())
         lang_text_draw_multiline(147, 20, 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
     else {
-        lang_text_draw_multiline(147, scenario_campaign_mission(), 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_multiline(147, scenario_campaign_scenario_id(), 80, 192, 488, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     int left_width = get_max(
@@ -130,7 +130,7 @@ static void advance_to_next_mission(void) {
             scenario_set_campaign_rank(2);
         }
     } else {
-        scenario_set_campaign_mission(game_mission_peaceful());
+//        scenario_set_campaign_mission(game_mission_peaceful());
         window_mission_next_selection_show();
     }
 }
@@ -176,7 +176,7 @@ static void show_intermezzo(void) {
 
 void window_mission_end_show_won(void) {
     mouse_reset_up_state();
-    if (GAME_ENV == ENGINE_ENV_PHARAOH || scenario_is_tutorial(1) || scenario_is_tutorial(2)) {
+    if (GAME_ENV == ENGINE_ENV_PHARAOH || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
         // tutorials: immediately go to next mission
         show_intermezzo();
     } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {

@@ -227,8 +227,8 @@ extern struct scenario_t {
     } native_images;
 
     struct { // used to be stored in the settings file
-        int campaign_rank;
-        int campaign_mission;
+        int campaign_mission_rank;
+        int campaign_scenario_id;
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
@@ -237,6 +237,6 @@ extern struct scenario_t {
     } settings;
 
     bool is_saved;
-} scenario;
+} scenario_data;
 
 #endif // SCENARIO_DATA_H
