@@ -4,6 +4,21 @@
 #include "core/game_environment.h"
 #include "player_data.h"
 
+int get_first_mission_in_campaign(int campaign_id) {
+    if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
+        return SCENARIO_NULL;
+    if (campaign_id == CAMPAIGN_PHARAOH_PREDYNASTIC)
+        return SCENARIO_NUBT;
+    else
+        return 1 + SCENARIO_LAST_IN_CAMPAIGN[campaign_id - 1];
+}
+int get_last_mission_in_campaign(int campaign_id) {
+    if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
+        return SCENARIO_NULL;
+
+   return SCENARIO_LAST_IN_CAMPAIGN[campaign_id];
+}
+
 int game_mission_choose(int rank, int index) {
     if (index < 0 || index > 2)
         index = 0;

@@ -67,6 +67,7 @@ void highscores_load();
 
 ///
 
+const char *player_get_cached_scenario_name(int scenario_id);
 const player_record *player_get_scenario_record(int scenario_id);
 const char *player_get_last_autosave();
 

@@ -99,6 +99,9 @@ static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
         SCENARIO_ACTIUM
 };
 
+int get_first_mission_in_campaign(int campaign_id);
+int get_last_mission_in_campaign(int campaign_id);
+
 static const struct {
     int req_beaten[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
 } SCENARIO_REQUIREMENTS_PH[] = {

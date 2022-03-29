@@ -29,7 +29,7 @@ static struct {
     //<player>.dat
     player_unused_scenario_data unused_data[MAX_DAT_ENTRIES];
     int unk38;
-    uint8_t scenario_names[MAX_DAT_ENTRIES][DAT_MAP_NAME_SIZE];
+    char scenario_names[MAX_DAT_ENTRIES][DAT_MAP_NAME_SIZE];
     int unk35;
     char last_autosave_path[MAX_AUTOSAVE_PATH];
     int unk00;
@@ -110,6 +110,9 @@ void highscores_load() {
 
 ///
 
+const char *player_get_cached_scenario_name(int scenario_id) {
+    return data.scenario_names[scenario_id];
+}
 const player_record *player_get_scenario_record(int scenario_id) {
     return &data.player_scenario_records[scenario_id];
 }

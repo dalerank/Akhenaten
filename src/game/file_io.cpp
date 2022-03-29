@@ -1022,23 +1022,32 @@ static void savegame_write_to_file(FILE *fp) {
 bool game_file_io_read_scenario(const char *filename) {
     // TODO
     return false;
-//    log_info("Loading scenario", filename, 0);
-//    init_scenario_data();
-//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-//    if (!fp) {
-//        return 0;
-//    }
-//    for (int i = 0; i < scenario_data.num_pieces; i++) {
+
+    init_scenario_data();
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        log_error("Unable to access file", filename, 0);
+        return false;
+    }
+    log_info("Loading scenario", filename, 0);
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        int bytes_read = scenario_data.pieces[i].buf->from_file((size_t) scenario_data.pieces[i].buf->size(), fp);
+        if (bytes_read != scenario_data.pieces[i].buf->size()) {
+            log_error("Unable to load scenario", filename, 0);
+            file_close(fp);
+            return false;
+        }
+
 //        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
 //            log_error("Unable to load scenario", filename, 0);
 //            file_close(fp);
 //            return 0;
 //        }
-//    }
-//    file_close(fp);
-//
-//    scenario_load_from_state(&scenario_data.state);
-//    return 1;
+    }
+    file_close(fp);
+
+    scenario_load_from_state(&scenario_data.state);
+    return true;
 }
 bool game_file_io_write_scenario(const char *filename) {
     // TODO

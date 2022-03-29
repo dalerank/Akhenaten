@@ -57,7 +57,7 @@ static scrollable_list_ui_params ui_params = {
         .blocks_y = NUM_FILES_IN_VIEW + 1,
         .draw_scrollbar_always = true
 };
-static scroll_list_panel *panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click,
+static scroll_list_panel *panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none,
                                                         ui_params, true, "Save/", "folders");
 
 static struct {
@@ -75,7 +75,7 @@ static void clear_selectd_name() {
     set_name("");
 }
 static bool is_selected_name(int index) {
-    return strcmp(data.selected_player_utf8, panel->get_selected_entry_text()) == 0;
+    return strcmp(data.selected_player_utf8, panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
 }
 static bool is_valid_selected_player() {
     if (strcmp(data.selected_player_utf8, "") == 0)
@@ -132,7 +132,7 @@ static void confirm_delete_player(bool accepted) {
 static void button_select_file(int index, int param2) {
     if (index >= panel->get_total_entries())
         return clear_selectd_name();
-    set_name(panel->get_selected_entry_text());
+    set_name(panel->get_selected_entry_text(FILE_NO_EXT));
     setting_set_player_name(data.selected_player);
 }
 static void button_double_click(int index, int param2) {

@@ -189,15 +189,14 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     city_data_init_scenario();
     game_state_unpause();
 }
-static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file) {
+static bool load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file) {
     if (!file_exists(scenario_file, NOT_LOCALIZED))
-        return 0;
-
+        return false;
 
     clear_scenario_data();
     game_file_load_scenario_data(scenario_file);
     initialize_scenario_data(scenario_name);
-    return 1;
+    return true;
 }
 static void load_empire_data(int is_custom_scenario, int empire_id) {
     if (GAME_ENV == ENGINE_ENV_C3) // only for external file
@@ -281,42 +280,42 @@ static void initialize_saved_game(void) {
 
     game_state_unpause();
 }
-static int get_campaign_mission_offset(int mission_id) {
-    // init 4-byte buffer and read from file header corresponding to mission index (i.e. mission 20 = offset 20*4 = 80)
+static int get_campaign_scenario_offset(int scenario_id) {
+    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
     buffer *buf = new buffer(4);
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, buf, 4, 4 * mission_id))
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, buf, 4, 4 * scenario_id))
         return 0;
     return buf->read_i32();
 }
-static int load_campaign_mission(int mission_id) {
-    int offset = get_campaign_mission_offset(mission_id);
+static bool load_campaign_scenario(int scenario_id) {
+    int offset = get_campaign_scenario_offset(scenario_id);
     if (offset <= 0)
-        return 0;
+        return false;
     if (!game_file_io_read_saved_game(MISSION_PACK_FILE, offset))
-        return 0;
+        return false;
 
-    if (mission_id == 0)
+    if (scenario_id == 0)
         scenario_set_player_name(setting_player_name());
     else
         scenario_restore_campaign_player_name();
     initialize_saved_game();
-    scenario_fix_patch_trade(mission_id);
+    scenario_fix_patch_trade(scenario_id);
 
     city_data_init_campaign_mission();
-    return 1;
+    return true;
 }
 
-static int start_scenario(const uint8_t *scenario_name, const char *scenario_file) {
-    int mission = scenario_campaign_scenario_id();
+static bool start_scenario(const uint8_t *scenario_name, const char *scenario_file) {
+    int scenario_id = scenario_campaign_scenario_id();
     int rank = scenario_campaign_rank();
     map_bookmarks_clear();
     if (scenario_is_custom()) {
         if (!load_custom_scenario(scenario_name, scenario_file))
-            return 0;
+            return false;
         scenario_set_player_name(setting_player_name());
-    } else if (!load_campaign_mission(mission))
-        return 0;
-    scenario_set_campaign_scenario(mission);
+    } else if (!load_campaign_scenario(scenario_id))
+        return false;
+    scenario_set_campaign_scenario(scenario_id);
     scenario_set_campaign_rank(rank);
 
     if (scenario_is_mission_rank(1))
@@ -330,7 +329,7 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
 
     building_menu_update(BUILDSET_NORMAL);
     city_message_init_scenario();
-    return 1;
+    return true;
 }
 
 static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed) {
@@ -341,42 +340,41 @@ static const char *get_scenario_filename(const uint8_t *scenario_name, int decom
 
     return filename;
 }
-int game_file_start_scenario_by_name(const uint8_t *scenario_name) {
+bool game_file_start_scenario_by_name(const uint8_t *scenario_name) {
     if (start_scenario(scenario_name, get_scenario_filename(scenario_name, 0)))
-        return 1;
+        return true;
     else
         return start_scenario(scenario_name, get_scenario_filename(scenario_name, 1));
 }
-int game_file_start_scenario(const char *scenario_file) {
+bool game_file_start_scenario(const char *scenario_file) {
     uint8_t scenario_name[FILE_NAME_MAX];
     encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
     file_remove_extension(scenario_name);
     return start_scenario(scenario_name, scenario_file);
 }
-int game_file_load_scenario_data(const char *scenario_file) {
-    if (!game_file_io_read_scenario(scenario_file))
-        return 0;
-
+bool game_file_load_scenario_data(const char *scenario_file) {
+    if (!game_file_io_read_scenario(scenario_file)) // TODO
+        return false;
 
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
-    return 1;
+    return true;
 }
-int game_file_load_saved_game(const char *filename) {
+bool game_file_load_saved_game(const char *filename) {
     if (!game_file_io_read_saved_game(filename, 0))
-        return 0;
+        return false;
 
     check_backward_compatibility();
     initialize_saved_game();
     building_storage_reset_building_ids();
 
     sound_music_update(1);
-    return 1;
+    return true;
 }
-int game_file_write_saved_game(const char *filename) {
+bool game_file_write_saved_game(const char *filename) {
     return game_file_io_write_saved_game(filename);
 }
-int game_file_delete_saved_game(const char *filename) {
+bool game_file_delete_saved_game(const char *filename) {
     return game_file_io_delete_saved_game(filename);
 }
 void game_file_write_mission_saved_game(void) {

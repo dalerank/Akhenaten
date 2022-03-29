@@ -34,16 +34,23 @@ struct scrollable_list_ui_params {
     font_t font_selected = FONT_NORMAL_WHITE_ON_DARK;
 };
 
+enum {
+    FILE_NO_EXT,
+    FILE_WITH_EXT,
+    FILE_FULL_PATH,
+};
+
 class scroll_list_panel {
 private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
     int num_total_entries = 0;
     int num_buttons;
-    int focus_button_id = 0;
-    int selected_entry_idx = 0;
+    int focus_button_id = 0; // first valid --> 1
+    int selected_entry_idx = -1; // first valid --> 0
     void (*left_click_callback)(int param1, int param2);
     void (*right_click_callback)(int param1, int param2);
     void (*double_click_callback)(int param1, int param2);
+    void (*focus_change_callback)(int param1, int param2);
 
     scrollbar_type scrollbar;
 
@@ -72,8 +79,8 @@ public:
     int get_focused_entry_idx();
     int get_selected_entry_idx();
     int get_total_entries();
-    const char* get_entry_text_by_idx(int index);
-    const char* get_selected_entry_text();
+    const char* get_entry_text_by_idx(int index, int filename_syntax);
+    const char* get_selected_entry_text(int full_filename);
     int get_entry_idx(const char *button_text);
     bool has_entry(const char *button_text);
 
@@ -93,6 +100,7 @@ public:
                       void (*lmb)(int param1, int param2),
                       void (*rmb)(int param1, int param2),
                       void (*dmb)(int param1, int param2),
+                      void (*fcc)(int param1, int param2),
                       scrollable_list_ui_params params, bool use_file_finder, const char *dir = ".", const char *ext = "");
     ~scroll_list_panel();
 };
