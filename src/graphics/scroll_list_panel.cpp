@@ -128,7 +128,7 @@ int scroll_list_panel::input_handle(const mouse *m) {
         return 0;
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, 0, 0, list_buttons, num_buttons, &focus_button_id);
-    if (handled_button_id > 0) {
+    if (handled_button_id > 0 && get_focused_entry_idx() < num_total_entries) {
         generic_button *button = &list_buttons[handled_button_id - 1];
         if (m->left.went_up) {
             select_by_button_id(handled_button_id);
@@ -149,8 +149,14 @@ int scroll_list_panel::input_handle(const mouse *m) {
             focus_change_callback(button->parameter1, button->parameter2);
         }
         return handled_button_id;
-    } else if (last_focused != focus_button_id) {
-        focus_change_callback(-1, -1);
+    } else {
+        if (last_focused != focus_button_id)
+            focus_change_callback(-1, -1);
+        if (handled_button_id > 0 && m->left.went_up) {
+            unselect();
+            // left click callback
+            left_click_callback(-1, -1);
+        }
     }
     return 0;
 }

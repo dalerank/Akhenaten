@@ -317,6 +317,7 @@ bool game_start_loaded_scenario() {
         window_city_show();
     else
         window_mission_briefing_show();
+    sound_music_update(1);
     return true;
 }
 bool game_load_scenario(const char *filename, bool start_immediately) {

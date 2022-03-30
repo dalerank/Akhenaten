@@ -31,6 +31,7 @@
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
 static void button_start_scenario(int param1, int param2);
+static void button_scores_or_goals(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
@@ -78,6 +79,7 @@ static generic_button buttons_campaigns[] = {
 static struct {
     map_selection_dialog_type dialog;
     int campaign_sub_dialog;
+    int scores_or_goals;
 
     int focus_button_id;
 //    char selected_scenario_filename[FILE_NAME_MAX];
@@ -87,6 +89,7 @@ static struct {
 static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector = -1) {
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
+    data.scores_or_goals = 0;
     switch (dialog_type) {
         case MAP_SELECTION_CCK_LEGACY:
         case MAP_SELECTION_CUSTOM:
@@ -126,6 +129,14 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
 #define INFO_Y 130
 #define INFO_W 265
 #define CRITERIA_X 420
+#define SCORES_Y 250
+#define GOALS_BUTTON_Y 400
+
+static generic_button button_scores_goals[] = {
+        {INFO_X + INFO_W / 8 - 10, GOALS_BUTTON_Y, 6 * (INFO_W / 8) + 20, 30, button_scores_or_goals, button_none, 1,  0},
+        {INFO_X + INFO_W / 8, GOALS_BUTTON_Y, 6 * (INFO_W / 8), 30, button_scores_or_goals, button_none, 0,  0},
+};
+
 static void draw_scenario_thumbnail(int image_id) {
     switch (data.dialog) {
         case MAP_SELECTION_CCK_LEGACY:
@@ -141,65 +152,11 @@ static void draw_scenario_thumbnail(int image_id) {
             break;
     }
 }
-static void draw_side_panel_info() {
-
-    // thumbnail
-    draw_scenario_thumbnail(scenario_image_id());
-
-    switch (data.dialog) {
-        case MAP_SELECTION_CAMPAIGN: {
-            int text_id_offset = 1; // 0 = description; 1 = unlocked; 2 = locked
-            lang_text_draw_centered(294, (data.focus_button_id - 1) * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-            lang_text_draw_multiline(294, (data.focus_button_id - 1) * 4 + text_id_offset, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-            break;
-        }
-        case MAP_SELECTION_CUSTOM: { // TODO
-            // scenario name
-            uint8_t scenario_name[FILE_NAME_MAX];
-            encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, FILE_NAME_MAX);
-            text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
-            text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
-
-            // subtitle
-            text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-            // starting year
-            lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
-
-            // climate
-            lang_text_draw_centered(44, 77 + scenario_property_climate(), INFO_X, INFO_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-            break;
-        }
-        case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: { // TODO
-            // campaign title
-            lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
-
-            if (panel->get_selected_entry_idx() == -1)
-                return;
-            int scenario_id = scenario_campaign_scenario_id();
-            const lang_message *msg = lang_get_message(200 + scenario_id);
-
-            // scenario name
-            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
-
-            // subtitle
-            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-            // starting year
-            lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
-
-            bool beaten = game_scenario_beaten(scenario_id);
-            if (beaten) {
-                const player_record *record = player_get_scenario_record(scenario_id);
-                lang_text_draw_multiline(297, scenario_id, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-            } else {
-                lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-            }
-            break;
-        }
-    }
+static void draw_scenario_info() {
 
 
+    // climate
+    lang_text_draw_centered(44, 77 + scenario_property_climate(), INFO_X, INFO_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
 
     // headers
 //    char selected_scenario_filename[FILE_NAME_MAX];
@@ -292,6 +249,108 @@ static void draw_side_panel_info() {
 //    }
 //    lang_text_draw_centered(44, 136, INFO_X, 446, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
 }
+static int draw_scores_line(int group_id, int *y, int score, int special = -1, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+    int width = lang_text_draw(298, group_id, INFO_X, *y, font) - 5;
+    switch (special) {
+        case 0: // completion time
+            if (score >= 24) { // years
+                width += text_draw_number(score / 12, '@', "", INFO_X + width, *y, font);
+                width += lang_text_draw(298, 9, INFO_X + width, *y, font);
+            } else { // months
+                width += text_draw_number(score, '@', "", INFO_X + width, *y, font);
+                width += lang_text_draw(148, 15, INFO_X + width, *y, font);
+            }
+            break;
+        case 1: // difficulty
+            width += 5;
+            width += lang_text_draw(153, 1 + score, INFO_X + width, *y, font);
+            break;
+        default:
+            width += text_draw_number(score, '@', "", INFO_X + width, *y, font);
+            break;
+    }
+
+    *y += 17;
+    return width;
+}
+static void draw_scores(int scenario_id) {
+    bool beaten = game_scenario_beaten(scenario_id);
+    if (beaten) {
+        const player_record *record = player_get_scenario_record(scenario_id);
+        lang_text_draw_multiline(297, scenario_id, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+
+        int line_y = SCORES_Y;
+        draw_scores_line(6, &line_y, record->completion_months, 0);
+        draw_scores_line(4, &line_y, record->final_population);
+        draw_scores_line(5, &line_y, record->final_funds);
+        draw_scores_line(0, &line_y, record->rating_culture);
+        draw_scores_line(1, &line_y, record->rating_prosperity);
+        draw_scores_line(3, &line_y, record->rating_kingdom);
+        draw_scores_line(7, &line_y, record->difficulty, 1);
+        draw_scores_line(8, &line_y, record->score, -1, FONT_NORMAL_WHITE_ON_DARK);
+    } else {
+        lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_YELLOW);
+    }
+}
+static void draw_side_panel_info() {
+    switch (data.dialog) {
+        case MAP_SELECTION_CAMPAIGN: {
+            // thumbnail
+            draw_scenario_thumbnail(data.focus_button_id - 1);
+
+            int text_id_offset = 1; // 0 = description; 1 = unlocked; 2 = locked
+            lang_text_draw_centered(294, (data.focus_button_id - 1) * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
+            lang_text_draw_multiline(294, (data.focus_button_id - 1) * 4 + text_id_offset, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+            break;
+        }
+        case MAP_SELECTION_CUSTOM: {
+            // thumbnail
+            draw_scenario_thumbnail(scenario_image_id());
+
+            // scenario name
+            uint8_t scenario_name[FILE_NAME_MAX];
+            encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, FILE_NAME_MAX);
+            text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
+            text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+
+            // subtitle
+            text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+            // starting year
+            lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
+
+            draw_scenario_info();
+            break;
+        }
+        case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
+            // thumbnail
+            draw_scenario_thumbnail(data.campaign_sub_dialog);
+
+            // campaign title
+            lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
+
+            if (panel->get_selected_entry_idx() == -1)
+                return;
+            int scenario_id = scenario_campaign_scenario_id();
+            const lang_message *msg = lang_get_message(200 + scenario_id);
+
+            // scenario name
+            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+
+            // subtitle
+            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+            // starting year
+            lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
+
+            if (data.scores_or_goals == 0)
+                draw_scores(scenario_id);
+            else
+                draw_scenario_info();
+            break;
+        }
+    }
+}
 
 static void draw_background(void) {
     graphics_reset_dialog();
@@ -311,7 +370,6 @@ static void draw_background(void) {
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
         panel->draw();
         draw_side_panel_info();
-//        draw_side_panel_info(panel->get_selected_entry_text());
     }
     graphics_reset_dialog();
 }
@@ -322,14 +380,20 @@ static void draw_foreground(void) {
         case MAP_SELECTION_CUSTOM:
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             panel->draw();
+            if (panel->get_selected_entry_idx() != -1) {
+                // show scores / goals button
+                int i = data.scores_or_goals;
+                button_border_draw(button_scores_goals[i].x, button_scores_goals[i].y, button_scores_goals[i].width,
+                                   button_scores_goals[i].height,
+                                   data.focus_button_id == 1 ? 1 : 0);
+                lang_text_draw_centered(44, 221 - i, button_scores_goals[i].x, button_scores_goals[i].y + 10, button_scores_goals[i].width, FONT_NORMAL_BLACK_ON_DARK);
+            }
             break;
         case MAP_SELECTION_CAMPAIGN:
             // campaign buttons
             lang_text_draw_centered(294, 41, CSEL_X, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
             lang_text_draw_centered(294, 42, CSEL_X + CSEL_XGAP, CSEL_Y + 10 - CSEL_YGAP, CSEL_W, FONT_NORMAL_BLACK_ON_LIGHT);
             for (int i = 0; i < 9; ++i) {
-//                button_border_draw(buttons_campaigns[i].x, buttons_campaigns[i].y, buttons_campaigns[i].width, buttons_campaigns[i].height,
-//                                   data.focus_button_id == i + 1 ? 1 : 0);
                 large_label_draw(buttons_campaigns[i].x, buttons_campaigns[i].y, buttons_campaigns[i].width / 16,
                                  data.focus_button_id == i + 1 ? 1 : 0);
                 lang_text_draw_centered(294, i * 4, buttons_campaigns[i].x, buttons_campaigns[i].y + 5, buttons_campaigns[i].width,
@@ -359,20 +423,14 @@ static void button_select_item(int index, int param2) {
             game_load_scenario(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
             break;
     }
-
-//    strcpy(data.selected_scenario_filename, panel->get_selected_entry_text());
-//    game_file_load_scenario_data(data.selected_scenario_filename);
-//    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-//    file_remove_extension(data.selected_scenario_display);
     window_invalidate();
 }
 static void button_start_scenario(int param1, int param2) {
-    // TODO
     game_start_loaded_scenario();
-//    if (game_file_start_scenario(data.selected_scenario_filename)) {
-//        sound_music_update(1);
-//        window_city_show();
-//    }
+}
+static void button_scores_or_goals(int param1, int param2) {
+    data.scores_or_goals = param1;
+    window_invalidate();
 }
 
 static void on_scroll(void) {
@@ -398,6 +456,14 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             if (panel->input_handle(m_dialog))
                 return;
+            if (panel->get_selected_entry_idx() != -1) {
+                if (!data.scores_or_goals) {
+                    if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[0], 1, &data.focus_button_id))
+                        return;
+                } else
+                    if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[1], 1, &data.focus_button_id))
+                        return;
+            }
             break;
         case MAP_SELECTION_CAMPAIGN:
             int last_focus = data.focus_button_id;
