@@ -4,6 +4,15 @@
 #include "core/game_environment.h"
 #include "player_data.h"
 
+int get_mission_campaign_id(int scenario_id) {
+    if (scenario_id < SCENARIO_NULL || scenario_id >= SCENARIO_MAX)
+        return CAMPAIGN_NULL;
+    for (int i = 0; i < 9; ++i) {
+        int last_in_campaign = get_last_mission_in_campaign(i);
+        if (scenario_id <= last_in_campaign)
+            return i;
+    }
+}
 int get_first_mission_in_campaign(int campaign_id) {
     if (campaign_id < CAMPAIGN_PHARAOH_PREDYNASTIC || campaign_id >= CAMPAIGN_MAX)
         return SCENARIO_NULL;
@@ -27,22 +36,6 @@ int game_mission_choose(int rank, int index) {
         return scenarios[0];
     return scenarios[index];
 }
-//int game_mission_peaceful(void) {
-//    if (GAME_ENV == ENGINE_ENV_C3)
-//        return MISSION_IDS_C3[scenario_campaign_rank()].peaceful;
-//    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        int selector = scenario_ph_mission_selector();
-//        return MISSION_IDS_PH[selector].peaceful;
-//    }
-//}
-//int game_mission_military(void) {
-//    if (GAME_ENV == ENGINE_ENV_C3)
-//        return MISSION_IDS_C3[scenario_campaign_rank()].military;
-//    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-//        int selector = scenario_ph_mission_selector();
-//        return MISSION_IDS_PH[selector].military;
-//    }
-//}
 bool game_mission_has_choice(void) {
     return false; // TODO
 //    if (GAME_ENV == ENGINE_ENV_C3)
@@ -52,7 +45,6 @@ bool game_mission_has_choice(void) {
 //        return CAN_CHOOSE_NEXT_SCENARIO_PH[selector];
 //    }
 }
-
 
 bool game_campaign_unlocked(int campaign_id) {
     switch (campaign_id) {

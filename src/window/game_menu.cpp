@@ -20,6 +20,8 @@
 #include <game/player_data.h>
 #include <core/file.h>
 #include <game/file.h>
+#include <scenario/property.h>
+#include <game/mission.h>
 
 static void button_click(int param1, int param2);
 
@@ -98,15 +100,14 @@ static void draw_foreground() {
 static void button_click(int param1, int param2) {
     switch (param1) {
         case 0: // begin / resume family history
-            if (data.to_begin_history)
-                window_mission_briefing_show();
-            else {
-                // TODO: load last autosave
+            if (data.to_begin_history) {
+                game_load_scenario(SCENARIO_NUBT);
+            } else {
                 if (game_file_load_saved_game(data.last_autosave)) {
                     graphics_reset_dialog();
                     return window_city_show();
                 } else {
-//                    data.message_not_exist_start_time = time_get_millis();
+                    // save load failed
                     return;
                 }
             }

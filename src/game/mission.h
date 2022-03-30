@@ -72,6 +72,8 @@ enum {
 };
 
 enum {
+    CAMPAIGN_NULL = -1,
+    //
     CAMPAIGN_PHARAOH_PREDYNASTIC = 0,
     CAMPAIGN_PHARAOH_ARCHAIC = 1,
     CAMPAIGN_PHARAOH_OLD_KINGDOM = 2,
@@ -99,6 +101,7 @@ static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
         SCENARIO_ACTIUM
 };
 
+int get_mission_campaign_id(int scenario_id);
 int get_first_mission_in_campaign(int campaign_id);
 int get_last_mission_in_campaign(int campaign_id);
 
@@ -225,9 +228,6 @@ static const int SCENARIO_TO_MISSION_RANK[] = {
         21, 21, 22, 22, 23, 24, // <-- the last two are the same "rank" but are unlocked separately!
 };
 
-//int game_current_mission_rank();
-//int game_mission_peaceful(void);
-//int game_mission_military(void);
 bool game_mission_has_choice(void);
 
 bool game_campaign_unlocked(int campaign_id);

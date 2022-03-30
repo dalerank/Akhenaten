@@ -73,10 +73,13 @@
 #include "sound/music.h"
 #include "undo.h"
 #include "player_data.h"
+#include "mission.h"
 
 #include <string.h>
 #include <building/count.h>
 #include <city/floods.h>
+#include <window/mission_briefing.h>
+#include <window/city.h>
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
@@ -189,46 +192,11 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     city_data_init_scenario();
     game_state_unpause();
 }
-static bool load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file) {
-    if (!file_exists(scenario_file, NOT_LOCALIZED))
-        return false;
-
-    clear_scenario_data();
-    game_file_load_scenario_data(scenario_file);
-    initialize_scenario_data(scenario_name);
-    return true;
-}
 static void load_empire_data(int is_custom_scenario, int empire_id) {
     if (GAME_ENV == ENGINE_ENV_C3) // only for external file
         empire_load_external_c3(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
-}
-
-/**
- * search for hippodrome buildings, all three pieces should have the same subtype.orientation
- */
-static void check_hippodrome_compatibility(building *b) {
-    // if we got the middle part of the hippodrome
-    if (b->next_part_building_id && b->prev_part_building_id) {
-        building *next = building_get(b->next_part_building_id);
-        building *prev = building_get(b->prev_part_building_id);
-        // if orientation is different, it means that rotation was not available yet in augustus, so it should be set to 0
-        if (b->subtype.orientation != next->subtype.orientation ||
-            b->subtype.orientation != prev->subtype.orientation) {
-            prev->subtype.orientation = 0;
-            b->subtype.orientation = 0;
-            next->subtype.orientation = 0;
-        }
-    }
-}
-static void check_backward_compatibility(void) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
-        building *b = building_get(i);
-        if (b->type == BUILDING_SENET_HOUSE) {
-            check_hippodrome_compatibility(b);
-        }
-    }
 }
 
 static void initialize_saved_game(void) {
@@ -287,84 +255,108 @@ static int get_campaign_scenario_offset(int scenario_id) {
         return 0;
     return buf->read_i32();
 }
-static bool load_campaign_scenario(int scenario_id) {
+
+static bool game_load_scenario_savegame(const char *filename) {}
+static bool game_load_scenario_pak_mission(int scenario_id) {
     int offset = get_campaign_scenario_offset(scenario_id);
     if (offset <= 0)
         return false;
     if (!game_file_io_read_saved_game(MISSION_PACK_FILE, offset))
         return false;
 
-    if (scenario_id == 0)
+    if (scenario_id == SCENARIO_NUBT)
         scenario_set_player_name(setting_player_name());
     else
         scenario_restore_campaign_player_name();
     initialize_saved_game();
     scenario_fix_patch_trade(scenario_id);
 
-    city_data_init_campaign_mission();
-    return true;
-}
-
-static bool start_scenario(const uint8_t *scenario_name, const char *scenario_file) {
-    int scenario_id = scenario_campaign_scenario_id();
-    int rank = scenario_campaign_rank();
-    map_bookmarks_clear();
-    if (scenario_is_custom()) {
-        if (!load_custom_scenario(scenario_name, scenario_file))
-            return false;
-        scenario_set_player_name(setting_player_name());
-    } else if (!load_campaign_scenario(scenario_id))
-        return false;
+    int rank = SCENARIO_TO_MISSION_RANK[scenario_id];
     scenario_set_campaign_scenario(scenario_id);
     scenario_set_campaign_rank(rank);
 
+    city_data_init_campaign_mission();
+
+    return true;
+}
+static bool game_load_scenario_custom_map(const char *filename) {
+    if (!file_exists(filename, NOT_LOCALIZED))
+        return false;
+
+    clear_scenario_data();
+    if (!game_file_io_read_scenario(filename)) // TODO
+        return false;
+
+    // post-load
+    trade_prices_reset();
+    load_empire_data(1, scenario_empire_id());
+    initialize_scenario_data(scenario_name());
+    scenario_set_player_name(setting_player_name());
+    return true;
+}
+
+static bool pre_load() {
+    map_bookmarks_clear();
+    return true;
+}
+static bool post_load() {
     if (scenario_is_mission_rank(1))
         setting_set_personal_savings_for_mission(0, 0);
 
     scenario_settings_init_mission();
-
-    city_emperor_init_scenario(rank);
+    city_emperor_init_scenario(scenario_campaign_rank());
 
     tutorial_init();
-
     building_menu_update(BUILDSET_NORMAL);
     city_message_init_scenario();
     return true;
 }
-
-static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed) {
-    static char filename[FILE_NAME_MAX];
-    encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
-    if (!file_has_extension(filename, "map"))
-        file_append_extension(filename, "map");
-
-    return filename;
-}
-bool game_file_start_scenario_by_name(const uint8_t *scenario_name) {
-    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, 0)))
-        return true;
+bool game_start_loaded_scenario() {
+    if (!post_load()) return false;
+    if (scenario_is_custom())
+        window_city_show();
     else
-        return start_scenario(scenario_name, get_scenario_filename(scenario_name, 1));
-}
-bool game_file_start_scenario(const char *scenario_file) {
-    uint8_t scenario_name[FILE_NAME_MAX];
-    encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
-    file_remove_extension(scenario_name);
-    return start_scenario(scenario_name, scenario_file);
-}
-bool game_file_load_scenario_data(const char *scenario_file) {
-    if (!game_file_io_read_scenario(scenario_file)) // TODO
-        return false;
-
-    trade_prices_reset();
-    load_empire_data(1, scenario_empire_id());
+        window_mission_briefing_show();
     return true;
 }
+bool game_load_scenario(const char *filename, bool start_immediately) {
+    if (!pre_load()) return false;
+
+    // file loading
+    if (file_has_extension(filename, "map"))
+        if (!game_load_scenario_custom_map(filename)) return false;
+    else if (file_has_extension(filename, "sav"))
+        if (!game_load_scenario_savegame(filename)) return false;
+    else return false;
+
+    if (start_immediately)
+        return game_start_loaded_scenario();
+    return true;
+}
+bool game_load_scenario(const uint8_t *scenario_name, bool start_immediately) {
+    if (!pre_load()) return false;
+
+    return false; // TODO
+
+    if (!start_immediately)
+        return true;
+}
+bool game_load_scenario(int scenario_id, bool start_immediately) {
+    if (!pre_load()) return false;
+
+    // pak loading
+    if (!game_load_scenario_pak_mission(scenario_id))
+        return false;
+
+    if (start_immediately)
+       return game_start_loaded_scenario();
+    return true;
+}
+
 bool game_file_load_saved_game(const char *filename) {
     if (!game_file_io_read_saved_game(filename, 0))
         return false;
 
-    check_backward_compatibility();
     initialize_saved_game();
     building_storage_reset_building_ids();
 

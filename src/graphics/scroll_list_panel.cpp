@@ -87,7 +87,10 @@ void scroll_list_panel::clear_entry_list() {
     unselect();
 }
 void scroll_list_panel::add_entry(const char *entry_text) {
-    strncpy(manual_entry_list[num_total_entries], entry_text, FILE_NAME_MAX - 1);
+    if (strlen(entry_text) < FILE_NAME_MAX - 1)
+        strcpy(manual_entry_list[num_total_entries], entry_text);
+    else
+        strncpy(manual_entry_list[num_total_entries], entry_text, FILE_NAME_MAX - 1);
     num_total_entries++;
 }
 void scroll_list_panel::change_file_path(const char *dir, const char *ext) {

@@ -9,7 +9,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-#define DISPLAY_TIME_MILLIS 1000
+#define DISPLAY_TIME_MILLIS 1200
 
 static const char SOUND_FILES_BRIEFING[][32] = {
         "wavs/01b.wav",

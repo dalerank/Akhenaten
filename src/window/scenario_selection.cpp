@@ -26,6 +26,7 @@
 #include <graphics/scroll_list_panel.h>
 #include <game/mission.h>
 #include <game/player_data.h>
+#include <core/lang.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -115,11 +116,14 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
     window_invalidate();
 }
 
-#define TITLE_Y 25
-#define SUBTITLE_Y 60
-#define YEAR_Y 80
+#define HEADER_Y 28
+#define HEADER_LARGE_Y 25
+#define TITLE_Y 60
+//#define TITLE_LARGE_Y 58
+#define SUBTITLE_Y 88
+#define YEAR_Y 108
 #define INFO_X 345
-#define INFO_Y 105
+#define INFO_Y 130
 #define INFO_W 265
 #define CRITERIA_X 420
 static void draw_scenario_thumbnail(int image_id) {
@@ -145,8 +149,8 @@ static void draw_side_panel_info() {
     switch (data.dialog) {
         case MAP_SELECTION_CAMPAIGN: {
             int text_id_offset = 1; // 0 = description; 1 = unlocked; 2 = locked
-            lang_text_draw_centered(294, data.focus_button_id * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-            lang_text_draw_multiline(294, data.focus_button_id * 4 + text_id_offset, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+            lang_text_draw_centered(294, (data.focus_button_id - 1) * 4, INFO_X, SUBTITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
+            lang_text_draw_multiline(294, (data.focus_button_id - 1) * 4 + text_id_offset, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
             break;
         }
         case MAP_SELECTION_CUSTOM: { // TODO
@@ -154,7 +158,7 @@ static void draw_side_panel_info() {
             uint8_t scenario_name[FILE_NAME_MAX];
             encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, FILE_NAME_MAX);
             text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
-            text_draw_centered(scenario_name, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+            text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
             // subtitle
             text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
@@ -166,14 +170,20 @@ static void draw_side_panel_info() {
             lang_text_draw_centered(44, 77 + scenario_property_climate(), INFO_X, INFO_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
             break;
         }
-        case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: {
+        case MAP_SELECTION_CAMPAIGN_SINGLE_LIST: { // TODO
+            // campaign title
+            lang_text_draw_centered(294, data.campaign_sub_dialog * 4, INFO_X, HEADER_Y, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
+
+            if (panel->get_selected_entry_idx() == -1)
+                return;
             int scenario_id = scenario_campaign_scenario_id();
+            const lang_message *msg = lang_get_message(200 + scenario_id);
 
             // scenario name
-            text_draw_centered(scenario_name(), INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
             // subtitle
-            text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
 
             // starting year
             lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
@@ -343,9 +353,10 @@ static void button_select_item(int index, int param2) {
 
     switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:
-            game_file_load_scenario_data(panel->get_selected_entry_text(FILE_FULL_PATH)); // TODO
+            game_load_scenario(panel->get_selected_entry_text(FILE_FULL_PATH), false);
             break;
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
+            game_load_scenario(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
             break;
     }
 
@@ -357,6 +368,7 @@ static void button_select_item(int index, int param2) {
 }
 static void button_start_scenario(int param1, int param2) {
     // TODO
+    game_start_loaded_scenario();
 //    if (game_file_start_scenario(data.selected_scenario_filename)) {
 //        sound_music_update(1);
 //        window_city_show();

@@ -161,7 +161,6 @@ const char *dir_get_file(const char *filepath, int localizable) {
                 return path;
             else if (localizable == MUST_BE_LOCALIZED)
                 return 0;
-
         }
     }
 

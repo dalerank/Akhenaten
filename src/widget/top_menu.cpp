@@ -467,7 +467,7 @@ static void replay_map_confirmed(bool confirmed) {
         return;
     }
     if (scenario_is_custom()) {
-        game_file_start_scenario_by_name(scenario_name());
+        game_load_scenario(scenario_name());
         window_city_show();
     } else {
         scenario_save_campaign_player_name();
