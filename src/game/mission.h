@@ -1,6 +1,8 @@
 #ifndef GAME_MISSION_H
 #define GAME_MISSION_H
 
+#include <cstdint>
+
 enum {
     SCENARIO_NULL = -1,
 
@@ -233,5 +235,8 @@ bool game_mission_has_choice(void);
 bool game_campaign_unlocked(int campaign_id);
 bool game_scenario_unlocked(int scenario_id);
 bool game_scenario_beaten(int scenario_id);
+
+const uint8_t *game_mission_get_name(int scenario_id);
+bool game_load_campaign_file();
 
 #endif // GAME_MISSION_H

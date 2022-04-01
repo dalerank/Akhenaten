@@ -62,6 +62,10 @@ int string_compare_case_insensitive(const char *a, const char *b);
  * @param b String B
  * @return Boolean true if the strings are equal, false if they differ
  */
-int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive);
+bool string_equals(const uint8_t *a, const uint8_t *b, bool case_sentitive);
+
+bool string_needle_equals(const uint8_t *a, const uint8_t *b, int len);
+int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length);
+int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length);
 
 #endif // CORE_STRING_H

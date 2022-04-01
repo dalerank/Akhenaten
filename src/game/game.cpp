@@ -34,6 +34,7 @@
 #include "window/editor/map.h"
 #include "window/logo.h"
 #include "window/main_menu.h"
+#include "mission.h"
 
 static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {
         0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
@@ -80,6 +81,7 @@ static bool reload_language(int is_editor, int reload_images) {
         errlog("unable to load main graphics");
         return false;
     }
+
     return true;
 }
 
@@ -164,6 +166,10 @@ bool game_init(void) {
         }
         if (!eventmsg_auto_phrases_load()) {
             errlog("unable to load event auto reason phrases");
+            return false;
+        }
+        if (!game_load_campaign_file()) {
+            errlog("unable to load campaign data");
             return false;
         }
     }

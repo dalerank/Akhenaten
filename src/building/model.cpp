@@ -26,32 +26,6 @@ struct {
 //    int difficulty_level_cached = 0;
 } data;
 
-static int strings_equal(const uint8_t *a, const uint8_t *b, int len) {
-    for (int i = 0; i < len; i++, a++, b++) {
-        if (*a != *b)
-            return 0;
-
-    }
-    return 1;
-}
-static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
-    int needle_length = string_length(needle);
-    for (int i = 0; i < haystack_length; i++) {
-        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
-            return i + 1;
-
-    }
-    return 0;
-}
-static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
-    for (int i = 0; i < haystack_length; i++) {
-        if (haystack[i] == needle)
-            return i + 1;
-
-    }
-    return 0;
-}
-
 static const uint8_t *skip_non_digits(const uint8_t *str) {
     int safeguard = 0;
     while (1) {

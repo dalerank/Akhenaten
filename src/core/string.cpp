@@ -132,7 +132,7 @@ int string_compare_case_insensitive(const char *a, const char *b) {
 
     return 0;
 }
-int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive) {
+bool string_equals(const uint8_t *a, const uint8_t *b, bool case_sentitive) {
     while (*a && *b &&
            ((case_sentitive == 1 && *a == *b) ||
             (case_sentitive == 0 && tolower(*a) == tolower(*b)))) {
@@ -140,8 +140,39 @@ int string_equals(const uint8_t *a, const uint8_t *b, int case_sentitive) {
         ++b;
     }
     if (*a == 0 && *b == 0)
-        return 1;
-    else {
-        return 0;
+        return true;
+    else
+        return false;
+}
+
+bool string_needle_equals(const uint8_t *a, const uint8_t *b, int len) {
+    for (int i = 0; i < len; i++, a++, b++) {
+        if (*a != *b)
+            return false;
     }
+    return true;
+}
+//static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
+//    int needle_length = string_length(needle);
+//    for (int i = 0; i < haystack_length; i++) {
+//        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
+//            return i + 1;
+//    }
+//    return 0;
+//}
+int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
+    int needle_length = string_length(needle);
+    for (int i = 0; i < haystack_length; i++) {
+        if (haystack[i] == needle[0] && string_needle_equals(&haystack[i], needle, needle_length))
+            return i + 1;
+    }
+    return 0;
+}
+int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
+    for (int i = 0; i < haystack_length; i++) {
+        if (haystack[i] == needle)
+            return i + 1;
+
+    }
+    return 0;
 }

@@ -110,8 +110,10 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                 default:
                 {
                     for (int i = get_first_mission_in_campaign(data.campaign_sub_dialog); i <= get_last_mission_in_campaign(data.campaign_sub_dialog); ++i) {
-                        const char *name = player_get_cached_scenario_name(i); // TODO
-                        panel->add_entry(name);
+                        auto name = game_mission_get_name(i);
+                        char name_utf8[FILE_NAME_MAX];
+                        encoding_to_utf8(name, name_utf8, FILE_NAME_MAX, 0);
+                        panel->add_entry(name_utf8);
                     }
                     break;
                 }
@@ -341,10 +343,12 @@ static void draw_side_panel_info() {
             const lang_message *msg = lang_get_message(200 + scenario_id);
 
             // scenario name
-            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+//            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+            text_draw_centered(game_mission_get_name(scenario_id), INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
             // subtitle
-            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+//            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+            text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
 
             // starting year
             lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);

@@ -63,7 +63,7 @@ lang_files_collection lfcs[] = {
         }
 };
 
-static int file_exists_in_dir(const char *dir, const char *file) {
+static bool file_exists_in_dir(const char *dir, const char *file) {
     char path[2 * FILE_NAME_MAX];
     path[2 * FILE_NAME_MAX - 1] = 0;
     strncpy(path, dir, 2 * FILE_NAME_MAX - 1);
@@ -71,15 +71,15 @@ static int file_exists_in_dir(const char *dir, const char *file) {
     strncat(path, file, 2 * FILE_NAME_MAX - 1);
     return file_exists(path, NOT_LOCALIZED);
 }
-int lang_dir_is_valid(const char *dir) {
+bool lang_dir_is_valid(const char *dir) {
     lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG))
-        return 1;
+        return true;
 
     if (file_exists_in_dir(dir, lfc->FILE_TEXT_RUS) && file_exists_in_dir(dir, lfc->FILE_MM_RUS))
-        return 1;
+        return true;
 
-    return 0;
+    return false;
 }
 static uint8_t *get_message_text(int32_t offset) {
     if (!offset)
@@ -129,12 +129,12 @@ static void parse_MM_file(buffer *buf) {
             break;
     }
 }
-static int load_files(const char *text_filename, const char *message_filename, int localizable) {
+static bool load_files(const char *text_filename, const char *message_filename, int localizable) {
     // load text into buffer
     buffer buf(BUFFER_SIZE);
     int filesize = io_read_file_into_buffer(text_filename, localizable, &buf, BUFFER_SIZE);
     if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
-        return 0;
+        return false;
     }
 
     // parse text
@@ -142,21 +142,19 @@ static int load_files(const char *text_filename, const char *message_filename, i
     for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
         data.text_entries[i].offset = buf.read_i32();
         data.text_entries[i].in_use = buf.read_i32();
-
     }
     buf.read_raw(data.text_data, filesize - 8028); //MAX_TEXT_DATA
 
     // load message
     buf.clear();
     filesize = io_read_file_into_buffer(message_filename, localizable, &buf, BUFFER_SIZE);
-    if (filesize < MIN_MESSAGE_SIZE) { // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
-        return 0;
-    }
+    if (filesize < MIN_MESSAGE_SIZE) // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
+        return false;
     parse_MM_file(&buf);
 
-    return 1;
+    return true;
 }
-int lang_load(int is_editor) {
+bool lang_load(int is_editor) {
     lang_files_collection *lfc = &lfcs[GAME_ENV];
     if (is_editor)
         return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
