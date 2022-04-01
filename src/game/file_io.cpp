@@ -562,8 +562,10 @@ static void init_savegame_data(bool expanded) {
             state->junk4b = create_savegame_piece(4, false, "junk4b"); // unknown bytes
             state->junk4c = create_savegame_piece(12, false, "junk4c"); // unknown bytes
             state->junk4d = create_savegame_piece(12, false, "junk4d"); // unknown bytes
-            state->junk4e = create_savegame_piece(14, false, "junk4e"); // unknown bytes
+            state->SCENARIO.climate_id = create_savegame_piece(2, false, "SCENARIO.climate_id");
+            state->junk4e = create_savegame_piece(10, false, "junk4e"); // unknown bytes
             state->junk4f = create_savegame_piece(2, false, "junk4f"); // unknown bytes
+            state->junk4f = create_savegame_piece(2, false, "junk4g"); // unknown bytes
             state->SCENARIO.herds = create_savegame_piece(32, false, "SCENARIO.herds");
             state->SCENARIO.allowed_builds = create_savegame_piece(228, false, "SCENARIO.allowed_builds");
 
@@ -1086,8 +1088,7 @@ bool game_file_io_read_saved_game(const char *filename, int offset) {
     }
     if (offset)
         fseek(fp, offset, SEEK_SET);
-
-
+    
     int result = savegame_read_from_file(fp);
     file_close(fp);
     if (!result) {
