@@ -165,6 +165,15 @@ game at the right time
 
 ==================
 
+?? - tiny
+84 - small
+112 - average
+140 - large
+170 - very large
+226 - enormous
+
+==================
+
 first one in the list is always null
 
 type 0 is OURS

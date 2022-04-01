@@ -73,8 +73,8 @@ static int draw_background(void) {
     // culture
     draw_rating(0, city_rating_culture(), open_play, winning_culture());
     draw_rating(1, city_rating_prosperity(), open_play, winning_prosperity());
-    draw_rating(2, city_rating_peace(), open_play, winning_peace());
-    draw_rating(3, city_rating_favor(), open_play, winning_favor());
+    draw_rating(2, city_rating_peace(), open_play, winning_monuments());
+    draw_rating(3, city_rating_favor(), open_play, winning_kingdom());
 
     // bottom info box
     int box_x = 44;

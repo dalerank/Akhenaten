@@ -98,3 +98,33 @@ int scenario_initial_funds(void) {
 int scenario_rescue_loan(void) {
     return scenario_data.rescue_loan;
 }
+
+int scenario_property_monuments_is_enabled(void) {
+    return (scenario_data.monuments.first > 0 ||
+        scenario_data.monuments.second > 0 ||
+        scenario_data.monuments.third > 0);
+}
+int scenario_property_monument(int field) {
+    switch (field) {
+        case 0:
+            return scenario_data.monuments.first;
+        case 1:
+            return scenario_data.monuments.second;
+        case 2:
+            return scenario_data.monuments.third;
+    }
+    return -1;
+}
+void scenario_set_monument(int field, int m) {
+    switch (field) {
+        case 0:
+            scenario_data.monuments.first = m;
+            break;
+        case 1:
+            scenario_data.monuments.second = m;
+            break;
+        case 2:
+            scenario_data.monuments.third = m;
+            break;
+    }
+}

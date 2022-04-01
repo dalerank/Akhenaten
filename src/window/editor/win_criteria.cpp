@@ -89,15 +89,15 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 52, 66, 221, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 212, 80, 30, focus_button_id == 5);
-    lang_text_draw_centered(18, is_open_play ? 0 : winning_peace(), 316, 221, 80, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_monuments(), 316, 221, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 212, 180, 30, focus_button_id == 6);
-    text_draw_number_centered(winning_peace(), 416, 221, 180, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered(winning_monuments(), 416, 221, 180, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 53, 66, 261, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 252, 80, 30, focus_button_id == 7);
-    lang_text_draw_centered(18, is_open_play ? 0 : winning_favor(), 316, 261, 80, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_centered(18, is_open_play ? 0 : winning_kingdom(), 316, 261, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 252, 180, 30, focus_button_id == 8);
-    text_draw_number_centered(winning_favor(), 416, 261, 180, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered(winning_kingdom(), 416, 261, 180, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 54, 66, 301, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 292, 80, 30, focus_button_id == 9);

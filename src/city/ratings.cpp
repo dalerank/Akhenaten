@@ -532,14 +532,14 @@ static void update_favor_rating(int is_yearly_update) {
                         winning_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_peace() &&
+            if (winning_monuments() &&
                 city_data.ratings.peace < calc_adjust_with_percentage(
-                        winning_peace(), milestone_pct)) {
+                        winning_monuments(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_favor() &&
+            if (winning_kingdom() &&
                 city_data.ratings.favor < calc_adjust_with_percentage(
-                        winning_favor(), milestone_pct)) {
+                        winning_kingdom(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_population() &&

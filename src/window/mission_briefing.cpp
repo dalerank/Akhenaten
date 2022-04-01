@@ -110,21 +110,21 @@ static void draw_background(void) {
         int width = lang_text_draw(62, 13, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
         text_draw_number(winning_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
-    if (winning_peace()) {
+    if (winning_monuments()) {
         int x = GOAL_OFFSETS_X[goal_index];
         int y = GOAL_OFFSETS_Y[goal_index];
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 14, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_peace(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_monuments(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
-    if (winning_favor()) {
+    if (winning_kingdom()) {
         int x = GOAL_OFFSETS_X[goal_index];
         int y = GOAL_OFFSETS_Y[goal_index];
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 15, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_favor(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_kingdom(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
     int immediate_goal_text = tutorial_get_immediate_goal_text();
     if (immediate_goal_text) {

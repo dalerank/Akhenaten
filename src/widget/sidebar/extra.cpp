@@ -111,11 +111,11 @@ static void set_extra_info_objectives(void) {
     if (winning_prosperity())
         data.prosperity.target = winning_prosperity();
 
-    if (winning_peace())
-        data.peace.target = winning_peace();
+    if (winning_monuments())
+        data.peace.target = winning_monuments();
 
-    if (winning_favor())
-        data.favor.target = winning_favor();
+    if (winning_kingdom())
+        data.favor.target = winning_kingdom();
 
     if (winning_population())
         data.population.target = winning_population();

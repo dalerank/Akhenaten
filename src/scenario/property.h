@@ -67,4 +67,9 @@ int scenario_initial_funds(void);
 
 int scenario_rescue_loan(void);
 
+int scenario_property_monuments_is_enabled(void);
+int scenario_property_monument(int field);
+void scenario_set_monument(int field, int m);
+
+
 #endif // SCENARIO_PROPERTY_H

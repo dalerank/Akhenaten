@@ -568,8 +568,8 @@ static void init_savegame_data(bool expanded) {
             state->SCENARIO.allowed_builds = create_savegame_piece(228, false, "SCENARIO.allowed_builds");
 
             // 24 bytes     FF FF FF FF (cyclic) ???
-            state->junk5 = create_savegame_piece(24, false, "junk5"); // unknown bytes
-            state->SCENARIO.monuments = create_savegame_piece(10, false, "SCENARIO.monuments"); // 4 bytes + 3 x 2-byte
+            state->junk5 = create_savegame_piece(28, false, "junk5"); // unknown bytes
+            state->SCENARIO.monuments = create_savegame_piece(6, false, "SCENARIO.monuments"); // 3 x 2-byte
 
             // 290 bytes    00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
@@ -646,7 +646,7 @@ static void init_savegame_data(bool expanded) {
             state->junk9b = create_savegame_piece(396, false, "junk9b");
 
             // 51984 bytes  00 00 00 00 ???
-            state->soil_fertility_grid = create_savegame_piece(51984, false, "soil_fertility_grid"); // todo: 1-byte grid
+            state->soil_fertility_grid = create_savegame_piece(51984, false, "soil_fertility_grid");
 
 
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
@@ -686,7 +686,7 @@ static void init_savegame_data(bool expanded) {
             // 64 bytes     00 00 00 00 ???
             state->junk16 = create_savegame_piece(64, false, "junk16"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->soil_unk_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
+            state->soil_unk_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion");
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, false, "junk17");

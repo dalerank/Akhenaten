@@ -7,7 +7,7 @@ void scenario_invasion_clear(void);
 
 void scenario_invasion_init(void);
 
-int scenario_invasion_exists_upcoming(void);
+bool scenario_invasion_exists_upcoming(void);
 
 void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id));
 

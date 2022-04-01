@@ -185,19 +185,19 @@ void scenario_save_state(scenario_data_buffers *SCENARIO) {
     if (SCENARIO->win_criteria) {
         SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.culture.goal);
         SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.prosperity.goal);
-        SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.peace.goal);
-        SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.favor.goal);
+        SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.monuments.goal);
+        SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.kingdom.goal);
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.ph_goal1.goal);
-            SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.ph_goal2.goal);
+            SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.houses.goal);
+            SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.house_level.goal);
         }
         SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.culture.enabled);
         SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.prosperity.enabled);
-        SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.peace.enabled);
-        SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.favor.enabled);
+        SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.monuments.enabled);
+        SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.kingdom.enabled);
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.ph_goal1.enabled);
-            SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.ph_goal2.enabled);
+            SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.houses.enabled);
+            SCENARIO->win_criteria->write_u8(scenario_data.win_criteria.house_level.enabled);
         }
         SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.time_limit.enabled);
         SCENARIO->win_criteria->write_i32(scenario_data.win_criteria.time_limit.years);
@@ -373,19 +373,19 @@ void scenario_load_state(scenario_data_buffers *SCENARIO) {
     if (SCENARIO->win_criteria->is_valid(1)) {
         scenario_data.win_criteria.culture.goal = SCENARIO->win_criteria->read_i32(); // 4
         scenario_data.win_criteria.prosperity.goal = SCENARIO->win_criteria->read_i32(); // 4
-        scenario_data.win_criteria.peace.goal = SCENARIO->win_criteria->read_i32(); // 4
-        scenario_data.win_criteria.favor.goal = SCENARIO->win_criteria->read_i32(); // 4
+        scenario_data.win_criteria.monuments.goal = SCENARIO->win_criteria->read_i32(); // 4
+        scenario_data.win_criteria.kingdom.goal = SCENARIO->win_criteria->read_i32(); // 4
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            scenario_data.win_criteria.ph_goal1.goal = SCENARIO->win_criteria->read_i32(); // 4
-            scenario_data.win_criteria.ph_goal2.goal = SCENARIO->win_criteria->read_i32(); // 4
+            scenario_data.win_criteria.houses.goal = SCENARIO->win_criteria->read_i32(); // 4
+            scenario_data.win_criteria.house_level.goal = SCENARIO->win_criteria->read_i32(); // 4
         }
         scenario_data.win_criteria.culture.enabled = SCENARIO->win_criteria->read_u8(); // 1
         scenario_data.win_criteria.prosperity.enabled = SCENARIO->win_criteria->read_u8(); // 1
-        scenario_data.win_criteria.peace.enabled = SCENARIO->win_criteria->read_u8(); // 1
-        scenario_data.win_criteria.favor.enabled = SCENARIO->win_criteria->read_u8(); // 1
+        scenario_data.win_criteria.monuments.enabled = SCENARIO->win_criteria->read_u8(); // 1
+        scenario_data.win_criteria.kingdom.enabled = SCENARIO->win_criteria->read_u8(); // 1
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            scenario_data.win_criteria.ph_goal1.enabled = SCENARIO->win_criteria->read_u8(); // 1
-            scenario_data.win_criteria.ph_goal2.enabled = SCENARIO->win_criteria->read_u8(); // 1
+            scenario_data.win_criteria.houses.enabled = SCENARIO->win_criteria->read_u8(); // 1
+            scenario_data.win_criteria.house_level.enabled = SCENARIO->win_criteria->read_u8(); // 1
         }
         scenario_data.win_criteria.time_limit.enabled = SCENARIO->win_criteria->read_i32(); // 4
         scenario_data.win_criteria.time_limit.years = SCENARIO->win_criteria->read_i32(); // 4
@@ -545,6 +545,11 @@ void scenario_load_state(scenario_data_buffers *SCENARIO) {
     // Pharaoh scenario events
     if (SCENARIO->events_ph->is_valid(1))
         scenario_events_load_state(SCENARIO->events_ph);
+
+    // Pharaoh monument fields
+    scenario_data.monuments.first = SCENARIO->monuments->read_u16();
+    scenario_data.monuments.second = SCENARIO->monuments->read_u16();
+    scenario_data.monuments.third = SCENARIO->monuments->read_u16();
 
     scenario_data.is_saved = true;
 }

@@ -21,12 +21,14 @@
 #include "scenario/property.h"
 #include "sound/music.h"
 #include "window/city.h"
+#include "message_dialog.h"
 
 #include <string.h>
 #include <graphics/scroll_list_panel.h>
 #include <game/mission.h>
 #include <game/player_data.h>
 #include <core/lang.h>
+#include <cmath>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -126,7 +128,7 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
 #define SUBTITLE_Y 88
 #define YEAR_Y 108
 #define INFO_X 345
-#define INFO_Y 130
+#define INFO_Y 140
 #define INFO_W 265
 #define CRITERIA_X 420
 #define SCORES_Y 250
@@ -137,6 +139,67 @@ static generic_button button_scores_goals[] = {
         {INFO_X + INFO_W / 8, GOALS_BUTTON_Y, 6 * (INFO_W / 8), 30, button_scores_or_goals, button_none, 0,  0},
 };
 
+#define LINE_H 17
+static int draw_text_line(int *base_group, int *y, int *phrase_group, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+    int width = lang_text_draw(base_group[0], base_group[1], INFO_X, *y, font) - 5;
+    width += lang_text_draw(phrase_group[0], phrase_group[1], INFO_X + width, *y, font);
+}
+static int draw_info_line(int base_group, int base_id, int *y, int value, int special = -1, bool colon = false, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
+    int width = 0;
+    if (special != 5) {
+        width += lang_text_draw(base_group, base_id, INFO_X, *y, font) - 5;
+        if (colon)
+            width += text_draw(string_from_ascii(":"), INFO_X + width, *y, font, 0);
+    }
+    switch (special) {
+        default: // simple number
+            width += text_draw_number(value, '@', "", INFO_X + width, *y, font);
+            break;
+        case 0: // completion time
+            if (value >= 24) { // years
+                width += text_draw_number(value / 12, '@', "", INFO_X + width, *y, font);
+                width += lang_text_draw(298, 9, INFO_X + width, *y, font);
+            } else { // months
+                width += text_draw_number(value, '@', "", INFO_X + width, *y, font);
+                width += lang_text_draw(148, 15, INFO_X + width, *y, font);
+            }
+            break;
+        case 1: // difficulty
+            width += 5;
+            width += lang_text_draw(153, 1 + value, INFO_X + width, *y, font);
+            break;
+        case 2: // lang text id
+            width += 5;
+            width += lang_text_draw(base_group, value, INFO_X + width, *y, font);
+            break;
+        case 3: // map size
+            width += 5;
+            value = fmin(4, fmax(0, value - 50)/30);
+            width += lang_text_draw(44, 121 + value, INFO_X + width, *y, font);
+            break;
+        case 4: // invasions
+            width += 5;
+            if (value <= 0)
+                value = 0;
+            else if (value <= 2)
+                value = 1;
+            else if (value <= 4)
+                value = 2;
+            else if (value <= 10)
+                value = 3;
+            else
+                value = 4;
+            width += lang_text_draw(44, 112 + value, INFO_X + width, *y, font);
+            break;
+        case 5: // reverse: value first, then text
+            width += text_draw_number(value, '@', " ", INFO_X + width, *y, font);
+            width += lang_text_draw(base_group, base_id, INFO_X + width, *y, font);
+            break;
+    }
+
+    *y += LINE_H;
+    return width;
+}
 static void draw_scenario_thumbnail(int image_id) {
     switch (data.dialog) {
         case MAP_SELECTION_CCK_LEGACY:
@@ -153,125 +216,68 @@ static void draw_scenario_thumbnail(int image_id) {
     }
 }
 static void draw_scenario_info() {
+    if (panel->get_selected_entry_idx() == -1)
+        return;
 
-
-    // climate
-    lang_text_draw_centered(44, 77 + scenario_property_climate(), INFO_X, INFO_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-
-    // headers
-//    char selected_scenario_filename[FILE_NAME_MAX];
-//    text_ellipsize(selected_scenario_display, FONT_LARGE_BLACK_ON_LIGHT, INFO_W + 10);
-//    text_draw_centered(selected_scenario_display, INFO_X, TITLE_Y, INFO_W + 10, FONT_LARGE_BLACK_ON_LIGHT, 0);
-//    text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
-//    lang_text_draw_year(scenario_property_start_year(), CRITERIA_X, 90, FONT_LARGE_BLACK_ON_DARK);
-//    lang_text_draw_centered(44, 77 + scenario_property_climate(), INFO_X, 150, INFO_W, FONT_LARGE_BLACK_ON_DARK);
-
-//    // map size
-//    int text_id;
-//    switch (scenario_map_size()) {
-//        case 40:
-//            text_id = 121;
-//            break;
-//        case 60:
-//            text_id = 122;
-//            break;
-//        case 80:
-//            text_id = 123;
-//            break;
-//        case 100:
-//            text_id = 124;
-//            break;
-//        case 120:
-//            text_id = 125;
-//            break;
-//        default:
-//            text_id = 126;
-//            break;
-//    }
-//    lang_text_draw_centered(44, text_id, INFO_X, 170, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
-//
-//    // military
-//    int num_invasions = scenario_invasion_count();
-//    if (num_invasions <= 0)
-//        text_id = 112;
-//    else if (num_invasions <= 2)
-//        text_id = 113;
-//    else if (num_invasions <= 4)
-//        text_id = 114;
-//    else if (num_invasions <= 10)
-//        text_id = 115;
-//    else
-//        text_id = 116;
-//    lang_text_draw_centered(44, text_id, INFO_X, 190, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
-//
-//    lang_text_draw_centered(32, 11 + scenario_property_player_rank(), INFO_X, 210, INFO_W,
-//                            FONT_NORMAL_BLACK_ON_LIGHT);
-//    if (scenario_is_open_play()) {
-//        if (scenario_open_play_id() < 12)
-//            lang_text_draw_multiline(145, scenario_open_play_id(), INFO_X + 10, 270, INFO_W - 10,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//    } else {
-//        lang_text_draw_centered(44, 127, INFO_X, 262, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
-//        int width;
-//        if (winning_culture()) {
-//            width = text_draw_number(winning_culture(), '@', " ", CRITERIA_X, 290,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 129, CRITERIA_X + width, 290, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (winning_prosperity()) {
-//            width = text_draw_number(winning_prosperity(), '@', " ", CRITERIA_X, 306,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 130, CRITERIA_X + width, 306, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (winning_peace()) {
-//            width = text_draw_number(winning_peace(), '@', " ", CRITERIA_X, 322, FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 131, CRITERIA_X + width, 322, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (winning_favor()) {
-//            width = text_draw_number(winning_favor(), '@', " ", CRITERIA_X, 338, FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 132, CRITERIA_X + width, 338, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (winning_population()) {
-//            width = text_draw_number(winning_population(), '@', " ", CRITERIA_X, 354,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 133, CRITERIA_X + width, 354, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (scenario_criteria_time_limit_enabled()) {
-//            width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ", CRITERIA_X, 370,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 134, CRITERIA_X + width, 370, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//        if (scenario_criteria_survival_enabled()) {
-//            width = text_draw_number(scenario_criteria_survival_years(), '@', " ", CRITERIA_X, 386,
-//                                     FONT_NORMAL_BLACK_ON_LIGHT);
-//            lang_text_draw(44, 135, CRITERIA_X + width, 386, FONT_NORMAL_BLACK_ON_LIGHT);
-//        }
-//    }
-//    lang_text_draw_centered(44, 136, INFO_X, 446, INFO_W, FONT_NORMAL_BLACK_ON_LIGHT);
-}
-static int draw_scores_line(int group_id, int *y, int score, int special = -1, font_t font = FONT_NORMAL_BLACK_ON_DARK) {
-    int width = lang_text_draw(298, group_id, INFO_X, *y, font) - 5;
-    switch (special) {
-        case 0: // completion time
-            if (score >= 24) { // years
-                width += text_draw_number(score / 12, '@', "", INFO_X + width, *y, font);
-                width += lang_text_draw(298, 9, INFO_X + width, *y, font);
-            } else { // months
-                width += text_draw_number(score, '@', "", INFO_X + width, *y, font);
-                width += lang_text_draw(148, 15, INFO_X + width, *y, font);
-            }
-            break;
-        case 1: // difficulty
-            width += 5;
-            width += lang_text_draw(153, 1 + score, INFO_X + width, *y, font);
-            break;
-        default:
-            width += text_draw_number(score, '@', "", INFO_X + width, *y, font);
-            break;
+    // map info
+    int line_y = INFO_Y - 17;
+    lang_text_draw_centered(44, 10, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK); line_y += LINE_H;
+    if (false) {
+        draw_info_line(44, 76, &line_y, 77 + scenario_property_climate(), 2, true);
+        draw_info_line(44, 120, &line_y, scenario_map_size(), 3, true);
+        draw_info_line(44, 111, &line_y, scenario_invasion_count(), 4, true);
+        draw_info_line(2, 6, &line_y, 0, 2, true); // TODO
+    } else {
+        lang_text_draw(44, 77 + scenario_property_climate(), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK); line_y += LINE_H;
+        lang_text_draw(44, 121 + fmin(4, fmax(0, scenario_map_size() - 50)/30), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK); line_y += LINE_H;
+        lang_text_draw(44, 112 + scenario_invasion_count() / 2, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK); line_y += LINE_H;
+        lang_text_draw(2, 6, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK); line_y += LINE_H; // TODO
     }
 
-    *y += 17;
-    return width;
+    // scenario objectives
+    lang_text_draw_centered(44, 127, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK); line_y += LINE_H;
+    if (scenario_is_open_play()) {
+        lang_text_draw_multiline(145, 0, INFO_X, line_y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
+    } else {
+        if (winning_culture() > 0)
+            draw_info_line(44, 129, &line_y, winning_culture(), 5);
+        if (winning_prosperity() > 0)
+            draw_info_line(44, 130, &line_y, winning_prosperity(), 5);
+        if (winning_monuments() > 0)
+            draw_info_line(44, 131, &line_y, winning_monuments(), 5);
+        if (winning_kingdom() > 0)
+            draw_info_line(44, 132, &line_y, winning_kingdom(), 5);
+        if (winning_population() > 0)
+            draw_info_line(44, 133, &line_y, winning_population(), 5);
+        if (winning_housing() > 0)
+            draw_info_line(29, 20 + winning_houselevel(), &line_y, winning_housing(), 5);
+
+        if (scenario_criteria_survival_enabled())
+            draw_info_line(44, 55, &line_y, scenario_criteria_survival_years() * 12, 0, true, FONT_NORMAL_YELLOW);
+        else if (scenario_criteria_time_limit_enabled())
+            draw_info_line(44, 54, &line_y, scenario_criteria_time_limit_years() * 12, 0, true, FONT_NORMAL_YELLOW);
+    }
+
+    // monuments
+    line_y = 328;
+    if (true) {
+        int m = 0;
+        lang_text_draw_centered(41, 48, INFO_X, line_y, INFO_W, FONT_NORMAL_WHITE_ON_DARK); line_y += LINE_H;
+        if (scenario_property_monument(0) > 0) {
+            lang_text_draw(198, scenario_property_monument(0), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
+            line_y += LINE_H; m++;
+        }
+        if (scenario_property_monument(1) > 0) {
+            lang_text_draw(198, scenario_property_monument(1), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
+            line_y += LINE_H; m++;
+        }
+        if (scenario_property_monument(2) > 0) {
+            lang_text_draw(198, scenario_property_monument(2), INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
+            line_y += LINE_H; m++;
+        }
+        if (m == 0)
+            lang_text_draw(198, 0, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
+    }
 }
 static void draw_scores(int scenario_id) {
     bool beaten = game_scenario_beaten(scenario_id);
@@ -280,14 +286,14 @@ static void draw_scores(int scenario_id) {
         lang_text_draw_multiline(297, scenario_id, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_BLACK_ON_DARK);
 
         int line_y = SCORES_Y;
-        draw_scores_line(6, &line_y, record->completion_months, 0);
-        draw_scores_line(4, &line_y, record->final_population);
-        draw_scores_line(5, &line_y, record->final_funds);
-        draw_scores_line(0, &line_y, record->rating_culture);
-        draw_scores_line(1, &line_y, record->rating_prosperity);
-        draw_scores_line(3, &line_y, record->rating_kingdom);
-        draw_scores_line(7, &line_y, record->difficulty, 1);
-        draw_scores_line(8, &line_y, record->score, -1, FONT_NORMAL_WHITE_ON_DARK);
+        draw_info_line(298, 6, &line_y, record->completion_months, 0);
+        draw_info_line(298, 4, &line_y, record->final_population);
+        draw_info_line(298, 5, &line_y, record->final_funds);
+        draw_info_line(298, 0, &line_y, record->rating_culture);
+        draw_info_line(298, 1, &line_y, record->rating_prosperity);
+        draw_info_line(298, 3, &line_y, record->rating_kingdom);
+        draw_info_line(298, 7, &line_y, record->difficulty, 1);
+        draw_info_line(298, 8, &line_y, record->score, -1, false, FONT_NORMAL_WHITE_ON_DARK);
     } else {
         lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_YELLOW);
     }
@@ -380,7 +386,7 @@ static void draw_foreground(void) {
         case MAP_SELECTION_CUSTOM:
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             panel->draw();
-            if (panel->get_selected_entry_idx() != -1) {
+            if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel->get_selected_entry_idx() != -1) {
                 // show scores / goals button
                 int i = data.scores_or_goals;
                 button_border_draw(button_scores_goals[i].x, button_scores_goals[i].y, button_scores_goals[i].width,
@@ -456,7 +462,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
             if (panel->input_handle(m_dialog))
                 return;
-            if (panel->get_selected_entry_idx() != -1) {
+            if (data.dialog == MAP_SELECTION_CAMPAIGN_SINGLE_LIST && panel->get_selected_entry_idx() != -1) {
                 if (!data.scores_or_goals) {
                     if (generic_buttons_handle_mouse(m_dialog, 0, 0, &button_scores_goals[0], 1, &data.focus_button_id))
                         return;

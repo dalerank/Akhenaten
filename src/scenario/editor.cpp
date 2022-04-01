@@ -54,10 +54,10 @@ void scenario_editor_create(int map_size) {
     scenario_data.win_criteria.culture.enabled = 1;
     scenario_data.win_criteria.prosperity.goal = 10;
     scenario_data.win_criteria.prosperity.enabled = 1;
-    scenario_data.win_criteria.peace.goal = 10;
-    scenario_data.win_criteria.peace.enabled = 1;
-    scenario_data.win_criteria.favor.goal = 10;
-    scenario_data.win_criteria.favor.enabled = 1;
+    scenario_data.win_criteria.monuments.goal = 10;
+    scenario_data.win_criteria.monuments.enabled = 1;
+    scenario_data.win_criteria.kingdom.goal = 10;
+    scenario_data.win_criteria.kingdom.enabled = 1;
     scenario_data.win_criteria.population.goal = 0;
     scenario_data.win_criteria.population.enabled = 0;
 
@@ -424,22 +424,22 @@ void scenario_editor_set_prosperity(int goal) {
 }
 
 void scenario_editor_toggle_peace(void) {
-    scenario_data.win_criteria.peace.enabled = !scenario_data.win_criteria.peace.enabled;
+    scenario_data.win_criteria.monuments.enabled = !scenario_data.win_criteria.monuments.enabled;
     scenario_data.is_saved = 0;
 }
 
 void scenario_editor_set_peace(int goal) {
-    scenario_data.win_criteria.peace.goal = goal;
+    scenario_data.win_criteria.monuments.goal = goal;
     scenario_data.is_saved = 0;
 }
 
 void scenario_editor_toggle_favor(void) {
-    scenario_data.win_criteria.favor.enabled = !scenario_data.win_criteria.favor.enabled;
+    scenario_data.win_criteria.kingdom.enabled = !scenario_data.win_criteria.kingdom.enabled;
     scenario_data.is_saved = 0;
 }
 
 void scenario_editor_set_favor(int goal) {
-    scenario_data.win_criteria.favor.goal = goal;
+    scenario_data.win_criteria.kingdom.goal = goal;
     scenario_data.is_saved = 0;
 }
 

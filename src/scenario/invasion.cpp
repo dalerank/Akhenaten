@@ -143,20 +143,18 @@ void scenario_invasion_init(void) {
     }
 }
 
-int scenario_invasion_exists_upcoming(void) {
+bool scenario_invasion_exists_upcoming(void) {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled)
-            return 1;
-
+            return true;
     }
-    return 0;
+    return false;
 }
 
 void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id)) {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (data.warnings[i].in_use && data.warnings[i].handled)
             callback(data.warnings[i].x, data.warnings[i].y, data.warnings[i].image_id);
-
     }
 }
 
@@ -165,7 +163,6 @@ int scenario_invasion_count(void) {
     for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
         if (scenario_data.invasions[i].type)
             num_invasions++;
-
     }
     return num_invasions;
 }

@@ -32,25 +32,25 @@ int winning_prosperity() {
         return 0;
     return scenario_data.win_criteria.prosperity.goal;
 }
-int winning_peace() {
-    if (!scenario_data.win_criteria.peace.enabled)
+int winning_monuments() {
+    if (!scenario_data.win_criteria.monuments.enabled)
         return 0;
-    return scenario_data.win_criteria.peace.goal;
+    return scenario_data.win_criteria.monuments.goal;
 }
-int winning_favor() {
-    if (!scenario_data.win_criteria.favor.enabled)
+int winning_kingdom() {
+    if (!scenario_data.win_criteria.kingdom.enabled)
         return 0;
-    return scenario_data.win_criteria.favor.goal;
+    return scenario_data.win_criteria.kingdom.goal;
 }
 int winning_housing() {
-    if (!scenario_data.win_criteria.ph_goal1.enabled)
+    if (!scenario_data.win_criteria.houses.enabled)
         return 0;
-    return scenario_data.win_criteria.ph_goal1.goal;
+    return scenario_data.win_criteria.houses.goal;
 }
 int winning_houselevel() {
-    if (!scenario_data.win_criteria.ph_goal2.enabled)
+    if (!scenario_data.win_criteria.house_level.enabled)
         return 0;
-    return scenario_data.win_criteria.ph_goal2.goal;
+    return scenario_data.win_criteria.house_level.goal;
 }
 
 int scenario_criteria_milestone_year(int percentage) {
