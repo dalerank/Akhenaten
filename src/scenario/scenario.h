@@ -20,6 +20,7 @@ typedef struct scenario_data_buffers {
     buffer *river_points = new buffer;
     buffer *empire = new buffer;
     buffer *wheat = new buffer;
+    buffer *climate_id = new buffer;
 
     buffer *requests = new buffer;
     buffer *invasions = new buffer;

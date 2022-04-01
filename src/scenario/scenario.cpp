@@ -352,6 +352,9 @@ void scenario_load_state(scenario_data_buffers *SCENARIO) {
         scenario_data.flotsam_enabled = SCENARIO->info3->read_u8(); // 1
         SCENARIO->info3->skip(2);
     }
+    if (SCENARIO->climate_id->is_valid(1)) {
+        scenario_data.climate = SCENARIO->climate_id->read_i16();
+    }
 
     // 8. random events (44)
     // events
