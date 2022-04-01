@@ -14,13 +14,13 @@ static struct {
 } data;
 
 void scenario_emperor_change_init(void) {
-    data.game_year = scenario.start_year + scenario.emperor_change.year;
+    data.game_year = scenario_data.start_year + scenario_data.emperor_change.year;
     data.month = 1 + (random_byte() & 7);
     data.state = 0;
 }
 
 void scenario_emperor_change_process(void) {
-    if (!scenario.emperor_change.enabled)
+    if (!scenario_data.emperor_change.enabled)
         return;
     if (data.state == 0) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {

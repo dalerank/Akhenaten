@@ -17,11 +17,11 @@ int scenario_campaign_rank(void);
 
 void scenario_set_campaign_rank(int rank);
 
-int scenario_campaign_mission(void);
+int scenario_campaign_scenario_id(void);
 
-void scenario_set_campaign_mission(int mission);
+void scenario_set_campaign_scenario(int scenario_id);
 
-bool scenario_is_tutorial(int rank);
+bool scenario_is_mission_rank(int rank);
 int scenario_is_tutorial_before_mission_5(void);
 int scenario_starting_favor(void);
 
@@ -66,5 +66,10 @@ const uint8_t *scenario_subtitle(void);
 int scenario_initial_funds(void);
 
 int scenario_rescue_loan(void);
+
+int scenario_property_monuments_is_enabled(void);
+int scenario_property_monument(int field);
+void scenario_set_monument(int field, int m);
+
 
 #endif // SCENARIO_PROPERTY_H

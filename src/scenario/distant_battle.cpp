@@ -15,34 +15,34 @@
 #include "scenario/data.h"
 
 int scenario_distant_battle_roman_travel_months(void) {
-    return scenario.empire.distant_battle_roman_travel_months;
+    return scenario_data.empire.distant_battle_roman_travel_months;
 }
 
 int scenario_distant_battle_enemy_travel_months(void) {
-    return scenario.empire.distant_battle_enemy_travel_months;
+    return scenario_data.empire.distant_battle_enemy_travel_months;
 }
 
 void scenario_distant_battle_set_roman_travel_months(void) {
-    scenario.empire.distant_battle_roman_travel_months =
+    scenario_data.empire.distant_battle_roman_travel_months =
             empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ROMAN_ARMY);
 }
 
 void scenario_distant_battle_set_enemy_travel_months(void) {
-    scenario.empire.distant_battle_enemy_travel_months =
+    scenario_data.empire.distant_battle_enemy_travel_months =
             empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
 }
 
 void scenario_distant_battle_process(void) {
     for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
-        if (scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE &&
-            game_time_year() == scenario.invasions[i].year + scenario.start_year &&
-            game_time_month() == scenario.invasions[i].month &&
-            scenario.empire.distant_battle_enemy_travel_months > 4 &&
-            scenario.empire.distant_battle_roman_travel_months > 4 &&
+        if (scenario_data.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE &&
+            game_time_year() == scenario_data.invasions[i].year + scenario_data.start_year &&
+            game_time_month() == scenario_data.invasions[i].month &&
+            scenario_data.empire.distant_battle_enemy_travel_months > 4 &&
+            scenario_data.empire.distant_battle_roman_travel_months > 4 &&
             !city_military_has_distant_battle()) {
 
             city_message_post(true, MESSAGE_CAESAR_REQUESTS_ARMY, 0, 0);
-            city_military_init_distant_battle(scenario.invasions[i].amount);
+            city_military_init_distant_battle(scenario_data.invasions[i].amount);
             return;
         }
     }

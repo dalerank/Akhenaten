@@ -66,15 +66,15 @@ static int draw_background(void) {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(winning_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK_ON_LIGHT);
     }
-    ImageDraw::img_generic(image_id_from_group(GROUP_RATINGS_BACKGROUND), 60, 48 - 10);
+    ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_RATINGS_BACKGROUND), 60, 48 - 10);
 
     int open_play = scenario_is_open_play();
 
     // culture
     draw_rating(0, city_rating_culture(), open_play, winning_culture());
     draw_rating(1, city_rating_prosperity(), open_play, winning_prosperity());
-    draw_rating(2, city_rating_peace(), open_play, winning_peace());
-    draw_rating(3, city_rating_favor(), open_play, winning_favor());
+    draw_rating(2, city_rating_peace(), open_play, winning_monuments());
+    draw_rating(3, city_rating_favor(), open_play, winning_kingdom());
 
     // bottom info box
     int box_x = 44;

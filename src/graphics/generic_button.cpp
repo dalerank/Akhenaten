@@ -38,9 +38,8 @@ int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *b
         button->left_click_handler(button->parameter1, button->parameter2);
     else if (m->right.went_up)
         button->right_click_handler(button->parameter1, button->parameter2);
-    else {
+    else
         return 0;
-    }
     return button_id;
 }
 
@@ -61,7 +60,6 @@ int generic_buttons_min_handle_mouse(const mouse *m, int x, int y, generic_butto
         button->right_click_handler(button->parameter1, button->parameter2);
     else
         return 0;
-
     return button_id;
 }
 

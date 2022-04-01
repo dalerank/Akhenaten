@@ -10,26 +10,26 @@
 void scenario_demand_change_init(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
         random_generate_next();
-        if (scenario.demand_changes[i].year)
-            scenario.demand_changes[i].month = (random_byte() & 7) + 2;
+        if (scenario_data.demand_changes[i].year)
+            scenario_data.demand_changes[i].month = (random_byte() & 7) + 2;
 
     }
 }
 
 void scenario_demand_change_process(void) {
     for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
-        if (!scenario.demand_changes[i].year)
+        if (!scenario_data.demand_changes[i].year)
             continue;
 
-        if (game_time_year() != scenario.demand_changes[i].year + scenario.start_year ||
-            game_time_month() != scenario.demand_changes[i].month) {
+        if (game_time_year() != scenario_data.demand_changes[i].year + scenario_data.start_year ||
+            game_time_month() != scenario_data.demand_changes[i].month) {
             continue;
         }
-        int route = scenario.demand_changes[i].route_id;
-        int resource = scenario.demand_changes[i].resource;
+        int route = scenario_data.demand_changes[i].route_id;
+        int resource = scenario_data.demand_changes[i].resource;
         int city_id = empire_city_get_for_trade_route(route);
         if (city_id < 0) city_id = 0;
-        if (scenario.demand_changes[i].is_rise) {
+        if (scenario_data.demand_changes[i].is_rise) {
             if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route))
                 city_message_post(true, MESSAGE_INCREASED_TRADING, city_id, resource);
 

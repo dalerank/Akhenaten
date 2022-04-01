@@ -19,7 +19,7 @@
 #include "sound/speech.h"
 #include "window/city.h"
 #include "window/intermezzo.h"
-#include "window/mission_selection.h"
+#include "window/mission_next.h"
 
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
@@ -47,10 +47,6 @@ static void init(void) {
     // load map!
     if (!data.campaign_mission_loaded) {
         data.campaign_mission_loaded = 1;
-        if (!game_file_start_scenario_by_name(scenario_name())) {
-            window_city_show();
-            return;
-        }
     }
 }
 
@@ -68,7 +64,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
 
     graphics_in_dialog();
-    int text_id = 200 + scenario_campaign_mission();
+    int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message *msg = lang_get_message(text_id);
 
     outer_panel_draw(16, 32, 38, 27);
@@ -76,8 +72,8 @@ static void draw_background(void) {
     text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (!data.is_review && game_mission_has_choice())
-        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
+//    if (!data.is_review && game_mission_has_choice())
+//        lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK_ON_LIGHT);
 
     inner_panel_draw(32, 96, 33, 6);
     lang_text_draw(62, 10, 48, 104, FONT_NORMAL_WHITE_ON_DARK);
@@ -114,21 +110,21 @@ static void draw_background(void) {
         int width = lang_text_draw(62, 13, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
         text_draw_number(winning_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
-    if (winning_peace()) {
+    if (winning_monuments()) {
         int x = GOAL_OFFSETS_X[goal_index];
         int y = GOAL_OFFSETS_Y[goal_index];
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 14, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_peace(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_monuments(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
-    if (winning_favor()) {
+    if (winning_kingdom()) {
         int x = GOAL_OFFSETS_X[goal_index];
         int y = GOAL_OFFSETS_Y[goal_index];
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 15, 16 + x + 8, 32 + y + 3, FONT_NORMAL_YELLOW);
-        text_draw_number(winning_favor(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
+        text_draw_number(winning_kingdom(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_YELLOW);
     }
     int immediate_goal_text = tutorial_get_immediate_goal_text();
     if (immediate_goal_text) {
@@ -174,7 +170,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 static void button_back(int param1, int param2) {
     if (!data.is_review) {
         sound_speech_stop();
-        window_mission_selection_show();
+        window_mission_next_selection_show();
     }
 }
 static void button_start_mission(int param1, int param2) {

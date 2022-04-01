@@ -14,14 +14,14 @@ static struct {
 } data;
 
 void scenario_gladiator_revolt_init(void) {
-    data.game_year = scenario.start_year + scenario.gladiator_revolt.year;
+    data.game_year = scenario_data.start_year + scenario_data.gladiator_revolt.year;
     data.month = 3 + (random_byte() & 3);
     data.end_month = 3 + data.month;
     data.state = EVENT_STATE_INITIAL;
 }
 
 void scenario_gladiator_revolt_process(void) {
-    if (!scenario.gladiator_revolt.enabled)
+    if (!scenario_data.gladiator_revolt.enabled)
         return;
     if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {

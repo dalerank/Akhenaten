@@ -1,4 +1,5 @@
 #include <tgmath.h>
+#include <window/game_menu.h>
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
@@ -466,7 +467,7 @@ static void replay_map_confirmed(bool confirmed) {
         return;
     }
     if (scenario_is_custom()) {
-        game_file_start_scenario_by_name(scenario_name());
+        game_load_scenario(scenario_name());
         window_city_show();
     } else {
         scenario_save_campaign_player_name();
@@ -478,7 +479,7 @@ static void menu_file_new_game(int param) {
     Planner.reset();
     game_undo_disable();
     game_state_reset_overlay();
-    window_main_menu_show(1);
+    window_game_menu_show();
 }
 static void menu_file_replay_map(int param) {
     clear_state();

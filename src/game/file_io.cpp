@@ -338,7 +338,7 @@ static void init_savegame_data(bool expanded) {
     savegame_state *state = &savegame_data.state;
     switch (GAME_ENV) {
         case ENGINE_ENV_C3: {
-            state->SCENARIO.mission_index = create_savegame_piece(4, false, "scenario_campaign_mission");
+            state->SCENARIO.mission_index = create_savegame_piece(4, false, "scenario_campaign_scenario_id");
             state->file_version = create_savegame_piece(4, false, "file_version");
             state->image_grid = create_savegame_piece(52488, true, "image_grid");
             state->edge_grid = create_savegame_piece(26244, true, "edge_grid");
@@ -568,8 +568,8 @@ static void init_savegame_data(bool expanded) {
             state->SCENARIO.allowed_builds = create_savegame_piece(228, false, "SCENARIO.allowed_builds");
 
             // 24 bytes     FF FF FF FF (cyclic) ???
-            state->junk5 = create_savegame_piece(24, false, "junk5"); // unknown bytes
-            state->SCENARIO.monuments = create_savegame_piece(10, false, "SCENARIO.monuments"); // 4 bytes + 3 x 2-byte
+            state->junk5 = create_savegame_piece(28, false, "junk5"); // unknown bytes
+            state->SCENARIO.monuments = create_savegame_piece(6, false, "SCENARIO.monuments"); // 3 x 2-byte
 
             // 290 bytes    00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
@@ -646,7 +646,7 @@ static void init_savegame_data(bool expanded) {
             state->junk9b = create_savegame_piece(396, false, "junk9b");
 
             // 51984 bytes  00 00 00 00 ???
-            state->soil_fertility_grid = create_savegame_piece(51984, false, "soil_fertility_grid"); // todo: 1-byte grid
+            state->soil_fertility_grid = create_savegame_piece(51984, false, "soil_fertility_grid");
 
 
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
@@ -686,7 +686,7 @@ static void init_savegame_data(bool expanded) {
             // 64 bytes     00 00 00 00 ???
             state->junk16 = create_savegame_piece(64, false, "junk16"); // 71x 4-bytes emptiness
             state->tutorial_part1 = create_savegame_piece(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->soil_unk_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion"); // todo: 1-byte grid
+            state->soil_unk_grid = create_savegame_piece(51984, true, "floodplain_soil_depletion");
 
             // lone byte ???
             state->junk17 = create_savegame_piece(1, false, "junk17");
@@ -1022,23 +1022,32 @@ static void savegame_write_to_file(FILE *fp) {
 bool game_file_io_read_scenario(const char *filename) {
     // TODO
     return false;
-//    log_info("Loading scenario", filename, 0);
-//    init_scenario_data();
-//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-//    if (!fp) {
-//        return 0;
-//    }
-//    for (int i = 0; i < scenario_data.num_pieces; i++) {
+
+    init_scenario_data();
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        log_error("Unable to access file", filename, 0);
+        return false;
+    }
+    log_info("Loading scenario", filename, 0);
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        int bytes_read = scenario_data.pieces[i].buf->from_file((size_t) scenario_data.pieces[i].buf->size(), fp);
+        if (bytes_read != scenario_data.pieces[i].buf->size()) {
+            log_error("Unable to load scenario", filename, 0);
+            file_close(fp);
+            return false;
+        }
+
 //        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
 //            log_error("Unable to load scenario", filename, 0);
 //            file_close(fp);
 //            return 0;
 //        }
-//    }
-//    file_close(fp);
-//
-//    scenario_load_from_state(&scenario_data.state);
-//    return 1;
+    }
+    file_close(fp);
+
+    scenario_load_from_state(&scenario_data.state);
+    return true;
 }
 bool game_file_io_write_scenario(const char *filename) {
     // TODO

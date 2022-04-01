@@ -1,4 +1,4 @@
-#include "mission_selection.h"
+#include "mission_next.h"
 
 #include "core/image_group.h"
 #include "game/mission.h"
@@ -51,7 +51,7 @@ static void draw_background(void) {
 
     ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
     graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    ImageDraw::img_generic(image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (data.choice)
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -117,33 +117,34 @@ static void handle_input(const mouse *m, const hotkeys *h) {
 
 
     if (m_dialog->left.went_up) {
-        if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
-            scenario_set_campaign_mission(game_mission_peaceful());
-            data.choice = 1;
-            if (m_dialog->left.double_click) {
-                button_start(0, 0);
-                return;
-            }
-            window_invalidate();
-            sound_speech_play_file("wavs/fanfare_nu1.wav");
-        }
-        if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
-            scenario_set_campaign_mission(game_mission_military());
-            data.choice = 2;
-            if (m_dialog->left.double_click) {
-                button_start(0, 0);
-                return;
-            }
-            window_invalidate();
-            sound_speech_play_file("wavs/fanfare_nu5.wav");
-        }
+        // TODO
+//        if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
+//            scenario_set_campaign_mission(game_mission_peaceful());
+//            data.choice = 1;
+//            if (m_dialog->left.double_click) {
+//                button_start(0, 0);
+//                return;
+//            }
+//            window_invalidate();
+//            sound_speech_play_file("wavs/fanfare_nu1.wav");
+//        }
+//        if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
+//            scenario_set_campaign_mission(game_mission_military());
+//            data.choice = 2;
+//            if (m_dialog->left.double_click) {
+//                button_start(0, 0);
+//                return;
+//            }
+//            window_invalidate();
+//            sound_speech_play_file("wavs/fanfare_nu5.wav");
+//        }
     }
 }
 static void button_start(int param1, int param2) {
     window_mission_briefing_show();
 }
 
-void window_mission_selection_show(void) {
+void window_mission_next_selection_show(void) {
     if (!game_mission_has_choice()) {
         window_mission_briefing_show();
         return;

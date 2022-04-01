@@ -11,7 +11,7 @@ typedef struct {
     int height;
     void (*on_scroll_callback)(void);
     int dot_padding;
-    int always_visible;
+    bool always_visible;
     int max_scroll_position;
     int scroll_position;
     int is_dragging_scroll;

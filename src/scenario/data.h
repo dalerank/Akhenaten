@@ -140,17 +140,17 @@ extern struct scenario_t {
     uint8_t subtitle[64];
     uint8_t brief_description[522];
     int enemy_id;
-    int is_open_play;
+    bool is_open_play;
     int open_play_scenario_id;
 
     struct {
         struct win_criteria_t population;
         struct win_criteria_t culture;
         struct win_criteria_t prosperity;
-        struct win_criteria_t peace;
-        struct win_criteria_t favor;
-        struct win_criteria_t ph_goal1;
-        struct win_criteria_t ph_goal2;
+        struct win_criteria_t monuments;
+        struct win_criteria_t kingdom;
+        struct win_criteria_t houses;
+        struct win_criteria_t house_level;
         struct {
             int enabled;
             int years;
@@ -227,8 +227,8 @@ extern struct scenario_t {
     } native_images;
 
     struct { // used to be stored in the settings file
-        int campaign_rank;
-        int campaign_mission;
+        int campaign_mission_rank;
+        int campaign_scenario_id;
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
@@ -236,7 +236,13 @@ extern struct scenario_t {
         uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
     } settings;
 
+    struct {
+        int first;
+        int second;
+        int third;
+    } monuments;
+
     bool is_saved;
-} scenario;
+} scenario_data;
 
 #endif // SCENARIO_DATA_H

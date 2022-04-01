@@ -34,7 +34,7 @@ int floodplains_current_cycle() {
     return cycle;
 }
 int floodplains_flooding_start_cycle() {
-//    int h = (int)(long long)((float)give_me_da_time()->year - (short)scenario.start_year) * (float)randomizing_double;
+//    int h = (int)(long long)((float)give_me_da_time()->year - (short)scenario_data.start_year) * (float)randomizing_double;
     int h = 0;
     return data.season * 1.05 + 15 + h;
 }

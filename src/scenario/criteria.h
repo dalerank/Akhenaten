@@ -12,8 +12,8 @@ int scenario_criteria_survival_years(void);
 int winning_population();
 int winning_culture();
 int winning_prosperity();
-int winning_peace();
-int winning_favor();
+int winning_monuments();
+int winning_kingdom();
 int winning_housing();
 int winning_houselevel();
 

@@ -82,7 +82,7 @@ static void cause_disease(int total_people) {
 }
 
 void city_health_update(void) {
-    if (city_data.population.population < 200 || scenario_is_tutorial(1) || scenario_is_tutorial(2)) {
+    if (city_data.population.population < 200 || scenario_is_mission_rank(1) || scenario_is_mission_rank(2)) {
         city_data.health.value = 50;
         city_data.health.target_value = 50;
         return;

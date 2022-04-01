@@ -9,7 +9,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-#define DISPLAY_TIME_MILLIS 1000
+#define DISPLAY_TIME_MILLIS 1200
 
 static const char SOUND_FILES_BRIEFING[][32] = {
         "wavs/01b.wav",
@@ -80,7 +80,7 @@ static void init(intermezzo_type type, void (*callback)(void)) {
     if (data.type == INTERMEZZO_FIRED)
         sound_speech_play_file(SOUND_FILE_LOSE);
     else if (!scenario_is_custom()) {
-        int mission = scenario_campaign_mission();
+        int mission = scenario_campaign_scenario_id();
         if (data.type == INTERMEZZO_MISSION_BRIEFING)
             sound_speech_play_file(SOUND_FILES_BRIEFING[mission]);
         else if (data.type == INTERMEZZO_WON)
@@ -93,11 +93,12 @@ static void init(intermezzo_type type, void (*callback)(void)) {
 
 static void draw_background(void) {
     graphics_clear_screens();
+    graphics_reset_dialog();
     int x_offset = (screen_width() - 1024) / 2;
     int y_offset = (screen_height() - 768) / 2;
 
     // draw background by mission
-    int mission = scenario_campaign_mission();
+    int mission = scenario_campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
         if (scenario_is_custom())

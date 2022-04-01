@@ -136,9 +136,8 @@ void large_label_draw(int x, int y, int width_blocks, int type) {
             image_id = 3 * type;
         else if (i < width_blocks - 1)
             image_id = 3 * type + 1;
-        else {
+        else
             image_id = 3 * type + 2;
-        }
         ImageDraw::img_generic(image_base + image_id, x + 16 * i, y);
     }
 }

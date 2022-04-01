@@ -481,7 +481,7 @@ static void update_favor_rating(int is_yearly_update) {
         city_data.ratings.favor_salary_penalty = 0;
         city_data.ratings.favor_milestone_penalty = 0;
         city_data.ratings.favor_ignored_request_penalty = 0;
-        if (!scenario_is_tutorial(1) && !scenario_is_tutorial(2))
+        if (!scenario_is_mission_rank(1) && !scenario_is_mission_rank(2))
             city_data.ratings.favor -= 2;
 
         // tribute penalty
@@ -532,14 +532,14 @@ static void update_favor_rating(int is_yearly_update) {
                         winning_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_peace() &&
+            if (winning_monuments() &&
                 city_data.ratings.peace < calc_adjust_with_percentage(
-                        winning_peace(), milestone_pct)) {
+                        winning_monuments(), milestone_pct)) {
                 bonus = 0;
             }
-            if (winning_favor() &&
+            if (winning_kingdom() &&
                 city_data.ratings.favor < calc_adjust_with_percentage(
-                        winning_favor(), milestone_pct)) {
+                        winning_kingdom(), milestone_pct)) {
                 bonus = 0;
             }
             if (winning_population() &&
