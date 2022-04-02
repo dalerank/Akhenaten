@@ -236,7 +236,43 @@ bool game_campaign_unlocked(int campaign_id);
 bool game_scenario_unlocked(int scenario_id);
 bool game_scenario_beaten(int scenario_id);
 
+typedef struct mission_step_t;
+typedef struct mission_choice_branch_t;
+
+#define MAX_MISSION_STEP_BRANCHES 5
+#define MAX_MISSION_CAMPAIGNS 10
+
+struct mission_choice_branch_t {
+    int path_id = -1;
+    int x;
+    int y;
+    int text_id;
+    mission_step_t *mission = nullptr;
+};
+
+struct mission_step_t {
+    int scenario_id = -1;
+    int intro_MM = -1;
+    int victory_text_id = -1;
+    int path_ids[MAX_MISSION_STEP_BRANCHES] = { -1 }; // all elements initialized to -1
+    const uint8_t *map_name;
+
+    // choices
+    int graphics_id;
+    int text_id;
+    mission_choice_branch_t branches[MAX_MISSION_STEP_BRANCHES];
+    int num_branches = 0;
+
+    bool has_choice = false;
+    bool is_campaign_end = false;
+    int campaign_id = -1;
+    mission_step_t *previous_in_list = nullptr;
+    mission_step_t *next_in_list = nullptr;
+};
+
 const uint8_t *game_mission_get_name(int scenario_id);
+const mission_step_t *game_campaign_get_step_data(int campaign_id, int step_index);
+const mission_step_t *game_scenario_get_step_data(int scenario_id);
 bool game_load_campaign_file();
 
 #endif // GAME_MISSION_H

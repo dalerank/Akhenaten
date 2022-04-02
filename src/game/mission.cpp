@@ -107,36 +107,74 @@ struct {
     int map_name_nums = 0;
 
     struct {
-        struct {
-            int type; // 0 = mission; 1 = choice; 2 = end campaign
-            struct {
-                int scenario_id = -1;
-                int intro_MM;
-                int victory_text_id;
-                int path_ids[5];
-//                int num_paths = 0;
-            } mission;
-            struct {
-                int graphics_id;
-                int text_id;
-                struct {
-                    int path_id;
-                    int x;
-                    int y;
-                    int text_id;
-                } branches[5];
-                int num_branches = 0;
-            } choice;
-        } steps[50];
+        mission_step_t steps[50];
         int num_steps = 0;
-    } campaigns[10];
+    } campaigns[MAX_MISSION_CAMPAIGNS];
     int num_campaigns = 0;
 } data;
 
+bool matches_path_id(const mission_step_t *step, int path_id) {
+    for (int i = 0; i < MAX_MISSION_STEP_BRANCHES; ++i) {
+        if (step->path_ids[i] == path_id)
+            return true; // ONLY match with the provided id. the default path id merger (0) is checked MANUALLY!
+    }
+    return false;
+}
+static mission_step_t *find_next_connected_path_step(const mission_step_t *step, int path_id) {
+    auto next = step->next_in_list;
+    while (next != nullptr) {
+        if (matches_path_id(next, path_id))
+            return next;
+        // should we do this? why not...
+        if (next->is_campaign_end && next->campaign_id > -1 && next->campaign_id < data.num_campaigns - 1)
+            return &data.campaigns[next->campaign_id + 1].steps[0];
+        next = next->next_in_list;
+    }
+    return nullptr;
+}
+static mission_step_t *find_next(const mission_step_t *step, int choice_index = 0) {
+    if (!step->has_choice)
+        return find_next_connected_path_step(step, 0);
+    else {
+        auto choice = step->branches[choice_index];
+        return find_next_connected_path_step(step, choice.path_id);
+    }
+    return nullptr; // this should never happen?
+}
+static void find_in_campaigns(int scenario_id, int *campaign_id, int *step_index) {
+    for (int c = 0; c < data.num_campaigns; ++c) {
+        auto campaign = &data.campaigns[c];
+        for (int i = 0; i < campaign->num_steps; ++i) {
+            auto step = &campaign->steps[i];
+            if (step->scenario_id == scenario_id) {
+                *campaign_id = c;
+                *step_index = i;
+                return;
+            }
+        }
+    }
+    // no matching scenario found!
+    *campaign_id = -1;
+    *step_index = -1;
+}
 const uint8_t *game_mission_get_name(int scenario_id) {
     if (scenario_id >= data.map_name_nums || scenario_id > 299)
         return data.map_names[0];
     return data.map_names[scenario_id];
+}
+const mission_step_t *game_campaign_get_step_data(int campaign_id, int step_index) {
+    if (campaign_id < -1 || campaign_id >= data.num_campaigns)
+        return nullptr;
+    auto campaign = &data.campaigns[campaign_id];
+    if (step_index < -1 || step_index > campaign->num_steps)
+        return nullptr;
+    return &data.campaigns[campaign_id].steps[step_index];
+}
+const mission_step_t *game_scenario_get_step_data(int scenario_id) {
+    int campaign_id = -1;
+    int step_index = -1;
+    find_in_campaigns(scenario_id, &campaign_id, &step_index);
+    return game_campaign_get_step_data(campaign_id, step_index);
 }
 
 #define TMP_BUFFER_SIZE 10000
@@ -192,56 +230,71 @@ bool game_load_campaign_file() {
             line_size -= 2;
         const uint8_t *endl = ptr + line_size;
         int comment = index_of(ptr, ';', line_size);
-        if (comment != 1 && line_size > 0) { // valid line
-            if (index_of(ptr, '[', line_size)) { // header tag
+        if (comment != 1 && line_size > 0) { // valid line!
+            if (index_of(ptr, '[', line_size)) { // braced tag
                 data_line_idx = 0;
                 if (index_of_string(ptr, string_from_ascii("MISSION_NAMES"), line_size)) {
                     action = -1;
                 } else {
+//                    if (action > -1) { // END of the previous campaign
+//                        auto campaign = &data.campaigns[data.num_campaigns - 1];
+//                        auto step = &campaign->steps[campaign->num_steps - 1];
+//                        step->is_campaign_end = true;
+//                    }
                     data.num_campaigns++;
                     action++;
                 }
-            } else { // data tag
-                if (action == -1) {
+            } else { // data line
+                if (action == -1) { // map names
                     buf2.clear();
                     buf2.write_raw(ptr, line_size);
                     buf2.reset_offset();
                     buf2.read_raw(data.map_names[data_line_idx], line_size);
                     data.map_name_nums++;
-                } else {
+                } else { // mission data
                     auto campaign = &data.campaigns[data.num_campaigns - 1];
-                    // step data
-                    if (index_of_string(ptr, string_from_ascii("mission"), line_size)) {
+                    if (index_of_string(ptr, string_from_ascii("mission"), line_size)) { // mission step data
                         campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
-                        step->type = 0;
+//                        step->type = CAMPAIGN_STEP_MISSION;
                         ptr = skip_non_digits(ptr);
-                        ptr = get_value(ptr, endl, &step->mission.scenario_id);
-                        ptr = get_value(ptr, endl, &step->mission.intro_MM);
-                        ptr = get_value(ptr, endl, &step->mission.victory_text_id);
-                        for (int i = 0; i < 5; ++i) {
+                        ptr = get_value(ptr, endl, &step->scenario_id);
+                        ptr = get_value(ptr, endl, &step->intro_MM);
+                        ptr = get_value(ptr, endl, &step->victory_text_id);
+                        for (int i = 0; i < MAX_MISSION_STEP_BRANCHES; ++i) {
                             if (index_of(ptr, '\n', line_size) > 2)
-                                ptr = get_value(ptr, endl, &step->mission.path_ids[i]);
+                                ptr = get_value(ptr, endl, &step->path_ids[i]);
                             else
-                                step->mission.path_ids[i] = -1;
+                                step->path_ids[i] = -1; // just to be safe...
                         }
-                    } else if (index_of_string(ptr, string_from_ascii("choicescreen"), line_size)) {
+                        step->map_name = (const uint8_t*)data.map_names[step->scenario_id];
+                        step->campaign_id = data.num_campaigns - 1;
+                        // linked list pointers
+                        if (campaign->num_steps > 1) { // previous one is the mission immediately preceding this one
+                            step->previous_in_list = &campaign->steps[campaign->num_steps - 2];
+                            step->previous_in_list->next_in_list = step;
+                        } else if (data.num_campaigns > 1) { // previous one is the last one in PREVIOUS CAMPAIGN
+                            auto prev_campaign = &data.campaigns[data.num_campaigns - 2];
+                            step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
+                            step->previous_in_list->next_in_list = step;
+                        }
+                    } else if (index_of_string(ptr, string_from_ascii("choicescreen"), line_size)) { // choice screen data
                         if (campaign->num_steps == 0)
                             campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
-                        step->type = 1;
+                        step->has_choice = true;
                         ptr = skip_non_digits(ptr);
-                        ptr = get_value(ptr, endl, &step->choice.graphics_id);
-                        ptr = get_value(ptr, endl, &step->choice.text_id);
-                    } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) {
-                        auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a VALID STEP.
-                        auto branch = &step->choice.branches[step->choice.num_branches];
+                        ptr = get_value(ptr, endl, &step->graphics_id);
+                        ptr = get_value(ptr, endl, &step->text_id);
+                    } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) { // choice branch data
+                        auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
+                        auto branch = &step->branches[step->num_branches];
                         ptr = skip_non_digits(ptr);
                         ptr = get_value(ptr, endl, &branch->path_id);
                         ptr = get_value(ptr, endl, &branch->x);
                         ptr = get_value(ptr, endl, &branch->y);
                         ptr = get_value(ptr, endl, &branch->text_id);
-                        step->choice.num_branches++;
+                        step->num_branches++;
                     }
                 }
                 data_line_idx++;
@@ -255,6 +308,20 @@ bool game_load_campaign_file() {
     } while (line_end);
     // GOD, what a MESS!
 
-    log_info("campaign.txt loaded", 0, 0);
+    // finalize loading, clean up things, generate advanced pointers/helper members etc.
+    for (int c = 0; c < data.num_campaigns; ++c) {
+        auto campaign = &data.campaigns[c];
+        auto last_step = &campaign->steps[campaign->num_steps - 1];
+        last_step->is_campaign_end = true;
+        for (int i = 0; i < campaign->num_steps; ++i) {
+            auto step = &campaign->steps[i];
+            for (int j = 0; j < step->num_branches; ++j) {
+                auto branch = &step->branches[j];
+                branch->mission = find_next_connected_path_step(step, branch->path_id);
+            }
+        }
+    }
+
+    log_info("Campaign mission data loaded", 0, 0);
     return true;
 }

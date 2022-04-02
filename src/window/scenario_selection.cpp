@@ -109,11 +109,13 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                     break;
                 default:
                 {
-                    for (int i = get_first_mission_in_campaign(data.campaign_sub_dialog); i <= get_last_mission_in_campaign(data.campaign_sub_dialog); ++i) {
-                        auto name = game_mission_get_name(i);
-                        char name_utf8[FILE_NAME_MAX];
-                        encoding_to_utf8(name, name_utf8, FILE_NAME_MAX, 0);
-                        panel->add_entry(name_utf8);
+                    for (int i = 0; i < MAX_MANUAL_ENTRIES; ++i) {
+                        auto mission_data = game_campaign_get_step_data(data.campaign_sub_dialog, i);
+                        if (mission_data != nullptr && mission_data->scenario_id != -1) {
+                            char name_utf8[FILE_NAME_MAX];
+                            encoding_to_utf8(mission_data->map_name, name_utf8, FILE_NAME_MAX, 0);
+                            panel->add_entry(name_utf8);
+                        }
                     }
                     break;
                 }
