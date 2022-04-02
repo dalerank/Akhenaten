@@ -172,7 +172,6 @@ int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
     for (int i = 0; i < haystack_length; i++) {
         if (haystack[i] == needle)
             return i + 1;
-
     }
     return 0;
 }

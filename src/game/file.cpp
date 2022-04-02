@@ -271,9 +271,8 @@ static bool game_load_scenario_pak_mission(int scenario_id) {
     initialize_saved_game();
     scenario_fix_patch_trade(scenario_id);
 
-    int rank = SCENARIO_TO_MISSION_RANK[scenario_id];
     scenario_set_campaign_scenario(scenario_id);
-    scenario_set_campaign_rank(rank);
+    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_id));
 
     city_data_init_campaign_mission();
 
@@ -298,6 +297,7 @@ static bool game_load_scenario_custom_map(const char *filename) {
 }
 
 static bool pre_load() {
+    scenario_set_campaign_scenario(-1);
     map_bookmarks_clear();
     return true;
 }
