@@ -92,6 +92,7 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
     data.scores_or_goals = 0;
+    scenario_set_campaign_scenario(-1);
     switch (dialog_type) {
         case MAP_SELECTION_CCK_LEGACY:
         case MAP_SELECTION_CUSTOM:
@@ -109,9 +110,13 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                     break;
                 default:
                 {
-                    for (int i = get_first_mission_in_campaign(data.campaign_sub_dialog); i <= get_last_mission_in_campaign(data.campaign_sub_dialog); ++i) {
-                        const char *name = player_get_cached_scenario_name(i); // TODO
-                        panel->add_entry(name);
+                    for (int i = 0; i < MAX_MANUAL_ENTRIES; ++i) {
+                        auto mission_data = get_campaign_mission_step_data(data.campaign_sub_dialog, i);
+                        if (mission_data != nullptr && mission_data->scenario_id != -1) {
+                            char name_utf8[FILE_NAME_MAX];
+                            encoding_to_utf8(mission_data->map_name, name_utf8, FILE_NAME_MAX, 0);
+                            panel->add_entry(name_utf8);
+                        }
                     }
                     break;
                 }
@@ -280,6 +285,8 @@ static void draw_scenario_info() {
     }
 }
 static void draw_scores(int scenario_id) {
+    int rank = get_scenario_mission_rank(scenario_id);
+    bool unlocked = game_scenario_unlocked(scenario_id);
     bool beaten = game_scenario_beaten(scenario_id);
     if (beaten) {
         const player_record *record = player_get_scenario_record(scenario_id);
@@ -297,6 +304,15 @@ static void draw_scores(int scenario_id) {
     } else {
         lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_YELLOW);
     }
+
+    uint8_t txt[200];
+    draw_debug_line(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+
+//    text_draw_number(rank, '@', "", INFO_X, -100, FONT_NORMAL_YELLOW);
+//    text_draw_number(unlocked, '@', "", INFO_X, -80, FONT_NORMAL_YELLOW);
+//    text_draw_number(beaten, '@', "", INFO_X, -60, FONT_NORMAL_YELLOW);
 }
 static void draw_side_panel_info() {
     switch (data.dialog) {
@@ -338,13 +354,17 @@ static void draw_side_panel_info() {
             if (panel->get_selected_entry_idx() == -1)
                 return;
             int scenario_id = scenario_campaign_scenario_id();
-            const lang_message *msg = lang_get_message(200 + scenario_id);
 
             // scenario name
-            text_draw_centered(msg->title.text, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+            uint8_t name[300];
+            string_copy(game_mission_get_name(scenario_id), name, 300);
+            int i = index_of_string(name, string_from_ascii("("), 300);
+            if (i > 0)
+                name[i - 1] = NULL;
+            text_draw_centered(name, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
             // subtitle
-            text_draw_centered(msg->subtitle.text, INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
+            text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
 
             // starting year
             lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
@@ -432,6 +452,8 @@ static void button_select_item(int index, int param2) {
     window_invalidate();
 }
 static void button_start_scenario(int param1, int param2) {
+    if (scenario_campaign_scenario_id() == -1)
+        return;
     game_start_loaded_scenario();
 }
 static void button_scores_or_goals(int param1, int param2) {

@@ -1,6 +1,44 @@
 #ifndef GAME_MISSION_H
 #define GAME_MISSION_H
 
+#include <cstdint>
+
+typedef struct mission_step_t;
+typedef struct mission_choice_branch_t;
+
+#define MAX_MISSION_CHOICE_BRANCHES 5
+#define MAX_MISSION_CAMPAIGNS 10
+
+struct mission_choice_branch_t {
+    int path_id = -1;
+    int x;
+    int y;
+    int text_id;
+    mission_step_t *next_play = nullptr;
+};
+
+struct mission_step_t {
+    int scenario_id = -1;
+    int intro_MM = -1;
+    int victory_text_id = -1;
+    int path_ids[MAX_MISSION_CHOICE_BRANCHES] = { -1 }; // all elements initialized to -1
+    const uint8_t *map_name;
+    mission_step_t *requirements[MAX_MISSION_CHOICE_BRANCHES];
+
+    // choices
+    int graphics_id;
+    int text_id;
+    mission_choice_branch_t branches[MAX_MISSION_CHOICE_BRANCHES];
+    int num_branches = 0;
+
+    bool has_choice = false;
+    bool is_campaign_end = false;
+    int campaign_id = -1;
+    int mission_rank = -1;
+    mission_step_t *previous_in_list = nullptr;
+    mission_step_t *next_in_list = nullptr;
+};
+
 enum {
     SCENARIO_NULL = -1,
 
@@ -85,92 +123,88 @@ enum {
     CAMPAIGN_CLEOPATRA_ANCIENT_CONQUERORS = 7,
     CAMPAIGN_CLEOPATRA_CLEOPATRAS_CAPITAL = 8,
     //
-    CAMPAIGN_MAX
+    CAMPAIGN_MAX = MAX_MISSION_CAMPAIGNS
 };
 
-static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
-        SCENARIO_PERWADJYT,
-        SCENARIO_ABEDJU,
-        SCENARIO_DUNQUL_OASIS,
-        SCENARIO_BUBASTIS,
-        SCENARIO_HETEPSENUSRET,
-        ///
-        SCENARIO_VALLEY_SETI,
-        SCENARIO_RAMSES_IN_THE_VALLEY,
-        SCENARIO_TANIS,
-        SCENARIO_ACTIUM
-};
+//static const int SCENARIO_LAST_IN_CAMPAIGN[] = {
+//        SCENARIO_PERWADJYT,
+//        SCENARIO_ABEDJU,
+//        SCENARIO_DUNQUL_OASIS,
+//        SCENARIO_BUBASTIS,
+//        SCENARIO_HETEPSENUSRET,
+//        ///
+//        SCENARIO_VALLEY_SETI,
+//        SCENARIO_RAMSES_IN_THE_VALLEY,
+//        SCENARIO_TANIS,
+//        SCENARIO_ACTIUM
+//};
 
-int get_mission_campaign_id(int scenario_id);
-int get_first_mission_in_campaign(int campaign_id);
-int get_last_mission_in_campaign(int campaign_id);
-
-static const struct {
-    int req_beaten[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
-} SCENARIO_REQUIREMENTS_PH[] = {
-        {}, // nubt
-        {}, // thinis
-        {}, // perwadjyt
-        //
-        {}, // nekhen
-        {}, // men-nefer
-        {}, // timna
-        {SCENARIO_TIMNA}, // behdet
-        {SCENARIO_TIMNA}, // abedju
-        //
-        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // selima oasis
-        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // abu
-        {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, // saqqara
-        {SCENARIO_SAQQARA}, // serabit khadim
-        {SCENARIO_SAQQARA}, // meidum
-        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // buhen
-        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // south dashur
-        {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, // north dashur
-        {SCENARIO_NORTH_DASHUR}, // iunet
-        {SCENARIO_NORTH_DASHUR}, // on
-        {SCENARIO_IUNET, SCENARIO_ON}, // rostja
-        {SCENARIO_ROSTJA}, // bahariya oasis
-        {SCENARIO_ROSTJA}, // djedu
-        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dakhla oasis
-        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dunqul oasis
-        //
-        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // thinis
-        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // waset
-        {SCENARIO_THINIS_2, SCENARIO_WASET}, // kebet
-        {SCENARIO_THINIS_2, SCENARIO_WASET}, // menat khufu
-        {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, // itjtawy
-        {SCENARIO_ITJTAWY}, // iken
-        {SCENARIO_ITJTAWY}, // sawu
-        {SCENARIO_IKEN, SCENARIO_SAWU}, // heh
-        {SCENARIO_IKEN, SCENARIO_SAWU}, // bubastis
-        //
-        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // khmun
-        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // sauty
-        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // byblos
-        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // baki
-        {SCENARIO_BYBLOS}, // rowarty
-        {SCENARIO_BAKI}, // hetepsenusret
-
-        // cleopatra
-        {},
-        {},
-        {},
-        //
-        {},
-        {},
-        {},
-        {},
-        //
-        {},
-        {},
-        {},
-        //
-        {},
-        {},
-        {},
-        {},
-        {}
-};
+//static const struct {
+//    int req_beaten[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
+//} SCENARIO_REQUIREMENTS_PH[] = {
+//        {}, // nubt
+//        {}, // thinis
+//        {}, // perwadjyt
+//        //
+//        {}, // nekhen
+//        {}, // men-nefer
+//        {}, // timna
+//        {SCENARIO_TIMNA}, // behdet
+//        {SCENARIO_TIMNA}, // abedju
+//        //
+//        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // selima oasis
+//        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, // abu
+//        {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, // saqqara
+//        {SCENARIO_SAQQARA}, // serabit khadim
+//        {SCENARIO_SAQQARA}, // meidum
+//        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // buhen
+//        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, // south dashur
+//        {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, // north dashur
+//        {SCENARIO_NORTH_DASHUR}, // iunet
+//        {SCENARIO_NORTH_DASHUR}, // on
+//        {SCENARIO_IUNET, SCENARIO_ON}, // rostja
+//        {SCENARIO_ROSTJA}, // bahariya oasis
+//        {SCENARIO_ROSTJA}, // djedu
+//        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dakhla oasis
+//        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, // dunqul oasis
+//        //
+//        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // thinis
+//        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, // waset
+//        {SCENARIO_THINIS_2, SCENARIO_WASET}, // kebet
+//        {SCENARIO_THINIS_2, SCENARIO_WASET}, // menat khufu
+//        {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, // itjtawy
+//        {SCENARIO_ITJTAWY}, // iken
+//        {SCENARIO_ITJTAWY}, // sawu
+//        {SCENARIO_IKEN, SCENARIO_SAWU}, // heh
+//        {SCENARIO_IKEN, SCENARIO_SAWU}, // bubastis
+//        //
+//        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // khmun
+//        {SCENARIO_HEH, SCENARIO_BUBASTIS}, // sauty
+//        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // byblos
+//        {SCENARIO_KHMUN, SCENARIO_SAUTY}, // baki
+//        {SCENARIO_BYBLOS}, // rowarty
+//        {SCENARIO_BAKI}, // hetepsenusret
+//
+//        // cleopatra
+//        {},
+//        {},
+//        {},
+//        //
+//        {},
+//        {},
+//        {},
+//        {},
+//        //
+//        {},
+//        {},
+//        {},
+//        //
+//        {},
+//        {},
+//        {},
+//        {},
+//        {}
+//};
 
 //static const int RANK_CHOICE_C3[] = {
 //        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
@@ -186,52 +220,63 @@ static const struct {
 //};
 
 // lookup table converting MISSION RANK to SCENARIO ID.
-static const struct {
-    int scenario[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
-} MISSION_RANK_TO_SCENARIO[] = {
-        {SCENARIO_NUBT}, // <-- no scenario will invoke this rank     0
-        {SCENARIO_NEKHEN}, //                                         1
-        {SCENARIO_PERWADJYT}, //                                      2
-        //
-        {SCENARIO_NEKHEN}, //                                         3
-        {SCENARIO_MEN_NEFER}, //                                      4
-        {SCENARIO_TIMNA}, //                                          5
-        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, //               6
-        //
-        {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, //            7
-        {SCENARIO_SAQQARA}, //                                        8
-        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, //       9
-        {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, //         10
-        {SCENARIO_NORTH_DASHUR}, //                                  11
-        {SCENARIO_IUNET, SCENARIO_ON}, //                   12
-        {SCENARIO_ROSTJA}, //                                        13
-        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, //       14
-        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, //  15
-        //
-        {SCENARIO_THINIS_2, SCENARIO_WASET}, //             16
-        {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, //          17
-        {SCENARIO_ITJTAWY}, //                                       18
-        {SCENARIO_IKEN, SCENARIO_SAWU}, //                  19
-        {SCENARIO_HEH, SCENARIO_BUBASTIS}, //               20
-        //
-        {SCENARIO_KHMUN, SCENARIO_SAUTY}, //                21
-        {SCENARIO_BYBLOS, SCENARIO_BAKI}, //                22
-        {SCENARIO_ROWARTY}, //                                       23 <--- GOD.
-        {SCENARIO_HETEPSENUSRET}, //                                 24 <--- GOD.
-};
+//static const struct {
+//    int scenario[3] = {SCENARIO_NULL, SCENARIO_NULL, SCENARIO_NULL};
+//} MISSION_RANK_TO_SCENARIO[] = {
+//        {SCENARIO_NUBT}, // <-- no scenario will invoke this rank     0
+//        {SCENARIO_NEKHEN}, //                                         1
+//        {SCENARIO_PERWADJYT}, //                                      2
+//        //
+//        {SCENARIO_NEKHEN}, //                                         3
+//        {SCENARIO_MEN_NEFER}, //                                      4
+//        {SCENARIO_TIMNA}, //                                          5
+//        {SCENARIO_BEHDET, SCENARIO_ABEDJU}, //               6
+//        //
+//        {SCENARIO_SELIMA_OASIS, SCENARIO_ABU}, //            7
+//        {SCENARIO_SAQQARA}, //                                        8
+//        {SCENARIO_SERABIT_KHADIM, SCENARIO_MEIDUM}, //       9
+//        {SCENARIO_BUHEN, SCENARIO_SOUTH_DASHUR}, //         10
+//        {SCENARIO_NORTH_DASHUR}, //                                  11
+//        {SCENARIO_IUNET, SCENARIO_ON}, //                   12
+//        {SCENARIO_ROSTJA}, //                                        13
+//        {SCENARIO_BAHARIYA_OASIS, SCENARIO_DJEDU}, //       14
+//        {SCENARIO_DAKHLA_OASIS, SCENARIO_DUNQUL_OASIS}, //  15
+//        //
+//        {SCENARIO_THINIS_2, SCENARIO_WASET}, //             16
+//        {SCENARIO_KEBET, SCENARIO_MENAT_KHUFU}, //          17
+//        {SCENARIO_ITJTAWY}, //                                       18
+//        {SCENARIO_IKEN, SCENARIO_SAWU}, //                  19
+//        {SCENARIO_HEH, SCENARIO_BUBASTIS}, //               20
+//        //
+//        {SCENARIO_KHMUN, SCENARIO_SAUTY}, //                21
+//        {SCENARIO_BYBLOS, SCENARIO_BAKI}, //                22
+//        {SCENARIO_ROWARTY}, //                                       23 <--- GOD.
+//        {SCENARIO_HETEPSENUSRET}, //                                 24 <--- GOD.
+//};
 // lookup table converting SCENARIO ID to MISSION RANK.
-static const int SCENARIO_TO_MISSION_RANK[] = {
-        0, 1, 2,
-        3, 4, 5, 6, 6,
-        7, 7, 8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 14, 15, 15,
-        16, 16, 17, 17, 18, 19, 19, 20, 20,
-        21, 21, 22, 22, 23, 24, // <-- the last two are the same "rank" but are unlocked separately!
-};
+//static const int SCENARIO_TO_MISSION_RANK[] = {
+//        0, 1, 2,
+//        3, 4, 5, 6, 6,
+//        7, 7, 8, 9, 9, 10, 10, 11, 12, 12, 13, 14, 14, 15, 15,
+//        16, 16, 17, 17, 18, 19, 19, 20, 20,
+//        21, 21, 22, 22, 23, 24, // <-- the last two are the same "rank" but are unlocked separately!
+//};
+
+const uint8_t *game_mission_get_name(int scenario_id);
+const mission_step_t *get_campaign_mission_step_data(int campaign_id, int step_index);
+const mission_step_t *get_scenario_step_data(int scenario_id);
+
+int get_scenario_mission_rank(int scenario_id);
+int get_scenario_campaign_id(int scenario_id);
+int get_first_mission_in_campaign(int campaign_id);
+int get_last_mission_in_campaign(int campaign_id);
 
 bool game_mission_has_choice(void);
 
 bool game_campaign_unlocked(int campaign_id);
 bool game_scenario_unlocked(int scenario_id);
 bool game_scenario_beaten(int scenario_id);
+
+bool game_load_campaign_file();
 
 #endif // GAME_MISSION_H

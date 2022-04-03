@@ -248,14 +248,14 @@ static void initialize_saved_game(void) {
 
     game_state_unpause();
 }
+static buffer *offset_buf = new buffer(4);
 static int get_campaign_scenario_offset(int scenario_id) {
     // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
-    buffer *buf = new buffer(4);
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, buf, 4, 4 * scenario_id))
+    offset_buf->clear();
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_buf, 4, 4 * scenario_id))
         return 0;
-    return buf->read_i32();
+    return offset_buf->read_i32();
 }
-
 static bool game_load_scenario_savegame(const char *filename) {}
 static bool game_load_scenario_pak_mission(int scenario_id) {
     int offset = get_campaign_scenario_offset(scenario_id);
@@ -271,9 +271,8 @@ static bool game_load_scenario_pak_mission(int scenario_id) {
     initialize_saved_game();
     scenario_fix_patch_trade(scenario_id);
 
-    int rank = SCENARIO_TO_MISSION_RANK[scenario_id];
     scenario_set_campaign_scenario(scenario_id);
-    scenario_set_campaign_rank(rank);
+    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_id));
 
     city_data_init_campaign_mission();
 
@@ -284,7 +283,9 @@ static bool game_load_scenario_custom_map(const char *filename) {
         return false;
 
     clear_scenario_data();
-    if (!game_file_io_read_scenario(filename)) // TODO
+//    if (!game_file_io_read_scenario(filename)) // TODO
+//        return false;
+    if (!game_file_io_read_saved_game(filename, 0)) // TODO
         return false;
 
     // post-load
@@ -296,6 +297,7 @@ static bool game_load_scenario_custom_map(const char *filename) {
 }
 
 static bool pre_load() {
+    scenario_set_campaign_scenario(-1);
     map_bookmarks_clear();
     return true;
 }
