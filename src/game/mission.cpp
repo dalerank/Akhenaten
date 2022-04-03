@@ -147,6 +147,26 @@ bool game_campaign_unlocked(int campaign_id) {
 //            return game_scenario_unlocked(SCENARIO_ALEXANDRIA_1);
 //    }
 }
+bool is_step_unlocked(const mission_step_t *step) {
+    if (step->requirements[0] == nullptr)
+        return true;
+    // if otherwise specified, this scenario requires specific ones to unlock;
+    // any one of them in the req. group will suffice to unlock the scenario.
+    for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
+
+        auto req = step->requirements[i];
+        if (req != nullptr) {
+            if (req->scenario_id == SCENARIO_NULL) { // a dangling choice screen: traverse the tree upwards
+                if (is_step_unlocked(req))
+                    return true;
+            } else { // found a valid mission field
+                if (game_scenario_beaten(req->scenario_id))
+                    return true;
+            }
+        }
+    }
+    return false;
+}
 bool game_scenario_unlocked(int scenario_id) {
     if (scenario_id < 0 || scenario_id >= SCENARIO_MAX) // invalid mission index
         return false;
@@ -155,20 +175,8 @@ bool game_scenario_unlocked(int scenario_id) {
         case SCENARIO_VALLEY_THUTMOSE:
             return true; // first mission is always unlocked
     }
-//    const int *requirements = SCENARIO_REQUIREMENTS_PH[scenario_id].req_beaten;
     auto step = get_scenario_step_data(scenario_id);
-//    auto requirements = step->requirements;
-    // by default, beating the previous scenario will unlock the scenario.
-    if (step->requirements[0] == nullptr)
-        return true;
-//        return game_scenario_beaten(scenario_id - 1);
-    // if otherwise specified, this scenario requires specific ones to unlock;
-    // any one of them in the req. group will suffice to unlock the scenario.
-    for (int i = 0; i < MAX_MISSION_CHOICE_BRANCHES; ++i) {
-        if (step->requirements[i] != nullptr && step->requirements[i]->scenario_id != SCENARIO_NULL)
-            if (game_scenario_beaten(step->requirements[i]->scenario_id))
-                return true;
-    }
+    return is_step_unlocked(step);
 }
 bool game_scenario_beaten(int scenario_id) {
     if (scenario_id < 0 || scenario_id >= SCENARIO_MAX) // invalid mission index
@@ -286,6 +294,11 @@ bool game_load_campaign_file() {
                         ptr = get_value(ptr, endl, &step->text_id);
                         if (step->scenario_id == -1) { // a choice screen invoked automatically, with no previous scenario
                             step->path_ids[0] = 0;
+                        }
+                        if (step->scenario_id == -1 && data.num_campaigns > 1) { // dangling choice screen at the start of a campaign!!
+                            auto prev_campaign = &data.campaigns[data.num_campaigns - 2];
+                            step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
+                            step->previous_in_list->next_in_list = step;
                         }
                     } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) { // choice branch data
                         auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.

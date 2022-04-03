@@ -305,9 +305,14 @@ static void draw_scores(int scenario_id) {
         lang_text_draw_multiline(305, 0, INFO_X, INFO_Y, INFO_W, FONT_NORMAL_YELLOW);
     }
 
-    text_draw_number(rank, '@', "", INFO_X, -100, FONT_NORMAL_YELLOW);
-    text_draw_number(unlocked, '@', "", INFO_X, -80, FONT_NORMAL_YELLOW);
-    text_draw_number(beaten, '@', "", INFO_X, -60, FONT_NORMAL_YELLOW);
+    uint8_t txt[200];
+    draw_debug_line(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
+
+//    text_draw_number(rank, '@', "", INFO_X, -100, FONT_NORMAL_YELLOW);
+//    text_draw_number(unlocked, '@', "", INFO_X, -80, FONT_NORMAL_YELLOW);
+//    text_draw_number(beaten, '@', "", INFO_X, -60, FONT_NORMAL_YELLOW);
 }
 static void draw_side_panel_info() {
     switch (data.dialog) {
