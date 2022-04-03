@@ -352,7 +352,8 @@ int map_floodplain_rebuild_shoreorder() {
     map_grid_fill(&terrain_floodplain_growth, 0);
     map_grid_fill(&terrain_floodplain_max_fertile, 0);
     for (int order = 0; order < 30; order++) {
-        floodplain_offsets[order].initialized = false;
+//        floodplain_offsets[order].initialized = false;
+//        floodplain_offsets[order].offsets = nullptr;
         floodplain_offsets[order].amount = 0;
     }
     river_total_tiles = 0;
@@ -437,10 +438,13 @@ int map_floodplain_rebuild_shoreorder() {
 
         // build long-term order list cache!
         floodplain_order *order_cache = &floodplain_offsets[order];
-        if (order_cache->initialized)
-            free(order_cache->offsets);
-        order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
-        order_cache->initialized = true;
+//        if (order_cache->initialized)
+//            free(order_cache->offsets);
+//        order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
+//        order_cache->initialized = true;
+        if (order_cache->offsets != nullptr)
+            delete[] order_cache->offsets;
+        order_cache->offsets = new uint32_t[temp_cache_howmany];
         order_cache->amount = temp_cache_howmany;
         for (int o = 0; o < temp_cache_howmany; o++)
             order_cache->offsets[o] = temp_cache_buffer[o];
@@ -464,10 +468,13 @@ int map_floodplain_rebuild_shoreorder() {
     }
     // fill in the last order!
     floodplain_order *order_cache = &floodplain_offsets[29];
-    if (order_cache->initialized)
-        free(order_cache->offsets);
-    order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
-    order_cache->initialized = true;
+//    if (order_cache->initialized)
+//        free(order_cache->offsets);
+//    order_cache->offsets = (uint32_t*)malloc(temp_cache_howmany * sizeof(uint32_t));
+//    order_cache->initialized = true;
+    if (order_cache->offsets != nullptr)
+        delete[] order_cache->offsets;
+    order_cache->offsets = new uint32_t[temp_cache_howmany];
     order_cache->amount = temp_cache_howmany;
     for (int o = 0; o < temp_cache_howmany; o++)
         order_cache->offsets[o] = temp_cache_buffer[o];

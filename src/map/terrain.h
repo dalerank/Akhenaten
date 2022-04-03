@@ -114,8 +114,8 @@ extern int river_total_tiles;
 extern int floodplain_total_tiles;
 
 typedef struct floodplain_order {
-    bool initialized = false;
-    uint32_t *offsets;
+//    bool initialized = false;
+    uint32_t *offsets = nullptr;
     uint32_t amount;
 } floodplain_order;
 

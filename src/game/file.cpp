@@ -258,6 +258,7 @@ static int get_campaign_scenario_offset(int scenario_id) {
 }
 static bool game_load_scenario_savegame(const char *filename) {}
 static bool game_load_scenario_pak_mission(int scenario_id) {
+
     int offset = get_campaign_scenario_offset(scenario_id);
     if (offset <= 0)
         return false;
@@ -345,6 +346,7 @@ bool game_load_scenario(const uint8_t *scenario_name, bool start_immediately) {
         return true;
 }
 bool game_load_scenario(int scenario_id, bool start_immediately) {
+
     if (!pre_load()) return false;
 
     // pak loading
