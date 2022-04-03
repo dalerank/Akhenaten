@@ -6,6 +6,18 @@
 #include <algorithm>
 #include <cassert>
 
+void safe_realloc_for_size(buffer **p_buf, int size) {
+    if (*p_buf == nullptr)
+        *p_buf = new buffer(size);
+    else {
+        if ((*p_buf)->size() != size) {
+            delete (*p_buf);
+            *p_buf = new buffer(size);
+        } else
+            (*p_buf)->clear();
+    }
+}
+
 buffer::buffer():
     data{std::vector<uint8_t>()}, index{0} {
 }
@@ -56,6 +68,8 @@ void buffer::skip(size_t s) {
 }
 
 bool buffer::is_valid(size_t count) const {
+    if (this == nullptr)
+        return false; // eh........ if it works, it works
     bool result = true;
     if (index + count > size()) {
         result = false;

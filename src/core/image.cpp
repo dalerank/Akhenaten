@@ -94,17 +94,18 @@ static int convert_compressed(buffer *buf, int amount, color_t *dst) {
     }
     return dst_length;
 }
+static buffer *temp_external_image_buf = nullptr;
 static const color_t *load_external_data(const image *img) {
     char filename[FILE_NAME_MAX];
     int size = 0;
-    buffer *buf = new buffer(img->draw.data_length);
+    safe_realloc_for_size(&temp_external_image_buf, img->draw.data_length);
     switch (GAME_ENV) {
         case ENGINE_ENV_C3:
             strcpy(&filename[0], "555/");
             strcpy(&filename[4], img->draw.bitmap_name);
             file_change_extension(filename, "555");
             size = io_read_file_part_into_buffer(
-                    &filename[4], MAY_BE_LOCALIZED, buf,
+                    &filename[4], MAY_BE_LOCALIZED, temp_external_image_buf,
                     img->draw.data_length, img->draw.offset - 1
             );
             break;
@@ -113,7 +114,7 @@ static const color_t *load_external_data(const image *img) {
             strcpy(&filename[5], img->draw.bitmap_name);
             file_change_extension(filename, "555");
             size = io_read_file_part_into_buffer(
-                    &filename[5], MAY_BE_LOCALIZED, buf,
+                    &filename[5], MAY_BE_LOCALIZED, temp_external_image_buf,
                     img->draw.data_length, img->draw.offset - 1
             );
             break;
@@ -121,7 +122,7 @@ static const color_t *load_external_data(const image *img) {
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-                filename, MAY_BE_LOCALIZED, buf,
+                filename, MAY_BE_LOCALIZED, temp_external_image_buf,
                 img->draw.data_length, img->draw.offset - 1
         );
         if (!size) {
@@ -133,9 +134,9 @@ static const color_t *load_external_data(const image *img) {
 
     // NB: isometric images are never external
     if (img->draw.is_fully_compressed)
-        convert_compressed(buf, img->draw.data_length, data.tmp_image_data);
+        convert_compressed(temp_external_image_buf, img->draw.data_length, data.tmp_image_data);
     else {
-        convert_uncompressed(buf, img->draw.data_length, data.tmp_image_data);
+        convert_uncompressed(temp_external_image_buf, img->draw.data_length, data.tmp_image_data);
     }
     return data.tmp_image_data;
 }
@@ -162,6 +163,7 @@ imagepak::~imagepak() {
     delete image_data;
 }
 
+buffer *scratch_data_buf = nullptr;
 bool imagepak::load_pak(const char *filename_partial, int starting_index) {
 
     //////////////////////////////////////////////////////////////////
@@ -193,8 +195,8 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     string_copy(string_from_ascii(".sg3"), &filename_sgx[str_index], 5);
 
     // prepare sgx data
-    buffer *buf = new buffer(SCRATCH_DATA_SIZE);
-    if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
+    safe_realloc_for_size(&scratch_data_buf, SCRATCH_DATA_SIZE);
+    if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, scratch_data_buf, SCRATCH_DATA_SIZE)) //int MAIN_INDEX_SIZE = 660680;
         return false;
     int HEADER_SIZE = 0;
     if (file_has_extension((const char*)filename_sgx, "sg2"))
@@ -203,7 +205,7 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
         HEADER_SIZE = 40680; //
 
     // read header
-    buf->read_raw(header_data, sizeof(uint32_t) * 10);
+    scratch_data_buf->read_raw(header_data, sizeof(uint32_t) * 10);
 
     // allocate arrays
     entries_num = (size_t) header_data[4] + 1;
@@ -211,7 +213,7 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     images = new image[entries_num];
     image_data = new color_t[entries_num * 10000];
 
-    buf->skip(40); // skip remaining 40 bytes
+    scratch_data_buf->skip(40); // skip remaining 40 bytes
 
     // adjust global index (depends on the pak)
     id_shift_overall = starting_index;
@@ -219,7 +221,7 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     // parse groups (always a fixed 300 pool)
     groups_num = 0;
     for (int i = 0; i < 300; i++) {
-        group_image_ids[i] = buf->read_u16();
+        group_image_ids[i] = scratch_data_buf->read_u16();
         if (group_image_ids[i] != 0 || i == 0) {
             groups_num++;
 //            SDL_Log("%s group %i -> id %i", filename_sgx, i, group_image_ids[i]);
@@ -231,10 +233,10 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     // header (100 for good measure) and 18 in Pharaoh_General.sg3
     int num_bmp_names = (int)header_data[5];
     char bmp_names[num_bmp_names][200];
-    buf->read_raw(bmp_names, 200 * num_bmp_names);
+    scratch_data_buf->read_raw(bmp_names, 200 * num_bmp_names);
 
     // move on to the rest of the content
-    buf->set_offset(HEADER_SIZE);
+    scratch_data_buf->set_offset(HEADER_SIZE);
 
     //////////////////////////////////////////////////////////////////
     auto TIME_HEADER = std::chrono::high_resolution_clock::now();
@@ -245,27 +247,27 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     int bmp_lastindex = 1;
     for (int i = 0; i < entries_num; i++) {
         image img;
-        img.draw.offset = buf->read_i32();
-        img.draw.data_length = buf->read_i32();
-        img.draw.uncompressed_length = buf->read_i32();
-        buf->skip(4);
-        img.offset_mirror = buf->read_i32(); // .sg3 only
-        img.width = buf->read_u16();
-        img.height = buf->read_u16();
-        buf->skip(6);
-        img.num_animation_sprites = buf->read_u16();
-        buf->skip(2);
-        img.sprite_offset_x = buf->read_i16();
-        img.sprite_offset_y = buf->read_i16();
-        buf->skip(10);
-        img.animation_can_reverse = buf->read_i8();
-        buf->skip(1);
-        img.draw.type = buf->read_u8();
-        img.draw.is_fully_compressed = buf->read_i8();
-        img.draw.is_external = buf->read_i8();
-        img.draw.has_compressed_part = buf->read_i8();
-        buf->skip(2);
-        int bitmap_id = buf->read_u8();
+        img.draw.offset = scratch_data_buf->read_i32();
+        img.draw.data_length = scratch_data_buf->read_i32();
+        img.draw.uncompressed_length = scratch_data_buf->read_i32();
+        scratch_data_buf->skip(4);
+        img.offset_mirror = scratch_data_buf->read_i32(); // .sg3 only
+        img.width = scratch_data_buf->read_u16();
+        img.height = scratch_data_buf->read_u16();
+        scratch_data_buf->skip(6);
+        img.num_animation_sprites = scratch_data_buf->read_u16();
+        scratch_data_buf->skip(2);
+        img.sprite_offset_x = scratch_data_buf->read_i16();
+        img.sprite_offset_y = scratch_data_buf->read_i16();
+        scratch_data_buf->skip(10);
+        img.animation_can_reverse = scratch_data_buf->read_i8();
+        scratch_data_buf->skip(1);
+        img.draw.type = scratch_data_buf->read_u8();
+        img.draw.is_fully_compressed = scratch_data_buf->read_i8();
+        img.draw.is_external = scratch_data_buf->read_i8();
+        img.draw.has_compressed_part = scratch_data_buf->read_i8();
+        scratch_data_buf->skip(2);
+        int bitmap_id = scratch_data_buf->read_u8();
         const char *bmn = bmp_names[bitmap_id];
         strncpy(img.draw.bitmap_name, bmn, 200);
         if (bitmap_id != bmp_lastbmp) {// new bitmap name, reset bitmap grouping index
@@ -274,12 +276,12 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
         }
         img.draw.bmp_index = bmp_lastindex;
         bmp_lastindex++;
-        buf->skip(1);
-        img.animation_speed_id = buf->read_u8();
+        scratch_data_buf->skip(1);
+        img.animation_speed_id = scratch_data_buf->read_u8();
         if (header_data[1] < 214)
-            buf->skip(5);
+            scratch_data_buf->skip(5);
         else
-            buf->skip(5 + 8);
+            scratch_data_buf->skip(5 + 8);
         images[i] = img;
         int f = 1;
     }
@@ -302,8 +304,8 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     }
 
     // prepare bitmap data
-    buf->clear();
-    int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, buf, SCRATCH_DATA_SIZE);
+    scratch_data_buf->clear();
+    int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, scratch_data_buf, SCRATCH_DATA_SIZE);
     if (!data_size)
         return false;
 
@@ -315,16 +317,16 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
         image *img = &images[i];
         if (img->draw.is_external)
             continue;
-        buf->set_offset(img->draw.offset);
+        scratch_data_buf->set_offset(img->draw.offset);
         int img_offset = (int) (dst - start_dst);
 
         if (img->draw.is_fully_compressed)
-            dst += convert_compressed(buf, img->draw.data_length, dst);
+            dst += convert_compressed(scratch_data_buf, img->draw.data_length, dst);
         else if (img->draw.has_compressed_part) { // isometric tile
-            dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
-            dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
+            dst += convert_uncompressed(scratch_data_buf, img->draw.uncompressed_length, dst);
+            dst += convert_compressed(scratch_data_buf, img->draw.data_length - img->draw.uncompressed_length, dst);
         } else
-            dst += convert_uncompressed(buf, img->draw.data_length, dst);
+            dst += convert_uncompressed(scratch_data_buf, img->draw.data_length, dst);
 
         img->draw.offset = img_offset;
         img->draw.uncompressed_length /= 2;

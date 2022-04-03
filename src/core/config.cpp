@@ -11,7 +11,7 @@
 static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the ints in config.h
-static const char *ini_keys[] = {
+static const char *ini_keys[CONFIG_MAX_ENTRIES] = {
         "gameplay_fix_immigration",
         "gameplay_fix_100y_ghosts",
         "gameplay_fix_editor_events",
@@ -59,7 +59,7 @@ static const char *ini_keys[] = {
         "gameplay_change_cart_instant_unload",
         "gameplay_change_understaffed_accept_goods",
         "gameplay_change_multiple_temple_complexes",
-        "gameplay_change_multiple_monuments"
+        "gameplay_change_multiple_monuments",
         "gameplay_change_soil_depletion",
 
 };

@@ -4,38 +4,38 @@
 #include "core/buffer.h"
 
 typedef struct scenario_data_buffers {
-    buffer *mission_index = new buffer;
-    buffer *map_name = new buffer;
-    buffer *map_settings = new buffer;
-    buffer *is_custom = new buffer;
-    buffer *player_name = new buffer;
+    buffer *mission_index = nullptr;
+    buffer *map_name = nullptr;
+    buffer *map_settings = nullptr;
+    buffer *is_custom = nullptr;
+    buffer *player_name = nullptr;
 
-    buffer *header = new buffer;
-    buffer *info1 = new buffer;
-    buffer *info2 = new buffer;
-    buffer *info3 = new buffer;
-    buffer *events = new buffer;
-    buffer *win_criteria = new buffer;
-    buffer *map_points = new buffer;
-    buffer *river_points = new buffer;
-    buffer *empire = new buffer;
-    buffer *wheat = new buffer;
-    buffer *climate_id = new buffer;
+    buffer *header = nullptr;
+    buffer *info1 = nullptr;
+    buffer *info2 = nullptr;
+    buffer *info3 = nullptr;
+    buffer *events = nullptr;
+    buffer *win_criteria = nullptr;
+    buffer *map_points = nullptr;
+    buffer *river_points = nullptr;
+    buffer *empire = nullptr;
+    buffer *wheat = nullptr;
+    buffer *climate_id = nullptr;
 
-    buffer *requests = new buffer;
-    buffer *invasions = new buffer;
-    buffer *invasion_points = new buffer;
-    buffer *request_comply_dialogs = new buffer;
-    buffer *herds = new buffer;
-    buffer *demands = new buffer;
-    buffer *price_changes = new buffer;
-    buffer *fishing_points = new buffer;
-    buffer *request_extra = new buffer;
-    buffer *allowed_builds = new buffer;
+    buffer *requests = nullptr;
+    buffer *invasions = nullptr;
+    buffer *invasion_points = nullptr;
+    buffer *request_comply_dialogs = nullptr;
+    buffer *herds = nullptr;
+    buffer *demands = nullptr;
+    buffer *price_changes = nullptr;
+    buffer *fishing_points = nullptr;
+    buffer *request_extra = nullptr;
+    buffer *allowed_builds = nullptr;
 
-    buffer *events_ph = new buffer;
+    buffer *events_ph = nullptr;
 
-    buffer *monuments = new buffer;
+    buffer *monuments = nullptr;
 
 } scenario_data_buffers;
 

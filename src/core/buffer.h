@@ -58,4 +58,6 @@ public:
     size_t to_file(size_t count, FILE *__restrict__ fp) const;
 };
 
+void safe_realloc_for_size(buffer **p_buf, int size);
+
 #endif // CORE_BUFFER_H

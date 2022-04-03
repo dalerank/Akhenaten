@@ -64,29 +64,30 @@ bool empire_city_type_can_trade(int type) {
     return false;
 }
 
+buffer *temp_external_buf_c3 = nullptr;
 void empire_load_external_c3(int is_custom_scenario, int empire_id) {
-    buffer *buf = new buffer(EMPIRE_DATA_SIZE[GAME_ENV]);
+    safe_realloc_for_size(&temp_external_buf_c3, EMPIRE_DATA_SIZE[GAME_ENV]);
     const char *filename = is_custom_scenario ? SCENARIO_FILE[GAME_ENV][0] : SCENARIO_FILE[GAME_ENV][1];
 
     if (is_custom_scenario && GAME_ENV == ENGINE_ENV_PHARAOH) // in Pharaoh, custom map data is saved internally
         return;
 
     // read header with scroll positions
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, 4, 32 * empire_id)) {
-        buf->write_u32(0);
-        buf->reset_offset();
+    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, temp_external_buf_c3, 4, 32 * empire_id)) {
+        temp_external_buf_c3->write_u32(0);
+        temp_external_buf_c3->reset_offset();
     }
-    data.initial_scroll_x = buf->read_i16();
-    data.initial_scroll_y = buf->read_i16();
+    data.initial_scroll_x = temp_external_buf_c3->read_i16();
+    data.initial_scroll_y = temp_external_buf_c3->read_i16();
 
     // read data section with objects
     int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE[GAME_ENV] * empire_id;
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, buf, EMPIRE_DATA_SIZE[GAME_ENV], offset) != EMPIRE_DATA_SIZE[GAME_ENV]) {
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, temp_external_buf_c3, EMPIRE_DATA_SIZE[GAME_ENV], offset) != EMPIRE_DATA_SIZE[GAME_ENV]) {
         // load empty empire when loading fails
         log_error("Unable to load empire data from file", filename, 0);
-        buf->fill(0);
+        temp_external_buf_c3->fill(0);
     }
-    empire_objects_load(buf, is_custom_scenario);
+    empire_objects_load(temp_external_buf_c3, is_custom_scenario);
 }
 void empire_load_internal_ph(buffer *empire_objects, buffer *empire_routes) {
     if (empire_objects->size() == 15200)

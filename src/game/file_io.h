@@ -15,6 +15,7 @@ enum {
     FILE_SAVEGAME = 181
 };
 
+const int *get_file_version();
 bool game_file_io_read_scenario(const char *filename);
 
 bool game_file_io_write_scenario(const char *filename);

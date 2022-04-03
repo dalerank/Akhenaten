@@ -60,7 +60,7 @@
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
-static int savegame_version[2];
+static int file_version[2];
 
 typedef struct {
     buffer *buf;
@@ -69,17 +69,17 @@ typedef struct {
 } file_piece;
 
 typedef struct {
-    buffer *graphic_ids = new buffer;
-    buffer *edge = new buffer;
-    buffer *terrain = new buffer;
-    buffer *bitfields = new buffer;
-    buffer *random = new buffer;
-    buffer *elevation = new buffer;
-    buffer *random_iv = new buffer;
-    buffer *camera = new buffer;
-//    buffer *scenario = new buffer;
+    buffer *graphic_ids = nullptr;
+    buffer *edge = nullptr;
+    buffer *terrain = nullptr;
+    buffer *bitfields = nullptr;
+    buffer *random = nullptr;
+    buffer *elevation = nullptr;
+    buffer *random_iv = nullptr;
+    buffer *camera = nullptr;
+//    buffer *scenario = nullptr;
     scenario_data_buffers SCENARIO;
-    buffer *end_marker = new buffer;
+    buffer *end_marker = nullptr;
 } scenario_state;
 
 static struct {
@@ -89,47 +89,47 @@ static struct {
 } scenario_data = {0};
 
 typedef struct {
-//    buffer *scenario_campaign_mission = new buffer;
-    buffer *file_version = new buffer;
-    buffer *image_grid = new buffer;
-    buffer *edge_grid = new buffer;
-    buffer *building_grid = new buffer;
-    buffer *terrain_grid = new buffer;
-    buffer *aqueduct_grid = new buffer;
-    buffer *figure_grid = new buffer;
-    buffer *bitfields_grid = new buffer;
-    buffer *sprite_grid = new buffer;
-    buffer *random_grid = new buffer;
-    buffer *desirability_grid = new buffer;
-    buffer *elevation_grid = new buffer;
-    buffer *building_damage_grid = new buffer;
-    buffer *aqueduct_backup_grid = new buffer;
-    buffer *sprite_backup_grid = new buffer;
-    buffer *figures = new buffer;
-    buffer *route_figures = new buffer;
-    buffer *route_paths = new buffer;
-    buffer *formations = new buffer;
-    buffer *formation_totals = new buffer;
-    buffer *city_data = new buffer;
-    buffer *city_faction_unknown = new buffer;
-//    buffer *player_name = new buffer;
-    buffer *city_faction = new buffer;
-    buffer *buildings = new buffer;
-    buffer *city_view_orientation = new buffer;
-    buffer *game_time = new buffer;
-    buffer *building_highest_id_ever = new buffer;
-    buffer *random_iv = new buffer;
-    buffer *city_view_camera = new buffer;
-    buffer *building_count_culture1 = new buffer;
-    buffer *city_graph_order = new buffer;
-    buffer *emperor_change_time = new buffer;
-    buffer *empire = new buffer;
-    buffer *empire_cities = new buffer;
-    buffer *building_count_industry = new buffer;
-    buffer *trade_prices = new buffer;
-    buffer *figure_names = new buffer;
-    buffer *culture_coverage = new buffer;
-//    buffer *scenario = new buffer;
+//    buffer *scenario_campaign_mission = nullptr;
+    buffer *file_version = nullptr;
+    buffer *image_grid = nullptr;
+    buffer *edge_grid = nullptr;
+    buffer *building_grid = nullptr;
+    buffer *terrain_grid = nullptr;
+    buffer *aqueduct_grid = nullptr;
+    buffer *figure_grid = nullptr;
+    buffer *bitfields_grid = nullptr;
+    buffer *sprite_grid = nullptr;
+    buffer *random_grid = nullptr;
+    buffer *desirability_grid = nullptr;
+    buffer *elevation_grid = nullptr;
+    buffer *building_damage_grid = nullptr;
+    buffer *aqueduct_backup_grid = nullptr;
+    buffer *sprite_backup_grid = nullptr;
+    buffer *figures = nullptr;
+    buffer *route_figures = nullptr;
+    buffer *route_paths = nullptr;
+    buffer *formations = nullptr;
+    buffer *formation_totals = nullptr;
+    buffer *city_data = nullptr;
+    buffer *city_faction_unknown = nullptr;
+//    buffer *player_name = nullptr;
+    buffer *city_faction = nullptr;
+    buffer *buildings = nullptr;
+    buffer *city_view_orientation = nullptr;
+    buffer *game_time = nullptr;
+    buffer *building_highest_id_ever = nullptr;
+    buffer *random_iv = nullptr;
+    buffer *city_view_camera = nullptr;
+    buffer *building_count_culture1 = nullptr;
+    buffer *city_graph_order = nullptr;
+    buffer *emperor_change_time = nullptr;
+    buffer *empire = nullptr;
+    buffer *empire_cities = nullptr;
+    buffer *building_count_industry = nullptr;
+    buffer *trade_prices = nullptr;
+    buffer *figure_names = nullptr;
+    buffer *culture_coverage = nullptr;
+//    buffer *scenario = nullptr;
 
     // 1. header
     // 2. requests/invasions
@@ -152,119 +152,119 @@ typedef struct {
 
     scenario_data_buffers SCENARIO;
 
-//    buffer *scenario_header = new buffer;
-//        buffer *scenario_request_events = new buffer;
-//        buffer *scenario_invasion_events = new buffer;
-//    buffer *scenario_map_info1 = new buffer;
-//        buffer *scenario_request_can_comply_dialogs = new buffer;
-//    buffer *scenario_map_info2 = new buffer;
-//        buffer *scenario_animal_herds = new buffer;
-//        buffer *scenario_demands = new buffer;
-//    buffer *scenario_random_events = new buffer;
-//        buffer *scenario_fishing_spots = new buffer;
-//        buffer *scenario_requests_extra = new buffer;
-//    buffer *scenario_wheat_rome = new buffer;
-//        buffer *scenario_allowed_buildings = new buffer;
-//    buffer *scenario_win_criteria = new buffer;
-//    buffer *scenario_map_points = new buffer;
-//        buffer *scenario_invasion_points = new buffer;
-//    buffer *scenario_river_entry = new buffer;
-//    buffer *scenario_map_info3 = new buffer;
-//    buffer *scenario_empire_info = new buffer;
+//    buffer *scenario_header = nullptr;
+//        buffer *scenario_request_events = nullptr;
+//        buffer *scenario_invasion_events = nullptr;
+//    buffer *scenario_map_info1 = nullptr;
+//        buffer *scenario_request_can_comply_dialogs = nullptr;
+//    buffer *scenario_map_info2 = nullptr;
+//        buffer *scenario_animal_herds = nullptr;
+//        buffer *scenario_demands = nullptr;
+//    buffer *scenario_random_events = nullptr;
+//        buffer *scenario_fishing_spots = nullptr;
+//        buffer *scenario_requests_extra = nullptr;
+//    buffer *scenario_wheat_rome = nullptr;
+//        buffer *scenario_allowed_buildings = nullptr;
+//    buffer *scenario_win_criteria = nullptr;
+//    buffer *scenario_map_points = nullptr;
+//        buffer *scenario_invasion_points = nullptr;
+//    buffer *scenario_river_entry = nullptr;
+//    buffer *scenario_map_info3 = nullptr;
+//    buffer *scenario_empire_info = nullptr;
 
-    buffer *max_game_year = new buffer;
-    buffer *earthquake = new buffer;
-    buffer *emperor_change_state = new buffer;
-    buffer *messages = new buffer;
-    buffer *message_extra = new buffer;
-    buffer *population_messages = new buffer;
-    buffer *message_counts = new buffer;
-    buffer *message_delays = new buffer;
-    buffer *building_list_burning_totals = new buffer;
-    buffer *figure_sequence = new buffer;
-//    buffer *scenario_settings = new buffer;
-    buffer *invasion_warnings = new buffer;
-//    buffer *scenario_is_custom = new buffer;
-    buffer *city_sounds = new buffer;
-    buffer *building_highest_id = new buffer;
-    buffer *figure_traders = new buffer;
-    buffer *building_list_burning = new buffer;
-    buffer *building_list_small = new buffer;
-    buffer *building_list_large = new buffer;
-    buffer *tutorial_part1 = new buffer;
-    buffer *building_count_military = new buffer;
-    buffer *enemy_army_totals = new buffer;
-    buffer *building_storages = new buffer;
-    buffer *building_count_culture2 = new buffer;
-    buffer *building_count_support = new buffer;
-    buffer *tutorial_part2 = new buffer;
-    buffer *gladiator_revolt = new buffer;
-    buffer *trade_route_limit = new buffer;
-    buffer *trade_route_traded = new buffer;
-    buffer *building_barracks_tower_sentry = new buffer;
-    buffer *building_extra_sequence = new buffer;
-    buffer *routing_counters = new buffer;
-    buffer *building_count_culture3 = new buffer;
-    buffer *enemy_armies = new buffer;
-    buffer *city_entry_exit_xy = new buffer;
-    buffer *last_invasion_id = new buffer;
-    buffer *building_extra_corrupt_houses = new buffer;
-//    buffer *scenario_name = new buffer;
-    buffer *bookmarks = new buffer;
-    buffer *tutorial_part3 = new buffer;
-    buffer *empire_map_objects = new buffer;
-    buffer *city_entry_exit_grid_offset = new buffer;
-    buffer *floodplain_settings = new buffer;
-    buffer *moisture_grid = new buffer;
-    buffer *bizarre_ordered_fields_4 = new buffer;
+    buffer *max_game_year = nullptr;
+    buffer *earthquake = nullptr;
+    buffer *emperor_change_state = nullptr;
+    buffer *messages = nullptr;
+    buffer *message_extra = nullptr;
+    buffer *population_messages = nullptr;
+    buffer *message_counts = nullptr;
+    buffer *message_delays = nullptr;
+    buffer *building_list_burning_totals = nullptr;
+    buffer *figure_sequence = nullptr;
+//    buffer *scenario_settings = nullptr;
+    buffer *invasion_warnings = nullptr;
+//    buffer *scenario_is_custom = nullptr;
+    buffer *city_sounds = nullptr;
+    buffer *building_highest_id = nullptr;
+    buffer *figure_traders = nullptr;
+    buffer *building_list_burning = nullptr;
+    buffer *building_list_small = nullptr;
+    buffer *building_list_large = nullptr;
+    buffer *tutorial_part1 = nullptr;
+    buffer *building_count_military = nullptr;
+    buffer *enemy_army_totals = nullptr;
+    buffer *building_storages = nullptr;
+    buffer *building_count_culture2 = nullptr;
+    buffer *building_count_support = nullptr;
+    buffer *tutorial_part2 = nullptr;
+    buffer *gladiator_revolt = nullptr;
+    buffer *trade_route_limit = nullptr;
+    buffer *trade_route_traded = nullptr;
+    buffer *building_barracks_tower_sentry = nullptr;
+    buffer *building_extra_sequence = nullptr;
+    buffer *routing_counters = nullptr;
+    buffer *building_count_culture3 = nullptr;
+    buffer *enemy_armies = nullptr;
+    buffer *city_entry_exit_xy = nullptr;
+    buffer *last_invasion_id = nullptr;
+    buffer *building_extra_corrupt_houses = nullptr;
+//    buffer *scenario_name = nullptr;
+    buffer *bookmarks = nullptr;
+    buffer *tutorial_part3 = nullptr;
+    buffer *empire_map_objects = nullptr;
+    buffer *city_entry_exit_grid_offset = nullptr;
+    buffer *floodplain_settings = nullptr;
+    buffer *moisture_grid = nullptr;
+    buffer *bizarre_ordered_fields_4 = nullptr;
 
-    buffer *junk1 = new buffer;
-    buffer *junk2a = new buffer;
-    buffer *junk2b = new buffer;
-    buffer *junk2c = new buffer;
-    buffer *junk2d = new buffer;
-    buffer *junk3 = new buffer;
-    buffer *junk4a = new buffer;
-    buffer *junk4b = new buffer;
-    buffer *junk4c = new buffer;
-    buffer *junk4d = new buffer;
-    buffer *junk4e = new buffer;
-    buffer *junk4f = new buffer;
-    buffer *junk5 = new buffer;
-    buffer *junk6a = new buffer;
-    buffer *junk6b = new buffer;
-    buffer *junk7a = new buffer;
-    buffer *junk7b = new buffer;
-//    buffer *junk7c = new buffer;
-    buffer *junk8a = new buffer;
-    buffer *junk8b = new buffer;
-    buffer *junk8c = new buffer;
-    buffer *junk9a = new buffer;
-    buffer *junk9b = new buffer;
-//    buffer *scenario_events = new buffer;
-    buffer *junk10a = new buffer;
-    buffer *junk10b = new buffer;
-    buffer *junk10c = new buffer;
-    buffer *junk10d = new buffer;
-    buffer *junk10f = new buffer;
-    buffer *junk11 = new buffer;
-//    buffer *junk12 = new buffer;
-    buffer *empire_map_routes = new buffer;
-    buffer *junk14 = new buffer;
-    buffer *bizarre_ordered_fields_1 = new buffer;
-//    buffer *junk15 = new buffer;
-    buffer *bizarre_ordered_fields_3 = new buffer;
-    buffer *junk16 = new buffer;
-    buffer *junk17 = new buffer;
-    buffer *bizarre_ordered_fields_2 = new buffer;
-    buffer *junk18 = new buffer;
-    buffer *junk19 = new buffer;
-    buffer *junk20 = new buffer;
+    buffer *junk1 = nullptr;
+    buffer *junk2a = nullptr;
+    buffer *junk2b = nullptr;
+    buffer *junk2c = nullptr;
+    buffer *junk2d = nullptr;
+    buffer *junk3 = nullptr;
+    buffer *junk4a = nullptr;
+    buffer *junk4b = nullptr;
+    buffer *junk4c = nullptr;
+    buffer *junk4d = nullptr;
+    buffer *junk4e = nullptr;
+    buffer *junk4f = nullptr;
+    buffer *junk5 = nullptr;
+    buffer *junk6a = nullptr;
+    buffer *junk6b = nullptr;
+    buffer *junk7a = nullptr;
+    buffer *junk7b = nullptr;
+//    buffer *junk7c = nullptr;
+    buffer *junk8a = nullptr;
+    buffer *junk8b = nullptr;
+    buffer *junk8c = nullptr;
+    buffer *junk9a = nullptr;
+    buffer *junk9b = nullptr;
+//    buffer *scenario_events = nullptr;
+    buffer *junk10a = nullptr;
+    buffer *junk10b = nullptr;
+    buffer *junk10c = nullptr;
+    buffer *junk10d = nullptr;
+    buffer *junk10f = nullptr;
+    buffer *junk11 = nullptr;
+//    buffer *junk12 = nullptr;
+    buffer *empire_map_routes = nullptr;
+    buffer *junk14 = nullptr;
+    buffer *bizarre_ordered_fields_1 = nullptr;
+//    buffer *junk15 = nullptr;
+    buffer *bizarre_ordered_fields_3 = nullptr;
+    buffer *junk16 = nullptr;
+    buffer *junk17 = nullptr;
+    buffer *bizarre_ordered_fields_2 = nullptr;
+    buffer *junk18 = nullptr;
+    buffer *junk19 = nullptr;
+    buffer *junk20 = nullptr;
 
-    buffer *soil_fertility_grid = new buffer;
-    buffer *GRID02_8BIT = new buffer;
-    buffer *GRID03_32BIT = new buffer;
-    buffer *soil_unk_grid = new buffer;
+    buffer *soil_fertility_grid = nullptr;
+    buffer *GRID02_8BIT = nullptr;
+    buffer *GRID03_32BIT = nullptr;
+    buffer *soil_unk_grid = nullptr;
 } savegame_state;
 
 static struct {
@@ -275,7 +275,7 @@ static struct {
 
 static void init_file_piece(file_piece *piece, int size, bool compressed) {
     piece->compressed = compressed;
-    piece->buf = new buffer(size);
+    safe_realloc_for_size(&piece->buf, size);
 }
 static buffer *create_scenario_piece(int size, const char *name) {
     file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
@@ -290,6 +290,15 @@ static buffer *push_io_piece(int size, bool compressed, const char *name) {
     return piece->buf;
 }
 
+static buffer *version_buffer = new buffer(8);
+static bool load_file_version(const char *filename, int offset) {
+    version_buffer->clear();
+    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset))
+        return false;
+    file_version[0] = version_buffer->read_i32();
+    file_version[1] = version_buffer->read_i32();
+    return true;
+}
 static void init_scenario_data(void) {
     return;
     if (scenario_data.num_pieces > 0) {
@@ -330,7 +339,7 @@ static void init_scenario_data(void) {
 
     state->end_marker = create_scenario_piece(4, "");
 }
-static void init_file_data(int version1, int version2) {
+static void init_file_data() {
     if (file_data.num_pieces > 0) {
         for (int i = 0; i < file_data.num_pieces; i++)
             file_data.pieces[i].buf->clear();
@@ -341,7 +350,7 @@ static void init_file_data(int version1, int version2) {
         case ENGINE_ENV_PHARAOH: {
             state->SCENARIO.mission_index = push_io_piece(4, false, "SCENARIO.mission_index");
             state->file_version = push_io_piece(8, false, "file_version");
-//                state->unk01 = create_savegame_piece(3, false, ""); // 3 bytes
+
             state->junk1 = push_io_piece(6000, false, "junk1"); // ?????
 
             state->image_grid = push_io_piece(207936, true, "image_grid");                         // (228²) * 4 <<
@@ -516,7 +525,7 @@ static void init_file_data(int version1, int version2) {
             state->bookmarks = push_io_piece(32, false, "bookmarks"); // ok
             state->tutorial_part3 = push_io_piece(4, false, "tutorial_part3"); // ok ????
 
-            int t_sub = 228;
+//            int t_sub = 228;
 
             // 8 bytes      00 00 00 00 ???
             state->junk9a = push_io_piece(8, false, "junk9a");
@@ -533,21 +542,13 @@ static void init_file_data(int version1, int version2) {
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
             state->junk10a = push_io_piece(28, false, "junk10a");
-            state->junk10b = push_io_piece(13216, false, "junk10b");
-            if (version1 >= 149)
-                state->junk10c = push_io_piece(200, false, "junk10c");
-            state->junk10d = push_io_piece(8200, false, "junk10d");
+            state->junk10b = push_io_piece(file_version[0] < 149 ? 13216 : 13416, false, "junk10b");
+            state->junk10c = push_io_piece(8200, false, "junk10c");
 
-//            if (version1 < 160)
             state->junk11 = push_io_piece(1280, true, "junk11"); // unknown compressed data
-            if (version1 >= 160)
-//                if (version2 == FILE_SAVEGAME)
-                    state->empire_map_objects = push_io_piece(19600, true, "empire_state_objects"); // unknown compressed data
-//                else
-//                    state->junk11 = push_io_piece(1280, true, "junk11"); // unknown compressed data
-            else
-                state->empire_map_objects = push_io_piece(15200, true, "empire_state_objects"); // unknown compressed data
-            state->empire_map_routes = push_io_piece(16200, true, "junk13"); // unknown compressed data
+
+            state->empire_map_objects = push_io_piece(file_version[0] < 160 ? 15200 : 19600, true, "empire_objects");
+            state->empire_map_routes = push_io_piece(16200, true, "empire_routes");
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
             state->GRID02_8BIT = push_io_piece(51984, false, "GRID02_8BIT"); // todo: 1-byte grid
@@ -615,8 +616,8 @@ static void scenario_save_to_state(scenario_state *state) {
 //    file->end_marker->skip(4);
 }
 static void savegame_load_from_state(savegame_state *state) {
-    savegame_version[0] = state->file_version->read_i32();
-    savegame_version[1] = state->file_version->read_i32();
+    file_version[0] = state->file_version->read_i32();
+    file_version[1] = state->file_version->read_i32();
 
     scenario_load_state(&state->SCENARIO);
 
@@ -700,7 +701,8 @@ static void savegame_load_from_state(savegame_state *state) {
 //    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state) {
-    state->file_version->write_i32(savegame_version[0]);
+    state->file_version->write_i32(file_version[0]);
+    state->file_version->write_i32(file_version[1]);
 
     scenario_save_state(&state->SCENARIO);
 //    scenario_settings_save_state(state->scenario_campaign_mission,
@@ -862,7 +864,7 @@ static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
     }
     return 1;
 }
-static int savegame_read_from_file(FILE *fp) {
+static bool read_file_pieces(FILE *fp) {
     for (int i = 0; i < file_data.num_pieces; i++) {
         file_piece *piece = &file_data.pieces[i];
         findex = i;
@@ -890,14 +892,12 @@ static int savegame_read_from_file(FILE *fp) {
         log_hex(piece, i, offs);
 
         // The last piece may be smaller than buf->size
-        if (!result && i != (file_data.num_pieces - 1)) {
-//            SDL_Log("Incorrect buffer size, expected %i, found %i", piece->buf->size());
-            return 0;
-        }
+        if (!result && i != (file_data.num_pieces - 1))
+            return false;
     }
-    return 1;
+    return true;
 }
-static void savegame_write_to_file(FILE *fp) {
+static void write_file_pieces(FILE *fp) {
     for (int i = 0; i < file_data.num_pieces; i++) {
         file_piece *piece = &file_data.pieces[i];
         if (piece->compressed)
@@ -907,19 +907,8 @@ static void savegame_write_to_file(FILE *fp) {
     }
 }
 
-static buffer *version_buffer = new buffer(8);
-static int get_file_version1(const char *filename, int offset) {
-    version_buffer->clear();
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset))
-        return 0;
-    return version_buffer->read_i32();
-}
-static int get_file_version2(const char *filename, int offset) {
-    version_buffer->clear();
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset))
-        return 0;
-    version_buffer->skip(4);
-    return version_buffer->read_i32();
+const int *get_file_version() {
+    return file_version;
 }
 bool game_file_io_read_scenario(const char *filename) {
     // TODO
@@ -971,18 +960,20 @@ bool game_file_io_write_scenario(const char *filename) {
 }
 bool game_file_io_read_saved_game(const char *filename, int offset) {
 
-    int file_version1 = get_file_version1(filename, offset + 4);
-    int file_version2 = get_file_version2(filename, offset + 4);
-    SDL_Log("FILE VERSION: %i TYPE: %i", file_version1, file_version2);
-    init_file_data(file_version1, file_version2);
-
-    if (file_has_extension(filename, "pak") && file_version1 == 147) {
-        log_info("Loading saved game.", filename, 0);
-        terrain_ph_offset = 539; //14791
-    } else {
-        log_info("Loading saved game (expanded).", filename, 0);
-        terrain_ph_offset = 0; //14252
+    if (!load_file_version(filename, offset + 4)) {
+        log_info("Unable to load game, unable to read savefile.", filename, 0);
+        return false;
     }
+
+    SDL_Log("FILE VERSION: %i TYPE: %i", file_version[0], file_version[1]);
+
+    init_file_data();
+    log_info("Loading saved game.", filename, 0);
+
+    if (file_has_extension(filename, "pak") && file_version[0] < 149)
+        terrain_ph_offset = 539; //14791
+    else
+        terrain_ph_offset = 0; //14252
 
     log_info("Loading saved game", filename, 0);
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
@@ -993,7 +984,7 @@ bool game_file_io_read_saved_game(const char *filename, int offset) {
     if (offset)
         fseek(fp, offset, SEEK_SET);
 
-    int result = savegame_read_from_file(fp);
+    int result = read_file_pieces(fp);
     file_close(fp);
     if (!result) {
         log_error("Unable to load game, unable to read savefile.", 0, 0);
@@ -1003,7 +994,7 @@ bool game_file_io_read_saved_game(const char *filename, int offset) {
     return true;
 }
 bool game_file_io_write_saved_game(const char *filename) {
-    init_file_data(0, 0);
+    init_file_data();
 
     log_info("Saving game", filename, 0);
 //    savegame_version = SAVE_GAME_VERSION;
@@ -1014,7 +1005,7 @@ bool game_file_io_write_saved_game(const char *filename) {
         log_error("Unable to save game", 0, 0);
         return false;
     }
-    savegame_write_to_file(fp);
+    write_file_pieces(fp);
     file_close(fp);
     return true;
 }
