@@ -29,6 +29,7 @@
 #include <game/player_data.h>
 #include <core/lang.h>
 #include <cmath>
+#include <game/file_io.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -309,10 +310,6 @@ static void draw_scores(int scenario_id) {
     draw_debug_line(txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
     draw_debug_line(txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
     draw_debug_line(txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
-
-//    text_draw_number(rank, '@', "", INFO_X, -100, FONT_NORMAL_YELLOW);
-//    text_draw_number(unlocked, '@', "", INFO_X, -80, FONT_NORMAL_YELLOW);
-//    text_draw_number(beaten, '@', "", INFO_X, -60, FONT_NORMAL_YELLOW);
 }
 static void draw_side_panel_info() {
     switch (data.dialog) {
@@ -360,7 +357,7 @@ static void draw_side_panel_info() {
             string_copy(game_mission_get_name(scenario_id), name, 300);
             int i = index_of_string(name, string_from_ascii("("), 300);
             if (i > 0)
-                name[i - 1] = NULL;
+                name[i - 1] = '\0';
             text_draw_centered(name, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
             // subtitle
@@ -430,6 +427,11 @@ static void draw_foreground(void) {
             break;
     }
 
+    uint8_t txt[200];
+    auto v = get_file_version();
+    draw_debug_line(txt, INFO_X, -120, 0, "", v->minor, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
+
     image_buttons_draw(0, 0, &start_button, 1);
     graphics_reset_dialog();
 }
@@ -440,7 +442,6 @@ static void button_select_campaign(int index, int param2) {
 static void button_select_item(int index, int param2) {
     if (index >= panel->get_total_entries())
         return;
-
     switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:
             game_load_scenario(panel->get_selected_entry_text(FILE_FULL_PATH), false);

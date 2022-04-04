@@ -55,8 +55,8 @@ private:
     scrollbar_type scrollbar;
 
     const dir_listing *file_finder;
-    const char *files_dir;
-    const char *files_ext;
+    char files_dir[FILE_NAME_MAX];
+    char files_ext[FILE_NAME_MAX];
     bool using_file_finder;
 
     char manual_entry_list[FILE_NAME_MAX][MAX_MANUAL_ENTRIES];
@@ -80,7 +80,7 @@ public:
     int get_selected_entry_idx();
     int get_total_entries();
     const char* get_entry_text_by_idx(int index, int filename_syntax);
-    const char* get_selected_entry_text(int full_filename);
+    const char* get_selected_entry_text(int filename_syntax);
     int get_entry_idx(const char *button_text);
     bool has_entry(const char *button_text);
 

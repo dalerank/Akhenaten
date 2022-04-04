@@ -58,8 +58,8 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
     } else
         return manual_entry_list[index];
 }
-const char* scroll_list_panel::get_selected_entry_text(int full_filename) {
-    return get_entry_text_by_idx(get_selected_entry_idx(), full_filename);
+const char* scroll_list_panel::get_selected_entry_text(int filename_syntax) {
+    return get_entry_text_by_idx(get_selected_entry_idx(), filename_syntax);
 }
 int scroll_list_panel::get_entry_idx(const char* button_text) {
     if (using_file_finder) {
@@ -94,9 +94,9 @@ void scroll_list_panel::add_entry(const char *entry_text) {
     num_total_entries++;
 }
 void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
-    files_dir = dir;
+    strncpy(files_dir, dir, FILE_NAME_MAX);
     if (ext != nullptr)
-        files_ext = ext;
+        strncpy(files_ext, ext, FILE_NAME_MAX);
     refresh_file_finder();
 }
 void scroll_list_panel::refresh_file_finder() {
@@ -246,9 +246,7 @@ scroll_list_panel::scroll_list_panel(int n_buttons,
 
     // init dir_listing
     using_file_finder = use_file_finder;
-    files_dir = dir;
-    files_ext = ext;
-    refresh_file_finder();
+    change_file_path(dir, ext);
 }
 scroll_list_panel::~scroll_list_panel() {
 

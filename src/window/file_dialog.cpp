@@ -28,6 +28,7 @@
 #include <string.h>
 #include <game/settings.h>
 #include <graphics/scroll_list_panel.h>
+#include <game/file_io.h>
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 
@@ -171,6 +172,11 @@ static void draw_foreground(void) {
 
     image_buttons_draw(0, 0, image_buttons, 2);
 
+//    uint8_t txt[200];
+//    auto v = get_file_version();
+//    draw_debug_line(txt, 150, 110, 0, "", v->minor, COLOR_FONT_YELLOW);
+//    draw_debug_line(txt, 200, 110, 0, "", v->major, COLOR_FONT_YELLOW);
+
     graphics_reset_dialog();
 }
 
@@ -253,6 +259,7 @@ static void button_select_file(int index, int param2) {
 //    setting_set_player_name(data.selected_player);
     input_box_refresh_text(&file_name_input);
     data.message_not_exist_start_time = 0;
+    load_file_version(panel->get_selected_entry_text(FILE_FULL_PATH), 4);
 
 
 

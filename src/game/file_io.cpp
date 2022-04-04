@@ -60,7 +60,7 @@
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
-static int file_version[2];
+//static file_version_t file_version;
 
 typedef struct {
     buffer *buf;
@@ -271,6 +271,7 @@ static struct {
     int num_pieces;
     file_piece pieces[200];
     savegame_state state;
+    file_version_t version;
 } file_data = {0};
 
 static void init_file_piece(file_piece *piece, int size, bool compressed) {
@@ -291,12 +292,12 @@ static buffer *push_io_piece(int size, bool compressed, const char *name) {
 }
 
 static buffer *version_buffer = new buffer(8);
-static bool load_file_version(const char *filename, int offset) {
+bool load_file_version(const char *filename, int offset) {
     version_buffer->clear();
     if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset))
         return false;
-    file_version[0] = version_buffer->read_i32();
-    file_version[1] = version_buffer->read_i32();
+    file_data.version.minor = version_buffer->read_i32();
+    file_data.version.major = version_buffer->read_i32();
     return true;
 }
 static void init_scenario_data(void) {
@@ -542,12 +543,12 @@ static void init_file_data() {
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
             state->junk10a = push_io_piece(28, false, "junk10a");
-            state->junk10b = push_io_piece(file_version[0] < 149 ? 13216 : 13416, false, "junk10b");
+            state->junk10b = push_io_piece(file_data.version.minor < 149 ? 13216 : 13416, false, "junk10b");
             state->junk10c = push_io_piece(8200, false, "junk10c");
 
             state->junk11 = push_io_piece(1280, true, "junk11"); // unknown compressed data
 
-            state->empire_map_objects = push_io_piece(file_version[0] < 160 ? 15200 : 19600, true, "empire_objects");
+            state->empire_map_objects = push_io_piece(file_data.version.minor < 160 ? 15200 : 19600, true, "empire_objects");
             state->empire_map_routes = push_io_piece(16200, true, "empire_routes");
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
@@ -616,8 +617,8 @@ static void scenario_save_to_state(scenario_state *state) {
 //    file->end_marker->skip(4);
 }
 static void savegame_load_from_state(savegame_state *state) {
-    file_version[0] = state->file_version->read_i32();
-    file_version[1] = state->file_version->read_i32();
+    file_data.version.minor = state->file_version->read_i32();
+    file_data.version.major = state->file_version->read_i32();
 
     scenario_load_state(&state->SCENARIO);
 
@@ -701,8 +702,8 @@ static void savegame_load_from_state(savegame_state *state) {
 //    state->end_marker->skip(284);
 }
 static void savegame_save_to_state(savegame_state *state) {
-    state->file_version->write_i32(file_version[0]);
-    state->file_version->write_i32(file_version[1]);
+    state->file_version->write_i32(file_data.version.minor);
+    state->file_version->write_i32(file_data.version.major);
 
     scenario_save_state(&state->SCENARIO);
 //    scenario_settings_save_state(state->scenario_campaign_mission,
@@ -907,8 +908,8 @@ static void write_file_pieces(FILE *fp) {
     }
 }
 
-const int *get_file_version() {
-    return file_version;
+const file_version_t *get_file_version() {
+    return &file_data.version;
 }
 bool game_file_io_read_scenario(const char *filename) {
     // TODO
@@ -965,12 +966,12 @@ bool game_file_io_read_saved_game(const char *filename, int offset) {
         return false;
     }
 
-    SDL_Log("FILE VERSION: %i TYPE: %i", file_version[0], file_version[1]);
+    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
 
     init_file_data();
     log_info("Loading saved game.", filename, 0);
 
-    if (file_has_extension(filename, "pak") && file_version[0] < 149)
+    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
         terrain_ph_offset = 539; //14791
     else
         terrain_ph_offset = 0; //14252
