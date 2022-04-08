@@ -16,12 +16,7 @@
  * @li Extension parameters are expected to be 3 chars, without leading dot
  */
 
-#define FILE_NAME_MAX 300
-
-typedef struct {
-    char extension[4];
-    char last_loaded_file[FILE_NAME_MAX];
-} file_type_data;
+#define MAX_FILE_NAME 300
 
 /**
  * Wrapper for fopen converting filename to path in current working directory

@@ -96,7 +96,7 @@ static int convert_compressed(buffer *buf, int amount, color_t *dst) {
 }
 static buffer *temp_external_image_buf = nullptr;
 static const color_t *load_external_data(const image *img) {
-    char filename[FILE_NAME_MAX];
+    char filename[MAX_FILE_NAME];
     int size = 0;
     safe_realloc_for_size(&temp_external_image_buf, img->draw.data_length);
     switch (GAME_ENV) {

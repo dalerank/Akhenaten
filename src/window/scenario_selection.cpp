@@ -114,8 +114,8 @@ static void init(map_selection_dialog_type dialog_type, int sub_dialog_selector 
                     for (int i = 0; i < MAX_MANUAL_ENTRIES; ++i) {
                         auto mission_data = get_campaign_mission_step_data(data.campaign_sub_dialog, i);
                         if (mission_data != nullptr && mission_data->scenario_id != -1) {
-                            char name_utf8[FILE_NAME_MAX];
-                            encoding_to_utf8(mission_data->map_name, name_utf8, FILE_NAME_MAX, 0);
+                            char name_utf8[MAX_FILE_NAME];
+                            encoding_to_utf8(mission_data->map_name, name_utf8, MAX_FILE_NAME, 0);
                             panel->add_entry(name_utf8);
                         }
                     }
@@ -327,8 +327,8 @@ static void draw_side_panel_info() {
             draw_scenario_thumbnail(scenario_image_id());
 
             // scenario name
-            uint8_t scenario_name[FILE_NAME_MAX];
-            encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, FILE_NAME_MAX);
+            uint8_t scenario_name[MAX_FILE_NAME];
+            encoding_from_utf8(panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, MAX_FILE_NAME);
             text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
             text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
@@ -428,7 +428,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    auto v = get_file_version();
+    auto v = FileIO.get_file_version();
     draw_debug_line(txt, INFO_X, -120, 0, "", v->minor, COLOR_FONT_YELLOW);
     draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
 

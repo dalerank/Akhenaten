@@ -18,7 +18,7 @@ static struct {
 
 static void allocate_listing_files(int min, int max) {
     for (int i = min; i < max; i++) {
-        data.listing.files[i] = (char *) malloc(FILE_NAME_MAX * sizeof(char));
+        data.listing.files[i] = (char *) malloc(MAX_FILE_NAME * sizeof(char));
         data.listing.files[i][0] = 0;
     }
 }
@@ -53,8 +53,8 @@ static int add_to_listing(const char *filename) {
     if (data.listing.num_files >= data.max_files)
         expand_dir_listing();
 
-    strncpy(data.listing.files[data.listing.num_files], filename, FILE_NAME_MAX);
-    data.listing.files[data.listing.num_files][FILE_NAME_MAX - 1] = 0;
+    strncpy(data.listing.files[data.listing.num_files], filename, MAX_FILE_NAME);
+    data.listing.files[data.listing.num_files][MAX_FILE_NAME - 1] = 0;
     ++data.listing.num_files;
     return LIST_CONTINUE;
 }
@@ -95,19 +95,19 @@ static void move_left(char *str) {
 }
 
 static const char *get_case_corrected_file(const char *dir, const char *filepath) {
-    static char corrected_filename[2 * FILE_NAME_MAX];
-    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
+    static char corrected_filename[2 * MAX_FILE_NAME];
+    corrected_filename[2 * MAX_FILE_NAME - 1] = 0;
 
     size_t dir_len = 0;
     if (dir) {
         dir_len = strlen(dir) + 1;
-        strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);
+        strncpy(corrected_filename, dir, 2 * MAX_FILE_NAME - 1);
         corrected_filename[dir_len - 1] = '/';
     } else {
         dir = ".";
     }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
+    strncpy(&corrected_filename[dir_len], filepath, 2 * MAX_FILE_NAME - dir_len - 1);
 
     FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
@@ -119,7 +119,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return 0;
 
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
+    strncpy(&corrected_filename[dir_len], filepath, 2 * MAX_FILE_NAME - dir_len - 1);
 
     char *slash = strchr(&corrected_filename[dir_len], '/');
     if (!slash)

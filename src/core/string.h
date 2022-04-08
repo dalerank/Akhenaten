@@ -68,4 +68,7 @@ bool string_needle_equals(const uint8_t *a, const uint8_t *b, int len);
 int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length);
 int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length);
 
+// Also called: "why the fuck does the standard library not have this already?"
+void safe_strncpy(char *dest, const char *src, size_t destsz);
+
 #endif // CORE_STRING_H

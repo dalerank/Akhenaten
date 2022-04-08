@@ -64,11 +64,11 @@ lang_files_collection lfcs[] = {
 };
 
 static bool file_exists_in_dir(const char *dir, const char *file) {
-    char path[2 * FILE_NAME_MAX];
-    path[2 * FILE_NAME_MAX - 1] = 0;
-    strncpy(path, dir, 2 * FILE_NAME_MAX - 1);
-    strncat(path, "/", 2 * FILE_NAME_MAX - 1);
-    strncat(path, file, 2 * FILE_NAME_MAX - 1);
+    char path[2 * MAX_FILE_NAME];
+    path[2 * MAX_FILE_NAME - 1] = 0;
+    strncpy(path, dir, 2 * MAX_FILE_NAME - 1);
+    strncat(path, "/", 2 * MAX_FILE_NAME - 1);
+    strncat(path, file, 2 * MAX_FILE_NAME - 1);
     return file_exists(path, NOT_LOCALIZED);
 }
 bool lang_dir_is_valid(const char *dir) {

@@ -1,6 +1,7 @@
 #include "core/string.h"
 
 #include <ctype.h>
+#include <cstring>
 
 uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
     int length = 0;
@@ -174,4 +175,13 @@ int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
             return i + 1;
     }
     return 0;
+}
+
+void safe_strncpy(char *dest, const char *src, size_t destsz)
+{
+    size_t srcsz = strlen(src);  // crash here if not nul-terminated
+    if (srcsz > destsz - 1)
+        srcsz = destsz - 1;
+    memmove(dest, src, srcsz);   // memmove is safe if dest and src overlap
+    dest[srcsz] = '\0';
 }

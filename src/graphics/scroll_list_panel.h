@@ -55,11 +55,11 @@ private:
     scrollbar_type scrollbar;
 
     const dir_listing *file_finder;
-    char files_dir[FILE_NAME_MAX];
-    char files_ext[FILE_NAME_MAX];
+    char files_dir[MAX_FILE_NAME];
+    char files_ext[MAX_FILE_NAME];
     bool using_file_finder;
 
-    char manual_entry_list[FILE_NAME_MAX][MAX_MANUAL_ENTRIES];
+    char manual_entry_list[MAX_FILE_NAME][MAX_MANUAL_ENTRIES];
 
     void (*custom_text_render)(int button_index, const uint8_t *text, int x, int y, font_t font);
     bool using_custom_text_render = false;

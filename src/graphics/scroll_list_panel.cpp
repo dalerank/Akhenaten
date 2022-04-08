@@ -1,12 +1,13 @@
 #include <core/file.h>
 #include <cstring>
 #include <functional>
+#include <core/string.h>
 #include "scroll_list_panel.h"
 #include "panel.h"
 #include "text.h"
 #include "window.h"
 
-static char temp_filename_buffer[FILE_NAME_MAX];
+static char temp_filename_buffer[MAX_FILE_NAME];
 
 void scroll_list_panel::select(const char *button_text) {
     return select_entry(get_entry_idx(button_text));
@@ -44,14 +45,14 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
     if (using_file_finder) {
         switch (filename_syntax) {
             case FILE_FULL_PATH:
-                snprintf(temp_filename_buffer, FILE_NAME_MAX, "%s%s", files_dir, file_finder->files[index]);
+                snprintf(temp_filename_buffer, MAX_FILE_NAME, "%s%s", files_dir, file_finder->files[index]);
                 return temp_filename_buffer;
             case FILE_WITH_EXT:
                 return file_finder->files[index];
             case FILE_NO_EXT:
                 if (strcmp(files_ext, "folders") == 0)
                     return file_finder->files[index];
-                strcpy(temp_filename_buffer, file_finder->files[index]);
+                safe_strncpy(temp_filename_buffer, file_finder->files[index], MAX_FILE_NAME);
                 temp_filename_buffer[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
                 return temp_filename_buffer;
         }
@@ -87,16 +88,17 @@ void scroll_list_panel::clear_entry_list() {
     unselect();
 }
 void scroll_list_panel::add_entry(const char *entry_text) {
-    if (strlen(entry_text) < FILE_NAME_MAX - 1)
-        strcpy(manual_entry_list[num_total_entries], entry_text);
-    else
-        strncpy(manual_entry_list[num_total_entries], entry_text, FILE_NAME_MAX - 1);
+    safe_strncpy(manual_entry_list[num_total_entries], entry_text, MAX_FILE_NAME);
+//    if (strlen(entry_text) < MAX_FILE_NAME - 1)
+//        strcpy(manual_entry_list[num_total_entries], entry_text);
+//    else
+//        strncpy(manual_entry_list[num_total_entries], entry_text, MAX_FILE_NAME - 1);
     num_total_entries++;
 }
 void scroll_list_panel::change_file_path(const char *dir, const char *ext) {
-    strncpy(files_dir, dir, FILE_NAME_MAX);
+    strncpy(files_dir, dir, MAX_FILE_NAME);
     if (ext != nullptr)
-        strncpy(files_ext, ext, FILE_NAME_MAX);
+        strncpy(files_ext, ext, MAX_FILE_NAME);
     refresh_file_finder();
 }
 void scroll_list_panel::refresh_file_finder() {
@@ -179,14 +181,14 @@ void scroll_list_panel::draw() {
 
         if (using_file_finder) {
             strcpy(text_utf8, file_finder->files[i + scrollbar.scroll_position]);
-            encoding_from_utf8(text_utf8, text, FILE_NAME_MAX);
+            encoding_from_utf8(text_utf8, text, MAX_FILE_NAME);
             file_remove_extension(text);
         } else {
             if (i < num_total_entries)
                 strcpy(text_utf8, manual_entry_list[i + scrollbar.scroll_position]);
             else
                 strcpy(text_utf8, "");
-            encoding_from_utf8(text_utf8, text, FILE_NAME_MAX);
+            encoding_from_utf8(text_utf8, text, MAX_FILE_NAME);
         }
 
         if (using_custom_text_render)

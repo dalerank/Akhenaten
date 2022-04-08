@@ -52,6 +52,7 @@
 #include <city/floods.h>
 #include <cinttypes>
 #include <core/io.h>
+#include <core/string.h>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -62,33 +63,27 @@ static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
 //static file_version_t file_version;
 
-typedef struct {
-    buffer *buf;
-    int compressed;
-    char name[100];
-} file_piece;
+//typedef struct {
+//    buffer *graphic_ids = nullptr;
+//    buffer *edge = nullptr;
+//    buffer *terrain = nullptr;
+//    buffer *bitfields = nullptr;
+//    buffer *random = nullptr;
+//    buffer *elevation = nullptr;
+//    buffer *random_iv = nullptr;
+//    buffer *camera = nullptr;
+////    buffer *scenario = nullptr;
+//    scenario_data_buffers SCENARIO;
+//    buffer *end_marker = nullptr;
+//} scenario_state;
 
-typedef struct {
-    buffer *graphic_ids = nullptr;
-    buffer *edge = nullptr;
-    buffer *terrain = nullptr;
-    buffer *bitfields = nullptr;
-    buffer *random = nullptr;
-    buffer *elevation = nullptr;
-    buffer *random_iv = nullptr;
-    buffer *camera = nullptr;
-//    buffer *scenario = nullptr;
-    scenario_data_buffers SCENARIO;
-    buffer *end_marker = nullptr;
-} scenario_state;
+//static struct {
+//    int num_pieces;
+//    file_piece_t pieces[10];
+//    scenario_state state;
+//} scenario_data = {0};
 
-static struct {
-    int num_pieces;
-    file_piece pieces[10];
-    scenario_state state;
-} scenario_data = {0};
-
-typedef struct {
+struct {
 //    buffer *scenario_campaign_mission = nullptr;
     buffer *file_version = nullptr;
     buffer *image_grid = nullptr;
@@ -265,132 +260,129 @@ typedef struct {
     buffer *GRID02_8BIT = nullptr;
     buffer *GRID03_32BIT = nullptr;
     buffer *soil_unk_grid = nullptr;
-} savegame_state;
+} buffers;
+FileManager FileIO;
 
-static struct {
-    int num_pieces;
-    file_piece pieces[200];
-    savegame_state state;
-    file_version_t version;
-} file_data = {0};
+//static struct {
+//    int num_pieces;
+//    file_piece_t pieces[200];
+//    savegame_state state;
+//    file_version_t version;
+//} file_data = {0};
 
-static void init_file_piece(file_piece *piece, int size, bool compressed) {
-    piece->compressed = compressed;
-    safe_realloc_for_size(&piece->buf, size);
-}
-static buffer *create_scenario_piece(int size, const char *name) {
-    file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
-    init_file_piece(piece, size, 0);
-    strncpy(piece->name, name, 99);
-    return piece->buf;
-}
-static buffer *push_io_piece(int size, bool compressed, const char *name) {
-    file_piece *piece = &file_data.pieces[file_data.num_pieces++];
-    init_file_piece(piece, size, compressed);
-    strncpy(piece->name, name, 99);
-    return piece->buf;
+//static void init_file_piece(file_piece_t *piece, int size, bool compressed) {
+//    piece->compressed = compressed;
+//    safe_realloc_for_size(&piece->buf, size);
+//}
+//static buffer *create_scenario_piece(int size, const char *name) {
+//    file_piece_t *piece = &scenario_data.pieces[scenario_data.num_pieces++];
+//    init_file_piece(piece, size, 0);
+//    strncpy(piece->name, name, 99);
+//    return piece->buf;
+//}
+
+void FileManager::clear() {
+    loaded = false;
+    safe_strncpy(file_path, "", MAX_FILE_NAME);
+    file_size = 0;
+    file_offset = 0;
+    file_version = {-1, -1};
+    file_chunks.clear();
 }
 
 static buffer *version_buffer = new buffer(8);
-bool load_file_version(const char *filename, int offset) {
+file_version_t read_file_version(const char *filename, int offset) {
+    file_version_t version = {-1, -1};
     version_buffer->clear();
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset))
-        return false;
-    file_data.version.minor = version_buffer->read_i32();
-    file_data.version.major = version_buffer->read_i32();
-    return true;
-}
-static void init_scenario_data(void) {
-    return;
-    if (scenario_data.num_pieces > 0) {
-        for (int i = 0; i < scenario_data.num_pieces; i++)
-            file_data.pieces[i].buf->clear();
-        return;
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset)) {
+        version.minor = version_buffer->read_i32();
+        version.major = version_buffer->read_i32();
     }
-    scenario_state *state = &scenario_data.state;
-    state->graphic_ids = create_scenario_piece(52488, "");
-    state->edge = create_scenario_piece(26244, "");
-    state->terrain = create_scenario_piece(52488, "");
-    state->bitfields = create_scenario_piece(26244, "");
-    state->random = create_scenario_piece(26244, "");
-    state->elevation = create_scenario_piece(26244, "");
-    state->random_iv = create_scenario_piece(8, "");
-    state->camera = create_scenario_piece(8, "");
-//    state->scenario = create_scenario_piece(1720, "");
-    state->SCENARIO.header = create_scenario_piece(14, "");
-    state->SCENARIO.requests = create_scenario_piece(160, "");
-    state->SCENARIO.invasions = create_scenario_piece(202, "");
-    state->SCENARIO.info1 = create_scenario_piece(614, "");
-    state->SCENARIO.request_comply_dialogs = create_scenario_piece(20, "");
-    state->SCENARIO.info2 = create_scenario_piece(6, "");
-    state->SCENARIO.herds = create_scenario_piece(16, "");
-    state->SCENARIO.demands = create_scenario_piece(120, "");
-    state->SCENARIO.price_changes = create_scenario_piece(120, "");
-    state->SCENARIO.events = create_scenario_piece(44, "");
-    state->SCENARIO.fishing_points = create_scenario_piece(32, "");
-    state->SCENARIO.request_extra = create_scenario_piece(120, "");
-    state->SCENARIO.wheat = create_scenario_piece(4, "");
-    state->SCENARIO.allowed_builds = create_scenario_piece(100, "");
-    state->SCENARIO.win_criteria = create_scenario_piece(52, "");
-    state->SCENARIO.map_points = create_scenario_piece(12, "");
-    state->SCENARIO.invasion_points = create_scenario_piece(32, "");
-    state->SCENARIO.river_points = create_scenario_piece(8, "");
-    state->SCENARIO.info3 = create_scenario_piece(32, "");
-    state->SCENARIO.empire = create_scenario_piece(12, "");
-
-    state->end_marker = create_scenario_piece(4, "");
+    return version;
 }
-static void init_file_data() {
-    if (file_data.num_pieces > 0) {
-        for (int i = 0; i < file_data.num_pieces; i++)
-            file_data.pieces[i].buf->clear();
-        file_data.num_pieces = 0;
-    }
-    savegame_state *state = &file_data.state;
-    switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH: {
-            state->SCENARIO.mission_index = push_io_piece(4, false, "SCENARIO.mission_index");
-            state->file_version = push_io_piece(8, false, "file_version");
+void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
+    if (loaded)
+        clear(); // make sure the pieces
+    file_version = version;
+    auto state = &buffers;
+    switch (mapping_schema) {
+        case FILE_SCHEMA_MAP: // TODO!!!!
+//            scenario_state *state = &scenario_data.state;
+//            state->graphic_ids = create_scenario_piece(52488, "");
+//            state->edge = create_scenario_piece(26244, "");
+//            state->terrain = create_scenario_piece(52488, "");
+//            state->bitfields = create_scenario_piece(26244, "");
+//            state->random = create_scenario_piece(26244, "");
+//            state->elevation = create_scenario_piece(26244, "");
+//            state->random_iv = create_scenario_piece(8, "");
+//            state->camera = create_scenario_piece(8, "");
+//        //    state->scenario = create_scenario_piece(1720, "");
+//            state->SCENARIO.header = create_scenario_piece(14, "");
+//            state->SCENARIO.requests = create_scenario_piece(160, "");
+//            state->SCENARIO.invasions = create_scenario_piece(202, "");
+//            state->SCENARIO.info1 = create_scenario_piece(614, "");
+//            state->SCENARIO.request_comply_dialogs = create_scenario_piece(20, "");
+//            state->SCENARIO.info2 = create_scenario_piece(6, "");
+//            state->SCENARIO.herds = create_scenario_piece(16, "");
+//            state->SCENARIO.demands = create_scenario_piece(120, "");
+//            state->SCENARIO.price_changes = create_scenario_piece(120, "");
+//            state->SCENARIO.events = create_scenario_piece(44, "");
+//            state->SCENARIO.fishing_points = create_scenario_piece(32, "");
+//            state->SCENARIO.request_extra = create_scenario_piece(120, "");
+//            state->SCENARIO.wheat = create_scenario_piece(4, "");
+//            state->SCENARIO.allowed_builds = create_scenario_piece(100, "");
+//            state->SCENARIO.win_criteria = create_scenario_piece(52, "");
+//            state->SCENARIO.map_points = create_scenario_piece(12, "");
+//            state->SCENARIO.invasion_points = create_scenario_piece(32, "");
+//            state->SCENARIO.river_points = create_scenario_piece(8, "");
+//            state->SCENARIO.info3 = create_scenario_piece(32, "");
+//            state->SCENARIO.empire = create_scenario_piece(12, "");
+//
+//            state->end_marker = create_scenario_piece(4, "");
+            break;
+        case FILE_SCHEMA_SAV: {
+            state->SCENARIO.mission_index = push_chunk(4, false, "SCENARIO.mission_index");
+            state->file_version = push_chunk(8, false, "file_version");
 
-            state->junk1 = push_io_piece(6000, false, "junk1"); // ?????
+            state->junk1 = push_chunk(6000, false, "junk1"); // ?????
 
-            state->image_grid = push_io_piece(207936, true, "image_grid");                         // (228²) * 4 <<
-            state->edge_grid = push_io_piece(51984, true, "edge_grid");                            // (228²) * 1
-            state->building_grid = push_io_piece(103968, true, "building_grid");                   // (228²) * 2
-            state->terrain_grid = push_io_piece(207936, true, "terrain_grid");                     // (228²) * 4 <<
-            state->aqueduct_grid = push_io_piece(51984, true, "aqueduct_grid");                    // (228²) * 1
-            state->figure_grid = push_io_piece(103968, true, "figure_grid");                       // (228²) * 2
-            state->bitfields_grid = push_io_piece(51984, true, "bitfields_grid");                  // (228²) * 1
-            state->sprite_grid = push_io_piece(51984, true, "sprite_grid");                        // (228²) * 1
-            state->random_grid = push_io_piece(51984, false, "random_grid");                            // (228²) * 1
-            state->desirability_grid = push_io_piece(51984, true, "desirability_grid");            // (228²) * 1
-            state->elevation_grid = push_io_piece(51984, true, "elevation_grid");                  // (228²) * 1
-            state->building_damage_grid = push_io_piece(103968, true, "building_damage_grid");     // (228²) * 2 <<
-            state->aqueduct_backup_grid = push_io_piece(51984, true, "aqueduct_backup_grid");      // (228²) * 1
-            state->sprite_backup_grid = push_io_piece(51984, true, "sprite_backup_grid");          // (228²) * 1
-            state->figures = push_io_piece(776000, true, "figures");
-            state->route_figures = push_io_piece(2000, true, "route_figures");
-            state->route_paths = push_io_piece(500000, true, "route_paths");
-            state->formations = push_io_piece(7200, true, "formations");
-            state->formation_totals = push_io_piece(12, false, "formation_totals");
-            state->city_data = push_io_piece(37808, true, "city_data");
-            state->city_faction_unknown = push_io_piece(4, false, "city_faction_unknown");
-            state->SCENARIO.player_name = push_io_piece(64, false, "SCENARIO.player_name");
-            state->city_faction = push_io_piece(4, false, "city_faction");
-            state->buildings = push_io_piece(1056000, true, "buildings");
-            state->city_view_orientation = push_io_piece(4, false, "city_view_orientation"); // ok
-            state->game_time = push_io_piece(20, false, "game_time"); // ok
-            state->building_highest_id_ever = push_io_piece(8, false, "building_extra_highest_id_ever"); // ok
-            state->random_iv = push_io_piece(8, false, "random_iv"); // ok
-            state->city_view_camera = push_io_piece(8, false, "city_view_camera"); // ok
+            state->image_grid = push_chunk(207936, true, "image_grid");                         // (228²) * 4 <<
+            state->edge_grid = push_chunk(51984, true, "edge_grid");                            // (228²) * 1
+            state->building_grid = push_chunk(103968, true, "building_grid");                   // (228²) * 2
+            state->terrain_grid = push_chunk(207936, true, "terrain_grid");                     // (228²) * 4 <<
+            state->aqueduct_grid = push_chunk(51984, true, "aqueduct_grid");                    // (228²) * 1
+            state->figure_grid = push_chunk(103968, true, "figure_grid");                       // (228²) * 2
+            state->bitfields_grid = push_chunk(51984, true, "bitfields_grid");                  // (228²) * 1
+            state->sprite_grid = push_chunk(51984, true, "sprite_grid");                        // (228²) * 1
+            state->random_grid = push_chunk(51984, false, "random_grid");                            // (228²) * 1
+            state->desirability_grid = push_chunk(51984, true, "desirability_grid");            // (228²) * 1
+            state->elevation_grid = push_chunk(51984, true, "elevation_grid");                  // (228²) * 1
+            state->building_damage_grid = push_chunk(103968, true, "building_damage_grid");     // (228²) * 2 <<
+            state->aqueduct_backup_grid = push_chunk(51984, true, "aqueduct_backup_grid");      // (228²) * 1
+            state->sprite_backup_grid = push_chunk(51984, true, "sprite_backup_grid");          // (228²) * 1
+            state->figures = push_chunk(776000, true, "figures");
+            state->route_figures = push_chunk(2000, true, "route_figures");
+            state->route_paths = push_chunk(500000, true, "route_paths");
+            state->formations = push_chunk(7200, true, "formations");
+            state->formation_totals = push_chunk(12, false, "formation_totals");
+            state->city_data = push_chunk(37808, true, "city_data");
+            state->city_faction_unknown = push_chunk(4, false, "city_faction_unknown");
+            state->SCENARIO.player_name = push_chunk(64, false, "SCENARIO.player_name");
+            state->city_faction = push_chunk(4, false, "city_faction");
+            state->buildings = push_chunk(1056000, true, "buildings");
+            state->city_view_orientation = push_chunk(4, false, "city_view_orientation"); // ok
+            state->game_time = push_chunk(20, false, "game_time"); // ok
+            state->building_highest_id_ever = push_chunk(8, false, "building_extra_highest_id_ever"); // ok
+            state->random_iv = push_chunk(8, false, "random_iv"); // ok
+            state->city_view_camera = push_chunk(8, false, "city_view_camera"); // ok
 //                state->building_count_culture1 = create_savegame_piece(132, false, ""); // MISSING
-            state->city_graph_order = push_io_piece(8, false, "city_graph_order"); // I guess ????
+            state->city_graph_order = push_chunk(8, false, "city_graph_order"); // I guess ????
 //                state->emperor_change_time = create_savegame_piece(8, false, ""); // MISSING
-            state->empire = push_io_piece(12, false, "empire"); // ok ???
-            state->empire_cities = push_io_piece(6466, true, "empire_cities"); // 83920 + 7681 --> 91601
-            state->building_count_industry = push_io_piece(288, false, "building_count_industry"); // 288 bytes ??????
-            state->trade_prices = push_io_piece(288, false, "trade_prices");
-            state->figure_names = push_io_piece(84, false, "figure_names");
+            state->empire = push_chunk(12, false, "empire"); // ok ???
+            state->empire_cities = push_chunk(6466, true, "empire_cities"); // 83920 + 7681 --> 91601
+            state->building_count_industry = push_chunk(288, false, "building_count_industry"); // 288 bytes ??????
+            state->trade_prices = push_chunk(288, false, "trade_prices");
+            state->figure_names = push_chunk(84, false, "figure_names");
 
 //                state->culture_coverage = create_savegame_piece(60, false, ""); // MISSING
 //                state->scenario = create_savegame_piece(1720, false, ""); // MISSING
@@ -416,26 +408,26 @@ static void init_file_data() {
 //            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
 
 
-            state->SCENARIO.header = push_io_piece(32, false, "SCENARIO.header");
-            state->SCENARIO.info1 = push_io_piece(614, false, "SCENARIO.info1");
+            state->SCENARIO.header = push_chunk(32, false, "SCENARIO.header");
+            state->SCENARIO.info1 = push_chunk(614, false, "SCENARIO.info1");
 //                state->scenario_request_can_comply_dialogs = create_savegame_piece(20, false, ""); // MISSING
-            state->SCENARIO.info2 = push_io_piece(6, false, "SCENARIO.info2");
+            state->SCENARIO.info2 = push_chunk(6, false, "SCENARIO.info2");
 
             // 48 bytes     FF FF FF FF (non cyclic) ???
             // 44 bytes     00 00 00 00 ???
             // 64 bytes     FF FF FF FF (cyclic) invasion points???
             // 36 bytes     01 00 01 00 ???
-            state->junk2a = push_io_piece(48, false, "junk2a"); // unknown bytes
-            state->junk2b = push_io_piece(44, false, "junk2b"); // unknown bytes
-            state->junk2c = push_io_piece(64, false, "junk2c"); // unknown bytes
-            state->junk2d = push_io_piece(36, false, "junk2d"); // unknown bytes
+            state->junk2a = push_chunk(48, false, "junk2a"); // unknown bytes
+            state->junk2b = push_chunk(44, false, "junk2b"); // unknown bytes
+            state->junk2c = push_chunk(64, false, "junk2c"); // unknown bytes
+            state->junk2d = push_chunk(36, false, "junk2d"); // unknown bytes
 
-            state->SCENARIO.win_criteria = push_io_piece(60, false, "SCENARIO.win_criteria");
+            state->SCENARIO.win_criteria = push_chunk(60, false, "SCENARIO.win_criteria");
 
             // 4 bytes     FF FF FF FF ???
-            state->junk3 = push_io_piece(4, false, "junk3"); // unknown bytes
+            state->junk3 = push_chunk(4, false, "junk3"); // unknown bytes
 
-            state->city_entry_exit_xy = push_io_piece(8, false, "city_entry_exit_xy");
+            state->city_entry_exit_xy = push_chunk(8, false, "city_entry_exit_xy");
 
             // 40 bytes     FF FF FF FF (non cyclic?) ???
             // 4  bytes     B8 0B 00 00 ???
@@ -443,27 +435,27 @@ static void init_file_data() {
             // 12 bytes     CB 32 00 00 (3x4) ??? (n, n+2, n+1497)
             // 14 bytes     01 00 00 00 ???
             // 2  bytes     FF FF       ???
-            state->junk4a = push_io_piece(40, false, "junk4a"); // unknown bytes
-            state->junk4b = push_io_piece(4, false, "junk4b"); // unknown bytes
-            state->junk4c = push_io_piece(12, false, "junk4c"); // unknown bytes
-            state->junk4d = push_io_piece(12, false, "junk4d"); // unknown bytes
-            state->SCENARIO.climate_id = push_io_piece(2, false, "SCENARIO.climate_id");
-            state->junk4e = push_io_piece(10, false, "junk4e"); // unknown bytes
-            state->junk4f = push_io_piece(2, false, "junk4f"); // unknown bytes
-            state->junk4f = push_io_piece(2, false, "junk4g"); // unknown bytes
-            state->SCENARIO.herds = push_io_piece(32, false, "SCENARIO.herds");
-            state->SCENARIO.allowed_builds = push_io_piece(228, false, "SCENARIO.allowed_builds");
+            state->junk4a = push_chunk(40, false, "junk4a"); // unknown bytes
+            state->junk4b = push_chunk(4, false, "junk4b"); // unknown bytes
+            state->junk4c = push_chunk(12, false, "junk4c"); // unknown bytes
+            state->junk4d = push_chunk(12, false, "junk4d"); // unknown bytes
+            state->SCENARIO.climate_id = push_chunk(2, false, "SCENARIO.climate_id");
+            state->junk4e = push_chunk(10, false, "junk4e"); // unknown bytes
+            state->junk4f = push_chunk(2, false, "junk4f"); // unknown bytes
+            state->junk4f = push_chunk(2, false, "junk4g"); // unknown bytes
+            state->SCENARIO.herds = push_chunk(32, false, "SCENARIO.herds");
+            state->SCENARIO.allowed_builds = push_chunk(228, false, "SCENARIO.allowed_builds");
 
             // 24 bytes     FF FF FF FF (cyclic) ???
-            state->junk5 = push_io_piece(28, false, "junk5"); // unknown bytes
-            state->SCENARIO.monuments = push_io_piece(6, false, "SCENARIO.monuments"); // 3 x 2-byte
+            state->junk5 = push_chunk(28, false, "junk5"); // unknown bytes
+            state->SCENARIO.monuments = push_chunk(6, false, "SCENARIO.monuments"); // 3 x 2-byte
 
             // 290 bytes    00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
             // 4 bytes      00 00 00 00 ???
-            state->junk6a = push_io_piece(290, false, "junk6a"); // unknown bytes
-            state->junk6b = push_io_piece(4 + 4 + 4, false, "junk6b"); // unknown bytes
+            state->junk6a = push_chunk(290, false, "junk6a"); // unknown bytes
+            state->junk6b = push_chunk(4 + 4 + 4, false, "junk6b"); // unknown bytes
 
             /////////////////////
 
@@ -471,22 +463,22 @@ static void init_file_data() {
 //                state->earthquake = create_savegame_piece(60, false, ""); // MISSING
 //                state->emperor_change_state = create_savegame_piece(4, false, ""); // MISSING
 
-            state->messages = push_io_piece(48000, true, "messages"); // 94000 + 533 --> 94532 + 4 = 94536
-            state->message_extra = push_io_piece(12, false, "message_extra"); // ok
-            state->population_messages = push_io_piece(10, false, "population_messages"); // ok
-            state->message_counts = push_io_piece(80, false, "message_counts"); // ok
-            state->message_delays = push_io_piece(80, false, "message_delays"); // ok
-            state->building_list_burning_totals = push_io_piece(8, false, "building_list_burning_totals"); // ok
-            state->figure_sequence = push_io_piece(4, false, "figure_sequence"); // ok
-            state->SCENARIO.map_settings = push_io_piece(12, false, "SCENARIO.map_settings"); // ok
-            state->invasion_warnings = push_io_piece(3232, true, "invasion_warnings"); // 94743 + 31 --> 94774 + 4 = 94778
-            state->SCENARIO.is_custom = push_io_piece(4, false, "SCENARIO.is_custom"); // ok
-            state->city_sounds = push_io_piece(8960, false, "city_sounds"); // ok
-            state->building_highest_id = push_io_piece(4, false, "building_extra_highest_id"); // ok
-            state->figure_traders = push_io_piece(8804, false, "figure_traders"); // +4000 ???
-            state->building_list_burning = push_io_piece(1000, true, "building_list_burning"); // ok
-            state->building_list_small = push_io_piece(1000, true, "building_list_small"); // ok
-            state->building_list_large = push_io_piece(8000, true, "building_list_large"); // ok
+            state->messages = push_chunk(48000, true, "messages"); // 94000 + 533 --> 94532 + 4 = 94536
+            state->message_extra = push_chunk(12, false, "message_extra"); // ok
+            state->population_messages = push_chunk(10, false, "population_messages"); // ok
+            state->message_counts = push_chunk(80, false, "message_counts"); // ok
+            state->message_delays = push_chunk(80, false, "message_delays"); // ok
+            state->building_list_burning_totals = push_chunk(8, false, "building_list_burning_totals"); // ok
+            state->figure_sequence = push_chunk(4, false, "figure_sequence"); // ok
+            state->SCENARIO.map_settings = push_chunk(12, false, "SCENARIO.map_settings"); // ok
+            state->invasion_warnings = push_chunk(3232, true, "invasion_warnings"); // 94743 + 31 --> 94774 + 4 = 94778
+            state->SCENARIO.is_custom = push_chunk(4, false, "SCENARIO.is_custom"); // ok
+            state->city_sounds = push_chunk(8960, false, "city_sounds"); // ok
+            state->building_highest_id = push_chunk(4, false, "building_extra_highest_id"); // ok
+            state->figure_traders = push_chunk(8804, false, "figure_traders"); // +4000 ???
+            state->building_list_burning = push_chunk(1000, true, "building_list_burning"); // ok
+            state->building_list_small = push_chunk(1000, true, "building_list_small"); // ok
+            state->building_list_large = push_chunk(8000, true, "building_list_large"); // ok
 
 //                state->tutorial_part1 = create_savegame_piece(32, false, "");
 //                state->building_count_military = create_savegame_piece(16, false, "");
@@ -499,12 +491,12 @@ static void init_file_data() {
 
             // 32 bytes     00 00 00 00 ???
             // 24 bytes     00 00 00 00 ???
-            state->junk7a = push_io_piece(32, false, "junk7a"); // unknown bytes
-            state->junk7b = push_io_piece(24, false, "junk7b"); // unknown bytes
-            state->building_storages = push_io_piece(39200, false, "building_storages"); // storage instructions
+            state->junk7a = push_chunk(32, false, "junk7a"); // unknown bytes
+            state->junk7b = push_chunk(24, false, "junk7b"); // unknown bytes
+            state->building_storages = push_chunk(39200, false, "building_storages"); // storage instructions
 
-            state->trade_route_limit = push_io_piece(2880, true, "trade_route_limit"); // ok
-            state->trade_route_traded = push_io_piece(2880, true, "trade_route_traded"); // ok
+            state->trade_route_limit = push_chunk(2880, true, "trade_route_limit"); // ok
+            state->trade_route_traded = push_chunk(2880, true, "trade_route_traded"); // ok
 
 //                state->building_barracks_tower_sentry = create_savegame_piece(4, false, "");
 //                state->building_extra_sequence = create_savegame_piece(4, false, "");
@@ -515,111 +507,336 @@ static void init_file_data() {
             // 12 bytes     00 00 00 00 ???
             // 16 bytes     00 00 00 00 ???
             // 22 bytes     00 00 00 00 ???
-            state->junk8a = push_io_piece(12, false, "junk8a"); // unknown bytes
-            state->junk8b = push_io_piece(16, false, "junk8b"); // unknown bytes
-            state->junk8c = push_io_piece(22, false, "junk8c"); // unknown bytes
+            state->junk8a = push_chunk(12, false, "junk8a"); // unknown bytes
+            state->junk8b = push_chunk(16, false, "junk8b"); // unknown bytes
+            state->junk8c = push_chunk(22, false, "junk8c"); // unknown bytes
 
 //                state->last_invasion_id = create_savegame_piece(2, false, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
 
-            state->SCENARIO.map_name = push_io_piece(65, false, "SCENARIO.map_name"); // ok
-            state->bookmarks = push_io_piece(32, false, "bookmarks"); // ok
-            state->tutorial_part3 = push_io_piece(4, false, "tutorial_part3"); // ok ????
+            state->SCENARIO.map_name = push_chunk(65, false, "SCENARIO.map_name"); // ok
+            state->bookmarks = push_chunk(32, false, "bookmarks"); // ok
+            state->tutorial_part3 = push_chunk(4, false, "tutorial_part3"); // ok ????
 
 //            int t_sub = 228;
 
             // 8 bytes      00 00 00 00 ???
-            state->junk9a = push_io_piece(8, false, "junk9a");
-            state->junk9b = push_io_piece(396, false, "junk9b");
+            state->junk9a = push_chunk(8, false, "junk9a");
+            state->junk9b = push_chunk(396, false, "junk9b");
 
             // 51984 bytes  00 00 00 00 ???
-            state->soil_fertility_grid = push_io_piece(51984, false, "soil_fertility_grid");
+            state->soil_fertility_grid = push_chunk(51984, false, "soil_fertility_grid");
 
 
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
-            state->SCENARIO.events_ph = push_io_piece(18600, false, "SCENARIO.events_ph");
+            state->SCENARIO.events_ph = push_chunk(18600, false, "SCENARIO.events_ph");
 
             // 28 bytes     2F 01 00 00 ???
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
-            state->junk10a = push_io_piece(28, false, "junk10a");
-            state->junk10b = push_io_piece(file_data.version.minor < 149 ? 13216 : 13416, false, "junk10b");
-            state->junk10c = push_io_piece(8200, false, "junk10c");
+            state->junk10a = push_chunk(28, false, "junk10a");
+            state->junk10b = push_chunk(version.minor < 149 ? 13216 : 13416, false, "junk10b");
+            state->junk10c = push_chunk(8200, false, "junk10c");
 
-            state->junk11 = push_io_piece(1280, true, "junk11"); // unknown compressed data
+            state->junk11 = push_chunk(1280, true, "junk11"); // unknown compressed data
 
-            state->empire_map_objects = push_io_piece(file_data.version.minor < 160 ? 15200 : 19600, true, "empire_objects");
-            state->empire_map_routes = push_io_piece(16200, true, "empire_routes");
+            state->empire_map_objects = push_chunk(version.minor < 160 ? 15200 : 19600, true, "empire_objects");
+            state->empire_map_routes = push_chunk(16200, true, "empire_routes");
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
-            state->GRID02_8BIT = push_io_piece(51984, false, "GRID02_8BIT"); // todo: 1-byte grid
+            state->GRID02_8BIT = push_chunk(51984, false, "GRID02_8BIT"); // todo: 1-byte grid
 
             // 20 bytes     19 00 00 00 ???
-            state->junk14 = push_io_piece(20, false, "junk14");
+            state->junk14 = push_chunk(20, false, "junk14");
 
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
-            state->bizarre_ordered_fields_1 = push_io_piece(528, false, "bizarre_ordered_fields_1");
+            state->bizarre_ordered_fields_1 = push_chunk(528, false, "bizarre_ordered_fields_1");
 
-            state->floodplain_settings = push_io_piece(36, true, "floodplain_settings"); // floodplain_settings
-            state->GRID03_32BIT = push_io_piece(207936, true, "GRID03_32BIT"); // todo: 4-byte grid
+            state->floodplain_settings = push_chunk(36, true, "floodplain_settings"); // floodplain_settings
+            state->GRID03_32BIT = push_chunk(207936, true, "GRID03_32BIT"); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
-            state->bizarre_ordered_fields_3 = push_io_piece(312 , false, "bizarre_ordered_fields_3"); // 71x 4-bytes emptiness
+            state->bizarre_ordered_fields_3 = push_chunk(312, false, "bizarre_ordered_fields_3"); // 71x 4-bytes emptiness
 
             // 64 bytes     00 00 00 00 ???
-            state->junk16 = push_io_piece(64, false, "junk16"); // 71x 4-bytes emptiness
-            state->tutorial_part1 = push_io_piece(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
-            state->soil_unk_grid = push_io_piece(51984, true, "floodplain_soil_depletion");
+            state->junk16 = push_chunk(64, false, "junk16"); // 71x 4-bytes emptiness
+            state->tutorial_part1 = push_chunk(41, false, "tutorial_part1"); // 41 x 1-byte flag fields
+            state->soil_unk_grid = push_chunk(51984, true, "floodplain_soil_depletion");
 
             // lone byte ???
-            state->junk17 = push_io_piece(1, false, "junk17");
-            state->moisture_grid = push_io_piece(51984, true, "moisture_grid");
+            state->junk17 = push_chunk(1, false, "junk17");
+            state->moisture_grid = push_chunk(51984, true, "moisture_grid");
 
             // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
-            state->bizarre_ordered_fields_2 = push_io_piece(672, false, "bizarre_ordered_fields_2");
+            state->bizarre_ordered_fields_2 = push_chunk(672, false, "bizarre_ordered_fields_2");
 
             // 20 bytes     00 00 00 00 ???
             // 4800 bytes   00 00 00 00 ???
-            state->junk18 = push_io_piece(20, false, "junk18");
-            state->bizarre_ordered_fields_4 = push_io_piece(4800, false, "bizarre_ordered_fields_4");
+            state->junk18 = push_chunk(20, false, "junk18");
+            state->bizarre_ordered_fields_4 = push_chunk(4800, false, "bizarre_ordered_fields_4");
 
             break;
         }
     }
 }
+const file_version_t *FileManager::get_file_version() {
+    return &file_version;
+}
 
-static void scenario_load_from_state(scenario_state *state) {
-    map_image_load_state(state->graphic_ids);
-    map_terrain_load_state(state->terrain);
-    map_property_load_state(state->bitfields, state->edge);
-    map_random_load_state(state->random);
-    map_elevation_load_state(state->elevation);
-    city_view_load_scenario_state(state->camera);
+buffer *FileManager::push_chunk(int size, bool compressed, const char *name) {
+    // add empty piece onto the stack
+    file_chunks.push_back(file_chunk_t());
+    auto piece = &file_chunks.at(file_chunks.size() - 1);
 
-    random_load_state(state->random_iv);
+    // fill info
+    piece->compressed = compressed;
+    safe_realloc_for_size(&piece->buf, size);
+    strncpy(piece->name, name, 99);
 
-    scenario_load_state(&state->SCENARIO);
+    // return linked buffer pointer so that it can be assigned for read/write access later
+    return piece->buf;
+}
+const int FileManager::num_chunks() {
+    return file_chunks.size();
+}
+
+#include "SDL.h"
+
+#ifdef _WIN32
+#  ifdef _WIN64
+#    define PRI_SIZET PRIu64
+#  else
+#    define PRI_SIZET PRIu32
+#  endif
+#else
+#  define PRI_SIZET "zu"
+#endif
+
+int findex;
+char *fname;
+
+void log_hex(file_chunk_t *piece, int i, int offs) {
+    // log first few bytes of the filepiece
+    size_t s = piece->buf->size() < 16 ? piece->buf->size() : 16;
+    char hexstr[40] = {0};
+    for (int b = 0; b < s; b++) {
+        char hexcode[3] = {0};
+        uint8_t inbyte = piece->buf->get_value(b);
+        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
+        if ((b + 1) % 4 == 0 || (b + 1) == s)
+            strncat(hexstr, " ", 2);
+    }
+
+    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", piece->compressed ? "(C)" : "---", i + 1, FileIO.num_chunks(),
+            offs, hexstr, piece->buf->size(), fname);
+}
+static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
+    // check that the stream size isn't above maximum temp buffer
+    if (filepiece_size > COMPRESS_BUFFER_SIZE)
+        return 0;
+
+    // read 32-bit int header denoting size of compressed chunk
+    uint32_t chunk_size = 0;
+    fread(&chunk_size, 4, 1, fp);
+
+    // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
+    if ((unsigned int) chunk_size == UNCOMPRESSED) {
+        if (buf->from_file(filepiece_size, fp) != filepiece_size)
+            return 0;
+    } else {
+        // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
+        int csize = fread(compress_buffer, 1, chunk_size, fp);
+        if (csize != chunk_size) {
+            SDL_Log("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
+            return 0;
+        }
+        int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
+        if (bsize != buf->size()) {
+            SDL_Log("Incorrect buffer size, expected %i, found %i", buf->size(), bsize);
+            return 0;
+        }
+//        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
+//            || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size) !=
+//               buf->size())
+//            return 0;
+    }
+//    buf->force_validate_unsafe_pls_use_carefully();
+
+    return 1;
+}
+static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
+    if (bytes_to_write > COMPRESS_BUFFER_SIZE)
+        return 0;
+
+    int output_size = COMPRESS_BUFFER_SIZE;
+    if (zip_compress(buf->get_data(), bytes_to_write, compress_buffer, &output_size)) {
+//        write_int32(fp, output_size);
+        fwrite(&output_size, 4, 1, fp);
+        fwrite(compress_buffer, 1, output_size, fp);
+    } else {
+        // unable to compress: write uncompressed
+//        write_int32(fp, UNCOMPRESSED);
+        output_size = UNCOMPRESSED;
+        fwrite(&output_size, 4, 1, fp);
+        fwrite(buf->get_data(), 1, bytes_to_write, fp);
+    }
+    return 1;
+}
+
+//static void write_file_pieces(FILE *fp) {
+//    for (int i = 0; i < file_data.num_pieces; i++) {
+//        file_chunk_t *piece = &file_data.file_chunks[i];
+//        if (piece->compressed)
+//            write_compressed_chunk(fp, piece->buf, piece->buf->size());
+//        else
+//            piece->buf->to_file(piece->buf->size(), fp);
+//    }
+//}
+bool FileManager::load_file_headers() {
+    file_version = read_file_version(file_path, file_offset);
+    if (file_version.major == -1 || file_version.minor == -1)
+        return false;
+    return true;
+    // TODO: file size?
+}
+bool FileManager::load_file_body() {
+    log_info("Loading saved game", file_path, 0);
+    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        log_error("Unable to load game, unable to open file.", 0, 0);
+        return false;
+    }
+    if (file_offset)
+        fseek(fp, file_offset, SEEK_SET);
+
+    // read contents
+    for (int i = 0; i < num_chunks(); i++) {
+        file_chunk_t *chunk = &file_chunks.at(i);
+        findex = i;
+        fname = chunk->name;
+        int result = 0;
+
+        auto offs = ftell(fp);
+
+        if (chunk->compressed)
+            result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
+        else
+            result = chunk->buf->from_file(chunk->buf->size(), fp) == chunk->buf->size();
+
+        // export uncompressed buffer data to zip folder for debugging
+        char *lfile = (char *) malloc(200);
+        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+        FILE *log = fopen(lfile, "wb+");
+        if (log)
+            fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
+        fclose(log);
+        free(lfile);
+
+        ///
+
+        log_hex(chunk, i, offs);
+
+        // The last piece may be smaller than buf->size
+        if (!result && i != (num_chunks() - 1)) {
+            log_error("Unable to load game, unable to read savefile.", 0, 0);
+            return false;
+        }
+    }
+    file_close(fp);
+    return true;
+}
+
+bool FileManager::read(const char *filename, int offset) {
+
+    // first, clear up the manager data and set the new file info
+    clear();
+    safe_strncpy(file_path, filename, MAX_FILE_NAME);
+    file_offset = offset;
+
+    // read file header data
+    if (!load_file_headers()) {
+        log_info("Invalid file and/or version header!", filename, 0);
+        return false;
+    }
+    SDL_Log("FILE VERSION: %i TYPE: %i", file_version.minor, file_version.major);
+
+    // determine appropriate schema and related data
+    if (file_has_extension(filename, "pak") || file_has_extension(filename, "sav"))
+        file_schema = FILE_SCHEMA_SAV;
+    else if (file_has_extension(filename, "map"))
+        file_schema = FILE_SCHEMA_MAP;
+    if (file_has_extension(filename, "pak") && file_version.minor < 149)
+        terrain_ph_offset = 539; //14791
+    else
+        terrain_ph_offset = 0; //14252
+
+    // init file chunks and buffer collection
+    init_with_schema(file_schema, file_version);
+
+    // fill buffers with file contents
+    if (!load_file_body()) {
+        return false;
+    }
+    return true;
+
+//    if (!load_file_version(filename, offset + 4)) {
+//        log_info("Unable to load game, unable to read savefile.", filename, 0);
+//        return false;
+//    }
+//
+//    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
+//
+//    init_file_data();
+//    log_info("Loading saved game.", filename, 0);
+//
+//    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
+//        terrain_ph_offset = 539; //14791
+//    else
+//        terrain_ph_offset = 0; //14252
+
+
+}
+bool FileManager::write(const char *filename) {
+
+}
+
+static void scenario_load_from_state() {
+    auto state = &buffers;
+//    map_image_load_state(state->graphic_ids);
+//    map_terrain_load_state(state->terrain);
+//    map_property_load_state(state->bitfields, state->edge);
+//    map_random_load_state(state->random);
+//    map_elevation_load_state(state->elevation);
+//    city_view_load_scenario_state(state->camera);
+//
+//    random_load_state(state->random_iv);
+//
+//    scenario_load_state(&state->SCENARIO);
 
 //    file->end_marker->skip(4);
 }
-static void scenario_save_to_state(scenario_state *state) {
-    map_image_save_state(state->graphic_ids);
-    map_terrain_save_state(state->terrain);
-    map_property_save_state(state->bitfields, state->edge);
-    map_random_save_state(state->random);
-    map_elevation_save_state(state->elevation);
-    city_view_save_scenario_state(state->camera);
-
-    random_save_state(state->random_iv);
-
-    scenario_save_state(&state->SCENARIO);
+static void scenario_save_to_state() {
+    auto state = &buffers;
+//    map_image_save_state(state->graphic_ids);
+//    map_terrain_save_state(state->terrain);
+//    map_property_save_state(state->bitfields, state->edge);
+//    map_random_save_state(state->random);
+//    map_elevation_save_state(state->elevation);
+//    city_view_save_scenario_state(state->camera);
+//
+//    random_save_state(state->random_iv);
+//
+//    scenario_save_state(&state->SCENARIO);
 
 //    file->end_marker->skip(4);
 }
-static void savegame_load_from_state(savegame_state *state) {
-    file_data.version.minor = state->file_version->read_i32();
-    file_data.version.major = state->file_version->read_i32();
+static void savegame_load_from_state() {
+//    file_data.version.minor = state->file_version->read_i32();
+//    file_data.version.major = state->file_version->read_i32();
 
+    auto state = &buffers;
     scenario_load_state(&state->SCENARIO);
 
     map_image_load_state(state->image_grid, terrain_ph_offset);
@@ -701,9 +918,10 @@ static void savegame_load_from_state(savegame_state *state) {
     }
 //    state->end_marker->skip(284);
 }
-static void savegame_save_to_state(savegame_state *state) {
-    state->file_version->write_i32(file_data.version.minor);
-    state->file_version->write_i32(file_data.version.major);
+static void savegame_save_to_state() {
+    auto state = &buffers;
+//    state->file_version->write_i32(file_data.version.minor);
+//    state->file_version->write_i32(file_data.version.major);
 
     scenario_save_state(&state->SCENARIO);
 //    scenario_settings_save_state(state->scenario_campaign_mission,
@@ -781,164 +999,34 @@ static void savegame_save_to_state(savegame_state *state) {
 //    state->end_marker->skip(284);
 }
 
-#include "SDL.h"
-
-#ifdef _WIN32
-#  ifdef _WIN64
-#    define PRI_SIZET PRIu64
-#  else
-#    define PRI_SIZET PRIu32
-#  endif
-#else
-#  define PRI_SIZET "zu"
-#endif
-
-int findex;
-char *fname;
-
-void log_hex(file_piece *piece, int i, int offs) {
-    // log first few bytes of the filepiece
-    size_t s = piece->buf->size() < 16 ? piece->buf->size() : 16;
-    char hexstr[40] = {0};
-    for (int b = 0; b < s; b++) {
-        char hexcode[3] = {0};
-        uint8_t inbyte = piece->buf->get_value(b);
-        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
-        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
-        if ((b + 1) % 4 == 0 || (b + 1) == s)
-            strncat(hexstr, " ", 2);
-    }
-
-    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", piece->compressed ? "(C)" : "---", i + 1, file_data.num_pieces,
-            offs, hexstr, piece->buf->size(), fname);
-}
-static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
-    // check that the stream size isn't above maximum temp buffer
-    if (filepiece_size > COMPRESS_BUFFER_SIZE)
-        return 0;
-
-    // read 32-bit int header denoting size of compressed chunk
-    uint32_t chunk_size = 0;
-    fread(&chunk_size, 4, 1, fp);
-
-    // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
-    if ((unsigned int) chunk_size == UNCOMPRESSED) {
-        if (buf->from_file(filepiece_size, fp) != filepiece_size)
-            return 0;
-    } else {
-        // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
-        int csize = fread(compress_buffer, 1, chunk_size, fp);
-        if (csize != chunk_size) {
-            SDL_Log("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
-            return 0;
-        }
-        int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
-        if (bsize != buf->size()) {
-            SDL_Log("Incorrect buffer size, expected %i, found %i", buf->size(), bsize);
-            return 0;
-        }
-//        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
-//            || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size) !=
-//               buf->size())
-//            return 0;
-    }
-//    buf->force_validate_unsafe_pls_use_carefully();
-
-    return 1;
-}
-static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
-    if (bytes_to_write > COMPRESS_BUFFER_SIZE)
-        return 0;
-
-    int output_size = COMPRESS_BUFFER_SIZE;
-    if (zip_compress(buf->get_data(), bytes_to_write, compress_buffer, &output_size)) {
-//        write_int32(fp, output_size);
-        fwrite(&output_size, 4, 1, fp);
-        fwrite(compress_buffer, 1, output_size, fp);
-    } else {
-        // unable to compress: write uncompressed
-//        write_int32(fp, UNCOMPRESSED);
-        output_size = UNCOMPRESSED;
-        fwrite(&output_size, 4, 1, fp);
-        fwrite(buf->get_data(), 1, bytes_to_write, fp);
-    }
-    return 1;
-}
-static bool read_file_pieces(FILE *fp) {
-    for (int i = 0; i < file_data.num_pieces; i++) {
-        file_piece *piece = &file_data.pieces[i];
-        findex = i;
-        fname = piece->name;
-        int result = 0;
-
-        auto offs = ftell(fp);
-
-        if (piece->compressed)
-            result = read_compressed_chunk(fp, piece->buf, piece->buf->size());
-        else
-            result = piece->buf->from_file(piece->buf->size(), fp) == piece->buf->size();
-
-        // export uncompressed buffer data to zip folder for debugging
-        char *lfile = (char *) malloc(200);
-        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, piece->buf->size(), fname);
-        FILE *log = fopen(lfile, "wb+");
-        if (log)
-            fwrite(piece->buf->get_data(), piece->buf->size(), 1, log);
-        fclose(log);
-        free(lfile);
-
-        ///
-
-        log_hex(piece, i, offs);
-
-        // The last piece may be smaller than buf->size
-        if (!result && i != (file_data.num_pieces - 1))
-            return false;
-    }
-    return true;
-}
-static void write_file_pieces(FILE *fp) {
-    for (int i = 0; i < file_data.num_pieces; i++) {
-        file_piece *piece = &file_data.pieces[i];
-        if (piece->compressed)
-            write_compressed_chunk(fp, piece->buf, piece->buf->size());
-        else
-            piece->buf->to_file(piece->buf->size(), fp);
-    }
-}
-
-const file_version_t *get_file_version() {
-    return &file_data.version;
-}
 bool game_file_io_read_scenario(const char *filename) {
     // TODO
     return false;
 
-    init_scenario_data();
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-    if (!fp) {
-        log_error("Unable to access file", filename, 0);
-        return false;
-    }
-    log_info("Loading scenario", filename, 0);
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        int bytes_read = scenario_data.pieces[i].buf->from_file((size_t) scenario_data.pieces[i].buf->size(), fp);
-        if (bytes_read != scenario_data.pieces[i].buf->size()) {
-            log_error("Unable to load scenario", filename, 0);
-            file_close(fp);
-            return false;
-        }
-
-//        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
+//    init_scenario_data();
+//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+//    if (!fp) {
+//        log_error("Unable to access file", filename, 0);
+//        return false;
+//    }
+//    log_info("Loading scenario", filename, 0);
+//    for (int i = 0; i < scenario_data.num_pieces; i++) {
+//        int bytes_read = scenario_data.file_chunks[i].buf->from_file((size_t) scenario_data.file_chunks[i].buf->size(), fp);
+//        if (bytes_read != scenario_data.file_chunks[i].buf->size()) {
 //            log_error("Unable to load scenario", filename, 0);
 //            file_close(fp);
-//            return 0;
+//            return false;
 //        }
-    }
-    file_close(fp);
-
-    scenario_load_from_state(&scenario_data.state);
+//
+////        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
+////            log_error("Unable to load scenario", filename, 0);
+////            file_close(fp);
+////            return 0;
+////        }
+//    }
+//    file_close(fp);
+//
+//    scenario_load_from_state(&scenario_data.state);
     return true;
 }
 bool game_file_io_write_scenario(const char *filename) {
@@ -961,53 +1049,54 @@ bool game_file_io_write_scenario(const char *filename) {
 }
 bool game_file_io_read_saved_game(const char *filename, int offset) {
 
-    if (!load_file_version(filename, offset + 4)) {
-        log_info("Unable to load game, unable to read savefile.", filename, 0);
-        return false;
-    }
-
-    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
-
-    init_file_data();
-    log_info("Loading saved game.", filename, 0);
-
-    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
-        terrain_ph_offset = 539; //14791
-    else
-        terrain_ph_offset = 0; //14252
-
-    log_info("Loading saved game", filename, 0);
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-    if (!fp) {
-        log_error("Unable to load game, unable to open file.", 0, 0);
-        return false;
-    }
-    if (offset)
-        fseek(fp, offset, SEEK_SET);
-
-    int result = read_file_pieces(fp);
-    file_close(fp);
-    if (!result) {
-        log_error("Unable to load game, unable to read savefile.", 0, 0);
-        return false;
-    }
-    savegame_load_from_state(&file_data.state);
+    FileIO.read(filename, offset);
+//    if (!load_file_version(filename, offset + 4)) {
+//        log_info("Unable to load game, unable to read savefile.", filename, 0);
+//        return false;
+//    }
+//
+//    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
+//
+//    init_file_data();
+//    log_info("Loading saved game.", filename, 0);
+//
+//    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
+//        terrain_ph_offset = 539; //14791
+//    else
+//        terrain_ph_offset = 0; //14252
+//
+//    log_info("Loading saved game", filename, 0);
+//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+//    if (!fp) {
+//        log_error("Unable to load game, unable to open file.", 0, 0);
+//        return false;
+//    }
+//    if (offset)
+//        fseek(fp, offset, SEEK_SET);
+//
+//    int result = read_file_pieces(fp);
+//    file_close(fp);
+//    if (!result) {
+//        log_error("Unable to load game, unable to read savefile.", 0, 0);
+//        return false;
+//    }
+    savegame_load_from_state();
     return true;
 }
 bool game_file_io_write_saved_game(const char *filename) {
-    init_file_data();
-
-    log_info("Saving game", filename, 0);
-//    savegame_version = SAVE_GAME_VERSION;
-    savegame_save_to_state(&file_data.state);
-
-    FILE *fp = file_open(filename, "wb");
-    if (!fp) {
-        log_error("Unable to save game", 0, 0);
-        return false;
-    }
-    write_file_pieces(fp);
-    file_close(fp);
+//    init_file_data();
+//
+//    log_info("Saving game", filename, 0);
+////    savegame_version = SAVE_GAME_VERSION;
+//    savegame_save_to_state(&file_data.state);
+//
+//    FILE *fp = file_open(filename, "wb");
+//    if (!fp) {
+//        log_error("Unable to save game", 0, 0);
+//        return false;
+//    }
+//    write_file_pieces(fp);
+//    file_close(fp);
     return true;
 }
 bool game_file_io_delete_saved_game(const char *filename) {

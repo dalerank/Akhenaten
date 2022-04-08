@@ -1,6 +1,7 @@
 #include <core/buffer.h>
 #include <core/io.h>
 #include <cstring>
+#include <core/string.h>
 #include "player_data.h"
 
 #include "scenario/property.h"
@@ -172,9 +173,9 @@ void player_data_load(const uint8_t *player_name) {
     data.dat_file->read_raw(raw_autosave_path, MAX_AUTOSAVE_PATH); // path to last autosave_replay.sav file
     auto proper_path_syntax = dir_get_file(raw_autosave_path, NOT_LOCALIZED);
     if (proper_path_syntax)
-        strcpy(data.last_autosave_path, proper_path_syntax);
+        safe_strncpy(data.last_autosave_path, proper_path_syntax, MAX_AUTOSAVE_PATH);
     else
-        strcpy(data.last_autosave_path, "");
+        safe_strncpy(data.last_autosave_path, "", MAX_AUTOSAVE_PATH);
     data.unk00 == data.dat_file->read_i32(); // unknown 32-bit field (0)
     for (int i = 0; i < MAX_DAT_ENTRIES; ++i) // scenario records
         load_jas_record_chunk(data.dat_file, &data.player_scenario_records[i]);

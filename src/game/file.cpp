@@ -385,8 +385,8 @@ void game_file_write_mission_saved_game(void) {
     return; // temp
     const char *filename = MISSION_SAVED_GAMES[rank];
     if (locale_translate_rank_autosaves()) {
-        char localized_filename[FILE_NAME_MAX];
-        encoding_to_utf8(lang_get_string(32, rank), localized_filename, FILE_NAME_MAX,
+        char localized_filename[MAX_FILE_NAME];
+        encoding_to_utf8(lang_get_string(32, rank), localized_filename, MAX_FILE_NAME,
                          encoding_system_uses_decomposed());
         strcat(localized_filename, ".svx");
         filename = localized_filename;

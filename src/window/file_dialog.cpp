@@ -57,6 +57,11 @@ static scroll_list_panel *panel = new scroll_list_panel(NUM_FILES_IN_VIEW, butto
 
 static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE_ON_DARK};
 
+typedef struct {
+    char extension[4];
+    char last_loaded_file[MAX_FILE_NAME];
+} file_type_data;
+
 static struct {
     time_millis message_not_exist_start_time;
     file_type type;
@@ -64,8 +69,8 @@ static struct {
     int focus_button_id;
 
     file_type_data *file_data;
-    uint8_t typed_name[FILE_NAME_MAX];
-    char selected_file[FILE_NAME_MAX];
+    uint8_t typed_name[MAX_FILE_NAME];
+    char selected_file[MAX_FILE_NAME];
 } data;
 
 static file_type_data saved_game_data = {"sav"};
@@ -91,8 +96,8 @@ static bool is_valid_chosen_filename() {
 }
 static const char *get_chosen_filename(void) {
     // Check if we should work with the selected file
-    uint8_t selected_name[FILE_NAME_MAX];
-    encoding_from_utf8(data.selected_file, selected_name, FILE_NAME_MAX);
+    uint8_t selected_name[MAX_FILE_NAME];
+    encoding_from_utf8(data.selected_file, selected_name, MAX_FILE_NAME);
 
     if (string_equals(selected_name, data.typed_name, 1)) {
         // user has not modified the string after selecting it: use filename
@@ -100,8 +105,8 @@ static const char *get_chosen_filename(void) {
     }
 
     // We should use the typed name, which needs to be converted to UTF-8...
-    static char typed_file[FILE_NAME_MAX];
-    encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
+    static char typed_file[MAX_FILE_NAME];
+    encoding_to_utf8(data.typed_name, typed_file, MAX_FILE_NAME, encoding_system_uses_decomposed());
     return typed_file;
 }
 
@@ -115,7 +120,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
 //        string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
 //        encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
     } else
-        encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
+        encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, MAX_FILE_NAME);
 
     data.dialog_type = dialog_type;
     data.message_not_exist_start_time = 0;
@@ -132,7 +137,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
 //                data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
             break;
         case ENGINE_ENV_PHARAOH:
-            char folder_name[FILE_NAME_MAX] = "Save/";
+            char folder_name[MAX_FILE_NAME] = "Save/";
             strcat(folder_name, setting_player_name_utf8());
             strcat(folder_name, "/");
             if (type == FILE_TYPE_SCENARIO)
@@ -146,12 +151,12 @@ static void init(file_type type, file_dialog_type dialog_type) {
     }
 
     set_chosen_filename(data.file_data->last_loaded_file);
-    input_box_start(&file_name_input, data.typed_name, FILE_NAME_MAX, 0);
+    input_box_start(&file_name_input, data.typed_name, MAX_FILE_NAME, 0);
 }
 
 static void draw_foreground(void) {
     graphics_in_dialog();
-    uint8_t file[FILE_NAME_MAX];
+    uint8_t file[MAX_FILE_NAME];
 
     outer_panel_draw(128, 40, 24, 21);
     input_box_draw(&file_name_input);
@@ -250,7 +255,7 @@ static void button_ok_cancel(int is_ok, int param2) {
         }
     }
 
-    strncpy(data.file_data->last_loaded_file, get_chosen_filename(), FILE_NAME_MAX - 1);
+    strncpy(data.file_data->last_loaded_file, get_chosen_filename(), MAX_FILE_NAME - 1);
 }
 static void button_select_file(int index, int param2) {
     if (index >= panel->get_total_entries())
@@ -259,7 +264,7 @@ static void button_select_file(int index, int param2) {
 //    setting_set_player_name(data.selected_player);
     input_box_refresh_text(&file_name_input);
     data.message_not_exist_start_time = 0;
-    load_file_version(panel->get_selected_entry_text(FILE_FULL_PATH), 4);
+//    read_file_version(panel->get_selected_entry_text(FILE_FULL_PATH), 4);
 
 
 
