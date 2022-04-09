@@ -1,5 +1,5 @@
-#ifndef GAME_FILE_IO_H
-#define GAME_FILE_IO_H
+#ifndef OZYMANDIAS_MANAGER_H
+#define OZYMANDIAS_MANAGER_H
 
 #include <vector>
 #include <core/buffer.h>
@@ -73,17 +73,14 @@ public:
 
     void init_with_schema(file_schema_enum_t mapping_schema, file_version_t version);
 
-    bool read(const char *filename, int offset);
-    bool write(const char *filename);
+    bool read_from_file(const char *filename, int offset);
+    bool write_to_file(const char *filename, int offset);
+
+    void load_state();
+    void write_state();
 
 } FileIO;
 
 file_version_t read_file_version(const char *filename, int offset);
 
-bool game_file_io_read_scenario(const char *filename);
-bool game_file_io_write_scenario(const char *filename);
-bool game_file_io_read_saved_game(const char *filename, int offset);
-bool game_file_io_write_saved_game(const char *filename);
-bool game_file_io_delete_saved_game(const char *filename);
-
-#endif // GAME_FILE_IO_H
+#endif //OZYMANDIAS_MANAGER_H

@@ -20,7 +20,7 @@
 #include "figuretype/editor.h"
 #include "figuretype/water.h"
 #include "game/animation.h"
-#include "game/file_io.h"
+#include "game/gamestate/file_io.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "map/aqueduct.h"
@@ -133,8 +133,8 @@ void game_file_editor_create_scenario(int size) {
 
 int game_file_editor_load_scenario(const char *scenario_file) {
     clear_map_data();
-    if (!game_file_io_read_scenario(scenario_file))
-        return 0;
+//    if (!game_file_io_read_scenario(scenario_file)) TODO
+//        return 0;
 
     scenario_map_init();
 
@@ -151,5 +151,5 @@ int game_file_editor_write_scenario(const char *scenario_file) {
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
-    return game_file_io_write_scenario(scenario_file);
+//    return game_file_io_write_scenario(scenario_file); TODO
 }

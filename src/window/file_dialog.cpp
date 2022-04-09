@@ -28,7 +28,7 @@
 #include <string.h>
 #include <game/settings.h>
 #include <graphics/scroll_list_panel.h>
-#include <game/file_io.h>
+#include <game/gamestate/manager.h>
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 

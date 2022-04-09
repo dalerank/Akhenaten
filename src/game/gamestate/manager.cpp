@@ -1,51 +1,4 @@
-#include "file_io.h"
-
-#include "building/barracks.h"
-#include "building/count.h"
-#include "building/list.h"
-#include "building/storage.h"
-#include "city/culture.h"
-#include "city/data.h"
-#include "core/file.h"
-#include "core/log.h"
-#include "core/image.h"
-#include "core/game_environment.h"
-#include "city/message.h"
-#include "city/view.h"
-#include "core/dir.h"
-#include "core/random.h"
-#include "core/zip.h"
-#include "empire/city.h"
-#include "empire/empire.h"
-#include "empire/trade_prices.h"
-#include "empire/trade_route.h"
-#include "figure/enemy_army.h"
-#include "figure/formation.h"
-#include "figure/name.h"
-#include "figure/route.h"
-#include "figure/trader.h"
-#include "game/time.h"
-#include "game/tutorial.h"
-#include "map/aqueduct.h"
-#include "map/bookmark.h"
-#include "map/building.h"
-#include "map/desirability.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/image.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/routing.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
-#include "scenario/criteria.h"
-#include "scenario/earthquake.h"
-#include "scenario/emperor_change.h"
-#include "scenario/gladiator_revolt.h"
-#include "scenario/invasion.h"
-#include "scenario/scenario.h"
-#include "sound/city.h"
-
+#include "manager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,35 +6,15 @@
 #include <cinttypes>
 #include <core/io.h>
 #include <core/string.h>
+#include <chrono>
+#include <core/zip.h>
+#include <core/log.h>
+#include <core/image.h>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
 
-//static const int SAVE_GAME_VERSION = 0x76;
-
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
-
-//static file_version_t file_version;
-
-//typedef struct {
-//    buffer *graphic_ids = nullptr;
-//    buffer *edge = nullptr;
-//    buffer *terrain = nullptr;
-//    buffer *bitfields = nullptr;
-//    buffer *random = nullptr;
-//    buffer *elevation = nullptr;
-//    buffer *random_iv = nullptr;
-//    buffer *camera = nullptr;
-////    buffer *scenario = nullptr;
-//    scenario_data_buffers SCENARIO;
-//    buffer *end_marker = nullptr;
-//} scenario_state;
-
-//static struct {
-//    int num_pieces;
-//    file_piece_t pieces[10];
-//    scenario_state state;
-//} scenario_data = {0};
 
 struct {
 //    buffer *scenario_campaign_mission = nullptr;
@@ -145,7 +78,42 @@ struct {
     // 17. map info 3
     // 18. empire info
 
-    scenario_data_buffers SCENARIO;
+    struct {
+        buffer *mission_index = nullptr;
+        buffer *map_name = nullptr;
+        buffer *map_settings = nullptr;
+        buffer *is_custom = nullptr;
+        buffer *player_name = nullptr;
+
+        buffer *header = nullptr;
+        buffer *info1 = nullptr;
+        buffer *info2 = nullptr;
+        buffer *info3 = nullptr;
+        buffer *events = nullptr;
+        buffer *win_criteria = nullptr;
+        buffer *map_points = nullptr;
+        buffer *river_points = nullptr;
+        buffer *empire = nullptr;
+        buffer *wheat = nullptr;
+        buffer *climate_id = nullptr;
+
+        buffer *requests = nullptr;
+        buffer *invasions = nullptr;
+        buffer *invasion_points = nullptr;
+        buffer *request_comply_dialogs = nullptr;
+        buffer *herds = nullptr;
+        buffer *demands = nullptr;
+        buffer *price_changes = nullptr;
+        buffer *fishing_points = nullptr;
+        buffer *request_extra = nullptr;
+        buffer *allowed_builds = nullptr;
+
+        buffer *events_ph = nullptr;
+
+        buffer *monuments = nullptr;
+
+    } SCENARIO;
+//    scenario_data_buffers SCENARIO;
 
 //    buffer *scenario_header = nullptr;
 //        buffer *scenario_request_events = nullptr;
@@ -263,30 +231,15 @@ struct {
 } buffers;
 FileManager FileIO;
 
-//static struct {
-//    int num_pieces;
-//    file_piece_t pieces[200];
-//    savegame_state state;
-//    file_version_t version;
-//} file_data = {0};
-
-//static void init_file_piece(file_piece_t *piece, int size, bool compressed) {
-//    piece->compressed = compressed;
-//    safe_realloc_for_size(&piece->buf, size);
-//}
-//static buffer *create_scenario_piece(int size, const char *name) {
-//    file_piece_t *piece = &scenario_data.pieces[scenario_data.num_pieces++];
-//    init_file_piece(piece, size, 0);
-//    strncpy(piece->name, name, 99);
-//    return piece->buf;
-//}
-
 void FileManager::clear() {
     loaded = false;
     safe_strncpy(file_path, "", MAX_FILE_NAME);
     file_size = 0;
     file_offset = 0;
     file_version = {-1, -1};
+    for (int i = 0; i < num_chunks(); ++i) {
+        delete file_chunks.at(i).buf;
+    }
     file_chunks.clear();
 }
 
@@ -294,7 +247,7 @@ static buffer *version_buffer = new buffer(8);
 file_version_t read_file_version(const char *filename, int offset) {
     file_version_t version = {-1, -1};
     version_buffer->clear();
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset)) {
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset + 4)) {
         version.minor = version_buffer->read_i32();
         version.major = version_buffer->read_i32();
     }
@@ -702,7 +655,6 @@ bool FileManager::load_file_headers() {
     // TODO: file size?
 }
 bool FileManager::load_file_body() {
-    log_info("Loading saved game", file_path, 0);
     FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
@@ -736,7 +688,7 @@ bool FileManager::load_file_body() {
 
         ///
 
-        log_hex(chunk, i, offs);
+//        log_hex(chunk, i, offs);
 
         // The last piece may be smaller than buf->size
         if (!result && i != (num_chunks() - 1)) {
@@ -748,7 +700,11 @@ bool FileManager::load_file_body() {
     return true;
 }
 
-bool FileManager::read(const char *filename, int offset) {
+bool FileManager::read_from_file(const char *filename, int offset) {
+
+    //////////////////////////////////////////////////////////////////
+    auto TIME_START = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
 
     // first, clear up the manager data and set the new file info
     clear();
@@ -760,7 +716,6 @@ bool FileManager::read(const char *filename, int offset) {
         log_info("Invalid file and/or version header!", filename, 0);
         return false;
     }
-    SDL_Log("FILE VERSION: %i TYPE: %i", file_version.minor, file_version.major);
 
     // determine appropriate schema and related data
     if (file_has_extension(filename, "pak") || file_has_extension(filename, "sav"))
@@ -779,28 +734,65 @@ bool FileManager::read(const char *filename, int offset) {
     if (!load_file_body()) {
         return false;
     }
+
+    //////////////////////////////////////////////////////////////////
+    auto TIME_FINISH = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
+
+    SDL_Log("Loading savestate from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
+
     return true;
-
-//    if (!load_file_version(filename, offset + 4)) {
-//        log_info("Unable to load game, unable to read savefile.", filename, 0);
-//        return false;
-//    }
-//
-//    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
-//
-//    init_file_data();
-//    log_info("Loading saved game.", filename, 0);
-//
-//    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
-//        terrain_ph_offset = 539; //14791
-//    else
-//        terrain_ph_offset = 0; //14252
-
+}
+bool FileManager::write_to_file(const char *filename, int offset) {
 
 }
-bool FileManager::write(const char *filename) {
 
-}
+#include "building/barracks.h"
+#include "building/count.h"
+#include "building/list.h"
+#include "building/storage.h"
+#include "city/culture.h"
+#include "city/data.h"
+#include "core/file.h"
+#include "core/log.h"
+#include "core/image.h"
+#include "core/game_environment.h"
+#include "city/message.h"
+#include "city/view.h"
+#include "core/dir.h"
+#include "core/random.h"
+#include "core/zip.h"
+#include "empire/city.h"
+#include "empire/empire.h"
+#include "empire/trade_prices.h"
+#include "empire/trade_route.h"
+#include "figure/enemy_army.h"
+#include "figure/formation.h"
+#include "figure/name.h"
+#include "figure/route.h"
+#include "figure/trader.h"
+#include "game/time.h"
+#include "game/tutorial.h"
+#include "map/aqueduct.h"
+#include "map/bookmark.h"
+#include "map/building.h"
+#include "map/desirability.h"
+#include "map/elevation.h"
+#include "map/figure.h"
+#include "map/image.h"
+#include "map/property.h"
+#include "map/random.h"
+#include "map/routing.h"
+#include "map/sprite.h"
+#include "map/terrain.h"
+#include "scenario/criteria.h"
+#include "scenario/earthquake.h"
+#include "scenario/emperor_change.h"
+#include "scenario/gladiator_revolt.h"
+#include "scenario/invasion.h"
+#include "scenario/scenario.h"
+#include "sound/city.h"
 
 static void scenario_load_from_state() {
     auto state = &buffers;
@@ -832,12 +824,12 @@ static void scenario_save_to_state() {
 
 //    file->end_marker->skip(4);
 }
-static void savegame_load_from_state() {
+void FileManager::load_state() {
 //    file_data.version.minor = state->file_version->read_i32();
 //    file_data.version.major = state->file_version->read_i32();
 
     auto state = &buffers;
-    scenario_load_state(&state->SCENARIO);
+//    scenario_load_state(&state->SCENARIO);
 
     map_image_load_state(state->image_grid, terrain_ph_offset);
     map_building_load_state(state->building_grid, state->building_damage_grid);
@@ -923,7 +915,8 @@ static void savegame_save_to_state() {
 //    state->file_version->write_i32(file_data.version.minor);
 //    state->file_version->write_i32(file_data.version.major);
 
-    scenario_save_state(&state->SCENARIO);
+//    scenario_save_state(&state->SCENARIO);
+
 //    scenario_settings_save_state(state->scenario_campaign_mission,
 //                                 state->scenario_settings,
 //                                 state->scenario_is_custom,
@@ -997,113 +990,4 @@ static void savegame_save_to_state() {
     map_bookmark_save_state(state->bookmarks);
 
 //    state->end_marker->skip(284);
-}
-
-bool game_file_io_read_scenario(const char *filename) {
-    // TODO
-    return false;
-
-//    init_scenario_data();
-//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-//    if (!fp) {
-//        log_error("Unable to access file", filename, 0);
-//        return false;
-//    }
-//    log_info("Loading scenario", filename, 0);
-//    for (int i = 0; i < scenario_data.num_pieces; i++) {
-//        int bytes_read = scenario_data.file_chunks[i].buf->from_file((size_t) scenario_data.file_chunks[i].buf->size(), fp);
-//        if (bytes_read != scenario_data.file_chunks[i].buf->size()) {
-//            log_error("Unable to load scenario", filename, 0);
-//            file_close(fp);
-//            return false;
-//        }
-//
-////        if (fread(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp) != scenario_data.pieces[i].buf->size) {
-////            log_error("Unable to load scenario", filename, 0);
-////            file_close(fp);
-////            return 0;
-////        }
-//    }
-//    file_close(fp);
-//
-//    scenario_load_from_state(&scenario_data.state);
-    return true;
-}
-bool game_file_io_write_scenario(const char *filename) {
-    // TODO
-    return false;
-//    log_info("Saving scenario", filename, 0);
-//    init_scenario_data();
-//    scenario_save_to_state(&scenario_data.state);
-//
-//    FILE *fp = file_open(filename, "wb");
-//    if (!fp) {
-//        log_error("Unable to save scenario", 0, 0);
-//        return 0;
-//    }
-//    for (int i = 0; i < scenario_data.num_pieces; i++) {
-//        fwrite(scenario_data.pieces[i].buf->data, 1, scenario_data.pieces[i].buf->size, fp);
-//    }
-//    file_close(fp);
-//    return 1;
-}
-bool game_file_io_read_saved_game(const char *filename, int offset) {
-
-    FileIO.read(filename, offset);
-//    if (!load_file_version(filename, offset + 4)) {
-//        log_info("Unable to load game, unable to read savefile.", filename, 0);
-//        return false;
-//    }
-//
-//    SDL_Log("FILE VERSION: %i TYPE: %i", file_data.version.minor, file_data.version.major);
-//
-//    init_file_data();
-//    log_info("Loading saved game.", filename, 0);
-//
-//    if (file_has_extension(filename, "pak") && file_data.version.minor < 149)
-//        terrain_ph_offset = 539; //14791
-//    else
-//        terrain_ph_offset = 0; //14252
-//
-//    log_info("Loading saved game", filename, 0);
-//    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-//    if (!fp) {
-//        log_error("Unable to load game, unable to open file.", 0, 0);
-//        return false;
-//    }
-//    if (offset)
-//        fseek(fp, offset, SEEK_SET);
-//
-//    int result = read_file_pieces(fp);
-//    file_close(fp);
-//    if (!result) {
-//        log_error("Unable to load game, unable to read savefile.", 0, 0);
-//        return false;
-//    }
-    savegame_load_from_state();
-    return true;
-}
-bool game_file_io_write_saved_game(const char *filename) {
-//    init_file_data();
-//
-//    log_info("Saving game", filename, 0);
-////    savegame_version = SAVE_GAME_VERSION;
-//    savegame_save_to_state(&file_data.state);
-//
-//    FILE *fp = file_open(filename, "wb");
-//    if (!fp) {
-//        log_error("Unable to save game", 0, 0);
-//        return false;
-//    }
-//    write_file_pieces(fp);
-//    file_close(fp);
-    return true;
-}
-bool game_file_io_delete_saved_game(const char *filename) {
-    log_info("Deleting game", filename, 0);
-    int result = file_remove(filename);
-    if (!result)
-        log_error("Unable to delete game", 0, 0);
-
-    return result;
 }

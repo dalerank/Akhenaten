@@ -366,7 +366,10 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.cpp
     ${PROJECT_SOURCE_DIR}/src/game/file.cpp
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/file_io.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/file_io.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_buffer.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_chunks.cpp
     ${PROJECT_SOURCE_DIR}/src/game/game.cpp
     ${PROJECT_SOURCE_DIR}/src/game/mission.cpp
     ${PROJECT_SOURCE_DIR}/src/game/orientation.cpp

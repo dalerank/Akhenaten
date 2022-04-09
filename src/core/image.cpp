@@ -148,8 +148,6 @@ static const color_t *load_external_data(const image *img) {
 #include <cinttypes>
 #include "core/string.h"
 
-using milli = std::chrono::milliseconds;
-
 imagepak::imagepak(const char *filename_partial, int starting_index) {
     images = nullptr;
     image_data = nullptr;
@@ -342,7 +340,7 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
             filename_sgx,
             entries_num,
             groups_num,
-            std::chrono::duration_cast<milli>(TIME_FINISH - TIME_START));
+            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;
 }
