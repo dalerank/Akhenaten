@@ -20,12 +20,10 @@ typedef enum {
     BIND_SIGNATURE_INT16,
     BIND_SIGNATURE_UINT32,
     BIND_SIGNATURE_INT32,
-//    BIND_SIGNATURE_UINT64,
-//    BIND_SIGNATURE_INT64,
-    BIND_SIGNATURE_BOOL,
     BIND_SIGNATURE_RAW,
-    BIND_SIGNATURE_UTF8,
 } bind_signature_e;
+
+#define IO_BRANCH(R, W) if (access_type == CHUNK_ACCESS_READ) R; else if (access_type == CHUNK_ACCESS_WRITE) W; return;
 
 class io_buffer {
 private:
@@ -34,42 +32,53 @@ private:
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    bool (*bind_callback)(io_buffer *io, chunk_buffer_access_e access);
+    bool (*bind_callback)(io_buffer *io);
+
+    // this is the parent of the below READ / WRITE functions, written
+    // into a single generalized form.
+    bool io_run(chunk_buffer_access_e flag);
 
 public:
 
-    // these will CHECK that the buffer is valid and RESET the buffer pointer
+    // this will HOOK the io_buffer the provided BUFFER
+    void hook(buffer *buf);
+
+    // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
 
-    // called for every data field in the chunk
+    // called for every data field in the chunk.
     // writes/reads from the buffer depending on the signature
-    // and the selected access type
-    template <typename T>
-    void bind(T *ext, bind_signature_e signature, int size = -1) {
-        if (signature == BIND_SIGNATURE_NONE)
-            return;
-        // check that data pointer is valid
+    // and the selected access type -- must be implemented HERE
+    // in the header file, since it's a TEMPLATE function.
+    template <typename T> void bind(bind_signature_e signature, T *ext) {
         if (ext == nullptr)
             return;
-
         switch (signature) {
-            case BIND_SIGNATURE_SKIP:
-                if (size < 0)
-                    return;
-                return p_buf->skip(size);
-            default:
-                return p_buf->skip(sizeof(*ext));
+            case BIND_SIGNATURE_INT8: IO_BRANCH(*ext = p_buf->read_i8(), p_buf->write_i8(*ext))
+            case BIND_SIGNATURE_UINT8: IO_BRANCH(*ext = p_buf->read_u8(), p_buf->write_u8(*ext))
+            case BIND_SIGNATURE_INT16: IO_BRANCH(*ext = p_buf->read_i16(), p_buf->write_i16(*ext))
+            case BIND_SIGNATURE_UINT16: IO_BRANCH(*ext = p_buf->read_u16(), p_buf->write_u16(*ext))
+            case BIND_SIGNATURE_INT32: IO_BRANCH(*ext = p_buf->read_i32(), p_buf->write_i32(*ext))
+            case BIND_SIGNATURE_UINT32: IO_BRANCH(*ext = p_buf->read_u32(), p_buf->write_u32(*ext))
         }
+    }
+    template <typename T> void bind(bind_signature_e signature, T *ext, size_t size) {
+        if (ext != nullptr && signature == BIND_SIGNATURE_RAW && size > 0) {
+            IO_BRANCH(p_buf->read_raw((uint8_t *)ext, size), p_buf->write_raw((uint8_t *)ext, size))
+        }
+    }
+    void bind(bind_signature_e signature, size_t size = -1) {
+        if (size > 0)
+            return p_buf->skip(size);
     }
 
     // these will VALIDATE the buffer, set the ACCESS FLAG, then fire the external CALLBACK
-    // which will BIND every data field following a manually defined external SCHEMA,
+    // which will BIND (access) every data field following a manually defined external SCHEMA,
     // then set the ACCESS FLAG back to "REVOKED".
     bool read();
     bool write();
 
-
-    io_buffer(bool (*bclb)(io_buffer *io, chunk_buffer_access_e access));
+    io_buffer(bool (*bclb)(io_buffer *io));
     ~io_buffer();
 };
 

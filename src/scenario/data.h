@@ -7,6 +7,7 @@
 #include "events.h"
 
 #include <stdint.h>
+#include <game/gamestate/io_buffer.h>
 
 //#define MAX_REQUESTS 20
 //#define MAX_INVASIONS 20

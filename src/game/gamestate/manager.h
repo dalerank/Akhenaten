@@ -4,6 +4,7 @@
 #include <vector>
 #include <core/buffer.h>
 #include <core/file.h>
+#include "io_buffer.h"
 
 enum { // MINOR versioning found so far
     FILE_144 = 144,
@@ -34,7 +35,8 @@ typedef struct {
 } file_version_t;
 
 typedef struct {
-    buffer *buf;
+    buffer *buf = nullptr;
+    io_buffer *iob = nullptr;
     int compressed;
     char name[100];
 } file_chunk_t;
@@ -62,7 +64,7 @@ private:
 
     std::vector<file_chunk_t> file_chunks;
 
-    buffer *push_chunk(int size, bool compressed, const char *name);
+    buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);
     bool load_file_headers();
     bool load_file_body();
 

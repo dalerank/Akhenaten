@@ -270,7 +270,6 @@ static bool game_load_scenario_pak_mission(int scenario_id) {
     else
         scenario_restore_campaign_player_name();
     initialize_saved_game();
-    scenario_fix_patch_trade(scenario_id);
 
     scenario_set_campaign_scenario(scenario_id);
     scenario_set_campaign_rank(get_scenario_mission_rank(scenario_id));

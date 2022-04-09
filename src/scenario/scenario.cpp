@@ -1,5 +1,6 @@
 #include <city/data_private.h>
 #include <city/gods.h>
+#include <game/gamestate/io_buffer.h>
 #include "scenario.h"
 
 #include "city/resource.h"
@@ -304,33 +305,33 @@ void scenario_load_state(scenario_data_buffers *SCENARIO) {
     // 18. empire info
 
     // 1. header (32)
-    if (SCENARIO->header->is_valid(1)) {
-        scenario_data.start_year = SCENARIO->header->read_i16(); // 2 bytes
-        SCENARIO->header->skip(2);
-        scenario_data.empire.id = SCENARIO->header->read_i16(); // 2 bytes
-        SCENARIO->header->skip(4);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            for (int i = 0; i < MAX_GODS; i++)
-                city_data.religion.gods[i].is_known = SCENARIO->header->read_i16();
-            SCENARIO->header->skip(10);
-            SCENARIO->header->skip(2); // 2 bytes ???        03 00
-        }
-    }
-
-    // 3. map info 1 (614)
-    if (SCENARIO->info1->is_valid(1)) { // (12)
-        scenario_data.initial_funds = SCENARIO->info1->read_i32(); // 4
-        scenario_data.enemy_id = SCENARIO->info1->read_i16(); // 2
-        SCENARIO->info1->skip(6);
-        // (16)
-        scenario_data.map.width = SCENARIO->info1->read_i32(); // 4
-        scenario_data.map.height = SCENARIO->info1->read_i32(); // 4
-        scenario_data.map.grid_start = SCENARIO->info1->read_i32(); // 4
-        scenario_data.map.grid_border_size = SCENARIO->info1->read_i32(); // 4
-        // (64 + 522 = 576)
-        SCENARIO->info1->read_raw(scenario_data.subtitle, MAX_SUBTITLE);
-        SCENARIO->info1->read_raw(scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
-    }
+//    if (SCENARIO->header->is_valid(1)) {
+//        scenario_data.start_year = SCENARIO->header->read_i16(); // 2 bytes
+//        SCENARIO->header->skip(2);
+//        scenario_data.empire.id = SCENARIO->header->read_i16(); // 2 bytes
+//        SCENARIO->header->skip(4);
+//        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//            for (int i = 0; i < MAX_GODS; i++)
+//                city_data.religion.gods[i].is_known = SCENARIO->header->read_i16();
+//            SCENARIO->header->skip(10);
+//            SCENARIO->header->skip(2); // 2 bytes ???        03 00
+//        }
+//    }
+//
+//    // 3. map info 1 (614)
+//    if (SCENARIO->info1->is_valid(1)) { // (12)
+//        scenario_data.initial_funds = SCENARIO->info1->read_i32(); // 4
+//        scenario_data.enemy_id = SCENARIO->info1->read_i16(); // 2
+//        SCENARIO->info1->skip(6);
+//        // (16)
+//        scenario_data.map.width = SCENARIO->info1->read_i32(); // 4
+//        scenario_data.map.height = SCENARIO->info1->read_i32(); // 4
+//        scenario_data.map.grid_start = SCENARIO->info1->read_i32(); // 4
+//        scenario_data.map.grid_border_size = SCENARIO->info1->read_i32(); // 4
+//        // (64 + 522 = 576)
+//        SCENARIO->info1->read_raw(scenario_data.subtitle, MAX_SUBTITLE);
+//        SCENARIO->info1->read_raw(scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
+//    }
 
     // 5. map info 2 (6)
     if (SCENARIO->info2->is_valid(1)) {
@@ -569,8 +570,53 @@ void scenario_settings_init_mission(void) {
     scenario_data.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario_data.settings.campaign_mission_rank);
 }
 
-void scenario_fix_patch_trade(int mission_id) { // todo: only C3
-    // Damascus, allow import of marble
-    if (mission_id == 15)
-        trade_route_init(1, RESOURCE_MARBLE_C3, 15);
+static bool scenario_header_bind(io_buffer *iob) {
+//    scenario_data.start_year = SCENARIO->header->read_i16(); // 2 bytes
+//    SCENARIO->header->skip(2);
+//    scenario_data.empire.id = SCENARIO->header->read_i16(); // 2 bytes
+//    SCENARIO->header->skip(4);
+//    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+//        for (int i = 0; i < MAX_GODS; i++)
+//            city_data.religion.gods[i].is_known = SCENARIO->header->read_i16();
+//        SCENARIO->header->skip(10);
+//        SCENARIO->header->skip(2); // 2 bytes ???        03 00
+//    }
+
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.start_year);
+    iob->bind(BIND_SIGNATURE_SKIP, 2);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.empire.id);
+    iob->bind(BIND_SIGNATURE_SKIP, 4);
+    for (int i = 0; i < MAX_GODS; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.gods[i].is_known);
+    iob->bind(BIND_SIGNATURE_SKIP, 10);
+    iob->bind(BIND_SIGNATURE_SKIP, 2);
+
+    return true;
 }
+io_buffer *iob_scenario_header = new io_buffer(scenario_header_bind);
+static bool scenario_info1_bind(io_buffer *iob) {
+//    scenario_data.initial_funds = SCENARIO->info1->read_i32(); // 4
+//    scenario_data.enemy_id = SCENARIO->info1->read_i16(); // 2
+//    SCENARIO->info1->skip(6);
+//    // (16)
+//    scenario_data.map.width = SCENARIO->info1->read_i32(); // 4
+//    scenario_data.map.height = SCENARIO->info1->read_i32(); // 4
+//    scenario_data.map.grid_start = SCENARIO->info1->read_i32(); // 4
+//    scenario_data.map.grid_border_size = SCENARIO->info1->read_i32(); // 4
+//    // (64 + 522 = 576)
+//    SCENARIO->info1->read_raw(scenario_data.subtitle, MAX_SUBTITLE);
+//    SCENARIO->info1->read_raw(scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
+
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.initial_funds);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.enemy_id);
+    iob->bind(BIND_SIGNATURE_SKIP, 6);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.map.width);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.map.height);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.map.grid_start);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.map.grid_border_size);
+    iob->bind(BIND_SIGNATURE_RAW, &scenario_data.subtitle, MAX_SUBTITLE);
+    iob->bind(BIND_SIGNATURE_RAW, &scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);
+
+    return true;
+}
+io_buffer *iob_scenario_info1 = new io_buffer(scenario_info1_bind);

@@ -1,7 +1,16 @@
+#include <cassert>
 #include "io_buffer.h"
 
+void io_buffer::hook(buffer *buf) {
+    if (this == nullptr)
+        return;
+    p_buf = buf;
+}
+
 bool io_buffer::validate() {
-    if (p_buf == nullptr || !p_buf->is_valid(0))
+    if (this == nullptr)
+        return false;
+    if (p_buf == nullptr || !p_buf->is_valid(1))
         return false;
     if (access_type != CHUNK_ACCESS_REVOKED)
         return false;
@@ -10,40 +19,26 @@ bool io_buffer::validate() {
     return true;
 }
 
-//template <typename T>
-//void io_buffer::bind(T *ext, bind_signature_e signature, int size) {
-//    if (signature == BIND_SIGNATURE_NONE)
-//        return;
-//    // check that data pointer is valid
-//    if (ext == nullptr)
-//        return;
-//
-//    switch (signature) {
-//        case BIND_SIGNATURE_SKIP:
-//            if (size < 0)
-//                return;
-//            return p_buf->skip(size);
-//        default:
-//            return p_buf->skip(sizeof(*ext));
-//    }
-//}
-
-bool io_buffer::read() {
+bool io_buffer::io_run(chunk_buffer_access_e flag) {
     if (!validate())
         return false;
-    access_type = CHUNK_ACCESS_READ;
-    return bind_callback(this, access_type);
+    access_type = flag;
+    if (!bind_callback(this))
+        return false;
+    access_type = CHUNK_ACCESS_REVOKED;
+    return true;
+}
+bool io_buffer::read() {
+    return io_run(CHUNK_ACCESS_READ);
 }
 bool io_buffer::write() {
-    if (!validate())
-        return false;
-    access_type = CHUNK_ACCESS_WRITE;
-    return bind_callback(this, access_type);
+    return io_run(CHUNK_ACCESS_WRITE);
 }
 
-io_buffer::io_buffer(bool (*bclb)(io_buffer *, chunk_buffer_access_e)) {
+io_buffer::io_buffer(bool (*bclb)(io_buffer *)) {
     bind_callback = bclb;
 }
 io_buffer::~io_buffer() {
-
+    // this DOES NOT free up the internal buffer memory (for now)!!!
+    // it WILL become a dangling pointer!
 }
