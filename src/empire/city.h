@@ -57,7 +57,4 @@ void empire_city_generate_trader(void);
 
 void empire_city_remove_trader(int city_id, int figure_id);
 
-void empire_city_save_state(buffer *buf);
-void empire_city_load_state(buffer *buf);
-
 #endif // EMPIRE_CITY_H

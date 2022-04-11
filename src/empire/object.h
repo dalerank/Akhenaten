@@ -38,8 +38,6 @@ typedef struct {
     empire_object obj;
 } full_empire_object;
 
-void empire_objects_load(buffer *buf, bool expanded);
-
 void empire_object_init_cities(void);
 
 int empire_object_init_distant_battle_travel_months(int object_type);
@@ -83,8 +81,5 @@ struct map_route_object {
 };
 
 map_route_object *empire_get_route_object(int id);
-
-void trade_route_objects_save_state(buffer *buf);
-void trade_route_objects_load_state(buffer *buf);
 
 #endif // EMPIRE_OBJECT_H

@@ -342,6 +342,7 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 #include <stdlib.h>
 #include <city/data_private.h>
 #include <core/config.h>
+#include <game/gamestate/io_buffer.h>
 
 floodplain_order floodplain_offsets[30];
 
@@ -550,13 +551,6 @@ void map_soil_set_depletion(int grid_offset, int malus) {
     map_grid_set(&terrain_floodplain_fertility, grid_offset, max(3, min(99, new_fert)));
 }
 
-void map_soil_fertility_load_state(buffer *buf) {
-    map_grid_load_buffer(&terrain_floodplain_fertility, buf);
-}
-void map_soil_unk_grid_load_state(buffer *buf) {
-    map_grid_load_buffer(&terrain_soil_unk, buf);
-}
-
 /////
 
 void map_terrain_backup(void) {
@@ -583,16 +577,6 @@ void map_terrain_init_outside_map(void) {
     }
 }
 
-void map_terrain_save_state(buffer *buf) {
-    map_grid_save_buffer(&terrain_grid, buf);
-}
-void map_terrain_load_state(buffer *buf) {
-    map_grid_load_buffer(&terrain_grid, buf);
-}
-
-void map_moisture_load_state(buffer *buf) {
-    map_grid_load_buffer(&terrain_moisture, buf);
-}
 uint8_t map_moisture_get(int grid_offset) {
     return map_grid_get(&terrain_moisture, grid_offset);
 }
@@ -622,20 +606,6 @@ bool map_is_4x4_tallgrass(int x, int y, int grid_offset) {
     return true;
 }
 
-void map_temp_grid_load(buffer *buf, int g) {
-    switch (g) {
-//        case 0: {
-//
-//            break;
-//        }
-        case 1:
-            map_grid_load_buffer(&GRID02_8BIT, buf); break;
-        case 2:
-            map_grid_load_buffer(&GRID03_32BIT, buf); break;
-//        case 3:
-//            map_grid_load_buffer(&terrain_floodplain_soil_depletion, buf); break;
-    }
-}
 int64_t map_temp_grid_get(int grid_offset, int g) {
     switch (g) {
 //        case 0:
@@ -650,3 +620,23 @@ int64_t map_temp_grid_get(int grid_offset, int g) {
     return 0;
 }
 
+io_buffer *iob_terrain_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_grid);
+});
+io_buffer *iob_soil_fertility_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_floodplain_fertility);
+});
+io_buffer *iob_soil_unk_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_soil_unk);
+});
+io_buffer *iob_moisture_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture);
+});
+
+
+io_buffer *iob_GRID02_8BIT = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &GRID02_8BIT);
+});
+io_buffer *iob_GRID03_32BIT = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);
+});

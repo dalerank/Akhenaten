@@ -11,225 +11,13 @@
 #include <core/zip.h>
 #include <core/log.h>
 #include <core/image.h>
+#include <map/image.h>
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
-struct {
-//    buffer *scenario_campaign_mission = nullptr;
-    buffer *file_version = nullptr;
-    buffer *image_grid = nullptr;
-    buffer *edge_grid = nullptr;
-    buffer *building_grid = nullptr;
-    buffer *terrain_grid = nullptr;
-    buffer *aqueduct_grid = nullptr;
-    buffer *figure_grid = nullptr;
-    buffer *bitfields_grid = nullptr;
-    buffer *sprite_grid = nullptr;
-    buffer *random_grid = nullptr;
-    buffer *desirability_grid = nullptr;
-    buffer *elevation_grid = nullptr;
-    buffer *building_damage_grid = nullptr;
-    buffer *aqueduct_backup_grid = nullptr;
-    buffer *sprite_backup_grid = nullptr;
-    buffer *figures = nullptr;
-    buffer *route_figures = nullptr;
-    buffer *route_paths = nullptr;
-    buffer *formations = nullptr;
-    buffer *formation_totals = nullptr;
-    buffer *city_data = nullptr;
-    buffer *city_faction_unknown = nullptr;
-//    buffer *player_name = nullptr;
-    buffer *city_faction = nullptr;
-    buffer *buildings = nullptr;
-    buffer *city_view_orientation = nullptr;
-    buffer *game_time = nullptr;
-    buffer *building_highest_id_ever = nullptr;
-    buffer *random_iv = nullptr;
-    buffer *city_view_camera = nullptr;
-    buffer *building_count_culture1 = nullptr;
-    buffer *city_graph_order = nullptr;
-    buffer *emperor_change_time = nullptr;
-    buffer *empire = nullptr;
-    buffer *empire_cities = nullptr;
-    buffer *building_count_industry = nullptr;
-    buffer *trade_prices = nullptr;
-    buffer *figure_names = nullptr;
-    buffer *culture_coverage = nullptr;
-//    buffer *scenario = nullptr;
-
-    // 1. header
-    // 2. requests/invasions
-    // 3. map info 1
-    // 4. request can-comply dialog
-    // 5. map info 2
-    // 6. herds
-    // 7. demands
-    // 8. random events
-    // 9. fishing
-    // 10. other request data
-    // 11. wheat
-    // 12. allowed buildings
-    // 13. win criteria
-    // 14. map points
-    // 15. invasion entry points
-    // 16. river entry points
-    // 17. map info 3
-    // 18. empire info
-
-    struct {
-        buffer *mission_index = nullptr;
-        buffer *map_name = nullptr;
-        buffer *map_settings = nullptr;
-        buffer *is_custom = nullptr;
-        buffer *player_name = nullptr;
-
-        buffer *header = nullptr;
-        buffer *info1 = nullptr;
-        buffer *info2 = nullptr;
-        buffer *info3 = nullptr;
-        buffer *events = nullptr;
-        buffer *win_criteria = nullptr;
-        buffer *map_points = nullptr;
-        buffer *river_points = nullptr;
-        buffer *empire = nullptr;
-        buffer *wheat = nullptr;
-        buffer *climate_id = nullptr;
-
-        buffer *requests = nullptr;
-        buffer *invasions = nullptr;
-        buffer *invasion_points = nullptr;
-        buffer *request_comply_dialogs = nullptr;
-        buffer *herds = nullptr;
-        buffer *demands = nullptr;
-        buffer *price_changes = nullptr;
-        buffer *fishing_points = nullptr;
-        buffer *request_extra = nullptr;
-        buffer *allowed_builds = nullptr;
-
-        buffer *events_ph = nullptr;
-
-        buffer *monuments = nullptr;
-
-    } SCENARIO;
-//    scenario_data_buffers SCENARIO;
-
-//    buffer *scenario_header = nullptr;
-//        buffer *scenario_request_events = nullptr;
-//        buffer *scenario_invasion_events = nullptr;
-//    buffer *scenario_map_info1 = nullptr;
-//        buffer *scenario_request_can_comply_dialogs = nullptr;
-//    buffer *scenario_map_info2 = nullptr;
-//        buffer *scenario_animal_herds = nullptr;
-//        buffer *scenario_demands = nullptr;
-//    buffer *scenario_random_events = nullptr;
-//        buffer *scenario_fishing_spots = nullptr;
-//        buffer *scenario_requests_extra = nullptr;
-//    buffer *scenario_wheat_rome = nullptr;
-//        buffer *scenario_allowed_buildings = nullptr;
-//    buffer *scenario_win_criteria = nullptr;
-//    buffer *scenario_map_points = nullptr;
-//        buffer *scenario_invasion_points = nullptr;
-//    buffer *scenario_river_entry = nullptr;
-//    buffer *scenario_map_info3 = nullptr;
-//    buffer *scenario_empire_info = nullptr;
-
-    buffer *max_game_year = nullptr;
-    buffer *earthquake = nullptr;
-    buffer *emperor_change_state = nullptr;
-    buffer *messages = nullptr;
-    buffer *message_extra = nullptr;
-    buffer *population_messages = nullptr;
-    buffer *message_counts = nullptr;
-    buffer *message_delays = nullptr;
-    buffer *building_list_burning_totals = nullptr;
-    buffer *figure_sequence = nullptr;
-//    buffer *scenario_settings = nullptr;
-    buffer *invasion_warnings = nullptr;
-//    buffer *scenario_is_custom = nullptr;
-    buffer *city_sounds = nullptr;
-    buffer *building_highest_id = nullptr;
-    buffer *figure_traders = nullptr;
-    buffer *building_list_burning = nullptr;
-    buffer *building_list_small = nullptr;
-    buffer *building_list_large = nullptr;
-    buffer *tutorial_part1 = nullptr;
-    buffer *building_count_military = nullptr;
-    buffer *enemy_army_totals = nullptr;
-    buffer *building_storages = nullptr;
-    buffer *building_count_culture2 = nullptr;
-    buffer *building_count_support = nullptr;
-    buffer *tutorial_part2 = nullptr;
-    buffer *gladiator_revolt = nullptr;
-    buffer *trade_route_limit = nullptr;
-    buffer *trade_route_traded = nullptr;
-    buffer *building_barracks_tower_sentry = nullptr;
-    buffer *building_extra_sequence = nullptr;
-    buffer *routing_counters = nullptr;
-    buffer *building_count_culture3 = nullptr;
-    buffer *enemy_armies = nullptr;
-    buffer *city_entry_exit_xy = nullptr;
-    buffer *last_invasion_id = nullptr;
-    buffer *building_extra_corrupt_houses = nullptr;
-//    buffer *scenario_name = nullptr;
-    buffer *bookmarks = nullptr;
-    buffer *tutorial_part3 = nullptr;
-    buffer *empire_map_objects = nullptr;
-    buffer *city_entry_exit_grid_offset = nullptr;
-    buffer *floodplain_settings = nullptr;
-    buffer *moisture_grid = nullptr;
-    buffer *bizarre_ordered_fields_4 = nullptr;
-
-    buffer *junk1 = nullptr;
-    buffer *junk2a = nullptr;
-    buffer *junk2b = nullptr;
-    buffer *junk2c = nullptr;
-    buffer *junk2d = nullptr;
-    buffer *junk3 = nullptr;
-    buffer *junk4a = nullptr;
-    buffer *junk4b = nullptr;
-    buffer *junk4c = nullptr;
-    buffer *junk4d = nullptr;
-    buffer *junk4e = nullptr;
-    buffer *junk4f = nullptr;
-    buffer *junk5 = nullptr;
-    buffer *junk6a = nullptr;
-    buffer *junk6b = nullptr;
-    buffer *junk7a = nullptr;
-    buffer *junk7b = nullptr;
-//    buffer *junk7c = nullptr;
-    buffer *junk8a = nullptr;
-    buffer *junk8b = nullptr;
-    buffer *junk8c = nullptr;
-    buffer *junk9a = nullptr;
-    buffer *junk9b = nullptr;
-//    buffer *scenario_events = nullptr;
-    buffer *junk10a = nullptr;
-    buffer *junk10b = nullptr;
-    buffer *junk10c = nullptr;
-    buffer *junk10d = nullptr;
-    buffer *junk10f = nullptr;
-    buffer *junk11 = nullptr;
-//    buffer *junk12 = nullptr;
-    buffer *empire_map_routes = nullptr;
-    buffer *junk14 = nullptr;
-    buffer *bizarre_ordered_fields_1 = nullptr;
-//    buffer *junk15 = nullptr;
-    buffer *bizarre_ordered_fields_3 = nullptr;
-    buffer *junk16 = nullptr;
-    buffer *junk17 = nullptr;
-    buffer *bizarre_ordered_fields_2 = nullptr;
-    buffer *junk18 = nullptr;
-    buffer *junk19 = nullptr;
-    buffer *junk20 = nullptr;
-
-    buffer *soil_fertility_grid = nullptr;
-    buffer *GRID02_8BIT = nullptr;
-    buffer *GRID03_32BIT = nullptr;
-    buffer *soil_unk_grid = nullptr;
-} buffers;
 FileManager FileIO;
 
 void FileManager::clear() {
@@ -258,7 +46,6 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
     if (loaded)
         clear(); // make sure the pieces
     file_version = version;
-    auto state = &buffers;
     switch (mapping_schema) {
         case FILE_SCHEMA_MAP: // TODO!!!!
 //            scenario_state *state = &scenario_data.state;
@@ -295,48 +82,46 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 //            state->end_marker = create_scenario_piece(4, "");
             break;
         case FILE_SCHEMA_SAV: {
-            state->SCENARIO.mission_index = push_chunk(4, false, "SCENARIO.mission_index", nullptr);
-            state->file_version = push_chunk(8, false, "file_version", nullptr);
+            push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
+            push_chunk(8, false, "file_version", nullptr);
 
-            state->junk1 = push_chunk(6000, false, "junk1", nullptr); // ?????
+            push_chunk(6000, false, "junk1", iob_junk1); // ?????
 
-            state->image_grid = push_chunk(207936, true, "image_grid", nullptr);                         // (228²) * 4 <<
-            state->edge_grid = push_chunk(51984, true, "edge_grid", nullptr);                            // (228²) * 1
-            state->building_grid = push_chunk(103968, true, "building_grid", nullptr);                   // (228²) * 2
-            state->terrain_grid = push_chunk(207936, true, "terrain_grid", nullptr);                     // (228²) * 4 <<
-            state->aqueduct_grid = push_chunk(51984, true, "aqueduct_grid", nullptr);                    // (228²) * 1
-            state->figure_grid = push_chunk(103968, true, "figure_grid", nullptr);                       // (228²) * 2
-            state->bitfields_grid = push_chunk(51984, true, "bitfields_grid", nullptr);                  // (228²) * 1
-            state->sprite_grid = push_chunk(51984, true, "sprite_grid", nullptr);                        // (228²) * 1
-            state->random_grid = push_chunk(51984, false, "random_grid", nullptr);                            // (228²) * 1
-            state->desirability_grid = push_chunk(51984, true, "desirability_grid", nullptr);            // (228²) * 1
-            state->elevation_grid = push_chunk(51984, true, "elevation_grid", nullptr);                  // (228²) * 1
-            state->building_damage_grid = push_chunk(103968, true, "building_damage_grid", nullptr);     // (228²) * 2 <<
-            state->aqueduct_backup_grid = push_chunk(51984, true, "aqueduct_backup_grid", nullptr);      // (228²) * 1
-            state->sprite_backup_grid = push_chunk(51984, true, "sprite_backup_grid", nullptr);          // (228²) * 1
-            state->figures = push_chunk(776000, true, "figures", nullptr);
-            state->route_figures = push_chunk(2000, true, "route_figures", nullptr);
-            state->route_paths = push_chunk(500000, true, "route_paths", nullptr);
-            state->formations = push_chunk(7200, true, "formations", nullptr);
-            state->formation_totals = push_chunk(12, false, "formation_totals", nullptr);
-            state->city_data = push_chunk(37808, true, "city_data", nullptr);
-            state->city_faction_unknown = push_chunk(4, false, "city_faction_unknown", nullptr);
-            state->SCENARIO.player_name = push_chunk(64, false, "SCENARIO.player_name", nullptr);
-            state->city_faction = push_chunk(4, false, "city_faction", nullptr);
-            state->buildings = push_chunk(1056000, true, "buildings", nullptr);
-            state->city_view_orientation = push_chunk(4, false, "city_view_orientation", nullptr); // ok
-            state->game_time = push_chunk(20, false, "game_time", nullptr); // ok
-            state->building_highest_id_ever = push_chunk(8, false, "building_extra_highest_id_ever", nullptr); // ok
-            state->random_iv = push_chunk(8, false, "random_iv", nullptr); // ok
-            state->city_view_camera = push_chunk(8, false, "city_view_camera", nullptr); // ok
+            push_chunk(207936, true, "image_grid", iob_image_grid);                         // (228²) * 4 <<
+            push_chunk(51984, true, "edge_grid", iob_edge_grid);                            // (228²) * 1
+            push_chunk(103968, true, "building_grid", iob_building_grid);                   // (228²) * 2
+            push_chunk(207936, true, "terrain_grid", iob_terrain_grid);                     // (228²) * 4 <<
+            push_chunk(51984, true, "aqueduct_grid", iob_aqueduct_grid);                    // (228²) * 1
+            push_chunk(103968, true, "figure_grid", iob_figure_grid);                       // (228²) * 2
+            push_chunk(51984, true, "bitfields_grid", iob_bitfields_grid);                  // (228²) * 1
+            push_chunk(51984, true, "sprite_grid", iob_sprite_grid);                        // (228²) * 1
+            push_chunk(51984, false, "random_grid", iob_random_grid);                            // (228²) * 1
+            push_chunk(51984, true, "desirability_grid", iob_desirability_grid);            // (228²) * 1
+            push_chunk(51984, true, "elevation_grid", iob_elevation_grid);                  // (228²) * 1
+            push_chunk(103968, true, "building_damage_grid", iob_damage_grid);     // (228²) * 2 <<
+            push_chunk(51984, true, "aqueduct_backup_grid", iob_aqueduct_backup_grid);      // (228²) * 1
+            push_chunk(51984, true, "sprite_backup_grid", iob_sprite_backup_grid);          // (228²) * 1
+            push_chunk(776000, true, "figures", iob_figures);
+            push_chunk(2000, true, "route_figures", iob_route_figures);
+            push_chunk(500000, true, "route_paths", iob_route_paths);
+            push_chunk(7200, true, "formations", iob_formations);
+            push_chunk(12, false, "formation_totals", iob_formation_totals);
+            push_chunk(37808, true, "city_data", iob_city_data);
+            push_chunk(72, false, "city_data_extra", iob_city_data_extra);
+            push_chunk(1056000, true, "buildings", iob_buildings);
+            push_chunk(4, false, "city_view_orientation", iob_city_view_orientation); // ok
+            push_chunk(20, false, "game_time", iob_game_time); // ok
+            push_chunk(8, false, "building_extra_highest_id_ever", iob_building_highest_id_ever); // ok
+            push_chunk(8, false, "random_iv", iob_random_iv); // ok
+            push_chunk(8, false, "city_view_camera", iob_city_view_camera); // ok
 //                state->building_count_culture1 = create_savegame_piece(132, false, ""); // MISSING
-            state->city_graph_order = push_chunk(8, false, "city_graph_order", nullptr); // I guess ????
+            push_chunk(8, false, "city_graph_order", iob_city_graph_order); // I guess ????
 //                state->emperor_change_time = create_savegame_piece(8, false, ""); // MISSING
-            state->empire = push_chunk(12, false, "empire", nullptr); // ok ???
-            state->empire_cities = push_chunk(6466, true, "empire_cities", nullptr); // 83920 + 7681 --> 91601
-            state->building_count_industry = push_chunk(288, false, "building_count_industry", nullptr); // 288 bytes ??????
-            state->trade_prices = push_chunk(288, false, "trade_prices", nullptr);
-            state->figure_names = push_chunk(84, false, "figure_names", nullptr);
+            push_chunk(12, false, "empire", iob_empire_map_params); // ok ???
+            push_chunk(6466, true, "empire_cities", iob_empire_cities); // 83920 + 7681 --> 91601
+            push_chunk(288, false, "building_count_industry", iob_building_count_industry); // 288 bytes ??????
+            push_chunk(288, false, "trade_prices", iob_trade_prices);
+            push_chunk(84, false, "figure_names", iob_figure_names);
 
 //                state->culture_coverage = create_savegame_piece(60, false, ""); // MISSING
 //                state->scenario = create_savegame_piece(1720, false, ""); // MISSING
@@ -361,55 +146,7 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 //            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
 //            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
 
-
-            state->SCENARIO.header = push_chunk(32, false, "SCENARIO.header", iob_scenario_header);
-            state->SCENARIO.info1 = push_chunk(614, false, "SCENARIO.info1", iob_scenario_info1);
-//                state->scenario_request_can_comply_dialogs = create_savegame_piece(20, false, ""); // MISSING
-            state->SCENARIO.info2 = push_chunk(6, false, "SCENARIO.info2", nullptr);
-
-            // 48 bytes     FF FF FF FF (non cyclic) ???
-            // 44 bytes     00 00 00 00 ???
-            // 64 bytes     FF FF FF FF (cyclic) invasion points???
-            // 36 bytes     01 00 01 00 ???
-            state->junk2a = push_chunk(48, false, "junk2a", nullptr); // unknown bytes
-            state->junk2b = push_chunk(44, false, "junk2b", nullptr); // unknown bytes
-            state->junk2c = push_chunk(64, false, "junk2c", nullptr); // unknown bytes
-            state->junk2d = push_chunk(36, false, "junk2d", nullptr); // unknown bytes
-
-            state->SCENARIO.win_criteria = push_chunk(60, false, "SCENARIO.win_criteria", nullptr);
-
-            // 4 bytes     FF FF FF FF ???
-            state->junk3 = push_chunk(4, false, "junk3", nullptr); // unknown bytes
-
-            state->city_entry_exit_xy = push_chunk(8, false, "city_entry_exit_xy", nullptr);
-
-            // 40 bytes     FF FF FF FF (non cyclic?) ???
-            // 4  bytes     B8 0B 00 00 ???
-            // 12 bytes     0A 00 00 00 (3x4) ???
-            // 12 bytes     CB 32 00 00 (3x4) ??? (n, n+2, n+1497)
-            // 14 bytes     01 00 00 00 ???
-            // 2  bytes     FF FF       ???
-            state->junk4a = push_chunk(40, false, "junk4a", nullptr); // unknown bytes
-            state->junk4b = push_chunk(4, false, "junk4b", nullptr); // unknown bytes
-            state->junk4c = push_chunk(12, false, "junk4c", nullptr); // unknown bytes
-            state->junk4d = push_chunk(12, false, "junk4d", nullptr); // unknown bytes
-            state->SCENARIO.climate_id = push_chunk(2, false, "SCENARIO.climate_id", nullptr);
-            state->junk4e = push_chunk(10, false, "junk4e", nullptr); // unknown bytes
-            state->junk4f = push_chunk(2, false, "junk4f", nullptr); // unknown bytes
-            state->junk4f = push_chunk(2, false, "junk4g", nullptr); // unknown bytes
-            state->SCENARIO.herds = push_chunk(32, false, "SCENARIO.herds", nullptr);
-            state->SCENARIO.allowed_builds = push_chunk(228, false, "SCENARIO.allowed_builds", nullptr);
-
-            // 24 bytes     FF FF FF FF (cyclic) ???
-            state->junk5 = push_chunk(28, false, "junk5", nullptr); // unknown bytes
-            state->SCENARIO.monuments = push_chunk(6, false, "SCENARIO.monuments", nullptr); // 3 x 2-byte
-
-            // 290 bytes    00 00 00 00 ???
-            // 4 bytes      00 00 00 00 ???
-            // 4 bytes      00 00 00 00 ???
-            // 4 bytes      00 00 00 00 ???
-            state->junk6a = push_chunk(290, false, "junk6a", nullptr); // unknown bytes
-            state->junk6b = push_chunk(4 + 4 + 4, false, "junk6b", nullptr); // unknown bytes
+            push_chunk(1596, false, "scenario_info", iob_scenario_info);
 
             /////////////////////
 
@@ -417,22 +154,24 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 //                state->earthquake = create_savegame_piece(60, false, ""); // MISSING
 //                state->emperor_change_state = create_savegame_piece(4, false, ""); // MISSING
 
-            state->messages = push_chunk(48000, true, "messages", nullptr); // 94000 + 533 --> 94532 + 4 = 94536
-            state->message_extra = push_chunk(12, false, "message_extra", nullptr); // ok
-            state->population_messages = push_chunk(10, false, "population_messages", nullptr); // ok
-            state->message_counts = push_chunk(80, false, "message_counts", nullptr); // ok
-            state->message_delays = push_chunk(80, false, "message_delays", nullptr); // ok
-            state->building_list_burning_totals = push_chunk(8, false, "building_list_burning_totals", nullptr); // ok
-            state->figure_sequence = push_chunk(4, false, "figure_sequence", nullptr); // ok
-            state->SCENARIO.map_settings = push_chunk(12, false, "SCENARIO.map_settings", nullptr); // ok
-            state->invasion_warnings = push_chunk(3232, true, "invasion_warnings", nullptr); // 94743 + 31 --> 94774 + 4 = 94778
-            state->SCENARIO.is_custom = push_chunk(4, false, "SCENARIO.is_custom", nullptr); // ok
-            state->city_sounds = push_chunk(8960, false, "city_sounds", nullptr); // ok
-            state->building_highest_id = push_chunk(4, false, "building_extra_highest_id", nullptr); // ok
-            state->figure_traders = push_chunk(8804, false, "figure_traders", nullptr); // +4000 ???
-            state->building_list_burning = push_chunk(1000, true, "building_list_burning", nullptr); // ok
-            state->building_list_small = push_chunk(1000, true, "building_list_small", nullptr); // ok
-            state->building_list_large = push_chunk(8000, true, "building_list_large", nullptr); // ok
+            push_chunk(48000, true, "messages", iob_messages); // 94000 + 533 --> 94532 + 4 = 94536
+            push_chunk(182, false, "message_extra", iob_message_extra); // ok
+//            push_chunk(10, false, "population_messages", iob_population_messages); // ok
+//            push_chunk(80, false, "message_counts", iob_message_counts); // ok
+//            push_chunk(80, false, "message_delays", iob_message_delays); // ok
+
+            push_chunk(8, false, "building_list_burning_totals", iob_building_list_burning_totals); // ok
+            push_chunk(4, false, "figure_sequence", iob_figure_sequence); // ok
+            push_chunk(12, false, "scenario_starting_rank", iob_scenario_starting_rank); // ok
+            push_chunk(3232, true, "invasion_warnings", iob_invasion_warnings); // 94743 + 31 --> 94774 + 4 = 94778
+            push_chunk(4, false, "scenario_is_custom", iob_scenario_is_custom); // ok
+            push_chunk(8960, false, "city_sounds", iob_city_sounds); // ok
+            push_chunk(4, false, "building_extra_highest_id", iob_building_highest_id); // ok
+            push_chunk(8804, false, "figure_traders", iob_figure_traders); // +4000 ???
+
+            push_chunk(1000, true, "building_list_burning", iob_building_list_burning); // ok
+            push_chunk(1000, true, "building_list_small", iob_building_list_small); // ok
+            push_chunk(8000, true, "building_list_large", iob_building_list_large); // ok
 
 //                state->tutorial_part1 = create_savegame_piece(32, false, "");
 //                state->building_count_military = create_savegame_piece(16, false, "");
@@ -445,12 +184,12 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 
             // 32 bytes     00 00 00 00 ???
             // 24 bytes     00 00 00 00 ???
-            state->junk7a = push_chunk(32, false, "junk7a", nullptr); // unknown bytes
-            state->junk7b = push_chunk(24, false, "junk7b", nullptr); // unknown bytes
-            state->building_storages = push_chunk(39200, false, "building_storages", nullptr); // storage instructions
+            push_chunk(32, false, "junk7a", iob_junk7a); // unknown bytes
+            push_chunk(24, false, "junk7b", iob_junk7b); // unknown bytes
+            push_chunk(39200, false, "building_storages", iob_building_storages); // storage instructions
 
-            state->trade_route_limit = push_chunk(2880, true, "trade_route_limit", nullptr); // ok
-            state->trade_route_traded = push_chunk(2880, true, "trade_route_traded", nullptr); // ok
+            push_chunk(2880, true, "trade_route_limit", iob_trade_route_limit); // ok
+            push_chunk(2880, true, "trade_route_traded", iob_trade_route_traded); // ok
 
 //                state->building_barracks_tower_sentry = create_savegame_piece(4, false, "");
 //                state->building_extra_sequence = create_savegame_piece(4, false, "");
@@ -461,74 +200,73 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
             // 12 bytes     00 00 00 00 ???
             // 16 bytes     00 00 00 00 ???
             // 22 bytes     00 00 00 00 ???
-            state->junk8a = push_chunk(12, false, "junk8a", nullptr); // unknown bytes
-            state->junk8b = push_chunk(16, false, "junk8b", nullptr); // unknown bytes
-            state->junk8c = push_chunk(22, false, "junk8c", nullptr); // unknown bytes
+            push_chunk(12, false, "junk8a", iob_junk8a); // unknown bytes
+            push_chunk(16, false, "junk8b", iob_junk8b); // unknown bytes
+            push_chunk(22, false, "junk8c", iob_junk8c); // unknown bytes
 
 //                state->last_invasion_id = create_savegame_piece(2, false, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
 
-            state->SCENARIO.map_name = push_chunk(65, false, "SCENARIO.map_name", nullptr); // ok
-            state->bookmarks = push_chunk(32, false, "bookmarks", nullptr); // ok
-            state->tutorial_part3 = push_chunk(4, false, "tutorial_part3", nullptr); // ok ????
+            push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
+            push_chunk(32, false, "bookmarks", iob_bookmarks); // ok
+            push_chunk(4, false, "tutorial_part3", iob_junk9a); // ok ????
 
 //            int t_sub = 228;
 
             // 8 bytes      00 00 00 00 ???
-            state->junk9a = push_chunk(8, false, "junk9a", nullptr);
-            state->junk9b = push_chunk(396, false, "junk9b", nullptr);
+            push_chunk(8, false, "junk9a", iob_junk9b);
+            push_chunk(396, false, "junk9b", iob_junk9c);
 
             // 51984 bytes  00 00 00 00 ???
-            state->soil_fertility_grid = push_chunk(51984, false, "soil_fertility_grid", nullptr);
+            push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
 
 
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
-            state->SCENARIO.events_ph = push_chunk(18600, false, "SCENARIO.events_ph", nullptr);
+            push_chunk(18600, false, "scenario_events", iob_scenario_events);
 
             // 28 bytes     2F 01 00 00 ???
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
-            state->junk10a = push_chunk(28, false, "junk10a", nullptr);
-            state->junk10b = push_chunk(version.minor < 149 ? 13216 : 13416, false, "junk10b", nullptr);
-            state->junk10c = push_chunk(8200, false, "junk10c", nullptr);
+            push_chunk(28, false, "junk10a", iob_junk10a);
+            push_chunk(version.minor < 149 ? 13216 : 13416, false, "junk10b", iob_junk10b);
+            push_chunk(8200, false, "junk10c", iob_junk10c);
 
-            state->junk11 = push_chunk(1280, true, "junk11", nullptr); // unknown compressed data
+            push_chunk(1280, true, "junk11", iob_junk11); // unknown compressed data
 
-            state->empire_map_objects = push_chunk(version.minor < 160 ? 15200 : 19600, true, "empire_objects",
-                                                   nullptr);
-            state->empire_map_routes = push_chunk(16200, true, "empire_routes", nullptr);
+            push_chunk(version.minor < 160 ? 15200 : 19600, true, "empire_objects", iob_empire_objects);
+            push_chunk(16200, true, "empire_routes", iob_empire_map_routes);
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
-            state->GRID02_8BIT = push_chunk(51984, false, "GRID02_8BIT", nullptr); // todo: 1-byte grid
+            push_chunk(51984, false, "GRID02_8BIT", iob_GRID02_8BIT); // todo: 1-byte grid
 
             // 20 bytes     19 00 00 00 ???
-            state->junk14 = push_chunk(20, false, "junk14", nullptr);
+            push_chunk(20, false, "junk14", iob_junk14);
 
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
-            state->bizarre_ordered_fields_1 = push_chunk(528, false, "bizarre_ordered_fields_1", nullptr);
+            push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
 
-            state->floodplain_settings = push_chunk(36, true, "floodplain_settings", nullptr); // floodplain_settings
-            state->GRID03_32BIT = push_chunk(207936, true, "GRID03_32BIT", nullptr); // todo: 4-byte grid
+            push_chunk(36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
+            push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
-            state->bizarre_ordered_fields_3 = push_chunk(312, false, "bizarre_ordered_fields_3", nullptr); // 71x 4-bytes emptiness
+            push_chunk(312, false, "bizarre_ordered_fields_3", iob_bizarre_ordered_fields_3); // 71x 4-bytes emptiness
 
             // 64 bytes     00 00 00 00 ???
-            state->junk16 = push_chunk(64, false, "junk16", nullptr); // 71x 4-bytes emptiness
-            state->tutorial_part1 = push_chunk(41, false, "tutorial_part1", nullptr); // 41 x 1-byte flag fields
-            state->soil_unk_grid = push_chunk(51984, true, "floodplain_soil_depletion", nullptr);
+            push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
+            push_chunk(41, false, "tutorial_part1", iob_tutorial_flags); // 41 x 1-byte flag fields
+            push_chunk(51984, true, "floodplain_soil_depletion", iob_soil_unk_grid);
 
             // lone byte ???
-            state->junk17 = push_chunk(1, false, "junk17", nullptr);
-            state->moisture_grid = push_chunk(51984, true, "moisture_grid", nullptr);
+            push_chunk(1, false, "junk17", iob_junk17);
+            push_chunk(51984, true, "moisture_grid", iob_moisture_grid);
 
             // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
-            state->bizarre_ordered_fields_2 = push_chunk(672, false, "bizarre_ordered_fields_2", nullptr);
+            push_chunk(672, false, "bizarre_ordered_fields_2", iob_bizarre_ordered_fields_2);
 
             // 20 bytes     00 00 00 00 ???
             // 4800 bytes   00 00 00 00 ???
-            state->junk18 = push_chunk(20, false, "junk18", nullptr);
-            state->bizarre_ordered_fields_4 = push_chunk(4800, false, "bizarre_ordered_fields_4", nullptr);
+            push_chunk(20, false, "junk18", iob_junk18);
+            push_chunk(4800, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4);
 
             break;
         }
@@ -548,9 +286,9 @@ buffer *FileManager::push_chunk(int size, bool compressed, const char *name, io_
     safe_realloc_for_size(&chunk->buf, size);
     strncpy(chunk->name, name, 99);
 
-    // assign io_buffer content
+    // fill io_buffer content
     if (iob != nullptr) {
-        iob->hook(chunk->buf);
+        iob->hook(chunk->buf, size, compressed, name);
         chunk->iob = iob;
     }
 
@@ -655,6 +393,7 @@ static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
 //            piece->buf->to_file(piece->buf->size(), fp);
 //    }
 //}
+
 bool FileManager::load_file_headers() {
     file_version = read_file_version(file_path, file_offset);
     if (file_version.major == -1 || file_version.minor == -1)
@@ -731,9 +470,9 @@ bool FileManager::read_from_file(const char *filename, int offset) {
     else if (file_has_extension(filename, "map"))
         file_schema = FILE_SCHEMA_MAP;
     if (file_has_extension(filename, "pak") && file_version.minor < 149)
-        terrain_ph_offset = 539; //14791
+        set_image_grid_correction_shift(539); //14791
     else
-        terrain_ph_offset = 0; //14252
+        set_image_grid_correction_shift(0); //14252
 
     // init file chunks and buffer collection
     init_with_schema(file_schema, file_version);
@@ -803,7 +542,7 @@ bool FileManager::write_to_file(const char *filename, int offset) {
 #include "sound/city.h"
 
 static void scenario_load_from_state() {
-    auto state = &buffers;
+//    auto state = &buffers;
 //    map_image_load_state(state->graphic_ids);
 //    map_terrain_load_state(state->terrain);
 //    map_property_load_state(state->bitfields, state->edge);
@@ -818,7 +557,7 @@ static void scenario_load_from_state() {
 //    file->end_marker->skip(4);
 }
 static void scenario_save_to_state() {
-    auto state = &buffers;
+//    auto state = &buffers;
 //    map_image_save_state(state->graphic_ids);
 //    map_terrain_save_state(state->terrain);
 //    map_property_save_state(state->bitfields, state->edge);
@@ -832,54 +571,12 @@ static void scenario_save_to_state() {
 
 //    file->end_marker->skip(4);
 }
+
 void FileManager::load_state() {
+    for (int i = 0; i < num_chunks(); ++i)
+        file_chunks.at(i).iob->read();
 
-    for (int i = 0; i < num_chunks(); ++i) {
-        auto chunk = file_chunks.at(i);
-        if (chunk.iob != nullptr)
-            chunk.iob->read();
-    }
-
-
-
-
-
-//    file_data.version.minor = state->file_version->read_i32();
-//    file_data.version.major = state->file_version->read_i32();
-
-    auto state = &buffers;
-//    scenario_load_state(&state->SCENARIO);
-
-    map_image_load_state(state->image_grid, terrain_ph_offset);
-    map_building_load_state(state->building_grid, state->building_damage_grid);
-    map_terrain_load_state(state->terrain_grid);
-    map_aqueduct_load_state(state->aqueduct_grid, state->aqueduct_backup_grid);
-    map_figure_load_state(state->figure_grid);
-    map_sprite_load_state(state->sprite_grid, state->sprite_backup_grid);
-    map_property_load_state(state->bitfields_grid, state->edge_grid);
-    map_random_load_state(state->random_grid);
-    map_desirability_load_state(state->desirability_grid);
-    map_elevation_load_state(state->elevation_grid);
-
-    figure_load_state(state->figures, state->figure_sequence);
-    figure_route_load_state(state->route_figures, state->route_paths);
-    formations_load_state(state->formations, state->formation_totals);
-
-    city_data_load_state(state->city_data,
-                         state->city_faction,
-                         state->city_faction_unknown,
-                         state->city_graph_order,
-                         state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset);
-    floodplains_load_state(state->floodplain_settings);
-
-    building_load_state(state->buildings,
-                        state->building_highest_id,
-                        state->building_highest_id_ever);
 //    building_barracks_load_state(state->building_barracks_tower_sentry);
-    city_view_load_state(state->city_view_orientation, state->city_view_camera);
-    game_time_load_state(state->game_time);
-    random_load_state(state->random_iv);
 //    building_count_load_state(state->building_count_industry,
 //                              state->building_count_culture1,
 //                              state->building_count_culture2,
@@ -889,124 +586,17 @@ void FileManager::load_state() {
 
 //    scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
 
-    empire_load_state(state->empire);
-    empire_city_load_state(state->empire_cities);
-    trade_prices_load_state(state->trade_prices);
-    figure_name_load_state(state->figure_names);
 //    city_culture_load_state(state->culture_coverage);
 
 //    scenario_max_year_load_state(state->max_game_year);
 //    scenario_earthquake_load_state(state->earthquake);
-    city_message_load_state(state->messages, state->message_extra,
-                            state->message_counts, state->message_delays,
-                            state->population_messages);
-    sound_city_load_state(state->city_sounds);
-    traders_load_state(state->figure_traders);
 
-    building_list_load_state(state->building_list_small, state->building_list_large,
-                             state->building_list_burning, state->building_list_burning_totals);
-
-    tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
-
-    building_storage_load_state(state->building_storages);
 //    scenario_gladiator_revolt_load_state(state->gladiator_revolt);
-    trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
 //    map_routing_load_state(state->routing_counters);
 //    enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 //    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
-    map_bookmark_load_state(state->bookmarks);
-
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        map_soil_fertility_load_state(state->soil_fertility_grid);
-        map_soil_unk_grid_load_state(state->soil_unk_grid);
-        map_moisture_load_state(state->moisture_grid);
-        empire_load_internal_ph(state->empire_map_objects, state->empire_map_routes);
-
-        map_temp_grid_load(state->GRID02_8BIT, 1);
-        map_temp_grid_load(state->GRID03_32BIT, 2);
-//        map_GRID03_32BIT_load_split_state(state->GRID03_32BIT);
-
-    }
-//    state->end_marker->skip(284);
 }
-static void savegame_save_to_state() {
-    auto state = &buffers;
-//    state->file_version->write_i32(file_data.version.minor);
-//    state->file_version->write_i32(file_data.version.major);
-
-//    scenario_save_state(&state->SCENARIO);
-
-//    scenario_settings_save_state(state->scenario_campaign_mission,
-//                                 state->scenario_settings,
-//                                 state->scenario_is_custom,
-//                                 state->player_name,
-//                                 state->scenario_name);
-
-    map_image_save_state(state->image_grid);
-    map_building_save_state(state->building_grid, state->building_damage_grid);
-    map_terrain_save_state(state->terrain_grid);
-    map_aqueduct_save_state(state->aqueduct_grid, state->aqueduct_backup_grid);
-    map_figure_save_state(state->figure_grid);
-    map_sprite_save_state(state->sprite_grid, state->sprite_backup_grid);
-    map_property_save_state(state->bitfields_grid, state->edge_grid);
-    map_random_save_state(state->random_grid);
-    map_desirability_save_state(state->desirability_grid);
-    map_elevation_save_state(state->elevation_grid);
-
-    figure_save_state(state->figures, state->figure_sequence);
-    figure_route_save_state(state->route_figures, state->route_paths);
-    formations_save_state(state->formations, state->formation_totals);
-
-    city_data_save_state(state->city_data,
-                         state->city_faction,
-                         state->city_faction_unknown,
-                         state->city_graph_order,
-                         state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset, nullptr);
-
-    building_save_state(state->buildings,
-                        state->building_highest_id,
-                        state->building_highest_id_ever);
-    building_barracks_save_state(state->building_barracks_tower_sentry);
-    city_view_save_state(state->city_view_orientation, state->city_view_camera);
-    game_time_save_state(state->game_time);
-    random_save_state(state->random_iv);
-    building_count_save_state(state->building_count_industry,
-                              state->building_count_culture1,
-                              state->building_count_culture2,
-                              state->building_count_culture3,
-                              state->building_count_military,
-                              state->building_count_support);
-
-    scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
-
-    empire_save_state(state->empire);
-    empire_city_save_state(state->empire_cities);
-    trade_prices_save_state(state->trade_prices);
-    figure_name_save_state(state->figure_names);
-    city_culture_save_state(state->culture_coverage);
-
-//    scenario_save_state(&state->SCENARIO);
-    scenario_max_year_save_state(state->max_game_year);
-    scenario_earthquake_save_state(state->earthquake);
-    city_message_save_state(state->messages, state->message_extra,
-                            state->message_counts, state->message_delays,
-                            state->population_messages);
-    sound_city_save_state(state->city_sounds);
-    traders_save_state(state->figure_traders);
-
-    building_list_save_state(state->building_list_small, state->building_list_large,
-                             state->building_list_burning, state->building_list_burning_totals);
-
-    tutorial_save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
-
-    building_storage_save_state(state->building_storages);
-    scenario_gladiator_revolt_save_state(state->gladiator_revolt);
-    trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
-    map_routing_save_state(state->routing_counters);
-    enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
-    scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
-    map_bookmark_save_state(state->bookmarks);
-
-//    state->end_marker->skip(284);
+void FileManager::write_state() {
+    for (int i = 0; i < num_chunks(); ++i)
+        file_chunks.at(i).iob->write();
 }

@@ -94,18 +94,6 @@ int game_time_advance_month(void);
  */
 void game_time_advance_year(void);
 
-/**
- * Saves the game time
- * @param buf Buffer
- */
-void game_time_save_state(buffer *buf);
-
-/**
- * Loads the game time
- * @param buf Buffer
- */
-void game_time_load_state(buffer *buf);
-
 time_data* give_me_da_time();
 
 #endif // GAME_TIME_H

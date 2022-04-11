@@ -178,7 +178,4 @@ void formation_calculate_figures(void);
 
 void formation_update_all(int second_time);
 
-void formations_save_state(buffer *buf, buffer *totals);
-void formations_load_state(buffer *buf, buffer *totals);
-
 #endif // FIGURE_FORMATION_H

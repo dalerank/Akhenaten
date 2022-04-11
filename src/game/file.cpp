@@ -193,8 +193,8 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     game_state_unpause();
 }
 static void load_empire_data(int is_custom_scenario, int empire_id) {
-    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
-        empire_load_external_c3(is_custom_scenario, empire_id);
+//    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
+//        empire_load_external_c3(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
@@ -266,9 +266,9 @@ static bool game_load_scenario_pak_mission(int scenario_id) {
         return false;
 
     if (scenario_id == SCENARIO_NUBT)
-        scenario_set_player_name(setting_player_name());
+        city_set_player_name(setting_player_name());
     else
-        scenario_restore_campaign_player_name();
+        city_restore_campaign_player_name();
     initialize_saved_game();
 
     scenario_set_campaign_scenario(scenario_id);
@@ -292,7 +292,7 @@ static bool game_load_scenario_custom_map(const char *filename) {
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
     initialize_scenario_data(scenario_name());
-    scenario_set_player_name(setting_player_name());
+    city_set_player_name(setting_player_name());
     return true;
 }
 

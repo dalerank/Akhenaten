@@ -143,6 +143,7 @@ extern struct scenario_t {
     int enemy_id;
     bool is_open_play;
     int open_play_scenario_id;
+    bool is_custom;
 
     struct {
         struct win_criteria_t population;
@@ -208,6 +209,10 @@ extern struct scenario_t {
         int height;
         int grid_start;
         int grid_border_size;
+//        map_tile entry_point;
+//        map_tile exit_point;
+        map_tile entry_flag;
+        map_tile exit_flag;
     } map;
     int flotsam_enabled;
     map_point entry_point;
@@ -231,10 +236,8 @@ extern struct scenario_t {
         int campaign_mission_rank;
         int campaign_scenario_id;
         int is_custom;
-        int starting_favor;
+        int starting_kingdom;
         int starting_personal_savings;
-        uint8_t player_name[32];
-        uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
     } settings;
 
     struct {

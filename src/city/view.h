@@ -91,12 +91,6 @@ int city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(void);
 
-void city_view_save_state(buffer *orientation, buffer *camera);
-void city_view_load_state(buffer *orientation, buffer *camera);
-
-void city_view_save_scenario_state(buffer *camera);
-void city_view_load_scenario_state(buffer *camera);
-
 void city_view_foreach_map_tile(map_callback *callback);
 void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2 = nullptr, map_callback *callback3 = nullptr,
                                       map_callback *callback4 = nullptr, map_callback *callback5 = nullptr, map_callback *callback6 = nullptr);

@@ -1,4 +1,5 @@
-#include "image.h"
+#include <game/gamestate/io_buffer.h>
+#include <core/image.h>
 
 #include "map/grid.h"
 
@@ -39,13 +40,14 @@ void map_image_init_edges(void) {
     map_grid_set(&images, map_grid_offset(width, height), 5);
 }
 
-void map_image_save_state(buffer *buf) {
-    map_grid_save_buffer(&images, buf);
+static int image_shift = 0;
+void set_image_grid_correction_shift(int shift) {
+    image_shift = shift;
 }
-void map_image_load_state(buffer *buf, int shift) {
-    map_grid_load_buffer(&images, buf);
+io_buffer *iob_image_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &images);
     for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
-        auto nv = map_grid_get(&images, i) - shift;
+        auto nv = map_grid_get(&images, i) - image_shift;
         map_grid_set(&images, i, nv);
     }
-}
+});

@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "bookmark.h"
 
 #include "city/view.h"
@@ -33,16 +34,9 @@ int map_bookmark_go_to(int number) {
     return 0;
 }
 
-void map_bookmark_save_state(buffer *buf) {
+io_buffer *iob_bookmarks = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        buf->write_i32(bookmarks[i].x);
-        buf->write_i32(bookmarks[i].y);
+        iob->bind(BIND_SIGNATURE_INT32, &bookmarks[i].x);
+        iob->bind(BIND_SIGNATURE_INT32, &bookmarks[i].y);
     }
-}
-
-void map_bookmark_load_state(buffer *buf) {
-    for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        bookmarks[i].x = buf->read_i32();
-        bookmarks[i].y = buf->read_i32();
-    }
-}
+});

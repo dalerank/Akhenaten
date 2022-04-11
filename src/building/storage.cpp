@@ -229,47 +229,22 @@ void building_storage_accept_none(int storage_id) {
         data.storages[storage_id].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
 }
 
-void building_storage_save_state(buffer *buf) {
-    for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
-        buf->write_i32(data.storages[i].storage.permissions); // Originally unused
-        buf->write_i32(data.storages[i].building_id);
-        buf->write_u8((uint8_t) data.storages[i].in_use);
-        buf->write_u8((uint8_t) data.storages[i].storage.empty_all);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            buf->write_u8(data.storages[i].storage.resource_state[r]);
-        }
-        for (int r = 0; r < 6; r++) {
-            buf->write_u8(0); // unused resource states
-        }
-    }
-}
 void building_storage_load_state(buffer *buf) {
-    for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            data.storages[i].storage.permissions = buf->read_i32(); // Originally unused
-            data.storages[i].building_id = buf->read_i32();
-            data.storages[i].in_use = buf->read_u8();
-            data.storages[i].storage.empty_all = buf->read_u8();
-            for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-                data.storages[i].storage.resource_state[r] = buf->read_u8();
-            }
-            buf->skip(6); // unused resource states
-         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            data.storages[i].storage.permissions = buf->read_i32(); // Originally unused
-            data.storages[i].building_id = buf->read_i32();
-            data.storages[i].in_use = buf->read_u8();
-            data.storages[i].storage.empty_all = buf->read_u8();
-            for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-                data.storages[i].storage.resource_state[r] = buf->read_u8();
-            }
-            buf->skip(6); // unused resource states
-            for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-                data.storages[i].storage.resource_max_accept[r] = buf->read_u16();
-            }
-            for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-                data.storages[i].storage.resource_max_get[r] = buf->read_u16();
-            }
-//            buf->skip(144); // ?????
-        }
-    }
+   
 }
+io_buffer *iob_building_storages = new io_buffer([](io_buffer *iob) {
+    for (int i = 0; i < MAX_STORAGES[GAME_ENV]; i++) {
+        iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].storage.permissions); // Originally unused
+        iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].building_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].in_use);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.empty_all);
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+            iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.resource_state[r]);
+        iob->bind____skip(6); // unused resource states
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+            iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_accept[r]);
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+            iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_get[r]);
+//        iob->bind____skip(144); // ?????
+    }
+});

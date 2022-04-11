@@ -1,5 +1,6 @@
 #include <tgmath.h>
 #include <window/game_menu.h>
+#include <city/data.h>
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
@@ -470,7 +471,7 @@ static void replay_map_confirmed(bool confirmed) {
         game_load_scenario(scenario_name());
         window_city_show();
     } else {
-        scenario_save_campaign_player_name();
+        city_save_campaign_player_name();
         window_mission_briefing_show();
     }
 }

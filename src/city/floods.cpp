@@ -187,22 +187,19 @@ void floodplains_tick_update() {
         map_advance_floodplain_growth();
 }
 
-void floodplains_save_state(buffer *floodplain_data) {
-    // todo
-}
-void floodplains_load_state(buffer *floodplain_data) {
-    data.season_initial = floodplain_data->read_i32();
-    data.duration_initial = floodplain_data->read_i32();
-    data.quality_initial = floodplain_data->read_i32();
-    data.season = floodplain_data->read_i32();
-    data.duration = floodplain_data->read_i32();
-    data.quality = floodplain_data->read_i32();
-    data.unk00 = floodplain_data->read_i32();
-    data.quality_next = floodplain_data->read_i32();
-    data.quality_last = floodplain_data->read_i32();
+io_buffer *iob_floodplain_settings = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
+    iob->bind(BIND_SIGNATURE_INT32, &data.duration_initial);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_initial);
+    iob->bind(BIND_SIGNATURE_INT32, &data.season);
+    iob->bind(BIND_SIGNATURE_INT32, &data.duration);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality);
+    iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
 
     data.flood_progress = 30;
     data.unk00 = 0;
     data.state = FLOOD_STATE_FARMABLE;
     data.floodplain_width = 10;
-}
+});

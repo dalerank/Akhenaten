@@ -22,16 +22,4 @@ void figure_name_init(void);
  */
 int figure_name_get(int type, int enemy);
 
-/**
- * Saves generator state
- * @param buf Buffer to save to
- */
-void figure_name_save_state(buffer *buf);
-
-/**
- * Loads generator state
- * @param buf Buffer to load from
- */
-void figure_name_load_state(buffer *buf);
-
 #endif // FIGURE_NAME_H

@@ -1,6 +1,7 @@
 #include "core/random.h"
 
 #include <string.h>
+#include <game/gamestate/io_buffer.h>
 //#include <cmath>
 
 static random_data data;
@@ -15,6 +16,14 @@ void random_init(void) {
     data.iv2 = 0x72641663;
 }
 
+static void random_bits_fill() {
+    data.random1_3bit = data.iv1 & 0x7;
+    data.random1_7bit = data.iv1 & 0x7f;
+    data.random1_15bit = data.iv1 & 0x7fff;
+    data.random2_3bit = data.iv2 & 0x7;
+    data.random2_7bit = data.iv2 & 0x7f;
+    data.random2_15bit = data.iv2 & 0x7fff;
+}
 void random_generate_next(void) {
     data.pool[data.pool_index++] = data.random1_7bit;
     if (data.pool_index >= MAX_RANDOM)
@@ -30,12 +39,7 @@ void random_generate_next(void) {
         if (r2)
             data.iv2 |= 0x40000000;
     }
-    data.random1_3bit = data.iv1 & 0x7;
-    data.random1_7bit = data.iv1 & 0x7f;
-    data.random1_15bit = data.iv1 & 0x7fff;
-    data.random2_3bit = data.iv2 & 0x7;
-    data.random2_7bit = data.iv2 & 0x7f;
-    data.random2_15bit = data.iv2 & 0x7fff;
+    random_bits_fill();
 }
 
 void random_generate_pool(void) {
@@ -162,18 +166,8 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
         return true;
 }
 
-void random_load_state(buffer *buf) {
-    data.iv1 = buf->read_u32();
-    data.iv2 = buf->read_u32();
-    data.random1_3bit = data.iv1 & 0x7;
-    data.random1_7bit = data.iv1 & 0x7f;
-    data.random1_15bit = data.iv1 & 0x7fff;
-    data.random2_3bit = data.iv2 & 0x7;
-    data.random2_7bit = data.iv2 & 0x7f;
-    data.random2_15bit = data.iv2 & 0x7fff;
-}
-
-void random_save_state(buffer *buf) {
-    buf->write_u32(data.iv1);
-    buf->write_u32(data.iv2);
-}
+io_buffer *iob_random_iv = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_UINT32, &data.iv1);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.iv2);
+    random_bits_fill();
+});

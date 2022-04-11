@@ -1,6 +1,7 @@
 #include "list.h"
 
 #include <string.h>
+#include <game/gamestate/io_buffer.h>
 
 #define MAX_SMALL 2500
 #define MAX_LARGE 10000
@@ -83,36 +84,19 @@ const int *building_list_burning_items(void) {
     return data.burning.items;
 }
 
-void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals) {
-    for (int i = 0; i < MAX_SMALL; i++) {
-        small->write_i16(data.small.items[i]);
-    }
-    for (int i = 0; i < MAX_LARGE; i++) {
-        large->write_i16(data.large.items[i]);
-    }
-    for (int i = 0; i < MAX_BURNING; i++) {
-        burning->write_i16(data.burning.items[i]);
-    }
-    burning_totals->write_i32(data.burning.total);
-    burning_totals->write_i32(data.burning.size);
-}
-
-void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals) {
-    for (int i = 0; i < MAX_SMALL; i++) {
-        if (!small->is_valid(1))
-            break;
-        data.small.items[i] = small->read_i16();
-    }
-    for (int i = 0; i < MAX_LARGE; i++) {
-        if (!large->is_valid(1))
-            break;
-        data.large.items[i] = large->read_i16();
-    }
-    for (int i = 0; i < MAX_BURNING; i++) {
-        if (!burning->is_valid(1))
-            break;
-        data.burning.items[i] = burning->read_i16();
-    }
-    data.burning.total = burning_totals->read_i32();
-    data.burning.size = burning_totals->read_i32();
-}
+io_buffer *iob_building_list_small = new io_buffer([](io_buffer *iob) {
+    for (int i = 0; i < MAX_SMALL; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &data.small.items[i]);
+});
+io_buffer *iob_building_list_large = new io_buffer([](io_buffer *iob) {
+    for (int i = 0; i < MAX_LARGE; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &data.large.items[i]);
+});
+io_buffer *iob_building_list_burning = new io_buffer([](io_buffer *iob) {
+    for (int i = 0; i < MAX_BURNING; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &data.burning.items[i]);
+});
+io_buffer *iob_building_list_burning_totals = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.burning.total);
+    iob->bind(BIND_SIGNATURE_INT32, &data.burning.size);
+});

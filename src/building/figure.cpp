@@ -42,6 +42,12 @@ const int generic_delay_table[] = {
 figure *building::get_figure(int i) {
     return figure_get(get_figureID(i));
 }
+void building::bind_iob_figures(io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[0]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[1]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[2]);
+    iob->bind(BIND_SIGNATURE_UINT16, &figure_ids_array[3]);
+}
 void building::set_figure(int i, int figure_id) {
 //    // correct index if out of bounds
 //    if (i < 0)

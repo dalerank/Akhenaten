@@ -1,4 +1,5 @@
 #include <scenario/property.h>
+#include <game/gamestate/io_buffer.h>
 #include "time.h"
 
 static time_data data;
@@ -68,17 +69,10 @@ void game_time_advance_year(void) {
     ++data.year;
 }
 
-void game_time_save_state(buffer *buf) {
-    buf->write_i32(data.tick);
-    buf->write_i32(data.day);
-    buf->write_i32(data.month);
-    buf->write_i32(data.year);
-    buf->write_i32(data.total_days);
-}
-void game_time_load_state(buffer *buf) {
-    data.tick = buf->read_i32();
-    data.day = buf->read_i32();
-    data.month = buf->read_i32();
-    data.year = buf->read_i32();
-    data.total_days = buf->read_i32();
-}
+io_buffer *iob_game_time = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.tick);
+    iob->bind(BIND_SIGNATURE_INT32, &data.day);
+    iob->bind(BIND_SIGNATURE_INT32, &data.month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.year);
+    iob->bind(BIND_SIGNATURE_INT32, &data.total_days);
+});

@@ -49,7 +49,4 @@ int floodplains_expected_month();
 
 void floodplains_tick_update();
 
-void floodplains_save_state(buffer *floodplain_data);
-void floodplains_load_state(buffer *floodplain_data);
-
 #endif //OZYMANDIAS_FLOODS_H

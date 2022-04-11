@@ -1,6 +1,7 @@
 #ifndef FIGURE_FIGURE_H
 #define FIGURE_FIGURE_H
 
+#include <game/gamestate/io_buffer.h>
 #include "core/buffer.h"
 #include "core/direction.h"
 #include "figure/action.h"
@@ -187,8 +188,7 @@ public:
     void set_state(figure_state s) {
         state = s;
     };
-    void load(buffer *buf);
-    void save(buffer *buf);
+    void bind(io_buffer *iob);
 
     // figure/figure.c
     void figure_delete_UNSAFE();
@@ -490,8 +490,6 @@ figure *figure_create(int type, int x, int y, int dir);
 void figure_init_scenario(void);
 
 void figure_kill_all();
-void figure_save_state(buffer *list, buffer *seq);
-void figure_load_state(buffer *list, buffer *seq);
 
 //
 

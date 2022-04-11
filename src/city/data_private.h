@@ -89,6 +89,9 @@ extern struct city_data_t {
         int32_t salary_amount;
         int32_t donate_amount;
         int32_t personal_savings;
+        uint8_t player_name_adversary[32];
+        uint8_t player_name[32];
+        uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
         struct {
             int32_t count;
             int32_t size;
@@ -444,7 +447,7 @@ extern struct city_data_t {
         int8_t unknown_464c[232];
         int32_t unknown_order;
         int32_t faction_id;
-        uint8_t faction_bytes[2];
+        uint8_t faction_bytes[4];
     } unused;
 } city_data;
 

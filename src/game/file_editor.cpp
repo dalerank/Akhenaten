@@ -102,7 +102,7 @@ static void create_blank_map(int size) {
 static void prepare_map_for_editing(void) {
     image_load_main_paks(scenario_property_climate(), 1, 0);
 
-    empire_load_external_c3(1, scenario_empire_id());
+//    empire_load_external_c3(1, scenario_empire_id());
     empire_object_init_cities();
 
     figure_init_scenario();

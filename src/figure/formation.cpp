@@ -570,185 +570,119 @@ void formation_update_all(int second_time) {
     formation_herd_update();
 }
 
-void formations_save_state(buffer *buf, buffer *totals) {
+io_buffer *iob_formations = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_FORMATIONS[GAME_ENV]; i++) {
-        formation *f = &formations[i];
-        buf->write_u8(f->in_use);
-        buf->write_u8(f->faction_id);
-        buf->write_u8(f->legion_id);
-        buf->write_u8(f->is_at_fort);
-        buf->write_i16(f->figure_type);
-        buf->write_i16(f->building_id);
-        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
-            buf->write_i16(f->figures[fig]);
-        }
-        buf->write_u8(f->num_figures);
-        buf->write_u8(f->max_figures);
-        buf->write_i16(f->layout);
-        buf->write_i16(f->morale);
-        buf->write_u8(f->x_home);
-        buf->write_u8(f->y_home);
-        buf->write_u8(f->standard_x);
-        buf->write_u8(f->standard_y);
-        buf->write_u8(f->x);
-        buf->write_u8(f->y);
-        buf->write_u8(f->destination_x);
-        buf->write_u8(f->destination_y);
-        buf->write_i16(f->destination_building_id);
-        buf->write_i16(f->standard_figure_id);
-        buf->write_u8(f->is_legion);
-        buf->skip(1);
-        buf->write_i16(f->attack_type);
-        buf->write_i16(f->legion_recruit_type);
-        buf->write_i16(f->has_military_training);
-        buf->write_i16(f->total_damage);
-        buf->write_i16(f->max_total_damage);
-        buf->write_i16(f->wait_ticks);
-        buf->write_i16(f->recent_fight);
-        buf->write_i16(f->enemy_state.duration_advance);
-        buf->write_i16(f->enemy_state.duration_regroup);
-        buf->write_i16(f->enemy_state.duration_halt);
-        buf->write_i16(f->enemy_legion_index);
-        buf->write_i16(f->is_halted);
-        buf->write_i16(f->missile_fired);
-        buf->write_i16(f->missile_attack_timeout);
-        buf->write_i16(f->missile_attack_formation_id);
-        buf->write_i16(f->prev.layout);
-        buf->write_i16(f->cursed_by_mars);
-        buf->write_u8(f->months_low_morale);
-        buf->write_u8(f->empire_service);
-        buf->write_u8(f->in_distant_battle);
-        buf->write_u8(f->is_herd);
-        buf->write_u8(f->enemy_type);
-        buf->write_u8(f->direction);
-        buf->write_u8(f->prev.x_home);
-        buf->write_u8(f->prev.y_home);
-        buf->write_u8(f->unknown_fired);
-        buf->write_u8(f->orientation);
-        buf->write_u8(f->months_from_home);
-        buf->write_u8(f->months_very_low_morale);
-        buf->write_u8(f->invasion_id);
-        buf->write_u8(f->herd_wolf_spawn_delay);
-        buf->write_u8(f->herd_direction);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            buf->skip(16);
-        buf->skip(17);
-        buf->write_i16(f->invasion_sequence);
-    }
-    totals->write_i32(data.id_last_in_use);
-    totals->write_i32(data.id_last_legion);
-    totals->write_i32(data.num_legions);
-}
-
-void formations_load_state(buffer *buf, buffer *totals) {
-    data.id_last_in_use = totals->read_i32();
-    data.id_last_legion = totals->read_i32();
-    data.num_legions = totals->read_i32();
-    for (int i = 0; i < MAX_FORMATIONS[GAME_ENV]; i++) {
-        if (i == 10) {
-            int a = 24;
-        }
         formation *f = &formations[i];
         f->id = i;                                                      // 10
-        f->in_use = buf->read_u8();                                     // 1
-        f->faction_id = buf->read_u8();
-        f->legion_id = buf->read_u8();
-        f->is_at_fort = buf->read_u8();
-        f->figure_type = buf->read_i16();                               // 69
-        f->building_id = buf->read_i16();
+        iob->bind(BIND_SIGNATURE_UINT8, &f->in_use);                                     // 1
+        iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->legion_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->is_at_fort);
+        iob->bind(BIND_SIGNATURE_INT16, &f->figure_type);                               // 69
+        iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
         for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++)
-            f->figures[fig] = buf->read_i16();
-        f->num_figures = buf->read_u8();                                // --> 3
-        f->max_figures = buf->read_u8();                                // 7
-        f->layout = buf->read_i16();                                    // 9
-        f->morale = buf->read_i16();                                    // 100
+            iob->bind(BIND_SIGNATURE_INT16, &f->figures[fig]);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->num_figures);                                // --> 3
+        iob->bind(BIND_SIGNATURE_UINT8, &f->max_figures);                                // 7
+        iob->bind(BIND_SIGNATURE_INT16, &f->layout);                                    // 9
+        iob->bind(BIND_SIGNATURE_INT16, &f->morale);                                    // 100
         if (GAME_ENV == ENGINE_ENV_C3) {
-            f->x_home = buf->read_u8();
-            f->y_home = buf->read_u8();
-            f->standard_x = buf->read_u8();
-            f->standard_y = buf->read_u8();
-            f->x = buf->read_u8();
-            f->y = buf->read_u8();
-            f->destination_x = buf->read_u8();
-            f->destination_y = buf->read_u8();
+            iob->bind(BIND_SIGNATURE_UINT8, &f->x_home);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->y_home);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->standard_x);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->standard_y);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->x);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->y);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->destination_x);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->destination_y);
         }
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            f->x_home = buf->read_u16();                                // 44
-            f->y_home = buf->read_u16();                                // 58
-            f->standard_x = buf->read_u16();                            //
-            f->standard_y = buf->read_u16();                            //
-            f->x = buf->read_u16();                                     // 44
-            f->y = buf->read_u16();                                     // 58
-            f->destination_x = buf->read_u16();                         // 49
-            f->destination_y = buf->read_u16();                         // 49
+            iob->bind(BIND_SIGNATURE_UINT16, &f->x_home);                                // 44
+            iob->bind(BIND_SIGNATURE_UINT16, &f->y_home);                                // 58
+            iob->bind(BIND_SIGNATURE_UINT16, &f->standard_x);                            //
+            iob->bind(BIND_SIGNATURE_UINT16, &f->standard_y);                            //
+            iob->bind(BIND_SIGNATURE_UINT16, &f->x);                                     // 44
+            iob->bind(BIND_SIGNATURE_UINT16, &f->y);                                     // 58
+            iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x);                         // 49
+            iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y);                         // 49
         }
-        f->destination_building_id = buf->read_i16();
-        f->standard_figure_id = buf->read_i16();
-        f->is_legion = buf->read_u8();
-        buf->skip(1);
-        f->attack_type = buf->read_i16();
-        f->legion_recruit_type = buf->read_i16();
-        f->has_military_training = buf->read_i16();
+        iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
+        iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->is_legion);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_INT16, &f->attack_type);
+        iob->bind(BIND_SIGNATURE_INT16, &f->legion_recruit_type);
+        iob->bind(BIND_SIGNATURE_INT16, &f->has_military_training);
         if (GAME_ENV == ENGINE_ENV_C3) {
-            f->total_damage = buf->read_i16();                              //     vv 6 hp per ostich?
-            f->max_total_damage = buf->read_i16();                          // --> 18
-            f->wait_ticks = buf->read_i16();                                // 50
-            f->recent_fight = buf->read_i16();
-            f->enemy_state.duration_advance = buf->read_i16();
-            f->enemy_state.duration_regroup = buf->read_i16();              // --> 8 --> 0 ??????
-            f->enemy_state.duration_halt = buf->read_i16();
-            f->enemy_legion_index = buf->read_i16();
+            iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);                              //     vv 6 hp per ostich?
+            iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage);                          // --> 18
+            iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                                // 50
+            iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
+            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
+            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);              // --> 8 --> 0 ??????
+            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
+            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
         }
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            buf->skip(2);                                                //     vv 6 hp per ostich?
-            f->total_damage = buf->read_i16();                              // --> 18
-            f->max_total_damage = buf->read_i16();                          // 50
-            f->recent_fight = buf->read_i16();
-            buf->skip(2);
-            f->wait_ticks = buf->read_i16();                                // --> 8 --> 0 ??????
-            buf->skip(4);
-//            f->enemy_state.duration_advance = buf->read_i16();
-//            f->enemy_state.duration_regroup = buf->read_i16();
-//            f->enemy_state.duration_halt = buf->read_i16();
-//            f->enemy_legion_index = buf->read_i16();
+            iob->bind____skip(2);                                                //     vv 6 hp per ostich?
+            iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);                              // --> 18
+            iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage);                          // 50
+            iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
+            iob->bind____skip(2);
+            iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                                // --> 8 --> 0 ??????
+            iob->bind____skip(4);
+//            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
+//            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);
+//            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
+//            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
             f->enemy_state.duration_advance = 0;
             f->enemy_state.duration_regroup = 0;
             f->enemy_state.duration_halt = 0;
             f->enemy_legion_index = 0;
         }
-        f->is_halted = buf->read_i16();
-        f->missile_fired = buf->read_i16();
-        f->missile_attack_timeout = buf->read_i16();
-        f->missile_attack_formation_id = buf->read_i16();
-        f->prev.layout = buf->read_i16();
-        f->cursed_by_mars = buf->read_i16();
-        f->months_low_morale = buf->read_u8();
+        iob->bind(BIND_SIGNATURE_INT16, &f->is_halted);
+        iob->bind(BIND_SIGNATURE_INT16, &f->missile_fired);
+        iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_timeout);
+        iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_formation_id);
+        iob->bind(BIND_SIGNATURE_INT16, &f->prev.layout);
+        iob->bind(BIND_SIGNATURE_INT16, &f->cursed_by_mars);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->months_low_morale);
         f->months_very_low_morale = 0;
-        f->empire_service = buf->read_u8();
-        f->in_distant_battle = buf->read_u8();
-        f->is_herd = buf->read_u8();                                    // 2
-        f->enemy_type = buf->read_u8();
-        f->direction = buf->read_u8();
+        iob->bind(BIND_SIGNATURE_UINT8, &f->empire_service);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->in_distant_battle);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->is_herd);                                    // 2
+        iob->bind(BIND_SIGNATURE_UINT8, &f->enemy_type);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->direction);
         if (GAME_ENV == ENGINE_ENV_C3) {
-            f->prev.x_home = buf->read_u8();
-            f->prev.y_home = buf->read_u8();
+            iob->bind(BIND_SIGNATURE_UINT8, &f->prev.x_home);
+            iob->bind(BIND_SIGNATURE_UINT8, &f->prev.y_home);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            f->prev.x_home = buf->read_u16();
-            f->prev.y_home = buf->read_u16();
+            iob->bind(BIND_SIGNATURE_UINT16, &f->prev.x_home);
+            iob->bind(BIND_SIGNATURE_UINT16, &f->prev.y_home);
         }
-        f->unknown_fired = buf->read_u8();
-        f->orientation = buf->read_u8();
-        f->months_from_home = buf->read_u8();
-        f->months_very_low_morale = buf->read_u8();
-        f->invasion_id = buf->read_u8();
-        f->herd_wolf_spawn_delay = buf->read_u8();                      // --> 4
-        f->herd_direction = buf->read_u8();                             // 6
+        iob->bind(BIND_SIGNATURE_UINT8, &f->unknown_fired);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->orientation);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->months_very_low_morale);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->invasion_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);                             // 6
         if (i == 10) {
             int a = 24;
         }
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
-            buf->skip(6);
-        buf->skip(17);
-        f->invasion_sequence = buf->read_i16();
+            iob->bind____skip(6);
+        iob->bind____skip(17);
+        iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
     }
+});
+io_buffer *iob_formation_totals = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_in_use);
+    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_legion);
+    iob->bind(BIND_SIGNATURE_INT32, &data.num_legions);
+});
+
+void formations_load_state(buffer *buf, buffer *totals) {
+    
+    
 }

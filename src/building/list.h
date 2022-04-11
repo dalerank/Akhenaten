@@ -63,8 +63,4 @@ int building_list_burning_size(void);
 
 const int *building_list_burning_items(void);
 
-void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
-
-void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
-
 #endif // BUILDING_LIST_H

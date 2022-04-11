@@ -1,3 +1,4 @@
+#include <city/data.h>
 #include "imperial.h"
 
 #include "city/emperor.h"
@@ -123,7 +124,7 @@ static int draw_background(void) {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     ImageDraw::img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 2, 10, 10);
 
-    text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw(city_player_name(), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK_ON_LIGHT);

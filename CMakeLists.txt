@@ -255,7 +255,6 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
     ${PROJECT_SOURCE_DIR}/src/building/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/building_state.cpp
     ${PROJECT_SOURCE_DIR}/src/building/count.cpp
     ${PROJECT_SOURCE_DIR}/src/building/destruction.cpp
     ${PROJECT_SOURCE_DIR}/src/building/dock.cpp

@@ -20,8 +20,4 @@ void sound_city_decay_views(void);
 
 void sound_city_play(void);
 
-void sound_city_save_state(buffer *buf);
-
-void sound_city_load_state(buffer *buf);
-
 #endif // SOUND_CITY_H

@@ -4,20 +4,15 @@
 #include "core/buffer.h"
 
 int map_image_at(int grid_offset);
-
 void map_image_set(int grid_offset, int image_id);
 
 void map_image_backup(void);
-
 void map_image_restore(void);
-
 void map_image_restore_at(int grid_offset);
 
 void map_image_clear(void);
 void map_image_init_edges(void);
 
-void map_image_save_state(buffer *buf);
-
-void map_image_load_state(buffer *buf, int shift = 0);
+void set_image_grid_correction_shift(int shift);
 
 #endif // MAP_IMAGE_H

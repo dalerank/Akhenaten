@@ -2,6 +2,7 @@
 #define OZYMANDIAS_IO_BUFFER_H
 
 #include <core/buffer.h>
+#include <map/grid.h>
 
 typedef enum {
     CHUNK_ACCESS_REVOKED,
@@ -20,28 +21,41 @@ typedef enum {
     BIND_SIGNATURE_INT16,
     BIND_SIGNATURE_UINT32,
     BIND_SIGNATURE_INT32,
+
     BIND_SIGNATURE_RAW,
+
+    BIND_SIGNATURE_GRID,
 } bind_signature_e;
 
 #define IO_BRANCH(R, W) if (access_type == CHUNK_ACCESS_READ) R; else if (access_type == CHUNK_ACCESS_WRITE) W; return;
 
 class io_buffer {
 private:
+    int size = 0;
+    bool compressed = false;
+    char name[100] = "";
+
     // internal buffer
     buffer *p_buf = nullptr;
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    bool (*bind_callback)(io_buffer *io);
+    void (*bind_callback)(io_buffer *io);
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
     bool io_run(chunk_buffer_access_e flag);
 
 public:
+    int get_size() {
+        return size;
+    }
+    int get_offset() {
+        return p_buf->get_offset();
+    }
 
     // this will HOOK the io_buffer the provided BUFFER
-    void hook(buffer *buf);
+    void hook(buffer *buf, int _size, bool _compressed, const char *_name);
 
     // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
@@ -67,9 +81,17 @@ public:
             IO_BRANCH(p_buf->read_raw((uint8_t *)ext, size), p_buf->write_raw((uint8_t *)ext, size))
         }
     }
+    void bind(bind_signature_e signature, grid_xx *ext) {
+        if (ext != nullptr && signature == BIND_SIGNATURE_GRID) {
+            IO_BRANCH(map_grid_load_buffer(ext, p_buf), map_grid_save_buffer(ext, p_buf))
+        }
+    }
     void bind(bind_signature_e signature, size_t size = -1) {
         if (size > 0)
             return p_buf->skip(size);
+    }
+    void bind____skip(size_t size) {
+        return bind(BIND_SIGNATURE_SKIP, size);
     }
 
     // these will VALIDATE the buffer, set the ACCESS FLAG, then fire the external CALLBACK
@@ -78,7 +100,7 @@ public:
     bool read();
     bool write();
 
-    io_buffer(bool (*bclb)(io_buffer *io));
+    io_buffer(void (*bclb)(io_buffer *io));
     ~io_buffer();
 };
 

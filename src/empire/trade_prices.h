@@ -34,16 +34,4 @@ int trade_price_sell(int resource);
  */
 int trade_price_change(int resource, int amount);
 
-/**
- * Save trade prices to buffer
- * @param buf Buffer
- */
-void trade_prices_save_state(buffer *buf);
-
-/**
- * Load trade prices from buffer
- * @param buf Buffer
- */
-void trade_prices_load_state(buffer *buf);
-
 #endif // EMPIRE_TRADE_PRICES_H

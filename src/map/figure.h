@@ -45,8 +45,4 @@ int map_figure_foreach_until(int grid_offset, int test);
  */
 void map_figure_clear(void);
 
-void map_figure_save_state(buffer *buf);
-
-void map_figure_load_state(buffer *buf);
-
 #endif // MAP_FIGURE_H

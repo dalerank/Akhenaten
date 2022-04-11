@@ -37,6 +37,7 @@ void map_aqueduct_clear(void) {
 }
 
 #include <stdlib.h>
+#include <game/gamestate/io_buffer.h>
 
 void map_aqueduct_backup(void) {
 
@@ -53,11 +54,9 @@ void map_aqueduct_restore(void) {
     map_grid_copy(&aqueduct_backup, &aqueduct);
 }
 
-void map_aqueduct_save_state(buffer *buf, buffer *backup) {
-    map_grid_save_buffer(&aqueduct, buf);
-    map_grid_save_buffer(&aqueduct_backup, backup);
-}
-void map_aqueduct_load_state(buffer *buf, buffer *backup) {
-    map_grid_load_buffer(&aqueduct, buf);
-    map_grid_load_buffer(&aqueduct_backup, backup);
-}
+io_buffer *iob_aqueduct_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &aqueduct);
+});
+io_buffer *iob_aqueduct_backup_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &aqueduct_backup);
+});
