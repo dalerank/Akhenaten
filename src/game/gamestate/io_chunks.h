@@ -6,7 +6,7 @@
 extern io_buffer *iob_none;
 
 extern io_buffer *iob_scenario_mission_id;
-//extern io_buffer *iob_file_version;
+extern io_buffer *iob_file_version;
 
 extern io_buffer *iob_junk1; 
 

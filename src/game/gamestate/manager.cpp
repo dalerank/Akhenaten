@@ -16,7 +16,57 @@
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
 
-static char compress_buffer[COMPRESS_BUFFER_SIZE];
+#include "SDL.h"
+
+#ifdef _WIN32
+#  ifdef _WIN64
+#    define PRI_SIZET PRIu64
+#  else
+#    define PRI_SIZET PRIu32
+#  endif
+#else
+#  define PRI_SIZET "zu"
+#endif
+
+int findex;
+char *fname;
+static void export_unzipped(file_chunk_t *chunk) {
+    char *lfile = (char *) malloc(200);
+    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+    FILE *log = fopen(lfile, "wb+");
+    if (log)
+        fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
+    fclose(log);
+    free(lfile);
+}
+static void log_hex(file_chunk_t *chunk, int i, int offs) {
+    // log first few bytes of the filepiece
+    size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
+    char hexstr[40] = {0};
+    for (int b = 0; b < s; b++) {
+        char hexcode[3] = {0};
+        uint8_t inbyte = chunk->buf->get_value(b);
+        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
+        if ((b + 1) % 4 == 0 || (b + 1) == s)
+            strncat(hexstr, " ", 2);
+    }
+
+    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, FileIO.num_chunks(),
+            offs, hexstr, chunk->buf->size(), fname);
+}
+
+static buffer *version_buffer = new buffer(8);
+file_version_t read_file_version(const char *filename, int offset) {
+    file_version_t version = {-1, -1};
+    version_buffer->clear();
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset + 4)) {
+        version.minor = version_buffer->read_i32();
+        version.major = version_buffer->read_i32();
+    }
+    return version;
+}
 
 FileManager FileIO;
 
@@ -30,17 +80,6 @@ void FileManager::clear() {
         delete file_chunks.at(i).buf;
     }
     file_chunks.clear();
-}
-
-static buffer *version_buffer = new buffer(8);
-file_version_t read_file_version(const char *filename, int offset) {
-    file_version_t version = {-1, -1};
-    version_buffer->clear();
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset + 4)) {
-        version.minor = version_buffer->read_i32();
-        version.major = version_buffer->read_i32();
-    }
-    return version;
 }
 void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
     if (loaded)
@@ -83,7 +122,7 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
             break;
         case FILE_SCHEMA_SAV: {
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
-            push_chunk(8, false, "file_version", nullptr);
+            push_chunk(8, false, "file_version", iob_file_version);
 
             push_chunk(6000, false, "junk1", iob_junk1); // ?????
 
@@ -117,7 +156,7 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 //                state->building_count_culture1 = create_savegame_piece(132, false, ""); // MISSING
             push_chunk(8, false, "city_graph_order", iob_city_graph_order); // I guess ????
 //                state->emperor_change_time = create_savegame_piece(8, false, ""); // MISSING
-            push_chunk(12, false, "empire", iob_empire_map_params); // ok ???
+            push_chunk(12, false, "empire_map_params", iob_empire_map_params); // ok ???
             push_chunk(6466, true, "empire_cities", iob_empire_cities); // 83920 + 7681 --> 91601
             push_chunk(288, false, "building_count_industry", iob_building_count_industry); // 288 bytes ??????
             push_chunk(288, false, "trade_prices", iob_trade_prices);
@@ -272,9 +311,15 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
         }
     }
 }
-const file_version_t *FileManager::get_file_version() {
+file_version_t *FileManager::get_file_version() {
     return &file_version;
 }
+
+io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
+    auto v = FileIO.get_file_version();
+    iob->bind(BIND_SIGNATURE_INT32, v->minor);
+    iob->bind(BIND_SIGNATURE_INT32, v->major);
+});
 
 buffer *FileManager::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
     // add empty piece onto the stack
@@ -299,42 +344,11 @@ const int FileManager::num_chunks() {
     return file_chunks.size();
 }
 
-#include "SDL.h"
-
-#ifdef _WIN32
-#  ifdef _WIN64
-#    define PRI_SIZET PRIu64
-#  else
-#    define PRI_SIZET PRIu32
-#  endif
-#else
-#  define PRI_SIZET "zu"
-#endif
-
-int findex;
-char *fname;
-
-void log_hex(file_chunk_t *piece, int i, int offs) {
-    // log first few bytes of the filepiece
-    size_t s = piece->buf->size() < 16 ? piece->buf->size() : 16;
-    char hexstr[40] = {0};
-    for (int b = 0; b < s; b++) {
-        char hexcode[3] = {0};
-        uint8_t inbyte = piece->buf->get_value(b);
-        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
-        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
-        if ((b + 1) % 4 == 0 || (b + 1) == s)
-            strncat(hexstr, " ", 2);
-    }
-
-    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", piece->compressed ? "(C)" : "---", i + 1, FileIO.num_chunks(),
-            offs, hexstr, piece->buf->size(), fname);
-}
-static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
+static char compress_buffer[COMPRESS_BUFFER_SIZE];
+static bool read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer
     if (filepiece_size > COMPRESS_BUFFER_SIZE)
-        return 0;
+        return false;
 
     // read 32-bit int header denoting size of compressed chunk
     uint32_t chunk_size = 0;
@@ -343,18 +357,18 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     // if file signature says "uncompressed" well man, it's uncompressed. read as normal ignoring the directive
     if ((unsigned int) chunk_size == UNCOMPRESSED) {
         if (buf->from_file(filepiece_size, fp) != filepiece_size)
-            return 0;
+            return false;
     } else {
         // read into buffer chunk of specified size - the actual "file piece" size is used for the output!
         int csize = fread(compress_buffer, 1, chunk_size, fp);
         if (csize != chunk_size) {
             SDL_Log("Incorrect chunk size, expected %i, found %i", chunk_size, csize);
-            return 0;
+            return false;
         }
         int bsize = zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size);
         if (bsize != buf->size()) {
             SDL_Log("Incorrect buffer size, expected %i, found %i", buf->size(), bsize);
-            return 0;
+            return false;
         }
 //        if (fread(compress_buffer, 1, chunk_size, fp) != chunk_size
 //            || zip_decompress(compress_buffer, chunk_size, buf->data_unsafe_pls_use_carefully(), &filepiece_size) !=
@@ -363,11 +377,11 @@ static int read_compressed_chunk(FILE *fp, buffer *buf, int filepiece_size) {
     }
 //    buf->force_validate_unsafe_pls_use_carefully();
 
-    return 1;
+    return true;
 }
-static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
+static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
     if (bytes_to_write > COMPRESS_BUFFER_SIZE)
-        return 0;
+        return false;
 
     int output_size = COMPRESS_BUFFER_SIZE;
     if (zip_compress(buf->get_data(), bytes_to_write, compress_buffer, &output_size)) {
@@ -381,72 +395,74 @@ static int write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
         fwrite(&output_size, 4, 1, fp);
         fwrite(buf->get_data(), 1, bytes_to_write, fp);
     }
-    return 1;
-}
-
-//static void write_file_pieces(FILE *fp) {
-//    for (int i = 0; i < file_data.num_pieces; i++) {
-//        file_chunk_t *piece = &file_data.file_chunks[i];
-//        if (piece->compressed)
-//            write_compressed_chunk(fp, piece->buf, piece->buf->size());
-//        else
-//            piece->buf->to_file(piece->buf->size(), fp);
-//    }
-//}
-
-bool FileManager::load_file_headers() {
-    file_version = read_file_version(file_path, file_offset);
-    if (file_version.major == -1 || file_version.minor == -1)
-        return false;
     return true;
-    // TODO: file size?
 }
-bool FileManager::load_file_body() {
-    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
+
+bool FileManager::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version) {
+
+    //////////////////////////////////////////////////////////////////
+    auto TIME_START = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
+
+    // first, clear up the manager data and set the new file info
+    clear();
+    safe_strncpy(file_path, filename, MAX_FILE_NAME);
+    file_offset = offset;
+
+    // open file handle
+    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "wb");
     if (!fp) {
-        log_error("Unable to load game, unable to open file.", 0, 0);
+        log_error("Unable to save game, access denied.", 0, 0);
         return false;
-    }
-    if (file_offset)
+    } else if (file_offset)
         fseek(fp, file_offset, SEEK_SET);
 
-    // read contents
+    // dump GAME STATE into buffers
+    save_state();
+
+//    init_file_data();
+//
+//    log_info("Saving game", filename, 0);
+////    savegame_version = SAVE_GAME_VERSION;
+//    savegame_save_to_state(&file_data.state);
+//
+//    FILE *fp = file_open(filename, "wb");
+//    if (!fp) {
+//        log_error("Unable to save game", 0, 0);
+//        return false;
+//    }
+
+    // init file chunks and buffer collection
+    init_with_schema(mapping_schema, version);
+
     for (int i = 0; i < num_chunks(); i++) {
         file_chunk_t *chunk = &file_chunks.at(i);
-        findex = i;
-        fname = chunk->name;
+
         int result = 0;
-
-        auto offs = ftell(fp);
-
         if (chunk->compressed)
-            result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
+            result = write_compressed_chunk(fp, chunk->buf, chunk->buf->size());
         else
-            result = chunk->buf->from_file(chunk->buf->size(), fp) == chunk->buf->size();
-
-        // export uncompressed buffer data to zip folder for debugging
-        char *lfile = (char *) malloc(200);
-        sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
-        FILE *log = fopen(lfile, "wb+");
-        if (log)
-            fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
-        fclose(log);
-        free(lfile);
-
-        ///
-
-//        log_hex(chunk, i, offs);
+            result = chunk->buf->to_file(chunk->buf->size(), fp);
 
         // The last piece may be smaller than buf->size
-        if (!result && i != (num_chunks() - 1)) {
-            log_error("Unable to load game, unable to read savefile.", 0, 0);
+        if (!result) {
+            log_error("Unable to save game, write failure.", 0, 0);
             return false;
         }
     }
+
+    // close file handle
     file_close(fp);
+
+    //////////////////////////////////////////////////////////////////
+    auto TIME_FINISH = std::chrono::high_resolution_clock::now();
+    //////////////////////////////////////////////////////////////////
+
+    SDL_Log("Saving game state to file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
+
     return true;
 }
-
 bool FileManager::read_from_file(const char *filename, int offset) {
 
     //////////////////////////////////////////////////////////////////
@@ -458,8 +474,17 @@ bool FileManager::read_from_file(const char *filename, int offset) {
     safe_strncpy(file_path, filename, MAX_FILE_NAME);
     file_offset = offset;
 
-    // read file header data
-    if (!load_file_headers()) {
+    // open file handle
+    FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        log_error("Unable to load game, unable to open file.", 0, 0);
+        return false;
+    } else if (file_offset)
+        fseek(fp, file_offset, SEEK_SET);
+
+    // read file header data (required for schema...)
+    file_version = read_file_version(file_path, file_offset);
+    if (file_version.major == -1 || file_version.minor == -1) {
         log_info("Invalid file and/or version header!", filename, 0);
         return false;
     }
@@ -477,126 +502,53 @@ bool FileManager::read_from_file(const char *filename, int offset) {
     // init file chunks and buffer collection
     init_with_schema(file_schema, file_version);
 
-    // fill buffers with file contents
-    if (!load_file_body()) {
-        return false;
+    // read file contents into buffers
+    for (int i = 0; i < num_chunks(); i++) {
+        file_chunk_t *chunk = &file_chunks.at(i);
+        findex = i;
+        fname = chunk->name;
+
+        auto offs = ftell(fp);
+
+        int result = 0;
+        if (chunk->compressed)
+            result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
+        else
+            result = chunk->buf->from_file(chunk->buf->size(), fp) == chunk->buf->size();
+
+        // ******** DEBUGGING ********
+        export_unzipped(chunk); // export uncompressed buffer data to zip folder
+        if (false) log_hex(chunk, i, offs); // print full chunk read log info
+        // ***************************
+
+        // The last piece may be smaller than buf->size
+        if (!result && i != (num_chunks() - 1)) {
+            log_error("Unable to load game, unable to read savefile.", 0, 0);
+            return false;
+        }
     }
+
+    // close file handle
+    file_close(fp);
+
+    // load GAME STATE from buffers
+    load_state();
 
     //////////////////////////////////////////////////////////////////
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
     //////////////////////////////////////////////////////////////////
 
-    SDL_Log("Loading savestate from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+    SDL_Log("Loading game state from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
             std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;
 }
-bool FileManager::write_to_file(const char *filename, int offset) {
 
+void FileManager::save_state() {
+    for (int i = 0; i < num_chunks(); ++i)
+        file_chunks.at(i).iob->write();
 }
-
-#include "building/barracks.h"
-#include "building/count.h"
-#include "building/list.h"
-#include "building/storage.h"
-#include "city/culture.h"
-#include "city/data.h"
-#include "core/file.h"
-#include "core/log.h"
-#include "core/image.h"
-#include "core/game_environment.h"
-#include "city/message.h"
-#include "city/view.h"
-#include "core/dir.h"
-#include "core/random.h"
-#include "core/zip.h"
-#include "empire/city.h"
-#include "empire/empire.h"
-#include "empire/trade_prices.h"
-#include "empire/trade_route.h"
-#include "figure/enemy_army.h"
-#include "figure/formation.h"
-#include "figure/name.h"
-#include "figure/route.h"
-#include "figure/trader.h"
-#include "game/time.h"
-#include "game/tutorial.h"
-#include "map/aqueduct.h"
-#include "map/bookmark.h"
-#include "map/building.h"
-#include "map/desirability.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/image.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/routing.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
-#include "scenario/criteria.h"
-#include "scenario/earthquake.h"
-#include "scenario/emperor_change.h"
-#include "scenario/gladiator_revolt.h"
-#include "scenario/invasion.h"
-#include "scenario/scenario.h"
-#include "sound/city.h"
-
-static void scenario_load_from_state() {
-//    auto state = &buffers;
-//    map_image_load_state(state->graphic_ids);
-//    map_terrain_load_state(state->terrain);
-//    map_property_load_state(state->bitfields, state->edge);
-//    map_random_load_state(state->random);
-//    map_elevation_load_state(state->elevation);
-//    city_view_load_scenario_state(state->camera);
-//
-//    random_load_state(state->random_iv);
-//
-//    scenario_load_state(&state->SCENARIO);
-
-//    file->end_marker->skip(4);
-}
-static void scenario_save_to_state() {
-//    auto state = &buffers;
-//    map_image_save_state(state->graphic_ids);
-//    map_terrain_save_state(state->terrain);
-//    map_property_save_state(state->bitfields, state->edge);
-//    map_random_save_state(state->random);
-//    map_elevation_save_state(state->elevation);
-//    city_view_save_scenario_state(state->camera);
-//
-//    random_save_state(state->random_iv);
-//
-//    scenario_save_state(&state->SCENARIO);
-
-//    file->end_marker->skip(4);
-}
-
 void FileManager::load_state() {
     for (int i = 0; i < num_chunks(); ++i)
         file_chunks.at(i).iob->read();
-
-//    building_barracks_load_state(state->building_barracks_tower_sentry);
-//    building_count_load_state(state->building_count_industry,
-//                              state->building_count_culture1,
-//                              state->building_count_culture2,
-//                              state->building_count_culture3,
-//                              state->building_count_military,
-//                              state->building_count_support);
-
-//    scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
-
-//    city_culture_load_state(state->culture_coverage);
-
-//    scenario_max_year_load_state(state->max_game_year);
-//    scenario_earthquake_load_state(state->earthquake);
-
-//    scenario_gladiator_revolt_load_state(state->gladiator_revolt);
-//    map_routing_load_state(state->routing_counters);
-//    enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
-//    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
-}
-void FileManager::write_state() {
-    for (int i = 0; i < num_chunks(); ++i)
-        file_chunks.at(i).iob->write();
 }

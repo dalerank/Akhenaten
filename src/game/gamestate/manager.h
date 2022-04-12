@@ -48,11 +48,15 @@ typedef struct {
 // - schemas define the arrangement of data CHUNKS inside the file
 // - schemas can be assigned without reading a file, to prepare for file saving
 // - upon reading a file, the manager will:
-//      > read the file version header
-//      > detect the proper schema automatically
-//      > initialize the file chunks in the proper order
-//      > link the static FILESTATE BUFFERS to the ordered file chunks
-//      > read the file content into the chunks' linked buffers
+//      > open the file handle with the specified offset
+//      > read the file's version header
+//      > detect the proper schema automatically from the header
+//      > initialize the file chunks (io_buffer) in the proper order,
+//        as well as their internal memory buffer, and set up extra info
+//        (e.g. size, compressed flag, name for debugging)
+//      > read the file contents into the chunk cache (io_buffer sequence)
+//      > close the file handle
+//      > load the GAME STATE into the engine from the chunk cache
 extern class FileManager {
 private:
     bool loaded = false;
@@ -65,21 +69,22 @@ private:
     std::vector<file_chunk_t> file_chunks;
 
     buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);
-    bool load_file_headers();
-    bool load_file_body();
 
 public:
     void clear();
-    const file_version_t *get_file_version();
+    file_version_t *get_file_version();
     const int num_chunks();
 
+    // set up list of io_buffer chunks in correct order for specific file format read/write operations
     void init_with_schema(file_schema_enum_t mapping_schema, file_version_t version);
 
+    // write/read internal chunk cache (io_buffer sequence) to/from disk file
+    bool write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version);
     bool read_from_file(const char *filename, int offset);
-    bool write_to_file(const char *filename, int offset);
 
+    // save/load game state to/from internal chunk cache (io_buffer sequence)
+    void save_state();
     void load_state();
-    void write_state();
 
 } FileIO;
 
