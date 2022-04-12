@@ -153,14 +153,6 @@ bool string_needle_equals(const uint8_t *a, const uint8_t *b, int len) {
     }
     return true;
 }
-//static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
-//    int needle_length = string_length(needle);
-//    for (int i = 0; i < haystack_length; i++) {
-//        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
-//            return i + 1;
-//    }
-//    return 0;
-//}
 int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
     int needle_length = string_length(needle);
     for (int i = 0; i < haystack_length; i++) {

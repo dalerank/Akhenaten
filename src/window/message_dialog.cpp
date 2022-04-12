@@ -106,36 +106,13 @@ static struct {
     int use_popup;
 } player_message;
 
-//static int strings_equal(const uint8_t *a, const uint8_t *b, int len) {
-//    for (int i = 0; i < len; i++, a++, b++) {
-//        if (*a != *b)
-//            return 0;
-//
-//    }
-//    return 1;
-//}
-//static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length) {
-//    int needle_length = string_length(needle);
-//    for (int i = 0; i < haystack_length; i++) {
-//        if (haystack[i] == needle[0] && strings_equal(&haystack[i], needle, needle_length))
-//            return i;
-//    }
-//    return -1;
-//}
-//static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
-//    for (int i = 0; i < haystack_length; i++) {
-//        if (haystack[i] == needle)
-//            return i;
-//    }
-//    return -1;
-//}
 static void write_to_body_text_buffer(const uint8_t *in, uint8_t **out) {
     int size = string_length(in);
     memcpy(*out, in, size);
     *out += size;
 }
 static void swap_tag(uint8_t *curr_byte, uint8_t **curr_byte_out, const uint8_t *tag, const uint8_t *content) {
-    if (index_of_string(curr_byte, tag, 200) == 0)
+    if (index_of_string(curr_byte, tag, 200) == 1)
         write_to_body_text_buffer(content, curr_byte_out);
 }
 void text_fill_in_tags(const uint8_t *src, uint8_t *dst, text_tag_substitution *tag_templates, int num_tags) {
@@ -146,7 +123,7 @@ void text_fill_in_tags(const uint8_t *src, uint8_t *dst, text_tag_substitution *
 
         if ((char)*curr_byte == '[') { // found an opening bracket
             uint8_t *tag_end_ptr = curr_byte + index_of(curr_byte, ']', 200);
-            int size = tag_end_ptr - curr_byte;
+            int size = tag_end_ptr - curr_byte - 1;
 
             // needs to go over all the possible tags...
             for (int i = 0; i < num_tags; ++i)
