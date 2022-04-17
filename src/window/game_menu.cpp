@@ -19,9 +19,10 @@
 #include <graphics/text.h>
 #include <game/player_data.h>
 #include <core/file.h>
-#include <game/file.h>
+#include <game/gamestate/file.h>
 #include <scenario/property.h>
 #include <game/mission.h>
+#include <game/gamestate/manager.h>
 
 static void button_click(int param1, int param2);
 
@@ -101,9 +102,9 @@ static void button_click(int param1, int param2) {
     switch (param1) {
         case 0: // begin / resume family history
             if (data.to_begin_history) {
-                game_load_scenario(SCENARIO_NUBT);
+                GamestateIO::load_mission(SCENARIO_NUBT);
             } else {
-                if (game_file_load_saved_game(data.last_autosave)) {
+                if (GamestateIO::load_savegame(data.last_autosave)) {
                     graphics_reset_dialog();
                     return window_city_show();
                 } else {

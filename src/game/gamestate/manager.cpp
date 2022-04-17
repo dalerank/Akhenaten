@@ -13,6 +13,8 @@
 #include <core/image.h>
 #include <map/image.h>
 
+extern GamestateIO SFIO;
+
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
 
@@ -53,8 +55,17 @@ static void log_hex(file_chunk_t *chunk, int i, int offs) {
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, FileIO.num_chunks(),
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, SFIO.num_chunks(),
             offs, hexstr, chunk->buf->size(), fname);
+}
+
+static buffer *offset_buf = new buffer(4);
+const int get_campaign_scenario_offset(int scenario_id) {
+    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
+    offset_buf->clear();
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_buf, 4, 4 * scenario_id))
+        return 0;
+    return offset_buf->read_i32();
 }
 
 static buffer *version_buffer = new buffer(8);
@@ -68,9 +79,7 @@ file_version_t read_file_version(const char *filename, int offset) {
     return version;
 }
 
-FileManager FileIO;
-
-void FileManager::clear() {
+void GamestateIO::clear() {
     loaded = false;
     safe_strncpy(file_path, "", MAX_FILE_NAME);
     file_size = 0;
@@ -81,7 +90,7 @@ void FileManager::clear() {
     }
     file_chunks.clear();
 }
-void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
+void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
     if (loaded)
         clear(); // make sure the pieces
     file_version = version;
@@ -311,17 +320,17 @@ void FileManager::init_with_schema(file_schema_enum_t mapping_schema, file_versi
         }
     }
 }
-file_version_t *FileManager::get_file_version() {
-    return &file_version;
+file_version_t *GamestateIO::get_file_version() {
+    return &SFIO.file_version;
 }
 
 io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
-    auto v = FileIO.get_file_version();
+    auto v = SFIO.get_file_version();
     iob->bind(BIND_SIGNATURE_INT32, v->minor);
     iob->bind(BIND_SIGNATURE_INT32, v->major);
 });
 
-buffer *FileManager::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
+buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
     // add empty piece onto the stack
     file_chunks.push_back(file_chunk_t());
     auto chunk = &file_chunks.at(file_chunks.size() - 1);
@@ -340,7 +349,7 @@ buffer *FileManager::push_chunk(int size, bool compressed, const char *name, io_
     // return linked buffer pointer so that it can be assigned for read/write access later
     return chunk->buf;
 }
-const int FileManager::num_chunks() {
+const int GamestateIO::num_chunks() {
     return file_chunks.size();
 }
 
@@ -398,7 +407,7 @@ static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
     return true;
 }
 
-bool FileManager::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version) {
+bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version) {
 
     //////////////////////////////////////////////////////////////////
     auto TIME_START = std::chrono::high_resolution_clock::now();
@@ -418,7 +427,8 @@ bool FileManager::write_to_file(const char *filename, int offset, file_schema_en
         fseek(fp, file_offset, SEEK_SET);
 
     // dump GAME STATE into buffers
-    save_state();
+    for (int i = 0; i < num_chunks(); ++i)
+        file_chunks.at(i).iob->write();
 
 //    init_file_data();
 //
@@ -463,7 +473,7 @@ bool FileManager::write_to_file(const char *filename, int offset, file_schema_en
 
     return true;
 }
-bool FileManager::read_from_file(const char *filename, int offset) {
+bool GamestateIO::read_from_file(const char *filename, int offset) {
 
     //////////////////////////////////////////////////////////////////
     auto TIME_START = std::chrono::high_resolution_clock::now();
@@ -532,7 +542,8 @@ bool FileManager::read_from_file(const char *filename, int offset) {
     file_close(fp);
 
     // load GAME STATE from buffers
-    load_state();
+    for (int i = 0; i < num_chunks(); ++i)
+        file_chunks.at(i).iob->read();
 
     //////////////////////////////////////////////////////////////////
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
@@ -542,13 +553,4 @@ bool FileManager::read_from_file(const char *filename, int offset) {
             std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;
-}
-
-void FileManager::save_state() {
-    for (int i = 0; i < num_chunks(); ++i)
-        file_chunks.at(i).iob->write();
-}
-void FileManager::load_state() {
-    for (int i = 0; i < num_chunks(); ++i)
-        file_chunks.at(i).iob->read();
 }

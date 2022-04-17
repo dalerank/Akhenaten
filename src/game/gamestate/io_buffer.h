@@ -44,7 +44,7 @@ private:
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
-    bool io_run(chunk_buffer_access_e flag);
+    bool io_sync(chunk_buffer_access_e flag);
 
 public:
     int get_size() {

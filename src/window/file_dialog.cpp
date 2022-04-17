@@ -9,7 +9,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "core/game_environment.h"
-#include "game/file.h"
+#include "game/gamestate/file.h"
 #include "game/file_editor.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -192,24 +192,19 @@ static void button_ok_cancel(int is_ok, int param2) {
         return;
     }
 
-    char filename[200] = "";
-//    const char *fn = get_chosen_filename();
-    switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            strcat(filename, "Save/");
-            strcat(filename, setting_player_name_utf8());
-            strcat(filename, "/");
-    }
+    char filename[MAX_FILE_NAME] = "";
     strcat(filename, get_chosen_filename());
     strcat(filename, ".sav");
+    char full[MAX_FILE_NAME] = "";
+    path_build_saves(full, filename);
 
-    if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
+    if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(full, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();
         return;
     }
     if (data.dialog_type == FILE_DIALOG_LOAD) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            if (game_file_load_saved_game(filename)) {
+            if (GamestateIO::load_savegame(filename)) {
                 input_box_stop(&file_name_input);
                 window_city_show();
             } else {
@@ -217,7 +212,7 @@ static void button_ok_cancel(int is_ok, int param2) {
                 return;
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            if (game_file_editor_load_scenario(filename)) {
+            if (game_file_editor_load_scenario(full)) {
                 input_box_stop(&file_name_input);
                 window_editor_map_show();
             } else {
@@ -228,20 +223,19 @@ static void button_ok_cancel(int is_ok, int param2) {
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         input_box_stop(&file_name_input);
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            if (!file_has_extension(filename, saved_game_data_expanded.extension))
-                file_append_extension(filename, saved_game_data_expanded.extension);
-
-            game_file_write_saved_game(filename);
+            if (!file_has_extension(full, saved_game_data_expanded.extension))
+                file_append_extension(full, saved_game_data_expanded.extension);
+            GamestateIO::write_savegame(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            if (!file_has_extension(filename, scenario_data.extension))
-                file_append_extension(filename, scenario_data.extension);
+            if (!file_has_extension(full, scenario_data.extension))
+                file_append_extension(full, scenario_data.extension);
 
-            game_file_editor_write_scenario(filename);
+            game_file_editor_write_scenario(full);
             window_editor_map_show();
         }
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
-        if (game_file_delete_saved_game(filename)) {
+        if (GamestateIO::delete_savegame(filename)) {
             dir_find_files_with_extension(".", data.file_data->extension);
             dir_append_files_with_extension(saved_game_data_expanded.extension);
 

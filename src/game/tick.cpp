@@ -1,5 +1,6 @@
 #include <city/floods.h>
 #include <scenario/events.h>
+#include <game/gamestate/manager.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -33,7 +34,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
-#include "game/file.h"
+#include "game/gamestate/file.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -103,8 +104,14 @@ static void advance_month(void) {
     city_festival_update();
     if (GAME_ENV == ENGINE_ENV_C3)
         tutorial_on_month_tick();
-    if (setting_monthly_autosave())
-        game_file_write_saved_game("autosave.svx");
+    if (setting_monthly_autosave()) {
+//        if (0)
+//            SaveFileIO::write_savegame("autosave.sav");
+//        if (1)
+//            SaveFileIO::write_savegame("autosave_history.sav");
+//        if (2)
+//            SaveFileIO::write_savegame("autosave_replay.sav");
+    }
 }
 
 static void advance_day(void) {

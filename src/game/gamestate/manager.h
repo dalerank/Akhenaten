@@ -6,6 +6,8 @@
 #include <core/file.h>
 #include "io_buffer.h"
 
+static const char MISSION_PACK_FILE[] = "mission1.pak";
+
 enum { // MINOR versioning found so far
     FILE_144 = 144,
     FILE_147 = 147,
@@ -57,7 +59,7 @@ typedef struct {
 //      > read the file contents into the chunk cache (io_buffer sequence)
 //      > close the file handle
 //      > load the GAME STATE into the engine from the chunk cache
-extern class FileManager {
+class GamestateIO {
 private:
     bool loaded = false;
     char file_path[MAX_FILE_NAME] = "";
@@ -68,12 +70,12 @@ private:
 
     std::vector<file_chunk_t> file_chunks;
 
+    void clear();
     buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);
 
 public:
-    void clear();
-    file_version_t *get_file_version();
     const int num_chunks();
+    static file_version_t *get_file_version();
 
     // set up list of io_buffer chunks in correct order for specific file format read/write operations
     void init_with_schema(file_schema_enum_t mapping_schema, file_version_t version);
@@ -82,12 +84,23 @@ public:
     bool write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version);
     bool read_from_file(const char *filename, int offset);
 
-    // save/load game state to/from internal chunk cache (io_buffer sequence)
-    void save_state();
-    void load_state();
+    // static boilerplate methods for use anywhere in the engine
+    static bool write_mission(const int scenario_id);
+    static bool write_savegame(const char *filename_short);
+    static bool write_map(const char *filename_short);
+    //
+    static bool load_mission(const int scenario_id, bool start_immediately = true);
+    static bool load_savegame(const char *filename_short, bool start_immediately = true);
+    static bool load_map(const char *filename_short, bool start_immediately = true);
+    //
+    static void start_loaded_file();
+    //
+    static bool delete_mission(const int scenario_id);
+    static bool delete_savegame(const char *filename_short);
+    static bool delete_map(const char *filename_short);
+};
 
-} FileIO;
-
+const int get_campaign_scenario_offset(int scenario_id);
 file_version_t read_file_version(const char *filename, int offset);
 
 #endif //OZYMANDIAS_MANAGER_H

@@ -23,7 +23,7 @@ bool io_buffer::validate() {
     return true;
 }
 
-bool io_buffer::io_run(chunk_buffer_access_e flag) {
+bool io_buffer::io_sync(chunk_buffer_access_e flag) {
     if (!validate())
         return false;
     access_type = flag;
@@ -34,10 +34,10 @@ bool io_buffer::io_run(chunk_buffer_access_e flag) {
     return true;
 }
 bool io_buffer::read() {
-    return io_run(CHUNK_ACCESS_READ);
+    return io_sync(CHUNK_ACCESS_READ);
 }
 bool io_buffer::write() {
-    return io_run(CHUNK_ACCESS_WRITE);
+    return io_sync(CHUNK_ACCESS_WRITE);
 }
 
 io_buffer::io_buffer(void (*bclb)(io_buffer *)) {

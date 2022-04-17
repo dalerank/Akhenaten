@@ -20,7 +20,6 @@
 #include "figuretype/editor.h"
 #include "figuretype/water.h"
 #include "game/animation.h"
-#include "game/gamestate/file_io.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "map/aqueduct.h"
