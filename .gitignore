@@ -33,6 +33,10 @@ local.properties
 distribution/
 *.log
 
+/wiki/*
+/ozymandias-pharaoh-wiki.wiki/*
+doc
+/doc/*
 *.ods#
 
 *.lnk
@@ -41,3 +45,4 @@ distribution/
 /tools/*
 !/tools/*.zip
 !/tools/*.7z
+
