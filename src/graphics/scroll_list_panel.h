@@ -91,7 +91,8 @@ public:
 //    void remove_entry(int index); // TODO: nope.
     void change_file_path(const char *dir, const char *ext = nullptr);
     void refresh_file_finder();
-    void refresh_scrollbar_position();
+    void refresh_scrollbar();
+    void clamp_scrollbar_position();
 
     void draw();
     int input_handle(const mouse *m);

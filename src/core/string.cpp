@@ -169,7 +169,7 @@ int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length) {
     return 0;
 }
 
-void safe_strncpy(char *dest, const char *src, size_t destsz)
+void strncpy_safe(char *dest, const char *src, size_t destsz)
 {
     size_t srcsz = strlen(src);  // crash here if not nul-terminated
     if (srcsz > destsz - 1)

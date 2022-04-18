@@ -65,7 +65,7 @@ io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
 
 void GamestateIO::clear() {
     loaded = false;
-    safe_strncpy(file_path, "", MAX_FILE_NAME);
+    strncpy_safe(file_path, "", MAX_FILE_NAME);
     file_size = 0;
     file_offset = 0;
     file_version = {-1, -1};
@@ -418,7 +418,7 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
 
     // first, clear up the manager data and set the new file info
     clear();
-    safe_strncpy(file_path, filename, MAX_FILE_NAME);
+    strncpy_safe(file_path, filename, MAX_FILE_NAME);
     file_offset = offset;
 
     // open file handle
@@ -484,7 +484,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
 
     // first, clear up the manager data and set the new file info
     clear();
-    safe_strncpy(file_path, filename, MAX_FILE_NAME);
+    strncpy_safe(file_path, filename, MAX_FILE_NAME);
     file_offset = offset;
 
     // open file handle

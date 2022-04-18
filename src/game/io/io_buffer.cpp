@@ -8,7 +8,7 @@ void io_buffer::hook(buffer *buf, int _size, bool _compressed, const char *_name
     p_buf = buf;
     size = _size;
     compressed = _compressed;
-    safe_strncpy(name, _name, 100);
+    strncpy_safe(name, _name, 100);
 }
 
 bool io_buffer::validate() {

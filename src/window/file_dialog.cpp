@@ -239,7 +239,7 @@ static void button_ok_cancel(int is_ok, int param2) {
             dir_find_files_with_extension(".", data.file_data->extension);
             dir_append_files_with_extension(saved_game_data_expanded.extension);
 
-            panel->refresh_scrollbar_position();
+            panel->clamp_scrollbar_position();
 //            if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files)
 //                --scrollbar.scroll_position;
 //
