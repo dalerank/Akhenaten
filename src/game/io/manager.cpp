@@ -1,5 +1,5 @@
 #include "manager.h"
-#include "io_chunks.h"
+#include "chunks.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,8 +12,6 @@
 #include <core/log.h>
 #include <core/image.h>
 #include <map/image.h>
-
-extern GamestateIO SFIO;
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -30,34 +28,9 @@ extern GamestateIO SFIO;
 #  define PRI_SIZET "zu"
 #endif
 
-int findex;
-char *fname;
-static void export_unzipped(file_chunk_t *chunk) {
-    char *lfile = (char *) malloc(200);
-    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
-    FILE *log = fopen(lfile, "wb+");
-    if (log)
-        fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
-    fclose(log);
-    free(lfile);
-}
-static void log_hex(file_chunk_t *chunk, int i, int offs) {
-    // log first few bytes of the filepiece
-    size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
-    char hexstr[40] = {0};
-    for (int b = 0; b < s; b++) {
-        char hexcode[3] = {0};
-        uint8_t inbyte = chunk->buf->get_value(b);
-        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
-        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
-        if ((b + 1) % 4 == 0 || (b + 1) == s)
-            strncat(hexstr, " ", 2);
-    }
+extern GamestateIO SFIO;
 
-    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, SFIO.num_chunks(),
-            offs, hexstr, chunk->buf->size(), fname);
-}
+///
 
 static buffer *offset_buf = new buffer(4);
 const int get_campaign_scenario_offset(int scenario_id) {
@@ -79,15 +52,25 @@ file_version_t read_file_version(const char *filename, int offset) {
     return version;
 }
 
+file_version_t *GamestateIO::get_file_version() {
+    return &SFIO.file_version;
+}
+io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
+    auto v = SFIO.get_file_version();
+    iob->bind(BIND_SIGNATURE_INT32, v->minor);
+    iob->bind(BIND_SIGNATURE_INT32, v->major);
+});
+
+///
+
 void GamestateIO::clear() {
     loaded = false;
     safe_strncpy(file_path, "", MAX_FILE_NAME);
     file_size = 0;
     file_offset = 0;
     file_version = {-1, -1};
-    for (int i = 0; i < num_chunks(); ++i) {
+    for (int i = 0; i < num_chunks(); ++i)
         delete file_chunks.at(i).buf;
-    }
     file_chunks.clear();
 }
 void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
@@ -320,15 +303,6 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
         }
     }
 }
-file_version_t *GamestateIO::get_file_version() {
-    return &SFIO.file_version;
-}
-
-io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
-    auto v = SFIO.get_file_version();
-    iob->bind(BIND_SIGNATURE_INT32, v->minor);
-    iob->bind(BIND_SIGNATURE_INT32, v->major);
-});
 
 buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
     // add empty piece onto the stack
@@ -351,6 +325,35 @@ buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_
 }
 const int GamestateIO::num_chunks() {
     return file_chunks.size();
+}
+
+int findex;
+char *fname;
+static void export_unzipped(file_chunk_t *chunk) {
+    char *lfile = (char *) malloc(200);
+    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
+    FILE *log = fopen(lfile, "wb+");
+    if (log)
+        fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
+    fclose(log);
+    free(lfile);
+}
+static void log_hex(file_chunk_t *chunk, int i, int offs) {
+    // log first few bytes of the filepiece
+    size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
+    char hexstr[40] = {0};
+    for (int b = 0; b < s; b++) {
+        char hexcode[3] = {0};
+        uint8_t inbyte = chunk->buf->get_value(b);
+        snprintf(hexcode, sizeof(hexcode)/sizeof(hexcode[0]), "%02X", inbyte);
+        strncat(hexstr, hexcode, sizeof(hexcode)/sizeof(hexcode[0]) - 1);
+        if ((b + 1) % 4 == 0 || (b + 1) == s)
+            strncat(hexstr, " ", 2);
+    }
+
+    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, SFIO.num_chunks(),
+            offs, hexstr, chunk->buf->size(), fname);
 }
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
@@ -528,7 +531,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
 
         // ******** DEBUGGING ********
         export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (false) log_hex(chunk, i, offs); // print full chunk read log info
+        if (true) log_hex(chunk, i, offs); // print full chunk read log info
         // ***************************
 
         // The last piece may be smaller than buf->size
@@ -549,7 +552,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
     //////////////////////////////////////////////////////////////////
 
-    SDL_Log("Loading game state from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+    SDL_Log("Loading game from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
             std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;

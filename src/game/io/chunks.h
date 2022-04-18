@@ -1,5 +1,5 @@
-#ifndef OZYMANDIAS_IO_CHUNKS_H
-#define OZYMANDIAS_IO_CHUNKS_H
+#ifndef OZYMANDIAS_CHUNKS_H
+#define OZYMANDIAS_CHUNKS_H
 
 #include "io_buffer.h"
 
@@ -117,4 +117,4 @@ extern io_buffer *iob_junk18;
 extern io_buffer *iob_bizarre_ordered_fields_4;
 
 
-#endif //OZYMANDIAS_IO_CHUNKS_H
+#endif //OZYMANDIAS_CHUNKS_H

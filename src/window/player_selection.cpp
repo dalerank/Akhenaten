@@ -8,7 +8,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
-#include "game/gamestate/boilerplate.h"
+#include "game/io/boilerplate.h"
 #include "game/file_editor.h"
 #include "game/player_data.h"
 #include "graphics/generic_button.h"

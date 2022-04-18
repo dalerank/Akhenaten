@@ -1,7 +1,7 @@
 #ifndef FIGURE_FIGURE_H
 #define FIGURE_FIGURE_H
 
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include "core/buffer.h"
 #include "core/direction.h"
 #include "figure/action.h"

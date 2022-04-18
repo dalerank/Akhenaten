@@ -1,4 +1,4 @@
-#include "io_chunks.h"
+#include "chunks.h"
 
 static void default_bind(io_buffer *io) {
     io->bind(BIND_SIGNATURE_NONE);

@@ -4,7 +4,7 @@
 #include "core/game_environment.h"
 
 #include <string.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 #define MAX_TRADERS 100
 

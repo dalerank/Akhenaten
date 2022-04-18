@@ -9,7 +9,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "core/game_environment.h"
-#include "game/gamestate/boilerplate.h"
+#include "game/io/boilerplate.h"
 #include "game/file_editor.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -28,7 +28,7 @@
 #include <string.h>
 #include <game/settings.h>
 #include <graphics/scroll_list_panel.h>
-#include <game/gamestate/manager.h>
+#include <game/io/manager.h>
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 

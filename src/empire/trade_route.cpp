@@ -1,4 +1,4 @@
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include "trade_route.h"
 #include "core/game_environment.h"
 

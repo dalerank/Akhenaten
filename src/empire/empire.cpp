@@ -13,7 +13,7 @@
 #include "type.h"
 
 #include <string.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 const static int EMPIRE_WIDTH[2] = {
         2000,

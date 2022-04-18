@@ -342,7 +342,7 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 #include <stdlib.h>
 #include <city/data_private.h>
 #include <core/config.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 floodplain_order floodplain_offsets[30];
 

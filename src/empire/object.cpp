@@ -8,7 +8,7 @@
 #include "game/animation.h"
 #include "scenario/empire.h"
 #include "core/game_environment.h"
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20

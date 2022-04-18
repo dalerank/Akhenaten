@@ -19,10 +19,10 @@
 #include <graphics/text.h>
 #include <game/player_data.h>
 #include <core/file.h>
-#include <game/gamestate/boilerplate.h>
+#include <game/io/boilerplate.h>
 #include <scenario/property.h>
 #include <game/mission.h>
-#include <game/gamestate/manager.h>
+#include <game/io/manager.h>
 
 static void button_click(int param1, int param2);
 

@@ -79,7 +79,7 @@
 #include <city/floods.h>
 #include <window/mission_briefing.h>
 #include <window/city.h>
-#include <game/gamestate/manager.h>
+#include <game/io/manager.h>
 
 void path_build_saves(char *full, const char *filename) {
     strcpy(full, "");

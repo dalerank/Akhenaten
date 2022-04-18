@@ -1,4 +1,4 @@
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include "desirability.h"
 
 #include "building/building.h"

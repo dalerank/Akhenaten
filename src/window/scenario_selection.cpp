@@ -4,7 +4,7 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
-#include "game/gamestate/boilerplate.h"
+#include "game/io/boilerplate.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -29,7 +29,7 @@
 #include <game/player_data.h>
 #include <core/lang.h>
 #include <cmath>
-#include <game/gamestate/manager.h>
+#include <game/io/manager.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);

@@ -3,7 +3,7 @@
 #include "city/mission.h"
 #include "core/image_group.h"
 #include "core/lang.h"
-#include "game/gamestate/boilerplate.h"
+#include "game/io/boilerplate.h"
 #include "game/mission.h"
 #include "game/tutorial.h"
 #include "graphics/graphics.h"

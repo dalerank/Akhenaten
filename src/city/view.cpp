@@ -1,5 +1,5 @@
 #include <cmath>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include "view.h"
 
 #include "core/calc.h"

@@ -7,7 +7,7 @@
 #include "scenario/property.h"
 
 #include <string.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include <core/string.h>
 
 city_data_t *city_give_me_da_city_data() {

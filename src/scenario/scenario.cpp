@@ -1,6 +1,6 @@
 #include <city/data_private.h>
 #include <city/gods.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 #include "scenario.h"
 
 #include "city/resource.h"

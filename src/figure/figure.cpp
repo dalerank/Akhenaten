@@ -11,7 +11,7 @@
 #include "map/grid.h"
 
 #include <string.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 static struct {
     int created_sequence;

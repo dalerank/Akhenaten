@@ -1,7 +1,7 @@
 #include "list.h"
 
 #include <string.h>
-#include <game/gamestate/io_buffer.h>
+#include <game/io/io_buffer.h>
 
 #define MAX_SMALL 2500
 #define MAX_LARGE 10000
