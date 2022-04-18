@@ -5,7 +5,7 @@
 
 void city_data_init(void);
 
-void city_data_init_scenario(void);
+void city_data_init_custom_map(void);
 
 void city_data_init_campaign_mission(void);
 

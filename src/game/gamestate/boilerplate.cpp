@@ -81,23 +81,6 @@
 #include <window/city.h>
 #include <game/gamestate/manager.h>
 
-//static const char MISSION_PACK_FILE[] = "mission1.pak";
-
-static const char MISSION_SAVED_GAMES[][32] = {
-        "Citizen.sav",
-        "Clerk.sav",
-        "Engineer.sav",
-        "Architect.sav",
-        "Quaestor.sav",
-        "Procurator.sav",
-        "Aedile.sav",
-        "Praetor.sav",
-        "Consul.sav",
-        "Proconsul.sav",
-        "Caesar.sav",
-        "Caesar2.sav"
-};
-
 void path_build_saves(char *full, const char *filename) {
     strcpy(full, "");
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
@@ -119,7 +102,18 @@ void path_build_maps(char *full, const char *filename) {
     strcat(full, filename);
 }
 
-static void clear_scenario_data(void) {
+enum {
+    LOADED_NULL = -1,
+    LOADED_MISSION = 0,
+    LOADED_SAVE = 1,
+    LOADED_CUSTOM_MAP = 2
+};
+
+static int last_loaded = LOADED_NULL;
+static void pre_load() { // do we NEED this...?
+    scenario_set_campaign_scenario(-1);
+    map_bookmarks_clear();
+
     // clear data
     city_victory_reset();
     Planner.reset();
@@ -156,116 +150,98 @@ static void clear_scenario_data(void) {
     map_image_context_init();
     map_random_init();
 }
-static void initialize_scenario_data(const uint8_t *scenario_name) {
-    scenario_set_name(scenario_name);
-    scenario_map_init();
-
-    // initialize grids
-    map_tiles_update_all_elevation();
-    map_tiles_river_refresh_entire();
-    map_tiles_update_all_earthquake();
-    map_tiles_update_all_rocks();
-    map_tiles_add_entry_exit_flags();
-    map_tiles_update_all_empty_land();
-    map_tiles_update_all_meadow();
-    map_tiles_update_all_roads();
-    map_tiles_update_all_plazas();
-    map_tiles_update_all_walls();
-    map_tiles_update_all_aqueducts(0);
-
-    map_natives_init();
-
-    city_view_init();
-
-    figure_create_fishing_points();
-    figure_create_herds();
-    figure_create_flotsam();
-
-    map_routing_update_all();
-
-    scenario_map_init_entry_exit();
-
-    map_point entry = scenario_map_entry();
-    map_point exit = scenario_map_exit();
-
-    city_map_set_entry_point(entry.x, entry.y);
-    city_map_set_exit_point(exit.x, exit.y);
-
-    game_time_init(scenario_property_start_year());
-
-    // set up events
-    scenario_earthquake_init();
-    scenario_gladiator_revolt_init();
-    scenario_emperor_change_init();
-    scenario_criteria_init_max_year();
-
-    empire_init_scenario();
-    traders_clear();
-    scenario_invasion_init();
-    city_military_determine_distant_battle_city();
-    scenario_request_init();
-    scenario_demand_change_init();
-    scenario_price_change_init();
-    building_menu_update(BUILDSET_NORMAL);
-    image_load_main_paks(scenario_property_climate(), 0, 0);
-    image_set_enemy_pak(scenario_property_enemy());
-
-    city_data_init_scenario();
-    game_state_unpause();
-}
-static void load_empire_data(int is_custom_scenario, int empire_id) {
-//    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
-//        empire_load_external_c3(is_custom_scenario, empire_id);
-    scenario_distant_battle_set_roman_travel_months();
-    scenario_distant_battle_set_enemy_travel_months();
-}
-static void pre_load() { // do we NEED this...?
-    scenario_set_campaign_scenario(-1);
-    map_bookmarks_clear();
-}
 static void post_load() {
-    trade_prices_reset();
-    load_empire_data(scenario_is_custom(), scenario_empire_id());
-    if (scenario_is_custom())
-        initialize_scenario_data(scenario_name());
+    // TODO: check all of these...
+
+    // scenario settings
+    scenario_set_name(scenario_name());
     city_set_player_name(setting_player_name());
+    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
+//    if (scenario_is_mission_rank(1))
+//        setting_set_personal_savings_for_mission(0, 0);
+//    scenario_settings_init_mission();
 
-    scenario_map_init();
+    // new game / initializations
+    if (last_loaded != LOADED_SAVE) {
+        scenario_map_init();
 
+        // initialize grids
+        map_tiles_update_all_elevation();
+        map_tiles_river_refresh_entire();
+        map_tiles_update_all_earthquake();
+        map_tiles_update_all_rocks();
+        map_tiles_add_entry_exit_flags();
+        map_tiles_update_all_empty_land();
+        map_tiles_update_all_meadow();
+        map_tiles_update_all_roads();
+        map_tiles_update_all_plazas();
+        map_tiles_update_all_walls();
+        map_tiles_update_all_aqueducts(0);
+
+//        map_natives_init();
+        figure_create_fishing_points();
+        figure_create_herds();
+        figure_create_flotsam();
+
+        map_point entry = scenario_map_entry();
+        map_point exit = scenario_map_exit();
+        city_map_set_entry_point(entry.x, entry.y);
+        city_map_set_exit_point(exit.x, exit.y);
+
+        // game time
+        game_time_init(scenario_property_start_year());
+
+        // traders / empire
+        empire_init_scenario();
+        traders_clear();
+
+        // set up events
+        scenario_earthquake_init();
+        scenario_gladiator_revolt_init();
+        scenario_emperor_change_init();
+        scenario_criteria_init_max_year();
+        scenario_invasion_init();
+        city_military_determine_distant_battle_city();
+        scenario_request_init();
+        scenario_demand_change_init();
+        scenario_price_change_init();
+
+        // tutorial flags
+        tutorial_init();
+    }
+
+    // city view / orientation
     city_view_init();
-
-    map_routing_update_all();
-    floodplains_init();
-
     map_orientation_update_buildings();
+
+    // routing
+    map_routing_update_all();
     figure_route_clean();
     map_road_network_update();
     building_maintenance_check_rome_access();
-    building_granaries_calculate_stocks();
-    building_menu_update(BUILDSET_NORMAL);
+
+    // problems / overlays
     city_message_init_problem_areas();
-
-    sound_city_init();
-
-    game_undo_disable();
-    game_state_reset_overlay();
-
     city_mission_tutorial_set_fire_message_shown(1);
     city_mission_tutorial_set_disease_message_shown(1);
+    game_state_reset_overlay();
+    game_undo_disable();
 
-    if (GAME_ENV == ENGINE_ENV_C3) // TODO?
-        image_load_main_paks(scenario_property_climate(), 0, 0);
-
+     // military
     image_set_enemy_pak(scenario_property_enemy());
     city_military_determine_distant_battle_city();
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+
+    // river / garden tiles refresh
+    floodplains_init();
+    map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();
 
-    city_message_clear_scroll();
-    map_tiles_river_refresh_entire();
-
-    // TODO: temp?
-    // can't find cache in Pharaoh's save file format?
+    // building counts / storage
+    // TODO: can't find cache in Pharaoh's save file format?
     building_count_update();
+    building_granaries_calculate_stocks();
     city_resource_calculate_warehouse_stocks();
     city_resource_determine_available();
     for (int i = 0; i < building_get_highest_id(); i++) {
@@ -273,24 +249,31 @@ static void post_load() {
         if (b->state)
             b->update_road_access();
     }
-
     building_storage_reset_building_ids();
 
-    // post load
-    if (scenario_is_mission_rank(1))
-        setting_set_personal_savings_for_mission(0, 0);
-
-    scenario_settings_init_mission();
+    // traders / empire
+    trade_prices_reset();
     city_emperor_init_scenario(scenario_campaign_rank());
 
-    tutorial_init();
+    // city data special cases
+    switch (last_loaded) {
+        case LOADED_MISSION:
+            city_data_init_campaign_mission();
+            break;
+        case LOADED_CUSTOM_MAP:
+            city_data_init_custom_map();
+            break;
+    }
+
+    // building menu
     building_menu_update(BUILDSET_NORMAL);
+
+    // city messages
     city_message_init_scenario();
+    city_message_clear_scroll();
 
-    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
-    city_data_init_campaign_mission();
-
-//    game_state_unpause();
+    // city sounds
+    sound_city_init();
 }
 
 GamestateIO SFIO;
@@ -317,14 +300,6 @@ bool GamestateIO::write_map(const char *filename_short) {
     return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, {160, 181});
 }
 
-enum {
-    LOADED_NULL = -1,
-    LOADED_MISSION = 0,
-    LOADED_SAVE = 1,
-    LOADED_MAP = 2
-};
-
-static int last_loaded = LOADED_NULL;
 bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     // get mission pack file offset
     int offset = get_campaign_scenario_offset(scenario_id);
@@ -335,9 +310,9 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     pre_load();
     if (!SFIO.read_from_file(MISSION_PACK_FILE, offset))
         return false;
-    post_load();
-    scenario_set_campaign_scenario(scenario_id);
     last_loaded = LOADED_MISSION;
+    scenario_set_campaign_scenario(scenario_id);
+    post_load();
 
     // finish loading and start
     if (start_immediately) {
@@ -356,8 +331,8 @@ bool GamestateIO::load_savegame(const char *filename_short, bool start_immediate
     pre_load();
     if (!SFIO.read_from_file(full, 0))
         return false;
-    post_load();
     last_loaded = LOADED_SAVE;
+    post_load();
 
     // finish loading and start
     if (start_immediately) {
@@ -366,7 +341,7 @@ bool GamestateIO::load_savegame(const char *filename_short, bool start_immediate
     return true;
 }
 bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
-    return false; //TODO
+//    return false; //TODO
 
     // concatenate string
     char full[MAX_FILE_NAME];
@@ -376,8 +351,8 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
     pre_load();
     if (!SFIO.read_from_file(full, 0))
         return false;
+    last_loaded = LOADED_CUSTOM_MAP;
     post_load();
-    last_loaded = LOADED_MAP;
 
     // finish loading and start
     if (start_immediately) {
@@ -389,11 +364,12 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 }
 
 void GamestateIO::start_loaded_file() {
-    game_state_unpause();
     if (last_loaded == LOADED_MISSION)
         window_mission_briefing_show();
-    else
+    else {
+        game_state_unpause();
         window_city_show();
+    }
     sound_music_update(1);
     last_loaded = LOADED_NULL;
 }

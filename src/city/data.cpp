@@ -39,7 +39,7 @@ void city_data_init(void) {
 
     city_gods_reset();
 }
-void city_data_init_scenario(void) {
+void city_data_init_custom_map(void) {
     city_data.unused.faction_id = 1;
     city_data.unused.unknown_00a2 = 1;
     city_data.unused.unknown_00a3 = 1;

@@ -274,7 +274,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// BUILD PLANNER
-    if (true) {
+    if (false) {
         int cl = 90;
         draw_debug_line(str, x, y + 15, cl, "type:", Planner.build_type);
         draw_debug_line(str, x, y + 25, cl, "in progress:", Planner.in_progress);
@@ -378,7 +378,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// TUTORIAL
-    if (false) {auto flags = give_me_da_tut_flags();
+    if (true) {auto flags = give_me_da_tut_flags();
         const char* const flagnames[41] = {
                 "fire","pop_150","meat_400","collapse","gold_500","temples_done","disease","figs_800","???","pottery_200",
                 "beer_300","","","","","tut1 start","tut2 start","tut3 start","tut4 start","tut5 start",

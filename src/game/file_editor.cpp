@@ -51,7 +51,7 @@ void game_file_editor_clear_data(void) {
     city_victory_reset();
     Planner.reset();
     city_data_init();
-    city_data_init_scenario();
+    city_data_init_custom_map();
     city_message_init_scenario();
     game_state_init();
     game_animation_init();

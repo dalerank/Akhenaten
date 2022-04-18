@@ -54,13 +54,15 @@ static void set_all_tut_flags_null() {
 void tutorial_init(void) {
     set_all_tut_flags_null();
 
-    int tut_passed[10];
-    std::fill_n(tut_passed, 10, 1);
+    if (scenario_is_custom())
+        return;
 
-    for (int t = 1; t <= 10; t++) {
-        if (scenario_is_mission_rank(t))
-            for (int i = t - 1; i < 10; i++)
-                tut_passed[i] = 0;
+    int rank = scenario_campaign_rank();
+    bool tut_passed[10];
+    std::fill_n(tut_passed, 10, 1);
+    for (int i = 0; i < 10; ++i) {
+        if (i >= rank)
+            tut_passed[i] = false;
     }
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -69,8 +71,10 @@ void tutorial_init(void) {
         data.pharaoh.disease = tut_passed[0];
         data.pharaoh.population_150_reached = tut_passed[0];
         data.pharaoh.gamemeat_400_stored = tut_passed[0];
+
         data.pharaoh.gold_mined_500 = tut_passed[1];
         data.pharaoh.temples_built = tut_passed[1];
+
         data.pharaoh.flags[6] = tut_passed[3];
         data.pharaoh.figs_800_stored = tut_passed[2];
         data.pharaoh.flags[8] = tut_passed[3];
