@@ -69,18 +69,6 @@ int32_t random_from_pool(int index);
 
 void randomize_event_fields(int16_t field[4], int32_t *seed);
 
-/**
- * Save data to buffer
- * @param buf Buffer to save to
- */
-void random_save_state(buffer *buf);
-
-/**
- * Load data from buffer
- * @param buf Buffer to read from
- */
-void random_load_state(buffer *buf);
-
 void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int *dest_y, int step, int bias, int max_dist);
 
 bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);

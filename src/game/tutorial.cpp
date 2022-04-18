@@ -514,74 +514,48 @@ void tutorial_on_month_tick(void) {
                                                  1200);
     }
 }
-void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3) {
-    buf1->write_i32(data.tutorial1.fire);
-    buf1->write_i32(data.tutorial1.crime);
-    buf1->write_i32(data.tutorial1.collapse);
-    buf1->write_i32(data.tutorial2.granary_built);
-    buf1->write_i32(data.tutorial2.population_250_reached);
-    buf1->write_i32(data.tutorial1.senate_built);
-    buf1->write_i32(data.tutorial2.population_450_reached);
-    buf1->write_i32(data.tutorial2.pottery_made);
 
-    buf2->write_i32(data.tutorial2.pottery_made_year);
+io_buffer *iob_tutorial_flags = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.fire);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.population_150_reached);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.gamemeat_400_stored);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.collapse);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.gold_mined_500);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.temples_built);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[6]); // ????
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.figs_800_stored);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[8]); // ????
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.pottery_made);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.beer_made);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.spacious_apartment);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[12]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[13]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[14]);
 
-    buf3->write_i32(data.tutorial3.disease);
-}
-void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        data.tutorial1.fire = buf1->read_i32();
-        data.tutorial1.crime = buf1->read_i32();
-        data.tutorial1.collapse = buf1->read_i32();
-        data.tutorial2.granary_built = buf1->read_i32();
-        data.tutorial2.population_250_reached = buf1->read_i32();
-        data.tutorial1.senate_built = buf1->read_i32();
-        data.tutorial2.population_450_reached = buf1->read_i32();
-        data.tutorial2.pottery_made = buf1->read_i32();
-        data.tutorial2.pottery_made_year = buf2->read_i32();
-        data.tutorial3.disease = buf3->read_i32();
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        data.pharaoh.fire = buf1->read_u8();
-        data.pharaoh.population_150_reached = buf1->read_u8();
-        data.pharaoh.gamemeat_400_stored = buf1->read_u8();
-        data.pharaoh.collapse = buf1->read_u8();
-        data.pharaoh.gold_mined_500 = buf1->read_u8();
-        data.pharaoh.temples_built = buf1->read_u8();
-        data.pharaoh.flags[6] = buf1->read_u8(); // ????
-        data.pharaoh.figs_800_stored = buf1->read_u8();
-        data.pharaoh.flags[8] = buf1->read_u8(); // ????
-        data.pharaoh.pottery_made = buf1->read_u8();
-        data.pharaoh.beer_made = buf1->read_u8();
-        data.pharaoh.spacious_apartment = buf1->read_u8();
-        data.pharaoh.flags[12] = buf1->read_u8();
-        data.pharaoh.flags[13] = buf1->read_u8();
-        data.pharaoh.flags[14] = buf1->read_u8();
-
-        data.pharaoh.tut1_start = buf1->read_u8();
-        data.pharaoh.tut2_start = buf1->read_u8();
-        data.pharaoh.tut3_start = buf1->read_u8();
-        data.pharaoh.tut4_start = buf1->read_u8();
-        data.pharaoh.tut5_start = buf1->read_u8();
-        data.pharaoh.tut6_start = buf1->read_u8();
-        data.pharaoh.tut7_start = buf1->read_u8();
-        data.pharaoh.tut8_start = buf1->read_u8();
-        data.pharaoh.flags[23] = buf1->read_u8();
-        data.pharaoh.flags[24] = buf1->read_u8();
-        data.pharaoh.flags[25] = buf1->read_u8();
-        data.pharaoh.flags[26] = buf1->read_u8(); // goal: bazaar
-        data.pharaoh.flags[27] = buf1->read_u8(); // goal: pottery
-        data.pharaoh.flags[28] = buf1->read_u8();
-        data.pharaoh.flags[29] = buf1->read_u8();
-        data.pharaoh.flags[30] = buf1->read_u8(); // tut4 ???
-        data.pharaoh.flags[31] = buf1->read_u8();
-        data.pharaoh.flags[32] = buf1->read_u8();
-        data.pharaoh.flags[33] = buf1->read_u8(); // goal: water supply
-        data.pharaoh.flags[34] = buf1->read_u8(); // tut4 ???
-        data.pharaoh.flags[35] = buf1->read_u8();
-        data.pharaoh.flags[36] = buf1->read_u8(); // goal: entertainment
-        data.pharaoh.flags[37] = buf1->read_u8(); // goal: temples
-        data.pharaoh.flags[38] = buf1->read_u8();
-        data.pharaoh.flags[39] = buf1->read_u8();
-        data.pharaoh.flags[40] = buf1->read_u8();
-    }
-}
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut1_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut2_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut3_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut4_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut5_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut6_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut7_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.tut8_start);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[23]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[24]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[25]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[26]); // goal: bazaar
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[27]); // goal: pottery
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[28]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[29]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[30]); // tut4 ???
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[31]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[32]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[33]); // goal: water supply
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[34]); // tut4 ???
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[35]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[36]); // goal: entertainment
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[37]); // goal: temples
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[38]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[39]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[40]);
+});

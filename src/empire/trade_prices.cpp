@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "trade_prices.h"
 #include "core/game_environment.h"
 
@@ -32,15 +33,6 @@ void trade_prices_reset(void) {
         prices[i] = DEFAULT_PRICES[i];
     }
 }
-
-int trade_price_buy(int resource) {
-    return prices[resource].buy;
-}
-
-int trade_price_sell(int resource) {
-    return prices[resource].sell;
-}
-
 int trade_price_change(int resource, int amount) {
     if (amount < 0 && prices[resource].sell <= 0) {
         // cannot lower the price to negative
@@ -56,16 +48,16 @@ int trade_price_change(int resource, int amount) {
     return 1;
 }
 
-void trade_prices_save_state(buffer *buf) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
-        buf->write_i32(prices[i].buy);
-        buf->write_i32(prices[i].sell);
-    }
+int trade_price_buy(int resource) {
+    return prices[resource].buy;
+}
+int trade_price_sell(int resource) {
+    return prices[resource].sell;
 }
 
-void trade_prices_load_state(buffer *buf) {
+io_buffer *iob_trade_prices = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
-        prices[i].buy = buf->read_i32();
-        prices[i].sell = buf->read_i32();
+        iob->bind(BIND_SIGNATURE_INT32, &prices[i].buy);
+        iob->bind(BIND_SIGNATURE_INT32, &prices[i].sell);
     }
-}
+});

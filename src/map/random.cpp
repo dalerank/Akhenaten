@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "random.h"
 
 #include "core/random.h"
@@ -22,9 +23,6 @@ int map_random_get(int grid_offset) {
     return map_grid_get(&random_xx, grid_offset);
 }
 
-void map_random_save_state(buffer *buf) {
-    map_grid_save_buffer(&random_xx, buf);
-}
-void map_random_load_state(buffer *buf) {
-    map_grid_load_buffer(&random_xx, buf);
-}
+io_buffer *iob_random_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &random_xx);
+});

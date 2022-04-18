@@ -1,4 +1,5 @@
 #include <scenario/events.h>
+#include <city/data.h>
 #include "message_dialog.h"
 
 #include "city/message.h"
@@ -156,7 +157,7 @@ static void eventmsg_template_combine(uint8_t *template_ptr, uint8_t *out_ptr, b
     }
     text_tag_substitution tags[] = {
             {"[greeting]", lang_get_string(32, 11 + scenario_campaign_rank())},
-            {"[player_name]", scenario_player_name()},
+            {"[player_name]", city_player_name()},
             {"[reason_phrase]", data.phrase_text},
             {"[city_name]", lang_get_string(195, city->name_id)},
             {"[a_foreign_army]", (uint8_t*)""}, // TODO
@@ -259,7 +260,7 @@ static void draw_city_message_text(const lang_message *msg) {
             }
         } else {
             width += lang_text_draw(63, 5, data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-            text_draw(scenario_player_name(), data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+            text_draw(city_player_name(), data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
         }
     }
     switch (msg->message_type) {
@@ -451,7 +452,7 @@ static void draw_background_video(void) {
         lang_text_draw_amount(8, 0, player_message.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
     } else {
         width += lang_text_draw(63, 5, data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-        text_draw(scenario_player_name(), data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
+        text_draw(city_player_name(), data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
 
     data.text_height_blocks = msg->height_blocks - 1 - (32 + data.y_text - data.y) / 16;

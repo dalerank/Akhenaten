@@ -16,7 +16,7 @@
 #include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
-#include "game/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -209,7 +209,6 @@ void game_run(void) {
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
         game_tick_run();
-        game_file_write_mission_saved_game();
 
         if (window_is_invalid())
             break;

@@ -1,4 +1,5 @@
 #include <cmath>
+#include <game/gamestate/io_buffer.h>
 #include "view.h"
 
 #include "core/calc.h"
@@ -507,33 +508,24 @@ void city_view_toggle_sidebar(void) {
     camera_validate_position();
 }
 
-void city_view_save_state(buffer *orientation, buffer *camera) {
-    orientation->write_i32(data.orientation);
-
-    camera->write_i32(data.camera.tile_internal.x);
-    camera->write_i32(data.camera.tile_internal.y);
-}
-void city_view_load_state(buffer *orientation, buffer *camera) {
-    data.orientation = orientation->read_i32();
-    city_view_load_scenario_state(camera);
+io_buffer *iob_city_view_orientation = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
 
     if (data.orientation >= 0 && data.orientation <= 6)
         data.orientation = 2 * (data.orientation / 2); // ensure even number
     else
         data.orientation = 0;
-}
-void city_view_save_scenario_state(buffer *camera) {
-    camera->write_i32(data.camera.tile_internal.x);
-    camera->write_i32(data.camera.tile_internal.y);
-}
-void city_view_load_scenario_state(buffer *camera) {
-    int x = camera->read_i32();
-    int y = camera->read_i32();
+});
+io_buffer *iob_city_view_camera = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.camera.tile_internal.x);
+    iob->bind(BIND_SIGNATURE_INT32, &data.camera.tile_internal.y);
 
 //    city_view_go_to_position(x, y);
 //    set_viewport_with_sidebar();
-    city_view_go_to_tile_corner(x, y, false);
-}
+    city_view_go_to_tile_corner(data.camera.tile_internal.x, data.camera.tile_internal.y, false);
+});
+
+
 void city_view_foreach_map_tile(map_callback *callback) {
     int odd = 0;
     int y_view = data.camera.tile_internal.y - 8;

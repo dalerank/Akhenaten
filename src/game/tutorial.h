@@ -94,7 +94,4 @@ void tutorial_starting_message();
 void tutorial_on_day_tick(void);
 void tutorial_on_month_tick(void);
 
-void tutorial_save_state(buffer *buf1, buffer *buf2, buffer *buf3);
-void tutorial_load_state(buffer *buf1, buffer *buf2, buffer *buf3);
-
 #endif // GAME_TUTORIAL_H

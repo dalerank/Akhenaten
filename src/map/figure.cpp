@@ -12,6 +12,7 @@ int map_figure_at(int grid_offset) {
 }
 
 #include <assert.h>
+#include <game/gamestate/io_buffer.h>
 
 int map_figure_foreach_until(int grid_offset, int test) {
     if (map_grid_get(&figures, grid_offset) > 0) {
@@ -114,9 +115,7 @@ void map_figure_clear(void) {
     map_grid_clear(&figures);
 }
 
-void map_figure_save_state(buffer *buf) {
-    map_grid_save_buffer(&figures, buf);
-}
-void map_figure_load_state(buffer *buf) {
-    map_grid_load_buffer(&figures, buf);
-}
+
+io_buffer *iob_figure_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &figures);
+});

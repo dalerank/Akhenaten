@@ -158,9 +158,6 @@ uint8_t *get_eventmsg_text(int group_id, int index);
 
 void scenario_event_process();
 
-void scenario_events_save_state(buffer *buf);
-void scenario_events_load_state(buffer *buf);
-
 bool eventmsg_load(void);
 bool eventmsg_auto_phrases_load(void);
 

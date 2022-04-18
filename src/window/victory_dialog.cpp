@@ -1,3 +1,4 @@
+#include <city/data.h>
 #include "victory_dialog.h"
 
 #include "city/victory.h"
@@ -32,7 +33,7 @@ static void draw_background(void) {
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_centered(32, scenario_campaign_rank() + 1, 48, 194, 544, FONT_LARGE_BLACK_ON_LIGHT);
     } else {
-        text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK_ON_LIGHT, 0);
+        text_draw_centered(city_player_name(), 48, 144, 512, FONT_LARGE_BLACK_ON_LIGHT, 0);
         lang_text_draw_multiline(62, 26, 64, 175, 480, FONT_NORMAL_BLACK_ON_LIGHT);
     }
     graphics_reset_dialog();

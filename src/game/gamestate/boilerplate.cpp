@@ -1,4 +1,4 @@
-#include "file.h"
+#include "boilerplate.h"
 
 #include "building/construction/build_planner.h"
 #include "building/granary.h"
@@ -31,7 +31,6 @@
 #include "figuretype/water.h"
 #include "game/animation.h"
 #include "game/difficulty.h"
-#include "game/file_io.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
@@ -71,17 +70,18 @@
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/music.h"
-#include "undo.h"
-#include "player_data.h"
-#include "mission.h"
+#include "game/undo.h"
+#include "game/player_data.h"
+#include "game/mission.h"
 
 #include <string.h>
 #include <building/count.h>
 #include <city/floods.h>
 #include <window/mission_briefing.h>
 #include <window/city.h>
+#include <game/gamestate/manager.h>
 
-static const char MISSION_PACK_FILE[] = "mission1.pak";
+//static const char MISSION_PACK_FILE[] = "mission1.pak";
 
 static const char MISSION_SAVED_GAMES[][32] = {
         "Citizen.sav",
@@ -97,6 +97,27 @@ static const char MISSION_SAVED_GAMES[][32] = {
         "Caesar.sav",
         "Caesar2.sav"
 };
+
+void path_build_saves(char *full, const char *filename) {
+    strcpy(full, "");
+    if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
+        strcat(full, filename);
+        return;
+    }
+    strcat(full, "Save/");
+    strcat(full, setting_player_name_utf8());
+    strcat(full, "/");
+    strcat(full, filename);
+}
+void path_build_maps(char *full, const char *filename) {
+    strcpy(full, "");
+    if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
+        strcat(full, filename);
+        return;
+    }
+    strcat(full, "Maps/");
+    strcat(full, filename);
+}
 
 static void clear_scenario_data(void) {
     // clear data
@@ -193,14 +214,21 @@ static void initialize_scenario_data(const uint8_t *scenario_name) {
     game_state_unpause();
 }
 static void load_empire_data(int is_custom_scenario, int empire_id) {
-    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
-        empire_load_external_c3(is_custom_scenario, empire_id);
+//    if (GAME_ENV == ENGINE_ENV_C3) // only for external file
+//        empire_load_external_c3(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
-
-static void initialize_saved_game(void) {
+static void pre_load() { // do we NEED this...?
+    scenario_set_campaign_scenario(-1);
+    map_bookmarks_clear();
+}
+static void post_load() {
+    trade_prices_reset();
     load_empire_data(scenario_is_custom(), scenario_empire_id());
+    if (scenario_is_custom())
+        initialize_scenario_data(scenario_name());
+    city_set_player_name(setting_player_name());
 
     scenario_map_init();
 
@@ -246,63 +274,9 @@ static void initialize_saved_game(void) {
             b->update_road_access();
     }
 
-    game_state_unpause();
-}
-static buffer *offset_buf = new buffer(4);
-static int get_campaign_scenario_offset(int scenario_id) {
-    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
-    offset_buf->clear();
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_buf, 4, 4 * scenario_id))
-        return 0;
-    return offset_buf->read_i32();
-}
-static bool game_load_scenario_savegame(const char *filename) {}
-static bool game_load_scenario_pak_mission(int scenario_id) {
+    building_storage_reset_building_ids();
 
-    int offset = get_campaign_scenario_offset(scenario_id);
-    if (offset <= 0)
-        return false;
-    if (!game_file_io_read_saved_game(MISSION_PACK_FILE, offset))
-        return false;
-
-    if (scenario_id == SCENARIO_NUBT)
-        scenario_set_player_name(setting_player_name());
-    else
-        scenario_restore_campaign_player_name();
-    initialize_saved_game();
-    scenario_fix_patch_trade(scenario_id);
-
-    scenario_set_campaign_scenario(scenario_id);
-    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_id));
-
-    city_data_init_campaign_mission();
-
-    return true;
-}
-static bool game_load_scenario_custom_map(const char *filename) {
-    if (!file_exists(filename, NOT_LOCALIZED))
-        return false;
-
-    clear_scenario_data();
-//    if (!game_file_io_read_scenario(filename)) // TODO
-//        return false;
-    if (!game_file_io_read_saved_game(filename, 0)) // TODO
-        return false;
-
-    // post-load
-    trade_prices_reset();
-    load_empire_data(1, scenario_empire_id());
-    initialize_scenario_data(scenario_name());
-    scenario_set_player_name(setting_player_name());
-    return true;
-}
-
-static bool pre_load() {
-    scenario_set_campaign_scenario(-1);
-    map_bookmarks_clear();
-    return true;
-}
-static bool post_load() {
+    // post load
     if (scenario_is_mission_rank(1))
         setting_set_personal_savings_for_mission(0, 0);
 
@@ -312,85 +286,135 @@ static bool post_load() {
     tutorial_init();
     building_menu_update(BUILDSET_NORMAL);
     city_message_init_scenario();
-    return true;
+
+    scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
+    city_data_init_campaign_mission();
+
+//    game_state_unpause();
 }
-bool game_start_loaded_scenario() {
-    if (!post_load()) return false;
-    if (scenario_is_custom())
-        window_city_show();
-    else
-        window_mission_briefing_show();
-    sound_music_update(1);
-    return true;
+
+GamestateIO SFIO;
+bool GamestateIO::write_mission(const int scenario_id) {
+    // TODO?
+    return false;
 }
-bool game_load_scenario(const char *filename, bool start_immediately) {
-    if (!pre_load()) return false;
+bool GamestateIO::write_savegame(const char *filename_short) {
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_saves(full, filename_short);
 
-    // file loading
-    if (file_has_extension(filename, "map"))
-        if (!game_load_scenario_custom_map(filename)) return false;
-    else if (file_has_extension(filename, "sav"))
-        if (!game_load_scenario_savegame(filename)) return false;
-    else return false;
-
-    if (start_immediately)
-        return game_start_loaded_scenario();
-    return true;
+    // write file
+    return SFIO.write_to_file(filename_short, 0, FILE_SCHEMA_SAV, {160, 181});
 }
-bool game_load_scenario(const uint8_t *scenario_name, bool start_immediately) {
-    if (!pre_load()) return false;
+bool GamestateIO::write_map(const char *filename_short) {
+    return false; //TODO
 
-    return false; // TODO
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_maps(full, filename_short);
 
-    if (!start_immediately)
-        return true;
+    // write file
+    return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, {160, 181});
 }
-bool game_load_scenario(int scenario_id, bool start_immediately) {
 
-    if (!pre_load()) return false;
+enum {
+    LOADED_NULL = -1,
+    LOADED_MISSION = 0,
+    LOADED_SAVE = 1,
+    LOADED_MAP = 2
+};
 
-    // pak loading
-    if (!game_load_scenario_pak_mission(scenario_id))
+static int last_loaded = LOADED_NULL;
+bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
+    // get mission pack file offset
+    int offset = get_campaign_scenario_offset(scenario_id);
+    if (offset <= 0)
         return false;
 
-    if (start_immediately)
-       return game_start_loaded_scenario();
-    return true;
-}
-
-bool game_file_load_saved_game(const char *filename) {
-    if (!game_file_io_read_saved_game(filename, 0))
+    // read file
+    pre_load();
+    if (!SFIO.read_from_file(MISSION_PACK_FILE, offset))
         return false;
+    post_load();
+    scenario_set_campaign_scenario(scenario_id);
+    last_loaded = LOADED_MISSION;
 
-    initialize_saved_game();
-    building_storage_reset_building_ids();
-
-    sound_music_update(1);
-    return true;
-}
-bool game_file_write_saved_game(const char *filename) {
-    return game_file_io_write_saved_game(filename);
-}
-bool game_file_delete_saved_game(const char *filename) {
-    return game_file_io_delete_saved_game(filename);
-}
-void game_file_write_mission_saved_game(void) {
-    return; // temp
-    int rank = scenario_campaign_rank();
-    if (rank < 0)
-        rank = 0;
-    else if (rank > 11)
-        rank = 11;
-
-    return; // temp
-    const char *filename = MISSION_SAVED_GAMES[rank];
-    if (locale_translate_rank_autosaves()) {
-        char localized_filename[MAX_FILE_NAME];
-        encoding_to_utf8(lang_get_string(32, rank), localized_filename, MAX_FILE_NAME,
-                         encoding_system_uses_decomposed());
-        strcat(localized_filename, ".svx");
-        filename = localized_filename;
+    // finish loading and start
+    if (start_immediately) {
+        start_loaded_file();
+        // replay mission autosave file
+        GamestateIO::write_savegame("autosave_replay.sav");
     }
-    if (city_mission_should_save_start() && !file_exists(filename, NOT_LOCALIZED))
-        game_file_io_write_saved_game(filename);
+    return true;
+}
+bool GamestateIO::load_savegame(const char *filename_short, bool start_immediately) {
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_saves(full, filename_short);
+
+    // read file
+    pre_load();
+    if (!SFIO.read_from_file(full, 0))
+        return false;
+    post_load();
+    last_loaded = LOADED_SAVE;
+
+    // finish loading and start
+    if (start_immediately) {
+        start_loaded_file();
+    }
+    return true;
+}
+bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
+    return false; //TODO
+
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_maps(full, filename_short);
+
+    // read file
+    pre_load();
+    if (!SFIO.read_from_file(full, 0))
+        return false;
+    post_load();
+    last_loaded = LOADED_MAP;
+
+    // finish loading and start
+    if (start_immediately) {
+        start_loaded_file();
+        // replay mission autosave file
+        GamestateIO::write_savegame("autosave_replay.sav");
+    }
+    return true;
+}
+
+void GamestateIO::start_loaded_file() {
+    game_state_unpause();
+    if (last_loaded == LOADED_MISSION)
+        window_mission_briefing_show();
+    else
+        window_city_show();
+    sound_music_update(1);
+    last_loaded = LOADED_NULL;
+}
+
+bool GamestateIO::delete_mission(const int scenario_id) {
+    // TODO?
+    return false;
+}
+bool GamestateIO::delete_savegame(const char *filename_short) {
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_saves(full, filename_short);
+
+    // delete file
+    return file_remove(full);
+}
+bool GamestateIO::delete_map(const char *filename_short) {
+    // concatenate string
+    char full[MAX_FILE_NAME];
+    path_build_maps(full, filename_short);
+
+    // delete file
+    return file_remove(full);
 }

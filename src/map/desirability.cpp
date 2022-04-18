@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "desirability.h"
 
 #include "building/building.h"
@@ -139,9 +140,6 @@ int map_desirability_get_max(int x, int y, int size) {
     return max;
 }
 
-void map_desirability_save_state(buffer *buf) {
-    map_grid_save_buffer(&desirability_grid, buf);
-}
-void map_desirability_load_state(buffer *buf) {
-    map_grid_load_buffer(&desirability_grid, buf);
-}
+io_buffer *iob_desirability_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &desirability_grid);
+});

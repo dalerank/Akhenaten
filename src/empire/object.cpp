@@ -8,6 +8,7 @@
 #include "game/animation.h"
 #include "scenario/empire.h"
 #include "core/game_environment.h"
+#include <game/gamestate/io_buffer.h>
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -54,63 +55,6 @@ static void fix_image_ids(void) {
 
 //static int objects_are_loaded = 0;
 
-void empire_objects_load(buffer *buf, bool expanded) {
-//    if (objects_are_loaded)
-//        return;
-    int last_object_was_used = 1;
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        full_empire_object *full = &objects[i];
-        empire_object *obj = &full->obj;
-        obj->id = i;
-        //
-        obj->type = buf->read_u8();
-        full->in_use = buf->read_u8();
-        obj->animation_index = buf->read_u8();
-        buf->skip(1);
-        obj->x = buf->read_i16();
-        obj->y = buf->read_i16();
-        obj->width = buf->read_i16();
-        obj->height = buf->read_i16();
-        obj->image_id = buf->read_i16();
-        obj->expanded.image_id = buf->read_i16();
-        buf->skip(1);
-        obj->distant_battle_travel_months = buf->read_u8();
-        buf->skip(1);
-        obj->text_align = buf->read_u8();
-        obj->expanded.x = buf->read_i16();
-        obj->expanded.y = buf->read_i16();
-        full->city_type = buf->read_u8();
-        full->city_name_id = buf->read_u8();
-        obj->trade_route_id = buf->read_u8();
-        full->trade_route_open = buf->read_u8();
-        full->trade_route_cost = buf->read_i16();
-        for (int r = 0; r < 10; r++)
-            full->city_sells_resource[r] = buf->read_u8();
-        buf->skip(2);
-        for (int r = 0; r < 8; r++)
-            full->city_buys_resource[r] = buf->read_u8();
-        obj->invasion_path_id = buf->read_u8();
-        obj->invasion_years = buf->read_u8();
-        full->trade40 = buf->read_u16();
-        full->trade25 = buf->read_u16();
-        full->trade15 = buf->read_u16();
-        buf->skip(6);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (expanded)
-                buf->skip(34); // 18600 : 98 (64)
-            else
-                buf->skip(12); // 15200 : 76 (64)
-            if (last_object_was_used)
-                last_object_was_used = full->in_use;
-            else
-                full->in_use = last_object_was_used;
-        }
-    }
-
-//    objects_are_loaded = 1;
-    if (GAME_ENV == ENGINE_ENV_C3)
-        fix_image_ids();
-}
 void empire_object_init_cities(void) {
     empire_city_clear_all();
     int route_index = 1;
@@ -385,33 +329,83 @@ map_route_object *empire_get_route_object(int id) {
     return &route_objects[id];
 }
 
-#include <SDL_log.h>
 
-void trade_route_objects_save_state(buffer *buf) {
-    //
-}
-void trade_route_objects_load_state(buffer *buf) {
+io_buffer *iob_empire_objects = new io_buffer([](io_buffer *iob) {
+//    if (objects_are_loaded)
+//        return;
+    bool expanded = (iob->get_size() != 15200);
+    int last_object_was_used = 1;
+    for (int i = 0; i < MAX_OBJECTS; i++) {
+        full_empire_object *full = &objects[i];
+        empire_object *obj = &full->obj;
+        obj->id = i;
+        //
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->type);
+        iob->bind(BIND_SIGNATURE_UINT8, &full->in_use);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->animation_index);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->x);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->y);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->width);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->height);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->image_id);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.image_id);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->distant_battle_travel_months);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->text_align);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.x);
+        iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.y);
+        iob->bind(BIND_SIGNATURE_UINT8, &full->city_type);
+        iob->bind(BIND_SIGNATURE_UINT8, &full->city_name_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->trade_route_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &full->trade_route_open);
+        iob->bind(BIND_SIGNATURE_INT16, &full->trade_route_cost);
+        for (int r = 0; r < 10; r++)
+            iob->bind(BIND_SIGNATURE_UINT8, &full->city_sells_resource[r]);
+        iob->bind____skip(2);
+        for (int r = 0; r < 8; r++)
+            iob->bind(BIND_SIGNATURE_UINT8, &full->city_buys_resource[r]);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_path_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_years);
+        iob->bind(BIND_SIGNATURE_UINT16, &full->trade40);
+        iob->bind(BIND_SIGNATURE_UINT16, &full->trade25);
+        iob->bind(BIND_SIGNATURE_UINT16, &full->trade15);
+        iob->bind____skip(6);
+        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+            if (expanded)
+                iob->bind____skip(34); // 18600 : 98 (64)
+            else
+                iob->bind____skip(12); // 15200 : 76 (64)
+            if (last_object_was_used)
+                last_object_was_used = full->in_use;
+            else
+                full->in_use = last_object_was_used;
+        }
+    }
+});
+io_buffer *iob_empire_map_routes = new io_buffer([](io_buffer *iob) {
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
         map_route_object *obj = &route_objects[id];
 
-        obj->unk_header[0] = buf->read_u32(); // 05 00 00 00
-        obj->unk_header[1] = buf->read_u32(); // 00 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[0]); // 05 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[1]); // 00 00 00 00
 
         for (int i = 0; i < 50; i++) {
-            obj->points[i].x = buf->read_u16();
-            obj->points[i].y = buf->read_u16();
-            obj->points[i].is_in_use = buf->read_u16();
+            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].x);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].y);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].is_in_use);
         }
-        obj->length = buf->read_u32();
+        iob->bind(BIND_SIGNATURE_UINT32, &obj->length);
 
-        obj->unk_00 = buf->read_u32(); // 00 00 00 00
-        obj->unk_01 = buf->read_u32(); // FF FF FF FF
+        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_00); // 00 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_01); // FF FF FF FF
 
-        obj->route_type = buf->read_u8(); // 1 = land; 2 = sea;
-        obj->num_points = buf->read_u8();
-        obj->in_use = buf->read_u8();
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->route_type); // 1 = land; 2 = sea;
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->num_points);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->in_use);
 
-        obj->unk_03 = buf->read_u8();
+        iob->bind(BIND_SIGNATURE_UINT8, &obj->unk_03);
 //        SDL_Log("TRADE DATA: %04i %04i -- %02i %02i %02i", obj->unk_header[0], obj->unk_header[1], obj->route_type, obj->in_use, obj->unk_03);
     }
-}
+});

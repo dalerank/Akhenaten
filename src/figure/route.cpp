@@ -113,20 +113,16 @@ int figure_route_get_direction(int path_id, int index) {
     return data.direction_paths[path_id][index];
 }
 
-void figure_route_save_state(buffer *figures, buffer *paths) {
+io_buffer *iob_route_figures = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_ROUTES; i++) {
-        figures->write_i16(data.figure_ids[i]);
-        paths->write_raw(data.direction_paths[i], MAX_PATH_LENGTH);
+        iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
     }
-}
-void figure_route_load_state(buffer *figures, buffer *paths) {
+});
+io_buffer *iob_route_paths = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_ROUTES; i++) {
-        if (!figures->is_valid(2))
-            return;
-        data.figure_ids[i] = figures->read_i16();
-        paths->read_raw(data.direction_paths[i], MAX_PATH_LENGTH);
+        iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
     }
-}
+});
 
 #include "core/calc.h"
 #include "core/random.h"

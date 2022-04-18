@@ -4,7 +4,7 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
-#include "game/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -29,7 +29,7 @@
 #include <game/player_data.h>
 #include <core/lang.h>
 #include <cmath>
-#include <game/file_io.h>
+#include <game/gamestate/manager.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -428,7 +428,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    auto v = FileIO.get_file_version();
+    auto v = GamestateIO::get_file_version();
     draw_debug_line(txt, INFO_X, -120, 0, "", v->minor, COLOR_FONT_YELLOW);
     draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
 
@@ -444,10 +444,10 @@ static void button_select_item(int index, int param2) {
         return;
     switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:
-            game_load_scenario(panel->get_selected_entry_text(FILE_FULL_PATH), false);
+            GamestateIO::load_map(panel->get_selected_entry_text(FILE_WITH_EXT), false);
             break;
         case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-            game_load_scenario(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
+            GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + panel->get_selected_entry_idx(), false);
             break;
     }
     window_invalidate();
@@ -455,7 +455,7 @@ static void button_select_item(int index, int param2) {
 static void button_start_scenario(int param1, int param2) {
     if (scenario_campaign_scenario_id() == -1)
         return;
-    game_start_loaded_scenario();
+    GamestateIO::start_loaded_file();
 }
 static void button_scores_or_goals(int param1, int param2) {
     data.scores_or_goals = param1;

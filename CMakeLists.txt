@@ -255,7 +255,6 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
     ${PROJECT_SOURCE_DIR}/src/building/building.cpp
-    ${PROJECT_SOURCE_DIR}/src/building/building_state.cpp
     ${PROJECT_SOURCE_DIR}/src/building/count.cpp
     ${PROJECT_SOURCE_DIR}/src/building/destruction.cpp
     ${PROJECT_SOURCE_DIR}/src/building/dock.cpp
@@ -364,9 +363,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/game/cheats.cpp
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/file.cpp
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/file_io.cpp
     ${PROJECT_SOURCE_DIR}/src/game/game.cpp
     ${PROJECT_SOURCE_DIR}/src/game/mission.cpp
     ${PROJECT_SOURCE_DIR}/src/game/orientation.cpp
@@ -378,6 +375,10 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
     ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
     ${PROJECT_SOURCE_DIR}/src/game/player_data.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_buffer.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_chunks.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/boilerplate.cpp
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp

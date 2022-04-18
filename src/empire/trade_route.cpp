@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "trade_route.h"
 #include "core/game_environment.h"
 
@@ -68,19 +69,23 @@ int trade_route_limit_reached(int route_id, int resource) {
     return data[route_id][resource].traded >= data[route_id][resource].limit;
 }
 
-void trade_routes_save_state(buffer *limit, buffer *traded) {
+io_buffer *iob_trade_route_limit = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            limit->write_i32(data[route_id][r].limit / 100);
-            traded->write_i32(data[route_id][r].traded / 100);
+            data[route_id][r].limit *= 0.01;
+            iob->bind(BIND_SIGNATURE_INT32, &data[route_id][r].limit);
+            data[route_id][r].limit *= 100;
+//            data[route_id][r].traded = traded->read_i32() * 100;
         }
     }
-}
-void trade_routes_load_state(buffer *limit, buffer *traded) {
+});
+io_buffer *iob_trade_route_traded = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            data[route_id][r].limit = limit->read_i32() * 100;
-            data[route_id][r].traded = traded->read_i32() * 100;
+            data[route_id][r].traded *= 0.01;
+            iob->bind(BIND_SIGNATURE_INT32, &data[route_id][r].traded);
+            data[route_id][r].traded *= 100;
+//            data[route_id][r].limit = limit->read_i32() * 100;
         }
     }
-}
+});

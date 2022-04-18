@@ -502,3 +502,7 @@ void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings) {
         warnings->skip(11);
     }
 }
+
+io_buffer *iob_invasion_warnings = new io_buffer([](io_buffer *iob) {
+    // TODO
+});

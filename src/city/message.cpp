@@ -1,4 +1,5 @@
 #include <scenario/events.h>
+#include <game/gamestate/io_buffer.h>
 #include "message.h"
 
 #include "core/encoding.h"
@@ -556,68 +557,78 @@ void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, bu
     population->write_u8(data.population_shown.pop25000);
 }
 void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population) {
+
+}
+
+io_buffer *iob_messages = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message *msg = &data.messages[i];
         if (GAME_ENV == ENGINE_ENV_C3) {
-            msg->param1 = messages->read_i32();
-            msg->year = messages->read_i16();
-            msg->param2 = messages->read_i16();
-//            msg->message_id = messages->read_i16();
+            iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->year);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->param2);
+//            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
 //            msg->message_id = city_message_get_text_id(msg->message_id);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            msg->param1 = messages->read_i32();
-            msg->param2 = messages->read_i32();
-            msg->year = messages->read_i16();
-//            msg->message_id = messages->read_i16();
+            iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
+            iob->bind(BIND_SIGNATURE_INT32, &msg->param2);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->year);
+//            iob->bind(BIND_SIGNATURE_INT16, &msg->message_id);
 //            msg->message_id = lang_get_message(msg->message_id)->message_id;
         }
-        msg->MM_text_id = messages->read_i16();
-        msg->sequence = messages->read_i16();
-        msg->is_read = messages->read_u8();
-        msg->month = messages->read_u8();
+        iob->bind(BIND_SIGNATURE_INT16, &msg->MM_text_id);
+        iob->bind(BIND_SIGNATURE_INT16, &msg->sequence);
+        iob->bind(BIND_SIGNATURE_UINT8, &msg->is_read);
+        iob->bind(BIND_SIGNATURE_UINT8, &msg->month);
         if (GAME_ENV == ENGINE_ENV_C3)
-            messages->skip(2);
+            iob->bind____skip(2);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            msg->eventmsg_body_id = messages->read_i16(); // FF FF
-            msg->eventmsg_title_id = messages->read_i16(); // FF FF
-            msg->unk_02 = messages->read_i16(); // FF FF
+            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_body_id); // FF FF
+            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_title_id); // FF FF
+            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02); // FF FF
 
-            msg->req_city = messages->read_i16();
-            msg->req_amount = messages->read_i16();
-            msg->req_resource = messages->read_i16();
-            msg->req_months_left = messages->read_i16();
-            msg->unk_07 = messages->read_i16();
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_months_left);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_07);
 
-            msg->eventmsg_phrase_id = messages->read_i16();
-            msg->req_city_past = messages->read_i16(); // enum?
-            msg->unk_09 = messages->read_i16(); // 00 00
-            msg->unk_10 = messages->read_i16(); // 00 00
+            iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_phrase_id);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_city_past); // enum?
+            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_09); // 00 00
+            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_10); // 00 00
 
-            msg->req_amount_past = messages->read_i16();
-            msg->req_resource_past = messages->read_i16();
-            msg->unk_11a_i8 = messages->read_i8(); // FF
-            msg->unk_11b_i8 = messages->read_i8(); // FF
-            msg->unk_12 = messages->read_i16(); // 00 00
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
+            iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
+            iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11a_i8); // FF
+            iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11b_i8); // FF
+            iob->bind(BIND_SIGNATURE_INT16, &msg->unk_12); // 00 00
         }
     }
+});
 
-    data.next_message_sequence = extra->read_i32();
-    data.total_messages = extra->read_i32();
-    data.current_message_id = extra->read_i32();
+io_buffer *iob_message_extra = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);
+    iob->bind(BIND_SIGNATURE_INT32, &data.total_messages);
+    iob->bind(BIND_SIGNATURE_INT32, &data.current_message_id);
+
+    // population
+    iob->bind____skip(1);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop500);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop1000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop2000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop3000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop5000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop10000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop15000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop20000);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.population_shown.pop25000);
+    
+    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+        iob->bind(BIND_SIGNATURE_INT32, &data.message_count[i]);
+    }
 
     for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
-        data.message_count[i] = counts->read_i32();
-        data.message_delay[i] = delays->read_i32();
+        iob->bind(BIND_SIGNATURE_INT32, &data.message_delay[i]);
     }
-    // population
-    population->skip(1);
-    data.population_shown.pop500 = population->read_u8();
-    data.population_shown.pop1000 = population->read_u8();
-    data.population_shown.pop2000 = population->read_u8();
-    data.population_shown.pop3000 = population->read_u8();
-    data.population_shown.pop5000 = population->read_u8();
-    data.population_shown.pop10000 = population->read_u8();
-    data.population_shown.pop15000 = population->read_u8();
-    data.population_shown.pop20000 = population->read_u8();
-    data.population_shown.pop25000 = population->read_u8();
-}
+});

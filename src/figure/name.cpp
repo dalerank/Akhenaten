@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "figure/name.h"
 
 #include "core/random.h"
@@ -172,50 +173,26 @@ int figure_name_get(int type, int enemy) {
     }
 }
 
-void figure_name_save_state(buffer *buf) {
-    buf->write_i32(data.citizen_male);
-    buf->write_i32(data.patrician);
-    buf->write_i32(data.citizen_female);
-    buf->write_i32(data.tax_collector);
-    buf->write_i32(data.engineer);
-    buf->write_i32(data.prefect);
-    buf->write_i32(data.javelin_thrower);
-    buf->write_i32(data.cavalry);
-    buf->write_i32(data.legionary);
-    buf->write_i32(data.actor);
-    buf->write_i32(data.gladiator);
-    buf->write_i32(data.lion_tamer);
-    buf->write_i32(data.charioteer);
-    buf->write_i32(data.barbarian);
-    buf->write_i32(data.enemy_greek);
-    buf->write_i32(data.enemy_egyptian);
-    buf->write_i32(data.enemy_arabian);
-    buf->write_i32(data.trader);
-    buf->write_i32(data.ship);
-    buf->write_i32(data.warship);
-    buf->write_i32(data.enemy_warship);
-}
-
-void figure_name_load_state(buffer *buf) {
-    data.citizen_male = buf->read_i32();
-    data.patrician = buf->read_i32();
-    data.citizen_female = buf->read_i32();
-    data.tax_collector = buf->read_i32();
-    data.engineer = buf->read_i32();
-    data.prefect = buf->read_i32();
-    data.javelin_thrower = buf->read_i32();
-    data.cavalry = buf->read_i32();
-    data.legionary = buf->read_i32();
-    data.actor = buf->read_i32();
-    data.gladiator = buf->read_i32();
-    data.lion_tamer = buf->read_i32();
-    data.charioteer = buf->read_i32();
-    data.barbarian = buf->read_i32();
-    data.enemy_greek = buf->read_i32();
-    data.enemy_egyptian = buf->read_i32();
-    data.enemy_arabian = buf->read_i32();
-    data.trader = buf->read_i32();
-    data.ship = buf->read_i32();
-    data.warship = buf->read_i32();
-    data.enemy_warship = buf->read_i32();
-}
+io_buffer *iob_figure_names = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.citizen_male);
+    iob->bind(BIND_SIGNATURE_INT32, &data.patrician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.citizen_female);
+    iob->bind(BIND_SIGNATURE_INT32, &data.tax_collector);
+    iob->bind(BIND_SIGNATURE_INT32, &data.engineer);
+    iob->bind(BIND_SIGNATURE_INT32, &data.prefect);
+    iob->bind(BIND_SIGNATURE_INT32, &data.javelin_thrower);
+    iob->bind(BIND_SIGNATURE_INT32, &data.cavalry);
+    iob->bind(BIND_SIGNATURE_INT32, &data.legionary);
+    iob->bind(BIND_SIGNATURE_INT32, &data.actor);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gladiator);
+    iob->bind(BIND_SIGNATURE_INT32, &data.lion_tamer);
+    iob->bind(BIND_SIGNATURE_INT32, &data.charioteer);
+    iob->bind(BIND_SIGNATURE_INT32, &data.barbarian);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_greek);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_egyptian);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_arabian);
+    iob->bind(BIND_SIGNATURE_INT32, &data.trader);
+    iob->bind(BIND_SIGNATURE_INT32, &data.ship);
+    iob->bind(BIND_SIGNATURE_INT32, &data.warship);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_warship);
+});

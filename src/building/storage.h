@@ -120,21 +120,7 @@ void building_storage_toggle_empty_all(int storage_id);
  */
 void building_storage_reset_building_ids(void);
 
-/**
- * Save data
- * @param buf Buffer to read from
- */
-void building_storage_save_state(buffer *buf);
-
-/**
- * Load data
- * @param buf Buffer to read from
- */
-void building_storage_load_state(buffer *buf);
-
-
 void building_storage_set_permission(int p, building *b);
 int building_storage_get_permission(int p, building *b);
-
 
 #endif // BUILDING_STORAGE_H

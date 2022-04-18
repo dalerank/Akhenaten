@@ -20,7 +20,6 @@
 #include "figuretype/editor.h"
 #include "figuretype/water.h"
 #include "game/animation.h"
-#include "game/file_io.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "map/aqueduct.h"
@@ -102,7 +101,7 @@ static void create_blank_map(int size) {
 static void prepare_map_for_editing(void) {
     image_load_main_paks(scenario_property_climate(), 1, 0);
 
-    empire_load_external_c3(1, scenario_empire_id());
+//    empire_load_external_c3(1, scenario_empire_id());
     empire_object_init_cities();
 
     figure_init_scenario();
@@ -133,8 +132,8 @@ void game_file_editor_create_scenario(int size) {
 
 int game_file_editor_load_scenario(const char *scenario_file) {
     clear_map_data();
-    if (!game_file_io_read_scenario(scenario_file))
-        return 0;
+//    if (!game_file_io_read_scenario(scenario_file)) TODO
+//        return 0;
 
     scenario_map_init();
 
@@ -151,5 +150,5 @@ int game_file_editor_write_scenario(const char *scenario_file) {
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
-    return game_file_io_write_scenario(scenario_file);
+//    return game_file_io_write_scenario(scenario_file); TODO
 }

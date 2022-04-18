@@ -13,6 +13,7 @@
 #include "type.h"
 
 #include <string.h>
+#include <game/gamestate/io_buffer.h>
 
 const static int EMPIRE_WIDTH[2] = {
         2000,
@@ -64,39 +65,6 @@ bool empire_city_type_can_trade(int type) {
     return false;
 }
 
-buffer *temp_external_buf_c3 = nullptr;
-void empire_load_external_c3(int is_custom_scenario, int empire_id) {
-    safe_realloc_for_size(&temp_external_buf_c3, EMPIRE_DATA_SIZE[GAME_ENV]);
-    const char *filename = is_custom_scenario ? SCENARIO_FILE[GAME_ENV][0] : SCENARIO_FILE[GAME_ENV][1];
-
-    if (is_custom_scenario && GAME_ENV == ENGINE_ENV_PHARAOH) // in Pharaoh, custom map data is saved internally
-        return;
-
-    // read header with scroll positions
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, temp_external_buf_c3, 4, 32 * empire_id)) {
-        temp_external_buf_c3->write_u32(0);
-        temp_external_buf_c3->reset_offset();
-    }
-    data.initial_scroll_x = temp_external_buf_c3->read_i16();
-    data.initial_scroll_y = temp_external_buf_c3->read_i16();
-
-    // read data section with objects
-    int offset = EMPIRE_HEADER_SIZE + EMPIRE_DATA_SIZE[GAME_ENV] * empire_id;
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, temp_external_buf_c3, EMPIRE_DATA_SIZE[GAME_ENV], offset) != EMPIRE_DATA_SIZE[GAME_ENV]) {
-        // load empty empire when loading fails
-        log_error("Unable to load empire data from file", filename, 0);
-        temp_external_buf_c3->fill(0);
-    }
-    empire_objects_load(temp_external_buf_c3, is_custom_scenario);
-}
-void empire_load_internal_ph(buffer *empire_objects, buffer *empire_routes) {
-    if (empire_objects->size() == 15200)
-        empire_objects_load(empire_objects, false);
-    else
-        empire_objects_load(empire_objects, true);
-    trade_route_objects_load_state(empire_routes);
-}
-
 static void check_scroll_boundaries(void) {
     int max_x = EMPIRE_WIDTH[GAME_ENV] - data.viewport_width;
     int max_y = EMPIRE_HEIGHT[GAME_ENV] - data.viewport_height + 20;
@@ -106,21 +74,21 @@ static void check_scroll_boundaries(void) {
 }
 
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height) {
-    empire_load_external_c3(1, empire_id);
-    empire_object_init_cities();
-
-    const empire_object *our_city = empire_object_get_our_city();
-
-    data.viewport_width = viewport_width;
-    data.viewport_height = viewport_height;
-    if (our_city) {
-        data.scroll_x = our_city->x - data.viewport_width / 2;
-        data.scroll_y = our_city->y - data.viewport_height / 2;
-    } else {
-        data.scroll_x = data.initial_scroll_x;
-        data.scroll_y = data.initial_scroll_y;
-    }
-    check_scroll_boundaries();
+//    empire_load_external_c3(1, empire_id);
+//    empire_object_init_cities();
+//
+//    const empire_object *our_city = empire_object_get_our_city();
+//
+//    data.viewport_width = viewport_width;
+//    data.viewport_height = viewport_height;
+//    if (our_city) {
+//        data.scroll_x = our_city->x - data.viewport_width / 2;
+//        data.scroll_y = our_city->y - data.viewport_height / 2;
+//    } else {
+//        data.scroll_x = data.initial_scroll_x;
+//        data.scroll_y = data.initial_scroll_y;
+//    }
+//    check_scroll_boundaries();
 }
 void empire_init_scenario(void) {
     data.scroll_x = data.initial_scroll_x;
@@ -253,13 +221,8 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-void empire_save_state(buffer *buf) {
-    buf->write_i32(data.scroll_x);
-    buf->write_i32(data.scroll_y);
-    buf->write_i32(data.selected_object);
-}
-void empire_load_state(buffer *buf) {
-    data.scroll_x = buf->read_i32();
-    data.scroll_y = buf->read_i32();
-    data.selected_object = buf->read_i32();
-}
+io_buffer *iob_empire_map_params = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
+    iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);
+    iob->bind(BIND_SIGNATURE_INT32, &data.selected_object);
+});

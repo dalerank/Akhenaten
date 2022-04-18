@@ -189,26 +189,18 @@ uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_set_floodplain_growth(int grid_offset, int growth);
 void map_soil_set_depletion(int grid_offset, int malus);
 
-void map_soil_fertility_load_state(buffer *buf);
-void map_soil_unk_grid_load_state(buffer *buf);
-
 void map_terrain_backup(void);
 void map_terrain_restore(void);
 void map_terrain_clear(void);
 void map_terrain_init_outside_map(void);
 
-void map_terrain_save_state(buffer *buf);
-void map_terrain_load_state(buffer *buf);
-
 uint8_t  map_moisture_get(int grid_offset);
-void map_moisture_load_state(buffer *buf);
 uint8_t map_grasslevel_get(int grid_offset);
 bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
 
 //void map_GRID03_32BIT_load_split_state(buffer *buf);
 //int8_t map_GRID03_32BIT_get_byte(int grid_offset, int a);
 
-void map_temp_grid_load(buffer *buf, int g);
 int64_t map_temp_grid_get(int grid_offset, int g);
 
 #endif // MAP_TERRAIN_H

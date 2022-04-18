@@ -284,80 +284,77 @@ void scenario_event_process() {
 
 ///////
 
-void scenario_events_save_state(buffer *buf) {
-
-}
-void scenario_events_load_state(buffer *buf) {
+io_buffer *iob_scenario_events = new io_buffer([](io_buffer *iob) {
 
     // the first event's header always contains the total number of events
     data.num_of_events = &(data.event_list[0].num_total_header);
 
     for (int i = 0; i < MAX_EVENTS; i++) {
         event_ph_t *event = &data.event_list[i];
-        event->num_total_header = buf->read_i16();
+        iob->bind(BIND_SIGNATURE_INT16, &event->num_total_header);
         if (!is_valid_event_index(i))
-            return;
-            event->__unk01 = buf->read_i16();
-        event->event_id = buf->read_i16();
-        event->type = buf->read_i8();
-        event->month = buf->read_i8();
-        event->item_fields[0] = buf->read_i16();
-        event->item_fields[1] = buf->read_i16();
-        event->item_fields[2] = buf->read_i16();
-        event->item_fields[3] = buf->read_i16();
-        event->amount_fields[0] = buf->read_i16();
-        event->amount_fields[1] = buf->read_i16();
-        event->amount_fields[2] = buf->read_i16();
-        event->amount_fields[3] = buf->read_i16();
-        event->time_fields[0] = buf->read_i16();
-        event->time_fields[1] = buf->read_i16();
-        event->time_fields[2] = buf->read_i16();
-        event->time_fields[3] = buf->read_i16();
-        event->location_fields[0] = buf->read_i16();
-        event->location_fields[1] = buf->read_i16();
-        event->location_fields[2] = buf->read_i16();
-        event->location_fields[3] = buf->read_i16();
-        event->on_completed_action = buf->read_i16();
-        event->on_refusal_action = buf->read_i16();
-        event->event_trigger_type = buf->read_i16();
-            event->__unk07 = buf->read_i16();
-        event->months_initial = buf->read_i16();
-        event->quest_months_left = buf->read_i16();
-        event->event_state = buf->read_i16();
-        event->is_active = buf->read_i16();
-            event->__unk11 = buf->read_i16();
-        event->festival_deity = buf->read_i8();
-            event->__unk12_i8 = buf->read_i8();
-        event->invasion_attack_target = buf->read_i8();
-            // ...
-            // ...
-            // ...
-            buf->skip(25);
-        event->on_tooLate_action = buf->read_i16();
-        event->on_defeat_action = buf->read_i16();
-        event->sender_faction = buf->read_i8();
-            event->__unk13_i8 = buf->read_i8();
-        event->route_fields[0] = buf->read_i16();
-        event->route_fields[1] = buf->read_i16();
-        event->route_fields[2] = buf->read_i16();
-        event->route_fields[3] = buf->read_i16();
-        event->subtype = buf->read_i8();
-            event->__unk15_i8 = buf->read_i8(); // 07 --> 05
-            event->__unk16 = buf->read_i16();
-            event->__unk17 = buf->read_i16();
-            event->__unk18 = buf->read_i16();
-            event->__unk19 = buf->read_i16();
-        event->on_completed_msgAlt = buf->read_i8();
-        event->on_refusal_msgAlt = buf->read_i8();
-        event->on_tooLate_msgAlt = buf->read_i8();
-        event->on_defeat_msgAlt = buf->read_i8();
-            event->__unk20a = buf->read_i16();
-            event->__unk20b = buf->read_i16();
-            event->__unk20c = buf->read_i16();
-            event->__unk21 = buf->read_i16();
-            event->__unk22 = buf->read_i16();
+            break;
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk01);
+        iob->bind(BIND_SIGNATURE_INT16, &event->event_id);
+        iob->bind(BIND_SIGNATURE_INT8, &event->type);
+        iob->bind(BIND_SIGNATURE_INT8, &event->month);
+        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->item_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->amount_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->time_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->location_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->on_completed_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event->on_refusal_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event->event_trigger_type);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk07);
+        iob->bind(BIND_SIGNATURE_INT16, &event->months_initial);
+        iob->bind(BIND_SIGNATURE_INT16, &event->quest_months_left);
+        iob->bind(BIND_SIGNATURE_INT16, &event->event_state);
+        iob->bind(BIND_SIGNATURE_INT16, &event->is_active);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk11);
+        iob->bind(BIND_SIGNATURE_INT8, &event->festival_deity);
+        iob->bind(BIND_SIGNATURE_INT8, &event->__unk12_i8);
+        iob->bind(BIND_SIGNATURE_INT8, &event->invasion_attack_target);
+        // ...
+        // ...
+        // ...
+        iob->bind____skip(25); // ???
+        iob->bind(BIND_SIGNATURE_INT16, &event->on_tooLate_action);
+        iob->bind(BIND_SIGNATURE_INT16, &event->on_defeat_action);
+        iob->bind(BIND_SIGNATURE_INT8, &event->sender_faction);
+        iob->bind(BIND_SIGNATURE_INT8, &event->__unk13_i8);
+        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[0]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[1]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[2]);
+        iob->bind(BIND_SIGNATURE_INT16, &event->route_fields[3]);
+        iob->bind(BIND_SIGNATURE_INT8, &event->subtype);
+        iob->bind(BIND_SIGNATURE_INT8, &event->__unk15_i8); // 07 --> 05
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk16);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk17);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk18);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk19);
+        iob->bind(BIND_SIGNATURE_INT8, &event->on_completed_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event->on_refusal_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event->on_tooLate_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT8, &event->on_defeat_msgAlt);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20a);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20b);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk20c);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk21);
+        iob->bind(BIND_SIGNATURE_INT16, &event->__unk22);
     }
-}
+});
 
 ///////
 

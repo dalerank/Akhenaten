@@ -312,45 +312,23 @@ void sound_city_play(void) {
     channels[max_sound_id].times_played++;
 }
 
-void sound_city_save_state(buffer *buf) {
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        const city_channel *ch = &channels[i];
-        buf->write_i32(ch->available);
-        buf->write_i32(ch->total_views);
-        buf->write_i32(ch->views_threshold);
-        for (int d = 0; d < 5; d++)
-            buf->write_i32(ch->direction_views[d]);
-        buf->write_i32(0); // current channel, always 0
-        buf->write_i32(ch->in_use ? 1 : 0); // num channels, max 1
-        buf->write_i32(ch->channel);
-        for (int c = 1; c < 8; c++)
-            buf->write_i32(0); // channels 1-7: never used
-        buf->write_i32(ch->in_use);
-        buf->write_i32(ch->times_played);
-        buf->write_u32(ch->last_played_time);
-        buf->write_u32(ch->delay_millis);
-        buf->write_i32(ch->should_play);
-        for (int x = 0; x < 9; x++)
-            buf->write_i32(0);
-    }
-}
-void sound_city_load_state(buffer *buf) {
+io_buffer *iob_city_sounds = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_CHANNELS; i++) {
         city_channel *ch = &channels[i];
-        ch->available = buf->read_i32();
-        ch->total_views = buf->read_i32();
-        ch->views_threshold = buf->read_i32();
+        iob->bind(BIND_SIGNATURE_INT32, &ch->available);
+        iob->bind(BIND_SIGNATURE_INT32, &ch->total_views);
+        iob->bind(BIND_SIGNATURE_INT32, &ch->views_threshold);
         for (int d = 0; d < 5; d++)
-            ch->direction_views[d] = buf->read_i32();
-        buf->skip(4); // current channel
-        buf->skip(4); // num channels
-        ch->channel = buf->read_i32();
-        buf->skip(28);
-        ch->in_use = buf->read_i32();
-        ch->times_played = buf->read_i32();
-        ch->last_played_time = buf->read_u32();
-        ch->delay_millis = buf->read_u32();
-        ch->should_play = buf->read_i32();
-        buf->skip(36);
+            iob->bind(BIND_SIGNATURE_INT32, &ch->direction_views[d]);
+        iob->bind____skip(4); // current channel
+        iob->bind____skip(4); // num channels
+        iob->bind(BIND_SIGNATURE_INT32, &ch->channel);
+        iob->bind____skip(28);
+        iob->bind(BIND_SIGNATURE_INT32, &ch->in_use);
+        iob->bind(BIND_SIGNATURE_INT32, &ch->times_played);
+        iob->bind(BIND_SIGNATURE_UINT32, &ch->last_played_time);
+        iob->bind(BIND_SIGNATURE_UINT32, &ch->delay_millis);
+        iob->bind(BIND_SIGNATURE_INT32, &ch->should_play);
+        iob->bind____skip(36);
     }
-}
+});

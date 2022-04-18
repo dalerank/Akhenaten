@@ -1,3 +1,4 @@
+#include <game/gamestate/io_buffer.h>
 #include "building.h"
 
 #include "building/building.h"
@@ -52,14 +53,12 @@ void map_clear_highlights(void) {
     map_grid_clear(&highlight_grid);
 }
 
-void map_building_save_state(buffer *buildings, buffer *damage) {
-    map_grid_save_buffer(&buildings_grid, buildings);
-    map_grid_save_buffer(&damage_grid, damage);
-}
-void map_building_load_state(buffer *buildings, buffer *damage) {
-    map_grid_load_buffer(&buildings_grid, buildings);
-    map_grid_load_buffer(&damage_grid, damage);
-}
+io_buffer *iob_building_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &buildings_grid);
+});
+io_buffer *iob_damage_grid = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &damage_grid);
+});
 
 int map_building_is_reservoir(int x, int y) {
     if (!map_grid_is_inside(x, y, 3))

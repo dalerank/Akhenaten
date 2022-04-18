@@ -322,63 +322,33 @@ void empire_city_set_foreign(int city_id) {
     cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
 }
 
-void empire_city_save_state(buffer *buf) {
-    for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
-        empire_city *city = &cities[i];
-        buf->write_u8(city->in_use);
-        buf->write_u8(0);
-        buf->write_u8(city->type);
-        buf->write_u8(city->name_id);
-        buf->write_u8(city->route_id);
-        buf->write_u8(city->is_open);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            buf->write_u8(city->buys_resource[r]);
-        }
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            buf->write_u8(city->sells_resource[r]);
-        }
-        buf->write_i16(city->cost_to_open);
-        buf->skip(2);
-        buf->write_i16(city->trader_entry_delay);
-        buf->write_i16(0);
-        buf->write_i16(city->empire_object_id);
-        buf->write_u8(city->is_sea_trade);
-        buf->write_u8(0);
-        for (int f = 0; f < 3; f++) {
-            buf->write_i16(city->trader_figure_ids[f]);
-        }
-        for (int p = 0; p < 10; p++) {
-            buf->write_u8(0);
-        }
-    }
-}
-void empire_city_load_state(buffer *buf) {
+io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {
 //    int last_city = 0;
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         empire_city *city = &cities[i];
-        city->in_use = buf->read_u8();
-        buf->skip(1);
-        city->type = buf->read_u8();
-        city->name_id = buf->read_u8();
-        city->route_id = buf->read_u8();
-        city->is_open = buf->read_u8();
+        iob->bind(BIND_SIGNATURE_UINT8, &city->in_use);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &city->type);
+        iob->bind(BIND_SIGNATURE_UINT8, &city->name_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city->route_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city->is_open);
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
-            city->buys_resource[r] = buf->read_u8();
+            iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
-            city->sells_resource[r] = buf->read_u8();
+            iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
             if (city->sells_resource[r])
                 int a = 5;
         }
-        city->cost_to_open = buf->read_i16();
-        city->ph_unk01 = buf->read_i16();
-        city->trader_entry_delay = buf->read_i16();
-        city->ph_unk02 = buf->read_i16();
-        city->empire_object_id = buf->read_i16();
-        city->is_sea_trade = buf->read_u8();
-        buf->skip(1);
+        iob->bind(BIND_SIGNATURE_INT16, &city->cost_to_open);
+        iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk01);
+        iob->bind(BIND_SIGNATURE_INT16, &city->trader_entry_delay);
+        iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk02);
+        iob->bind(BIND_SIGNATURE_INT16, &city->empire_object_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city->is_sea_trade);
+        iob->bind____skip(1);
         for (int f = 0; f < 3; f++)
-            city->trader_figure_ids[f] = buf->read_i16();
-        buf->skip(10);
+            iob->bind(BIND_SIGNATURE_INT16, &city->trader_figure_ids[f]);
+        iob->bind____skip(10);
 //        if (city->in_use && last_city == 0) {
 ////            int a = 24;
 //            for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
@@ -398,4 +368,4 @@ void empire_city_load_state(buffer *buf) {
             food_index++;
         }
     }
-}
+});

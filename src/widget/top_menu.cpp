@@ -1,11 +1,13 @@
 #include <tgmath.h>
 #include <window/game_menu.h>
+#include <city/data.h>
+#include <game/gamestate/manager.h>
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
 #include "city/population.h"
-#include "game/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
@@ -466,13 +468,13 @@ static void replay_map_confirmed(bool confirmed) {
         window_city_show();
         return;
     }
-    if (scenario_is_custom()) {
-        game_load_scenario(scenario_name());
-        window_city_show();
-    } else {
-        scenario_save_campaign_player_name();
-        window_mission_briefing_show();
-    }
+//    if (scenario_is_custom()) {
+    GamestateIO::load_savegame("autosave_replay.sav");
+    window_city_show();
+//    } else {
+//        city_save_campaign_player_name();
+//        window_mission_briefing_show();
+//    }
 }
 static void menu_file_new_game(int param) {
     clear_state();

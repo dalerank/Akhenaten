@@ -4,6 +4,7 @@
 #include "core/game_environment.h"
 
 #include <string.h>
+#include <game/gamestate/io_buffer.h>
 
 #define MAX_TRADERS 100
 
@@ -63,32 +64,28 @@ int trader_has_traded_max(int trader_id) {
     return data.traders[trader_id].bought_amount >= 1200 || data.traders[trader_id].sold_amount >= 1200;
 }
 
-void traders_save_state(buffer *buf) {
+io_buffer *iob_figure_traders = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader *t = &data.traders[i];
-        buf->write_i32(t->bought_amount);
-        buf->write_i32(t->sold_amount);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
-            buf->write_u8(t->bought_resources[r] / 100);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
-            buf->write_u8(t->sold_resources[r] / 100);
-        buf->write_i32(t->bought_value);
-        buf->write_i32(t->sold_value);
-    }
-    buf->write_i32(data.next_index);
-}
+        iob->bind(BIND_SIGNATURE_INT32, &t->bought_amount);
+        iob->bind(BIND_SIGNATURE_INT32, &t->sold_amount);
 
-void traders_load_state(buffer *buf) {
-    for (int i = 0; i < MAX_TRADERS; i++) {
-        struct trader *t = &data.traders[i];
-        t->bought_amount = buf->read_i32();
-        t->sold_amount = buf->read_i32();
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+            t->bought_resources[r] *= 0.01;
+            t->sold_resources[r] *= 0.01;
+        }
+
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
-            t->bought_resources[r] = buf->read_u8() * 100;
+            iob->bind(BIND_SIGNATURE_UINT8, &t->bought_resources[r]);
         for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
-            t->sold_resources[r] = buf->read_u8() * 100;
-        t->bought_value = buf->read_i32();
-        t->sold_value = buf->read_i32();
+            iob->bind(BIND_SIGNATURE_UINT8, &t->sold_resources[r]);
+
+        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+            t->bought_resources[r] *= 100;
+            t->sold_resources[r] *= 100;
+        }
+        iob->bind(BIND_SIGNATURE_INT32, &t->bought_value);
+        iob->bind(BIND_SIGNATURE_INT32, &t->sold_value);
     }
-    data.next_index = buf->read_i32();
-}
+    iob->bind(BIND_SIGNATURE_INT32, &data.next_index);
+});
