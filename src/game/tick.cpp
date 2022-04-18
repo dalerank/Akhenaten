@@ -34,7 +34,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
-#include "game/gamestate/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"

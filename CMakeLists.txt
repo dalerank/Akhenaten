@@ -375,10 +375,10 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
     ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
     ${PROJECT_SOURCE_DIR}/src/game/player_data.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/gamestate/file.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/gamestate/manager.cpp
     ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/game/gamestate/io_chunks.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/game/gamestate/boilerplate.cpp
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp

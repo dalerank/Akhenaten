@@ -7,7 +7,7 @@
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
 #include "city/population.h"
-#include "game/gamestate/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"

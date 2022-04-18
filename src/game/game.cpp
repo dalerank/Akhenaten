@@ -16,7 +16,7 @@
 #include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
-#include "game/gamestate/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"

@@ -19,7 +19,7 @@
 #include <graphics/text.h>
 #include <game/player_data.h>
 #include <core/file.h>
-#include <game/gamestate/file.h>
+#include <game/gamestate/boilerplate.h>
 #include <scenario/property.h>
 #include <game/mission.h>
 #include <game/gamestate/manager.h>

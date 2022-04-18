@@ -9,7 +9,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "core/game_environment.h"
-#include "game/gamestate/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "game/file_editor.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"

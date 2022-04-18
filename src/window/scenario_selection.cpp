@@ -4,7 +4,7 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
-#include "game/gamestate/file.h"
+#include "game/gamestate/boilerplate.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
