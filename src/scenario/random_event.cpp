@@ -92,7 +92,7 @@ static void contaminate_water(void) {
 static void destroy_iron_mine(void) {
     if (scenario_data.random_events.iron_mine_collapse) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            if (building_find(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS[GAME_ENV]) {
+            if (building_find(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
                 city_message_post(true, MESSAGE_IRON_MINE_COLLAPED, 0, 0);
             }
@@ -108,7 +108,7 @@ static void destroy_iron_mine(void) {
 static void destroy_clay_pit(void) {
     if (scenario_data.random_events.clay_pit_flooded) {
         if (config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
-            if (building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS[GAME_ENV]) {
+            if (building_find(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
                 city_finance_process_requests_and_festivals(250);
                 city_message_post(true, MESSAGE_CLAY_PIT_FLOODED, 0, 0);
             }

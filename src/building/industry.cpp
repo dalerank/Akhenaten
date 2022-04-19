@@ -43,7 +43,7 @@ static void update_farm_image(const building *b) {
 }
 
 int building_determine_worker_needed() {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -72,7 +72,7 @@ int farm_expected_produce(const building *b) {
 }
 
 void building_industry_update_production(void) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
@@ -103,7 +103,7 @@ void building_industry_update_production(void) {
     }
 }
 void building_industry_update_farms(void) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
@@ -154,7 +154,7 @@ void building_industry_update_farms(void) {
 void building_industry_update_wheat_production(void) {
     if (scenario_property_climate() == CLIMATE_NORTHERN)
         return;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !b->output_resource_id)
             continue;
@@ -220,7 +220,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
 }
 
 void building_bless_farms(void) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
             b->data.industry.progress = MAX_PROGRESS_RAW;
@@ -232,7 +232,7 @@ void building_bless_farms(void) {
 }
 void building_curse_farms(int big_curse) {
     // TODO
-//    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+//    for (int i = 1; i < MAX_BUILDINGS; i++) {
 //        building *b = building_get(i);
 //        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
 //            b->data.industry.progress = 0;
@@ -276,7 +276,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
 
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;
@@ -311,7 +311,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
 
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;

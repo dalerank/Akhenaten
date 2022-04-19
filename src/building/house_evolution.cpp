@@ -449,7 +449,7 @@ void building_house_process_evolve_and_consume_goods(void) {
     city_houses_reset_demands();
     house_demands *demands = city_houses_demands();
     int has_expanded = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && building_is_house(b->type)) {
             building_house_check_for_corruption(b);

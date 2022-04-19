@@ -53,15 +53,15 @@ map_point scenario_map_river_exit(void) {
 }
 
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y)) {
-    for (int i = 0; i < MAX_HERD_POINTS[GAME_ENV]; i++) {
-        if (scenario_data.herd_points[i].x > 0)
-            callback(scenario_data.herd_points[i].x, scenario_data.herd_points[i].y);
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) {
+        if (scenario_data.herd_points_predator[i].x > 0)
+            callback(scenario_data.herd_points_predator[i].x, scenario_data.herd_points_predator[i].y);
 
     }
 }
 
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y)) {
-    for (int i = 0; i < MAX_FISH_POINTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (scenario_data.fishing_points[i].x > 0)
             callback(scenario_data.fishing_points[i].x, scenario_data.fishing_points[i].y);
 
@@ -70,7 +70,7 @@ void scenario_map_foreach_fishing_point(void (*callback)(int x, int y)) {
 
 int scenario_map_closest_fishing_point(int x, int y, map_point *fish) {
     int num_fishing_spots = 0;
-    for (int i = 0; i < MAX_FISH_POINTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (scenario_data.fishing_points[i].x > 0)
             num_fishing_spots++;
 
@@ -80,7 +80,7 @@ int scenario_map_closest_fishing_point(int x, int y, map_point *fish) {
 
     int min_dist = 10000;
     int min_fish_id = 0;
-    for (int i = 0; i < MAX_FISH_POINTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (scenario_data.fishing_points[i].x > 0) {
             int dist = calc_maximum_distance(x, y,
                                              scenario_data.fishing_points[i].x, scenario_data.fishing_points[i].y);

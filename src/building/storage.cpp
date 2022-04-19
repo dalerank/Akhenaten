@@ -30,7 +30,7 @@ void building_storage_reset_building_ids(void) {
         data.storages[i].building_id = 0;
     }
 
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED)
             continue;
@@ -225,7 +225,7 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
 }
 void building_storage_accept_none(int storage_id) {
     has_unsaved_changes = true;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++)
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++)
         data.storages[storage_id].storage.resource_state[r] = STORAGE_STATE_PHARAOH_REFUSE;
 }
 
@@ -238,12 +238,12 @@ io_buffer *iob_building_storages = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT32, &data.storages[i].building_id);
         iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].in_use);
         iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.empty_all);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &data.storages[i].storage.resource_state[r]);
         iob->bind____skip(6); // unused resource states
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_accept[r]);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT16, &data.storages[i].storage.resource_max_get[r]);
 //        iob->bind____skip(144); // ?????
     }

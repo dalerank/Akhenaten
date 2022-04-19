@@ -139,7 +139,7 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40] = {
 int formation_rioter_get_target_building(int *x_tile, int *y_tile) {
     int best_type_index = 100;
     building *best_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -176,7 +176,7 @@ static void set_enemy_target_building(formation *m) {
     int best_type_index = 100;
     building *best_building = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
             continue;
@@ -198,7 +198,7 @@ static void set_enemy_target_building(formation *m) {
     }
     if (!best_building) {
         // no target buildings left: take rioter attack priority
-        for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
             if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
                 continue;
@@ -233,7 +233,7 @@ static void set_native_target_building(formation *m) {
     city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
     building *min_building = 0;
     int min_distance = 10000;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -568,7 +568,7 @@ void formation_enemy_update(void) {
         enemy_army_calculate_roman_influence();
         enemy_armies_clear_formations();
         int roman_distance = 0;
-        for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->is_legion)
                 update_enemy_formation(m, &roman_distance);

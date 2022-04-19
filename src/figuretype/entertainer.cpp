@@ -18,7 +18,7 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
 
     building_list_small_clear();
 
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;

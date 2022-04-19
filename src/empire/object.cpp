@@ -78,7 +78,7 @@ void empire_object_init_cities(void) {
         city->cost_to_open = obj->trade_route_cost;
         city->is_sea_trade = is_sea_trade_route(obj->obj.trade_route_id);
 
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             city->sells_resource[resource] = 0;
             city->buys_resource[resource] = 0;
             if (city->type == EMPIRE_CITY_DISTANT_ROMAN

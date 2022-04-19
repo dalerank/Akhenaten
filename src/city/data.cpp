@@ -189,32 +189,32 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.senate_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_2828);
     if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.space_in_warehouses[i]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.stored_in_warehouses[i]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trade_status[i]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trading_amount[i]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i]);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         iob->bind____skip(2);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.space_in_warehouses[i + 1]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.stored_in_warehouses[i + 1]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trade_status[i + 1]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trading_amount[i + 1]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i + 1]);
     }
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unused_28ca);
     if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granary_food_stored[i]);
         for (int i = 0; i < 6; i++)
             iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stored_in_workshops[i]);
@@ -225,14 +225,14 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_types_eaten_num);
         for (int i = 0; i < 272; i++)
             iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_2924[i]);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stockpiled[i]);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         iob->bind____skip(20);
 
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i + 1]);
-        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
 
         iob->bind____skip(28); // temp
@@ -240,19 +240,19 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
         int food_index = 0;
         for (int i = 0; i < 4; i++) // reset available foods quick array
             city_data.resource.food_types_allowed[i] = 0;
-        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+        for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_available_arr[i]);
             if (city_data.resource.food_types_available_arr[i]) {
                 city_data.resource.food_types_allowed[food_index] = i;
                 food_index++;
             }
         }
-        for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
             iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_eaten_arr[i]);
 
         iob->bind____skip(234);
 
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+        for (int i = 0; i < RESOURCES_MAX; i++)
             iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stockpiled[i]);
 
         // TODO: TEMP!!!!

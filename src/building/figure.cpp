@@ -918,7 +918,7 @@ bool building::can_spawn_hunter() { // no cache because fuck the system (also I 
     int hunters_total = 0;
     int hunters_this_lodge = 0;
     int huntables = city_data.figure.animals;
-//    for (int b = 0; b < MAX_BUILDINGS[GAME_ENV]; b++) {
+//    for (int b = 0; b < MAX_BUILDINGS; b++) {
 //        if (building_get()->type == 115)
 //            lodges++;
 //    }

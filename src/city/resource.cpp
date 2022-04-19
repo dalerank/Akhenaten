@@ -165,11 +165,11 @@ void city_resource_remove_from_warehouse(int resource, int amount) {
 }
 
 void city_resource_calculate_warehouse_stocks(void) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCES_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = 0;
         city_data.resource.stored_in_warehouses[i] = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
@@ -179,7 +179,7 @@ void city_resource_calculate_warehouse_stocks(void) {
                 b->has_road_access = 2;
         }
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE_SPACE)
             continue;
@@ -199,7 +199,7 @@ void city_resource_calculate_warehouse_stocks(void) {
     }
 }
 void city_resource_determine_available(void) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCES_MAX; i++) {
         available.resource_list.items[i] = 0;
         available.food_list.items[i] = 0;
     }
@@ -207,7 +207,7 @@ void city_resource_determine_available(void) {
     available.food_list.size = 0;
     available.market_goods_list.size = 0;
 
-    for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+    for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
         if (GAME_ENV == ENGINE_ENV_C3 && (i == RESOURCE_OLIVES || i == RESOURCE_VINES))
             continue;
 
@@ -217,7 +217,7 @@ void city_resource_determine_available(void) {
             available.market_goods_list.items[available.market_goods_list.size++] = i;
         }
     }
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
         if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
             (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF))) {
             available.resource_list.items[available.resource_list.size++] = i;
@@ -233,7 +233,7 @@ void city_resource_determine_available(void) {
     }
 }
 static void calculate_available_food(void) {
-    for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         city_data.resource.granary_food_stored[i] = 0;
     }
     city_data.resource.granary_total_stored = 0;
@@ -243,7 +243,7 @@ static void calculate_available_food(void) {
     city_data.resource.granaries.understaffed = 0;
     city_data.resource.granaries.not_operating = 0;
     city_data.resource.granaries.not_operating_with_food = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
@@ -257,7 +257,7 @@ static void calculate_available_food(void) {
                 city_data.resource.granaries.understaffed++;
 
             int amount_stored = 0;
-            for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++) {
+            for (int r = RESOURCE_MIN_FOOD; r < RESOURCES_FOODS_MAX; r++) {
                 amount_stored += b->data.granary.resource_stored[r];
             }
             if (pct_workers < 50) {
@@ -267,14 +267,14 @@ static void calculate_available_food(void) {
 
             } else {
                 city_data.resource.granaries.operating++;
-                for (int r = 0; r < RESOURCE_MAX_FOOD[GAME_ENV]; r++)
+                for (int r = 0; r < RESOURCES_FOODS_MAX; r++)
                     city_data.resource.granary_food_stored[r] += b->data.granary.resource_stored[r];
                 if (amount_stored >= 100)
                     tutorial_on_filled_granary(amount_stored);
             }
         }
     }
-    for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+    for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
         if (city_data.resource.granary_food_stored[i]) {
             city_data.resource.granary_total_stored += city_data.resource.granary_food_stored[i];
             city_data.resource.food_types_available_num++;
@@ -297,7 +297,7 @@ static void calculate_available_food(void) {
 void city_resource_calculate_food_stocks_and_supply_wheat(void) {
     calculate_available_food();
     if (scenario_property_rome_supplies_wheat()) {
-        for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
             if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
                 b->data.market.inventory[0] = 200;
@@ -310,7 +310,7 @@ void city_resource_calculate_workshop_stocks(void) {
         city_data.resource.stored_in_workshops[i] = 0;
         city_data.resource.space_in_workshops[i] = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
             continue;
@@ -334,7 +334,7 @@ void city_resource_consume_food(void) {
     city_data.resource.food_types_eaten_num = 0;
     city_data.unused.unknown_00c0 = 0;
     int total_consumed = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
             int num_types = model_get_house(b->subtype.house_level)->food_types;

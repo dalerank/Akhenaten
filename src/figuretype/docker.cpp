@@ -82,11 +82,11 @@ static int try_export_resource(building *warehouse, int resource, int city_id) {
 static int get_closest_warehouse_for_import(int x, int y, int city_id, int distance_from_entry, int road_network_id, map_point *warehouse, int *import_resource) {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         importable[r] = empire_can_import_resource_from_city(city_id, r);
     }
     int resource = city_trade_next_docker_import_resource();
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV] && !importable[resource]; i++) {
+    for (int i = RESOURCE_MIN; i < RESOURCES_MAX && !importable[resource]; i++) {
         resource = city_trade_next_docker_import_resource();
     }
     if (!importable[resource])
@@ -94,7 +94,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
 
     int min_distance = 10000;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;
@@ -148,11 +148,11 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
 static int get_closest_warehouse_for_export(int x, int y, int city_id, int distance_from_entry, int road_network_id, map_point *warehouse, int *export_resource) {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
     }
     int resource = city_trade_next_docker_export_resource();
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV] && !exportable[resource]; i++) {
+    for (int i = RESOURCE_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
         resource = city_trade_next_docker_export_resource();
     }
     if (!exportable[resource])
@@ -160,7 +160,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
 
     int min_distance = 10000;
     int min_building_id = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;

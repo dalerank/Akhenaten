@@ -233,7 +233,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // city sells
         lang_text_draw(47, 11, x_offset + 44, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO[GAME_ENV]);
         int index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
@@ -259,7 +259,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // city buys
         lang_text_draw(47, 10, x_offset + 44 + 350, y_offset + INFO_Y_TRADED - 2, FONT_OBJECT_INFO[GAME_ENV]);
         index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
@@ -287,7 +287,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // selling
         int spacing = 0;
         lang_text_draw(47, 5, x_offset + 30, y_offset + INFO_Y_SELLS, FONT_OBJECT_INFO[GAME_ENV]);
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
@@ -300,7 +300,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // buying
         spacing = 0;
         lang_text_draw(47, 4, x_offset + 30, y_offset + INFO_Y_BUYS, FONT_OBJECT_INFO[GAME_ENV]);
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
@@ -723,7 +723,7 @@ static void handle_input(const mouse *m, const hotkeys *h) {
                     int index_buy = 0;
 
                     // we only want to handle resource buttons that the selected city trades
-                    for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX[GAME_ENV]; resource++) {
+                    for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
 
                         if (empire_object_city_sells_resource(obj->id, resource)) {
                             int column_offset = TRADE_COLUMN_SPACING * (index_sell / 4) - 150;
@@ -787,7 +787,7 @@ static int get_tooltip_resource(tooltip_context *c) {
     int y_offset = data.y_max - 113;
 
     int item_offset = lang_text_get_width(47, 5, FONT_OBJECT_INFO[GAME_ENV]);
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_SELLS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
                 return r;
@@ -796,7 +796,7 @@ static int get_tooltip_resource(tooltip_context *c) {
         }
     }
     item_offset += lang_text_get_width(47, 4, FONT_OBJECT_INFO[GAME_ENV]);
-    for (int r = RESOURCE_MIN; r <= RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r <= RESOURCES_MAX; r++) {
         if (empire_object_city_buys_resource(object_id, r)) {
             if (is_mouse_hit(c, x_offset + 18 + item_offset, y_offset + INFO_Y_BUYS - TRADE_RESOURCE_OFFSET[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]))
                 return r;

@@ -24,7 +24,7 @@ typedef struct scenario_data_buffers {
 
     buffer *requests = nullptr;
     buffer *invasions = nullptr;
-    buffer *invasion_points = nullptr;
+    buffer *invasion_points_land = nullptr;
     buffer *request_comply_dialogs = nullptr;
     buffer *herds = nullptr;
     buffer *demands = nullptr;

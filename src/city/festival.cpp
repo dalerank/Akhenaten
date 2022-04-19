@@ -81,7 +81,7 @@ void city_festival_schedule(void) {
 
 static void throw_party(void) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+        for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
             if (b->state != BUILDING_STATE_VALID)
                 continue;

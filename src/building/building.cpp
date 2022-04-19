@@ -34,13 +34,13 @@ static struct {
 } extra = {0, 0, 0};
 
 int building_find(int type) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; ++i) {
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
             return i;
 
     }
-    return MAX_BUILDINGS[GAME_ENV];
+    return MAX_BUILDINGS;
 }
 building *building_get(int id) {
     return &all_buildings[id];
@@ -231,7 +231,7 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
 }
 building *building_create(int type, int x, int y, int orientation) {
     building *b = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
             b = &all_buildings[i];
             break;
@@ -362,7 +362,7 @@ void building::clear_related_data() {
         city_buildings_remove_festival_square();
 }
 void building_clear_all(void) {
-    for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&all_buildings[i], 0, sizeof(building));
         all_buildings[i].id = i;
     }
@@ -644,7 +644,7 @@ int building_get_highest_id(void) {
 }
 void building_update_highest_id(void) {
     extra.highest_id_in_use = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         if (all_buildings[i].state != BUILDING_STATE_UNUSED)
             extra.highest_id_in_use = i;
     }
@@ -656,7 +656,7 @@ void building_update_state(void) {
     bool wall_recalc = false;
     bool road_recalc = false;
     bool aqueduct_recalc = false;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
         if (b->state == BUILDING_STATE_CREATED)
             b->state = BUILDING_STATE_VALID;
@@ -693,7 +693,7 @@ void building_update_state(void) {
         map_tiles_update_all_roads();
 }
 void building_update_desirability(void) {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = &all_buildings[i];
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -826,7 +826,7 @@ static void read_type_data(io_buffer *iob, building *b) {
         iob->bind____skip(2);
         if (GAME_ENV == ENGINE_ENV_PHARAOH)
             iob->bind____skip(2);
-        for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+        for (int i = 0; i < RESOURCES_MAX; i++) {
             iob->bind(BIND_SIGNATURE_INT16, &b->data.granary.resource_stored[i]);
             b->data.granary.resource_stored[i] = (b->data.granary.resource_stored[i] / 100) * 100; // todo
         }
@@ -907,7 +907,7 @@ static void read_type_data(io_buffer *iob, building *b) {
 }
 
 io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
-    for (int i = 0; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_BUILDINGS; i++) {
 //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &all_buildings[i];
         int sind = iob->get_offset();

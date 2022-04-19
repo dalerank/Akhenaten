@@ -43,7 +43,7 @@ void city_military_update_totals(void) {
     city_data.military.empire_service_legions = 0;
     city_data.military.total_soldiers = 0;
     city_data.military.total_legions = 0;
-    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation *m = formation_get(i);
         if (m->in_use && m->is_legion) {
             city_data.military.total_legions++;

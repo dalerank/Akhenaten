@@ -29,7 +29,7 @@ static const struct trade_price DEFAULT_PRICES[36] = {
 static struct trade_price prices[36];
 
 void trade_prices_reset(void) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCES_MAX; i++) {
         prices[i] = DEFAULT_PRICES[i];
     }
 }
@@ -56,7 +56,7 @@ int trade_price_sell(int resource) {
 }
 
 io_buffer *iob_trade_prices = new io_buffer([](io_buffer *iob) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++) {
+    for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].buy);
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].sell);
     }

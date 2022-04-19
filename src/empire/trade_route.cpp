@@ -60,7 +60,7 @@ void trade_route_increase_traded(int route_id, int resource) {
     data[route_id][resource].traded += 100;
 }
 void trade_route_reset_traded(int route_id) {
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         data[route_id][r].traded = 0;
     }
 }
@@ -71,7 +71,7 @@ int trade_route_limit_reached(int route_id, int resource) {
 
 io_buffer *iob_trade_route_limit = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             data[route_id][r].limit *= 0.01;
             iob->bind(BIND_SIGNATURE_INT32, &data[route_id][r].limit);
             data[route_id][r].limit *= 100;
@@ -81,7 +81,7 @@ io_buffer *iob_trade_route_limit = new io_buffer([](io_buffer *iob) {
 });
 io_buffer *iob_trade_route_traded = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             data[route_id][r].traded *= 0.01;
             iob->bind(BIND_SIGNATURE_INT32, &data[route_id][r].traded);
             data[route_id][r].traded *= 100;

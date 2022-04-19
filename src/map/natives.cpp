@@ -52,7 +52,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius) {
 static void determine_meeting_center(void) {
     // gather list of meeting centers
     building_list_small_clear();
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_MEETING)
             building_list_small_add(i);
@@ -63,7 +63,7 @@ static void determine_meeting_center(void) {
         return;
     const int *meetings = building_list_small_items();
     // determine closest meeting center for hut
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_NATIVE_HUT) {
             int min_dist = 1000;
@@ -194,7 +194,7 @@ void map_natives_check_land(void) {
     map_property_clear_all_native_land();
     city_military_decrease_native_attack_duration();
 
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;

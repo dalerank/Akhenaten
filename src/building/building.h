@@ -5,11 +5,7 @@
 #include "building/type.h"
 #include "core/buffer.h"
 
-//#define MAX_BUILDINGS[GAME_ENV] 10000
-static const int MAX_BUILDINGS[2] = {
-        2000,
-        4000
-};
+#define MAX_BUILDINGS 4000
 
 // partial (forward) declaration for recursive class
 class figure;

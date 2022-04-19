@@ -273,7 +273,7 @@ static void update_herd_formation(formation *m) {
 void formation_herd_update(void) {
     if (city_figures_animals() <= 0)
         return;
-    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0)
             update_herd_formation(m);
@@ -281,7 +281,7 @@ void formation_herd_update(void) {
 }
 
 int formation_herd_breeding_ground_at(int x, int y, int size) {
-    for (int i = 1; i < MAX_FORMATIONS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd && !m->is_legion) {
             if (m->x >= x && m->x < x + size

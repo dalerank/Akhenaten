@@ -425,7 +425,7 @@ static void update_prosperity_rating(void) {
 static void calculate_max_prosperity(void) {
     int points = 0;
     int houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state && b->house_size) {
             points += model_get_house(b->subtype.house_level)->prosperity;

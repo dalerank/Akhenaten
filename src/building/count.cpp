@@ -42,7 +42,7 @@ static void limit_hippodrome(void) {
 }
 
 void building_entertainment_update() {
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->house_size)
             continue;
@@ -83,7 +83,7 @@ void building_count_update(void) {
     city_buildings_reset_dock_wharf_counters();
     city_health_reset_hospital_workers();
 
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->house_size)
             continue;
@@ -332,9 +332,9 @@ int building_count_industry_total(int resource) {
 }
 
 io_buffer *iob_building_count_industry = new io_buffer([](io_buffer *iob) {
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+    for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.industry[i].total);
-    for (int i = 0; i < RESOURCE_MAX[GAME_ENV]; i++)
+    for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.industry[i].active);
 
     //    // culture 1

@@ -14,7 +14,7 @@
 #include "events.h"
 
 void scenario_request_init(void) {
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_REQUESTS; i++) {
         random_generate_next();
         if (scenario_data.requests[i].resource) {
             scenario_data.requests[i].month = (random_byte() & 7) + 2;
@@ -24,7 +24,7 @@ void scenario_request_init(void) {
 }
 
 void scenario_request_process_C3(void) {
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_REQUESTS; i++) {
         if (!scenario_data.requests[i].resource || scenario_data.requests[i].state > REQUEST_STATE_DISPATCHED_LATE)
             continue;
 
@@ -112,7 +112,7 @@ void scenario_request_dispatch(int id) {
 int scenario_requests_active_count() {
     int count = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
             if (scenario_data.requests[i].resource && scenario_data.requests[i].visible &&
                 scenario_data.requests[i].state <= 1) {
                 count++;
@@ -150,7 +150,7 @@ const scenario_request *scenario_request_get(int id) {
 }
 const scenario_request *scenario_request_get_visible(int index) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
             if (scenario_data.requests[i].resource && scenario_data.requests[i].visible &&
                 scenario_data.requests[i].state <= 1) {
                 if (index == 0)
@@ -160,7 +160,7 @@ const scenario_request *scenario_request_get_visible(int index) {
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         int event_index = -1;
-        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
             const event_ph_t *event;
             do {
                 event_index++;
@@ -182,14 +182,14 @@ const scenario_request *scenario_request_get_visible(int index) {
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request)) {
     int index = start_index;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
             if (scenario_data.requests[i].resource && scenario_data.requests[i].visible) {
                 callback(index, scenario_request_get(i));
                 index++;
             }
         }
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
             auto request = scenario_request_get_visible(i);
             if (request) {
                 callback(index, request);

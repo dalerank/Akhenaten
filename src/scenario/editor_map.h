@@ -11,11 +11,11 @@ void scenario_editor_set_river_entry_point(int x, int y);
 
 void scenario_editor_set_river_exit_point(int x, int y);
 
-void scenario_editor_clear_herd_points(void);
+void scenario_editor_clear_predator_herd_points(void);
 
-map_point scenario_editor_herd_point(int id);
+map_point scenario_editor_predator_herd_point(int id);
 
-void scenario_editor_set_herd_point(int id, int x, int y);
+void scenario_editor_set_predator_herd_point(int id, int x, int y);
 
 void scenario_editor_clear_fishing_points(void);
 
@@ -27,9 +27,9 @@ int scenario_editor_count_invasion_points(void);
 
 void scenario_editor_clear_invasion_points(void);
 
-map_point scenario_editor_invasion_point(int id);
+map_point scenario_editor_land_invasion_point(int id);
 
-void scenario_editor_set_invasion_point(int id, int x, int y);
+void scenario_editor_set_land_invasion_point(int id, int x, int y);
 
 map_point scenario_editor_earthquake_point(void);
 

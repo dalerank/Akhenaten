@@ -33,7 +33,7 @@ void scenario_distant_battle_set_enemy_travel_months(void) {
 }
 
 void scenario_distant_battle_process(void) {
-    for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_INVASIONS; i++) {
         if (scenario_data.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE &&
             game_time_year() == scenario_data.invasions[i].year + scenario_data.start_year &&
             game_time_month() == scenario_data.invasions[i].month &&

@@ -198,7 +198,7 @@ void empire_city_expand_empire(void) {
 static bool generate_trader(int city_id, empire_city *city) {
     int max_traders = 0;
     int num_resources = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (city->buys_resource[r] || city->sells_resource[r]) {
             ++num_resources;
             switch (trade_route_limit(city->route_id, r)) {
@@ -332,9 +332,9 @@ io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &city->name_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city->is_open);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
             if (city->sells_resource[r])
                 int a = 5;
@@ -351,7 +351,7 @@ io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {
         iob->bind____skip(10);
 //        if (city->in_use && last_city == 0) {
 ////            int a = 24;
-//            for (int i = 0; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++) {
+//            for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
 //                int can_do_food_x = empire_can_produce_resource(i);
 //                if (can_do_food_x) {
 //                    city_data.resource.food_types_allowed[food_index] = i;
@@ -361,7 +361,7 @@ io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {
 //        }
     }
     int food_index = 0;
-    for (int resource = 1; resource < RESOURCE_MAX_FOOD[GAME_ENV]; resource++) {
+    for (int resource = 1; resource < RESOURCES_FOODS_MAX; resource++) {
         int can_do_food_x = empire_can_produce_resource(resource, true);
         if (can_do_food_x) {
             set_allowed_food(food_index, resource);

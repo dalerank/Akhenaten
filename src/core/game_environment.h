@@ -13,50 +13,25 @@ enum {
     ENGINE_MODE_MAX = 2
 };
 
-const int MAX_REQUESTS[2] = {
-        20,
-        20
-};
-const int MAX_INVASIONS[2] = {
-        20,
-        20
-};
-const int MAX_DEMAND_CHANGES[2] = {
-        20,
-        20
-};
-const int MAX_PRICE_CHANGES[2] = {
-        20,
-        20
-};
+#define MAX_REQUESTS 20
+#define MAX_INVASIONS 20
+#define MAX_DEMAND_CHANGES 20
+#define MAX_PRICE_CHANGES 20
 
-const int MAX_HERD_POINTS[2] = {
-        4,
-        4
-};
-const int MAX_FISH_POINTS[2] = {
-        8,
-        8
-};
-const int MAX_INVASION_POINTS[2] = {
-        8,
-        8
-};
+#define MAX_FISH_POINTS 8
+#define MAX_PREDATOR_HERD_POINTS 4
+#define MAX_PREY_HERD_POINTS 4
+#define MAX_DISEMBARK_POINTS 3
+#define MAX_INVASION_POINTS_LAND 8
+#define MAX_INVASION_POINTS_SEA 8
+#define MAX_FORMATIONS 50
 
-const int MAX_ALLOWED_BUILDINGS[2] = {
-        50,
-        114
-};
+#define MAX_ALLOWED_BUILDINGS 114
 
-const int MAX_PLAYER_NAME = 32;
-const int MAX_SCENARIO_NAME = 65;
-const int MAX_SUBTITLE = 64;
-const int MAX_BRIEF_DESCRIPTION = 522;
-
-const int MAX_FORMATIONS[2] = {
-        250,
-        50
-};
+#define MAX_PLAYER_NAME 32
+#define MAX_SCENARIO_NAME 65
+#define MAX_SUBTITLE 64
+#define MAX_BRIEF_DESCRIPTION 522
 
 extern int GAME_ENV;
 extern int DEBUG_MODE;

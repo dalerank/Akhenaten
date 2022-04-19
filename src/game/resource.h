@@ -10,14 +10,8 @@
  * Resource types
  */
 
-const static int RESOURCE_MAX[2] = {
-        16,
-        36,
-};
-const static int RESOURCE_MAX_FOOD[2] = {
-        7,
-        9,
-};
+#define RESOURCES_MAX 36
+#define RESOURCES_FOODS_MAX 9
 
 enum {
     RESOURCE_NONE = 0,
@@ -61,9 +55,7 @@ enum {
     RESOURCE_TROOPS_PH = 37,
     // helper constants
     RESOURCE_MIN = 1,
-//    RESOURCE_MAX[GAME_ENV] = 16,
     RESOURCE_MIN_FOOD = 1,
-//    RESOURCE_MAX_FOOD[GAME_ENV] = 7
 };
 
 enum {

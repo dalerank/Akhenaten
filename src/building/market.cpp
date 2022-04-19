@@ -82,7 +82,7 @@ int building_market_get_storage_destination(building *market) {
         resources[i].num_buildings = 0;
         resources[i].distance = 40;
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;

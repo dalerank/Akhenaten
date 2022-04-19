@@ -510,7 +510,7 @@ void window_building_draw_granary(building_info_context *c) {
         window_building_draw_description_at(c, 40, 98, 4);
     else {
         int total_stored = 0;
-        for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD[GAME_ENV]; i++)
+        for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++)
             total_stored += b->data.granary.resource_stored[i];
         int width = lang_text_draw(98, 2, c->x_offset + 34, c->y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw_amount(8, 16, total_stored, c->x_offset + 34 + width, c->y_offset + 40, FONT_NORMAL_BLACK_ON_LIGHT);

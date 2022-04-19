@@ -400,13 +400,13 @@ void editor_tool_end_use(const map_tile *tile) {
             place_flag(tile, scenario_editor_set_river_exit_point);
             break;
         case TOOL_INVASION_POINT:
-            place_flag_with_id(tile, scenario_editor_set_invasion_point);
+            place_flag_with_id(tile, scenario_editor_set_land_invasion_point);
             break;
         case TOOL_FISHING_POINT:
             place_flag_with_id(tile, scenario_editor_set_fishing_point);
             break;
         case TOOL_HERD_POINT:
-            place_flag_with_id(tile, scenario_editor_set_herd_point);
+            place_flag_with_id(tile, scenario_editor_set_predator_herd_point);
             break;
         case TOOL_NATIVE_CENTER:
         case TOOL_NATIVE_FIELD:

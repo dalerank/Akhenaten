@@ -106,11 +106,11 @@ static void draw_status(void) {
         }
     }
 
-    int invasion_points = scenario_editor_count_invasion_points();
-    if (invasion_points == 1)
+    int invasion_points_land = scenario_editor_count_invasion_points();
+    if (invasion_points_land == 1)
         lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_BLACK_ON_DARK);
-    else if (invasion_points > 1) {
-        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_BLACK_ON_DARK);
+    else if (invasion_points_land > 1) {
+        int width = text_draw_number(invasion_points_land, '@', " ", text_offset - 2, 254, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         editor_invasion first_invasion;

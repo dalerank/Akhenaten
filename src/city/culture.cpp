@@ -149,7 +149,7 @@ void city_culture_calculate(void) {
     city_data.culture.average_health = 0;
 
     int num_houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->house_size) {
             num_houses++;

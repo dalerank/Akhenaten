@@ -369,7 +369,7 @@ static void calculate_workers_needed_per_category(void) {
         city_data.labor.categories[cat].workers_allocated = 0;
         city_data.labor.categories[cat].workers_needed = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -388,7 +388,7 @@ static void calculate_workers_needed_per_category(void) {
 }
 static void set_building_worker_weight(void) {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER_HEALTH].buildings);
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -492,8 +492,8 @@ static void allocate_workers_to_water(void) {
     }
     int building_id = start_building_id;
     start_building_id = 0;
-    for (int guard = 1; guard < MAX_BUILDINGS[GAME_ENV]; guard++, building_id++) {
-        if (building_id >= MAX_BUILDINGS[GAME_ENV])
+    for (int guard = 1; guard < MAX_BUILDINGS; guard++, building_id++) {
+        if (building_id >= MAX_BUILDINGS)
             building_id = 1;
 
         building *b = building_get(building_id);
@@ -529,7 +529,7 @@ static void allocate_workers_to_non_water_buildings(void) {
                 city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed
                 ? 1 : 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -571,7 +571,7 @@ static void allocate_workers_to_non_water_buildings(void) {
                 category_workers_needed[i] = city_data.labor.categories[i].workers_allocated - category_workers_allocated[i];
         }
     }
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;

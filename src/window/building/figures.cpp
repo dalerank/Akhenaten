@@ -148,7 +148,7 @@ void figure::draw_trader(building_info_context *c) {
         // bought
         int y_base = c->y_offset + 180;
         width = lang_text_draw(129, 4, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_bought_resources(trader_id, r)) {
                 width += text_draw_number(trader_bought_resources(trader_id, r),
                                           '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
@@ -161,7 +161,7 @@ void figure::draw_trader(building_info_context *c) {
         // sold
         y_base = c->y_offset + 210;
         width = lang_text_draw(129, 5, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (trader_sold_resources(trader_id, r)) {
                 width += text_draw_number(trader_sold_resources(trader_id, r),
                                           '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
@@ -175,7 +175,7 @@ void figure::draw_trader(building_info_context *c) {
         // buying
         int y_base = c->y_offset + 180;
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->buys_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -186,7 +186,7 @@ void figure::draw_trader(building_info_context *c) {
         // selling
         y_base = c->y_offset + 210;
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
                 int image_id =
                         image_id_from_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);

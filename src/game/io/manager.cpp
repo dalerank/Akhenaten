@@ -162,7 +162,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 //            state->scenario_data.wheat = create_savegame_piece(4, false, "wheat");
 
 //            state->scenario_data.map_points = create_savegame_piece(12, false, "map_points");
-//            state->scenario_data.invasion_points = create_savegame_piece(32, false, "invasion_points");
+//            state->scenario_data.invasion_points_land = create_savegame_piece(32, false, "invasion_points_land");
 //            state->scenario_data.river_points = create_savegame_piece(8, false, "river_points");
 //            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
 //            state->scenario_data.empire = create_savegame_piece(12, false, "empire");

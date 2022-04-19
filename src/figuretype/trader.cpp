@@ -96,7 +96,7 @@ bool figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city
         return false;
 
     int num_importable = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (!building_warehouse_is_not_accepting(r, warehouse)) {
             if (empire_can_import_resource_from_city(city_id, r))
                 num_importable++;
@@ -111,7 +111,7 @@ bool figure_trade_caravan_can_sell(figure *trader, building *warehouse, int city
         empire_can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
-        for (int i = RESOURCE_MIN; i < RESOURCE_MAX[GAME_ENV]; i++) {
+        for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
             if (!building_warehouse_is_not_accepting(resource, warehouse) &&
                 empire_can_import_resource_from_city(city_id, resource)) {
@@ -173,11 +173,11 @@ static int trader_get_sell_resource(building *warehouse, int city_id) {
 
     int resource_to_import = city_trade_current_caravan_import_resource();
     int imp = RESOURCE_MIN;
-    while (imp < RESOURCE_MAX[GAME_ENV] && !empire_can_import_resource_from_city(city_id, resource_to_import)) {
+    while (imp < RESOURCES_MAX && !empire_can_import_resource_from_city(city_id, resource_to_import)) {
         imp++;
         resource_to_import = city_trade_next_caravan_import_resource();
     }
-    if (imp >= RESOURCE_MAX[GAME_ENV])
+    if (imp >= RESOURCES_MAX)
         return 0;
 
     // add to existing bay with room
@@ -202,7 +202,7 @@ static int trader_get_sell_resource(building *warehouse, int city_id) {
         }
     }
     // find another importable resource that can be added to this warehouse
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         resource_to_import = city_trade_next_caravan_backup_import_resource();
         if (empire_can_import_resource_from_city(city_id, resource_to_import)) {
             space = warehouse;
@@ -245,11 +245,11 @@ int figure_trade_ship_is_trading(figure *ship) {
 }
 
 int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_entry, map_point *warehouse) {
-    int exportable[RESOURCE_MAX[GAME_ENV]];
-    int importable[RESOURCE_MAX[GAME_ENV]];
+    int exportable[RESOURCES_MAX];
+    int importable[RESOURCES_MAX];
     exportable[RESOURCE_NONE] = 0;
     importable[RESOURCE_NONE] = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
         if (trader_amount_bought >= 8)
             exportable[r] = 0;
@@ -264,14 +264,14 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
 
     }
     int num_importable = 0;
-    for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (importable[r])
             num_importable++;
 
     }
     int min_distance = 10000;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WAREHOUSE)
             continue;
@@ -284,7 +284,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
 
         const building_storage *s = building_storage_get(b->storage_id);
         int num_imports_for_warehouse = 0;
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (!building_warehouse_is_not_accepting(r, b) && empire_can_import_resource_from_city(city_id, r))
                 num_imports_for_warehouse++;
 
@@ -297,7 +297,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
                 distance_penalty -= 4;
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
-                for (int r = RESOURCE_MIN; r < RESOURCE_MAX[GAME_ENV]; r++) {
+                for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
                     if (!building_warehouse_is_not_accepting(city_trade_next_caravan_import_resource(), b))
                         break;
 

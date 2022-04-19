@@ -45,7 +45,7 @@ void scenario_editor_create(int map_size) {
     scenario_data.win_criteria.milestone50_year = 20;
     scenario_data.win_criteria.milestone75_year = 30;
 
-    for (int i = 0; i < MAX_ALLOWED_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
         scenario_data.allowed_buildings[i] = 1;
     }
     scenario_data.rome_supplies_wheat = 0;
@@ -74,21 +74,23 @@ void scenario_editor_create(int map_size) {
     init_point(&scenario_data.exit_point);
     init_point(&scenario_data.river_entry_point);
     init_point(&scenario_data.river_exit_point);
-    for (int i = 0; i < MAX_INVASION_POINTS[GAME_ENV]; i++) {
-        init_point(&scenario_data.invasion_points[i]);
-    }
-    for (int i = 0; i < MAX_FISH_POINTS[GAME_ENV]; i++) {
-        init_point(&scenario_data.fishing_points[i]);
-    }
-    for (int i = 0; i < MAX_HERD_POINTS[GAME_ENV]; i++) {
-        init_point(&scenario_data.herd_points[i]);
-    }
+    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++)
+        init_point(&scenario_data.invasion_points_land[i]);
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++)
+        init_point(&scenario_data.invasion_points_sea[i]);
 
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++)
+        init_point(&scenario_data.fishing_points[i]);
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++)
+        init_point(&scenario_data.herd_points_predator[i]);
+    for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
+        init_point(&scenario_data.herd_points_prey[i]);
+
+    for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario_data.requests[i].deadline_years = 5;
         scenario_data.requests[i].favor = 8;
     }
-    for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario_data.invasions[i].from = 8;
     }
 
@@ -110,8 +112,8 @@ void scenario_editor_request_get(int index, editor_request *request) {
 }
 
 static void sort_requests(void) {
-    for (int i = 0; i < MAX_REQUESTS[GAME_ENV]; i++) {
-        for (int j = MAX_REQUESTS[GAME_ENV] - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        for (int j = MAX_REQUESTS - 1; j > 0; j--) {
             request_t *current = &scenario_data.requests[j];
             request_t *prev = &scenario_data.requests[j - 1];
             if (current->resource && (!prev->resource || prev->year > current->year)) {
@@ -152,8 +154,8 @@ void scenario_editor_invasion_get(int index, editor_invasion *invasion) {
 }
 
 static void sort_invasions(void) {
-    for (int i = 0; i < MAX_INVASIONS[GAME_ENV]; i++) {
-        for (int j = MAX_INVASIONS[GAME_ENV] - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_INVASIONS; i++) {
+        for (int j = MAX_INVASIONS - 1; j > 0; j--) {
             invasion_t *current = &scenario_data.invasions[j];
             invasion_t *prev = &scenario_data.invasions[j - 1];
             if (current->type && (!prev->type || prev->year > current->year)) {
@@ -193,13 +195,13 @@ void scenario_editor_price_change_get(int index, editor_price_change *price_chan
 }
 
 static void sort_price_changes(void) {
-    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         if (!scenario_data.price_changes[i].resource)
             scenario_data.price_changes[i].year = 0;
 
     }
-    for (int i = 0; i < MAX_PRICE_CHANGES[GAME_ENV]; i++) {
-        for (int j = MAX_PRICE_CHANGES[GAME_ENV] - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
+        for (int j = MAX_PRICE_CHANGES - 1; j > 0; j--) {
             price_change_t *current = &scenario_data.price_changes[j];
             price_change_t *prev = &scenario_data.price_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {
@@ -237,13 +239,13 @@ void scenario_editor_demand_change_get(int index, editor_demand_change *demand_c
 }
 
 static void sort_demand_changes(void) {
-    for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
+    for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         if (!scenario_data.demand_changes[i].resource)
             scenario_data.demand_changes[i].year = 0;
 
     }
-    for (int i = 0; i < MAX_DEMAND_CHANGES[GAME_ENV]; i++) {
-        for (int j = MAX_DEMAND_CHANGES[GAME_ENV] - 1; j > 0; j--) {
+    for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
+        for (int j = MAX_DEMAND_CHANGES - 1; j > 0; j--) {
             demand_change_t *current = &scenario_data.demand_changes[j];
             demand_change_t *prev = &scenario_data.demand_changes[j - 1];
             if (current->year && (!prev->year || prev->year > current->year)) {

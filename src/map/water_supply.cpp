@@ -43,7 +43,7 @@ static void mark_well_access(int well_id, int radius) {
 
 void map_water_supply_update_houses(void) {
     building_list_small_clear();
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_VALID)
             continue;
@@ -181,7 +181,7 @@ static void update_canals_from_water_lifts() {
             { OFFSET(-1, 0), OFFSET(-1, 1) }
     };
 
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WATER_LIFT) {
             building_list_large_add(i);

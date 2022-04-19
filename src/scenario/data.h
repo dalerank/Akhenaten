@@ -8,15 +8,16 @@
 
 #include <stdint.h>
 #include <game/io/io_buffer.h>
+#include <game/resource.h>
 
 //#define MAX_REQUESTS 20
 //#define MAX_INVASIONS 20
 //#define MAX_DEMAND_CHANGES 20
 //#define MAX_PRICE_CHANGES 20
 //
-//#define MAX_HERD_POINTS 4
+//#define MAX_PREDATOR_HERD_POINTS 4
 //#define MAX_FISH_POINTS 8
-//#define MAX_INVASION_POINTS 8
+//#define MAX_INVASION_POINTS_LAND 8
 //
 //#define MAX_ALLOWED_BUILDINGS 50
 //
@@ -132,6 +133,7 @@ extern struct scenario_t {
     int start_year;
     int climate;
     int player_rank;
+    int player_incarnation;
 
     int initial_funds;
     int rescue_loan;
@@ -144,6 +146,7 @@ extern struct scenario_t {
     bool is_open_play;
     int open_play_scenario_id;
     bool is_custom;
+    bool alt_predator_type;
 
     struct {
         struct win_criteria_t population;
@@ -184,6 +187,7 @@ extern struct scenario_t {
         int year;
     } earthquake;
 
+    int current_pharaoh;
     struct {
         int year;
         int enabled;
@@ -220,11 +224,14 @@ extern struct scenario_t {
     map_point river_entry_point;
     map_point river_exit_point;
     map_point earthquake_point;
-    map_point herd_points[6];
-    map_point fishing_points[16];
-    map_point invasion_points[16];
+    map_point herd_points_predator[MAX_PREDATOR_HERD_POINTS];
+    map_point herd_points_prey[MAX_PREY_HERD_POINTS];
+    map_point fishing_points[MAX_FISH_POINTS];
+    map_point disembark_points[MAX_DISEMBARK_POINTS];
+    map_point invasion_points_land[MAX_INVASION_POINTS_LAND];
+    map_point invasion_points_sea[MAX_INVASION_POINTS_SEA];
 
-    bool allowed_buildings[200];
+    bool allowed_buildings[MAX_ALLOWED_BUILDINGS];
 
     struct {
         int hut;
@@ -238,12 +245,15 @@ extern struct scenario_t {
         int is_custom;
         int starting_kingdom;
         int starting_personal_savings;
+        int debt_interest_rate;
     } settings;
 
     struct {
+        int monuments_set;
         int first;
         int second;
         int third;
+        int burial_provisions[RESOURCES_MAX];
     } monuments;
 
     bool is_saved;

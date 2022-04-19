@@ -138,7 +138,7 @@ void building_destroy_by_rioter(building *b) {
 
 int building_destroy_first_of_type(int type) {
     int i = building_find(type);
-    if (i < MAX_BUILDINGS[GAME_ENV]) {
+    if (i < MAX_BUILDINGS) {
         building *b = building_get(i);
         int grid_offset = b->grid_offset;
         game_undo_disable();
@@ -153,7 +153,7 @@ int building_destroy_first_of_type(int type) {
 void building_destroy_last_placed(void) {
     int highest_sequence = 0;
     building *last_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS[GAME_ENV]; i++) {
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_VALID) {
             if (b->creation_sequence_index > highest_sequence) {

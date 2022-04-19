@@ -70,17 +70,17 @@ io_buffer *iob_figure_traders = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT32, &t->bought_amount);
         iob->bind(BIND_SIGNATURE_INT32, &t->sold_amount);
 
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             t->bought_resources[r] *= 0.01;
             t->sold_resources[r] *= 0.01;
         }
 
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &t->bought_resources[r]);
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++)
+        for (int r = 0; r < RESOURCES_MAX; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &t->sold_resources[r]);
 
-        for (int r = 0; r < RESOURCE_MAX[GAME_ENV]; r++) {
+        for (int r = 0; r < RESOURCES_MAX; r++) {
             t->bought_resources[r] *= 100;
             t->sold_resources[r] *= 100;
         }

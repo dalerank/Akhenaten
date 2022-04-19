@@ -236,7 +236,7 @@ static void menu_help_about(int param) {
 }
 
 static void menu_resets_herds(int param) {
-    scenario_editor_clear_herd_points();
+    scenario_editor_clear_predator_herd_points();
     clear_state();
     window_go_back();
 }
