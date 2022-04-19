@@ -2,6 +2,7 @@
 #define FIGURE_FIGURE_H
 
 #include <game/io/io_buffer.h>
+#include <memory.h>
 #include "core/buffer.h"
 #include "core/direction.h"
 #include "figure/action.h"
@@ -155,6 +156,9 @@ public:
     //
 
     figure(int _id) {
+        // ...can't be bothered to add default values to ALL
+        // the above members of "figure" ....for now...
+        memset(this, 0, sizeof(figure));
         id = _id;
     };
 
