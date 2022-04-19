@@ -41,24 +41,20 @@ const int get_campaign_scenario_offset(int scenario_id) {
     return offset_buf->read_i32();
 }
 
-static buffer *version_buffer = new buffer(8);
-file_version_t read_file_version(const char *filename, int offset) {
-    file_version_t version = {-1, -1};
+static buffer *version_buffer = new buffer(4);
+const int read_file_version(const char *filename, int offset) {
     version_buffer->clear();
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 8, offset + 4)) {
-        version.minor = version_buffer->read_i32();
-        version.major = version_buffer->read_i32();
-    }
-    return version;
+    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 4, offset + 4))
+        return version_buffer->read_i32();
+    return -1;
 }
 
-file_version_t *GamestateIO::get_file_version() {
-    return &SFIO.file_version;
+static int file_version;
+const int GamestateIO::get_file_version() {
+    return file_version;
 }
 io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
-    auto v = SFIO.get_file_version();
-    iob->bind(BIND_SIGNATURE_INT32, v->minor);
-    iob->bind(BIND_SIGNATURE_INT32, v->major);
+    iob->bind(BIND_SIGNATURE_INT32, &file_version);
 });
 
 ///
@@ -68,55 +64,50 @@ void GamestateIO::clear() {
     strncpy_safe(file_path, "", MAX_FILE_NAME);
     file_size = 0;
     file_offset = 0;
-    file_version = {-1, -1};
+    file_version = -1;
     for (int i = 0; i < num_chunks(); ++i)
         delete file_chunks.at(i).buf;
     file_chunks.clear();
 }
-void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_version_t version) {
+void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int version) {
     if (loaded)
         clear(); // make sure the pieces
     file_version = version;
     switch (mapping_schema) {
-        case FILE_SCHEMA_MAP: // TODO!!!!
-//            scenario_state *state = &scenario_data.state;
-//            state->graphic_ids = create_scenario_piece(52488, "");
-//            state->edge = create_scenario_piece(26244, "");
-//            state->terrain = create_scenario_piece(52488, "");
-//            state->bitfields = create_scenario_piece(26244, "");
-//            state->random = create_scenario_piece(26244, "");
-//            state->elevation = create_scenario_piece(26244, "");
-//            state->random_iv = create_scenario_piece(8, "");
-//            state->camera = create_scenario_piece(8, "");
-//        //    state->scenario = create_scenario_piece(1720, "");
-//            state->SCENARIO.header = create_scenario_piece(14, "");
-//            state->SCENARIO.requests = create_scenario_piece(160, "");
-//            state->SCENARIO.invasions = create_scenario_piece(202, "");
-//            state->SCENARIO.info1 = create_scenario_piece(614, "");
-//            state->SCENARIO.request_comply_dialogs = create_scenario_piece(20, "");
-//            state->SCENARIO.info2 = create_scenario_piece(6, "");
-//            state->SCENARIO.herds = create_scenario_piece(16, "");
-//            state->SCENARIO.demands = create_scenario_piece(120, "");
-//            state->SCENARIO.price_changes = create_scenario_piece(120, "");
-//            state->SCENARIO.events = create_scenario_piece(44, "");
-//            state->SCENARIO.fishing_points = create_scenario_piece(32, "");
-//            state->SCENARIO.request_extra = create_scenario_piece(120, "");
-//            state->SCENARIO.wheat = create_scenario_piece(4, "");
-//            state->SCENARIO.allowed_builds = create_scenario_piece(100, "");
-//            state->SCENARIO.win_criteria = create_scenario_piece(52, "");
-//            state->SCENARIO.map_points = create_scenario_piece(12, "");
-//            state->SCENARIO.invasion_points = create_scenario_piece(32, "");
-//            state->SCENARIO.river_points = create_scenario_piece(8, "");
-//            state->SCENARIO.info3 = create_scenario_piece(32, "");
-//            state->SCENARIO.empire = create_scenario_piece(12, "");
-//
-//            state->end_marker = create_scenario_piece(4, "");
+        case FILE_SCHEMA_MAP:
+            push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
+            push_chunk(4, false, "file_version", iob_file_version);
+            push_chunk(6004, false, "junk1", iob_junk1);
+
+            push_chunk(207936, false, "image_grid", iob_image_grid);
+            push_chunk(51984, false, "edge_grid", iob_edge_grid);
+            push_chunk(207936, false, "terrain_grid", iob_terrain_grid);
+            push_chunk(51984, false, "bitfields_grid", iob_bitfields_grid);
+            push_chunk(51984, false, "random_grid", iob_random_grid);
+            push_chunk(51984, false, "elevation_grid", iob_elevation_grid);
+
+            push_chunk(8, false, "random_iv", iob_random_iv);
+            push_chunk(8, false, "city_view_camera", iob_city_view_camera);
+            push_chunk(1592, false, "scenario_info", iob_scenario_info);
+
+            push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
+            push_chunk(18600, false, "scenario_events", iob_scenario_events);
+            push_chunk(28, false, "junk10a", iob_junk10a);
+            push_chunk(1280, true, "junk11", iob_junk11);
+            push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
+            push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
+            push_chunk(51984, false, "GRID02_8BIT", iob_GRID02_8BIT);
+
+            push_chunk(version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
+            push_chunk(288, false, "trade_prices", iob_trade_prices);
+            push_chunk(51984, true, "moisture_grid", iob_moisture_grid);
+
             break;
         case FILE_SCHEMA_SAV: {
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
-            push_chunk(8, false, "file_version", iob_file_version);
+            push_chunk(4, false, "file_version", iob_file_version);
 
-            push_chunk(6000, false, "junk1", iob_junk1); // ?????
+            push_chunk(6004, false, "junk1", iob_junk1); // ?????
 
             push_chunk(207936, true, "image_grid", iob_image_grid);                         // (228²) * 4 <<
             push_chunk(51984, true, "edge_grid", iob_edge_grid);                            // (228²) * 1
@@ -156,8 +147,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 
 //                state->culture_coverage = create_savegame_piece(60, false, ""); // MISSING
 //                state->scenario = create_savegame_piece(1720, false, ""); // MISSING
-
-
+            push_chunk(1592, false, "scenario_info", iob_scenario_info);
 
 //            state->scenario_data.requests = create_savegame_piece(160, false, "requests");
 //            state->scenario_data.invasions = create_savegame_piece(202, false, "invasions");
@@ -177,7 +167,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 //            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
 //            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
 
-            push_chunk(1596, false, "scenario_info", iob_scenario_info);
+            push_chunk(4, false, "junk2", iob_junk2);
 
             /////////////////////
 
@@ -240,13 +230,13 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 
             push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
             push_chunk(32, false, "bookmarks", iob_bookmarks); // ok
-            push_chunk(4, false, "tutorial_part3", iob_junk9a); // ok ????
+            push_chunk(4, false, "junk9a", iob_junk9a); // ok ????
 
 //            int t_sub = 228;
 
             // 8 bytes      00 00 00 00 ???
-            push_chunk(8, false, "junk9a", iob_junk9b);
-            push_chunk(396, false, "junk9b", iob_junk9c);
+            push_chunk(8, false, "junk9b", iob_junk9b);
+            push_chunk(396, false, "junk9c", iob_junk9c);
 
             // 51984 bytes  00 00 00 00 ???
             push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
@@ -259,13 +249,13 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
             // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
             push_chunk(28, false, "junk10a", iob_junk10a);
-            push_chunk(version.minor < 149 ? 13216 : 13416, false, "junk10b", iob_junk10b);
+            push_chunk(version < 149 ? 13216 : 13416, false, "junk10b", iob_junk10b);
             push_chunk(8200, false, "junk10c", iob_junk10c);
 
             push_chunk(1280, true, "junk11", iob_junk11); // unknown compressed data
 
-            push_chunk(version.minor < 160 ? 15200 : 19600, true, "empire_objects", iob_empire_objects);
-            push_chunk(16200, true, "empire_routes", iob_empire_map_routes);
+            push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
+            push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
             push_chunk(51984, false, "GRID02_8BIT", iob_GRID02_8BIT); // todo: 1-byte grid
@@ -276,7 +266,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
             push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
 
-            push_chunk(36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
+            push_chunk(version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
             push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
@@ -284,7 +274,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, file_versi
 
             // 64 bytes     00 00 00 00 ???
             push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
-            push_chunk(41, false, "tutorial_part1", iob_tutorial_flags); // 41 x 1-byte flag fields
+            push_chunk(41, false, "tutorial_flags", iob_tutorial_flags); // 41 x 1-byte flag fields
             push_chunk(51984, true, "floodplain_soil_depletion", iob_soil_unk_grid);
 
             // lone byte ???
@@ -410,7 +400,7 @@ static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
     return true;
 }
 
-bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version) {
+bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, const int version) {
 
     //////////////////////////////////////////////////////////////////
     auto TIME_START = std::chrono::high_resolution_clock::now();
@@ -471,7 +461,7 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
     //////////////////////////////////////////////////////////////////
 
-    SDL_Log("Saving game state to file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+    SDL_Log("Saving game state to file %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
             std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;
@@ -497,7 +487,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
 
     // read file header data (required for schema...)
     file_version = read_file_version(file_path, file_offset);
-    if (file_version.major == -1 || file_version.minor == -1) {
+    if (file_version == -1) {
         log_info("Invalid file and/or version header!", filename, 0);
         return false;
     }
@@ -507,7 +497,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
         file_schema = FILE_SCHEMA_SAV;
     else if (file_has_extension(filename, "map"))
         file_schema = FILE_SCHEMA_MAP;
-    if (file_has_extension(filename, "pak") && file_version.minor < 149)
+    if (file_has_extension(filename, "pak") && file_version < 149)
         set_image_grid_correction_shift(539); //14791
     else
         set_image_grid_correction_shift(0); //14252
@@ -531,7 +521,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
 
         // ******** DEBUGGING ********
         export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (true) log_hex(chunk, i, offs); // print full chunk read log info
+        if (false) log_hex(chunk, i, offs); // print full chunk read log info
         // ***************************
 
         // The last piece may be smaller than buf->size
@@ -552,7 +542,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
     auto TIME_FINISH = std::chrono::high_resolution_clock::now();
     //////////////////////////////////////////////////////////////////
 
-    SDL_Log("Loading game from file %s %i@ --- VERSION HEADER: %i %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version.minor, file_version.major,
+    SDL_Log("Loading game from file %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
             std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
 
     return true;

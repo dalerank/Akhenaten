@@ -162,9 +162,8 @@ static void post_load() {
 //    scenario_settings_init_mission();
 
     // new game / initializations
+    scenario_map_init();
     if (last_loaded != LOADED_SAVE) {
-        scenario_map_init();
-
         // initialize grids
         map_tiles_update_all_elevation();
         map_tiles_river_refresh_entire();
@@ -287,7 +286,7 @@ bool GamestateIO::write_savegame(const char *filename_short) {
     path_build_saves(full, filename_short);
 
     // write file
-    return SFIO.write_to_file(filename_short, 0, FILE_SCHEMA_SAV, {160, 181});
+    return SFIO.write_to_file(filename_short, 0, FILE_SCHEMA_SAV, 160);
 }
 bool GamestateIO::write_map(const char *filename_short) {
     return false; //TODO
@@ -297,7 +296,7 @@ bool GamestateIO::write_map(const char *filename_short) {
     path_build_maps(full, filename_short);
 
     // write file
-    return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, {160, 181});
+    return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, 160);
 }
 
 bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {

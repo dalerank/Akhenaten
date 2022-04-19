@@ -32,11 +32,6 @@ typedef enum {
 } file_schema_enum_t;
 
 typedef struct {
-    int minor;
-    int major;
-} file_version_t;
-
-typedef struct {
     buffer *buf = nullptr;
     io_buffer *iob = nullptr;
     int compressed;
@@ -65,7 +60,7 @@ private:
     char file_path[MAX_FILE_NAME] = "";
     int file_size = 0;
     int file_offset = 0;
-    file_version_t file_version;
+//    int file_version;
     file_schema_enum_t file_schema = FILE_SCHEMA_NULL;
 
     std::vector<file_chunk_t> file_chunks;
@@ -75,13 +70,13 @@ private:
 
 public:
     const int num_chunks();
-    static file_version_t *get_file_version();
+    static const int get_file_version();
 
     // set up list of io_buffer chunks in correct order for specific file format read/write operations
-    void init_with_schema(file_schema_enum_t mapping_schema, file_version_t version);
+    void init_with_schema(file_schema_enum_t mapping_schema, int version);
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, file_version_t version);
+    bool write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, const int version);
     bool read_from_file(const char *filename, int offset);
 
     // static boilerplate methods for use anywhere in the engine
@@ -101,6 +96,6 @@ public:
 };
 
 const int get_campaign_scenario_offset(int scenario_id);
-file_version_t read_file_version(const char *filename, int offset);
+const int read_file_version(const char *filename, int offset);
 
 #endif //OZYMANDIAS_MANAGER_H

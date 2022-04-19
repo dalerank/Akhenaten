@@ -2,6 +2,7 @@
 #include <map/tiles.h>
 #include <map/building.h>
 #include <map/terrain.h>
+#include <game/io/manager.h>
 #include "floods.h"
 
 #include "city/constants.h"
@@ -196,7 +197,8 @@ io_buffer *iob_floodplain_settings = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.quality);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
-    iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
+    if (GamestateIO::get_file_version() >= 149)
+        iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
 
     data.flood_progress = 30;
     data.unk00 = 0;

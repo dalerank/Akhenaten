@@ -428,9 +428,8 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    auto v = GamestateIO::get_file_version();
-    draw_debug_line(txt, INFO_X, -120, 0, "", v->minor, COLOR_FONT_YELLOW);
-    draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -120, 0, "", GamestateIO::get_file_version(), COLOR_FONT_YELLOW);
+//    draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);
     graphics_reset_dialog();

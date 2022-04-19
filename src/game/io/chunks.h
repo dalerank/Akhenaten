@@ -48,6 +48,8 @@ extern io_buffer *iob_figure_names;
 
 extern io_buffer *iob_scenario_info;
 
+extern io_buffer *iob_junk2;
+
 extern io_buffer *iob_messages; 
 extern io_buffer *iob_message_extra;
 
@@ -92,7 +94,7 @@ extern io_buffer *iob_junk10c;
 
 extern io_buffer *iob_junk11;
 
-extern io_buffer *iob_empire_objects;
+extern io_buffer *iob_empire_map_objects;
 extern io_buffer *iob_empire_map_routes;
 
 extern io_buffer *iob_GRID02_8BIT;

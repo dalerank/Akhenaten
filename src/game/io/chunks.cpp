@@ -13,6 +13,8 @@ io_buffer *iob_ = new io_buffer([](io_buffer *iob) {
 
 io_buffer *iob_junk1 = new io_buffer(default_bind);
 
+io_buffer *iob_junk2 = new io_buffer(default_bind);
+
 io_buffer *iob_junk7a = new io_buffer(default_bind);
 io_buffer *iob_junk7b = new io_buffer(default_bind);
 

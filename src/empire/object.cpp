@@ -330,7 +330,7 @@ map_route_object *empire_get_route_object(int id) {
 }
 
 
-io_buffer *iob_empire_objects = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_empire_map_objects = new io_buffer([](io_buffer *iob) {
 //    if (objects_are_loaded)
 //        return;
     bool expanded = (iob->get_size() != 15200);
