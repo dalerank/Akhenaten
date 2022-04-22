@@ -447,7 +447,7 @@ extern struct city_data_t {
         int8_t unknown_464c[232];
         int32_t unknown_order;
         int32_t faction_id;
-        uint8_t faction_bytes[4];
+        int16_t faction_bytes[2];
     } unused;
 } city_data;
 

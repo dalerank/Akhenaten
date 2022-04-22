@@ -18,8 +18,8 @@ static formation formations[250];
 
 static struct {
     int id_last_in_use;
-    int id_last_legion;
-    int num_legions;
+    int id_last_formation;
+    int num_formations;
 } data;
 
 void formations_clear(void) {
@@ -28,8 +28,8 @@ void formations_clear(void) {
         formations[i].id = i;
     }
     data.id_last_in_use = 0;
-    data.id_last_legion = 0;
-    data.num_legions = 0;
+    data.id_last_formation = 0;
+    data.num_formations = 0;
 }
 
 void formation_clear(int formation_id) {
@@ -68,7 +68,7 @@ formation *formation_create_legion(int building_id, int x, int y, int type) {
     m->x = m->standard_x = m->x_home = fort_ground->x;
     m->y = m->standard_y = m->y_home = fort_ground->y;
 
-    data.num_legions++;
+    data.num_formations++;
     if (formation_id > data.id_last_in_use)
         data.id_last_in_use = formation_id;
 
@@ -184,19 +184,19 @@ int formation_has_low_morale(formation *m) {
 }
 
 int formation_get_num_legions_cached(void) {
-    return data.num_legions;
+    return data.num_formations;
 }
 
 void formation_calculate_legion_totals(void) {
-    data.id_last_legion = 0;
-    data.num_legions = 0;
+    data.id_last_formation = 0;
+    data.num_formations = 0;
     city_military_clear_legionary_legions();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use) {
             if (m->is_legion) {
-                data.id_last_legion = i;
-                data.num_legions++;
+                data.id_last_formation = i;
+                data.num_formations++;
                 if (m->figure_type == FIGURE_FORT_LEGIONARY)
                     city_military_add_legionary_legion();
             }
@@ -676,13 +676,8 @@ io_buffer *iob_formations = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
     }
 });
-io_buffer *iob_formation_totals = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_formations_info = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_in_use);
-    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_legion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.num_legions);
+    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_formation);
+    iob->bind(BIND_SIGNATURE_INT32, &data.num_formations);
 });
-
-void formations_load_state(buffer *buf, buffer *totals) {
-    
-    
-}

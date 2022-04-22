@@ -96,7 +96,7 @@ io_buffer *iob_building_list_burning = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_BURNING; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.burning.items[i]);
 });
-io_buffer *iob_building_list_burning_totals = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_building_burning_list_info = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.burning.total);
     iob->bind(BIND_SIGNATURE_INT32, &data.burning.size);
 });

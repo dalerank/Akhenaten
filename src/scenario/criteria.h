@@ -20,7 +20,5 @@ int winning_houselevel();
 int scenario_criteria_milestone_year(int percentage);
 void scenario_criteria_init_max_year(void);
 int scenario_criteria_max_year(void);
-void scenario_max_year_save_state(buffer *buf);
-void scenario_max_year_load_state(buffer *buf);
 
 #endif // SCENARIO_CRITERIA_H

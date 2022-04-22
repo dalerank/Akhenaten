@@ -30,6 +30,7 @@
 #include <core/lang.h>
 #include <cmath>
 #include <game/io/manager.h>
+#include <game/io/chunks.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -429,7 +430,7 @@ static void draw_foreground(void) {
 
     uint8_t txt[200];
     draw_debug_line(txt, INFO_X, -120, 0, "", GamestateIO::get_file_version(), COLOR_FONT_YELLOW);
-//    draw_debug_line(txt, INFO_X + 100, -120, 0, "", v->major, COLOR_FONT_YELLOW);
+//    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);
     graphics_reset_dialog();

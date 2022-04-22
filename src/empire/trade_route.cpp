@@ -69,7 +69,7 @@ int trade_route_limit_reached(int route_id, int resource) {
     return data[route_id][resource].traded >= data[route_id][resource].limit;
 }
 
-io_buffer *iob_trade_route_limit = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_trade_routes_limits = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCES_MAX; r++) {
             data[route_id][r].limit *= 0.01;
@@ -79,7 +79,7 @@ io_buffer *iob_trade_route_limit = new io_buffer([](io_buffer *iob) {
         }
     }
 });
-io_buffer *iob_trade_route_traded = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_trade_routes_traded = new io_buffer([](io_buffer *iob) {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
         for (int r = 0; r < RESOURCES_MAX; r++) {
             data[route_id][r].traded *= 0.01;

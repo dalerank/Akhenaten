@@ -86,15 +86,15 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.prosperity.goal);
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.monuments.goal);
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.kingdom.goal);
-    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.houses.goal);
-    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.house_level.goal);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.housing_count.goal);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.housing_level.goal);
 
     iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.culture.enabled);
     iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.prosperity.enabled);
     iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.monuments.enabled);
     iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.kingdom.enabled);
-    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.houses.enabled);
-    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.house_level.enabled);
+    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.housing_count.enabled);
+    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.win_criteria.housing_level.enabled);
 
     iob->bind____skip(6); // ???
 //    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.earthquake.severity);
@@ -107,29 +107,44 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.population.enabled);
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.population.goal);
 
-    // junk 3
-    iob->bind____skip(4); // ??? -1
-
-    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.map.entry_flag.x);
-    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.map.entry_flag.y);
-    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.map.exit_flag.x);
-    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.map.exit_flag.y);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.earthquake_point.x);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.earthquake_point.y);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.entry_point.x);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.entry_point.y);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.exit_point.x);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.exit_point.y);
 
     // junk 4a
-    iob->bind____skip(40); // 20 * 2
-    iob->bind____skip(4);
-    iob->bind____skip(12); // 3 * 4
-    iob->bind____skip(12); // 3 * 4
+    iob->bind____skip(28); // 14 * 2
+    iob->bind____skip(4); // 2 * 2 (58, 64)
 
-    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.climate);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.river_entry_point.x);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.river_entry_point.y);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.river_exit_point.x);
+    iob->bind(BIND_SIGNATURE_INT16, &scenario_data.river_exit_point.y);
+
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.rescue_loan);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.milestone25_year);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.milestone50_year);
+    iob->bind(BIND_SIGNATURE_INT32, &scenario_data.win_criteria.milestone75_year);
+
+    // junk 4b
+    iob->bind____skip(12); // 3 * 4 (usually go n, n+2, n+1497)
+
+    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.climate);
 
     // junk 4e
-    iob->bind____skip(10);
+    iob->bind____skip(1);
+    iob->bind____skip(1); // used?
+    iob->bind____skip(1); // used?
+    iob->bind____skip(8);
 
-    iob->bind(BIND_SIGNATURE_UINT16, &scenario_data.monuments.monuments_set);
+    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.monuments.monuments_set);
+    iob->bind(BIND_SIGNATURE_UINT8, &scenario_data.player_faction);
 
     // junk 4f
-    iob->bind____skip(2);
+    iob->bind____skip(1); // -1 or -31
+    iob->bind____skip(1); // -1
 
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
         iob->bind(BIND_SIGNATURE_INT32, &scenario_data.herd_points_prey[i].x);
@@ -144,7 +159,7 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_DISEMBARK_POINTS; ++i)
         iob->bind(BIND_SIGNATURE_INT32, &scenario_data.disembark_points[i].y);
 
-    iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.settings.debt_interest_rate);
+    iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.debt_interest_rate);
 
     iob->bind(BIND_SIGNATURE_UINT16, &scenario_data.monuments.first);
     iob->bind(BIND_SIGNATURE_UINT16, &scenario_data.monuments.second);
@@ -154,9 +169,9 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
     iob->bind____skip(2);
 
     for (int i = 0; i < RESOURCES_MAX; ++i)
-        iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.monuments.burial_provisions[i]);
-
-    iob->bind____skip(144); // ??? something related to resources like the above
+        iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.monuments.burial_provisions[i].required);
+    for (int i = 0; i < RESOURCES_MAX; ++i)
+        iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.monuments.burial_provisions[i].dispatched);
 
     iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.current_pharaoh);
     iob->bind(BIND_SIGNATURE_UINT32, &scenario_data.player_incarnation);
@@ -168,7 +183,7 @@ io_buffer *iob_scenario_info = new io_buffer([](io_buffer *iob) {
 
     scenario_data.is_saved = true;
 });
-io_buffer *iob_scenario_starting_rank = new io_buffer([](io_buffer *iob) {
+io_buffer *iob_scenario_carry_settings = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.settings.starting_kingdom);
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.settings.starting_personal_savings);
     iob->bind(BIND_SIGNATURE_INT32, &scenario_data.settings.campaign_mission_rank);

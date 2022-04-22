@@ -547,6 +547,7 @@ io_buffer *iob_tutorial_flags = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[23]);
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[24]);
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[25]);
+
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[26]); // goal: bazaar
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[27]); // goal: pottery
     iob->bind(BIND_SIGNATURE_UINT8, &data.pharaoh.flags[28]);

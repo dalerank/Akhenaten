@@ -683,10 +683,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     }
 });
 io_buffer *iob_city_data_extra = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.faction_bytes[0]);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.faction_bytes[1]);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.faction_bytes[2]);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.faction_bytes[3]);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[0]);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[1]);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name_adversary, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_RAW, &city_data.emperor.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.faction_id);

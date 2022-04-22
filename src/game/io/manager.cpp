@@ -32,21 +32,19 @@ extern GamestateIO SFIO;
 
 ///
 
-static buffer *offset_buf = new buffer(4);
+static buffer *small_buffer = new buffer(4);
 const int get_campaign_scenario_offset(int scenario_id) {
     // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
-    offset_buf->clear();
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, offset_buf, 4, 4 * scenario_id))
+    small_buffer->clear();
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, small_buffer, 4, 4 * scenario_id))
         return 0;
-    return offset_buf->read_i32();
+    return small_buffer->read_i32();
 }
-
-static buffer *version_buffer = new buffer(4);
 const int read_file_version(const char *filename, int offset) {
-    version_buffer->clear();
-    if (io_read_file_part_into_buffer(filename, NOT_LOCALIZED, version_buffer, 4, offset + 4))
-        return version_buffer->read_i32();
-    return -1;
+    small_buffer->clear();
+    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, small_buffer, 4, offset + 4))
+        return -1;
+    return small_buffer->read_i32();
 }
 
 static int file_version;
@@ -77,7 +75,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
         case FILE_SCHEMA_MAP:
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
             push_chunk(4, false, "file_version", iob_file_version);
-            push_chunk(6004, false, "junk1", iob_junk1);
+            push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
 
             push_chunk(207936, false, "image_grid", iob_image_grid);
             push_chunk(51984, false, "edge_grid", iob_edge_grid);
@@ -92,7 +90,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 
             push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
             push_chunk(18600, false, "scenario_events", iob_scenario_events);
-            push_chunk(28, false, "junk10a", iob_junk10a);
+            push_chunk(28, false, "junk10a", iob_scenario_events_extra);
             push_chunk(1280, true, "junk11", iob_junk11);
             push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
@@ -106,8 +104,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
         case FILE_SCHEMA_SAV: {
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
             push_chunk(4, false, "file_version", iob_file_version);
-
-            push_chunk(6004, false, "junk1", iob_junk1); // ?????
+            push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
 
             push_chunk(207936, true, "image_grid", iob_image_grid);                         // (228²) * 4 <<
             push_chunk(51984, true, "edge_grid", iob_edge_grid);                            // (228²) * 1
@@ -117,17 +114,17 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(103968, true, "figure_grid", iob_figure_grid);                       // (228²) * 2
             push_chunk(51984, true, "bitfields_grid", iob_bitfields_grid);                  // (228²) * 1
             push_chunk(51984, true, "sprite_grid", iob_sprite_grid);                        // (228²) * 1
-            push_chunk(51984, false, "random_grid", iob_random_grid);                            // (228²) * 1
+            push_chunk(51984, false, "random_grid", iob_random_grid);                       // (228²) * 1
             push_chunk(51984, true, "desirability_grid", iob_desirability_grid);            // (228²) * 1
             push_chunk(51984, true, "elevation_grid", iob_elevation_grid);                  // (228²) * 1
-            push_chunk(103968, true, "building_damage_grid", iob_damage_grid);     // (228²) * 2 <<
+            push_chunk(103968, true, "building_damage_grid", iob_damage_grid);              // (228²) * 2 <<
             push_chunk(51984, true, "aqueduct_backup_grid", iob_aqueduct_backup_grid);      // (228²) * 1
             push_chunk(51984, true, "sprite_backup_grid", iob_sprite_backup_grid);          // (228²) * 1
             push_chunk(776000, true, "figures", iob_figures);
             push_chunk(2000, true, "route_figures", iob_route_figures);
             push_chunk(500000, true, "route_paths", iob_route_paths);
             push_chunk(7200, true, "formations", iob_formations);
-            push_chunk(12, false, "formation_totals", iob_formation_totals);
+            push_chunk(12, false, "formations_info", iob_formations_info);
             push_chunk(37808, true, "city_data", iob_city_data);
             push_chunk(72, false, "city_data_extra", iob_city_data_extra);
             push_chunk(1056000, true, "buildings", iob_buildings);
@@ -146,44 +143,17 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(84, false, "figure_names", iob_figure_names);
 
 //                state->culture_coverage = create_savegame_piece(60, false, ""); // MISSING
-//                state->scenario = create_savegame_piece(1720, false, ""); // MISSING
             push_chunk(1592, false, "scenario_info", iob_scenario_info);
-
-//            state->scenario_data.requests = create_savegame_piece(160, false, "requests");
-//            state->scenario_data.invasions = create_savegame_piece(202, false, "invasions");
-
-//            state->scenario_data.request_comply_dialogs = create_savegame_piece(20, false, "request_comply_dialogs");
-
-//            state->scenario_data.demands = create_savegame_piece(120, false, "demands");
-//            state->scenario_data.price_changes = create_savegame_piece(120, false, "price_changes");
-//            state->scenario_data.events = create_savegame_piece(44, false, "events");
-//            state->scenario_data.fishing_points = create_savegame_piece(32, false, "fishing_points");
-//            state->scenario_data.request_extra = create_savegame_piece(120, false, "request_extra");
-//            state->scenario_data.wheat = create_savegame_piece(4, false, "wheat");
-
-//            state->scenario_data.map_points = create_savegame_piece(12, false, "map_points");
-//            state->scenario_data.invasion_points_land = create_savegame_piece(32, false, "invasion_points_land");
-//            state->scenario_data.river_points = create_savegame_piece(8, false, "river_points");
-//            state->scenario_data.info3 = create_savegame_piece(32, false, "info3");
-//            state->scenario_data.empire = create_savegame_piece(12, false, "empire");
-
-            push_chunk(4, false, "junk2", iob_junk2);
 
             /////////////////////
 
-//                state->max_game_year = create_savegame_piece(4, false, ""); // MISSING
-//                state->earthquake = create_savegame_piece(60, false, ""); // MISSING
-//                state->emperor_change_state = create_savegame_piece(4, false, ""); // MISSING
-
+            push_chunk(4, false, "max_year", iob_max_year);
             push_chunk(48000, true, "messages", iob_messages); // 94000 + 533 --> 94532 + 4 = 94536
             push_chunk(182, false, "message_extra", iob_message_extra); // ok
-//            push_chunk(10, false, "population_messages", iob_population_messages); // ok
-//            push_chunk(80, false, "message_counts", iob_message_counts); // ok
-//            push_chunk(80, false, "message_delays", iob_message_delays); // ok
 
-            push_chunk(8, false, "building_list_burning_totals", iob_building_list_burning_totals); // ok
+            push_chunk(8, false, "building_burning_list_info", iob_building_burning_list_info); // ok
             push_chunk(4, false, "figure_sequence", iob_figure_sequence); // ok
-            push_chunk(12, false, "scenario_starting_rank", iob_scenario_starting_rank); // ok
+            push_chunk(12, false, "scenario_carry_settings", iob_scenario_carry_settings); // ok
             push_chunk(3232, true, "invasion_warnings", iob_invasion_warnings); // 94743 + 31 --> 94774 + 4 = 94778
             push_chunk(4, false, "scenario_is_custom", iob_scenario_is_custom); // ok
             push_chunk(8960, false, "city_sounds", iob_city_sounds); // ok
@@ -203,14 +173,14 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 //                state->tutorial_part2 = create_savegame_piece(4, false, "");
 //                state->gladiator_revolt = create_savegame_piece(16, false, "");
 
-            // 32 bytes     00 00 00 00 ???
-            // 24 bytes     00 00 00 00 ???
+            // 32 bytes     00 00 00 00 ??? 8 x int
+            // 24 bytes     00 00 00 00 ??? 6 x int
             push_chunk(32, false, "junk7a", iob_junk7a); // unknown bytes
             push_chunk(24, false, "junk7b", iob_junk7b); // unknown bytes
             push_chunk(39200, false, "building_storages", iob_building_storages); // storage instructions
 
-            push_chunk(2880, true, "trade_route_limit", iob_trade_route_limit); // ok
-            push_chunk(2880, true, "trade_route_traded", iob_trade_route_traded); // ok
+            push_chunk(2880, true, "trade_routes_limits", iob_trade_routes_limits); // ok
+            push_chunk(2880, true, "trade_routes_traded", iob_trade_routes_traded); // ok
 
 //                state->building_barracks_tower_sentry = create_savegame_piece(4, false, "");
 //                state->building_extra_sequence = create_savegame_piece(4, false, "");
@@ -218,40 +188,43 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 //                state->building_count_culture3 = create_savegame_piece(40, false, "");
 //                state->enemy_armies = create_savegame_piece(900, false, "");
 
-            // 12 bytes     00 00 00 00 ???
-            // 16 bytes     00 00 00 00 ???
-            // 22 bytes     00 00 00 00 ???
-            push_chunk(12, false, "junk8a", iob_junk8a); // unknown bytes
-            push_chunk(16, false, "junk8b", iob_junk8b); // unknown bytes
-            push_chunk(22, false, "junk8c", iob_junk8c); // unknown bytes
+            // 12 bytes     00 00 00 00 ??? 3 x int
+            // 16 bytes     00 00 00 00 ??? 4 x int
+            // 12 bytes     00 00 00 00 ??? 3 x int
+            //  2 bytes     00 00       ??? 1 x short
+            //  8 bytes     00 00 00 00 ??? 2 x int
+            push_chunk(50, false, "junk8", iob_junk8); // unknown bytes
 
 //                state->last_invasion_id = create_savegame_piece(2, false, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
 
             push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
             push_chunk(32, false, "bookmarks", iob_bookmarks); // ok
-            push_chunk(4, false, "junk9a", iob_junk9a); // ok ????
 
-//            int t_sub = 228;
 
-            // 8 bytes      00 00 00 00 ???
-            push_chunk(8, false, "junk9b", iob_junk9b);
-            push_chunk(396, false, "junk9c", iob_junk9c);
+            // 12 bytes     00 00 00 00 ??? 3 x int
+            // 396 bytes    00 00 00 00 ??? 99 x int
+            push_chunk(12, false, "junk9a", iob_junk9a); // ok ????
+            push_chunk(396, false, "junk9c", iob_junk9b);
 
             // 51984 bytes  00 00 00 00 ???
             push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
 
-
             // 18600 bytes  00 00 00 00 ??? 150 x 124-byte chunk
-            push_chunk(18600, false, "scenario_events", iob_scenario_events);
-
             // 28 bytes     2F 01 00 00 ???
-            // 13416 bytes  00 00 00 00 ??? (200 less for non-expanded file)
-            // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
-            push_chunk(28, false, "junk10a", iob_junk10a);
-            push_chunk(version < 149 ? 13216 : 13416, false, "junk10b", iob_junk10b);
-            push_chunk(8200, false, "junk10c", iob_junk10c);
+            push_chunk(18600, false, "scenario_events", iob_scenario_events);
+            push_chunk(28, false, "scenario_events_extra", iob_scenario_events_extra);
 
+            // 11000 bytes  00 00 00 00 ??? 50 x 224-byte chunk (50 x 220 for old version)
+            // 2200 bytes   00 00 00 00 ??? 50 x 44-byte chunk
+            // 16 bytes     00 00 00 00 ??? 4 x int
+            // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
+            push_chunk(version < 149 ? 11000 : 11200, false, "junk10a", iob_junk10a);
+            push_chunk(2200, false, "junk10b", iob_junk10b);
+            push_chunk(16, false, "junk10c", iob_junk10c);
+            push_chunk(8200, false, "junk10d", iob_junk10d);
+
+            // 1280 bytes   00 00 00 00 ??? 40 x 32-byte chunk
             push_chunk(1280, true, "junk11", iob_junk11); // unknown compressed data
 
             push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
@@ -270,7 +243,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
-            push_chunk(312, false, "bizarre_ordered_fields_3", iob_bizarre_ordered_fields_3); // 71x 4-bytes emptiness
+            push_chunk(312, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4); // 71x 4-bytes emptiness
 
             // 64 bytes     00 00 00 00 ???
             push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
@@ -281,14 +254,31 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(1, false, "junk17", iob_junk17);
             push_chunk(51984, true, "moisture_grid", iob_moisture_grid);
 
-            // 672 bytes    0F 00 00 00 ??? 28 x 24-byte chunk
-            push_chunk(672, false, "bizarre_ordered_fields_2", iob_bizarre_ordered_fields_2);
+            // 240 bytes    0F 00 00 00 ??? 10 x 24-byte chunk
+            // 432 bytes    0F 00 00 00 ??? 18 x 24-byte chunk
+            push_chunk(240, false, "bizarre_ordered_fields_2", iob_bizarre_ordered_fields_2);
+            push_chunk(432, false, "bizarre_ordered_fields_3", iob_bizarre_ordered_fields_3);
 
-            // 20 bytes     00 00 00 00 ???
-            // 4800 bytes   00 00 00 00 ???
-            push_chunk(20, false, "junk18", iob_junk18);
-            push_chunk(4800, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4);
+            // 8 bytes      00 00 00 00 ??? 2 x int
+            push_chunk(8, false, "junk18", iob_junk18);
 
+            if (version >= 160) {
+
+                // 12 bytes     00 00 00 00 ??? 3 x int
+                push_chunk(20, false, "junk19", iob_junk19);
+
+                // 648 bytes   00 00 00 00 ??? 27 x 24-byte chunk
+                // 648 bytes   00 00 00 00 ??? 27 x 24-byte chunk
+                // 360 bytes   00 00 00 00 ??? 15 x 24-byte chunk
+                // 1344 bytes  00 00 00 00 ??? 56 x 24-byte chunk
+                // 1800 bytes  00 00 00 00 ??? 75 x 24-byte chunk <--- I can't even... their own schema is wrong. it's >> 74! <<
+                push_chunk(648, false, "bizarre_ordered_fields_5", iob_bizarre_ordered_fields_5);
+                push_chunk(648, false, "bizarre_ordered_fields_6", iob_bizarre_ordered_fields_6);
+                push_chunk(360, false, "bizarre_ordered_fields_7", iob_bizarre_ordered_fields_7);
+                push_chunk(1344, false, "bizarre_ordered_fields_8", iob_bizarre_ordered_fields_8);
+                push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
+
+            }
             break;
         }
     }
@@ -513,22 +503,28 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
 
         auto offs = ftell(fp);
 
-        int result = 0;
-        if (chunk->compressed)
+        bool result = false;
+        if (chunk->compressed) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
-        else
-            result = chunk->buf->from_file(chunk->buf->size(), fp) == chunk->buf->size();
+            if (!result) {
+                log_error("Unable to read file, decompression failed.", 0, 0);
+                return false;
+            }
+        } else {
+            int got = chunk->buf->from_file(chunk->buf->size(), fp);
+            int exp = chunk->buf->size();
+            result = got == exp;
+            if (!result) {
+                SDL_Log("Incorrect buffer size, expected %i, found %i", exp, got);
+                log_error("Unable to read file, chunk size incorrect.", 0, 0);
+                return false;
+            }
+        }
 
         // ******** DEBUGGING ********
         export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (false) log_hex(chunk, i, offs); // print full chunk read log info
+        if (true) log_hex(chunk, i, offs); // print full chunk read log info
         // ***************************
-
-        // The last piece may be smaller than buf->size
-        if (!result && i != (num_chunks() - 1)) {
-            log_error("Unable to load game, unable to read savefile.", 0, 0);
-            return false;
-        }
     }
 
     // close file handle

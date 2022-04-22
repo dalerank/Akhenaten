@@ -43,14 +43,14 @@ int winning_kingdom() {
     return scenario_data.win_criteria.kingdom.goal;
 }
 int winning_housing() {
-    if (!scenario_data.win_criteria.houses.enabled)
+    if (!scenario_data.win_criteria.housing_count.enabled)
         return 0;
-    return scenario_data.win_criteria.houses.goal;
+    return scenario_data.win_criteria.housing_count.goal;
 }
 int winning_houselevel() {
-    if (!scenario_data.win_criteria.house_level.enabled)
+    if (!scenario_data.win_criteria.housing_level.enabled)
         return 0;
-    return scenario_data.win_criteria.house_level.goal;
+    return scenario_data.win_criteria.housing_level.goal;
 }
 
 int scenario_criteria_milestone_year(int percentage) {
@@ -77,9 +77,6 @@ void scenario_criteria_init_max_year(void) {
 int scenario_criteria_max_year(void) {
     return max_game_year;
 }
-void scenario_max_year_save_state(buffer *buf) {
-    buf->write_i32(max_game_year);
-}
-void scenario_max_year_load_state(buffer *buf) {
-    max_game_year = buf->read_i32();
-}
+io_buffer *iob_max_year = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
+});

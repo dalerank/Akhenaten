@@ -355,6 +355,9 @@ io_buffer *iob_scenario_events = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT16, &event->__unk22);
     }
 });
+io_buffer *iob_scenario_events_extra = new io_buffer([](io_buffer *iob) {
+    // TODO ????????
+});
 
 ///////
 

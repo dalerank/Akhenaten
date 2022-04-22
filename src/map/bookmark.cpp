@@ -22,16 +22,16 @@ void map_bookmark_save(int number) {
 
 }
 
-int map_bookmark_go_to(int number) {
+bool map_bookmark_go_to(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS) {
         int x = bookmarks[number].x;
         int y = bookmarks[number].y;
         if (x > -1 && map_grid_offset(x, y) > -1) {
             city_view_go_to_tile_corner(x, y, true);
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 io_buffer *iob_bookmarks = new io_buffer([](io_buffer *iob) {

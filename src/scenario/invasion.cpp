@@ -459,50 +459,25 @@ void scenario_invasion_start_from_console(int attack_type, int size, int invasio
     }
 }
 
-void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings) {
-    invasion_id->write_u16(data.last_internal_invasion_id);
-
-    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
-        const invasion_warning *w = &data.warnings[i];
-        warnings->write_u8(w->in_use);
-        warnings->write_u8(w->handled);
-        warnings->write_u8(w->invasion_path_id);
-        warnings->write_u8(w->warning_years);
-        warnings->write_i16(w->x);
-        warnings->write_i16(w->y);
-        warnings->write_i16(w->image_id);
-        warnings->write_i16(w->empire_object_id);
-        warnings->write_i16(w->month_notified);
-        warnings->write_i16(w->year_notified);
-        warnings->write_i32(w->months_to_go);
-        warnings->write_u8(w->invasion_id);
-        for (int x = 0; x < 11; x++) {
-            warnings->write_u8(0);
-        }
-    }
-}
-
-void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings) {
-    data.last_internal_invasion_id = invasion_id->read_u16();
-
-    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
-        invasion_warning *w = &data.warnings[i];
-        w->in_use = warnings->read_u8();
-        w->handled = warnings->read_u8();
-        w->invasion_path_id = warnings->read_u8();
-        w->warning_years = warnings->read_u8();
-        w->x = warnings->read_i16();
-        w->y = warnings->read_i16();
-        w->image_id = warnings->read_i16();
-        w->empire_object_id = warnings->read_i16();
-        w->month_notified = warnings->read_i16();
-        w->year_notified = warnings->read_i16();
-        w->months_to_go = warnings->read_i32();
-        w->invasion_id = warnings->read_u8();
-        warnings->skip(11);
-    }
-}
-
 io_buffer *iob_invasion_warnings = new io_buffer([](io_buffer *iob) {
+//    data.last_internal_invasion_id = invasion_id->read_u16();
+
+//    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
+//        invasion_warning *w = &data.warnings[i];
+//        w->in_use = warnings->read_u8();
+//        w->handled = warnings->read_u8();
+//        w->invasion_path_id = warnings->read_u8();
+//        w->warning_years = warnings->read_u8();
+//        w->x = warnings->read_i16();
+//        w->y = warnings->read_i16();
+//        w->image_id = warnings->read_i16();
+//        w->empire_object_id = warnings->read_i16();
+//        w->month_notified = warnings->read_i16();
+//        w->year_notified = warnings->read_i16();
+//        w->months_to_go = warnings->read_i32();
+//        w->invasion_id = warnings->read_u8();
+//        warnings->skip(11);
+//    }
+
     // TODO
 });

@@ -10,28 +10,6 @@
 #include <game/io/io_buffer.h>
 #include <game/resource.h>
 
-//#define MAX_REQUESTS 20
-//#define MAX_INVASIONS 20
-//#define MAX_DEMAND_CHANGES 20
-//#define MAX_PRICE_CHANGES 20
-//
-//#define MAX_PREDATOR_HERD_POINTS 4
-//#define MAX_FISH_POINTS 8
-//#define MAX_INVASION_POINTS_LAND 8
-//
-//#define MAX_ALLOWED_BUILDINGS 50
-//
-//#define MAX_PLAYER_NAME 32
-//#define MAX_SCENARIO_NAME 65
-//#define MAX_subtitle 64
-//#define MAX_BRIEFING 522
-
-//enum {
-//    EVENT_NOT_STARTED = 0,
-//    EVENT_IN_PROGRESS = 1,
-//    EVENT_FINISHED = 2
-//};
-
 enum {
     ALLOWED_BUILDING_NONE = 0,
     ALLOWED_BUILDING_FARMS = 1,
@@ -137,6 +115,7 @@ extern struct scenario_t {
 
     int initial_funds;
     int rescue_loan;
+    int debt_interest_rate;
 
     int rome_supplies_wheat;
     int image_id;
@@ -148,14 +127,16 @@ extern struct scenario_t {
     bool is_custom;
     bool alt_predator_type;
 
+    int player_faction;
+
     struct {
         struct win_criteria_t population;
         struct win_criteria_t culture;
         struct win_criteria_t prosperity;
         struct win_criteria_t monuments;
         struct win_criteria_t kingdom;
-        struct win_criteria_t houses;
-        struct win_criteria_t house_level;
+        struct win_criteria_t housing_count;
+        struct win_criteria_t housing_level;
         struct {
             int enabled;
             int years;
@@ -215,8 +196,8 @@ extern struct scenario_t {
         int grid_border_size;
 //        map_tile entry_point;
 //        map_tile exit_point;
-        map_tile entry_flag;
-        map_tile exit_flag;
+//        map_tile entry_flag;
+//        map_tile exit_flag;
     } map;
     int flotsam_enabled;
     map_point entry_point;
@@ -245,7 +226,6 @@ extern struct scenario_t {
         int is_custom;
         int starting_kingdom;
         int starting_personal_savings;
-        int debt_interest_rate;
     } settings;
 
     struct {
@@ -253,7 +233,10 @@ extern struct scenario_t {
         int first;
         int second;
         int third;
-        int burial_provisions[RESOURCES_MAX];
+        struct {
+            int required;
+            int dispatched;
+        } burial_provisions[RESOURCES_MAX];
     } monuments;
 
     bool is_saved;

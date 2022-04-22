@@ -1,7 +1,8 @@
+#include <cstring>
 #include "chunks.h"
 
-static void default_bind(io_buffer *io) {
-    io->bind(BIND_SIGNATURE_NONE);
+static void default_bind(io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_NONE);
 }
 
 io_buffer *iob_none = new io_buffer(default_bind);
@@ -10,25 +11,73 @@ io_buffer *iob_ = new io_buffer([](io_buffer *iob) {
 
 });
 
+struct {
+    struct {
+        uint32_t compressed = 0; // 0, 1
 
-io_buffer *iob_junk1 = new io_buffer(default_bind);
+        uint8_t unk01 = 0;
+        uint16_t unk02 = 0;
+        uint8_t unk03 = 0; // 0
+        uint32_t unk123 = 0;
 
-io_buffer *iob_junk2 = new io_buffer(default_bind);
+        uint32_t fields_size = 0; // 1, 4, 24, ...
+        uint32_t fields_num = 0; // 1, 10, 15, 56, 51984 (???!?!!)
+        uint16_t unk06 = 0; // 0
+        uint16_t unk07 = 0; // 0
+    } chunks[6000];
+    int chunks_in_used = 0;
+} data;
+io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
+    FILE *debug_file = fopen("DEV_TESTING/zip/CHUNKS_SCHEMA.txt", "wb+");
+    char temp_string[200] = "";
+    iob->bind(BIND_SIGNATURE_UINT32, &data.chunks_in_used);
+    if (debug_file) {
+        sprintf(temp_string, "NUMBER OF CHUNKS: %i\n", data.chunks_in_used);
+        fwrite(temp_string, strlen(temp_string), 1, debug_file);
+    }
+    for (int i = 0; i < data.chunks_in_used; ++i) {
+
+        if (i == 77)
+            int a = 5;
+        auto chunk = &data.chunks[i];
+        iob->bind(BIND_SIGNATURE_UINT32, &chunk->compressed);
+
+        iob->bind(BIND_SIGNATURE_UINT8, &chunk->unk01);
+        iob->bind(BIND_SIGNATURE_UINT16, &chunk->unk02);
+        iob->bind(BIND_SIGNATURE_UINT8, &chunk->unk03);
+//        iob->bind(BIND_SIGNATURE_UINT32, &field->unk123);
+
+        iob->bind(BIND_SIGNATURE_UINT32, &chunk->fields_size);
+        iob->bind(BIND_SIGNATURE_UINT32, &chunk->fields_num);
+        iob->bind(BIND_SIGNATURE_UINT16, &chunk->unk06);
+        iob->bind(BIND_SIGNATURE_UINT16, &chunk->unk07);
+
+        if (debug_file) {
+            sprintf(temp_string, "%03i: %s %6i %4i : %-5i %-6i %2i : %6i * %5i\n", i,
+                    chunk->compressed ? "(C)" : "---",
+                    chunk->unk06, chunk->unk07,
+                    chunk->unk01, chunk->unk02, chunk->unk03,
+                    chunk->fields_num, chunk->fields_size);
+//            sprintf(temp_string, "%03i: %-6i %-8i %-6i %-6i %-6i\n", i,
+//                    field->unk00, field->unk123, field->unk04, field->unk05, field->unk06);
+            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        }
+    }
+    fclose(debug_file);
+});
 
 io_buffer *iob_junk7a = new io_buffer(default_bind);
 io_buffer *iob_junk7b = new io_buffer(default_bind);
 
-io_buffer *iob_junk8a = new io_buffer(default_bind);
-io_buffer *iob_junk8b = new io_buffer(default_bind);
-io_buffer *iob_junk8c = new io_buffer(default_bind);
+io_buffer *iob_junk8 = new io_buffer(default_bind);
 
 io_buffer *iob_junk9a = new io_buffer(default_bind);
 io_buffer *iob_junk9b = new io_buffer(default_bind);
-io_buffer *iob_junk9c = new io_buffer(default_bind);
 
 io_buffer *iob_junk10a = new io_buffer(default_bind);
 io_buffer *iob_junk10b = new io_buffer(default_bind);
 io_buffer *iob_junk10c = new io_buffer(default_bind);
+io_buffer *iob_junk10d = new io_buffer(default_bind);
 
 io_buffer *iob_junk11 = new io_buffer(default_bind);
 
@@ -40,7 +89,74 @@ io_buffer *iob_junk17 = new io_buffer(default_bind);
 
 io_buffer *iob_junk18 = new io_buffer(default_bind);
 
-io_buffer *iob_bizarre_ordered_fields_1 = new io_buffer(default_bind);
-io_buffer *iob_bizarre_ordered_fields_2 = new io_buffer(default_bind);
-io_buffer *iob_bizarre_ordered_fields_3 = new io_buffer(default_bind);
-io_buffer *iob_bizarre_ordered_fields_4 = new io_buffer(default_bind);
+struct {
+    int current_chunk = 0;
+    FILE *debug_file = nullptr;
+    struct {
+        struct {
+            int unk00;
+            int unk01;
+            int unk02;
+            int unk03;
+            int unk04;
+//            int unk04a;
+//            int unk04b;
+//            int unk04c;
+            int unk05;
+        } fields[50];
+    } chunks[10];
+} bizarre;
+static void record_bizarre_fields(io_buffer *iob, int i) {
+    auto chunk = &bizarre.chunks[i];
+    char temp_string[200] = "";
+    sprintf(temp_string, "CHUNK %i\n", i);
+    fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+
+    int fields_num = iob->get_size() / 24;
+    for (int j = 0; j < fields_num; ++j) {
+        auto field = chunk->fields[j];
+
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk00);
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk01);
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk02);
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk03);
+
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk04);
+//        iob->bind(BIND_SIGNATURE_UINT16, &field.unk04a);
+//        iob->bind(BIND_SIGNATURE_INT8, &field.unk04b);
+//        iob->bind(BIND_SIGNATURE_UINT8, &field.unk04c);
+
+        iob->bind(BIND_SIGNATURE_UINT32, &field.unk05);
+
+        sprintf(temp_string, "%02i >> %2i:   %4i %4i %4i %4i  %4i  %4i\n", i, j,
+                field.unk00, field.unk01, field.unk02, field.unk03,
+                field.unk04,
+//                field.unk04a, field.unk04b, field.unk04c,
+                field.unk05);
+        fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
+    }
+}
+static void bizarre_ordered_fields_bind(io_buffer *iob) {
+    if (iob == iob_bizarre_ordered_fields_1) {
+        bizarre.current_chunk = 0;
+        bizarre.debug_file = fopen("DEV_TESTING/zip/BIZARRE.txt", "wb+");
+    } else {
+        bizarre.current_chunk++;
+        bizarre.debug_file = fopen("DEV_TESTING/zip/BIZARRE.txt", "ab+");
+    }
+    record_bizarre_fields(iob, bizarre.current_chunk);
+    fclose(bizarre.debug_file);
+}
+
+io_buffer *iob_bizarre_ordered_fields_1 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_2 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_3 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_4 = new io_buffer(bizarre_ordered_fields_bind);
+
+io_buffer *iob_junk19 = new io_buffer(default_bind);
+
+io_buffer *iob_bizarre_ordered_fields_5 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_6 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_7 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_8 = new io_buffer(bizarre_ordered_fields_bind);
+io_buffer *iob_bizarre_ordered_fields_9 = new io_buffer(bizarre_ordered_fields_bind);

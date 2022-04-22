@@ -523,43 +523,6 @@ void city_message_set_scroll_position(int scroll_position) {
     data.scroll_position = scroll_position;
 }
 
-void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population) {
-    for (int i = 0; i < MAX_MESSAGES; i++) {
-        city_message *msg = &data.messages[i];
-        messages->write_i32(msg->param1);
-        messages->write_i16(msg->year);
-        messages->write_i16(msg->param2);
-        messages->write_i16(msg->MM_text_id);
-        messages->write_i16(msg->sequence);
-        messages->write_u8(msg->is_read);
-        messages->write_u8(msg->month);
-        messages->write_i16(0);
-    }
-
-    extra->write_i32(data.next_message_sequence);
-    extra->write_i32(data.total_messages);
-    extra->write_i32(data.current_message_id);
-
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
-        counts->write_i32(data.message_count[i]);
-        delays->write_i32(data.message_delay[i]);
-    }
-    // population
-    population->write_u8(0);
-    population->write_u8(data.population_shown.pop500);
-    population->write_u8(data.population_shown.pop1000);
-    population->write_u8(data.population_shown.pop2000);
-    population->write_u8(data.population_shown.pop3000);
-    population->write_u8(data.population_shown.pop5000);
-    population->write_u8(data.population_shown.pop10000);
-    population->write_u8(data.population_shown.pop15000);
-    population->write_u8(data.population_shown.pop20000);
-    population->write_u8(data.population_shown.pop25000);
-}
-void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population) {
-
-}
-
 io_buffer *iob_messages = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message *msg = &data.messages[i];
