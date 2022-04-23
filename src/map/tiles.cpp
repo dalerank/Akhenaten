@@ -33,6 +33,8 @@ static int aqueduct_include_construction = 0;
 
 //#include <chrono>
 #include "SDL_log.h"
+#include "floodplain.h"
+#include "moisture.h"
 
 static int is_clear(int x, int y, int size, int allowed_terrain, bool check_image, int check_figures = 2) {
     if (!map_grid_is_inside(x, y, size))
@@ -80,28 +82,6 @@ static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max, void
             ++grid_offset;
         }
         grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
-    }
-}
-static void foreach_river_tile(void (*callback)(int x, int y, int grid_offset)) {
-//    auto start = std::chrono::steady_clock::now();
-//    std::chrono::nanoseconds clock_total;
-//    int clock_count = 0;
-
-    for (int i = 0; i < river_total_tiles; i++)
-        callback(all_river_tiles_x[i], all_river_tiles_y[i], all_river_tiles[i]);
-
-//    auto diff = std::chrono::steady_clock::now() - start;
-//    clock_total+= std::chrono::duration_cast<std::chrono::nanoseconds>(diff);
-//    clock_count++;
-//    SDL_Log("Average time: %i (%i cycles)", clock_total / clock_count, clock_count);
-}
-static void foreach_floodplain_order(int order, void (*callback)(int x, int y, int grid_offset, int order)) {
-    if (order < -1 || order >= 30)
-        return;
-    floodplain_order *order_cache = &floodplain_offsets[order];
-    for (int i = 0; i < order_cache->amount; i++) {
-        int grid_offset = order_cache->offsets[i];
-        callback(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), grid_offset, order);
     }
 }
 
@@ -878,6 +858,7 @@ void map_tiles_update_all_reed_fields() {
 }
 
 #include "game/time.h"
+#include "water.h"
 
 static void set_water_image(int x, int y, int grid_offset) {
     const terrain_image *img = map_image_context_get_shore(grid_offset);
@@ -1059,9 +1040,9 @@ static void advance_floodplain_growth_tile(int x, int y, int grid_offset, int or
 }
 void map_advance_floodplain_growth() {
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
-    foreach_floodplain_order(-1 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(11 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(23 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order( 0 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
     if (floodplain_growth_advance >= 12)
@@ -1139,7 +1120,7 @@ void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {
     floodplain_is_flooding = is_flooding;
     if (floodplain_is_flooding == 0)
         return;
-    for (int i = -1; i < 30; i++)
+    for (int i = 0; i <= MAX_FLOODPLAIN_ORDER_RANGE; i++)
         foreach_floodplain_order(i, floodplain_update_inundation_row);
 }
 

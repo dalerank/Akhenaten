@@ -1,5 +1,6 @@
 #include <cstring>
 #include "chunks.h"
+#include "manager.h"
 
 static void default_bind(io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_NONE);
@@ -74,8 +75,54 @@ io_buffer *iob_junk8 = new io_buffer(default_bind);
 io_buffer *iob_junk9a = new io_buffer(default_bind);
 io_buffer *iob_junk9b = new io_buffer(default_bind);
 
-io_buffer *iob_junk10a = new io_buffer(default_bind);
-io_buffer *iob_junk10b = new io_buffer(default_bind);
+#define MAX_JUNK10_FIELDS 50
+struct {
+    struct {
+        bool in_use = false;
+        int large_data[56] = {0}; // 55 for versions < 149
+        int small_data[11] = {0};
+    } fields[MAX_JUNK10_FIELDS];
+} junk10;
+io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
+    const int version = GamestateIO::get_file_version();
+
+    FILE *debug_file = fopen("DEV_TESTING/zip/JUNK10.txt", "wb+");
+    char temp_string[200] = "";
+
+    for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
+        auto field = &junk10.fields[i];
+        sprintf(temp_string, "%03i: ", i);
+        fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        // fill ints / print debug file
+        for (int j = 0; j < (version < 149 ? 55 : 56); ++j) {
+            iob->bind(BIND_SIGNATURE_UINT32, &field->large_data[j]);
+            switch (j) {
+                case 0:
+                    sprintf(temp_string, "%i ", field->large_data[j]); break;
+                case 1:
+                case 2:
+                case 3:
+                    sprintf(temp_string, "%2i ", field->large_data[j]); break;
+                default:
+                    sprintf(temp_string, "%3i ", field->large_data[j]); break;
+            }
+            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        }
+        // first byte is the in_use flag
+        if (field->large_data[0] == 1)
+            field->in_use = true;
+        fwrite("\n", 1, 1, debug_file);
+    }
+    fclose(debug_file);
+});
+io_buffer *iob_junk10b = new io_buffer([](io_buffer *iob) {
+    for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
+        auto field = &junk10.fields[i];
+        // fill ints
+        for (int j = 0; j < 11; ++j)
+            iob->bind(BIND_SIGNATURE_UINT32, &field->small_data[j]);
+    }
+});
 io_buffer *iob_junk10c = new io_buffer(default_bind);
 io_buffer *iob_junk10d = new io_buffer(default_bind);
 

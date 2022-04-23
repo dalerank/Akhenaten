@@ -422,6 +422,9 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/tiles.cpp
     ${PROJECT_SOURCE_DIR}/src/map/water.cpp
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/marshland.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
 )
 set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.cpp

@@ -3,6 +3,7 @@
 #include <map/building.h>
 #include <map/terrain.h>
 #include <game/io/manager.h>
+#include <map/floodplain.h>
 #include "floods.h"
 
 #include "city/constants.h"

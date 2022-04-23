@@ -97,29 +97,7 @@ enum {
             + TERRAIN_GARDEN
             + TERRAIN_GATEHOUSE
             - TERRAIN_FLOODPLAIN,
-
-    // Pharaoh moisture combinators
-    MOISTURE_GRASS = 0x7,
-    MOISTURE_TRANSITION = 0x80,
-//    MOISTURE_TALLGRASS = 0x40,
-//    MOISTURE_SHORE_TIP = 0x24,
-    MOISTURE_SHORE_TALLGRASS = 0x64
 };
-
-extern int all_river_tiles[];
-extern int all_floodplain_tiles[];
-extern int all_river_tiles_x[];
-extern int all_river_tiles_y[];
-extern int river_total_tiles;
-extern int floodplain_total_tiles;
-
-typedef struct floodplain_order {
-//    bool initialized = false;
-    uint32_t *offsets = nullptr;
-    uint32_t amount;
-} floodplain_order;
-
-extern floodplain_order floodplain_offsets[30];
 
 bool map_terrain_is(int grid_offset, int terrain);
 
@@ -175,32 +153,13 @@ void map_terrain_add_roadblock_road(int x, int y, int orientation);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
-enum {
-    FERT_NO_MALUS = 0,
-    FERT_WITH_MALUS = 1,
-    FERT_ONLY_MALUS = 2
-};
-
-int map_floodplain_rebuild_shoreorder();
-int8_t map_get_floodplain_shoreorder(int grid_offset);
-uint8_t map_get_floodplain_growth(int grid_offset);
-int map_get_fertility(int grid_offset, int tally_type);
-uint8_t map_get_fertility_for_farm(int grid_offset);
-void map_set_floodplain_growth(int grid_offset, int growth);
-void map_soil_set_depletion(int grid_offset, int malus);
-
 void map_terrain_backup(void);
 void map_terrain_restore(void);
 void map_terrain_clear(void);
 void map_terrain_init_outside_map(void);
 
-uint8_t  map_moisture_get(int grid_offset);
-uint8_t map_grasslevel_get(int grid_offset);
-bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
+void build_terrain_caches();
 
-//void map_GRID03_32BIT_load_split_state(buffer *buf);
-//int8_t map_GRID03_32BIT_get_byte(int grid_offset, int a);
-
-int64_t map_temp_grid_get(int grid_offset, int g);
+int64_t map_get_UNK32bit(int grid_offset);
 
 #endif // MAP_TERRAIN_H

@@ -95,7 +95,7 @@ extern io_buffer *iob_junk11;
 extern io_buffer *iob_empire_map_objects;
 extern io_buffer *iob_empire_map_routes;
 
-extern io_buffer *iob_GRID02_8BIT;
+extern io_buffer *iob_marshland_depletion;
 
 extern io_buffer *iob_junk14;
 

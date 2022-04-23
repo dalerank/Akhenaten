@@ -7,6 +7,7 @@
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/terrain.h"
+#include "moisture.h"
 
 #define MAX_TILES 8
 

@@ -233,6 +233,7 @@ static void post_load() {
     scenario_distant_battle_set_enemy_travel_months();
 
     // river / garden tiles refresh
+    build_terrain_caches();
     floodplains_init();
     map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();

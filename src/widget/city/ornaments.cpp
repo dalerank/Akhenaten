@@ -22,6 +22,7 @@
 #include <city/floods.h>
 #include <core/random.h>
 #include <map/random.h>
+#include <map/floodplain.h>
 #include "building/building.h"
 
 static bool drawing_building_as_deleted(building *b) {

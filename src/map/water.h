@@ -5,6 +5,12 @@
 #include "map/point.h"
 #include "terrain.h"
 
+void tile_cache_river_clear();
+void tile_cache_river_add(int grid_offset, int x, int y);
+int tile_cache_river_total();
+void tile_cache_river_get(int i, int *grid_offset, int *x, int *y);
+void foreach_river_tile(void (*callback)(int x, int y, int grid_offset));
+
 void map_water_add_building(int building_id, int x, int y, int size, int image_id);
 
 bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int *orientation_absolute, bool adjacent = false, int shore_terrain = TERRAIN_WATER);

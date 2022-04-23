@@ -1,3 +1,4 @@
+#include <map/floodplain.h>
 #include "industry.h"
 
 #include "building/building.h"

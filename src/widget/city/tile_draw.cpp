@@ -8,6 +8,9 @@
 #include <map/random.h>
 #include <widget/overlays/city_overlay_risks.h>
 #include <map/aqueduct.h>
+#include <map/floodplain.h>
+#include <map/marshland.h>
+#include <map/moisture.h>
 #include "tile_draw.h"
 
 #include "building/animation.h"
@@ -366,6 +369,12 @@ void draw_footprint(int x, int y, int grid_offset) {
 
         ImageDraw::isometric_footprint_from_drawtile(image_id, x, y, color_mask);
     }
+
+    // ******** TEMP ********
+    if (grid_offset == map_grid_offset(135, 66))
+        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+    if (grid_offset == map_grid_offset(136, 66))
+        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 }
 void draw_top(int x, int y, int grid_offset) {
     // tile must contain image draw data
@@ -608,7 +617,7 @@ static int north_tile_grid_offset(int x, int y) {
 }
 void draw_debug(int x, int y, int grid_offset) {
 
-    int DB2 = abs(debug_range_2) % 16;
+    int DB2 = abs(debug_range_2) % 20;
     if (DB2 == 0)
         return;
 
@@ -624,6 +633,8 @@ void draw_debug(int x, int y, int grid_offset) {
     x += 15;
 
     switch (DB2) {
+        default:
+            break;
         case 1: // BUILDING IDS
             if (b_id && b->grid_offset == grid_offset)
                 draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, x - 15, y, COLOR_MASK_GREEN);
@@ -793,12 +804,30 @@ void draw_debug(int x, int y, int grid_offset) {
             }
             break;
         case 13: // TERRAIN BIT FIELD
-            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE); break;
-        case 14: // IMAGE FIELD
-            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED); break;
+            draw_debug_line(str, x, y + 10, 0, "", map_terrain_get(grid_offset), COLOR_LIGHT_BLUE);
             break;
-        case 15: // UNKNOWN 8BIT GRID
-            draw_debug_line(str, x, y + 10, 0, "", map_temp_grid_get(grid_offset, 1), COLOR_LIGHT_RED); break;
+        case 14: // IMAGE FIELD
+            draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED);
+            break;
+        case 15: // MARSHLAND DEPLETION
+            d = map_get_marshland_depletion(grid_offset);
+            if (d != -1)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+            break;
+        case 16: // SOIL DEPLETION
+            d = map_get_fertility(grid_offset, FERT_ONLY_MALUS);
+            if (d != 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+            break;
+        case 17: // UNKNOWN SOIL GRID
+            d = map_get_soil_unk(grid_offset);
+            if (d != 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+            break;
+        case 18: // UNKNOWN 32BIT GRID
+            d = map_get_UNK32bit(grid_offset);
+            if (d != 0)
+                draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
     }
 }

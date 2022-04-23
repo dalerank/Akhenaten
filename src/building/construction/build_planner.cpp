@@ -1,6 +1,7 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
+#include <map/floodplain.h>
 #include "build_planner.h"
 
 #include "clear.h"

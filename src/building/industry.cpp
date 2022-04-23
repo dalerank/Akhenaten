@@ -22,6 +22,7 @@
 #include <map/grid.h>
 #include <core/config.h>
 #include <game/time.h>
+#include <map/floodplain.h>
 
 static int max_progress(const building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
