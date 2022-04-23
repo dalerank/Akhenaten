@@ -7,11 +7,11 @@
 #include <cinttypes>
 #include <core/io.h>
 #include <core/string.h>
-#include <chrono>
 #include <core/zip.h>
 #include <core/log.h>
 #include <core/image.h>
 #include <map/image.h>
+#include "core/stopwatch.h"
 
 #define COMPRESS_BUFFER_SIZE 3000000
 #define UNCOMPRESSED 0x80000000
@@ -391,11 +391,11 @@ static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
     return true;
 }
 
+static stopwatch WATCH;
+
 bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, const int version) {
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_START = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
+    WATCH.START();
 
     // first, clear up the manager data and set the new file info
     clear();
@@ -413,18 +413,6 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
     // dump GAME STATE into buffers
     for (int i = 0; i < num_chunks(); ++i)
         file_chunks.at(i).iob->write();
-
-//    init_file_data();
-//
-//    log_info("Saving game", filename, 0);
-////    savegame_version = SAVE_GAME_VERSION;
-//    savegame_save_to_state(&file_data.state);
-//
-//    FILE *fp = file_open(filename, "wb");
-//    if (!fp) {
-//        log_error("Unable to save game", 0, 0);
-//        return false;
-//    }
 
     // init file chunks and buffer collection
     init_with_schema(mapping_schema, version);
@@ -448,20 +436,14 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
     // close file handle
     file_close(fp);
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_FINISH = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
-
     SDL_Log("Saving game state to file %s %i@ --- VERSION: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
-            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
+            WATCH.STOP());
 
     return true;
 }
 bool GamestateIO::read_from_file(const char *filename, int offset) {
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_START = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
+    WATCH.START();
 
     // first, clear up the manager data and set the new file info
     clear();
@@ -535,12 +517,8 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
     for (int i = 0; i < num_chunks(); ++i)
         file_chunks.at(i).iob->read();
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_FINISH = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
-
-    SDL_Log("Loading game from file %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
-            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
+    SDL_Log("Reading from file %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
+            WATCH.STOP());
 
     return true;
 }

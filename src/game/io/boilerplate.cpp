@@ -80,6 +80,9 @@
 #include <window/mission_briefing.h>
 #include <window/city.h>
 #include <game/io/manager.h>
+#include <core/stopwatch.h>
+#include <SDL.h>
+#include <cinttypes>
 
 void path_build_saves(char *full, const char *filename) {
     strcpy(full, "");
@@ -108,6 +111,8 @@ enum {
     LOADED_SAVE = 1,
     LOADED_CUSTOM_MAP = 2
 };
+
+static stopwatch WATCH;
 
 static int last_loaded = LOADED_NULL;
 static void pre_load() { // do we NEED this...?
@@ -153,71 +158,64 @@ static void pre_load() { // do we NEED this...?
 static void post_load() {
     // TODO: check all of these...
 
+    WATCH.START();
+
     // scenario settings
     scenario_set_name(scenario_name());
     city_set_player_name(setting_player_name());
     scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
-//    if (scenario_is_mission_rank(1))
-//        setting_set_personal_savings_for_mission(0, 0);
-//    scenario_settings_init_mission();
 
     // new game / initializations
     scenario_map_init();
     if (last_loaded != LOADED_SAVE) {
-        // initialize grids
-        map_tiles_update_all_elevation();
-        map_tiles_river_refresh_entire();
-        map_tiles_update_all_earthquake();
-        map_tiles_update_all_rocks();
-        map_tiles_add_entry_exit_flags();
-        map_tiles_update_all_empty_land();
-        map_tiles_update_all_meadow();
-        map_tiles_update_all_roads();
-        map_tiles_update_all_plazas();
-        map_tiles_update_all_walls();
-        map_tiles_update_all_aqueducts(0);
-
-//        map_natives_init();
-        figure_create_fishing_points();
-        figure_create_herds();
-        figure_create_flotsam();
-
-        map_point entry = scenario_map_entry();
-        map_point exit = scenario_map_exit();
-        city_map_set_entry_point(entry.x, entry.y);
-        city_map_set_exit_point(exit.x, exit.y);
-
-        // game time
-        game_time_init(scenario_property_start_year());
-
-        // traders / empire
-        empire_init_scenario();
-        traders_clear();
-
-        // set up events
-        scenario_earthquake_init();
-        scenario_gladiator_revolt_init();
-        scenario_emperor_change_init();
-        scenario_criteria_init_max_year();
-        scenario_invasion_init();
-        city_military_determine_distant_battle_city();
-        scenario_request_init();
-        scenario_demand_change_init();
-        scenario_price_change_init();
-
-        // tutorial flags
-        tutorial_init();
+//        // initialize grids
+//            WATCH.RECORD("headers"); //////////////////////////////////////////////////////////////////
+//        map_tiles_update_all_elevation();
+//        map_tiles_river_refresh_entire();
+//        map_tiles_update_all_earthquake();
+//        map_tiles_update_all_rocks();
+//        map_tiles_add_entry_exit_flags();
+//        map_tiles_update_all_empty_land();
+//        map_tiles_update_all_meadow();
+//        map_tiles_update_all_roads();
+//        map_tiles_update_all_plazas();
+//        map_tiles_update_all_walls();
+//        map_tiles_update_all_aqueducts(0);
+//            WATCH.RECORD("all tile updates"); //////////////////////////////////////////////////////////////////
+//
+////        map_natives_init();
+//        figure_create_fishing_points();
+//        figure_create_herds();
+//        figure_create_flotsam();
+//
+//        map_point entry = scenario_map_entry();
+//        map_point exit = scenario_map_exit();
+//        city_map_set_entry_point(entry.x, entry.y);
+//        city_map_set_exit_point(exit.x, exit.y);
+//
+//        // game time
+//        game_time_init(scenario_property_start_year());
+//
+//        // traders / empire
+//        empire_init_scenario();
+//        traders_clear();
+//
+//        // set up events
+//        scenario_earthquake_init();
+//        scenario_gladiator_revolt_init();
+//        scenario_emperor_change_init();
+//        scenario_criteria_init_max_year();
+//        scenario_invasion_init();
+//        city_military_determine_distant_battle_city();
+//        scenario_request_init();
+//        scenario_demand_change_init();
+//        scenario_price_change_init();
+//
+//        // tutorial flags
+//        tutorial_init();
     }
 
-    // city view / orientation
-    city_view_init();
-    map_orientation_update_buildings();
 
-    // routing
-    map_routing_update_all();
-    figure_route_clean();
-    map_road_network_update();
-    building_maintenance_check_rome_access();
 
     // problems / overlays
     city_message_init_problem_areas();
@@ -231,12 +229,6 @@ static void post_load() {
     city_military_determine_distant_battle_city();
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
-
-    // river / garden tiles refresh
-    build_terrain_caches();
-    floodplains_init();
-    map_tiles_river_refresh_entire();
-    map_tiles_determine_gardens();
 
     // building counts / storage
     // TODO: can't find cache in Pharaoh's save file format?
@@ -274,6 +266,9 @@ static void post_load() {
 
     // city sounds
     sound_city_init();
+
+    WATCH.RECORD("post-load"); //////////////////////////////////////////////////////////////////
+    WATCH.LOG();
 }
 
 GamestateIO SFIO;
@@ -364,6 +359,69 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 }
 
 void GamestateIO::start_loaded_file() {
+    if (last_loaded != LOADED_SAVE) {
+        // initialize grids
+        map_tiles_update_all_elevation();
+        map_tiles_river_refresh_entire();
+        map_tiles_update_all_earthquake();
+        map_tiles_update_all_rocks();
+        map_tiles_add_entry_exit_flags();
+        map_tiles_update_all_empty_land();
+        map_tiles_update_all_meadow();
+        map_tiles_update_all_roads();
+        map_tiles_update_all_plazas();
+        map_tiles_update_all_walls();
+        map_tiles_update_all_aqueducts(0);
+
+//        map_natives_init();
+        figure_create_fishing_points();
+        figure_create_herds();
+        figure_create_flotsam();
+
+        map_point entry = scenario_map_entry();
+        map_point exit = scenario_map_exit();
+        city_map_set_entry_point(entry.x, entry.y);
+        city_map_set_exit_point(exit.x, exit.y);
+
+        // game time
+        game_time_init(scenario_property_start_year());
+
+        // traders / empire
+        empire_init_scenario();
+        traders_clear();
+
+        // set up events
+        scenario_earthquake_init();
+        scenario_gladiator_revolt_init();
+        scenario_emperor_change_init();
+        scenario_criteria_init_max_year();
+        scenario_invasion_init();
+        city_military_determine_distant_battle_city();
+        scenario_request_init();
+        scenario_demand_change_init();
+        scenario_price_change_init();
+
+        // tutorial flags
+        tutorial_init();
+    }
+
+    // city view / orientation
+    city_view_init();
+    map_orientation_update_buildings();
+
+    // routing
+    map_routing_update_all();
+    figure_route_clean();
+    map_road_network_update();
+    building_maintenance_check_rome_access();
+
+    // river / garden tiles refresh
+    build_terrain_caches();
+    floodplains_init();
+    map_tiles_river_refresh_entire();
+    map_tiles_determine_gardens();
+
+
     if (last_loaded == LOADED_MISSION)
         window_mission_briefing_show();
     else {

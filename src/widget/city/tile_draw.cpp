@@ -371,10 +371,10 @@ void draw_footprint(int x, int y, int grid_offset) {
     }
 
     // ******** TEMP ********
-    if (grid_offset == map_grid_offset(135, 66))
-        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
-    if (grid_offset == map_grid_offset(136, 66))
-        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+//    if (grid_offset == map_grid_offset(135, 66))
+//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
+//    if (grid_offset == map_grid_offset(136, 66))
+//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 }
 void draw_top(int x, int y, int grid_offset) {
     // tile must contain image draw data

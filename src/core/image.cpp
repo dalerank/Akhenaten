@@ -144,9 +144,11 @@ static const color_t *load_external_data(const image *img) {
 //////////////////////// IMAGEPAK
 
 #include <cassert>
-#include <chrono>
 #include <cinttypes>
 #include "core/string.h"
+#include "stopwatch.h"
+
+static stopwatch WATCH;
 
 imagepak::imagepak(const char *filename_partial, int starting_index) {
     images = nullptr;
@@ -164,9 +166,7 @@ imagepak::~imagepak() {
 buffer *scratch_data_buf = nullptr;
 bool imagepak::load_pak(const char *filename_partial, int starting_index) {
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_START = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
+    WATCH.START();
 
     // construct proper filepaths
     int str_index = 0;
@@ -236,10 +236,6 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     // move on to the rest of the content
     scratch_data_buf->set_offset(HEADER_SIZE);
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_HEADER = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
-
     // fill in image data
     int bmp_lastbmp = 0;
     int bmp_lastindex = 1;
@@ -283,10 +279,6 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
         images[i] = img;
         int f = 1;
     }
-
-    //////////////////////////////////////////////////////////////////
-    auto TIME_DATA = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
 
     // fill in bmp offset data
     int offset = 4;
@@ -332,15 +324,11 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
 //        SDL_Log("Loading... %s : %i", filename_555, i);
     }
 
-    //////////////////////////////////////////////////////////////////
-    auto TIME_FINISH = std::chrono::high_resolution_clock::now();
-    //////////////////////////////////////////////////////////////////
-
     SDL_Log("Loading image collection from file '%s' ---- %i images, %i groups, %" PRIu64 " milliseconds.",
             filename_sgx,
             entries_num,
             groups_num,
-            std::chrono::duration_cast<std::chrono::milliseconds>(TIME_FINISH - TIME_START));
+            WATCH.STOP());
 
     return true;
 }

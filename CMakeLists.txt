@@ -249,7 +249,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/time.cpp
     ${PROJECT_SOURCE_DIR}/src/core/zip.cpp
     ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
-)
+    ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp)
 
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
