@@ -12,10 +12,10 @@
  * Mouse button state
  */
 typedef struct {
-    int is_down; /**< Mouse button is down */
-    int went_down; /**< Mouse button went down during this cycle */
-    int went_up; /**< Mouse button went up during this cycle */
-    int double_click; /**< Mouse double clicked during this cycle */
+    bool is_down; /**< Mouse button is down */
+    bool went_down; /**< Mouse button went down during this cycle */
+    bool went_up; /**< Mouse button went up during this cycle */
+    bool double_click; /**< Mouse double clicked during this cycle */
     int system_change;
 } mouse_button;
 

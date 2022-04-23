@@ -330,14 +330,29 @@ static int get_mouse_grid_offset(const mouse *m) {
     foreach_map_tile(update_mouse_grid_offset);
     return data.mouse.grid_offset;
 }
-int widget_minimap_handle_mouse(const mouse *m) {
-    if ((m->left.went_down || m->right.went_down) && is_in_minimap(m)) {
+struct {
+    int x = -1;
+    int y = -1;
+} mouse_last_coords;
+bool widget_minimap_handle_mouse(const mouse *m) {
+    if (!is_in_minimap(m) || m->left.went_up || m->right.went_up) {
+        mouse_last_coords = {-1, -1};
+        return false;
+    }
+
+    bool mouse_is_moving = false;
+    if (m->x != mouse_last_coords.x || m->y != mouse_last_coords.y)
+        mouse_is_moving = true;
+
+    if ((m->left.went_down || m->right.went_down)
+    || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
             city_view_go_to_grid_offset(grid_offset);
             widget_minimap_invalidate();
-            return 1;
+            mouse_last_coords = {m->x, m->y};
+            return true;
         }
     }
-    return 0;
+    return false;
 }
