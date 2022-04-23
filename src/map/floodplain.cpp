@@ -38,8 +38,6 @@ static grid_xx terrain_floodplain_shoreorder = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
-//static grid_xx terrain_floodplain_soil_depletion = {0, {FS_INT8, FS_INT8}};
-static grid_xx terrain_soil_unk = {0, {FS_INT8, FS_INT8}};
 
 static void build_shoreorder_from_tile(int x, int y, int grid_offset) {
 
@@ -195,13 +193,6 @@ void map_soil_set_depletion(int grid_offset, int malus) {
     map_grid_set(&terrain_floodplain_fertility, grid_offset, max(3, min(99, new_fert)));
 }
 
-int map_get_soil_unk(int grid_offset) {
-    return map_grid_get(&terrain_soil_unk, grid_offset);
-}
-
 io_buffer *iob_soil_fertility_grid = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_GRID, &terrain_floodplain_fertility);
-});
-io_buffer *iob_soil_unk_grid = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_GRID, &terrain_soil_unk);
 });

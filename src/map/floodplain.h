@@ -25,6 +25,6 @@ uint8_t map_get_fertility_for_farm(int grid_offset);
 void map_set_floodplain_growth(int grid_offset, int growth);
 void map_soil_set_depletion(int grid_offset, int malus);
 
-int map_get_soil_unk(int grid_offset);
+int map_get_UNK04(int grid_offset);
 
 #endif //OZYMANDIAS_FLOODPLAIN_H

@@ -359,26 +359,27 @@ void build_terrain_caches() {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
                 tile_cache_river_add(grid_offset, x, y);
-//                all_river_tiles[river_tile] = grid_offset;
-//                all_river_tiles_x[river_tile] = x;
-//                all_river_tiles_y[river_tile] = y;
-//                river_total_tiles++;
                 river_tile++;
             }
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 tile_cache_floodplain_add(grid_offset);
-//                all_floodplain_tiles[floodplain_tile] = grid_offset;
-//                floodplain_total_tiles++;
                 floodplain_tile++;
             }
         }
     }
 }
 
+
 // unknown data grid
 static grid_xx GRID03_32BIT = {0, {FS_INT8, FS_INT32}}; // ?? routing
-int64_t map_get_UNK32bit(int grid_offset) {
+int map_get_UNK03(int grid_offset) {
     return map_grid_get(&GRID03_32BIT, grid_offset);
+}
+
+// unknown data grid
+static grid_xx GRID04_8BIT = {0, {FS_INT8, FS_INT8}};
+int map_get_UNK04(int grid_offset) {
+    return map_grid_get(&GRID04_8BIT, grid_offset);
 }
 
 io_buffer *iob_terrain_grid = new io_buffer([](io_buffer *iob) {
@@ -386,4 +387,7 @@ io_buffer *iob_terrain_grid = new io_buffer([](io_buffer *iob) {
 });
 io_buffer *iob_GRID03_32BIT = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);
+});
+io_buffer *iob_GRID04_8BIT = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_GRID, &GRID04_8BIT);
 });

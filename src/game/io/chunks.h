@@ -107,7 +107,7 @@ extern io_buffer *iob_GRID03_32BIT;
 extern io_buffer *iob_bizarre_ordered_fields_4;
 extern io_buffer *iob_junk16;
 extern io_buffer *iob_tutorial_flags;
-extern io_buffer *iob_soil_unk_grid;
+extern io_buffer *iob_GRID04_8BIT;
 
 extern io_buffer *iob_junk17;
 extern io_buffer *iob_moisture_grid;

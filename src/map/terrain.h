@@ -160,6 +160,6 @@ void map_terrain_init_outside_map(void);
 
 void build_terrain_caches();
 
-int64_t map_get_UNK32bit(int grid_offset);
+int map_get_UNK03(int grid_offset);
 
 #endif // MAP_TERRAIN_H

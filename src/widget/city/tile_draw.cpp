@@ -820,12 +820,12 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
         case 17: // UNKNOWN SOIL GRID
-            d = map_get_soil_unk(grid_offset);
+            d = map_get_UNK04(grid_offset);
             if (d != 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
         case 18: // UNKNOWN 32BIT GRID
-            d = map_get_UNK32bit(grid_offset);
+            d = map_get_UNK03(grid_offset);
             if (d != 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;

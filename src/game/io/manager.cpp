@@ -90,7 +90,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 
             push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
             push_chunk(18600, false, "scenario_events", iob_scenario_events);
-            push_chunk(28, false, "junk10a", iob_scenario_events_extra);
+            push_chunk(28, false, "scenario_events_extra", iob_scenario_events_extra);
             push_chunk(1280, true, "junk11", iob_junk11);
             push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
@@ -248,7 +248,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 64 bytes     00 00 00 00 ???
             push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
             push_chunk(41, false, "tutorial_flags", iob_tutorial_flags); // 41 x 1-byte flag fields
-            push_chunk(51984, true, "floodplain_soil_depletion", iob_soil_unk_grid);
+            push_chunk(51984, true, "GRID04_8BIT", iob_GRID04_8BIT);
 
             // lone byte ???
             push_chunk(1, false, "junk17", iob_junk17);

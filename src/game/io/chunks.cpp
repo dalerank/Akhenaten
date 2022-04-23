@@ -126,7 +126,31 @@ io_buffer *iob_junk10b = new io_buffer([](io_buffer *iob) {
 io_buffer *iob_junk10c = new io_buffer(default_bind);
 io_buffer *iob_junk10d = new io_buffer(default_bind);
 
-io_buffer *iob_junk11 = new io_buffer(default_bind);
+#define MAX_JUNK11_FIELDS 40
+struct {
+    struct {
+        int data[32] = {0};
+    } fields[MAX_JUNK11_FIELDS];
+} junk11;
+io_buffer *iob_junk11 = new io_buffer([](io_buffer *iob) {
+    FILE *debug_file = fopen("DEV_TESTING/zip/JUNK11.txt", "wb+");
+    char temp_string[200] = "";
+
+    for (int i = 0; i < MAX_JUNK11_FIELDS; ++i) {
+        auto field = &junk11.fields[i];
+        sprintf(temp_string, "%03i: ", i);
+        fwrite(temp_string, strlen(temp_string), 1, debug_file);
+
+        // fill ints
+        for (int j = 0; j < 32; ++j) {
+            iob->bind(BIND_SIGNATURE_INT8, &field->data[j]);
+            sprintf(temp_string, "%3i ", field->data[j]);
+            fwrite(temp_string, strlen(temp_string), 1, debug_file);
+        }
+        fwrite("\n", 1, 1, debug_file);
+    }
+    fclose(debug_file);
+});
 
 io_buffer *iob_junk14 = new io_buffer(default_bind);
 
