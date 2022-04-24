@@ -510,6 +510,7 @@ bool building_is_monument(int type) {
         case BUILDING_MEDIUM_ROYAL_TOMB:
         case BUILDING_LARGE_ROYAL_TOMB:
         case BUILDING_GRAND_ROYAL_TOMB:
+        case BUILDING_SUN_TEMPLE:
             return true;
         default:
             return false;
@@ -571,6 +572,10 @@ bool building_is_industry(int type) {
     return false;
 }
 bool building_is_food_category(int type) {
+    if (building_is_farm(type)) { // special case for food-producing farms
+        return (type >= BUILDING_GRAIN_FARM && type <= BUILDING_CHICKPEAS_FARM)
+            || type == BUILDING_FIGS_FARM;
+    }
     if (type == BUILDING_GRANARY || type == BUILDING_MARKET || type == BUILDING_WORK_CAMP
         || type == BUILDING_FISHING_WHARF || type == BUILDING_CATTLE_RANCH || type == BUILDING_HUNTING_LODGE)
         return true;

@@ -180,21 +180,20 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 210; // dark grey
             else
                 image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + debug_range_1;
-            switch (map_property_multi_tile_size(grid_offset)) {
+            auto multi_tile_size = map_property_multi_tile_size(grid_offset);
+            switch (multi_tile_size) {
                 case 1:
-                    ImageDraw::img_generic(image_id, x_view, y_view);
-                    break;
                 case 2:
-                    ImageDraw::img_generic(image_id + 1, x_view, y_view - 1);
-                    break;
                 case 3:
-                    ImageDraw::img_generic(image_id + 2, x_view, y_view - 2);
-                    break;
                 case 4:
-                    ImageDraw::img_generic(image_id + 3, x_view, y_view - 3);
-                    break;
                 case 5:
-                    ImageDraw::img_generic(image_id + 4, x_view, y_view - 4);
+                    ImageDraw::img_generic(image_id + (multi_tile_size - 1), x_view, y_view - (multi_tile_size - 1));
+                    break;
+                case 6:
+                    ImageDraw::img_generic(image_id + 2, x_view, y_view - 2);
+                    ImageDraw::img_generic(image_id + 2, x_view + 3, y_view - 5);
+                    ImageDraw::img_generic(image_id + 2, x_view + 6, y_view - 2);
+                    ImageDraw::img_generic(image_id + 2, x_view + 3, y_view + 1);
                     break;
             }
         }
