@@ -200,7 +200,7 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
 void city_message_post(bool use_popup, int message_id, int param1, int param2) {
 //    return;
 
-//    use_popup = false; // temp
+    use_popup = false; // temp
 
     int id = new_message_id();
     if (id < 0)

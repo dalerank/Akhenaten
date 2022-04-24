@@ -165,57 +165,8 @@ static void post_load() {
     city_set_player_name(setting_player_name());
     scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
 
-    // new game / initializations
+    // scenario settings
     scenario_map_init();
-    if (last_loaded != LOADED_SAVE) {
-//        // initialize grids
-//            WATCH.RECORD("headers"); //////////////////////////////////////////////////////////////////
-//        map_tiles_update_all_elevation();
-//        map_tiles_river_refresh_entire();
-//        map_tiles_update_all_earthquake();
-//        map_tiles_update_all_rocks();
-//        map_tiles_add_entry_exit_flags();
-//        map_tiles_update_all_empty_land();
-//        map_tiles_update_all_meadow();
-//        map_tiles_update_all_roads();
-//        map_tiles_update_all_plazas();
-//        map_tiles_update_all_walls();
-//        map_tiles_update_all_aqueducts(0);
-//            WATCH.RECORD("all tile updates"); //////////////////////////////////////////////////////////////////
-//
-////        map_natives_init();
-//        figure_create_fishing_points();
-//        figure_create_herds();
-//        figure_create_flotsam();
-//
-//        map_point entry = scenario_map_entry();
-//        map_point exit = scenario_map_exit();
-//        city_map_set_entry_point(entry.x, entry.y);
-//        city_map_set_exit_point(exit.x, exit.y);
-//
-//        // game time
-//        game_time_init(scenario_property_start_year());
-//
-//        // traders / empire
-//        empire_init_scenario();
-//        traders_clear();
-//
-//        // set up events
-//        scenario_earthquake_init();
-//        scenario_gladiator_revolt_init();
-//        scenario_emperor_change_init();
-//        scenario_criteria_init_max_year();
-//        scenario_invasion_init();
-//        city_military_determine_distant_battle_city();
-//        scenario_request_init();
-//        scenario_demand_change_init();
-//        scenario_price_change_init();
-//
-//        // tutorial flags
-//        tutorial_init();
-    }
-
-
 
     // problems / overlays
     city_message_init_problem_areas();
@@ -359,6 +310,8 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 }
 
 void GamestateIO::start_loaded_file() {
+
+    // build the map grids when loading MAP files
     if (last_loaded != LOADED_SAVE) {
         // initialize grids
         map_tiles_update_all_elevation();

@@ -32,6 +32,7 @@ typedef enum {
 } file_schema_enum_t;
 
 typedef struct {
+    bool VALID = false;
     buffer *buf = nullptr;
     io_buffer *iob = nullptr;
     int compressed;
@@ -64,6 +65,7 @@ private:
     file_schema_enum_t file_schema = FILE_SCHEMA_NULL;
 
     std::vector<file_chunk_t> file_chunks;
+    int alloc_index = 0;
 
     void clear();
     buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);

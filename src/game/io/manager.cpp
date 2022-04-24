@@ -64,8 +64,8 @@ void GamestateIO::clear() {
     file_offset = 0;
     file_version = -1;
     for (int i = 0; i < num_chunks(); ++i)
-        delete file_chunks.at(i).buf;
-    file_chunks.clear();
+        file_chunks.at(i).VALID = false;
+    alloc_index = 0;
 }
 void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int version) {
     if (loaded)
@@ -205,7 +205,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 12 bytes     00 00 00 00 ??? 3 x int
             // 396 bytes    00 00 00 00 ??? 99 x int
             push_chunk(12, false, "junk9a", iob_junk9a); // ok ????
-            push_chunk(396, false, "junk9c", iob_junk9b);
+            push_chunk(396, false, "junk9b", iob_junk9b);
 
             // 51984 bytes  00 00 00 00 ???
             push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);
@@ -285,11 +285,12 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 }
 
 buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
-    // add empty piece onto the stack
-    file_chunks.push_back(file_chunk_t());
-    auto chunk = &file_chunks.at(file_chunks.size() - 1);
+    // add empty piece onto the stack if we're beyond the current capacity
+    if (alloc_index >= file_chunks.size())
+        file_chunks.push_back(file_chunk_t());
 
     // fill info
+    auto chunk = &file_chunks.at(alloc_index);
     chunk->compressed = compressed;
     safe_realloc_for_size(&chunk->buf, size);
     strncpy(chunk->name, name, 99);
@@ -298,13 +299,17 @@ buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_
     if (iob != nullptr) {
         iob->hook(chunk->buf, size, compressed, name);
         chunk->iob = iob;
+        chunk->VALID = true;
     }
+
+    // advance allocator index
+    alloc_index++;
 
     // return linked buffer pointer so that it can be assigned for read/write access later
     return chunk->buf;
 }
 const int GamestateIO::num_chunks() {
-    return file_chunks.size();
+    return alloc_index;
 }
 
 int findex;
@@ -411,8 +416,10 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
         fseek(fp, file_offset, SEEK_SET);
 
     // dump GAME STATE into buffers
-    for (int i = 0; i < num_chunks(); ++i)
-        file_chunks.at(i).iob->write();
+    for (int i = 0; i < num_chunks(); ++i) {
+        if (file_chunks.at(i).VALID)
+            file_chunks.at(i).iob->write();
+    }
 
     // init file chunks and buffer collection
     init_with_schema(mapping_schema, version);
@@ -514,8 +521,10 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
     file_close(fp);
 
     // load GAME STATE from buffers
-    for (int i = 0; i < num_chunks(); ++i)
-        file_chunks.at(i).iob->read();
+    for (int i = 0; i < num_chunks(); ++i) {
+        if (file_chunks.at(i).VALID)
+            file_chunks.at(i).iob->read();
+    }
 
     SDL_Log("Reading from file %s %i@ --- VERSION HEADER: %i --- %" PRIu64 " milliseconds", file_path, file_offset, file_version,
             WATCH.STOP());

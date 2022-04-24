@@ -29,7 +29,7 @@ struct {
     int chunks_in_used = 0;
 } data;
 io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
-    FILE *debug_file = fopen("DEV_TESTING/zip/CHUNKS_SCHEMA.txt", "wb+");
+    FILE *debug_file = fopen("DEV_TESTING/CHUNKS_SCHEMA.txt", "wb+");
     char temp_string[200] = "";
     iob->bind(BIND_SIGNATURE_UINT32, &data.chunks_in_used);
     if (debug_file) {
@@ -86,7 +86,7 @@ struct {
 io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
     const int version = GamestateIO::get_file_version();
 
-    FILE *debug_file = fopen("DEV_TESTING/zip/JUNK10.txt", "wb+");
+    FILE *debug_file = fopen("DEV_TESTING/JUNK10.txt", "wb+");
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK10_FIELDS; ++i) {
@@ -133,7 +133,12 @@ struct {
     } fields[MAX_JUNK11_FIELDS];
 } junk11;
 io_buffer *iob_junk11 = new io_buffer([](io_buffer *iob) {
-    FILE *debug_file = fopen("DEV_TESTING/zip/JUNK11.txt", "wb+");
+
+    // the first two fields are the Map Editor's cached empire map coordinates....
+    // I have absolutely no idea about the need for this, or any of the rest.
+    // the third field is set to "1" when "Edit objects" is active in the editor.
+
+    FILE *debug_file = fopen("DEV_TESTING/JUNK11.txt", "wb+");
     char temp_string[200] = "";
 
     for (int i = 0; i < MAX_JUNK11_FIELDS; ++i) {
@@ -142,9 +147,9 @@ io_buffer *iob_junk11 = new io_buffer([](io_buffer *iob) {
         fwrite(temp_string, strlen(temp_string), 1, debug_file);
 
         // fill ints
-        for (int j = 0; j < 32; ++j) {
-            iob->bind(BIND_SIGNATURE_INT8, &field->data[j]);
-            sprintf(temp_string, "%3i ", field->data[j]);
+        for (int j = 0; j < 16; ++j) {
+            iob->bind(BIND_SIGNATURE_UINT16, &field->data[j]);
+            sprintf(temp_string, "%4i ", field->data[j]);
             fwrite(temp_string, strlen(temp_string), 1, debug_file);
         }
         fwrite("\n", 1, 1, debug_file);
@@ -199,7 +204,7 @@ static void record_bizarre_fields(io_buffer *iob, int i) {
 
         iob->bind(BIND_SIGNATURE_UINT32, &field.unk05);
 
-        sprintf(temp_string, "%02i >> %2i:   %4i %4i %4i %4i  %4i  %4i\n", i, j,
+        sprintf(temp_string, "%02i-%02i:     %4i %4i %4i %4i  %4i  %4i\n", i, j,
                 field.unk00, field.unk01, field.unk02, field.unk03,
                 field.unk04,
 //                field.unk04a, field.unk04b, field.unk04c,
@@ -210,10 +215,10 @@ static void record_bizarre_fields(io_buffer *iob, int i) {
 static void bizarre_ordered_fields_bind(io_buffer *iob) {
     if (iob == iob_bizarre_ordered_fields_1) {
         bizarre.current_chunk = 0;
-        bizarre.debug_file = fopen("DEV_TESTING/zip/BIZARRE.txt", "wb+");
+        bizarre.debug_file = fopen("DEV_TESTING/BIZARRE.txt", "wb+");
     } else {
         bizarre.current_chunk++;
-        bizarre.debug_file = fopen("DEV_TESTING/zip/BIZARRE.txt", "ab+");
+        bizarre.debug_file = fopen("DEV_TESTING/BIZARRE.txt", "ab+");
     }
     record_bizarre_fields(iob, bizarre.current_chunk);
     fclose(bizarre.debug_file);
