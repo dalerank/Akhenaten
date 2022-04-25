@@ -73,22 +73,6 @@ static void draw_foreground(void) {
     graphics_in_dialog();
 
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3: {
-            int groups[6][2] = {
-                    {30, 1},
-                    {30, 2},
-                    {30, 3},
-                    {9,  8},
-                    {2,  0},
-                    {30, 5},
-            };
-            for (int i = 0; i < MAX_BUTTONS; i++) {
-                large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
-                lang_text_draw_centered(groups[i][0], groups[i][1], BUTTONS_X, BUTTONS_Y + 40 * i + 6, BUTTONS_WIDTH,
-                                        FONT_NORMAL_BLACK_ON_DARK);
-            }
-            break;
-        }
         case ENGINE_ENV_PHARAOH: {
             int groups[6][2] = {
                     {30, 0},
@@ -118,9 +102,6 @@ static void button_click(int type, int param2) {
     switch (type) {
         case 1:
             switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    window_new_career_show();
-                    break;
                 case ENGINE_ENV_PHARAOH:
                     window_player_selection_show();
                     break;
@@ -128,9 +109,6 @@ static void button_click(int type, int param2) {
             break;
         case 2:
             switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-                    break;
                 case ENGINE_ENV_PHARAOH:
                     window_records_show(); // TODO
                     break;

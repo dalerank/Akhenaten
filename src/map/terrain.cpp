@@ -9,6 +9,7 @@
 #include "floodplain.h"
 #include "water.h"
 #include "data.h"
+#include "marshland.h"
 
 static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
@@ -335,36 +336,33 @@ void map_terrain_clear(void) {
 void map_terrain_init_outside_map(void) {
     int map_width, map_height;
     map_grid_size(&map_width, &map_height);
-    int y_start = (GRID_SIZE_PH - map_height) / 2;
-    int x_start = (GRID_SIZE_PH - map_width) / 2;
-    for (int y = 0; y < GRID_SIZE_PH; y++) {
+    int y_start = (GRID_SIZE - map_height) / 2;
+    int x_start = (GRID_SIZE - map_width) / 2;
+    for (int y = 0; y < GRID_SIZE; y++) {
         int y_outside_map = y < y_start || y >= y_start + map_height;
-        for (int x = 0; x < GRID_SIZE_PH; x++) {
+        for (int x = 0; x < GRID_SIZE; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width)
-                map_grid_set(&terrain_grid, x + GRID_SIZE_PH * y, TERRAIN_TREE | TERRAIN_WATER);
+                map_grid_set(&terrain_grid, x + GRID_SIZE * y, TERRAIN_TREE | TERRAIN_WATER);
 
         }
     }
 }
 
 void build_terrain_caches() {
-    tile_cache_floodplain_clear();
-    tile_cache_river_clear();
+    floodplain_tiles_cache.clear();
+    river_tiles_cache.clear();
+    marshland_tiles_cache.clear();
 
     // fill in all water/river tiles
-    int river_tile = 0;
-    int floodplain_tile = 0;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
-                tile_cache_river_add(grid_offset);
-                river_tile++;
-            }
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                tile_cache_floodplain_add(grid_offset);
-                floodplain_tile++;
-            }
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
+                river_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
+                floodplain_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
+                marshland_tiles_cache.add(grid_offset);
         }
     }
 }

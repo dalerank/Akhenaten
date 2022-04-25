@@ -30,9 +30,9 @@ void scenario_editor_create(int map_size) {
 
     scenario_data.map.width = MAP_SIZES[map_size].width;
     scenario_data.map.height = MAP_SIZES[map_size].height;
-    scenario_data.map.grid_border_size = grid_size[GAME_ENV] - scenario_data.map.width;
-    scenario_data.map.grid_start = (grid_size[GAME_ENV] - scenario_data.map.height) / 2 * grid_size[GAME_ENV] +
-                                   (grid_size[GAME_ENV] - scenario_data.map.width) / 2;
+    scenario_data.map.grid_border_size = GRID_SIZE - scenario_data.map.width;
+    scenario_data.map.grid_start = (GRID_SIZE - scenario_data.map.height) / 2 * GRID_SIZE +
+                                   (GRID_SIZE - scenario_data.map.width) / 2;
 
     string_copy(lang_get_string(44, 37), scenario_data.subtitle, MAX_SUBTITLE);
     string_copy(lang_get_string(44, 38), scenario_data.brief_description, MAX_BRIEF_DESCRIPTION);

@@ -17,17 +17,17 @@
 //#define OFFSET_C3(x,y) (x + GRID_SIZE_C3 * y)
 //#define OFFSET_PH(x,y) (x + GRID_SIZE_PH * y)
 
-static const int HOUSE_TILE_OFFSETS_C3[] = {
-        OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, 1), OFFSET_C3(1, 1), // 2x2
-        OFFSET_C3(2, 0), OFFSET_C3(2, 1), OFFSET_C3(2, 2), OFFSET_C3(1, 2), OFFSET_C3(0, 2), // 3x3
-        OFFSET_C3(3, 0), OFFSET_C3(3, 1), OFFSET_C3(3, 2), OFFSET_C3(3, 3), OFFSET_C3(2, 3), OFFSET_C3(1, 3),
-        OFFSET_C3(0, 3) // 4x4
-};
+//static const int HOUSE_TILE_OFFSETS_C3[] = {
+//        OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, 1), OFFSET_C3(1, 1), // 2x2
+//        OFFSET_C3(2, 0), OFFSET_C3(2, 1), OFFSET_C3(2, 2), OFFSET_C3(1, 2), OFFSET_C3(0, 2), // 3x3
+//        OFFSET_C3(3, 0), OFFSET_C3(3, 1), OFFSET_C3(3, 2), OFFSET_C3(3, 3), OFFSET_C3(2, 3), OFFSET_C3(1, 3),
+//        OFFSET_C3(0, 3) // 4x4
+//};
 static const int HOUSE_TILE_OFFSETS_PH[] = {
-        OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, 1), OFFSET_PH(1, 1), // 2x2
-        OFFSET_PH(2, 0), OFFSET_PH(2, 1), OFFSET_PH(2, 2), OFFSET_PH(1, 2), OFFSET_PH(0, 2), // 3x3
-        OFFSET_PH(3, 0), OFFSET_PH(3, 1), OFFSET_PH(3, 2), OFFSET_PH(3, 3), OFFSET_PH(2, 3), OFFSET_PH(1, 3),
-        OFFSET_PH(0, 3) // 4x4
+        GRID_OFFSET(0, 0), GRID_OFFSET(1, 0), GRID_OFFSET(0, 1), GRID_OFFSET(1, 1), // 2x2
+        GRID_OFFSET(2, 0), GRID_OFFSET(2, 1), GRID_OFFSET(2, 2), GRID_OFFSET(1, 2), GRID_OFFSET(0, 2), // 3x3
+        GRID_OFFSET(3, 0), GRID_OFFSET(3, 1), GRID_OFFSET(3, 2), GRID_OFFSET(3, 3), GRID_OFFSET(2, 3), GRID_OFFSET(1, 3),
+        GRID_OFFSET(0, 3) // 4x4
 };
 
 
@@ -64,14 +64,10 @@ typedef struct {
     int y;
     int offset;
 } expand_direction;
-const expand_direction EXPAND_DIRECTION_DELTA_C3[MAX_DIR] = {{0,  0,  0},
-                                                             {-1, -1, -GRID_SIZE_C3 - 1},
-                                                             {-1, 0,  -1},
-                                                             {0,  -1, -GRID_SIZE_C3}};
 const expand_direction EXPAND_DIRECTION_DELTA_PH[MAX_DIR] = {{0,  0,  0},
-                                                             {-1, -1, -GRID_SIZE_PH - 1},
+                                                             {-1, -1, -GRID_SIZE - 1},
                                                              {-1, 0,  -1},
-                                                             {0,  -1, -GRID_SIZE_PH}};;
+                                                             {0,  -1, -GRID_SIZE}};;
 
 static struct {
     int x;
@@ -81,20 +77,10 @@ static struct {
 } merge_data;
 
 int house_tile_offsets(int i) {
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return HOUSE_TILE_OFFSETS_C3[i];
-        case ENGINE_ENV_PHARAOH:
-            return HOUSE_TILE_OFFSETS_PH[i];
-    }
+    return HOUSE_TILE_OFFSETS_PH[i];
 }
 expand_direction expand_delta(int i) {
-    switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return EXPAND_DIRECTION_DELTA_C3[i];
-        case ENGINE_ENV_PHARAOH:
-            return EXPAND_DIRECTION_DELTA_PH[i];
-    }
+    return EXPAND_DIRECTION_DELTA_PH[i];
 }
 
 static void create_vacant_lot(int x, int y, int image_id) {

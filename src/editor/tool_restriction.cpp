@@ -6,22 +6,15 @@
 #include "map/grid.h"
 #include "map/terrain.h"
 
-//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
+//#define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
-static const int TILE_GRID_OFFSETS_C3[] = {0, GRID_SIZE_C3, 1, GRID_SIZE_C3 + 1};
-static const int TILE_GRID_OFFSETS_PH[] = {0, GRID_SIZE_PH, 1, GRID_SIZE_PH + 1};
+static const int TILE_GRID_OFFSETS_PH[] = {0, GRID_SIZE, 1, GRID_SIZE + 1};
 
-static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_C3[4][6] = {
-        {OFFSET_C3(0, 1), OFFSET_C3(1, 1), OFFSET_C3(0, 2),  OFFSET_C3(1, 2),  OFFSET_C3(0, 0), OFFSET_C3(1, 0)},
-        {OFFSET_C3(0, 0), OFFSET_C3(0, 1), OFFSET_C3(-1, 0), OFFSET_C3(-1, 1), OFFSET_C3(1, 0), OFFSET_C3(1, 1)},
-        {OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, -1), OFFSET_C3(1, -1), OFFSET_C3(0, 1), OFFSET_C3(1, 1)},
-        {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1),  OFFSET_C3(0, 0), OFFSET_C3(0, 1)},
-};
 static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
-        {OFFSET_PH(0, 1), OFFSET_PH(1, 1), OFFSET_PH(0, 2),  OFFSET_PH(1, 2),  OFFSET_PH(0, 0), OFFSET_PH(1, 0)},
-        {OFFSET_PH(0, 0), OFFSET_PH(0, 1), OFFSET_PH(-1, 0), OFFSET_PH(-1, 1), OFFSET_PH(1, 0), OFFSET_PH(1, 1)},
-        {OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, -1), OFFSET_PH(1, -1), OFFSET_PH(0, 1), OFFSET_PH(1, 1)},
-        {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1),  OFFSET_PH(0, 0), OFFSET_PH(0, 1)},
+        {GRID_OFFSET(0, 1), GRID_OFFSET(1, 1), GRID_OFFSET(0, 2),  GRID_OFFSET(1, 2),  GRID_OFFSET(0, 0), GRID_OFFSET(1, 0)},
+        {GRID_OFFSET(0, 0), GRID_OFFSET(0, 1), GRID_OFFSET(-1, 0), GRID_OFFSET(-1, 1), GRID_OFFSET(1, 0), GRID_OFFSET(1, 1)},
+        {GRID_OFFSET(0, 0), GRID_OFFSET(1, 0), GRID_OFFSET(0, -1), GRID_OFFSET(1, -1), GRID_OFFSET(0, 1), GRID_OFFSET(1, 1)},
+        {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(2, 0),  GRID_OFFSET(2, 1),  GRID_OFFSET(0, 0), GRID_OFFSET(0, 1)},
 };
 
 static int is_clear_terrain(const map_tile *tile, int *warning) {
@@ -91,9 +84,6 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
         for (int index = 0; index < 6; index++) {
             int tile_offset = tile->grid_offset;// + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
             switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    tile_offset += ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_C3[orientation][index];
-                    break;
                 case ENGINE_ENV_PHARAOH:
                     tile_offset += ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[orientation][index];
                     break;
@@ -143,9 +133,6 @@ int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blo
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile->grid_offset;// + TILE_GRID_OFFSETS[i];
         switch (GAME_ENV) {
-            case ENGINE_ENV_C3:
-                tile_offset += TILE_GRID_OFFSETS_C3[i];
-                break;
             case ENGINE_ENV_PHARAOH:
                 tile_offset += TILE_GRID_OFFSETS_PH[i];
                 break;

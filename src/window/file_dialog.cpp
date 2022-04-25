@@ -127,15 +127,6 @@ static void init(file_type type, file_dialog_type dialog_type) {
 
     // populate file list
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-//            if (type == FILE_TYPE_SCENARIO)
-//                data.file_list = dir_find_files_with_extension(".", scenario_data.extension);
-//            else if (data.dialog_type != FILE_DIALOG_SAVE) {
-//                data.file_list = dir_find_files_with_extension(".", data.file_data->extension);
-//                data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
-//            } else
-//                data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
-            break;
         case ENGINE_ENV_PHARAOH:
             char folder_name[MAX_FILE_NAME] = "Save/";
             strcat(folder_name, setting_player_name_utf8());

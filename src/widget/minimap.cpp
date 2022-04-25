@@ -220,7 +220,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
             image_id = image_id_from_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
         else if (terrain & TERRAIN_FLOODPLAIN && !(terrain & TERRAIN_WATER))
             image_id = image_id_from_group(GROUP_MINIMAP_FLOODPLAIN) + (rand & 3);
-        else if (terrain & TERRAIN_REEDS)
+        else if (terrain & TERRAIN_MARSHLAND)
             image_id = image_id_from_group(GROUP_MINIMAP_REEDS) - 4 * (rand & 1);
         else if (terrain & TERRAIN_DUNE)
             image_id = image_id_from_group(GROUP_MINIMAP_DUNES) + (rand & 7);

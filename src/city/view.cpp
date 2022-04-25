@@ -36,10 +36,10 @@ view_data *city_view_data_unsafe() {
 }
 
 int MAP_TILE_UPPER_LIMIT_X() {
-    return grid_size[GAME_ENV] + 3;
+    return GRID_SIZE + 3;
 }
 int MAP_TILE_UPPER_LIMIT_Y() {
-    return grid_size[GAME_ENV] * 2 + 1;
+    return GRID_SIZE * 2 + 1;
 }
 
 int SCROLLABLE_X_MIN_TILE() {
@@ -189,11 +189,8 @@ static void calculate_lookup(void) {
 
     int grid_s;
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            grid_s = GRID_SIZE_C3;
-            break;
         case ENGINE_ENV_PHARAOH:
-            grid_s = GRID_SIZE_PH;
+            grid_s = GRID_SIZE;
             break;
     }
     for (int y = 0; y < grid_s; y++) {

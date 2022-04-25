@@ -10,29 +10,11 @@
 #include "map/property.h"
 #include "map/terrain.h"
 
-struct {
-    int all_river_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
-    int river_total_tiles = 0;
-} tile_cache;
-void tile_cache_river_clear() {
-    tile_cache.river_total_tiles = 0;
-}
-void tile_cache_river_add(int grid_offset) {
-    tile_cache.all_river_tiles[tile_cache.river_total_tiles] = grid_offset;
-    tile_cache.river_total_tiles++;
-}
-int tile_cache_river_total() {
-    return tile_cache.river_total_tiles;
-}
-int tile_cache_river_get(int i) {
-    if (i < 0 || i >= tile_cache.river_total_tiles)
-        return -1;
-    else
-        return tile_cache.all_river_tiles[i];
-}
+tile_cache river_tiles_cache;
+
 void foreach_river_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < tile_cache.river_total_tiles; i++)
-        callback(tile_cache.all_river_tiles[i]);
+    for (int i = 0; i < river_tiles_cache.size(); i++)
+        callback(river_tiles_cache.at(i));
 }
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id) {

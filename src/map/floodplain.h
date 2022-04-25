@@ -2,6 +2,7 @@
 #define OZYMANDIAS_FLOODPLAIN_H
 
 #include <stdint.h>
+#include "tile_cache.h"
 
 #define MAX_FLOODPLAIN_ORDER_RANGE 30
 
@@ -11,9 +12,7 @@ enum {
     FERT_ONLY_MALUS = 2
 };
 
-void tile_cache_floodplain_clear();
-void tile_cache_floodplain_add(int grid_offset);
-int tile_cache_floodplain_total();
+extern tile_cache floodplain_tiles_cache;
 
 void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order));
 int map_floodplain_rebuild_shoreorder();

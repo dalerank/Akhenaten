@@ -100,15 +100,6 @@ static const color_t *load_external_data(const image *img) {
     int size = 0;
     safe_realloc_for_size(&temp_external_image_buf, img->draw.data_length);
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            strcpy(&filename[0], "555/");
-            strcpy(&filename[4], img->draw.bitmap_name);
-            file_change_extension(filename, "555");
-            size = io_read_file_part_into_buffer(
-                    &filename[4], MAY_BE_LOCALIZED, temp_external_image_buf,
-                    img->draw.data_length, img->draw.offset - 1
-            );
-            break;
         case ENGINE_ENV_PHARAOH:
             strcpy(&filename[0], "Data/");
             strcpy(&filename[5], img->draw.bitmap_name);
@@ -357,8 +348,6 @@ const image *imagepak::get_image(int id, bool relative) {
 
 static imagepak *pak_from_collection_id(int collection, int pak_cache_idx) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return data.main; // only one for Caesar III
         case ENGINE_ENV_PHARAOH:
             switch (collection) {
                 case IMAGE_COLLECTION_UNLOADED:
@@ -535,13 +524,6 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
     const char *filename_555;
     const char *filename_sgx;
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-//            filename_555 = is_editor ? gfc.C3_EDITOR_555[climate_id] : gfc.C3_MAIN_555[climate_id];
-//            filename_sgx = is_editor ? gfc.C3_EDITOR_SG2[climate_id] : gfc.C3_MAIN_SG2[climate_id];
-//            if (!data.main->load_555(filename_555, filename_sgx))
-//                return 0;
-//            data.current_climate = climate_id;
-            break;
         case ENGINE_ENV_PHARAOH:
 
             // Pharaoh loads every image into a global listed cache; however, some
@@ -600,10 +582,6 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
 bool image_set_enemy_pak(int enemy_id) {
     data.enemy = data.enemy_paks.at(enemy_id);
 //    switch (GAME_ENV) {
-//        case ENGINE_ENV_C3:
-////            if (!data.enemy->load_pak(enemy_file_names_c3[enemy_id], 0))
-////                return false;
-//            break;
 //        case ENGINE_ENV_PHARAOH:
 //            data.enemy = new imagepak(enemy_file_names_ph[enemy_id], 11026);
 //            break;

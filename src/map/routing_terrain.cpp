@@ -173,7 +173,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
         case ROUTING_TYPE_CITIZEN:
             if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER))
                 return CITIZEN_0_ROAD;
-            else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_REEDS | TERRAIN_FLOODPLAIN)) // TODO?
+            else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN)) // TODO?
                 return CITIZEN_2_PASSABLE_TERRAIN;
             else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (fix_incorrect_buildings(grid_offset))

@@ -20,10 +20,6 @@ static int start_next_video(void) {
     int videos_num = 0;
     const char **videos;
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            videos_num = 3;
-            videos = C3_INTRO_VIDEOS;
-            break;
         case ENGINE_ENV_PHARAOH:
             videos_num = 1;
             videos = PH_INTRO_VIDEOS;

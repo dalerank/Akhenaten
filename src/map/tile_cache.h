@@ -4,9 +4,14 @@
 #include "grid.h"
 
 class tile_cache {
-    int all_river_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
-    int river_total_tiles = 0;
+private:
+    int pCache[GRID_TOTAL];
+    int pSize = 0;
+public:
+    void clear();
+    void add(int grid_offset);
+    int at(int i);
+    const int size();
 };
-
 
 #endif //OZYMANDIAS_TILE_CACHE_H

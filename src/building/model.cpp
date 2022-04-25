@@ -126,9 +126,6 @@ bool model_load_file(const char *filepath, int NUM_BUILDINGS, int NUM_HOUSES, mo
 
 bool model_load(void) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return model_load_file("c3_model.txt", 130, 20, data.buildings[0], data.houses[0]);
-            break;
         case ENGINE_ENV_PHARAOH: {
             if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0]))
                 return false;

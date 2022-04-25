@@ -104,7 +104,7 @@ static void fill_canals_from_offset(int grid_offset) {
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     do {
-        if (++guard >= grid_total_size[GAME_ENV])
+        if (++guard >= GRID_TOTAL)
             break;
 
         map_aqueduct_set(grid_offset, 1);
@@ -115,7 +115,7 @@ static void fill_canals_from_offset(int grid_offset) {
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
-            const int ADJACENT_OFFSETS[] = {-GRID_SIZE_PH, 1, GRID_SIZE_PH, -1};
+            const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             building *b = building_at(new_offset);
             if (b->id && b->type == BUILDING_WATER_LIFT) {
@@ -150,11 +150,8 @@ static void fill_canals_from_offset(int grid_offset) {
 
 static int OFFSET(int x, int y) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return OFFSET_C3(x, y);
-            break;
         case ENGINE_ENV_PHARAOH:
-            return OFFSET_PH(x, y);
+            return GRID_OFFSET(x, y);
             break;
     }
 }

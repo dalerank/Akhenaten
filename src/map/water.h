@@ -4,11 +4,9 @@
 #include "figure/figure.h"
 #include "map/point.h"
 #include "terrain.h"
+#include "tile_cache.h"
 
-void tile_cache_river_clear();
-void tile_cache_river_add(int grid_offset);
-int tile_cache_river_total();
-int tile_cache_river_get(int i);
+extern tile_cache river_tiles_cache;
 void foreach_river_tile(void (*callback)(int grid_offset));
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id);

@@ -44,7 +44,7 @@
 #include "window/building/terrain.h"
 #include "window/building/utility.h"
 
-//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
+//#define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -245,11 +245,8 @@ void highlight_waypoints(building *b) // highlight the 4 routing tiles for roams
 
 int OFFSET(int x, int y) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return OFFSET_C3(x, y);
-            break;
         case ENGINE_ENV_PHARAOH:
-            return OFFSET_PH(x, y);
+            return GRID_OFFSET(x, y);
             break;
     }
 }
@@ -286,7 +283,7 @@ static void init(int grid_offset) {
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
         else
             context.terrain_type = TERRAIN_INFO_FLOODPLAIN;
-    } else if (map_terrain_is(grid_offset, TERRAIN_REEDS))
+    } else if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
         context.terrain_type = TERRAIN_INFO_MARSHLAND;
     else if (map_terrain_is(grid_offset, TERRAIN_DUNE))
         context.terrain_type = TERRAIN_INFO_DUNES;
@@ -526,7 +523,7 @@ static void draw_background(void) {
                 window_building_draw_marble_quarry(&context); break;
             case BUILDING_LIMESTONE_QUARRY:
                 window_building_draw_iron_mine(&context); break;
-            case BUILDING_TIMBER_YARD:
+            case BUILDING_WOOD_CUTTERS:
                 window_building_draw_timber_yard(&context); break;
             case BUILDING_CLAY_PIT:
                 window_building_draw_clay_pit(&context); break;

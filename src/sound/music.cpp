@@ -146,11 +146,6 @@ static void play_track(int track) {
 
     switch (GAME_ENV) {
         const char *mp3_track;
-        case ENGINE_ENV_C3:
-            mp3_track = dir_get_file(c3_mp3[track], NOT_LOCALIZED);
-            if (!mp3_track || !sound_device_play_music(mp3_track, volume))
-                sound_device_play_music(dir_get_file(c3_wav[track], NOT_LOCALIZED), volume);
-            break;
         case ENGINE_ENV_PHARAOH:
             volume = volume * 0.4;
             sound_device_play_music(dir_get_file(ph_mp3[track], NOT_LOCALIZED), volume);

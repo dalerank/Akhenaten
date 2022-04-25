@@ -11,7 +11,7 @@
 #include "map/terrain.h"
 #include "core/game_environment.h"
 
-#define MAX_QUEUE 162 * 162//grid_total_size[GAME_ENV]
+#define MAX_QUEUE 162 * 162//GRID_SIZE_TOTAL
 #define GUARD 50000
 
 static const int ROUTE_OFFSETS[2][8] = {

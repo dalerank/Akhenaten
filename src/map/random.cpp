@@ -12,8 +12,8 @@ void map_random_clear(void) {
 }
 void map_random_init(void) {
     int grid_offset = 0;
-    for (int y = 0; y < GRID_SIZE_PH; y++) {
-        for (int x = 0; x < GRID_SIZE_PH; x++, grid_offset++) {
+    for (int y = 0; y < GRID_SIZE; y++) {
+        for (int x = 0; x < GRID_SIZE; x++, grid_offset++) {
             random_generate_next();
             map_grid_set(&random_xx, grid_offset, (uint8_t) random_short());
         }

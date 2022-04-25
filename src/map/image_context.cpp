@@ -528,7 +528,7 @@ const terrain_image *map_image_context_get_floodplain_waterline(int grid_offset)
 }
 const terrain_image *map_image_context_get_reeds_transition(int grid_offset) {
     int tiles[MAX_TILES];
-    fill_matches(grid_offset, TERRAIN_REEDS, 1, 0, tiles);
+    fill_matches(grid_offset, TERRAIN_MARSHLAND, 1, 0, tiles);
     return get_image(CONTEXT_FLOODSYSTEM, tiles);
 }
 const terrain_image *map_image_context_get_grass_corners(int grid_offset) {

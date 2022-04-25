@@ -13,10 +13,6 @@ void init_game_environment(int env, int mode) {
     assert(env != ENGINE_ENV_MAX);
     GAME_ENV = env;
     switch (env) {
-        case ENGINE_ENV_C3:
-            game_name = "Caesar 3";
-            pref_filename = "data_dir_c3.txt";
-            break;
         case ENGINE_ENV_PHARAOH:
             game_name = "Pharaoh";
             pref_filename = "data_dir_pharaoh.txt";

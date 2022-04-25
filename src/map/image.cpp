@@ -46,7 +46,7 @@ void set_image_grid_correction_shift(int shift) {
 }
 io_buffer *iob_image_grid = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_GRID, &images);
-    for (int i = 0; i < grid_total_size[GAME_ENV]; i++) {
+    for (int i = 0; i < GRID_TOTAL; i++) {
         auto nv = map_grid_get(&images, i) - image_shift;
         map_grid_set(&images, i, nv);
     }

@@ -293,9 +293,6 @@ void sound_device_play_channel(int channel, int volume_pct) {
 
             switch (GAME_ENV) {
                 const char *mp3_track;
-                case ENGINE_ENV_C3:
-                    sound_device_set_channel_volume(channel, volume_pct);
-                    break;
                 case ENGINE_ENV_PHARAOH:
                     sound_device_set_channel_volume(channel, volume_pct * 0.4);
                     break;

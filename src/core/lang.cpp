@@ -119,10 +119,6 @@ static void parse_MM_file(buffer *buf) {
         m->content.text = get_message_text(buf->read_i32());
     }
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            buf->set_offset(32024);
-            buf->read_raw(&data.message_data, 262704);
-            break;
         case ENGINE_ENV_PHARAOH:
             buf->set_offset(80024);
             buf->read_raw(&data.message_data, MESSAGE_DATA_SIZE);

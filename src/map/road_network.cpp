@@ -10,8 +10,7 @@
 
 #define MAX_QUEUE 1000
 
-static const int ADJACENT_OFFSETS_C3[] = {-GRID_SIZE_C3, 1, GRID_SIZE_C3, -1};
-static const int ADJACENT_OFFSETS_PH[] = {-GRID_SIZE_PH, 1, GRID_SIZE_PH, -1};
+static const int ADJACENT_OFFSETS_PH[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
 
 static grid_xx network = {0, {FS_UINT8, FS_UINT8}};
 
@@ -23,8 +22,6 @@ static struct {
 
 int adjacent_offsets(int i) {
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            return ADJACENT_OFFSETS_C3[i];
         case ENGINE_ENV_PHARAOH:
             return ADJACENT_OFFSETS_PH[i];
     }
@@ -43,7 +40,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
     int next_offset;
     int size = 1;
     do {
-        if (++guard >= grid_total_size[GAME_ENV])
+        if (++guard >= GRID_TOTAL)
             break;
 
         map_grid_set(&network, grid_offset, network_id);

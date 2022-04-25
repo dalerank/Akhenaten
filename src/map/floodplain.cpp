@@ -6,28 +6,13 @@
 #include "terrain.h"
 #include "water.h"
 
-struct {
-    int all_floodplain_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
-    int floodplain_total_tiles = 0;
+tile_cache floodplain_tiles_cache;
+tile_cache floodplain_offsets_cache[MAX_FLOODPLAIN_ORDER_RANGE + 1];
 
-    struct {
-        std::vector<uint32_t> offsets;
-    } order_caches[MAX_FLOODPLAIN_ORDER_RANGE + 1];
-} tile_cache;
-void tile_cache_floodplain_clear() {
-    tile_cache.floodplain_total_tiles = 0;
-}
-void tile_cache_floodplain_add(int grid_offset) {
-    tile_cache.all_floodplain_tiles[tile_cache.floodplain_total_tiles] = grid_offset;
-    tile_cache.floodplain_total_tiles++;
-}
-int tile_cache_floodplain_total() {
-    return tile_cache.floodplain_total_tiles;
-}
 void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order)) {
     if (order < 0 || order > MAX_FLOODPLAIN_ORDER_RANGE)
         return;
-    auto offsets = tile_cache.order_caches[order].offsets;
+    auto offsets = floodplain_offsets_cache[order];
     for (int i = 0; i < offsets.size(); i++) {
         int grid_offset = offsets.at(i);
         callback(grid_offset, order);
@@ -49,7 +34,7 @@ int map_floodplain_rebuild_shoreorder() {
     map_grid_fill(&terrain_floodplain_growth, 0);
     map_grid_fill(&terrain_floodplain_max_fertile, 0);
     for (int order = 0; order < MAX_FLOODPLAIN_ORDER_RANGE; order++)
-        tile_cache.order_caches[order].offsets.clear();
+        floodplain_offsets_cache[order].clear();
 
     // fill in shore order data
     for (int order = -1; order < MAX_FLOODPLAIN_ORDER_RANGE - 1; order++) {
@@ -57,10 +42,10 @@ int map_floodplain_rebuild_shoreorder() {
         int found_floodplain_tiles_in_order = 0;
 
         // go through every river tile
-        for (int i = 0; i < tile_cache_river_total(); i++) {
+        for (int i = 0; i < river_tiles_cache.size(); i++) {
 
             // get current river tile's grid offset and coords
-            int tile_offset = tile_cache_river_get(i);
+            int tile_offset = river_tiles_cache.at(i);
             int tile_x = map_grid_offset_to_x(tile_offset);
             int tile_y = map_grid_offset_to_y(tile_offset);
 
@@ -95,14 +80,14 @@ int map_floodplain_rebuild_shoreorder() {
 
                             // set the shore order cache
                             map_grid_set(&terrain_floodplain_shoreorder, grid_offset, order + 1);
-                            tile_cache.order_caches[order + 1].offsets.push_back(grid_offset);
+                            floodplain_offsets_cache[order + 1].add(grid_offset);
 
                             // advance counter
                             found_floodplain_tiles_in_order++;
                         }
                         ++grid_offset;
                     }
-                    grid_offset += GRID_SIZE_PH - (x_max - x_min + 1);
+                    grid_offset += GRID_SIZE - (x_max - x_min + 1);
                 }
             }
         }
@@ -113,11 +98,11 @@ int map_floodplain_rebuild_shoreorder() {
     }
 
     // if past 29, fill in all the rest with the same order
-    for (int i = 0; i < tile_cache.floodplain_total_tiles; i++) {
-        int grid_offset = tile_cache.all_floodplain_tiles[i];
+    for (int i = 0; i < floodplain_tiles_cache.size(); i++) {
+        int grid_offset = floodplain_tiles_cache.at(i);
         if (map_get_floodplain_shoreorder(grid_offset) == -1) {
             map_grid_set(&terrain_floodplain_shoreorder, grid_offset, MAX_FLOODPLAIN_ORDER_RANGE);
-            tile_cache.order_caches[MAX_FLOODPLAIN_ORDER_RANGE].offsets.push_back(grid_offset);
+            floodplain_offsets_cache[MAX_FLOODPLAIN_ORDER_RANGE].add(grid_offset);
         }
     }
 
@@ -166,7 +151,7 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
             fert_total += map_get_fertility(grid_offset, FERT_WITH_MALUS);
             ++grid_offset;
         }
-        grid_offset += GRID_SIZE_PH - (x_max - x_min + 1);
+        grid_offset += GRID_SIZE - (x_max - x_min + 1);
     }
     return fert_total / (size * size);
 }

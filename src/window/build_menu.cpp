@@ -233,53 +233,6 @@ static void button_menu_item(int item) {
 int window_build_menu_image(void) {
     int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            if (Planner.build_type == BUILDING_NONE)
-                return image_base + 12;
-            switch (data.selected_submenu) {
-                default:
-                case BUILD_MENU_VACANT_HOUSE:
-                    return image_base;
-                case BUILD_MENU_CLEAR_LAND:
-                    if (scenario_property_climate() == CLIMATE_DESERT)
-                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT);
-                    else {
-                        return image_base + 11;
-                    }
-                case BUILD_MENU_ROAD:
-                    if (scenario_property_climate() == CLIMATE_DESERT)
-                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
-                    else {
-                        return image_base + 10;
-                    }
-                case BUILD_MENU_WATER:
-                    if (scenario_property_climate() == CLIMATE_DESERT)
-                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
-                    else {
-                        return image_base + 3;
-                    }
-                case BUILD_MENU_HEALTH:
-                    return image_base + 5;
-                case BUILD_MENU_RELIGION:
-                    return image_base + 1;
-                case BUILD_MENU_EDUCATION:
-                    return image_base + 6;
-                case BUILD_MENU_ENTERTAINMENT:
-                    return image_base + 4;
-                case BUILD_MENU_ADMINISTRATION:
-                    return image_base + 2;
-                case BUILD_MENU_ENGINEERING:
-                    return image_base + 7;
-                case BUILD_MENU_SECURITY:
-                    if (scenario_property_climate() == CLIMATE_DESERT)
-                        return image_id_from_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
-                    else {
-                        return image_base + 8;
-                    }
-                case BUILD_MENU_INDUSTRY:
-                    return image_base + 9;
-            }
-            break;
         case ENGINE_ENV_PHARAOH:
             image_base = image_id_from_group(GROUP_PANEL_WINDOWS_PH);
 //            if (Planner.building_type == BUILDING_NONE)

@@ -45,140 +45,70 @@
 #include "game/state.h"
 #include "ornaments.h"
 
-static const int ADJACENT_OFFSETS_C3[2][4][7] = {
-  {
-    {
-      OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(0, -2), OFFSET_C3(1, -2)
-    }, {
-      OFFSET_C3(0, -1),
-      OFFSET_C3(1, -1),
-      OFFSET_C3(2, -1),
-      OFFSET_C3(2, 0),
-      OFFSET_C3(2, 1)
-    }, {
-      OFFSET_C3(1, 0),
-      OFFSET_C3(1, 1),
-      OFFSET_C3(1, 2),
-      OFFSET_C3(0, 2),
-      OFFSET_C3(-1, 2)
-    }, {
-      OFFSET_C3(0, 1),
-      OFFSET_C3(-1, 1),
-      OFFSET_C3(-2, 1),
-      OFFSET_C3(-2, 0),
-      OFFSET_C3(-2, -1)
-    }
-  },
-  {
-    {
-      OFFSET_C3(-1, 0), OFFSET_C3(-1, -1), OFFSET_C3(-1, -2), OFFSET_C3(-1, -3), OFFSET_C3(0, -3), OFFSET_C3(
-        1,
-        -3), OFFSET_C3(
-        2,
-        -3)
-    },
-    {
-      OFFSET_C3(0, -1),
-      OFFSET_C3(1, -1),
-      OFFSET_C3(2, -1),
-      OFFSET_C3(3, -1),
-      OFFSET_C3(3, 0),
-      OFFSET_C3(3,
-        1),
-      OFFSET_C3(
-        3,
-        2)
-    },
-    {
-      OFFSET_C3(1, 0),
-      OFFSET_C3(1, 1),
-      OFFSET_C3(1, 2),
-      OFFSET_C3(1, 3),
-      OFFSET_C3(0, 3),
-      OFFSET_C3(-1,
-        3),
-      OFFSET_C3(
-        -2,
-        3)
-    },
-    {
-      OFFSET_C3(0, 1),
-      OFFSET_C3(-1, 1),
-      OFFSET_C3(-2, 1),
-      OFFSET_C3(-3, 1),
-      OFFSET_C3(-3, 0),
-      OFFSET_C3(-3,
-        -1),
-      OFFSET_C3(
-        -3,
-        -2)
-    }
-  }
-};
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {
     {
-      OFFSET_PH(-1, 0),
-      OFFSET_PH(-1, -1),
-      OFFSET_PH(-1, -2),
-      OFFSET_PH(0, -2),
-      OFFSET_PH(1, -2)
+            GRID_OFFSET(-1, 0),
+            GRID_OFFSET(-1, -1),
+            GRID_OFFSET(-1, -2),
+            GRID_OFFSET(0, -2),
+            GRID_OFFSET(1, -2)
     }, {
-      OFFSET_PH(0, -1),
-      OFFSET_PH(1, -1),
-      OFFSET_PH(2, -1),
-      OFFSET_PH(2, 0),
-      OFFSET_PH(2, 1)
+               GRID_OFFSET(0, -1),
+               GRID_OFFSET(1, -1),
+               GRID_OFFSET(2, -1),
+               GRID_OFFSET(2, 0),
+               GRID_OFFSET(2, 1)
     }, {
-      OFFSET_PH(1, 0),
-      OFFSET_PH(1, 1),
-      OFFSET_PH(1, 2),
-      OFFSET_PH(0, 2),
-      OFFSET_PH(-1, 2)
+               GRID_OFFSET(1, 0),
+               GRID_OFFSET(1, 1),
+               GRID_OFFSET(1, 2),
+               GRID_OFFSET(0, 2),
+               GRID_OFFSET(-1, 2)
     }, {
-      OFFSET_PH(0, 1),
-      OFFSET_PH(-1, 1),
-      OFFSET_PH(-2, 1),
-      OFFSET_PH(-2, 0),
-      OFFSET_PH(-2, -1)
+               GRID_OFFSET(0, 1),
+               GRID_OFFSET(-1, 1),
+               GRID_OFFSET(-2, 1),
+               GRID_OFFSET(-2, 0),
+               GRID_OFFSET(-2, -1)
     }
   },
   {
     {
-      OFFSET_PH(-1, 0),
-      OFFSET_PH(-1, -1),
-      OFFSET_PH(-1, -2),
-      OFFSET_PH(-1, -3),
-      OFFSET_PH(0, -3),
-      OFFSET_PH(1, -3),
-      OFFSET_PH(2, -3)
+            GRID_OFFSET(-1, 0),
+            GRID_OFFSET(-1, -1),
+            GRID_OFFSET(-1, -2),
+            GRID_OFFSET(-1, -3),
+            GRID_OFFSET(0, -3),
+            GRID_OFFSET(1, -3),
+            GRID_OFFSET(2, -3)
     },
     {
-      OFFSET_PH(0, -1),
-      OFFSET_PH(1, -1),
-      OFFSET_PH(2, -1),
-      OFFSET_PH(3, -1),
-      OFFSET_PH(3, 0),
-      OFFSET_PH(3, 1),
-      OFFSET_PH(3, 2)
+               GRID_OFFSET(0, -1),
+               GRID_OFFSET(1, -1),
+               GRID_OFFSET(2, -1),
+               GRID_OFFSET(3, -1),
+               GRID_OFFSET(3, 0),
+               GRID_OFFSET(3, 1),
+               GRID_OFFSET(3, 2)
     },
     {
-      OFFSET_PH(1, 0),
-      OFFSET_PH(1, 1),
-      OFFSET_PH(1, 2),
-      OFFSET_PH(1, 3),
-      OFFSET_PH(0, 3),
-      OFFSET_PH(-1, 3),
-      OFFSET_PH(-2, 3)
+               GRID_OFFSET(1, 0),
+               GRID_OFFSET(1, 1),
+               GRID_OFFSET(1, 2),
+               GRID_OFFSET(1, 3),
+               GRID_OFFSET(0, 3),
+               GRID_OFFSET(-1, 3),
+               GRID_OFFSET(-2, 3)
     },
     {
-      OFFSET_PH(0, 1),
-      OFFSET_PH(-1, 1),
-      OFFSET_PH(-2, 1),
-      OFFSET_PH(-3, 1),
-      OFFSET_PH(-3, 0),
-      OFFSET_PH(-3,-1),
-      OFFSET_PH(-3, -2)
+               GRID_OFFSET(0, 1),
+               GRID_OFFSET(-1, 1),
+               GRID_OFFSET(-2, 1),
+               GRID_OFFSET(-3, 1),
+               GRID_OFFSET(-3, 0),
+               GRID_OFFSET(-3, -1),
+               GRID_OFFSET(-3, -2)
     }
   }
 };
@@ -232,9 +162,6 @@ static bool has_adjacent_deletion(int grid_offset) {
     int total_adjacent_offsets = size * 2 + 1;
     const int *adjacent_offset;// = ADJACENT_OFFSETS[size - 2][city_view_orientation() / 2];
     switch (GAME_ENV) {
-        case ENGINE_ENV_C3:
-            adjacent_offset = ADJACENT_OFFSETS_C3[size - 2][city_view_orientation() / 2];
-            break;
         case ENGINE_ENV_PHARAOH: // TODO: get rid of this garbage
             adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][city_view_orientation() / 2];
             break;

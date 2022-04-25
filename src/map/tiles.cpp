@@ -21,7 +21,7 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-//#define OFFSET(x,y) (x + grid_size[GAME_ENV] * y)
+//#define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 
 #define FORBIDDEN_TERRAIN_MEADOW (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
@@ -83,7 +83,7 @@ static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max, void
             callback(grid_offset);
             ++grid_offset;
         }
-        grid_offset += GRID_SIZE_PH - (x_max - x_min + 1);
+        grid_offset += GRID_SIZE - (x_max - x_min + 1);
     }
 }
 
@@ -684,14 +684,6 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
         bool is_paved = map_tiles_is_paved_road(grid_offset);
 
         switch (GAME_ENV) {
-            case ENGINE_ENV_C3:
-                if (road_dir_right)
-                    image_offset = 1;
-                else
-                    image_offset = 0;
-                if (!is_paved)
-                    image_offset += 8;
-                break;
             case ENGINE_ENV_PHARAOH:
                 if (road_dir_right) // left/right offset is opposite from C3
                     image_offset = 0;
@@ -852,7 +844,7 @@ void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) 
 }
 
 static void set_reeds_tile(int grid_offset) {
-    if (map_terrain_is(grid_offset, TERRAIN_REEDS)) { // there's no way to build anything on reed tiles, so... it's fine?
+    if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) { // there's no way to build anything on reed tiles, so... it's fine?
 
         const terrain_image *img = map_image_context_get_reeds_transition(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img->group_offset + img->item_offset;
@@ -1200,17 +1192,11 @@ static void clear_access_ramp_image(int grid_offset) {
 
 }
 
-static const int offsets_C3[4][6] = {
-        {OFFSET_C3(0, 1), OFFSET_C3(1, 1), OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, 2),  OFFSET_C3(1, 2)},
-        {OFFSET_C3(0, 0), OFFSET_C3(0, 1), OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(-1, 0), OFFSET_C3(-1, 1)},
-        {OFFSET_C3(0, 0), OFFSET_C3(1, 0), OFFSET_C3(0, 1), OFFSET_C3(1, 1), OFFSET_C3(0, -1), OFFSET_C3(1, -1)},
-        {OFFSET_C3(1, 0), OFFSET_C3(1, 1), OFFSET_C3(0, 0), OFFSET_C3(0, 1), OFFSET_C3(2, 0),  OFFSET_C3(2, 1)},
-};
 static const int offsets_PH[4][6] = {
-        {OFFSET_PH(0, 1), OFFSET_PH(1, 1), OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, 2),  OFFSET_PH(1, 2)},
-        {OFFSET_PH(0, 0), OFFSET_PH(0, 1), OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(-1, 0), OFFSET_PH(-1, 1)},
-        {OFFSET_PH(0, 0), OFFSET_PH(1, 0), OFFSET_PH(0, 1), OFFSET_PH(1, 1), OFFSET_PH(0, -1), OFFSET_PH(1, -1)},
-        {OFFSET_PH(1, 0), OFFSET_PH(1, 1), OFFSET_PH(0, 0), OFFSET_PH(0, 1), OFFSET_PH(2, 0),  OFFSET_PH(2, 1)},
+        {GRID_OFFSET(0, 1), GRID_OFFSET(1, 1), GRID_OFFSET(0, 0), GRID_OFFSET(1, 0), GRID_OFFSET(0, 2),  GRID_OFFSET(1, 2)},
+        {GRID_OFFSET(0, 0), GRID_OFFSET(0, 1), GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(-1, 0), GRID_OFFSET(-1, 1)},
+        {GRID_OFFSET(0, 0), GRID_OFFSET(1, 0), GRID_OFFSET(0, 1), GRID_OFFSET(1, 1), GRID_OFFSET(0, -1), GRID_OFFSET(1, -1)},
+        {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(0, 0), GRID_OFFSET(0, 1), GRID_OFFSET(2, 0),  GRID_OFFSET(2, 1)},
 };
 
 static int get_access_ramp_image_offset(int x, int y) {
@@ -1226,9 +1212,6 @@ static int get_access_ramp_image_offset(int x, int y) {
             int grid_offset = base_offset;
 
             switch (GAME_ENV) {
-                case ENGINE_ENV_C3:
-                    grid_offset += offsets_C3[dir][i];
-                    break;
                 case ENGINE_ENV_PHARAOH:
                     grid_offset += offsets_PH[dir][i];
                     break;

@@ -26,7 +26,7 @@ enum {
     // pharaoh
     TERRAIN_FLOODPLAIN = 0x10000,
         TERRAIN_UNK_00 = 0x20000,
-    TERRAIN_REEDS = 0x40000,
+    TERRAIN_MARSHLAND = 0x40000,
         TERRAIN_UNK_01 = 0x80000,
     TERRAIN_ORE = 0x100000,
         TERRAIN_UNK_02 = 0x200000,
@@ -53,16 +53,16 @@ enum {
             + TERRAIN_ROAD
               // ... //
             + TERRAIN_AQUEDUCT
-            + TERRAIN_ELEVATION
-            + TERRAIN_ACCESS_RAMP
+              + TERRAIN_ELEVATION
+              + TERRAIN_ACCESS_RAMP
               // ... //
             + TERRAIN_RUBBLE
               // ... //
             + TERRAIN_WALL
-            + TERRAIN_GATEHOUSE
-            + TERRAIN_FLOODPLAIN
+              + TERRAIN_GATEHOUSE
+              + TERRAIN_FLOODPLAIN
               // ... //
-            + TERRAIN_REEDS
+            + TERRAIN_MARSHLAND
               // ... //
             + TERRAIN_ORE
               // ... //
@@ -71,12 +71,12 @@ enum {
             + TERRAIN_SUBMERGED_ROAD,
 
     TERRAIN_CLEARABLE = TERRAIN_NOT_CLEAR
-            - TERRAIN_ROCK
-            - TERRAIN_WATER
-            - TERRAIN_ELEVATION
-            - TERRAIN_FLOODPLAIN
-            - TERRAIN_REEDS
-            - TERRAIN_ORE
+                        - TERRAIN_ROCK
+                        - TERRAIN_WATER
+                        - TERRAIN_ELEVATION
+                        - TERRAIN_FLOODPLAIN
+                        - TERRAIN_MARSHLAND
+                        - TERRAIN_ORE
             - TERRAIN_DUNE
             - TERRAIN_DEEPWATER
             - TERRAIN_SUBMERGED_ROAD,

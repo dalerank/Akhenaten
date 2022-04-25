@@ -6,24 +6,9 @@
 
 #include <stdint.h>
 
-enum {
-    GRID_SIZE_C3 = 162,
-    GRID_SIZE_PH = 228
-};
-
-static int grid_size[] = {
-    GRID_SIZE_C3,
-    GRID_SIZE_PH
-};
-static int grid_total_size[] = {
-    GRID_SIZE_C3 * GRID_SIZE_C3,
-    GRID_SIZE_PH * GRID_SIZE_PH
-};
-
-#define OFFSET_C3(x, y) (x + GRID_SIZE_C3 * y)
-#define OFFSET_PH(x, y) (x + GRID_SIZE_PH * y)
-
-#define MAX_GRID_ITEMS 300 * 300
+#define GRID_SIZE 228
+#define GRID_TOTAL GRID_SIZE * GRID_SIZE
+#define GRID_OFFSET(x, y) (x + GRID_SIZE * y)
 
 enum {
     FS_NONE = 0,

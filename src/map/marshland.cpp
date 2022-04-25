@@ -2,12 +2,7 @@
 #include "marshland.h"
 #include "grid.h"
 
-struct {
-    int all_marshland_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
-    int all_river_tiles_x[GRID_SIZE_PH * GRID_SIZE_PH];
-    int all_river_tiles_y[GRID_SIZE_PH * GRID_SIZE_PH];
-    int river_total_tiles = 0;
-} tile_cache;
+tile_cache marshland_tiles_cache;
 
 static grid_xx terrain_marshland_depletion = {0, {FS_UINT8, FS_UINT8}};
 
