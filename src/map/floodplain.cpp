@@ -24,13 +24,13 @@ void tile_cache_floodplain_add(int grid_offset) {
 int tile_cache_floodplain_total() {
     return tile_cache.floodplain_total_tiles;
 }
-void foreach_floodplain_order(int order, void (*callback)(int x, int y, int grid_offset, int order)) {
+void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order)) {
     if (order < 0 || order > MAX_FLOODPLAIN_ORDER_RANGE)
         return;
     auto offsets = tile_cache.order_caches[order].offsets;
     for (int i = 0; i < offsets.size(); i++) {
         int grid_offset = offsets.at(i);
-        callback(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), grid_offset, order);
+        callback(grid_offset, order);
     }
 }
 
@@ -60,10 +60,9 @@ int map_floodplain_rebuild_shoreorder() {
         for (int i = 0; i < tile_cache_river_total(); i++) {
 
             // get current river tile's grid offset and coords
-            int tile_offset = -1;
-            int tile_x = -1;
-            int tile_y = -1;
-            tile_cache_river_get(i, &tile_offset, &tile_x, &tile_y);
+            int tile_offset = tile_cache_river_get(i);
+            int tile_x = map_grid_offset_to_x(tile_offset);
+            int tile_y = map_grid_offset_to_y(tile_offset);
 
             bool is_vergin_water = (order == -1
                     && map_terrain_is(tile_offset, TERRAIN_WATER)
@@ -103,7 +102,7 @@ int map_floodplain_rebuild_shoreorder() {
                         }
                         ++grid_offset;
                     }
-                    grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
+                    grid_offset += GRID_SIZE_PH - (x_max - x_min + 1);
                 }
             }
         }
@@ -167,7 +166,7 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
             fert_total += map_get_fertility(grid_offset, FERT_WITH_MALUS);
             ++grid_offset;
         }
-        grid_offset += grid_size[GAME_ENV] - (x_max - x_min + 1);
+        grid_offset += GRID_SIZE_PH - (x_max - x_min + 1);
     }
     return fert_total / (size * size);
 }

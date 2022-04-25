@@ -115,7 +115,7 @@ static void fill_canals_from_offset(int grid_offset) {
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
-            const int ADJACENT_OFFSETS[] = {-grid_size[GAME_ENV], 1, grid_size[GAME_ENV], -1};
+            const int ADJACENT_OFFSETS[] = {-GRID_SIZE_PH, 1, GRID_SIZE_PH, -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             building *b = building_at(new_offset);
             if (b->id && b->type == BUILDING_WATER_LIFT) {

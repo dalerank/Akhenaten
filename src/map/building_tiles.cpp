@@ -479,7 +479,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
             map_sprite_clear_tile(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(x + dx, y + dy);
+                map_tiles_set_water(map_grid_offset(x + dx, y + dy));
             } else {
                 map_image_set(grid_offset,
                               image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) +
@@ -516,7 +516,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(x + dx, y + dy);
+                map_tiles_set_water(map_grid_offset(x + dx, y + dy));
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);

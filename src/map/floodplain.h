@@ -15,7 +15,7 @@ void tile_cache_floodplain_clear();
 void tile_cache_floodplain_add(int grid_offset);
 int tile_cache_floodplain_total();
 
-void foreach_floodplain_order(int order, void (*callback)(int x, int y, int grid_offset, int order));
+void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order));
 int map_floodplain_rebuild_shoreorder();
 int8_t map_get_floodplain_shoreorder(int grid_offset);
 

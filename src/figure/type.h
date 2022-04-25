@@ -97,6 +97,7 @@ typedef enum figure_type {
     FIGURE_WATER_CARRIER = 87,
     FIGURE_POLICEMAN = 88,
     FIGURE_MAGISTRATE = 89,
+    FIGURE_REED_GATHERER = 90,
     //
     FIGURE_FESTIVAL_PRIEST = 91,
     //

@@ -42,6 +42,8 @@ void random_generate_next(void);
  */
 void random_generate_pool(void);
 
+void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2);
+
 /**
  * Gets the current random 7-bit byte
  * @return Random 7-bit byte

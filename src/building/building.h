@@ -277,12 +277,17 @@ public:
     void spawn_figure_dock();
     void spawn_figure_warehouse();
     void spawn_figure_granary();
-    bool can_spawn_hunter();
     void spawn_figure_hunting_lodge();
+    void spawn_figure_reed_gatherers();
+    void spawn_figure_wood_cutters();
     void spawn_figure_native_hut();
     void spawn_figure_native_meeting();
     void spawn_figure_tower();
     void spawn_figure_barracks();
+
+    bool can_spawn_hunter();
+    bool can_spawn_reedgatherer();
+    bool can_spawn_woodcutter();
 
     void update_native_crop_progress();
     void update_road_access();
@@ -291,7 +296,7 @@ public:
     // barracks.c
     void barracks_add_weapon();
     int barracks_create_soldier();
-    int barracks_create_tower_sentry();
+    bool barracks_create_tower_sentry();
     void barracks_toggle_priority();
     int barracks_get_priority();
 };

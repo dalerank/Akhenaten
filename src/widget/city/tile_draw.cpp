@@ -811,7 +811,7 @@ void draw_debug(int x, int y, int grid_offset) {
             break;
         case 15: // MARSHLAND DEPLETION
             d = map_get_marshland_depletion(grid_offset);
-            if (d != -1)
+            if (d != 255)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
         case 16: // SOIL DEPLETION

@@ -181,13 +181,16 @@ void figure::advance_route_tile(int roaming_enabled) {
     if (direction >= 8)
         return;
     int target_grid_offset = grid_offset_figure + map_grid_direction_delta(direction);
-    if (is_boat) { // boats can not travel on land
-        if (!map_terrain_is(target_grid_offset, TERRAIN_WATER))
+
+
+    if (is_boat && !map_terrain_is(target_grid_offset, TERRAIN_WATER)) // boats can not travel on land
             direction = DIR_FIGURE_REROUTE;
-    } else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
-        if (!map_routing_noncitizen_is_passable(target_grid_offset))
-            direction = DIR_FIGURE_REROUTE;
-        else if (map_routing_is_destroyable(target_grid_offset)) {
+    else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset))
+        direction = DIR_FIGURE_REROUTE;
+    else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
+//        if (!map_routing_noncitizen_is_passable(target_grid_offset))
+//            direction = DIR_FIGURE_REROUTE;
+        if (map_routing_is_destroyable(target_grid_offset)) {
             int cause_damage = 1;
             int max_damage = 0;
             switch (map_routing_get_destroyable(target_grid_offset)) {
@@ -214,10 +217,12 @@ void figure::advance_route_tile(int roaming_enabled) {
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
             }
         }
-    } else if (terrain_usage == TERRAIN_USAGE_WALLS) {
-        if (!map_routing_is_wall_passable(target_grid_offset))
-            direction = DIR_FIGURE_REROUTE;
-    } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
+    }
+//    else if (terrain_usage == TERRAIN_USAGE_WALLS) {
+//        if (!map_routing_is_wall_passable(target_grid_offset))
+//            direction = DIR_FIGURE_REROUTE;
+//    }
+    else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
         if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN))
             direction = DIR_FIGURE_REROUTE;
         else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
@@ -241,8 +246,9 @@ void figure::advance_route_tile(int roaming_enabled) {
             default:
                 direction = DIR_FIGURE_REROUTE;
         }
-    } else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
-        direction = DIR_FIGURE_REROUTE;
+    }
+//    else if (map_terrain_is(target_grid_offset, TERRAIN_IMPASSABLE))
+//        direction = DIR_FIGURE_REROUTE;
 }
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
     while (num_ticks > 0) {

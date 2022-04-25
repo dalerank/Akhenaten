@@ -12,38 +12,27 @@
 
 struct {
     int all_river_tiles[GRID_SIZE_PH * GRID_SIZE_PH];
-    int all_river_tiles_x[GRID_SIZE_PH * GRID_SIZE_PH];
-    int all_river_tiles_y[GRID_SIZE_PH * GRID_SIZE_PH];
     int river_total_tiles = 0;
 } tile_cache;
 void tile_cache_river_clear() {
     tile_cache.river_total_tiles = 0;
 }
-void tile_cache_river_add(int grid_offset, int x, int y) {
+void tile_cache_river_add(int grid_offset) {
     tile_cache.all_river_tiles[tile_cache.river_total_tiles] = grid_offset;
-    tile_cache.all_river_tiles_x[tile_cache.river_total_tiles] = x;
-    tile_cache.all_river_tiles_y[tile_cache.river_total_tiles] = y;
     tile_cache.river_total_tiles++;
 }
 int tile_cache_river_total() {
     return tile_cache.river_total_tiles;
 }
-void tile_cache_river_get(int i, int *grid_offset, int *x, int *y) {
-    if (grid_offset == nullptr || x == nullptr || y == nullptr)
-        return;
-    if (i < 0 || i >= tile_cache.river_total_tiles) {
-        *grid_offset = -1;
-        *x = -1;
-        *y = -1;
-    } else {
-        *grid_offset = tile_cache.all_river_tiles[i];
-        *x = tile_cache.all_river_tiles_x[i];
-        *y = tile_cache.all_river_tiles_y[i];
-    }
+int tile_cache_river_get(int i) {
+    if (i < 0 || i >= tile_cache.river_total_tiles)
+        return -1;
+    else
+        return tile_cache.all_river_tiles[i];
 }
-void foreach_river_tile(void (*callback)(int x, int y, int grid_offset)) {
+void foreach_river_tile(void (*callback)(int grid_offset)) {
     for (int i = 0; i < tile_cache.river_total_tiles; i++)
-        callback(tile_cache.all_river_tiles_x[i], tile_cache.all_river_tiles_y[i], tile_cache.all_river_tiles[i]);
+        callback(tile_cache.all_river_tiles[i]);
 }
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id) {

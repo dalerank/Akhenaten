@@ -133,9 +133,9 @@ int building::barracks_create_soldier() {
     formation_calculate_figures();
     return formation_id ? 1 : 0;
 }
-int building::barracks_create_tower_sentry() {
+bool building::barracks_create_tower_sentry() {
     if (tower_sentry_request <= 0)
-        return 0;
+        return false;
 
     building *tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -148,7 +148,7 @@ int building::barracks_create_tower_sentry() {
         }
     }
     if (!tower)
-        return 0;
+        return false;
 
     figure *f = figure_create(FIGURE_TOWER_SENTRY, road_access_x, road_access_y, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
@@ -160,7 +160,7 @@ int building::barracks_create_tower_sentry() {
         f->poof();
     tower->set_figure(0, f->id);
     f->set_home(tower->id);
-    return 1;
+    return true;
 }
 
 void building_barracks_request_tower_sentry() {

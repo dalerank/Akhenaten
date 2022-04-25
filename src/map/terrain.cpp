@@ -335,13 +335,13 @@ void map_terrain_clear(void) {
 void map_terrain_init_outside_map(void) {
     int map_width, map_height;
     map_grid_size(&map_width, &map_height);
-    int y_start = (grid_size[GAME_ENV] - map_height) / 2;
-    int x_start = (grid_size[GAME_ENV] - map_width) / 2;
-    for (int y = 0; y < grid_size[GAME_ENV]; y++) {
+    int y_start = (GRID_SIZE_PH - map_height) / 2;
+    int x_start = (GRID_SIZE_PH - map_width) / 2;
+    for (int y = 0; y < GRID_SIZE_PH; y++) {
         int y_outside_map = y < y_start || y >= y_start + map_height;
-        for (int x = 0; x < grid_size[GAME_ENV]; x++) {
+        for (int x = 0; x < GRID_SIZE_PH; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width)
-                map_grid_set(&terrain_grid, x + grid_size[GAME_ENV] * y, TERRAIN_TREE | TERRAIN_WATER);
+                map_grid_set(&terrain_grid, x + GRID_SIZE_PH * y, TERRAIN_TREE | TERRAIN_WATER);
 
         }
     }
@@ -358,7 +358,7 @@ void build_terrain_caches() {
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER)) {
-                tile_cache_river_add(grid_offset, x, y);
+                tile_cache_river_add(grid_offset);
                 river_tile++;
             }
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {

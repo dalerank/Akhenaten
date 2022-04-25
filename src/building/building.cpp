@@ -109,7 +109,7 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
             case BUILDING_LIMESTONE_QUARRY:
                 b->output_resource_id = RESOURCE_LIMESTONE;
                 break;
-            case BUILDING_TIMBER_YARD:
+            case BUILDING_WOOD_CUTTERS:
                 b->output_resource_id = RESOURCE_TIMBER_PH;
                 break;
             case BUILDING_CLAY_PIT:
@@ -494,8 +494,8 @@ bool building_is_extractor(int type) {
            || type == BUILDING_GEMSTONE_MINE
            || type == BUILDING_COPPER_MINE
            || type == BUILDING_GRANITE_QUARRY
-           || type == BUILDING_SANDSTONE_QUARRY
-           || type == BUILDING_REED_GATHERER;
+           || type == BUILDING_SANDSTONE_QUARRY;
+//           || type == BUILDING_REED_GATHERER;
 }
 bool building_is_monument(int type) {
     switch (type) {

@@ -167,6 +167,13 @@ bool figure::has_destination(building *b) {
     return (b == destination());
 }
 
+bool figure::is(figure_type value) {
+    return type == value;
+}
+bool figure::is(figure_state value) {
+    return state == value;
+}
+
 //bool figure::is_roamer() {
 //    switch (action_state) {
 //        case ACTION_1_ROAMING:

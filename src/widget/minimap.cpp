@@ -189,7 +189,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
                 case 5:
                     ImageDraw::img_generic(image_id + (multi_tile_size - 1), x_view, y_view - (multi_tile_size - 1));
                     break;
-                case 6:
+                case 6: // TODO: make a generalized formula?
                     ImageDraw::img_generic(image_id + 2, x_view, y_view - 2);
                     ImageDraw::img_generic(image_id + 2, x_view + 3, y_view - 5);
                     ImageDraw::img_generic(image_id + 2, x_view + 6, y_view - 2);

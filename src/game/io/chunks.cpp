@@ -104,7 +104,7 @@ io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
                 case 3:
                     sprintf(temp_string, "%2i ", field->large_data[j]); break;
                 default:
-                    sprintf(temp_string, "%3i ", field->large_data[j]); break;
+                    sprintf(temp_string, "%4i ", field->large_data[j]); break;
             }
             fwrite(temp_string, strlen(temp_string), 1, debug_file);
         }

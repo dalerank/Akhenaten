@@ -352,6 +352,7 @@ public:
     void hippodrome_horse_action();
     // pharaoh
     void hunter_action();
+    void gatherer_action();
     void policeman_action();
     void magistrate_action();
     void water_carrier_action();

@@ -208,7 +208,7 @@ void building_count_update(void) {
                 case BUILDING_LIMESTONE_QUARRY:
                     increase_industry_count(RESOURCE_IRON, b->num_workers > 0);
                     break;
-                case BUILDING_TIMBER_YARD:
+                case BUILDING_WOOD_CUTTERS:
                     increase_industry_count(RESOURCE_TIMBER_C3, b->num_workers > 0);
                     break;
                 case BUILDING_CLAY_PIT:
@@ -261,7 +261,7 @@ void building_count_update(void) {
                     increase_industry_count(RESOURCE_CLAY, b->num_workers > 0); break;
                 case BUILDING_REED_GATHERER:
                     increase_industry_count(RESOURCE_REEDS, b->num_workers > 0); break;
-                case BUILDING_TIMBER_YARD:
+                case BUILDING_WOOD_CUTTERS:
                     increase_industry_count(RESOURCE_TIMBER_PH, b->num_workers > 0); break;
                     ////
                 case BUILDING_GEMSTONE_MINE:

@@ -49,6 +49,12 @@ void random_generate_pool(void) {
     }
 }
 
+void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2) {
+    data.iv1 = iv1;
+    data.iv2 = iv2;
+    random_bits_fill();
+}
+
 int8_t random_byte(void) {
     return data.random1_7bit;
 }

@@ -352,6 +352,8 @@ void figure::action_perform() {
                     poof();
                 break;
             case FIGURE_HUNTER:
+            case FIGURE_REED_GATHERER:
+            case BUILDING_WOOD_CUTTERS:
                 if (b->state != BUILDING_STATE_VALID)
                     poof();
                 break;
@@ -510,8 +512,8 @@ void figure::action_perform() {
             case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;
             case 89: magistrate_action();               break;
-            case 91:
-                festival_guy_action();                 break;
+            case 90: gatherer_action();                 break; // TODO: also the same for wood cutters
+            case 91: festival_guy_action();             break;
             default:
                 break;
         }

@@ -28,6 +28,7 @@
 
 #include <math.h>
 #include <city/floods.h>
+#include <core/random.h>
 
 const int generic_delay_table[] = {
         0,
@@ -914,25 +915,23 @@ void building::spawn_figure_granary() {
 #include "city/data_private.h"
 
 bool building::can_spawn_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
-    int lodges = 0;
     int hunters_total = 0;
     int hunters_this_lodge = 0;
     int huntables = city_data.figure.animals;
-//    for (int b = 0; b < MAX_BUILDINGS; b++) {
-//        if (building_get()->type == 115)
-//            lodges++;
-//    }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->type == 73) { // hunter
+        if (f->is(FIGURE_HUNTER)) { // figure with type on map
             hunters_total++;
-            if (f->has_home(this)) // belongs to this lodge
+            if (f->has_home(this)) // belongs to this building
                 hunters_this_lodge++;
         }
         if (hunters_total >= huntables)
             break;
     }
-    if (hunters_total < huntables && hunters_this_lodge < 3 && hunters_this_lodge + (stored_full_amount / 100) < 5)
+    // max 3 per building
+    // can not have more hunters than preys on map
+    // can only spawn if there's space for more game meat in the building
+    if (hunters_total < huntables && hunters_this_lodge < 3 && hunters_this_lodge + (stored_full_amount / 100) < (5 - hunters_this_lodge))
         return true;
     return false;
 }
@@ -951,45 +950,72 @@ void building::spawn_figure_hunting_lodge() {
         }
     }
     common_spawn_goods_output_cartpusher();
+}
 
+bool building::can_spawn_reedgatherer() {
+    int gatherers_total = 0;
+    int gatherers_this_yard = 0;
+    int gatherable = 10; // TODO
+    for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
+        figure *f = figure_get(i);
+        if (f->is(FIGURE_REED_GATHERER)) { // figure with type on map
+            gatherers_total++;
+            if (f->has_home(this)) // belongs to this building
+                gatherers_this_yard++;
+        }
+        if (gatherers_total >= gatherable)
+            break;
+    }
+    // max 5 per building
+    // can not have more gatherers than mature reed tiles on map
+    // can only spawn if there's space for more reed in the building
+    // TODO : temp = 1
+    if (gatherers_total < gatherable && gatherers_this_yard < 1 && gatherers_this_yard + (stored_full_amount / 50) < (10 - gatherers_this_yard))
+        return true;
+    return false;
+}
+void building::spawn_figure_reed_gatherers() {
+    check_labor_problem();
+    if (road_is_accessible) {
+        common_spawn_labor_seeker(100);
+        int pct_workers = worker_percentage();
+        int spawn_delay = figure_spawn_timer();
+        if (spawn_delay == -1)
+            return;
+        figure_spawn_delay++;
+        if (figure_spawn_delay > spawn_delay) {
+            figure_spawn_delay = 0;
+
+            random_TEMP_SET_DEBUG(1843529368, 1835336013);
+
+            while (can_spawn_reedgatherer()) {
+                random_generate_next();
+                auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+                f->wait_ticks = random_short() % 30; // ok
+            }
+        }
+    }
+    common_spawn_goods_output_cartpusher();
+}
+
+bool building::can_spawn_woodcutter() {
+    return false;
+}
+void building::spawn_figure_wood_cutters() {
 //    check_labor_problem();
 //    if (road_is_accessible) {
-//        spawn_labor_seeker(50);
+//        common_spawn_labor_seeker(100);
 //        int pct_workers = worker_percentage();
 //        int spawn_delay = figure_spawn_timer();
-////        if (pct_workers >= 100)
-////            spawn_delay = 0;
-////        else if (pct_workers >= 75)
-////            spawn_delay = 1;
-////        else if (pct_workers >= 50)
-////            spawn_delay = 3;
-////        else if (pct_workers >= 25)
-////            spawn_delay = 7;
-////        else if (pct_workers >= 1)
-////            spawn_delay = 15;
-////        else
-////            return;
-//        figure_spawn_delay++;
-//        if (figure_spawn_delay > spawn_delay && can_spawn_hunter()) {
-//            figure_spawn_delay = 0;
-//            create_figure_generic(FIGURE_HUNTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
-//        }
-//        if (has_figure_of_type(0, FIGURE_CART_PUSHER))
+//        if (spawn_delay == -1)
 //            return;
-//        if (loads_stored) {
-//            int loads_to_carry = fmin(loads_stored, 4);
-//            create_cartpusher(RESOURCE_GAMEMEAT, loads_to_carry);
-//            loads_stored -= loads_to_carry;
-////            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
-////            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-////            int loads_to_carry = fmin(loads_stored, 4);
-////            loads_stored -= loads_to_carry;
-////            f->load_resource(loads_to_carry * 100, RESOURCE_GAMEMEAT);
-////            f->set_home(id);
-////            set_figure(0, f->id);
-////            f->wait_ticks = 30;
+//        figure_spawn_delay++;
+//        if (figure_spawn_delay > spawn_delay && can_spawn_woodcutter()) {
+//            figure_spawn_delay = 0;
+//            create_figure_generic(FIGURE_WOOD_CUTTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
 //        }
 //    }
+//    common_spawn_goods_output_cartpusher();
 }
 
 void building::spawn_figure_native_hut() {
@@ -1215,6 +1241,10 @@ bool building::figure_generate() {
                 common_spawn_figure_trigger(100); break;
             case BUILDING_HUNTING_LODGE:
                 spawn_figure_hunting_lodge(); break;
+            case BUILDING_REED_GATHERER:
+                spawn_figure_reed_gatherers(); break;
+            case BUILDING_WOOD_CUTTERS:
+                spawn_figure_wood_cutters(); break;
             case BUILDING_WORK_CAMP:
                 spawn_figure_work_camp(); break;
             case BUILDING_COURTHOUSE:

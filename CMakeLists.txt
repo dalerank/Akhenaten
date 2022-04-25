@@ -358,6 +358,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/trader.cpp
     ${PROJECT_SOURCE_DIR}/src/figuretype/wall.cpp
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.cpp
+    ${PROJECT_SOURCE_DIR}/src/figuretype/gatherers.cpp
 )
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.cpp
@@ -422,6 +423,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/tiles.cpp
     ${PROJECT_SOURCE_DIR}/src/map/water.cpp
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/tile_cache.cpp
     ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
     ${PROJECT_SOURCE_DIR}/src/map/marshland.cpp
     ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
