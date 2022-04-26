@@ -29,6 +29,8 @@ void vegetation_growth_update() {
             random_generate_next();
             int r = random_short() % 10 + 25;
             growth += r;
+            if (growth > 255)
+                growth = 255;
             map_grid_set(&terrain_vegetation_growth, grid_offset, growth);
         }
     }

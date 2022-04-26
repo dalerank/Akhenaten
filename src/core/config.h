@@ -98,7 +98,7 @@ void config_set_string(int key, const char *value);
  * @param key Integer key
  * @return Default config value
  */
-int config_get_default_value(int key);
+bool config_get_default_value(int key);
 
 /**
  * Get a string default config value
