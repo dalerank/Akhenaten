@@ -283,7 +283,7 @@ static bool callback_travel_found_reeds(int next_offset, int dist) {
             int t_y = map_grid_offset_to_y(next_offset);
             // requires tile to be fully within a 3x3 marshland area
             if (map_terrain_all_tiles_in_radius_are(t_x, t_y, 1, 1, TERRAIN_MARSHLAND))
-                if (is_gathering_point_valid(next_offset))
+                if (can_harvest_point(next_offset))
                     return true;
         }
     }
@@ -300,7 +300,7 @@ static bool callback_travel_found_timber(int next_offset, int dist) {
         && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
         if (map_terrain_is(next_offset, TERRAIN_TREE))
-            if (is_gathering_point_valid(next_offset))
+            if (can_harvest_point(next_offset))
                 return true;
     }
     return false;

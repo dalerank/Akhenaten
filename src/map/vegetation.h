@@ -9,6 +9,7 @@ int map_get_vegetation_growth(int grid_offset);
 void vegetation_deplete(int grid_offset);
 void vegetation_growth_update();
 
-bool is_gathering_point_valid(int grid_offset, int max_gatherers = 1);
+int gatherers_harvesting_point(int grid_offset);
+bool can_harvest_point(int grid_offset, int max_gatherers = 1);
 
 #endif //OZYMANDIAS_VEGETATION_H

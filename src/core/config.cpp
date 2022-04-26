@@ -61,6 +61,7 @@ static const char *ini_keys[CONFIG_MAX_ENTRIES] = {
         "gameplay_change_multiple_temple_complexes",
         "gameplay_change_multiple_monuments",
         "gameplay_change_soil_depletion",
+        "gameplay_change_multiple_gatherers",
 
 };
 
@@ -121,6 +122,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
         false, // multiple temple complexes
         false, // multiple monuments
         true, // deplation soil change
+        false, // multiple gatherers on a single tile
 
 };
 

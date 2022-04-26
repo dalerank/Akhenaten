@@ -2,6 +2,7 @@
 #include <game/resource.h>
 #include <core/image_group.h>
 #include <map/vegetation.h>
+#include <core/config.h>
 
 void figure::gatherer_action() {
     switch (action_state) {
@@ -31,7 +32,7 @@ void figure::gatherer_action() {
             break;
         case 9: // go to gathering place
             if (do_goto(destination_x, destination_y, TERRAIN_USAGE_PREFER_ROADS)) {
-                if (!is_gathering_point_valid(map_grid_offset(destination_x, destination_y))) {
+                if (!can_harvest_point(map_grid_offset(destination_x, destination_y))) {
                     wait_ticks = 0;
                     advance_action(8);
                 } else
@@ -39,11 +40,29 @@ void figure::gatherer_action() {
             }
             break;
         case 10: // gathering resource
-            if (wait_ticks >= 300) {
-                vegetation_deplete(grid_offset_figure);
-                advance_action(11);
+            // someone finished harvesting this spot (for "multiple gatherers" config setting enabled)
+            if (map_get_vegetation_growth(grid_offset_figure) < 255) {
+                switch (type) {
+                    case FIGURE_REED_GATHERER:
+                        wait_ticks = 0;
+                        break;
+                    case FIGURE_LUMBERJACK:
+                        wait_ticks = 10;
+                        break;
+                }
+                advance_action(8);
+            } else {
+                // harvesting.....
+                if (wait_ticks >= 300) {
+                    vegetation_deplete(grid_offset_figure);
+                    advance_action(11);
+                }
+                // progress faster with multiple people on one spot
+                if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
+                    wait_ticks += gatherers_harvesting_point(grid_offset_figure);
+                else
+                    wait_ticks++;
             }
-            wait_ticks++;
             break;
         case 11: // returning with resource
             if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
