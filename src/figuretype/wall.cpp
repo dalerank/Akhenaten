@@ -14,7 +14,7 @@
 #include "figuretype/missile.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 #include "sound/effect.h"
 

@@ -3,7 +3,7 @@
 #include "figure/figure.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "map/routing.h"
+#include "map/routing/routing.h"
 
 static grid_xx strength = {0, {FS_UINT8, FS_UINT8}};
 

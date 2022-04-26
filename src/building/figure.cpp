@@ -29,6 +29,7 @@
 #include <math.h>
 #include <city/floods.h>
 #include <core/random.h>
+#include <map/routing/routing.h>
 
 const int generic_delay_table[] = {
         0,
@@ -220,7 +221,7 @@ bool building::common_spawn_roamer(int type, int min_houses, int created_action)
     }
     return false;
 }
-bool building::common_spawn_goods_output_cartpusher(bool only_one) {
+bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_full_loads, int min_carry, int max_carry) {
     // can only have one?
     if (only_one && has_figure_of_type(0, FIGURE_CART_PUSHER))
         return false;
@@ -228,8 +229,10 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one) {
     // no checking for work force? doesn't matter anyways.... there's no instance
     // in the game that allows cartpushers to spawn before the workers disappear!
     if (road_is_accessible) {
-        while (stored_full_amount) {
-            int amounts_to_carry = fmin(stored_full_amount, 800);
+        while (stored_full_amount >= min_carry) {
+            int amounts_to_carry = fmin(stored_full_amount, max_carry);
+            if (only_full_loads)
+                amounts_to_carry -= amounts_to_carry % 100; // remove pittance
             create_cartpusher(output_resource_id, amounts_to_carry);
             stored_full_amount -= amounts_to_carry;
             if (only_one || stored_full_amount == 0) // done once, or out of goods?
@@ -952,25 +955,29 @@ void building::spawn_figure_hunting_lodge() {
     common_spawn_goods_output_cartpusher();
 }
 
-bool building::can_spawn_reedgatherer() {
-    int gatherers_total = 0;
+bool building::can_spawn_gatherer(figure_type ftype, int max_gatherers_per_building, int carry_per_person) {
     int gatherers_this_yard = 0;
-    int gatherable = 10; // TODO
+    bool resource_reachable = false;
+    switch (ftype) {
+        case FIGURE_REED_GATHERER:
+            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_MARSHLAND);
+            break;
+        case FIGURE_LUMBERJACK:
+            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_TREE);
+            break;
+    }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
         figure *f = figure_get(i);
-        if (f->is(FIGURE_REED_GATHERER)) { // figure with type on map
-            gatherers_total++;
+        if (f->is(ftype)) { // figure with type on map
             if (f->has_home(this)) // belongs to this building
                 gatherers_this_yard++;
         }
-        if (gatherers_total >= gatherable)
-            break;
     }
     // max 5 per building
-    // can not have more gatherers than mature reed tiles on map
     // can only spawn if there's space for more reed in the building
-    // TODO : temp = 1
-    if (gatherers_total < gatherable && gatherers_this_yard < 1 && gatherers_this_yard + (stored_full_amount / 50) < (10 - gatherers_this_yard))
+    int max_loads = 500 / carry_per_person;
+    if (gatherers_this_yard < max_gatherers_per_building
+    && gatherers_this_yard + (stored_full_amount / carry_per_person) < (max_loads - gatherers_this_yard))
         return true;
     return false;
 }
@@ -986,11 +993,9 @@ void building::spawn_figure_reed_gatherers() {
         if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
 
-            random_TEMP_SET_DEBUG(1843529368, 1835336013);
-
-            while (can_spawn_reedgatherer()) {
-                random_generate_next();
+            while (can_spawn_gatherer(FIGURE_REED_GATHERER, 5, 50)) {
                 auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+                random_generate_next();
                 f->wait_ticks = random_short() % 30; // ok
             }
         }
@@ -998,24 +1003,26 @@ void building::spawn_figure_reed_gatherers() {
     common_spawn_goods_output_cartpusher();
 }
 
-bool building::can_spawn_woodcutter() {
-    return false;
-}
 void building::spawn_figure_wood_cutters() {
-//    check_labor_problem();
-//    if (road_is_accessible) {
-//        common_spawn_labor_seeker(100);
-//        int pct_workers = worker_percentage();
-//        int spawn_delay = figure_spawn_timer();
-//        if (spawn_delay == -1)
-//            return;
-//        figure_spawn_delay++;
-//        if (figure_spawn_delay > spawn_delay && can_spawn_woodcutter()) {
-//            figure_spawn_delay = 0;
-//            create_figure_generic(FIGURE_WOOD_CUTTER, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
-//        }
-//    }
-//    common_spawn_goods_output_cartpusher();
+    check_labor_problem();
+    if (road_is_accessible) {
+        common_spawn_labor_seeker(100);
+        int pct_workers = worker_percentage();
+        int spawn_delay = figure_spawn_timer();
+        if (spawn_delay == -1)
+            return;
+        figure_spawn_delay++;
+        if (figure_spawn_delay > spawn_delay) {
+            figure_spawn_delay = 0;
+
+            while (can_spawn_gatherer(FIGURE_LUMBERJACK, 3, 25)) {
+                auto f = create_figure_generic(FIGURE_LUMBERJACK, ACTION_8_RECALCULATE, 0, DIR_4_BOTTOM_LEFT);
+                random_generate_next();
+                f->wait_ticks = random_short() % 30; // ok
+            }
+        }
+    }
+    common_spawn_goods_output_cartpusher();
 }
 
 void building::spawn_figure_native_hut() {
@@ -1143,9 +1150,12 @@ bool building::figure_generate() {
     show_on_problem_overlay = 0;
 
     bool patrician_generated = false;
-    if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE) {
+    if (type >= BUILDING_HOUSE_SMALL_VILLA && type <= BUILDING_HOUSE_LUXURY_PALACE)
         patrician_generated = spawn_patrician(patrician_generated);
-    }
+    else if (type == BUILDING_REED_GATHERER)
+        spawn_figure_reed_gatherers();
+    else if (type == BUILDING_WOOD_CUTTERS)
+        spawn_figure_wood_cutters();
     else if (is_workshop() || is_extractor()) // farms are handled by a separate cycle in Pharaoh!
         spawn_figure_industry();
     else if (is_tax_collector())
@@ -1241,10 +1251,6 @@ bool building::figure_generate() {
                 common_spawn_figure_trigger(100); break;
             case BUILDING_HUNTING_LODGE:
                 spawn_figure_hunting_lodge(); break;
-            case BUILDING_REED_GATHERER:
-                spawn_figure_reed_gatherers(); break;
-            case BUILDING_WOOD_CUTTERS:
-                spawn_figure_wood_cutters(); break;
             case BUILDING_WORK_CAMP:
                 spawn_figure_work_camp(); break;
             case BUILDING_COURTHOUSE:

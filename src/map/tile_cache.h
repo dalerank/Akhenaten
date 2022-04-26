@@ -5,7 +5,7 @@
 
 class tile_cache {
 private:
-    int pCache[GRID_TOTAL];
+    int pCache[GRID_SIZE_TOTAL];
     int pSize = 0;
 public:
     void clear();

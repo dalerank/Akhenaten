@@ -1,6 +1,7 @@
 #include <city/floods.h>
 #include <scenario/events.h>
 #include <game/io/manager.h>
+#include <map/vegetation.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -42,7 +43,7 @@
 #include "map/desirability.h"
 #include "map/natives.h"
 #include "map/road_network.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/tiles.h"
 #include "map/water_supply.h"
 #include "scenario/demand_change.h"
@@ -181,6 +182,7 @@ static void advance_tick(void) {
             break;
         case 20:
             building_industry_update_production();
+            vegetation_growth_update();
             break;
         case 21:
             building_maintenance_check_rome_access();

@@ -6,7 +6,7 @@
 #include "empire/city.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "map/routing.h"
+#include "map/routing/routing.h"
 #include "map/terrain.h"
 #include "scenario/map.h"
 

@@ -9,8 +9,8 @@
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/road_network.h"
-#include "map/routing.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 
 static bool road_tile_valid_access(int grid_offset) {

@@ -6,9 +6,9 @@
 
 #include <stdint.h>
 
-#define GRID_SIZE 228
-#define GRID_TOTAL GRID_SIZE * GRID_SIZE
-#define GRID_OFFSET(x, y) (x + GRID_SIZE * y)
+#define GRID_LENGTH 228
+#define GRID_SIZE_TOTAL GRID_LENGTH * GRID_LENGTH
+#define GRID_OFFSET(x, y) (x + GRID_LENGTH * y)
 
 enum {
     FS_NONE = 0,
@@ -76,7 +76,8 @@ void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_mi
 void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max,
                                 int *y_max);
 int map_grid_is_inside(int x, int y, int size);
-int map_view_tile_inside_map_area(int x, int y);
+bool map_tile_inside_map_area(int x, int y, int edge_size = 0);
+bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
 const int *map_grid_adjacent_offsets_xy(int sizex, int sizey);
 const int *map_grid_adjacent_offsets(int size);
 

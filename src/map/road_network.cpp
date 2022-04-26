@@ -3,14 +3,14 @@
 #include "city/map.h"
 #include "map/data.h"
 #include "map/grid.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 
 #include <string.h>
 
 #define MAX_QUEUE 1000
 
-static const int ADJACENT_OFFSETS_PH[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
+static const int ADJACENT_OFFSETS_PH[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
 
 static grid_xx network = {0, {FS_UINT8, FS_UINT8}};
 
@@ -40,7 +40,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
     int next_offset;
     int size = 1;
     do {
-        if (++guard >= GRID_TOTAL)
+        if (++guard >= GRID_SIZE_TOTAL)
             break;
 
         map_grid_set(&network, grid_offset, network_id);

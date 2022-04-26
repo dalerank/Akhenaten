@@ -3,13 +3,13 @@
 #include <window/city.h>
 #include <game/tutorial.h>
 #include <graphics/graphics.h>
-#include <map/routing.h>
+#include <map/routing/routing.h>
 #include <map/road_network.h>
 #include <map/random.h>
 #include <widget/overlays/city_overlay_risks.h>
 #include <map/aqueduct.h>
 #include <map/floodplain.h>
-#include <map/marshland.h>
+#include <map/vegetation.h>
 #include <map/moisture.h>
 #include "tile_draw.h"
 
@@ -243,12 +243,13 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
-void draw_empty_tile_debug(int x, int y, int grid_offset) {
+void draw_empty_tile(int x, int y, int grid_offset) {
     if (!map_property_is_draw_tile(grid_offset))
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
 };
 
 void draw_footprint(int x, int y, int grid_offset) {
+
     // black tile outside of map
     if (grid_offset < 0)
         return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
@@ -299,9 +300,6 @@ void draw_footprint(int x, int y, int grid_offset) {
 
     // ******** TEMP ********
 //    if (grid_offset == map_grid_offset(135, 66))
-//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
-//    if (grid_offset == map_grid_offset(136, 66))
-//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 }
 void draw_top(int x, int y, int grid_offset) {
     // tile must contain image draw data
@@ -737,21 +735,26 @@ void draw_debug(int x, int y, int grid_offset) {
             draw_debug_line(str, x, y + 10, 0, "", map_image_at(grid_offset) - 14252, COLOR_LIGHT_RED);
             break;
         case 15: // MARSHLAND DEPLETION
-            d = map_get_marshland_depletion(grid_offset);
+            d = map_get_vegetation_growth(grid_offset);
             if (d != 255)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 16: // SOIL DEPLETION
-            d = map_get_fertility(grid_offset, FERT_ONLY_MALUS);
+        case 16: // MARSHLAND
+            d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
             if (d != 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 17: // UNKNOWN SOIL GRID
+        case 17: // TERRAIN TYPE
+            d = map_terrain_get(grid_offset);
+//            if (d != 0)
+            draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_BLUE);
+            break;
+        case 18: // UNKNOWN SOIL GRID
             d = map_get_UNK04(grid_offset);
             if (d != 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
             break;
-        case 18: // UNKNOWN 32BIT GRID
+        case 19: // UNKNOWN 32BIT GRID
             d = map_get_UNK03(grid_offset);
             if (d != 0)
                 draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);

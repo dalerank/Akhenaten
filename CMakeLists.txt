@@ -413,10 +413,10 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/road_access.cpp
     ${PROJECT_SOURCE_DIR}/src/map/road_aqueduct.cpp
     ${PROJECT_SOURCE_DIR}/src/map/road_network.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing_data.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing_path.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/routing_terrain.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing/routing.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing/routing_grids.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing/queue.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/routing/routing_terrain.cpp
     ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.cpp
     ${PROJECT_SOURCE_DIR}/src/map/sprite.cpp
     ${PROJECT_SOURCE_DIR}/src/map/terrain.cpp
@@ -425,7 +425,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
     ${PROJECT_SOURCE_DIR}/src/map/tile_cache.cpp
     ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
-    ${PROJECT_SOURCE_DIR}/src/map/marshland.cpp
+        ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
     ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
 )
 set(SCENARIO_FILES

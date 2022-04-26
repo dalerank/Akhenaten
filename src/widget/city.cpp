@@ -1,5 +1,6 @@
 #include <widget/city/building_ghost.h>
 #include <widget/overlays/city_overlay.h>
+#include <graphics/image.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
@@ -100,6 +101,22 @@ static int adjust_offset_for_orientation(int grid_offset, int size) {
     }
 }
 
+static void draw_TEST(int x, int y, int grid_offset) {
+    // NO grid_offset outside of the valid map area can be accessed -- the ones passed through here will ALWAYS be set to -1.
+    // so it's impossible to draw outside the map with these!
+    if (grid_offset == -1)
+        return;
+    int tx = map_grid_offset_to_x(grid_offset);
+    int ty = map_grid_offset_to_y(grid_offset);
+//    if (tx==40 && ty==44)
+//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
+    if (map_grid_inside_map_area(tx, ty, 1))
+        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+//    if (!map_grid_is_inside(tx, ty, 1))
+//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
+//    else
+//        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+}
 void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
@@ -118,7 +135,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 
     // do this for EVERY tile (not just valid ones)
     // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_empty_tile_debug);
+    city_view_foreach_map_tile(draw_empty_tile);
 
     if (!city_building_ghost_mark_deleting(tile)) {
         city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
@@ -142,6 +159,10 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     city_view_foreach_valid_map_tile(
             draw_debug,
             draw_debug_figures);
+//    city_view_foreach_map_tile(draw_debug);
+//    city_view_foreach_map_tile(draw_debug_figures);
+//    city_view_foreach_map_tile(draw_TEST);
+
 }
 void widget_city_draw_with_overlay(const map_tile *tile) {
     if (!select_city_overlay())
@@ -149,7 +170,7 @@ void widget_city_draw_with_overlay(const map_tile *tile) {
 
     // do this for EVERY tile (not just valid ones)
     // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_empty_tile_debug);
+    city_view_foreach_map_tile(draw_empty_tile);
 
     if (!city_building_ghost_mark_deleting(tile)) {
         city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures

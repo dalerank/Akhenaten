@@ -83,7 +83,7 @@ static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max, void
             callback(grid_offset);
             ++grid_offset;
         }
-        grid_offset += GRID_SIZE - (x_max - x_min + 1);
+        grid_offset += GRID_LENGTH - (x_max - x_min + 1);
     }
 }
 

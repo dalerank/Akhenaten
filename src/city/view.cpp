@@ -36,10 +36,10 @@ view_data *city_view_data_unsafe() {
 }
 
 int MAP_TILE_UPPER_LIMIT_X() {
-    return GRID_SIZE + 3;
+    return GRID_LENGTH + 3;
 }
 int MAP_TILE_UPPER_LIMIT_Y() {
-    return GRID_SIZE * 2 + 1;
+    return GRID_LENGTH * 2 + 1;
 }
 
 int SCROLLABLE_X_MIN_TILE() {
@@ -190,7 +190,7 @@ static void calculate_lookup(void) {
     int grid_s;
     switch (GAME_ENV) {
         case ENGINE_ENV_PHARAOH:
-            grid_s = GRID_SIZE;
+            grid_s = GRID_LENGTH;
             break;
     }
     for (int y = 0; y < grid_s; y++) {
@@ -199,7 +199,7 @@ static void calculate_lookup(void) {
         for (int x = 0; x < grid_s; x++) {
             int grid_offset = x + grid_s * y;
 
-            int is_inside_area = map_view_tile_inside_map_area(x, y);
+            bool is_inside_area = map_tile_inside_map_area(x, y);
             if (is_inside_area) // inside area
                 view_tile_to_grid_offset_lookup[x_view / 2][y_view] = grid_offset;
             else // outside area

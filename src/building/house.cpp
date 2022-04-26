@@ -65,9 +65,9 @@ typedef struct {
     int offset;
 } expand_direction;
 const expand_direction EXPAND_DIRECTION_DELTA_PH[MAX_DIR] = {{0,  0,  0},
-                                                             {-1, -1, -GRID_SIZE - 1},
+                                                             {-1, -1, -GRID_LENGTH - 1},
                                                              {-1, 0,  -1},
-                                                             {0,  -1, -GRID_SIZE}};;
+                                                             {0,  -1, -GRID_LENGTH}};;
 
 static struct {
     int x;

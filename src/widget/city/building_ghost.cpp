@@ -1,5 +1,5 @@
 #include <cmath>
-#include <map/routing.h>
+#include <map/routing/routing.h>
 #include "building_ghost.h"
 
 #include "building/construction/build_planner.h"

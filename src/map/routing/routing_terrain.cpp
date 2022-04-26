@@ -9,7 +9,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
-#include "map/routing_data.h"
+#include "routing_grids.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
 
@@ -171,9 +171,12 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     int y = map_grid_offset_to_y(grid_offset);
     switch (routing_type) {
         case ROUTING_TYPE_CITIZEN:
+//            if (!map_tile_inside_map_area(x, y))
+//                return CITIZEN_N1_BLOCKED;
             if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER))
                 return CITIZEN_0_ROAD;
-            else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN)) // TODO?
+            else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN
+            | TERRAIN_MARSHLAND | TERRAIN_FLOODPLAIN | TERRAIN_TREE)) // TODO?
                 return CITIZEN_2_PASSABLE_TERRAIN;
             else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (fix_incorrect_buildings(grid_offset))

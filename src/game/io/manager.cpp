@@ -94,7 +94,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(1280, true, "junk11", iob_junk11);
             push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
-            push_chunk(51984, false, "marshland_depletion", iob_marshland_depletion); // not sure what's the point of this in MAP...
+            push_chunk(51984, false, "vegetation_growth", iob_vegetation_growth); // not sure what's the point of this in MAP...
 
             push_chunk(version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
             push_chunk(288, false, "trade_prices", iob_trade_prices);
@@ -193,7 +193,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 12 bytes     00 00 00 00 ??? 3 x int
             //  2 bytes     00 00       ??? 1 x short
             //  8 bytes     00 00 00 00 ??? 2 x int
-            push_chunk(50, false, "junk8", iob_junk8); // unknown bytes
+            push_chunk(50, false, "junk8", iob_routing_stats); // unknown bytes
 
 //                state->last_invasion_id = create_savegame_piece(2, false, "");
 //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
@@ -231,7 +231,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
-            push_chunk(51984, false, "marshland_depletion", iob_marshland_depletion); // todo: 1-byte grid
+            push_chunk(51984, false, "vegetation_growth", iob_vegetation_growth); // todo: 1-byte grid
 
             // 20 bytes     19 00 00 00 ???
             push_chunk(20, false, "junk14", iob_junk14);

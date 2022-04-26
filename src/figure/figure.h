@@ -471,7 +471,9 @@ public:
     void draw_market_buyer(building_info_context *c);
     void draw_normal_figure(building_info_context *c);
 
-
+    // map/marshland.c
+//    bool is_gathering_point_valid(int grid_offset);
+    bool find_resource_tile(int resource_type, int *out_x, int *out_y);
 };
 
 figure *figure_get(int id);

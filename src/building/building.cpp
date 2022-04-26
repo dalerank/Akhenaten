@@ -14,7 +14,7 @@
 #include "map/elevation.h"
 #include "map/grid.h"
 #include "map/random.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "menu.h"
@@ -489,13 +489,18 @@ bool building_is_workshop(int type) {
            || type == BUILDING_PAINT_WORKSHOP;
 }
 bool building_is_extractor(int type) {
-    return (type >= BUILDING_STONE_QUARRY && type <= BUILDING_CLAY_PIT)
+    return (type == BUILDING_STONE_QUARRY
+           || type == BUILDING_LIMESTONE_QUARRY
+           || type == BUILDING_CLAY_PIT)
            || type == BUILDING_GOLD_MINE
            || type == BUILDING_GEMSTONE_MINE
            || type == BUILDING_COPPER_MINE
            || type == BUILDING_GRANITE_QUARRY
            || type == BUILDING_SANDSTONE_QUARRY;
-//           || type == BUILDING_REED_GATHERER;
+}
+bool building_is_harvester(int type) {
+    return (type == BUILDING_REED_GATHERER
+    || type == BUILDING_WOOD_CUTTERS);
 }
 bool building_is_monument(int type) {
     switch (type) {
@@ -558,6 +563,8 @@ bool building_is_industry_type(const building *b) {
 
 bool building_is_industry(int type) {
     if (building_is_extractor(type))
+        return true;
+    if (building_is_harvester(type))
         return true;
     if (building_is_workshop(type))
         return true;

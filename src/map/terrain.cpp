@@ -3,13 +3,13 @@
 
 #include "map/grid.h"
 #include "map/ring.h"
-#include "map/routing.h"
+#include "map/routing/routing.h"
 #include "core/game_environment.h"
 #include "city/floods.h"
 #include "floodplain.h"
 #include "water.h"
 #include "data.h"
-#include "marshland.h"
+#include "vegetation.h"
 
 static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
 static grid_xx terrain_grid_backup = {0, {FS_UINT16, FS_UINT32}};
@@ -336,13 +336,13 @@ void map_terrain_clear(void) {
 void map_terrain_init_outside_map(void) {
     int map_width, map_height;
     map_grid_size(&map_width, &map_height);
-    int y_start = (GRID_SIZE - map_height) / 2;
-    int x_start = (GRID_SIZE - map_width) / 2;
-    for (int y = 0; y < GRID_SIZE; y++) {
+    int y_start = (GRID_LENGTH - map_height) / 2;
+    int x_start = (GRID_LENGTH - map_width) / 2;
+    for (int y = 0; y < GRID_LENGTH; y++) {
         int y_outside_map = y < y_start || y >= y_start + map_height;
-        for (int x = 0; x < GRID_SIZE; x++) {
+        for (int x = 0; x < GRID_LENGTH; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width)
-                map_grid_set(&terrain_grid, x + GRID_SIZE * y, TERRAIN_TREE | TERRAIN_WATER);
+                map_grid_set(&terrain_grid, x + GRID_LENGTH * y, TERRAIN_TREE | TERRAIN_WATER);
 
         }
     }
@@ -351,7 +351,7 @@ void map_terrain_init_outside_map(void) {
 void build_terrain_caches() {
     floodplain_tiles_cache.clear();
     river_tiles_cache.clear();
-    marshland_tiles_cache.clear();
+    vegetation_tiles_cache.clear();
 
     // fill in all water/river tiles
     int grid_offset = map_data.start_offset;
@@ -361,8 +361,9 @@ void build_terrain_caches() {
                 river_tiles_cache.add(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
                 floodplain_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
-                marshland_tiles_cache.add(grid_offset);
+            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND) || map_terrain_is(grid_offset, TERRAIN_TREE))
+//            && map_tile_inside_map_area(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset)))
+                vegetation_tiles_cache.add(grid_offset);
         }
     }
 }

@@ -5,7 +5,7 @@ void tile_cache::clear() {
 }
 void tile_cache::add(int grid_offset) {
     // if not full
-    if (pSize < GRID_TOTAL) {
+    if (pSize < GRID_SIZE_TOTAL) {
         pCache[pSize] = grid_offset;
         pSize++;
     }

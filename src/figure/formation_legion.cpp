@@ -10,7 +10,7 @@
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "map/routing.h"
+#include "map/routing/routing.h"
 #include "scenario/distant_battle.h"
 
 int formation_legion_create_for_fort(building *fort) {

@@ -1,74 +1,80 @@
 #include <figure/figure.h>
+#include <game/resource.h>
 #include <core/image_group.h>
-#include <core/random.h>
-#include <map/figure.h>
+#include <map/vegetation.h>
 
-bool is_gathering_point_busy(int grid_offset, figure *myself) {
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id) {
-        if (myself->id != figure_id)
-            return true;
-
-        if (figure_id != myself->next_figure)
-            figure_id = myself->next_figure;
-        else
-            figure_id = 0;
-    }
-    return false;
-}
-bool find_resource(int *x, int *y) {
-    // TODO
-    *x = 159;
-    *y = 171;
-    return true;
-}
 void figure::gatherer_action() {
-    int dist = 0; // TODO
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case 14: // spawning
-            if (wait_ticks >= 10) {
+            anim_frame = 0;
+            if ((type == FIGURE_REED_GATHERER && wait_ticks++ >= 10) // I hate
+            || (type == FIGURE_LUMBERJACK && --wait_ticks <= 0)) { // everything.
                 int x = -1;
                 int y = -1;
-                if (find_resource(&x, &y)) { // TODO
+                bool found_resource = false;
+                switch (type) {
+                    case FIGURE_REED_GATHERER:
+                        found_resource = find_resource_tile(RESOURCE_REEDS, &x, &y);
+                        break;
+                    case FIGURE_LUMBERJACK:
+                        found_resource = find_resource_tile(RESOURCE_TIMBER_PH, &x, &y);
+                        break;
+                }
+                if (found_resource) {
                     anim_offset = 0;
                     do_goto(x, y, TERRAIN_USAGE_PREFER_ROADS);
                     advance_action(9);
-                }
+                } else
+                    poof();
             }
-            wait_ticks++;
             break;
         case 9: // go to gathering place
             if (do_goto(destination_x, destination_y, TERRAIN_USAGE_PREFER_ROADS)) {
-                anim_offset = 0;
-                if (is_gathering_point_busy(destination_grid_offset, this)) {
+                if (!is_gathering_point_valid(map_grid_offset(destination_x, destination_y))) {
                     wait_ticks = 0;
-                    return advance_action(8);
+                    advance_action(8);
                 } else
                     advance_action(10);
             }
             break;
         case 10: // gathering resource
-            if (wait_ticks >= 300)
+            if (wait_ticks >= 300) {
+                vegetation_deplete(grid_offset_figure);
                 advance_action(11);
+            }
             wait_ticks++;
             break;
         case 11: // returning with resource
-            if (do_returnhome(TERRAIN_USAGE_ENEMY))
-                home()->stored_full_amount += 50;
+            if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
+                switch (type) {
+                    case FIGURE_REED_GATHERER:
+                        home()->stored_full_amount += 50;
+                        break;
+                    case FIGURE_LUMBERJACK:
+                        home()->stored_full_amount += 25;
+                        break;
+                }
+            }
             break;
     }
     switch (action_state) {
         default: // normal walk
         case 8:
         case 9:
-            image_set_animation(GROUP_FIGURE_REED_GATHERER, 0, 12);
-            break;
+            switch (type) {
+                case FIGURE_REED_GATHERER: return image_set_animation(GROUP_FIGURE_REED_GATHERER, 0, 12);
+                case FIGURE_LUMBERJACK: return image_set_animation(GROUP_FIGURE_LUMBERJACK, 0, 12);
+            }
         case 10: // gathering
-            image_set_animation(GROUP_FIGURE_REED_GATHERER, 104, 15);
-            break;
+            switch (type) {
+                case FIGURE_REED_GATHERER: return image_set_animation(GROUP_FIGURE_REED_GATHERER, 104, 15);
+                case FIGURE_LUMBERJACK: return image_set_animation(GROUP_FIGURE_LUMBERJACK, 104, 12);
+            }
         case 11: // returning
-            image_set_animation(GROUP_FIGURE_REED_GATHERER, 224, 12);
-            break;
+            switch (type) {
+                case FIGURE_REED_GATHERER: return image_set_animation(GROUP_FIGURE_REED_GATHERER, 224, 12);
+                case FIGURE_LUMBERJACK: return image_set_animation(GROUP_FIGURE_LUMBERJACK, 200, 12);
+            }
     }
 }

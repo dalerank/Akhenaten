@@ -88,6 +88,7 @@ typedef enum figure_type {
 
     FIGURE_HUNTER = 73,
     FIGURE_HUNTER_ARROW = 74,
+    FIGURE_LUMBERJACK = 75,
     //
     FIGURE_CROCODILE = 82,
     //

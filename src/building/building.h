@@ -239,7 +239,7 @@ public:
     bool common_spawn_figure_trigger(int min_houses);
     void common_spawn_labor_seeker(int min_houses);
     bool common_spawn_roamer(int type, int min_houses, int created_action = FIGURE_ACTION_125_ROAMING);
-    bool common_spawn_goods_output_cartpusher(bool only_one = true);
+    bool common_spawn_goods_output_cartpusher(bool only_one = true, bool only_full_loads = true, int min_carry = 100, int max_carry = 800);
 
     void spawn_figure_work_camp();
     bool spawn_patrician(bool spawned);
@@ -286,7 +286,7 @@ public:
     void spawn_figure_barracks();
 
     bool can_spawn_hunter();
-    bool can_spawn_reedgatherer();
+    bool can_spawn_gatherer(figure_type ftype, int max_gatherers_per_building, int carry_per_person);
     bool can_spawn_woodcutter();
 
     void update_native_crop_progress();
@@ -322,6 +322,7 @@ bool building_is_farm(int type);
 bool building_is_floodplain_farm(const building *b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
+bool building_is_harvester(int type);
 bool building_is_monument(int type);
 bool building_is_senate(int type);
 bool building_is_tax_collector(int type);

@@ -72,7 +72,7 @@ extern io_buffer *iob_building_storages;
 extern io_buffer *iob_trade_routes_limits;
 extern io_buffer *iob_trade_routes_traded;
 
-extern io_buffer *iob_junk8;
+extern io_buffer *iob_routing_stats;
 
 extern io_buffer *iob_scenario_map_name;
 extern io_buffer *iob_bookmarks;
@@ -95,7 +95,7 @@ extern io_buffer *iob_junk11;
 extern io_buffer *iob_empire_map_objects;
 extern io_buffer *iob_empire_map_routes;
 
-extern io_buffer *iob_marshland_depletion;
+extern io_buffer *iob_vegetation_growth;
 
 extern io_buffer *iob_junk14;
 

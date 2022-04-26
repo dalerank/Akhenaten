@@ -1,5 +1,6 @@
 #include <cmath>
 #include <figure/formation_herd.h>
+#include <map/vegetation.h>
 #include "routing.h"
 
 #include "building/building.h"
@@ -7,158 +8,18 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
-#include "map/routing_data.h"
+#include "routing_grids.h"
 #include "map/terrain.h"
 #include "core/game_environment.h"
-
-#define MAX_QUEUE 162 * 162//GRID_SIZE_TOTAL
-#define GUARD 50000
-
-static const int ROUTE_OFFSETS[2][8] = {
-        {-162, 1, 162, -1, -161, 163, 161, -163},
-        {-228, 1, 228, -1, -227, 229, 227, -229}
-};
-
-static grid_xx routing_distance = {0, {FS_INT16, FS_INT16}};
+#include "queue.h"
 
 static struct {
     int total_routes_calculated;
     int enemy_routes_calculated;
 } stats = {0, 0};
-
-static struct {
-    int head;
-    int tail;
-    int items[MAX_QUEUE];
-} queue;
-
-static grid_xx water_drag = {0, {FS_UINT8, FS_UINT8}};
-
 static struct {
     int through_building_id;
 } state;
-
-static void clear_distances(void) {
-    map_grid_clear(&routing_distance);
-}
-static int valid_offset(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0;
-}
-
-static void enqueue(int offset, int dist) {
-    map_grid_set(&routing_distance, offset, dist);
-    queue.items[queue.tail++] = offset;
-    if (queue.tail >= MAX_QUEUE)
-        queue.tail = 0;
-}
-static void route_queue(int source, int dest, void (*callback)(int next_offset, int dist)) {
-    clear_distances();
-    queue.head = queue.tail = 0;
-    enqueue(source, 1);
-    while (queue.head != queue.tail) {
-        int offset = queue.items[queue.head];
-        if (offset == dest)
-            break;
-        int dist = 1 + map_grid_get(&routing_distance, offset);
-        for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
-                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
-        }
-        if (++queue.head >= MAX_QUEUE)
-            queue.head = 0;
-    }
-}
-static void route_queue_until(int source, int (*callback)(int next_offset, int dist)) {
-    clear_distances();
-    queue.head = queue.tail = 0;
-    enqueue(source, 1);
-    while (queue.head != queue.tail) {
-        int offset = queue.items[queue.head];
-        int dist = 1 + map_grid_get(&routing_distance, offset);
-        for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i])) {
-                if (!callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist))
-                    break;
-
-            }
-        }
-        if (++queue.head >= MAX_QUEUE)
-            queue.head = 0;
-
-    }
-}
-static void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, int)) {
-    clear_distances();
-    queue.head = queue.tail = 0;
-    enqueue(source, 1);
-    int tiles = 0;
-    while (queue.head != queue.tail) {
-        int offset = queue.items[queue.head];
-        if (offset == dest) break;
-        if (++tiles > max_tiles) break;
-        int dist = 1 + map_grid_get(&routing_distance, offset);
-        for (int i = 0; i < 4; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
-                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
-        }
-        if (++queue.head >= MAX_QUEUE)
-            queue.head = 0;
-    }
-}
-static void route_queue_boat(int source, void (*callback)(int, int)) {
-    clear_distances();
-    map_grid_clear(&water_drag);
-    queue.head = queue.tail = 0;
-    enqueue(source, 1);
-    int tiles = 0;
-    while (queue.head != queue.tail) {
-        int offset = queue.items[queue.head];
-        if (++tiles > GUARD)
-            break;
-
-        int drag = map_grid_get(&terrain_water, offset) == WATER_N2_MAP_EDGE ? 4 : 0;
-        int v = map_grid_get(&water_drag, offset);
-        if (drag && v < drag) {
-            queue.items[queue.tail++] = offset;
-            if (queue.tail >= MAX_QUEUE)
-                queue.tail = 0;
-        } else {
-            int dist = 1 + map_grid_get(&routing_distance, offset);
-            for (int i = 0; i < 4; i++) {
-                if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
-                    callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
-            }
-        }
-        map_grid_set(&water_drag, offset, v + 1);
-        if (++queue.head >= MAX_QUEUE)
-            queue.head = 0;
-    }
-}
-static void route_queue_dir8(int source, void (*callback)(int, int)) {
-    clear_distances();
-    queue.head = queue.tail = 0;
-    enqueue(source, 1);
-    int tiles = 0;
-    while (queue.head != queue.tail) {
-        if (++tiles > GUARD)
-            break;
-        int offset = queue.items[queue.head];
-        int dist = 1 + map_grid_get(&routing_distance, offset);
-        for (int i = 0; i < 8; i++) {
-            if (valid_offset(offset + ROUTE_OFFSETS[GAME_ENV][i]))
-                callback(offset + ROUTE_OFFSETS[GAME_ENV][i], dist);
-        }
-        if (++queue.head >= MAX_QUEUE)
-            queue.head = 0;
-    }
-}
-
-static int queue_has(int offset) {
-    for (int i = 0; i < MAX_QUEUE; i++)
-        if (queue.items[i] == offset)
-            return 1;
-    return 0;
-}
 
 static bool can_place_on_crossing_no_neighboring(int grid_offset, int terrain_underneath, int terrain_to_avoid, int d_x, int d_y, bool adjacent) {
     // this is similar to the way Pharaoh does it... it only allows to build in alternating rows/columns
@@ -240,8 +101,8 @@ static void callback_calc_distance_build_wall(int next_offset, int dist) {
 }
 static void callback_calc_distance_build_road(int next_offset, int dist) {
     bool blocked = false;
-    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
-    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
+    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue_get(0));
+    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue_get(0));
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
         case CITIZEN_N3_AQUEDUCT:
             if (!map_can_place_road_under_aqueduct(next_offset))
@@ -271,8 +132,8 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
 }
 static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     bool blocked = false;
-    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue.items[0]);
-    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue.items[0]);
+    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue_get(0));
+    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue_get(0));
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
         case CITIZEN_0_ROAD: // rubble, garden, access ramp
             if (!map_can_place_aqueduct_on_road(next_offset))
@@ -372,15 +233,15 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
     ++stats.total_routes_calculated;
     return true;
 }
-static int callback_delete_wall_aqueduct(int next_offset, int dist) {
+static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
     if (map_grid_get(&terrain_land_citizen, next_offset) < CITIZEN_0_ROAD) {
         if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
-            return 1;
+            return true;
         }
     } else
         enqueue(next_offset, dist);
-    return 0;
+    return false;
 }
 void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     ++stats.total_routes_calculated;
@@ -400,11 +261,62 @@ static int has_fighting_enemy(int grid_offset) {
     return map_figure_foreach_until(grid_offset, TEST_SEARCH_FIGHTING_ENEMY);
 }
 
+static bool callback_travel_found_terrain(int next_offset, int dist, int terrain_type) {
+    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
+        enqueue(next_offset, dist);
+        if (map_terrain_is(next_offset, terrain_type))
+            return true;
+    }
+    return false;
+}
+bool map_routing_citizen_found_terrain(int src_x, int src_y, int *dst_x, int *dst_y, int terrain_type) {
+    int src_offset = map_grid_offset(src_x, src_y);
+    ++stats.total_routes_calculated;
+    bool found = route_queue_until_terrain(src_offset, terrain_type, dst_x, dst_y, callback_travel_found_terrain);
+    return found;
+}
+static bool callback_travel_found_reeds(int next_offset, int dist) {
+    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
+        enqueue(next_offset, dist);
+        if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
+            int t_x = map_grid_offset_to_x(next_offset);
+            int t_y = map_grid_offset_to_y(next_offset);
+            // requires tile to be fully within a 3x3 marshland area
+            if (map_terrain_all_tiles_in_radius_are(t_x, t_y, 1, 1, TERRAIN_MARSHLAND))
+                if (is_gathering_point_valid(next_offset))
+                    return true;
+        }
+    }
+    return false;
+}
+bool map_routing_citizen_found_reeds(int src_x, int src_y, int *dst_x, int *dst_y) {
+    int src_offset = map_grid_offset(src_x, src_y);
+    ++stats.total_routes_calculated;
+    bool found = route_queue_until_found(src_offset, dst_x, dst_y, callback_travel_found_reeds);
+    return found;
+}
+static bool callback_travel_found_timber(int next_offset, int dist) {
+    if ((map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD || map_terrain_is(next_offset, TERRAIN_TREE))
+        && !has_fighting_friendly(next_offset)) {
+        enqueue(next_offset, dist);
+        if (map_terrain_is(next_offset, TERRAIN_TREE))
+            if (is_gathering_point_valid(next_offset))
+                return true;
+    }
+    return false;
+}
+bool map_routing_citizen_found_timber(int src_x, int src_y, int *dst_x, int *dst_y) {
+    int src_offset = map_grid_offset(src_x, src_y);
+    ++stats.total_routes_calculated;
+    bool found = route_queue_until_found(src_offset, dst_x, dst_y, callback_travel_found_timber);
+    return found;
+}
+
 static void callback_travel_citizen_land(int next_offset, int dist) {
-    if (map_grid_get(&terrain_land_citizen, next_offset) >= 0 && !has_fighting_friendly(next_offset))
+    if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset))
         enqueue(next_offset, dist);
 }
-int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y) {
+bool map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -417,7 +329,7 @@ static void callback_travel_citizen_road(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, int dst_y) {
+bool map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -430,7 +342,7 @@ static void callback_travel_citizen_road_garden(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y) {
+bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -443,7 +355,7 @@ static void callback_travel_walls(int next_offset, int dist) {
         enqueue(next_offset, dist);
     }
 }
-int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y) {
+bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -468,7 +380,7 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
         }
     }
 }
-int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
+bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -485,7 +397,7 @@ static void callback_travel_noncitizen_through_everything(int next_offset, int d
         enqueue(next_offset, dist);
 
 }
-int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y) {
+bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y) {
     int src_offset = map_grid_offset(src_x, src_y);
     int dst_offset = map_grid_offset(dst_x, dst_y);
     ++stats.total_routes_calculated;
@@ -509,15 +421,15 @@ int map_citizen_grid(int grid_offset) {
     return map_grid_get(&terrain_land_citizen, grid_offset);
 }
 
-void map_routing_save_state(buffer *buf) {
-    buf->write_i32(0); // unused counter
-    buf->write_i32(stats.enemy_routes_calculated);
-    buf->write_i32(stats.total_routes_calculated);
-    buf->write_i32(0); // unused counter
-}
-void map_routing_load_state(buffer *buf) {
-    buf->skip(4); // unused counter
-    stats.enemy_routes_calculated = buf->read_i32();
-    stats.total_routes_calculated = buf->read_i32();
-    buf->skip(4); // unused counter
-}
+io_buffer *iob_routing_stats = new io_buffer([](io_buffer *iob) {
+    iob->bind____skip(4);
+    iob->bind____skip(4); // resets to zero at the start of a new scenario
+    iob->bind____skip(4); // unused counter
+    iob->bind(BIND_SIGNATURE_UINT32, &stats.enemy_routes_calculated);
+    iob->bind(BIND_SIGNATURE_UINT32, &stats.total_routes_calculated);
+    iob->bind____skip(4); // unused counter
+    iob->bind____skip(8); // ??? coords?
+    iob->bind____skip(8); // ??? coords?
+    iob->bind____skip(2); // ??? something empire map related?
+    iob->bind____skip(8); // ??? something storage related?
+});

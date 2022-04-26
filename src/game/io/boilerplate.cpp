@@ -50,7 +50,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/soldier_strength.h"
 #include "map/sprite.h"
 #include "map/terrain.h"

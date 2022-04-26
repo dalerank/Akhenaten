@@ -7,8 +7,8 @@
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/image.h"
-#include "map/routing.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 
 bool map_can_place_road_under_aqueduct(int grid_offset) {

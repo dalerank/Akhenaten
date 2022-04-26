@@ -1,7 +1,7 @@
 #include "editor_map.h"
 
 #include "figuretype/water.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "scenario/data.h"
 
 void scenario_editor_set_entry_point(int x, int y) {

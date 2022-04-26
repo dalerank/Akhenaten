@@ -70,8 +70,6 @@ io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
 io_buffer *iob_junk7a = new io_buffer(default_bind);
 io_buffer *iob_junk7b = new io_buffer(default_bind);
 
-io_buffer *iob_junk8 = new io_buffer(default_bind);
-
 io_buffer *iob_junk9a = new io_buffer(default_bind);
 io_buffer *iob_junk9b = new io_buffer(default_bind);
 

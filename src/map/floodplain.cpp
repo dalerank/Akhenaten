@@ -87,7 +87,7 @@ int map_floodplain_rebuild_shoreorder() {
                         }
                         ++grid_offset;
                     }
-                    grid_offset += GRID_SIZE - (x_max - x_min + 1);
+                    grid_offset += GRID_LENGTH - (x_max - x_min + 1);
                 }
             }
         }
@@ -151,7 +151,7 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
             fert_total += map_get_fertility(grid_offset, FERT_WITH_MALUS);
             ++grid_offset;
         }
-        grid_offset += GRID_SIZE - (x_max - x_min + 1);
+        grid_offset += GRID_LENGTH - (x_max - x_min + 1);
     }
     return fert_total / (size * size);
 }

@@ -15,7 +15,7 @@ static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1), GRID_OFFSET(1, -1),
 
 void map_grid_init(grid_xx *grid) {
     grid->size_field = gr_sizes[grid->datatype[GAME_ENV]];
-    grid->size_total = grid->size_field * GRID_TOTAL;
+    grid->size_total = grid->size_field * GRID_SIZE_TOTAL;
     grid->items_xx = malloc(grid->size_total);
     grid->initialized = 1;
 }
@@ -23,7 +23,7 @@ int64_t map_grid_get(grid_xx *grid, uint32_t at) {
     if (!grid->initialized)
         map_grid_init(grid);
 
-    if (at >= GRID_TOTAL)
+    if (at >= GRID_SIZE_TOTAL)
         return 0;
 
 //    assert(at < GRID_SIZE_TOTAL);
@@ -53,7 +53,7 @@ int64_t map_grid_get(grid_xx *grid, uint32_t at) {
 void map_grid_set(grid_xx *grid, uint32_t at, int64_t value) {
     if (!grid->initialized)
         map_grid_init(grid);
-    if (at >= GRID_TOTAL)
+    if (at >= GRID_SIZE_TOTAL)
         return;
 //    assert(at < GRID_SIZE_TOTAL);
     switch (grid->datatype[GAME_ENV]) {
@@ -135,7 +135,7 @@ void map_grid_or(grid_xx *grid, uint32_t at, int mask) {
 void map_grid_and_all(grid_xx *grid, int mask) {
     if (!grid->initialized)
         map_grid_init(grid);
-    for (int i = 0; i < GRID_TOTAL; i++) {
+    for (int i = 0; i < GRID_SIZE_TOTAL; i++) {
         switch (grid->datatype[GAME_ENV]) {
             case FS_UINT8:
                 ((uint8_t *) grid->items_xx)[i] &= (uint8_t) mask;
@@ -164,25 +164,25 @@ void map_grid_save_buffer(grid_xx *grid, buffer *buf) {
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            buf->write_raw(grid->items_xx, GRID_TOTAL);
+            buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
             break;
         case FS_INT8:
-            buf->write_raw(grid->items_xx, GRID_TOTAL);
+            buf->write_raw(grid->items_xx, GRID_SIZE_TOTAL);
             break;
         case FS_UINT16:
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 buf->write_u16(((uint16_t *) grid->items_xx)[i]);
             break;
         case FS_INT16:
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 buf->write_i16(((int16_t *) grid->items_xx)[i]);
             break;
         case FS_UINT32:
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 buf->write_u32(((uint32_t *) grid->items_xx)[i]);
             break;
         case FS_INT32:
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 buf->write_i32(((int32_t *) grid->items_xx)[i]);
             break;
     }
@@ -192,32 +192,32 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
         map_grid_init(grid);
     switch (grid->datatype[GAME_ENV]) {
         case FS_UINT8:
-            buf->read_raw(grid->items_xx, GRID_TOTAL);
+            buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);
             break;
         case FS_INT8:
-            buf->read_raw(grid->items_xx, GRID_TOTAL);
+            buf->read_raw(grid->items_xx, GRID_SIZE_TOTAL);
             break;
         case FS_UINT16: {
             uint16_t *dr_data = (uint16_t *) grid->items_xx;
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 dr_data[i] = buf->read_u16();
             break;
         }
         case FS_INT16: {
             int16_t *dr_data = (int16_t *) grid->items_xx;
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 dr_data[i] = buf->read_i16();
             break;
         }
         case FS_UINT32: {
             uint32_t *dr_data = (uint32_t *) grid->items_xx;
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 dr_data[i] = buf->read_u32();
             break;
         }
         case FS_INT32: {
             int32_t *dr_data = (int32_t *) grid->items_xx;
-            for (int i = 0; i < GRID_TOTAL; i++)
+            for (int i = 0; i < GRID_SIZE_TOTAL; i++)
                 dr_data[i] = buf->read_i32();
             break;
         }
@@ -227,8 +227,8 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
 
 void map_grid_data_init(int width, int height, int start_offset, int border_size) {
     if (0) {
-        map_data.width = GRID_SIZE;
-        map_data.height = GRID_SIZE;
+        map_data.width = GRID_LENGTH;
+        map_data.height = GRID_LENGTH;
         map_data.start_offset = 0;
         map_data.border_size = 0;
     } else {
@@ -240,28 +240,27 @@ void map_grid_data_init(int width, int height, int start_offset, int border_size
 }
 
 int map_grid_is_valid_offset(int grid_offset) {
-    return true; // temp
-    return grid_offset >= 0 && grid_offset < GRID_TOTAL;
+    return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;
 }
 int map_grid_offset(int x, int y) {
 //    return x + y * GRID_SIZE_PH;
-    return map_data.start_offset + x + y * GRID_SIZE;
+    return map_data.start_offset + x + y * GRID_LENGTH;
 }
 int map_grid_offset_to_x(int grid_offset) {
-    return (grid_offset - map_data.start_offset) % GRID_SIZE;
+    return (grid_offset - map_data.start_offset) % GRID_LENGTH;
 }
 int map_grid_offset_to_y(int grid_offset) {
-    return (grid_offset - map_data.start_offset) / GRID_SIZE;
+    return (grid_offset - map_data.start_offset) / GRID_LENGTH;
 }
 
 int map_grid_delta(int x, int y) {
-    return y * GRID_SIZE + x;
+    return y * GRID_LENGTH + x;
 }
 int map_grid_add_delta(int grid_offset, int x, int y) {
-    int raw_x = grid_offset % GRID_SIZE;
-    int raw_y = grid_offset / GRID_SIZE;
-    if (raw_x + x < 0 || raw_x + x >= GRID_SIZE ||
-        raw_y + y < 0 || raw_y + y >= GRID_SIZE) {
+    int raw_x = grid_offset % GRID_LENGTH;
+    int raw_y = grid_offset / GRID_LENGTH;
+    if (raw_x + x < 0 || raw_x + x >= GRID_LENGTH ||
+        raw_y + y < 0 || raw_y + y >= GRID_LENGTH) {
         return -1;
     }
     return grid_offset + map_grid_delta(x, y);
@@ -365,15 +364,18 @@ int map_grid_is_inside(int x, int y, int size) {
         return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
     }
 }
-int map_view_tile_inside_map_area(int x, int y) {
+bool map_tile_inside_map_area(int x, int y, int edge_size) {
     int dist_horizontal = abs(x - y);
-    int dist_vertical = abs(y - (GRID_SIZE - x) + 1);
+    int dist_vertical = abs(y - (GRID_LENGTH - x) + 1);
 
-    if (dist_horizontal < map_data.width / 2 + 1 && dist_vertical < map_data.height / 2 + 1)
-        return 1; // inside play space
+    if (dist_horizontal < map_data.width / 2 + 1 - edge_size && dist_vertical < map_data.height / 2 + 1 - edge_size)
+        return true; // inside play space
 //    if (dist_horizontal < map_data.width / 2 + 1 && dist_vertical < map_data.height / 2 + 1)
 //        return 0; // outside play space, but visible
-    return 0; // outside viewable area
+    return false; // outside viewable area
+}
+bool map_grid_inside_map_area(int x, int y, int edge_size) {
+    return map_tile_inside_map_area(x + map_data.start_offset % GRID_LENGTH, y + map_data.start_offset / GRID_LENGTH, edge_size);
 }
 
 static int offsets_array[150];

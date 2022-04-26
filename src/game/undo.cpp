@@ -15,7 +15,7 @@
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/earthquake.h"

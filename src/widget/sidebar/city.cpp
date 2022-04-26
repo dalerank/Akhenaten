@@ -241,9 +241,10 @@ static void draw_debug_ui(int x, int y) {
             case 13: text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, col); break;
             case 14: text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
             case 15: text_draw_shadow((uint8_t *) string_from_ascii("MARSHLAND DEPLETION"), x, y + 10, col); break;
-            case 16: text_draw_shadow((uint8_t *) string_from_ascii("SOIL DEPLETION"), x, y + 10, col); break;
-            case 17: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, col); break;
-            case 18: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, col); break;
+            case 16: text_draw_shadow((uint8_t *) string_from_ascii("MARSHLAND"), x, y + 10, col); break;
+            case 17: text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN TYPE"), x, y + 10, col); break;
+            case 18: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, col); break;
+            case 19: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, col); break;
         }
         y += 10;
         x -= 20;

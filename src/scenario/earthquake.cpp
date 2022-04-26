@@ -9,7 +9,7 @@
 #include "game/time.h"
 #include "map/building.h"
 #include "map/grid.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "scenario/data.h"

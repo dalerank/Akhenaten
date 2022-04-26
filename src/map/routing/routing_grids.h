@@ -32,6 +32,9 @@ enum {
     NO_VALID_ROUTING_CHECK_RESULT = -99,
 };
 
+extern grid_xx routing_distance;
+extern grid_xx water_drag;
+
 extern grid_xx terrain_land_citizen;
 extern grid_xx terrain_land_noncitizen;
 extern grid_xx terrain_water;

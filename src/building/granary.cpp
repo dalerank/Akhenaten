@@ -9,7 +9,7 @@
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 #include "core/game_environment.h"

@@ -15,7 +15,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_access.h"
-#include "map/routing_terrain.h"
+#include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 
 void figure::advance_figure_tick() {

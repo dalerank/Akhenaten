@@ -240,17 +240,24 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
                 y = main->road_access_y;
             }
         } else {
-            if (terrainchoice == TERRAIN_USAGE_ROADS)
-                found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
-            if (!found_road) {
-                if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN)
-                    found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
-                else
-                    found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
-            }
-            if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
-                x = tile_x;
-                y = tile_y;
+            building *main = dest->main();
+            if (main->road_is_accessible) {
+                found_road = true;
+                x = main->road_access_x;
+                y = main->road_access_y;
+            } else {
+                if (terrainchoice == TERRAIN_USAGE_ROADS)
+                    found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+                if (!found_road) {
+                    if (building_is_house(dest->type) || dest->type == BUILDING_BURNING_RUIN)
+                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 2, &x, &y);
+                    else
+                        found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
+                }
+                if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
+                    x = tile_x;
+                    y = tile_y;
+                }
             }
         }
         // found any road...?
@@ -353,7 +360,7 @@ void figure::action_perform() {
                 break;
             case FIGURE_HUNTER:
             case FIGURE_REED_GATHERER:
-            case BUILDING_WOOD_CUTTERS:
+            case FIGURE_LUMBERJACK:
                 if (b->state != BUILDING_STATE_VALID)
                     poof();
                 break;
@@ -507,12 +514,13 @@ void figure::action_perform() {
             // PHARAOH vvvv
             case 73: hunter_action();                   break;
             case 74: arrow_action();                    break;
+            case 75: gatherer_action();                 break; // wood cutters
             case 84: hippo_action();                    break;
             case 85: worker_action();                   break;
             case 87: water_carrier_action();            break;
             case 88: policeman_action();                break;
             case 89: magistrate_action();               break;
-            case 90: gatherer_action();                 break; // TODO: also the same for wood cutters
+            case 90: gatherer_action();                 break; // reed gatherers
             case 91: festival_guy_action();             break;
             default:
                 break;

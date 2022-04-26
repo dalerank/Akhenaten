@@ -104,7 +104,7 @@ static void fill_canals_from_offset(int grid_offset) {
     int next_offset;
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
     do {
-        if (++guard >= GRID_TOTAL)
+        if (++guard >= GRID_SIZE_TOTAL)
             break;
 
         map_aqueduct_set(grid_offset, 1);
@@ -115,7 +115,7 @@ static void fill_canals_from_offset(int grid_offset) {
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
-            const int ADJACENT_OFFSETS[] = {-GRID_SIZE, 1, GRID_SIZE, -1};
+            const int ADJACENT_OFFSETS[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             building *b = building_at(new_offset);
             if (b->id && b->type == BUILDING_WATER_LIFT) {

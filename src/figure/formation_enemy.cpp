@@ -14,8 +14,8 @@
 #include "figure/route.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "map/routing.h"
-#include "map/routing_path.h"
+#include "map/routing/routing.h"
+#include "map/routing/queue.h"
 #include "map/soldier_strength.h"
 #include "map/terrain.h"
 
