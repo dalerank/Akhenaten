@@ -52,8 +52,7 @@ public:
     short distance_from_entry;
     short house_highest_population;
     short house_unreachable_ticks;
-    unsigned char road_access_x;
-    unsigned char road_access_y;
+    map_point road_access;
 //    figure *figure_id;
 //    figure *figure_id2; // labor seeker or market buyer
 //    short immigrant_figure_id;

@@ -954,11 +954,11 @@ io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
         if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->road_access_x);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->road_access_y);
+            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_X));
+            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_Y));
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, &b->road_access_x);
-            iob->bind(BIND_SIGNATURE_UINT16, &b->road_access_y);
+            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
+            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
         }
 //        b->set_figure(0, buf->read_u16());
 //        b->set_figure(1, buf->read_u16());

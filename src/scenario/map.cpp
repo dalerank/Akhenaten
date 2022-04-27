@@ -8,11 +8,6 @@ const map_data_t *map_data() {
     return &scenario_data.map;
 }
 
-//void scenario_map_init(void) {
-//    map_grid_data_init(scenario_data.map.width, scenario_data.map.height,
-//                       scenario_data.map.grid_start, scenario_data.map.grid_border_size);
-//}
-
 int scenario_map_size(void) {
     return scenario_data.map.width;
 }

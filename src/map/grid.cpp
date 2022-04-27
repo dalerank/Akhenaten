@@ -1,6 +1,6 @@
 #include "grid.h"
 
-#include "map/data.h"
+#include <scenario/map.h>
 
 #include <string.h>
 
@@ -225,15 +225,15 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
 
 //void map_grid_data_init(int width, int height, int start_offset, int border_size) {
 //    if (0) {
-//        map_data.width = GRID_LENGTH;
-//        map_data.height = GRID_LENGTH;
-//        map_data.start_offset = 0;
-//        map_data.border_size = 0;
+//        map_data()->width = GRID_LENGTH;
+//        map_data()->height = GRID_LENGTH;
+//        map_data()->start_offset = 0;
+//        map_data()->border_size = 0;
 //    } else {
-//        map_data.width = width;
-//        map_data.height = height;
-//        map_data.start_offset = start_offset;
-//        map_data.border_size = border_size;
+//        map_data()->width = width;
+//        map_data()->height = height;
+//        map_data()->start_offset = start_offset;
+//        map_data()->border_size = border_size;
 //    }
 //}
 
@@ -242,13 +242,13 @@ int map_grid_is_valid_offset(int grid_offset) {
 }
 int map_grid_offset(int x, int y) {
 //    return x + y * GRID_SIZE_PH;
-    return map_data.start_offset + x + y * GRID_LENGTH;
+    return map_data()->start_offset + x + y * GRID_LENGTH;
 }
 int map_grid_offset_to_x(int grid_offset) {
-    return (grid_offset - map_data.start_offset) % GRID_LENGTH;
+    return (grid_offset - map_data()->start_offset) % GRID_LENGTH;
 }
 int map_grid_offset_to_y(int grid_offset) {
-    return (grid_offset - map_data.start_offset) / GRID_LENGTH;
+    return (grid_offset - map_data()->start_offset) / GRID_LENGTH;
 }
 
 int map_grid_delta(int x, int y) {
@@ -274,14 +274,14 @@ int map_grid_direction_delta(int direction) {
     }
 }
 void map_grid_size(int *width, int *height) {
-    *width = map_data.width;
-    *height = map_data.height;
+    *width = map_data()->width;
+    *height = map_data()->height;
 }
 int map_grid_width(void) {
-    return map_data.width;
+    return map_data()->width;
 }
 int map_grid_height(void) {
-    return map_data.height;
+    return map_data()->height;
 }
 void map_grid_bound(int *x, int *y) {
     if (*x < 0)
@@ -290,11 +290,11 @@ void map_grid_bound(int *x, int *y) {
     if (*y < 0)
         *y = 0;
 
-    if (*x >= map_data.width)
-        *x = map_data.width - 1;
+    if (*x >= map_data()->width)
+        *x = map_data()->width - 1;
 
-    if (*y >= map_data.height)
-        *y = map_data.height - 1;
+    if (*y >= map_data()->height)
+        *y = map_data()->height - 1;
 }
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max) {
     if (*x_min < 0)
@@ -303,11 +303,11 @@ void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max) {
     if (*y_min < 0)
         *y_min = 0;
 
-    if (*x_max >= map_data.width)
-        *x_max = map_data.width - 1;
+    if (*x_max >= map_data()->width)
+        *x_max = map_data()->width - 1;
 
-    if (*y_max >= map_data.height)
-        *y_max = map_data.height - 1;
+    if (*y_max >= map_data()->height)
+        *y_max = map_data()->height - 1;
 
 }
 void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_min, int *x_max, int *y_max) {
@@ -336,13 +336,13 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, 
 }
 int map_grid_is_inside(int x, int y, int size) {
     if (GAME_ENV == ENGINE_ENV_C3)
-        return x >= 0 && x + size <= map_data.width && y >= 0 && y + size <= map_data.height;
+        return x >= 0 && x + size <= map_data()->width && y >= 0 && y + size <= map_data()->height;
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
 
         // todo? it's not really making anything go haywire at the moment.
 
-//        int start_x = map_grid_offset_to_x(2 * map_data.start_offset);
-//        int start_y = map_grid_offset_to_y(2 * map_data.start_offset);
+//        int start_x = map_grid_offset_to_x(2 * map_data()->start_offset);
+//        int start_y = map_grid_offset_to_y(2 * map_data()->start_offset);
 //
 //        x += start_x; // -1
 //        y += start_y; // -1
@@ -350,14 +350,14 @@ int map_grid_is_inside(int x, int y, int size) {
 //        int dist_horizontal = abs(x - y);
 //        int dist_vertical = abs(y - (GRID_SIZE_PH - x) + 2);
 //
-//        if (dist_horizontal < map_data.width * 0.5 && dist_vertical < map_data.height * 0.5) // -2, -2
+//        if (dist_horizontal < map_data()->width * 0.5 && dist_vertical < map_data()->height * 0.5) // -2, -2
 //            return 1;
 //        return 0;
 
         int min_x = 0;
-        int max_x = map_data.width;
+        int max_x = map_data()->width;
         int min_y = 0;
-        int max_y = map_data.height;
+        int max_y = map_data()->height;
 
         return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
     }
@@ -366,14 +366,14 @@ bool map_tile_inside_map_area(int x, int y, int edge_size) {
     int dist_horizontal = abs(x - y);
     int dist_vertical = abs(y - (GRID_LENGTH - x) + 1);
 
-    if (dist_horizontal < map_data.width / 2 + 1 - edge_size && dist_vertical < map_data.height / 2 + 1 - edge_size)
+    if (dist_horizontal < map_data()->width / 2 + 1 - edge_size && dist_vertical < map_data()->height / 2 + 1 - edge_size)
         return true; // inside play space
-//    if (dist_horizontal < map_data.width / 2 + 1 && dist_vertical < map_data.height / 2 + 1)
+//    if (dist_horizontal < map_data()->width / 2 + 1 && dist_vertical < map_data()->height / 2 + 1)
 //        return 0; // outside play space, but visible
     return false; // outside viewable area
 }
 bool map_grid_inside_map_area(int x, int y, int edge_size) {
-    return map_tile_inside_map_area(x + map_data.start_offset % GRID_LENGTH, y + map_data.start_offset / GRID_LENGTH, edge_size);
+    return map_tile_inside_map_area(x + map_data()->start_offset % GRID_LENGTH, y + map_data()->start_offset / GRID_LENGTH, edge_size);
 }
 
 static int offsets_array[150];

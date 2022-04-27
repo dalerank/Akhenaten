@@ -91,7 +91,6 @@ static void clear_map_data(void) {
 
 static void create_blank_map(int size) {
     scenario_editor_create(size);
-    scenario_map_init();
     clear_map_data();
     map_image_init_edges();
     city_view_go_to_tile_corner(76, 152, true);
@@ -134,8 +133,6 @@ int game_file_editor_load_scenario(const char *scenario_file) {
     clear_map_data();
 //    if (!game_file_io_read_scenario(scenario_file)) TODO
 //        return 0;
-
-    scenario_map_init();
 
     prepare_map_for_editing();
     return 1;

@@ -236,15 +236,15 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
             building *main = dest->main();
             if (main->road_is_accessible) {
                 found_road = true;
-                x = main->road_access_x;
-                y = main->road_access_y;
+                x = main->road_access.x;
+                y = main->road_access.y;
             }
         } else {
             building *main = dest->main();
             if (main->road_is_accessible) {
                 found_road = true;
-                x = main->road_access_x;
-                y = main->road_access_y;
+                x = main->road_access.x;
+                y = main->road_access.y;
             } else {
                 if (terrainchoice == TERRAIN_USAGE_ROADS)
                     found_road = map_closest_reachable_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);

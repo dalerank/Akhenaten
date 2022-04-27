@@ -1,7 +1,7 @@
 #include <game/io/io_buffer.h>
 #include "elevation.h"
 
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 
 static grid_xx elevation = {0, {FS_UINT8, FS_UINT8}};
@@ -29,9 +29,9 @@ static void fix_cliff_tiles(int grid_offset) {
 void map_elevation_remove_cliffs(void) {
     // elevation is max 5, so we need 4 passes to fix the lot
     for (int level = 0; level < 4; level++) {
-        int grid_offset = map_data.start_offset;
-        for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-            for (int x = 0; x < map_data.width; x++, grid_offset++) {
+        int grid_offset = map_data()->start_offset;
+        for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+            for (int x = 0; x < map_data()->width; x++, grid_offset++) {
                 if (map_grid_get(&elevation, grid_offset) > 0)
                     fix_cliff_tiles(grid_offset);
 

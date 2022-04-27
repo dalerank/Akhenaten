@@ -105,9 +105,8 @@ static void throw_party(void) {
                     f->festival_remaining_dances = 10;
 
                     // choose a random tile on the festival square
-                    int x, y;
-                    city_building_get_festival_square_position(&x, &y);
-                    f->do_goto(x + 2, y + 2, TERRAIN_USAGE_ROADS, 10);
+                    map_point festival = city_building_get_festival_square_position();
+                    f->do_goto(festival.x + 2, festival.y + 2, TERRAIN_USAGE_ROADS, 10);
 
                     break;
                 }
@@ -252,14 +251,13 @@ void figure::festival_guy_action() {
                         return poof();
 
                     // choose a random tile on the festival square
-                    int x, y;
+                    map_point festival = city_building_get_festival_square_position();
                     int rand_x, rand_y;
-                    city_building_get_festival_square_position(&x, &y);
                     int rand_seed = random_short();
                     do {
                         int random_tile = rand_seed % 25;
-                        rand_x = x + random_tile % 5;
-                        rand_y = y + random_tile / 5;
+                        rand_x = festival.x + random_tile % 5;
+                        rand_y = festival.y + random_tile / 5;
                         rand_seed++;
                     } while (rand_x == tile_x && rand_y == tile_y);
                     do_goto(rand_x, rand_y, TERRAIN_USAGE_ANY, 11);

@@ -171,8 +171,8 @@ bool figure::fight_fire() {
         building *ruin = building_get(ruin_id);
         wait_ticks_missile = 0;
         advance_action(FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE);
-        destination_x = ruin->road_access_x;
-        destination_y = ruin->road_access_y;
+        destination_x = ruin->road_access.x;
+        destination_y = ruin->road_access.y;
         set_destination(ruin_id);
         route_remove();
         ruin->set_figure(3, id);

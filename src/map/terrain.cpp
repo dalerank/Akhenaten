@@ -8,7 +8,7 @@
 #include "city/floods.h"
 #include "floodplain.h"
 #include "water.h"
-#include "data.h"
+#include "scenario/map.h"
 #include "vegetation.h"
 
 static grid_xx terrain_grid = {0, {FS_UINT16, FS_UINT32}};
@@ -354,9 +354,9 @@ void build_terrain_caches() {
     vegetation_tiles_cache.clear();
 
     // fill in all water/river tiles
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
                 river_tiles_cache.add(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))

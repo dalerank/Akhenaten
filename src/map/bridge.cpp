@@ -2,7 +2,7 @@
 
 #include "city/view.h"
 #include "core/direction.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
@@ -306,9 +306,9 @@ int map_bridge_count_figures(int grid_offset) {
 }
 
 void map_bridge_update_after_rotate(int counter_clockwise) {
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_animation_at(grid_offset)) {

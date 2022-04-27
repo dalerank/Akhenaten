@@ -9,7 +9,7 @@
 #include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/desirability.h"
 #include "map/elevation.h"
 #include "map/figure.h"
@@ -69,9 +69,9 @@ int map_tiles_are_clear(int grid_offset, int size, int disallowed_terrain, int c
     return is_clear(grid_offset, size, disallowed_terrain, false, check_figures);
 }
 static void foreach_map_tile(void (*callback)(int grid_offset)) {
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++)
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++)
             callback(grid_offset);
     }
 }
@@ -1320,8 +1320,8 @@ static void set_elevation_image(int grid_offset) {
     }
 }
 void map_tiles_update_all_elevation(void) {
-    int width = map_data.width - 2;
-    int height = map_data.height - 2;
+    int width = map_data()->width - 2;
+    int height = map_data()->height - 2;
     foreach_region_tile(0, 0, width, height, clear_access_ramp_image);
     foreach_region_tile(0, 0, width, height, set_elevation_image);
 }
@@ -1331,11 +1331,11 @@ void map_tiles_add_entry_exit_flags(void) {
     map_point entry_point = scenario_map_entry();
     if (entry_point.x == 0)
         entry_orientation = DIR_2_BOTTOM_RIGHT;
-    else if (entry_point.x == map_data.width - 1)
+    else if (entry_point.x == map_data()->width - 1)
         entry_orientation = DIR_6_TOP_LEFT;
     else if (entry_point.y == 0)
         entry_orientation = DIR_0_TOP_RIGHT;
-    else if (entry_point.y == map_data.height - 1)
+    else if (entry_point.y == map_data()->height - 1)
         entry_orientation = DIR_4_BOTTOM_LEFT;
     else
         entry_orientation = -1;
@@ -1343,11 +1343,11 @@ void map_tiles_add_entry_exit_flags(void) {
     map_point exit_point = scenario_map_exit();
     if (exit_point.x == 0)
         exit_orientation = DIR_2_BOTTOM_RIGHT;
-    else if (exit_point.x == map_data.width - 1)
+    else if (exit_point.x == map_data()->width - 1)
         exit_orientation = DIR_6_TOP_LEFT;
     else if (exit_point.y == 0)
         exit_orientation = DIR_0_TOP_RIGHT;
-    else if (exit_point.y == map_data.height - 1)
+    else if (exit_point.y == map_data()->height - 1)
         exit_orientation = DIR_4_BOTTOM_LEFT;
     else
         exit_orientation = -1;

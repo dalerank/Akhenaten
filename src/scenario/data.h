@@ -70,8 +70,8 @@ struct win_criteria_t {
 struct map_data_t {
     int width = -1;
     int height = -1;
-    int grid_start = -1;
-    int grid_border_size = -1;
+    int start_offset = -1;
+    int border_size = -1;
 };
 
 typedef struct {

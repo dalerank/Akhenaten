@@ -229,8 +229,7 @@ static void set_enemy_target_building(formation *m) {
 }
 
 static void set_native_target_building(formation *m) {
-    int meeting_x, meeting_y;
-    city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
+    map_point meeting = city_buildings_main_native_meeting_center();
     building *min_building = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -248,7 +247,7 @@ static void set_native_target_building(formation *m) {
             case BUILDING_ROADBLOCK:
                 break;
             default: {
-                int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
+                int distance = calc_maximum_distance(meeting.x, meeting.y, b->x, b->y);
                 if (distance < min_distance) {
                     min_building = b;
                     min_distance = distance;

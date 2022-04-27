@@ -260,16 +260,16 @@ void building_maintenance_check_rome_access(void) {
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x = x_road;
+                b->road_access.y = y_road;
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
             b->distance_from_entry = 0;
             building *main_building = b->main();
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
-            b->road_access_x = main_building->road_access_x;
-            b->road_access_y = main_building->road_access_y;
+            b->road_access.x = main_building->road_access.x;
+            b->road_access.y = main_building->road_access.y;
         } else if (b->type == BUILDING_SENET_HOUSE) {
             b->distance_from_entry = 0;
             int x_road, y_road;
@@ -277,8 +277,8 @@ void building_maintenance_check_rome_access(void) {
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x = x_road;
+                b->road_access.y = y_road;
             }
         } else { // other building
             b->distance_from_entry = 0;
@@ -287,8 +287,8 @@ void building_maintenance_check_rome_access(void) {
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x = x_road;
+                b->road_access.y = y_road;
             }
         }
     }

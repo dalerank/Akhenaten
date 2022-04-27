@@ -6,7 +6,7 @@
 #include "core/game_environment.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -17,6 +17,7 @@
 #include "tiles.h"
 
 #include <string.h>
+#include <scenario/map.h>
 
 #define MAX_QUEUE 1000
 
@@ -77,9 +78,9 @@ static void canals_empty_all(void) {
     river_access_canal_offsets_total = 0;
 
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);

@@ -11,7 +11,7 @@
 #include "game/undo.h"
 #include "map/bridge.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing/routing_terrain.h"
@@ -23,9 +23,9 @@
 
 static void determine_leftmost_tile(void) {
     int orientation = city_view_orientation();
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             int size = map_property_multi_tile_size(grid_offset);
             if (size == 1) {
                 map_property_mark_draw_tile(grid_offset);

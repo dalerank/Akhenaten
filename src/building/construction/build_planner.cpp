@@ -795,8 +795,8 @@ void BuildPlanner::reset() {
     tiles_blocked_total = 0;
 
     // position and orientation
-    start = map_point();
-    end = map_point();
+    start.set(-1, -1);
+    end.set(-1, -1);
     relative_orientation = 0;
     variant = 0;
 

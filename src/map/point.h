@@ -2,7 +2,6 @@
 #define MAP_POINT_H
 
 #include "grid.h"
-#include "data.h"
 
 class map_point;
 
@@ -10,15 +9,16 @@ struct private_point_int_t {
 private:
     map_point *pPARENT = nullptr;
     int *pDATA = nullptr;
-    bool check_valid_data();
+    bool check_and_repair_if_invalid() const;
 public:
-    // ACCESS/CASTING
-    operator int() { return *pDATA; }
-    operator int() const { return *pDATA; }
+    bool is_valid() const;
 
-    // CONSTRUCTOR / DESTRUCTOR
+    // ACCESS/CASTING
+    operator int();
+    operator int() const;
+
+    // CONSTRUCTOR
     private_point_int_t(int *data, map_point *parent);
-    ~private_point_int_t();
 
     // ASSIGNMENT
     private_point_int_t(int rhs);
@@ -27,11 +27,14 @@ public:
     // OPERATIONS
     private_point_int_t operator-=(int rhs);
     private_point_int_t operator+=(int rhs);
-//    private_point_int_t operator-(int rhs);
-//    private_point_int_t operator-(int rhs);
+};
 
-    // COMPARISON
-    bool operator==(int rhs);
+enum {
+    _X = 0,
+    _Y = 1,
+    _GRID_OFFSET = 2,
+    _ABS_X = 3,
+    _ABS_Y = 4
 };
 
 class map_point {
@@ -43,31 +46,32 @@ private:
     int p_ABS_X = -1;
     int p_ABS_Y = -1;
 
-    void build_from_coords(int _x, int _y);
-    void build_from_offset(int _grid_offset);
-
 public:
-//    const int& x = p_X;
-//    const int& y = p_Y;
-//    const int& grid_offset = p_GRID_OFFSET;
-//    const int& ABS_X = p_ABS_X;
-//    const int& ABS_Y = p_ABS_Y;
     private_point_int_t x = private_point_int_t(&p_X, this);
     private_point_int_t y = private_point_int_t(&p_Y, this);
     private_point_int_t grid_offset = private_point_int_t(&p_GRID_OFFSET, this);
     private_point_int_t ABS_X = private_point_int_t(&p_ABS_X, this);
     private_point_int_t ABS_Y = private_point_int_t(&p_ABS_Y, this);
 
-    // INTERNAL SETTER
-    void refresh(int *field, int value);
+    // direct access to private fields, for iob read/write without recalc
+    int *private_access(int i);
 
-    // CONSTRUCTORS
+    // INTERNAL SETTER
+    void set(int _x, int _y);
+    void set(int _grid_offset);
+    void refresh(int *field, int value);
+    bool attemp_recalc_if_broken();
+
+    // CONSTRUCTORS / DESTRUCTOR
     void rebuild_privs();
     void empty();
     map_point(); // default constructor
     map_point(int _grid_offset);
     map_point(int _x, int _y);
+    ~map_point();
 };
+
+void recalc_broken_points();
 
 /**
  * Stores the X and Y to the passed point.

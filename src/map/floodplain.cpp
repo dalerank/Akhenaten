@@ -2,7 +2,7 @@
 #include <core/config.h>
 #include "floodplain.h"
 #include "building_tiles.h"
-#include "data.h"
+#include "scenario/map.h"
 #include "terrain.h"
 #include "water.h"
 

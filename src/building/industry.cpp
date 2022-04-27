@@ -297,7 +297,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         }
     }
     if (min_building) {
-        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+        map_point_store_result(min_building->road_access.x, min_building->road_access.y, dst);
         return min_building->id;
     }
     return 0;
@@ -330,7 +330,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
         }
     }
     if (min_building) {
-        map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+        map_point_store_result(min_building->road_access.x, min_building->road_access.y, dst);
         return min_building->id;
     }
     return 0;

@@ -26,32 +26,28 @@ typedef struct {
 
 extern struct city_data_t {
     struct {
-        int16_t senate_placed;
-        uint8_t senate_x;
-        uint8_t senate_y;
-        int16_t senate_grid_offset;
+        bool senate_placed;
         int32_t senate_building_id;
-        int16_t festival_square_placed;
-        uint8_t festival_square_x;
-        uint8_t festival_square_y;
-//        int16_t festival_grid_offset;
-//        int32_t festival_building_id;
-        int16_t mansion_placed;
-        uint8_t mansion_x;
-        uint8_t mansion_y;
-        int16_t mansion_grid_offset;
+        map_point senate;
+
+        bool festival_square_placed;
+        int32_t festival_building_id;
+        map_point festival_square;
+
+        bool mansion_placed;
         int32_t mansion_building_id;
+        map_point mansion;
+
         int32_t hippodrome_placed;
-        int8_t barracks_x;
-        int8_t barracks_y;
-        int16_t barracks_grid_offset;
+
+        bool barracks_placed;
         int32_t barracks_building_id;
-        int32_t barracks_placed;
-        int8_t distribution_center_x;
-        int8_t distribution_center_y;
-        int16_t distribution_center_grid_offset;
+        map_point barracks;
+
+        bool distribution_center_placed;
         int32_t distribution_center_building_id;
-        int32_t distribution_center_placed;
+        map_point distribution_center;
+
         int32_t trade_center_building_id;
         int8_t triumphal_arches_available;
         int8_t triumphal_arches_placed;
@@ -62,7 +58,8 @@ extern struct city_data_t {
         int32_t mission_post_operational;
         map_point main_native_meeting;
         int8_t unknown_value;
-        int16_t temple_complex_placed;
+
+        bool temple_complex_placed;
         int32_t temple_complex_id;
     } building;
     struct {

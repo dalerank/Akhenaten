@@ -409,7 +409,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
     }
     if (min_building) {
         if (dst)
-            map_point_store_result(min_building->road_access_x, min_building->road_access_y, dst);
+            map_point_store_result(min_building->road_access.x, min_building->road_access.y, dst);
         return min_building->id;
     } else
         return 0;

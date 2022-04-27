@@ -582,9 +582,9 @@ void widget_city_get_tooltip(tooltip_context *c) {
         return;
     if (!window_is(WINDOW_CITY))
         return;
-    if (data.current_tile.grid_offset == 0)
-        return;
     int grid_offset = data.current_tile.grid_offset;
+    if (grid_offset == 0)
+        return;
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
     // cheat tooltips

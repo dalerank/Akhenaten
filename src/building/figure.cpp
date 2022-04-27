@@ -116,7 +116,7 @@ int building::get_figure_slot(figure *f) {
 }
 
 figure *building::create_figure_generic(int _type, int created_action, int slot, int created_dir) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, created_dir);
+    figure *f = figure_create(_type, road_access.x, road_access.y, created_dir);
     f->action_state = created_action;
     f->set_home(id);
     return f;
@@ -265,7 +265,7 @@ void building::spawn_figure_police() {
 
 void building::spawn_figure_juggler() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
+        building *dest = building_get(determine_venue_destination(road_access.x, road_access.y, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -275,7 +275,7 @@ void building::spawn_figure_juggler() {
 }
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
+        building *dest = building_get(determine_venue_destination(road_access.x, road_access.y, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -285,7 +285,7 @@ void building::spawn_figure_musician() {
 }
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, 0, 0));
+        building *dest = building_get(determine_venue_destination(road_access.x, road_access.y, BUILDING_PAVILLION, 0, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -865,7 +865,7 @@ void building::spawn_figure_warehouse() {
 //                amount = 1;
 
             if (!has_figure(0)) {
-                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access.x, road_access.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 switch (task) {
@@ -885,7 +885,7 @@ void building::spawn_figure_warehouse() {
                 f->set_home(id);
 
             } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure_of_type(1,FIGURE_WAREHOUSEMAN)) {
-                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access.x, road_access.y, DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 f->load_resource(0, RESOURCE_NONE);
@@ -960,10 +960,10 @@ bool building::can_spawn_gatherer(figure_type ftype, int max_gatherers_per_build
     bool resource_reachable = false;
     switch (ftype) {
         case FIGURE_REED_GATHERER:
-            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_MARSHLAND);
+            resource_reachable = map_routing_citizen_found_terrain(road_access.x, road_access.y, nullptr, nullptr, TERRAIN_MARSHLAND);
             break;
         case FIGURE_LUMBERJACK:
-            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_TREE);
+            resource_reachable = map_routing_citizen_found_terrain(road_access.x, road_access.y, nullptr, nullptr, TERRAIN_TREE);
             break;
     }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -1118,13 +1118,13 @@ void building::update_native_crop_progress() {
 
 void building::update_road_access() {
     // update building road access
-    map_point road;
+//    map_point road;
     switch (type) {
         case BUILDING_WAREHOUSE:
-            road_is_accessible = map_has_road_access(x, y, 3, &road);
+            road_is_accessible = map_has_road_access(x, y, 3, &road_access);
             break;
         case BUILDING_BURNING_RUIN:
-            road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
+            road_is_accessible = burning_ruin_can_be_accessed(x, y, &road_access);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1133,18 +1133,18 @@ void building::update_road_access() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
             if (is_main()) {
                 int orientation = (5 - (data.monuments.variant / 2)) % 4;
-                road_is_accessible = map_has_road_access_temple_complex(x, y, orientation, false, &road);
+                road_is_accessible = map_has_road_access_temple_complex(x, y, orientation, false, &road_access);
             }
             break;
         default:
             if (id == 17)
                 int a = 4;
-            road_is_accessible = map_has_road_access(x, y, size, &road);
+            road_is_accessible = map_has_road_access(x, y, size, &road_access);
             break;
     }
     // TODO: Temple Complexes
-    road_access_x = road.x;
-    road_access_y = road.y;
+//    road_access.x = road.x;
+//    road_access.y = road.y;
 }
 bool building::figure_generate() {
     show_on_problem_overlay = 0;

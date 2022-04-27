@@ -9,7 +9,7 @@
 #include "core/image_group_editor.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -87,9 +87,9 @@ void map_natives_init(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 
@@ -150,9 +150,9 @@ void map_natives_init_editor(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE);
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = map_data()->start_offset;
+    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
+        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 

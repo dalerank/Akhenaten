@@ -583,10 +583,10 @@ void draw_debug(int x, int y, int grid_offset) {
             break;
         case 3: // ROADS
             if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->grid_offset == grid_offset
-                draw_debug_line(str, x0, y + 5, 0, "", b->road_access_x, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
-                draw_debug_line(str, x0, y + 15, 0, "", b->road_access_y, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
+                draw_debug_line(str, x0, y + 5, 0, "", b->road_access.x, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
+                draw_debug_line(str, x0, y + 15, 0, "", b->road_access.y, b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 if (b->road_is_accessible) {
-                    auto tile_coords = city_view_grid_offset_to_pixel(b->road_access_x, b->road_access_y);
+                    auto tile_coords = city_view_grid_offset_to_pixel(b->road_access.x, b->road_access.y);
                     draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords.x, tile_coords.y, COLOR_MASK_GREEN);
                 }
             }
