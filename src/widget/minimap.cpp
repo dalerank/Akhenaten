@@ -68,23 +68,23 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.absolute_x = (MAP_TILE_UPPER_LIMIT_X() - width_tiles) / 2;
     data.absolute_y = (MAP_TILE_UPPER_LIMIT_Y() - height_tiles) / 2;
 
-    int camera_x, camera_y;
-    city_view_get_camera_tile(&camera_x, &camera_y);
+//    int camera_x, camera_y;
+    map_point camera_tile = city_view_get_camera_tile();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     if ((map_grid_width() - width_tiles) / 2 > 0) {
-        if (camera_x < data.absolute_x)
-            data.absolute_x = camera_x;
-        else if (camera_x > width_tiles + data.absolute_x - view_width_tiles)
-            data.absolute_x = view_width_tiles + camera_x - width_tiles;
+        if (camera_tile.x < data.absolute_x)
+            data.absolute_x = camera_tile.x;
+        else if (camera_tile.x > width_tiles + data.absolute_x - view_width_tiles)
+            data.absolute_x = view_width_tiles + camera_tile.x - width_tiles;
 
     }
     if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
-        if (camera_y < data.absolute_y)
-            data.absolute_y = camera_y;
-        else if (camera_y > height_tiles + data.absolute_y - view_height_tiles)
-            data.absolute_y = view_height_tiles + camera_y - height_tiles;
+        if (camera_tile.y < data.absolute_y)
+            data.absolute_y = camera_tile.y;
+        else if (camera_tile.y > height_tiles + data.absolute_y - view_height_tiles)
+            data.absolute_y = view_height_tiles + camera_tile.y - height_tiles;
 
     }
     // ensure even height
@@ -233,21 +233,19 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
     }
 }
 static void draw_viewport_rectangle(void) {
-    int camera_x, camera_y;
-    int camera_pixels_x, camera_pixels_y;
-    city_view_get_camera_tile(&camera_x, &camera_y);
-    city_view_get_camera_pixel_offset(&camera_pixels_x, &camera_pixels_y);
+    map_point camera_tile = city_view_get_camera_tile();
+    pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    int x_offset = data.x_offset + 2 * (camera_x - data.absolute_x) - 2 + camera_pixels_x / 30;
+    int x_offset = data.x_offset + 2 * (camera_tile.x - data.absolute_x) - 2 + camera_pixels.x / 30;
     if (x_offset < data.x_offset)
         x_offset = data.x_offset;
 
     if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles)
         x_offset -= 2;
 
-    int y_offset = data.y_offset + camera_y - data.absolute_y + 1;
+    int y_offset = data.y_offset + camera_tile.y - data.absolute_y + 1;
     graphics_draw_rect(x_offset, y_offset,
                        view_width_tiles * 2 + 8,
                        view_height_tiles + 3,

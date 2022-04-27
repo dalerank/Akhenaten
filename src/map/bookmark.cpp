@@ -11,15 +11,13 @@ static map_point bookmarks[MAX_BOOKMARKS];
 
 void map_bookmarks_clear(void) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        bookmarks[i].x = -1;
-        bookmarks[i].y = -1;
+        bookmarks[i].empty();
     }
 }
 
 void map_bookmark_save(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS)
-        city_view_get_camera_tile(&bookmarks[number].x, &bookmarks[number].y);
-
+        bookmarks[number] = city_view_get_camera_tile();
 }
 
 bool map_bookmark_go_to(int number) {

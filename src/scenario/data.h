@@ -67,6 +67,13 @@ struct win_criteria_t {
     int goal;
 };
 
+struct map_data_t {
+    int width = -1;
+    int height = -1;
+    int grid_start = -1;
+    int grid_border_size = -1;
+};
+
 typedef struct {
     int year;
     int resource;
@@ -189,16 +196,18 @@ extern struct scenario_t {
         int clay_pit_flooded;
     } random_events;
 
-    struct {
-        int width;
-        int height;
-        int grid_start;
-        int grid_border_size;
-//        map_tile entry_point;
-//        map_tile exit_point;
-//        map_tile entry_flag;
-//        map_tile exit_flag;
-    } map;
+    map_data_t map;
+
+//    struct {
+//        int width;
+//        int height;
+//        int grid_start;
+//        int grid_border_size;
+////        map_tile entry_point;
+////        map_tile exit_point;
+////        map_tile entry_flag;
+////        map_tile exit_flag;
+//    } map;
     int flotsam_enabled;
     map_point entry_point;
     map_point exit_point;

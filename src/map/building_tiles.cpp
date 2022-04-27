@@ -315,7 +315,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     }
 
     // adjust northern tile offset
-    map_tile north_tile = {x, y};
+    map_point north_tile = {x, y};
     switch (orientation) {
         case 0: // NE
             north_tile.x -= 2;

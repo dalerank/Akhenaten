@@ -208,7 +208,7 @@ void building_maintenance_check_fire_collapse(void) {
         map_routing_update_land();
 }
 void building_maintenance_check_rome_access(void) {
-    const map_tile *entry_point = city_map_entry_point();
+    const map_point *entry_point = city_map_entry_point();
     map_routing_calculate_distances(entry_point->x, entry_point->y);
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -292,7 +292,7 @@ void building_maintenance_check_rome_access(void) {
             }
         }
     }
-    const map_tile *exit_point = city_map_exit_point();
+    const map_point *exit_point = city_map_exit_point();
     if (!map_routing_distance(exit_point->grid_offset)) {
         // no route through city
         if (city_population() <= 0)

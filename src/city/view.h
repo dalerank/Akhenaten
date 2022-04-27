@@ -2,6 +2,7 @@
 #define CITY_VIEW_H
 
 #include "core/buffer.h"
+#include "map.h"
 
 int MAP_TILE_UPPER_LIMIT_X();
 int MAP_TILE_UPPER_LIMIT_Y();
@@ -52,8 +53,8 @@ void city_view_reset_orientation(void);
 int city_view_get_scale(void);
 void city_view_set_scale(int scale);
 
-void city_view_get_camera_tile(int *tile_x, int *tile_y);
-void city_view_get_camera_pixel_offset(int *offset_x, int *offset_y);
+map_point city_view_get_camera_tile();
+pixel_coordinate city_view_get_camera_pixel_offset();
 void city_view_get_camera_position(int *x, int *y);
 void city_view_get_camera_max_tile(int *x, int *y);
 void city_view_get_camera_max_pixel_offset(int *x, int *y);

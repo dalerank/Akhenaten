@@ -488,7 +488,7 @@ void figure::soldier_action() {
             }
             break;
         case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-            const map_tile *exit = city_map_exit_point();
+            const map_point *exit = city_map_exit_point();
             formation_at_rest = 0;
             destination_x = exit->x;
             destination_y = exit->y;

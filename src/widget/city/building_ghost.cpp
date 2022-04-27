@@ -317,7 +317,7 @@ static void draw_farm(int type, int x, int y, int grid_offset) {
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         draw_farm_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
-static void draw_fort(const map_tile *tile, int x, int y) {
+static void draw_fort(const map_point *tile, int x, int y) {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_legions_cached() >= formation_get_max_legions() || city_finance_out_of_money()) {
@@ -365,7 +365,7 @@ static void draw_fort(const map_tile *tile, int x, int y) {
     }
 }
 
-static void draw_aqueduct(const map_tile *tile, int x, int y) {
+static void draw_aqueduct(const map_point *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool  blocked = false;
     if (!map_can_place_initial_road_or_aqueduct(tile->grid_offset, true))
@@ -390,7 +390,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y) {
         draw_building(get_aqueduct_image(grid_offset, map_terrain_is(grid_offset, TERRAIN_ROAD), 0, img), x, y);
     }
 }
-static void draw_road(const map_tile *tile, int x, int y) {
+static void draw_road(const map_point *tile, int x, int y) {
     int grid_offset = tile->grid_offset;
     bool blocked = false;
     int image_id = 0;
@@ -437,7 +437,7 @@ static void draw_road(const map_tile *tile, int x, int y) {
     else
         draw_building(image_id, x, y);
 }
-static void draw_bridge(const map_tile *tile, int x, int y, int type) {
+static void draw_bridge(const map_point *tile, int x, int y, int type) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile->x, tile->y, &length, &direction);
 
@@ -495,7 +495,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, int type) {
     }
 }
 
-static void draw_entertainment_venue(const map_tile *tile, int x, int y, int type) {
+static void draw_entertainment_venue(const map_point *tile, int x, int y, int type) {
     int can_build = 0;
 //    const building_properties *props = building_properties_for_type(type);
     int size = 0;
@@ -674,11 +674,11 @@ static void draw_entertainment_venue(const map_tile *tile, int x, int y, int typ
         }
     }
 }
-static void draw_monument_blueprint(const map_tile *tile, int x, int y, int type) {
+static void draw_monument_blueprint(const map_point *tile, int x, int y, int type) {
     // TODO: implement monuments
 }
 
-bool city_building_ghost_mark_deleting(const map_tile *tile) {
+bool city_building_ghost_mark_deleting(const map_point *tile) {
     if (!config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE))
         return false;
 
@@ -716,10 +716,10 @@ void BuildPlanner::draw_graphics() {
     pixel_coordinate pixel = pixel_coords_cache[0][0];
     switch (build_type) {
         case BUILDING_ROAD:
-            return draw_road((const map_tile*)&end, pixel.x, pixel.y);
+            return draw_road((const map_point*)&end, pixel.x, pixel.y);
             break;
         case BUILDING_IRRIGATION_DITCH:
-            return draw_aqueduct((const map_tile*)&end, pixel.x, pixel.y);
+            return draw_aqueduct((const map_point*)&end, pixel.x, pixel.y);
             break;
 //        case BUILDING_WALL_PH:
 //            return draw_walls((const map_tile*)&end, end_coord.x, end_coord.y);
@@ -731,7 +731,7 @@ void BuildPlanner::draw_graphics() {
         case BUILDING_BANDSTAND:
         case BUILDING_PAVILLION:
         case BUILDING_FESTIVAL_SQUARE:
-            draw_entertainment_venue((const map_tile*)&end, pixel.x, pixel.y, build_type);
+            draw_entertainment_venue((const map_point*)&end, pixel.x, pixel.y, build_type);
             break;
         case BUILDING_BARLEY_FARM:
         case BUILDING_FLAX_FARM:

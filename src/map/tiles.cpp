@@ -1380,7 +1380,7 @@ void map_tiles_add_entry_exit_flags(void) {
         map_image_set(grid_offset_flag, image_id_from_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
     }
 }
-static void remove_entry_exit_flag(const map_tile *tile) {
+static void remove_entry_exit_flag(const map_point *tile) {
     // re-calculate grid_offset_figure because the stored offset might be invalid
     map_terrain_remove(map_grid_offset(tile->x, tile->y), TERRAIN_ROCK);
 }

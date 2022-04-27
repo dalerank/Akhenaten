@@ -106,7 +106,7 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
         for (int column = 0; column < size.x; ++column) {
             int image_id = tile_graphics_array[row][column];
             int size = tile_sizes_array[row][column];
-            map_tile tile = tile_coord_cache[row][column];
+            map_point tile = tile_coord_cache[row][column];
 
             // correct for city orientation
             switch (city_view_orientation() / 2) {
@@ -751,7 +751,7 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
     building_menu_update_temple_complexes();
     return true;
 }
-static map_tile temple_complex_part_target(building *main, int part) {
+static map_point temple_complex_part_target(building *main, int part) {
     building *b = main;
     if (part == 1)
         b = b->next();
@@ -772,7 +772,7 @@ static map_tile temple_complex_part_target(building *main, int part) {
             y += 2;
             break;
     }
-    return {x, y, map_grid_offset(x, y)};
+    return map_point(x, y);
 }
 
 //////////////////////
@@ -795,10 +795,8 @@ void BuildPlanner::reset() {
     tiles_blocked_total = 0;
 
     // position and orientation
-    start.x = 0;
-    start.y = 0;
-    end.x = 0;
-    end.y = 0;
+    start = map_point();
+    end = map_point();
     relative_orientation = 0;
     variant = 0;
 
@@ -1205,7 +1203,7 @@ void BuildPlanner::update_obstructions_check() {
         for (int column = 0; column < size.x; column++) {
 
             // check terrain at coords
-            map_tile current_tile = tile_coord_cache[row][column];
+            map_point current_tile = tile_coord_cache[row][column];
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
@@ -1467,7 +1465,7 @@ void BuildPlanner::update_coord_caches() {
             int current_y = view_tile.y + x_offset * 15 + y_offset * 15;
 
             // save values in cache
-            tile_coord_cache[row][column] = {tile_x, tile_y, map_grid_offset(tile_x, tile_y)};
+            tile_coord_cache[row][column] = map_point(tile_x, tile_y);
             pixel_coords_cache[row][column] = {current_x, current_y};
         }
     }
@@ -1560,9 +1558,7 @@ int BuildPlanner::get_total_drag_size(int *x, int *y) {
     return 1;
 }
 void BuildPlanner::construction_start(int x, int y, int grid_offset) {
-    start.grid_offset = grid_offset;
-    start.x = end.x = x;
-    start.y = end.y = y;
+    start = end = map_point(grid_offset);
 
     if (game_undo_start_build(build_type)) {
         in_progress = true;
@@ -1598,9 +1594,7 @@ void BuildPlanner::construction_cancel() {
 }
 void BuildPlanner::construction_update(int x, int y, int grid_offset) {
     if (grid_offset) {
-        end.x = x;
-        end.y = y;
-        end.grid_offset = grid_offset;
+        end = map_point(grid_offset);
     } else {
         x = end.x;
         y = end.y;
@@ -1774,7 +1768,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
 //////////////////////
 
-void BuildPlanner::update(const map_tile *cursor_tile) {
+void BuildPlanner::update(const map_point *cursor_tile) {
     end = *cursor_tile;
     update_coord_caches();
 

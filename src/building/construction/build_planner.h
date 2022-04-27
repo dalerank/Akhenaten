@@ -47,7 +47,7 @@ private:
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
-    map_tile tile_coord_cache[30][30];
+    map_point tile_coord_cache[30][30];
     pixel_coordinate pixel_coords_cache[30][30];
 
     long long special_flags = 0;
@@ -90,19 +90,25 @@ public:
     int build_type;
     bool in_progress;
     bool draw_as_constructing;
-    map_tile start;
-    map_tile end;
+    map_point start;
+    map_point end;
     int total_cost;
     int relative_orientation;
     int absolute_orientation;
     int variant;
-    map_point size;
-    map_point pivot;
+    struct {
+        int x;
+        int y;
+    } size;
+    struct {
+        int x;
+        int y;
+    } pivot;
 
-    map_tile north_tile;
-    map_tile east_tile;
-    map_tile south_tile;
-    map_tile west_tile;
+    map_point north_tile;
+    map_point east_tile;
+    map_point south_tile;
+    map_point west_tile;
 
     int can_be_placed();
 
@@ -122,7 +128,7 @@ public:
     int get_total_drag_size(int *x, int *y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
-    void update(const map_tile *cursor_tile);
+    void update(const map_point *cursor_tile);
     void draw();
     bool place();
 } Planner;

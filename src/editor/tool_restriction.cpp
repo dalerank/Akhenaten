@@ -17,7 +17,7 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
         {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(2, 0),  GRID_OFFSET(2, 1),  GRID_OFFSET(0, 0), GRID_OFFSET(0, 1)},
 };
 
-static int is_clear_terrain(const map_tile *tile, int *warning) {
+static int is_clear_terrain(const map_point *tile, int *warning) {
     int result = !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
     if (!result && warning)
         *warning = WARNING_EDITOR_CANNOT_PLACE;
@@ -25,7 +25,7 @@ static int is_clear_terrain(const map_tile *tile, int *warning) {
     return result;
 }
 
-static int is_edge(const map_tile *tile, int *warning) {
+static int is_edge(const map_point *tile, int *warning) {
     int result = tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_MAP_EDGE;
@@ -33,7 +33,7 @@ static int is_edge(const map_tile *tile, int *warning) {
     return result;
 }
 
-static int is_water(const map_tile *tile, int *warning) {
+static int is_water(const map_point *tile, int *warning) {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER);
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
@@ -41,7 +41,7 @@ static int is_water(const map_tile *tile, int *warning) {
     return result;
 }
 
-static int is_deep_water(const map_tile *tile, int *warning) {
+static int is_deep_water(const map_point *tile, int *warning) {
     int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
                  map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
     if (!result && warning)
@@ -50,7 +50,7 @@ static int is_deep_water(const map_tile *tile, int *warning) {
     return result;
 }
 
-int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning) {
+int editor_tool_can_place_flag(int type, const map_point *tile, int *warning) {
     switch (type) {
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
@@ -73,7 +73,7 @@ int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning) {
     }
 }
 
-int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_index) {
+int editor_tool_can_place_access_ramp(const map_point *tile, int *orientation_index) {
     if (!map_grid_is_inside(tile->x, tile->y, 2))
         return 0;
 
@@ -128,7 +128,7 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
     return 0;
 }
 
-int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blocked_tiles) {
+int editor_tool_can_place_building(const map_point *tile, int num_tiles, int *blocked_tiles) {
     bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile->grid_offset;// + TILE_GRID_OFFSETS[i];

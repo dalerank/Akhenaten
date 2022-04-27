@@ -253,13 +253,15 @@ void city_view_reset_orientation(void) {
 int city_view_get_scale(void) {
     return data.scale;
 }
-void city_view_get_camera_tile(int *tile_x, int *tile_y) {
-    *tile_x = data.camera.tile_internal.x;
-    *tile_y = data.camera.tile_internal.y;
+map_point city_view_get_camera_tile() {
+    return map_point(data.camera.tile_internal.x, data.camera.tile_internal.y);
+//    point->x = data.camera.tile_internal.x;
+//    point->y = data.camera.tile_internal.y;
 }
-void city_view_get_camera_pixel_offset(int *offset_x, int *offset_y) {
-    *offset_x = data.camera.pixel_offset_internal.x;
-    *offset_y = data.camera.pixel_offset_internal.y;
+pixel_coordinate city_view_get_camera_pixel_offset() {
+    return {data.camera.pixel_offset_internal.x, data.camera.pixel_offset_internal.y};
+//    *offset_x = data.camera.pixel_offset_internal.x;
+//    *offset_y = data.camera.pixel_offset_internal.y;
 }
 void city_view_get_camera_position(int *x, int *y) {
     *x = data.camera.position.x;

@@ -425,7 +425,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
     ${PROJECT_SOURCE_DIR}/src/map/tile_cache.cpp
     ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
-        ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
     ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
 )
 set(SCENARIO_FILES

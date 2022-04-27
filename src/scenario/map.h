@@ -2,8 +2,11 @@
 #define SCENARIO_MAP_H
 
 #include "map/point.h"
+#include "data.h"
 
-void scenario_map_init(void);
+//void scenario_map_init(void);
+
+const map_data_t *map_data();
 
 int scenario_map_size(void);
 

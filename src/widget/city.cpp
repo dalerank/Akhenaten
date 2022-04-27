@@ -35,8 +35,8 @@
 #include "window/city.h"
 
 static struct {
-    map_tile current_tile;
-    map_tile selected_tile;
+    map_point current_tile;
+    map_point selected_tile;
     int new_start_grid_offset;
     int capture_input;
 } data;
@@ -69,7 +69,7 @@ static void scroll_map(const mouse *m) {
         sound_city_decay_views();
     }
 }
-static void update_city_view_coords(int x, int y, map_tile *tile) {
+static void update_city_view_coords(int x, int y, map_point *tile) {
     view_tile view;
     if (city_view_pixels_to_view_tile(x, y, &view)) {
         tile->grid_offset = city_view_tile_to_grid_offset(&view);
@@ -117,7 +117,7 @@ static void draw_TEST(int x, int y, int grid_offset) {
 //    else
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
 }
-void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile) {
+void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, const map_point *tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
         highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
@@ -164,7 +164,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    city_view_foreach_map_tile(draw_TEST);
 
 }
-void widget_city_draw_with_overlay(const map_tile *tile) {
+void widget_city_draw_with_overlay(const map_point *tile) {
     if (!select_city_overlay())
         return;
 
@@ -253,11 +253,11 @@ bool widget_city_draw_construction_cost_and_size(void) {
 
 // INPUT HANDLING
 
-static void build_start(const map_tile *tile) {
+static void build_start(const map_point *tile) {
     if (tile->grid_offset) // Allow building on paused
         Planner.construction_start(tile->x, tile->y, tile->grid_offset);
 }
-static void build_move(const map_tile *tile) {
+static void build_move(const map_point *tile) {
     if (!Planner.in_progress)
         return;
     Planner.construction_update(tile->x, tile->y, tile->grid_offset);
@@ -288,7 +288,7 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
     return 0;
 }
 
-static bool handle_right_click_allow_building_info(const map_tile *tile) {
+static bool handle_right_click_allow_building_info(const map_point *tile) {
     int allow = true;
     if (!window_is(WINDOW_CITY))
         allow = false;
@@ -304,7 +304,7 @@ static bool handle_right_click_allow_building_info(const map_tile *tile) {
     }
     return allow;
 }
-static bool handle_legion_click(const map_tile *tile) {
+static bool handle_legion_click(const map_point *tile) {
     if (tile->grid_offset) {
         int formation_id = formation_legion_at_grid_offset(tile->grid_offset);
         if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
@@ -372,7 +372,7 @@ static void handle_touch_zoom(const touch *first, const touch *last) {
         zoom_end_touch();
 
 }
-static void handle_first_touch(map_tile *tile) {
+static void handle_first_touch(map_point *tile) {
     const touch *first = get_earliest_touch();
     int type = Planner.build_type;
 
@@ -461,7 +461,7 @@ static void handle_touch(void) {
         return;
     }
 
-    map_tile *tile = &data.current_tile;
+    map_point *tile = &data.current_tile;
     if (!Planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
 
@@ -483,7 +483,7 @@ int widget_city_has_input(void) {
     return data.capture_input;
 }
 static void handle_mouse(const mouse *m) {
-    map_tile *tile = &data.current_tile;
+    map_point *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     zoom_map(m);
     Planner.draw_as_constructing = false;
@@ -514,7 +514,7 @@ static void handle_mouse(const mouse *m) {
     if (m->middle.went_up)
         scroll_drag_end();
 }
-static void military_map_click(int legion_formation_id, const map_tile *tile) {
+static void military_map_click(int legion_formation_id, const map_point *tile) {
     if (!tile->grid_offset) {
         window_city_show();
         return;
@@ -547,7 +547,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h) {
     }
 }
 void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int legion_formation_id) {
-    map_tile *tile = &data.current_tile;
+    map_point *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m))
         return;

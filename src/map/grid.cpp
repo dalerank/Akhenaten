@@ -4,8 +4,6 @@
 
 #include <string.h>
 
-struct map_data_t map_data;
-
 static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1), GRID_OFFSET(1, -1), 1, GRID_OFFSET(1, 1), GRID_OFFSET(0, 1),
                                          GRID_OFFSET(-1, 1), -1, -GRID_OFFSET(1, 1)};
 
@@ -225,19 +223,19 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
     return;
 }
 
-void map_grid_data_init(int width, int height, int start_offset, int border_size) {
-    if (0) {
-        map_data.width = GRID_LENGTH;
-        map_data.height = GRID_LENGTH;
-        map_data.start_offset = 0;
-        map_data.border_size = 0;
-    } else {
-        map_data.width = width;
-        map_data.height = height;
-        map_data.start_offset = start_offset;
-        map_data.border_size = border_size;
-    }
-}
+//void map_grid_data_init(int width, int height, int start_offset, int border_size) {
+//    if (0) {
+//        map_data.width = GRID_LENGTH;
+//        map_data.height = GRID_LENGTH;
+//        map_data.start_offset = 0;
+//        map_data.border_size = 0;
+//    } else {
+//        map_data.width = width;
+//        map_data.height = height;
+//        map_data.start_offset = start_offset;
+//        map_data.border_size = border_size;
+//    }
+//}
 
 int map_grid_is_valid_offset(int grid_offset) {
     return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;

@@ -339,10 +339,8 @@ static void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (false) {
-        int tx, ty;
-        int px, py;
-        city_view_get_camera_tile(&tx, &ty);
-        city_view_get_camera_pixel_offset(&px, &py);
+        map_point camera_tile = city_view_get_camera_tile();
+        pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
 
         view_data* viewdata = city_view_data_unsafe();
         int real_max_x;
@@ -355,11 +353,11 @@ static void draw_debug_ui(int x, int y) {
 
         draw_debug_line_double_left(str, x, y + 15, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
         draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
-        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", tx, ty);
+        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x, camera_tile.y);
         draw_debug_line_double_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
         draw_debug_line_double_left(str, x, y + 65, 90, 40, "---min:", 0, 0);
-        draw_debug_line_double_left(str, x, y + 75, 90, 40, "pixel:", px, py);
+        draw_debug_line_double_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
         draw_debug_line_double_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
         draw_debug_line_double_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);

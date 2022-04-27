@@ -8,7 +8,9 @@
 
 #define GRID_LENGTH 228
 #define GRID_SIZE_TOTAL GRID_LENGTH * GRID_LENGTH
-#define GRID_OFFSET(x, y) (x + GRID_LENGTH * y)
+#define GRID_OFFSET(abs_x, abs_y) (abs_x + GRID_LENGTH * abs_y)
+#define GRID_X(offset) (offset % GRID_LENGTH)
+#define GRID_Y(offset) (offset / GRID_LENGTH)
 
 enum {
     FS_NONE = 0,
@@ -53,7 +55,7 @@ void map_grid_and_all(grid_xx *grid, int mask);
 void map_grid_save_buffer(grid_xx *grid, buffer *buf);
 void map_grid_load_buffer(grid_xx *grid, buffer *buf);
 
-void map_grid_data_init(int width, int height, int start_offset, int border_size);
+//void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
 int map_grid_is_valid_offset(int grid_offset);
 int map_grid_offset(int x, int y);

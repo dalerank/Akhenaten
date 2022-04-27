@@ -30,7 +30,7 @@ static struct {
     int brush_size;
     int build_in_progress;
     int start_elevation;
-    map_tile start_tile;
+    map_point start_tile;
 } data = {0, TOOL_GRASS, 0, 3, 0};
 
 int editor_tool_type(void) {
@@ -95,7 +95,7 @@ int editor_tool_is_in_use(void) {
     return data.build_in_progress;
 }
 
-void editor_tool_start_use(const map_tile *tile) {
+void editor_tool_start_use(const map_point *tile) {
     if (!data.active)
         return;
     data.build_in_progress = 1;
@@ -153,7 +153,7 @@ static int lower_land_tile(int x, int y, int grid_offset, int terrain) {
 }
 
 static void add_terrain(const void *tile_data, int dx, int dy) {
-    const map_tile *tile = (const map_tile *) tile_data;
+    const map_point *tile = (const map_point *) tile_data;
     int x = tile->x + dx;
     int y = tile->y + dy;
     if (!map_grid_is_inside(x, y, 1))
@@ -210,7 +210,7 @@ static void add_terrain(const void *tile_data, int dx, int dy) {
     map_terrain_set(grid_offset, terrain);
 }
 
-void editor_tool_update_use(const map_tile *tile) {
+void editor_tool_update_use(const map_point *tile) {
     if (!data.build_in_progress)
         return;
     if (data.type == TOOL_ROAD) {
@@ -278,7 +278,7 @@ void editor_tool_update_use(const map_tile *tile) {
     widget_minimap_invalidate();
 }
 
-static void place_earthquake_flag(const map_tile *tile) {
+static void place_earthquake_flag(const map_point *tile) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
         if (scenario_editor_earthquake_severity())
@@ -291,7 +291,7 @@ static void place_earthquake_flag(const map_tile *tile) {
     }
 }
 
-static void place_flag(const map_tile *tile, void (*update)(int x, int y)) {
+static void place_flag(const map_point *tile, void (*update)(int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(tile->x, tile->y);
@@ -300,7 +300,7 @@ static void place_flag(const map_tile *tile, void (*update)(int x, int y)) {
     }
 }
 
-static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int x, int y)) {
+static void place_flag_with_id(const map_point *tile, void (*update)(int id, int x, int y)) {
     int warning = 0;
     if (editor_tool_can_place_flag(data.type, tile, &warning))
         update(data.id, tile->x, tile->y);
@@ -308,7 +308,7 @@ static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int 
         city_warning_show(warning);
 }
 
-static void place_building(const map_tile *tile) {
+static void place_building(const map_point *tile) {
     int image_id;
     int size;
     int type;
@@ -353,7 +353,7 @@ static void update_terrain_after_elevation_changes(void) {
     scenario_editor_updated_terrain();
 }
 
-static void place_access_ramp(const map_tile *tile) {
+static void place_access_ramp(const map_point *tile) {
     int orientation = 0;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_AQUEDUCT);
@@ -373,13 +373,13 @@ static void place_access_ramp(const map_tile *tile) {
     }
 }
 
-static void place_road(const map_tile *start_tile, const map_tile *end_tile) {
+static void place_road(const map_point *start_tile, const map_point *end_tile) {
     if (building_construction_place_road(0, start_tile->x, start_tile->y, end_tile->x, end_tile->y))
         scenario_editor_updated_terrain();
 
 }
 
-void editor_tool_end_use(const map_tile *tile) {
+void editor_tool_end_use(const map_point *tile) {
     if (!data.build_in_progress)
         return;
     data.build_in_progress = 0;

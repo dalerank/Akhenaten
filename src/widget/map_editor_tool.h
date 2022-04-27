@@ -3,6 +3,6 @@
 
 #include "map/point.h"
 
-void map_editor_tool_draw(const map_tile *tile);
+void map_editor_tool_draw(const map_point *tile);
 
 #endif // WIDGET_MAP_EDITOR_TOOL_H

@@ -385,10 +385,10 @@ extern struct city_data_t {
         int32_t docker_export_resource;
     } trade;
     struct {
-        map_tile entry_point;
-        map_tile exit_point;
-        map_tile entry_flag;
-        map_tile exit_flag;
+        map_point entry_point;
+        map_point exit_point;
+        map_point entry_flag;
+        map_point exit_flag;
         struct {
             int32_t id;
             int32_t size;

@@ -419,8 +419,7 @@ void window_building_draw_figure_list(building_info_context *c) {
 }
 
 static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
-    int x_cam, y_cam;
-    city_view_get_camera_tile(&x_cam, &y_cam);
+    map_point camera_tile = city_view_get_camera_tile();
 
     int grid_offset = figure_get(figure_id)->grid_offset_figure;
     int x, y;

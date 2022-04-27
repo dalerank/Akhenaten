@@ -342,7 +342,7 @@ void figure::go_to_next_warehouse(int x_src, int y_src, int distance_to_entry) {
         destination_x = dst.x;
         destination_y = dst.y;
     } else {
-        const map_tile *exit = city_map_exit_point();
+        const map_point *exit = city_map_exit_point();
         action_state = FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING;
         destination_x = exit->x;
         destination_y = exit->y;

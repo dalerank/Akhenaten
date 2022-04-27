@@ -20,7 +20,7 @@
 #include "widget/city/tile_draw.h"
 
 static struct {
-    map_tile current_tile;
+    map_point current_tile;
     int selected_grid_offset;
     int new_start_grid_offset;
     int capture_input;
@@ -96,7 +96,7 @@ void widget_map_editor_draw(void) {
     graphics_set_active_canvas(CANVAS_UI);
 }
 
-static void update_city_view_coords(int x, int y, map_tile *tile) {
+static void update_city_view_coords(int x, int y, map_point *tile) {
     view_tile view;
     if (city_view_pixels_to_view_tile(x, y, &view)) {
         tile->grid_offset = city_view_tile_to_grid_offset(&view);
@@ -195,7 +195,7 @@ static bool handle_cancel_construction_button(const touch *t) {
     return true;
 }
 
-static void handle_first_touch(map_tile *tile) {
+static void handle_first_touch(map_point *tile) {
     const touch *first = get_earliest_touch();
 
     if (touch_was_click(first)) {
@@ -272,7 +272,7 @@ static void handle_touch(void) {
         return;
     }
 
-    map_tile *tile = &data.current_tile;
+    map_point *tile = &data.current_tile;
     if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y))
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
 
@@ -321,7 +321,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h) {
         return;
     }
 
-    map_tile *tile = &data.current_tile;
+    map_point *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
 
     if (!tile->grid_offset)
