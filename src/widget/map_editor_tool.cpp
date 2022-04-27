@@ -46,7 +46,7 @@ static void draw_building_image(int image_id, int x, int y) {
     ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN);
 }
 
-static void draw_building(const map_point *tile, int x_view, int y_view, int type) {
+static void draw_building(map_point tile, int x_view, int y_view, int type) {
     const building_properties *props = building_properties_for_type(type);
 
     int num_tiles = props->size * props->size;
@@ -72,8 +72,8 @@ static void draw_building(const map_point *tile, int x_view, int y_view, int typ
     }
 }
 
-static void draw_road(const map_point *tile, int x, int y) {
-    int grid_offset = tile->grid_offset;
+static void draw_road(map_point tile, int x, int y) {
+    int grid_offset = tile.grid_offset();
     bool blocked = false;
     int image_id = 0;
     if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
@@ -99,12 +99,12 @@ static void draw_brush_tile(const void *data, int dx, int dy) {
     draw_flat_tile(view->x + view_dx, view->y + view_dy, COLOR_MASK_GREEN);
 }
 
-static void draw_brush(const map_point *tile, int x, int y) {
+static void draw_brush(map_point tile, int x, int y) {
     view_tile vt = {x, y};
     editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 
-static void draw_access_ramp(const map_point *tile, int x, int y) {
+static void draw_access_ramp(map_point tile, int x, int y) {
     int orientation;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int image_id = image_id_from_group(GROUP_TERRAIN_ACCESS_RAMP) + orientation;
@@ -119,8 +119,8 @@ static void draw_map_flag(int x, int y, int is_ok) {
     draw_flat_tile(x, y, is_ok ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 }
 
-void map_editor_tool_draw(const map_point *tile) {
-    if (!tile->grid_offset || scroll_in_progress() || !editor_tool_is_active())
+void map_editor_tool_draw(map_point tile) {
+    if (!tile.grid_offset() || scroll_in_progress() || !editor_tool_is_active())
         return;
 
     int type = editor_tool_type();

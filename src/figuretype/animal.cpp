@@ -21,7 +21,7 @@
 #include "map/terrain.h"
 #include "map/building.h"
 
-static const map_point SEAGULL_OFFSETS[] = {
+static const coords SEAGULL_OFFSETS[] = {
         {0,  0},
         {0,  -2},
         {-2, 0},
@@ -33,7 +33,7 @@ static const map_point SEAGULL_OFFSETS[] = {
         {0,  0}
 };
 
-static const map_point HORSE_DESTINATION_1[] = {
+static const coords HORSE_DESTINATION_1[] = {
         {2,  1},
         {3,  1},
         {4,  1},
@@ -57,7 +57,7 @@ static const map_point HORSE_DESTINATION_1[] = {
         {3,  3},
         {2,  2}
 };
-static const map_point HORSE_DESTINATION_2[] = {
+static const coords HORSE_DESTINATION_2[] = {
         {12, 3},
         {11, 3},
         {10, 3},

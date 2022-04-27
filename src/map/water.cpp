@@ -23,18 +23,16 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
     map_point leftmost;
     switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
-            leftmost.x = 0;
-            leftmost.y = size - 1;
+            leftmost.set(0, size - 1);
             break;
         case DIR_2_BOTTOM_RIGHT:
-            leftmost.x = leftmost.y = 0;
+            leftmost.set(0, 0);
             break;
         case DIR_4_BOTTOM_LEFT:
-            leftmost.x = size - 1;
-            leftmost.y = 0;
+            leftmost.set(size - 1, 0);
             break;
         case DIR_6_TOP_LEFT:
-            leftmost.x = leftmost.y = size - 1;
+            leftmost.set(size - 1, size - 1);
             break;
         default:
             return;
@@ -52,7 +50,7 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
             map_property_set_multi_tile_size(grid_offset, size);
             map_image_set(grid_offset, image_id);
             map_property_set_multi_tile_xy(grid_offset, dx, dy,
-                                           dx == leftmost.x && dy == leftmost.y);
+                                           dx == leftmost.x() && dy == leftmost.y());
         }
     }
 }

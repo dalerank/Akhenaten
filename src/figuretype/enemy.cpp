@@ -52,7 +52,7 @@ void figure::enemy_initial(formation *m) {
             wait_ticks_missile = 0;
             if (figure_combat_get_missile_target_for_enemy(this, 10, city_figures_soldiers() < 4, &tile)) {
                 attack_image_offset = 1;
-                direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
+                direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x(), tile.y());
             } else
                 attack_image_offset = 0;
         }
@@ -70,7 +70,7 @@ void figure::enemy_initial(formation *m) {
                     break;
             }
             if (attack_image_offset == 1) {
-                if (tile.x == -1 || tile.y == -1)
+                if (tile.x() == -1 || tile.y() == -1)
                     map_point_get_last_result(&tile);
 
 //                figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, missile_type);

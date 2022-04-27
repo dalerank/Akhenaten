@@ -42,10 +42,10 @@ int editor_tool_is_updatable(void);
 
 int editor_tool_is_in_use(void);
 
-void editor_tool_start_use(const map_point *tile);
+void editor_tool_start_use(map_point tile);
 
-void editor_tool_update_use(const map_point *tile);
+void editor_tool_update_use(map_point tile);
 
-void editor_tool_end_use(const map_point *tile);
+void editor_tool_end_use(map_point tile);
 
 #endif // EDITOR_TOOL_H

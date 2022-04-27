@@ -52,8 +52,8 @@ void scenario_earthquake_init(void) {
     }
     data.state = EVENT_STATE_INITIAL;
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = scenario_data.earthquake_point.x;
-        data.expand[i].y = scenario_data.earthquake_point.y;
+        data.expand[i].x = scenario_data.earthquake_point.x();
+        data.expand[i].y = scenario_data.earthquake_point.y();
     }
 }
 
@@ -91,7 +91,7 @@ static void advance_earthquake_to_tile(int x, int y) {
 
 void scenario_earthquake_process(void) {
     if (scenario_data.earthquake.severity == EARTHQUAKE_NONE ||
-        scenario_data.earthquake_point.x == -1 || scenario_data.earthquake_point.y == -1)
+        scenario_data.earthquake_point.x() == -1 || scenario_data.earthquake_point.y() == -1)
         return;
     if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year &&

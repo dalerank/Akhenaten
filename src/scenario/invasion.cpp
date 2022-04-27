@@ -223,12 +223,12 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     // determine invasion point
     if (enemy_type == ENEMY_11_CAESAR) {
         map_point entry_point = scenario_map_entry();
-        x = entry_point.x;
-        y = entry_point.y;
+        x = entry_point.x();
+        y = entry_point.y();
     } else {
         int num_points = 0;
         for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) {
-            if (scenario_data.invasion_points_land[i].x != -1)
+            if (scenario_data.invasion_points_land[i].grid_offset() != -1)
                 num_points++;
 
         }
@@ -242,20 +242,20 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             }
         }
         if (num_points > 0) {
-            while (scenario_data.invasion_points_land[invasion_point].x == -1) {
+            while (scenario_data.invasion_points_land[invasion_point].grid_offset() == -1) {
                 invasion_point++;
                 if (invasion_point >= MAX_INVASION_POINTS_LAND)
                     invasion_point = 0;
 
             }
         }
-        x = scenario_data.invasion_points_land[invasion_point].x;
-        y = scenario_data.invasion_points_land[invasion_point].y;
+        x = scenario_data.invasion_points_land[invasion_point].x();
+        y = scenario_data.invasion_points_land[invasion_point].y();
     }
     if (x == -1 || y == -1) {
         map_point exit_point = scenario_map_exit();
-        x = exit_point.x;
-        y = exit_point.y;
+        x = exit_point.x();
+        y = exit_point.y();
     }
     // determine orientation
     if (y == 0)

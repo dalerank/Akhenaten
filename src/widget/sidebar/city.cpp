@@ -271,8 +271,8 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 35, cl, "draw as con.:", Planner.draw_as_constructing);
         draw_debug_line(str, x, y + 45, cl, "orientation:", Planner.absolute_orientation); draw_debug_line(str, x + 40, y + 45, cl, "", Planner.relative_orientation);
         draw_debug_line(str, x, y + 55, cl, "variant:", Planner.variant);
-        draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y);
-        draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y);
+        draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x()); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y());
+        draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x()); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y());
         draw_debug_line(str, x, y + 85, cl, "cost:", Planner.total_cost);
         y += 90;
     }
@@ -353,7 +353,7 @@ static void draw_debug_ui(int x, int y) {
 
         draw_debug_line_double_left(str, x, y + 15, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
         draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
-        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x, camera_tile.y);
+        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
         draw_debug_line_double_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
         draw_debug_line_double_left(str, x, y + 65, 90, 40, "---min:", 0, 0);

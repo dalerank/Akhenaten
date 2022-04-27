@@ -96,7 +96,7 @@ void figure::ballista_action() {
             if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
                 if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
-                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
+                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x(), tile.y());
                     wait_ticks_missile = 0;
 //                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_BOLT);
                     missile_fire_at(target_figure_id, FIGURE_BOLT);
@@ -234,7 +234,7 @@ void figure::tower_sentry_action() {
             if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
                 map_point tile;
                 if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
-                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
+                    direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x(), tile.y());
                     wait_ticks_missile = 0;
 //                    figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
                     missile_fire_at(target_figure_id, FIGURE_JAVELIN);

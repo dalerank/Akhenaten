@@ -91,7 +91,7 @@ void widget_map_editor_draw(void) {
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
-    map_editor_tool_draw(&data.current_tile);
+    map_editor_tool_draw(data.current_tile);
 
     graphics_set_active_canvas(CANVAS_UI);
 }
@@ -99,12 +99,10 @@ void widget_map_editor_draw(void) {
 static void update_city_view_coords(int x, int y, map_point *tile) {
     view_tile view;
     if (city_view_pixels_to_view_tile(x, y, &view)) {
-        tile->grid_offset = city_view_tile_to_grid_offset(&view);
+        tile->set(city_view_tile_to_grid_offset(&view));
         city_view_set_selected_view_tile(&view);
-        tile->x = map_grid_offset_to_x(tile->grid_offset);
-        tile->y = map_grid_offset_to_y(tile->grid_offset);
     } else {
-        tile->grid_offset = tile->x = tile->y = 0;
+        tile->set(0);
     }
 }
 
@@ -195,7 +193,7 @@ static bool handle_cancel_construction_button(const touch *t) {
     return true;
 }
 
-static void handle_first_touch(map_point *tile) {
+static void handle_first_touch(map_point tile) {
     const touch *first = get_earliest_touch();
 
     if (touch_was_click(first)) {
@@ -216,8 +214,8 @@ static void handle_first_touch(map_point *tile) {
             }
         } else {
             if (first->has_started) {
-                if (data.selected_grid_offset != tile->grid_offset)
-                    data.new_start_grid_offset = tile->grid_offset;
+                if (data.selected_grid_offset != tile.grid_offset())
+                    data.new_start_grid_offset = tile.grid_offset();
 
             }
             if (touch_not_click(first) && data.new_start_grid_offset) {
@@ -227,16 +225,16 @@ static void handle_first_touch(map_point *tile) {
                 editor_tool_start_use(tile);
             }
             editor_tool_update_use(tile);
-            if (data.selected_grid_offset != tile->grid_offset)
+            if (data.selected_grid_offset != tile.grid_offset())
                 data.selected_grid_offset = 0;
 
             if (first->has_ended) {
-                if (data.selected_grid_offset == tile->grid_offset) {
+                if (data.selected_grid_offset == tile.grid_offset()) {
                     editor_tool_end_use(tile);
                     widget_map_editor_clear_current_tile();
                     data.new_start_grid_offset = 0;
                 } else {
-                    data.selected_grid_offset = tile->grid_offset;
+                    data.selected_grid_offset = tile.grid_offset();
                 }
             }
         }
@@ -255,13 +253,13 @@ static void handle_first_touch(map_point *tile) {
     }
 
     if (touch_was_click(first) && first->has_ended && data.capture_input &&
-        data.selected_grid_offset == tile->grid_offset) {
+        data.selected_grid_offset == tile.grid_offset()) {
         editor_tool_start_use(tile);
         editor_tool_update_use(tile);
         editor_tool_end_use(tile);
         widget_map_editor_clear_current_tile();
     } else if (first->has_ended)
-        data.selected_grid_offset = tile->grid_offset;
+        data.selected_grid_offset = tile.grid_offset();
 
 }
 
@@ -272,9 +270,8 @@ static void handle_touch(void) {
         return;
     }
 
-    map_point *tile = &data.current_tile;
     if (!editor_tool_is_in_use() || input_coords_in_map(first->current_point.x, first->current_point.y))
-        update_city_view_coords(first->current_point.x, first->current_point.y, tile);
+        update_city_view_coords(first->current_point.x, first->current_point.y, &data.current_tile);
 
 
     if (first->has_started && input_coords_in_map(first->current_point.x, first->current_point.y)) {
@@ -283,7 +280,7 @@ static void handle_touch(void) {
     }
 
     handle_last_touch();
-    handle_first_touch(tile);
+    handle_first_touch(data.current_tile);
 
     if (first->has_ended)
         data.capture_input = 0;
@@ -321,27 +318,26 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h) {
         return;
     }
 
-    map_point *tile = &data.current_tile;
-    update_city_view_coords(m->x, m->y, tile);
+    update_city_view_coords(m->x, m->y, &data.current_tile);
 
-    if (!tile->grid_offset)
+    if (!data.current_tile.grid_offset())
         return;
 
     if (m->left.went_down) {
         if (!editor_tool_is_in_use())
-            editor_tool_start_use(tile);
+            editor_tool_start_use(data.current_tile);
 
-        editor_tool_update_use(tile);
+        editor_tool_update_use(data.current_tile);
     } else if (m->left.is_down || editor_tool_is_in_use())
-        editor_tool_update_use(tile);
+        editor_tool_update_use(data.current_tile);
 
     if (m->left.went_up) {
-        editor_tool_end_use(tile);
+        editor_tool_end_use(data.current_tile);
         sound_effect_play(SOUND_EFFECT_BUILD);
     }
 }
 
 void widget_map_editor_clear_current_tile(void) {
     data.selected_grid_offset = 0;
-    data.current_tile.grid_offset = 0;
+    data.current_tile.set(0);
 }

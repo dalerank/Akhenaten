@@ -16,7 +16,7 @@
 #include "map/grid.h"
 #include "map/point.h"
 
-static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},
+static const coords ALTERNATIVE_POINTS[] = {{-1, -6},
                                                {0,  -1},
                                                {1,  -1},
                                                {1,  0},
@@ -234,13 +234,13 @@ void figure::javelin_launch_missile() {
         wait_ticks_missile = 0;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             attack_image_offset = 1;
-            direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
+            direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x(), tile.y());
         } else
             attack_image_offset = 0;
     }
     if (attack_image_offset) {
         if (attack_image_offset == 1) {
-            if (tile.x == -1 || tile.y == -1)
+            if (tile.x() == -1 || tile.y() == -1)
                 map_point_get_last_result(&tile);
 
 //            figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, FIGURE_JAVELIN);
@@ -488,10 +488,10 @@ void figure::soldier_action() {
             }
             break;
         case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-            const map_point *exit = city_map_exit_point();
+            map_point *exit = city_map_exit_point();
             formation_at_rest = 0;
-            destination_x = exit->x;
-            destination_y = exit->y;
+            destination_x = exit->x();
+            destination_y = exit->y();
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;

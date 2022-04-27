@@ -160,9 +160,6 @@ static void post_load() {
 
     WATCH.START();
 
-    // finish reading / recalc cached map_points
-    recalc_broken_points();
-
     // scenario settings
     scenario_set_name(scenario_name());
     city_set_player_name(setting_player_name());
@@ -333,8 +330,8 @@ void GamestateIO::start_loaded_file() {
 
         map_point entry = scenario_map_entry();
         map_point exit = scenario_map_exit();
-        city_map_set_entry_point(entry.x, entry.y);
-        city_map_set_exit_point(exit.x, exit.y);
+        city_map_set_entry_point(entry.x(), entry.y());
+        city_map_set_exit_point(exit.x(), exit.y());
 
         // game time
         game_time_init(scenario_property_start_year());

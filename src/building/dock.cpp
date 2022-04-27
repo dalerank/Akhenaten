@@ -26,7 +26,7 @@ int building_dock_count_idle_dockers(const building *dock) {
 
 void building_dock_update_open_water_access(void) {
     map_point river_entry = scenario_map_river_entry();
-    map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
+    map_routing_calculate_distances_water_boat(river_entry.x(), river_entry.y());
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && !b->house_size && b->type == BUILDING_DOCK) {
@@ -40,7 +40,7 @@ void building_dock_update_open_water_access(void) {
 
 int building_dock_is_connected_to_open_water(int x, int y) {
     map_point river_entry = scenario_map_river_entry();
-    map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
+    map_routing_calculate_distances_water_boat(river_entry.x(), river_entry.y());
     if (map_terrain_is_adjacent_to_open_water(x, y, 3))
         return 1;
     else
@@ -145,7 +145,7 @@ int building_dock_get_queue_destination(int ship_id, map_point *tile) {
                 break;
         }
         map_point_store_result(dock->x + dx, dock->y + dy, tile);
-        if (!map_has_figure_at(map_grid_offset(tile->x, tile->y)))
+        if (!map_has_figure_at(tile->grid_offset()))
             return dock_id;
 
     }
@@ -178,7 +178,7 @@ int building_dock_get_queue_destination(int ship_id, map_point *tile) {
                 break;
         }
         map_point_store_result(dock->x + dx, dock->y + dy, tile);
-        if (!map_has_figure_at(map_grid_offset(tile->x, tile->y)))
+        if (!map_has_figure_at(tile->grid_offset()))
             return dock_id;
 
     }

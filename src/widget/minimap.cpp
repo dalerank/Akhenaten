@@ -44,7 +44,7 @@ static struct {
     struct {
         int x;
         int y;
-        int grid_offset;
+        map_point tile;
     } mouse;
     int refresh_requested;
 } data;
@@ -74,17 +74,17 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
     if ((map_grid_width() - width_tiles) / 2 > 0) {
-        if (camera_tile.x < data.absolute_x)
-            data.absolute_x = camera_tile.x;
-        else if (camera_tile.x > width_tiles + data.absolute_x - view_width_tiles)
-            data.absolute_x = view_width_tiles + camera_tile.x - width_tiles;
+        if (camera_tile.x() < data.absolute_x)
+            data.absolute_x = camera_tile.x();
+        else if (camera_tile.x() > width_tiles + data.absolute_x - view_width_tiles)
+            data.absolute_x = view_width_tiles + camera_tile.x() - width_tiles;
 
     }
     if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
-        if (camera_tile.y < data.absolute_y)
-            data.absolute_y = camera_tile.y;
-        else if (camera_tile.y > height_tiles + data.absolute_y - view_height_tiles)
-            data.absolute_y = view_height_tiles + camera_tile.y - height_tiles;
+        if (camera_tile.y() < data.absolute_y)
+            data.absolute_y = camera_tile.y();
+        else if (camera_tile.y() > height_tiles + data.absolute_y - view_height_tiles)
+            data.absolute_y = view_height_tiles + camera_tile.y() - height_tiles;
 
     }
     // ensure even height
@@ -238,14 +238,14 @@ static void draw_viewport_rectangle(void) {
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    int x_offset = data.x_offset + 2 * (camera_tile.x - data.absolute_x) - 2 + camera_pixels.x / 30;
+    int x_offset = data.x_offset + 2 * (camera_tile.x() - data.absolute_x) - 2 + camera_pixels.x / 30;
     if (x_offset < data.x_offset)
         x_offset = data.x_offset;
 
     if (x_offset + 2 * view_width_tiles + 4 > data.x_offset + data.width_tiles)
         x_offset -= 2;
 
-    int y_offset = data.y_offset + camera_tile.y - data.absolute_y + 1;
+    int y_offset = data.y_offset + camera_tile.y() - data.absolute_y + 1;
     graphics_draw_rect(x_offset, y_offset,
                        view_width_tiles * 2 + 8,
                        view_height_tiles + 3,
@@ -317,15 +317,14 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
 
 static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset) {
     if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1))
-        data.mouse.grid_offset = grid_offset < 0 ? 0 : grid_offset;
-
+        data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
 }
 static int get_mouse_grid_offset(const mouse *m) {
     data.mouse.x = m->x;
     data.mouse.y = m->y;
-    data.mouse.grid_offset = 0;
+    data.mouse.tile.set(0);
     foreach_map_tile(update_mouse_grid_offset);
-    return data.mouse.grid_offset;
+    return data.mouse.tile.grid_offset();
 }
 struct {
     int x = -1;

@@ -43,7 +43,7 @@ void figure_create_flotsam(void) {
 
     map_point river_entry = scenario_map_river_entry();
     for (int i = 0; i < 20; i++) {
-        figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP_RIGHT);
+        figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x(), river_entry.y(), DIR_0_TOP_RIGHT);
         f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
         f->set_resource(FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
@@ -86,8 +86,8 @@ void figure::flotsam_action() {
                     min_max_seen = 1;
 
                 map_point river_exit = scenario_map_river_exit();
-                destination_x = river_exit.x;
-                destination_y = river_exit.y;
+                destination_x = river_exit.x();
+                destination_y = river_exit.y();
             }
             break;
         case FIGURE_ACTION_129_FLOTSAM_FLOATING:
@@ -122,8 +122,8 @@ void figure::flotsam_action() {
             }
             map_figure_remove();
             map_point river_entry = scenario_map_river_entry();
-            tile_x = river_entry.x;
-            tile_y = river_entry.y;
+            tile_x = river_entry.x();
+            tile_y = river_entry.y();
             grid_offset_figure = map_grid_offset(tile_x, tile_y);
             cross_country_x = 15 * tile_x;
             cross_country_y = 15 * tile_y;
@@ -160,8 +160,8 @@ void figure::shipwreck_action() {
         map_figure_remove();
         map_point tile;
         if (map_water_find_shipwreck_tile(this, &tile)) {
-            tile_x = tile.x;
-            tile_y = tile.y;
+            tile_x = tile.x();
+            tile_y = tile.y();
             grid_offset_figure = map_grid_offset(tile_x, tile_y);
             cross_country_x = 15 * tile_x + 7;
             cross_country_y = 15 * tile_y + 7;
@@ -187,10 +187,10 @@ void figure::fishing_boat_action() {
             set_home(b->id);
             b->data.industry.fishing_boat_id = id;
             action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-            destination_x = tile.x;
-            destination_y = tile.y;
-            source_x = tile.x;
-            source_y = tile.y;
+            destination_x = tile.x();
+            destination_y = tile.y();
+            source_x = tile.x();
+            source_y = tile.y();
             route_remove();
         } else {
             poof();
@@ -212,10 +212,10 @@ void figure::fishing_boat_action() {
                     set_home(wharf_id);
                     building_get(wharf_id)->data.industry.fishing_boat_id = id;
                     action_state = FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF;
-                    destination_x = tile.x;
-                    destination_y = tile.y;
-                    source_x = tile.x;
-                    source_y = tile.y;
+                    destination_x = tile.x();
+                    destination_y = tile.y();
+                    source_x = tile.x();
+                    source_y = tile.y();
                     route_remove();
                 }
             }
@@ -227,8 +227,8 @@ void figure::fishing_boat_action() {
                 map_point tile;
                 if (map_water_find_alternative_fishing_boat_tile(this, &tile)) {
                     route_remove();
-                    destination_x = tile.x;
-                    destination_y = tile.y;
+                    destination_x = tile.x();
+                    destination_y = tile.y();
                     direction = previous_tile_direction;
                 } else {
                     action_state = FIGURE_ACTION_192_FISHING_BOAT_FISHING;
@@ -277,8 +277,8 @@ void figure::fishing_boat_action() {
                     map_point tile;
                     if (scenario_map_closest_fishing_point(tile_x, tile_y, &tile)) {
                         action_state = FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH;
-                        destination_x = tile.x;
-                        destination_y = tile.y;
+                        destination_x = tile.x();
+                        destination_y = tile.y();
                         route_remove();
                     }
                 }

@@ -50,7 +50,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
     }
     if (min_building && min_dist < INFINITE) {
         if (dst)
-            map_point_store_result(min_building->road_access.x, min_building->road_access.y, dst);
+            map_point_store_result(min_building->road_access.x(), min_building->road_access.y(), dst);
 
         return min_building->id;
     }
@@ -109,7 +109,7 @@ int building::barracks_create_soldier() {
     int formation_id = get_closest_legion_needing_soldiers(this);
     if (formation_id > 0) {
         const formation *m = formation_get(formation_id);
-        figure *f = figure_create(m->figure_type, road_access.x, road_access.y, DIR_0_TOP_RIGHT);
+        figure *f = figure_create(m->figure_type, road_access.x(), road_access.y(), DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -122,8 +122,8 @@ int building::barracks_create_soldier() {
             building *academy = building_get(academy_id);
             if (map_has_road_access(academy->x, academy->y, academy->size, &road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
-                f->destination_x = road.x;
-                f->destination_y = road.y;
+                f->destination_x = road.x();
+                f->destination_y = road.y();
                 f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
             } else
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
@@ -150,12 +150,12 @@ bool building::barracks_create_tower_sentry() {
     if (!tower)
         return false;
 
-    figure *f = figure_create(FIGURE_TOWER_SENTRY, road_access.x, road_access.y, DIR_0_TOP_RIGHT);
+    figure *f = figure_create(FIGURE_TOWER_SENTRY, road_access.x(), road_access.y(), DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
-        f->destination_x = road.x;
-        f->destination_y = road.y;
+        f->destination_x = road.x();
+        f->destination_y = road.y();
     } else
         f->poof();
     tower->set_figure(0, f->id);

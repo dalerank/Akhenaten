@@ -288,9 +288,9 @@ static void init(int grid_offset) {
     else if (map_terrain_is(grid_offset, TERRAIN_DUNE))
         context.terrain_type = TERRAIN_INFO_DUNES;
     else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
-        if (grid_offset == city_map_entry_flag()->grid_offset)
+        if (grid_offset == city_map_entry_flag()->grid_offset())
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
-        else if (grid_offset == city_map_exit_flag()->grid_offset)
+        else if (grid_offset == city_map_exit_flag()->grid_offset())
             context.terrain_type = TERRAIN_INFO_EXIT_FLAG;
         else {
             if (map_terrain_is(grid_offset, TERRAIN_ORE))

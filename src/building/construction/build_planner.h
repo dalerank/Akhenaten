@@ -115,8 +115,8 @@ public:
     void reset();
     void setup_build(int type);
 
-    void construction_start(int x, int y, int grid_offset);
-    void construction_update(int x, int y, int grid_offset);
+    void construction_start(map_point tile);
+    void construction_update(map_point tile);
     void construction_cancel();
     void construction_finalize();
 
@@ -128,7 +128,7 @@ public:
     int get_total_drag_size(int *x, int *y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
-    void update(const map_point *cursor_tile);
+    void update(map_point cursor_tile);
     void draw();
     bool place();
 } Planner;

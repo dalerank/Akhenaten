@@ -11,7 +11,7 @@ static map_point bookmarks[MAX_BOOKMARKS];
 
 void map_bookmarks_clear(void) {
     for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        bookmarks[i].empty();
+        bookmarks[i].set(0);
     }
 }
 
@@ -22,8 +22,8 @@ void map_bookmark_save(int number) {
 
 bool map_bookmark_go_to(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS) {
-        int x = bookmarks[number].x;
-        int y = bookmarks[number].y;
+        int x = bookmarks[number].x();
+        int y = bookmarks[number].y();
         if (x > -1 && map_grid_offset(x, y) > -1) {
             city_view_go_to_tile_corner(x, y, true);
             return true;

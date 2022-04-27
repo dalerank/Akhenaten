@@ -239,8 +239,8 @@ int figure::deliver_import_resource(building *dock) {
     set_destination(warehouse_id);
     wait_ticks = 0;
     action_state = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;
-    destination_x = tile.x;
-    destination_y = tile.y;
+    destination_x = tile.x();
+    destination_y = tile.y();
     resource_id = resource;
     return 1;
 }
@@ -265,8 +265,8 @@ int figure::fetch_export_resource(building *dock) {
     set_destination(warehouse_id);
     action_state = FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE;
     wait_ticks = 0;
-    destination_x = tile.x;
-    destination_y = tile.y;
+    destination_x = tile.x();
+    destination_y = tile.y();
     resource_id = resource;
     return 1;
 }

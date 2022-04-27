@@ -247,7 +247,7 @@ static void set_native_target_building(formation *m) {
             case BUILDING_ROADBLOCK:
                 break;
             default: {
-                int distance = calc_maximum_distance(meeting.x, meeting.y, b->x, b->y);
+                int distance = calc_maximum_distance(meeting.x(), meeting.y(), b->x, b->y);
                 if (distance < min_distance) {
                     min_building = b;
                     min_distance = distance;

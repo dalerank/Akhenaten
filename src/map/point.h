@@ -3,31 +3,7 @@
 
 #include "grid.h"
 
-class map_point;
-
-struct private_point_int_t {
-private:
-    map_point *pPARENT = nullptr;
-    int *pDATA = nullptr;
-    bool check_and_repair_if_invalid() const;
-public:
-    bool is_valid() const;
-
-    // ACCESS/CASTING
-    operator int();
-    operator int() const;
-
-    // CONSTRUCTOR
-    private_point_int_t(int *data, map_point *parent);
-
-    // ASSIGNMENT
-    private_point_int_t(int rhs);
-    private_point_int_t operator=(int rhs);
-
-    // OPERATIONS
-    private_point_int_t operator-=(int rhs);
-    private_point_int_t operator+=(int rhs);
-};
+#define _RETRIEVE_ONLY -GRID_LENGTH-100
 
 enum {
     _X = 0,
@@ -36,6 +12,11 @@ enum {
     _ABS_X = 3,
     _ABS_Y = 4
 };
+
+typedef struct {
+    int x;
+    int y;
+} coords;
 
 class map_point {
 private:
@@ -47,31 +28,32 @@ private:
     int p_ABS_Y = -1;
 
 public:
-    private_point_int_t x = private_point_int_t(&p_X, this);
-    private_point_int_t y = private_point_int_t(&p_Y, this);
-    private_point_int_t grid_offset = private_point_int_t(&p_GRID_OFFSET, this);
-    private_point_int_t ABS_X = private_point_int_t(&p_ABS_X, this);
-    private_point_int_t ABS_Y = private_point_int_t(&p_ABS_Y, this);
+    // SETTERS / GETTERS
+    const int x(int v = _RETRIEVE_ONLY);
+    const int y(int v = _RETRIEVE_ONLY);
+    const int grid_offset(int v = _RETRIEVE_ONLY);
+    const int ABS_X(int v = _RETRIEVE_ONLY);
+    const int ABS_Y(int v = _RETRIEVE_ONLY);
+
+    // MODIFIERS
+    void shift(int _x, int _y);
+    void shift(int _grid_offset);
+
+    // SET BY CONSTRUCTION
+    void set(int _x, int _y);
+    void set(int _grid_offset);
 
     // direct access to private fields, for iob read/write without recalc
     int *private_access(int i);
 
-    // INTERNAL SETTER
-    void set(int _x, int _y);
-    void set(int _grid_offset);
-    void refresh(int *field, int value);
-    bool attemp_recalc_if_broken();
+    // CORRECT BROKEN FIELDS
+    bool self_correct();
 
     // CONSTRUCTORS / DESTRUCTOR
-    void rebuild_privs();
-    void empty();
     map_point(); // default constructor
     map_point(int _grid_offset);
     map_point(int _x, int _y);
-    ~map_point();
 };
-
-void recalc_broken_points();
 
 /**
  * Stores the X and Y to the passed point.

@@ -253,7 +253,7 @@ building *building_at(int x, int y) {
     return building_get(map_building_at(map_grid_offset(x, y)));
 }
 building *building_at(map_point point) {
-    return building_get(map_building_at(map_grid_offset(point.x, point.y)));
+    return building_get(map_building_at(point.grid_offset()));
 }
 bool building_exists_at(int grid_offset, building *b) {
     b = nullptr;
@@ -281,7 +281,7 @@ bool building_exists_at(int x, int y, building *b) {
 }
 bool building_exists_at(map_point point, building *b) {
     b = nullptr;
-    int b_id = map_building_at(map_grid_offset(point.x, point.y));
+    int b_id = map_building_at(point.grid_offset());
     if (b_id > 0) {
         b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED)

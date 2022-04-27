@@ -318,18 +318,22 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     map_point north_tile = {x, y};
     switch (orientation) {
         case 0: // NE
-            north_tile.x -= 2;
-            north_tile.y -= 10;
+            north_tile.shift(-2, -10);
+//            north_tile.x -= 2;
+//            north_tile.y -= 10;
             break;
         case 1: // SE
-            north_tile.y -= 2;
+            north_tile.shift(0, -2);
+//            north_tile.y -= 2;
             break;
         case 2: // SW
-            north_tile.x -= 2;
+            north_tile.shift(-2, 0);
+//            north_tile.x -= 2;
             break;
         case 3: // NW
-            north_tile.x -= 10;
-            north_tile.y -= 2;
+            north_tile.shift(-10, -2);
+//            north_tile.x -= 10;
+//            north_tile.y -= 2;
             break;
     }
 
@@ -353,7 +357,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 13; row++) {
                 for (int column = 0; column < 7; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(map_grid_offset(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -369,7 +373,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 7; row++) {
                 for (int column = 0; column < 13; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(map_grid_offset(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -391,7 +395,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 13; row++) {
                 for (int column = 0; column < 7; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(map_grid_offset(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -407,7 +411,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 7; row++) {
                 for (int column = 0; column < 13; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(map_grid_offset(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
