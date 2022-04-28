@@ -1,6 +1,6 @@
 #include "overlay_menu.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/time.h"
 #include "game/state.h"
 #include "graphics/generic_button.h"

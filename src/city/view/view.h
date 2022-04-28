@@ -2,7 +2,7 @@
 #define CITY_VIEW_H
 
 #include "core/buffer.h"
-#include "map.h"
+#include "city/map.h"
 
 int MAP_TILE_UPPER_LIMIT_X();
 int MAP_TILE_UPPER_LIMIT_Y();
@@ -66,16 +66,6 @@ void city_view_go_to_tile_corner(int tile_x, int tile_y, bool validate);
 void city_view_go_to_tile(int tile_x, int tile_y, bool validate);
 void city_view_go_to_grid_offset(int grid_offset);
 void city_view_scroll(int x, int y);
-
-pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset);
-pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y);
-
-
-
-int city_view_to_grid_offset(int x_view, int y_view);
-void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view);
-int city_view_pixels_to_view_tile(int x, int y, view_tile *tile);
-int city_view_tile_to_grid_offset(const view_tile *tile);
 
 void city_view_get_selected_tile_pixels(int *x, int *y);
 void city_view_set_selected_view_tile(const view_tile *tile);

@@ -1,6 +1,6 @@
 #include "missile.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/image.h"
 #include "figure/formation.h"
 #include "figure/movement.h"

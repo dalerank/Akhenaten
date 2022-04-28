@@ -1,7 +1,7 @@
 #include "minimap.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

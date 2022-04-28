@@ -11,6 +11,7 @@
 #include <map/floodplain.h>
 #include <map/vegetation.h>
 #include <map/moisture.h>
+#include <city/view/lookup.h>
 #include "tile_draw.h"
 
 #include "building/animation.h"
@@ -23,7 +24,7 @@
 #include "city/labor.h"
 #include "city/population.h"
 #include "city/ratings.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "core/time.h"
 #include "game/resource.h"

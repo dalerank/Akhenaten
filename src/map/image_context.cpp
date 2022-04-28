@@ -1,7 +1,7 @@
 #include "image_context.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "map/building.h"
 #include "map/elevation.h"
 #include "map/grid.h"

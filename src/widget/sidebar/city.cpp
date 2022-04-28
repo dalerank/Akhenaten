@@ -6,7 +6,7 @@
 
 #include "building/menu.h"
 #include "city/message.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
 #include "core/game_environment.h"

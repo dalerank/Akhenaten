@@ -1,6 +1,6 @@
 #include "warning.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"

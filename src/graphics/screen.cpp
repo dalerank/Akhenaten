@@ -1,6 +1,6 @@
 #include "screen.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "graphics/graphics.h"
 #include "graphics/window.h"

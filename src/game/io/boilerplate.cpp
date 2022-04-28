@@ -12,7 +12,7 @@
 #include "city/military.h"
 #include "city/mission.h"
 #include "city/victory.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/resource.h"
 #include "core/encoding.h"
 #include "core/file.h"

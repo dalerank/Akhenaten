@@ -8,7 +8,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/sentiment.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/random.h"

@@ -5,7 +5,7 @@
 
 #include "graphics/color.h"
 #include "map/point.h"
-#include "city/view.h"
+#include "city/view/view.h"
 
 enum PlannerFlags {
     Groundwater =           1,

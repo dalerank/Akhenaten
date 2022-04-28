@@ -1,6 +1,6 @@
 #include "screenshot.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/buffer.h"
 #include "core/config.h"
 #include "core/file.h"

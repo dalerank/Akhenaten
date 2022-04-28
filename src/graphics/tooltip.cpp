@@ -2,7 +2,7 @@
 
 #include "city/labor.h"
 #include "city/ratings.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -19,6 +19,7 @@
 #include "window/advisors.h"
 
 #include <stdlib.h>
+#include <city/view/lookup.h>
 
 #define OVERLAY_TEXT_MAX 1000
 

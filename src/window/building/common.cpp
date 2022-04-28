@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/labor.h"
 #include "city/population.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/screen.h"

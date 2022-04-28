@@ -1,6 +1,7 @@
+#include <city/view/lookup.h>
 #include "map_editor.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "editor/tool.h"
 #include "graphics/graphics.h"

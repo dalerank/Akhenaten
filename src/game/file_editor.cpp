@@ -6,7 +6,7 @@
 #include "city/data.h"
 #include "city/message.h"
 #include "city/victory.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/image.h"
 #include "core/image_group_editor.h"
 #include "empire/empire.h"

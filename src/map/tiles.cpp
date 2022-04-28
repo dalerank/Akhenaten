@@ -2,7 +2,7 @@
 #include "tiles.h"
 
 #include "city/map.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/direction.h"
 #include "core/image.h"
 #include "core/game_environment.h"

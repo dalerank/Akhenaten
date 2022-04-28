@@ -15,7 +15,7 @@
 #define INFINITE 10000
 
 #include "map/terrain.h"
-#include "city/view.h"
+#include "city/view/view.h"
 
 #include <math.h>
 #include <city/floods.h>

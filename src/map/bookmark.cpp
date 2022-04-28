@@ -1,7 +1,7 @@
 #include <game/io/io_buffer.h>
 #include "bookmark.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "map/grid.h"
 #include "map/point.h"
 

@@ -1,12 +1,13 @@
 #include <widget/city/building_ghost.h>
 #include <widget/overlays/city_overlay.h>
 #include <graphics/image.h>
+#include <city/view/lookup.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/config.h"

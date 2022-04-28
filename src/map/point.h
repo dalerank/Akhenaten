@@ -3,7 +3,7 @@
 
 #include "grid.h"
 
-#define _RETRIEVE_ONLY -GRID_LENGTH-100
+#define _INVALID_COORD -GRID_LENGTH-100
 
 enum {
     _X = 0,
@@ -29,11 +29,11 @@ private:
 
 public:
     // SETTERS / GETTERS
-    const int x(int v = _RETRIEVE_ONLY);
-    const int y(int v = _RETRIEVE_ONLY);
-    const int grid_offset(int v = _RETRIEVE_ONLY);
-    const int ABS_X(int v = _RETRIEVE_ONLY);
-    const int ABS_Y(int v = _RETRIEVE_ONLY);
+    const int x(int v = _INVALID_COORD);
+    const int y(int v = _INVALID_COORD);
+    const int grid_offset(int v = _INVALID_COORD);
+    const int ABS_X(int v = _INVALID_COORD);
+    const int ABS_Y(int v = _INVALID_COORD);
 
     // MODIFIERS
     void shift(int _x, int _y);

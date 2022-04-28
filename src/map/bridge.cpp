@@ -1,6 +1,6 @@
 #include "bridge.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/direction.h"
 #include <scenario/map.h>
 #include "map/figure.h"

@@ -2,7 +2,7 @@
 
 #include "city/figures.h"
 #include "city/military.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"

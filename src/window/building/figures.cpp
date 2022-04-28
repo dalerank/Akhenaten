@@ -1,7 +1,8 @@
+#include <city/view/lookup.h>
 #include "figures.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "empire/city.h"
 #include "figure/figure.h"

@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "city/entertainment.h"
 #include "city/figures.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"

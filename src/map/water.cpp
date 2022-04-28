@@ -1,7 +1,7 @@
 #include "water.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"

@@ -1,6 +1,6 @@
 #include "build_menu.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "editor/tool.h"
 #include "graphics/generic_button.h"
 #include "graphics/lang_text.h"

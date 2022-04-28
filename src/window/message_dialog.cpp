@@ -4,7 +4,7 @@
 
 #include "city/message.h"
 #include "city/sentiment.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "empire/city.h"

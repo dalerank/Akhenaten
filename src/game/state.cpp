@@ -1,7 +1,7 @@
 #include "state.h"
 
 #include "city/victory.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/random.h"
 #include "map/ring.h"

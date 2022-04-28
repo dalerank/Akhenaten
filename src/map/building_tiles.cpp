@@ -5,7 +5,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/direction.h"
 #include "core/image.h"
 #include "map/aqueduct.h"

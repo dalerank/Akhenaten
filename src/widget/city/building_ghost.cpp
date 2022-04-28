@@ -9,7 +9,7 @@
 #include "building/rotation.h"
 #include "city/buildings.h"
 #include "city/finance.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "core/game_environment.h"
 #include "figure/formation.h"

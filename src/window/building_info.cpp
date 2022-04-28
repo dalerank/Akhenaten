@@ -8,7 +8,7 @@
 #include "building/warehouse.h"
 #include "city/map.h"
 #include "city/resource.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/image_group.h"
 #include "figure/figure.h"

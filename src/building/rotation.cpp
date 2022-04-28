@@ -1,6 +1,6 @@
 #include "rotation.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "core/direction.h"
 #include "core/time.h"

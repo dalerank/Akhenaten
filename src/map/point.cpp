@@ -21,35 +21,35 @@ int *map_point::private_access(int i) {
 
 // SETTERS / GETTERS
 const int map_point::x(int v) {
-    if (v != _RETRIEVE_ONLY)
+    if (v != _INVALID_COORD)
         set(v, p_Y);
     else
         self_correct();
     return p_X;
 }
 const int map_point::y(int v) {
-    if (v != _RETRIEVE_ONLY)
+    if (v != _INVALID_COORD)
         set(p_X, v);
     else
         self_correct();
     return p_Y;
 }
 const int map_point::grid_offset(int v) {
-    if (v != _RETRIEVE_ONLY)
+    if (v != _INVALID_COORD)
         set(v);
     else
         self_correct();
     return p_GRID_OFFSET;
 }
 const int map_point::ABS_X(int v) {
-    if (v != _RETRIEVE_ONLY)
+    if (v != _INVALID_COORD)
         set(GRID_OFFSET(v, p_ABS_Y));
     else
         self_correct();
     return p_ABS_X;
 }
 const int map_point::ABS_Y(int v) {
-    if (v != _RETRIEVE_ONLY)
+    if (v != _INVALID_COORD)
         set(GRID_OFFSET(p_ABS_X, v));
     else
         self_correct();
@@ -66,6 +66,14 @@ void map_point::shift(int _grid_offset) {
 
 // SET BY CONSTRUCTION
 void map_point::set(int _x, int _y) {
+//    if (_x == _INVALID_COORD || _y == _INVALID_COORD) {
+//        p_GRID_OFFSET = _INVALID_COORD;
+//        p_X = _INVALID_COORD;
+//        p_Y = _INVALID_COORD;
+//        p_ABS_X = _INVALID_COORD;
+//        p_ABS_Y = _INVALID_COORD;
+//        return;
+//    }
     p_GRID_OFFSET = map_data()->start_offset + GRID_OFFSET(_x, _y);
 
     p_X = _x;
@@ -75,6 +83,14 @@ void map_point::set(int _x, int _y) {
     p_ABS_Y = GRID_Y(p_GRID_OFFSET);
 }
 void map_point::set(int _grid_offset) {
+//    if (_grid_offset < 0) {
+//        p_GRID_OFFSET = _INVALID_COORD;
+//        p_X = _INVALID_COORD;
+//        p_Y = _INVALID_COORD;
+//        p_ABS_X = _INVALID_COORD;
+//        p_ABS_Y = _INVALID_COORD;
+//        return;
+//    }
     p_GRID_OFFSET = _grid_offset;
 
     p_X = GRID_X(p_GRID_OFFSET - map_data()->start_offset);
@@ -102,7 +118,7 @@ bool map_point::self_correct() {
 // CONSTRUCTORS
 map_point::map_point() {
     // default constructor
-    set(0);
+    set(_INVALID_COORD);
 }
 map_point::map_point(int _grid_offset) {
     set(_grid_offset);

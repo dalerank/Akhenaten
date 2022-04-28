@@ -1,7 +1,8 @@
 #include <core/string.h>
 #include <cmath>
+#include <city/view/lookup.h>
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "formation.h"
 #include "image.h"
 #include "figuretype/editor.h"
