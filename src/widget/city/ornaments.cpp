@@ -1,29 +1,22 @@
-#include "ornaments.h"
-
-#include <map/image.h>
-#include <map/building.h>
-#include <graphics/image.h>
+#include <building/building.h>
 #include <map/property.h>
+#include <map/image.h>
 #include <building/animation.h>
-#include <city/entertainment.h>
-#include <building/dock.h>
-#include <city/population.h>
-#include <building/rotation.h>
-#include <map/water_supply.h>
-#include <map/grid.h>
-#include <game/resource.h>
+#include <core/image.h>
+#include <graphics/image.h>
 #include <cmath>
+#include <map/terrain.h>
+#include <map/floodplain.h>
+#include <game/time.h>
+#include <map/random.h>
+#include <city/floods.h>
+#include <building/dock.h>
+#include <game/resource.h>
 #include <city/buildings.h>
 #include <city/ratings.h>
 #include <city/labor.h>
-#include <building/industry.h>
-#include <map/terrain.h>
-#include <game/time.h>
-#include <city/floods.h>
-#include <core/random.h>
-#include <map/random.h>
-#include <map/floodplain.h>
-#include "building/building.h"
+#include <map/water_supply.h>
+#include "ornaments.h"
 
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();
@@ -433,7 +426,10 @@ static void draw_warehouse_ornaments(const building *b, int x, int y, color_t co
     if (b->id == city_buildings_get_trade_center() && GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
 }
-static void draw_hippodrome_ornaments(int x, int y, int grid_offset) {
+static void draw_hippodrome_ornaments(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
     building *b = building_at(grid_offset);
@@ -475,7 +471,10 @@ static void draw_senate_rating_flags(const building *b, int x, int y, color_t co
     }
 }
 
-void draw_ornaments_and_animations(int x, int y, int grid_offset) {
+void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset))
         return;
@@ -595,5 +594,5 @@ void draw_ornaments_and_animations(int x, int y, int grid_offset) {
     // specific buildings
     draw_senate_rating_flags(b, x, y, color_mask);
     draw_workshop_raw_material_storage(b, x, y, color_mask);
-//    draw_hippodrome_ornaments(x, y, grid_offset);
+//    draw_hippodrome_ornaments(pixel, point);
 }

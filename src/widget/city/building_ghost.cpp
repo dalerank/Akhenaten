@@ -291,8 +291,8 @@ void draw_building(int image_id, int x, int y, color_t color_mask) {
     ImageDraw::isometric_top(image_id, x, y, color_mask);
 }
 
-static void draw_fountain_range(int x, int y, int grid_offset) {
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_BLUE);
+static void draw_fountain_range(pixel_coordinate pixel, map_point point) {
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE);
 }
 static void draw_warehouse(int x, int y) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);

@@ -14,6 +14,6 @@ enum {
 
 uint8_t  map_moisture_get(int grid_offset);
 uint8_t map_grasslevel_get(int grid_offset);
-bool map_is_4x4_tallgrass(int x, int y, int grid_offset);
+//bool map_is_4x4_tallgrass(pixel_coordinate pixel, map_point point);
 
 #endif //OZYMANDIAS_MOISTURE_H

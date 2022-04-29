@@ -24,7 +24,7 @@ static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 
-static void build_shoreorder_from_tile(int x, int y, int grid_offset) {
+static void build_shoreorder_from_tile(pixel_coordinate pixel, map_point point) {
 
 }
 int map_floodplain_rebuild_shoreorder() {

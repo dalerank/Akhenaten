@@ -123,7 +123,7 @@ public:
     void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
-    void construction_record_view_position(int view_x, int view_y, int grid_offset);
+    void construction_record_view_position(pixel_coordinate pixel, map_point point);
 
     int get_total_drag_size(int *x, int *y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);

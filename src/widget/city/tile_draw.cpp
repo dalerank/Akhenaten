@@ -244,18 +244,20 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
-void draw_empty_tile(int x, int y, int grid_offset) {
-    if (!map_property_is_draw_tile(grid_offset))
-        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
+void draw_empty_tile(pixel_coordinate pixel, map_point point) {
+    if (!map_property_is_draw_tile(point.grid_offset()))
+        ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
 };
 
-void draw_footprint(int x, int y, int grid_offset) {
-
+void draw_footprint(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     // black tile outside of map
     if (grid_offset < 0)
         return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 
-    Planner.construction_record_view_position(x, y, grid_offset);
+    Planner.construction_record_view_position(pixel, point);
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
@@ -302,7 +304,10 @@ void draw_footprint(int x, int y, int grid_offset) {
     // ******** TEMP ********
 //    if (grid_offset == map_grid_offset(135, 66))
 }
-void draw_top(int x, int y, int grid_offset) {
+void draw_top(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     // tile must contain image draw data
     if (!map_property_is_draw_tile(grid_offset))
         return;
@@ -317,12 +322,15 @@ void draw_top(int x, int y, int grid_offset) {
 
     ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
 }
-void draw_ornaments(int x, int y, int grid_offset) {
+void draw_ornaments(pixel_coordinate pixel, map_point point) {
     // defined separately in ornaments.cpp
     // cuz it's too much stuff.
-    draw_ornaments_and_animations(x, y, grid_offset);
+    draw_ornaments_and_animations(pixel, point);
 }
-void draw_figures(int x, int y, int grid_offset) {
+void draw_figures(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -343,7 +351,10 @@ void draw_figures(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
-void draw_elevated_figures(int x, int y, int grid_offset) {
+void draw_elevated_figures(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
@@ -360,30 +371,39 @@ void draw_elevated_figures(int x, int y, int grid_offset) {
 static bool should_draw_top_before_deletion(int grid_offset) {
     return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
 }
-void deletion_draw_top(int x, int y, int grid_offset) {
+void deletion_draw_top(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
-        draw_top(x, y, grid_offset);
+        draw_top(pixel, point);
 }
-void deletion_draw_figures_animations(int x, int y, int grid_offset) {
+void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_at(grid_offset)))
         ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
-        draw_top(x, y, grid_offset);
+        draw_top(pixel, point);
 
-    draw_figures(x, y, grid_offset);
-    draw_ornaments(x, y, grid_offset);
+    draw_figures(pixel, point);
+    draw_ornaments(pixel, point);
 }
 
 /////////
 
-void draw_footprint_overlay(int x, int y, int grid_offset) {
-    Planner.construction_record_view_position(x, y, grid_offset);
+void draw_footprint_overlay(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
+    Planner.construction_record_view_position(pixel, point);
     if (grid_offset < 0) {
         // Outside map: draw black tile
         ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (get_city_overlay()->draw_custom_footprint)
-        get_city_overlay()->draw_custom_footprint(x, y, grid_offset);
+        get_city_overlay()->draw_custom_footprint(pixel, point);
     else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
@@ -401,13 +421,16 @@ void draw_footprint_overlay(int x, int y, int grid_offset) {
             ImageDraw::isometric_footprint_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
 }
-void draw_top_overlay(int x, int y, int grid_offset) {
+void draw_top_overlay(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (get_city_overlay()->draw_custom_top)
-        get_city_overlay()->draw_custom_top(x, y, grid_offset);
+        get_city_overlay()->draw_custom_top(pixel, point);
     else if (map_property_is_draw_tile(grid_offset)) {
         if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset))
-                city_with_overlay_draw_building_top(x, y, grid_offset);
+                city_with_overlay_draw_building_top(pixel, point);
             else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 color_t color_mask = 0;
                 if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset))
@@ -419,16 +442,22 @@ void draw_top_overlay(int x, int y, int grid_offset) {
         }
     }
 }
-void draw_ornaments_overlay(int x, int y, int grid_offset) {
+void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int b_id = map_building_at(grid_offset);
     if (b_id) {
         const building *b = building_at(grid_offset);
         if (get_city_overlay()->show_building(b))
-            draw_ornaments(x, y, grid_offset);
+            draw_ornaments(pixel, point);
     } else
-        draw_ornaments(x, y, grid_offset);
+        draw_ornaments(pixel, point);
 }
-void draw_figures_overlay(int x, int y, int grid_offset) {
+void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
@@ -441,7 +470,10 @@ void draw_figures_overlay(int x, int y, int grid_offset) {
             figure_id = 0;
     }
 }
-void draw_elevated_figures_overlay(int x, int y, int grid_offset) {
+void draw_elevated_figures_overlay(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
@@ -511,13 +543,16 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
             draw_flattened_footprint_building(b, x, y, image_offset, 0);
     }
 }
-void city_with_overlay_draw_building_top(int x, int y, int grid_offset) {
+void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     building *b = building_at(grid_offset);
     if (get_city_overlay()->type == OVERLAY_PROBLEMS)
         overlay_problems_prepare_building(b);
 
     if (get_city_overlay()->show_building(b))
-        draw_top(x, y, grid_offset);
+        draw_top(pixel, point);
     else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {
@@ -541,7 +576,10 @@ static int north_tile_grid_offset(int x, int y) {
         grid_offset += map_grid_delta(0, -1);
     return grid_offset;
 }
-void draw_debug(int x, int y, int grid_offset) {
+void draw_debug(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
 
     int DB2 = abs(debug_range_2) % 20;
     if (DB2 == 0)
@@ -762,7 +800,10 @@ void draw_debug(int x, int y, int grid_offset) {
             break;
     }
 }
-void draw_debug_figures(int x, int y, int grid_offset) {
+void draw_debug_figures(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);

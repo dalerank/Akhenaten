@@ -52,7 +52,7 @@ static struct {
 void widget_minimap_invalidate(void) {
     data.refresh_requested = 1;
 }
-static void foreach_map_tile(map_callback *callback) {
+static void foreach_map_tile(void(*callback)(screen_tile screen, map_point point)) {
     city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
                                    data.absolute_x, data.absolute_y,
                                    data.width_tiles, data.height_tiles,
@@ -115,7 +115,10 @@ bool figure::has_figure_color() {
 
     return FIGURE_COLOR_NONE;
 }
-static int draw_figure(int screen_x, int screen_y, int grid_offset) {
+static int draw_figure(screen_tile screen, map_point point) {
+    int grid_offset = point.grid_offset();
+    int screen_x = screen.x;
+    int screen_y = screen.y;
     int color_type = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
     if (color_type == FIGURE_COLOR_NONE)
         return 0;
@@ -129,13 +132,16 @@ static int draw_figure(int screen_x, int screen_y, int grid_offset) {
     graphics_draw_horizontal_line(screen_x, screen_x + 1, screen_y, color);
     return 1;
 }
-static void draw_minimap_tile(int screen_x, int screen_y, int grid_offset) {
+static void draw_minimap_tile(screen_tile screen, map_point point) {
+    int grid_offset = point.grid_offset();
+    int screen_x = screen.x;
+    int screen_y = screen.y;
     if (grid_offset < 0) {
         ImageDraw::img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
         return;
     }
 
-    if (draw_figure(screen_x, screen_y, grid_offset))
+    if (draw_figure(screen, point))
         return;
 
     int terrain = map_terrain_get(grid_offset);
@@ -315,7 +321,10 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
     }
 }
 
-static void update_mouse_grid_offset(int screen_x, int screen_y, int grid_offset) {
+static void update_mouse_grid_offset(screen_tile screen, map_point point) {
+    int grid_offset = point.grid_offset();
+    int screen_x = screen.x;
+    int screen_y = screen.y;
     if (data.mouse.y == screen_y && (data.mouse.x == screen_x || data.mouse.x == screen_x + 1))
         data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
 }

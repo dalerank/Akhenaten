@@ -102,7 +102,10 @@ static int adjust_offset_for_orientation(int grid_offset, int size) {
     }
 }
 
-static void draw_TEST(int x, int y, int grid_offset) {
+static void draw_TEST(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     // NO grid_offset outside of the valid map area can be accessed -- the ones passed through here will ALWAYS be set to -1.
     // so it's impossible to draw outside the map with these!
     if (grid_offset == -1)

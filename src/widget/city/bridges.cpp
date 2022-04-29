@@ -5,7 +5,10 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 
-void city_draw_bridge(int x, int y, int grid_offset) {
+void city_draw_bridge(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
         map_sprite_clear_tile(grid_offset);
         return;

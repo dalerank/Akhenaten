@@ -3,6 +3,7 @@
 #include <core/calc.h>
 #include "lookup.h"
 
+// TODO: get rid of these!!!
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[500][500];
 
 map_point screentile_to_mappoint(screen_tile screen) {
@@ -24,14 +25,14 @@ screen_tile mappoint_to_screentile(map_point point) {
 
 ///
 
-static pixel_coordinate MAPPOINT_TO_PIXELCOORD_LOOKUP[500][500];
+static pixel_coordinate MAPPOINT_TO_PIXELCOORD_LOOKUP[GRID_SIZE_TOTAL];
 
 pixel_coordinate mappoint_to_pixel(map_point point) {
 //    calculate_lookup();
-    return MAPPOINT_TO_PIXELCOORD_LOOKUP[point.x()][point.y()];
+    return MAPPOINT_TO_PIXELCOORD_LOOKUP[point.grid_offset()];
 }
-void record_pixel_coord(map_point tile, pixel_coordinate coord) {
-    MAPPOINT_TO_PIXELCOORD_LOOKUP[tile.x()][tile.y()] = {coord.x, coord.y};
+void record_pixel_coord(map_point point, pixel_coordinate coord) {
+    MAPPOINT_TO_PIXELCOORD_LOOKUP[point.grid_offset()] = {coord.x, coord.y};
 }
 
 ///

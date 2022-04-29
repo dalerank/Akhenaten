@@ -51,7 +51,10 @@ static void init_draw_context(void) {
     draw_context.image_id_deepwater_last = 89 + draw_context.image_id_deepwater_first;
 }
 
-static void draw_flags(int x, int y, int grid_offset) {
+static void draw_flags(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);

@@ -171,11 +171,13 @@ void building_destroy_last_placed(void) {
 }
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     if (map_building_damage_increase(grid_offset) > max_damage) {
-        building_destroy_by_enemy(map_grid_offset_to_x(grid_offset),
-                                  map_grid_offset_to_y(grid_offset), grid_offset);
+        building_destroy_by_enemy(map_point(grid_offset));
     }
 }
-void building_destroy_by_enemy(int x, int y, int grid_offset) {
+void building_destroy_by_enemy(map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = point.x();
+    int y = point.y();
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);

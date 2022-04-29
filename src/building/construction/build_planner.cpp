@@ -1530,10 +1530,10 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches(); // refresh caches
 }
-void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
-    if (grid_offset == start.grid_offset()) {
-        start_offset_screen_x = view_x;
-        start_offset_screen_y = view_y;
+void BuildPlanner::construction_record_view_position(pixel_coordinate pixel, map_point point) {
+    if (point == start) {
+        start_offset_screen_x = pixel.x;
+        start_offset_screen_y = pixel.y;
     }
 }
 void BuildPlanner::dispatch_warnings() {
