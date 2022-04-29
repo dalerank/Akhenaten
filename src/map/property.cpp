@@ -113,8 +113,10 @@ void map_property_set_multi_tile_size(int grid_offset, int size) {
 }
 
 void map_property_init_alternate_terrain(void) {
-    int map_width, map_height;
-    map_grid_size(&map_width, &map_height);
+    int map_width = scenario_map_data()->width;
+    int map_height = scenario_map_data()->height;
+//    int map_width, map_height;
+//    map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
             int grid_offset = MAP_OFFSET(x, y);

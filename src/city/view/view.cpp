@@ -34,15 +34,15 @@ int MAP_TILE_UPPER_LIMIT_Y() {
 
 int SCROLLABLE_X_MIN_TILE() {
     if (GAME_ENV == ENGINE_ENV_C3)
-        return (MAP_TILE_UPPER_LIMIT_X() - map_grid_width()) / 2 - 1;
+        return (MAP_TILE_UPPER_LIMIT_X() - scenario_map_data()->width) / 2 - 1;
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return (MAP_TILE_UPPER_LIMIT_X() - map_grid_width() / 2) / 2 + 2 - 1;
+        return (MAP_TILE_UPPER_LIMIT_X() - scenario_map_data()->width / 2) / 2 + 2 - 1;
 }
 int SCROLLABLE_Y_MIN_TILE() {
     if (GAME_ENV == ENGINE_ENV_C3)
-        return (MAP_TILE_UPPER_LIMIT_Y() - 2 * map_grid_height()) / 2;
+        return (MAP_TILE_UPPER_LIMIT_Y() - 2 * scenario_map_data()->height) / 2;
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return (MAP_TILE_UPPER_LIMIT_Y() - map_grid_height()) / 2;
+        return (MAP_TILE_UPPER_LIMIT_Y() - scenario_map_data()->height) / 2;
 }
 int SCROLLABLE_X_MAX_TILE() {
     return MAP_TILE_UPPER_LIMIT_X() - SCROLLABLE_X_MIN_TILE() - 2;

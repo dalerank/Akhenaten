@@ -521,8 +521,10 @@ void building_house_check_for_corruption(building *house) {
 
     // house offset is corrupted??
     if (house->grid_offset != MAP_OFFSET(house->x, house->y) || map_building_at(house->grid_offset) != house->id) {
-        int map_width, map_height;
-        map_grid_size(&map_width, &map_height); // get map size and store in temp vars
+        int map_width = scenario_map_data()->width;
+        int map_height = scenario_map_data()->height;
+//        int map_width, map_height;
+//        map_grid_size(&map_width, &map_height); // get map size and store in temp vars
 
         // go through tiles and find tile belonging to the house
         for (int y = 0; y < map_height; y++) {

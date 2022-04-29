@@ -73,14 +73,14 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
-    if ((map_grid_width() - width_tiles) / 2 > 0) {
+    if ((scenario_map_data()->width - width_tiles) / 2 > 0) {
         if (camera_tile.x() < data.absolute_x)
             data.absolute_x = camera_tile.x();
         else if (camera_tile.x() > width_tiles + data.absolute_x - view_width_tiles)
             data.absolute_x = view_width_tiles + camera_tile.x() - width_tiles;
 
     }
-    if ((2 * map_grid_height() - height_tiles) / 2 > 0) {
+    if ((2 * scenario_map_data()->height - height_tiles) / 2 > 0) {
         if (camera_tile.y() < data.absolute_y)
             data.absolute_y = camera_tile.y();
         else if (camera_tile.y() > height_tiles + data.absolute_y - view_height_tiles)

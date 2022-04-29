@@ -3,8 +3,15 @@
 #include <string.h>
 //#include <scenario/map.h>
 
-static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1), GRID_OFFSET(1, -1), 1, GRID_OFFSET(1, 1), GRID_OFFSET(0, 1),
-                                         GRID_OFFSET(-1, 1), -1, -GRID_OFFSET(1, 1)};
+static const int DIRECTION_DELTA_PH[] = {
+        -GRID_OFFSET(0, 1),
+        GRID_OFFSET(1, -1),
+        1,
+        GRID_OFFSET(1, 1),
+        GRID_OFFSET(0, 1),
+        GRID_OFFSET(-1, 1),
+        -1,
+        -GRID_OFFSET(1, 1)};
 
 #include <stdlib.h>
 #include "core/game_environment.h"
@@ -239,16 +246,6 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
 bool map_grid_is_valid_offset(int grid_offset) {
     return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;
 }
-//int MAP_OFFSET(int x, int y) {
-////    return x + y * GRID_SIZE_PH;
-//    return scenario_map_data()->start_offset + x + y * GRID_LENGTH;
-//}
-//int MAP_X(int grid_offset) {
-//    return (grid_offset - scenario_map_data()->start_offset) % GRID_LENGTH;
-//}
-//int MAP_Y(int grid_offset) {
-//    return (grid_offset - scenario_map_data()->start_offset) / GRID_LENGTH;
-//}
 
 int map_grid_direction_delta(int direction) {
     if (direction >= 0 && direction < 8) {
@@ -256,20 +253,19 @@ int map_grid_direction_delta(int direction) {
             case ENGINE_ENV_PHARAOH:
                 return DIRECTION_DELTA_PH[direction];
         }
-    } else {
+    } else
         return 0;
-    }
 }
-void map_grid_size(int *width, int *height) {
-    *width = scenario_map_data()->width;
-    *height = scenario_map_data()->height;
-}
-int map_grid_width(void) {
-    return scenario_map_data()->width;
-}
-int map_grid_height(void) {
-    return scenario_map_data()->height;
-}
+//void map_grid_size(int *width, int *height) {
+//    *width = scenario_map_data()->width;
+//    *height = scenario_map_data()->height;
+//}
+//int map_grid_width(void) {
+//    return scenario_map_data()->width;
+//}
+//int map_grid_height(void) {
+//    return scenario_map_data()->height;
+//}
 void map_grid_bound(int *x, int *y) {
     if (*x < 0)
         *x = 0;

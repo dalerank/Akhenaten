@@ -27,8 +27,9 @@ void map_image_clear(void) {
     map_grid_clear(&images);
 }
 void map_image_init_edges(void) {
-    int width, height;
-    map_grid_size(&width, &height);
+    int width = scenario_map_data()->width;
+    int height = scenario_map_data()->height;
+//    map_grid_size(&width, &height);
     for (int x = 1; x < width; x++) {
         map_grid_set(&images, MAP_OFFSET(x, height), 1);
     }

@@ -97,7 +97,7 @@ void map_point::set(int _x, int _y) {
 //        p_ABS_Y = _INVALID_COORD;
 //        return;
 //    }
-    p_GRID_OFFSET = scenario_map_data()->start_offset + GRID_OFFSET(_x, _y);
+    p_GRID_OFFSET = MAP_OFFSET(_x, _y);
 
     p_X = _x;
     p_Y = _y;
@@ -116,8 +116,8 @@ void map_point::set(int _grid_offset) {
 //    }
     p_GRID_OFFSET = _grid_offset;
 
-    p_X = GRID_X(p_GRID_OFFSET - scenario_map_data()->start_offset);
-    p_Y = GRID_Y(p_GRID_OFFSET - scenario_map_data()->start_offset);
+    p_X = MAP_X(p_GRID_OFFSET);
+    p_Y = MAP_Y(p_GRID_OFFSET);
 
     p_ABS_X = GRID_X(p_GRID_OFFSET);
     p_ABS_Y = GRID_Y(p_GRID_OFFSET);

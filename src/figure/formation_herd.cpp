@@ -97,10 +97,10 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
             x_target = 1;
         else if (y_target <= 0)
             y_target = 1;
-        else if (x_target >= map_grid_width() - 1)
-            x_target = map_grid_width() - 2;
-        else if (y_target >= map_grid_height() - 1)
-            y_target = map_grid_height() - 2;
+        else if (x_target >= scenario_map_data()->width - 1)
+            x_target = scenario_map_data()->width - 2;
+        else if (y_target >= scenario_map_data()->height - 1)
+            y_target = scenario_map_data()->height - 2;
 
         if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile))
             return 1;

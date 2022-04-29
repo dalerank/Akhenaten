@@ -26,7 +26,7 @@ static int is_clear_terrain(map_point tile, int *warning) {
 }
 
 static int is_edge(map_point tile, int *warning) {
-    int result = tile.x() == 0 || tile.y() == 0 || tile.x() == map_grid_width() - 1 || tile.y() == map_grid_height() - 1;
+    int result = tile.x() == 0 || tile.y() == 0 || tile.x() == scenario_map_data()->width - 1 || tile.y() == scenario_map_data()->height - 1;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_MAP_EDGE;
 

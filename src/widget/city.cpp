@@ -122,7 +122,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    int x;
 //    int y;
 //    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
-//    graphics_set_clip_rectangle(x - 30, y, map_grid_width() * 30 - 60, map_grid_height() * 15 - 30);
+//    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
 
 
     // do this for EVERY tile (not just valid ones)
