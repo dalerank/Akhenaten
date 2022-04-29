@@ -18,7 +18,7 @@ typedef struct {
     int y;
 } coords;
 
-typedef class map_point {
+class map_point {
 private:
     // by and large, X/Y coords in the game logic are RELATIVE TO MAP AREA / STARTING OFFSET.
     int p_X = -1;
@@ -29,11 +29,17 @@ private:
 
 public:
     // SETTERS / GETTERS
-    const int x(int v = _INVALID_COORD);
-    const int y(int v = _INVALID_COORD);
-    const int grid_offset(int v = _INVALID_COORD);
-    const int ABS_X(int v = _INVALID_COORD);
-    const int ABS_Y(int v = _INVALID_COORD);
+    const int x(int v);
+    const int y(int v);
+    const int grid_offset(int v);
+    const int ABS_X(int v);
+    const int ABS_Y(int v);
+
+    const int x(void);
+    const int y(void);
+    const int grid_offset(void);
+    const int ABS_X(void);
+    const int ABS_Y(void);
 
     // MODIFIERS
     void shift(int _x, int _y);
@@ -53,6 +59,9 @@ public:
     explicit map_point(); // default constructor
     explicit map_point(int _grid_offset);
     map_point(int _x, int _y);
+
+    // COMPARISON
+    bool operator==(map_point rhs);
 };
 
 /**

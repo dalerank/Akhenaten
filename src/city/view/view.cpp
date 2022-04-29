@@ -224,12 +224,12 @@ void city_view_set_selected_view_tile(const screen_tile *tile) {
 }
 
 static int get_camera_corner_offset(void) {
-    return screentile_to_mappoint(data.camera.tile_internal);
+    return screentile_to_mappoint(data.camera.tile_internal).grid_offset();
 }
 static int get_center_grid_offset(void) {
     int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
     int y_center = data.camera.tile_internal.y + data.viewport.height_tiles / 2;
-    return screentile_to_mappoint({x_center, y_center});
+    return screentile_to_mappoint({x_center, y_center}).grid_offset();
 }
 
 void city_view_rotate_left(void) {
@@ -378,15 +378,15 @@ void city_view_foreach_map_tile(map_callback *callback) {
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen_x >= 0 && screen_x < MAP_TILE_UPPER_LIMIT_X()) {
 //                    int grid_offset = view_tile_to_grid_offset_lookup[screen_x][screen_y];
-                    int grid_offset = screentile_to_mappoint({screen_x, screen_y});
+                    map_point point = screentile_to_mappoint({screen_x, screen_y});
 //                    int grid_offset = city_view_tile_to_map_point({screen_x, screen_y}).grid_offset();
 //                    tile_xy_to_pixel_coord_lookup[map_grid_offset_to_x(grid_offset)][map_grid_offset_to_y(grid_offset)] = pixel_coordinate {
 //                            x_graphic,
 //                            y_graphic
 //                    };
-                    record_pixel_coord(map_point(grid_offset), {x_graphic, y_graphic});
+                    record_pixel_coord(point, {x_graphic, y_graphic});
                     if (callback)
-                        callback(x_graphic, y_graphic, grid_offset);
+                        callback(x_graphic, y_graphic, point.grid_offset());
 //                        callback(x_graphic, y_graphic, grid_offset);
 //                        callback({x_graphic, y_graphic}, map_point(grid_offset));
                 }
@@ -417,9 +417,9 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen_x >= 0 && screen_x < MAP_TILE_UPPER_LIMIT_X()) {
 //                    int grid_offset = view_tile_to_grid_offset_lookup[screen_x][screen_y];
-                    int grid_offset = screentile_to_mappoint({screen_x, screen_y});
+                    map_point point = screentile_to_mappoint({screen_x, screen_y});
 //                    int grid_offset = city_view_tile_to_map_point({screen_x, screen_y}).grid_offset();
-                    if (grid_offset >= 0) {
+                    if (point.grid_offset() >= 0) {
 //                        if (callback1)
 //                            callback1({x_graphic, y_graphic}, map_point(grid_offset));
 //                        if (callback2)
@@ -433,17 +433,17 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
 //                        if (callback6)
 //                            callback6({x_graphic, y_graphic}, map_point(grid_offset));
                         if (callback1)
-                            callback1(x_graphic, y_graphic, grid_offset);
+                            callback1(x_graphic, y_graphic, point.grid_offset());
                         if (callback2)
-                            callback2(x_graphic, y_graphic, grid_offset);
+                            callback2(x_graphic, y_graphic, point.grid_offset());
                         if (callback3)
-                            callback3(x_graphic, y_graphic, grid_offset);
+                            callback3(x_graphic, y_graphic, point.grid_offset());
                         if (callback4)
-                            callback4(x_graphic, y_graphic, grid_offset);
+                            callback4(x_graphic, y_graphic, point.grid_offset());
                         if (callback5)
-                            callback5(x_graphic, y_graphic, grid_offset);
+                            callback5(x_graphic, y_graphic, point.grid_offset());
                         if (callback6)
-                            callback6(x_graphic, y_graphic, grid_offset);
+                            callback6(x_graphic, y_graphic, point.grid_offset());
                     }
                 }
                 x_graphic += TILE_WIDTH_PIXELS;
@@ -544,7 +544,7 @@ void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, 
         int x_abs = absolute_x - 4;
         for (int x_rel = -4; x_rel < width_tiles; x_rel++, x_abs++, screen_x += 2) {
             if (x_abs >= 0 && x_abs < MAP_TILE_UPPER_LIMIT_X() && y_abs >= 0 && y_abs < MAP_TILE_UPPER_LIMIT_Y())
-                callback(screen_x, screen_y, screentile_to_mappoint({x_abs, y_abs}));
+                callback(screen_x, screen_y, screentile_to_mappoint({x_abs, y_abs}).grid_offset());
 
         }
     }

@@ -98,13 +98,12 @@ void widget_map_editor_draw(void) {
 }
 
 static void update_city_view_coords(int x, int y, map_point *tile) {
-    screen_tile screen;
-    if (pixel_to_screentile({x, y}, &screen)) {
-        tile->set(screentile_to_mappoint(screen));
+    screen_tile screen = pixel_to_screentile({x, y});
+    if (screen.x != -1 && screen.y != -1) {
+        tile->set(screentile_to_mappoint(screen).grid_offset());
         city_view_set_selected_view_tile(&screen);
-    } else {
+    } else
         tile->set(0);
-    }
 }
 
 static void scroll_map(const mouse *m) {

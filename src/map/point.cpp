@@ -23,38 +23,50 @@ int *map_point::private_access(int i) {
 const int map_point::x(int v) {
     if (v != _INVALID_COORD)
         set(v, p_Y);
-    else
-        self_correct();
     return p_X;
 }
 const int map_point::y(int v) {
     if (v != _INVALID_COORD)
         set(p_X, v);
-    else
-        self_correct();
     return p_Y;
 }
 const int map_point::grid_offset(int v) {
     if (v != _INVALID_COORD)
         set(v);
-    else
-        self_correct();
     return p_GRID_OFFSET;
 }
 const int map_point::ABS_X(int v) {
     if (v != _INVALID_COORD)
         set(GRID_OFFSET(v, p_ABS_Y));
-    else
-        self_correct();
     return p_ABS_X;
 }
 const int map_point::ABS_Y(int v) {
     if (v != _INVALID_COORD)
         set(GRID_OFFSET(p_ABS_X, v));
-    else
-        self_correct();
     return p_ABS_Y;
 }
+
+const int map_point::x(void) {
+    self_correct();
+    return p_X;
+}
+const int map_point::y(void) {
+    self_correct();
+    return p_Y;
+}
+const int map_point::grid_offset(void) {
+    self_correct();
+    return p_GRID_OFFSET;
+}
+const int map_point::ABS_X(void) {
+    self_correct();
+    return p_ABS_X;
+}
+const int map_point::ABS_Y(void) {
+    self_correct();
+    return p_ABS_Y;
+}
+
 
 // MODIFIERS
 void map_point::shift(int _x, int _y) {
@@ -108,7 +120,7 @@ bool map_point::self_correct() {
     else {
         set(p_X, p_Y);
         if (p_GRID_OFFSET < 0) { // well, everything is broken I guess.
-            set(0);
+            set(_INVALID_COORD);
             return false;
         }
     }
@@ -125,6 +137,11 @@ map_point::map_point(int _grid_offset) {
 }
 map_point::map_point(int _x, int _y) {
     set(_x, _y);
+}
+
+// COMPARISON
+bool map_point::operator==(map_point rhs) {
+    return p_GRID_OFFSET == rhs.p_GRID_OFFSET;
 }
 
 ///////////////

@@ -282,9 +282,9 @@ static void draw_senate_tooltip(tooltip_context *c) {
 }
 
 static void draw_tile_tooltip(tooltip_context *c) {
-    screen_tile screen;
-    if (pixel_to_screentile({c->mouse_x, c->mouse_y}, &screen)) {
-        int grid_offset = screentile_to_mappoint(screen);
+    screen_tile screen = pixel_to_screentile({c->mouse_x, c->mouse_y});
+    if (screen.x != -1 && screen.y != -1) {
+        int grid_offset = screentile_to_mappoint(screen).grid_offset();
         city_view_set_selected_view_tile(&screen);
         int x_tile = map_grid_offset_to_x(grid_offset);
         int y_tile = map_grid_offset_to_y(grid_offset);
