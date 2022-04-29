@@ -75,6 +75,16 @@ void map_point::shift(int _x, int _y) {
 void map_point::shift(int _grid_offset) {
     set(p_GRID_OFFSET + _grid_offset);
 }
+map_point map_point::shifted(int _x, int _y) {
+    map_point p2 = map_point(p_GRID_OFFSET);
+    p2.shift(_x, _y);
+    return p2;
+}
+map_point map_point::shifted(int _grid_offset) {
+    map_point p2 = map_point(p_GRID_OFFSET);
+    p2.shift(_grid_offset);
+    return p2;
+}
 
 // SET BY CONSTRUCTION
 void map_point::set(int _x, int _y) {

@@ -71,7 +71,7 @@ int map_building_is_reservoir(int x, int y) {
 
     for (int dy = 0; dy < 3; dy++) {
         for (int dx = 0; dx < 3; dx++) {
-            if (building_id != map_building_at(grid_offset + map_grid_delta(dx, dy)))
+            if (building_id != map_building_at(grid_offset + GRID_OFFSET(dx, dy)))
                 return 0;
 
         }

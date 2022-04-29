@@ -571,9 +571,9 @@ static int north_tile_grid_offset(int x, int y) {
     int grid_offset = map_grid_offset(x, y);
     int size = map_property_multi_tile_size(grid_offset);
     for (int i = 0; i < size && map_property_multi_tile_x(grid_offset); i++)
-        grid_offset += map_grid_delta(-1, 0);
+        grid_offset += GRID_OFFSET(-1, 0);
     for (int i = 0; i < size && map_property_multi_tile_y(grid_offset); i++)
-        grid_offset += map_grid_delta(0, -1);
+        grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
 void draw_debug(pixel_coordinate pixel, map_point point) {

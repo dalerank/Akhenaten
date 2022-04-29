@@ -90,16 +90,16 @@ static void foreach_region_tile(int x_min, int y_min, int x_max, int y_max, void
 static bool terrain_no_image_at(int grid_offset, int radius) {
 //    if (map_image_at(grid_offset) != 0) return false;
     if (radius >= 2) {
-        if (map_image_at(grid_offset + map_grid_delta(1, 0)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(1, 1)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(0, 1)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(1, 0)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(1, 1)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(0, 1)) != 0) return false;
     }
     if (radius >= 3) {
-        if (map_image_at(grid_offset + map_grid_delta(2, 0)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(2, 1)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(2, 2)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(1, 2)) != 0) return false;
-        if (map_image_at(grid_offset + map_grid_delta(0, 2)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(2, 0)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(2, 1)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(2, 2)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(1, 2)) != 0) return false;
+        if (map_image_at(grid_offset + GRID_OFFSET(0, 2)) != 0) return false;
     }
     return true;
 }
@@ -322,9 +322,9 @@ static int is_tile_plaza(int grid_offset) {
 }
 static int is_two_tile_square_plaza(int grid_offset) {
     return
-            is_tile_plaza(grid_offset + map_grid_delta(1, 0)) &&
-            is_tile_plaza(grid_offset + map_grid_delta(0, 1)) &&
-            is_tile_plaza(grid_offset + map_grid_delta(1, 1));
+            is_tile_plaza(grid_offset + GRID_OFFSET(1, 0)) &&
+            is_tile_plaza(grid_offset + GRID_OFFSET(0, 1)) &&
+            is_tile_plaza(grid_offset + GRID_OFFSET(1, 1));
 }
 static void set_plaza_image(int grid_offset) {
     int x = map_grid_offset_to_x(grid_offset);
@@ -369,138 +369,138 @@ static int get_gatehouse_building_id(int grid_offset) {
 static int get_gatehouse_position(int grid_offset, int direction, int building_id) {
     int result = 0;
     if (direction == DIR_0_TOP_RIGHT) {
-        if (map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_GATEHOUSE) &&
-            map_building_at(grid_offset + map_grid_delta(1, -1)) == building_id) {
+        if (map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_GATEHOUSE) &&
+            map_building_at(grid_offset + GRID_OFFSET(1, -1)) == building_id) {
             result = 1;
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_WALL)) {
                 result = 2;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-        } else if (map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_GATEHOUSE) &&
-                   map_building_at(grid_offset + map_grid_delta(-1, -1)) == building_id) {
+        } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_GATEHOUSE) &&
+                   map_building_at(grid_offset + GRID_OFFSET(-1, -1)) == building_id) {
             result = 3;
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_WALL)) {
                 result = 4;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
         }
     } else if (direction == DIR_6_TOP_LEFT) {
-        if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_GATEHOUSE) &&
-            map_building_at(grid_offset + map_grid_delta(-1, 1)) == building_id) {
+        if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_GATEHOUSE) &&
+            map_building_at(grid_offset + GRID_OFFSET(-1, 1)) == building_id) {
             result = 1;
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_WALL)) {
                 result = 2;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-        } else if (map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_GATEHOUSE) &&
-                   map_building_at(grid_offset + map_grid_delta(-1, -1)) == building_id) {
+        } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_GATEHOUSE) &&
+                   map_building_at(grid_offset + GRID_OFFSET(-1, -1)) == building_id) {
             result = 3;
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_WALL)) {
                 result = 4;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
         }
     } else if (direction == DIR_4_BOTTOM_LEFT) {
-        if (map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GATEHOUSE) &&
-            map_building_at(grid_offset + map_grid_delta(1, 1)) == building_id) {
+        if (map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GATEHOUSE) &&
+            map_building_at(grid_offset + GRID_OFFSET(1, 1)) == building_id) {
             result = 1;
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_WALL)) {
                 result = 2;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-        } else if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_GATEHOUSE) &&
-                   map_building_at(grid_offset + map_grid_delta(-1, 1)) == building_id) {
+        } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_GATEHOUSE) &&
+                   map_building_at(grid_offset + GRID_OFFSET(-1, 1)) == building_id) {
             result = 3;
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_WALL)) {
                 result = 4;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
         }
     } else if (direction == DIR_2_BOTTOM_RIGHT) {
-        if (map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GATEHOUSE) &&
-            map_building_at(grid_offset + map_grid_delta(1, 1)) == building_id) {
+        if (map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GATEHOUSE) &&
+            map_building_at(grid_offset + GRID_OFFSET(1, 1)) == building_id) {
             result = 1;
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_WALL)) {
                 result = 2;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-        } else if (map_terrain_is(grid_offset + map_grid_delta(1, -1), TERRAIN_GATEHOUSE) &&
-                   map_building_at(grid_offset + map_grid_delta(1, -1)) == building_id) {
+        } else if (map_terrain_is(grid_offset + GRID_OFFSET(1, -1), TERRAIN_GATEHOUSE) &&
+                   map_building_at(grid_offset + GRID_OFFSET(1, -1)) == building_id) {
             result = 3;
-            if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WALL))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WALL))
                 result = 0;
 
-            if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WALL) &&
-                map_terrain_is(grid_offset + map_grid_delta(-1, 1), TERRAIN_WALL)) {
+            if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WALL) &&
+                map_terrain_is(grid_offset + GRID_OFFSET(-1, 1), TERRAIN_WALL)) {
                 result = 4;
             }
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
-            if (!map_terrain_is(grid_offset + map_grid_delta(-1, -1), TERRAIN_WALL_OR_GATEHOUSE))
+            if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, -1), TERRAIN_WALL_OR_GATEHOUSE))
                 result = 0;
 
         }
@@ -508,10 +508,10 @@ static int get_gatehouse_position(int grid_offset, int direction, int building_i
     return result;
 }
 static void set_wall_gatehouse_image_manually(int grid_offset) {
-    int gatehouse_up = get_gatehouse_building_id(grid_offset + map_grid_delta(0, -1));
-    int gatehouse_left = get_gatehouse_building_id(grid_offset + map_grid_delta(-1, 0));
-    int gatehouse_down = get_gatehouse_building_id(grid_offset + map_grid_delta(0, 1));
-    int gatehouse_right = get_gatehouse_building_id(grid_offset + map_grid_delta(1, 0));
+    int gatehouse_up = get_gatehouse_building_id(grid_offset + GRID_OFFSET(0, -1));
+    int gatehouse_left = get_gatehouse_building_id(grid_offset + GRID_OFFSET(-1, 0));
+    int gatehouse_down = get_gatehouse_building_id(grid_offset + GRID_OFFSET(0, 1));
+    int gatehouse_right = get_gatehouse_building_id(grid_offset + GRID_OFFSET(1, 0));
     int image_offset = 0;
     int map_orientation = city_view_orientation();
     if (map_orientation == DIR_0_TOP_RIGHT) {
@@ -676,9 +676,9 @@ int get_aqueduct_image(int grid_offset, bool is_road, int terrain, const terrain
     // TODO: some edge cases with roads don't perfectly match up with original game (not really a priority?)
     if (is_road) {
         bool road_dir_right = false;
-        if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD))
+        if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_ROAD))
             road_dir_right = true;
-        if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_ROAD))
+        if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_ROAD))
             road_dir_right = true;
         road_dir_right = city_view_relative_orientation(road_dir_right) % 2;
         bool is_paved = map_tiles_is_paved_road(grid_offset);
@@ -768,13 +768,13 @@ static void set_road_image(int grid_offset) {
     } else {
         const terrain_image *img = map_image_context_get_dirt_road(grid_offset);
         if (!map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
-            if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_FLOODPLAIN))
+            if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_FLOODPLAIN))
                 map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 84);
-            else if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_FLOODPLAIN))
+            else if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_FLOODPLAIN))
                 map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 85);
-            else if (map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_FLOODPLAIN))
+            else if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_FLOODPLAIN))
                 map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 86);
-            else if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_FLOODPLAIN))
+            else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_FLOODPLAIN))
                 map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_FLOODPLAIN) + 87);
             else map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_ROAD) +
                                             img->group_offset + img->item_offset + 49);

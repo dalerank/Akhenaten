@@ -158,7 +158,7 @@ static void add_terrain(const void *tile_data, int dx, int dy) {
     int y = tile.y() + dy;
     if (!map_grid_is_inside(x, y, 1))
         return;
-    int grid_offset = tile.grid_offset() + map_grid_delta(dx, dy);
+    int grid_offset = tile.grid_offset() + GRID_OFFSET(dx, dy);
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_BUILDING) {
         map_building_tiles_remove(0, x, y);
@@ -359,7 +359,7 @@ static void place_access_ramp(map_point tile) {
         int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_AQUEDUCT);
         for (int dy = 0; dy < 2; dy++) {
             for (int dx = 0; dx < 2; dx++) {
-                int grid_offset = tile.grid_offset() + map_grid_delta(dx, dy);
+                int grid_offset = tile.grid_offset() + GRID_OFFSET(dx, dy);
                 map_terrain_set(grid_offset, map_terrain_get(grid_offset) & terrain_mask);
             }
         }

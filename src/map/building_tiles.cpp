@@ -26,9 +26,9 @@ static int north_tile_grid_offset(int x, int y, int *size) {
     int grid_offset = map_grid_offset(x, y);
     *size = map_property_multi_tile_size(grid_offset);
     for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++)
-        grid_offset += map_grid_delta(-1, 0);
+        grid_offset += GRID_OFFSET(-1, 0);
     for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++)
-        grid_offset += map_grid_delta(0, -1);
+        grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
 static void adjust_to_absolute_xy(int *x, int *y, int size) {
@@ -174,10 +174,10 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
 }
 
 void map_add_bandstand_tiles(building *b) {
-    int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);
-    int b_delta_0_1 = b->grid_offset - map_grid_delta(0, 1);
-    int b_delta_1_0 = b->grid_offset - map_grid_delta(1, 0);
-    int b_delta_m1_0 = b->grid_offset - map_grid_delta(-1, 0);
+    int b_delta_0_m1 = b->grid_offset - GRID_OFFSET(0, -1);
+    int b_delta_0_1 = b->grid_offset - GRID_OFFSET(0, 1);
+    int b_delta_1_0 = b->grid_offset - GRID_OFFSET(1, 0);
+    int b_delta_m1_0 = b->grid_offset - GRID_OFFSET(-1, 0);
 
     int offsets_by_orientation[4];
     switch (city_view_orientation()) {

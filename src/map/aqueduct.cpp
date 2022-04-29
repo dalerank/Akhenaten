@@ -19,17 +19,17 @@ void map_aqueduct_set(int grid_offset, int value) {
 }
 void map_aqueduct_remove(int grid_offset) {
     map_grid_set(&aqueduct, grid_offset, 0);
-    if (map_grid_get(&aqueduct, grid_offset + map_grid_delta(0, -1)) == 5)
-        map_grid_set(&aqueduct, grid_offset + map_grid_delta(0, -1), 1);
+    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(0, -1)) == 5)
+        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(0, -1), 1);
 
-    if (map_grid_get(&aqueduct, grid_offset + map_grid_delta(1, 0)) == 6)
-        map_grid_set(&aqueduct, grid_offset + map_grid_delta(1, 0), 2);
+    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(1, 0)) == 6)
+        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(1, 0), 2);
 
-    if (map_grid_get(&aqueduct, grid_offset + map_grid_delta(0, 1)) == 5)
-        map_grid_set(&aqueduct, grid_offset + map_grid_delta(0, 1), 3);
+    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(0, 1)) == 5)
+        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(0, 1), 3);
 
-    if (map_grid_get(&aqueduct, grid_offset + map_grid_delta(-1, 0)) == 6)
-        map_grid_set(&aqueduct, grid_offset + map_grid_delta(-1, 0), 4);
+    if (map_grid_get(&aqueduct, grid_offset + GRID_OFFSET(-1, 0)) == 6)
+        map_grid_set(&aqueduct, grid_offset + GRID_OFFSET(-1, 0), 4);
 
 }
 void map_aqueduct_clear(void) {

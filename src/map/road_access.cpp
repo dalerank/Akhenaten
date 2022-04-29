@@ -358,20 +358,20 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, int perm) {
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, int perm) {
     road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
 
-    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, -1), perm);
-    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(1, 0), perm);
-    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, 1), perm);
-    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(-1, 0), perm);
+    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, -1), perm);
+    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(1, 0), perm);
+    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(0, 1), perm);
+    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + GRID_OFFSET(-1, 0), perm);
 
     return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
 }
 
 
 int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles) {
-    road_tiles[1] = terrain_is_road_like(grid_offset + map_grid_delta(1, -1));
-    road_tiles[3] = terrain_is_road_like(grid_offset + map_grid_delta(1, 1));
-    road_tiles[5] = terrain_is_road_like(grid_offset + map_grid_delta(-1, 1));
-    road_tiles[7] = terrain_is_road_like(grid_offset + map_grid_delta(-1, -1));
+    road_tiles[1] = terrain_is_road_like(grid_offset + GRID_OFFSET(1, -1));
+    road_tiles[3] = terrain_is_road_like(grid_offset + GRID_OFFSET(1, 1));
+    road_tiles[5] = terrain_is_road_like(grid_offset + GRID_OFFSET(-1, 1));
+    road_tiles[7] = terrain_is_road_like(grid_offset + GRID_OFFSET(-1, -1));
 
     int max_stretch = 0;
     int stretch = 0;
@@ -389,10 +389,10 @@ int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles) {
 }
 
 int map_has_adjacent_road_tiles(int grid_offset) {
-    int adjacent_roads = terrain_is_road_like(grid_offset + map_grid_delta(0, -1))
-                         + terrain_is_road_like(grid_offset + map_grid_delta(1, 0))
-                         + terrain_is_road_like(grid_offset + map_grid_delta(0, 1))
-                         + terrain_is_road_like(grid_offset + map_grid_delta(-1, 0));
+    int adjacent_roads = terrain_is_road_like(grid_offset + GRID_OFFSET(0, -1))
+                         + terrain_is_road_like(grid_offset + GRID_OFFSET(1, 0))
+                         + terrain_is_road_like(grid_offset + GRID_OFFSET(0, 1))
+                         + terrain_is_road_like(grid_offset + GRID_OFFSET(-1, 0));
     return adjacent_roads;
 
 
@@ -400,10 +400,10 @@ int map_has_adjacent_road_tiles(int grid_offset) {
 
 int map_has_adjacent_granary_road(int grid_offset) {
     int tiles[4];
-    tiles[0] = grid_offset + map_grid_delta(0, -1);
-    tiles[1] = grid_offset + map_grid_delta(1, 0);
-    tiles[2] = grid_offset + map_grid_delta(0, 1);
-    tiles[3] = grid_offset + map_grid_delta(-1, 0);
+    tiles[0] = grid_offset + GRID_OFFSET(0, -1);
+    tiles[1] = grid_offset + GRID_OFFSET(1, 0);
+    tiles[2] = grid_offset + GRID_OFFSET(0, 1);
+    tiles[3] = grid_offset + GRID_OFFSET(-1, 0);
     for (int i = 0; i < 4; i++) {
         if (building_at(tiles[i])->type != BUILDING_GRANARY) continue;
         switch (map_property_multi_tile_xy(tiles[i])) {

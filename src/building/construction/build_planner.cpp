@@ -113,18 +113,14 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
             switch (city_view_orientation() / 2) {
                 case 0:
                     tile.shift(0, - size + 1);
-//                    tile.y = tile.y - size + 1;
                     break;
                 case 1:
                     break;
                 case 2:
                     tile.shift(- size + 1, 0);
-//                    tile.x = tile.x - size + 1;
                     break;
                 case 3:
                     tile.shift(- size + 1, - size + 1);
-//                    tile.x = tile.x - size + 1;
-//                    tile.y = tile.y - size + 1;
                     break;
             }
             if (image_id > 0 && size > 0) {
@@ -194,9 +190,9 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
 
         map_building_set(grid_offset, this_venue->id);
         if (type == BUILDING_PAVILLION) {
-            map_building_set(grid_offset + map_grid_delta(1, 0), this_venue->id);
-            map_building_set(grid_offset + map_grid_delta(1, 1), this_venue->id);
-            map_building_set(grid_offset + map_grid_delta(0, 1), this_venue->id);
+            map_building_set(grid_offset + GRID_OFFSET(1, 0), this_venue->id);
+            map_building_set(grid_offset + GRID_OFFSET(1, 1), this_venue->id);
+            map_building_set(grid_offset + GRID_OFFSET(0, 1), this_venue->id);
         }
     }
 
@@ -1442,27 +1438,19 @@ void BuildPlanner::update_coord_caches() {
             int y_offset = (row - pivot.y);
 
             // get abs. tile
-            map_point tile = end;
+            map_point tile;
             switch (orientation) {
                 case 0:
-                    tile.shift(x_offset, y_offset);
-//                    tile.x = end.x + x_offset;
-//                    tile_y = end.y + y_offset;
+                    tile = end.shifted(x_offset, y_offset);
                     break;
                 case 1:
-                    tile.shift(-y_offset, x_offset);
-//                    tile_x = end.x - y_offset;
-//                    tile_y = end.y + x_offset;
+                    tile = end.shifted(-y_offset, x_offset);
                     break;
                 case 2:
-                    tile.shift(-x_offset, -y_offset);
-//                    tile_x = end.x - x_offset;
-//                    tile_y = end.y - y_offset;
+                    tile = end.shifted(-x_offset, -y_offset);
                     break;
                 case 3:
-                    tile.shift(y_offset, -x_offset);
-//                    tile_x = end.x + y_offset;
-//                    tile_y = end.y - x_offset;
+                    tile = end.shifted(y_offset, -x_offset);
                     break;
             }
 

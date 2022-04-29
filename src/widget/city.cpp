@@ -89,18 +89,6 @@ static int input_coords_in_city(int x, int y) {
 
     return (x >= 0 && x < width && y >= 0 && y < height);
 }
-static int adjust_offset_for_orientation(int grid_offset, int size) {
-    switch (city_view_orientation()) {
-        case DIR_0_TOP_RIGHT:
-            return map_grid_add_delta(grid_offset, -size + 1, -size + 1);
-        case DIR_2_BOTTOM_RIGHT:
-            return map_grid_add_delta(grid_offset, 0, -size + 1);
-        case DIR_6_TOP_LEFT:
-            return map_grid_add_delta(grid_offset, -size + 1, 0);
-        default:
-            return grid_offset;
-    }
-}
 
 static void draw_TEST(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
@@ -276,7 +264,18 @@ static void build_end(void) {
 }
 
 static int has_confirmed_construction(int ghost_offset, int tile_offset, int range_size) {
-    tile_offset = adjust_offset_for_orientation(tile_offset, range_size);
+//    tile_offset = adjust_offset_for_orientation(tile_offset, range_size);
+    map_point point = map_point(tile_offset);
+    switch (city_view_orientation()) {
+        case DIR_0_TOP_RIGHT:
+            point.shift(-range_size + 1, -range_size + 1);
+        case DIR_2_BOTTOM_RIGHT:
+            point.shift(0, -range_size + 1);
+        case DIR_6_TOP_LEFT:
+            point.shift(-range_size + 1, 0);
+    }
+    tile_offset = point.grid_offset();
+
     int x = map_grid_offset_to_x(tile_offset);
     int y = map_grid_offset_to_y(tile_offset);
     if (ghost_offset <= 0 || !map_grid_is_inside(x, y, range_size))
@@ -284,7 +283,7 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
 
     for (int dy = 0; dy < range_size; dy++) {
         for (int dx = 0; dx < range_size; dx++) {
-            if (ghost_offset == tile_offset + map_grid_delta(dx, dy))
+            if (ghost_offset == tile_offset + GRID_OFFSET(dx, dy))
                 return 1;
 
         }

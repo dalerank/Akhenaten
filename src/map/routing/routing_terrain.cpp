@@ -113,10 +113,10 @@ static int get_land_type_noncitizen(int grid_offset) {
 }
 
 static int is_surrounded_by_water(int grid_offset) {
-    return map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WATER) &&
-           map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WATER) &&
-           map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WATER) &&
-           map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WATER);
+    return map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WATER) &&
+           map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WATER) &&
+           map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WATER) &&
+           map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WATER);
 }
 static int is_wall_tile(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
@@ -125,24 +125,24 @@ static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
     switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, 1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 0));
             break;
         case DIR_2_BOTTOM_RIGHT:
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, 1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(-1, 1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(-1, 0));
             break;
         case DIR_4_BOTTOM_LEFT:
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, -1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, -1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(-1, -1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(-1, 0));
             break;
         case DIR_6_TOP_LEFT:
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, -1));
-            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, -1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, -1));
+            adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 0));
             break;
     }
     return adjacent;

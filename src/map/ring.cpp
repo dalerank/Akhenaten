@@ -42,7 +42,7 @@ void map_ring_init(void) {
         }
     }
     for (int i = 0; i < index; i++) {
-        data.tiles[i].grid_offset = map_grid_delta(data.tiles[i].x, data.tiles[i].y);
+        data.tiles[i].grid_offset = GRID_OFFSET(data.tiles[i].x, data.tiles[i].y);
     }
 }
 

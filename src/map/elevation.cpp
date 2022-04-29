@@ -19,10 +19,10 @@ void map_elevation_clear(void) {
 static void fix_cliff_tiles(int grid_offset) {
     // reduce elevation when the surrounding tiles are at least 2 lower
     int max = map_grid_get(&elevation, grid_offset) - 1;
-    if (map_grid_get(&elevation, grid_offset + map_grid_delta(-1, 0)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(0, -1)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(1, 0)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(0, 1)) < max) {
+    if (map_grid_get(&elevation, grid_offset + GRID_OFFSET(-1, 0)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(0, -1)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(1, 0)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(0, 1)) < max) {
         map_grid_set(&elevation, grid_offset, max);
     }
 }

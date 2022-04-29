@@ -363,7 +363,7 @@ io_buffer *iob_city_view_camera = new io_buffer([](io_buffer *iob) {
     city_view_go_to_tile_corner(data.camera.tile_internal.x, data.camera.tile_internal.y, false);
 });
 
-void city_view_foreach_map_tile(map_callback *callback) {
+void city_view_foreach_map_tile(tile_draw_callback *callback) {
     int odd = 0;
     int screen_y = data.camera.tile_internal.y - 8;
     int y_graphic = data.viewport.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel_offset_internal.y;
@@ -399,8 +399,8 @@ void city_view_foreach_map_tile(map_callback *callback) {
         screen_y++;
     }
 }
-void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *callback2, map_callback *callback3,
-                                      map_callback *callback4, map_callback *callback5, map_callback *callback6) {
+void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_callback *callback2, tile_draw_callback *callback3,
+                                      tile_draw_callback *callback4, tile_draw_callback *callback5, tile_draw_callback *callback6) {
     int odd = 0;
     int screen_y = data.camera.tile_internal.y - 8;
     int y_graphic = data.viewport.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel_offset_internal.y;
@@ -456,12 +456,12 @@ void city_view_foreach_valid_map_tile(map_callback *callback1, map_callback *cal
     }
 }
 
-static void do_valid_callback(pixel_coordinate pixel, map_point point, map_callback *callback) {
+static void do_valid_callback(pixel_coordinate pixel, map_point point, tile_draw_callback *callback) {
     if (point.grid_offset() >= 0 && map_image_at(point.grid_offset()) >= 6)
         callback(pixel, point);
 }
 
-void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_callback *callback) {
+void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback *callback) {
 //    int x, y;
     screen_tile screen = mappoint_to_screentile(map_point(grid_offset));
     pixel_coordinate pixel;
@@ -478,7 +478,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     int pixel_rotation = orientation_x * orientation_y;
 
     int rotation_delta = pixel_rotation == -1 ? (2 - size) : 1;
-    grid_offset += map_grid_delta(rotation_delta * orientation_x, rotation_delta * orientation_y);
+    grid_offset += GRID_OFFSET(rotation_delta * orientation_x, rotation_delta * orientation_y);
     int x_delta = HALF_TILE_WIDTH_PIXELS;
     int y_delta = HALF_TILE_HEIGHT_PIXELS;
     int x_offset = HALF_TILE_WIDTH_PIXELS;
@@ -498,30 +498,31 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     for (int ring = 0; ring < radius; ++ring) {
         int offset_north = -ring - 2;
         int offset_south = ring + size;
+        map_point point = map_point(grid_offset);
         do_valid_callback({pixel.x, pixel.y + y_offset * pixel_rotation},
-                          map_point(map_grid_add_delta(grid_offset, offset_south * orientation_x, offset_south * orientation_y)),
+                          point.shifted(offset_south * orientation_x, offset_south * orientation_y),
                           callback);
         do_valid_callback({pixel.x, pixel.y - y_offset * pixel_rotation},
-                          map_point(map_grid_add_delta(grid_offset, offset_north * orientation_x, offset_north * orientation_y)),
+                          point.shifted(offset_north * orientation_x, offset_north * orientation_y),
                           callback);
         do_valid_callback({pixel.x - x_offset - x_delta, pixel.y},
-                          map_point(map_grid_add_delta(grid_offset, offset_north * orientation_x, offset_south * orientation_y)),
+                          point.shifted(offset_north * orientation_x, offset_south * orientation_y),
                           callback);
         do_valid_callback({pixel.x + x_offset + x_delta, pixel.y},
-                          map_point(map_grid_add_delta(grid_offset, offset_south * orientation_x, offset_north * orientation_y)),
+                          point.shifted(offset_south * orientation_x, offset_north * orientation_y),
                           callback);
         for (int tile = 1; tile < ring * 2 + size + 2; ++tile) {
             do_valid_callback({pixel.x + x_delta * tile, pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
-                              map_point(map_grid_add_delta(grid_offset, (tile + offset_north) * orientation_x, offset_north * orientation_y)),
+                              point.shifted((tile + offset_north) * orientation_x, offset_north * orientation_y),
                               callback);
             do_valid_callback({pixel.x - x_delta * tile, pixel.y - y_offset * pixel_rotation + y_delta * pixel_rotation * tile},
-                              map_point(map_grid_add_delta(grid_offset, offset_north * orientation_x, (tile + offset_north) * orientation_y)),
+                              point.shifted(offset_north * orientation_x, (tile + offset_north) * orientation_y),
                               callback);
             do_valid_callback({pixel.x + x_delta * tile, pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
-                              map_point(map_grid_add_delta(grid_offset, offset_south * orientation_x, (offset_south - tile) * orientation_y)),
+                              point.shifted(offset_south * orientation_x, (offset_south - tile) * orientation_y),
                               callback);
             do_valid_callback({pixel.x - x_delta * tile, pixel.y + y_offset * pixel_rotation - y_delta * pixel_rotation * tile},
-                              map_point(map_grid_add_delta(grid_offset, (offset_south - tile) * orientation_x, offset_south * orientation_y)),
+                              point.shifted((offset_south - tile) * orientation_x, offset_south * orientation_y),
                               callback);
         }
         x_offset += TILE_WIDTH_PIXELS;
@@ -529,7 +530,7 @@ void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, map_
     }
 }
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles,
-                                    int height_tiles, void(*callback)(screen_tile screen, map_point point)) {
+                                    int height_tiles, minimap_draw_callback callback) {
     int odd = 0;
     int y_abs = absolute_y - 4;
     int screen_y = y_offset - 4;

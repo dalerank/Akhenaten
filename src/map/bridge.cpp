@@ -41,17 +41,17 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
         return 0;
 
-    if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = map_grid_delta(0, 1);
+    if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WATER)) {
+        bridge.direction_grid_delta = GRID_OFFSET(0, 1);
         bridge.direction = DIR_4_BOTTOM_LEFT;
-    } else if (!map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = map_grid_delta(-1, 0);
+    } else if (!map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WATER)) {
+        bridge.direction_grid_delta = GRID_OFFSET(-1, 0);
         bridge.direction = DIR_6_TOP_LEFT;
-    } else if (!map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = map_grid_delta(0, -1);
+    } else if (!map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WATER)) {
+        bridge.direction_grid_delta = GRID_OFFSET(0, -1);
         bridge.direction = DIR_0_TOP_RIGHT;
-    } else if (!map_terrain_is(grid_offset + map_grid_delta(-1, 0), TERRAIN_WATER)) {
-        bridge.direction_grid_delta = map_grid_delta(1, 0);
+    } else if (!map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WATER)) {
+        bridge.direction_grid_delta = GRID_OFFSET(1, 0);
         bridge.direction = DIR_2_BOTTOM_RIGHT;
     } else {
         return 0;
@@ -217,16 +217,16 @@ int map_is_bridge(int grid_offset) {
 
 static int get_y_bridge_tiles(int grid_offset) {
     int tiles = 0;
-    if (map_is_bridge(grid_offset + map_grid_delta(0, -1)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(0, -1)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(0, -2)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(0, -2)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(0, 1)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(0, 1)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(0, 2)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(0, 2)))
         tiles++;
 
     return tiles;
@@ -234,16 +234,16 @@ static int get_y_bridge_tiles(int grid_offset) {
 
 static int get_x_bridge_tiles(int grid_offset) {
     int tiles = 0;
-    if (map_is_bridge(grid_offset + map_grid_delta(-1, 0)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(-1, 0)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(-2, 0)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(-2, 0)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(1, 0)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(1, 0)))
         tiles++;
 
-    if (map_is_bridge(grid_offset + map_grid_delta(2, 0)))
+    if (map_is_bridge(grid_offset + GRID_OFFSET(2, 0)))
         tiles++;
 
     return tiles;
@@ -256,7 +256,7 @@ void map_bridge_remove(int grid_offset, int mark_deleted) {
     int tiles_x = get_x_bridge_tiles(grid_offset);
     int tiles_y = get_y_bridge_tiles(grid_offset);
 
-    int offset_up = tiles_x > tiles_y ? map_grid_delta(1, 0) : map_grid_delta(0, 1);
+    int offset_up = tiles_x > tiles_y ? GRID_OFFSET(1, 0) : GRID_OFFSET(0, 1);
     // find lower end of the bridge
     while (map_is_bridge(grid_offset - offset_up)) {
         grid_offset -= offset_up;
@@ -286,7 +286,7 @@ int map_bridge_count_figures(int grid_offset) {
     int tiles_x = get_x_bridge_tiles(grid_offset);
     int tiles_y = get_y_bridge_tiles(grid_offset);
 
-    int offset_up = tiles_x > tiles_y ? map_grid_delta(1, 0) : map_grid_delta(0, 1);
+    int offset_up = tiles_x > tiles_y ? GRID_OFFSET(1, 0) : GRID_OFFSET(0, 1);
     // find lower end of the bridge
     while (map_is_bridge(grid_offset - offset_up)) {
         grid_offset -= offset_up;

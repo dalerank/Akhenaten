@@ -44,6 +44,8 @@ public:
     // MODIFIERS
     void shift(int _x, int _y);
     void shift(int _grid_offset);
+    map_point shifted(int _x, int _y);
+    map_point shifted(int _grid_offset);
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);

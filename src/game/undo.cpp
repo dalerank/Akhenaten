@@ -197,26 +197,26 @@ static void add_building_to_terrain(building *b) {
         case BUILDING_BOOTH:
             for (int dy = 0; dy < 2; dy++)
                 for (int dx = 0; dx < 2; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_BANDSTAND:
             for (int dy = 0; dy < 3; dy++)
                 for (int dx = 0; dx < 3; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_PAVILLION:
             for (int dy = 0; dy < 4; dy++)
                 for (int dx = 0; dx < 4; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_FESTIVAL_SQUARE:
             for (int dy = 0; dy < 5; dy++)
                 for (int dx = 0; dx < 5; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
     }
 }

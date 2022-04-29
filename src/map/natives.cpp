@@ -106,9 +106,9 @@ void map_natives_init(void) {
             } else if (image_id == image_meeting) {
                 type = BUILDING_NATIVE_MEETING;
                 map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 0), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(0, 1), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + random_bit);
@@ -125,9 +125,9 @@ void map_natives_init(void) {
                     break;
                 case BUILDING_NATIVE_MEETING:
                     b->sentiment.native_anger = 100;
-                    map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
-                    map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
-                    map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
+                    map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
+                    map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
+                    map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
                     mark_native_land(b->x, b->y, 2, 6);
                     if (!meeting_center_set)
                         city_buildings_set_main_native_meeting_center(b->x, b->y);
@@ -168,9 +168,9 @@ void map_natives_init_editor(void) {
             } else if (image_id == image_meeting) {
                 type = BUILDING_NATIVE_MEETING;
                 map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 0), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(0, 1), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
@@ -182,9 +182,9 @@ void map_natives_init_editor(void) {
             b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_NATIVE_MEETING) {
-                map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
-                map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
-                map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
             }
         }
     }

@@ -251,18 +251,21 @@ int map_grid_offset_to_y(int grid_offset) {
     return (grid_offset - map_data()->start_offset) / GRID_LENGTH;
 }
 
-int map_grid_delta(int x, int y) {
-    return y * GRID_LENGTH + x;
-}
-int map_grid_add_delta(int grid_offset, int x, int y) {
-    int raw_x = grid_offset % GRID_LENGTH;
-    int raw_y = grid_offset / GRID_LENGTH;
-    if (raw_x + x < 0 || raw_x + x >= GRID_LENGTH ||
-        raw_y + y < 0 || raw_y + y >= GRID_LENGTH) {
-        return -1;
-    }
-    return grid_offset + map_grid_delta(x, y);
-}
+//int GRID_OFFSET(int x, int y) {
+//    return y * GRID_LENGTH + x;
+//}
+//int map_grid_add_delta(int grid_offset, int x, int y) {
+////    int raw_x = grid_offset % GRID_LENGTH;
+////    int raw_y = grid_offset / GRID_LENGTH;
+////    if (raw_x + x < 0 || raw_x + x >= GRID_LENGTH ||
+////        raw_y + y < 0 || raw_y + y >= GRID_LENGTH) {
+////        return -1;
+////    }
+////    return grid_offset + GRID_OFFSET(x, y);
+//    auto point = map_point(grid_offset);
+//    point.shift(x, y);
+//    return point.grid_offset();
+//}
 int map_grid_direction_delta(int direction) {
     if (direction >= 0 && direction < 8) {
         switch (GAME_ENV) {

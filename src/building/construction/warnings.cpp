@@ -75,9 +75,9 @@ static void check_water(int type, int x, int y) {
             if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;
             else if (type == BUILDING_MENU_MONUMENTS) {
-                if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GROUNDWATER)) {
+                if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_GROUNDWATER) ||
+                    map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_GROUNDWATER) ||
+                    map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GROUNDWATER)) {
                     has_water = 1;
                 }
             }
