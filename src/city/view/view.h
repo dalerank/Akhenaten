@@ -15,7 +15,7 @@ int SCROLLABLE_Y_MAX_TILE();
 typedef struct {
     int x;
     int y;
-} view_tile, pixel_coordinate;
+} screen_tile, pixel_coordinate;
 
 typedef struct {
     int screen_width;
@@ -24,7 +24,7 @@ typedef struct {
     int orientation;
     int scale;
     struct {
-        view_tile tile_internal;
+        screen_tile tile_internal;
         pixel_coordinate pixel_offset_internal;
         pixel_coordinate position;
     } camera;
@@ -68,7 +68,7 @@ void city_view_go_to_grid_offset(int grid_offset);
 void city_view_scroll(int x, int y);
 
 void city_view_get_selected_tile_pixels(int *x, int *y);
-void city_view_set_selected_view_tile(const view_tile *tile);
+void city_view_set_selected_view_tile(const screen_tile *tile);
 
 void city_view_rotate_left(void);
 void city_view_rotate_right(void);

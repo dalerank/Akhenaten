@@ -46,7 +46,7 @@ static void draw_building_image(int image_id, int x, int y) {
     ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN);
 }
 
-static void draw_building(map_point tile, int x_view, int y_view, int type) {
+static void draw_building(map_point tile, int screen_x, int screen_y, int type) {
     const building_properties *props = building_properties_for_type(type);
 
     int num_tiles = props->size * props->size;
@@ -54,12 +54,12 @@ static void draw_building(map_point tile, int x_view, int y_view, int type) {
     int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
 
     if (blocked)
-        draw_partially_blocked(x_view, y_view, num_tiles, blocked_tiles);
+        draw_partially_blocked(screen_x, screen_y, num_tiles, blocked_tiles);
     else if (editor_tool_is_in_use()) {
         int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
         for (int i = 0; i < num_tiles; i++) {
-            int x_offset = x_view + X_VIEW_OFFSETS[i];
-            int y_offset = y_view + Y_VIEW_OFFSETS[i];
+            int x_offset = screen_x + X_VIEW_OFFSETS[i];
+            int y_offset = screen_y + Y_VIEW_OFFSETS[i];
             ImageDraw::isometric_footprint(image_id, x_offset, y_offset, 0);
         }
     } else {
@@ -68,7 +68,7 @@ static void draw_building(map_point tile, int x_view, int y_view, int type) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         else
             image_id = image_id_from_group(props->image_collection, props->image_group) + props->image_offset;
-        draw_building_image(image_id, x_view, y_view);
+        draw_building_image(image_id, screen_x, screen_y);
     }
 }
 
@@ -93,14 +93,14 @@ static void draw_road(map_point tile, int x, int y) {
 }
 
 static void draw_brush_tile(const void *data, int dx, int dy) {
-    view_tile *view = (view_tile *) data;
+    screen_tile *view = (screen_tile *) data;
     int view_dx, view_dy;
     offset_to_view_offset(dx, dy, &view_dx, &view_dy);
     draw_flat_tile(view->x + view_dx, view->y + view_dy, COLOR_MASK_GREEN);
 }
 
 static void draw_brush(map_point tile, int x, int y) {
-    view_tile vt = {x, y};
+    screen_tile vt = {x, y};
     editor_tool_foreach_brush_tile(draw_brush_tile, &vt);
 }
 

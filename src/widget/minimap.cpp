@@ -115,7 +115,7 @@ bool figure::has_figure_color() {
 
     return FIGURE_COLOR_NONE;
 }
-static int draw_figure(int x_view, int y_view, int grid_offset) {
+static int draw_figure(int screen_x, int screen_y, int grid_offset) {
     int color_type = map_figure_foreach_until(grid_offset, TEST_SEARCH_HAS_COLOR);
     if (color_type == FIGURE_COLOR_NONE)
         return 0;
@@ -126,16 +126,16 @@ static int draw_figure(int x_view, int y_view, int grid_offset) {
     else if (color_type == FIGURE_COLOR_ENEMY)
         color = data.enemy_color;
 
-    graphics_draw_horizontal_line(x_view, x_view + 1, y_view, color);
+    graphics_draw_horizontal_line(screen_x, screen_x + 1, screen_y, color);
     return 1;
 }
-static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
+static void draw_minimap_tile(int screen_x, int screen_y, int grid_offset) {
     if (grid_offset < 0) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), x_view, y_view);
+        ImageDraw::img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
         return;
     }
 
-    if (draw_figure(x_view, y_view, grid_offset))
+    if (draw_figure(screen_x, screen_y, grid_offset))
         return;
 
     int terrain = map_terrain_get(grid_offset);
@@ -187,13 +187,13 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
                 case 3:
                 case 4:
                 case 5:
-                    ImageDraw::img_generic(image_id + (multi_tile_size - 1), x_view, y_view - (multi_tile_size - 1));
+                    ImageDraw::img_generic(image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
                     break;
                 case 6: // TODO: make a generalized formula?
-                    ImageDraw::img_generic(image_id + 2, x_view, y_view - 2);
-                    ImageDraw::img_generic(image_id + 2, x_view + 3, y_view - 5);
-                    ImageDraw::img_generic(image_id + 2, x_view + 6, y_view - 2);
-                    ImageDraw::img_generic(image_id + 2, x_view + 3, y_view + 1);
+                    ImageDraw::img_generic(image_id + 2, screen_x, screen_y - 2);
+                    ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y - 5);
+                    ImageDraw::img_generic(image_id + 2, screen_x + 6, screen_y - 2);
+                    ImageDraw::img_generic(image_id + 2, screen_x + 3, screen_y + 1);
                     break;
             }
         }
@@ -229,7 +229,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        ImageDraw::img_generic(image_id, x_view, y_view);
+        ImageDraw::img_generic(image_id, screen_x, screen_y);
     }
 }
 static void draw_viewport_rectangle(void) {
@@ -315,8 +315,8 @@ void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height
     }
 }
 
-static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset) {
-    if (data.mouse.y == y_view && (data.mouse.x == x_view || data.mouse.x == x_view + 1))
+static void update_mouse_grid_offset(int screen_x, int screen_y, int grid_offset) {
+    if (data.mouse.y == screen_y && (data.mouse.x == screen_x || data.mouse.x == screen_x + 1))
         data.mouse.tile.grid_offset(grid_offset < 0 ? 0 : grid_offset);
 }
 static int get_mouse_grid_offset(const mouse *m) {

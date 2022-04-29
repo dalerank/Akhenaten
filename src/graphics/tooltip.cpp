@@ -282,8 +282,8 @@ static void draw_senate_tooltip(tooltip_context *c) {
 }
 
 static void draw_tile_tooltip(tooltip_context *c) {
-    view_tile view;
-    if (pixel_to_viewtile(c->mouse_x, c->mouse_y, &view)) {
+    screen_tile view;
+    if (pixel_to_screentile(c->mouse_x, c->mouse_y, &view)) {
         int grid_offset = viewtile_to_mappoint(&view);
         city_view_set_selected_view_tile(&view);
         int x_tile = map_grid_offset_to_x(grid_offset);

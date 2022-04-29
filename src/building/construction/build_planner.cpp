@@ -1532,8 +1532,8 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
 }
 void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
     if (grid_offset == start.grid_offset()) {
-        start_offset_x_view = view_x;
-        start_offset_y_view = view_y;
+        start_offset_screen_x = view_x;
+        start_offset_screen_y = view_y;
     }
 }
 void BuildPlanner::dispatch_warnings() {

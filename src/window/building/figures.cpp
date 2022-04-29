@@ -423,8 +423,8 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
     map_point camera_tile = city_view_get_camera_tile();
 
     int grid_offset = figure_get(figure_id)->grid_offset_figure;
-    int x, y;
-    mappoint_to_viewtile(grid_offset, &x, &y);
+//    int x, y;
+//    screen_tile screen = mappoint_to_viewtile(map_point(grid_offset));
 
 //    city_view_go_to_tile(x - 2, y - 6);
 

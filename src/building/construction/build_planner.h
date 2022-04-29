@@ -59,8 +59,8 @@ private:
     int immediate_warning_id = -1;
     int extra_warning_id = -1;
 
-    int start_offset_x_view;
-    int start_offset_y_view;
+    int start_offset_screen_x;
+    int start_offset_screen_y;
 
     void init_tiles(int size_x, int size_y);
     void set_graphics_row(int row, int *image_ids, int total);
