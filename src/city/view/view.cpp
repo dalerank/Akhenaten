@@ -378,12 +378,8 @@ void city_view_foreach_map_tile(tile_draw_callback *callback) {
     int odd = 0;
     screen_tile screen_0 = starting_tile();
     screen_tile screen = screen_0;
-//    screen.x = data.camera.tile_internal.x - 4;
-//    screen.y = data.camera.tile_internal.y - 8;
     pixel_coordinate pixel_0 = starting_coords();
     pixel_coordinate pixel = pixel_0;
-//    pixel.x = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
-//    pixel.y = data.viewport.offset.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel_offset_internal.y;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (screen.y >= 0 && screen.y < MAP_TILE_UPPER_LIMIT_Y()) {
             screen.x = screen_0.x;
@@ -413,12 +409,8 @@ void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_c
     int odd = 0;
     screen_tile screen_0 = starting_tile();
     screen_tile screen = screen_0;
-//    screen.x = data.camera.tile_internal.x - 4;
-//    screen.y = data.camera.tile_internal.y - 8;
     pixel_coordinate pixel_0 = starting_coords();
     pixel_coordinate pixel = pixel_0;
-//    pixel.x = -(4 * TILE_WIDTH_PIXELS) - data.camera.pixel_offset_internal.x;
-//    pixel.y = data.viewport.offset.y - 9 * HALF_TILE_HEIGHT_PIXELS - data.camera.pixel_offset_internal.y;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
         if (screen.y >= 0 && screen.y < MAP_TILE_UPPER_LIMIT_Y()) {
             screen.x = screen_0.x;
@@ -461,7 +453,6 @@ static void do_valid_callback(pixel_coordinate pixel, map_point point, tile_draw
 }
 
 void city_view_foreach_tile_in_range(int grid_offset, int size, int radius, tile_draw_callback *callback) {
-//    int x, y;
     screen_tile screen = mappoint_to_screentile(map_point(grid_offset));
     pixel_coordinate pixel;
     pixel.x = (screen.x - data.camera.tile_internal.x) * TILE_WIDTH_PIXELS - (screen.y & 1) * HALF_TILE_WIDTH_PIXELS - data.camera.pixel_offset_internal.x +

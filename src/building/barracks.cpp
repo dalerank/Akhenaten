@@ -122,9 +122,10 @@ int building::barracks_create_soldier() {
             building *academy = building_get(academy_id);
             if (map_has_road_access(academy->x, academy->y, academy->size, &road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
-                f->destination_x = road.x();
-                f->destination_y = road.y();
-                f->destination_grid_offset = MAP_OFFSET(f->destination_x, f->destination_y);
+                f->destination_tile = road;
+//                f->destination_x = road.x();
+//                f->destination_y = road.y();
+//                f->destination_grid_offset = MAP_OFFSET(f->destination_x, f->destination_y);
             } else
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         } else
@@ -154,8 +155,9 @@ bool building::barracks_create_tower_sentry() {
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
-        f->destination_x = road.x();
-        f->destination_y = road.y();
+        f->destination_tile = road;
+//        f->destination_x = road.x();
+//        f->destination_y = road.y();
     } else
         f->poof();
     tower->set_figure(0, f->id);

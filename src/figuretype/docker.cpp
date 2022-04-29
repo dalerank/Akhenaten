@@ -212,8 +212,8 @@ void figure::get_trade_center_location(int *_x, int *_y) {
         *_x = trade_center->x;
         *_y = trade_center->y;
     } else {
-        *_x = tile_x;
-        *_y = tile_y;
+        *_x = tile.x();
+        *_y = tile.y();
     }
 }
 int figure::deliver_import_resource(building *dock) {
@@ -239,8 +239,9 @@ int figure::deliver_import_resource(building *dock) {
     set_destination(warehouse_id);
     wait_ticks = 0;
     action_state = FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE;
-    destination_x = tile.x();
-    destination_y = tile.y();
+    destination_tile = tile;
+//    destination_tile.x() = tile.x();
+//    destination_tile.y() = tile.y();
     resource_id = resource;
     return 1;
 }
@@ -265,8 +266,9 @@ int figure::fetch_export_resource(building *dock) {
     set_destination(warehouse_id);
     action_state = FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE;
     wait_ticks = 0;
-    destination_x = tile.x();
-    destination_y = tile.y();
+    destination_tile = tile;
+//    destination_tile.x() = tile.x();
+//    destination_tile.y() = tile.y();
     resource_id = resource;
     return 1;
 }
@@ -431,14 +433,16 @@ void figure::docker_action() {
                     trader_record_sold_resource(trader_id, resource_id);
                     action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
                     wait_ticks = 0;
-                    destination_x = source_x;
-                    destination_y = source_y;
+                    destination_tile = source_tile;
+//                    destination_tile.x() = source_tile.x();
+//                    destination_tile.y() = source_tile.y();
                     resource_id = 0;
                     fetch_export_resource(b);
                 } else {
                     action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
-                    destination_x = source_x;
-                    destination_y = source_y;
+                    destination_tile = source_tile;
+//                    destination_tile.x() = source_tile.x();
+//                    destination_tile.y() = source_tile.y();
                 }
                 wait_ticks = 0;
             }
@@ -455,8 +459,9 @@ void figure::docker_action() {
                     trade_city_id = 0;
                 }
                 action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
-                destination_x = source_x;
-                destination_y = source_y;
+                destination_tile = source_tile;
+//                destination_tile.x() = source_tile.x();
+//                destination_tile.y() = source_tile.y();
                 wait_ticks = 0;
                 if (try_export_resource(destination(), resource_id, trade_city_id)) {
                     int trader_id = figure_get(b->data.dock.trade_ship_id)->trader_id;

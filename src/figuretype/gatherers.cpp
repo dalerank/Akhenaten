@@ -31,8 +31,8 @@ void figure::gatherer_action() {
             }
             break;
         case 9: // go to gathering place
-            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_PREFER_ROADS)) {
-                if (!can_harvest_point(MAP_OFFSET(destination_x, destination_y))) {
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_PREFER_ROADS)) {
+                if (!can_harvest_point(MAP_OFFSET(destination_tile.x(), destination_tile.y()))) {
                     wait_ticks = 0;
                     advance_action(8);
                 } else
@@ -41,7 +41,7 @@ void figure::gatherer_action() {
             break;
         case 10: // gathering resource
             // someone finished harvesting this spot (for "multiple gatherers" config setting enabled)
-            if (map_get_vegetation_growth(grid_offset_figure) < 255) {
+            if (map_get_vegetation_growth(tile.grid_offset()) < 255) {
                 switch (type) {
                     case FIGURE_REED_GATHERER:
                         wait_ticks = 0;
@@ -54,12 +54,12 @@ void figure::gatherer_action() {
             } else {
                 // harvesting.....
                 if (wait_ticks >= 300) {
-                    vegetation_deplete(grid_offset_figure);
+                    vegetation_deplete(tile.grid_offset());
                     advance_action(11);
                 }
                 // progress faster with multiple people on one spot
                 if (config_get(CONFIG_GP_CH_MULTIPLE_GATHERERS))
-                    wait_ticks += gatherers_harvesting_point(grid_offset_figure);
+                    wait_ticks += gatherers_harvesting_point(tile.grid_offset());
                 else
                     wait_ticks++;
             }

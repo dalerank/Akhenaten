@@ -144,7 +144,7 @@ void figure::homeless_action() {
             anim_frame = 0;
             wait_ticks++;
             if (wait_ticks > 51) {
-                int building_id = closest_house_with_room(tile_x, tile_y);
+                int building_id = closest_house_with_room(tile.x(), tile.y());
                 if (building_id) {
                     building *b = building_get(building_id);
                     int x_road, y_road;
@@ -174,7 +174,7 @@ void figure::homeless_action() {
             wait_ticks++;
             if (wait_ticks > 30) {
                 wait_ticks = 0;
-                int building_id = closest_house_with_room(tile_x, tile_y);
+                int building_id = closest_house_with_room(tile.x(), tile.y());
                 if (building_id > 0) {
                     building *b = building_get(building_id);
                     int x_road, y_road;

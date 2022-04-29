@@ -193,12 +193,12 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile) {
     return wharf->id;
 }
 int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) {
-    if (map_figure_at(boat->grid_offset_figure) == boat->id)
+    if (map_figure_at(boat->tile.grid_offset()) == boat->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(boat->tile_x, boat->tile_y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(boat->tile.x(), boat->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
@@ -213,12 +213,12 @@ int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) 
     return 0;
 }
 int map_water_find_shipwreck_tile(figure *wreck, map_point *tile) {
-    if (map_terrain_is(wreck->grid_offset_figure, TERRAIN_WATER) && map_figure_at(wreck->grid_offset_figure) == wreck->id)
+    if (map_terrain_is(wreck->tile.grid_offset(), TERRAIN_WATER) && map_figure_at(wreck->tile.grid_offset()) == wreck->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(wreck->tile_x, wreck->tile_y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(wreck->tile.x(), wreck->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {

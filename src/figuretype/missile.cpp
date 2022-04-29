@@ -48,11 +48,12 @@ void figure_create_explosion_cloud(int x, int y, int size) {
     for (int i = 0; i < 16; i++) {
         figure *f = figure_create(FIGURE_EXPLOSION, x + tile_offset, y + tile_offset, DIR_0_TOP_RIGHT);
         if (f->id) {
-            f->cross_country_x += cc_offset;
-            f->cross_country_y += cc_offset;
-            f->destination_x += CLOUD_DIRECTION[i].x;
-            f->destination_y += CLOUD_DIRECTION[i].y;
-            f->set_cross_country_direction(f->cross_country_x, f->cross_country_y, 15 * f->destination_x + cc_offset, 15 * f->destination_y + cc_offset, 0);
+            f->cc_coords.x += cc_offset;
+            f->cc_coords.y += cc_offset;
+            f->destination_tile.shift(CLOUD_DIRECTION[i].x, CLOUD_DIRECTION[i].y);
+//            f->destination_tile.x() += CLOUD_DIRECTION[i].x;
+//            f->destination_tile.y() += CLOUD_DIRECTION[i].y;
+            f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x() + cc_offset, 15 * f->destination_tile.y() + cc_offset, 0);
             f->speed_multiplier = CLOUD_SPEED[i];
         }
     }
@@ -64,14 +65,15 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
     if (f->id) {
         f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
         f->set_home(building_id);
-        f->destination_x = x_dst;
-        f->destination_y = y_dst;
-        f->set_cross_country_direction(f->cross_country_x, f->cross_country_y, 15 * x_dst, 15 * y_dst, 1);
+        f->destination_tile.set(x_dst, y_dst);
+//        f->destination_tile.x() = x_dst;
+//        f->destination_tile.y() = y_dst;
+        f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * x_dst, 15 * y_dst, 1);
     }
 }
 void figure::missile_fire_at(int target_id, int missile_type) {
     figure *f = figure_get(target_id);
-    figure_create_missile(id, tile_x, tile_y, f->tile_x, f->tile_y, missile_type);
+    figure_create_missile(id, tile.x(), tile.y(), f->tile.x(), f->tile.y(), missile_type);
 }
 
 bool figure::is_citizen() {
@@ -157,7 +159,7 @@ void figure::arrow_action() {
         poof();
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile(grid_offset_figure);
+    int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_ARROW_HIT);
@@ -171,7 +173,7 @@ void figure::spear_action() {
         poof();
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_citizen_on_tile(grid_offset_figure);
+    int target_id = get_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_FORT_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -188,7 +190,7 @@ void figure::javelin_action() {
         poof();
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile(grid_offset_figure);
+    int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         missile_hit_target(target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
         sound_effect_play(SOUND_EFFECT_JAVELIN);
@@ -202,7 +204,7 @@ void figure::bolt_action() {
         poof();
 
     int should_die = move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile(grid_offset_figure);
+    int target_id = get_non_citizen_on_tile(tile.grid_offset());
     if (target_id) {
         figure *target = figure_get(target_id);
         const figure_properties *target_props = figure_properties_for_type(target->type);

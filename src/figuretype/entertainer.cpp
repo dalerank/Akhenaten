@@ -167,16 +167,16 @@ void figure::entertainer_action() {
                 int dst_building_id = 0;
                 switch (type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                         break;
                     case FIGURE_LION_TAMER: // dancer
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_PAVILLION, 0, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_PAVILLION, 0, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_SENET_HOUSE, 0, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_SENET_HOUSE, 0, 0);
                         break;
                 }
                 if (dst_building_id) { // todo: summarize
@@ -185,8 +185,9 @@ void figure::entertainer_action() {
                     if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
                         set_destination(dst_building_id);
                         action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
-                        destination_x = x_road;
-                        destination_y = y_road;
+                        destination_tile.set(x_road, y_road);
+//                        destination_tile.x() = x_road;
+//                        destination_tile.y() = y_road;
                         roam_length = 0;
                     } else
                         poof();

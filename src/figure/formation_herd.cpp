@@ -124,21 +124,19 @@ static void move_animals(const formation *m, int attacking_animals) {
         if (GAME_ENV == ENGINE_ENV_C3)
             f->wait_ticks = 401;
         if (attacking_animals) {
-            int target_id = figure_combat_get_target_for_wolf(f->tile_x, f->tile_y, 6);
+            int target_id = figure_combat_get_target_for_wolf(f->tile.x(), f->tile.y(), 6);
             if (target_id) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                    f->destination_x = 0;
-                    f->destination_y = 0;
+                    f->destination_tile.set(0, 0);
 //                    while (f->destination_x == 0 || f->destination_y == 0)
                         f->herd_roost(4, 8, 22);
-                    if (f->destination_x != 0 && f->destination_y != 0)
+                    if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0)
                         f->advance_action(16);
                 } else {
                     figure *target = figure_get(target_id);
                     f->target_figure_id = target_id;
                     f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
-                    f->destination_x = target->tile_x;
-                    f->destination_y = target->tile_y;
+                    f->destination_tile = target->tile;
                     target->targeted_by_figure_id = f->id;
                     f->target_figure_created_sequence = target->created_sequence;
                     f->route_remove();
@@ -146,8 +144,7 @@ static void move_animals(const formation *m, int attacking_animals) {
             } else {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     f->advance_action(14);
-                    f->destination_x = 0;
-                    f->destination_y = 0;
+                    f->destination_tile.set(0, 0);
                 } else
                     f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             }
@@ -220,7 +217,7 @@ static void update_herd_formation(formation *m) {
     if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile_x, f->tile_y);
+            formation_set_home(m, f->tile.x(), f->tile.y());
     }
     int roam_distance;
     int roam_delay;

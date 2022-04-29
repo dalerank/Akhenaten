@@ -203,7 +203,7 @@ void formation_calculate_legion_totals(void) {
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure *f = figure_get(m->figures[0]);
                 if (f->state == FIGURE_STATE_ALIVE)
-                    formation_set_home(m, f->tile_x, f->tile_y);
+                    formation_set_home(m, f->tile.x(), f->tile.y());
             }
         }
     }

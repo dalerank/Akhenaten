@@ -155,8 +155,8 @@ int figure::figure_image_corpse_offset() {
     return CORPSE_IMAGE_OFFSETS[wait_ticks / 2] + type_offset;
 }
 void figure::figure_image_set_cart_offset(int direction) {
-    x_offset_cart = CART_OFFSETS_X[direction];
-    y_offset_cart = CART_OFFSETS_Y[direction];
+    cart_offset.x = CART_OFFSETS_X[direction];
+    cart_offset.y = CART_OFFSETS_Y[direction];
 }
 int figure::figure_image_missile_launcher_offset() {
     return MISSILE_LAUNCHER_OFFSETS[attack_image_offset / 2];

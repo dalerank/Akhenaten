@@ -68,8 +68,8 @@ bool can_harvest_point(int grid_offset, int max_gatherers) {
 bool figure::find_resource_tile(int resource_type, int *out_x, int *out_y) {
     switch (resource_type) {
         case RESOURCE_REEDS:
-            return map_routing_citizen_found_reeds(tile_x, tile_y, out_x, out_y);
+            return map_routing_citizen_found_reeds(tile.x(), tile.y(), out_x, out_y);
         case RESOURCE_TIMBER_PH:
-            return map_routing_citizen_found_timber(tile_x, tile_y, out_x, out_y);
+            return map_routing_citizen_found_timber(tile.x(), tile.y(), out_x, out_y);
     }
 }

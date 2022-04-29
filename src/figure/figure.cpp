@@ -44,13 +44,17 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->direction = dir;
 //    f->direction = DIR_FIGURE_NONE;
     f->roam_length = 0;
-    f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
-    f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
-    f->destination_x = 0;
-    f->destination_y = 0;
-    f->grid_offset_figure = MAP_OFFSET(x, y);
-    f->cross_country_x = 15 * x;
-    f->cross_country_y = 15 * y;
+    f->source_tile = f->destination_tile = f->previous_tile = f->tile = map_point(x, y);
+    f->destination_tile.set(0, 0);
+//    f->source_x = f->destination_x = f->previous_tile_x = f->tile_x = x;
+//    f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
+//    f->destination_x = 0;
+//    f->destination_y = 0;
+//    f->grid_offset_figure = MAP_OFFSET(x, y);
+    f->cc_coords.x = 15 * x;
+    f->cc_coords.y = 15 * y;
+//    f->cross_country_x = 15 * x;
+//    f->cross_country_y = 15 * y;
     f->progress_on_tile = 14;
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
@@ -230,40 +234,20 @@ void figure::bind(io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->previous_tile_direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->attack_direction);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind(BIND_SIGNATURE_UINT16, &f->tile_x);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->tile_y);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->previous_tile_x);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->previous_tile_y);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->missile_damage);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->damage);
-    } else {
-        iob->bind(BIND_SIGNATURE_UINT8, &f->tile_x);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->tile_y);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->previous_tile_x);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->previous_tile_y);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->missile_damage);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->damage);
-    }
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind(BIND_SIGNATURE_INT32, &f->grid_offset_figure);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y);
-        iob->bind(BIND_SIGNATURE_INT32, &f->destination_grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->source_x);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->source_y);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
-    } else {
-        iob->bind(BIND_SIGNATURE_INT16, &f->grid_offset_figure);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->destination_x);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->destination_y);
-        iob->bind(BIND_SIGNATURE_INT16, &f->destination_grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->source_x);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->source_y);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->formation_position_x.soldier);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->formation_position_y.soldier);
-    }
+    iob->bind(BIND_SIGNATURE_UINT16, f->tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, f->tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT16, f->previous_tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, f->previous_tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT16, &f->missile_damage);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->damage);
+    iob->bind(BIND_SIGNATURE_INT32, f->tile.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_UINT16, f->destination_tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, f->destination_tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, f->destination_tile.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_UINT16, f->source_tile.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, f->source_tile.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_x.soldier);
+    iob->bind(BIND_SIGNATURE_UINT16, &f->formation_position_y.soldier);
     iob->bind(BIND_SIGNATURE_INT16, &f->__unused_24); // 0
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // 0
     iob->bind(BIND_SIGNATURE_UINT8, &f->action_state); // 9
@@ -279,12 +263,12 @@ void figure::bind(io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->roam_random_counter);
     iob->bind(BIND_SIGNATURE_INT8, &f->roam_turn_direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->roam_ticks_until_next_turn); // 0 ^^^^
-    iob->bind(BIND_SIGNATURE_INT16, &f->cross_country_x);
-    iob->bind(BIND_SIGNATURE_INT16, &f->cross_country_y);
-    iob->bind(BIND_SIGNATURE_INT16, &f->cc_destination_x);
-    iob->bind(BIND_SIGNATURE_INT16, &f->cc_destination_y);
-    iob->bind(BIND_SIGNATURE_INT16, &f->cc_delta_x);
-    iob->bind(BIND_SIGNATURE_INT16, &f->cc_delta_y);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_coords.x);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_coords.y);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_destination.x);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_destination.y);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_delta.x);
+    iob->bind(BIND_SIGNATURE_INT16, &f->cc_delta.y);
     iob->bind(BIND_SIGNATURE_INT16, &f->cc_delta_xy);
     iob->bind(BIND_SIGNATURE_UINT8, &f->cc_direction);
     iob->bind(BIND_SIGNATURE_UINT8, &f->speed_multiplier);
@@ -301,8 +285,8 @@ void figure::bind(io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->leading_figure_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->attack_image_offset);
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_missile);
-    iob->bind(BIND_SIGNATURE_INT8, &f->x_offset_cart);
-    iob->bind(BIND_SIGNATURE_INT8, &f->y_offset_cart);
+    iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.x);
+    iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
     iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
     iob->bind(BIND_SIGNATURE_INT16, &f->name); // 6

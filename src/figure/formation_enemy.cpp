@@ -345,7 +345,7 @@ static void mars_kill_enemies(void) {
             f->kill();
             to_kill--;
             if (!grid_offset)
-                grid_offset = f->grid_offset_figure;
+                grid_offset = f->tile.grid_offset();
 
         }
     }
@@ -519,7 +519,7 @@ static void update_enemy_formation(formation *m, int *roman_distance) {
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile_x, f->tile_y);
+            formation_set_home(m, f->tile.x(), f->tile.y());
 
     }
     if (!army->formation_id) {

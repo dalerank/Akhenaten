@@ -336,7 +336,7 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
         figure *f = figure_get(figure_id);
 
         pixel_coordinate coords;
-        coords = mappoint_to_pixel(map_point(f->tile_x, f->tile_y));
+        coords = mappoint_to_pixel(map_point(f->tile.x(), f->tile.y()));
 
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {

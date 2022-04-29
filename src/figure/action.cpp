@@ -166,8 +166,9 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     terrain_usage = terrainchoice;
     roam_length++;
     if (roam_length >= max_roam_length) { // roam over, return home
-        destination_x = 0;
-        destination_y = 0;
+        destination_tile.set(0);
+//        destination_x = 0;
+//        destination_y = 0;
         roam_length = 0;
         set_destination(0);
         route_remove();
@@ -183,7 +184,7 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
         terrain_usage = TERRAIN_USAGE_ANY;
 
     // refresh routing if destination is different
-    if (destination_x != x || destination_y != y)
+    if (destination_tile.x() != x || destination_tile.y() != y)
         route_remove();
 
     // set up destination and move!!!
@@ -195,8 +196,9 @@ bool figure::do_goto(int x, int y, int terrainchoice, short NEXT_ACTION, short F
         }
     }
     else {
-        destination_x = x;
-        destination_y = y;
+        destination_tile.set(x, y);
+//        destination_x = x;
+//        destination_y = y;
         move_ticks(speed_multiplier);
     }
 
@@ -228,9 +230,9 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
                 found_road = map_closest_reachable_road_within_radius(main->x, main->y, 3, 1, &x, &y);
             if (!found_road)
                 found_road = map_closest_road_within_radius(main->x, main->y, 3, 1, &x, &y);
-            if (found_road && is_coords_within_range(tile_x, tile_y, main->x, main->y, 3, 1)) {
-                x = tile_x;
-                y = tile_y;
+            if (found_road && is_coords_within_range(tile.x(), tile.y(), main->x, main->y, 3, 1)) {
+                x = tile.x();
+                y = tile.y();
             }
         } else if (building_is_large_temple(dest->type)) { // TODO: proper return home for temple complexes
             building *main = dest->main();
@@ -254,16 +256,15 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
                     else
                         found_road = map_closest_road_within_radius(dest->x, dest->y, dest->size, 1, &x, &y);
                 }
-                if (found_road && is_coords_within_range(tile_x, tile_y, dest->x, dest->y, dest->size, 1)) {
-                    x = tile_x;
-                    y = tile_y;
+                if (found_road && is_coords_within_range(tile.x(), tile.y(), dest->x, dest->y, dest->size, 1)) {
+                    x = tile.x();
+                    y = tile.y();
                 }
             }
         }
         // found any road...?
         if (found_road) {
-            destination_x = x;
-            destination_y = y;
+            destination_tile.set(x, y);
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
@@ -411,22 +412,22 @@ void figure::action_perform() {
         }
         if (state == FIGURE_STATE_DYING) // update corpses / dying animation
            figure_combat_handle_corpse();
-        if (map_terrain_is(grid_offset_figure, TERRAIN_ROAD)) { // update road flag
+        if (map_terrain_is(tile.grid_offset(), TERRAIN_ROAD)) { // update road flag
             outside_road_ticks = 0;
-            if (map_terrain_is(grid_offset_figure, TERRAIN_WATER)) // bridge
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) // bridge
                 set_target_height_bridge();
         } else {
             if (outside_road_ticks < 255)
                 outside_road_ticks++;
-            if (!is_boat && map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+            if (!is_boat && map_terrain_is(tile.grid_offset(), TERRAIN_WATER))
                 kill();
-            if (is_boat && !map_terrain_is(grid_offset_figure, TERRAIN_WATER))
+            if (is_boat && !map_terrain_is(tile.grid_offset(), TERRAIN_WATER))
                 kill();
             if (terrain_usage == TERRAIN_USAGE_ROADS) { // walkers outside of roads for too long?
-                if (destination_x && destination_y &&
+                if (destination_tile.x() && destination_tile.y() &&
                     outside_road_ticks > 100) // dudes with destination have a bit of lee way
                     poof();
-                if (!destination_x && !destination_y && state == FIGURE_STATE_ALIVE && outside_road_ticks > 0)
+                if (!destination_tile.x() && !destination_tile.y() && state == FIGURE_STATE_ALIVE && outside_road_ticks > 0)
                     poof();
             }
         }

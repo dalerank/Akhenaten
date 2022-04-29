@@ -35,7 +35,7 @@ void figure::market_buyer_action() {
 }
 
 int figure::create_delivery_boy(int leader_id) {
-    figure *boy = figure_create(FIGURE_DELIVERY_BOY, tile_x, tile_y, 0);
+    figure *boy = figure_create(FIGURE_DELIVERY_BOY, tile.x(), tile.y(), 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = collecting_item_id;
     boy->set_home(homeID());

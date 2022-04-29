@@ -55,19 +55,19 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
 
         // pass on to inner distance check
         if (category_check) {
-            int dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+            int dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
             if (dist <= max_distance) {
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
                 if (category == NEARBY_HOSTILE) {
                     if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR)
-                        dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                        dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-                        dist = calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                        dist = calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
                     else if (f->is_enemy())
-                        dist = 3 * calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                        dist = 3 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
                     else if (f->type == FIGURE_WOLF)
-                        dist = 4 * calc_maximum_distance(tile_x, tile_y, f->tile_x, f->tile_y);
+                        dist = 4 * calc_maximum_distance(tile.x(), tile.y(), f->tile.x(), f->tile.y());
 //                    else
 //                        continue;
                 }
@@ -136,8 +136,9 @@ bool figure::fight_enemy(int category, int max_distance) {
         figure *enemy = figure_get(enemy_id);
         wait_ticks_next_target = 0;
         action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
-        destination_x = enemy->tile_x;
-        destination_y = enemy->tile_y;
+        destination_tile = enemy->tile;
+//        destination_tile.x() = enemy->tile.x();
+//        destination_tile.y() = enemy->tile.y();
         target_figure_id = enemy_id;
         enemy->targeted_by_figure_id = id;
         target_figure_created_sequence = enemy->created_sequence;
@@ -166,13 +167,14 @@ bool figure::fight_fire() {
         return false;
 
     int distance;
-    int ruin_id = building_maintenance_get_closest_burning_ruin(tile_x, tile_y, &distance);
+    int ruin_id = building_maintenance_get_closest_burning_ruin(tile.x(), tile.y(), &distance);
     if (ruin_id > 0 && distance <= 25) {
         building *ruin = building_get(ruin_id);
         wait_ticks_missile = 0;
         advance_action(FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE);
-        destination_x = ruin->road_access.x();
-        destination_y = ruin->road_access.y();
+        destination_tile = ruin->road_access;
+//        destination_tile.x() = ruin->road_access.x();
+//        destination_tile.y() = ruin->road_access.y();
         set_destination(ruin_id);
         route_remove();
         ruin->set_figure(3, id);
@@ -182,14 +184,14 @@ bool figure::fight_fire() {
 }
 void figure::extinguish_fire() {
     building *burn = destination();
-    int distance = calc_maximum_distance(tile_x, tile_y, burn->x, burn->y);
+    int distance = calc_maximum_distance(tile.x(), tile.y(), burn->x, burn->y);
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) &&
         burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else
         wait_ticks = 1;
-    attack_direction = calc_general_direction(tile_x, tile_y, burn->x, burn->y);
+    attack_direction = calc_general_direction(tile.x(), tile.y(), burn->x, burn->y);
     if (attack_direction >= 8)
         attack_direction = 0;
 
@@ -258,7 +260,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
         case 12:
-            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
                 wait_ticks = 50;
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
@@ -271,8 +273,9 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
+                    destination_tile.set(x_road, y_road);
+//                    destination_tile.x() = x_road;
+//                    destination_tile.y() = y_road;
                     route_remove();
                     roam_length = 0;
                 } else
@@ -281,8 +284,9 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 figure *target = figure_get(target_figure_id);
-                destination_x = target->tile_x;
-                destination_y = target->tile_y;
+                destination_tile = target->tile;
+//                destination_tile.x() = target->tile.x();
+//                destination_tile.y() = target->tile.y();
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
@@ -323,7 +327,7 @@ void figure::policeman_action() {
             use_cross_country = true;
 //            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
-                if (map_building_at(grid_offset_figure) == homeID()) {
+                if (map_building_at(tile.grid_offset()) == homeID()) {
                     // returned to own building
                     poof();
                 } else {
@@ -341,8 +345,9 @@ void figure::policeman_action() {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
+                    destination_tile.set(x_road, y_road);
+//                    destination_tile.x() = x_road;
+//                    destination_tile.y() = y_road;
                     route_remove();
                 } else
                     poof();
@@ -365,8 +370,9 @@ void figure::policeman_action() {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
+                    destination_tile.set(x_road, y_road);
+//                    destination_tile.x() = x_road;
+//                    destination_tile.y() = y_road;
                     route_remove();
                     roam_length = 0;
                 } else
@@ -375,8 +381,9 @@ void figure::policeman_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 figure *target = figure_get(target_figure_id);
-                destination_x = target->tile_x;
-                destination_y = target->tile_y;
+                destination_tile = target->tile;
+//                destination_tile.x() = target->tile.x();
+//                destination_tile.y() = target->tile.y();
                 route_remove();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
