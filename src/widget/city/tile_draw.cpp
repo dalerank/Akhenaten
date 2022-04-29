@@ -328,7 +328,7 @@ void draw_figures(int x, int y, int grid_offset) {
         figure *f = figure_get(figure_id);
 
         pixel_coordinate coords;
-        coords = city_view_grid_offset_to_pixel(f->tile_x, f->tile_y);
+        coords = mappoint_to_pixel(map_point(f->tile_x, f->tile_y));
 
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
@@ -587,7 +587,7 @@ void draw_debug(int x, int y, int grid_offset) {
                 draw_debug_line(str, x0, y + 5, 0, "", b->road_access.x(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 draw_debug_line(str, x0, y + 15, 0, "", b->road_access.y(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 if (b->road_is_accessible) {
-                    auto tile_coords = city_view_grid_offset_to_pixel(b->road_access.x(), b->road_access.y());
+                    auto tile_coords = mappoint_to_pixel(b->road_access);
                     draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords.x, tile_coords.y, COLOR_MASK_GREEN);
                 }
             }

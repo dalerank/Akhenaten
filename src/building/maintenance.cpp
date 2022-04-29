@@ -268,7 +268,7 @@ void building_maintenance_check_rome_access(void) {
             building *main_building = b->main();
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
-            b->road_access = main_building->road_access.x();
+            b->road_access = main_building->road_access;
         } else if (b->type == BUILDING_SENET_HOUSE) {
             b->distance_from_entry = 0;
             int x_road, y_road;

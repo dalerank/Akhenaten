@@ -1428,7 +1428,7 @@ void BuildPlanner::update_unique_only_one_check() {
     }
 }
 void BuildPlanner::update_coord_caches() {
-    pixel_coordinate view_tile = city_view_grid_offset_to_pixel(end.grid_offset());
+    pixel_coordinate view_tile = mappoint_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.

@@ -18,7 +18,7 @@ typedef struct {
     int y;
 } coords;
 
-class map_point {
+typedef class map_point {
 private:
     // by and large, X/Y coords in the game logic are RELATIVE TO MAP AREA / STARTING OFFSET.
     int p_X = -1;
@@ -50,8 +50,8 @@ public:
     bool self_correct();
 
     // CONSTRUCTORS / DESTRUCTOR
-    map_point(); // default constructor
-    map_point(int _grid_offset);
+    explicit map_point(); // default constructor
+    explicit map_point(int _grid_offset);
     map_point(int _x, int _y);
 };
 

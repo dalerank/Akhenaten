@@ -46,7 +46,7 @@ void figure::draw_debug() {
 
     uint8_t str[10];
     pixel_coordinate coords;
-    coords = city_view_grid_offset_to_pixel(tile_x, tile_y);
+    coords = mappoint_to_pixel(map_point(tile_x, tile_y));
     adjust_pixel_offset(&coords.x, &coords.y);
     coords.x -= 10;
     coords.y -= 80;
@@ -76,13 +76,13 @@ void figure::draw_debug() {
         case 2: // ROUTING
             // draw path
             if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-                auto tile_coords = city_view_grid_offset_to_pixel(destination()->x, destination()->y);
+                auto tile_coords = mappoint_to_pixel(map_point(destination()->x, destination()->y));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, tile_coords.x, tile_coords.y);
-                tile_coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
+                tile_coords = mappoint_to_pixel(map_point(destination_x, destination_y));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, tile_coords.x, tile_coords.y);
                 int tx = tile_x;
                 int ty = tile_y;
-                tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                tile_coords = mappoint_to_pixel(map_point(tx, ty));
                 ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                        tile_coords.y);
                 int starting_tile_index = routing_path_current_tile;
@@ -120,7 +120,7 @@ void figure::draw_debug() {
                             ty--;
                             break;
                     }
-                    tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                    tile_coords = mappoint_to_pixel(map_point(tx, ty));
                     ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                            tile_coords.y);
                 }
@@ -401,7 +401,7 @@ void figure::draw_figure_with_cart(int x, int y) {
     }
 }
 void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord) {
-    pixel_coordinate coords2 = city_view_grid_offset_to_pixel(tile_x, tile_y);
+    pixel_coordinate coords2 = mappoint_to_pixel(map_point(tile_x, tile_y));
     adjust_pixel_offset(&x, &y);
     if (coord != nullptr) {
         highlight = 0;

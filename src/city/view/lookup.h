@@ -10,14 +10,12 @@
 
 void calculate_lookup();
 
-pixel_coordinate city_view_grid_offset_to_pixel(int grid_offset);
-pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y);
+int screentile_to_mappoint(screen_tile screen);
+screen_tile mappoint_to_screentile(map_point point);
 
-void cache_pixel_coord(map_point tile, pixel_coordinate coord);
+pixel_coordinate mappoint_to_pixel(map_point point);
+void record_pixel_coord(map_point tile, pixel_coordinate coord);
 
-int screentile_to_pixel(int screen_x, int screen_y);
-screen_tile mappoint_to_viewtile(map_point point);
-int pixel_to_screentile(int x, int y, screen_tile *screen);
-int viewtile_to_mappoint(const screen_tile *tile);
+bool pixel_to_screentile(pixel_coordinate pixel, screen_tile *screen);
 
 #endif //OZYMANDIAS_LOOKUP_H

@@ -24,14 +24,14 @@
                             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)
 
 static struct {
-    int active;
-    int type;
-    int id;
-    int brush_size;
-    int build_in_progress;
-    int start_elevation;
-    map_point start_tile;
-} data = {0, TOOL_GRASS, 0, 3, 0};
+    int active = 0;
+    int type = TOOL_GRASS;
+    int id = 0;
+    int brush_size = 3;
+    int build_in_progress = 0;
+    int start_elevation = 0;
+    map_point start_tile = {0, 0};
+} data;
 
 int editor_tool_type(void) {
     return data.type;
