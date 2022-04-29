@@ -80,7 +80,7 @@ static void update_zoom_level(void) {
     city_view_get_camera_position(&offset.x, &offset.y);
     if (zoom_update_value(&zoom, &offset)) {
         city_view_set_scale(zoom);
-        city_view_go_to_position(offset.x, offset.y, true);
+        city_view_go_to_pixel_coord(offset.x, offset.y, true);
         sound_city_decay_views();
     }
 }

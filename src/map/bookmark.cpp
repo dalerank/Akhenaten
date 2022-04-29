@@ -25,7 +25,7 @@ bool map_bookmark_go_to(int number) {
         int x = bookmarks[number].x();
         int y = bookmarks[number].y();
         if (x > -1 && MAP_OFFSET(x, y) > -1) {
-            city_view_go_to_tile_corner(x, y, true);
+            city_view_go_to_screen_tile_corner(screen_tile(x, y), true);
             return true;
         }
     }

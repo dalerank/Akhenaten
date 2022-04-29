@@ -12,10 +12,13 @@ int SCROLLABLE_Y_MIN_TILE();
 int SCROLLABLE_X_MAX_TILE();
 int SCROLLABLE_Y_MAX_TILE();
 
-typedef struct {
-    int x;
-    int y;
-} screen_tile, pixel_coordinate;
+typedef struct pixel_coordinate {
+    int x = 0;
+    int y = 0;
+    pixel_coordinate() {}
+    pixel_coordinate(int _x, int _y) : x(_x), y(_y) {}
+} pixel_coordinate;
+typedef pixel_coordinate screen_tile;
 
 typedef struct {
     int screen_width;
@@ -29,8 +32,7 @@ typedef struct {
         pixel_coordinate position;
     } camera;
     struct {
-        int x;
-        int y;
+        pixel_coordinate offset;
         int width_pixels;
         int height_pixels;
         int width_tiles;
@@ -62,10 +64,10 @@ void city_view_get_camera_max_pixel_offset(int *x, int *y);
 void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y);
 void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y);
 
-void city_view_go_to_position(int x, int y, bool validate);
-void city_view_go_to_tile_corner(int tile_x, int tile_y, bool validate);
-void city_view_go_to_tile(int tile_x, int tile_y, bool validate);
-void city_view_go_to_grid_offset(int grid_offset);
+void city_view_go_to_pixel_coord(int x, int y, bool validate);
+void city_view_go_to_screen_tile_corner(screen_tile screen, bool validate);
+void city_view_go_to_screen_tile(screen_tile screen, bool validate);
+void city_view_go_to_point(map_point point);
 void city_view_scroll(int x, int y);
 
 void city_view_get_selected_tile_pixels(int *x, int *y);

@@ -353,7 +353,7 @@ bool widget_minimap_handle_mouse(const mouse *m) {
     || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
-            city_view_go_to_grid_offset(grid_offset);
+            city_view_go_to_point(map_point(grid_offset));
             widget_minimap_invalidate();
             mouse_last_coords = {m->x, m->y};
             return true;

@@ -49,23 +49,23 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
     pixel.y = calc_adjust_with_percentage(pixel.y, data.scale);
 
     // check if within viewport
-    if (pixel.x < data.viewport.x ||
-        pixel.x >= data.viewport.x + data.viewport.width_pixels ||
-        pixel.y < data.viewport.y ||
-        pixel.y >= data.viewport.y + data.viewport.height_pixels) {
+    if (pixel.x < data.viewport.offset.x ||
+        pixel.x >= data.viewport.offset.x + data.viewport.width_pixels ||
+        pixel.y < data.viewport.offset.y ||
+        pixel.y >= data.viewport.offset.y + data.viewport.height_pixels) {
         return {-1, -1};
     }
 
     pixel.x += data.camera.pixel_offset_internal.x;
     pixel.y += data.camera.pixel_offset_internal.y;
-    int odd = ((pixel.x - data.viewport.x) / HALF_TILE_WIDTH_PIXELS +
-               (pixel.y - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
-    int x_is_odd = ((pixel.x - data.viewport.x) / HALF_TILE_WIDTH_PIXELS) & 1;
-    int y_is_odd = ((pixel.y - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
-    int x_mod = ((pixel.x - data.viewport.x) % HALF_TILE_WIDTH_PIXELS) / 2;
-    int y_mod = (pixel.y - data.viewport.y) % HALF_TILE_HEIGHT_PIXELS;
-    int screen_x_offset = (pixel.x - data.viewport.x) / TILE_WIDTH_PIXELS;
-    int y_view_offset = (pixel.y - data.viewport.y) / HALF_TILE_HEIGHT_PIXELS;
+    int odd = ((pixel.x - data.viewport.offset.x) / HALF_TILE_WIDTH_PIXELS +
+               (pixel.y - data.viewport.offset.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_is_odd = ((pixel.x - data.viewport.offset.x) / HALF_TILE_WIDTH_PIXELS) & 1;
+    int y_is_odd = ((pixel.y - data.viewport.offset.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
+    int x_mod = ((pixel.x - data.viewport.offset.x) % HALF_TILE_WIDTH_PIXELS) / 2;
+    int y_mod = (pixel.y - data.viewport.offset.y) % HALF_TILE_HEIGHT_PIXELS;
+    int screen_x_offset = (pixel.x - data.viewport.offset.x) / TILE_WIDTH_PIXELS;
+    int y_view_offset = (pixel.y - data.viewport.offset.y) / HALF_TILE_HEIGHT_PIXELS;
     if (odd) {
         if (x_mod + y_mod >= HALF_TILE_HEIGHT_PIXELS - 1) {
             y_view_offset++;

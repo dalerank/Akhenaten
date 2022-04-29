@@ -229,20 +229,6 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf) {
     return;
 }
 
-//void map_grid_data_init(int width, int height, int start_offset, int border_size) {
-//    if (0) {
-//        scenario_map_data()->width = GRID_LENGTH;
-//        scenario_map_data()->height = GRID_LENGTH;
-//        scenario_map_data()->start_offset = 0;
-//        scenario_map_data()->border_size = 0;
-//    } else {
-//        scenario_map_data()->width = width;
-//        scenario_map_data()->height = height;
-//        scenario_map_data()->start_offset = start_offset;
-//        scenario_map_data()->border_size = border_size;
-//    }
-//}
-
 bool map_grid_is_valid_offset(int grid_offset) {
     return grid_offset >= 0 && grid_offset < GRID_SIZE_TOTAL;
 }
@@ -256,16 +242,6 @@ int map_grid_direction_delta(int direction) {
     } else
         return 0;
 }
-//void map_grid_size(int *width, int *height) {
-//    *width = scenario_map_data()->width;
-//    *height = scenario_map_data()->height;
-//}
-//int map_grid_width(void) {
-//    return scenario_map_data()->width;
-//}
-//int map_grid_height(void) {
-//    return scenario_map_data()->height;
-//}
 void map_grid_bound(int *x, int *y) {
     if (*x < 0)
         *x = 0;
