@@ -424,7 +424,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
 
     int grid_offset = figure_get(figure_id)->grid_offset_figure;
     int x, y;
-    city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
+    mappoint_to_viewtile(grid_offset, &x, &y);
 
 //    city_view_go_to_tile(x - 2, y - 6);
 

@@ -101,23 +101,10 @@ pixel_coordinate city_view_grid_offset_to_pixel(int tile_x, int tile_y) {
     return tile_xy_to_pixel_coord_lookup[tile_x][tile_y];
 }
 
-int city_view_to_grid_offset(int x_view, int y_view) {
+int viewtile_to_pixel(int x_view, int y_view) {
     return view_tile_to_map_point_lookup[x_view][y_view].grid_offset();
 }
-void city_view_grid_offset_to_xy_view(int grid_offset, int *x_view, int *y_view) {
-    calculate_lookup();
-    *x_view = *y_view = 0;
-    for (int y = 0; y < MAP_TILE_UPPER_LIMIT_Y(); y++) {
-        for (int x = 0; x < MAP_TILE_UPPER_LIMIT_X(); x++) {
-            if (city_view_to_grid_offset(x, y) == grid_offset) {
-                *x_view = x;
-                *y_view = y;
-                return;
-            }
-        }
-    }
-}
-int city_view_pixels_to_view_tile(int x, int y, view_tile *tile) {
+int pixel_to_viewtile(int x, int y, view_tile *tile) {
     if (config_get(CONFIG_UI_ZOOM))
         y -= TOP_MENU_HEIGHT[GAME_ENV];
 
@@ -161,8 +148,22 @@ int city_view_pixels_to_view_tile(int x, int y, view_tile *tile) {
     tile->y = data.camera.tile_internal.y + y_view_offset;
     return 1;
 }
-int city_view_tile_to_grid_offset(const view_tile *tile) {
-    int grid_offset = city_view_to_grid_offset(tile->x, tile->y);
+
+void mappoint_to_viewtile(int grid_offset, int *x_view, int *y_view) {
+    calculate_lookup();
+    *x_view = *y_view = 0;
+    for (int y = 0; y < MAP_TILE_UPPER_LIMIT_Y(); y++) {
+        for (int x = 0; x < MAP_TILE_UPPER_LIMIT_X(); x++) {
+            if (viewtile_to_pixel(x, y) == grid_offset) {
+                *x_view = x;
+                *y_view = y;
+                return;
+            }
+        }
+    }
+}
+int viewtile_to_mappoint(const view_tile *tile) {
+    int grid_offset = viewtile_to_pixel(tile->x, tile->y);
     if (grid_offset < 0)
         view_tile_to_map_point_lookup[tile->x][tile->y].set(0);
 

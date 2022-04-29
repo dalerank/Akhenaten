@@ -99,8 +99,8 @@ void widget_map_editor_draw(void) {
 
 static void update_city_view_coords(int x, int y, map_point *tile) {
     view_tile view;
-    if (city_view_pixels_to_view_tile(x, y, &view)) {
-        tile->set(city_view_tile_to_grid_offset(&view));
+    if (pixel_to_viewtile(x, y, &view)) {
+        tile->set(viewtile_to_mappoint(&view));
         city_view_set_selected_view_tile(&view);
     } else {
         tile->set(0);
