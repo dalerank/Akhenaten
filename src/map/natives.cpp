@@ -22,7 +22,7 @@ static void mark_native_land(int x, int y, int size, int radius) {
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            map_property_mark_native_land(map_grid_offset(xx, yy));
+            map_property_mark_native_land(MAP_OFFSET(xx, yy));
         }
     }
 }
@@ -32,7 +32,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius) {
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(map_grid_offset(xx, yy));
+            int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;
                 if (type != BUILDING_MISSION_POST &&
@@ -87,9 +87,9 @@ void map_natives_init(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 
@@ -150,9 +150,9 @@ void map_natives_init_editor(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 

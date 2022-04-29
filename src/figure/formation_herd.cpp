@@ -24,7 +24,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             if (!map_terrain_is(grid_offset, disallowed_terrain)) {
                 if (map_soldier_strength_get(grid_offset))
                     return 0;
@@ -198,7 +198,7 @@ static void set_figures_to_initial(const formation *m) {
 static void update_herd_formation(formation *m) {
     if (can_spawn_wolf(m)) {
         // spawn new wolf
-        if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
+        if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)

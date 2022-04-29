@@ -167,8 +167,8 @@ static bool fix_incorrect_buildings(int grid_offset) {
 
 int map_routing_tile_check(int routing_type, int grid_offset) {
     int terrain = map_terrain_get(grid_offset);
-    int x = map_grid_offset_to_x(grid_offset);
-    int y = map_grid_offset_to_y(grid_offset);
+    int x = MAP_X(grid_offset);
+    int y = MAP_Y(grid_offset);
     switch (routing_type) {
         case ROUTING_TYPE_CITIZEN:
 //            if (!map_tile_inside_map_area(x, y))
@@ -211,7 +211,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             ////////////////
         case ROUTING_TYPE_WATER:
             if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
-                if (x > 0 && x < map_data()->width - 1 && y > 0 && y < map_data()->height - 1) {
+                if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
                     switch (map_sprite_animation_at(grid_offset)) {
                         case 5:
                         case 6: // low bridge middle section
@@ -243,9 +243,9 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
 
 void map_routing_update_land_citizen(void) {
     map_grid_fill(&terrain_land_citizen, -1);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             map_grid_set(&terrain_land_citizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_CITIZEN, grid_offset));
 //            int terrain = map_terrain_get(grid_offset);
 //            if (terrain & TERRAIN_ROAD && !(terrain & TERRAIN_WATER)) {
@@ -276,9 +276,9 @@ void map_routing_update_land_citizen(void) {
 }
 static void map_routing_update_land_noncitizen(void) {
     map_grid_fill(&terrain_land_noncitizen, -1);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             map_grid_set(&terrain_land_noncitizen, grid_offset,
                          map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
 //            int terrain = map_terrain_get(grid_offset);
@@ -308,13 +308,13 @@ void map_routing_update_land(void) {
 }
 void map_routing_update_water(void) {
     map_grid_fill(&terrain_water, -1);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             map_grid_set(&terrain_water, grid_offset, map_routing_tile_check(ROUTING_TYPE_WATER, grid_offset));
 //            if (map_terrain_is(grid_offset, TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
-//                if (x > 0 && x < map_data()->width - 1 &&
-//                    y > 0 && y < map_data()->height - 1) {
+//                if (x > 0 && x < scenario_map_data()->width - 1 &&
+//                    y > 0 && y < scenario_map_data()->height - 1) {
 //                    switch (map_sprite_animation_at(grid_offset)) {
 //                        case 5:
 //                        case 6: // low bridge middle section
@@ -338,9 +338,9 @@ void map_routing_update_water(void) {
 }
 void map_routing_update_walls(void) {
     map_grid_fill(&terrain_walls, -1);
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             map_grid_set(&terrain_water, grid_offset, map_routing_tile_check(ROUTING_TYPE_WALLS, grid_offset));
 //            if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
 //                if (count_adjacent_wall_tiles(grid_offset) == 3) {
@@ -392,7 +392,7 @@ static int wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wal
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            if (map_routing_is_wall_passable(map_grid_offset(xx, yy))) {
+            if (map_routing_is_wall_passable(MAP_OFFSET(xx, yy))) {
                 *x_wall = xx;
                 *y_wall = yy;
                 return 1;

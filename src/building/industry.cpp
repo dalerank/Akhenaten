@@ -34,7 +34,7 @@ static void update_farm_image(const building *b) {
     if (building_is_floodplain_farm(b)) {
         for (int _y = b->y; _y < b->y + b->size; _y++)
             for (int _x = b->x; _x < b->x + b->size; _x++)
-                if (map_terrain_is(map_grid_offset(_x, _y), TERRAIN_WATER))
+                if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
                     is_flooded = true;
     }
     if (!is_flooded)
@@ -249,14 +249,14 @@ void building_farm_deplete_soil(const building *b) {
         int malus = (float) b->data.industry.progress / (float) MAX_PROGRESS_FARM_PH * (float) -100;
         for (int _y = b->y; _y < b->y + b->size; _y++)
             for (int _x = b->x; _x < b->x + b->size; _x++)
-                map_soil_set_depletion(map_grid_offset(_x, _y), malus);
+                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
     }
     else {
         for (int _y = b->y; _y < b->y + b->size; _y++)
             for (int _x = b->x; _x < b->x + b->size; _x++) {
-                int new_fert = map_get_fertility(map_grid_offset(_x, _y), FERT_WITH_MALUS) * 0.2f;
-                int malus = new_fert - map_get_fertility(map_grid_offset(_x, _y), FERT_NO_MALUS);
-                map_soil_set_depletion(map_grid_offset(_x, _y), malus);
+                int new_fert = map_get_fertility(MAP_OFFSET(_x, _y), FERT_WITH_MALUS) * 0.2f;
+                int malus = new_fert - map_get_fertility(MAP_OFFSET(_x, _y), FERT_NO_MALUS);
+                map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
             }
     }
 

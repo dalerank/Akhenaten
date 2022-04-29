@@ -32,7 +32,7 @@ void figure::gatherer_action() {
             break;
         case 9: // go to gathering place
             if (do_goto(destination_x, destination_y, TERRAIN_USAGE_PREFER_ROADS)) {
-                if (!can_harvest_point(map_grid_offset(destination_x, destination_y))) {
+                if (!can_harvest_point(MAP_OFFSET(destination_x, destination_y))) {
                     wait_ticks = 0;
                     advance_action(8);
                 } else

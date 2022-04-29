@@ -1,6 +1,7 @@
 #include "criteria.h"
 
 #include "scenario/data.h"
+#include <game/io/io_buffer.h>
 
 static int max_game_year;
 

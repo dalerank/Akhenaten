@@ -230,12 +230,12 @@ void building_maintenance_check_rome_access(void) {
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
+            } else if (map_routing_distance(MAP_OFFSET(x_road, y_road))) {
                 // reachable from rome
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
+                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
             } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
+                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
             } else {
                 // no reachable road in radius

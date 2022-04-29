@@ -55,7 +55,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE))
                 continue;
             if (measure_only && visual_feedback_on_delete) {
@@ -190,7 +190,7 @@ int building_construction_clear_land(bool measure_only, int x_start, int y_start
     int ask_confirm_fort = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);

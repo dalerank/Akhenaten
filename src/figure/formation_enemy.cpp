@@ -283,13 +283,13 @@ static void set_figures_to_initial(const formation *m) {
 }
 
 int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_tile, int *y_tile) {
-    int base_offset = map_grid_offset(
+    int base_offset = MAP_OFFSET(
             formation_layout_position_x(m->layout, 0),
             formation_layout_position_y(m->layout, 0));
     int figure_offsets[50];
     figure_offsets[0] = 0;
     for (int i = 1; i < m->num_figures; i++) {
-        figure_offsets[i] = map_grid_offset(
+        figure_offsets[i] = MAP_OFFSET(
                 formation_layout_position_x(m->layout, i),
                 formation_layout_position_y(m->layout, i)) - base_offset;
     }
@@ -301,7 +301,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
             for (int xx = x_min; xx <= x_max; xx++) {
                 int can_move = 1;
                 for (int fig = 0; fig < m->num_figures; fig++) {
-                    int grid_offset = map_grid_offset(xx, yy) + figure_offsets[fig];
+                    int grid_offset = MAP_OFFSET(xx, yy) + figure_offsets[fig];
                     if (!map_grid_is_valid_offset(grid_offset)) {
                         can_move = 0;
                         break;

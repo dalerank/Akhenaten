@@ -117,7 +117,7 @@ void map_property_init_alternate_terrain(void) {
     map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_random_get(grid_offset) & 1)
                 map_property_set_alternate_terrain(grid_offset);
         }

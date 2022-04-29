@@ -270,7 +270,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         orientation = DIR_4_BOTTOM_LEFT;
     }
     // check terrain
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     if (map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE))
         return -1;
 

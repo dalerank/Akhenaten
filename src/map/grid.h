@@ -3,6 +3,7 @@
 
 #include "core/buffer.h"
 #include "core/game_environment.h"
+#include <scenario/map.h>
 
 #include <stdint.h>
 
@@ -11,6 +12,9 @@
 #define GRID_OFFSET(abs_x, abs_y) ((abs_x) + GRID_LENGTH * (abs_y))
 #define GRID_X(offset) ((offset) % GRID_LENGTH)
 #define GRID_Y(offset) ((offset) / GRID_LENGTH)
+#define MAP_OFFSET(map_x, map_y) (scenario_map_data()->start_offset + GRID_OFFSET(map_x, map_y))
+#define MAP_X(offset) (GRID_X(offset - scenario_map_data()->start_offset))
+#define MAP_Y(offset) (GRID_Y(offset - scenario_map_data()->start_offset))
 
 enum {
     FS_NONE = 0,
@@ -57,17 +61,11 @@ void map_grid_load_buffer(grid_xx *grid, buffer *buf);
 
 //void map_grid_data_init(int width, int height, int start_offset, int border_size);
 
-int map_grid_is_valid_offset(int grid_offset);
-int map_grid_offset(int x, int y);
-int map_grid_offset_to_x(int grid_offset);
-int map_grid_offset_to_y(int grid_offset);
+bool map_grid_is_valid_offset(int grid_offset);
+//int MAP_OFFSET(int x, int y);
+//int MAP_X(int grid_offset);
+//int MAP_Y(int grid_offset);
 
-//int GRID_OFFSET(int x, int y);
-/**
- * Adds the specified X and Y to the given offset with error checking
- * @return New grid offset, or -1 if the x/y would wrap around to a different row/column
- */
-//int map_grid_add_delta(int grid_offset, int x, int y);
 int map_grid_direction_delta(int direction);
 void map_grid_size(int *width, int *height);
 int map_grid_width(void);

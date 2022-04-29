@@ -26,7 +26,7 @@ void map_bridge_reset_building_length(void) {
 }
 
 int map_bridge_calculate_length_direction(int x, int y, int *length, int *direction) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     bridge.end_grid_offset = 0;
     bridge.direction_grid_delta = 0;
     bridge.length = *length = 0;
@@ -197,7 +197,7 @@ int map_bridge_add(int x, int y, bool is_ship_bridge) {
         bridge.direction += 8;
 
 
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     for (int i = 0; i < bridge.length; i++) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
         int value = map_bridge_get_sprite_id(i, bridge.length, bridge.direction, is_ship_bridge);
@@ -306,9 +306,9 @@ int map_bridge_count_figures(int grid_offset) {
 }
 
 void map_bridge_update_after_rotate(int counter_clockwise) {
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (map_is_bridge(grid_offset)) {
                 int new_value;
                 switch (map_sprite_animation_at(grid_offset)) {

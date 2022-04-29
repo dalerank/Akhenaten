@@ -16,7 +16,7 @@ void map_soldier_strength_add(int x, int y, int radius, int amount) {
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int v = map_grid_get(&strength, grid_offset);
             map_grid_set(&strength, grid_offset, v + amount);
             if (map_has_figure_at(grid_offset)) {
@@ -39,7 +39,7 @@ int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_
     int max_tile_x = 0, max_tile_y = 0;
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             if (map_routing_distance(grid_offset) > 0 && map_grid_get(&strength, grid_offset) > max_value) {
                 max_value = map_grid_get(&strength, grid_offset);
                 max_tile_x = xx;

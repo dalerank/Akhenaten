@@ -568,7 +568,7 @@ void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point
 /////////
 
 static int north_tile_grid_offset(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     int size = map_property_multi_tile_size(grid_offset);
     for (int i = 0; i < size && map_property_multi_tile_x(grid_offset); i++)
         grid_offset += GRID_OFFSET(-1, 0);
@@ -736,7 +736,7 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
             break;
         case 12: // SPRITE FRAMES
 
-            if (grid_offset == map_grid_offset(b->x, b->y))
+            if (grid_offset == MAP_OFFSET(b->x, b->y))
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
             if (grid_offset == north_tile_grid_offset(b->x, b->y))
                 ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);

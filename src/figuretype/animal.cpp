@@ -150,7 +150,7 @@ bool figure::herd_roost(int step, int bias, int max_dist) {
     int dx;
     int dy;
     random_around_point(m->x_home, m->y_home, tile_x, tile_y, &dx, &dy, step, bias, max_dist);
-    int offset = map_grid_offset(dx, dy);
+    int offset = MAP_OFFSET(dx, dy);
     if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) { // todo: fix gardens
         destination_x = dx;
         destination_y = dy;

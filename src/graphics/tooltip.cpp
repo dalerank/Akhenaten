@@ -286,8 +286,8 @@ static void draw_tile_tooltip(tooltip_context *c) {
     if (screen.x != -1 && screen.y != -1) {
         int grid_offset = screentile_to_mappoint(screen).grid_offset();
         city_view_set_selected_view_tile(&screen);
-        int x_tile = map_grid_offset_to_x(grid_offset);
-        int y_tile = map_grid_offset_to_y(grid_offset);
+        int x_tile = MAP_X(grid_offset);
+        int y_tile = MAP_Y(grid_offset);
 
         int x, y;
         int width = 60;

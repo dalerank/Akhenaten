@@ -173,7 +173,7 @@ static int handle_mouse(const mouse *m) {
 
 static void button_go_to_legion(int legion_id, int param2) {
     const formation *m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
-    city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
+    city_view_go_to_grid_offset(MAP_OFFSET(m->x_home, m->y_home));
     window_city_show();
 }
 

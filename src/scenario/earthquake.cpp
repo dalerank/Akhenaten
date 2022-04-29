@@ -58,7 +58,7 @@ void scenario_earthquake_init(void) {
 }
 
 static int can_advance_earthquake_to_tile(int x, int y) {
-    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
+    if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
         return 0;
     else {
         return 1;
@@ -66,7 +66,7 @@ static int can_advance_earthquake_to_tile(int x, int y) {
 }
 
 static void advance_earthquake_to_tile(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     int building_id = map_building_at(grid_offset);
     if (building_id) {
         building_destroy_by_fire(building_get(building_id));
@@ -101,7 +101,7 @@ void scenario_earthquake_process(void) {
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
             city_message_post(true, MESSAGE_EARTHQUAKE, 0,
-                              map_grid_offset(data.expand[0].x, data.expand[0].y));
+                              MAP_OFFSET(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_STATE_IN_PROGRESS) {
         data.delay++;

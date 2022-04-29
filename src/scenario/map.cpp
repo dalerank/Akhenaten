@@ -4,7 +4,7 @@
 #include "map/grid.h"
 #include "scenario/data.h"
 
-const map_data_t *map_data() {
+const map_data_t *scenario_map_data() {
     return &scenario_data.map;
 }
 

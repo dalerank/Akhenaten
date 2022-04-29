@@ -7,7 +7,6 @@
 #include "events.h"
 
 #include <stdint.h>
-#include <game/io/io_buffer.h>
 #include <game/resource.h>
 
 enum {

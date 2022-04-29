@@ -14,7 +14,7 @@
 #include "scenario/gladiator_revolt.h"
 
 int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
-    int road_network = map_road_network_get(map_grid_offset(x, y));
+    int road_network = map_road_network_get(MAP_OFFSET(x, y));
 
     building_list_small_clear();
 

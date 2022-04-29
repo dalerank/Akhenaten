@@ -132,7 +132,7 @@ static void restore_map_images(void) {
     map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (!map_building_at(grid_offset))
                 map_image_restore_at(grid_offset);
         }
@@ -225,7 +225,7 @@ static void restore_housing(building *b) {
     int size = b->house_size;
     for (int x = b->x; x < b->x + size; x++)
         for (int y = b->y; y < b->y + size; y++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             data.newhouses_offsets[data.newhouses_num] = grid_offset + 1;
             data.newhouses_num++;
 //            if (x == b->x && y == b->y) {
@@ -307,8 +307,8 @@ void game_undo_perform(void) {
         int grid_offset = data.newhouses_offsets[i] - 1;
         int vacant_lot_image = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 
-        int x = map_grid_offset_to_x(grid_offset);
-        int y = map_grid_offset_to_y(grid_offset);
+        int x = MAP_X(grid_offset);
+        int y = MAP_Y(grid_offset);
 
         building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
         if (new_b->id > 0)

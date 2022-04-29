@@ -2,13 +2,14 @@
 #define INPUT_TOUCH_H
 
 #include "core/time.h"
+#include "city/view/view.h"
 
 #define MAX_ACTIVE_TOUCHES 2
 
-typedef struct {
-    int x;
-    int y;
-} touch_coords;
+//typedef struct {
+//    int x;
+//    int y;
+//} pixel_coordinate;
 
 enum {
     TOUCH_MODE_ORIGINAL = 0, // original julius touch mode
@@ -22,11 +23,11 @@ typedef struct {
     int has_started;
     int has_moved;
     int has_ended;
-    touch_coords start_point;
-    touch_coords current_point;
-    touch_coords previous_frame_point;
-    touch_coords frame_movement;
-    touch_coords last_movement;
+    pixel_coordinate start_point;
+    pixel_coordinate current_point;
+    pixel_coordinate previous_frame_point;
+    pixel_coordinate frame_movement;
+    pixel_coordinate last_movement;
     time_millis start_time;
     time_millis last_change_time;
 } touch;
@@ -44,8 +45,8 @@ int touch_get_scroll(void);
 
 void reset_touches(int reset_old_touch);
 
-int touch_create(touch_coords start_coords, time_millis start_time);
-void touch_move(int index, touch_coords current_coords, time_millis current_time);
+int touch_create(pixel_coordinate start_coords, time_millis start_time);
+void touch_move(int index, pixel_coordinate current_coords, time_millis current_time);
 void touch_end(int index, time_millis current_time);
 int touch_in_use(int index);
 

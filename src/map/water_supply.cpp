@@ -34,7 +34,7 @@ static void mark_well_access(int well_id, int radius) {
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(map_grid_offset(xx, yy));
+            int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id)
                 building_get(building_id)->has_well_access = 1;
 
@@ -78,9 +78,9 @@ static void canals_empty_all(void) {
     river_access_canal_offsets_total = 0;
 
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
@@ -112,7 +112,7 @@ static void fill_canals_from_offset(int grid_offset) {
         int image_id = map_image_at(grid_offset);
         if (image_id >= image_without_water)
             map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
-        map_terrain_add_with_radius(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
+        map_terrain_add_with_radius(MAP_X(grid_offset), MAP_Y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
@@ -231,7 +231,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.bathhouse) {
                 num_houses++;

@@ -59,7 +59,7 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
 
     b->x = x;
     b->y = y;
-    b->grid_offset = map_grid_offset(x, y);
+    b->grid_offset = MAP_OFFSET(x, y);
     b->map_random_7bit = map_random_get(b->grid_offset) & 0x7f;
     b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;
@@ -250,7 +250,7 @@ building *building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
 }
 building *building_at(int x, int y) {
-    return building_get(map_building_at(map_grid_offset(x, y)));
+    return building_get(map_building_at(MAP_OFFSET(x, y)));
 }
 building *building_at(map_point point) {
     return building_get(map_building_at(point.grid_offset()));
@@ -269,7 +269,7 @@ bool building_exists_at(int grid_offset, building *b) {
 }
 bool building_exists_at(int x, int y, building *b) {
     b = nullptr;
-    int b_id = map_building_at(map_grid_offset(x, y));
+    int b_id = map_building_at(MAP_OFFSET(x, y));
     if (b_id > 0) {
         b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED)

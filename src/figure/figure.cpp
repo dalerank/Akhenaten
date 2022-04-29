@@ -48,7 +48,7 @@ figure *figure_create(int type, int x, int y, int dir) {
     f->source_y = f->destination_y = f->previous_tile_y = f->tile_y = y;
     f->destination_x = 0;
     f->destination_y = 0;
-    f->grid_offset_figure = map_grid_offset(x, y);
+    f->grid_offset_figure = MAP_OFFSET(x, y);
     f->cross_country_x = 15 * x;
     f->cross_country_y = 15 * y;
     f->progress_on_tile = 14;

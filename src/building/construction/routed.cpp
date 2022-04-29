@@ -26,7 +26,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
             {6, 0, 4, 2}
     };
     *items = 0;
-    int grid_offset = map_grid_offset(x_end, y_end);
+    int grid_offset = MAP_OFFSET(x_end, y_end);
     int guard = 0;
     // reverse routing
     while (true) {
@@ -61,8 +61,8 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
             int new_dist = map_routing_distance(new_grid_offset);
             if (new_dist > 0 && new_dist < distance) {
                 grid_offset = new_grid_offset;
-                x_end = map_grid_offset_to_x(grid_offset);
-                y_end = map_grid_offset_to_y(grid_offset);
+                x_end = MAP_X(grid_offset);
+                y_end = MAP_Y(grid_offset);
                 routed = 1;
                 break;
             }
@@ -90,8 +90,8 @@ int building_construction_place_road(bool measure_only, int x_start, int y_start
 int building_construction_place_wall(bool measure_only, int x_start, int y_start, int x_end, int y_end) {
     game_undo_restore_map(0);
 
-    int start_offset = map_grid_offset(x_start, y_start);
-    int end_offset = map_grid_offset(x_end, y_end);
+    int start_offset = MAP_OFFSET(x_start, y_start);
+    int end_offset = MAP_OFFSET(x_end, y_end);
     int forbidden_terrain_mask =
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |
             TERRAIN_SHRUB | TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |

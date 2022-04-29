@@ -73,7 +73,7 @@ void figure::ballista_action() {
             tile_y = b->y + 1;
             break;
     }
-    grid_offset_figure = map_grid_offset(tile_x, tile_y);
+    grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
     map_figure_add();
 
     switch (action_state) {
@@ -268,7 +268,7 @@ void figure::tower_sentry_action() {
                 map_figure_remove();
                 source_x = tile_x = b->x;
                 source_y = tile_y = b->y;
-                grid_offset_figure = map_grid_offset(tile_x, tile_y);
+                grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
                 map_figure_add();
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
                 route_remove();
@@ -322,7 +322,7 @@ void figure_tower_sentry_reroute(void) {
             f->previous_tile_y = f->tile_y = y_tile;
             f->cross_country_x = 15 * x_tile;
             f->cross_country_y = 15 * y_tile;
-            f->grid_offset_figure = map_grid_offset(x_tile, y_tile);
+            f->grid_offset_figure = MAP_OFFSET(x_tile, y_tile);
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
             f->destination_x = f->source_x;
@@ -333,7 +333,7 @@ void figure_tower_sentry_reroute(void) {
             building *b = f->home();
             f->source_x = f->tile_x = b->x;
             f->source_y = f->tile_y = b->y;
-            f->grid_offset_figure = map_grid_offset(f->tile_x, f->tile_y);
+            f->grid_offset_figure = MAP_OFFSET(f->tile_x, f->tile_y);
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             f->route_remove();

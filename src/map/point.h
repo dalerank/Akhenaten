@@ -1,9 +1,9 @@
 #ifndef MAP_POINT_H
 #define MAP_POINT_H
 
-#include "grid.h"
+//#include "grid.h"
 
-#define _INVALID_COORD -GRID_LENGTH-100
+#define _INVALID_COORD -1
 
 enum {
     _X = 0,

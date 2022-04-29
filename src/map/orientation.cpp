@@ -23,9 +23,9 @@
 
 static void determine_leftmost_tile(void) {
     int orientation = city_view_orientation();
-    int grid_offset = map_data()->start_offset;
-    for (int y = 0; y < map_data()->height; y++, grid_offset += map_data()->border_size) {
-        for (int x = 0; x < map_data()->width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             int size = map_property_multi_tile_size(grid_offset);
             if (size == 1) {
                 map_property_mark_draw_tile(grid_offset);
@@ -172,8 +172,8 @@ void map_orientation_update_buildings(void) {
                             break;
                     }
                     map_add_venue_plaza_tiles(b->id, size,
-                                              map_grid_offset_to_x(b->data.entertainment.booth_corner_grid_offset),
-                                              map_grid_offset_to_y(b->data.entertainment.booth_corner_grid_offset),
+                                              MAP_X(b->data.entertainment.booth_corner_grid_offset),
+                                              MAP_Y(b->data.entertainment.booth_corner_grid_offset),
                                               plaza_image_id, true);
                 }
                 // additionally, correct bandstand graphics
@@ -280,7 +280,7 @@ bool map_orientation_for_venue(int x, int y, int mode, int *building_orientation
     *building_orientation = 0;
     int num_correct_road_tiles[8] = {0,0,0,0,0,0,0,0};
 
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     for (int y_delta = 0; y_delta < mode + 2; y_delta++)
         for (int x_delta = 0; x_delta < mode + 2; x_delta++) {
             int offset_check = grid_offset + GRID_OFFSET(x_delta, y_delta);
@@ -394,13 +394,13 @@ int map_orientation_for_gatehouse(int x, int y) {
             y--;
             break;
     }
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     int num_road_tiles_within = 0;
     int road_tiles_within_flags = 0;
     // tiles within gate, flags:
     // 1  2
     // 4  8
-    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ROAD)) {
+    if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ROAD)) {
         road_tiles_within_flags |= 1;
         num_road_tiles_within++;
     }
@@ -493,7 +493,7 @@ int map_orientation_for_triumphal_arch(int x, int y) {
     int num_road_tiles_left_right = 0;
     int num_blocked_tiles = 0;
 
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     // check corner tiles
     if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         num_blocked_tiles++;

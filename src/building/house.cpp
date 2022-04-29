@@ -128,7 +128,7 @@ static void prepare_for_merge(int building_id, int num_tiles) {
         merge_data.inventory[i] = 0;
     }
     merge_data.population = 0;
-    int grid_offset = map_grid_offset(merge_data.x, merge_data.y);
+    int grid_offset = MAP_OFFSET(merge_data.x, merge_data.y);
     for (int i = 0; i < num_tiles; i++) {
         int house_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(house_offset, TERRAIN_BUILDING)) {
@@ -160,7 +160,7 @@ static void merge(building *b) {
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
     b->y = merge_data.y;
-    b->grid_offset = map_grid_offset(b->x, b->y);
+    b->grid_offset = MAP_OFFSET(b->x, b->y);
     b->house_is_merged = 1;
     map_building_tiles_add(b->id, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
 }
@@ -356,7 +356,7 @@ static void split_size3(building *house) {
     create_house_tile(house->type, house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
 }
 static void split(building *house, int num_tiles) {
-    int grid_offset = map_grid_offset(merge_data.x, merge_data.y);
+    int grid_offset = MAP_OFFSET(merge_data.x, merge_data.y);
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + house_tile_offsets(i);
         if (map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
@@ -391,7 +391,7 @@ void building_house_expand_to_large_insula(building *house) {
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
-    house->grid_offset = map_grid_offset(house->x, house->y);
+    house->grid_offset = MAP_OFFSET(house->x, house->y);
     map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_expand_to_large_villa(building *house) {
@@ -409,7 +409,7 @@ void building_house_expand_to_large_villa(building *house) {
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
-    house->grid_offset = map_grid_offset(house->x, house->y);
+    house->grid_offset = MAP_OFFSET(house->x, house->y);
     map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_expand_to_large_palace(building *house) {
@@ -427,7 +427,7 @@ void building_house_expand_to_large_palace(building *house) {
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
-    house->grid_offset = map_grid_offset(house->x, house->y);
+    house->grid_offset = MAP_OFFSET(house->x, house->y);
     map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 void building_house_devolve_from_large_insula(building *house) {
@@ -520,19 +520,19 @@ void building_house_check_for_corruption(building *house) {
     house->data.house.no_space_to_expand = 0;
 
     // house offset is corrupted??
-    if (house->grid_offset != map_grid_offset(house->x, house->y) || map_building_at(house->grid_offset) != house->id) {
+    if (house->grid_offset != MAP_OFFSET(house->x, house->y) || map_building_at(house->grid_offset) != house->id) {
         int map_width, map_height;
         map_grid_size(&map_width, &map_height); // get map size and store in temp vars
 
         // go through tiles and find tile belonging to the house
         for (int y = 0; y < map_height; y++) {
             for (int x = 0; x < map_width; x++) {
-                int grid_offset = map_grid_offset(x, y); // get offset of current tile (global map tile offset)
+                int grid_offset = MAP_OFFSET(x, y); // get offset of current tile (global map tile offset)
                 if (map_building_at(grid_offset) ==
                     house->id) { // does this tile belong to the house I'm searching for??
                     house->grid_offset = grid_offset; // set house offset to this tile's offset (i.e. lowest x & y; north-west corner)
-                    house->x = map_grid_offset_to_x(grid_offset); // set house coords (x) to tile's coords (x)
-                    house->y = map_grid_offset_to_y(grid_offset); // set house coords (y) to tile's coords (y)
+                    house->x = MAP_X(grid_offset); // set house coords (x) to tile's coords (x)
+                    house->y = MAP_Y(grid_offset); // set house coords (y) to tile's coords (y)
 //                    building_totals_add_corrupted_house(0);
                     return;
                 }

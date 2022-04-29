@@ -138,10 +138,10 @@ static building *add_temple_complex_element(int x, int y, int orientation, build
     game_undo_add_building(b);
 
     b->size = 3;
-    b->grid_offset = map_grid_offset(b->x, b->y);
+    b->grid_offset = MAP_OFFSET(b->x, b->y);
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    int image_id = map_image_at(map_grid_offset(x, y));
+    int image_id = map_image_at(MAP_OFFSET(x, y));
     map_building_tiles_add(b->id, b->x, b->y, 3, image_id, TERRAIN_BUILDING);
 
     return b;
@@ -170,7 +170,7 @@ static void add_temple_complex(building *b, int orientation) {
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
     int x = main->x + dx;
     int y = main->y + dy;
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     building *this_venue = main;
     if (main_venue) { // this is the main venue building!!
         if (type != main->type)
@@ -390,7 +390,7 @@ static void add_warehouse(building *b) {
     // adjust BUILDING_WAREHOUSE
     b->x = b->x + x_offset[corner];
     b->y = b->y + y_offset[corner];
-    b->grid_offset = map_grid_offset(b->x, b->y);
+    b->grid_offset = MAP_OFFSET(b->x, b->y);
     game_undo_adjust_building(b);
 
     prev->next_part_building_id = 0;
@@ -604,7 +604,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     game_undo_restore_building_state();
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) || map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
                 continue;
 
@@ -647,7 +647,7 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end) {
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
                 !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_AQUEDUCT)
                 && map_tiles_is_paved_road(grid_offset)) {
@@ -673,7 +673,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&  !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)) {
                 if (formation_herd_breeding_ground_at(x, y, 1)) {
                     map_property_clear_constructing_and_deleted();
@@ -1740,7 +1740,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
     if (special_flags & PlannerFlags::Meadow) {
         for (int y = end.y(); y < end.y() + size.y; y++)
             for (int x = end.x(); x < end.x() + size.x; x++)
-                map_set_floodplain_growth(map_grid_offset(x, y), 0);
+                map_set_floodplain_growth(MAP_OFFSET(x, y), 0);
     }
     if (special_flags & PlannerFlags::Road) {
         map_terrain_add_in_area(end.x(), end.y(), end.x() + size.x - 1, end.y() + size.y - 1, TERRAIN_ROAD);
@@ -1783,7 +1783,7 @@ bool BuildPlanner::place() {
     int y = end.y();
 
     // for debugging...
-    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, map_grid_offset(x, y));
+    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));
 
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)

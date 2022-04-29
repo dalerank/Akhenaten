@@ -124,7 +124,7 @@ void figure::flotsam_action() {
             map_point river_entry = scenario_map_river_entry();
             tile_x = river_entry.x();
             tile_y = river_entry.y();
-            grid_offset_figure = map_grid_offset(tile_x, tile_y);
+            grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
             cross_country_x = 15 * tile_x;
             cross_country_y = 15 * tile_y;
             break;
@@ -162,7 +162,7 @@ void figure::shipwreck_action() {
         if (map_water_find_shipwreck_tile(this, &tile)) {
             tile_x = tile.x();
             tile_y = tile.y();
-            grid_offset_figure = map_grid_offset(tile_x, tile_y);
+            grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
             cross_country_x = 15 * tile_x + 7;
             cross_country_y = 15 * tile_y + 7;
         }

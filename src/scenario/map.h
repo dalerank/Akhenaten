@@ -6,7 +6,7 @@
 
 //void scenario_map_init(void);
 
-const map_data_t *map_data();
+const map_data_t *scenario_map_data();
 
 int scenario_map_size(void);
 

@@ -220,25 +220,25 @@ void highlight_waypoints(building *b) // highlight the 4 routing tiles for roams
     hy = b->y - 8;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
     hx = b->x + 8;
     hy = b->y;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
     hx = b->x;
     hy = b->y + 8;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
     hx = b->x - 8;
     hy = b->y;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
     window_invalidate();
 }

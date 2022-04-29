@@ -24,7 +24,7 @@ bool map_bookmark_go_to(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS) {
         int x = bookmarks[number].x();
         int y = bookmarks[number].y();
-        if (x > -1 && map_grid_offset(x, y) > -1) {
+        if (x > -1 && MAP_OFFSET(x, y) > -1) {
             city_view_go_to_tile_corner(x, y, true);
             return true;
         }

@@ -304,8 +304,8 @@ void figure::init_roaming_from_building(int roam_dir) {
     map_grid_bound(&offset_search_x, &offset_search_y);
     int x_road, y_road;
     int found_road = map_closest_road_within_radius(offset_search_x, offset_search_y, 1, 6, &x_road, &y_road);
-    int road_network_original = map_road_network_get(map_grid_offset(tile_x, tile_y));
-    int road_network_found = map_road_network_get(map_grid_offset(x_road, y_road));
+    int road_network_original = map_road_network_get(MAP_OFFSET(tile_x, tile_y));
+    int road_network_found = map_road_network_get(MAP_OFFSET(x_road, y_road));
     if (found_road && road_network_original == road_network_found) { // must be in the same network!!
         destination_x = x_road;
         destination_y = y_road;
@@ -313,7 +313,7 @@ void figure::init_roaming_from_building(int roam_dir) {
         roam_wander_freely = true; // no road found within bounds, roam freely
 }
 void figure::roam_set_direction() {
-    int grid_offset = map_grid_offset(tile_x, tile_y);
+    int grid_offset = MAP_OFFSET(tile_x, tile_y);
     int direction = calc_general_direction(tile_x, tile_y, destination_x, destination_y);
     if (direction >= 8)
         direction = 0;
@@ -624,7 +624,7 @@ int figure::move_ticks_cross_country(int num_ticks) {
     }
     tile_x = cross_country_x / 15;
     tile_y = cross_country_y / 15;
-    grid_offset_figure = map_grid_offset(tile_x, tile_y);
+    grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
     if (map_terrain_is(grid_offset_figure, TERRAIN_BUILDING))
         in_building_wait_ticks = 8;
     else if (in_building_wait_ticks)
@@ -638,7 +638,7 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
     figure *f = figure_get(0); // abuse unused figure 0 as scratch
     f->cross_country_x = 15 * x_src;
     f->cross_country_y = 15 * y_src;
-    if (map_terrain_is(map_grid_offset(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE))
+    if (map_terrain_is(MAP_OFFSET(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE))
         height = 6;
 
     f->set_cross_country_direction(15 * x_src, 15 * y_src, 15 * x_dst, 15 * y_dst, 0);
@@ -655,7 +655,7 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
         if (height)
             height--;
         else {
-            int grid_offset = map_grid_offset(f->tile_x, f->tile_y);
+            int grid_offset = MAP_OFFSET(f->tile_x, f->tile_y);
             if (map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_GATEHOUSE | TERRAIN_TREE))
                 break;
 

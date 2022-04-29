@@ -29,7 +29,7 @@ static bool road_tile_valid_access(int grid_offset) {
 }
 
 static void find_minimum_road_tile_xy(int x, int y, int sizex, int sizey, int *min_value, int *min_grid_offset) {
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets_xy(sizex, sizey); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
 
@@ -47,13 +47,13 @@ bool map_has_road_access(int x, int y, int size, map_point *road) {
     return map_has_road_access_rotation(0, x, y, size, road);
 }
 bool burning_ruin_can_be_accessed(int x, int y, map_point *point) {
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(1); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
 
         if (road_tile_valid_access(grid_offset) ||
             (building_at(grid_offset)->type == BUILDING_BURNING_RUIN && building_at(grid_offset)->fire_duration <= 0)) {
-            map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), point);
+            map_point_store_result(MAP_X(grid_offset), MAP_Y(grid_offset), point);
             return true;
         }
     }
@@ -76,11 +76,11 @@ bool map_has_road_access_rotation(int rotation, int x, int y, int size, map_poin
             break;
     }
     int min_value = 12;
-    int min_grid_offset = map_grid_offset(x, y);
+    int min_grid_offset = MAP_OFFSET(x, y);
     find_minimum_road_tile_xy(x, y, size, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
-            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+            map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
         return true;
     }
     return false;
@@ -142,11 +142,11 @@ bool map_has_road_access_temple_complex(int x, int y, int orientation, bool from
     }
 
     int min_value = 12;
-    int min_grid_offset = map_grid_offset(x, y);
+    int min_grid_offset = MAP_OFFSET(x, y);
     find_minimum_road_tile_xy(x, y, sizex, sizey, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road)
-            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+            map_point_store_result(MAP_X(min_grid_offset), MAP_Y(min_grid_offset), road);
         return true;
     }
     return false;
@@ -158,7 +158,7 @@ static bool road_within_radius(int x, int y, int size, int radius, int *x_road, 
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_ROAD)) {
+            if (map_terrain_is(MAP_OFFSET(xx, yy), TERRAIN_ROAD)) {
                 // Don't spawn walkers on roadblocks
                 if (building_at(xx, yy)->type == BUILDING_ROADBLOCK) continue;
                 if (x_road && y_road) {
@@ -186,7 +186,7 @@ static int reachable_road_within_radius(int x, int y, int size, int radius, int 
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 if (map_routing_distance(grid_offset) > 0) {
                     if (x_road && y_road) {
@@ -225,7 +225,7 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
     }
     int min_index = 12;
     int min_grid_offset = -1;
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
@@ -237,8 +237,8 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
         }
     }
     if (min_index < 12) {
-        *x_road = map_grid_offset_to_x(min_grid_offset);
-        *y_road = map_grid_offset_to_y(min_grid_offset);
+        *x_road = MAP_X(min_grid_offset);
+        *y_road = MAP_Y(min_grid_offset);
         return min_grid_offset;
     }
     int min_dist = 100000;
@@ -252,8 +252,8 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
         }
     }
     if (min_grid_offset >= 0) {
-        *x_road = map_grid_offset_to_x(min_grid_offset);
-        *y_road = map_grid_offset_to_y(min_grid_offset);
+        *x_road = MAP_X(min_grid_offset);
+        *y_road = MAP_Y(min_grid_offset);
         return min_grid_offset;
     }
     return -1;
@@ -263,7 +263,7 @@ int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road
 }
 
 static void check_road_to_largest_network_hippodrome(int x, int y, int *min_index, int *min_grid_offset) {
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(5); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
@@ -297,21 +297,21 @@ int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_roa
     check_road_to_largest_network_hippodrome(x + 10, y, &min_index, &min_grid_offset);
 
     if (min_index < 12) {
-        *x_road = map_grid_offset_to_x(min_grid_offset);
-        *y_road = map_grid_offset_to_y(min_grid_offset);
+        *x_road = MAP_X(min_grid_offset);
+        *y_road = MAP_Y(min_grid_offset);
         return min_grid_offset;
     }
 
     int min_dist = 100000;
     min_grid_offset = -1;
     int min_x_offset = -1;
-    check_min_dist_hippodrome(map_grid_offset(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
-    check_min_dist_hippodrome(map_grid_offset(x + 5, y), 5, &min_dist, &min_grid_offset, &min_x_offset);
-    check_min_dist_hippodrome(map_grid_offset(x + 10, y), 10, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_hippodrome(MAP_OFFSET(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_hippodrome(MAP_OFFSET(x + 5, y), 5, &min_dist, &min_grid_offset, &min_x_offset);
+    check_min_dist_hippodrome(MAP_OFFSET(x + 10, y), 10, &min_dist, &min_grid_offset, &min_x_offset);
 
     if (min_grid_offset >= 0) {
-        *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;
-        *y_road = map_grid_offset_to_y(min_grid_offset);
+        *x_road = MAP_X(min_grid_offset) + min_x_offset;
+        *y_road = MAP_Y(min_grid_offset);
         return min_grid_offset + min_x_offset;
     }
     return -1;

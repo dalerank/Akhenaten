@@ -70,7 +70,7 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
 static void check_water(int type, int x, int y) {
     if (!has_warning) {
         if (type == BUILDING_MENU_BEAUTIFICATION || type == BUILDING_MENU_MONUMENTS) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             int has_water = 0;
             if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;

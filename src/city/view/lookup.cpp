@@ -1,6 +1,7 @@
 #include <core/config.h>
 #include <graphics/menu.h>
 #include <core/calc.h>
+#include <map/grid.h>
 #include "lookup.h"
 
 // TODO: get rid of these!!!

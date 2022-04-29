@@ -757,7 +757,7 @@ int building_house_determine_worst_desirability_building(const building *house) 
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int building_id = map_building_at(map_grid_offset(x, y));
+            int building_id = map_building_at(MAP_OFFSET(x, y));
             if (building_id <= 0)
                 continue;
 

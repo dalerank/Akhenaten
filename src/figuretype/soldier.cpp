@@ -200,7 +200,7 @@ void figure::military_standard_action() {
         tile_x = m->standard_x;
         tile_y = m->standard_y;
     }
-    grid_offset_figure = map_grid_offset(tile_x, tile_y);
+    grid_offset_figure = MAP_OFFSET(tile_x, tile_y);
     cross_country_x = 15 * tile_x + 7;
     cross_country_y = 15 * tile_y + 7;
     map_figure_add();
@@ -392,7 +392,7 @@ void figure::soldier_action() {
             formation_at_rest = 1;
             destination_x = formation_position_x.soldier;
             destination_y = formation_position_y.soldier;
-            destination_grid_offset = map_grid_offset(destination_x, destination_y);
+            destination_grid_offset = MAP_OFFSET(destination_x, destination_y);
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
@@ -421,7 +421,7 @@ void figure::soldier_action() {
                 destination_x += ALTERNATIVE_POINTS[alternative_location_index].x;
                 destination_y += ALTERNATIVE_POINTS[alternative_location_index].y;
             }
-            destination_grid_offset = map_grid_offset(destination_x, destination_y);
+            destination_grid_offset = MAP_OFFSET(destination_x, destination_y);
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
@@ -509,7 +509,7 @@ void figure::soldier_action() {
             formation_at_rest = 1;
             destination_x = formation_position_x.soldier;
             destination_y = formation_position_y.soldier;
-            destination_grid_offset = map_grid_offset(destination_x, destination_y);
+            destination_grid_offset = MAP_OFFSET(destination_x, destination_y);
             move_ticks(speed_factor);
             if (direction == DIR_FIGURE_NONE)
                 action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;

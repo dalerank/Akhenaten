@@ -124,7 +124,7 @@ int building::barracks_create_soldier() {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destination_x = road.x();
                 f->destination_y = road.y();
-                f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
+                f->destination_grid_offset = MAP_OFFSET(f->destination_x, f->destination_y);
             } else
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         } else

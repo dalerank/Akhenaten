@@ -72,7 +72,7 @@ static void destroy_on_fire(building *b, int plagued) {
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->x;
         int y = y_tiles[tile] + b->y;
-        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER))
+        if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_WATER))
             continue;
 
         // FIXME: possible can't render image & fire animation

@@ -278,7 +278,7 @@ static void handle_touch(void) {
 
 
     if (first->has_started && input_coords_in_map(first->current_point.x, first->current_point.y)) {
-        data.capture_input = 1;
+        data.capture_input = true;
         scroll_restore_margins();
     }
 
@@ -286,7 +286,7 @@ static void handle_touch(void) {
     handle_first_touch(data.current_tile);
 
     if (first->has_ended)
-        data.capture_input = 0;
+        data.capture_input = false;
 
 }
 
