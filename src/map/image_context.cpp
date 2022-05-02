@@ -1,7 +1,7 @@
 #include "image_context.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "map/building.h"
 #include "map/elevation.h"
 #include "map/grid.h"
@@ -564,10 +564,10 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
         else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building *b = building_at(offset);
             if (b->type == BUILDING_GRANARY) {
-                tiles[i] = (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + map_grid_delta(0, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
+                tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(0, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(2, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(1, 2)) ? 1 : 0;
             }
         }
     }

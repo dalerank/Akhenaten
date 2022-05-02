@@ -64,7 +64,7 @@ static void callback_calc_distance(int next_offset, int dist) {
 }
 void map_routing_calculate_distances(int x, int y) {
     ++stats.total_routes_calculated;
-    route_queue(map_grid_offset(x, y), -1, callback_calc_distance);
+    route_queue(MAP_OFFSET(x, y), -1, callback_calc_distance);
 }
 static void callback_calc_distance_water_boat(int next_offset, int dist) {
     if (map_grid_get(&terrain_water, next_offset) != WATER_N1_BLOCKED &&
@@ -78,7 +78,7 @@ static void callback_calc_distance_water_boat(int next_offset, int dist) {
     }
 }
 void map_routing_calculate_distances_water_boat(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
         clear_distances();
     else
@@ -89,7 +89,7 @@ static void callback_calc_distance_water_flotsam(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 void map_routing_calculate_distances_water_flotsam(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     if (map_grid_get(&terrain_water, grid_offset) == WATER_N1_BLOCKED)
         clear_distances();
     else
@@ -101,8 +101,8 @@ static void callback_calc_distance_build_wall(int next_offset, int dist) {
 }
 static void callback_calc_distance_build_road(int next_offset, int dist) {
     bool blocked = false;
-    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue_get(0));
-    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue_get(0));
+    int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
+    int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
         case CITIZEN_N3_AQUEDUCT:
             if (!map_can_place_road_under_aqueduct(next_offset))
@@ -132,8 +132,8 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
 }
 static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     bool blocked = false;
-    int d_x = map_grid_offset_to_x(next_offset) - map_grid_offset_to_x(queue_get(0));
-    int d_y = map_grid_offset_to_y(next_offset) - map_grid_offset_to_y(queue_get(0));
+    int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
+    int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
     switch (map_grid_get(&terrain_land_citizen, next_offset)) {
         case CITIZEN_0_ROAD: // rubble, garden, access ramp
             if (!map_can_place_aqueduct_on_road(next_offset))
@@ -203,13 +203,13 @@ bool map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct) {
     }
 
     // herd spawn points
-    if (formation_herd_breeding_ground_at(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1))
+    if (formation_herd_breeding_ground_at(MAP_X(grid_offset), MAP_Y(grid_offset), 1))
         return false;
     return true;
 }
 bool map_routing_calculate_distances_for_building(routed_int type, int x, int y) {
     clear_distances();
-    int source_offset = map_grid_offset(x, y);
+    int source_offset = MAP_OFFSET(x, y);
 
     switch (type) {
         case ROUTED_BUILDING_ROAD:
@@ -227,7 +227,7 @@ bool map_routing_calculate_distances_for_building(routed_int type, int x, int y)
             route_queue(source_offset, -1, callback_calc_distance_build_aqueduct);
             break;
         case ROUTED_BUILDING_WALL:
-            route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
+            route_queue(MAP_OFFSET(x, y), -1, callback_calc_distance_build_wall);
             break;
     }
     ++stats.total_routes_calculated;
@@ -245,7 +245,7 @@ static bool callback_delete_wall_aqueduct(int next_offset, int dist) {
 }
 void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
     ++stats.total_routes_calculated;
-    route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
+    route_queue_until(MAP_OFFSET(x, y), callback_delete_wall_aqueduct);
 }
 
 bool figure::is_fighting_friendly() {
@@ -270,7 +270,7 @@ static bool callback_travel_found_terrain(int next_offset, int dist, int terrain
     return false;
 }
 bool map_routing_citizen_found_terrain(int src_x, int src_y, int *dst_x, int *dst_y, int terrain_type) {
-    int src_offset = map_grid_offset(src_x, src_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
     ++stats.total_routes_calculated;
     bool found = route_queue_until_terrain(src_offset, terrain_type, dst_x, dst_y, callback_travel_found_terrain);
     return found;
@@ -279,8 +279,8 @@ static bool callback_travel_found_reeds(int next_offset, int dist) {
     if (map_grid_get(&terrain_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
         enqueue(next_offset, dist);
         if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
-            int t_x = map_grid_offset_to_x(next_offset);
-            int t_y = map_grid_offset_to_y(next_offset);
+            int t_x = MAP_X(next_offset);
+            int t_y = MAP_Y(next_offset);
             // requires tile to be fully within a 3x3 marshland area
             if (map_terrain_all_tiles_in_radius_are(t_x, t_y, 1, 1, TERRAIN_MARSHLAND))
                 if (can_harvest_point(next_offset))
@@ -290,7 +290,7 @@ static bool callback_travel_found_reeds(int next_offset, int dist) {
     return false;
 }
 bool map_routing_citizen_found_reeds(int src_x, int src_y, int *dst_x, int *dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
     ++stats.total_routes_calculated;
     bool found = route_queue_until_found(src_offset, dst_x, dst_y, callback_travel_found_reeds);
     return found;
@@ -306,7 +306,7 @@ static bool callback_travel_found_timber(int next_offset, int dist) {
     return false;
 }
 bool map_routing_citizen_found_timber(int src_x, int src_y, int *dst_x, int *dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
     ++stats.total_routes_calculated;
     bool found = route_queue_until_found(src_offset, dst_x, dst_y, callback_travel_found_timber);
     return found;
@@ -317,8 +317,8 @@ static void callback_travel_citizen_land(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 bool map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_citizen_land);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -330,8 +330,8 @@ static void callback_travel_citizen_road(int next_offset, int dist) {
     }
 }
 bool map_routing_citizen_can_travel_over_road(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_citizen_road);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -343,8 +343,8 @@ static void callback_travel_citizen_road_garden(int next_offset, int dist) {
     }
 }
 bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_citizen_road_garden);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -356,8 +356,8 @@ static void callback_travel_walls(int next_offset, int dist) {
     }
 }
 bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_walls);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -381,8 +381,8 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
     }
 }
 bool map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     ++stats.enemy_routes_calculated;
     if (only_through_building_id) {
@@ -398,8 +398,8 @@ static void callback_travel_noncitizen_through_everything(int next_offset, int d
 
 }
 bool map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y) {
-    int src_offset = map_grid_offset(src_x, src_y);
-    int dst_offset = map_grid_offset(dst_x, dst_y);
+    int src_offset = MAP_OFFSET(src_x, src_y);
+    int dst_offset = MAP_OFFSET(dst_x, dst_y);
     ++stats.total_routes_calculated;
     route_queue(src_offset, dst_offset, callback_travel_noncitizen_through_everything);
     return map_grid_get(&routing_distance, dst_offset) != 0;
@@ -410,7 +410,7 @@ void map_routing_block(int x, int y, int size) {
         return;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            map_grid_set(&routing_distance, map_grid_offset(x + dx, y + dy), 0);
+            map_grid_set(&routing_distance, MAP_OFFSET(x + dx, y + dy), 0);
         }
     }
 }

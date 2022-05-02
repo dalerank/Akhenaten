@@ -57,10 +57,11 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
     b->sentiment.house_happiness = 50;
     b->distance_from_entry = 0;
 
-    b->x = x;
-    b->y = y;
-    b->grid_offset = map_grid_offset(x, y);
-    b->map_random_7bit = map_random_get(b->grid_offset) & 0x7f;
+    b->tile.set(x, y);
+//    b->tile.x() = x;
+//    b->tile.y() = y;
+//    b->tile.grid_offset() = MAP_OFFSET(x, y);
+    b->map_random_7bit = map_random_get(b->tile.grid_offset()) & 0x7f;
     b->figure_roam_direction = b->map_random_7bit & 6;
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
@@ -250,10 +251,10 @@ building *building_at(int grid_offset) {
     return building_get(map_building_at(grid_offset));
 }
 building *building_at(int x, int y) {
-    return building_get(map_building_at(map_grid_offset(x, y)));
+    return building_get(map_building_at(MAP_OFFSET(x, y)));
 }
 building *building_at(map_point point) {
-    return building_get(map_building_at(map_grid_offset(point.x, point.y)));
+    return building_get(map_building_at(point.grid_offset()));
 }
 bool building_exists_at(int grid_offset, building *b) {
     b = nullptr;
@@ -269,7 +270,7 @@ bool building_exists_at(int grid_offset, building *b) {
 }
 bool building_exists_at(int x, int y, building *b) {
     b = nullptr;
-    int b_id = map_building_at(map_grid_offset(x, y));
+    int b_id = map_building_at(MAP_OFFSET(x, y));
     if (b_id > 0) {
         b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED)
@@ -281,7 +282,7 @@ bool building_exists_at(int x, int y, building *b) {
 }
 bool building_exists_at(map_point point, building *b) {
     b = nullptr;
-    int b_id = map_building_at(map_grid_offset(point.x, point.y));
+    int b_id = map_building_at(point.grid_offset());
     if (b_id > 0) {
         b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED)
@@ -303,14 +304,14 @@ building *building::main() {
 }
 building *building::top_xy() {
     building *b = main();
-    int x = b->x;
-    int y = b->y;
+    int x = b->tile.x();
+    int y = b->tile.y();
     building *top = b;
     while (b->next_part_building_id <= 0) {
         b = next();
-        if (b->x < x)
+        if (b->tile.x() < x)
             top = b;
-        if (b->y < y)
+        if (b->tile.y() < y)
             top = b;
     }
     return top;
@@ -476,10 +477,10 @@ bool building_is_farm(int type) {
     return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM)
            || type == BUILDING_FIGS_FARM || type == BUILDING_HENNA_FARM;
 }
-bool building_is_floodplain_farm(const building *b) {
+bool building_is_floodplain_farm(building *b) {
     return (GAME_ENV == ENGINE_ENV_PHARAOH
             && building_is_farm(b->type)
-            && map_terrain_is(b->grid_offset, TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
+            && map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
 }
 bool building_is_workshop(int type) {
     return (type >= BUILDING_BEER_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
@@ -683,7 +684,7 @@ void building_update_state(void) {
                 else if (b->type == BUILDING_GRANARY)
                     road_recalc = true;
 
-                map_building_tiles_remove(i, b->x, b->y);
+                map_building_tiles_remove(i, b->tile.x(), b->tile.y());
                 road_recalc = true; // always recalc underlying road tiles
                 land_recalc = true;
                 building_delete_UNSAFE(b);
@@ -710,11 +711,11 @@ void building_update_desirability(void) {
         if (b->state != BUILDING_STATE_VALID)
             continue;
 
-        b->desirability = map_desirability_get_max(b->x, b->y, b->size);
+        b->desirability = map_desirability_get_max(b->tile.x(), b->tile.y(), b->size);
         if (b->is_adjacent_to_water)
             b->desirability += 10;
 
-        switch (map_elevation_at(b->grid_offset)) {
+        switch (map_elevation_at(b->tile.grid_offset())) {
             case 0:
                 break;
             case 1:
@@ -931,16 +932,10 @@ io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->size);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_is_merged);
         iob->bind(BIND_SIGNATURE_UINT8, &b->house_size);
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->x);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->y);
-            iob->bind(BIND_SIGNATURE_INT16, &b->grid_offset);
-        } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, &b->x);
-            iob->bind(BIND_SIGNATURE_UINT16, &b->y);
-            iob->bind____skip(2);
-            iob->bind(BIND_SIGNATURE_INT32, &b->grid_offset);
-        }
+        iob->bind(BIND_SIGNATURE_UINT16, b->tile.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT16, b->tile.private_access(_Y));
+        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_INT32, b->tile.private_access(_GRID_OFFSET));
         iob->bind(BIND_SIGNATURE_INT16, &b->type);
         iob->bind(BIND_SIGNATURE_INT16, &b->subtype.house_level); // which union field we use does not matter
         iob->bind(BIND_SIGNATURE_UINT16, &b->road_network_id);
@@ -954,11 +949,11 @@ io_buffer *iob_buildings = new io_buffer([](io_buffer *iob) {
 
         iob->bind(BIND_SIGNATURE_INT16, &b->house_unreachable_ticks);
         if (GAME_ENV == ENGINE_ENV_C3) {
-            iob->bind(BIND_SIGNATURE_UINT8, &b->road_access_x);
-            iob->bind(BIND_SIGNATURE_UINT8, &b->road_access_y);
+            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_X));
+            iob->bind(BIND_SIGNATURE_UINT8, b->road_access.private_access(_Y));
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            iob->bind(BIND_SIGNATURE_UINT16, &b->road_access_x);
-            iob->bind(BIND_SIGNATURE_UINT16, &b->road_access_y);
+            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_X));
+            iob->bind(BIND_SIGNATURE_UINT16, b->road_access.private_access(_Y));
         }
 //        b->set_figure(0, buf->read_u16());
 //        b->set_figure(1, buf->read_u16());

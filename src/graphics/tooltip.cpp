@@ -2,7 +2,7 @@
 
 #include "city/labor.h"
 #include "city/ratings.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
@@ -19,6 +19,7 @@
 #include "window/advisors.h"
 
 #include <stdlib.h>
+#include <city/view/lookup.h>
 
 #define OVERLAY_TEXT_MAX 1000
 
@@ -281,12 +282,12 @@ static void draw_senate_tooltip(tooltip_context *c) {
 }
 
 static void draw_tile_tooltip(tooltip_context *c) {
-    view_tile view;
-    if (city_view_pixels_to_view_tile(c->mouse_x, c->mouse_y, &view)) {
-        int grid_offset = city_view_tile_to_grid_offset(&view);
-        city_view_set_selected_view_tile(&view);
-        int x_tile = map_grid_offset_to_x(grid_offset);
-        int y_tile = map_grid_offset_to_y(grid_offset);
+    screen_tile screen = pixel_to_screentile({c->mouse_x, c->mouse_y});
+    if (screen.x != -1 && screen.y != -1) {
+        int grid_offset = screentile_to_mappoint(screen).grid_offset();
+        city_view_set_selected_view_tile(&screen);
+        int x_tile = MAP_X(grid_offset);
+        int y_tile = MAP_Y(grid_offset);
 
         int x, y;
         int width = 60;

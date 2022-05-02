@@ -5,7 +5,7 @@
 #include "building/rotation.h"
 #include "city/message.h"
 #include "city/victory.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/config.h"
 #include "core/image.h"
@@ -150,7 +150,7 @@ static void cycle_legion(void) {
         }
         if (current_legion_id > 0) {
             const formation *m = formation_get(current_legion_id);
-            city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
+            city_view_go_to_point(map_point(MAP_OFFSET(m->x_home, m->y_home)));
             window_invalidate();
         }
     }

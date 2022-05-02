@@ -8,6 +8,7 @@
 #include "core/io.h"
 #include "core/log.h"
 #include "core/string.h"
+#include <game/io/io_buffer.h>
 
 #define MAX_EVENTS 150
 #define NUM_AUTO_PHRASE_VARIANTS 54

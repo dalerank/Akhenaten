@@ -1,6 +1,6 @@
 #include "platform/screen.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "input/mouse.h"

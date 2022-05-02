@@ -1,7 +1,7 @@
 #include "water.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -23,25 +23,23 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
     map_point leftmost;
     switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
-            leftmost.x = 0;
-            leftmost.y = size - 1;
+            leftmost.set(0, size - 1);
             break;
         case DIR_2_BOTTOM_RIGHT:
-            leftmost.x = leftmost.y = 0;
+            leftmost.set(0, 0);
             break;
         case DIR_4_BOTTOM_LEFT:
-            leftmost.x = size - 1;
-            leftmost.y = 0;
+            leftmost.set(size - 1, 0);
             break;
         case DIR_6_TOP_LEFT:
-            leftmost.x = leftmost.y = size - 1;
+            leftmost.set(size - 1, size - 1);
             break;
         default:
             return;
     }
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             map_terrain_add(grid_offset, TERRAIN_BUILDING);
             if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
@@ -52,7 +50,7 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
             map_property_set_multi_tile_size(grid_offset, size);
             map_image_set(grid_offset, image_id);
             map_property_set_multi_tile_xy(grid_offset, dx, dy,
-                                           dx == leftmost.x && dy == leftmost.y);
+                                           dx == leftmost.x() && dy == leftmost.y());
         }
     }
 }
@@ -93,7 +91,7 @@ bool map_shore_determine_orientation(int x, int y, int size, bool adjust_xy, int
     int water_tiles[size][size];
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
-            water_tiles[row][column] = map_terrain_is(map_grid_offset(x + column, y + row), shore_terrain);
+            water_tiles[row][column] = map_terrain_is(MAP_OFFSET(x + column, y + row), shore_terrain);
         }
     }
 
@@ -191,20 +189,20 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile) {
             dy = 1;
             break;
     }
-    map_point_store_result(wharf->x + dx, wharf->y + dy, tile);
+    map_point_store_result(wharf->tile.x() + dx, wharf->tile.y() + dy, tile);
     return wharf->id;
 }
 int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) {
-    if (map_figure_at(boat->grid_offset_figure) == boat->id)
+    if (map_figure_at(boat->tile.grid_offset()) == boat->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(boat->tile_x, boat->tile_y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(boat->tile.x(), boat->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
-                int grid_offset = map_grid_offset(xx, yy);
+                int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
                     map_point_store_result(xx, yy, tile);
                     return 1;
@@ -215,22 +213,22 @@ int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) 
     return 0;
 }
 int map_water_find_shipwreck_tile(figure *wreck, map_point *tile) {
-    if (map_terrain_is(wreck->grid_offset_figure, TERRAIN_WATER) && map_figure_at(wreck->grid_offset_figure) == wreck->id)
+    if (map_terrain_is(wreck->tile.grid_offset(), TERRAIN_WATER) && map_figure_at(wreck->tile.grid_offset()) == wreck->id)
         return 0;
 
     for (int radius = 1; radius <= 5; radius++) {
         int x_min, y_min, x_max, y_max;
-        map_grid_get_area(wreck->tile_x, wreck->tile_y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+        map_grid_get_area(wreck->tile.x(), wreck->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
         for (int yy = y_min; yy <= y_max; yy++) {
             for (int xx = x_min; xx <= x_max; xx++) {
-                int grid_offset = map_grid_offset(xx, yy);
+                int grid_offset = MAP_OFFSET(xx, yy);
                 if (!map_has_figure_at(grid_offset) || map_figure_at(grid_offset) == wreck->id) {
                     if (map_terrain_is(grid_offset, TERRAIN_WATER) &&
-                        map_terrain_is(map_grid_offset(xx, yy - 2), TERRAIN_WATER) &&
-                        map_terrain_is(map_grid_offset(xx, yy + 2), TERRAIN_WATER) &&
-                        map_terrain_is(map_grid_offset(xx - 2, yy), TERRAIN_WATER) &&
-                        map_terrain_is(map_grid_offset(xx + 2, yy), TERRAIN_WATER)) {
+                        map_terrain_is(MAP_OFFSET(xx, yy - 2), TERRAIN_WATER) &&
+                        map_terrain_is(MAP_OFFSET(xx, yy + 2), TERRAIN_WATER) &&
+                        map_terrain_is(MAP_OFFSET(xx - 2, yy), TERRAIN_WATER) &&
+                        map_terrain_is(MAP_OFFSET(xx + 2, yy), TERRAIN_WATER)) {
                         map_point_store_result(xx, yy, tile);
                         return 1;
                     }
@@ -252,13 +250,13 @@ static int num_surrounding_water_tiles(int grid_offset) {
 }
 
 int map_water_can_spawn_fishing_boat(int x, int y, int size, map_point *tile) {
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 if (num_surrounding_water_tiles(grid_offset) >= 8) {
-                    map_point_store_result(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), tile);
+                    map_point_store_result(MAP_X(grid_offset), MAP_Y(grid_offset), tile);
                     return 1;
                 }
             }

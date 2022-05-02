@@ -1,6 +1,6 @@
 #include "map.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "editor/editor.h"
 #include "editor/tool.h"

@@ -2,7 +2,7 @@
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/count.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/log.h"
 #include "figure/formation_legion.h"

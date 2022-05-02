@@ -16,7 +16,7 @@
 int formation_legion_create_for_fort(building *fort) {
     formation_calculate_legion_totals();
 
-    formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fort_figure_type);
+    formation *m = formation_create_legion(fort->id, fort->tile.x(), fort->tile.y(), fort->subtype.fort_figure_type);
     if (!m->id)
         return 0;
 
@@ -102,7 +102,7 @@ static int prepare_to_move(formation *m) {
 
 void formation_legion_move_to(formation *m, int x, int y) {
     map_routing_calculate_distances(m->x_home, m->y_home);
-    if (map_routing_distance(map_grid_offset(x, y)) <= 0)
+    if (map_routing_distance(MAP_OFFSET(x, y)) <= 0)
         return; // unable to route there
 
     if (x == m->x_home && y == m->y_home)
@@ -133,7 +133,7 @@ void formation_legion_move_to(formation *m, int x, int y) {
 
 void formation_legion_return_home(formation *m) {
     map_routing_calculate_distances(m->x_home, m->y_home);
-    if (map_routing_distance(map_grid_offset(m->x, m->y)) <= 0)
+    if (map_routing_distance(MAP_OFFSET(m->x, m->y)) <= 0)
         return; // unable to route home
 
     if (m->cursed_by_mars)

@@ -308,9 +308,10 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/sound.cpp
     ${PROJECT_SOURCE_DIR}/src/city/trade.cpp
     ${PROJECT_SOURCE_DIR}/src/city/victory.cpp
-    ${PROJECT_SOURCE_DIR}/src/city/view.cpp
     ${PROJECT_SOURCE_DIR}/src/city/warning.cpp
     ${PROJECT_SOURCE_DIR}/src/city/floods.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/view/view.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/view/lookup.cpp
 )
 set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.cpp
@@ -425,7 +426,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.cpp
     ${PROJECT_SOURCE_DIR}/src/map/tile_cache.cpp
     ${PROJECT_SOURCE_DIR}/src/map/floodplain.cpp
-        ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
+    ${PROJECT_SOURCE_DIR}/src/map/vegetation.cpp
     ${PROJECT_SOURCE_DIR}/src/map/moisture.cpp
 )
 set(SCENARIO_FILES

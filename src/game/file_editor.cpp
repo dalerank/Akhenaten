@@ -6,7 +6,7 @@
 #include "city/data.h"
 #include "city/message.h"
 #include "city/victory.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/image.h"
 #include "core/image_group_editor.h"
 #include "empire/empire.h"
@@ -91,10 +91,9 @@ static void clear_map_data(void) {
 
 static void create_blank_map(int size) {
     scenario_editor_create(size);
-    scenario_map_init();
     clear_map_data();
     map_image_init_edges();
-    city_view_go_to_tile_corner(76, 152, true);
+    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
     city_view_reset_orientation();
 }
 
@@ -134,8 +133,6 @@ int game_file_editor_load_scenario(const char *scenario_file) {
     clear_map_data();
 //    if (!game_file_io_read_scenario(scenario_file)) TODO
 //        return 0;
-
-    scenario_map_init();
 
     prepare_map_for_editing();
     return 1;

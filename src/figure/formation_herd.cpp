@@ -24,7 +24,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             if (!map_terrain_is(grid_offset, disallowed_terrain)) {
                 if (map_soldier_strength_get(grid_offset))
                     return 0;
@@ -97,10 +97,10 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
             x_target = 1;
         else if (y_target <= 0)
             y_target = 1;
-        else if (x_target >= map_grid_width() - 1)
-            x_target = map_grid_width() - 2;
-        else if (y_target >= map_grid_height() - 1)
-            y_target = map_grid_height() - 2;
+        else if (x_target >= scenario_map_data()->width - 1)
+            x_target = scenario_map_data()->width - 2;
+        else if (y_target >= scenario_map_data()->height - 1)
+            y_target = scenario_map_data()->height - 2;
 
         if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile))
             return 1;
@@ -124,21 +124,19 @@ static void move_animals(const formation *m, int attacking_animals) {
         if (GAME_ENV == ENGINE_ENV_C3)
             f->wait_ticks = 401;
         if (attacking_animals) {
-            int target_id = figure_combat_get_target_for_wolf(f->tile_x, f->tile_y, 6);
+            int target_id = figure_combat_get_target_for_wolf(f->tile.x(), f->tile.y(), 6);
             if (target_id) {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                    f->destination_x = 0;
-                    f->destination_y = 0;
+                    f->destination_tile.set(0, 0);
 //                    while (f->destination_x == 0 || f->destination_y == 0)
                         f->herd_roost(4, 8, 22);
-                    if (f->destination_x != 0 && f->destination_y != 0)
+                    if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0)
                         f->advance_action(16);
                 } else {
                     figure *target = figure_get(target_id);
                     f->target_figure_id = target_id;
                     f->action_state = FIGURE_ACTION_199_WOLF_ATTACKING;
-                    f->destination_x = target->tile_x;
-                    f->destination_y = target->tile_y;
+                    f->destination_tile = target->tile;
                     target->targeted_by_figure_id = f->id;
                     f->target_figure_created_sequence = target->created_sequence;
                     f->route_remove();
@@ -146,8 +144,7 @@ static void move_animals(const formation *m, int attacking_animals) {
             } else {
                 if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                     f->advance_action(14);
-                    f->destination_x = 0;
-                    f->destination_y = 0;
+                    f->destination_tile.set(0, 0);
                 } else
                     f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             }
@@ -198,7 +195,7 @@ static void set_figures_to_initial(const formation *m) {
 static void update_herd_formation(formation *m) {
     if (can_spawn_wolf(m)) {
         // spawn new wolf
-        if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
+        if (!map_terrain_is(MAP_OFFSET(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP_RIGHT);
             wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -220,7 +217,7 @@ static void update_herd_formation(formation *m) {
     if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile_x, f->tile_y);
+            formation_set_home(m, f->tile.x(), f->tile.y());
     }
     int roam_distance;
     int roam_delay;

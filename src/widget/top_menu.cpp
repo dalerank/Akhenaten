@@ -216,7 +216,7 @@ static void top_menu_window_show(void) {
     window_show(&window);
 }
 
-#include "city/view.h"
+#include "city/view/view.h"
 
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;

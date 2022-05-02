@@ -16,7 +16,7 @@ static int provide_culture(int x, int y, void (*callback)(building *)) {
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);
@@ -35,7 +35,7 @@ static int provide_entertainment(int x, int y, int shows, void (*callback)(build
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);
@@ -53,7 +53,7 @@ static int provide_missionary_coverage(int x, int y) {
     map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(map_grid_offset(xx, yy));
+            int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id) {
                 building *b = building_get(building_id);
                 if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING)
@@ -70,7 +70,7 @@ static int provide_service(int x, int y, int *data, void (*callback)(building *,
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);
@@ -245,7 +245,7 @@ static int provide_market_goods(building *market, int x, int y) {
     map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);
@@ -276,20 +276,20 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_PATRICIAN:
             return 0;
         case FIGURE_LABOR_SEEKER:
-            houses_serviced = provide_culture(tile_x, tile_y, labor_seeker_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), labor_seeker_coverage);
             break;
         case FIGURE_TAX_COLLECTOR: {
             int max_tax_rate = 0;
-            houses_serviced = provide_service(tile_x, tile_y, &max_tax_rate, tax_collector_coverage);
+            houses_serviced = provide_service(tile.x(), tile.y(), &max_tax_rate, tax_collector_coverage);
             min_max_seen = max_tax_rate;
             break;
         }
         case FIGURE_MARKET_TRADER:
-            houses_serviced = provide_market_goods(home(), tile_x, tile_y);
+            houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
             break;
         case FIGURE_MARKET_BUYER:
             if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION))
-                houses_serviced = provide_market_goods(home(), tile_x, tile_y);
+                houses_serviced = provide_market_goods(home(), tile.x(), tile.y());
 
             break;
 //        case FIGURE_BATHHOUSE_WORKER:
@@ -297,51 +297,51 @@ int figure::figure_service_provide_coverage() {
 //            houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
 //            break;
         case FIGURE_SCHOOL_CHILD:
-            houses_serviced = provide_culture(tile_x, tile_y, school_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), school_coverage);
             break;
         case FIGURE_TEACHER:
-            houses_serviced = provide_culture(tile_x, tile_y, academy_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), academy_coverage);
             break;
         case FIGURE_LIBRARIAN:
-            houses_serviced = provide_culture(tile_x, tile_y, library_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), library_coverage);
             break;
         case FIGURE_BARBER:
-            houses_serviced = provide_culture(tile_x, tile_y, barber_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), barber_coverage);
             break;
         case FIGURE_DOCTOR:
-            houses_serviced = provide_culture(tile_x, tile_y, clinic_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), clinic_coverage);
             break;
         case FIGURE_SURGEON:
-            houses_serviced = provide_culture(tile_x, tile_y, hospital_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), hospital_coverage);
             break;
         case FIGURE_WATER_CARRIER:
-            houses_serviced = provide_culture(tile_x, tile_y, water_supply_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), water_supply_coverage);
             break;
         case FIGURE_MISSIONARY:
-            houses_serviced = provide_missionary_coverage(tile_x, tile_y);
+            houses_serviced = provide_missionary_coverage(tile.x(), tile.y());
             break;
         case FIGURE_PRIEST:
             tutorial_on_religion();
             switch (home()->type) {
                 case BUILDING_TEMPLE_OSIRIS:
                 case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_ceres);
+                    houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_ceres);
                     break;
                 case BUILDING_TEMPLE_RA:
                 case BUILDING_TEMPLE_COMPLEX_RA:
-                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_neptune);
+                    houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_neptune);
                     break;
                 case BUILDING_TEMPLE_PTAH:
                 case BUILDING_TEMPLE_COMPLEX_PTAH:
-                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mercury);
+                    houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_mercury);
                     break;
                 case BUILDING_TEMPLE_SETH:
                 case BUILDING_TEMPLE_COMPLEX_SETH:
-                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_mars);
+                    houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_mars);
                     break;
                 case BUILDING_TEMPLE_BAST:
                 case BUILDING_TEMPLE_COMPLEX_BAST:
-                    houses_serviced = provide_culture(tile_x, tile_y, religion_coverage_venus);
+                    houses_serviced = provide_culture(tile.x(), tile.y(), religion_coverage_venus);
                     break;
                 default:
                     break;
@@ -350,33 +350,33 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_ACTOR:
             b = get_entertainment_building();
             if (b->type == BUILDING_BOOTH)
-                houses_serviced = provide_culture(tile_x, tile_y, theater_coverage);
+                houses_serviced = provide_culture(tile.x(), tile.y(), theater_coverage);
             else if (b->type == BUILDING_BANDSTAND) {
-                houses_serviced = provide_entertainment(tile_x, tile_y,
+                houses_serviced = provide_entertainment(tile.x(), tile.y(),
                                                         b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
             }
             break;
         case FIGURE_GLADIATOR:
             b = get_entertainment_building();
             if (b->type == BUILDING_BANDSTAND) {
-                houses_serviced = provide_entertainment(tile_x, tile_y,
+                houses_serviced = provide_entertainment(tile.x(), tile.y(),
                                                         b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
             } else if (b->type == BUILDING_PAVILLION) {
-                houses_serviced = provide_entertainment(tile_x, tile_y,
+                houses_serviced = provide_entertainment(tile.x(), tile.y(),
                                                         b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
             }
             break;
         case FIGURE_LION_TAMER:
             b = get_entertainment_building();
-            houses_serviced = provide_entertainment(tile_x, tile_y,
+            houses_serviced = provide_entertainment(tile.x(), tile.y(),
                                                     b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
             break;
         case FIGURE_CHARIOTEER:
-            houses_serviced = provide_culture(tile_x, tile_y, hippodrome_coverage);
+            houses_serviced = provide_culture(tile.x(), tile.y(), hippodrome_coverage);
             break;
         case FIGURE_ENGINEER: {
             int max_damage = 0;
-            houses_serviced = provide_service(tile_x, tile_y, &max_damage, engineer_coverage);
+            houses_serviced = provide_service(tile.x(), tile.y(), &max_damage, engineer_coverage);
             if (max_damage > min_max_seen)
                 min_max_seen = max_damage;
             else if (min_max_seen <= 10)
@@ -387,7 +387,7 @@ int figure::figure_service_provide_coverage() {
         }
         case FIGURE_PREFECT: {
             int min_happiness = 100;
-            houses_serviced = provide_service(tile_x, tile_y, &min_happiness, prefect_coverage);
+            houses_serviced = provide_service(tile.x(), tile.y(), &min_happiness, prefect_coverage);
             min_max_seen = min_happiness;
             break;
         }
@@ -398,9 +398,9 @@ int figure::figure_service_provide_coverage() {
         case FIGURE_POLICEMAN:
         case FIGURE_MAGISTRATE:
             int max_anger = 0;
-            houses_serviced = provide_service(tile_x, tile_y, &max_anger, policeman_coverage);
+            houses_serviced = provide_service(tile.x(), tile.y(), &max_anger, policeman_coverage);
             if (type == FIGURE_MAGISTRATE)
-                houses_serviced = provide_culture(tile_x, tile_y, magistrate_coverage);
+                houses_serviced = provide_culture(tile.x(), tile.y(), magistrate_coverage);
             if (max_anger > min_max_seen)
                 min_max_seen = max_anger;
             else if (min_max_seen <= 10)

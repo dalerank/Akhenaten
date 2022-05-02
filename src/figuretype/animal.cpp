@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "city/entertainment.h"
 #include "city/figures.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"
@@ -21,7 +21,7 @@
 #include "map/terrain.h"
 #include "map/building.h"
 
-static const map_point SEAGULL_OFFSETS[] = {
+static const coords SEAGULL_OFFSETS[] = {
         {0,  0},
         {0,  -2},
         {-2, 0},
@@ -33,7 +33,7 @@ static const map_point SEAGULL_OFFSETS[] = {
         {0,  0}
 };
 
-static const map_point HORSE_DESTINATION_1[] = {
+static const coords HORSE_DESTINATION_1[] = {
         {2,  1},
         {3,  1},
         {4,  1},
@@ -57,7 +57,7 @@ static const map_point HORSE_DESTINATION_1[] = {
         {3,  3},
         {2,  2}
 };
-static const map_point HORSE_DESTINATION_2[] = {
+static const coords HORSE_DESTINATION_2[] = {
         {12, 3},
         {11, 3},
         {10, 3},
@@ -104,7 +104,7 @@ static void create_fishing_point(int x, int y) {
     figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP_RIGHT);
     fish->anim_frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
-    fish->set_cross_country_direction(fish->cross_country_x, fish->cross_country_y, 15 * fish->destination_x, 15 * fish->destination_y, 0);
+    fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
 }
 void figure_create_fishing_points(void) {
     scenario_map_foreach_fishing_point(create_fishing_point);
@@ -149,15 +149,17 @@ bool figure::herd_roost(int step, int bias, int max_dist) {
     const formation *m = formation_get(formation_id);
     int dx;
     int dy;
-    random_around_point(m->x_home, m->y_home, tile_x, tile_y, &dx, &dy, step, bias, max_dist);
-    int offset = map_grid_offset(dx, dy);
+    random_around_point(m->x_home, m->y_home, tile.x(), tile.y(), &dx, &dy, step, bias, max_dist);
+    int offset = MAP_OFFSET(dx, dy);
     if (!map_terrain_is(offset, TERRAIN_IMPASSABLE_WOLF)) { // todo: fix gardens
-        destination_x = dx;
-        destination_y = dy;
+        destination_tile.set(dx, dy);
+//        destination_tile.x() = dx;
+//        destination_tile.y() = dy;
         return true;
     } else {
-        destination_x = 0;
-        destination_y = 0;
+        destination_tile.set(0, 0);
+//        destination_tile.x() = 0;
+//        destination_tile.y() = 0;
         return false;
     }
 }
@@ -169,7 +171,7 @@ void figure::seagulls_action() {
         progress_on_tile++;
         if (progress_on_tile > 14) // wrap around
             progress_on_tile = 0;
-        set_cross_country_destination(source_x + SEAGULL_OFFSETS[progress_on_tile].x, source_y + SEAGULL_OFFSETS[progress_on_tile].y);
+        set_cross_country_destination(source_tile.x() + SEAGULL_OFFSETS[progress_on_tile].x, source_tile.y() + SEAGULL_OFFSETS[progress_on_tile].y);
     }
     if (id & 1) {
         image_set_animation(GROUP_FIGURE_SEAGULLS, 0, 54, 3);
@@ -195,8 +197,10 @@ void figure::sheep_action() {
             if (wait_ticks > 400) {
                 wait_ticks = id & 0x1f;
                 action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
-                destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
+                destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation),
+                                     m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation));
+//                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
+//                destination_tile.y() = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
                 roam_length = 0;
             }
             break;
@@ -232,8 +236,10 @@ void figure::wolf_action() {
             if (wait_ticks > 400) {
                 wait_ticks = id & 0x1f;
                 action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
-                destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
+                destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation),
+                                     m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation));
+//                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
+//                destination_tile.y() = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
                 roam_length = 0;
             }
             break;
@@ -249,11 +255,12 @@ void figure::wolf_action() {
         case FIGURE_ACTION_199_WOLF_ATTACKING:
             move_ticks(2);
             if (direction == DIR_FIGURE_NONE) {
-                int target_id = figure_combat_get_target_for_wolf(tile_x, tile_y, 6);
+                int target_id = figure_combat_get_target_for_wolf(tile.x(), tile.y(), 6);
                 if (target_id) {
                     figure *target = figure_get(target_id);
-                    destination_x = target->tile_x;
-                    destination_y = target->tile_y;
+                    destination_tile = target->tile;
+//                    destination_tile.x() = target->tile.x();
+//                    destination_tile.y() = target->tile.y();
                     target_figure_id = target_id;
                     target->targeted_by_figure_id = id;
                     target_figure_created_sequence = target->created_sequence;
@@ -316,7 +323,7 @@ void figure::ostrich_action() {
 //            if (action_state == 16)
 //                while (destination_x == 0 || destination_y == 0)
 //                    herd_roost(4, 8, 22);
-            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ANIMAL,
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL,
                 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE))
                 wait_ticks = 50;
             break;
@@ -383,7 +390,7 @@ void figure::hippo_action() {
 //            if (action_state == 16)
 //                while (destination_x == 0 || destination_y == 0)
 //                    herd_roost(4, 8, 22);
-            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ANIMAL,
+            if (do_goto(destination_tile.x(), destination_tile.y(), TERRAIN_USAGE_ANIMAL,
                         18 + (random_byte() & 0x1), ACTION_8_RECALCULATE))
                 wait_ticks = 50;
             break;
@@ -428,8 +435,10 @@ void figure::zebra_action() {
             if (wait_ticks > 200) {
                 wait_ticks = id & 0x1f;
                 action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                destination_x = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
-                destination_y = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
+                destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation),
+                                     m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation));
+//                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation);
+//                destination_tile.y() = m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation);
                 roam_length = 0;
             }
             break;
@@ -462,19 +471,19 @@ static void set_horse_destination(int state) {
 //        map_f->map_figure_remove();
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
 //            }
 //        }
 //        if (f->resource_id == 1)
@@ -489,56 +498,56 @@ static void set_horse_destination(int state) {
 //    } else if (state == HORSE_RACING) {
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
 //            }
 //        }
 //    } else if (state == HORSE_FINISHED) {
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 2;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 2;
 //                } else {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 1;
 //                }
 //            } else {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 12;
-//                    f->destination_y = b->y + 3;
+//                    f->destination_x = b->tile.x() + 12;
+//                    f->destination_y = b->tile.y() + 3;
 //                } else {
-//                    f->destination_x = b->x + 12;
-//                    f->destination_y = b->y + 2;
+//                    f->destination_x = b->tile.x() + 12;
+//                    f->destination_y = b->tile.y() + 2;
 //                }
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 2;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 2;
+//                    f->destination_y = b->tile.y() + 1;
 //                } else {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 1;
 //                }
 //            } else {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 3;
-//                    f->destination_y = b->y + 12;
+//                    f->destination_x = b->tile.x() + 3;
+//                    f->destination_y = b->tile.y() + 12;
 //                } else {
-//                    f->destination_x = b->x + 2;
-//                    f->destination_y = b->y + 12;
+//                    f->destination_x = b->tile.x() + 2;
+//                    f->destination_y = b->tile.y() + 12;
 //                }
 //            }
 //        }
@@ -656,7 +665,7 @@ void figure::hunter_action() {
     figure *prey = figure_get(target_figure_id);
     int dist = 0;
     if (target_figure_id)
-        dist = calc_maximum_distance(tile_x, tile_y, prey->tile_x, prey->tile_y);
+        dist = calc_maximum_distance(tile.x(), tile.y(), prey->tile.x(), prey->tile.y());
     switch (action_state) {
         case ACTION_8_RECALCULATE:
         case 14: // spawning
@@ -675,7 +684,7 @@ void figure::hunter_action() {
         case 9: // following prey
             if (!target_figure_id) return advance_action(8);
             if (dist >= 2)
-                do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANIMAL, 15, 8);
+                do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 15, 8);
             else {
                 wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
                 advance_action(15);
@@ -695,14 +704,14 @@ void figure::hunter_action() {
                     wait_ticks = 12;
                     advance_action(13);
                 } else {
-                    direction = calc_missile_shooter_direction(tile_x, tile_y, prey->tile_x, prey->tile_y);
+                    direction = calc_missile_shooter_direction(tile.x(), tile.y(), prey->tile.x(), prey->tile.y());
                     missile_fire_at(target_figure_id, FIGURE_HUNTER_ARROW);
                 }
             }
             break;
         case 11: // going to pick up prey
             if (!target_figure_id) return advance_action(8);
-            if (do_goto(prey->tile_x, prey->tile_y, TERRAIN_USAGE_ANIMAL, 10, 11))
+            if (do_goto(prey->tile.x(), prey->tile.y(), TERRAIN_USAGE_ANIMAL, 10, 11))
                 anim_offset = 0;
             break;
         case 10: // picking up prey

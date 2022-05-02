@@ -70,14 +70,14 @@ static void check_road_access(int type, int x, int y, int size, int orientation)
 static void check_water(int type, int x, int y) {
     if (!has_warning) {
         if (type == BUILDING_MENU_BEAUTIFICATION || type == BUILDING_MENU_MONUMENTS) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             int has_water = 0;
             if (map_terrain_is(grid_offset, TERRAIN_GROUNDWATER))
                 has_water = 1;
             else if (type == BUILDING_MENU_MONUMENTS) {
-                if (map_terrain_is(grid_offset + map_grid_delta(1, 0), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + map_grid_delta(0, 1), TERRAIN_GROUNDWATER) ||
-                    map_terrain_is(grid_offset + map_grid_delta(1, 1), TERRAIN_GROUNDWATER)) {
+                if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_GROUNDWATER) ||
+                    map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_GROUNDWATER) ||
+                    map_terrain_is(grid_offset + GRID_OFFSET(1, 1), TERRAIN_GROUNDWATER)) {
                     has_water = 1;
                 }
             }

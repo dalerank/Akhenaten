@@ -158,12 +158,12 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile) {
         return 0;
 
     if (best_building->type == BUILDING_WAREHOUSE) {
-        *x_tile = best_building->x + 1;
-        *y_tile = best_building->y;
+        *x_tile = best_building->tile.x() + 1;
+        *y_tile = best_building->tile.y();
         return best_building->id + 1;
     } else {
-        *x_tile = best_building->x;
-        *y_tile = best_building->y;
+        *x_tile = best_building->tile.x();
+        *y_tile = best_building->tile.y();
         return best_building->id;
     }
 }
@@ -178,12 +178,12 @@ static void set_enemy_target_building(formation *m) {
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
+        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
             continue;
 
         for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
             if (b->type == ENEMY_ATTACK_PRIORITY[attack][n]) {
-                int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
+                int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
                 if (n < best_type_index) {
                     best_type_index = n;
                     best_building = b;
@@ -200,12 +200,12 @@ static void set_enemy_target_building(formation *m) {
         // no target buildings left: take rioter attack priority
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
+            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
                 continue;
 
             for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
                 if (b->type == RIOTER_ATTACK_PRIORITY[n]) {
-                    int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
+                    int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
                     if (n < best_type_index) {
                         best_type_index = n;
                         best_building = b;
@@ -221,16 +221,15 @@ static void set_enemy_target_building(formation *m) {
     }
     if (best_building) {
         if (best_building->type == BUILDING_WAREHOUSE)
-            formation_set_destination_building(m, best_building->x + 1, best_building->y, best_building->id + 1);
+            formation_set_destination_building(m, best_building->tile.x() + 1, best_building->tile.y(), best_building->id + 1);
         else {
-            formation_set_destination_building(m, best_building->x, best_building->y, best_building->id);
+            formation_set_destination_building(m, best_building->tile.x(), best_building->tile.y(), best_building->id);
         }
     }
 }
 
 static void set_native_target_building(formation *m) {
-    int meeting_x, meeting_y;
-    city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
+    map_point meeting = city_buildings_main_native_meeting_center();
     building *min_building = 0;
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -248,7 +247,7 @@ static void set_native_target_building(formation *m) {
             case BUILDING_ROADBLOCK:
                 break;
             default: {
-                int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
+                int distance = calc_maximum_distance(meeting.x(), meeting.y(), b->tile.x(), b->tile.y());
                 if (distance < min_distance) {
                     min_building = b;
                     min_distance = distance;
@@ -257,7 +256,7 @@ static void set_native_target_building(formation *m) {
         }
     }
     if (min_building)
-        formation_set_destination_building(m, min_building->x, min_building->y, min_building->id);
+        formation_set_destination_building(m, min_building->tile.x(), min_building->tile.y(), min_building->id);
 
 }
 
@@ -284,13 +283,13 @@ static void set_figures_to_initial(const formation *m) {
 }
 
 int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_tile, int *y_tile) {
-    int base_offset = map_grid_offset(
+    int base_offset = MAP_OFFSET(
             formation_layout_position_x(m->layout, 0),
             formation_layout_position_y(m->layout, 0));
     int figure_offsets[50];
     figure_offsets[0] = 0;
     for (int i = 1; i < m->num_figures; i++) {
-        figure_offsets[i] = map_grid_offset(
+        figure_offsets[i] = MAP_OFFSET(
                 formation_layout_position_x(m->layout, i),
                 formation_layout_position_y(m->layout, i)) - base_offset;
     }
@@ -302,7 +301,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
             for (int xx = x_min; xx <= x_max; xx++) {
                 int can_move = 1;
                 for (int fig = 0; fig < m->num_figures; fig++) {
-                    int grid_offset = map_grid_offset(xx, yy) + figure_offsets[fig];
+                    int grid_offset = MAP_OFFSET(xx, yy) + figure_offsets[fig];
                     if (!map_grid_is_valid_offset(grid_offset)) {
                         can_move = 0;
                         break;
@@ -346,7 +345,7 @@ static void mars_kill_enemies(void) {
             f->kill();
             to_kill--;
             if (!grid_offset)
-                grid_offset = f->grid_offset_figure;
+                grid_offset = f->tile.grid_offset();
 
         }
     }
@@ -520,7 +519,7 @@ static void update_enemy_formation(formation *m, int *roman_distance) {
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile_x, f->tile_y);
+            formation_set_home(m, f->tile.x(), f->tile.y());
 
     }
     if (!army->formation_id) {

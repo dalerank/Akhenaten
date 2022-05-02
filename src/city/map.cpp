@@ -3,48 +3,39 @@
 #include "city/data_private.h"
 #include "map/grid.h"
 
-const map_tile *city_map_entry_point(void) {
+map_point *city_map_entry_point(void) {
     return &city_data.map.entry_point;
 }
 
-const map_tile *city_map_exit_point(void) {
+map_point *city_map_exit_point(void) {
     return &city_data.map.exit_point;
 }
 
-const map_tile *city_map_entry_flag(void) {
-    if (city_data.map.entry_flag.grid_offset == 0)
-        city_data.map.entry_flag.grid_offset = map_grid_offset(city_data.map.entry_flag.x, city_data.map.entry_flag.y);
+map_point *city_map_entry_flag(void) {
     return &city_data.map.entry_flag;
 }
 
-const map_tile *city_map_exit_flag(void) {
-    if (city_data.map.exit_flag.grid_offset == 0)
-        city_data.map.exit_flag.grid_offset = map_grid_offset(city_data.map.exit_flag.x, city_data.map.exit_flag.y);
+map_point *city_map_exit_flag(void) {
     return &city_data.map.exit_flag;
 }
 
-static int set_tile(map_tile *tile, int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
-    tile->x = x;
-    tile->y = y;
-    tile->grid_offset = grid_offset;
-    return grid_offset;
-}
 
 void city_map_set_entry_point(int x, int y) {
-    set_tile(&city_data.map.entry_point, x, y);
+    city_data.map.entry_point.set(x, y);
 }
 
 void city_map_set_exit_point(int x, int y) {
-    set_tile(&city_data.map.exit_point, x, y);
+    city_data.map.exit_point.set(x, y);
 }
 
 int city_map_set_entry_flag(int x, int y) {
-    return set_tile(&city_data.map.entry_flag, x, y);
+    city_data.map.entry_flag.set(x, y);
+    return city_data.map.entry_flag.grid_offset();
 }
 
 int city_map_set_exit_flag(int x, int y) {
-    return set_tile(&city_data.map.exit_flag, x, y);
+    city_data.map.exit_flag.set(x, y);
+    return city_data.map.exit_flag.grid_offset();
 }
 
 int city_map_road_network_index(int network_id) {

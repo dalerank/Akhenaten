@@ -1,7 +1,8 @@
+#include <city/view/lookup.h>
 #include "figures.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "empire/city.h"
 #include "figure/figure.h"
@@ -419,12 +420,11 @@ void window_building_draw_figure_list(building_info_context *c) {
 }
 
 static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
-    int x_cam, y_cam;
-    city_view_get_camera_tile(&x_cam, &y_cam);
+    map_point camera_tile = city_view_get_camera_tile();
 
-    int grid_offset = figure_get(figure_id)->grid_offset_figure;
-    int x, y;
-    city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
+    int grid_offset = figure_get(figure_id)->tile.grid_offset();
+//    int x, y;
+//    screen_tile screen = mappoint_to_viewtile(map_point(grid_offset));
 
 //    city_view_go_to_tile(x - 2, y - 6);
 

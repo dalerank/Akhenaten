@@ -45,7 +45,7 @@ void clear_distances(void) {
 }
 int valid_offset(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0
-    && map_grid_inside_map_area(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1);
+    && map_grid_inside_map_area(MAP_X(grid_offset), MAP_Y(grid_offset), 1);
 }
 
 void enqueue(int offset, int distance) {
@@ -99,8 +99,8 @@ bool route_queue_until_found(int source, int *dst_x, int *dst_y, bool (*callback
             int next_offset = offset + ROUTE_OFFSETS(i);
             if (valid_offset(next_offset)) {
                 if (callback(next_offset, distance)) {
-                    *dst_x = map_grid_offset_to_x(next_offset);
-                    *dst_y = map_grid_offset_to_y(next_offset);
+                    *dst_x = MAP_X(next_offset);
+                    *dst_y = MAP_Y(next_offset);
                     return true;
                 }
             }
@@ -124,8 +124,8 @@ bool route_queue_until_terrain(int source, int terrain_type, int *dst_x, int *ds
             if (valid_offset(next_offset)) {
                 if (callback(next_offset, distance, terrain_type)) {
                     if (dst_x != nullptr && dst_y != nullptr) {
-                        *dst_x = map_grid_offset_to_x(next_offset);
-                        *dst_y = map_grid_offset_to_y(next_offset);
+                        *dst_x = MAP_X(next_offset);
+                        *dst_y = MAP_Y(next_offset);
                     }
                     return true;
                 }

@@ -1,6 +1,6 @@
 #include "screenshot.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/buffer.h"
 #include "core/config.h"
 #include "core/file.h"
@@ -217,8 +217,8 @@ static void create_full_city_screenshot(void) {
     int width = screen_width();
     int height = screen_height();
 
-    int city_width_pixels = map_grid_width() * TILE_X_SIZE;
-    int city_height_pixels = map_grid_height() * TILE_Y_SIZE;
+    int city_width_pixels = scenario_map_data()->width * TILE_X_SIZE;
+    int city_height_pixels = scenario_map_data()->height * TILE_Y_SIZE;
 
     if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, IMAGE_HEIGHT_CHUNK)) {
         log_error("Unable to set memory for full city screenshot", 0, 0);

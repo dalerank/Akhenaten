@@ -45,14 +45,14 @@ int city_buildings_shipyard_boats_requested(void);
 bool city_buildings_has_working_dock(void);
 int city_buildings_get_working_dock(int index);
 
-void city_buildings_main_native_meeting_center(int *x, int *y);
+map_point city_buildings_main_native_meeting_center();
 void city_buildings_set_main_native_meeting_center(int x, int y);
 
 int city_buildings_is_mission_post_operational(void);
 void city_buildings_set_mission_post_operational(void);
 
 bool city_building_has_festival_square(void);
-void city_building_get_festival_square_position(int *x, int *y);
+map_point city_building_get_festival_square_position();
 void city_buildings_add_festival_square(building *square);
 void city_buildings_remove_festival_square(void);
 

@@ -216,7 +216,10 @@ static int terrain_on_native_overlay(void) {
             TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
             TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
-static void draw_footprint_native(int x, int y, int grid_offset) {
+static void draw_footprint_native(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (!map_property_is_draw_tile(grid_offset))
         return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
@@ -239,7 +242,10 @@ static void draw_footprint_native(int x, int y, int grid_offset) {
         }
     }
 }
-static void draw_top_native(int x, int y, int grid_offset) {
+static void draw_top_native(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
     if (!map_property_is_draw_tile(grid_offset))
         return;
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
@@ -251,7 +257,7 @@ static void draw_top_native(int x, int y, int grid_offset) {
             ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
         }
     } else if (map_building_at(grid_offset))
-        city_with_overlay_draw_building_top(x, y, grid_offset);
+        city_with_overlay_draw_building_top(pixel, point);
 
 }
 

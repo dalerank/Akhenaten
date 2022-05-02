@@ -97,7 +97,7 @@ int building_market_get_storage_destination(building *market) {
         if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_MARKET, b))
             continue;
 
-        int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);
+        int distance = calc_maximum_distance(market->tile.x(), market->tile.y(), b->tile.x(), b->tile.y());
         if (distance >= 40)
             continue;
 

@@ -128,11 +128,13 @@ void game_undo_restore_building_state(void) {
 }
 
 static void restore_map_images(void) {
-    int map_width, map_height;
-    map_grid_size(&map_width, &map_height);
+    int map_width = scenario_map_data()->width;
+    int map_height = scenario_map_data()->height;
+//    int map_width, map_height;
+//    map_grid_size(&map_width, &map_height);
     for (int y = 0; y < map_height; y++) {
         for (int x = 0; x < map_width; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (!map_building_at(grid_offset))
                 map_image_restore_at(grid_offset);
         }
@@ -179,13 +181,13 @@ static void add_building_to_terrain(building *b) {
                 image_offset = 25;
                 break;
         }
-        map_building_tiles_add_farm(b->id, b->x, b->y,
+        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(),
                                     image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
     } else if (b->house_size) {
 
     } else {
         int size = building_properties_for_type(b->type)->size;
-        map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
+        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, 0, 0);
         if (b->type == BUILDING_FISHING_WHARF)
             b->data.industry.fishing_boat_id = 0;
     }
@@ -197,38 +199,38 @@ static void add_building_to_terrain(building *b) {
         case BUILDING_BOOTH:
             for (int dy = 0; dy < 2; dy++)
                 for (int dx = 0; dx < 2; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_BANDSTAND:
             for (int dy = 0; dy < 3; dy++)
                 for (int dx = 0; dx < 3; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_PAVILLION:
             for (int dy = 0; dy < 4; dy++)
                 for (int dx = 0; dx < 4; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
         case BUILDING_FESTIVAL_SQUARE:
             for (int dy = 0; dy < 5; dy++)
                 for (int dx = 0; dx < 5; dx++)
-                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy)) == 0)
-                        map_building_set(b->data.entertainment.booth_corner_grid_offset + map_grid_delta(dx, dy), b->id);
+                    if (map_building_at(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy)) == 0)
+                        map_building_set(b->data.entertainment.booth_corner_grid_offset + GRID_OFFSET(dx, dy), b->id);
             break;
     }
 }
 
 static void restore_housing(building *b) {
     int size = b->house_size;
-    for (int x = b->x; x < b->x + size; x++)
-        for (int y = b->y; y < b->y + size; y++) {
-            int grid_offset = map_grid_offset(x, y);
+    for (int x = b->tile.x(); x < b->tile.x() + size; x++)
+        for (int y = b->tile.y(); y < b->tile.y() + size; y++) {
+            int grid_offset = MAP_OFFSET(x, y);
             data.newhouses_offsets[data.newhouses_num] = grid_offset + 1;
             data.newhouses_num++;
-//            if (x == b->x && y == b->y) {
+//            if (x == b->tile.x() && y == b->tile.y()) {
 //                b->house_size = 1;
 //                b->house_is_merged = 0;
 //                map_building_tiles_add(b->id, x, y, 1,
@@ -307,8 +309,8 @@ void game_undo_perform(void) {
         int grid_offset = data.newhouses_offsets[i] - 1;
         int vacant_lot_image = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 
-        int x = map_grid_offset_to_x(grid_offset);
-        int y = map_grid_offset_to_y(grid_offset);
+        int x = MAP_X(grid_offset);
+        int y = MAP_Y(grid_offset);
 
         building *new_b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y, 0);
         if (new_b->id > 0)
@@ -368,7 +370,7 @@ void game_undo_reduce_time_available(void) {
                 window_invalidate();
                 return;
             }
-            if (b->type != data.buildings[i].type || b->grid_offset != data.buildings[i].grid_offset) {
+            if (b->type != data.buildings[i].type || b->tile.grid_offset() != data.buildings[i].tile.grid_offset()) {
                 data.available = 0;
                 window_invalidate();
                 return;

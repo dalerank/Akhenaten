@@ -3,7 +3,7 @@
 
 #include "building/construction/build_planner.h"
 #include "building/model.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"

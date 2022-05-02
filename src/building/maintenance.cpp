@@ -8,7 +8,7 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "city/sentiment.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -50,7 +50,7 @@ void building_maintenance_update_burning_ruins(void) {
         if (b->fire_duration > 32) {
             game_undo_disable();
             b->state = BUILDING_STATE_RUBBLE;
-            map_building_tiles_set_rubble(i, b->x, b->y, b->size);
+            map_building_tiles_set_rubble(i, b->tile.x(), b->tile.y(), b->size);
             recalculate_terrain = 1;
             continue;
         }
@@ -73,7 +73,7 @@ void building_maintenance_update_burning_ruins(void) {
         int dir2 = fire_spread_direction + 1;
         if (dir2 > 7) dir2 = 0;
 
-        int grid_offset = b->grid_offset;
+        int grid_offset = b->tile.grid_offset();
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
             building_destroy_by_fire(building_get(next_building_id));
@@ -111,7 +111,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
         building *b = building_get(building_id);
         if ((b->state == BUILDING_STATE_VALID || b->state == BUILDING_STATE_MOTHBALLED) &&
             b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
-            int dist = calc_maximum_distance(x, y, b->x, b->y);
+            int dist = calc_maximum_distance(x, y, b->tile.x(), b->tile.y());
             if (b->has_figure(3)) {
                 if (dist < min_occupied_dist) {
                     min_occupied_dist = dist;
@@ -134,7 +134,7 @@ static void collapse_building(building *b) {
 //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse())
-        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
 
     game_undo_disable();
     building_destroy_by_collapse(b);
@@ -143,7 +143,7 @@ static void fire_building(building *b) {
 //    return; // TODO: get fire values and logic working before enabling
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire())
-        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->tile.grid_offset());
 
     building_destroy_by_fire(b);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -179,7 +179,7 @@ void building_maintenance_check_fire_collapse(void) {
         }
 
         /////// FIRE
-        int random_building = (i + map_random_get(b->grid_offset)) & 7;
+        int random_building = (i + map_random_get(b->tile.grid_offset())) & 7;
         if (random_building == random_global) {
             b->fire_risk += model->fire_risk;
 //            if (!b->house_size)
@@ -208,8 +208,8 @@ void building_maintenance_check_fire_collapse(void) {
         map_routing_update_land();
 }
 void building_maintenance_check_rome_access(void) {
-    const map_tile *entry_point = city_map_entry_point();
-    map_routing_calculate_distances(entry_point->x, entry_point->y);
+    map_point *entry_point = city_map_entry_point();
+    map_routing_calculate_distances(entry_point->x(), entry_point->y());
     int problem_grid_offset = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
@@ -218,29 +218,29 @@ void building_maintenance_check_rome_access(void) {
 
         if (b->house_size) {
             int x_road, y_road;
-            if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+            if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                 // no road: eject people
                 b->distance_from_entry = 0;
                 b->house_unreachable_ticks++;
                 if (b->house_unreachable_ticks > 4) {
                     if (b->house_population) {
-                        figure_create_homeless(b->x, b->y, b->house_population);
+                        figure_create_homeless(b->tile.x(), b->tile.y(), b->house_population);
                         b->house_population = 0;
                         b->house_unreachable_ticks = 0;
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
+            } else if (map_routing_distance(MAP_OFFSET(x_road, y_road))) {
                 // reachable from rome
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
+                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
-            } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
+            } else if (map_closest_reachable_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
+                b->distance_from_entry = map_routing_distance(MAP_OFFSET(x_road, y_road));
                 b->house_unreachable_ticks = 0;
             } else {
                 // no reachable road in radius
                 if (!b->house_unreachable_ticks)
-                    problem_grid_offset = b->grid_offset;
+                    problem_grid_offset = b->tile.grid_offset();
 
                 b->house_unreachable_ticks++;
                 if (b->house_unreachable_ticks > 8) {
@@ -255,52 +255,51 @@ void building_maintenance_check_rome_access(void) {
 
             b->distance_from_entry = 0;
             int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road,
+            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, &x_road,
                                                                         &y_road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x(x_road);
+                b->road_access.y(y_road);
             }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
             b->distance_from_entry = 0;
             building *main_building = b->main();
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
-            b->road_access_x = main_building->road_access_x;
-            b->road_access_y = main_building->road_access_y;
+            b->road_access = main_building->road_access;
         } else if (b->type == BUILDING_SENET_HOUSE) {
             b->distance_from_entry = 0;
             int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road);
+            int road_grid_offset = map_road_to_largest_network_hippodrome(b->tile.x(), b->tile.y(), &x_road, &y_road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x(x_road);
+                b->road_access.y(y_road);
             }
         } else { // other building
             b->distance_from_entry = 0;
             int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
+            int road_grid_offset = map_road_to_largest_network(b->tile.x(), b->tile.y(), b->size, &x_road, &y_road);
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
+                b->road_access.x(x_road);
+                b->road_access.y(y_road);
             }
         }
     }
-    const map_tile *exit_point = city_map_exit_point();
-    if (!map_routing_distance(exit_point->grid_offset)) {
+    map_point *exit_point = city_map_exit_point();
+    if (!map_routing_distance(exit_point->grid_offset())) {
         // no route through city
         if (city_population() <= 0)
             return;
         for (int i = 0; i < 15; i++) {
-            map_routing_delete_first_wall_or_aqueduct(entry_point->x, entry_point->y);
-            map_routing_delete_first_wall_or_aqueduct(exit_point->x, exit_point->y);
-            map_routing_calculate_distances(entry_point->x, entry_point->y);
+            map_routing_delete_first_wall_or_aqueduct(entry_point->x(), entry_point->y());
+            map_routing_delete_first_wall_or_aqueduct(exit_point->x(), exit_point->y());
+            map_routing_calculate_distances(entry_point->x(), entry_point->y());
 
             map_tiles_update_all_walls();
             map_tiles_update_all_aqueducts(0);
@@ -310,7 +309,7 @@ void building_maintenance_check_rome_access(void) {
             map_routing_update_land();
             map_routing_update_walls();
 
-            if (map_routing_distance(exit_point->grid_offset)) {
+            if (map_routing_distance(exit_point->grid_offset())) {
                 city_message_post(true, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 game_undo_disable();
                 return;

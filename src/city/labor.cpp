@@ -252,7 +252,7 @@ const int CATEGORY_FOR_building(building *b) {
     if (GAME_ENV == ENGINE_ENV_C3)
         return CATEGORY_FOR_int_arr[type];
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (map_terrain_is(b->grid_offset, TERRAIN_FLOODPLAIN) && building_is_farm(type))
+        if (map_terrain_is(b->tile.grid_offset(), TERRAIN_FLOODPLAIN) && building_is_farm(type))
             return -1;
         return CATEGORY_FOR_int_arr_PH[type];
     }

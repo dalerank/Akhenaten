@@ -1,7 +1,7 @@
 #ifndef INPUT_SCROLL_H
 #define INPUT_SCROLL_H
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 

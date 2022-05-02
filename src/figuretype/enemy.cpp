@@ -36,9 +36,11 @@ void figure::enemy_initial(formation *m) {
         if (m->recent_fight)
             action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
         else {
-            destination_x = m->destination_x + formation_position_x.enemy;
-            destination_y = m->destination_y + formation_position_y.enemy;
-            if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) < 8)
+            destination_tile.set(m->destination_x + formation_position_x.enemy,
+                                 m->destination_y + formation_position_y.enemy);
+//            destination_tile.x() = m->destination_x + formation_position_x.enemy;
+//            destination_tile.y() = m->destination_y + formation_position_y.enemy;
+            if (calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y()) < 8)
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
 
         }
@@ -52,7 +54,7 @@ void figure::enemy_initial(formation *m) {
             wait_ticks_missile = 0;
             if (figure_combat_get_missile_target_for_enemy(this, 10, city_figures_soldiers() < 4, &tile)) {
                 attack_image_offset = 1;
-                direction = calc_missile_shooter_direction(tile_x, tile_y, tile.x, tile.y);
+                direction = calc_missile_shooter_direction(tile.x(), tile.y(), tile.x(), tile.y());
             } else
                 attack_image_offset = 0;
         }
@@ -70,7 +72,7 @@ void figure::enemy_initial(formation *m) {
                     break;
             }
             if (attack_image_offset == 1) {
-                if (tile.x == -1 || tile.y == -1)
+                if (tile.x() == -1 || tile.y() == -1)
                     map_point_get_last_result(&tile);
 
 //                figure_create_missile(id, tile_x, tile_y, tile.x, tile.y, missile_type);
@@ -91,9 +93,11 @@ void figure::enemy_marching(const formation *m) {
     wait_ticks--;
     if (wait_ticks <= 0) {
         wait_ticks = 50;
-        destination_x = m->destination_x + formation_position_x.enemy;
-        destination_y = m->destination_y + formation_position_y.enemy;
-        if (calc_general_direction(tile_x, tile_y, destination_x, destination_y) == DIR_FIGURE_NONE) {
+        destination_tile.set(m->destination_x + formation_position_x.enemy,
+                             m->destination_y + formation_position_y.enemy);
+//        destination_tile.x() = m->destination_x + formation_position_x.enemy;
+//        destination_tile.y() = m->destination_y + formation_position_y.enemy;
+        if (calc_general_direction(tile.x(), tile.y(), destination_tile.x(), destination_tile.y()) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
         }
@@ -128,11 +132,12 @@ void figure::enemy_fighting(const formation *m) {
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = figure_combat_get_target_for_enemy(tile_x, tile_y);
+        target_id = figure_combat_get_target_for_enemy(tile.x(), tile.y());
         if (target_id) {
             figure *target = figure_get(target_id);
-            destination_x = target->tile_x;
-            destination_y = target->tile_y;
+            destination_tile = target->tile;
+//            destination_tile.x() = target->tile.x();
+//            destination_tile.y() = target->tile.y();
             target_figure_id = target_id;
             target_figure_created_sequence = target->created_sequence;
             target->targeted_by_figure_id = id;
@@ -143,8 +148,9 @@ void figure::enemy_fighting(const formation *m) {
         move_ticks(speed_multiplier);
         if (direction == DIR_FIGURE_NONE) {
             figure *target = figure_get(target_figure_id);
-            destination_x = target->tile_x;
-            destination_y = target->tile_y;
+            destination_tile = target->tile;
+//            destination_tile.x() = target->tile.x();
+//            destination_tile.y() = target->tile.y();
             route_remove();
         } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
@@ -163,8 +169,9 @@ void figure::enemy_action(formation *m) {
 
     switch (action_state) {
         case FIGURE_ACTION_148_FLEEING:
-            destination_x = source_x;
-            destination_y = source_y;
+            destination_tile = source_tile;
+//            destination_tile.x() = source_tile.x();
+//            destination_tile.y() = source_tile.y();
             move_ticks(speed_multiplier);
             if (direction == DIR_FIGURE_NONE ||
                 direction == DIR_FIGURE_REROUTE ||
@@ -520,8 +527,9 @@ void figure::enemy_gladiator_action() {
                 int x_tile, y_tile;
                 int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {
-                    destination_x = x_tile;
-                    destination_y = y_tile;
+                    destination_tile.set(x_tile, y_tile);
+//                    destination_tile.x() = x_tile;
+//                    destination_tile.y() = y_tile;
                     set_destination(building_id);
                     route_remove();
                 } else {

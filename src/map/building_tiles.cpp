@@ -5,7 +5,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/direction.h"
 #include "core/image.h"
 #include "map/aqueduct.h"
@@ -23,12 +23,12 @@
 #include "graphics/image.h"
 
 static int north_tile_grid_offset(int x, int y, int *size) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     *size = map_property_multi_tile_size(grid_offset);
     for (int i = 0; i < *size && map_property_multi_tile_x(grid_offset); i++)
-        grid_offset += map_grid_delta(-1, 0);
+        grid_offset += GRID_OFFSET(-1, 0);
     for (int i = 0; i < *size && map_property_multi_tile_y(grid_offset); i++)
-        grid_offset += map_grid_delta(0, -1);
+        grid_offset += GRID_OFFSET(0, -1);
     return grid_offset;
 }
 static void adjust_to_absolute_xy(int *x, int *y, int size) {
@@ -45,7 +45,7 @@ static void adjust_to_absolute_xy(int *x, int *y, int size) {
     }
 }
 static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
-    int grid_offset = map_grid_offset(x + dx, y + dy);
+    int grid_offset = MAP_OFFSET(x + dx, y + dy);
     if (GAME_ENV == ENGINE_ENV_C3) {
         map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
         map_terrain_add(grid_offset, TERRAIN_BUILDING);
@@ -54,8 +54,8 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
         map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
         map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        ImageDraw::isometric_footprint(crop_image_id + (growth < 4 ? growth : 4), map_grid_offset_to_x(grid_offset),
-                                       map_grid_offset_to_y(grid_offset), 0);
+        ImageDraw::isometric_footprint(crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset),
+                                       MAP_Y(grid_offset), 0);
 }
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {
@@ -85,7 +85,7 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
     int y_proper = y_leftmost * (size - 1);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             map_terrain_add(grid_offset, terrain);
             map_building_set(grid_offset, building_id);
@@ -125,7 +125,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
         }
         for (int dy = 0; dy < 2; dy++) {
             for (int dx = 0; dx < 2; dx++) {
-                int grid_offset = map_grid_offset(x + dx, y + dy);
+                int grid_offset = MAP_OFFSET(x + dx, y + dy);
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_BUILDING);
                 map_building_set(grid_offset, building_id);
@@ -140,7 +140,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
 //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
 //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
 //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
-        map_building_tiles_add(building_id, x, y, 3, get_farm_image(map_grid_offset(x, y)), TERRAIN_BUILDING);
+        map_building_tiles_add(building_id, x, y, 3, get_farm_image(MAP_OFFSET(x, y)), TERRAIN_BUILDING);
 //        crop_image_offset += image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
         return;
     }
@@ -174,10 +174,14 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
 }
 
 void map_add_bandstand_tiles(building *b) {
-    int b_delta_0_m1 = b->grid_offset - map_grid_delta(0, -1);
-    int b_delta_0_1 = b->grid_offset - map_grid_delta(0, 1);
-    int b_delta_1_0 = b->grid_offset - map_grid_delta(1, 0);
-    int b_delta_m1_0 = b->grid_offset - map_grid_delta(-1, 0);
+    int b_delta_0_m1 = b->tile.shifted(0, -1).grid_offset();
+    int b_delta_0_1 = b->tile.shifted(0, 1).grid_offset();
+    int b_delta_1_0 = b->tile.shifted(1, 0).grid_offset();
+    int b_delta_m1_0 = b->tile.shifted(-1, 0).grid_offset();
+//    int b_delta_0_m1 = b->tile.grid_offset() - GRID_OFFSET(0, -1);
+//    int b_delta_0_1 = b->tile.grid_offset() - GRID_OFFSET(0, 1);
+//    int b_delta_1_0 = b->tile.grid_offset() - GRID_OFFSET(1, 0);
+//    int b_delta_m1_0 = b->tile.grid_offset() - GRID_OFFSET(-1, 0);
 
     int offsets_by_orientation[4];
     switch (city_view_orientation()) {
@@ -210,9 +214,9 @@ void map_add_bandstand_tiles(building *b) {
     for (int j = 0; j < 4; ++j) {
         auto neighbor = building_at(offsets_by_orientation[j]);
         if (neighbor->type == BUILDING_BANDSTAND
-            && neighbor->grid_offset == offsets_by_orientation[j]
+            && neighbor->tile.grid_offset() == offsets_by_orientation[j]
             && neighbor->main() == b->main()) {
-            map_image_set(neighbor->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
+            map_image_set(neighbor->tile.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
             continue;
         }
     }
@@ -233,7 +237,7 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
         case 0: // north
             for (int dy = 0; dy < size; dy++) {
                 for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = map_grid_offset(x + dx, y + dy);
+                    int grid_offset = MAP_OFFSET(x + dx, y + dy);
                     set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
                 }
             }
@@ -241,7 +245,7 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
         case 2: // east
             for (int dy = 0; dy < size; dy++) {
                 for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = map_grid_offset(x + size - 1 - dy, y + dx);
+                    int grid_offset = MAP_OFFSET(x + size - 1 - dy, y + dx);
                     set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
                 }
             }
@@ -249,7 +253,7 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
         case 4: // south
             for (int dy = 0; dy < size; dy++) {
                 for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = map_grid_offset(x + size - 1 - dx, y + size - 1 - dy);
+                    int grid_offset = MAP_OFFSET(x + size - 1 - dx, y + size - 1 - dy);
                     set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
                 }
             }
@@ -257,7 +261,7 @@ void map_add_venue_plaza_tiles(int building_id, int size, int x, int y, int imag
         case 6: // west
             for (int dy = 0; dy < size; dy++) {
                 for (int dx = 0; dx < size; dx++) {
-                    int grid_offset = map_grid_offset(x + dy, y + size - 1 - dx);
+                    int grid_offset = MAP_OFFSET(x + dy, y + size - 1 - dx);
                     set_underlying_venue_plaza_tile(grid_offset, building_id, image_id + dx + (dy * size), update_only);
                 }
             }
@@ -315,21 +319,25 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
     }
 
     // adjust northern tile offset
-    map_tile north_tile = {x, y};
+    map_point north_tile = {x, y};
     switch (orientation) {
         case 0: // NE
-            north_tile.x -= 2;
-            north_tile.y -= 10;
+            north_tile.shift(-2, -10);
+//            north_tile.x -= 2;
+//            north_tile.y -= 10;
             break;
         case 1: // SE
-            north_tile.y -= 2;
+            north_tile.shift(0, -2);
+//            north_tile.y -= 2;
             break;
         case 2: // SW
-            north_tile.x -= 2;
+            north_tile.shift(-2, 0);
+//            north_tile.x -= 2;
             break;
         case 3: // NW
-            north_tile.x -= 10;
-            north_tile.y -= 2;
+            north_tile.shift(-10, -2);
+//            north_tile.x -= 10;
+//            north_tile.y -= 2;
             break;
     }
 
@@ -353,7 +361,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 13; row++) {
                 for (int column = 0; column < 7; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -369,7 +377,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 7; row++) {
                 for (int column = 0; column < 13; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -391,7 +399,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 13; row++) {
                 for (int column = 0; column < 7; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -407,7 +415,7 @@ void map_add_temple_complex_base_tiles(int type, int x, int y, int orientation) 
             };
             for (int row = 0; row < 7; row++) {
                 for (int column = 0; column < 13; column++)
-                    map_image_set(map_grid_offset(north_tile.x + column, north_tile.y + row), TEMPLE_COMPLEX_SCHEME[row][column]);
+                    map_image_set(MAP_OFFSET(north_tile.x() + column, north_tile.y() + row), TEMPLE_COMPLEX_SCHEME[row][column]);
             }
             break;
         }
@@ -422,7 +430,7 @@ void map_building_tiles_add_temple_complex_parts(building *b) {
         part = 1;
     else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
         part = 2;
-    map_building_tiles_add(b->id, b->x, b->y, b->size,
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
        get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
        TERRAIN_BUILDING);
     if (b->next_part_building_id)
@@ -458,11 +466,11 @@ void map_building_tiles_remove(int building_id, int x, int y) {
                 break;
         }
     }
-    x = map_grid_offset_to_x(base_grid_offset);
-    y = map_grid_offset_to_y(base_grid_offset);
+    x = MAP_X(base_grid_offset);
+    y = MAP_Y(base_grid_offset);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
 //            if (building_id && map_building_at(grid_offset) != building_id)
 //                continue;
 
@@ -479,7 +487,7 @@ void map_building_tiles_remove(int building_id, int x, int y) {
             map_sprite_clear_tile(grid_offset);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(map_grid_offset(x + dx, y + dy));
+                map_tiles_set_water(MAP_OFFSET(x + dx, y + dy));
             } else {
                 map_image_set(grid_offset,
                               image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) +
@@ -498,7 +506,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
     building *b = building_get(building_id);
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             if (map_building_at(grid_offset) != building_id)
                 continue;
 
@@ -516,7 +524,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size) {
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(map_grid_offset(x + dx, y + dy));
+                map_tiles_set_water(MAP_OFFSET(x + dx, y + dy));
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);
@@ -537,7 +545,7 @@ bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, 
 
     for (int dy = 0; dy < size_y; dy++) {
         for (int dx = 0; dx < size_x; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset) || map_terrain_exists_tile_in_radius_with_type(x + dx, y + dy, 1, 1, TERRAIN_FLOODPLAIN))
                 return false;
         }
@@ -551,7 +559,7 @@ bool map_building_tiles_mark_construction(int x, int y, int size_x, int size_y, 
     // mark as being constructed
     for (int dy = 0; dy < size_y; dy++) {
         for (int dx = 0; dx < size_x; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             map_property_mark_constructing(grid_offset);
         }
     }
@@ -562,7 +570,7 @@ void map_building_tiles_mark_deleting(int grid_offset) {
     if (!building_id)
         map_bridge_remove(grid_offset, 1);
     else
-        grid_offset = building_get(building_id)->main()->grid_offset;
+        grid_offset = building_get(building_id)->main()->tile.grid_offset();
     map_property_mark_deleted(grid_offset);
 }
 int map_building_tiles_are_clear(int x, int y, int size, int terrain) {
@@ -572,7 +580,7 @@ int map_building_tiles_are_clear(int x, int y, int size, int terrain) {
 
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR))
                 return 0;
         }

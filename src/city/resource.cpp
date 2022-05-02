@@ -173,9 +173,9 @@ void city_resource_calculate_warehouse_stocks(void) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_WAREHOUSE) {
             b->has_road_access = 0;
-            if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, 0))
+            if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), b->size, 0))
                 b->has_road_access = 1;
-            else if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0))
+            else if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, 0))
                 b->has_road_access = 2;
         }
     }
@@ -249,7 +249,7 @@ static void calculate_available_food(void) {
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access(b->x, b->y, b->size, 0)) { //map_has_road_access_granary(b->x, b->y, 0)
+        if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0)) { //map_has_road_access_granary(b->tile.x(), b->tile.y(), 0)
             b->has_road_access = 1;
             int pct_workers = calc_percentage(
                     b->num_workers, model_get_building(b->type)->laborers);
@@ -316,7 +316,7 @@ void city_resource_calculate_workshop_stocks(void) {
             continue;
 
         b->has_road_access = 0;
-        if (map_has_road_access(b->x, b->y, b->size, 0)) {
+        if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0)) {
             b->has_road_access = 1;
             int room = 200 - b->stored_full_amount;
             if (room < 0)

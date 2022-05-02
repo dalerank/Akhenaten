@@ -8,7 +8,7 @@
 #include "building/warehouse.h"
 #include "city/map.h"
 #include "city/resource.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/calc.h"
 #include "core/image_group.h"
 #include "figure/figure.h"
@@ -216,29 +216,29 @@ void highlight_waypoints(building *b) // highlight the 4 routing tiles for roams
         return;
     }
     int hx, hy, roadx, roady;
-    hx = b->x;
-    hy = b->y - 8;
+    hx = b->tile.x();
+    hy = b->tile.y() - 8;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
-    hx = b->x + 8;
-    hy = b->y;
+    hx = b->tile.x() + 8;
+    hy = b->tile.y();
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
-    hx = b->x;
-    hy = b->y + 8;
+    hx = b->tile.x();
+    hy = b->tile.y() + 8;
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
-    hx = b->x - 8;
-    hy = b->y;
+    hx = b->tile.x() - 8;
+    hy = b->tile.y();
     map_grid_bound(&hx, &hy);
     if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady))
-        map_highlight_set(map_grid_offset(roadx, roady));
+        map_highlight_set(MAP_OFFSET(roadx, roady));
 
     window_invalidate();
 }
@@ -288,9 +288,9 @@ static void init(int grid_offset) {
     else if (map_terrain_is(grid_offset, TERRAIN_DUNE))
         context.terrain_type = TERRAIN_INFO_DUNES;
     else if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
-        if (grid_offset == city_map_entry_flag()->grid_offset)
+        if (grid_offset == city_map_entry_flag()->grid_offset())
             context.terrain_type = TERRAIN_INFO_ENTRY_FLAG;
-        else if (grid_offset == city_map_exit_flag()->grid_offset)
+        else if (grid_offset == city_map_exit_flag()->grid_offset())
             context.terrain_type = TERRAIN_INFO_EXIT_FLAG;
         else {
             if (map_terrain_is(grid_offset, TERRAIN_ORE))
@@ -351,12 +351,12 @@ static void init(int grid_offset) {
         context.has_road_access = 0;
         switch (b->type) {
 //            case BUILDING_GRANARY:
-//                if (map_has_road_access_granary(b->x, b->y, 0))
+//                if (map_has_road_access_granary(b->tile.x(), b->tile.y(), 0))
 //                    context.has_road_access = 1;
 //
 //                break;
 //            case BUILDING_SENET_HOUSE:
-//                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
+//                if (map_has_road_access_hippodrome_rotation(b->tile.x(), b->tile.y(), 0, b->subtype.orientation))
 //                    context.has_road_access = 1;
 
 //            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -364,12 +364,12 @@ static void init(int grid_offset) {
 //            case BUILDING_TEMPLE_COMPLEX_PTAH:
 //            case BUILDING_TEMPLE_COMPLEX_SETH:
 //            case BUILDING_TEMPLE_COMPLEX_BAST:
-//                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation))
+//                if (map_has_road_access_hippodrome_rotation(b->tile.x(), b->tile.y(), 0, b->subtype.orientation))
 //                    context.has_road_access = 1;
 //
 //                break;
 //            case BUILDING_WAREHOUSE:
-//                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0))
+//                if (map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, 0))
 //                    context.has_road_access = 1;
 //
 //                context.warehouse_space_text = building_warehouse_get_space_info(b);
@@ -377,7 +377,7 @@ static void init(int grid_offset) {
             default:
                 if (b->road_is_accessible)
                     context.has_road_access = 1;
-//                if (map_has_road_access(b->x, b->y, b->size, 0))
+//                if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
 //                    context.has_road_access = 1;
 
                 break;

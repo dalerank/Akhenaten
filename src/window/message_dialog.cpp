@@ -4,7 +4,7 @@
 
 #include "city/message.h"
 #include "city/sentiment.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "empire/city.h"
@@ -672,7 +672,7 @@ static void button_go_to_problem(int param1, int param2) {
 
     }
     if (grid_offset > 0 && grid_offset < 26244)
-        city_view_go_to_grid_offset(grid_offset);
+        city_view_go_to_point(map_point(grid_offset));
 
     window_city_show();
 }

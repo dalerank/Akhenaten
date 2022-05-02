@@ -20,18 +20,18 @@ static const struct {
         {160, 160}
 };
 
-static void init_point(map_point *point) {
-    point->x = -1;
-    point->y = -1;
-}
+//static void init_point(map_point *point) {
+//    point->x = -1;
+//    point->y = -1;
+//}
 
 void scenario_editor_create(int map_size) {
     memset(&scenario_data, 0, sizeof(scenario_data));
 
     scenario_data.map.width = MAP_SIZES[map_size].width;
     scenario_data.map.height = MAP_SIZES[map_size].height;
-    scenario_data.map.grid_border_size = GRID_LENGTH - scenario_data.map.width;
-    scenario_data.map.grid_start = (GRID_LENGTH - scenario_data.map.height) / 2 * GRID_LENGTH +
+    scenario_data.map.border_size = GRID_LENGTH - scenario_data.map.width;
+    scenario_data.map.start_offset = (GRID_LENGTH - scenario_data.map.height) / 2 * GRID_LENGTH +
                                    (GRID_LENGTH - scenario_data.map.width) / 2;
 
     string_copy(lang_get_string(44, 37), scenario_data.subtitle, MAX_SUBTITLE);
@@ -69,22 +69,22 @@ void scenario_editor_create(int map_size) {
     scenario_data.earthquake.severity = 0;
     scenario_data.earthquake.year = 0;
 
-    init_point(&scenario_data.earthquake_point);
-    init_point(&scenario_data.entry_point);
-    init_point(&scenario_data.exit_point);
-    init_point(&scenario_data.river_entry_point);
-    init_point(&scenario_data.river_exit_point);
+    scenario_data.earthquake_point.set(-1);
+    scenario_data.entry_point.set(-1);
+    scenario_data.exit_point.set(-1);
+    scenario_data.river_entry_point.set(-1);
+    scenario_data.river_exit_point.set(-1);
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++)
-        init_point(&scenario_data.invasion_points_land[i]);
+        scenario_data.invasion_points_land[i].set(-1);
     for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++)
-        init_point(&scenario_data.invasion_points_sea[i]);
+        scenario_data.invasion_points_sea[i].set(-1);
 
     for (int i = 0; i < MAX_FISH_POINTS; i++)
-        init_point(&scenario_data.fishing_points[i]);
+        scenario_data.fishing_points[i].set(-1);
     for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++)
-        init_point(&scenario_data.herd_points_predator[i]);
+        scenario_data.herd_points_predator[i].set(-1);
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
-        init_point(&scenario_data.herd_points_prey[i]);
+        scenario_data.herd_points_prey[i].set(-1);
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario_data.requests[i].deadline_years = 5;

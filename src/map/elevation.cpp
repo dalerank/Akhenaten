@@ -1,7 +1,7 @@
 #include <game/io/io_buffer.h>
 #include "elevation.h"
 
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 
 static grid_xx elevation = {0, {FS_UINT8, FS_UINT8}};
@@ -19,19 +19,19 @@ void map_elevation_clear(void) {
 static void fix_cliff_tiles(int grid_offset) {
     // reduce elevation when the surrounding tiles are at least 2 lower
     int max = map_grid_get(&elevation, grid_offset) - 1;
-    if (map_grid_get(&elevation, grid_offset + map_grid_delta(-1, 0)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(0, -1)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(1, 0)) < max ||
-        map_grid_get(&elevation, grid_offset + map_grid_delta(0, 1)) < max) {
+    if (map_grid_get(&elevation, grid_offset + GRID_OFFSET(-1, 0)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(0, -1)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(1, 0)) < max ||
+        map_grid_get(&elevation, grid_offset + GRID_OFFSET(0, 1)) < max) {
         map_grid_set(&elevation, grid_offset, max);
     }
 }
 void map_elevation_remove_cliffs(void) {
     // elevation is max 5, so we need 4 passes to fix the lot
     for (int level = 0; level < 4; level++) {
-        int grid_offset = map_data.start_offset;
-        for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-            for (int x = 0; x < map_data.width; x++, grid_offset++) {
+        int grid_offset = scenario_map_data()->start_offset;
+        for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+            for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
                 if (map_grid_get(&elevation, grid_offset) > 0)
                     fix_cliff_tiles(grid_offset);
 

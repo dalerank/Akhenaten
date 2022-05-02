@@ -80,13 +80,13 @@ static void draw_status(void) {
     map_point exit = scenario_map_exit();
     int people_text;
     font_t people_font = FONT_NORMAL_YELLOW;
-    if (entry.x == -1) {
-        if (exit.x == -1)
+    if (entry.x() == -1) {
+        if (exit.x() == -1)
             people_text = 60;
         else {
             people_text = 59;
         }
-    } else if (exit.x == -1)
+    } else if (exit.x() == -1)
         people_text = 61;
     else {
         people_text = 62;
@@ -96,10 +96,10 @@ static void draw_status(void) {
 
     entry = scenario_map_river_entry();
     exit = scenario_map_river_exit();
-    if (entry.x != -1 || exit.x != -1) {
-        if (entry.x == -1)
+    if (entry.x() != -1 || exit.x() != -1) {
+        if (entry.x() == -1)
             lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_YELLOW);
-        else if (exit.x == -1)
+        else if (exit.x() == -1)
             lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_YELLOW);
         else {
             lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_BLACK_ON_DARK);
@@ -122,7 +122,7 @@ static void draw_status(void) {
 
     if (scenario_editor_earthquake_severity() > 0) {
         map_point earthquake = scenario_editor_earthquake_point();
-        if (earthquake.x == -1 || earthquake.y == -1)
+        if (earthquake.x() == -1 || earthquake.y() == -1)
             lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_YELLOW);
         else {
             lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_BLACK_ON_DARK);

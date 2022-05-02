@@ -65,8 +65,8 @@ formation *formation_create_legion(int building_id, int x, int y, int type) {
         m->legion_id = 9;
 
     building *fort_ground = building_get(building_get(building_id)->next_part_building_id);
-    m->x = m->standard_x = m->x_home = fort_ground->x;
-    m->y = m->standard_y = m->y_home = fort_ground->y;
+    m->x = m->standard_x = m->x_home = fort_ground->tile.x();
+    m->y = m->standard_y = m->y_home = fort_ground->tile.y();
 
     data.num_formations++;
     if (formation_id > data.id_last_in_use)
@@ -154,7 +154,7 @@ int formation_grid_offset_for_invasion(int invasion_sequence) {
         formation *m = &formations[i];
         if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
             if (m->x_home > 0 || m->y_home > 0)
-                return map_grid_offset(m->x_home, m->y_home);
+                return MAP_OFFSET(m->x_home, m->y_home);
             else {
                 return 0;
             }
@@ -203,7 +203,7 @@ void formation_calculate_legion_totals(void) {
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure *f = figure_get(m->figures[0]);
                 if (f->state == FIGURE_STATE_ALIVE)
-                    formation_set_home(m, f->tile_x, f->tile_y);
+                    formation_set_home(m, f->tile.x(), f->tile.y());
             }
         }
     }

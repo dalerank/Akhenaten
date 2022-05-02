@@ -17,40 +17,40 @@ static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[4][6] = {
         {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(2, 0),  GRID_OFFSET(2, 1),  GRID_OFFSET(0, 0), GRID_OFFSET(0, 1)},
 };
 
-static int is_clear_terrain(const map_tile *tile, int *warning) {
-    int result = !map_terrain_is(tile->grid_offset, TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
+static int is_clear_terrain(map_point tile, int *warning) {
+    int result = !map_terrain_is(tile.grid_offset(), TERRAIN_NOT_CLEAR ^ TERRAIN_ROAD);
     if (!result && warning)
         *warning = WARNING_EDITOR_CANNOT_PLACE;
 
     return result;
 }
 
-static int is_edge(const map_tile *tile, int *warning) {
-    int result = tile->x == 0 || tile->y == 0 || tile->x == map_grid_width() - 1 || tile->y == map_grid_height() - 1;
+static int is_edge(map_point tile, int *warning) {
+    int result = tile.x() == 0 || tile.y() == 0 || tile.x() == scenario_map_data()->width - 1 || tile.y() == scenario_map_data()->height - 1;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_MAP_EDGE;
 
     return result;
 }
 
-static int is_water(const map_tile *tile, int *warning) {
-    int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER);
+static int is_water(map_point tile, int *warning) {
+    int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
 
     return result;
 }
 
-static int is_deep_water(const map_tile *tile, int *warning) {
-    int result = map_terrain_is(tile->grid_offset, TERRAIN_WATER) &&
-                 map_terrain_count_directly_adjacent_with_type(tile->grid_offset, TERRAIN_WATER) == 4;
+static int is_deep_water(map_point tile, int *warning) {
+    int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER) &&
+                 map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_WATER) == 4;
     if (!result && warning)
         *warning = WARNING_EDITOR_NEED_OPEN_WATER;
 
     return result;
 }
 
-int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning) {
+int editor_tool_can_place_flag(int type, map_point tile, int *warning) {
     switch (type) {
         case TOOL_ENTRY_POINT:
         case TOOL_EXIT_POINT:
@@ -73,8 +73,8 @@ int editor_tool_can_place_flag(int type, const map_tile *tile, int *warning) {
     }
 }
 
-int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_index) {
-    if (!map_grid_is_inside(tile->x, tile->y, 2))
+int editor_tool_can_place_access_ramp(map_point tile, int *orientation_index) {
+    if (!map_grid_is_inside(tile.x(), tile.y(), 2))
         return 0;
 
     for (int orientation = 0; orientation < 4; orientation++) {
@@ -82,7 +82,7 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
         int wrong_tiles = 0;
         int top_elevation = 0;
         for (int index = 0; index < 6; index++) {
-            int tile_offset = tile->grid_offset;// + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
+            int tile_offset = tile.grid_offset();// + ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[orientation][index];
             switch (GAME_ENV) {
                 case ENGINE_ENV_PHARAOH:
                     tile_offset += ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION_PH[orientation][index];
@@ -128,10 +128,10 @@ int editor_tool_can_place_access_ramp(const map_tile *tile, int *orientation_ind
     return 0;
 }
 
-int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blocked_tiles) {
+int editor_tool_can_place_building(map_point tile, int num_tiles, int *blocked_tiles) {
     bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = tile->grid_offset;// + TILE_GRID_OFFSETS[i];
+        int tile_offset = tile.grid_offset();// + TILE_GRID_OFFSETS[i];
         switch (GAME_ENV) {
             case ENGINE_ENV_PHARAOH:
                 tile_offset += TILE_GRID_OFFSETS_PH[i];

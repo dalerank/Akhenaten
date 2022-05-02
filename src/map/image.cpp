@@ -27,17 +27,18 @@ void map_image_clear(void) {
     map_grid_clear(&images);
 }
 void map_image_init_edges(void) {
-    int width, height;
-    map_grid_size(&width, &height);
+    int width = scenario_map_data()->width;
+    int height = scenario_map_data()->height;
+//    map_grid_size(&width, &height);
     for (int x = 1; x < width; x++) {
-        map_grid_set(&images, map_grid_offset(x, height), 1);
+        map_grid_set(&images, MAP_OFFSET(x, height), 1);
     }
     for (int y = 1; y < height; y++) {
-        map_grid_set(&images, map_grid_offset(width, y), 2);
+        map_grid_set(&images, MAP_OFFSET(width, y), 2);
     }
-    map_grid_set(&images, map_grid_offset(0, height), 3);
-    map_grid_set(&images, map_grid_offset(width, 0), 4);
-    map_grid_set(&images, map_grid_offset(width, height), 5);
+    map_grid_set(&images, MAP_OFFSET(0, height), 3);
+    map_grid_set(&images, MAP_OFFSET(width, 0), 4);
+    map_grid_set(&images, MAP_OFFSET(width, height), 5);
 }
 
 static int image_shift = 0;

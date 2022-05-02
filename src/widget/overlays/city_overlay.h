@@ -28,8 +28,8 @@ typedef struct {
     int (*get_column_height)(const building *b);
     int (*get_tooltip_for_grid_offset)(tooltip_context *c, int grid_offset);
     int (*get_tooltip_for_building)(tooltip_context *c, const building *b);
-    void (*draw_custom_footprint)(int x, int y, int grid_offset);
-    void (*draw_custom_top)(int x, int y, int grid_offset);
+    void (*draw_custom_footprint)(pixel_coordinate pixel, map_point point);
+    void (*draw_custom_top)(pixel_coordinate pixel, map_point point);
 } city_overlay;
 
 const city_overlay *get_city_overlay(void);
@@ -37,6 +37,6 @@ bool select_city_overlay(void);
 int widget_city_overlay_get_tooltip_text(tooltip_context *c, int grid_offset);
 
 void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, int image_offset);
-void city_with_overlay_draw_building_top(int x, int y, int grid_offset);
+void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point);
 
 #endif // WIDGET_CITY_OVERLAY_H

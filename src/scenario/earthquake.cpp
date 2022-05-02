@@ -52,13 +52,13 @@ void scenario_earthquake_init(void) {
     }
     data.state = EVENT_STATE_INITIAL;
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = scenario_data.earthquake_point.x;
-        data.expand[i].y = scenario_data.earthquake_point.y;
+        data.expand[i].x = scenario_data.earthquake_point.x();
+        data.expand[i].y = scenario_data.earthquake_point.y();
     }
 }
 
 static int can_advance_earthquake_to_tile(int x, int y) {
-    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
+    if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
         return 0;
     else {
         return 1;
@@ -66,7 +66,7 @@ static int can_advance_earthquake_to_tile(int x, int y) {
 }
 
 static void advance_earthquake_to_tile(int x, int y) {
-    int grid_offset = map_grid_offset(x, y);
+    int grid_offset = MAP_OFFSET(x, y);
     int building_id = map_building_at(grid_offset);
     if (building_id) {
         building_destroy_by_fire(building_get(building_id));
@@ -91,7 +91,7 @@ static void advance_earthquake_to_tile(int x, int y) {
 
 void scenario_earthquake_process(void) {
     if (scenario_data.earthquake.severity == EARTHQUAKE_NONE ||
-        scenario_data.earthquake_point.x == -1 || scenario_data.earthquake_point.y == -1)
+        scenario_data.earthquake_point.x() == -1 || scenario_data.earthquake_point.y() == -1)
         return;
     if (data.state == EVENT_STATE_INITIAL) {
         if (game_time_year() == data.game_year &&
@@ -101,7 +101,7 @@ void scenario_earthquake_process(void) {
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
             city_message_post(true, MESSAGE_EARTHQUAKE, 0,
-                              map_grid_offset(data.expand[0].x, data.expand[0].y));
+                              MAP_OFFSET(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_STATE_IN_PROGRESS) {
         data.delay++;

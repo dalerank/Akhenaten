@@ -166,25 +166,25 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     for (int i = 0; i < 18; i++)
         iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_27f4[i]);
     if (GAME_ENV == ENGINE_ENV_C3) {
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.map.entry_point.x);
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.map.entry_point.y);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.map.entry_point.grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.map.exit_point.x);
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.map.exit_point.y);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.map.exit_point.grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.building.senate_x);
-        iob->bind(BIND_SIGNATURE_UINT8, &city_data.building.senate_y);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_grid_offset);
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.entry_point.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.entry_point.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT16, city_data.map.entry_point.private_access(_GRID_OFFSET));
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.exit_point.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.exit_point.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT16, city_data.map.exit_point.private_access(_GRID_OFFSET));
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.building.senate.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT8, city_data.building.senate.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT16, city_data.building.senate.private_access(_GRID_OFFSET));
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.map.entry_point.x);
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.map.entry_point.y);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.map.entry_point.grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.map.exit_point.x);
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.map.exit_point.y);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.map.exit_point.grid_offset);
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.building.senate_x);
-        iob->bind(BIND_SIGNATURE_UINT16, &city_data.building.senate_y);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.building.senate_grid_offset);
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT32, city_data.map.entry_point.private_access(_GRID_OFFSET));
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT32, city_data.map.exit_point.private_access(_GRID_OFFSET));
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_X));
+        iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_Y));
+        iob->bind(BIND_SIGNATURE_INT32, city_data.building.senate.private_access(_GRID_OFFSET));
     }
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.senate_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_2828);
@@ -492,9 +492,9 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.cheated_money);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.building.barracks_x);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.building.barracks_y);
-    iob->bind(BIND_SIGNATURE_INT16, &city_data.building.barracks_grid_offset);
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.barracks.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.barracks.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.building.barracks.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.barracks_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.barracks_placed);
     for (int i = 0; i < 5; i++)
@@ -552,8 +552,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.military.native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_native_force_attack);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.mission_post_operational);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.main_native_meeting.x);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.main_native_meeting.y);
+    iob->bind(BIND_SIGNATURE_INT32, city_data.building.main_native_meeting.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT32, city_data.building.main_native_meeting.private_access(_Y));
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.wage_rate_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_needed_per_month); // 62
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granaries.understaffed);
@@ -574,9 +574,9 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_riot_cause);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.estimated_tax_income);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.tutorial_senate_built); // ok
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.building.distribution_center_x);
-    iob->bind(BIND_SIGNATURE_INT8, &city_data.building.distribution_center_y);
-    iob->bind(BIND_SIGNATURE_INT16, &city_data.building.distribution_center_grid_offset);
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.distribution_center.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT8, city_data.building.distribution_center.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT16, city_data.building.distribution_center.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.distribution_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.distribution_center_placed);
     for (int i = 0; i < 11; i++)
@@ -665,8 +665,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.requests_and_festivals);
         iob->bind____skip(72);
         iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.estimated_tax_uncollected);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.building.festival_square_x);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.building.festival_square_y);
+        iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_X));
+        iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_Y));
         iob->bind____skip(8);
         iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.gold_extracted);
         iob->bind____skip(96);

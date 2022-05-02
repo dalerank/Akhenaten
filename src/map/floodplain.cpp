@@ -2,7 +2,7 @@
 #include <core/config.h>
 #include "floodplain.h"
 #include "building_tiles.h"
-#include "data.h"
+#include "scenario/map.h"
 #include "terrain.h"
 #include "water.h"
 
@@ -24,7 +24,7 @@ static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 
-static void build_shoreorder_from_tile(int x, int y, int grid_offset) {
+static void build_shoreorder_from_tile(pixel_coordinate pixel, map_point point) {
 
 }
 int map_floodplain_rebuild_shoreorder() {
@@ -46,8 +46,8 @@ int map_floodplain_rebuild_shoreorder() {
 
             // get current river tile's grid offset and coords
             int tile_offset = river_tiles_cache.at(i);
-            int tile_x = map_grid_offset_to_x(tile_offset);
-            int tile_y = map_grid_offset_to_y(tile_offset);
+            int tile_x = MAP_X(tile_offset);
+            int tile_y = MAP_Y(tile_offset);
 
             bool is_vergin_water = (order == -1
                     && map_terrain_is(tile_offset, TERRAIN_WATER)
@@ -66,7 +66,7 @@ int map_floodplain_rebuild_shoreorder() {
                 int y_max = tile_y + 1;
 
                 map_grid_bound_area(&x_min, &y_min, &x_max, &y_max);
-                int grid_offset = map_grid_offset(x_min, y_min);
+                int grid_offset = MAP_OFFSET(x_min, y_min);
                 for (int yy = y_min; yy <= y_max; yy++) {
                     for (int xx = x_min; xx <= x_max; xx++) {
 
@@ -156,8 +156,8 @@ static uint8_t map_get_fertility_average(int grid_offset, int x, int y, int size
     return fert_total / (size * size);
 }
 uint8_t map_get_fertility_for_farm(int grid_offset) {
-    int x = map_grid_offset_to_x(grid_offset);
-    int y = map_grid_offset_to_y(grid_offset);
+    int x = MAP_X(grid_offset);
+    int y = MAP_Y(grid_offset);
     bool is_irrigated = false;
     if (config_get(CONFIG_GP_FIX_IRRIGATION_RANGE))
         is_irrigated = map_terrain_exists_tile_in_area_with_type(x, y, 3, TERRAIN_IRRIGATION_RANGE);

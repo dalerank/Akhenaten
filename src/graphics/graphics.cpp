@@ -1,6 +1,6 @@
 #include "graphics.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/config.h"
 #include "graphics/color.h"
 #include "graphics/menu.h"

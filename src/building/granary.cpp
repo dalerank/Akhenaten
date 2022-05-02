@@ -283,7 +283,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry,
+            int dist = calc_distance_with_penalty(b->tile.x() + 1, b->tile.y() + 1, x, y, distance_from_entry,
                                                   b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
@@ -293,7 +293,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     }
     // deliver to center of granary
     building *min = building_get(min_building_id);
-    map_point_store_result(min->x + 1, min->y + 1, dst);
+    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
     return min_building_id;
 }
 int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst) {
@@ -326,7 +326,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distance_from_entry,
+            int dist = calc_distance_with_penalty(b->tile.x() + 1, b->tile.y() + 1, x, y, distance_from_entry,
                                                   b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
@@ -335,7 +335,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
     }
     building *min = building_get(min_building_id);
-    map_point_store_result(min->x + 1, min->y + 1, dst);
+    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
     return min_building_id;
 }
 int building_granary_for_getting(building *src, map_point *dst) {
@@ -386,8 +386,8 @@ int building_granary_for_getting(building *src, map_point *dst) {
         }
         if (amount_gettable > 0) {
             int dist = calc_distance_with_penalty(
-                    b->x + 1, b->y + 1,
-                    src->x + 1, src->y + 1,
+                    b->tile.x() + 1, b->tile.y() + 1,
+                    src->tile.x() + 1, src->tile.y() + 1,
                     src->distance_from_entry, b->distance_from_entry);
             if (amount_gettable <= 400)
                 dist *= 2; // penalty for less food
@@ -399,7 +399,7 @@ int building_granary_for_getting(building *src, map_point *dst) {
         }
     }
     building *min = building_get(min_building_id);
-    map_point_store_result(min->x + 1, min->y + 1, dst);
+    map_point_store_result(min->tile.x() + 1, min->tile.y() + 1, dst);
     return min_building_id;
 }
 
@@ -465,7 +465,7 @@ void building_granary_warehouse_curse(int big) {
         return;
     if (big) {
         city_message_disable_sound_for_next_message();
-        city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->grid_offset);
+        city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
         building_destroy_by_fire(max_building);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();

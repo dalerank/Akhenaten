@@ -1,7 +1,8 @@
 #include <core/string.h>
 #include <cmath>
+#include <city/view/lookup.h>
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "formation.h"
 #include "image.h"
 #include "figuretype/editor.h"
@@ -45,7 +46,7 @@ void figure::draw_debug() {
 
     uint8_t str[10];
     pixel_coordinate coords;
-    coords = city_view_grid_offset_to_pixel(tile_x, tile_y);
+    coords = mappoint_to_pixel(map_point(tile.x(), tile.y()));
     adjust_pixel_offset(&coords.x, &coords.y);
     coords.x -= 10;
     coords.y -= 80;
@@ -61,11 +62,11 @@ void figure::draw_debug() {
 
             coords.y += 80;
 
-            string_from_int(str, tile_x, 0);
+            string_from_int(str, tile.x(), 0);
             text_draw(str, coords.x, coords.y, FONT_NORMAL_PLAIN, 0);
-            string_from_int(str, tile_y, 0);
+            string_from_int(str, tile.y(), 0);
             text_draw(str, coords.x, coords.y+10, FONT_NORMAL_PLAIN, 0);
-            string_from_int(str, grid_offset_figure, 0);
+            string_from_int(str, tile.grid_offset(), 0);
             text_draw(str, coords.x, coords.y+20, FONT_NORMAL_PLAIN, 0);
             string_from_int(str, progress_on_tile, 0);
             text_draw(str, coords.x, coords.y+30, FONT_NORMAL_PLAIN, 0);
@@ -75,13 +76,13 @@ void figure::draw_debug() {
         case 2: // ROUTING
             // draw path
             if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-                auto tile_coords = city_view_grid_offset_to_pixel(destination()->x, destination()->y);
+                auto tile_coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, tile_coords.x, tile_coords.y);
-                tile_coords = city_view_grid_offset_to_pixel(destination_x, destination_y);
+                tile_coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, tile_coords.x, tile_coords.y);
-                int tx = tile_x;
-                int ty = tile_y;
-                tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                int tx = tile.x();
+                int ty = tile.y();
+                tile_coords = mappoint_to_pixel(map_point(tx, ty));
                 ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                        tile_coords.y);
                 int starting_tile_index = routing_path_current_tile;
@@ -119,7 +120,7 @@ void figure::draw_debug() {
                             ty--;
                             break;
                     }
-                    tile_coords = city_view_grid_offset_to_pixel(tx, ty);
+                    tile_coords = mappoint_to_pixel(map_point(tx, ty));
                     ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, tile_coords.x,
                                            tile_coords.y);
                 }
@@ -298,7 +299,7 @@ void figure::adjust_pixel_offset(int *x, int *y) {
     int x_offset = 0;
     int y_offset = 0;
     if (use_cross_country) {
-        tile_cross_country_offset_to_pixel_offset(cross_country_x % 15, cross_country_y % 15, &x_offset, &y_offset);
+        tile_cross_country_offset_to_pixel_offset(cc_coords.x % 15, cc_coords.y % 15, &x_offset, &y_offset);
         y_offset -= missile_damage;
     } else {
         int dir = figure_image_normalize_direction(direction);
@@ -383,15 +384,15 @@ void figure::draw_figure_main(int x, int y) {
 }
 void figure::draw_figure_cart(int x, int y) {
     const image *img = image_get(cart_image_id);
-    ImageDraw::img_generic(cart_image_id, x + x_offset_cart - img->sprite_offset_x,
-                           y + y_offset_cart - img->sprite_offset_y - 7);
+    ImageDraw::img_generic(cart_image_id, x + cart_offset.x - img->sprite_offset_x,
+                           y + cart_offset.y - img->sprite_offset_y - 7);
 }
 void figure::draw_figure_with_cart(int x, int y) {
     draw_figure_cart(x, y);
     draw_figure_main(x, y);
     return; // pharaoh doesn't draw carts on top - to rework maybe later..?
 
-    if (y_offset_cart >= 0) {
+    if (cart_offset.y >= 0) {
         draw_figure_main(x, y);
         draw_figure_cart(x, y);
     } else {
@@ -400,7 +401,7 @@ void figure::draw_figure_with_cart(int x, int y) {
     }
 }
 void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord) {
-    pixel_coordinate coords2 = city_view_grid_offset_to_pixel(tile_x, tile_y);
+    pixel_coordinate coords2 = mappoint_to_pixel(map_point(tile.x(), tile.y()));
     adjust_pixel_offset(&x, &y);
     if (coord != nullptr) {
         highlight = 0;

@@ -24,8 +24,9 @@ void figure::indigenous_native_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
-                destination_x = source_x;
-                destination_y = source_y;
+                destination_tile = source_tile;
+//                destination_tile.x() = source_tile.x();
+//                destination_tile.y() = source_tile.y();
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
 
@@ -46,17 +47,19 @@ void figure::indigenous_native_action() {
                 if (!city_military_is_native_attack_active()) {
                     int x_tile, y_tile;
                     building *meeting = building_get(b->subtype.native_meeting_center_id);
-                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &x_tile,
+                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->tile.x(), meeting->tile.y(), meeting->size, &x_tile,
                                                                     &y_tile)) {
                         action_state = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
-                        destination_x = x_tile;
-                        destination_y = y_tile;
+                        destination_tile.set(x_tile, y_tile);
+//                        destination_tile.x() = x_tile;
+//                        destination_tile.y() = y_tile;
                     }
                 } else {
                     const formation *m = formation_get(0);
                     action_state = FIGURE_ACTION_159_NATIVE_ATTACKING;
-                    destination_x = m->destination_x;
-                    destination_y = m->destination_y;
+                    destination_tile.set(m->destination_x, m->destination_y);
+//                    destination_tile.x() = m->destination_x;
+//                    destination_tile.y() = m->destination_y;
                     set_destination(m->destination_building_id);
                 }
                 route_remove();

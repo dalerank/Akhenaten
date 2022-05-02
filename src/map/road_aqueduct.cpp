@@ -1,7 +1,7 @@
 #include "road_aqueduct.h"
 
 #include "building/building.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "core/direction.h"
 #include "core/image.h"
 #include "map/building.h"
@@ -103,11 +103,11 @@ static int is_road_tile_for_aqueduct(int grid_offset, int gate_orientation) {
 
 int map_is_straight_road_for_aqueduct(int grid_offset) {
     int road_tiles_x =
-            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2) +
-            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+            is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(1, 0), 2) +
+            is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(-1, 0), 2);
     int road_tiles_y =
-            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1) +
-            is_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
+            is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(0, -1), 1) +
+            is_road_tile_for_aqueduct(grid_offset + GRID_OFFSET(0, 1), 1);
 
     if (road_tiles_x == 2 && road_tiles_y == 0)
         return 1;

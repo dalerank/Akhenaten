@@ -55,12 +55,12 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION | TERRAIN_DUNE))
                 continue;
             if (measure_only && visual_feedback_on_delete) {
                 building *b = get_deletable_building(grid_offset);
-                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->grid_offset)))
+                if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->tile.grid_offset())))
                     continue;
                 map_building_tiles_mark_deleting(grid_offset);
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -86,7 +86,7 @@ static int clear_land_confirmed(bool measure_only, int x_start, int y_start, int
                         game_undo_disable();
                 }
                 if (b->house_size && b->house_population && !measure_only) {
-                    figure_create_homeless(b->x, b->y, b->house_population);
+                    figure_create_homeless(b->tile.x(), b->tile.y(), b->house_population);
                     b->house_population = 0;
                 }
                 if (building_is_floodplain_farm(b) && config_get(CONFIG_GP_CH_SOIL_DEPLETION))
@@ -190,7 +190,7 @@ int building_construction_clear_land(bool measure_only, int x_start, int y_start
     int ask_confirm_fort = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);

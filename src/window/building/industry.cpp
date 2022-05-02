@@ -30,7 +30,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     width += lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
 
     // fertility
-    int pct_fertility = map_get_fertility_for_farm(b->grid_offset);
+    int pct_fertility = map_get_fertility_for_farm(b->tile.grid_offset());
     width += lang_text_draw(group_id, 12, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     width += text_draw_percentage(pct_fertility, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(group_id, 13, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK_ON_LIGHT);

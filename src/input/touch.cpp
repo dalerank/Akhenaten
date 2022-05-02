@@ -128,7 +128,7 @@ static int get_unused_touch_index(void) {
     return i;
 }
 
-int touch_create(touch_coords start_coords, time_millis start_time) {
+int touch_create(pixel_coordinate start_coords, time_millis start_time) {
     int index = get_unused_touch_index();
     if (index != MAX_ACTIVE_TOUCHES) {
         touch *t = &data.finger[index];
@@ -151,7 +151,7 @@ int touch_in_use(int index) {
     return index >= 0 && index < MAX_ACTIVE_TOUCHES && data.finger[index].in_use;
 }
 
-void touch_move(int index, touch_coords current_coords, time_millis current_time) {
+void touch_move(int index, pixel_coordinate current_coords, time_millis current_time) {
     if (index < 0 || index >= MAX_ACTIVE_TOUCHES || !data.finger[index].in_use)
         return;
     touch *t = &data.finger[index];

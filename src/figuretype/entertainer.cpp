@@ -14,7 +14,7 @@
 #include "scenario/gladiator_revolt.h"
 
 int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
-    int road_network = map_road_network_get(map_grid_offset(x, y));
+    int road_network = map_road_network_get(MAP_OFFSET(x, y));
 
     building_list_small_clear();
 
@@ -52,7 +52,7 @@ int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
             days_left = b->data.entertainment.days2;
         else
             days_left = b->data.entertainment.days1;
-        int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
+        int dist = days_left + calc_maximum_distance(x, y, b->tile.x(), b->tile.y());
         if (dist < min_distance) {
             min_distance = dist;
             min_building_id = venues[i];
@@ -152,7 +152,7 @@ void figure::entertainer_action() {
             wait_ticks--;
             if (wait_ticks <= 0) { // todo: summarize
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
@@ -167,26 +167,27 @@ void figure::entertainer_action() {
                 int dst_building_id = 0;
                 switch (type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_BANDSTAND, BUILDING_PAVILLION, 0);
                         break;
                     case FIGURE_LION_TAMER: // dancer
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_PAVILLION, 0, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_PAVILLION, 0, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_venue_destination(tile_x, tile_y, BUILDING_SENET_HOUSE, 0, 0);
+                        dst_building_id = determine_venue_destination(tile.x(), tile.y(), BUILDING_SENET_HOUSE, 0, 0);
                         break;
                 }
                 if (dst_building_id) { // todo: summarize
                     building *b_dst = building_get(dst_building_id);
                     int x_road, y_road;
-                    if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
+                    if (map_closest_road_within_radius(b_dst->tile.x(), b_dst->tile.y(), b_dst->size, 2, &x_road, &y_road)) {
                         set_destination(dst_building_id);
                         action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
-                        destination_x = x_road;
-                        destination_y = y_road;
+                        destination_tile.set(x_road, y_road);
+//                        destination_tile.x() = x_road;
+//                        destination_tile.y() = y_road;
                         roam_length = 0;
                     } else
                         poof();

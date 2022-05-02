@@ -28,9 +28,10 @@ public:
     unsigned char size;
     unsigned char house_is_merged;
     unsigned char house_size;
-    unsigned char x;
-    unsigned char y;
-    unsigned short grid_offset;
+    map_point tile;
+//    unsigned char x;
+//    unsigned char y;
+//    unsigned short grid_offset;
     short type;
     union {
         short house_level;
@@ -52,8 +53,7 @@ public:
     short distance_from_entry;
     short house_highest_population;
     short house_unreachable_ticks;
-    unsigned char road_access_x;
-    unsigned char road_access_y;
+    map_point road_access;
 //    figure *figure_id;
 //    figure *figure_id2; // labor seeker or market buyer
 //    short immigrant_figure_id;
@@ -319,7 +319,7 @@ bool building_is_house(int type);
 bool building_is_fort(int type);
 bool building_is_defense_ph(int type);
 bool building_is_farm(int type);
-bool building_is_floodplain_farm(const building *b);
+bool building_is_floodplain_farm(building *b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
 bool building_is_harvester(int type);

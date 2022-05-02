@@ -409,10 +409,9 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
         int align_x = 0;
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
-            pixel_coordinate camera_offset;
-            city_view_get_camera_pixel_offset(&camera_offset.x, &camera_offset.y);
-            align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_offset.x);
-            align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_offset.y);
+            pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
+            align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_pixels.x);
+            align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_pixels.y);
         }
         speed_set_target(&data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
         speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);

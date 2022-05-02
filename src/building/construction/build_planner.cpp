@@ -2,6 +2,7 @@
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
 #include <map/floodplain.h>
+#include <city/view/lookup.h>
 #include "build_planner.h"
 
 #include "clear.h"
@@ -18,7 +19,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -74,7 +75,7 @@ const int CROPS_OFFSETS[2] = {5, 6};
 
 static void add_fort(int type, building *fort) {
     fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT),
+    map_building_tiles_add(fort->id, fort->tile.x(), fort->tile.y(), fort->size, image_id_from_group(GROUP_BUILDING_FORT),
                            TERRAIN_BUILDING);
     if (type == BUILDING_FORT_CHARIOTEERS)
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
@@ -87,14 +88,14 @@ static void add_fort(int type, building *fort) {
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
-    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[building_rotation_get_rotation()],
-                                       fort->y + offsets_y[building_rotation_get_rotation()], 0);
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->tile.x() + offsets_x[building_rotation_get_rotation()],
+                                       fort->tile.y() + offsets_y[building_rotation_get_rotation()], 0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->x + offsets_x[building_rotation_get_rotation()],
-                           fort->y + offsets_y[building_rotation_get_rotation()], 4,
+    map_building_tiles_add(ground->id, fort->tile.x() + offsets_x[building_rotation_get_rotation()],
+                           fort->tile.y() + offsets_y[building_rotation_get_rotation()], 4,
                            image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     fort->formation_id = formation_legion_create_for_fort(fort);
@@ -106,28 +107,27 @@ void BuildPlanner::add_building_tiles_from_list(int building_id, bool graphics_o
         for (int column = 0; column < size.x; ++column) {
             int image_id = tile_graphics_array[row][column];
             int size = tile_sizes_array[row][column];
-            map_tile tile = tile_coord_cache[row][column];
+            map_point tile = tile_coord_cache[row][column];
 
             // correct for city orientation
             switch (city_view_orientation() / 2) {
                 case 0:
-                    tile.y = tile.y - size + 1;
+                    tile.shift(0, - size + 1);
                     break;
                 case 1:
                     break;
                 case 2:
-                    tile.x = tile.x - size + 1;
+                    tile.shift(- size + 1, 0);
                     break;
                 case 3:
-                    tile.x = tile.x - size + 1;
-                    tile.y = tile.y - size + 1;
+                    tile.shift(- size + 1, - size + 1);
                     break;
             }
             if (image_id > 0 && size > 0) {
                 if (!graphics_only)
-                    map_building_tiles_add(building_id, tile.x, tile.y, size, image_id, TERRAIN_BUILDING);
+                    map_building_tiles_add(building_id, tile.x(), tile.y(), size, image_id, TERRAIN_BUILDING);
                 else
-                    map_image_set(tile.grid_offset, image_id);
+                    map_image_set(tile.grid_offset(), image_id);
             }
         }
     }
@@ -138,11 +138,12 @@ static building *add_temple_complex_element(int x, int y, int orientation, build
     game_undo_add_building(b);
 
     b->size = 3;
-    b->grid_offset = map_grid_offset(b->x, b->y);
+//    b->tile = map_point()
+//    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
-    int image_id = map_image_at(map_grid_offset(x, y));
-    map_building_tiles_add(b->id, b->x, b->y, 3, image_id, TERRAIN_BUILDING);
+    int image_id = map_image_at(MAP_OFFSET(x, y));
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 3, image_id, TERRAIN_BUILDING);
 
     return b;
 }
@@ -163,36 +164,37 @@ static void add_temple_complex(building *b, int orientation) {
             offset = {-3, 0};
             break;
     }
-    building *altar = add_temple_complex_element(b->x + offset.x, b->y + offset.y, orientation, b);
-    building *oracle = add_temple_complex_element(b->x + 2 * offset.x, b->y + 2 * offset.y, orientation, altar);
+    building *altar = add_temple_complex_element(b->tile.x() + offset.x(), b->tile.y() + offset.y(), orientation, b);
+    building *oracle = add_temple_complex_element(b->tile.x() + 2 * offset.x(), b->tile.y() + 2 * offset.y(), orientation, altar);
 }
 
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
-    int x = main->x + dx;
-    int y = main->y + dy;
-    int grid_offset = map_grid_offset(x, y);
+    map_point point = main->tile.shifted(dx, dy);
+//    int x = main->tile.x() + dx;
+//    int y = main->tile.y() + dy;
+//    int grid_offset = MAP_OFFSET(x, y);
     building *this_venue = main;
     if (main_venue) { // this is the main venue building!!
         if (type != main->type)
             return; // hmmm, this shouldn't happen
-        main->grid_offset = grid_offset;
-//        main->x += dx;
-//        main->y += dy;
+        main->tile = point;
+//        main->tile.x() += dx;
+//        main->tile.y() += dy;
     } else if (type == BUILDING_GARDENS) { // add gardens
-        map_terrain_add(grid_offset, TERRAIN_GARDEN);
+        map_terrain_add(point.grid_offset(), TERRAIN_GARDEN);
     } else { // extra venue
-        this_venue = building_create(type, x, y, 0);
+        this_venue = building_create(type, point.x(), point.y(), 0);
         building *parent = main; // link venue to last one in the chain
         while (parent->next_part_building_id)
             parent = building_get(parent->next_part_building_id);
         parent->next_part_building_id = this_venue->id;
         this_venue->prev_part_building_id = parent->id;
 
-        map_building_set(grid_offset, this_venue->id);
+        map_building_set(point.grid_offset(), this_venue->id);
         if (type == BUILDING_PAVILLION) {
-            map_building_set(grid_offset + map_grid_delta(1, 0), this_venue->id);
-            map_building_set(grid_offset + map_grid_delta(1, 1), this_venue->id);
-            map_building_set(grid_offset + map_grid_delta(0, 1), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(1, 0), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(1, 1), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(0, 1), this_venue->id);
         }
     }
 
@@ -202,10 +204,10 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
             map_tiles_update_all_gardens();
             break;
         case BUILDING_BOOTH:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BOOTH));
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BOOTH));
             break;
         case BUILDING_BANDSTAND:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
             if (orientation == 1)
                 latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
             else if (orientation == 2)
@@ -213,12 +215,12 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
             map_add_bandstand_tiles(this_venue);
             break;
         case BUILDING_PAVILLION:
-            map_building_tiles_add(this_venue->id, x, y, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+            map_building_tiles_add(this_venue->id, point.x(), point.y(), 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
             break;
     }
 }
 static void add_entertainment_venue(building *b, int orientation) {
-    b->data.entertainment.booth_corner_grid_offset = b->grid_offset;
+    b->data.entertainment.booth_corner_grid_offset = b->tile.grid_offset();
     int size = 0;
     switch (b->type) {
         case BUILDING_BOOTH:
@@ -230,7 +232,7 @@ static void add_entertainment_venue(building *b, int orientation) {
         case BUILDING_FESTIVAL_SQUARE:
             size = 5; break;
     }
-    if (!map_grid_is_inside(b->x, b->y, size))
+    if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size))
         return;
     int image_id = 0;
     switch (b->type) {
@@ -249,7 +251,7 @@ static void add_entertainment_venue(building *b, int orientation) {
     }
 
     // add underlying plaza first
-    map_add_venue_plaza_tiles(b->id, size, b->x, b->y, image_id, false);
+    map_add_venue_plaza_tiles(b->id, size, b->tile.x(), b->tile.y(), image_id, false);
 
     // add additional building parts, update graphics accordingly
     switch (b->type) {
@@ -377,7 +379,7 @@ static void add_warehouse(building *b) {
         building_storage_accept_none(b->storage_id);
 
     b->prev_part_building_id = 0;
-    map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1,
+    map_building_tiles_add(b->id, b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner], 1,
                            image_id_from_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
@@ -385,19 +387,20 @@ static void add_warehouse(building *b) {
         if (i == corner) {
             continue;
         }
-        prev = add_warehouse_space(b->x + x_offset[i], b->y + y_offset[i], prev);
+        prev = add_warehouse_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
     }
     // adjust BUILDING_WAREHOUSE
-    b->x = b->x + x_offset[corner];
-    b->y = b->y + y_offset[corner];
-    b->grid_offset = map_grid_offset(b->x, b->y);
+    b->tile.set(b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner]);
+//    b->tile.x() = b->tile.x() + x_offset[corner];
+//    b->tile.y() = b->tile.y() + y_offset[corner];
+//    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     game_undo_adjust_building(b);
 
     prev->next_part_building_id = 0;
 }
 
 static void add_building_tiles_image(building *b, int image_id) {
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_BUILDING);
 }
 static void add_building(building *b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
@@ -475,28 +478,28 @@ static void add_building(building *b, int orientation, int variant) {
             break;
             // farms
         case BUILDING_BARLEY_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, 0, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), 0, 0);
             break;
         case BUILDING_FLAX_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV], 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV], 0);
             break;
         case BUILDING_GRAIN_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 2, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 2, 0);
             break;
         case BUILDING_LETTUCE_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 3, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 3, 0);
             break;
         case BUILDING_POMEGRANATES_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 4, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 4, 0);
             break;
         case BUILDING_CHICKPEAS_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 5, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 5, 0);
             break;
         case BUILDING_FIGS_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 6, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 6, 0);
             break;
         case BUILDING_HENNA_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 7, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 7, 0);
             break;
             // government
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -508,13 +511,13 @@ static void add_building(building *b, int orientation, int variant) {
             break;
 //        case BUILDING_ROADBLOCK:
 //            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ROADBLOCK));
-//            map_terrain_add_roadblock_road(b->x, b->y, orientation);
+//            map_terrain_add_roadblock_road(b->tile.x(), b->tile.y(), orientation);
 //            break;
             // ships
 
         case BUILDING_WATER_LIFT: {
             auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->x, b->y, props->size,
+            map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
                                    image_id_from_group(props->image_collection, props->image_group) + orientation_rel + 4 * variant);
             break;
         }
@@ -525,29 +528,29 @@ static void add_building(building *b, int orientation, int variant) {
         case BUILDING_FERRY:
         case BUILDING_DOCK: {
             auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->x, b->y, props->size,
+            map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
                                    image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
             break;
         }
             // defense
         case BUILDING_TOWER:
-            map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
-            map_building_tiles_add(b->id, b->x, b->y, b->size, image_id_from_group(GROUP_BUILDING_TOWER),
+            map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
+            map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id_from_group(GROUP_BUILDING_TOWER),
                                    TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-            map_tiles_update_area_walls(b->x, b->y, 5);
+            map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
             break;
         case BUILDING_GATEHOUSE_PH:
         case BUILDING_GATEHOUSE:
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
                                    image_id_from_group(GROUP_BUILDING_TOWER) + orientation,
                                    TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
 //            map_orientation_update_buildings();
-            map_terrain_add_gatehouse_roads(b->x, b->y, orientation);
+            map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
             break;
         case BUILDING_TRIUMPHAL_ARCH:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
 //            map_orientation_update_buildings();
-            map_terrain_add_triumphal_arch_roads(b->x, b->y, orientation);
+            map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
             city_buildings_build_triumphal_arch();
             building_menu_update(BUILDSET_NORMAL);
             Planner.reset();
@@ -581,13 +584,15 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end) {
         } else if (f->state != FIGURE_STATE_ALIVE || !f->is_enemy())
             continue;
 
-        int dx = (f->tile_x > x_start) ? (f->tile_x - x_start) : (x_start - f->tile_x);
-        int dy = (f->tile_y > y_start) ? (f->tile_y - y_start) : (y_start - f->tile_y);
+        int tile_x = f->tile.x();
+        int tile_y = f->tile.y();
+        int dx = (tile_x > x_start) ? (tile_x - x_start) : (x_start - tile_x);
+        int dy = (tile_y > y_start) ? (tile_y - y_start) : (y_start - tile_y);
         if (dx <= 12 && dy <= 12)
             return 1;
 
-        dx = (f->tile_x > x_end) ? (f->tile_x - x_end) : (x_end - f->tile_x);
-        dy = (f->tile_y > y_end) ? (f->tile_y - y_end) : (y_end - f->tile_y);
+        dx = (tile_x > x_end) ? (tile_x - x_end) : (x_end - tile_x);
+        dy = (tile_y > y_end) ? (tile_y - y_end) : (y_end - tile_y);
         if (dx <= 12 && dy <= 12)
             return 1;
 
@@ -604,7 +609,7 @@ static int place_houses(bool measure_only, int x_start, int y_start, int x_end, 
     game_undo_restore_building_state();
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) || map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN))
                 continue;
 
@@ -647,7 +652,7 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end) {
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
                 !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_AQUEDUCT)
                 && map_tiles_is_paved_road(grid_offset)) {
@@ -673,7 +678,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end) {
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x, y);
+            int grid_offset = MAP_OFFSET(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR) &&  !map_terrain_exists_tile_in_radius_with_type(x, y, 1, 1, TERRAIN_FLOODPLAIN)) {
                 if (formation_herd_breeding_ground_at(x, y, 1)) {
                     map_property_clear_constructing_and_deleted();
@@ -751,15 +756,15 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
     building_menu_update_temple_complexes();
     return true;
 }
-static map_tile temple_complex_part_target(building *main, int part) {
+static map_point temple_complex_part_target(building *main, int part) {
     building *b = main;
     if (part == 1)
         b = b->next();
     else if (part == 2)
         b = get_temple_complex_front_facing_part(main);
 
-    int x = b->x;
-    int y = b->y;
+    int x = b->tile.x();
+    int y = b->tile.y();
     switch (city_view_orientation() / 2) {
         case 1: // east
             x += 2;
@@ -772,7 +777,7 @@ static map_tile temple_complex_part_target(building *main, int part) {
             y += 2;
             break;
     }
-    return {x, y, map_grid_offset(x, y)};
+    return map_point(x, y);
 }
 
 //////////////////////
@@ -795,10 +800,8 @@ void BuildPlanner::reset() {
     tiles_blocked_total = 0;
 
     // position and orientation
-    start.x = 0;
-    start.y = 0;
-    end.x = 0;
-    end.y = 0;
+    start.set(-1, -1);
+    end.set(-1, -1);
     relative_orientation = 0;
     variant = 0;
 
@@ -1156,7 +1159,7 @@ void BuildPlanner::setup_build_graphics() {
         case BUILDING_TEMPLE_COMPLEX_ALTAR:
         case BUILDING_TEMPLE_COMPLEX_ORACLE:
             init_tiles(3, 3);
-            set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset)->main()->type, additional_req_param1, relative_orientation, 1), 3);
+            set_tiles_building(get_temple_complex_part_image(building_at(end.grid_offset())->main()->type, additional_req_param1, relative_orientation, 1), 3);
             break;
         case BUILDING_WATER_LIFT:
             set_tiles_building(image_id_from_group(props->image_collection, props->image_group) + relative_orientation + variant * 4, props->size);
@@ -1205,7 +1208,7 @@ void BuildPlanner::update_obstructions_check() {
         for (int column = 0; column < size.x; column++) {
 
             // check terrain at coords
-            map_tile current_tile = tile_coord_cache[row][column];
+            map_point current_tile = tile_coord_cache[row][column];
             unsigned int restricted_terrain = TERRAIN_ALL;
 
             // special cases
@@ -1222,8 +1225,7 @@ void BuildPlanner::update_obstructions_check() {
                 return;
 
             tile_blocked_array[row][column] = false;
-            int grid_offset = map_grid_offset(current_tile.x, current_tile.y);
-            if (!map_grid_is_inside(current_tile.x, current_tile.y, 1) || map_terrain_is(grid_offset, restricted_terrain & TERRAIN_NOT_CLEAR)) {
+            if (!map_grid_is_inside(current_tile.x(), current_tile.y(), 1) || map_terrain_is(current_tile.grid_offset(), restricted_terrain & TERRAIN_NOT_CLEAR)) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }
@@ -1258,74 +1260,74 @@ void BuildPlanner::update_requirements_check() {
         }
     }
     if (special_flags & PlannerFlags::Groundwater) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 0, TERRAIN_GROUNDWATER)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 0, TERRAIN_GROUNDWATER)) {
             immediate_warning_id = WARNING_GROUNDWATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::NearbyWater) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_WATER)
-            && !map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 3, TERRAIN_FLOODPLAIN)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 3, TERRAIN_WATER)
+            && !map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 3, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_WATER_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Meadow) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_MEADOW)
-            && !map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_FLOODPLAIN)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_MEADOW)
+            && !map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_FLOODPLAIN)) {
             immediate_warning_id = WARNING_MEADOW_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Rock) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ROCK)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ROCK)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Ore) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_ORE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_ORE)) {
             immediate_warning_id = WARNING_ROCK_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Trees) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end.x, end.y, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
+        if (!map_terrain_exists_tile_in_radius_with_type(end.x(), end.y(), size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
             immediate_warning_id = WARNING_TREE_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Walls) {
-        if (!map_terrain_all_tiles_in_radius_are(end.x, end.y, size.x, 0, TERRAIN_WALL)) {
+        if (!map_terrain_all_tiles_in_radius_are(end.x(), end.y(), size.x, 0, TERRAIN_WALL)) {
             immediate_warning_id = WARNING_WALL_NEEDED;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::IgnoreNearbyEnemy == false) {
-        if (has_nearby_enemy(start.x, start.y, end.x, end.y)) {
+        if (has_nearby_enemy(start.x(), start.y(), end.x(), end.y())) {
             immediate_warning_id = WARNING_ENEMY_NEARBY;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Road && additional_req_param1 == true) {
-        if (!map_terrain_is(end.grid_offset, TERRAIN_ROAD)) {
+        if (!map_terrain_is(end.grid_offset(), TERRAIN_ROAD)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::Canals && additional_req_param1 == true) {
-        if (!map_terrain_is(end.grid_offset, TERRAIN_AQUEDUCT)) {
+        if (!map_terrain_is(end.grid_offset(), TERRAIN_AQUEDUCT)) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::FancyRoad) {
-        if (!map_tiles_is_paved_road(end.grid_offset)) {
+        if (!map_tiles_is_paved_road(end.grid_offset())) {
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & PlannerFlags::RiverAccess) {
-        if (!building_dock_is_connected_to_open_water(end.x, end.y)) {
+        if (!building_dock_is_connected_to_open_water(end.x(), end.y())) {
             immediate_warning_id = WARNING_DOCK_OPEN_WATER_NEEDED;
         }
     }
@@ -1335,18 +1337,18 @@ void BuildPlanner::update_special_case_orientations_check() {
 
     // for special buildings that require oriented terrain
     if (special_flags & PlannerFlags::ShoreLine) {
-        bool match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute);
+        bool match = map_shore_determine_orientation(end.x(), end.y(), additional_req_param1, true, &dir_absolute);
         if (special_flags & PlannerFlags::FloodplainShore) {
             // in original Pharaoh, this actually is allowed to be built over the EDGE CORNERS.
             // it looks off, but it's legit!
             variant = 0;
             if (!match) {
-                match = map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, &dir_absolute, true, TERRAIN_FLOODPLAIN);
-                if (match && !map_terrain_exists_tile_in_area_with_type(end.x, end.y, size.x, TERRAIN_WATER)) // correct for water
+                match = map_shore_determine_orientation(end.x(), end.y(), additional_req_param1, true, &dir_absolute, true, TERRAIN_FLOODPLAIN);
+                if (match && !map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_WATER)) // correct for water
                     variant = 1;
                 else
                     match = false;
-            } else if (map_terrain_exists_tile_in_area_with_type(end.x, end.y, size.x, TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
+            } else if (map_terrain_exists_tile_in_area_with_type(end.x(), end.y(), size.x, TERRAIN_FLOODPLAIN)) // correct the ShoreLine check for floodplains!
                 match = false;
         }
         dir_relative = city_view_relative_orientation(dir_absolute);
@@ -1359,7 +1361,7 @@ void BuildPlanner::update_special_case_orientations_check() {
         }
     }
     if (special_flags & PlannerFlags::Intersection) {
-        bool match = map_orientation_for_venue_with_map_orientation(end.x, end.y, additional_req_param1, &dir_relative);
+        bool match = map_orientation_for_venue_with_map_orientation(end.x(), end.y(), additional_req_param1, &dir_relative);
         if (!match) {
             immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
@@ -1369,8 +1371,8 @@ void BuildPlanner::update_special_case_orientations_check() {
         }
     }
     if (special_flags & PlannerFlags::TempleUpgrade) {
-        building *target = building_at(end.grid_offset)->main();
-        if (!building_at(end.grid_offset) || !building_is_large_temple(target->type)) {
+        building *target = building_at(end.grid_offset())->main();
+        if (!building_at(end.grid_offset()) || !building_is_large_temple(target->type)) {
             immediate_warning_id = WARNING_TEMPLE_UPGRADE_PLACEMENT_NEED_TEMPLE;
             can_place = CAN_NOT_PLACE;
         } else if (target->data.monuments.temple_complex_attachments & additional_req_param1) {
@@ -1427,7 +1429,7 @@ void BuildPlanner::update_unique_only_one_check() {
     }
 }
 void BuildPlanner::update_coord_caches() {
-    pixel_coordinate view_tile = city_view_grid_offset_to_pixel(end.grid_offset);
+    pixel_coordinate view_tile = mappoint_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
@@ -1441,24 +1443,19 @@ void BuildPlanner::update_coord_caches() {
             int y_offset = (row - pivot.y);
 
             // get abs. tile
-            int tile_x = 0;
-            int tile_y = 0;
+            map_point tile;
             switch (orientation) {
                 case 0:
-                    tile_x = end.x + x_offset;
-                    tile_y = end.y + y_offset;
+                    tile = end.shifted(x_offset, y_offset);
                     break;
                 case 1:
-                    tile_x = end.x - y_offset;
-                    tile_y = end.y + x_offset;
+                    tile = end.shifted(-y_offset, x_offset);
                     break;
                 case 2:
-                    tile_x = end.x - x_offset;
-                    tile_y = end.y - y_offset;
+                    tile = end.shifted(-x_offset, -y_offset);
                     break;
                 case 3:
-                    tile_x = end.x + y_offset;
-                    tile_y = end.y - x_offset;
+                    tile = end.shifted(y_offset, -x_offset);
                     break;
             }
 
@@ -1467,7 +1464,7 @@ void BuildPlanner::update_coord_caches() {
             int current_y = view_tile.y + x_offset * 15 + y_offset * 15;
 
             // save values in cache
-            tile_coord_cache[row][column] = {tile_x, tile_y, map_grid_offset(tile_x, tile_y)};
+            tile_coord_cache[row][column] = tile;
             pixel_coords_cache[row][column] = {current_x, current_y};
         }
     }
@@ -1526,10 +1523,10 @@ void BuildPlanner::update_orientations(bool check_if_changed) {
     setup_build_graphics(); // reload graphics, tiles, etc.
     update_coord_caches(); // refresh caches
 }
-void BuildPlanner::construction_record_view_position(int view_x, int view_y, int grid_offset) {
-    if (grid_offset == start.grid_offset) {
-        start_offset_x_view = view_x;
-        start_offset_y_view = view_y;
+void BuildPlanner::construction_record_view_position(pixel_coordinate pixel, map_point point) {
+    if (point == start) {
+        start_offset_screen_x = pixel.x;
+        start_offset_screen_y = pixel.y;
     }
 }
 void BuildPlanner::dispatch_warnings() {
@@ -1545,8 +1542,8 @@ int BuildPlanner::get_total_drag_size(int *x, int *y) {
         (build_type != BUILDING_CLEAR_LAND && !total_cost)) {
         return 0;
     }
-    int size_x = end.x - start.x;
-    int size_y = end.y - start.y;
+    int size_x = end.x() - start.x();
+    int size_y = end.y() - start.y();
     if (size_x < 0)
         size_x = -size_x;
 
@@ -1559,24 +1556,22 @@ int BuildPlanner::get_total_drag_size(int *x, int *y) {
     *y = size_y;
     return 1;
 }
-void BuildPlanner::construction_start(int x, int y, int grid_offset) {
-    start.grid_offset = grid_offset;
-    start.x = end.x = x;
-    start.y = end.y = y;
+void BuildPlanner::construction_start(map_point tile) {
+    start = end = tile;
 
     if (game_undo_start_build(build_type)) {
         in_progress = true;
         int can_start = true;
         switch (build_type) {
             case BUILDING_ROAD:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x, start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start.x(), start.y());
                 break;
             case BUILDING_IRRIGATION_DITCH:
 //            case BUILDING_WATER_LIFT:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x, start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, start.x(), start.y());
                 break;
             case BUILDING_WALL:
-                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x, start.y);
+                can_start = map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start.x(), start.y());
                 break;
             default:
                 break;
@@ -1596,16 +1591,17 @@ void BuildPlanner::construction_cancel() {
     }
     building_rotation_reset_rotation();
 }
-void BuildPlanner::construction_update(int x, int y, int grid_offset) {
-    if (grid_offset) {
-        end.x = x;
-        end.y = y;
-        end.grid_offset = grid_offset;
-    } else {
-        x = end.x;
-        y = end.y;
-        grid_offset = end.grid_offset;
-    }
+void BuildPlanner::construction_update(map_point tile) {
+    end = tile;
+//    if (grid_offset) {
+//        end = map_point(grid_offset);
+//    } else {
+//        x = end.x();
+//        y = end.y();
+//        grid_offset = end.grid_offset();
+//    }
+    int x = end.x();
+    int y = end.y();
     if (!build_type || city_finance_out_of_money()) {
         total_cost = 0;
         return;
@@ -1616,22 +1612,22 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
     int items_placed = 1;
     switch (build_type) {
         case BUILDING_CLEAR_LAND:
-            items_placed = last_items_cleared = building_construction_clear_land(true, start.x, start.y, x, y);
+            items_placed = last_items_cleared = building_construction_clear_land(true, start.x(), start.y(), x, y);
             break;
         case BUILDING_WALL:
-            items_placed = building_construction_place_wall(true, start.x, start.y, x, y);
+            items_placed = building_construction_place_wall(true, start.x(), start.y(), x, y);
             break;
         case BUILDING_ROAD:
-            items_placed = building_construction_place_road(true, start.x, start.y, x, y);
+            items_placed = building_construction_place_road(true, start.x(), start.y(), x, y);
             break;
         case BUILDING_PLAZA:
-            items_placed = place_plaza(start.x, start.y, x, y);
+            items_placed = place_plaza(start.x(), start.y(), x, y);
             break;
         case BUILDING_GARDENS:
-            items_placed = place_garden(start.x, start.y, x, y);
+            items_placed = place_garden(start.x(), start.y(), x, y);
             break;
         case BUILDING_IRRIGATION_DITCH:
-            items_placed = building_construction_place_aqueduct(true, start.x, start.y, x, y);
+            items_placed = building_construction_place_aqueduct(true, start.x(), start.y(), x, y);
             map_tiles_update_all_aqueducts(0);
             break;
         case BUILDING_LOW_BRIDGE:
@@ -1639,7 +1635,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
             items_placed = map_bridge_building_length();
             break;
         case BUILDING_HOUSE_VACANT_LOT:
-            items_placed = place_houses(true, start.x, start.y, x, y);
+            items_placed = place_houses(true, start.x(), start.y(), x, y);
             break;
         case BUILDING_GATEHOUSE_PH:
             mark_construction(x, y, 1, 3, ~TERRAIN_ROAD, false); // TODO
@@ -1657,7 +1653,7 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
         case BUILDING_DOCK:
         case BUILDING_WARSHIP_WHARF:
         case BUILDING_FERRY:
-            if (map_shore_determine_orientation(end.x, end.y, additional_req_param1, true, nullptr))
+            if (map_shore_determine_orientation(end.x(), end.y(), additional_req_param1, true, nullptr))
                 draw_as_constructing = true;
             else
                 draw_as_constructing = false;
@@ -1670,9 +1666,9 @@ void BuildPlanner::construction_update(int x, int y, int grid_offset) {
                 // never draw as constructing
             } else {
                 if ((city_view_orientation() / 2) % 2 == 0)
-                    mark_construction(north_tile.x, north_tile.y, size.x, size.y, TERRAIN_ALL, true);
+                    mark_construction(north_tile.x(), north_tile.y(), size.x, size.y, TERRAIN_ALL, true);
                 else
-                    mark_construction(north_tile.x, north_tile.y, size.y, size.x, TERRAIN_ALL, true);
+                    mark_construction(north_tile.x(), north_tile.y(), size.y, size.x, TERRAIN_ALL, true);
             }
     }
     if (items_placed >= 0)
@@ -1712,7 +1708,7 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
-    building_construction_warning_generic_checks(build_type, end.x, end.y, size.x, relative_orientation);
+    building_construction_warning_generic_checks(build_type, end.x(), end.y(), size.x, relative_orientation);
 
     // update city building info with newly created
     // building for special/unique constructions
@@ -1747,35 +1743,35 @@ void BuildPlanner::construction_finalize() { // confirm final placement
 
     // update terrain data for certain special cases
     if (special_flags & PlannerFlags::Meadow) {
-        for (int y = end.y; y < end.y + size.y; y++)
-            for (int x = end.x; x < end.x + size.x; x++)
-                map_set_floodplain_growth(map_grid_offset(x, y), 0);
+        for (int y = end.y(); y < end.y() + size.y; y++)
+            for (int x = end.x(); x < end.x() + size.x; x++)
+                map_set_floodplain_growth(MAP_OFFSET(x, y), 0);
     }
     if (special_flags & PlannerFlags::Road) {
-        map_terrain_add_in_area(end.x, end.y, end.x + size.x - 1, end.y + size.y - 1, TERRAIN_ROAD);
-        map_tiles_update_area_roads(end.x, end.y, 5);
+        map_terrain_add_in_area(end.x(), end.y(), end.x() + size.x - 1, end.y() + size.y - 1, TERRAIN_ROAD);
+        map_tiles_update_area_roads(end.x(), end.y(), 5);
         map_tiles_update_all_plazas();
     }
     if (special_flags & PlannerFlags::Walls)
-        map_tiles_update_area_walls(end.x, end.y, 5);
+        map_tiles_update_area_walls(end.x(), end.y(), 5);
 
     // consume resources for specific buildings (e.g. marble, granite)
     if (special_flags & PlannerFlags::Resources)
         building_warehouses_remove_resource(additional_req_param1, additional_req_param2);
 
     // finally, go over the rest of the stuff for all building types
-    formation_move_herds_away(end.x, end.y);
+    formation_move_herds_away(end.x(), end.y());
     city_finance_process_construction(total_cost);
     game_undo_finish_build(total_cost);
-    map_tiles_update_region_empty_land(false, start.x - 2, start.y - 2, end.x + size.x + 2, end.y + size.y + 2);
+    map_tiles_update_region_empty_land(false, start.x() - 2, start.y() - 2, end.x() + size.x + 2, end.y() + size.y + 2);
     map_routing_update_land();
     map_routing_update_walls();
 }
 
 //////////////////////
 
-void BuildPlanner::update(const map_tile *cursor_tile) {
-    end = *cursor_tile;
+void BuildPlanner::update(map_point cursor_tile) {
+    end = cursor_tile;
     update_coord_caches();
 
     immediate_warning_id = -1;
@@ -1788,11 +1784,11 @@ void BuildPlanner::update(const map_tile *cursor_tile) {
 bool BuildPlanner::place() {
 
     // attempt placing!
-    int x = end.x;
-    int y = end.y;
+    int x = end.x();
+    int y = end.y();
 
     // for debugging...
-    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, map_grid_offset(x, y));
+    SDL_Log("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));
 
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
@@ -1804,7 +1800,7 @@ bool BuildPlanner::place() {
             // the previous cost is deducted from treasury and if user chooses 'no', they still pay for removal.
             // If we don't do it this way, the user doesn't pay for the removal at all since we don't come back
             // here when the user says yes.
-            int items_placed = building_construction_clear_land(false, start.x, start.y, end.x, end.y);
+            int items_placed = building_construction_clear_land(false, start.x(), start.y(), end.x(), end.y());
             if (items_placed < 0)
                 items_placed = last_items_cleared;
             placement_cost *= items_placed;
@@ -1812,16 +1808,16 @@ bool BuildPlanner::place() {
             break;
         }
         case BUILDING_WALL:
-            placement_cost *= building_construction_place_wall(false, start.x, start.y, end.x, end.y);
+            placement_cost *= building_construction_place_wall(false, start.x(), start.y(), end.x(), end.y());
             break;
         case BUILDING_ROAD:
-            placement_cost *= building_construction_place_road(false, start.x, start.y, end.x, end.y);
+            placement_cost *= building_construction_place_road(false, start.x(), start.y(), end.x(), end.y());
             break;
         case BUILDING_PLAZA:
-            placement_cost *= place_plaza(start.x, start.y, end.x, end.y);
+            placement_cost *= place_plaza(start.x(), start.y(), end.x(), end.y());
             break;
         case BUILDING_GARDENS:
-            placement_cost *= place_garden(start.x, start.y, end.x, end.y);
+            placement_cost *= place_garden(start.x(), start.y(), end.x(), end.y());
             map_routing_update_land();
             break;
         case BUILDING_LOW_BRIDGE:
@@ -1835,7 +1831,7 @@ bool BuildPlanner::place() {
             break;
         }
         case BUILDING_IRRIGATION_DITCH: {
-            placement_cost *= building_construction_place_aqueduct(false, start.x, start.y, end.x, end.y);
+            placement_cost *= building_construction_place_aqueduct(false, start.x(), start.y(), end.x(), end.y());
             if (!placement_cost) {
                 map_tiles_update_all_aqueducts(0);
                 map_routing_update_land();
@@ -1843,7 +1839,7 @@ bool BuildPlanner::place() {
             break;
         }
         case BUILDING_HOUSE_VACANT_LOT:
-            placement_cost *= place_houses(false, start.x, start.y, end.x, end.y);
+            placement_cost *= place_houses(false, start.x(), start.y(), end.x(), end.y());
             if (placement_cost == 0) {
                 city_warning_show(WARNING_CLEAR_LAND_NEEDED);
                 return false;
@@ -1851,11 +1847,11 @@ bool BuildPlanner::place() {
             break;
         case BUILDING_TEMPLE_COMPLEX_ALTAR:
         case BUILDING_TEMPLE_COMPLEX_ORACLE:
-            if (!attach_temple_upgrade(additional_req_param1, end.grid_offset))
+            if (!attach_temple_upgrade(additional_req_param1, end.grid_offset()))
                 return false;
             break;
         default:
-            if (!place_building(build_type, end.x, end.y, absolute_orientation, variant))
+            if (!place_building(build_type, end.x(), end.y(), absolute_orientation, variant))
                 return false;
             break;
     }

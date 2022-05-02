@@ -51,18 +51,22 @@ public:
     signed char direction;
     signed char previous_tile_direction;
     signed char attack_direction;
-    unsigned char tile_x;
-    unsigned char tile_y;
-    unsigned char previous_tile_x;
-    unsigned char previous_tile_y;
+    map_point tile;
+    map_point previous_tile;
+    map_point source_tile;
+    map_point destination_tile;
+//    unsigned char tile_x;
+//    unsigned char tile_y;
+//    unsigned char previous_tile_x;
+//    unsigned char previous_tile_y;
     unsigned char missile_damage;
     unsigned char damage;
-    int grid_offset_figure;
-    unsigned char destination_x;
-    unsigned char destination_y;
-    int destination_grid_offset; // only used for soldiers
-    unsigned char source_x;
-    unsigned char source_y;
+//    int grid_offset_figure;
+//    unsigned char destination_x;
+//    unsigned char destination_y;
+//    int destination_grid_offset; // only used for soldiers
+//    unsigned char source_x;
+//    unsigned char source_y;
     union {
         unsigned char soldier;
         signed char enemy;
@@ -86,12 +90,15 @@ public:
     unsigned char roam_random_counter;
     signed char roam_turn_direction;
     signed char roam_ticks_until_next_turn;
-    short cross_country_x; // position = 15 * x + offset on tile
-    short cross_country_y; // position = 15 * y + offset on tile
-    short cc_destination_x;
-    short cc_destination_y;
-    short cc_delta_x;
-    short cc_delta_y;
+    coords cc_coords;
+    coords cc_destination;
+    coords cc_delta;
+//    short cross_country_x; // position = 15 * x + offset on tile
+//    short cross_country_y; // position = 15 * y + offset on tile
+//    short cc_destination_x;
+//    short cc_destination_y;
+//    short cc_delta_x;
+//    short cc_delta_y;
     short cc_delta_xy;
 //    unsigned char loads_counter;
 //    unsigned short loads_full; // full load counter
@@ -111,8 +118,9 @@ public:
     short leading_figure_id;
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
-    signed char x_offset_cart;
-    signed char y_offset_cart;
+    coords cart_offset;
+//    signed char x_offset_cart;
+//    signed char y_offset_cart;
     unsigned char empire_city_id;
     unsigned short trader_amount_bought;
     short name;
@@ -472,7 +480,6 @@ public:
     void draw_normal_figure(building_info_context *c);
 
     // map/marshland.c
-//    bool is_gathering_point_valid(int grid_offset);
     bool find_resource_tile(int resource_type, int *out_x, int *out_y);
 };
 

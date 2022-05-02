@@ -262,15 +262,15 @@ static bool generate_trader(int city_id, empire_city *city) {
         if (city_buildings_has_working_dock() && scenario_map_has_river_entry() &&
             !city_trade_has_sea_trade_problems()) {
             map_point river_entry = scenario_map_river_entry();
-            city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, city_id);
+            city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x(), river_entry.y(), city_id);
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            const map_tile *entry = city_map_entry_point();
-            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x, entry->y, city_id);
+            map_point *entry = city_map_entry_point();
+            city->trader_figure_ids[index] = figure_create_trade_caravan(entry->x(), entry->y(), city_id);
             return true;
         }
     }

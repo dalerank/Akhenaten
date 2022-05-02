@@ -1,6 +1,6 @@
 #include "orientation.h"
 
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
 #include "map/orientation.h"

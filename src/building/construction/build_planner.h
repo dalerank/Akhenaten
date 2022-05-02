@@ -5,7 +5,7 @@
 
 #include "graphics/color.h"
 #include "map/point.h"
-#include "city/view.h"
+#include "city/view/view.h"
 
 enum PlannerFlags {
     Groundwater =           1,
@@ -47,7 +47,7 @@ private:
     bool tile_blocked_array[30][30] = {};
     int tiles_blocked_total = 0;
 
-    map_tile tile_coord_cache[30][30];
+    map_point tile_coord_cache[30][30];
     pixel_coordinate pixel_coords_cache[30][30];
 
     long long special_flags = 0;
@@ -59,8 +59,8 @@ private:
     int immediate_warning_id = -1;
     int extra_warning_id = -1;
 
-    int start_offset_x_view;
-    int start_offset_y_view;
+    int start_offset_screen_x;
+    int start_offset_screen_y;
 
     void init_tiles(int size_x, int size_y);
     void set_graphics_row(int row, int *image_ids, int total);
@@ -90,39 +90,45 @@ public:
     int build_type;
     bool in_progress;
     bool draw_as_constructing;
-    map_tile start;
-    map_tile end;
+    map_point start;
+    map_point end;
     int total_cost;
     int relative_orientation;
     int absolute_orientation;
     int variant;
-    map_point size;
-    map_point pivot;
+    struct {
+        int x;
+        int y;
+    } size;
+    struct {
+        int x;
+        int y;
+    } pivot;
 
-    map_tile north_tile;
-    map_tile east_tile;
-    map_tile south_tile;
-    map_tile west_tile;
+    map_point north_tile;
+    map_point east_tile;
+    map_point south_tile;
+    map_point west_tile;
 
     int can_be_placed();
 
     void reset();
     void setup_build(int type);
 
-    void construction_start(int x, int y, int grid_offset);
-    void construction_update(int x, int y, int grid_offset);
+    void construction_start(map_point tile);
+    void construction_update(map_point tile);
     void construction_cancel();
     void construction_finalize();
 
     void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
-    void construction_record_view_position(int view_x, int view_y, int grid_offset);
+    void construction_record_view_position(pixel_coordinate pixel, map_point point);
 
     int get_total_drag_size(int *x, int *y);
     bool has_flag_set(int flag, int param1 = -1, int param2 = -1, int param3 = -1);
 
-    void update(const map_tile *cursor_tile);
+    void update(map_point cursor_tile);
     void draw();
     bool place();
 } Planner;

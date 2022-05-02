@@ -243,10 +243,10 @@ static void update_aftermath(void) {
         if (city_data.distant_battle.roman_months_to_travel_back <= 0) {
             if (city_data.distant_battle.city_foreign_months_left) {
                 // soldiers return - not in time
-                city_message_post(true, MESSAGE_TROOPS_RETURN_FAILED, 0, city_data.map.exit_point.grid_offset);
+                city_message_post(true, MESSAGE_TROOPS_RETURN_FAILED, 0, city_data.map.exit_point.grid_offset());
             } else {
                 // victorious
-                city_message_post(true, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, city_data.map.exit_point.grid_offset);
+                city_message_post(true, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, city_data.map.exit_point.grid_offset());
             }
             city_data.distant_battle.roman_months_traveled = 0;
             formation_legions_return_from_distant_battle();

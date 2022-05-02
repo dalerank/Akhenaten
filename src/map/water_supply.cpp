@@ -6,7 +6,7 @@
 #include "core/game_environment.h"
 #include "map/aqueduct.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -17,6 +17,7 @@
 #include "tiles.h"
 
 #include <string.h>
+#include <scenario/map.h>
 
 #define MAX_QUEUE 1000
 
@@ -29,11 +30,11 @@ static struct {
 static void mark_well_access(int well_id, int radius) {
     building *well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(map_grid_offset(xx, yy));
+            int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id)
                 building_get(building_id)->has_well_access = 1;
 
@@ -54,7 +55,7 @@ void map_water_supply_update_houses(void) {
             b->has_water_access = false;
             b->has_well_access = 0;
             if (b->data.house.bathhouse || map_terrain_exists_tile_in_area_with_type(
-                    b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
+                    b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
@@ -77,9 +78,9 @@ static void canals_empty_all(void) {
     river_access_canal_offsets_total = 0;
 
     int image_without_water = image_id_from_group(GROUP_BUILDING_AQUEDUCT) + IMAGE_CANAL_FULL_OFFSET;
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && !map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 map_aqueduct_set(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
@@ -111,7 +112,7 @@ static void fill_canals_from_offset(int grid_offset) {
         int image_id = map_image_at(grid_offset);
         if (image_id >= image_without_water)
             map_image_set(grid_offset, image_id - IMAGE_CANAL_FULL_OFFSET);
-        map_terrain_add_with_radius(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
+        map_terrain_add_with_radius(MAP_X(grid_offset), MAP_Y(grid_offset), 1, 2, TERRAIN_IRRIGATION_RANGE);
 
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
@@ -185,8 +186,8 @@ static void update_canals_from_water_lifts() {
 
             // check if has access to water
             b->has_water_access = false;
-            int input_offset_0 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][0];
-            int input_offset_1 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][1];
+            int input_offset_0 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][0];
+            int input_offset_1 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][1];
             if (map_aqueduct_at(input_offset_0) || map_terrain_is(input_offset_0, TERRAIN_WATER))
                 b->has_water_access = true;
             if (map_aqueduct_at(input_offset_1) || map_terrain_is(input_offset_1, TERRAIN_WATER))
@@ -194,9 +195,9 @@ static void update_canals_from_water_lifts() {
 
             // checks done, update
             if (b->has_water_access) {
-                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
-                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
-                map_terrain_add_with_radius(b->x, b->y, 2, 2, TERRAIN_IRRIGATION_RANGE);
+                fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
+                fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
+                map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 2, 2, TERRAIN_IRRIGATION_RANGE);
             }
         }
     }
@@ -218,7 +219,7 @@ void map_update_wells_range(void) {
     for (int i = 0; i < total_wells; i++) {
         building *b = building_get(wells[i]);
         if (b->type == BUILDING_WELL)
-            map_terrain_add_with_radius(b->x, b->y, 1, 3, TERRAIN_FOUNTAIN_RANGE);
+            map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
     }
 }
 
@@ -226,11 +227,11 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building *well = building_get(well_id);
     int num_houses = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
+            int grid_offset = MAP_OFFSET(xx, yy);
             int building_id = map_building_at(grid_offset);
             if (building_id && building_get(building_id)->house_size && !building_get(building_id)->data.house.bathhouse) {
                 num_houses++;

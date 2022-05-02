@@ -65,7 +65,7 @@ void figure::tax_collector_action() {
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
@@ -77,7 +77,7 @@ void figure::tax_collector_action() {
             use_cross_country = true;
 //            is_ghost = true;
             if (move_ticks_cross_country(1) == 1) {
-                if (has_home(map_building_at(grid_offset_figure))) {
+                if (has_home(map_building_at(tile.grid_offset()))) {
                     // returned to own building
                     poof();
                 } else {
@@ -93,10 +93,11 @@ void figure::tax_collector_action() {
             roam_length++;
             if (roam_length >= max_roam_length) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
-                    destination_x = x_road;
-                    destination_y = y_road;
+                    destination_tile.set(x_road, y_road);
+//                    destination_tile.x() = x_road;
+//                    destination_tile.y() = y_road;
                 } else {
                     poof();
                 }
@@ -108,7 +109,7 @@ void figure::tax_collector_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-                set_cross_country_destination(b->x, b->y);
+                set_cross_country_destination(b->tile.x(), b->tile.y());
                 roam_length = 0;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();

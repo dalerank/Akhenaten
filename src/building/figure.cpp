@@ -116,7 +116,7 @@ int building::get_figure_slot(figure *f) {
 }
 
 figure *building::create_figure_generic(int _type, int created_action, int slot, int created_dir) {
-    figure *f = figure_create(_type, road_access_x, road_access_y, created_dir);
+    figure *f = figure_create(_type, road_access.x(), road_access.y(), created_dir);
     f->action_state = created_action;
     f->set_home(id);
     return f;
@@ -265,7 +265,7 @@ void building::spawn_figure_police() {
 
 void building::spawn_figure_juggler() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
+        building *dest = building_get(determine_venue_destination(road_access.x(), road_access.y(), BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_JUGGLER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -275,7 +275,7 @@ void building::spawn_figure_juggler() {
 }
 void building::spawn_figure_musician() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
+        building *dest = building_get(determine_venue_destination(road_access.x(), road_access.y(), BUILDING_PAVILLION, BUILDING_BANDSTAND, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -285,7 +285,7 @@ void building::spawn_figure_musician() {
 }
 void building::spawn_figure_dancer() {
     if (common_spawn_figure_trigger(50)) {
-        building *dest = building_get(determine_venue_destination(road_access_x, road_access_y, BUILDING_PAVILLION, 0, 0));
+        building *dest = building_get(determine_venue_destination(road_access.x(), road_access.y(), BUILDING_PAVILLION, 0, 0));
         if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             if (dest->id > 0)
                 create_figure_with_destination(FIGURE_DANCER, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
@@ -393,11 +393,11 @@ void building::spawn_figure_senet() {
 void building::set_market_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -439,24 +439,24 @@ void building::spawn_figure_market() {
 void building::set_bathhouse_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_terrain_exists_tile_in_area_with_type(x, y, size, TERRAIN_GROUNDWATER))
+    if (map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER))
         has_water_access = true;
     else
         has_water_access = false;
     if (has_water_access && num_workers) {
-        if (map_desirability_get(grid_offset) <= 30) {
-            map_building_tiles_add(id, x, y, size,
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id, x, y, size,
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
-        if (map_desirability_get(grid_offset) <= 30) {
-            map_building_tiles_add(id, x, y, size,
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id, x, y, size,
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
@@ -489,7 +489,7 @@ void building::spawn_figure_school() {
     if (has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
         return;
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
         common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1)
@@ -498,23 +498,23 @@ void building::spawn_figure_school() {
         if (figure_spawn_delay > spawn_delay) {
             figure_spawn_delay = 0;
 
-            figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
+            figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
             child1->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             set_figure(0, child1->id); // first "child" (teacher) is the coupled figure to the school building
             child1->init_roaming_from_building(0);
 
-            figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
+            figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
             child2->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child2->init_roaming_from_building(0);
 
-            figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
+            figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
             child3->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child3->init_roaming_from_building(0);
 
-            figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP_RIGHT);
+            figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, road.x(), road.y(), DIR_0_TOP_RIGHT);
             child4->action_state = FIGURE_ACTION_125_ROAMING;
             child1->set_home(id);
             child4->init_roaming_from_building(0);
@@ -592,11 +592,11 @@ void building::spawn_figure_temple() {
 void building::set_water_supply_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
     }
 }
@@ -638,11 +638,11 @@ void building::spawn_figure_watersupply() {
 void building::set_senate_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -865,7 +865,7 @@ void building::spawn_figure_warehouse() {
 //                amount = 1;
 
             if (!has_figure(0)) {
-                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access.x(), road_access.y(), DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 switch (task) {
@@ -885,7 +885,7 @@ void building::spawn_figure_warehouse() {
                 f->set_home(id);
 
             } else if (task == WAREHOUSE_TASK_GETTING_MOAR && !has_figure_of_type(1,FIGURE_WAREHOUSEMAN)) {
-                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access_x, road_access_y, DIR_4_BOTTOM_LEFT);
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road_access.x(), road_access.y(), DIR_4_BOTTOM_LEFT);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
 
                 f->load_resource(0, RESOURCE_NONE);
@@ -900,13 +900,13 @@ void building::spawn_figure_warehouse() {
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) { //map_has_road_access_granary(x, y, &road)
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) { //map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
         if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
         int task = building_granary_determine_worker_task(this);
         if (task != GRANARY_TASK_NONE) {
-            figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM_LEFT);
+            figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x(), road.y(), DIR_4_BOTTOM_LEFT);
             f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             f->load_resource(0, task);
             set_figure(0, f->id);
@@ -960,10 +960,10 @@ bool building::can_spawn_gatherer(figure_type ftype, int max_gatherers_per_build
     bool resource_reachable = false;
     switch (ftype) {
         case FIGURE_REED_GATHERER:
-            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_MARSHLAND);
+            resource_reachable = map_routing_citizen_found_terrain(road_access.x(), road_access.y(), nullptr, nullptr, TERRAIN_MARSHLAND);
             break;
         case FIGURE_LUMBERJACK:
-            resource_reachable = map_routing_citizen_found_terrain(road_access_x, road_access_y, nullptr, nullptr, TERRAIN_TREE);
+            resource_reachable = map_routing_citizen_found_terrain(road_access.x(), road_access.y(), nullptr, nullptr, TERRAIN_TREE);
             break;
     }
     for (int i = 0; i < MAX_FIGURES[GAME_ENV]; i++) {
@@ -1047,7 +1047,7 @@ void building::spawn_figure_native_meeting() {
 //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 //    if (city_buildings_is_mission_post_operational() && !has_figure_of_type(FIGURE_NATIVE_TRADER)) {
 //        int x_out, y_out;
-//        if (map_terrain_get_adjacent_road_or_clear_land(x, y, size, &x_out, &y_out)) {
+//        if (map_terrain_get_adjacent_road_or_clear_land(tile.x(), tile.y(), size, &x_out, &y_out)) {
 //            figure_spawn_delay++;
 //            if (figure_spawn_delay > 8) {
 //                figure_spawn_delay = 0;
@@ -1063,7 +1063,7 @@ void building::spawn_figure_native_meeting() {
 void building::spawn_figure_tower() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
         common_spawn_labor_seeker(50);
         if (num_workers <= 0)
             return;
@@ -1113,18 +1113,18 @@ void building::update_native_crop_progress() {
     if (data.industry.progress >= 5)
         data.industry.progress = 0;
 
-    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
+    map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
 }
 
 void building::update_road_access() {
     // update building road access
-    map_point road;
+//    map_point road;
     switch (type) {
         case BUILDING_WAREHOUSE:
-            road_is_accessible = map_has_road_access(x, y, 3, &road);
+            road_is_accessible = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
             break;
         case BUILDING_BURNING_RUIN:
-            road_is_accessible = burning_ruin_can_be_accessed(x, y, &road);
+            road_is_accessible = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1133,18 +1133,18 @@ void building::update_road_access() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
             if (is_main()) {
                 int orientation = (5 - (data.monuments.variant / 2)) % 4;
-                road_is_accessible = map_has_road_access_temple_complex(x, y, orientation, false, &road);
+                road_is_accessible = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
             }
             break;
         default:
             if (id == 17)
                 int a = 4;
-            road_is_accessible = map_has_road_access(x, y, size, &road);
+            road_is_accessible = map_has_road_access(tile.x(), tile.y(), size, &road_access);
             break;
     }
     // TODO: Temple Complexes
-    road_access_x = road.x;
-    road_access_y = road.y;
+//    road_access.x() = road.x;
+//    road_access.y() = road.y;
 }
 bool building::figure_generate() {
     show_on_problem_overlay = 0;

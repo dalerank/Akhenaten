@@ -27,7 +27,7 @@ static const int CRIMINAL_OFFSETS[] = {
 
 static void generate_rioter(building *b) {
     int x_road, y_road;
-    if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road))
+    if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, &x_road, &y_road))
         return;
     city_sentiment_add_criminal();
     int people_in_mob;
@@ -54,8 +54,9 @@ static void generate_rioter(building *b) {
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
         if (target_building_id) {
-            f->destination_x = x_target;
-            f->destination_y = y_target;
+            f->destination_tile.set(x_target, y_target);
+//            f->destination_tile.x() = x_target;
+//            f->destination_tile.y() = y_target;
             f->set_destination(target_building_id);
         } else {
             f->poof();
@@ -66,7 +67,7 @@ static void generate_rioter(building *b) {
     city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, MAP_OFFSET(x_road, y_road));
 }
 
 static void generate_mugger(building *b) {
@@ -74,7 +75,7 @@ static void generate_mugger(building *b) {
     if (b->house_criminal_active < 2) {
         b->house_criminal_active = 2;
         int x_road, y_road;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();
@@ -84,7 +85,7 @@ static void generate_mugger(building *b) {
                 if (money_stolen > 400)
                     money_stolen = 400 - random_byte() / 2;
 
-                city_message_post(true, MESSAGE_THEFT, money_stolen, f->grid_offset_figure);
+                city_message_post(true, MESSAGE_THEFT, money_stolen, f->tile.grid_offset());
                 city_finance_process_stolen(money_stolen);
             }
         }
@@ -96,7 +97,7 @@ static void generate_protestor(building *b) {
     if (b->house_criminal_active < 1) {
         b->house_criminal_active = 1;
         int x_road, y_road;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();
@@ -201,8 +202,9 @@ void figure::rioter_action() {
                 int x_tile, y_tile;
                 int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {
-                    destination_x = x_tile;
-                    destination_y = y_tile;
+                    destination_tile.set(x_tile, y_tile);
+//                    destination_tile.x() = x_tile;
+//                    destination_tile.y() = y_tile;
                     set_destination(building_id);
                     route_remove();
                 } else
@@ -216,8 +218,9 @@ void figure::rioter_action() {
                 int x_tile, y_tile;
                 int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {
-                    destination_x = x_tile;
-                    destination_y = y_tile;
+                    destination_tile.set(x_tile, y_tile);
+//                    destination_tile.x() = x_tile;
+//                    destination_tile.y() = y_tile;
                     set_destination(building_id);
                     route_remove();
                 } else {

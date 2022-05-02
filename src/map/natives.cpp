@@ -9,7 +9,7 @@
 #include "core/image_group_editor.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -22,7 +22,7 @@ static void mark_native_land(int x, int y, int size, int radius) {
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            map_property_mark_native_land(map_grid_offset(xx, yy));
+            map_property_mark_native_land(MAP_OFFSET(xx, yy));
         }
     }
 }
@@ -32,7 +32,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius) {
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
-            int building_id = map_building_at(map_grid_offset(xx, yy));
+            int building_id = map_building_at(MAP_OFFSET(xx, yy));
             if (building_id > 0) {
                 int type = building_get(building_id)->type;
                 if (type != BUILDING_MISSION_POST &&
@@ -70,7 +70,7 @@ static void determine_meeting_center(void) {
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
                 building *meeting = building_get(meetings[n]);
-                int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
+                int dist = calc_maximum_distance(b->tile.x(), b->tile.y(), meeting->tile.x(), meeting->tile.y());
                 if (dist < min_dist) {
                     min_dist = dist;
                     min_meeting_id = meetings[n];
@@ -87,9 +87,9 @@ void map_natives_init(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 
@@ -106,9 +106,9 @@ void map_natives_init(void) {
             } else if (image_id == image_meeting) {
                 type = BUILDING_NATIVE_MEETING;
                 map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 0), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(0, 1), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + random_bit);
@@ -125,18 +125,18 @@ void map_natives_init(void) {
                     break;
                 case BUILDING_NATIVE_MEETING:
                     b->sentiment.native_anger = 100;
-                    map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
-                    map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
-                    map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
-                    mark_native_land(b->x, b->y, 2, 6);
+                    map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
+                    map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
+                    map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
+                    mark_native_land(b->tile.x(), b->tile.y(), 2, 6);
                     if (!meeting_center_set)
-                        city_buildings_set_main_native_meeting_center(b->x, b->y);
+                        city_buildings_set_main_native_meeting_center(b->tile.x(), b->tile.y());
 
                     break;
                 case BUILDING_NATIVE_HUT:
                     b->sentiment.native_anger = 100;
                     b->figure_spawn_delay = random_bit;
-                    mark_native_land(b->x, b->y, 1, 3);
+                    mark_native_land(b->tile.x(), b->tile.y(), 1, 3);
                     break;
             }
         }
@@ -150,9 +150,9 @@ void map_natives_init_editor(void) {
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int native_image = image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE);
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset))
                 continue;
 
@@ -168,9 +168,9 @@ void map_natives_init_editor(void) {
             } else if (image_id == image_meeting) {
                 type = BUILDING_NATIVE_MEETING;
                 map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 0), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(0, 1), native_image + 2);
-                map_image_set(grid_offset + map_grid_delta(1, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
@@ -182,9 +182,9 @@ void map_natives_init_editor(void) {
             b->state = BUILDING_STATE_VALID;
             map_building_set(grid_offset, b->id);
             if (type == BUILDING_NATIVE_MEETING) {
-                map_building_set(grid_offset + map_grid_delta(1, 0), b->id);
-                map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
-                map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
+                map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
             }
         }
     }
@@ -210,8 +210,8 @@ void map_natives_check_land(void) {
             continue;
         }
         if (b->sentiment.native_anger >= 100) {
-            mark_native_land(b->x, b->y, size, radius);
-            if (has_building_on_native_land(b->x, b->y, size, radius))
+            mark_native_land(b->tile.x(), b->tile.y(), size, radius);
+            if (has_building_on_native_land(b->tile.x(), b->tile.y(), size, radius))
                 city_military_start_native_attack();
 
         } else {

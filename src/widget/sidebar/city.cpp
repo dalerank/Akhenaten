@@ -6,7 +6,7 @@
 
 #include "building/menu.h"
 #include "city/message.h"
-#include "city/view.h"
+#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/direction.h"
 #include "core/game_environment.h"
@@ -271,8 +271,8 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 35, cl, "draw as con.:", Planner.draw_as_constructing);
         draw_debug_line(str, x, y + 45, cl, "orientation:", Planner.absolute_orientation); draw_debug_line(str, x + 40, y + 45, cl, "", Planner.relative_orientation);
         draw_debug_line(str, x, y + 55, cl, "variant:", Planner.variant);
-        draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y);
-        draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y);
+        draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x()); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y());
+        draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x()); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y());
         draw_debug_line(str, x, y + 85, cl, "cost:", Planner.total_cost);
         y += 90;
     }
@@ -339,10 +339,8 @@ static void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (false) {
-        int tx, ty;
-        int px, py;
-        city_view_get_camera_tile(&tx, &ty);
-        city_view_get_camera_pixel_offset(&px, &py);
+        map_point camera_tile = city_view_get_camera_tile();
+        pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
 
         view_data* viewdata = city_view_data_unsafe();
         int real_max_x;
@@ -355,11 +353,11 @@ static void draw_debug_ui(int x, int y) {
 
         draw_debug_line_double_left(str, x, y + 15, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
         draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
-        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", tx, ty);
+        draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
         draw_debug_line_double_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
         draw_debug_line_double_left(str, x, y + 65, 90, 40, "---min:", 0, 0);
-        draw_debug_line_double_left(str, x, y + 75, 90, 40, "pixel:", px, py);
+        draw_debug_line_double_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
         draw_debug_line_double_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
         draw_debug_line_double_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
@@ -674,7 +672,7 @@ static void button_help(int param1, int param2) {
 static void button_go_to_problem(int param1, int param2) {
     int grid_offset = city_message_next_problem_area_grid_offset();
     if (grid_offset) {
-        city_view_go_to_grid_offset(grid_offset);
+        city_view_go_to_point(map_point(grid_offset));
         window_city_show();
     } else {
         window_invalidate();

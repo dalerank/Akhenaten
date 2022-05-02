@@ -75,7 +75,7 @@ static struct {
 
 static file_type_data saved_game_data = {"sav"};
 static file_type_data saved_game_data_expanded = {"svx"};
-static file_type_data scenario_data = {"map"};
+static file_type_data map_file_data = {"map"};
 
 static void set_chosen_filename(const char *name) {
     strcpy(data.selected_file, name);
@@ -112,7 +112,7 @@ static const char *get_chosen_filename(void) {
 
 static void init(file_type type, file_dialog_type dialog_type) {
     data.type = type;
-    data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
+    data.file_data = type == FILE_TYPE_SCENARIO ? &map_file_data : &saved_game_data;
 
     // get last saved file name
     if (strlen(data.file_data->last_loaded_file) == 0) {
@@ -132,7 +132,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
             strcat(folder_name, setting_player_name_utf8());
             strcat(folder_name, "/");
             if (type == FILE_TYPE_SCENARIO)
-                panel->change_file_path("Maps/", scenario_data.extension);
+                panel->change_file_path("Maps/", map_file_data.extension);
             else if (data.dialog_type != FILE_DIALOG_SAVE) {
                 panel->change_file_path(folder_name, data.file_data->extension);
 //                data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension); // TODO?
@@ -219,8 +219,8 @@ static void button_ok_cancel(int is_ok, int param2) {
             GamestateIO::write_savegame(filename);
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
-            if (!file_has_extension(full, scenario_data.extension))
-                file_append_extension(full, scenario_data.extension);
+            if (!file_has_extension(full, map_file_data.extension))
+                file_append_extension(full, map_file_data.extension);
 
             game_file_editor_write_scenario(full);
             window_editor_map_show();

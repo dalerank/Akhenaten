@@ -4,7 +4,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
-#include "map/data.h"
+#include <scenario/map.h>
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/ring.h"
@@ -14,13 +14,13 @@ static grid_xx desirability_grid = {0, {FS_INT8, FS_INT8}};
 
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability) {
     int partially_outside_map = 0;
-    if (x - distance < -1 || x + distance + size - 1 > map_data.width)
+    if (x - distance < -1 || x + distance + size - 1 > scenario_map_data()->width)
         partially_outside_map = 1;
 
-    if (y - distance < -1 || y + distance + size - 1 > map_data.height)
+    if (y - distance < -1 || y + distance + size - 1 > scenario_map_data()->height)
         partially_outside_map = 1;
 
-    int base_offset = map_grid_offset(x, y);
+    int base_offset = MAP_OFFSET(x, y);
     int start = map_ring_start(size, distance);
     int end = map_ring_end(size, distance);
 
@@ -68,7 +68,7 @@ static void update_buildings(void) {
         if (b->state == BUILDING_STATE_VALID) {
             const model_building *model = model_get_building(b->type);
             add_to_terrain(
-                    b->x, b->y, b->size,
+                    b->tile.x(), b->tile.y(), b->size,
                     model->desirability_value,
                     model->desirability_step,
                     model->desirability_step_size,
@@ -77,9 +77,9 @@ static void update_buildings(void) {
     }
 }
 static void update_terrain(void) {
-    int grid_offset = map_data.start_offset;
-    for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
-        for (int x = 0; x < map_data.width; x++, grid_offset++) {
+    int grid_offset = scenario_map_data()->start_offset;
+    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
+        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
             if (map_property_is_plaza_or_earthquake(grid_offset)) {
                 int type;
@@ -126,12 +126,12 @@ int map_desirability_get(int grid_offset) {
 }
 int map_desirability_get_max(int x, int y, int size) {
     if (size == 1)
-        return map_grid_get(&desirability_grid, map_grid_offset(x, y));
+        return map_grid_get(&desirability_grid, MAP_OFFSET(x, y));
 
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
-            int grid_offset = map_grid_offset(x + dx, y + dy);
+            int grid_offset = MAP_OFFSET(x + dx, y + dy);
             if (map_grid_get(&desirability_grid, grid_offset) > max)
                 max = map_grid_get(&desirability_grid, grid_offset);
 
