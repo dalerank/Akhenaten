@@ -98,11 +98,11 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
     // so it's impossible to draw outside the map with these!
     if (grid_offset == -1)
         return;
-    int tx = MAP_X(grid_offset);
-    int ty = MAP_Y(grid_offset);
+//    int tx = MAP_X(grid_offset);
+//    int ty = MAP_Y(grid_offset);
 //    if (tx==40 && ty==44)
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
-    if (map_grid_inside_map_area(tx, ty, 1))
+    if (map_grid_inside_map_area(grid_offset, 1))
         return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
 //    if (!map_grid_is_inside(tx, ty, 1))
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);

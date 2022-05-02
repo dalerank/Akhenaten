@@ -10,8 +10,19 @@
 #include "terrain.h"
 #include "figure.h"
 #include "map/routing/routing.h"
+#include "tiles.h"
 
-tile_cache vegetation_tiles_cache;
+tile_cache marshland_tiles_cache;
+tile_cache trees_tiles_cache;
+
+void foreach_marshland_tile(void (*callback)(int grid_offset)) {
+    for (int i = 0; i < marshland_tiles_cache.size(); i++)
+        callback(marshland_tiles_cache.at(i));
+}
+void foreach_tree_tile(void (*callback)(int grid_offset)) {
+    for (int i = 0; i < trees_tiles_cache.size(); i++)
+        callback(trees_tiles_cache.at(i));
+}
 
 static grid_xx terrain_vegetation_growth = {0, {FS_UINT8, FS_UINT8}};
 
@@ -20,18 +31,21 @@ int map_get_vegetation_growth(int grid_offset) {
 }
 void vegetation_deplete(int grid_offset) {
     map_grid_set(&terrain_vegetation_growth, grid_offset, 0);
+    map_tiles_update_vegetation(grid_offset);
 }
 void vegetation_growth_update() {
-    for (int i = 0; i < vegetation_tiles_cache.size(); ++i) {
-        int grid_offset = vegetation_tiles_cache.at(i);
+    for (int i = 0; i < trees_tiles_cache.size(); ++i) {
+        int grid_offset = trees_tiles_cache.at(i);
         int growth = map_get_vegetation_growth(grid_offset);
         if (growth < 255) {
             random_generate_next();
             int r = random_short() % 10 + 25;
             growth += r;
             if (growth > 255)
-                growth = 255;
+                growth -= 255;
             map_grid_set(&terrain_vegetation_growth, grid_offset, growth);
+            if (growth == 255)
+                map_tiles_update_vegetation(grid_offset);
         }
     }
 }

@@ -35,6 +35,7 @@ static int aqueduct_include_construction = 0;
 #include "SDL_log.h"
 #include "floodplain.h"
 #include "moisture.h"
+#include "vegetation.h"
 
 static int is_clear(int grid_offset, int size, int allowed_terrain, bool check_image, int check_figures = 2) {
     int x = MAP_X(grid_offset);
@@ -186,22 +187,49 @@ static void update_tree_image(int grid_offset) {
     int y = MAP_Y(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_TREE) &&
         !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+
         int image_id = image_id_from_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7);
-        if (map_terrain_has_only_rocks_trees_in_ring(x, y, 3))
-            map_image_set(grid_offset, image_id + 24);
-        else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 2))
-            map_image_set(grid_offset, image_id + 16);
-        else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
-            map_image_set(grid_offset, image_id + 8);
-        else {
-            map_image_set(grid_offset, image_id);
+
+        int grasslevel = map_grasslevel_get(grid_offset);
+        if (map_get_vegetation_growth(grid_offset) == 255) {
+            if (map_terrain_has_only_rocks_trees_in_ring(x, y, 3))
+                image_id += 56;
+            else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 2))
+                image_id += 48;
+            else {
+                if (grasslevel > 8)
+                    image_id += 32;
+                else if (grasslevel > 4)
+                    image_id += 16;
+                if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
+                    image_id += 8;
+            }
+        } else {
+            image_id += 64;
+            if (grasslevel > 8)
+                image_id += 16;
+            else if (grasslevel > 4)
+                image_id += 8;
+//            if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
+//                image_id += 8;
         }
+        map_image_set(grid_offset, image_id);
+
+//        if (map_terrain_has_only_rocks_trees_in_ring(x, y, 3))
+//            map_image_set(grid_offset, image_id + 24);
+//        else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 2))
+//            map_image_set(grid_offset, image_id + 16);
+//        if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
+//            map_image_set(grid_offset, image_id + 8);
+//        else
+//            map_image_set(grid_offset, image_id);
+
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
         map_aqueduct_set(grid_offset, 0);
     }
 }
-static void set_tree_image(int grid_offset) {
+static void update_tree_image_3x3(int grid_offset) {
     int x = MAP_X(grid_offset);
     int y = MAP_Y(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_TREE) &&
@@ -210,7 +238,7 @@ static void set_tree_image(int grid_offset) {
     }
 }
 void map_tiles_update_region_trees(int x_min, int y_min, int x_max, int y_max) {
-    foreach_region_tile(x_min, y_min, x_max, y_max, set_tree_image);
+    foreach_region_tile(x_min, y_min, x_max, y_max, update_tree_image_3x3);
 }
 static void set_shrub_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_SHRUB) &&
@@ -843,24 +871,30 @@ void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) 
     foreach_region_tile(x_min, y_min, x_max, y_max, set_meadow_image);
 }
 
-static void set_reeds_tile(int grid_offset) {
+static void update_marshland_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) { // there's no way to build anything on reed tiles, so... it's fine?
 
         const terrain_image *img = map_image_context_get_reeds_transition(grid_offset);
         int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img->group_offset + img->item_offset;
 
         if (!img->is_valid) { // if not edge, then it's a full reeds tile
-            // todo
-            // if uncut:
-            image_id = image_id_from_group(GROUP_TERRAIN_REEDS_GROWN) + (map_random_get(grid_offset) & 7);
-            // if cut:
-//            image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + (map_random_get(grid_offset) & 7);
+            if (map_get_vegetation_growth(grid_offset) == 255)
+                image_id = image_id_from_group(GROUP_TERRAIN_REEDS_GROWN) + (map_random_get(grid_offset) & 7);
+            else
+                image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + (map_random_get(grid_offset) & 7);
         }
         return map_image_set(grid_offset, image_id);
     }
 }
-void map_tiles_update_all_reed_fields() {
-    foreach_map_tile(set_reeds_tile);
+void map_tiles_update_vegetation(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
+        return update_marshland_image(grid_offset);
+    else if (map_terrain_is(grid_offset, TERRAIN_TREE))
+        return update_tree_image(grid_offset);
+}
+void map_tiles_update_all_vegetation_tiles() {
+    foreach_marshland_tile(update_marshland_image);
+    foreach_tree_tile(update_tree_image);
 }
 
 #include "game/time.h"
@@ -998,8 +1032,9 @@ static void set_floodplain_land_tiles_image(int grid_offset) {
 }
 
 static void set_river_3x3_tiles(int grid_offset) {
-    int x = -1;
-    int y = -1;
+    map_point point = map_point(grid_offset);
+    int x = point.x();
+    int y = point.y();
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_river_image);
 }
 static void set_floodplain_edge_3x3_tiles(int grid_offset) {
@@ -1526,3 +1561,4 @@ void map_tiles_update_region_empty_land(bool clear, int x_min, int y_min, int x_
     foreach_region_tile(x_min, y_min, x_max, y_max, set_empty_land_pass2);
     foreach_region_tile(x_min-1, y_min-1, x_max+1, y_max+1, set_floodplain_edge_3x3_tiles);
 }
+

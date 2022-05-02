@@ -45,7 +45,7 @@ void clear_distances(void) {
 }
 int valid_offset(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(&routing_distance, grid_offset) == 0
-    && map_grid_inside_map_area(MAP_X(grid_offset), MAP_Y(grid_offset), 1);
+           && map_grid_inside_map_area(grid_offset, 1);
 }
 
 void enqueue(int offset, int distance) {

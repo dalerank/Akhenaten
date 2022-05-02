@@ -370,7 +370,7 @@ void GamestateIO::start_loaded_file() {
     floodplains_init();
     map_tiles_river_refresh_entire();
     map_tiles_determine_gardens();
-
+    map_tiles_update_all_vegetation_tiles();
 
     if (last_loaded == LOADED_MISSION)
         window_mission_briefing_show();

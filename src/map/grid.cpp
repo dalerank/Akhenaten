@@ -321,7 +321,9 @@ int map_grid_is_inside(int x, int y, int size) {
         return x >= min_x && x + size <= max_x && y >= min_y && y + size <= max_y;
     }
 }
-bool map_tile_inside_map_area(int x, int y, int edge_size) {
+bool map_grid_inside_map_area(int grid_offset, int edge_size) {
+    int x = GRID_X(grid_offset);
+    int y = GRID_Y(grid_offset);
     int dist_horizontal = abs(x - y);
     int dist_vertical = abs(y - (GRID_LENGTH - x) + 1);
 
@@ -331,9 +333,9 @@ bool map_tile_inside_map_area(int x, int y, int edge_size) {
 //        return 0; // outside play space, but visible
     return false; // outside viewable area
 }
-bool map_grid_inside_map_area(int x, int y, int edge_size) {
-    return map_tile_inside_map_area(x + scenario_map_data()->start_offset % GRID_LENGTH, y + scenario_map_data()->start_offset / GRID_LENGTH, edge_size);
-}
+//bool map_grid_inside_map_area(int x, int y, int edge_size) {
+//    return map_tile_inside_map_area(x + scenario_map_data()->start_offset % GRID_LENGTH, y + scenario_map_data()->start_offset / GRID_LENGTH, edge_size);
+//}
 
 static int offsets_array[150];
 const int *map_grid_adjacent_offsets_xy(int sizex, int sizey) {

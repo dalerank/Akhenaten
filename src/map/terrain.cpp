@@ -353,19 +353,23 @@ void map_terrain_init_outside_map(void) {
 void build_terrain_caches() {
     floodplain_tiles_cache.clear();
     river_tiles_cache.clear();
-    vegetation_tiles_cache.clear();
+    marshland_tiles_cache.clear();
+    trees_tiles_cache.clear();
 
     // fill in all water/river tiles
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
-                river_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
-                floodplain_tiles_cache.add(grid_offset);
-            if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND) || map_terrain_is(grid_offset, TERRAIN_TREE))
-//            && map_tile_inside_map_area(map_grid_offset_to_x(grid_offset), map_grid_offset_to_y(grid_offset)))
-                vegetation_tiles_cache.add(grid_offset);
+            if (map_grid_inside_map_area(grid_offset)) { // only inside the valid game area!
+                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
+                    river_tiles_cache.add(grid_offset);
+                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
+                    floodplain_tiles_cache.add(grid_offset);
+                if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
+                    marshland_tiles_cache.add(grid_offset);
+                if (map_terrain_is(grid_offset, TERRAIN_TREE))
+                    trees_tiles_cache.add(grid_offset);
+            }
         }
     }
 }

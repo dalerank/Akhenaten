@@ -76,8 +76,8 @@ void map_grid_get_area(int x, int y, int size, int radius, int *x_min, int *y_mi
 void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max,
                                 int *y_max);
 int map_grid_is_inside(int x, int y, int size);
-bool map_tile_inside_map_area(int x, int y, int edge_size = 0);
-bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
+bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
+//bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
 const int *map_grid_adjacent_offsets_xy(int sizex, int sizey);
 const int *map_grid_adjacent_offsets(int size);
 

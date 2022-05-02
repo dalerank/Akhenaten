@@ -151,7 +151,7 @@ void calculate_lookup() {
         for (int x = 0; x < grid_s; x++) {
             int grid_offset = x + grid_s * y;
 
-            bool is_inside_area = map_tile_inside_map_area(x, y);
+            bool is_inside_area = map_grid_inside_map_area(grid_offset);
             if (is_inside_area) // inside area
                 SCREENTILE_TO_MAPPOINT_LOOKUP[screen_x / 2][screen_y].set(grid_offset);
             else // outside area
