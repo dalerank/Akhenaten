@@ -293,8 +293,8 @@ void figure::init_roaming_from_building(int roam_dir) {
 
     // randomize a search area in a general direction to send off roamers to
     building *b = home();
-    int offset_search_x = b->x;
-    int offset_search_y = b->y;
+    int offset_search_x = b->tile.x();
+    int offset_search_y = b->tile.y();
     switch (roam_dir) {
         case DIR_0_TOP_RIGHT:
             offset_search_y -= 8;

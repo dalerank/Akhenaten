@@ -393,11 +393,11 @@ void building::spawn_figure_senet() {
 void building::set_market_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -439,24 +439,24 @@ void building::spawn_figure_market() {
 void building::set_bathhouse_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_terrain_exists_tile_in_area_with_type(x, y, size, TERRAIN_GROUNDWATER))
+    if (map_terrain_exists_tile_in_area_with_type(tile.x(), tile.y(), size, TERRAIN_GROUNDWATER))
         has_water_access = true;
     else
         has_water_access = false;
     if (has_water_access && num_workers) {
-        if (map_desirability_get(grid_offset) <= 30) {
-            map_building_tiles_add(id, x, y, size,
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id, x, y, size,
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
-        if (map_desirability_get(grid_offset) <= 30) {
-            map_building_tiles_add(id, x, y, size,
+        if (map_desirability_get(tile.grid_offset()) <= 30) {
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
-            map_building_tiles_add(id, x, y, size,
+            map_building_tiles_add(id, tile.x(), tile.y(), size,
                                    image_id_from_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
@@ -489,7 +489,7 @@ void building::spawn_figure_school() {
     if (has_figure_of_type(0, FIGURE_SCHOOL_CHILD))
         return;
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
         common_spawn_labor_seeker(50);
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1)
@@ -592,11 +592,11 @@ void building::spawn_figure_temple() {
 void building::set_water_supply_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_WATER_SUPPLY), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_WATER_SUPPLY) + 2, TERRAIN_BUILDING);
     }
 }
@@ -638,11 +638,11 @@ void building::spawn_figure_watersupply() {
 void building::set_senate_graphic() {
     if (state != BUILDING_STATE_VALID)
         return;
-    if (map_desirability_get(grid_offset) <= 30) {
-        map_building_tiles_add(id, x, y, size,
+    if (map_desirability_get(tile.grid_offset()) <= 30) {
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
-        map_building_tiles_add(id, x, y, size,
+        map_building_tiles_add(id, tile.x(), tile.y(), size,
                                image_id_from_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -900,7 +900,7 @@ void building::spawn_figure_warehouse() {
 void building::spawn_figure_granary() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) { //map_has_road_access_granary(x, y, &road)
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) { //map_has_road_access_granary(x, y, &road)
         common_spawn_labor_seeker(100);
         if (has_figure_of_type(0, FIGURE_WAREHOUSEMAN))
             return;
@@ -1047,7 +1047,7 @@ void building::spawn_figure_native_meeting() {
 //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 //    if (city_buildings_is_mission_post_operational() && !has_figure_of_type(FIGURE_NATIVE_TRADER)) {
 //        int x_out, y_out;
-//        if (map_terrain_get_adjacent_road_or_clear_land(x, y, size, &x_out, &y_out)) {
+//        if (map_terrain_get_adjacent_road_or_clear_land(tile.x(), tile.y(), size, &x_out, &y_out)) {
 //            figure_spawn_delay++;
 //            if (figure_spawn_delay > 8) {
 //                figure_spawn_delay = 0;
@@ -1063,7 +1063,7 @@ void building::spawn_figure_native_meeting() {
 void building::spawn_figure_tower() {
     check_labor_problem();
     map_point road;
-    if (map_has_road_access(x, y, size, &road)) {
+    if (map_has_road_access(tile.x(), tile.y(), size, &road)) {
         common_spawn_labor_seeker(50);
         if (num_workers <= 0)
             return;
@@ -1113,7 +1113,7 @@ void building::update_native_crop_progress() {
     if (data.industry.progress >= 5)
         data.industry.progress = 0;
 
-    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
+    map_image_set(tile.grid_offset(), image_id_from_group(GROUP_BUILDING_FARMLAND) + data.industry.progress);
 }
 
 void building::update_road_access() {
@@ -1121,10 +1121,10 @@ void building::update_road_access() {
 //    map_point road;
     switch (type) {
         case BUILDING_WAREHOUSE:
-            road_is_accessible = map_has_road_access(x, y, 3, &road_access);
+            road_is_accessible = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
             break;
         case BUILDING_BURNING_RUIN:
-            road_is_accessible = burning_ruin_can_be_accessed(x, y, &road_access);
+            road_is_accessible = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1133,13 +1133,13 @@ void building::update_road_access() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
             if (is_main()) {
                 int orientation = (5 - (data.monuments.variant / 2)) % 4;
-                road_is_accessible = map_has_road_access_temple_complex(x, y, orientation, false, &road_access);
+                road_is_accessible = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
             }
             break;
         default:
             if (id == 17)
                 int a = 4;
-            road_is_accessible = map_has_road_access(x, y, size, &road_access);
+            road_is_accessible = map_has_road_access(tile.x(), tile.y(), size, &road_access);
             break;
     }
     // TODO: Temple Complexes

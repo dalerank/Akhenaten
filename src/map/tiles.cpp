@@ -1088,8 +1088,8 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
                 b->data.industry.progress = 0;
                 b->data.industry.labor_state = 0;
                 b->data.industry.labor_days_left = 0;
-                for (int _y = b->y; _y < b->y + b->size; _y++)
-                    for (int _x = b->x; _x < b->x + b->size; _x++) {
+                for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
+                    for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {
                         int _offset = MAP_OFFSET(_x, _y);
                         map_terrain_remove(_offset, TERRAIN_BUILDING);
                         map_property_set_multi_tile_size(_offset, 1);
@@ -1111,12 +1111,12 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
             if (b_id && b->state == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
                 // check if any other tile of the farm is still submerged
                 bool still_flooded = false;
-                for (int _y = b->y; _y < b->y + b->size; _y++)
-                    for (int _x = b->x; _x < b->x + b->size; _x++)
+                for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
+                    for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++)
                         if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
                             still_flooded = true;
                 if (!still_flooded)
-                    map_building_tiles_add_farm(b_id, b->x, b->y, 0, 0);
+                    map_building_tiles_add_farm(b_id, b->tile.x(), b->tile.y(), 0, 0);
             }
 
             // resurface roads

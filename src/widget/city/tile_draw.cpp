@@ -151,7 +151,7 @@ static bool drawing_building_as_deleted(building *b) {
         return false;
 
     b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)))
+    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset())))
         return true;
     return false;
 }
@@ -600,9 +600,9 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
         default:
             break;
         case 1: // BUILDING IDS
-            if (b_id && b->grid_offset == grid_offset)
+            if (b_id && b->tile.grid_offset() == grid_offset)
                 draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, x - 15, y, COLOR_MASK_GREEN);
-            if (b_id && map_property_is_draw_tile(grid_offset)) { //b->grid_offset == grid_offset
+            if (b_id && map_property_is_draw_tile(grid_offset)) { //b->tile.grid_offset() == grid_offset
                 bool red = !map_terrain_is(grid_offset, TERRAIN_BUILDING);
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
@@ -621,7 +621,7 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
                 draw_debug_line(str, x, y + 10, 0, "", map_property_multi_tile_xy(grid_offset), COLOR_LIGHT_BLUE);
             break;
         case 3: // ROADS
-            if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->grid_offset == grid_offset
+            if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->tile.grid_offset() == grid_offset
                 draw_debug_line(str, x0, y + 5, 0, "", b->road_access.x(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 draw_debug_line(str, x0, y + 15, 0, "", b->road_access.y(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
                 if (b->road_is_accessible) {
@@ -718,7 +718,7 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
                 draw_debug_line(str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
                 //
                 if (building_is_farm(b->type)) {
-                    draw_debug_line(str, x1 + 40, y + 20, 40, "fert.", map_get_fertility_for_farm(b->grid_offset), COLOR_FONT_ORANGE_LIGHT);
+                    draw_debug_line(str, x1 + 40, y + 20, 40, "fert.", map_get_fertility_for_farm(b->tile.grid_offset()), COLOR_FONT_ORANGE_LIGHT);
                     draw_debug_line(str, x0, y + 30, 0, "", b->data.industry.progress, COLOR_GREEN);
                     draw_debug_line(str, x1 + 10, y + 30, 4, ":", b->data.industry.progress / 20, COLOR_GREEN);
                     draw_debug_line(str, x1 + 40, y + 30, 40, "exp.", farm_expected_produce(b), COLOR_GREEN);
@@ -736,9 +736,9 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
             break;
         case 12: // SPRITE FRAMES
 
-            if (grid_offset == MAP_OFFSET(b->x, b->y))
+            if (grid_offset == MAP_OFFSET(b->tile.x(), b->tile.y()))
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, x - 15, y, COLOR_MASK_GREEN);
-            if (grid_offset == north_tile_grid_offset(b->x, b->y))
+            if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y()))
                 ImageDraw::img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
             d = map_sprite_animation_at(grid_offset);
             if (d) {

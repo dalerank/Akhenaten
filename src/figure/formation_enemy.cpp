@@ -158,12 +158,12 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile) {
         return 0;
 
     if (best_building->type == BUILDING_WAREHOUSE) {
-        *x_tile = best_building->x + 1;
-        *y_tile = best_building->y;
+        *x_tile = best_building->tile.x() + 1;
+        *y_tile = best_building->tile.y();
         return best_building->id + 1;
     } else {
-        *x_tile = best_building->x;
-        *y_tile = best_building->y;
+        *x_tile = best_building->tile.x();
+        *y_tile = best_building->tile.y();
         return best_building->id;
     }
 }
@@ -178,12 +178,12 @@ static void set_enemy_target_building(formation *m) {
     int min_distance = 10000;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
+        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
             continue;
 
         for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
             if (b->type == ENEMY_ATTACK_PRIORITY[attack][n]) {
-                int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
+                int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
                 if (n < best_type_index) {
                     best_type_index = n;
                     best_building = b;
@@ -200,12 +200,12 @@ static void set_enemy_target_building(formation *m) {
         // no target buildings left: take rioter attack priority
         for (int i = 1; i < MAX_BUILDINGS; i++) {
             building *b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->grid_offset))
+            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
                 continue;
 
             for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
                 if (b->type == RIOTER_ATTACK_PRIORITY[n]) {
-                    int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
+                    int distance = calc_maximum_distance(m->x_home, m->y_home, b->tile.x(), b->tile.y());
                     if (n < best_type_index) {
                         best_type_index = n;
                         best_building = b;
@@ -221,9 +221,9 @@ static void set_enemy_target_building(formation *m) {
     }
     if (best_building) {
         if (best_building->type == BUILDING_WAREHOUSE)
-            formation_set_destination_building(m, best_building->x + 1, best_building->y, best_building->id + 1);
+            formation_set_destination_building(m, best_building->tile.x() + 1, best_building->tile.y(), best_building->id + 1);
         else {
-            formation_set_destination_building(m, best_building->x, best_building->y, best_building->id);
+            formation_set_destination_building(m, best_building->tile.x(), best_building->tile.y(), best_building->id);
         }
     }
 }
@@ -247,7 +247,7 @@ static void set_native_target_building(formation *m) {
             case BUILDING_ROADBLOCK:
                 break;
             default: {
-                int distance = calc_maximum_distance(meeting.x(), meeting.y(), b->x, b->y);
+                int distance = calc_maximum_distance(meeting.x(), meeting.y(), b->tile.x(), b->tile.y());
                 if (distance < min_distance) {
                     min_building = b;
                     min_distance = distance;
@@ -256,7 +256,7 @@ static void set_native_target_building(formation *m) {
         }
     }
     if (min_building)
-        formation_set_destination_building(m, min_building->x, min_building->y, min_building->id);
+        formation_set_destination_building(m, min_building->tile.x(), min_building->tile.y(), min_building->id);
 
 }
 

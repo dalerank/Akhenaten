@@ -181,13 +181,13 @@ static void add_building_to_terrain(building *b) {
                 image_offset = 25;
                 break;
         }
-        map_building_tiles_add_farm(b->id, b->x, b->y,
+        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(),
                                     image_id_from_group(GROUP_BUILDING_FARMLAND) + image_offset, 0);
     } else if (b->house_size) {
 
     } else {
         int size = building_properties_for_type(b->type)->size;
-        map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
+        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), size, 0, 0);
         if (b->type == BUILDING_FISHING_WHARF)
             b->data.industry.fishing_boat_id = 0;
     }
@@ -225,12 +225,12 @@ static void add_building_to_terrain(building *b) {
 
 static void restore_housing(building *b) {
     int size = b->house_size;
-    for (int x = b->x; x < b->x + size; x++)
-        for (int y = b->y; y < b->y + size; y++) {
+    for (int x = b->tile.x(); x < b->tile.x() + size; x++)
+        for (int y = b->tile.y(); y < b->tile.y() + size; y++) {
             int grid_offset = MAP_OFFSET(x, y);
             data.newhouses_offsets[data.newhouses_num] = grid_offset + 1;
             data.newhouses_num++;
-//            if (x == b->x && y == b->y) {
+//            if (x == b->tile.x() && y == b->tile.y()) {
 //                b->house_size = 1;
 //                b->house_is_merged = 0;
 //                map_building_tiles_add(b->id, x, y, 1,
@@ -370,7 +370,7 @@ void game_undo_reduce_time_available(void) {
                 window_invalidate();
                 return;
             }
-            if (b->type != data.buildings[i].type || b->grid_offset != data.buildings[i].grid_offset) {
+            if (b->type != data.buildings[i].type || b->tile.grid_offset() != data.buildings[i].tile.grid_offset()) {
                 data.available = 0;
                 window_invalidate();
                 return;

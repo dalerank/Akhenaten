@@ -75,7 +75,7 @@ const int CROPS_OFFSETS[2] = {5, 6};
 
 static void add_fort(int type, building *fort) {
     fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_id_from_group(GROUP_BUILDING_FORT),
+    map_building_tiles_add(fort->id, fort->tile.x(), fort->tile.y(), fort->size, image_id_from_group(GROUP_BUILDING_FORT),
                            TERRAIN_BUILDING);
     if (type == BUILDING_FORT_CHARIOTEERS)
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
@@ -88,14 +88,14 @@ static void add_fort(int type, building *fort) {
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
-    building *ground = building_create(BUILDING_FORT_GROUND, fort->x + offsets_x[building_rotation_get_rotation()],
-                                       fort->y + offsets_y[building_rotation_get_rotation()], 0);
+    building *ground = building_create(BUILDING_FORT_GROUND, fort->tile.x() + offsets_x[building_rotation_get_rotation()],
+                                       fort->tile.y() + offsets_y[building_rotation_get_rotation()], 0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = fort->id;
     fort->next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
-    map_building_tiles_add(ground->id, fort->x + offsets_x[building_rotation_get_rotation()],
-                           fort->y + offsets_y[building_rotation_get_rotation()], 4,
+    map_building_tiles_add(ground->id, fort->tile.x() + offsets_x[building_rotation_get_rotation()],
+                           fort->tile.y() + offsets_y[building_rotation_get_rotation()], 4,
                            image_id_from_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 
     fort->formation_id = formation_legion_create_for_fort(fort);
@@ -138,11 +138,12 @@ static building *add_temple_complex_element(int x, int y, int orientation, build
     game_undo_add_building(b);
 
     b->size = 3;
-    b->grid_offset = MAP_OFFSET(b->x, b->y);
+//    b->tile = map_point()
+//    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     b->prev_part_building_id = prev->id;
     prev->next_part_building_id = b->id;
     int image_id = map_image_at(MAP_OFFSET(x, y));
-    map_building_tiles_add(b->id, b->x, b->y, 3, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 3, image_id, TERRAIN_BUILDING);
 
     return b;
 }
@@ -163,36 +164,37 @@ static void add_temple_complex(building *b, int orientation) {
             offset = {-3, 0};
             break;
     }
-    building *altar = add_temple_complex_element(b->x + offset.x(), b->y + offset.y(), orientation, b);
-    building *oracle = add_temple_complex_element(b->x + 2 * offset.x(), b->y + 2 * offset.y(), orientation, altar);
+    building *altar = add_temple_complex_element(b->tile.x() + offset.x(), b->tile.y() + offset.y(), orientation, b);
+    building *oracle = add_temple_complex_element(b->tile.x() + 2 * offset.x(), b->tile.y() + 2 * offset.y(), orientation, altar);
 }
 
 static void latch_on_venue(int type, building *main, int dx, int dy, int orientation, bool main_venue = false) {
-    int x = main->x + dx;
-    int y = main->y + dy;
-    int grid_offset = MAP_OFFSET(x, y);
+    map_point point = main->tile.shifted(dx, dy);
+//    int x = main->tile.x() + dx;
+//    int y = main->tile.y() + dy;
+//    int grid_offset = MAP_OFFSET(x, y);
     building *this_venue = main;
     if (main_venue) { // this is the main venue building!!
         if (type != main->type)
             return; // hmmm, this shouldn't happen
-        main->grid_offset = grid_offset;
-//        main->x += dx;
-//        main->y += dy;
+        main->tile = point;
+//        main->tile.x() += dx;
+//        main->tile.y() += dy;
     } else if (type == BUILDING_GARDENS) { // add gardens
-        map_terrain_add(grid_offset, TERRAIN_GARDEN);
+        map_terrain_add(point.grid_offset(), TERRAIN_GARDEN);
     } else { // extra venue
-        this_venue = building_create(type, x, y, 0);
+        this_venue = building_create(type, point.x(), point.y(), 0);
         building *parent = main; // link venue to last one in the chain
         while (parent->next_part_building_id)
             parent = building_get(parent->next_part_building_id);
         parent->next_part_building_id = this_venue->id;
         this_venue->prev_part_building_id = parent->id;
 
-        map_building_set(grid_offset, this_venue->id);
+        map_building_set(point.grid_offset(), this_venue->id);
         if (type == BUILDING_PAVILLION) {
-            map_building_set(grid_offset + GRID_OFFSET(1, 0), this_venue->id);
-            map_building_set(grid_offset + GRID_OFFSET(1, 1), this_venue->id);
-            map_building_set(grid_offset + GRID_OFFSET(0, 1), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(1, 0), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(1, 1), this_venue->id);
+            map_building_set(point.grid_offset() + GRID_OFFSET(0, 1), this_venue->id);
         }
     }
 
@@ -202,10 +204,10 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
             map_tiles_update_all_gardens();
             break;
         case BUILDING_BOOTH:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BOOTH));
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BOOTH));
             break;
         case BUILDING_BANDSTAND:
-            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
+            map_image_set(point.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + orientation);
             if (orientation == 1)
                 latch_on_venue(BUILDING_BANDSTAND, main, dx, dy + 1, 0);
             else if (orientation == 2)
@@ -213,12 +215,12 @@ static void latch_on_venue(int type, building *main, int dx, int dy, int orienta
             map_add_bandstand_tiles(this_venue);
             break;
         case BUILDING_PAVILLION:
-            map_building_tiles_add(this_venue->id, x, y, 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
+            map_building_tiles_add(this_venue->id, point.x(), point.y(), 2, image_id_from_group(GROUP_BUILDING_PAVILLION), TERRAIN_BUILDING);
             break;
     }
 }
 static void add_entertainment_venue(building *b, int orientation) {
-    b->data.entertainment.booth_corner_grid_offset = b->grid_offset;
+    b->data.entertainment.booth_corner_grid_offset = b->tile.grid_offset();
     int size = 0;
     switch (b->type) {
         case BUILDING_BOOTH:
@@ -230,7 +232,7 @@ static void add_entertainment_venue(building *b, int orientation) {
         case BUILDING_FESTIVAL_SQUARE:
             size = 5; break;
     }
-    if (!map_grid_is_inside(b->x, b->y, size))
+    if (!map_grid_is_inside(b->tile.x(), b->tile.y(), size))
         return;
     int image_id = 0;
     switch (b->type) {
@@ -249,7 +251,7 @@ static void add_entertainment_venue(building *b, int orientation) {
     }
 
     // add underlying plaza first
-    map_add_venue_plaza_tiles(b->id, size, b->x, b->y, image_id, false);
+    map_add_venue_plaza_tiles(b->id, size, b->tile.x(), b->tile.y(), image_id, false);
 
     // add additional building parts, update graphics accordingly
     switch (b->type) {
@@ -377,7 +379,7 @@ static void add_warehouse(building *b) {
         building_storage_accept_none(b->storage_id);
 
     b->prev_part_building_id = 0;
-    map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1,
+    map_building_tiles_add(b->id, b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner], 1,
                            image_id_from_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
@@ -385,19 +387,20 @@ static void add_warehouse(building *b) {
         if (i == corner) {
             continue;
         }
-        prev = add_warehouse_space(b->x + x_offset[i], b->y + y_offset[i], prev);
+        prev = add_warehouse_space(b->tile.x() + x_offset[i], b->tile.y() + y_offset[i], prev);
     }
     // adjust BUILDING_WAREHOUSE
-    b->x = b->x + x_offset[corner];
-    b->y = b->y + y_offset[corner];
-    b->grid_offset = MAP_OFFSET(b->x, b->y);
+    b->tile.set(b->tile.x() + x_offset[corner], b->tile.y() + y_offset[corner]);
+//    b->tile.x() = b->tile.x() + x_offset[corner];
+//    b->tile.y() = b->tile.y() + y_offset[corner];
+//    b->tile.grid_offset() = MAP_OFFSET(b->tile.x(), b->tile.y());
     game_undo_adjust_building(b);
 
     prev->next_part_building_id = 0;
 }
 
 static void add_building_tiles_image(building *b, int image_id) {
-    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id, TERRAIN_BUILDING);
 }
 static void add_building(building *b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
@@ -475,28 +478,28 @@ static void add_building(building *b, int orientation, int variant) {
             break;
             // farms
         case BUILDING_BARLEY_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, 0, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), 0, 0);
             break;
         case BUILDING_FLAX_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV], 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV], 0);
             break;
         case BUILDING_GRAIN_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 2, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 2, 0);
             break;
         case BUILDING_LETTUCE_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 3, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 3, 0);
             break;
         case BUILDING_POMEGRANATES_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 4, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 4, 0);
             break;
         case BUILDING_CHICKPEAS_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 5, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 5, 0);
             break;
         case BUILDING_FIGS_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 6, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 6, 0);
             break;
         case BUILDING_HENNA_FARM:
-            map_building_tiles_add_farm(b->id, b->x, b->y, CROPS_OFFSETS[GAME_ENV] * 7, 0);
+            map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(), CROPS_OFFSETS[GAME_ENV] * 7, 0);
             break;
             // government
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
@@ -508,13 +511,13 @@ static void add_building(building *b, int orientation, int variant) {
             break;
 //        case BUILDING_ROADBLOCK:
 //            add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_ROADBLOCK));
-//            map_terrain_add_roadblock_road(b->x, b->y, orientation);
+//            map_terrain_add_roadblock_road(b->tile.x(), b->tile.y(), orientation);
 //            break;
             // ships
 
         case BUILDING_WATER_LIFT: {
             auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->x, b->y, props->size,
+            map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
                                    image_id_from_group(props->image_collection, props->image_group) + orientation_rel + 4 * variant);
             break;
         }
@@ -525,29 +528,29 @@ static void add_building(building *b, int orientation, int variant) {
         case BUILDING_FERRY:
         case BUILDING_DOCK: {
             auto props = building_properties_for_type(b->type);
-            map_water_add_building(b->id, b->x, b->y, props->size,
+            map_water_add_building(b->id, b->tile.x(), b->tile.y(), props->size,
                                    image_id_from_group(props->image_collection, props->image_group) + orientation_rel);
             break;
         }
             // defense
         case BUILDING_TOWER:
-            map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
-            map_building_tiles_add(b->id, b->x, b->y, b->size, image_id_from_group(GROUP_BUILDING_TOWER),
+            map_terrain_remove_with_radius(b->tile.x(), b->tile.y(), 2, 0, TERRAIN_WALL);
+            map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size, image_id_from_group(GROUP_BUILDING_TOWER),
                                    TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-            map_tiles_update_area_walls(b->x, b->y, 5);
+            map_tiles_update_area_walls(b->tile.x(), b->tile.y(), 5);
             break;
         case BUILDING_GATEHOUSE_PH:
         case BUILDING_GATEHOUSE:
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
                                    image_id_from_group(GROUP_BUILDING_TOWER) + orientation,
                                    TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
 //            map_orientation_update_buildings();
-            map_terrain_add_gatehouse_roads(b->x, b->y, orientation);
+            map_terrain_add_gatehouse_roads(b->tile.x(), b->tile.y(), orientation);
             break;
         case BUILDING_TRIUMPHAL_ARCH:
             add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
 //            map_orientation_update_buildings();
-            map_terrain_add_triumphal_arch_roads(b->x, b->y, orientation);
+            map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
             city_buildings_build_triumphal_arch();
             building_menu_update(BUILDSET_NORMAL);
             Planner.reset();
@@ -760,8 +763,8 @@ static map_point temple_complex_part_target(building *main, int part) {
     else if (part == 2)
         b = get_temple_complex_front_facing_part(main);
 
-    int x = b->x;
-    int y = b->y;
+    int x = b->tile.x();
+    int y = b->tile.y();
     switch (city_view_orientation() / 2) {
         case 1: // east
             x += 2;

@@ -564,10 +564,10 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES]) {
         else if (map_terrain_is(offset, TERRAIN_BUILDING)) {
             building *b = building_at(offset);
             if (b->type == BUILDING_GRANARY) {
-                tiles[i] = (offset == b->grid_offset + GRID_OFFSET(1, 0)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + GRID_OFFSET(0, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + GRID_OFFSET(2, 1)) ? 1 : 0;
-                tiles[i] |= (offset == b->grid_offset + GRID_OFFSET(1, 2)) ? 1 : 0;
+                tiles[i] = (offset == b->tile.grid_offset() + GRID_OFFSET(1, 0)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(0, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(2, 1)) ? 1 : 0;
+                tiles[i] |= (offset == b->tile.grid_offset() + GRID_OFFSET(1, 2)) ? 1 : 0;
             }
         }
     }

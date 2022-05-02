@@ -238,7 +238,7 @@ void figure::determine_deliveryman_destination() {
         building *dst_building = destination();
         int src_int = src_building->type;
         if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF)
-            dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_distance_with_penalty(src_building->tile.x(), src_building->tile.y(), dst_building->tile.x(), dst_building->tile.y(), src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             set_destination(0);
     }
@@ -263,7 +263,7 @@ void figure::determine_deliveryman_destination() {
         building *dst_building = destination();
         int src_int = src_building->type;
         if ((src_int >= BUILDING_BARLEY_FARM && src_int <= BUILDING_CHICKPEAS_FARM) || src_int == BUILDING_FISHING_WHARF)
-            dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_distance_with_penalty(src_building->tile.x(), src_building->tile.y(), dst_building->tile.x(), dst_building->tile.y(), src_building->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             set_destination(0);
     }
@@ -284,7 +284,7 @@ void figure::determine_deliveryman_destination_food() {
         int dist = 0;
         building *dst_building = building_get(dst_building_id);
         if ((b->type >= BUILDING_BARLEY_FARM && b->type <= BUILDING_CHICKPEAS_FARM) || b->type == BUILDING_FISHING_WHARF)
-            dist = calc_distance_with_penalty(b->x, b->y, dst_building->x, dst_building->y, b->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), dst_building->tile.x(), dst_building->tile.y(), b->distance_from_entry, dst_building->distance_from_entry);
         if (dist >= 64)
             dst_building_id = 0;
     }

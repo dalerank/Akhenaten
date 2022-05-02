@@ -68,7 +68,7 @@ static void update_buildings(void) {
         if (b->state == BUILDING_STATE_VALID) {
             const model_building *model = model_get_building(b->type);
             add_to_terrain(
-                    b->x, b->y, b->size,
+                    b->tile.x(), b->tile.y(), b->size,
                     model->desirability_value,
                     model->desirability_step,
                     model->desirability_step_size,

@@ -20,7 +20,7 @@
 
 static bool drawing_building_as_deleted(building *b) {
     b = b->main();
-    if (b->id && (b->is_deleted || map_property_is_deleted(b->grid_offset)))
+    if (b->id && (b->is_deleted || map_property_is_deleted(b->tile.grid_offset())))
         return true;
     return false;
 }
@@ -61,10 +61,10 @@ static void draw_water_lift_anim(building *b, int x, int y, color_t color_mask) 
             break;
     }
 
-    draw_normal_anim(x, y, b, b->grid_offset, image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
+    draw_normal_anim(x, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_WATER_LIFT_ANIM) - 1 + anim_offset, color_mask);
 }
 static void draw_fort_anim(int x, int y, building *b) {
-    if (map_property_is_draw_tile(b->grid_offset)) {
+    if (map_property_is_draw_tile(b->tile.grid_offset())) {
         int offset = 0;
         switch (b->subtype.fort_figure_type) {
             case FIGURE_FORT_LEGIONARY:
@@ -83,7 +83,7 @@ static void draw_fort_anim(int x, int y, building *b) {
     }
 }
 static void draw_gatehouse_anim(int x, int y, building *b) {
-    int xy = map_property_multi_tile_xy(b->grid_offset);
+    int xy = map_property_multi_tile_xy(b->tile.grid_offset());
     int orientation = city_view_orientation();
     if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) ||
         (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1) ||
@@ -122,7 +122,7 @@ static void draw_entertainment_shows_c3(building *b, int x, int y, color_t color
 static void draw_entertainment_show_jugglers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days1) {
-        draw_normal_anim(x + 30, y + 15, b, b->grid_offset, image_id_from_group(GROUP_JUGGLERS_SHOW) - 1,
+        draw_normal_anim(x + 30, y + 15, b, b->tile.grid_offset(), image_id_from_group(GROUP_JUGGLERS_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_BOOTH));
     }
 }
@@ -132,12 +132,12 @@ static void draw_entertainment_shows_musicians(building *b, int x, int y, int di
         building *next_tile = b->next();
         switch (direction) {
             case 0:
-                draw_normal_anim(x + 20, y + 12, b, b->grid_offset,
+                draw_normal_anim(x + 20, y + 12, b, b->tile.grid_offset(),
                                  image_id_from_group(GROUP_MUSICIANS_SHOW) - 1,
                                  color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
                 break;
             case 1:
-                draw_normal_anim(x + 48, y + 12, b, b->grid_offset,
+                draw_normal_anim(x + 48, y + 12, b, b->tile.grid_offset(),
                                  image_id_from_group(GROUP_MUSICIANS_SHOW) - 1 + 12,
                                  color_mask, image_id_from_group(GROUP_BUILDING_BANDSTAND), 12);
                 break;
@@ -147,7 +147,7 @@ static void draw_entertainment_shows_musicians(building *b, int x, int y, int di
 static void draw_entertainment_shows_dancers(building *b, int x, int y, color_t color_mask) {
     building *main = b->main();
     if (main->data.entertainment.days3_or_play) {
-        draw_normal_anim(x + 64, y, b, b->grid_offset, image_id_from_group(GROUP_DANCERS_SHOW) - 1,
+        draw_normal_anim(x + 64, y, b, b->tile.grid_offset(), image_id_from_group(GROUP_DANCERS_SHOW) - 1,
                          color_mask, image_id_from_group(GROUP_BUILDING_PAVILLION));
     }
 }
@@ -268,7 +268,7 @@ static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     x += 30;
     y -= 15;
     int animation_offset = 0;
-    int random_seed = 1234.567f * (1 + game_time_day()) * map_random_get(b->grid_offset);
+    int random_seed = 1234.567f * (1 + game_time_day()) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
     if (building_is_floodplain_farm(b)) {
         if (floodplains_is(FLOOD_STATE_IMMINENT)) {
@@ -318,7 +318,7 @@ static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
 static void draw_dock_workers(building *b, int x, int y, color_t color_mask) {
     int num_dockers = building_dock_count_idle_dockers(b);
     if (num_dockers > 0) {
-        int image_dock = map_image_at(b->grid_offset);
+        int image_dock = map_image_at(b->tile.grid_offset());
         int image_dockers = image_id_from_group(GROUP_BUILDING_DOCK_DOCKERS);
         if (image_dock == image_id_from_group(GROUP_BUILDING_DOCK))
             image_dockers += 0;
@@ -522,7 +522,7 @@ void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
         case BUILDING_FLAX_FARM:
         case BUILDING_HENNA_FARM:
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                draw_farm_crops(b->type, b->data.industry.progress, b->grid_offset, x, y, color_mask);
+                draw_farm_crops(b->type, b->data.industry.progress, b->tile.grid_offset(), x, y, color_mask);
                 draw_farm_workers(b, grid_offset,x, y);
             }
             break;

@@ -46,9 +46,9 @@ static void destroy_on_fire(building *b, int plagued) {
         else
             num_tiles = 0;
     }
-    map_building_tiles_remove(b->id, b->x, b->y);
+    map_building_tiles_remove(b->id, b->tile.x(), b->tile.y());
     unsigned int rand_int = random_short();
-    if (map_terrain_is(b->grid_offset, TERRAIN_WATER))
+    if (map_terrain_is(b->tile.grid_offset(), TERRAIN_WATER))
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     else {
         b->type = BUILDING_BURNING_RUIN;
@@ -63,15 +63,15 @@ static void destroy_on_fire(building *b, int plagued) {
         // FIXME: possible can't render image & fire animation
         unsigned char random = rand_int % 4; rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-        map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), 1, image_id, TERRAIN_BUILDING);
     }
     static const int x_tiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5,
                                   5, 5, 4, 3, 2, 1, 0};
     static const int y_tiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3,
                                   4, 5, 5, 5, 5, 5, 5};
     for (int tile = 1; tile < num_tiles; tile++) {
-        int x = x_tiles[tile] + b->x;
-        int y = y_tiles[tile] + b->y;
+        int x = x_tiles[tile] + b->tile.x();
+        int y = y_tiles[tile] + b->tile.y();
         if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_WATER))
             continue;
 
@@ -79,7 +79,7 @@ static void destroy_on_fire(building *b, int plagued) {
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y, 0);
         unsigned char random = rand_int % 4; rand_int *= rand_int;
         int image_id = image_id_from_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-        map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(ruin->id, ruin->tile.x(), ruin->tile.y(), 1, image_id, TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->map_random_7bit & 7) + 1;
         b->remove_figure(3);
         ruin->fire_proof = 1;
@@ -99,7 +99,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
         if (on_fire)
             destroy_on_fire(part, 0);
         else {
-            map_building_tiles_set_rubble(part_id, part->x, part->y, part->size);
+            map_building_tiles_set_rubble(part_id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
@@ -113,7 +113,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
         if (on_fire)
             destroy_on_fire(part, 0);
         else {
-            map_building_tiles_set_rubble(part->id, part->x, part->y, part->size);
+            map_building_tiles_set_rubble(part->id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
@@ -121,8 +121,8 @@ static void destroy_linked_parts(building *b, int on_fire) {
 
 void building_destroy_by_collapse(building *b) {
     b->state = BUILDING_STATE_RUBBLE;
-    map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
-    figure_create_explosion_cloud(b->x, b->y, b->size);
+    map_building_tiles_set_rubble(b->id, b->tile.x(), b->tile.y(), b->size);
+    figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
     destroy_linked_parts(b, 0);
 }
 void building_destroy_by_fire(building *b) {
@@ -140,10 +140,10 @@ int building_destroy_first_of_type(int type) {
     int i = building_find(type);
     if (i < MAX_BUILDINGS) {
         building *b = building_get(i);
-        int grid_offset = b->grid_offset;
+        int grid_offset = b->tile.grid_offset();
         game_undo_disable();
         b->state = BUILDING_STATE_RUBBLE;
-        map_building_tiles_set_rubble(i, b->x, b->y, b->size);
+        map_building_tiles_set_rubble(i, b->tile.x(), b->tile.y(), b->size);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();
         return grid_offset;
@@ -163,7 +163,7 @@ void building_destroy_last_placed(void) {
         }
     }
     if (last_building) {
-        city_message_post(true, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, last_building->grid_offset);
+        city_message_post(true, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, last_building->tile.grid_offset());
         game_undo_disable();
         building_destroy_by_collapse(last_building);
         map_routing_update_land();

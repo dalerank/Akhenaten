@@ -24,21 +24,21 @@
 #include <game/time.h>
 #include <map/floodplain.h>
 
-static int max_progress(const building *b) {
+static int max_progress(building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
         return MAX_PROGRESS_FARM_PH;
     return b->subtype.workshop_type ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
-static void update_farm_image(const building *b) {
+static void update_farm_image(building *b) {
     bool is_flooded = false;
     if (building_is_floodplain_farm(b)) {
-        for (int _y = b->y; _y < b->y + b->size; _y++)
-            for (int _x = b->x; _x < b->x + b->size; _x++)
+        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
+            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++)
                 if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
                     is_flooded = true;
     }
     if (!is_flooded)
-        map_building_tiles_add_farm(b->id, b->x, b->y,
+        map_building_tiles_add_farm(b->id, b->tile.x(), b->tile.y(),
                                     image_id_from_group(GROUP_BUILDING_FARMLAND) + 5 * (b->output_resource_id - 1),
                                     b->data.industry.progress);
 }
@@ -62,7 +62,7 @@ int building_determine_worker_needed() {
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
-int farm_expected_produce(const building *b) {
+int farm_expected_produce(building *b) {
     int progress = b->data.industry.progress;
     if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
         progress = (progress / 20) * 20;
@@ -119,7 +119,7 @@ void building_industry_update_farms(void) {
 //            b->data.industry.progress += b->num_workers;
 
         bool is_floodplain = building_is_floodplain_farm(b);
-        int fert = map_get_fertility_for_farm(b->grid_offset);
+        int fert = map_get_fertility_for_farm(b->tile.grid_offset());
         int progress_step = (float)fert * produce_uptick_per_day; // 0.16f
 
         if (is_floodplain) { // floodplain farms
@@ -243,17 +243,17 @@ void building_curse_farms(int big_curse) {
 //        }
 //    }
 }
-void building_farm_deplete_soil(const building *b) {
+void building_farm_deplete_soil(building *b) {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
     if (config_get(CONFIG_GP_CH_SOIL_DEPLETION)) {
         int malus = (float) b->data.industry.progress / (float) MAX_PROGRESS_FARM_PH * (float) -100;
-        for (int _y = b->y; _y < b->y + b->size; _y++)
-            for (int _x = b->x; _x < b->x + b->size; _x++)
+        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
+            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++)
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
     }
     else {
-        for (int _y = b->y; _y < b->y + b->size; _y++)
-            for (int _x = b->x; _x < b->x + b->size; _x++) {
+        for (int _y = b->tile.y(); _y < b->tile.y() + b->size; _y++)
+            for (int _x = b->tile.x(); _x < b->tile.x() + b->size; _x++) {
                 int new_fert = map_get_fertility(MAP_OFFSET(_x, _y), FERT_WITH_MALUS) * 0.2f;
                 int malus = new_fert - map_get_fertility(MAP_OFFSET(_x, _y), FERT_NO_MALUS);
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
@@ -286,7 +286,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
             continue;
 
         if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->stored_full_amount < 200) {
-            int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             if (b->stored_full_amount > 0)
                 dist += 20;
 
@@ -322,7 +322,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
 
         if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
             int dist = 10 * (b->stored_full_amount / 100) +
-                       calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+                       calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building = b;

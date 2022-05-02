@@ -15,14 +15,14 @@ void city_buildings_add_palace(building *palace) {
     city_data.building.senate_placed = 1;
     if (!city_data.building.senate.grid_offset()) {
         city_data.building.senate_building_id = palace->id;
-        city_data.building.senate.set(palace->grid_offset);
+        city_data.building.senate.set(palace->tile.grid_offset());
 //        city_data.building.senate.x() = palace->x;
 //        city_data.building.senate.y = palace->y;
 //        city_data.building.senate.grid_offset() = palace->grid_offset;
     }
 }
 void city_buildings_remove_palace(building *palace) {
-    if (palace->grid_offset == city_data.building.senate.grid_offset()) {
+    if (palace->tile.grid_offset() == city_data.building.senate.grid_offset()) {
         city_data.building.senate.set(0);
 //        city_data.building.senate.grid_offset() = 0;
 //        city_data.building.senate.x() = 0;
@@ -43,14 +43,14 @@ void city_buildings_add_mansion(building *mansion) {
     city_data.building.mansion_placed = 1;
     if (!city_data.building.mansion.grid_offset()) {
         city_data.building.mansion_building_id = mansion->id;
-        city_data.building.mansion.set(mansion->grid_offset);
+        city_data.building.mansion.set(mansion->tile.grid_offset());
 //        city_data.building.mansion.x() = mansion->x;
 //        city_data.building.mansion.y = mansion->y;
 //        city_data.building.mansion.grid_offset() = mansion->grid_offset;
     }
 }
 void city_buildings_remove_mansion(building *mansion) {
-    if (mansion->grid_offset == city_data.building.mansion.grid_offset()) {
+    if (mansion->tile.grid_offset() == city_data.building.mansion.grid_offset()) {
         city_data.building.mansion.set(0);
 //        city_data.building.mansion.grid_offset() = 0;
 //        city_data.building.mansion.x() = 0;
@@ -66,14 +66,14 @@ void city_buildings_add_recruiter(building *recruiter) {
     city_data.building.barracks_placed = 1;
     if (!city_data.building.barracks.grid_offset()) {
         city_data.building.barracks_building_id = recruiter->id;
-        city_data.building.barracks.set(recruiter->grid_offset);
+        city_data.building.barracks.set(recruiter->tile.grid_offset());
 //        city_data.building.barracks.x = recruiter->x;
 //        city_data.building.barracks.y = recruiter->y;
 //        city_data.building.barracks.grid_offset() = recruiter->grid_offset;
     }
 }
 void city_buildings_remove_recruiter(building *recruiter) {
-    if (recruiter->grid_offset == city_data.building.barracks.grid_offset()) {
+    if (recruiter->tile.grid_offset() == city_data.building.barracks.grid_offset()) {
         city_data.building.barracks.set(0);
 //        city_data.building.barracks.grid_offset() = 0;
 //        city_data.building.barracks.x = 0;
@@ -95,14 +95,14 @@ void city_buildings_add_distribution_center(building *center) {
     city_data.building.distribution_center_placed = 1;
     if (!city_data.building.distribution_center.grid_offset()) {
         city_data.building.distribution_center_building_id = center->id;
-        city_data.building.distribution_center.set(center->grid_offset);
+        city_data.building.distribution_center.set(center->tile.grid_offset());
 //        city_data.building.distribution_center.x = center->x;
 //        city_data.building.distribution_center.y = center->y;
 //        city_data.building.distribution_center.grid_offset() = center->grid_offset;
     }
 }
 void city_buildings_remove_distribution_center(building *center) {
-    if (center->grid_offset == city_data.building.distribution_center.grid_offset()) {
+    if (center->tile.grid_offset() == city_data.building.distribution_center.grid_offset()) {
         city_data.building.distribution_center.set(0);
 //        city_data.building.distribution_center.grid_offset() = 0;
 //        city_data.building.distribution_center.x = 0;
@@ -203,7 +203,7 @@ map_point city_building_get_festival_square_position() {
 }
 void city_buildings_add_festival_square(building *square) {
     city_data.building.festival_square_placed = true;
-    city_data.building.festival_square.set(square->grid_offset);
+    city_data.building.festival_square.set(square->tile.grid_offset());
 }
 void city_buildings_remove_festival_square(void) {
     city_data.building.festival_square.set(0);

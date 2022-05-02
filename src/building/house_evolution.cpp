@@ -749,11 +749,11 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     }
 }
 
-int building_house_determine_worst_desirability_building(const building *house) {
+int building_house_determine_worst_desirability_building(building *house) {
     int lowest_desirability = 0;
     int lowest_building_id = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(house->x, house->y, 1, 6, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(house->tile.x(), house->tile.y(), 1, 6, &x_min, &y_min, &x_max, &y_max);
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
@@ -771,7 +771,7 @@ int building_house_determine_worst_desirability_building(const building *house) 
                     // simplified desirability calculation
                     int step_size = model_get_building(b->type)->desirability_step_size;
                     int range = model_get_building(b->type)->desirability_range;
-                    int dist = calc_maximum_distance(x, y, house->x, house->y);
+                    int dist = calc_maximum_distance(x, y, house->tile.x(), house->tile.y());
                     if (dist <= range) {
                         while (--dist > 1) {
                             des += step_size;

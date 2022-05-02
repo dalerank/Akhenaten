@@ -172,7 +172,7 @@ void building_warehouse_space_set_image(building *space, int resource) {
                    4 * (resource - 1) + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE) +
                    ceil((float)space->stored_full_amount / 100.0) - 1;
     }
-    map_image_set(space->grid_offset, image_id);
+    map_image_set(space->tile.grid_offset(), image_id);
 }
 void building_warehouse_space_add_import(building *space, int resource) {
     city_resource_add_to_warehouse(resource, 100);
@@ -283,7 +283,7 @@ static int warehouse_is_this_space_the_best(building *space, int x, int y, int r
         check = check->next();
         if (check->subtype.warehouse_resource_id == resource && check->stored_full_amount < 400) {
             if (check == space)
-                return calc_distance_with_penalty(space->x, space->y, x, y, distance_from_entry, space->distance_from_entry);
+                return calc_distance_with_penalty(space->tile.x(), space->tile.y(), x, y, distance_from_entry, space->distance_from_entry);
             else
                 return 0;
         }
@@ -294,7 +294,7 @@ static int warehouse_is_this_space_the_best(building *space, int x, int y, int r
         check = check->next();
         if (check->subtype.warehouse_resource_id == RESOURCE_NONE) {// empty warehouse space
             if (check == space)
-                return calc_distance_with_penalty(space->x, space->y, x, y, distance_from_entry, space->distance_from_entry);
+                return calc_distance_with_penalty(space->tile.x(), space->tile.y(), x, y, distance_from_entry, space->distance_from_entry);
             else
                 return 0;
         }
@@ -370,8 +370,8 @@ int building_warehouse_for_storing(building *src, int x, int y, int resource, in
     // abuse null building space
     building *b = building_get(min_building_id)->main();
     if (b->has_road_access == 1)
-        map_point_store_result(b->x, b->y, dst);
-    else if (!map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, dst))
+        map_point_store_result(b->tile.x(), b->tile.y(), dst);
+    else if (!map_has_road_access_rotation(b->subtype.orientation, b->tile.x(), b->tile.y(), 3, dst))
         return 0;
 
     return min_building_id;
@@ -398,7 +398,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst) 
             }
         }
         if (amounts_stored > 0 && !building_warehouse_is_gettable(resource, b)) {
-            int dist = calc_distance_with_penalty(b->x, b->y, src->x, src->y,
+            int dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), src->tile.x(), src->tile.y(),
                                                   src->distance_from_entry, b->distance_from_entry);
             dist -= 4 * (amounts_stored / 100);
             if (dist < min_dist) {
@@ -539,7 +539,7 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     // deliver weapons to barracks
     if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions() &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
-        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS_C3,
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->tile.x(), warehouse->tile.y(), RESOURCE_WEAPONS_C3,
                                                  warehouse->road_network_id, warehouse->distance_from_entry, 0));
         int barracks_want = (100 * MAX_WEAPONS_BARRACKS) - barracks->stored_full_amount;
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {

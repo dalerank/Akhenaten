@@ -76,7 +76,7 @@ void figure::draw_debug() {
         case 2: // ROUTING
             // draw path
             if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-                auto tile_coords = mappoint_to_pixel(map_point(destination()->x, destination()->y));
+                auto tile_coords = mappoint_to_pixel(map_point(destination()->tile.x(), destination()->tile.y()));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 3, tile_coords.x, tile_coords.y);
                 tile_coords = mappoint_to_pixel(map_point(destination_tile.x(), destination_tile.y()));
                 draw_building(image_id_from_group(GROUP_SUNKEN_TILE) + 20, tile_coords.x, tile_coords.y);

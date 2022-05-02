@@ -21,7 +21,7 @@ static void draw_vacant_lot(building_info_context *c) {
 
     int text_id = 2;
     building *b = building_get(c->building_id);
-    if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0))
+    if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), 1, 2, 0, 0))
         text_id = 1;
 
     window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);

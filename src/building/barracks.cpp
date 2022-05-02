@@ -32,7 +32,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_RECRUITER)
             continue;
 
-        if (!map_has_road_access(b->x, b->y, b->size, 0))
+        if (!map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
             continue;
 
         if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id)
@@ -41,7 +41,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
         if (b->stored_full_amount >= MAX_WEAPONS_BARRACKS * 100)
             continue;
 
-        int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+        int dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
         dist += 8 * b->stored_full_amount / 100;
         if (dist < min_dist) {
             min_dist = dist;
@@ -62,7 +62,7 @@ void building::barracks_add_weapon() {
         stored_full_amount += 100;
 }
 
-static int get_closest_legion_needing_soldiers(const building *barracks) {
+static int get_closest_legion_needing_soldiers(building *barracks) {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
     int min_distance = INFINITE;
@@ -78,7 +78,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks) {
             continue;
 
         building *fort = building_get(m->building_id);
-        int dist = calc_maximum_distance(barracks->x, barracks->y, fort->x, fort->y);
+        int dist = calc_maximum_distance(barracks->tile.x(), barracks->tile.y(), fort->tile.x(), fort->tile.y());
         if (m->legion_recruit_type > recruit_type ||
             (m->legion_recruit_type == recruit_type && dist < min_distance)) {
             recruit_type = m->legion_recruit_type;
@@ -88,14 +88,14 @@ static int get_closest_legion_needing_soldiers(const building *barracks) {
     }
     return min_formation_id;
 }
-static int get_closest_military_academy(const building *fort) {
+static int get_closest_military_academy(building *fort) {
     int min_building_id = 0;
     int min_distance = INFINITE;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MILITARY_ACADEMY &&
             b->num_workers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
-            int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
+            int dist = calc_maximum_distance(fort->tile.x(), fort->tile.y(), b->tile.x(), b->tile.y());
             if (dist < min_distance) {
                 min_distance = dist;
                 min_building_id = i;
@@ -120,7 +120,7 @@ int building::barracks_create_soldier() {
         if (academy_id) {
             map_point road;
             building *academy = building_get(academy_id);
-            if (map_has_road_access(academy->x, academy->y, academy->size, &road)) {
+            if (map_has_road_access(academy->tile.x(), academy->tile.y(), academy->size, &road)) {
                 f->action_state = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destination_tile = road;
 //                f->destination_x = road.x();
@@ -154,7 +154,7 @@ bool building::barracks_create_tower_sentry() {
     figure *f = figure_create(FIGURE_TOWER_SENTRY, road_access.x(), road_access.y(), DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     map_point road;
-    if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
+    if (map_has_road_access(tower->tile.x(), tower->tile.y(), tower->size, &road)) {
         f->destination_tile = road;
 //        f->destination_x = road.x();
 //        f->destination_y = road.y();

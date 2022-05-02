@@ -315,7 +315,7 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
             }
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            int distance = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             distance += distance_penalty;
             if (distance < min_distance) {
                 min_distance = distance;
@@ -327,8 +327,8 @@ int figure::get_closest_warehouse(int x, int y, int city_id, int distance_from_e
         return 0;
 
     if (min_building->has_road_access == 1)
-        map_point_store_result(min_building->x, min_building->y, warehouse);
-    else if (!map_has_road_access(min_building->x, min_building->y, 3, warehouse))
+        map_point_store_result(min_building->tile.x(), min_building->tile.y(), warehouse);
+    else if (!map_has_road_access(min_building->tile.x(), min_building->tile.y(), 3, warehouse))
         return 0;
 
     return min_building->id;
@@ -391,8 +391,8 @@ void figure::trade_caravan_action() {
                 int trade_center_id = city_buildings_get_trade_center();
                 if (trade_center_id) {
                     building *trade_center = building_get(trade_center_id);
-                    x_base = trade_center->x;
-                    y_base = trade_center->y;
+                    x_base = trade_center->tile.x();
+                    y_base = trade_center->tile.y();
                 } else {
                     x_base = tile.x();
                     y_base = tile.y();

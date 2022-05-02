@@ -70,7 +70,7 @@ static void determine_meeting_center(void) {
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
                 building *meeting = building_get(meetings[n]);
-                int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
+                int dist = calc_maximum_distance(b->tile.x(), b->tile.y(), meeting->tile.x(), meeting->tile.y());
                 if (dist < min_dist) {
                     min_dist = dist;
                     min_meeting_id = meetings[n];
@@ -128,15 +128,15 @@ void map_natives_init(void) {
                     map_building_set(grid_offset + GRID_OFFSET(1, 0), b->id);
                     map_building_set(grid_offset + GRID_OFFSET(0, 1), b->id);
                     map_building_set(grid_offset + GRID_OFFSET(1, 1), b->id);
-                    mark_native_land(b->x, b->y, 2, 6);
+                    mark_native_land(b->tile.x(), b->tile.y(), 2, 6);
                     if (!meeting_center_set)
-                        city_buildings_set_main_native_meeting_center(b->x, b->y);
+                        city_buildings_set_main_native_meeting_center(b->tile.x(), b->tile.y());
 
                     break;
                 case BUILDING_NATIVE_HUT:
                     b->sentiment.native_anger = 100;
                     b->figure_spawn_delay = random_bit;
-                    mark_native_land(b->x, b->y, 1, 3);
+                    mark_native_land(b->tile.x(), b->tile.y(), 1, 3);
                     break;
             }
         }
@@ -210,8 +210,8 @@ void map_natives_check_land(void) {
             continue;
         }
         if (b->sentiment.native_anger >= 100) {
-            mark_native_land(b->x, b->y, size, radius);
-            if (has_building_on_native_land(b->x, b->y, size, radius))
+            mark_native_land(b->tile.x(), b->tile.y(), size, radius);
+            if (has_building_on_native_land(b->tile.x(), b->tile.y(), size, radius))
                 city_military_start_native_attack();
 
         } else {

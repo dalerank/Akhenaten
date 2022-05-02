@@ -47,7 +47,7 @@ void figure::indigenous_native_action() {
                 if (!city_military_is_native_attack_active()) {
                     int x_tile, y_tile;
                     building *meeting = building_get(b->subtype.native_meeting_center_id);
-                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &x_tile,
+                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->tile.x(), meeting->tile.y(), meeting->size, &x_tile,
                                                                     &y_tile)) {
                         action_state = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
                         destination_tile.set(x_tile, y_tile);

@@ -471,19 +471,19 @@ static void set_horse_destination(int state) {
 //        map_f->map_figure_remove();
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
 //            }
 //        }
 //        if (f->resource_id == 1)
@@ -498,56 +498,56 @@ static void set_horse_destination(int state) {
 //    } else if (state == HORSE_RACING) {
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
-//                f->destination_x = b->x + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_1[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_1[f->wait_ticks_missile].x;
 //            } else {
-//                f->destination_x = b->x + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
-//                f->destination_y = b->y + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
+//                f->destination_x = b->tile.x() + HORSE_DESTINATION_2[f->wait_ticks_missile].y;
+//                f->destination_y = b->tile.y() + HORSE_DESTINATION_2[f->wait_ticks_missile].x;
 //            }
 //        }
 //    } else if (state == HORSE_FINISHED) {
 //        if (rotation == 0) {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_6_TOP_LEFT) {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 2;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 2;
 //                } else {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 1;
 //                }
 //            } else {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 12;
-//                    f->destination_y = b->y + 3;
+//                    f->destination_x = b->tile.x() + 12;
+//                    f->destination_y = b->tile.y() + 3;
 //                } else {
-//                    f->destination_x = b->x + 12;
-//                    f->destination_y = b->y + 2;
+//                    f->destination_x = b->tile.x() + 12;
+//                    f->destination_y = b->tile.y() + 2;
 //                }
 //            }
 //        } else {
 //            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_2_BOTTOM_RIGHT) {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 2;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 2;
+//                    f->destination_y = b->tile.y() + 1;
 //                } else {
-//                    f->destination_x = b->x + 1;
-//                    f->destination_y = b->y + 1;
+//                    f->destination_x = b->tile.x() + 1;
+//                    f->destination_y = b->tile.y() + 1;
 //                }
 //            } else {
 //                if (f->resource_id) {
-//                    f->destination_x = b->x + 3;
-//                    f->destination_y = b->y + 12;
+//                    f->destination_x = b->tile.x() + 3;
+//                    f->destination_y = b->tile.y() + 12;
 //                } else {
-//                    f->destination_x = b->x + 2;
-//                    f->destination_y = b->y + 12;
+//                    f->destination_x = b->tile.x() + 2;
+//                    f->destination_y = b->tile.y() + 12;
 //                }
 //            }
 //        }

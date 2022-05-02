@@ -11,7 +11,7 @@
 
 int building_determine_worker_needed();
 
-int farm_expected_produce(const building *b);
+int farm_expected_produce(building *b);
 
 void building_industry_update_production(void);
 void building_industry_update_farms(void);
@@ -23,7 +23,7 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);
 
 void building_bless_farms(void);
 void building_curse_farms(int big_curse);
-void building_farm_deplete_soil(const building *b);
+void building_farm_deplete_soil(building *b);
 
 void building_workshop_add_raw_material(building *b, int amount);
 

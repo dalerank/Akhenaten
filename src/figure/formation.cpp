@@ -65,8 +65,8 @@ formation *formation_create_legion(int building_id, int x, int y, int type) {
         m->legion_id = 9;
 
     building *fort_ground = building_get(building_get(building_id)->next_part_building_id);
-    m->x = m->standard_x = m->x_home = fort_ground->x;
-    m->y = m->standard_y = m->y_home = fort_ground->y;
+    m->x = m->standard_x = m->x_home = fort_ground->tile.x();
+    m->y = m->standard_y = m->y_home = fort_ground->tile.y();
 
     data.num_formations++;
     if (formation_id > data.id_last_in_use)

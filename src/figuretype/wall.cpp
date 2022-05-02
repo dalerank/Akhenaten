@@ -57,24 +57,24 @@ void figure::ballista_action() {
     map_figure_remove();
     switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
-            tile.set(b->x, b->y);
-//            tile.x() = b->x;
-//            tile.y() = b->y;
+            tile.set(b->tile.x(), b->tile.y());
+//            tile.x() = b->tile.x();
+//            tile.y() = b->tile.y();
             break;
         case DIR_2_BOTTOM_RIGHT:
-            tile.set(b->x + 1, b->y);
-//            tile.x() = b->x + 1;
-//            tile.y() = b->y;
+            tile.set(b->tile.x() + 1, b->tile.y());
+//            tile.x() = b->tile.x() + 1;
+//            tile.y() = b->tile.y();
             break;
         case DIR_4_BOTTOM_LEFT:
-            tile.set(b->x + 1, b->y + 1);
-//            tile.x() = b->x + 1;
-//            tile.y() = b->y + 1;
+            tile.set(b->tile.x() + 1, b->tile.y() + 1);
+//            tile.x() = b->tile.x() + 1;
+//            tile.y() = b->tile.y() + 1;
             break;
         case DIR_6_TOP_LEFT:
-            tile.set(b->x, b->y + 1);
-//            tile.x() = b->x;
-//            tile.y() = b->y + 1;
+            tile.set(b->tile.x(), b->tile.y() + 1);
+//            tile.x() = b->tile.x();
+//            tile.y() = b->tile.y() + 1;
             break;
     }
 //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
@@ -143,8 +143,8 @@ void figure::tower_sentry_pick_target() {
 
 static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
     int dir = b->figure_roam_direction;
-    int x = b->x;
-    int y = b->y;
+    int x = b->tile.x();
+    int y = b->tile.y();
     switch (dir) {
         case DIR_0_TOP_RIGHT:
             y -= 8;
@@ -170,8 +170,8 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile) {
         dir = b->figure_roam_direction;
         b->figure_roam_direction += 2;
         if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
-        x = b->x;
-        y = b->y;
+        x = b->tile.x();
+        y = b->tile.y();
         switch (dir) {
             case DIR_0_TOP_RIGHT:
                 y -= 3;
@@ -274,9 +274,9 @@ void figure::tower_sentry_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 map_figure_remove();
-                source_tile = tile = map_point(b->x, b->y);
-//                source_tile.x() = tile.x() = b->x;
-//                source_tile.y() = tile.y() = b->y;
+                source_tile = tile = map_point(b->tile.x(), b->tile.y());
+//                source_tile.x() = tile.x() = b->tile.x();
+//                source_tile.y() = tile.y() = b->tile.y();
 //                tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
                 map_figure_add();
                 action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
@@ -342,9 +342,9 @@ void figure_tower_sentry_reroute(void) {
             // Teleport back to tower
             f->map_figure_remove();
             building *b = f->home();
-            f->source_tile = f->tile = map_point(b->x, b->y);
-//            f->source_tile.x() = f->tile.x() = b->x;
-//            f->source_tile.y() = f->tile.y() = b->y;
+            f->source_tile = f->tile = map_point(b->tile.x(), b->tile.y());
+//            f->source_tile.x() = f->tile.x() = b->tile.x();
+//            f->source_tile.y() = f->tile.y() = b->tile.y();
 //            f->tile.grid_offset() = MAP_OFFSET(f->tile.x(), f->tile.y());
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;

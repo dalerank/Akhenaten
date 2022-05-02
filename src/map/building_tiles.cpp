@@ -174,10 +174,14 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_o
 }
 
 void map_add_bandstand_tiles(building *b) {
-    int b_delta_0_m1 = b->grid_offset - GRID_OFFSET(0, -1);
-    int b_delta_0_1 = b->grid_offset - GRID_OFFSET(0, 1);
-    int b_delta_1_0 = b->grid_offset - GRID_OFFSET(1, 0);
-    int b_delta_m1_0 = b->grid_offset - GRID_OFFSET(-1, 0);
+    int b_delta_0_m1 = b->tile.shifted(0, -1).grid_offset();
+    int b_delta_0_1 = b->tile.shifted(0, 1).grid_offset();
+    int b_delta_1_0 = b->tile.shifted(1, 0).grid_offset();
+    int b_delta_m1_0 = b->tile.shifted(-1, 0).grid_offset();
+//    int b_delta_0_m1 = b->tile.grid_offset() - GRID_OFFSET(0, -1);
+//    int b_delta_0_1 = b->tile.grid_offset() - GRID_OFFSET(0, 1);
+//    int b_delta_1_0 = b->tile.grid_offset() - GRID_OFFSET(1, 0);
+//    int b_delta_m1_0 = b->tile.grid_offset() - GRID_OFFSET(-1, 0);
 
     int offsets_by_orientation[4];
     switch (city_view_orientation()) {
@@ -210,9 +214,9 @@ void map_add_bandstand_tiles(building *b) {
     for (int j = 0; j < 4; ++j) {
         auto neighbor = building_at(offsets_by_orientation[j]);
         if (neighbor->type == BUILDING_BANDSTAND
-            && neighbor->grid_offset == offsets_by_orientation[j]
+            && neighbor->tile.grid_offset() == offsets_by_orientation[j]
             && neighbor->main() == b->main()) {
-            map_image_set(neighbor->grid_offset, image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
+            map_image_set(neighbor->tile.grid_offset(), image_id_from_group(GROUP_BUILDING_BANDSTAND) + j);
             continue;
         }
     }
@@ -426,7 +430,7 @@ void map_building_tiles_add_temple_complex_parts(building *b) {
         part = 1;
     else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
         part = 2;
-    map_building_tiles_add(b->id, b->x, b->y, b->size,
+    map_building_tiles_add(b->id, b->tile.x(), b->tile.y(), b->size,
        get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(b->main()->data.monuments.temple_complex_attachments & part)),
        TERRAIN_BUILDING);
     if (b->next_part_building_id)
@@ -566,7 +570,7 @@ void map_building_tiles_mark_deleting(int grid_offset) {
     if (!building_id)
         map_bridge_remove(grid_offset, 1);
     else
-        grid_offset = building_get(building_id)->main()->grid_offset;
+        grid_offset = building_get(building_id)->main()->tile.grid_offset();
     map_property_mark_deleted(grid_offset);
 }
 int map_building_tiles_are_clear(int x, int y, int size, int terrain) {

@@ -30,7 +30,7 @@ void building_dock_update_open_water_access(void) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && !b->house_size && b->type == BUILDING_DOCK) {
-            if (map_terrain_is_adjacent_to_open_water(b->x, b->y, 3))
+            if (map_terrain_is_adjacent_to_open_water(b->tile.x(), b->tile.y(), 3))
                 b->has_water_access = true;
             else
                 b->has_water_access = false;
@@ -107,7 +107,7 @@ int building_dock_get_free_destination(int ship_id, map_point *tile) {
             dy = 1;
             break;
     }
-    map_point_store_result(dock->x + dx, dock->y + dy, tile);
+    map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
     dock->data.dock.trade_ship_id = ship_id;
     return dock_id;
 }
@@ -144,7 +144,7 @@ int building_dock_get_queue_destination(int ship_id, map_point *tile) {
                 dy = 2;
                 break;
         }
-        map_point_store_result(dock->x + dx, dock->y + dy, tile);
+        map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
         if (!map_has_figure_at(tile->grid_offset()))
             return dock_id;
 
@@ -177,7 +177,7 @@ int building_dock_get_queue_destination(int ship_id, map_point *tile) {
                 dy = 2;
                 break;
         }
-        map_point_store_result(dock->x + dx, dock->y + dy, tile);
+        map_point_store_result(dock->tile.x() + dx, dock->tile.y() + dy, tile);
         if (!map_has_figure_at(tile->grid_offset()))
             return dock_id;
 

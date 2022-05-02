@@ -184,14 +184,14 @@ bool figure::fight_fire() {
 }
 void figure::extinguish_fire() {
     building *burn = destination();
-    int distance = calc_maximum_distance(tile.x(), tile.y(), burn->x, burn->y);
+    int distance = calc_maximum_distance(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
     if ((burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) &&
         burn->type == BUILDING_BURNING_RUIN && distance < 2) {
         burn->fire_duration = 32;
         sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     } else
         wait_ticks = 1;
-    attack_direction = calc_general_direction(tile.x(), tile.y(), burn->x, burn->y);
+    attack_direction = calc_general_direction(tile.x(), tile.y(), burn->tile.x(), burn->tile.y());
     if (attack_direction >= 8)
         attack_direction = 0;
 
@@ -271,7 +271,7 @@ void figure::prefect_action() { // doubles as fireman! not as policeman!!!
             terrain_usage = TERRAIN_USAGE_ANY;
             if (!target_is_alive()) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
                     destination_tile.set(x_road, y_road);
 //                    destination_tile.x() = x_road;
@@ -314,7 +314,7 @@ void figure::policeman_action() {
             wait_ticks--;
             if (wait_ticks <= 0) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
                     set_cross_country_destination(x_road, y_road);
                     roam_length = 0;
@@ -343,7 +343,7 @@ void figure::policeman_action() {
             roam_length++;
             if (roam_length >= max_roam_length) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
                     destination_tile.set(x_road, y_road);
 //                    destination_tile.x() = x_road;
@@ -359,7 +359,7 @@ void figure::policeman_action() {
             move_ticks(1);
             if (direction == DIR_FIGURE_NONE) {
                 action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                set_cross_country_destination(b->x, b->y);
+                set_cross_country_destination(b->tile.x(), b->tile.y());
                 roam_length = 0;
             } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_CAN_NOT_REACH)
                 poof();
@@ -368,7 +368,7 @@ void figure::policeman_action() {
             terrain_usage = TERRAIN_USAGE_ANY;
             if (!target_is_alive()) {
                 int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
                     action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
                     destination_tile.set(x_road, y_road);
 //                    destination_tile.x() = x_road;
@@ -468,7 +468,7 @@ void figure::water_carrier_action() {
 //            wait_ticks--;
 //            if (wait_ticks <= 0) {
 //                int x_road, y_road;
-//                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+//                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
 //                    action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
 //                    set_cross_country_destination(x_road, y_road);
 //                    roam_length = 0;
@@ -497,7 +497,7 @@ void figure::water_carrier_action() {
 //            roam_length++;
 //            if (roam_length >= max_roam_length) {
 //                int x_road, y_road;
-//                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+//                if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
 //                    action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
 //                    destination_x = x_road;
 //                    destination_y = y_road;
@@ -512,7 +512,7 @@ void figure::water_carrier_action() {
 //            move_ticks(1);
 //            if (direction == DIR_FIGURE_AT_DESTINATION) {
 //                action_state = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-//                set_cross_country_destination(b->x, b->y);
+//                set_cross_country_destination(b->tile.x(), b->tile.y());
 //                roam_length = 0;
 //            } else if (direction == DIR_FIGURE_REROUTE || direction == DIR_FIGURE_LOST)
 //                poof();

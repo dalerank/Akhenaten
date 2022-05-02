@@ -189,7 +189,7 @@ int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile) {
             dy = 1;
             break;
     }
-    map_point_store_result(wharf->x + dx, wharf->y + dy, tile);
+    map_point_store_result(wharf->tile.x() + dx, wharf->tile.y() + dy, tile);
     return wharf->id;
 }
 int map_water_find_alternative_fishing_boat_tile(figure *boat, map_point *tile) {

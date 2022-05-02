@@ -122,7 +122,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
 
             }
             if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry,
+                int distance = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry,
                                                           b->distance_from_entry);
                 // prefer emptier warehouse
                 distance += distance_penalty;
@@ -138,8 +138,8 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
 
     building *min = building_get(min_building_id);
     if (min->has_road_access == 1)
-        map_point_store_result(min->x, min->y, warehouse);
-    else if (!map_has_road_access(min->x, min->y, 3, warehouse))
+        map_point_store_result(min->tile.x(), min->tile.y(), warehouse);
+    else if (!map_has_road_access(min->tile.x(), min->tile.y(), 3, warehouse))
         return 0;
 
     *import_resource = resource;
@@ -183,7 +183,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
 
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            int distance = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             // prefer fuller warehouse
             distance += distance_penalty;
             if (distance < min_distance) {
@@ -197,8 +197,8 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
 
     building *min = building_get(min_building_id);
     if (min->has_road_access == 1)
-        map_point_store_result(min->x, min->y, warehouse);
-    else if (!map_has_road_access(min->x, min->y, 3, warehouse))
+        map_point_store_result(min->tile.x(), min->tile.y(), warehouse);
+    else if (!map_has_road_access(min->tile.x(), min->tile.y(), 3, warehouse))
         return 0;
 
     *export_resource = resource;
@@ -209,8 +209,8 @@ void figure::get_trade_center_location(int *_x, int *_y) {
     int trade_center_id = city_buildings_get_trade_center();
     if (trade_center_id) {
         building *trade_center = building_get(trade_center_id);
-        *_x = trade_center->x;
-        *_y = trade_center->y;
+        *_x = trade_center->tile.x();
+        *_y = trade_center->tile.y();
     } else {
         *_x = tile.x();
         *_y = tile.y();

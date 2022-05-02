@@ -27,7 +27,7 @@ static const int CRIMINAL_OFFSETS[] = {
 
 static void generate_rioter(building *b) {
     int x_road, y_road;
-    if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road))
+    if (!map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 4, &x_road, &y_road))
         return;
     city_sentiment_add_criminal();
     int people_in_mob;
@@ -75,7 +75,7 @@ static void generate_mugger(building *b) {
     if (b->house_criminal_active < 2) {
         b->house_criminal_active = 2;
         int x_road, y_road;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_CRIMINAL, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();
@@ -97,7 +97,7 @@ static void generate_protestor(building *b) {
     if (b->house_criminal_active < 1) {
         b->house_criminal_active = 1;
         int x_road, y_road;
-        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+        if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, &x_road, &y_road)) {
             figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
             city_ratings_peace_record_criminal();

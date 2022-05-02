@@ -28,9 +28,10 @@ public:
     unsigned char size;
     unsigned char house_is_merged;
     unsigned char house_size;
-    unsigned char x;
-    unsigned char y;
-    unsigned short grid_offset;
+    map_point tile;
+//    unsigned char x;
+//    unsigned char y;
+//    unsigned short grid_offset;
     short type;
     union {
         short house_level;
@@ -318,7 +319,7 @@ bool building_is_house(int type);
 bool building_is_fort(int type);
 bool building_is_defense_ph(int type);
 bool building_is_farm(int type);
-bool building_is_floodplain_farm(const building *b);
+bool building_is_floodplain_farm(building *b);
 bool building_is_workshop(int type);
 bool building_is_extractor(int type);
 bool building_is_harvester(int type);

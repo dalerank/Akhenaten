@@ -30,7 +30,7 @@ static struct {
 static void mark_well_access(int well_id, int radius) {
     building *well = building_get(well_id);
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -55,7 +55,7 @@ void map_water_supply_update_houses(void) {
             b->has_water_access = false;
             b->has_well_access = 0;
             if (b->data.house.bathhouse || map_terrain_exists_tile_in_area_with_type(
-                    b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
+                    b->tile.x(), b->tile.y(), b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->has_water_access = true;
             }
         }
@@ -186,8 +186,8 @@ static void update_canals_from_water_lifts() {
 
             // check if has access to water
             b->has_water_access = false;
-            int input_offset_0 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][0];
-            int input_offset_1 = b->grid_offset + INPUT_OFFSETS[b->data.industry.orientation][1];
+            int input_offset_0 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][0];
+            int input_offset_1 = b->tile.grid_offset() + INPUT_OFFSETS[b->data.industry.orientation][1];
             if (map_aqueduct_at(input_offset_0) || map_terrain_is(input_offset_0, TERRAIN_WATER))
                 b->has_water_access = true;
             if (map_aqueduct_at(input_offset_1) || map_terrain_is(input_offset_1, TERRAIN_WATER))
@@ -195,9 +195,9 @@ static void update_canals_from_water_lifts() {
 
             // checks done, update
             if (b->has_water_access) {
-                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
-                fill_canals_from_offset(b->grid_offset + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
-                map_terrain_add_with_radius(b->x, b->y, 2, 2, TERRAIN_IRRIGATION_RANGE);
+                fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][0]);
+                fill_canals_from_offset(b->tile.grid_offset() + OUTPUT_OFFSETS[b->data.industry.orientation][1]);
+                map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 2, 2, TERRAIN_IRRIGATION_RANGE);
             }
         }
     }
@@ -219,7 +219,7 @@ void map_update_wells_range(void) {
     for (int i = 0; i < total_wells; i++) {
         building *b = building_get(wells[i]);
         if (b->type == BUILDING_WELL)
-            map_terrain_add_with_radius(b->x, b->y, 1, 3, TERRAIN_FOUNTAIN_RANGE);
+            map_terrain_add_with_radius(b->tile.x(), b->tile.y(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
     }
 }
 
@@ -227,7 +227,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius) {
     building *well = building_get(well_id);
     int num_houses = 0;
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(well->tile.x(), well->tile.y(), 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
