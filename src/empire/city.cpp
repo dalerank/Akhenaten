@@ -73,16 +73,16 @@ static bool can_produce_resource(int resource) {
 static int get_raw_resource(int resource) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (resource) {
-            case RESOURCE_POTTERY_C3:
+            case RESOURCE_POTTERY:
                 return RESOURCE_CLAY;
-            case RESOURCE_FURNITURE:
-                return RESOURCE_TIMBER_C3;
-            case RESOURCE_OIL_C3:
-                return RESOURCE_OLIVES;
-            case RESOURCE_WINE:
-                return RESOURCE_VINES;
-            case RESOURCE_WEAPONS_C3:
-                return RESOURCE_IRON;
+            case RESOURCE_LUXURY_GOODS:
+                return RESOURCE_GEMS;
+            case RESOURCE_MEAT:
+                return RESOURCE_STRAW;
+            case RESOURCE_BEER:
+                return RESOURCE_BARLEY;
+            case RESOURCE_WEAPONS:
+                return RESOURCE_COPPER;
             default:
                 return resource;
         }
@@ -90,7 +90,7 @@ static int get_raw_resource(int resource) {
         switch (resource) {
             case RESOURCE_STRAW:
                 return RESOURCE_GRAIN;
-            case RESOURCE_POTTERY_PH:
+            case RESOURCE_POTTERY:
                 return RESOURCE_CLAY;
             case RESOURCE_LUXURY_GOODS:
                 return RESOURCE_GEMS;
@@ -98,16 +98,16 @@ static int get_raw_resource(int resource) {
                 return RESOURCE_FLAX;
             case RESOURCE_BEER:
                 return RESOURCE_BARLEY;
-            case RESOURCE_WEAPONS_PH:
+            case RESOURCE_WEAPONS:
                 return RESOURCE_COPPER;
             case RESOURCE_PAPYRUS:
                 return RESOURCE_REEDS;
             case RESOURCE_CHARIOTS:
-                return RESOURCE_TIMBER_PH;
+                return RESOURCE_TIMBER;
             case RESOURCE_PAINT:
                 return RESOURCE_HENNA;
             case RESOURCE_LAMPS:
-                return RESOURCE_OIL_PH;
+                return RESOURCE_OIL;
             default:
                 return resource;
         }
@@ -161,7 +161,7 @@ int empire_city_count_wine_sources(void) {
     for (int i = 1; i < MAX_CITIES[GAME_ENV]; i++) {
         if (cities[i].in_use &&
             cities[i].is_open &&
-            cities[i].sells_resource[RESOURCE_WINE]) {
+            cities[i].sells_resource[RESOURCE_BEER]) {
             sources++;
         }
     }

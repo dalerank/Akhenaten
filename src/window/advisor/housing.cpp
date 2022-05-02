@@ -34,7 +34,7 @@ static void draw_housing_table() {
     int rows = 0;
     int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE,
                                    TR_ADVISOR_RESIDENCES_DEMANDING_OIL, TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
-    int goods_icons[4] = {RESOURCE_POTTERY_C3, RESOURCE_FURNITURE, RESOURCE_OIL_C3, RESOURCE_WINE};
+    int goods_icons[4] = {RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_MEAT, RESOURCE_BEER};
 
     housing_type_counts = calculate_number_of_each_housing_type();
     houses_demanding_goods = calculate_houses_demanding_goods(housing_type_counts);

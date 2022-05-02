@@ -3,7 +3,7 @@
 
 //#include "figure/figure.h"
 #include "building/type.h"
-#include "core/buffer.h"
+//#include "core/buffer.h"
 
 #define MAX_BUILDINGS 4000
 
@@ -105,7 +105,7 @@ public:
             int unk_c[14];
             unsigned char blessing_days_left;
             unsigned char orientation;
-            unsigned char has_raw_materials;
+            bool has_raw_materials;
             int unk_1;
             unsigned char curse_days_left;
             int unk_6[6];

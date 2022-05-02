@@ -104,16 +104,16 @@ int figure::take_resource_from_warehouse(building *warehouse) {
     if (GAME_ENV == ENGINE_ENV_C3)
         switch (collecting_item_id) {
             case INVENTORY_GOOD1:
-                resource = RESOURCE_POTTERY_C3;
+                resource = RESOURCE_POTTERY;
                 break;
             case INVENTORY_GOOD2:
-                resource = RESOURCE_FURNITURE;
+                resource = RESOURCE_LUXURY_GOODS;
                 break;
             case INVENTORY_GOOD3:
-                resource = RESOURCE_OIL_C3;
+                resource = RESOURCE_MEAT;
                 break;
             case INVENTORY_GOOD4:
-                resource = RESOURCE_WINE;
+                resource = RESOURCE_BEER;
                 break;
             default:
                 return 0;
@@ -121,7 +121,7 @@ int figure::take_resource_from_warehouse(building *warehouse) {
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         switch (collecting_item_id) {
             case INVENTORY_GOOD1:
-                resource = RESOURCE_POTTERY_PH;
+                resource = RESOURCE_POTTERY;
                 break;
             case INVENTORY_GOOD2:
                 resource = RESOURCE_LUXURY_GOODS;

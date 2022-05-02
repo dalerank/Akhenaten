@@ -110,7 +110,7 @@ static void draw_foreground(void) {
             else
                 lang_text_draw(54, 14, 98 + width, 172, FONT_NORMAL_BLACK_ON_LIGHT);
         }
-    } else if (data.resource != RESOURCE_MEAT_C3 || !scenario_building_allowed(BUILDING_FISHING_WHARF)) {
+    } else if (data.resource != RESOURCE_FIGS || !scenario_building_allowed(BUILDING_FISHING_WHARF)) {
         // we cannot produce this good
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK_ON_LIGHT);
     }

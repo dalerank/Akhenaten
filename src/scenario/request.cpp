@@ -80,9 +80,9 @@ void scenario_request_process_C3(void) {
                     if (city_resource_count(scenario_data.requests[i].resource) >= scenario_data.requests[i].amount)
                         scenario_data.requests[i].can_comply_dialog_shown = 1;
 
-                    if (scenario_data.requests[i].resource == RESOURCE_DENARII)
+                    if (scenario_data.requests[i].resource == RESOURCE_DEBEN)
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
-                    else if (scenario_data.requests[i].resource == RESOURCE_TROOPS_C3)
+                    else if (scenario_data.requests[i].resource == RESOURCE_TROOPS)
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
                     else
                         city_message_post(true, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
@@ -100,11 +100,11 @@ void scenario_request_dispatch(int id) {
     scenario_data.requests[id].months_to_comply = (random_byte() & 3) + 1;
     scenario_data.requests[id].visible = 0;
     int amount = scenario_data.requests[id].amount;
-    if (scenario_data.requests[id].resource == RESOURCE_DENARII)
+    if (scenario_data.requests[id].resource == RESOURCE_DEBEN)
         city_finance_process_requests_and_festivals(amount);
-    else if (scenario_data.requests[id].resource == RESOURCE_TROOPS_C3) {
+    else if (scenario_data.requests[id].resource == RESOURCE_TROOPS) {
         city_population_remove_for_troop_request(amount);
-        building_warehouses_remove_resource(RESOURCE_WEAPONS_C3, amount);
+        building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else
         building_warehouses_remove_resource(scenario_data.requests[id].resource, amount);
 }

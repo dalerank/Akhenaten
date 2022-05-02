@@ -104,31 +104,19 @@ int building_market_get_storage_destination(building *market) {
         if (b->type == BUILDING_GRANARY) {
             if (scenario_property_rome_supplies_wheat())
                 continue;
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                update_food_resource(&resources[0], RESOURCE_WHEAT, b, distance);
-                update_food_resource(&resources[1], RESOURCE_VEGETABLES, b, distance);
-                update_food_resource(&resources[2], RESOURCE_FRUIT, b, distance);
-                update_food_resource(&resources[3], RESOURCE_MEAT_C3, b, distance);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                // todo: fetch map available foods?
-                update_food_resource(&resources[0], ALLOWED_FOODS(0), b, distance);
-                update_food_resource(&resources[1], ALLOWED_FOODS(1), b, distance);
-                update_food_resource(&resources[2], ALLOWED_FOODS(2), b, distance);
-                update_food_resource(&resources[3], ALLOWED_FOODS(3), b, distance);
-            }
+
+            // todo: fetch map available foods?
+            update_food_resource(&resources[0], ALLOWED_FOODS(0), b, distance);
+            update_food_resource(&resources[1], ALLOWED_FOODS(1), b, distance);
+            update_food_resource(&resources[2], ALLOWED_FOODS(2), b, distance);
+            update_food_resource(&resources[3], ALLOWED_FOODS(3), b, distance);
+
         } else if (b->type == BUILDING_WAREHOUSE) {
             // goods
-            if (GAME_ENV == ENGINE_ENV_C3) {
-                update_good_resource(&resources[INVENTORY_GOOD1], RESOURCE_POTTERY_C3, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD2], RESOURCE_FURNITURE, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD3], RESOURCE_OIL_C3, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD4], RESOURCE_WINE, b, distance);
-            } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-                update_good_resource(&resources[INVENTORY_GOOD1], RESOURCE_POTTERY_PH, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD2], RESOURCE_LUXURY_GOODS, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD3], RESOURCE_LINEN, b, distance);
-                update_good_resource(&resources[INVENTORY_GOOD4], RESOURCE_BEER, b, distance);
-            }
+            update_good_resource(&resources[INVENTORY_GOOD1], RESOURCE_POTTERY, b, distance);
+            update_good_resource(&resources[INVENTORY_GOOD2], RESOURCE_LUXURY_GOODS, b, distance);
+            update_good_resource(&resources[INVENTORY_GOOD3], RESOURCE_LINEN, b, distance);
+            update_good_resource(&resources[INVENTORY_GOOD4], RESOURCE_BEER, b, distance);
         }
     }
 

@@ -66,7 +66,7 @@ static int get_request_status(int index) {
     }
     const scenario_request *request = scenario_request_get_visible(index - num_requests);
     if (request) {
-        if ((request->resource == RESOURCE_DENARII && GAME_ENV == ENGINE_ENV_C3) ||
+        if ((request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_C3) ||
             (request->resource == RESOURCE_DEBEN && GAME_ENV == ENGINE_ENV_PHARAOH)) {
             if (city_finance_treasury() <= request->amount)
                 return STATUS_NOT_ENOUGH_RESOURCES;
@@ -91,7 +91,7 @@ static void draw_request(int index, const scenario_request *request) {
     width = lang_text_draw_amount(8, 4, request->months_to_comply, 310, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
     lang_text_draw(12, 2, 310 + width, 102 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
 
-    if (request->resource == RESOURCE_DENARII) {
+    if (request->resource == RESOURCE_DEBEN) {
         // request for money
         int treasury = city_finance_treasury();
         width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE_ON_DARK);
@@ -115,9 +115,9 @@ static void draw_request(int index, const scenario_request *request) {
 }
 
 static int draw_background(void) {
-    int military_resource = RESOURCE_WEAPONS_PH;
+    int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        military_resource = RESOURCE_WEAPONS_C3;
+        military_resource = RESOURCE_WEAPONS;
     }
     city_emperor_calculate_gift_costs();
 

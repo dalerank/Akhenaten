@@ -208,21 +208,16 @@ void city_resource_determine_available(void) {
     available.market_goods_list.size = 0;
 
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCES_FOODS_MAX; i++) {
-        if (GAME_ENV == ENGINE_ENV_C3 && (i == RESOURCE_OLIVES || i == RESOURCE_VINES))
-            continue;
-
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
-            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF))) {
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             available.food_list.items[available.food_list.size++] = i;
             available.market_goods_list.items[available.market_goods_list.size++] = i;
         }
     }
     for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
-        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false) ||
-            (GAME_ENV == ENGINE_ENV_C3 && i == RESOURCE_MEAT_C3 && scenario_building_allowed(BUILDING_FISHING_WHARF))) {
+        if (empire_can_produce_resource(i, true) || empire_can_import_resource(i, false)) {
             available.resource_list.items[available.resource_list.size++] = i;
             switch (i) {
-                case RESOURCE_POTTERY_PH:
+                case RESOURCE_POTTERY:
                 case RESOURCE_BEER:
                 case RESOURCE_LINEN:
                 case RESOURCE_LUXURY_GOODS:

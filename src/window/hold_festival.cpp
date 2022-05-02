@@ -64,7 +64,7 @@ static void draw_buttons(void) {
 
     int resource_image_id = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE;
+        resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         resource_image_id = image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_BEER;
     }

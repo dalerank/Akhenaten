@@ -97,9 +97,9 @@ void window_building_draw_tower(building_info_context *c) {
 }
 
 void window_building_draw_barracks(building_info_context *c) {
-    int military_resource = RESOURCE_WEAPONS_PH;
+    int military_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        military_resource = RESOURCE_WEAPONS_C3;
+        military_resource = RESOURCE_WEAPONS;
     }
     c->help_id = 37;
     data.building_id = c->building_id;

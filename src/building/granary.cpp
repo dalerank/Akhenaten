@@ -122,29 +122,29 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 
     int max_amount = 0;
     int max_resource = 0;
-    if (building_granary_is_getting(RESOURCE_WHEAT, dst) && !building_granary_is_gettable(RESOURCE_WHEAT, src)) {
-        if (src->data.granary.resource_stored[RESOURCE_WHEAT] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_WHEAT];
-            max_resource = RESOURCE_WHEAT;
+    if (building_granary_is_getting(RESOURCE_GRAIN, dst) && !building_granary_is_gettable(RESOURCE_GRAIN, src)) {
+        if (src->data.granary.resource_stored[RESOURCE_GRAIN] > max_amount) {
+            max_amount = src->data.granary.resource_stored[RESOURCE_GRAIN];
+            max_resource = RESOURCE_GRAIN;
         }
     }
-    if (building_granary_is_getting(RESOURCE_VEGETABLES, dst) &&
-        !building_granary_is_gettable(RESOURCE_VEGETABLES, src)) {
-        if (src->data.granary.resource_stored[RESOURCE_VEGETABLES] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_VEGETABLES];
-            max_resource = RESOURCE_VEGETABLES;
+    if (building_granary_is_getting(RESOURCE_MEAT, dst) &&
+        !building_granary_is_gettable(RESOURCE_MEAT, src)) {
+        if (src->data.granary.resource_stored[RESOURCE_MEAT] > max_amount) {
+            max_amount = src->data.granary.resource_stored[RESOURCE_MEAT];
+            max_resource = RESOURCE_MEAT;
         }
     }
-    if (building_granary_is_getting(RESOURCE_FRUIT, dst) && !building_granary_is_gettable(RESOURCE_FRUIT, src)) {
-        if (src->data.granary.resource_stored[RESOURCE_FRUIT] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_FRUIT];
-            max_resource = RESOURCE_FRUIT;
+    if (building_granary_is_getting(RESOURCE_LETTUCE, dst) && !building_granary_is_gettable(RESOURCE_LETTUCE, src)) {
+        if (src->data.granary.resource_stored[RESOURCE_LETTUCE] > max_amount) {
+            max_amount = src->data.granary.resource_stored[RESOURCE_LETTUCE];
+            max_resource = RESOURCE_LETTUCE;
         }
     }
-    if (building_granary_is_getting(RESOURCE_MEAT_C3, dst) && !building_granary_is_gettable(RESOURCE_MEAT_C3, src)) {
-        if (src->data.granary.resource_stored[RESOURCE_MEAT_C3] > max_amount) {
-            max_amount = src->data.granary.resource_stored[RESOURCE_MEAT_C3];
-            max_resource = RESOURCE_MEAT_C3;
+    if (building_granary_is_getting(RESOURCE_FIGS, dst) && !building_granary_is_gettable(RESOURCE_FIGS, src)) {
+        if (src->data.granary.resource_stored[RESOURCE_FIGS] > max_amount) {
+            max_amount = src->data.granary.resource_stored[RESOURCE_FIGS];
+            max_resource = RESOURCE_FIGS;
         }
     }
 
@@ -185,17 +185,17 @@ int building_granary_determine_worker_task(building *granary) {
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0)
         return GRANARY_TASK_NONE; // granary full, nothing to get
 
-    if (building_granary_is_getting(RESOURCE_WHEAT, granary) && non_getting_granaries.total_storage_wheat > ONE_LOAD)
+    if (building_granary_is_getting(RESOURCE_GRAIN, granary) && non_getting_granaries.total_storage_wheat > ONE_LOAD)
         return GRANARY_TASK_GETTING;
 
-    if (building_granary_is_getting(RESOURCE_VEGETABLES, granary) &&
+    if (building_granary_is_getting(RESOURCE_MEAT, granary) &&
         non_getting_granaries.total_storage_vegetables > ONE_LOAD)
         return GRANARY_TASK_GETTING;
 
-    if (building_granary_is_getting(RESOURCE_FRUIT, granary) && non_getting_granaries.total_storage_fruit > ONE_LOAD)
+    if (building_granary_is_getting(RESOURCE_LETTUCE, granary) && non_getting_granaries.total_storage_fruit > ONE_LOAD)
         return GRANARY_TASK_GETTING;
 
-    if (building_granary_is_getting(RESOURCE_MEAT_C3, granary) && non_getting_granaries.total_storage_meat > ONE_LOAD)
+    if (building_granary_is_getting(RESOURCE_FIGS, granary) && non_getting_granaries.total_storage_meat > ONE_LOAD)
         return GRANARY_TASK_GETTING;
 
     return GRANARY_TASK_NONE;
@@ -220,21 +220,21 @@ void building_granaries_calculate_stocks(void) {
 
         const building_storage *s = building_storage_get(b->storage_id);
         int total_non_getting = 0;
-        if (!building_granary_is_gettable(RESOURCE_WHEAT, b)) {
-            total_non_getting += b->data.granary.resource_stored[RESOURCE_WHEAT];
-            non_getting_granaries.total_storage_wheat += b->data.granary.resource_stored[RESOURCE_WHEAT];
+        if (!building_granary_is_gettable(RESOURCE_GRAIN, b)) {
+            total_non_getting += b->data.granary.resource_stored[RESOURCE_GRAIN];
+            non_getting_granaries.total_storage_wheat += b->data.granary.resource_stored[RESOURCE_GRAIN];
         }
-        if (!building_granary_is_gettable(RESOURCE_VEGETABLES, b)) {
-            total_non_getting += b->data.granary.resource_stored[RESOURCE_VEGETABLES];
-            non_getting_granaries.total_storage_vegetables += b->data.granary.resource_stored[RESOURCE_VEGETABLES];
+        if (!building_granary_is_gettable(RESOURCE_MEAT, b)) {
+            total_non_getting += b->data.granary.resource_stored[RESOURCE_MEAT];
+            non_getting_granaries.total_storage_vegetables += b->data.granary.resource_stored[RESOURCE_MEAT];
         }
-        if (!building_granary_is_gettable(RESOURCE_FRUIT, b)) {
-            total_non_getting += b->data.granary.resource_stored[RESOURCE_FRUIT];
-            non_getting_granaries.total_storage_fruit += b->data.granary.resource_stored[RESOURCE_FRUIT];
+        if (!building_granary_is_gettable(RESOURCE_LETTUCE, b)) {
+            total_non_getting += b->data.granary.resource_stored[RESOURCE_LETTUCE];
+            non_getting_granaries.total_storage_fruit += b->data.granary.resource_stored[RESOURCE_LETTUCE];
         }
-        if (!building_granary_is_gettable(RESOURCE_MEAT_C3, b)) {
-            total_non_getting += b->data.granary.resource_stored[RESOURCE_MEAT_C3];
-            non_getting_granaries.total_storage_meat += b->data.granary.resource_stored[RESOURCE_MEAT_C3];
+        if (!building_granary_is_gettable(RESOURCE_FIGS, b)) {
+            total_non_getting += b->data.granary.resource_stored[RESOURCE_FIGS];
+            non_getting_granaries.total_storage_meat += b->data.granary.resource_stored[RESOURCE_FIGS];
         }
         if (total_non_getting > MAX_GRANARIES) {
             non_getting_granaries.building_ids[non_getting_granaries.num_items] = i;
@@ -347,10 +347,10 @@ int building_granary_for_getting(building *src, map_point *dst) {
         return 0;
 
     int is_getting = 0;
-    if (building_granary_is_getting(RESOURCE_WHEAT, src) ||
-        building_granary_is_getting(RESOURCE_VEGETABLES, src) ||
-        building_granary_is_getting(RESOURCE_FRUIT, src) ||
-        building_granary_is_getting(RESOURCE_MEAT_C3, src)) {
+    if (building_granary_is_getting(RESOURCE_GRAIN, src) ||
+        building_granary_is_getting(RESOURCE_MEAT, src) ||
+        building_granary_is_getting(RESOURCE_LETTUCE, src) ||
+        building_granary_is_getting(RESOURCE_FIGS, src)) {
         is_getting = 1;
     }
     if (is_getting <= 0)
@@ -368,21 +368,21 @@ int building_granary_for_getting(building *src, map_point *dst) {
         }
         const building_storage *s = building_storage_get(b->storage_id);
         int amount_gettable = 0;
-        if ((building_granary_is_getting(RESOURCE_WHEAT, src)) &&
-            !building_granary_is_gettable(RESOURCE_WHEAT, b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_WHEAT];
+        if ((building_granary_is_getting(RESOURCE_GRAIN, src)) &&
+            !building_granary_is_gettable(RESOURCE_GRAIN, b)) {
+            amount_gettable += b->data.granary.resource_stored[RESOURCE_GRAIN];
         }
-        if ((building_granary_is_getting(RESOURCE_VEGETABLES, src)) &&
-            !building_granary_is_gettable(RESOURCE_VEGETABLES, b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_VEGETABLES];
+        if ((building_granary_is_getting(RESOURCE_MEAT, src)) &&
+            !building_granary_is_gettable(RESOURCE_MEAT, b)) {
+            amount_gettable += b->data.granary.resource_stored[RESOURCE_MEAT];
         }
-        if ((building_granary_is_getting(RESOURCE_FRUIT, src)) &&
-            !building_granary_is_gettable(RESOURCE_FRUIT, b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_FRUIT];
+        if ((building_granary_is_getting(RESOURCE_LETTUCE, src)) &&
+            !building_granary_is_gettable(RESOURCE_LETTUCE, b)) {
+            amount_gettable += b->data.granary.resource_stored[RESOURCE_LETTUCE];
         }
-        if ((building_granary_is_getting(RESOURCE_MEAT_C3, src)) &&
-            !building_granary_is_gettable(RESOURCE_MEAT_C3, b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_MEAT_C3];
+        if ((building_granary_is_getting(RESOURCE_FIGS, src)) &&
+            !building_granary_is_gettable(RESOURCE_FIGS, b)) {
+            amount_gettable += b->data.granary.resource_stored[RESOURCE_FIGS];
         }
         if (amount_gettable > 0) {
             int dist = calc_distance_with_penalty(
@@ -422,16 +422,16 @@ void building_granary_bless(void) {
     }
     if (min_building) {
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_WHEAT, 0, 100);
+            building_granary_add_resource(min_building, RESOURCE_GRAIN, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_VEGETABLES, 0, 100);
+            building_granary_add_resource(min_building, RESOURCE_MEAT, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_FRUIT, 0, 100);
+            building_granary_add_resource(min_building, RESOURCE_LETTUCE, 0, 100);
         }
         for (int n = 0; n < 6; n++) {
-            building_granary_add_resource(min_building, RESOURCE_MEAT_C3, 0, 100);
+            building_granary_add_resource(min_building, RESOURCE_FIGS, 0, 100);
         }
     }
 }
@@ -473,10 +473,10 @@ void building_granary_warehouse_curse(int big) {
         if (max_building->type == BUILDING_WAREHOUSE)
             building_warehouse_remove_resource_curse(max_building, CURSE_LOADS);
         else if (max_building->type == BUILDING_GRANARY) {
-            int amount = building_granary_remove_resource(max_building, RESOURCE_WHEAT, CURSE_LOADS * UNITS_PER_LOAD);
-            amount = building_granary_remove_resource(max_building, RESOURCE_VEGETABLES, amount);
-            amount = building_granary_remove_resource(max_building, RESOURCE_FRUIT, amount);
-            building_granary_remove_resource(max_building, RESOURCE_MEAT_C3, amount);
+            int amount = building_granary_remove_resource(max_building, RESOURCE_GRAIN, CURSE_LOADS * UNITS_PER_LOAD);
+            amount = building_granary_remove_resource(max_building, RESOURCE_MEAT, amount);
+            amount = building_granary_remove_resource(max_building, RESOURCE_LETTUCE, amount);
+            building_granary_remove_resource(max_building, RESOURCE_FIGS, amount);
         }
     }
 }

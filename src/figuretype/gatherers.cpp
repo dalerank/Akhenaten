@@ -19,7 +19,7 @@ void figure::gatherer_action() {
                         found_resource = find_resource_tile(RESOURCE_REEDS, &x, &y);
                         break;
                     case FIGURE_LUMBERJACK:
-                        found_resource = find_resource_tile(RESOURCE_TIMBER_PH, &x, &y);
+                        found_resource = find_resource_tile(RESOURCE_TIMBER, &x, &y);
                         break;
                 }
                 if (found_resource) {

@@ -485,8 +485,8 @@ static int contains_non_stockpiled_food(building *space, const int *resources) {
     int resource = space->subtype.warehouse_resource_id;
     if (city_resource_is_stockpiled(resource))
         return 0;
-    if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
-        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT_C3) {
+    if (resource == RESOURCE_GRAIN || resource == RESOURCE_MEAT ||
+        resource == RESOURCE_LETTUCE || resource == RESOURCE_FIGS) {
         if (resources[resource] > 0)
             return 1;
     }
@@ -538,8 +538,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
     }
     // deliver weapons to barracks
     if (building_count_active(BUILDING_RECRUITER) > 0 && city_military_has_legionary_legions() &&
-        !city_resource_is_stockpiled(RESOURCE_WEAPONS_C3)) {
-        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->tile.x(), warehouse->tile.y(), RESOURCE_WEAPONS_C3,
+        !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->tile.x(), warehouse->tile.y(), RESOURCE_WEAPONS,
                                                  warehouse->road_network_id, warehouse->distance_from_entry, 0));
         int barracks_want = (100 * MAX_WEAPONS_BARRACKS) - barracks->stored_full_amount;
         if (barracks_want > 0 && warehouse->road_network_id == barracks->road_network_id) {
@@ -547,12 +547,12 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
             space = warehouse;
             for (int i = 0; i < 8; i++) {
                 space = space->next();
-                if (space->id > 0 && space->stored_full_amount > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS_C3) {
+                if (space->id > 0 && space->stored_full_amount > 0 && space->subtype.warehouse_resource_id == RESOURCE_WEAPONS) {
                     available += space->stored_full_amount;
                 }
             }
             if (available > 0) {
-                *resource = RESOURCE_WEAPONS_C3;
+                *resource = RESOURCE_WEAPONS;
                 *amount = fmin(available, barracks_want);
                 return WAREHOUSE_TASK_DELIVERING;
             }
@@ -564,12 +564,13 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         space = space->next();
         if (space->id > 0 && space->stored_full_amount > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
-                int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
-                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
-                    *resource = space->subtype.warehouse_resource_id;
-                    *amount = 100; // always one load only for industry!!
-                    return WAREHOUSE_TASK_DELIVERING;
-                }
+                // TODO
+//                int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
+//                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
+//                    *resource = space->subtype.warehouse_resource_id;
+//                    *amount = 100; // always one load only for industry!!
+//                    return WAREHOUSE_TASK_DELIVERING;
+//                }
             }
         }
     }

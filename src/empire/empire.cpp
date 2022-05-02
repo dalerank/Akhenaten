@@ -182,14 +182,14 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
     int finished_good = RESOURCE_NONE;
     /*switch (resource) {
         // food and finished materials
-        case RESOURCE_WHEAT:
-        case RESOURCE_VEGETABLES:
-        case RESOURCE_FRUIT:
+        case RESOURCE_GRAIN:
+        case RESOURCE_MEAT:
+        case RESOURCE_LETTUCE:
         case RESOURCE_MEAT:
         case RESOURCE_POTTERY:
-        case RESOURCE_FURNITURE:
+        case RESOURCE_LUXURY_GOODS:
         case RESOURCE_OIL:
-        case RESOURCE_WINE:
+        case RESOURCE_BEER:
             max_in_stock = get_max_stock_for_population();
             break;
 
@@ -202,15 +202,15 @@ int empire_can_import_resource_from_city(int city_id, int resource) {
             finished_good = RESOURCE_POTTERY;
             break;
         case RESOURCE_TIMBER:
-            finished_good = RESOURCE_FURNITURE;
+            finished_good = RESOURCE_LUXURY_GOODS;
             break;
-        case RESOURCE_OLIVES:
+        case RESOURCE_STRAW:
             finished_good = RESOURCE_OIL;
             break;
-        case RESOURCE_VINES:
-            finished_good = RESOURCE_WINE;
+        case RESOURCE_BARLEY:
+            finished_good = RESOURCE_BEER;
             break;
-        case RESOURCE_IRON:
+        case RESOURCE_COPPER:
             finished_good = RESOURCE_WEAPONS;
             break;
     }

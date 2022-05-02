@@ -395,22 +395,22 @@ void window_building_draw_market(building_info_context *c) {
         }
         // good stocks
         font = is_good_accepted(INVENTORY_GOOD1, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][0], c->x_offset + 32, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[0], c->x_offset + 32, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD1], '@', " ",
                          c->x_offset + 64, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD2, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][1], c->x_offset + 142, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[1], c->x_offset + 142, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD2], '@', " ",
                          c->x_offset + 174, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD3, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][2], c->x_offset + 252, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[2], c->x_offset + 252, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD3], '@', " ",
                          c->x_offset + 284, c->y_offset + Y_GOODS + 4, font);
 
         font = is_good_accepted(INVENTORY_GOOD4, b) ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_YELLOW;
-        ImageDraw::img_generic(image_id + INV_RESOURCES[GAME_ENV][3], c->x_offset + 362, c->y_offset + Y_GOODS);
+        ImageDraw::img_generic(image_id + INV_RESOURCES[3], c->x_offset + 362, c->y_offset + Y_GOODS);
         text_draw_number(b->data.market.inventory[INVENTORY_GOOD4], '@', " ",
                          c->x_offset + 394, c->y_offset + Y_GOODS + 4, font);
     }
@@ -523,7 +523,7 @@ void window_building_draw_granary(building_info_context *c) {
         int food2 = ALLOWED_FOODS(1);
         int food3 = ALLOWED_FOODS(2);
         int food4 = ALLOWED_FOODS(3);
-//        resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON);
+//        resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON);
 
         int image_id = image_id_from_group(GROUP_RESOURCE_ICONS);
         if (food1) { // wheat

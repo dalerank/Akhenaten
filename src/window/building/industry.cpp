@@ -160,7 +160,7 @@ void window_building_draw_wheat_farm(building_info_context *c) {
     int output_resource = RESOURCE_BARLEY;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 112;
-        output_resource = RESOURCE_WHEAT;
+        output_resource = RESOURCE_GRAIN;
     }
     draw_farm(c, 89, "wavs/wheat_farm.wav", farm_group_id, output_resource);
 }
@@ -169,7 +169,7 @@ void window_building_draw_vegetable_farm(building_info_context *c) {
     int output_resource = RESOURCE_FLAX;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 113;
-        output_resource = RESOURCE_VEGETABLES;
+        output_resource = RESOURCE_MEAT;
     }
     draw_farm(c, 90, "wavs/veg_farm.wav", farm_group_id, output_resource);
 }
@@ -178,7 +178,7 @@ void window_building_draw_fruit_farm(building_info_context *c) {
     int output_resource = RESOURCE_GRAIN;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 114;
-        output_resource = RESOURCE_WHEAT;
+        output_resource = RESOURCE_GRAIN;
     }
     draw_farm(c, 90, "wavs/figs_farm.wav", farm_group_id, output_resource);
 }
@@ -187,7 +187,7 @@ void window_building_draw_olive_farm(building_info_context *c) {
     int output_resource = RESOURCE_LETTUCE;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 115;
-        output_resource = RESOURCE_OLIVES;
+        output_resource = RESOURCE_STRAW;
     }
     draw_farm(c, 91, "wavs/olives_farm.wav", farm_group_id, output_resource);
 }
@@ -196,7 +196,7 @@ void window_building_draw_vines_farm(building_info_context *c) {
     int output_resource = RESOURCE_POMEGRANATES;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 116;
-        output_resource = RESOURCE_VINES;
+        output_resource = RESOURCE_BARLEY;
     }
     draw_farm(c, 91, "wavs/vines_farm.wav", farm_group_id, output_resource);
 }
@@ -205,7 +205,7 @@ void window_building_draw_pig_farm(building_info_context *c) {
     int output_resource = RESOURCE_CHICKPEAS;
     if (GAME_ENV == ENGINE_ENV_C3) {
         farm_group_id = 117;
-        output_resource = RESOURCE_MEAT_C3;
+        output_resource = RESOURCE_FIGS;
     }
     draw_farm(c, 90, "wavs/meat_farm.wav", farm_group_id, output_resource);
 }
@@ -257,23 +257,23 @@ void window_building_draw_hunting_lodge(building_info_context *c) {
 }
 
 void window_building_draw_marble_quarry(building_info_context *c) {
-    int output_resource = RESOURCE_MARBLE_PH;
+    int output_resource = RESOURCE_MARBLE;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_MARBLE_C3;
+        output_resource = RESOURCE_MARBLE;
     }
     draw_raw_material(c, 95, "wavs/quarry.wav", 118, output_resource);
 }
 void window_building_draw_iron_mine(building_info_context *c) {
     int output_resource = RESOURCE_COPPER;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_IRON;
+        output_resource = RESOURCE_COPPER;
     }
     draw_raw_material(c, 93, "wavs/mine.wav", 119, output_resource);
 }
 void window_building_draw_timber_yard(building_info_context *c) {
-    int output_resource = RESOURCE_TIMBER_PH;
+    int output_resource = RESOURCE_TIMBER;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_TIMBER_C3;
+        output_resource = RESOURCE_GEMS;
     }
     draw_raw_material(c, 94, "wavs/timber.wav", 120, output_resource);
 }
@@ -289,8 +289,8 @@ void window_building_draw_wine_workshop(building_info_context *c) {
     int input_resource = RESOURCE_BARLEY;
     int output_resource = RESOURCE_BEER;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_VINES;
-        output_resource = RESOURCE_WINE;
+        input_resource = RESOURCE_BARLEY;
+        output_resource = RESOURCE_BEER;
     }
     draw_workshop(c, 96, "wavs/wine_workshop.wav", 122, output_resource, input_resource);
 }
@@ -298,39 +298,39 @@ void window_building_draw_oil_workshop(building_info_context *c) {
     int input_resource = RESOURCE_FLAX;
     int output_resource = RESOURCE_LINEN;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_OLIVES;
-        output_resource = RESOURCE_OIL_C3;
+        input_resource = RESOURCE_STRAW;
+        output_resource = RESOURCE_MEAT;
     }
     draw_workshop(c, 97, "wavs/oil_workshop.wav", 123, output_resource, input_resource);
 }
 void window_building_draw_weapons_workshop(building_info_context *c) {
-    int output_resource = RESOURCE_WEAPONS_PH;
+    int output_resource = RESOURCE_WEAPONS;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_WEAPONS_C3;
+        output_resource = RESOURCE_WEAPONS;
     }
-    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, output_resource, RESOURCE_IRON);
+    draw_workshop(c, 98, "wavs/weapons_workshop.wav", 124, output_resource, RESOURCE_COPPER);
 }
 void window_building_draw_furniture_workshop(building_info_context *c) {
     int input_resource = RESOURCE_GEMS;
     int output_resource = RESOURCE_LUXURY_GOODS;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        input_resource = RESOURCE_TIMBER_C3;
-        output_resource = RESOURCE_FURNITURE;
+        input_resource = RESOURCE_GEMS;
+        output_resource = RESOURCE_LUXURY_GOODS;
     }
     draw_workshop(c, 99, "wavs/furniture_workshop.wav", 125, output_resource, input_resource);
 }
 void window_building_draw_pottery_workshop(building_info_context *c) {
-    int output_resource = RESOURCE_POTTERY_PH;
+    int output_resource = RESOURCE_POTTERY;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_POTTERY_C3;
+        output_resource = RESOURCE_POTTERY;
     }
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, output_resource, RESOURCE_CLAY);
 }
 // TODO: fix brick maker panel
 void window_building_draw_brick_maker_workshop(building_info_context *c) {
-    int output_resource = RESOURCE_POTTERY_PH;
+    int output_resource = RESOURCE_POTTERY;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        output_resource = RESOURCE_POTTERY_C3;
+        output_resource = RESOURCE_POTTERY;
     }
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, output_resource, RESOURCE_CLAY);
 }
@@ -367,8 +367,8 @@ void window_building_draw_wharf(building_info_context *c) {
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK_ON_LIGHT);
-    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT_C3 +
-                           resource_image_offset(RESOURCE_MEAT_C3, RESOURCE_IMAGE_ICON),
+    ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_FIGS +
+                           resource_image_offset(RESOURCE_FIGS, RESOURCE_IMAGE_ICON),
                            c->x_offset + 10, c->y_offset + 10);
 
     building *b = building_get(c->building_id);

@@ -73,7 +73,7 @@ void city_festival_schedule(void) {
 
     if (city_data.festival.selected.size == FESTIVAL_GRAND) {
         if (GAME_ENV == ENGINE_ENV_C3)
-            building_warehouses_remove_resource(RESOURCE_WINE, city_data.festival.grand_alcohol);
+            building_warehouses_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
         else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             building_warehouses_remove_resource(RESOURCE_BEER, city_data.festival.grand_alcohol);
     }
@@ -183,7 +183,7 @@ void city_festival_calculate_costs(void) {
 
     int32_t alcohol_resource = 0;
     if (GAME_ENV == ENGINE_ENV_C3) {
-        alcohol_resource = RESOURCE_WINE;
+        alcohol_resource = RESOURCE_BEER;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         alcohol_resource = RESOURCE_BEER;
     }

@@ -107,7 +107,7 @@ static void set_amount(int value) {
 static void button_amount(int param1, int param2) {
     int max_amount = 999;
     int max_digits = 3;
-    if (data.request.resource == RESOURCE_DENARII) {
+    if (data.request.resource == RESOURCE_DEBEN) {
         max_amount = 30000;
         max_digits = 5;
     }

@@ -79,7 +79,7 @@ void building_industry_update_production(void) {
             continue;
         if (building_is_farm(b->type))
             continue;
-        b->data.industry.has_raw_materials = 0;
+        b->data.industry.has_raw_materials = false;
         if (b->num_workers <= 0)
             continue;
         if (b->subtype.workshop_type && !b->stored_full_amount)
@@ -181,7 +181,7 @@ void building_industry_start_new_production(building *b) {
     if (b->subtype.workshop_type) {
         if (b->stored_full_amount) {
             if (b->stored_full_amount > 100)
-                b->data.industry.has_raw_materials = 1;
+                b->data.industry.has_raw_materials = true;
             b->stored_full_amount -= 100;
         }
     }
@@ -271,9 +271,9 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     if (city_resource_is_stockpiled(resource))
         return 0;
 
-    int output_type = resource_to_workshop_type(resource);
-    if (output_type == WORKSHOP_NONE)
-        return 0;
+//    int output_type = resource_to_workshop_type(resource);
+//    if (output_type == WORKSHOP_NONE)
+//        return 0;
 
     int min_dist = INFINITE;
     building *min_building = 0;
@@ -285,7 +285,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
         if (!b->has_road_access || b->distance_from_entry <= 0)
             continue;
 
-        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->stored_full_amount < 200) {
+        if (resource_required_by_workshop(b, resource) && b->road_network_id == road_network_id && b->stored_full_amount < 200) {
             int dist = calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             if (b->stored_full_amount > 0)
                 dist += 20;
@@ -306,9 +306,9 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
     if (city_resource_is_stockpiled(resource))
         return 0;
 
-    int output_type = resource_to_workshop_type(resource);
-    if (output_type == WORKSHOP_NONE)
-        return 0;
+//    int output_type = resource_to_workshop_type(resource);
+//    if (output_type == WORKSHOP_NONE)
+//        return 0;
 
     int min_dist = INFINITE;
     building *min_building = 0;
@@ -320,7 +320,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int dista
         if (!b->has_road_access || b->distance_from_entry <= 0)
             continue;
 
-        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
+        if (resource_required_by_workshop(b, resource) && b->road_network_id == road_network_id) {
             int dist = 10 * (b->stored_full_amount / 100) +
                        calc_distance_with_penalty(b->tile.x(), b->tile.y(), x, y, distance_from_entry, b->distance_from_entry);
             if (dist < min_dist) {

@@ -78,9 +78,9 @@ int stack_units_by_resource(int resource) {
         case RESOURCE_LIMESTONE:
         case RESOURCE_GRANITE:
         case RESOURCE_SANDSTONE:
-        case RESOURCE_MARBLE_PH:
+        case RESOURCE_MARBLE:
             return RESOURCE_UNIT_BLOCK;
-        case RESOURCE_WEAPONS_PH:
+        case RESOURCE_WEAPONS:
             return RESOURCE_UNIT_WEAPON;
         case RESOURCE_CHARIOTS:
             return RESOURCE_UNIT_CHARIOT;

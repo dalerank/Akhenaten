@@ -381,14 +381,14 @@ void tutorial_on_filled_granary(int quantity) {
     }
 }
 void tutorial_on_add_to_warehouse(void) {
-    if (!data.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY_C3) >= 1) {
+    if (!data.tutorial2.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 1) {
         data.tutorial2.pottery_made = 1;
         data.tutorial2.pottery_made_year = game_time_year();
         building_menu_update(BUILDSET_NORMAL);
         post_message(MESSAGE_TUTORIAL_TRADE);
     }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (!data.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY_PH) >= 2) {
+        if (!data.pharaoh.pottery_made && city_resource_count(RESOURCE_POTTERY) >= 2) {
             data.pharaoh.pottery_made = 1;
             building_menu_update(BUILDSET_TUT3_GARDENS);
             post_message(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES);

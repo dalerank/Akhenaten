@@ -756,10 +756,10 @@ void building::spawn_figure_wharf() {
 //        if (figure_spawn_delay) {
 //            figure_spawn_delay = 0;
 //            data.industry.has_fish = 0;
-//            output_resource_id = RESOURCE_MEAT_C3;
+//            output_resource_id = RESOURCE_FIGS;
 //            figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM_LEFT);
 //            f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
-//            f->set_resource(RESOURCE_MEAT_C3);
+//            f->set_resource(RESOURCE_FIGS);
 //            f->home() = b;
 //            figure_id = f->id;
 //            f->wait_ticks = 30;

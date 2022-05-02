@@ -84,150 +84,148 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
         b->subtype.house_level = 0;
 
     // unique data
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        switch (type) {
-            case BUILDING_BARLEY_FARM:
-                b->output_resource_id = RESOURCE_BARLEY;
-                break;
-            case BUILDING_FLAX_FARM:
-                b->output_resource_id = RESOURCE_FLAX;
-                break;
-            case BUILDING_GRAIN_FARM:
-                b->output_resource_id = RESOURCE_GRAIN;
-                break;
-            case BUILDING_LETTUCE_FARM:
-                b->output_resource_id = RESOURCE_LETTUCE;
-                break;
-            case BUILDING_POMEGRANATES_FARM:
-                b->output_resource_id = RESOURCE_POMEGRANATES;
-                break;
-            case BUILDING_CHICKPEAS_FARM:
-                b->output_resource_id = RESOURCE_CHICKPEAS;
-                break;
-            case BUILDING_STONE_QUARRY:
-                b->output_resource_id = RESOURCE_STONE;
-                break;
-            case BUILDING_LIMESTONE_QUARRY:
-                b->output_resource_id = RESOURCE_LIMESTONE;
-                break;
-            case BUILDING_WOOD_CUTTERS:
-                b->output_resource_id = RESOURCE_TIMBER_PH;
-                break;
-            case BUILDING_CLAY_PIT:
-                b->output_resource_id = RESOURCE_CLAY;
-                break;
-            case BUILDING_BEER_WORKSHOP:
-                b->output_resource_id = RESOURCE_BEER;
-                b->subtype.workshop_type = WORKSHOP_VINES_TO_WINE; // todo
-                break;
-            case BUILDING_LINEN_WORKSHOP:
-                b->output_resource_id = RESOURCE_LINEN;
-                b->subtype.workshop_type = WORKSHOP_OLIVES_TO_OIL; // todo
-                break;
-            case BUILDING_WEAPONS_WORKSHOP:
-                b->output_resource_id = RESOURCE_WEAPONS_C3;
-                b->subtype.workshop_type = WORKSHOP_IRON_TO_WEAPONS; // todo
-                break;
-            case BUILDING_JEWELS_WORKSHOP:
-                b->output_resource_id = RESOURCE_LUXURY_GOODS;
-                b->subtype.workshop_type = WORKSHOP_TIMBER_TO_FURNITURE; // todo
-                break;
-            case BUILDING_POTTERY_WORKSHOP:
-                b->output_resource_id = RESOURCE_POTTERY_PH;
-                b->subtype.workshop_type = WORKSHOP_CLAY_TO_POTTERY;
-                break;
-            case BUILDING_HUNTING_LODGE:
-                b->output_resource_id = RESOURCE_GAMEMEAT;
-                break;
-            case BUILDING_REED_GATHERER:
-                b->output_resource_id = RESOURCE_REEDS;
-                break;
-            case BUILDING_GOLD_MINE:
-                b->output_resource_id = RESOURCE_GOLD;
-                break;
-            case BUILDING_GEMSTONE_MINE:
-                b->output_resource_id = RESOURCE_GEMS;
-                break;
-            case BUILDING_CATTLE_RANCH:
-                b->output_resource_id = RESOURCE_MEAT_PH;
-//                b->subtype.workshop_type = ??? todo
-                break;
-            case BUILDING_FIGS_FARM:
-                b->output_resource_id = RESOURCE_FIGS;
-                break;
-            case BUILDING_PAPYRUS_WORKSHOP:
-                b->output_resource_id = RESOURCE_PAPYRUS;
-                b->subtype.workshop_type = WORKSHOP_REEDS_TO_PAPYRUS;
-                break;
-            case BUILDING_BRICKS_WORKSHOP:
-                b->output_resource_id = RESOURCE_BRICKS;
-//                b->subtype.workshop_type = ??? todo
-                break;
-            case BUILDING_CHARIOTS_WORKSHOP:
-                b->output_resource_id = RESOURCE_CHARIOTS;
-//                b->subtype.workshop_type = ??? todo
-                break;
-            case BUILDING_GRANITE_QUARRY:
-                b->output_resource_id = RESOURCE_GRANITE;
-                break;
-            case BUILDING_COPPER_MINE:
-                b->output_resource_id = RESOURCE_COPPER;
-                break;
-            case BUILDING_SANDSTONE_QUARRY:
-                b->output_resource_id = RESOURCE_SANDSTONE;
-                break;
-            case BUILDING_HENNA_FARM:
-                b->output_resource_id = RESOURCE_HENNA;
-                break;
-            case BUILDING_LAMP_WORKSHOP:
-                b->output_resource_id = RESOURCE_LAMPS;
-//                b->subtype.workshop_type = ??? todo
-                break;
-            case BUILDING_PAINT_WORKSHOP:
-                b->output_resource_id = RESOURCE_PAINT;
-//                b->subtype.workshop_type = ??? todo
-                break;
-            case BUILDING_GRANARY:
-                b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
-                b->storage_id = building_storage_create(BUILDING_GRANARY);
-                break;
-            case BUILDING_MARKET: // Set it as accepting all goods
-                b->subtype.market_goods = 0x0000;
-                break;
-            case BUILDING_WAREHOUSE:
-                b->subtype.orientation = building_rotation_get_rotation();
-                break;
-            case BUILDING_SMALL_STATUE:
-            case BUILDING_MEDIUM_STATUE:
-            case BUILDING_LARGE_STATUE:
-                b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
-                break;
-            case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-            case BUILDING_TEMPLE_COMPLEX_RA:
-            case BUILDING_TEMPLE_COMPLEX_PTAH:
-            case BUILDING_TEMPLE_COMPLEX_SETH:
-            case BUILDING_TEMPLE_COMPLEX_BAST:
-                b->data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
-                break;
-            case BUILDING_WATER_LIFT:
-            case BUILDING_FISHING_WHARF:
-            case BUILDING_TRANSPORT_WHARF:
-            case BUILDING_SHIPYARD:
-            case BUILDING_WARSHIP_WHARF:
-            case BUILDING_FERRY:
-                b->data.industry.orientation = orientation;
-                break;
-            case BUILDING_DOCK:
-                b->data.dock.orientation = orientation;
-                break;
-            case BUILDING_GATEHOUSE_PH:
-            case BUILDING_GATEHOUSE:
-                b->subtype.orientation = orientation;
-                break;
-            default:
-                b->output_resource_id = RESOURCE_NONE;
-                break;
-        }
+    switch (type) {
+        case BUILDING_BARLEY_FARM:
+            b->output_resource_id = RESOURCE_BARLEY;
+            break;
+        case BUILDING_FLAX_FARM:
+            b->output_resource_id = RESOURCE_FLAX;
+            break;
+        case BUILDING_GRAIN_FARM:
+            b->output_resource_id = RESOURCE_GRAIN;
+            break;
+        case BUILDING_LETTUCE_FARM:
+            b->output_resource_id = RESOURCE_LETTUCE;
+            break;
+        case BUILDING_POMEGRANATES_FARM:
+            b->output_resource_id = RESOURCE_POMEGRANATES;
+            break;
+        case BUILDING_CHICKPEAS_FARM:
+            b->output_resource_id = RESOURCE_CHICKPEAS;
+            break;
+        case BUILDING_STONE_QUARRY:
+            b->output_resource_id = RESOURCE_STONE;
+            break;
+        case BUILDING_LIMESTONE_QUARRY:
+            b->output_resource_id = RESOURCE_LIMESTONE;
+            break;
+        case BUILDING_WOOD_CUTTERS:
+            b->output_resource_id = RESOURCE_TIMBER;
+            break;
+        case BUILDING_CLAY_PIT:
+            b->output_resource_id = RESOURCE_CLAY;
+            break;
+        case BUILDING_BEER_WORKSHOP:
+            b->output_resource_id = RESOURCE_BEER;
+            b->subtype.workshop_type = WORKSHOP_BEER;
+            break;
+        case BUILDING_LINEN_WORKSHOP:
+            b->output_resource_id = RESOURCE_LINEN;
+            b->subtype.workshop_type = WORKSHOP_LINEN;
+            break;
+        case BUILDING_WEAPONS_WORKSHOP:
+            b->output_resource_id = RESOURCE_WEAPONS;
+            b->subtype.workshop_type = WORKSHOP_WEAPONS;
+            break;
+        case BUILDING_JEWELS_WORKSHOP:
+            b->output_resource_id = RESOURCE_LUXURY_GOODS;
+            b->subtype.workshop_type = WORKSHOP_JEWELS;
+            break;
+        case BUILDING_POTTERY_WORKSHOP:
+            b->output_resource_id = RESOURCE_POTTERY;
+            b->subtype.workshop_type = WORKSHOP_POTTERY;
+            break;
+        case BUILDING_HUNTING_LODGE:
+            b->output_resource_id = RESOURCE_GAMEMEAT;
+            break;
+        case BUILDING_REED_GATHERER:
+            b->output_resource_id = RESOURCE_REEDS;
+            break;
+        case BUILDING_GOLD_MINE:
+            b->output_resource_id = RESOURCE_GOLD;
+            break;
+        case BUILDING_GEMSTONE_MINE:
+            b->output_resource_id = RESOURCE_GEMS;
+            break;
+        case BUILDING_CATTLE_RANCH:
+            b->output_resource_id = RESOURCE_MEAT;
+            b->subtype.workshop_type = WORKSHOP_CATTLE;
+            break;
+        case BUILDING_FIGS_FARM:
+            b->output_resource_id = RESOURCE_FIGS;
+            break;
+        case BUILDING_PAPYRUS_WORKSHOP:
+            b->output_resource_id = RESOURCE_PAPYRUS;
+            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
+            break;
+        case BUILDING_BRICKS_WORKSHOP:
+            b->output_resource_id = RESOURCE_BRICKS;
+            b->subtype.workshop_type = WORKSHOP_BRICKS;
+            break;
+        case BUILDING_CHARIOTS_WORKSHOP:
+            b->output_resource_id = RESOURCE_CHARIOTS;
+            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
+            break;
+        case BUILDING_GRANITE_QUARRY:
+            b->output_resource_id = RESOURCE_GRANITE;
+            break;
+        case BUILDING_COPPER_MINE:
+            b->output_resource_id = RESOURCE_COPPER;
+            break;
+        case BUILDING_SANDSTONE_QUARRY:
+            b->output_resource_id = RESOURCE_SANDSTONE;
+            break;
+        case BUILDING_HENNA_FARM:
+            b->output_resource_id = RESOURCE_HENNA;
+            break;
+        case BUILDING_LAMP_WORKSHOP:
+            b->output_resource_id = RESOURCE_LAMPS;
+            b->subtype.workshop_type = WORKSHOP_LAMPS;
+            break;
+        case BUILDING_PAINT_WORKSHOP:
+            b->output_resource_id = RESOURCE_PAINT;
+            b->subtype.workshop_type = WORKSHOP_PAINT;
+            break;
+        case BUILDING_GRANARY:
+            b->data.granary.resource_stored[RESOURCE_NONE] = 3200;
+            b->storage_id = building_storage_create(BUILDING_GRANARY);
+            break;
+        case BUILDING_MARKET: // Set it as accepting all goods
+            b->subtype.market_goods = 0x0000;
+            break;
+        case BUILDING_WAREHOUSE:
+            b->subtype.orientation = building_rotation_get_rotation();
+            break;
+        case BUILDING_SMALL_STATUE:
+        case BUILDING_MEDIUM_STATUE:
+        case BUILDING_LARGE_STATUE:
+            b->data.monuments.variant = get_statue_variant_value((4 + building_rotation_get_rotation() + city_view_orientation() / 2) % 4, building_rotation_get_building_variant());
+            break;
+        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        case BUILDING_TEMPLE_COMPLEX_RA:
+        case BUILDING_TEMPLE_COMPLEX_PTAH:
+        case BUILDING_TEMPLE_COMPLEX_SETH:
+        case BUILDING_TEMPLE_COMPLEX_BAST:
+            b->data.monuments.variant = (10 - (2 * orientation)) % 8; // ugh!
+            break;
+        case BUILDING_WATER_LIFT:
+        case BUILDING_FISHING_WHARF:
+        case BUILDING_TRANSPORT_WHARF:
+        case BUILDING_SHIPYARD:
+        case BUILDING_WARSHIP_WHARF:
+        case BUILDING_FERRY:
+            b->data.industry.orientation = orientation;
+            break;
+        case BUILDING_DOCK:
+            b->data.dock.orientation = orientation;
+            break;
+        case BUILDING_GATEHOUSE_PH:
+        case BUILDING_GATEHOUSE:
+            b->subtype.orientation = orientation;
+            break;
+        default:
+            b->output_resource_id = RESOURCE_NONE;
+            break;
     }
 }
 building *building_create(int type, int x, int y, int orientation) {
