@@ -18,19 +18,11 @@ int resource_image_offset(int resource, int type) {
             return 0;
     }
 }
-
 #include "core/game_environment.h"
 #include "graphics/image.h"
 
 int resource_get_icon(int resource, int quantity) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        return resource + image_id_from_group(GROUP_EMPIRE_RESOURCES) + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        // assume we are dealing with NORMAL icons....
-
-        return resource + image_id_from_group(GROUP_RESOURCE_ICONS);
-    }
+    return resource + image_id_from_group(GROUP_RESOURCE_ICONS);
 }
 
 int resource_is_food(int resource) {
@@ -44,27 +36,27 @@ int resource_is_food(int resource) {
 bool resource_required_by_workshop(building *b, int resource) {
     switch (resource) {
         case RESOURCE_CLAY:
-            return (b->subtype.workshop_type == WORKSHOP_POTTERY
-                 || b->subtype.workshop_type == WORKSHOP_BRICKS);
+            return (b->type == BUILDING_POTTERY_WORKSHOP
+                 || b->type == BUILDING_BRICKS_WORKSHOP);
         case RESOURCE_STRAW:
-            return (b->subtype.workshop_type == WORKSHOP_BRICKS
-                 || b->subtype.workshop_type == WORKSHOP_CATTLE);
+            return (b->type == BUILDING_BRICKS_WORKSHOP
+                 || b->type == BUILDING_CATTLE_RANCH);
         case RESOURCE_BARLEY:
-            return b->subtype.workshop_type == WORKSHOP_BEER;
+            return b->type == BUILDING_BEER_WORKSHOP;
         case RESOURCE_REEDS:
-            return b->subtype.workshop_type == WORKSHOP_PAPYRUS;
+            return b->type == BUILDING_PAPYRUS_WORKSHOP;
         case RESOURCE_FLAX:
-            return b->subtype.workshop_type == WORKSHOP_LINEN;
+            return b->type == BUILDING_LINEN_WORKSHOP;
         case RESOURCE_GEMS:
-            return b->subtype.workshop_type == WORKSHOP_JEWELS;
+            return b->type == BUILDING_JEWELS_WORKSHOP;
         case RESOURCE_COPPER:
-            return b->subtype.workshop_type == WORKSHOP_WEAPONS;
+            return b->type == BUILDING_WEAPONS_WORKSHOP;
         case RESOURCE_TIMBER:
-            return b->subtype.workshop_type == WORKSHOP_CHARIOTS;
+            return b->type == BUILDING_CHARIOTS_WORKSHOP;
         case RESOURCE_HENNA:
-            return b->subtype.workshop_type == WORKSHOP_PAINT;
+            return b->type == BUILDING_PAINT_WORKSHOP;
         case RESOURCE_OIL:
-            return b->subtype.workshop_type == WORKSHOP_LAMPS;
+            return b->type == BUILDING_LAMP_WORKSHOP;
         default:
             return false;
     }

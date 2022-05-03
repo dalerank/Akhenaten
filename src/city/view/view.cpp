@@ -48,7 +48,7 @@ int SCROLLABLE_X_MAX_TILE() {
     return MAP_TILE_UPPER_LIMIT_X() - SCROLLABLE_X_MIN_TILE() - 2;
 }
 int SCROLLABLE_Y_MAX_TILE() {
-    return MAP_TILE_UPPER_LIMIT_Y() - SCROLLABLE_Y_MIN_TILE() - 5;
+    return MAP_TILE_UPPER_LIMIT_Y() - SCROLLABLE_Y_MIN_TILE() - 4;
 }
 
 void city_view_get_camera_max_tile(int *x, int *y) {

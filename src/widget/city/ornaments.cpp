@@ -353,39 +353,19 @@ static const int granary_offsets_ph[][2] = {
 };
 
 static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask) {
-    int image_base = 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        image_base = image_id_from_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL);
-        switch (b->type) {
-            case BUILDING_BEER_WORKSHOP:
-                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
-                    ImageDraw::img_generic(image_base, x + 45, y + 23, color_mask);
-                break;
-            case BUILDING_LINEN_WORKSHOP:
-                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
-                    ImageDraw::img_generic(image_base + 1, x + 35, y + 15, color_mask);
-                break;
-            case BUILDING_WEAPONS_WORKSHOP:
-                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
-                    ImageDraw::img_generic(image_base + 3, x + 46, y + 24, color_mask);
-                break;
-            case BUILDING_JEWELS_WORKSHOP:
-                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
-                    ImageDraw::img_generic(image_base + 2, x + 48, y + 19, color_mask);
-                break;
-            case BUILDING_POTTERY_WORKSHOP:
-                if (b->stored_full_amount >= 200 || b->data.industry.has_raw_materials)
-                    ImageDraw::img_generic(image_base + 4, x + 47, y + 24, color_mask);
-                break;
-        }
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        image_base = image_id_from_group(GROUP_EMPIRE_RESOURCES);
-        switch (b->type) {
-            case BUILDING_HUNTING_LODGE:
-                if (b->stored_full_amount > 0)
-                    ImageDraw::img_generic(image_base + ceil((float)b->stored_full_amount / 100.0) - 1, x + 61, y + 14, color_mask);
-                break;
-        }
+    if (b->stored_full_amount <= 0)
+        return;
+    int amount = ceil((float)b->stored_full_amount / 100.0) - 1;
+    switch (b->type) {
+        case BUILDING_HUNTING_LODGE:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
+            break;
+        case BUILDING_PAPYRUS_WORKSHOP:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
+            break;
+        case BUILDING_WOOD_CUTTERS:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+            break;
     }
 }
 static void draw_granary_stores(const building *b, int x, int y, color_t color_mask) {

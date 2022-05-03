@@ -27,7 +27,7 @@
 static int max_progress(building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
         return MAX_PROGRESS_FARM_PH;
-    return b->subtype.workshop_type ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+    return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
 static void update_farm_image(building *b) {
     bool is_flooded = false;
@@ -82,7 +82,7 @@ void building_industry_update_production(void) {
         b->data.industry.has_raw_materials = false;
         if (b->num_workers <= 0)
             continue;
-        if (b->subtype.workshop_type && !b->stored_full_amount)
+        if (building_is_workshop(b->type) && !b->stored_full_amount)
             continue;
         if (b->data.industry.curse_days_left)
             b->data.industry.curse_days_left--;
@@ -178,7 +178,7 @@ bool building_industry_has_produced_resource(building *b) {
 }
 void building_industry_start_new_production(building *b) {
     b->data.industry.progress = 0;
-    if (b->subtype.workshop_type) {
+    if (building_is_workshop(b->type)) {
         if (b->stored_full_amount) {
             if (b->stored_full_amount > 100)
                 b->data.industry.has_raw_materials = true;

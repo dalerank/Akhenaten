@@ -117,23 +117,23 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
             break;
         case BUILDING_BEER_WORKSHOP:
             b->output_resource_id = RESOURCE_BEER;
-            b->subtype.workshop_type = WORKSHOP_BEER;
+//            b->subtype.workshop_type = WORKSHOP_BEER;
             break;
         case BUILDING_LINEN_WORKSHOP:
             b->output_resource_id = RESOURCE_LINEN;
-            b->subtype.workshop_type = WORKSHOP_LINEN;
+//            b->subtype.workshop_type = WORKSHOP_LINEN;
             break;
         case BUILDING_WEAPONS_WORKSHOP:
             b->output_resource_id = RESOURCE_WEAPONS;
-            b->subtype.workshop_type = WORKSHOP_WEAPONS;
+//            b->subtype.workshop_type = WORKSHOP_WEAPONS;
             break;
         case BUILDING_JEWELS_WORKSHOP:
             b->output_resource_id = RESOURCE_LUXURY_GOODS;
-            b->subtype.workshop_type = WORKSHOP_JEWELS;
+//            b->subtype.workshop_type = WORKSHOP_JEWELS;
             break;
         case BUILDING_POTTERY_WORKSHOP:
             b->output_resource_id = RESOURCE_POTTERY;
-            b->subtype.workshop_type = WORKSHOP_POTTERY;
+//            b->subtype.workshop_type = WORKSHOP_POTTERY;
             break;
         case BUILDING_HUNTING_LODGE:
             b->output_resource_id = RESOURCE_GAMEMEAT;
@@ -149,22 +149,22 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
             break;
         case BUILDING_CATTLE_RANCH:
             b->output_resource_id = RESOURCE_MEAT;
-            b->subtype.workshop_type = WORKSHOP_CATTLE;
+//            b->subtype.workshop_type = WORKSHOP_CATTLE;
             break;
         case BUILDING_FIGS_FARM:
             b->output_resource_id = RESOURCE_FIGS;
             break;
         case BUILDING_PAPYRUS_WORKSHOP:
             b->output_resource_id = RESOURCE_PAPYRUS;
-            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
+//            b->subtype.workshop_type = WORKSHOP_PAPYRUS;
             break;
         case BUILDING_BRICKS_WORKSHOP:
             b->output_resource_id = RESOURCE_BRICKS;
-            b->subtype.workshop_type = WORKSHOP_BRICKS;
+//            b->subtype.workshop_type = WORKSHOP_BRICKS;
             break;
         case BUILDING_CHARIOTS_WORKSHOP:
             b->output_resource_id = RESOURCE_CHARIOTS;
-            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
+//            b->subtype.workshop_type = WORKSHOP_CHARIOTS;
             break;
         case BUILDING_GRANITE_QUARRY:
             b->output_resource_id = RESOURCE_GRANITE;
@@ -180,11 +180,11 @@ static void building_new_fill_in_data_for_type(building *b, int type, int x, int
             break;
         case BUILDING_LAMP_WORKSHOP:
             b->output_resource_id = RESOURCE_LAMPS;
-            b->subtype.workshop_type = WORKSHOP_LAMPS;
+//            b->subtype.workshop_type = WORKSHOP_LAMPS;
             break;
         case BUILDING_PAINT_WORKSHOP:
             b->output_resource_id = RESOURCE_PAINT;
-            b->subtype.workshop_type = WORKSHOP_PAINT;
+//            b->subtype.workshop_type = WORKSHOP_PAINT;
             break;
         case BUILDING_GRANARY:
             b->data.granary.resource_stored[RESOURCE_NONE] = 3200;

@@ -317,9 +317,10 @@ void city_resource_calculate_workshop_stocks(void) {
             if (room < 0)
                 room = 0;
 
-            int workshop_resource = b->subtype.workshop_type;
-            city_data.resource.space_in_workshops[workshop_resource] += room;
-            city_data.resource.stored_in_workshops[workshop_resource] += b->stored_full_amount;
+            // TODO
+//            int workshop_resource = b->subtype.workshop_type;
+//            city_data.resource.space_in_workshops[workshop_resource] += room;
+//            city_data.resource.stored_in_workshops[workshop_resource] += b->stored_full_amount;
         }
     }
 }

@@ -36,7 +36,7 @@ public:
     union {
         short house_level;
         short warehouse_resource_id;
-        short workshop_type;
+//        short workshop_type;
         short orientation;
         short fort_figure_type;
         short native_meeting_center_id;
