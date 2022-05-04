@@ -15,7 +15,7 @@ struct record {
 
 static struct {
     struct record buildings[int_MAX];
-    struct record industry[36];
+    struct record industry[RESOURCES_MAX];
 } data;
 
 static void clear_counters(void) {

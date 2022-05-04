@@ -47,8 +47,8 @@ static struct {
     int unemployment_amount;
     objective culture;
     objective prosperity;
-    objective peace;
-    objective favor;
+    objective monument;
+    objective kingdom;
     objective population;
 } data;
 
@@ -99,8 +99,8 @@ static int calculate_extra_info_height(void) {
 static void set_extra_info_objectives(void) {
     data.culture.target = 0;
     data.prosperity.target = 0;
-    data.peace.target = 0;
-    data.favor.target = 0;
+    data.monument.target = 0;
+    data.kingdom.target = 0;
     data.population.target = 0;
 
     if (scenario_is_open_play())
@@ -112,10 +112,10 @@ static void set_extra_info_objectives(void) {
         data.prosperity.target = winning_prosperity();
 
     if (winning_monuments())
-        data.peace.target = winning_monuments();
+        data.monument.target = winning_monuments();
 
     if (winning_kingdom())
-        data.favor.target = winning_kingdom();
+        data.kingdom.target = winning_kingdom();
 
     if (winning_population())
         data.population.target = winning_population();
@@ -147,8 +147,8 @@ static int update_extra_info(int is_background) {
 
         changed |= update_extra_info_value(city_rating_culture(), &data.culture.value);
         changed |= update_extra_info_value(city_rating_prosperity(), &data.prosperity.value);
-        changed |= update_extra_info_value(city_rating_peace(), &data.peace.value);
-        changed |= update_extra_info_value(city_rating_favor(), &data.favor.value);
+        changed |= update_extra_info_value(city_rating_monument(), &data.monument.value);
+        changed |= update_extra_info_value(city_rating_kingdom(), &data.kingdom.value);
         changed |= update_extra_info_value(city_population(), &data.population.value);
     }
     return changed;
@@ -221,8 +221,8 @@ static void draw_extra_info_panel(void) {
 //            y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 44, 56, &data.population, 1);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 1, &data.culture, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 2, &data.prosperity, 0);
-        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 3, &data.peace, 0);
-        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 4, &data.favor, 0);
+        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 3, &data.monument, 0);
+        y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 4, &data.kingdom, 0);
     }
     // todo: extra goal / required households
 }

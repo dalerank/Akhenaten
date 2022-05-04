@@ -1,7 +1,7 @@
 #ifndef GAME_DIFFICULTY_H
 #define GAME_DIFFICULTY_H
 
-int difficulty_starting_favor(void);
+int difficulty_starting_kingdom(void);
 
 int difficulty_sentiment(void);
 

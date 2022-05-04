@@ -7,7 +7,7 @@
 
 typedef struct {
     int size;
-    int items[36];
+    int items[RESOURCES_MAX];
 } resources_list;
 
 int city_resource_count(int resource);
@@ -43,8 +43,6 @@ void city_resource_toggle_stockpiled(int resource);
 int city_resource_is_mothballed(int resource);
 void city_resource_toggle_mothballed(int resource);
 
-int city_resource_has_workshop_with_room(int workshop_type);
-
 void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
 
@@ -56,7 +54,7 @@ void city_resource_determine_available(void);
 
 void city_resource_calculate_food_stocks_and_supply_wheat(void);
 
-void city_resource_calculate_workshop_stocks(void);
+//void city_resource_calculate_workshop_stocks(void);
 
 void city_resource_consume_food(void);
 

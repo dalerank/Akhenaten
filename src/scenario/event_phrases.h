@@ -369,7 +369,7 @@ enum {
     PHRASE_pharaoh_attacks_you_no_reason_A, // =
 //    PHRASE_pharaoh_attacks_you_no_reason_B, // =
 //    PHRASE_pharaoh_attacks_you_no_reason_C, // =
-    PHRASE_pharaoh_attacks_you_because_of_low_favor, // =
+    PHRASE_pharaoh_attacks_you_because_of_low_kingdom, // =
 
     //*****Egyptian Army Attacks*************************************
     PHRASE_eg_city_attacks_you_title, // =
@@ -385,7 +385,7 @@ enum {
     PHRASE_eg_city_attacks_you_no_reason_A, // =
 //    PHRASE_eg_city_attacks_you_no_reason_B, // =
 //    PHRASE_eg_city_attacks_you_no_reason_C, // =
-    PHRASE_eg_city_attacks_you_because_of_low_favor, // =
+    PHRASE_eg_city_attacks_you_because_of_low_kingdom, // =
 
     //*****Foreign Army Attacks*************************************
     PHRASE_foreign_army_attacks_you_title, // =

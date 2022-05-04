@@ -10,8 +10,8 @@ typedef struct {
     int name_id;
     int route_id;
     int is_open;
-    int buys_resource[36];
-    int sells_resource[36];
+    int buys_resource[RESOURCES_MAX];
+    int sells_resource[RESOURCES_MAX];
     int cost_to_open;
     int ph_unk01;
     int ph_unk02;

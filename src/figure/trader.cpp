@@ -11,11 +11,11 @@
 struct trader {
     int32_t bought_amount;
     int32_t bought_value;
-    uint16_t bought_resources[36];
+    uint16_t bought_resources[RESOURCES_MAX];
 
     int32_t sold_amount;
     int32_t sold_value;
-    uint16_t sold_resources[36];
+    uint16_t sold_resources[RESOURCES_MAX];
 };
 
 static struct {

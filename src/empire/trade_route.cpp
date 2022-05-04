@@ -9,7 +9,7 @@ struct route_resource {
     int traded;
 };
 
-static struct route_resource data[MAX_ROUTES][36];
+static struct route_resource data[MAX_ROUTES][RESOURCES_MAX];
 
 void trade_route_init(int route_id, int resource, int limit) {
     data[route_id][resource].limit = limit;

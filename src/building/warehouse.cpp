@@ -564,13 +564,16 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource,
         space = space->next();
         if (space->id > 0 && space->stored_full_amount > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
-                // TODO
-//                int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
-//                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
-//                    *resource = space->subtype.warehouse_resource_id;
-//                    *amount = 100; // always one load only for industry!!
-//                    return WAREHOUSE_TASK_DELIVERING;
-//                }
+                for (int j = 0; j < MAX_BUILDINGS; ++j) {
+                    auto b = building_get(j);
+                    if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
+                        continue;
+                    if (resource_required_by_workshop(b, space->subtype.warehouse_resource_id) && 200 - b->stored_full_amount >= 100) {
+                        *resource = space->subtype.warehouse_resource_id;
+                        *amount = 100; // always one load only for industry!!
+                        return WAREHOUSE_TASK_DELIVERING;
+                    }
+                }
             }
         }
     }

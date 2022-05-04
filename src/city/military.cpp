@@ -209,22 +209,22 @@ static int player_has_won(void) {
 static void fight_distant_battle(void) {
     if (city_data.distant_battle.roman_months_to_travel_forth <= 0) {
         city_message_post(true, MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS, 0, 0);
-        city_ratings_change_favor(-50);
+        city_ratings_change_kingdom(-50);
         set_city_foreign();
     } else if (city_data.distant_battle.roman_months_to_travel_forth > 2) {
         city_message_post(true, MESSAGE_DISTANT_BATTLE_LOST_TOO_LATE, 0, 0);
-        city_ratings_change_favor(-25);
+        city_ratings_change_kingdom(-25);
         set_city_foreign();
         city_data.distant_battle.roman_months_to_travel_back = city_data.distant_battle.roman_months_traveled;
     } else if (!player_has_won()) {
         city_message_post(true, MESSAGE_DISTANT_BATTLE_LOST_TOO_WEAK, 0, 0);
-        city_ratings_change_favor(-10);
+        city_ratings_change_kingdom(-10);
         set_city_foreign();
         city_data.distant_battle.roman_months_traveled = 0;
         // no return: all soldiers killed
     } else {
         city_message_post(true, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
-        city_ratings_change_favor(25);
+        city_ratings_change_kingdom(25);
         city_buildings_earn_triumphal_arch();
         building_menu_update(BUILDSET_NORMAL);
         city_data.distant_battle.won_count++;

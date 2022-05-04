@@ -244,8 +244,8 @@ extern struct city_data_t {
     struct {
         int32_t culture;
         int32_t prosperity;
-        int32_t peace;
-        int32_t favor;
+        int32_t monument; // peace
+        int32_t kingdom; // favor
         struct {
             int32_t theater;
             int32_t religion;
@@ -255,22 +255,22 @@ extern struct city_data_t {
         } culture_points;
         int32_t prosperity_treasury_last_year;
         int32_t prosperity_max;
-        int32_t peace_destroyed_buildings;
-        int32_t peace_years_of_peace;
-        int32_t peace_num_criminals;
-        int32_t peace_num_rioters;
-        int32_t peace_riot_cause;
-        int32_t favor_salary_penalty;
-        int32_t favor_milestone_penalty;
-        int32_t favor_ignored_request_penalty;
-        int32_t favor_last_year;
-        int32_t favor_change; // 0 = dropping, 1 = stalling, 2 = rising
+        int32_t monument_destroyed_buildings;
+        int32_t monument_years_of_monument;
+        int32_t monument_num_criminals;
+        int32_t monument_num_rioters;
+        int32_t monument_riot_cause;
+        int32_t kingdom_salary_penalty;
+        int32_t kingdom_milestone_penalty;
+        int32_t kingdom_ignored_request_penalty;
+        int32_t kingdom_last_year;
+        int32_t kingdom_change; // 0 = dropping, 1 = stalling, 2 = rising
 
         int32_t selected;
         int32_t culture_explanation;
         int32_t prosperity_explanation;
-        int32_t peace_explanation;
-        int32_t favor_explanation;
+        int32_t monument_explanation;
+        int32_t kingdom_explanation;
     } ratings;
     struct {
         int32_t average_entertainment;
@@ -324,31 +324,33 @@ extern struct city_data_t {
         int32_t second_festival_effect_months;
     } festival;
     struct {
-        int16_t space_in_warehouses[36];
-        int16_t stored_in_warehouses[36];
-        int32_t space_in_workshops[6];
-        int32_t stored_in_workshops[6];
-        int16_t trade_status[36];
-        int16_t trading_amount[36];
-        int32_t stockpiled[36];
-        int16_t mothballed[36];
-        int16_t unk_00[36];
+        int16_t space_in_warehouses[RESOURCES_MAX];
+        int16_t stored_in_warehouses[RESOURCES_MAX];
+//        int32_t space_in_workshops[6];
+//        int32_t stored_in_workshops[6];
+        int16_t trade_status[RESOURCES_MAX];
+        int16_t trading_amount[RESOURCES_MAX];
+        int32_t stockpiled[RESOURCES_MAX];
+        int16_t mothballed[RESOURCES_MAX];
+        int16_t unk_00[RESOURCES_MAX];
 
         int32_t wine_types_available;
 //        int32_t food_types_available;
 //        int32_t food_types_eaten;
-        int8_t food_types_available_arr[9];
-        int8_t food_types_eaten_arr[9];
+        int8_t food_types_available_arr[RESOURCES_FOODS_MAX];
+        int8_t food_types_eaten_arr[RESOURCES_FOODS_MAX];
         int8_t food_types_allowed[4];
         int32_t food_types_available_num;
         int32_t food_types_eaten_num;
-        int32_t granary_food_stored[8];
+        int32_t granary_food_stored[RESOURCES_FOODS_MAX];
         int32_t granary_total_stored;
         int32_t food_supply_months;
         int32_t food_needed_per_month;
         int32_t food_consumed_last_month;
         int32_t food_produced_last_month;
         int32_t food_produced_this_month;
+        int8_t food_types_arr_unk_00[RESOURCES_FOODS_MAX];
+        int8_t food_types_arr_unk_01[RESOURCES_FOODS_MAX];
         struct {
             int operating;
             int not_operating;
@@ -403,7 +405,7 @@ extern struct city_data_t {
         int32_t tutorial_senate_built;
     } mission;
     struct {
-        int8_t other_player[18068];
+        int8_t other_player[18904];
         int8_t unknown_00a0;
         int8_t unknown_00a1;
         int8_t unknown_00a2;

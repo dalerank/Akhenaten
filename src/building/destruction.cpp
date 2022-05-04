@@ -182,7 +182,7 @@ void building_destroy_by_enemy(map_point point) {
     if (building_id > 0) {
         building *b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID) {
-            city_ratings_peace_building_destroyed(b->type);
+            city_ratings_monument_building_destroyed(b->type);
             building_destroy_by_collapse(b);
         }
     } else {

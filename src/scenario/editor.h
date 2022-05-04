@@ -8,7 +8,7 @@ typedef struct {
     int resource;
     int amount;
     int deadline_years;
-    int favor;
+    int kingdom;
 } editor_request;
 
 typedef struct {
@@ -101,13 +101,13 @@ void scenario_editor_toggle_prosperity(void);
 
 void scenario_editor_set_prosperity(int goal);
 
-void scenario_editor_toggle_peace(void);
+void scenario_editor_toggle_monument(void);
 
-void scenario_editor_set_peace(int goal);
+void scenario_editor_set_monument(int goal);
 
-void scenario_editor_toggle_favor(void);
+void scenario_editor_toggle_kingdom(void);
 
-void scenario_editor_set_favor(int goal);
+void scenario_editor_set_kingdom(int goal);
 
 void scenario_editor_toggle_population(void);
 

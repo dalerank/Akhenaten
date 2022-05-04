@@ -18,8 +18,8 @@ static void button_rating(int rating, int param2);
 static generic_button rating_buttons[] = {
         {80,  276, 120, 60, button_rating, button_none, SELECTED_RATING_CULTURE,    0},
         {200, 276, 120, 60, button_rating, button_none, SELECTED_RATING_PROSPERITY, 0},
-        {320, 276, 120, 60, button_rating, button_none, SELECTED_RATING_PEACE,      0},
-        {440, 276, 120, 60, button_rating, button_none, SELECTED_RATING_FAVOR,      0},
+        {320, 276, 120, 60, button_rating, button_none, SELECTED_RATING_MONUMENT,   0},
+        {440, 276, 120, 60, button_rating, button_none, SELECTED_RATING_KINGDOM,    0},
 };
 
 static int focus_button_id;
@@ -73,8 +73,8 @@ static int draw_background(void) {
     // culture
     draw_rating(0, city_rating_culture(), open_play, winning_culture());
     draw_rating(1, city_rating_prosperity(), open_play, winning_prosperity());
-    draw_rating(2, city_rating_peace(), open_play, winning_monuments());
-    draw_rating(3, city_rating_favor(), open_play, winning_kingdom());
+    draw_rating(2, city_rating_monument(), open_play, winning_monuments());
+    draw_rating(3, city_rating_kingdom(), open_play, winning_kingdom());
 
     // bottom info box
     int box_x = 44;
@@ -98,17 +98,17 @@ static int draw_background(void) {
             } else
                 lang_text_draw_multiline(53, 51, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
-        case SELECTED_RATING_PEACE:
+        case SELECTED_RATING_MONUMENT:
             lang_text_draw(53, 3, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-            if (city_rating_peace() <= 90) {
+            if (city_rating_monument() <= 90) {
                 lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
                                          box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
                 lang_text_draw_multiline(53, 52, box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             break;
-        case SELECTED_RATING_FAVOR:
+        case SELECTED_RATING_KINGDOM:
             lang_text_draw(53, 4, box_x + 8, box_y + 4, FONT_NORMAL_WHITE_ON_DARK);
-            if (city_rating_favor() <= 90) {
+            if (city_rating_kingdom() <= 90) {
                 lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
                                          box_x + 8, box_y + 22, box_w, FONT_NORMAL_WHITE_ON_DARK);
             } else
@@ -124,8 +124,8 @@ static int draw_background(void) {
 static void draw_foreground(void) {
     button_border_draw(rating_buttons[0].x, rating_buttons[0].y, rating_buttons[0].width, rating_buttons[0].height, focus_button_id == SELECTED_RATING_CULTURE);
     button_border_draw(rating_buttons[1].x, rating_buttons[1].y, rating_buttons[1].width, rating_buttons[1].height, focus_button_id == SELECTED_RATING_PROSPERITY);
-    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == SELECTED_RATING_PEACE);
-    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, focus_button_id == SELECTED_RATING_FAVOR);
+    button_border_draw(rating_buttons[2].x, rating_buttons[2].y, rating_buttons[2].width, rating_buttons[2].height, focus_button_id == SELECTED_RATING_MONUMENT);
+    button_border_draw(rating_buttons[3].x, rating_buttons[3].y, rating_buttons[3].width, rating_buttons[3].height, focus_button_id == SELECTED_RATING_KINGDOM);
 }
 
 static int handle_mouse(const mouse *m) {
@@ -143,9 +143,9 @@ static int get_tooltip_text(void) {
             return 102;
         case SELECTED_RATING_PROSPERITY:
             return 103;
-        case SELECTED_RATING_PEACE:
+        case SELECTED_RATING_MONUMENT:
             return 104;
-        case SELECTED_RATING_FAVOR:
+        case SELECTED_RATING_KINGDOM:
             return 105;
         default:
             return 0;

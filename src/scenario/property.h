@@ -23,7 +23,7 @@ void scenario_set_campaign_scenario(int scenario_id);
 
 bool scenario_is_mission_rank(int rank);
 int scenario_is_tutorial_before_mission_5(void);
-int scenario_starting_favor(void);
+int scenario_starting_kingdom(void);
 
 int scenario_starting_personal_savings(void);
 

@@ -175,7 +175,7 @@ static void advance_tick(void) {
             city_resource_calculate_food_stocks_and_supply_wheat();
             break;
         case 18:
-            city_resource_calculate_workshop_stocks();
+//            city_resource_calculate_workshop_stocks();
             break;
         case 19:
             building_dock_update_open_water_access();

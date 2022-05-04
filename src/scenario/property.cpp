@@ -34,7 +34,7 @@ int scenario_is_tutorial_before_mission_5(void) {
     return !scenario_data.settings.is_custom && scenario_data.settings.campaign_mission_rank < 5;
 }
 
-int scenario_starting_favor(void) {
+int scenario_starting_kingdom(void) {
     return scenario_data.settings.starting_kingdom;
 }
 int scenario_starting_personal_savings(void) {

@@ -21,7 +21,7 @@ static void button_year(int param1, int param2);
 static void button_amount(int param1, int param2);
 static void button_resource(int param1, int param2);
 static void button_deadline_years(int param1, int param2);
-static void button_favor(int param1, int param2);
+static void button_kingdom(int param1, int param2);
 static void button_delete(int param1, int param2);
 static void button_save(int param1, int param2);
 
@@ -30,7 +30,7 @@ static generic_button buttons[] = {
         {330, 152, 80,  25, button_amount,         button_none},
         {430, 152, 100, 25, button_resource,       button_none},
         {70,  190, 140, 25, button_deadline_years, button_none},
-        {400, 190, 80,  25, button_favor,          button_none},
+        {400, 190, 80,  25, button_kingdom,          button_none},
         {10,  234, 250, 25, button_delete,         button_none},
         {300, 234, 100, 25, button_save,           button_none}
 };
@@ -73,7 +73,7 @@ static void draw_foreground(void) {
 
     lang_text_draw(44, 73, 300, 196, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(400, 190, 80, 25, data.focus_button_id == 5);
-    text_draw_number_centered_prefix(data.request.favor, '+', 400, 196, 80, FONT_NORMAL_BLACK_ON_LIGHT);
+    text_draw_number_centered_prefix(data.request.kingdom, '+', 400, 196, 80, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw(300, 234, 100, 25, data.focus_button_id == 7);
     lang_text_draw_centered(18, 3, 300, 240, 100, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -137,12 +137,12 @@ static void button_deadline_years(int param1, int param2) {
                               set_deadline_years);
 }
 
-static void set_favor(int value) {
-    data.request.favor = value;
+static void set_kingdom(int value) {
+    data.request.kingdom = value;
 }
 
-static void button_favor(int param1, int param2) {
-    window_numeric_input_show(screen_dialog_offset_x() + 260, screen_dialog_offset_y() + 100, 3, 100, set_favor);
+static void button_kingdom(int param1, int param2) {
+    window_numeric_input_show(screen_dialog_offset_x() + 260, screen_dialog_offset_y() + 100, 3, 100, set_kingdom);
 }
 
 static void button_delete(int param1, int param2) {

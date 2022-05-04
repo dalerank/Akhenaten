@@ -145,10 +145,6 @@ void city_resource_toggle_mothballed(int resource) {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
 
-int city_resource_has_workshop_with_room(int workshop_type) {
-    // todo: prevent oversending goods from warehouses etc.
-    return city_data.resource.space_in_workshops[workshop_type] > 0;
-}
 void city_resource_add_produced_to_granary(int amount) {
     city_data.resource.food_produced_this_month += amount;
 }
@@ -297,30 +293,6 @@ void city_resource_calculate_food_stocks_and_supply_wheat(void) {
             if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MARKET)
                 b->data.market.inventory[0] = 200;
 
-        }
-    }
-}
-void city_resource_calculate_workshop_stocks(void) {
-    for (int i = 0; i < 6; i++) {
-        city_data.resource.stored_in_workshops[i] = 0;
-        city_data.resource.space_in_workshops[i] = 0;
-    }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || !building_is_workshop(b->type))
-            continue;
-
-        b->has_road_access = 0;
-        if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0)) {
-            b->has_road_access = 1;
-            int room = 200 - b->stored_full_amount;
-            if (room < 0)
-                room = 0;
-
-            // TODO
-//            int workshop_resource = b->subtype.workshop_type;
-//            city_data.resource.space_in_workshops[workshop_resource] += room;
-//            city_data.resource.stored_in_workshops[workshop_resource] += b->stored_full_amount;
         }
     }
 }

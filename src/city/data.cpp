@@ -101,10 +101,7 @@ int stack_proper_quantity(int full, int resource) {
 #include "empire/city.h"
 
 io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18068);
-    else
-        iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18068 + 836);
+    iob->bind(BIND_SIGNATURE_RAW, &city_data.unused.other_player, 18904);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a0);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a1);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_00a2);
@@ -165,100 +162,72 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.last_used_warehouse);
     for (int i = 0; i < 18; i++)
         iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_27f4[i]);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.entry_point.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.entry_point.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT16, city_data.map.entry_point.private_access(_GRID_OFFSET));
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.exit_point.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.map.exit_point.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT16, city_data.map.exit_point.private_access(_GRID_OFFSET));
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.building.senate.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT8, city_data.building.senate.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT16, city_data.building.senate.private_access(_GRID_OFFSET));
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT32, city_data.map.entry_point.private_access(_GRID_OFFSET));
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT32, city_data.map.exit_point.private_access(_GRID_OFFSET));
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_X));
-        iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_Y));
-        iob->bind(BIND_SIGNATURE_INT32, city_data.building.senate.private_access(_GRID_OFFSET));
-    }
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.entry_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, city_data.map.entry_point.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.map.exit_point.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, city_data.map.exit_point.private_access(_GRID_OFFSET));
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_X));
+    iob->bind(BIND_SIGNATURE_UINT16, city_data.building.senate.private_access(_Y));
+    iob->bind(BIND_SIGNATURE_INT32, city_data.building.senate.private_access(_GRID_OFFSET));
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.senate_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_2828);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.space_in_warehouses[i]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.stored_in_warehouses[i]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trade_status[i]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trading_amount[i]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i]);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind____skip(2);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.space_in_warehouses[i + 1]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.stored_in_warehouses[i + 1]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trade_status[i + 1]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trading_amount[i + 1]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i + 1]);
-    }
+    iob->bind____skip(2);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.space_in_warehouses[i + 1]);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.stored_in_warehouses[i + 1]);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trade_status[i + 1]);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.trading_amount[i + 1]);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.mothballed[i + 1]);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unused_28ca);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granary_food_stored[i]);
-        for (int i = 0; i < 6; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stored_in_workshops[i]);
-        for (int i = 0; i < 6; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.space_in_workshops[i]);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granary_total_stored);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_types_available_num);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_types_eaten_num);
-        for (int i = 0; i < 272; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_2924[i]);
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stockpiled[i]);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind____skip(20);
 
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i + 1]);
-        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
+//    iob->bind____skip(20);
+//    for (int i = 0; i < RESOURCES_MAX; i++)
+//        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i + 1]);
+//    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+//        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
+//    iob->bind____skip(28); // temp
 
-        iob->bind____skip(28); // temp
 
-        int food_index = 0;
-        for (int i = 0; i < 4; i++) // reset available foods quick array
-            city_data.resource.food_types_allowed[i] = 0;
-        for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_available_arr[i]);
-            if (city_data.resource.food_types_available_arr[i]) {
-                city_data.resource.food_types_allowed[food_index] = i;
-                food_index++;
-            }
+    iob->bind____skip(20);
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.unk_00[i]);
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.resource.granary_food_stored[i]);
+    iob->bind____skip(28); // temp
+
+    int food_index = 0;
+    for (int i = 0; i < 4; i++) // reset available foods quick array
+        city_data.resource.food_types_allowed[i] = 0;
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_available_arr[i]);
+        if (city_data.resource.food_types_available_arr[i]) {
+            city_data.resource.food_types_allowed[food_index] = i;
+            food_index++;
         }
-        for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
-            iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_eaten_arr[i]);
-
-        iob->bind____skip(234);
-
-        for (int i = 0; i < RESOURCES_MAX; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stockpiled[i]);
-
-        // TODO: TEMP!!!!
-        city_data.resource.food_types_available_num = 0;
-        city_data.resource.food_types_eaten_num = 0;
     }
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+        iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_eaten_arr[i]);
+
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+        iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_arr_unk_00[i]);
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
+        iob->bind(BIND_SIGNATURE_UINT8, &city_data.resource.food_types_arr_unk_01[i]);
+
+    iob->bind____skip(216);
+
+    for (int i = 0; i < RESOURCES_MAX; i++)
+        iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.stockpiled[i]);
+
+    // TODO: TEMP!!!!
+    city_data.resource.food_types_available_num = 0;
+    city_data.resource.food_types_eaten_num = 0;
+
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_supply_months);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.granaries.operating);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.population.percentage_plebs);
@@ -331,8 +300,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.trade.caravan_backup_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom);
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         iob->bind____skip(8);
     else
@@ -344,8 +313,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.school);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.library);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.academy);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_num_criminals);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_num_rioters);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_num_criminals);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_num_rioters);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.missing.fountain);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.missing.well);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.missing.more_entertainment);
@@ -426,8 +395,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.selected);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity_explanation);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_explanation);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_explanation);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_explanation);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_explanation);
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.player_rank);
@@ -544,11 +513,11 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.gifts[GIFT_MODEST].cost);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.gifts[GIFT_GENEROUS].cost);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.gifts[GIFT_LAVISH].cost);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_salary_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_milestone_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_ignored_request_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.favor_change);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_salary_penalty);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_milestone_penalty);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_ignored_request_penalty);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_last_year);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_change);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.military.native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_native_force_attack);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.building.mission_post_operational);
@@ -571,7 +540,7 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_consumed_last_month);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_produced_last_month);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_produced_this_month);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_riot_cause);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_riot_cause);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.estimated_tax_income);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.tutorial_senate_built); // ok
     iob->bind(BIND_SIGNATURE_INT8, city_data.building.distribution_center.private_access(_X));
@@ -591,8 +560,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.warnings_given);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.days_until_invasion);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.retreat_message_shown);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_destroyed_buildings);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.peace_years_of_peace);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_destroyed_buildings);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_years_of_monument);
     iob->bind(BIND_SIGNATURE_UINT8, &city_data.distant_battle.city);
     iob->bind(BIND_SIGNATURE_UINT8, &city_data.distant_battle.enemy_strength);
     iob->bind(BIND_SIGNATURE_UINT8, &city_data.distant_battle.roman_strength);

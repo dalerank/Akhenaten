@@ -34,10 +34,10 @@ void scenario_request_process_C3(void) {
             if (scenario_data.requests[i].months_to_comply <= 0) {
                 if (state == REQUEST_STATE_DISPATCHED) {
                     city_message_post(true, MESSAGE_REQUEST_RECEIVED, i, 0);
-                    city_ratings_change_favor(scenario_data.requests[i].favor);
+                    city_ratings_change_kingdom(scenario_data.requests[i].kingdom);
                 } else {
                     city_message_post(true, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
-                    city_ratings_change_favor(scenario_data.requests[i].favor / 2);
+                    city_ratings_change_kingdom(scenario_data.requests[i].kingdom / 2);
                 }
                 scenario_data.requests[i].state = REQUEST_STATE_RECEIVED;
                 scenario_data.requests[i].visible = false;
@@ -54,14 +54,14 @@ void scenario_request_process_C3(void) {
                         city_message_post(true, MESSAGE_REQUEST_REFUSED, i, 0);
                         scenario_data.requests[i].state = REQUEST_STATE_OVERDUE;
                         scenario_data.requests[i].months_to_comply = 24;
-                        city_ratings_reduce_favor_missed_request(3);
+                        city_ratings_reduce_kingdom_missed_request(3);
                     }
                 } else if (state == REQUEST_STATE_OVERDUE) {
                     if (scenario_data.requests[i].months_to_comply <= 0) {
                         city_message_post(true, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario_data.requests[i].state = REQUEST_STATE_IGNORED;
                         scenario_data.requests[i].visible = false;
-                        city_ratings_reduce_favor_missed_request(5);
+                        city_ratings_reduce_kingdom_missed_request(5);
                     }
                 }
                 if (!scenario_data.requests[i].can_comply_dialog_shown &&

@@ -88,7 +88,7 @@ void scenario_editor_create(int map_size) {
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario_data.requests[i].deadline_years = 5;
-        scenario_data.requests[i].favor = 8;
+        scenario_data.requests[i].kingdom = 8;
     }
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario_data.invasions[i].from = 8;
@@ -108,7 +108,7 @@ void scenario_editor_request_get(int index, editor_request *request) {
     request->amount = scenario_data.requests[index].amount;
     request->resource = scenario_data.requests[index].resource;
     request->deadline_years = scenario_data.requests[index].deadline_years;
-    request->favor = scenario_data.requests[index].favor;
+    request->kingdom = scenario_data.requests[index].kingdom;
 }
 
 static void sort_requests(void) {
@@ -130,7 +130,7 @@ void scenario_editor_request_delete(int index) {
     scenario_data.requests[index].amount = 0;
     scenario_data.requests[index].resource = 0;
     scenario_data.requests[index].deadline_years = 5;
-    scenario_data.requests[index].favor = 8;
+    scenario_data.requests[index].kingdom = 8;
     sort_requests();
     scenario_data.is_saved = 0;
 }
@@ -140,7 +140,7 @@ void scenario_editor_request_save(int index, editor_request *request) {
     scenario_data.requests[index].amount = request->amount;
     scenario_data.requests[index].resource = request->resource;
     scenario_data.requests[index].deadline_years = request->deadline_years;
-    scenario_data.requests[index].favor = request->favor;
+    scenario_data.requests[index].kingdom = request->kingdom;
     sort_requests();
     scenario_data.is_saved = 0;
 }
@@ -425,22 +425,22 @@ void scenario_editor_set_prosperity(int goal) {
     scenario_data.is_saved = 0;
 }
 
-void scenario_editor_toggle_peace(void) {
+void scenario_editor_toggle_monument(void) {
     scenario_data.win_criteria.monuments.enabled = !scenario_data.win_criteria.monuments.enabled;
     scenario_data.is_saved = 0;
 }
 
-void scenario_editor_set_peace(int goal) {
+void scenario_editor_set_monument(int goal) {
     scenario_data.win_criteria.monuments.goal = goal;
     scenario_data.is_saved = 0;
 }
 
-void scenario_editor_toggle_favor(void) {
+void scenario_editor_toggle_kingdom(void) {
     scenario_data.win_criteria.kingdom.enabled = !scenario_data.win_criteria.kingdom.enabled;
     scenario_data.is_saved = 0;
 }
 
-void scenario_editor_set_favor(int goal) {
+void scenario_editor_set_kingdom(int goal) {
     scenario_data.win_criteria.kingdom.goal = goal;
     scenario_data.is_saved = 0;
 }

@@ -7,7 +7,7 @@ struct trade_price {
     int32_t sell;
 };
 
-static const struct trade_price DEFAULT_PRICES[36] = {
+static const struct trade_price DEFAULT_PRICES[RESOURCES_MAX] = {
         {0,   0},
         {28,  22},
         {38,  30},
@@ -26,7 +26,7 @@ static const struct trade_price DEFAULT_PRICES[36] = {
         {180, 140} // marble, weapons, furniture, pottery
 };
 
-static struct trade_price prices[36];
+static struct trade_price prices[RESOURCES_MAX];
 
 void trade_prices_reset(void) {
     for (int i = 0; i < RESOURCES_MAX; i++) {

@@ -19,8 +19,8 @@
 enum {
     RATING_CULTURE,
     RATING_PROSPERITY,
-    RATING_PEACE,
-    RATING_FAVOR
+    RATING_MONUMENT,
+    RATING_KINGDOM
 };
 
 static void button_rating_toggle(int rating, int param2);
@@ -38,10 +38,10 @@ static generic_button buttons[] = {
         {416, 132, 180, 30, button_rating_value,      button_none, RATING_CULTURE},
         {316, 172, 80,  30, button_rating_toggle,     button_none, RATING_PROSPERITY},
         {416, 172, 180, 30, button_rating_value,      button_none, RATING_PROSPERITY},
-        {316, 212, 80,  30, button_rating_toggle,     button_none, RATING_PEACE},
-        {416, 212, 180, 30, button_rating_value,      button_none, RATING_PEACE},
-        {316, 252, 80,  30, button_rating_toggle,     button_none, RATING_FAVOR},
-        {416, 252, 180, 30, button_rating_value,      button_none, RATING_FAVOR},
+        {316, 212, 80,  30, button_rating_toggle,     button_none, RATING_MONUMENT},
+        {416, 212, 180, 30, button_rating_value,      button_none, RATING_MONUMENT},
+        {316, 252, 80,  30, button_rating_toggle,     button_none, RATING_KINGDOM},
+        {416, 252, 180, 30, button_rating_value,      button_none, RATING_KINGDOM},
         {316, 292, 80,  30, button_time_limit_toggle, button_none},
         {416, 292, 180, 30, button_time_limit_years,  button_none},
         {316, 332, 80,  30, button_survival_toggle,   button_none},
@@ -143,11 +143,11 @@ static void button_rating_toggle(int rating, int param2) {
         case RATING_PROSPERITY:
             scenario_editor_toggle_prosperity();
             break;
-        case RATING_PEACE:
-            scenario_editor_toggle_peace();
+        case RATING_MONUMENT:
+            scenario_editor_toggle_monument();
             break;
-        case RATING_FAVOR:
-            scenario_editor_toggle_favor();
+        case RATING_KINGDOM:
+            scenario_editor_toggle_kingdom();
             break;
     }
 }
@@ -161,11 +161,11 @@ static void button_rating_value(int rating, int param2) {
         case RATING_PROSPERITY:
             callback = scenario_editor_set_prosperity;
             break;
-        case RATING_PEACE:
-            callback = scenario_editor_set_peace;
+        case RATING_MONUMENT:
+            callback = scenario_editor_set_monument;
             break;
-        case RATING_FAVOR:
-            callback = scenario_editor_set_favor;
+        case RATING_KINGDOM:
+            callback = scenario_editor_set_kingdom;
             break;
         default:
             return;

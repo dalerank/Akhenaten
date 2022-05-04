@@ -20,11 +20,11 @@ void scenario_settings_init(void) {
     scenario_data.settings.campaign_scenario_id = 0;
     scenario_data.settings.campaign_mission_rank = 0;
     scenario_data.settings.is_custom = 0;
-    scenario_data.settings.starting_kingdom = difficulty_starting_favor();
+    scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
     scenario_data.settings.starting_personal_savings = 0;
 }
 void scenario_settings_init_mission(void) {
-    scenario_data.settings.starting_kingdom = difficulty_starting_favor();
+    scenario_data.settings.starting_kingdom = difficulty_starting_kingdom();
     scenario_data.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario_data.settings.campaign_mission_rank);
 }
 

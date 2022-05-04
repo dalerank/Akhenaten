@@ -49,12 +49,12 @@ static int determine_victory_state(void) {
     }
     if (winning_monuments()) {
         has_criteria = 1;
-        if (city_data.ratings.peace < winning_monuments())
+        if (city_data.ratings.monument < winning_monuments())
             state = VICTORY_STATE_NONE;
     }
     if (winning_kingdom()) {
         has_criteria = 1;
-        if (city_data.ratings.favor < winning_kingdom())
+        if (city_data.ratings.kingdom < winning_kingdom())
             state = VICTORY_STATE_NONE;
     }
     if (winning_population()) {

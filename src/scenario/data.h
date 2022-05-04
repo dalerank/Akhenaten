@@ -79,7 +79,7 @@ typedef struct {
     int amount;
     int deadline_years;
     int can_comply_dialog_shown;
-    int favor;
+    int kingdom;
     int month;
     int state;
     bool visible;

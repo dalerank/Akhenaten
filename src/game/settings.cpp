@@ -92,7 +92,7 @@ static void load_settings(buffer *buf) {
     data.last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4); //int save_game_mission_id;
     data.tooltips = buf->read_i32();
-    buf->skip(4); //int starting_favor;
+    buf->skip(4); //int starting_kingdom;
     buf->skip(4); //int personal_savings_last_mission;
     buf->skip(4); //int current_mission_id;
     buf->skip(4); //int is_custom_scenario;
@@ -155,7 +155,7 @@ void settings_save(void) {
     buf->write_i32(data.last_advisor);
     buf->skip(4); //int save_game_mission_id;
     buf->write_i32(data.tooltips);
-    buf->skip(4); //int starting_favor;
+    buf->skip(4); //int starting_kingdom;
     buf->skip(4); //int personal_savings_last_mission;
     buf->skip(4); //int current_mission_id;
     buf->skip(4); //int is_custom_scenario;
