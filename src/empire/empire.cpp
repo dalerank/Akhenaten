@@ -53,12 +53,12 @@ const char SCENARIO_FILE[2][2][100] = {
 
 bool empire_city_type_can_trade(int type) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        return type == EMPIRE_CITY_TRADE;
+        return type == EMPIRE_CITY_PHARAOH;
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (type) {
-            case EMPIRE_CITY_PH_PHARAOH_TRADE:
-            case EMPIRE_CITY_PH_EGYPT_TRADE:
-            case EMPIRE_CITY_PH_FOREIGN_TRADE:
+            case EMPIRE_CITY_PHARAOH_TRADING:
+            case EMPIRE_CITY_EGYPTIAN_TRADING:
+            case EMPIRE_CITY_FOREIGN_TRADING:
                 return true;
         }
     }

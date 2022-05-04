@@ -31,7 +31,7 @@ static void fix_image_ids(void) {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use
             && objects[i].obj.type == EMPIRE_OBJECT_CITY
-            && objects[i].city_type == EMPIRE_CITY_OURS) {
+            && objects[i].city_type == EMPIRE_CITY_PHARAOH_TRADING) {
             image_id = objects[i].obj.image_id;
             break;
         }
@@ -81,10 +81,10 @@ void empire_object_init_cities(void) {
         for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
             city->sells_resource[resource] = 0;
             city->buys_resource[resource] = 0;
-            if (city->type == EMPIRE_CITY_DISTANT_ROMAN
-                || city->type == EMPIRE_CITY_DISTANT_FOREIGN
-                || city->type == EMPIRE_CITY_VULNERABLE_ROMAN
-                || city->type == EMPIRE_CITY_FUTURE_ROMAN) {
+            if (city->type == EMPIRE_CITY_OURS
+                || city->type == EMPIRE_CITY_EGYPTIAN
+                || city->type == EMPIRE_CITY_FOREIGN_TRADING
+                || city->type == EMPIRE_CITY_FOREIGN) {
                 continue;
             }
             if (empire_object_city_sells_resource(i, resource))
@@ -138,7 +138,7 @@ const empire_object *empire_object_get_our_city(void) {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use) {
             const empire_object *obj = &objects[i].obj;
-            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_OURS)
+            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_PHARAOH_TRADING)
                 return obj;
 
         }
@@ -198,10 +198,10 @@ int empire_object_get_closest(int x, int y) {
 }
 void empire_object_set_expanded(int object_id, int new_city_type) {
     objects[object_id].city_type = new_city_type;
-    if (new_city_type == EMPIRE_CITY_TRADE)
-        objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
-    else if (new_city_type == EMPIRE_CITY_DISTANT_ROMAN)
-        objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_DISTANT_ROMAN);
+    if (new_city_type == EMPIRE_CITY_PHARAOH)
+        objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_PHARAOH);
+    else if (new_city_type == EMPIRE_CITY_OURS)
+        objects[object_id].obj.expanded.image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_OURS);
 
 }
 
@@ -245,7 +245,7 @@ static int is_trade_city(int index) {
     if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
         return 0;
 
-    return objects[index].city_type > EMPIRE_CITY_OURS && objects[index].city_type < EMPIRE_CITY_FUTURE_ROMAN;
+    return objects[index].city_type > EMPIRE_CITY_PHARAOH_TRADING && objects[index].city_type < EMPIRE_CITY_FOREIGN;
 }
 static int get_trade_amount_code(int index, int resource) {
     if (!is_trade_city(index))

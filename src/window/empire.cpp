@@ -326,46 +326,46 @@ static void draw_city_info(const empire_object *object) {
     const empire_city *city = empire_city_get(data.selected_city);
     if (GAME_ENV == ENGINE_ENV_C3) {
         switch (city->type) {
-            case EMPIRE_CITY_DISTANT_ROMAN:
+            case EMPIRE_CITY_OURS:
                 lang_text_draw_centered(47, 12, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
                 break;
-            case EMPIRE_CITY_VULNERABLE_ROMAN:
+            case EMPIRE_CITY_FOREIGN_TRADING:
                 if (city_military_distant_battle_city_is_roman())
                     lang_text_draw_centered(47, 12, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
                 else {
                     lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
                 }
                 break;
-            case EMPIRE_CITY_FUTURE_TRADE:
-            case EMPIRE_CITY_DISTANT_FOREIGN:
-            case EMPIRE_CITY_FUTURE_ROMAN:
+            case EMPIRE_CITY_EGYPTIAN_TRADING:
+            case EMPIRE_CITY_EGYPTIAN:
+            case EMPIRE_CITY_FOREIGN:
                 lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
                 break;
-            case EMPIRE_CITY_OURS:
+            case EMPIRE_CITY_PHARAOH_TRADING:
                 lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_BUYS, 240, FONT_OBJECT_INFO[GAME_ENV]);
                 break;
-            case EMPIRE_CITY_TRADE:
+            case EMPIRE_CITY_PHARAOH:
                 draw_trade_city_info(object, city);
                 break;
         }
     }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
         switch (city->type) {
-            case EMPIRE_CITY_PH_OURS:
+            case EMPIRE_CITY_OURS:
                 lang_text_draw_centered(47, 1, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
-            case EMPIRE_CITY_PH_PHARAOH:
+            case EMPIRE_CITY_PHARAOH:
                 lang_text_draw_centered(47, 19, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
-            case EMPIRE_CITY_PH_EGYPT:
+            case EMPIRE_CITY_EGYPTIAN:
                 lang_text_draw_centered(47, 13, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
-            case EMPIRE_CITY_PH_FOREIGN:
+            case EMPIRE_CITY_FOREIGN:
                 lang_text_draw_centered(47, 0, x_offset, y_offset + INFO_Y_CITY_DESC, 240, FONT_NORMAL_BLACK_ON_LIGHT);
                 break;
-            case EMPIRE_CITY_PH_PHARAOH_TRADE:
-            case EMPIRE_CITY_PH_EGYPT_TRADE:
-            case EMPIRE_CITY_PH_FOREIGN_TRADE:
+            case EMPIRE_CITY_PHARAOH_TRADING:
+            case EMPIRE_CITY_EGYPTIAN_TRADING:
+            case EMPIRE_CITY_FOREIGN_TRADING:
                 draw_trade_city_info(object, city);
                 break;
         }
@@ -438,12 +438,12 @@ static void draw_empire_object(const empire_object *obj) {
 
     if (GAME_ENV == ENGINE_ENV_C3 && obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
-        if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
-            city->type == EMPIRE_CITY_FUTURE_ROMAN) {
+        if (city->type == EMPIRE_CITY_EGYPTIAN ||
+            city->type == EMPIRE_CITY_FOREIGN) {
             image_id = image_id_from_group(GROUP_EMPIRE_FOREIGN_CITY);
-        } else if (city->type == EMPIRE_CITY_TRADE) {
+        } else if (city->type == EMPIRE_CITY_PHARAOH) {
             // Fix cases where empire map still gives a blue flag for new trade cities (e.g. Massilia in campaign Lugdunum)
-            image_id = image_id_from_group(GROUP_EMPIRE_CITY_TRADE);
+            image_id = image_id_from_group(GROUP_EMPIRE_CITY_PH_PHARAOH);
         }
     }
     else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
@@ -451,16 +451,20 @@ static void draw_empire_object(const empire_object *obj) {
             const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
 
             // draw routes!
-            if (!city->is_open) {
-                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                    draw_trade_route(city->route_id, 2);
-                else
-                    draw_trade_route(city->route_id, 0);
-            } else {
-                if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
-                    draw_trade_route(city->route_id, 3);
-                else
-                    draw_trade_route(city->route_id, 1);
+            if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING ||
+                city->type == EMPIRE_CITY_FOREIGN_TRADING ||
+                city->type == EMPIRE_CITY_PHARAOH_TRADING) {
+                if (!city->is_open) {
+                    if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                        draw_trade_route(city->route_id, 2);
+                    else
+                        draw_trade_route(city->route_id, 0);
+                } else {
+                    if (empire_selected_object() && data.selected_city == empire_city_get_for_object(obj->id))
+                        draw_trade_route(city->route_id, 3);
+                    else
+                        draw_trade_route(city->route_id, 1);
+                }
             }
 
 
@@ -711,11 +715,11 @@ static void handle_input(const mouse *m, const hotkeys *h) {
             data.selected_city = empire_city_get_for_object(selected_object - 1);
             const empire_city *city = empire_city_get(data.selected_city);
 
-            if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_TRADE)
+            if ((GAME_ENV == ENGINE_ENV_C3 && city->type == EMPIRE_CITY_PHARAOH)
                 || (GAME_ENV == ENGINE_ENV_PHARAOH &&
-                    (city->type == EMPIRE_CITY_PH_PHARAOH_TRADE
-                    || city->type == EMPIRE_CITY_PH_EGYPT_TRADE
-                    || city->type == EMPIRE_CITY_PH_FOREIGN_TRADE))) {
+                    (city->type == EMPIRE_CITY_PHARAOH_TRADING
+                    || city->type == EMPIRE_CITY_EGYPTIAN_TRADING
+                    || city->type == EMPIRE_CITY_FOREIGN_TRADING))) {
                 if (city->is_open) {
                     int x_offset = (data.x_min + data.x_max - 500) / 2;
                     int y_offset = data.y_max - 113;
@@ -775,11 +779,11 @@ static int get_tooltip_resource(tooltip_context *c) {
     // we only want to check tooltips on our own closed cities.
     // open city resource tooltips are handled by their respective buttons directly
     if (city->is_open
-        || (GAME_ENV == ENGINE_ENV_C3 && city->type != EMPIRE_CITY_TRADE)
+        || (GAME_ENV == ENGINE_ENV_C3 && city->type != EMPIRE_CITY_PHARAOH)
         || (GAME_ENV == ENGINE_ENV_PHARAOH
-            && city->type != EMPIRE_CITY_PH_PHARAOH_TRADE
-            && city->type != EMPIRE_CITY_PH_EGYPT_TRADE
-            && city->type != EMPIRE_CITY_PH_FOREIGN_TRADE))
+            && city->type != EMPIRE_CITY_PHARAOH_TRADING
+            && city->type != EMPIRE_CITY_EGYPTIAN_TRADING
+            && city->type != EMPIRE_CITY_FOREIGN_TRADING))
         return 0;
 
     int object_id = empire_selected_object() - 1;
@@ -814,7 +818,7 @@ static void get_tooltip_trade_route_type(tooltip_context *c) {
 
     data.selected_city = empire_city_get_for_object(selected_object - 1);
     const empire_city *city = empire_city_get(data.selected_city);
-    if (city->type != EMPIRE_CITY_TRADE || city->is_open)
+    if (city->type != EMPIRE_CITY_PHARAOH || city->is_open)
         return;
 
     int x_offset = (data.x_min + data.x_max + 300) / 2;

@@ -62,8 +62,8 @@ bool empire_can_export_resource(int resource, bool check_if_open) {
 static bool can_produce_resource(int resource) {
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (cities[i].in_use &&
-            ((GAME_ENV == ENGINE_ENV_C3 && cities[i].type == EMPIRE_CITY_OURS)
-            || (GAME_ENV == ENGINE_ENV_PHARAOH && cities[i].type == EMPIRE_CITY_PH_OURS))) {
+            ((GAME_ENV == ENGINE_ENV_C3 && cities[i].type == EMPIRE_CITY_PHARAOH_TRADING)
+            || (GAME_ENV == ENGINE_ENV_PHARAOH && cities[i].type == EMPIRE_CITY_OURS))) {
             if (cities[i].sells_resource[resource] == 1)
                 return true;
         }
@@ -172,7 +172,7 @@ int empire_city_get_vulnerable_roman(void) {
     int city = 0;
     for (int i = 0; i < MAX_CITIES[GAME_ENV]; i++) {
         if (cities[i].in_use) {
-            if (cities[i].type == EMPIRE_CITY_VULNERABLE_ROMAN)
+            if (cities[i].type == EMPIRE_CITY_FOREIGN_TRADING)
                 city = i;
         }
     }
@@ -184,10 +184,10 @@ void empire_city_expand_empire(void) {
         if (!cities[i].in_use)
             continue;
 
-        if (cities[i].type == EMPIRE_CITY_FUTURE_TRADE)
-            cities[i].type = EMPIRE_CITY_TRADE;
-        else if (cities[i].type == EMPIRE_CITY_FUTURE_ROMAN)
-            cities[i].type = EMPIRE_CITY_DISTANT_ROMAN;
+        if (cities[i].type == EMPIRE_CITY_EGYPTIAN_TRADING)
+            cities[i].type = EMPIRE_CITY_PHARAOH;
+        else if (cities[i].type == EMPIRE_CITY_FOREIGN)
+            cities[i].type = EMPIRE_CITY_OURS;
         else {
             continue;
         }
@@ -316,10 +316,10 @@ void empire_city_remove_trader(int city_id, int figure_id) {
 }
 
 void empire_city_set_vulnerable(int city_id) {
-    cities[city_id].type = EMPIRE_CITY_VULNERABLE_ROMAN;
+    cities[city_id].type = EMPIRE_CITY_FOREIGN_TRADING;
 }
 void empire_city_set_foreign(int city_id) {
-    cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
+    cities[city_id].type = EMPIRE_CITY_EGYPTIAN;
 }
 
 io_buffer *iob_empire_cities = new io_buffer([](io_buffer *iob) {

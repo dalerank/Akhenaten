@@ -136,8 +136,8 @@ static void draw_empire_object(const empire_object *obj) {
         return;
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
-        if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
-            city->type == EMPIRE_CITY_FUTURE_ROMAN) {
+        if (city->type == EMPIRE_CITY_EGYPTIAN ||
+            city->type == EMPIRE_CITY_FOREIGN) {
             image_id = image_id_from_group(GROUP_EDITOR_EMPIRE_FOREIGN_CITY);
         }
     } else if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
@@ -202,16 +202,16 @@ static void draw_city_info(const empire_city *city) {
     int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE_ON_DARK);
 
     switch (city->type) {
-        case EMPIRE_CITY_DISTANT_ROMAN:
-        case EMPIRE_CITY_VULNERABLE_ROMAN:
+        case EMPIRE_CITY_OURS:
+        case EMPIRE_CITY_FOREIGN_TRADING:
             lang_text_draw(47, 12, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             break;
-        case EMPIRE_CITY_FUTURE_TRADE:
-        case EMPIRE_CITY_DISTANT_FOREIGN:
-        case EMPIRE_CITY_FUTURE_ROMAN:
+        case EMPIRE_CITY_EGYPTIAN_TRADING:
+        case EMPIRE_CITY_EGYPTIAN:
+        case EMPIRE_CITY_FOREIGN:
             lang_text_draw(47, 0, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             break;
-        case EMPIRE_CITY_OURS: {
+        case EMPIRE_CITY_PHARAOH_TRADING: {
             width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             int resource_x_offset = x_offset + 30 + width;
             for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -222,7 +222,7 @@ static void draw_city_info(const empire_city *city) {
             }
             break;
         }
-        case EMPIRE_CITY_TRADE: {
+        case EMPIRE_CITY_PHARAOH: {
             width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
             int resource_x_offset = x_offset + 30 + width;
             for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
