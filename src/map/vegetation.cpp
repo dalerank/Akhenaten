@@ -33,21 +33,24 @@ void vegetation_deplete(int grid_offset) {
     map_grid_set(&terrain_vegetation_growth, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
-void vegetation_growth_update() {
-    for (int i = 0; i < trees_tiles_cache.size(); ++i) {
-        int grid_offset = trees_tiles_cache.at(i);
-        int growth = map_get_vegetation_growth(grid_offset);
-        if (growth < 255) {
-            random_generate_next();
-            int r = random_short() % 10 + 25;
-            growth += r;
-            if (growth > 255)
-                growth -= 255;
-            map_grid_set(&terrain_vegetation_growth, grid_offset, growth);
-            if (growth == 255)
-                map_tiles_update_vegetation(grid_offset);
-        }
+static void vegetation_tile_update(int grid_offset) {
+    int growth = map_get_vegetation_growth(grid_offset);
+    if (growth < 255) {
+        random_generate_next();
+        int r = random_short() % 10 + 25;
+        growth += r;
+        if (growth > 255)
+            growth -= 255;
+        map_grid_set(&terrain_vegetation_growth, grid_offset, growth);
+        if (growth == 255)
+            map_tiles_update_vegetation(grid_offset);
     }
+}
+void vegetation_growth_update() {
+    for (int i = 0; i < trees_tiles_cache.size(); ++i)
+        vegetation_tile_update(trees_tiles_cache.at(i));
+    for (int i = 0; i < marshland_tiles_cache.size(); ++i)
+        vegetation_tile_update(marshland_tiles_cache.at(i));
 }
 
 io_buffer *iob_vegetation_growth = new io_buffer([](io_buffer *iob) {
