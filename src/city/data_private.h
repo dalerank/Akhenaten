@@ -11,17 +11,17 @@
 #include "map/point.h"
 
 typedef struct {
-    int8_t happiness;
-    int8_t target_happiness;
-    int8_t wrath_bolts;
-    int8_t happy_angels;
-    int8_t blessing_done;
-    int8_t small_curse_done;
-    int32_t months_since_festival;
+    uint8_t mood;
+    uint8_t target_mood;
+    uint8_t wrath_bolts;
+    uint8_t happy_ankhs;
+    uint8_t blessing_done;
+    uint8_t small_curse_done;
+    uint32_t months_since_festival;
     int8_t unused1;
     int8_t unused2;
     int8_t unused3;
-    int8_t is_known;
+    bool is_known;
 } god_status;
 
 extern struct city_data_t {

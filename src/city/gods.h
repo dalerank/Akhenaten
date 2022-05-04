@@ -8,7 +8,7 @@ void city_gods_reset_neptune_blessing(void);
 
 int is_god_known(int god);
 
-void city_gods_calculate_moods(int update_moods);
+void city_gods_calculate_moods(bool update_moods);
 int city_gods_calculate_least_happy(void);
 int city_god_happiness(int god_id);
 int city_god_wrath_bolts(int god_id);

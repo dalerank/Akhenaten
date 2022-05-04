@@ -104,7 +104,7 @@ static void draw_festival_info(void) {
     lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305, 400, FONT_NORMAL_WHITE_ON_DARK);
 }
 static int draw_background(void) {
-    city_gods_calculate_moods(0);
+    city_gods_calculate_moods(false);
     city_culture_calculate();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);

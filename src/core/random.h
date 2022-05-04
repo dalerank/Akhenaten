@@ -75,4 +75,8 @@ void random_around_point(int x_home, int y_home, int x, int y, int *dest_x, int 
 
 bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
+/////
+
+uint16_t anti_scum_random_uint16(bool update = true);
+
 #endif // CORE_RANDOM_H

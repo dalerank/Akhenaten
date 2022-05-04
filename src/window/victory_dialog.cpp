@@ -83,7 +83,7 @@ static void button_continue_governing(int months, int param2) {
     city_victory_continue_governing(months);
     window_city_show();
     city_victory_reset();
-    sound_music_update(1);
+    sound_music_update(true);
 }
 
 void window_victory_dialog_show(void) {

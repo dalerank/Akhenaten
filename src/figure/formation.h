@@ -176,6 +176,6 @@ void formation_move_herds_away(int x, int y);
 
 void formation_calculate_figures(void);
 
-void formation_update_all(int second_time);
+void formation_update_all(bool second_time);
 
 #endif // FIGURE_FORMATION_H

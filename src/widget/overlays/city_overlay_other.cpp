@@ -103,19 +103,19 @@ static void add_god(tooltip_context *c, int god_id) {
 static int get_tooltip_religion(tooltip_context *c, const building *b) {
     if (b->data.house.num_gods < 5) {
         if (b->data.house.temple_ceres)
-            add_god(c, GOD_CERES);
+            add_god(c, GOD_OSIRIS);
 
         if (b->data.house.temple_neptune)
-            add_god(c, GOD_NEPTUNE);
+            add_god(c, GOD_RA);
 
         if (b->data.house.temple_mercury)
-            add_god(c, GOD_MERCURY);
+            add_god(c, GOD_PTAH);
 
         if (b->data.house.temple_mars)
-            add_god(c, GOD_MARS);
+            add_god(c, GOD_SETH);
 
         if (b->data.house.temple_venus)
-            add_god(c, GOD_VENUS);
+            add_god(c, GOD_BAST);
 
     }
     if (b->data.house.num_gods <= 0)

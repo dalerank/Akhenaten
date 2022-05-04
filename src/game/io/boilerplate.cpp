@@ -83,6 +83,7 @@
 #include <core/stopwatch.h>
 #include <SDL.h>
 #include <cinttypes>
+#include <city/culture.h>
 
 void path_build_saves(char *full, const char *filename) {
     strcpy(full, "");
@@ -190,6 +191,7 @@ static void post_load() {
             b->update_road_access();
     }
     building_storage_reset_building_ids();
+    city_culture_update_coverage();
 
     // traders / empire
     trade_prices_reset();
@@ -377,7 +379,7 @@ void GamestateIO::start_loaded_file() {
         game_state_unpause();
         window_city_show();
     }
-    sound_music_update(1);
+    sound_music_update(true);
     last_loaded = LOADED_NULL;
 }
 

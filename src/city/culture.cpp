@@ -8,6 +8,7 @@
 #include "city/festival.h"
 #include "city/population.h"
 #include "core/calc.h"
+#include "gods.h"
 
 static struct {
     int theater;
@@ -78,6 +79,22 @@ static int top(int input) {
     return input > 100 ? 100 : input;
 }
 
+static int god_coverage_total(int god, int temple, int shrine, int complex) {
+    switch (is_god_known(god)) {
+        default:
+            return 0;
+        case GOD_STATUS_PATRON:
+            return 150 * building_count_total(shrine) +
+                   375 * building_count_active(temple) +
+                   8000 * building_count_active(complex);
+            break;
+        case GOD_STATUS_KNOWN:
+            return 300 * building_count_total(shrine) +
+                   750 * building_count_active(temple) +
+                   8000 * building_count_active(complex);
+            break;
+    }
+}
 void city_culture_update_coverage(void) {
     int population = city_data.population.population;
 
@@ -91,40 +108,25 @@ void city_culture_update_coverage(void) {
         coverage.hippodrome = 100;
 
     // religion
-    int oracles = building_count_total(BUILDING_ORACLE);
-    coverage.religion[GOD_CERES] = top(calc_percentage(
-            500 * oracles +
-            750 * building_count_active(BUILDING_TEMPLE_OSIRIS) +
-            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS),
-            population));
-    coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
-            500 * oracles +
-            750 * building_count_active(BUILDING_TEMPLE_RA) +
-            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_RA),
-            population));
-    coverage.religion[GOD_MERCURY] = top(calc_percentage(
-            500 * oracles +
-            750 * building_count_active(BUILDING_TEMPLE_PTAH) +
-            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH),
-            population));
-    coverage.religion[GOD_MARS] = top(calc_percentage(
-            500 * oracles +
-            750 * building_count_active(BUILDING_TEMPLE_SETH) +
-            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_SETH),
-            population));
-    coverage.religion[GOD_VENUS] = top(calc_percentage(
-            500 * oracles +
-            750 * building_count_active(BUILDING_TEMPLE_BAST) +
-            1500 * building_count_active(BUILDING_TEMPLE_COMPLEX_BAST),
-            population));
-    coverage.oracle = top(calc_percentage(500 * oracles, population));
+//    int oracles = building_count_total(BUILDING_ORACLE);
+//    coverage.oracle = top(calc_percentage(500 * oracles, population));
+    coverage.religion[GOD_OSIRIS] = top(calc_percentage(population,
+            god_coverage_total(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS)));
+    coverage.religion[GOD_RA] = top(calc_percentage(population,
+            god_coverage_total(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA)));
+    coverage.religion[GOD_PTAH] = top(calc_percentage(population,
+            god_coverage_total(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH)));
+    coverage.religion[GOD_SETH] = top(calc_percentage(population,
+            god_coverage_total(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH)));
+    coverage.religion[GOD_BAST] = top(calc_percentage(population,
+            god_coverage_total(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST)));
 
     city_data.culture.religion_coverage =
-            coverage.religion[GOD_CERES] +
-            coverage.religion[GOD_NEPTUNE] +
-            coverage.religion[GOD_MERCURY] +
-            coverage.religion[GOD_MARS] +
-            coverage.religion[GOD_VENUS];
+            coverage.religion[GOD_OSIRIS] +
+            coverage.religion[GOD_RA] +
+            coverage.religion[GOD_PTAH] +
+            coverage.religion[GOD_SETH] +
+            coverage.religion[GOD_BAST];
     city_data.culture.religion_coverage /= 5;
 
     // education
@@ -177,7 +179,7 @@ void city_culture_save_state(buffer *buf) {
     buf->write_i32(coverage.colosseum);
     buf->write_i32(coverage.hospital);
     buf->write_i32(coverage.hippodrome);
-    for (int i = GOD_CERES; i <= GOD_VENUS; i++) {
+    for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
         buf->write_i32(coverage.religion[i]);
     }
     buf->write_i32(coverage.oracle);
@@ -194,7 +196,7 @@ void city_culture_load_state(buffer *buf) {
     coverage.colosseum = buf->read_i32();
     coverage.hospital = buf->read_i32();
     coverage.hippodrome = buf->read_i32();
-    for (int i = GOD_CERES; i <= GOD_VENUS; i++) {
+    for (int i = GOD_OSIRIS; i <= GOD_BAST; i++) {
         coverage.religion[i] = buf->read_i32();
     }
     coverage.oracle = buf->read_i32();

@@ -2,6 +2,9 @@
 #include <city/floods.h>
 #include <core/random.h>
 #include <building/construction/build_planner.h>
+#include <city/gods.h>
+#include <building/count.h>
+#include <city/culture.h>
 #include "city.h"
 
 #include "building/menu.h"
@@ -202,7 +205,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// BUILD PLANNER
-    if (true) {
+    if (false) {
         int cl = 90;
         draw_debug_line(str, x, y + 15, cl, "type:", Planner.build_type);
         draw_debug_line(str, x, y + 25, cl, "in progress:", Planner.in_progress);
@@ -216,7 +219,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// RANDOM
-    if (true) {
+    if (false) {
         auto randm = give_me_da_random_data();
 
         int cl = 60;
@@ -228,6 +231,91 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 65, cl, "2_3b:", randm->random2_3bit);
         draw_debug_line(str, x, y + 75, cl, "2_7b:", randm->random2_7bit);
         draw_debug_line(str, x, y + 85, cl, "2_15b:", randm->random2_15bit);
+
+        draw_debug_line(str, x, y + 105, cl, "scum:", anti_scum_random_uint16(false));
+        y += 90;
+    }
+
+    /////// RELIGION
+    if (true) {
+        int cl = 0;
+        text_draw_shadow((uint8_t *) string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"), x, y + 15, COLOR_WHITE);
+        y += 15;
+        int c0 = 60;
+        int c1 = 40;
+        int c2 = 140;
+        int c3 = 220;
+        int c4 = 240;
+        int c5 = 260;
+        int c6 = 290;
+        int c7 = 15;
+        int c8 = 360;
+        if (is_god_known(0) != GOD_STATUS_UNKNOWN) {
+            draw_debug_line_double_left(str, x, y + 15, c0, c1, "Osiris:",
+                                        city_data.religion.gods[0].mood,
+                                        city_data.religion.gods[0].target_mood);
+            draw_debug_line_double_left(str, x + c2, y + 15, 0, c1, "",
+                                        city_data.religion.gods[0].wrath_bolts,
+                                        city_data.religion.gods[0].happy_ankhs);
+            draw_debug_line(str, x + c3, y + 15, cl, "", building_count_total(BUILDING_SHRINE_OSIRIS));
+            draw_debug_line(str, x + c4, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_OSIRIS));
+            draw_debug_line(str, x + c5, y + 15, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
+            draw_debug_line(str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(0));
+            draw_debug_line(str, x + c8, y + 15, cl, "", city_data.religion.gods[0].months_since_festival);
+        }
+        if (is_god_known(1) != GOD_STATUS_UNKNOWN)
+        {
+            draw_debug_line_double_left(str, x, y + 25, c0, c1, "Ra:",
+                                        city_data.religion.gods[1].mood,
+                                        city_data.religion.gods[1].target_mood);
+            draw_debug_line_double_left(str, x + c2, y + 25, 0, c1, "",
+                                        city_data.religion.gods[1].wrath_bolts,
+                                        city_data.religion.gods[1].happy_ankhs);
+            draw_debug_line(str, x + c3, y + 25, cl, "", building_count_total(BUILDING_SHRINE_RA));
+            draw_debug_line(str, x + c4, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_RA));
+            draw_debug_line(str, x + c5, y + 25, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_RA));
+            draw_debug_line(str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(1));
+            draw_debug_line(str, x + c8, y + 25, cl, "", city_data.religion.gods[1].months_since_festival);
+        }
+        if (is_god_known(2) != GOD_STATUS_UNKNOWN) {
+            draw_debug_line_double_left(str, x, y + 35, c0, c1, "Ptah:",
+                                        city_data.religion.gods[2].mood,
+                                        city_data.religion.gods[2].target_mood);
+            draw_debug_line_double_left(str, x + c2, y + 35, 0, c1, "",
+                                        city_data.religion.gods[2].wrath_bolts,
+                                        city_data.religion.gods[2].happy_ankhs);
+            draw_debug_line(str, x + c3, y + 35, cl, "", building_count_total(BUILDING_SHRINE_PTAH));
+            draw_debug_line(str, x + c4, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_PTAH));
+            draw_debug_line(str, x + c5, y + 35, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
+            draw_debug_line(str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(2));
+            draw_debug_line(str, x + c8, y + 35, cl, "", city_data.religion.gods[2].months_since_festival);
+        }
+        if (is_god_known(3) != GOD_STATUS_UNKNOWN) {
+            draw_debug_line_double_left(str, x, y + 45, c0, c1, "Seth:",
+                                        city_data.religion.gods[3].mood,
+                                        city_data.religion.gods[3].target_mood);
+            draw_debug_line_double_left(str, x + c2, y + 45, 0, c1, "",
+                                        city_data.religion.gods[3].wrath_bolts,
+                                        city_data.religion.gods[3].happy_ankhs);
+            draw_debug_line(str, x + c3, y + 45, cl, "", building_count_total(BUILDING_SHRINE_SETH));
+            draw_debug_line(str, x + c4, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_SETH));
+            draw_debug_line(str, x + c5, y + 45, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_SETH));
+            draw_debug_line(str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(3));
+            draw_debug_line(str, x + c8, y + 45, cl, "", city_data.religion.gods[3].months_since_festival);
+        }
+        if (is_god_known(4) != GOD_STATUS_UNKNOWN) {
+            draw_debug_line_double_left(str, x, y + 55, c0, c1, "Bast:",
+                                        city_data.religion.gods[4].mood,
+                                        city_data.religion.gods[4].target_mood);
+            draw_debug_line_double_left(str, x + c2, y + 55, 0, c1, "",
+                                        city_data.religion.gods[4].wrath_bolts,
+                                        city_data.religion.gods[4].happy_ankhs);
+            draw_debug_line(str, x + c3, y + 55, cl, "", building_count_total(BUILDING_SHRINE_BAST));
+            draw_debug_line(str, x + c4, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_BAST));
+            draw_debug_line(str, x + c5, y + 55, cl, "", building_count_active(BUILDING_TEMPLE_COMPLEX_BAST));
+            draw_debug_line(str, x + c6, y + 55, c7, "%", city_culture_coverage_religion(4));
+            draw_debug_line(str, x + c8, y + 55, cl, "", city_data.religion.gods[4].months_since_festival);
+        }
         y += 90;
     }
 

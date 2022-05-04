@@ -92,7 +92,7 @@ static void draw_festival_info(int y_offset) {
         lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 305 + y_offset, 400, FONT_NORMAL_WHITE_ON_DARK);
     }
 }
-static void draw_god_row(int god, int y_offset, int small_temple, int large_temple, int shrine) {
+static void draw_god_row(int god, int y_offset, int temple, int complex, int shrine) {
 //    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
 //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
@@ -116,11 +116,11 @@ static void draw_god_row(int god, int y_offset, int small_temple, int large_temp
         lang_text_draw(59, 37, 460, y_offset, font);
     }
     else {
-        if (is_building_enabled(BUILDING_TEMPLE_COMPLEX_OSIRIS + god))
-            text_draw_number_centered(building_count_total(large_temple), 200, y_offset, 50, font);
+        if (scenario_building_allowed(complex))
+            text_draw_number_centered(building_count_active(complex), 200, y_offset, 50, font);
         else
             lang_text_draw_centered(59, 37, 200, y_offset, 50, font);
-        text_draw_number_centered(building_count_total(small_temple), 265, y_offset, 50, font);
+        text_draw_number_centered(building_count_active(temple), 265, y_offset, 50, font);
         text_draw_number_centered(building_count_total(shrine), 330, y_offset, 50, font);
         text_draw_number_centered(city_god_months_since_festival(god), 390, y_offset, 50, font);
         width = lang_text_draw(59, 20 + city_god_happiness(god) / 10, 460, y_offset, font); //32
@@ -161,11 +161,11 @@ static int draw_background(void) {
 
     // todo: god description when clicking on god name
     // god rows
-    draw_god_row(GOD_CERES, 66, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS);
-    draw_god_row(GOD_NEPTUNE, 106, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA);
-    draw_god_row(GOD_MERCURY, 146, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
-    draw_god_row(GOD_MARS, 186, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
-    draw_god_row(GOD_VENUS, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
+    draw_god_row(GOD_OSIRIS, 66, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_SHRINE_OSIRIS);
+    draw_god_row(GOD_RA, 106, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_SHRINE_RA);
+    draw_god_row(GOD_PTAH, 146, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH);
+    draw_god_row(GOD_SETH, 186, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH);
+    draw_god_row(GOD_BAST, 226, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST);
 
 //    // oracles
 //    lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);

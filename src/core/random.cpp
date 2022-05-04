@@ -177,3 +177,15 @@ io_buffer *iob_random_iv = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_UINT32, &data.iv2);
     random_bits_fill();
 });
+
+/////////
+
+static uint32_t anti_scum_seed = 0;
+// used in OG Pharaoh to get non-deterministic random values
+uint16_t anti_scum_random_uint16(bool update) {
+    if (update) {
+        anti_scum_seed = anti_scum_seed * 214013 + 2531011;
+        return anti_scum_seed >> 0x10 & 0x7fff;
+    } else
+        return anti_scum_seed;
+}

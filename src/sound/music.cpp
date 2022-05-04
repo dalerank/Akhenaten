@@ -167,7 +167,7 @@ void sound_music_play_editor(void) {
         play_track(TRACK_CITY_1);
 
 }
-void sound_music_update(int force) {
+void sound_music_update(bool force) {
     if (data.next_check && !force) {
         --data.next_check;
         return;

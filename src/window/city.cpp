@@ -106,7 +106,6 @@ static void draw_foreground(void) {
     city_view_dirty |= widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY))
         city_message_process_queue();
-
 }
 static void draw_foreground_military(void) {
     widget_top_menu_draw(0);

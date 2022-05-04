@@ -139,10 +139,10 @@ static void advance_tick(void) {
 
     switch (game_time_tick()) {
         case 1:
-            city_gods_calculate_moods(1);
+            city_gods_calculate_moods(true);
             break;
         case 2:
-            sound_music_update(0);
+            sound_music_update(false);
             break;
         case 3:
             widget_minimap_invalidate();
@@ -151,7 +151,7 @@ static void advance_tick(void) {
             city_emperor_update();
             break;
         case 5:
-            formation_update_all(0);
+            formation_update_all(false);
             break;
         case 6:
             map_natives_check_land();
@@ -207,7 +207,7 @@ static void advance_tick(void) {
             map_water_supply_update_houses();
             break;
         case 29:
-            formation_update_all(1);
+            formation_update_all(true);
             break;
         case 30:
             widget_minimap_invalidate();

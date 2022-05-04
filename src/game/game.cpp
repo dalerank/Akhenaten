@@ -213,6 +213,8 @@ void game_run(void) {
         if (window_is_invalid())
             break;
     }
+    if (window_is(WINDOW_CITY))
+        anti_scum_random_uint16();
 }
 void game_draw(void) {
     window_draw(0);

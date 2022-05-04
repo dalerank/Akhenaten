@@ -556,7 +556,7 @@ static void set_legion_max_figures(void) {
     }
 }
 
-void formation_update_all(int second_time) {
+void formation_update_all(bool second_time) {
     formation_calculate_legion_totals();
     formation_calculate_figures();
     update_directions();
