@@ -29,19 +29,19 @@ static struct {
 static void draw_sliding_foreground(void) {
     window_request_refresh();
     data.position += speed_get_delta(&data.slide_speed);
-    if (data.position >= SIDEBAR_EXPANDED_WIDTH[GAME_ENV]) {
+    if (data.position >= SIDEBAR_EXPANDED_WIDTH) {
         data.finished_callback();
         return;
     }
 
     int x_offset = sidebar_common_get_x_offset_expanded();
-//    graphics_set_clip_rectangle(x_offset, 0, SIDEBAR_EXPANDED_WIDTH[GAME_ENV], sidebar_common_get_height()); //TOP_MENU_HEIGHT[GAME_ENV]
+//    graphics_set_clip_rectangle(x_offset, 0, SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height()); //TOP_MENU_HEIGHT
 
     int rel_offset = 0;
     if (data.direction == SLIDE_DIRECTION_IN) {
         if (data.position > SIDEBAR_DECELERATION_OFFSET)
             speed_set_target(&data.slide_speed, 1, SLIDE_ACCELERATION_MILLIS, 1);
-        rel_offset = SIDEBAR_EXPANDED_WIDTH[GAME_ENV] - data.position;
+        rel_offset = SIDEBAR_EXPANDED_WIDTH - data.position;
     } else
         rel_offset = data.position;
     x_offset += rel_offset;

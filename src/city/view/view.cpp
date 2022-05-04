@@ -270,14 +270,14 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
 #include "core/game_environment.h"
 
 static void set_viewport_with_sidebar(void) {
-    return set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT[GAME_ENV],
-                        data.screen_width - SIDEBAR_EXPANDED_WIDTH[GAME_ENV] + 2,
-                        data.screen_height - TOP_MENU_HEIGHT[GAME_ENV]);
+    return set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT,
+                        data.screen_width - SIDEBAR_EXPANDED_WIDTH + 2,
+                        data.screen_height - TOP_MENU_HEIGHT);
 }
 static void set_viewport_without_sidebar(void) {
 
-    set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT[GAME_ENV],
-                 data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT[GAME_ENV]);
+    set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT,
+                 data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 void city_view_set_scale(int scale) {

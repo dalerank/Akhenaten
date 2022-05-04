@@ -252,7 +252,7 @@ void graphics_clear_city_viewport(void) {
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
     while (y < height) {
-        auto b = graphics_get_pixel(0, y + TOP_MENU_HEIGHT[GAME_ENV]);
+        auto b = graphics_get_pixel(0, y + TOP_MENU_HEIGHT);
         memset(b, 0, width * sizeof(color_t));
         y++;
     }

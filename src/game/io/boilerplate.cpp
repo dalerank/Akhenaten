@@ -209,7 +209,6 @@ static void post_load() {
     building_menu_update(BUILDSET_NORMAL);
 
     // city messages
-    city_message_init_scenario();
     city_message_clear_scroll();
 
     // city sounds

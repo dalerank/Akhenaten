@@ -7,13 +7,13 @@
 #include "core/game_environment.h"
 
 int sidebar_common_get_x_offset_expanded(void) {
-    return screen_width() - SIDEBAR_EXPANDED_WIDTH[GAME_ENV];
+    return screen_width() - SIDEBAR_EXPANDED_WIDTH;
 }
 int sidebar_common_get_x_offset_collapsed(void) {
     return screen_width() - SIDEBAR_COLLAPSED_WIDTH;
 }
 int sidebar_common_get_height(void) {
-    return screen_height() - TOP_MENU_HEIGHT[GAME_ENV];
+    return screen_height() - TOP_MENU_HEIGHT;
 }
 
 void sidebar_common_draw_relief(int x_offset, int y_offset, int collection, int image, int is_collapsed) {

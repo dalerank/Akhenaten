@@ -68,13 +68,13 @@ void zoom_map(const mouse *m) {
     if (m->middle.went_up) { // todo: panning with middle mouse
         data.restore = 1;
         data.input_offset.x = m->x;
-        data.input_offset.y = m->y - TOP_MENU_HEIGHT[GAME_ENV];
+        data.input_offset.y = m->y - TOP_MENU_HEIGHT;
     }
     if (m->scrolled != SCROLL_NONE) {
         data.restore = 0;
         data.delta = (m->scrolled == SCROLL_DOWN) ? 20 : -20;
         data.input_offset.x = m->x;
-        data.input_offset.y = m->y - TOP_MENU_HEIGHT[GAME_ENV];
+        data.input_offset.y = m->y - TOP_MENU_HEIGHT;
     }
 }
 

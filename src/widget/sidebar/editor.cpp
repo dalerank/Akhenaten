@@ -50,7 +50,7 @@ static image_button buttons_build[] = {
 };
 
 static void draw_buttons(void) {
-    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT[GAME_ENV], buttons_build, 17);
+    image_buttons_draw(sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT, buttons_build, 17);
 }
 
 static void draw_status(void) {
@@ -133,11 +133,11 @@ static void draw_status(void) {
 void widget_sidebar_editor_draw_background(void) {
     int image_base = image_id_from_group(GROUP_EDITOR_SIDE_PANEL);
     int x_offset = sidebar_common_get_x_offset_expanded();
-    ImageDraw::img_generic(image_base, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+    ImageDraw::img_generic(image_base, x_offset, TOP_MENU_HEIGHT);
     draw_buttons();
     widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_status();
-    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[GAME_ENV],
+    sidebar_common_draw_relief(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT,
                                GROUP_EDITOR_SIDE_PANEL, 0);
 }
 

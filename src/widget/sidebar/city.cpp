@@ -51,57 +51,29 @@ static void button_mission_briefing(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
-static image_button buttons_overlays_collapse_sidebar[][2] = {
-        {
-                {127, 5, 31, 20, IB_NORMAL, 0, 90,  0, button_collapse_expand, button_none, 0, 0, 1},
-                {4, 3, 117, 31, IB_NORMAL, 0, 93, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
-        },
-        {
-                {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1},
-//        {4 - 15 - 5, 2, 117, 20, IB_NORMAL, 93, 0, button_overlay, button_help, 0, MESSAGE_DIALOG_OVERLAYS, 1}
-        }
+static image_button buttons_overlays_collapse_sidebar[1] = {
+        {128, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 7, button_collapse_expand, button_none, 0, 0, 1}
 };
 
-static image_button button_expand_sidebar[][1] = {
-        {
-                {6, 4, 31, 20, IB_NORMAL, 0, 90,  4,  button_collapse_expand, button_none, 0, 0, 1}
-        },
-        {
-                {8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}
-        }
+static image_button button_expand_sidebar[1] = {
+        {8, 0, 31, 20, IB_NORMAL, GROUP_SIDEBAR_UPPER_BUTTONS, 10, button_collapse_expand, button_none, 0, 0, 1}
 };
 
 #define CL_ROW0 21 //22
 
-static image_button buttons_build_collapsed[][20] = {
-        {
-                {2, 32,      39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 0,  button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {2, 67, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 8, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-                {2, 102, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
-                {2, 137, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_WATER, 0, 1},
-                {2, 172, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-                {2, 207, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
-                {2, 242, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
-                {2, 277, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-                {2, 312, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-                {2, 347, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_ENGINEERING, 0, 1},
-                {2, 382, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
-                {2, 417, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
-        },
-        {
-                {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-                {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
-                {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
-                {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
-                {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
-                {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-                {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
-                {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
-                {9, CL_ROW0 + 317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
-                {9, CL_ROW0 + 353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-                {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
-        }
+static image_button buttons_build_collapsed[12] = {
+        {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
+        {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
+        {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
+        {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
+        {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+        {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
+        {9, CL_ROW0 + 212, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 114, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+        {9, CL_ROW0 + 245, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 118, button_build, button_none, BUILD_MENU_RELIGION, 0, 1},
+        {9, CL_ROW0 + 281, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 122, button_build, button_none, BUILD_MENU_EDUCATION, 0, 1},
+        {9, CL_ROW0 + 317, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 126, button_build, button_none, BUILD_MENU_HEALTH, 0, 1},
+        {9, CL_ROW0 + 353, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 130, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
+        {9, CL_ROW0 + 385, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 134, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 };
 
 #define COL1 9
@@ -114,66 +86,32 @@ static image_button buttons_build_collapsed[][20] = {
 #define ROW3 ROW2 + 50 + 1
 #define ROW4 ROW3 + 49 + 4
 
-static image_button buttons_build_expanded[][20] = {
-        {
-                {13, 277,    39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {63, 277,    39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 8, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-                {113, 277,   39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_ROAD,       0, 1},
-                {13, 313,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4,  button_build, button_none, BUILD_MENU_WATER, 0, 1},
-                {63, 313,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_HEALTH,   0, 1},
-                {113, 313,   39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION,     0, 1},
-                {13, 349,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_EDUCATION,     0, 1},
-                {63, 349,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-                {113, 349,   39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-                {13, 385,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_ENGINEERING, 0, 1},
-                {63, 385,    39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_SECURITY,       0, 1},
-                {113, 385,   39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
-                {13, 421,    39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-                {63, 421,    39, 26, IB_NORMAL, GROUP_MESSAGE_ICON,    18, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-                {113, 421,   39, 26, IB_NORMAL, GROUP_MESSAGE_ICON,    22, button_go_to_problem, button_none, 0, 0, 1},
-        },
-        {
-                {COL1, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-                {COL1, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_ROAD,       0, 1},
-                {COL1, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 8,  button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
+static image_button buttons_build_expanded[15] = {
+        {COL1, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 0, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
+        {COL1, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 4, button_build, button_none, BUILD_MENU_ROAD,       0, 1},
+        {COL1, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 8,  button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
 
-                {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_FOOD,  0, 1},
-                {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
-                {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
+        {COL2, ROW1, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 12, button_build, button_none, BUILD_MENU_FOOD,  0, 1},
+        {COL2, ROW2, 36, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 16, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
+        {COL2, ROW3, 36, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 20, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
 
-                {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
-                {COL3, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION,      0, 1},
-                {COL3, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_EDUCATION,      0, 1},
+        {COL3, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 24, button_build, button_none, BUILD_MENU_ENTERTAINMENT, 0, 1},
+        {COL3, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 28, button_build, button_none, BUILD_MENU_RELIGION,      0, 1},
+        {COL3, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_EDUCATION,      0, 1},
 
-                {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_HEALTH,      0, 1},
-                {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
-                {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
+        {COL4, ROW1, 34, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_HEALTH,      0, 1},
+        {COL4, ROW2, 34, 50, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 40, button_build, button_none, BUILD_MENU_ADMINISTRATION, 0, 1},
+        {COL4, ROW3, 34, 49, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 44, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
 
-                {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-                {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-                {COL3, ROW4, 28, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
-//        {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
-        }
+        {COL1, ROW4, 35, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
+        {COL2, ROW4, 38, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 52, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
+        {COL3, ROW4, 28, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_go_to_problem, button_none, 0, 0, 1},
 };
 
-static image_button buttons_top_expanded[][10] = {
-        {
-                {7, 155, 71, 23, IB_NORMAL, GROUP_SIDEBAR_ADVISORS_EMPIRE, 0, button_advisors, button_none, 0, 0, 1},
-                {84, 155, 71, 23, IB_NORMAL, GROUP_SIDEBAR_ADVISORS_EMPIRE, 3, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
-                {7, 184,   33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 0, button_mission_briefing, button_none, 0, 0, 1},
-                {46, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 3, button_rotate_north, button_none, 0, 0, 1},
-                {84, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 6, button_rotate, button_none, 0, 0, 1},
-                {123, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
-        },
-        {
-                {COL1 + 7, 143, 60, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 64, button_advisors, button_none, 0, 0, 1},
-                {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
-//        {COL1, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 0, button_mission_briefing, button_none, 0, 0, 1},
-                {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
-//        {COL2, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 3, button_rotate_north, button_none, 0, 0, 1},
-//        {COL3, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 6, button_rotate, button_none, 0, 0, 1},
-//        {COL4, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
-        }
+static image_button buttons_top_expanded[3] = {
+        {COL1 + 7, 143, 60, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 64, button_advisors, button_none, 0, 0, 1},
+        {COL3 + 4, 143, 62, 36, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 68, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
+        {COL4 - 9, ROW4, 43, 45, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 60, button_mission_briefing, button_none, 0, 0, 1},
 };
 
 static struct {
@@ -465,20 +403,18 @@ static void draw_overlay_text(int x_offset) {
     }
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
-    int width = SIDEBAR_EXPANDED_WIDTH[GAME_ENV];
+    int width = SIDEBAR_EXPANDED_WIDTH;
     if (is_collapsed)
         width = SIDEBAR_COLLAPSED_WIDTH;
     int available_height = sidebar_common_get_height() - SIDEBAR_MAIN_SECTION_HEIGHT;
-    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[GAME_ENV], 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
+    int extra_height = sidebar_extra_draw_background(x_offset, SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT, 162, available_height, is_collapsed, SIDEBAR_EXTRA_DISPLAY_ALL);
     sidebar_extra_draw_foreground();
-    int relief_y_offset =
-            SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT[0] + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height; // + (GAME_ENV == ENGINE_ENV_PHARAOH) * 6;
     sidebar_common_draw_relief(x_offset, relief_y_offset, GROUP_SIDE_PANEL, is_collapsed);
 }
 static void draw_number_of_messages(int x_offset) {
     int messages = city_message_count();
-    buttons_build_expanded[GAME_ENV][13].enabled = messages > 0;
-    buttons_build_expanded[GAME_ENV][14].enabled = city_message_problem_area_count();
+    buttons_build_expanded[13].enabled = messages > 0;
     if (messages) {
         text_draw_number_centered_colored(messages, x_offset + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
         text_draw_number_centered_colored(messages, x_offset + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
@@ -486,52 +422,53 @@ static void draw_number_of_messages(int x_offset) {
 }
 
 static void draw_buttons_collapsed(int x_offset) {
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], button_expand_sidebar[GAME_ENV], 1);
-    image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_build_collapsed[GAME_ENV], 12);
+    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, button_expand_sidebar, 1);
+    image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_collapsed, 12);
 }
 static void draw_buttons_expanded(int x_offset) {
-    buttons_build_expanded[GAME_ENV][12].enabled = game_can_undo();
+    buttons_build_expanded[12].enabled = game_can_undo();
+    buttons_build_expanded[14].enabled = city_message_problem_area_count();
     if (GAME_ENV == ENGINE_ENV_C3) {
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_overlays_collapse_sidebar[GAME_ENV], 2);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_build_expanded[GAME_ENV], 15);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_top_expanded[GAME_ENV], 6);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 2);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 6);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_overlays_collapse_sidebar[GAME_ENV], 1);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_build_expanded[GAME_ENV], 15);
-        image_buttons_draw(x_offset, TOP_MENU_HEIGHT[GAME_ENV], buttons_top_expanded[GAME_ENV], 3);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_overlays_collapse_sidebar, 1);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_build_expanded, 15);
+        image_buttons_draw(x_offset, TOP_MENU_HEIGHT, buttons_top_expanded, 3);
     }
 }
 
 static void refresh_build_menu_buttons(void) {
     int num_buttons = 12;
     for (int i = 0; i < num_buttons; i++) {
-        buttons_build_expanded[GAME_ENV][i].enabled = 1;
-        if (building_menu_count_items(buttons_build_expanded[GAME_ENV][i].parameter1) <= 0)
-            buttons_build_expanded[GAME_ENV][i].enabled = 0;
+        buttons_build_expanded[i].enabled = 1;
+        if (building_menu_count_items(buttons_build_expanded[i].parameter1) <= 0)
+            buttons_build_expanded[i].enabled = 0;
 
-        buttons_build_collapsed[GAME_ENV][i].enabled = 1;
-        if (building_menu_count_items(buttons_build_collapsed[GAME_ENV][i].parameter1) <= 0)
-            buttons_build_collapsed[GAME_ENV][i].enabled = 0;
+        buttons_build_collapsed[i].enabled = 1;
+        if (building_menu_count_items(buttons_build_collapsed[i].parameter1) <= 0)
+            buttons_build_collapsed[i].enabled = 0;
     }
 }
 static void draw_collapsed_background(void) {
     int x_offset = sidebar_common_get_x_offset_collapsed();
     if (GAME_ENV == ENGINE_ENV_C3)
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, true);
 }
 static void draw_expanded_background(int x_offset) {
     if (GAME_ENV == ENGINE_ENV_C3) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        ImageDraw::img_generic(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
+        ImageDraw::img_generic(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT);
         widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
         draw_number_of_messages(x_offset);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT[GAME_ENV]);
-        ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT[GAME_ENV]);
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
+        ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
         widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
         // extra bar spacing on the right
@@ -594,11 +531,11 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar[GAME_ENV], 1, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id)
             data.focus_button_for_tooltip = 12;
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed[GAME_ENV], 12, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id)
             data.focus_button_for_tooltip = button_id + 19;
 
@@ -607,16 +544,16 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
             return true;
 
         int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar[GAME_ENV], 2,
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2,
                                               &button_id);
         if (button_id)
             data.focus_button_for_tooltip = button_id + 9;
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded[GAME_ENV], 15, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id)
             data.focus_button_for_tooltip = button_id + 19;
 
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded[GAME_ENV], 6, &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id)
             data.focus_button_for_tooltip = button_id + 39;
 
@@ -628,18 +565,18 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m) {
     if (city_view_is_sidebar_collapsed())
         return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_collapsed(), 24,
-                                          buttons_build_collapsed[GAME_ENV], 12, 0);
+                                          buttons_build_collapsed, 12, 0);
     else
         return image_buttons_handle_mouse(m, sidebar_common_get_x_offset_expanded(), 24,
-                                          buttons_build_expanded[GAME_ENV], 15, 0);
+                                          buttons_build_expanded, 15, 0);
 }
 int widget_sidebar_city_get_tooltip_text(void) {
     return data.focus_button_for_tooltip;
 }
 
 void widget_sidebar_city_release_build_buttons() {
-    image_buttons_release_press(buttons_build_expanded[GAME_ENV], 20);
-    image_buttons_release_press(buttons_build_collapsed[GAME_ENV], 20);
+    image_buttons_release_press(buttons_build_expanded, 20);
+    image_buttons_release_press(buttons_build_collapsed, 20);
 }
 
 static void slide_finished(void) {
