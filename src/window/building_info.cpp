@@ -375,7 +375,7 @@ static void init(int grid_offset) {
 //                context.warehouse_space_text = building_warehouse_get_space_info(b);
 //                break;
             default:
-                if (b->road_is_accessible)
+                if (b->has_road_access)
                     context.has_road_access = 1;
 //                if (map_has_road_access(b->tile.x(), b->tile.y(), b->size, 0))
 //                    context.has_road_access = 1;

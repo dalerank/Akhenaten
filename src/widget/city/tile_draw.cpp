@@ -622,9 +622,9 @@ void draw_debug(pixel_coordinate pixel, map_point point) {
             break;
         case 3: // ROADS
             if (b_id && map_property_is_draw_tile(grid_offset)) { //&& b->tile.grid_offset() == grid_offset
-                draw_debug_line(str, x0, y + 5, 0, "", b->road_access.x(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
-                draw_debug_line(str, x0, y + 15, 0, "", b->road_access.y(), b->road_is_accessible ? COLOR_GREEN : COLOR_LIGHT_RED);
-                if (b->road_is_accessible) {
+                draw_debug_line(str, x0, y + 5, 0, "", b->road_access.x(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
+                draw_debug_line(str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
+                if (b->has_road_access) {
                     auto tile_coords = mappoint_to_pixel(b->road_access);
                     draw_building(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords.x, tile_coords.y, COLOR_MASK_GREEN);
                 }

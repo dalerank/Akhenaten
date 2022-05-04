@@ -117,7 +117,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance) {
                     min_occupied_dist = dist;
                     min_occupied_building_id = building_id;
                 }
-            } else if (dist < *distance && b->road_is_accessible) {
+            } else if (dist < *distance && b->has_road_access) {
                 *distance = dist;
                 min_free_building_id = building_id;
             }

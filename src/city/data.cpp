@@ -302,11 +302,7 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(8);
-    else
-        for (int i = 0; i < 4; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4238[i]);
+    iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity_treasury_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.theater);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_points.religion);
@@ -352,26 +348,15 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.festival.months_since_festival); // ok
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].target_happiness);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(5);
+    iob->bind____skip(5);
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].happiness);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < MAX_GODS; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].wrath_bolts);
-        for (int i = 0; i < MAX_GODS; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].blessing_done);
-        for (int i = 0; i < MAX_GODS; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].small_curse_done);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        iob->bind____skip(5);
-        for (int i = 0; i < MAX_GODS; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].wrath_bolts);
-        iob->bind____skip(5);
-    }
+    iob->bind____skip(5);
+    for (int i = 0; i < MAX_GODS; i++)
+        iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].wrath_bolts);
+    iob->bind____skip(5);
     iob->bind____skip(15);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(35);
+    iob->bind____skip(35);
 //    for (int i = 0; i < MAX_GODS; i++)
 //        city_data.religion.gods[i].unused1 = main->read_i8();
 //    for (int i = 0; i < MAX_GODS; i++)
@@ -390,60 +375,39 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.education);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.houses.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.figure.rioters);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(20);
+    iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.selected);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.culture_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.prosperity_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.monument_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.ratings.kingdom_explanation);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(8);
+    iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.player_rank);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.personal_savings); // ok
 //    for (int i = 0; i < 2; i++)
 //        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
 //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
 //    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        for (int i = 0; i < 2; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.donate_amount);
-        for (int i = 0; i < 10; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_dock_ids[i]); // at i == 9 <-- 6 became 5 (animals?)
-        for (int i = 0; i < 3; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_439c[i]);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.figure.animals);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_sea_routes);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_land_routes);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.sea_trade_problem_duration);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.land_trade_problem_duration);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_docks);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_wharfs);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
 //        for (int i = 0; i < 2; i++)
 //            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
-        for (int i = 0; i < 2; i++)
-            iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
-        for (int i = 0; i < 10; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_dock_ids[i]);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.temple_complex_placed);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.figure.animals);
-        for (int i = 0; i < 3; i++)
-            iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_439c[i]);
-        iob->bind____skip(2);
-        iob->bind____skip(2);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
-        iob->bind____skip(2);
-        iob->bind____skip(2);
-        iob->bind____skip(2);
-        iob->bind____skip(2);
-        iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.income.donated);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.donated);
+    for (int i = 0; i < 2; i++)
+        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
+    for (int i = 0; i < 10; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_dock_ids[i]);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.building.temple_complex_placed);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.figure.animals);
+    for (int i = 0; i < 3; i++)
+        iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.unknown_439c[i]);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_sea_routes);
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.num_land_routes);
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.trade.sea_trade_problem_duration);
@@ -451,7 +415,7 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_docks);
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.senate_placed);
 //        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.working_wharfs);
-    }
+
     for (int i = 0; i < 2; i++)
         iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.padding_43b2[i]);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.finance.stolen_this_year);
@@ -477,8 +441,6 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.tribute); // ok
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.expenses.tribute);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.tribute_not_paid_last_year);
-    if (GAME_ENV == ENGINE_ENV_C3)
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.tribute_not_paid_total_years);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.festival.selected.god);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.festival.selected.size); // ????
     iob->bind(BIND_SIGNATURE_INT32, &city_data.festival.planned.size);
@@ -593,11 +555,7 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sound.hit_axe);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sound.hit_wolf);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sound.march_wolf);
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        iob->bind____skip(10);
-    else
-        for (int i = 0; i < 6; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unused_45a5[i]);
+    iob->bind____skip(10);
     iob->bind(BIND_SIGNATURE_INT8, &city_data.sentiment.include_tents);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.count);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.emperor.invasion.size);
@@ -624,32 +582,25 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_data.mission.tutorial_disease_message_shown);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.figure.attacking_natives);
 
-    if (GAME_ENV == ENGINE_ENV_C3)
-        for (int i = 0; i < 232; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.unused.unknown_464c[i]); // i=48,68,72
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) { // todo: fill in missing data?
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.building.temple_complex_id);
-        iob->bind____skip(36);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.expenses.requests_and_festivals);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.requests_and_festivals);
-        iob->bind____skip(72);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.estimated_tax_uncollected);
-        iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_X));
-        iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_Y));
-        iob->bind____skip(8);
-        iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.gold_extracted);
-        iob->bind____skip(96);
-        iob->bind(BIND_SIGNATURE_INT16, &city_data.building.festival_square_placed);
-        for (int i = 0; i < MAX_GODS; i++)
-            iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].happy_angels);
-        iob->bind____skip(33);
-        iob->bind____skip(2); // 2800 --> 0     granary space?
-        iob->bind____skip(30);
-        iob->bind____skip(2); // 400 --> 0      granary used (game meat)?
-        iob->bind____skip(378);
-
-//        iob->bind____skip(452); // unknown bytes ??????
-    }
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.building.temple_complex_id);
+    iob->bind____skip(36);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.last_year.expenses.requests_and_festivals);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.expenses.requests_and_festivals);
+    iob->bind____skip(72);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.estimated_tax_uncollected);
+    iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_X));
+    iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_Y));
+    iob->bind____skip(8);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.gold_extracted);
+    iob->bind____skip(96);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.building.festival_square_placed);
+    for (int i = 0; i < MAX_GODS; i++)
+        iob->bind(BIND_SIGNATURE_INT8, &city_data.religion.gods[i].happy_angels);
+    iob->bind____skip(33);
+    iob->bind____skip(2); // 2800 --> 0     granary space?
+    iob->bind____skip(30);
+    iob->bind____skip(2); // 400 --> 0      granary used (game meat)?
+    iob->bind____skip(378);
 });
 io_buffer *iob_city_data_extra = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[0]);

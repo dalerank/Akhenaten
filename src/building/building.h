@@ -60,16 +60,16 @@ public:
 //    short figure_id4; // tower ballista or burning ruin prefect
     unsigned short figure_spawn_delay;
     unsigned char figure_roam_direction;
-    unsigned char has_water_access;
+    bool has_water_access;
     int prev_part_building_id;
     int next_part_building_id;
 //    short stored_loads_c3;
     short stored_full_amount;
-    unsigned char has_well_access;
+    bool has_well_access;
     short num_workers;
     char labor_category;
     unsigned char output_resource_id;
-    unsigned char has_road_access;
+    bool has_road_access;
     unsigned char house_criminal_active;
     short damage_risk;
     short fire_risk;
@@ -164,10 +164,10 @@ public:
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
-    unsigned char ruin_has_plague;
+    bool ruin_has_plague;
     signed char desirability;
-    unsigned char is_deleted;
-    unsigned char is_adjacent_to_water;
+    bool is_deleted;
+    bool is_adjacent_to_water;
     unsigned char storage_id;
     union {
         signed char house_happiness;
@@ -213,7 +213,7 @@ public:
     void clear_related_data();
 
     // figure.c
-    bool road_is_accessible;
+//    bool has_road_access;
 
     const int get_figureID(int i) const {
         return figure_ids_array[i];

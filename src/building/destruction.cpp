@@ -19,7 +19,7 @@
 #include <string.h>
 #include <core/random.h>
 
-static void destroy_on_fire(building *b, int plagued) {
+static void destroy_on_fire(building *b, bool plagued) {
     game_undo_disable();
     b->fire_risk = 0;
     b->damage_risk = 0;
@@ -88,7 +88,7 @@ static void destroy_on_fire(building *b, int plagued) {
     if (waterside_building)
         map_routing_update_water();
 }
-static void destroy_linked_parts(building *b, int on_fire) {
+static void destroy_linked_parts(building *b, bool on_fire) {
     building *part = b;
     for (int i = 0; i < 99; i++) {
         if (part->prev_part_building_id <= 0)
@@ -97,7 +97,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
         int part_id = part->prev_part_building_id;
         part = building_get(part_id);
         if (on_fire)
-            destroy_on_fire(part, 0);
+            destroy_on_fire(part, false);
         else {
             map_building_tiles_set_rubble(part_id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
@@ -111,7 +111,7 @@ static void destroy_linked_parts(building *b, int on_fire) {
             break;
 
         if (on_fire)
-            destroy_on_fire(part, 0);
+            destroy_on_fire(part, false);
         else {
             map_building_tiles_set_rubble(part->id, part->tile.x(), part->tile.y(), part->size);
             part->state = BUILDING_STATE_RUBBLE;
@@ -123,17 +123,17 @@ void building_destroy_by_collapse(building *b) {
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->tile.x(), b->tile.y(), b->size);
     figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
-    destroy_linked_parts(b, 0);
+    destroy_linked_parts(b, false);
 }
 void building_destroy_by_fire(building *b) {
-    destroy_on_fire(b, 0);
-    destroy_linked_parts(b, 1);
+    destroy_on_fire(b, false);
+    destroy_linked_parts(b, true);
 }
 void building_destroy_by_plague(building *b) {
-    destroy_on_fire(b, 1);
+    destroy_on_fire(b, true);
 }
 void building_destroy_by_rioter(building *b) {
-    destroy_on_fire(b, 0);
+    destroy_on_fire(b, false);
 }
 
 int building_destroy_first_of_type(int type) {

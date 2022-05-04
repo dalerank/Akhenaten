@@ -200,7 +200,7 @@ bool building::common_spawn_figure_trigger(int min_houses) {
     check_labor_problem();
     if (has_figure(0))
         return false;
-    if (road_is_accessible) {
+    if (has_road_access) {
         if (main() == this) // only spawn from the main building
             common_spawn_labor_seeker(min_houses);
         int pct_workers = worker_percentage();
@@ -228,7 +228,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
 
     // no checking for work force? doesn't matter anyways.... there's no instance
     // in the game that allows cartpushers to spawn before the workers disappear!
-    if (road_is_accessible) {
+    if (has_road_access) {
         while (stored_full_amount >= min_carry) {
             int amounts_to_carry = fmin(stored_full_amount, max_carry);
             if (only_full_loads)
@@ -687,7 +687,7 @@ void building::spawn_figure_tax_collector() {
 
 void building::spawn_figure_industry() {
     check_labor_problem();
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(50);
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
@@ -699,7 +699,7 @@ void building::spawn_figure_industry() {
 }
 void building::spawn_figure_farms() {
     bool is_floodplain = building_is_floodplain_farm(this);
-    if (!is_floodplain && road_is_accessible) { // only for meadow farms
+    if (!is_floodplain && has_road_access) { // only for meadow farms
         common_spawn_labor_seeker(50);
         if (building_farm_time_to_deliver(false, output_resource_id)) // UGH!!
             spawn_figure_farm_harvests();
@@ -713,7 +713,7 @@ void building::spawn_figure_farm_harvests() {
         // still displays with the harvesting animation.
         if (has_figure_of_type(0, FIGURE_CART_PUSHER))
             return;
-        if (road_is_accessible && data.industry.progress > 0) {
+        if (has_road_access && data.industry.progress > 0) {
             create_cartpusher(output_resource_id, farm_expected_produce(this));
             building_farm_deplete_soil(this);
             data.industry.progress = 0;
@@ -723,7 +723,7 @@ void building::spawn_figure_farm_harvests() {
             num_workers = 0;
         }
     } else { // meadow farms
-        if (road_is_accessible) {
+        if (has_road_access) {
             if (has_figure_of_type(0, FIGURE_CART_PUSHER))
                 return;
             create_cartpusher(output_resource_id, farm_expected_produce(this));
@@ -853,7 +853,7 @@ void building::spawn_figure_warehouse() {
         if (space->id)
             space->show_on_problem_overlay = show_on_problem_overlay;
     }
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(100);
         int resource = 0;
         int amount = 0;
@@ -940,7 +940,7 @@ bool building::can_spawn_hunter() { // no cache because fuck the system (also I 
 }
 void building::spawn_figure_hunting_lodge() {
     check_labor_problem();
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
@@ -983,7 +983,7 @@ bool building::can_spawn_gatherer(figure_type ftype, int max_gatherers_per_build
 }
 void building::spawn_figure_reed_gatherers() {
     check_labor_problem();
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
@@ -1005,7 +1005,7 @@ void building::spawn_figure_reed_gatherers() {
 
 void building::spawn_figure_wood_cutters() {
     check_labor_problem();
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
@@ -1076,7 +1076,7 @@ void building::spawn_figure_tower() {
 void building::spawn_figure_barracks() {
     check_labor_problem();
 //    map_point road;
-    if (road_is_accessible) {
+    if (has_road_access) {
         common_spawn_labor_seeker(100);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
@@ -1121,10 +1121,10 @@ void building::update_road_access() {
 //    map_point road;
     switch (type) {
         case BUILDING_WAREHOUSE:
-            road_is_accessible = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
+            has_road_access = map_has_road_access(tile.x(), tile.y(), 3, &road_access);
             break;
         case BUILDING_BURNING_RUIN:
-            road_is_accessible = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
+            has_road_access = burning_ruin_can_be_accessed(tile.x(), tile.y(), &road_access);
             break;
         case BUILDING_TEMPLE_COMPLEX_OSIRIS:
         case BUILDING_TEMPLE_COMPLEX_RA:
@@ -1133,13 +1133,13 @@ void building::update_road_access() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
             if (is_main()) {
                 int orientation = (5 - (data.monuments.variant / 2)) % 4;
-                road_is_accessible = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
+                has_road_access = map_has_road_access_temple_complex(tile.x(), tile.y(), orientation, false, &road_access);
             }
             break;
         default:
             if (id == 17)
                 int a = 4;
-            road_is_accessible = map_has_road_access(tile.x(), tile.y(), size, &road_access);
+            has_road_access = map_has_road_access(tile.x(), tile.y(), size, &road_access);
             break;
     }
     // TODO: Temple Complexes

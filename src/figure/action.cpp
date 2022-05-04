@@ -236,14 +236,14 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
             }
         } else if (building_is_large_temple(dest->type)) { // TODO: proper return home for temple complexes
             building *main = dest->main();
-            if (main->road_is_accessible) {
+            if (main->has_road_access) {
                 found_road = true;
                 x = main->road_access.x();
                 y = main->road_access.y();
             }
         } else {
             building *main = dest->main();
-            if (main->road_is_accessible) {
+            if (main->has_road_access) {
                 found_road = true;
                 x = main->road_access.x();
                 y = main->road_access.y();
@@ -264,7 +264,7 @@ bool figure::do_gotobuilding(building *dest, bool stop_at_road, int terrainchoic
         }
         // found any road...?
         if (found_road) {
-            destination_tile.set(x, y);
+//            destination_tile.set(x, y);
             return do_goto(x, y, terrainchoice, NEXT_ACTION, FAIL_ACTION);
         } else {
             if (terrainchoice == TERRAIN_USAGE_ROADS && !use_cross_country)
