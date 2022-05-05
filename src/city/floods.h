@@ -31,9 +31,9 @@ typedef struct floods_data {
     int state;              // 1 - 6
     int floodplain_width;   // 0 - 30
     int unk02;              // 01
-} floods_data;
+} floods_data_t;
 
-floods_data* give_me_da_floods_data();
+const floods_data_t * floodplain_data();
 
 void floodplains_init();
 
@@ -44,6 +44,7 @@ int floodplains_flooding_end_cycle();
 int floodplains_flooding_rest_period_cycle();
 
 bool floodplains_is(int state);
+void floodplains_adjust_next_quality(int quality);
 int floodplains_expected_quality();
 int floodplains_expected_month();
 

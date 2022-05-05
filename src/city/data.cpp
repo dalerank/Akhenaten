@@ -10,7 +10,7 @@
 #include <game/io/io_buffer.h>
 #include <core/string.h>
 
-city_data_t *city_give_me_da_city_data() {
+const city_data_t *city_data_struct() {
     return &city_data;
 }
 
@@ -494,9 +494,9 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_44e0[i]);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.venus_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_44ec);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.neptune_double_trade_active);
-    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.mars_spirit_power);
-    city_data.religion.osiris_fertility_modifier = 0; // todo
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.ra_150_export_profits_months_left);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.seth_crush_enemy_troops);
+    city_data.religion.osiris_double_farm_yield = false; // todo
     iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unused_44f8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.angry_message_delay);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.resource.food_consumed_last_month);
@@ -592,7 +592,8 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, city_data.building.festival_square.private_access(_Y));
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &city_data.finance.this_year.income.gold_extracted);
-    iob->bind____skip(96);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.ra_no_traders_months_left);
+    iob->bind____skip(92);
     iob->bind(BIND_SIGNATURE_INT16, &city_data.building.festival_square_placed);
     for (int i = 0; i < MAX_GODS; i++)
         iob->bind(BIND_SIGNATURE_UINT8, &city_data.religion.gods[i].happy_ankhs);
@@ -600,7 +601,18 @@ io_buffer *iob_city_data = new io_buffer([](io_buffer *iob) {
     iob->bind____skip(2); // 2800 --> 0     granary space?
     iob->bind____skip(30);
     iob->bind____skip(2); // 400 --> 0      granary used (game meat)?
-    iob->bind____skip(378);
+    iob->bind____skip(290);
+    iob->bind____skip(4); // something related to Bast plague (minor curse)
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.ra_slightly_increased_trading_months_left);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.ra_harshly_reduced_trading_months_left);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.ra_slightly_reduced_trading_months_left);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_INT16, &city_data.religion.seth_protect_player_troops);
+    iob->bind____skip(6);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.osiris_double_farm_yield);
+    iob->bind(BIND_SIGNATURE_INT32, &city_data.religion.osiris_flood_will_destroy_active);
+    iob->bind____skip(60);
+//    iob->bind____skip(378);
 });
 io_buffer *iob_city_data_extra = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT16, &city_data.unused.faction_bytes[0]);

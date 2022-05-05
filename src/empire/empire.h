@@ -17,7 +17,7 @@ int empire_selected_object(void);
 void empire_clear_selected_object(void);
 void empire_select_object(int x, int y);
 
-int empire_can_export_resource_to_city(int city_id, int resource);
+bool empire_can_export_resource_to_city(int city_id, int resource);
 int empire_can_import_resource_from_city(int city_id, int resource);
 
 #endif // EMPIRE_EMPIRE_H

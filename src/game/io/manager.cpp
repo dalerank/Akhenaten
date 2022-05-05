@@ -247,7 +247,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 
             // 64 bytes     00 00 00 00 ???
             push_chunk(64, false, "junk16", iob_junk16); // 71x 4-bytes emptiness
-            push_chunk(41, false, "tutorial_flags", iob_tutorial_flags); // 41 x 1-byte flag fields
+            push_chunk(41, false, "tutorial_flags_struct", iob_tutorial_flags); // 41 x 1-byte flag fields
             push_chunk(51984, true, "GRID04_8BIT", iob_GRID04_8BIT);
 
             // lone byte ???

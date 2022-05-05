@@ -21,13 +21,13 @@ static struct {
 static void clear_counters(void) {
     memset(&data, 0, sizeof(data));
 }
-static void increase_count(int type, int active) {
+static void increase_count(int type, bool active) {
     ++data.buildings[type].total;
     if (active)
         ++data.buildings[type].active;
 
 }
-static void increase_industry_count(int resource, int active) {
+static void increase_industry_count(int resource, bool active) {
     ++data.industry[resource].total;
     if (active)
         ++data.industry[resource].active;
@@ -90,6 +90,10 @@ void building_count_update(void) {
 
         int type = b->type;
         switch (type) {
+            default:
+                increase_count(type, b->num_workers > 0);
+                break;
+
             // SPECIAL TREATMENT
             // entertainment venues
             case BUILDING_BOOTH:

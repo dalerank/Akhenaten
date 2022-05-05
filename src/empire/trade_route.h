@@ -5,7 +5,14 @@
 #include "game/resource.h"
 
 void trade_route_init(int route_id, int resource, int limit);
-int trade_route_limit(int route_id, int resource);
+
+enum {
+    LIMIT_WITH_BONUS,
+    LIMIT_BASE_ONLY,
+    LIMIT_BONUS_ONLY
+};
+
+int trade_route_limit(int route_id, int resource, int bonus_inclusion = LIMIT_WITH_BONUS);
 int trade_route_traded(int route_id, int resource);
 
 /**
@@ -14,7 +21,7 @@ int trade_route_traded(int route_id, int resource);
  * @param resource Resource
  * @return True on success, false if the limit couldn't be increased
  */
-int trade_route_increase_limit(int route_id, int resource);
+bool trade_route_increase_limit(int route_id, int resource);
 
 /**
  * Decreases the trade limit of the resource
@@ -22,7 +29,7 @@ int trade_route_increase_limit(int route_id, int resource);
  * @param resource Resource
  * @return True on success, false if the limit couldn't be decreased
  */
-int trade_route_decrease_limit(int route_id, int resource);
+bool trade_route_decrease_limit(int route_id, int resource);
 void trade_route_increase_traded(int route_id, int resource);
 void trade_route_reset_traded(int route_id);
 int trade_route_limit_reached(int route_id, int resource);

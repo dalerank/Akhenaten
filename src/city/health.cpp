@@ -25,7 +25,7 @@ static void cause_disease(int total_people) {
     if (city_data.religion.venus_curse_active) {
         // force plague
         chance_value = 0;
-        city_data.religion.venus_curse_active = 0;
+        city_data.religion.venus_curse_active = false;
     }
     if (chance_value > 40 - city_data.health.value)
         return;

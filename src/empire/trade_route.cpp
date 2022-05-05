@@ -1,4 +1,5 @@
 #include <game/io/io_buffer.h>
+#include <city/data_private.h>
 #include "trade_route.h"
 #include "core/game_environment.h"
 
@@ -16,14 +17,53 @@ void trade_route_init(int route_id, int resource, int limit) {
     data[route_id][resource].traded = 0;
 }
 
-int trade_route_limit(int route_id, int resource) {
-    return data[route_id][resource].limit;
+int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
+
+    int bonus_points = 0;
+    if (city_data.religion.ra_slightly_increased_trading_months_left > 0)
+        bonus_points = 1;
+    if (city_data.religion.ra_harshly_reduced_trading_months_left > 0)
+        bonus_points -= 2;
+    else if (city_data.religion.ra_slightly_reduced_trading_months_left > 0)
+        bonus_points -= 1;
+
+    // just to be safe...
+    if (bonus_points < -2)
+        bonus_points = -2;
+    if (bonus_points > 1)
+        bonus_points = 1;
+
+    const int tiers[7] = {0, 0, 0, 1500, 2500, 4000, 4000};
+    int bonus = 0;
+    switch (data[route_id][resource].limit) {
+        case 0:
+            bonus = tiers[2 + bonus_points];
+            break;
+        case 1500:
+            bonus = tiers[3 + bonus_points] - 1500;
+            break;
+        case 2500:
+            bonus = tiers[4 + bonus_points] - 2500;
+            break;
+        case 4000:
+            bonus = tiers[5 + bonus_points] - 4000;
+            break;
+    }
+
+    switch (bonus_inclusion) {
+        case LIMIT_WITH_BONUS:
+            return data[route_id][resource].limit + bonus;
+        case LIMIT_BASE_ONLY:
+            return data[route_id][resource].limit;
+        case LIMIT_BONUS_ONLY:
+            return bonus;
+    }
 }
 int trade_route_traded(int route_id, int resource) {
     return data[route_id][resource].traded;
 }
 
-int trade_route_increase_limit(int route_id, int resource) {
+bool trade_route_increase_limit(int route_id, int resource) {
     switch (data[route_id][resource].limit) {
         case 0:
             data[route_id][resource].limit = 1500;
@@ -35,11 +75,11 @@ int trade_route_increase_limit(int route_id, int resource) {
             data[route_id][resource].limit = 4000;
             break;
         default:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
-int trade_route_decrease_limit(int route_id, int resource) {
+bool trade_route_decrease_limit(int route_id, int resource) {
     switch (data[route_id][resource].limit) {
         case 4000:
             data[route_id][resource].limit = 2500;
@@ -51,9 +91,9 @@ int trade_route_decrease_limit(int route_id, int resource) {
             data[route_id][resource].limit = 0;
             break;
         default:
-            return 0;
+            return false;
     }
-    return 1;
+    return true;
 }
 
 void trade_route_increase_traded(int route_id, int resource) {
@@ -66,7 +106,8 @@ void trade_route_reset_traded(int route_id) {
 }
 
 int trade_route_limit_reached(int route_id, int resource) {
-    return data[route_id][resource].traded >= data[route_id][resource].limit;
+//    return data[route_id][resource].traded >= data[route_id][resource].limit;
+    return data[route_id][resource].traded >= trade_route_limit(route_id, resource);
 }
 
 io_buffer *iob_trade_routes_limits = new io_buffer([](io_buffer *iob) {

@@ -18,9 +18,9 @@ typedef struct random_data {
     int16_t random2_15bit;
     int pool_index;
     int32_t pool[MAX_RANDOM];
-} random_data;
+} random_data_t;
 
-random_data *give_me_da_random_data();
+const random_data_t * random_data_struct();
 
 /**
  * @file
@@ -77,6 +77,7 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
 /////
 
-uint16_t anti_scum_random_uint16(bool update = true);
+uint16_t anti_scum_random_15bit(bool update = true);
+bool anti_scum_random_bool();
 
 #endif // CORE_RANDOM_H

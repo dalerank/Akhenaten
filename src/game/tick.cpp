@@ -68,7 +68,7 @@ static void advance_year(void) {
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
     city_ratings_update(1);
-    city_gods_reset_neptune_blessing();
+//    city_gods_reset_yearly_blessings();
 }
 
 static void advance_month(void) {
@@ -139,7 +139,7 @@ static void advance_tick(void) {
 
     switch (game_time_tick()) {
         case 1:
-            city_gods_calculate_moods(true);
+            city_gods_update(false);
             break;
         case 2:
             sound_music_update(false);

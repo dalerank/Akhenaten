@@ -2,9 +2,9 @@
 #include <game/io/io_buffer.h>
 #include "time.h"
 
-static time_data data;
+static time_data_t data;
 
-time_data* give_me_da_time() {
+const time_data_t *game_time_struct() {
     return &data;
 }
 

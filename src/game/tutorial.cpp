@@ -12,9 +12,9 @@
 #include "scenario/property.h"
 #include "empire/city.h"
 
-static tutorial_flags data;
+static tutorial_flags_t data;
 
-tutorial_flags *give_me_da_tut_flags() {
+const tutorial_flags_t *tutorial_flags_struct() {
     return &data;
 }
 

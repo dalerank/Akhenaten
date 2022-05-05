@@ -14,7 +14,7 @@
 
 static struct {
     // display settings
-    int fullscreen;
+    bool fullscreen;
     int window_width;
     int window_height;
     // sound settings
@@ -29,13 +29,13 @@ static struct {
     int difficulty;
     int tooltips;
     int monthly_autosave;
-    int warnings;
-    int gods_enabled;
-    int victory_video;
+    bool warnings;
+    bool gods_enabled;
+    bool victory_video;
     // pharaoh settings
     int popup_messages;
     int city_names_style;
-    int pyramid_speedup;
+    bool pyramid_speedup;
     // persistent game state
     int last_advisor;
     uint8_t player_name[MAX_PLAYER_NAME];
@@ -47,17 +47,17 @@ static struct {
 } data;
 
 static void load_default_settings(void) {
-    data.fullscreen = 1;
+    data.fullscreen = true;
     data.window_width = 800;
     data.window_height = 600;
 
-    data.sound_effects.enabled = 1;
+    data.sound_effects.enabled = true;
     data.sound_effects.volume = 100;
-    data.sound_music.enabled = 1;
+    data.sound_music.enabled = true;
     data.sound_music.volume = 80;
-    data.sound_speech.enabled = 1;
+    data.sound_speech.enabled = true;
     data.sound_speech.volume = 100;
-    data.sound_city.enabled = 1;
+    data.sound_city.enabled = true;
     data.sound_city.volume = 100;
 
     data.game_speed = 90;
@@ -65,14 +65,14 @@ static void load_default_settings(void) {
 
     data.difficulty = DIFFICULTY_HARD;
     data.tooltips = TOOLTIPS_FULL;
-    data.warnings = 1;
-    data.gods_enabled = 1;
-    data.victory_video = 0;
+    data.warnings = true;
+    data.gods_enabled = true;
+    data.victory_video = false;
     data.last_advisor = ADVISOR_LABOR;
 
     data.popup_messages = 0;
     data.city_names_style = CITIES_OLD_NAMES;
-    data.pyramid_speedup = 0;
+    data.pyramid_speedup = false;
 
     setting_clear_personal_savings();
 }
@@ -319,7 +319,7 @@ void setting_toggle_popup_messages(int flag) {
     data.popup_messages ^= flag;
 }
 
-int setting_gods_enabled(void) {
+bool setting_gods_enabled(void) {
     return data.gods_enabled;
 }
 void setting_toggle_gods_enabled(void) {

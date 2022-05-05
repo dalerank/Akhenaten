@@ -20,11 +20,17 @@ void trade_prices_reset(void);
  */
 int trade_price_buy(int resource);
 
+enum {
+    PRICE_WITH_BONUS,
+    PRICE_ONLY_BASE,
+    PRICE_ONLY_BONUS
+};
+
 /**
  * Get the sell price for the resource
  * @param resource Resource
  */
-int trade_price_sell(int resource);
+int trade_price_sell(int resource, int bonus_inclusion = PRICE_WITH_BONUS);
 
 /**
  * Change the trade price for resource by amount

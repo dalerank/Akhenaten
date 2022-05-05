@@ -41,7 +41,8 @@ enum {
     FESTIVAL_NONE = 0,
     FESTIVAL_SMALL = 1,
     FESTIVAL_LARGE = 2,
-    FESTIVAL_GRAND = 3
+    FESTIVAL_GRAND = 3,
+    FESTIVAL_BAST_SPECIAL = 4,
 };
 
 enum {

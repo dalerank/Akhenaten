@@ -9,7 +9,7 @@ typedef struct time_data {
     int month; // 12 months in a year
     int year;
     int total_days;
-} time_data;
+} time_data_t;
 
 enum {
     MONTH_JANUARY = 0,
@@ -94,6 +94,6 @@ int game_time_advance_month(void);
  */
 void game_time_advance_year(void);
 
-time_data* give_me_da_time();
+const time_data_t * game_time_struct();
 
 #endif // GAME_TIME_H

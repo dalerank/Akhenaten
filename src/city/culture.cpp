@@ -80,7 +80,7 @@ static int top(int input) {
 }
 
 static int god_coverage_total(int god, int temple, int shrine, int complex) {
-    switch (is_god_known(god)) {
+    switch (god_known_status(god)) {
         default:
             return 0;
         case GOD_STATUS_PATRON:

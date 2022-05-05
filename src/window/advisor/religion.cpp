@@ -96,7 +96,7 @@ static void draw_god_row(int god, int y_offset, int temple, int complex, int shr
 //    lang_text_draw(59, 11 + god, 40, y_offset, FONT_NORMAL_WHITE);
 //    lang_text_draw(59, 16 + god, 120, y_offset + 1, FONT_SMALL_PLAIN);
 
-    int is_known = is_god_known(god);
+    int is_known = god_known_status(god);
     font_t font = FONT_NORMAL_WHITE_ON_DARK;
     if (is_known == GOD_STATUS_UNKNOWN)
         font = FONT_NORMAL_YELLOW;

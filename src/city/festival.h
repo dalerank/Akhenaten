@@ -1,7 +1,7 @@
 #ifndef CITY_FESTIVAL_H
 #define CITY_FESTIVAL_H
 
-int city_festival_is_planned(void);
+bool city_festival_is_planned(void);
 int city_festival_months_since_last(void);
 int city_festival_months_till_next(void);
 

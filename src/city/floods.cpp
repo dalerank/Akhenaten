@@ -4,6 +4,7 @@
 #include <map/terrain.h>
 #include <game/io/manager.h>
 #include <map/floodplain.h>
+#include <core/calc.h>
 #include "floods.h"
 
 #include "city/constants.h"
@@ -12,9 +13,9 @@
 #include "buildings.h"
 #include "message.h"
 
-static floods_data data;
+static floods_data_t data;
 
-floods_data* give_me_da_floods_data() {
+const floods_data_t *floodplain_data() {
     return &data;
 }
 
@@ -49,6 +50,10 @@ int floodplains_flooding_rest_period_cycle() {
 
 bool floodplains_is(int state) {
     return data.state == state;
+}
+
+void floodplains_adjust_next_quality(int quality) {
+    data.quality_next = calc_bound(data.quality_next + quality, 0, 100);
 }
 
 int floodplains_expected_quality() {
@@ -181,8 +186,10 @@ void floodplains_tick_update() {
     // update tiles!!
     if (cycle >= cycle_flooding_start && cycle <= cycle_flooding_start + rest_period)
         map_update_floodplain_inundation(1, (29 - data.flood_progress) * 25 + cycle_tick);
-    else if (cycle >= cycle_flooding_end - rest_period && cycle <= cycle_flooding_end)
+    else if (cycle >= cycle_flooding_end - rest_period && cycle <= cycle_flooding_end) {
         map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_tick);
+        city_data.religion.osiris_flood_will_destroy_active = false;
+    }
 
     // update grass growth
     if (cycle_tick % 10 == 0 && (cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period))

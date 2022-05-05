@@ -4,9 +4,9 @@
 #include <game/io/io_buffer.h>
 //#include <cmath>
 
-static random_data data;
+static random_data_t data;
 
-random_data *give_me_da_random_data() {
+const random_data_t * random_data_struct() {
     return &data;
 }
 
@@ -182,10 +182,19 @@ io_buffer *iob_random_iv = new io_buffer([](io_buffer *iob) {
 
 static uint32_t anti_scum_seed = 0;
 // used in OG Pharaoh to get non-deterministic random values
-uint16_t anti_scum_random_uint16(bool update) {
+uint16_t anti_scum_random_15bit(bool update) {
     if (update) {
         anti_scum_seed = anti_scum_seed * 214013 + 2531011;
         return anti_scum_seed >> 0x10 & 0x7fff;
     } else
         return anti_scum_seed;
+}
+bool anti_scum_random_bool() {
+    int randm = anti_scum_random_15bit();
+    randm = randm & 0x80000001;
+    bool rnd_bool_test = randm == 0;
+    if ((int)randm < 0) {
+        rnd_bool_test = (randm - 1 | 0xfffffffe) == 0xffffffff;
+    }
+    return rnd_bool_test;
 }

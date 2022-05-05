@@ -30,7 +30,7 @@ enum {
 };
 
 typedef struct {
-    int enabled;
+    bool enabled;
     int volume;
 } set_sound;
 
@@ -76,7 +76,7 @@ void setting_toggle_pyramid_speedup(void);
 int setting_popup_messages(void);
 void setting_toggle_popup_messages(int flag);
 
-int setting_gods_enabled(void);
+bool setting_gods_enabled(void);
 void setting_toggle_gods_enabled(void);
 
 int setting_difficulty(void);

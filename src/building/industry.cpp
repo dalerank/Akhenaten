@@ -23,6 +23,7 @@
 #include <core/config.h>
 #include <game/time.h>
 #include <map/floodplain.h>
+#include <city/data_private.h>
 
 static int max_progress(building *b) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH && building_is_farm(b->type))
@@ -62,6 +63,17 @@ int building_determine_worker_needed() {
 
 static const float produce_uptick_per_day = 103.5f * 20.0f / 128.0f / 100.0f; // don't ask
 
+//void building_bless_farms(void) {
+//    for (int i = 1; i < MAX_BUILDINGS; i++) {
+//        building *b = building_get(i);
+//        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
+//            b->data.industry.progress = MAX_PROGRESS_RAW;
+//            b->data.industry.curse_days_left = 0;
+//            b->data.industry.blessing_days_left = 16;
+//            update_farm_image(b);
+//        }
+//    }
+//}
 int farm_expected_produce(building *b) {
     int progress = b->data.industry.progress;
     if (!config_get(CONFIG_GP_FIX_FARM_PRODUCE_QUANTITY))
@@ -69,7 +81,10 @@ int farm_expected_produce(building *b) {
     // In OG Pharaoh, the progress value gets counted as if it was rounded
     // down to the lowest 20 points. No idea why! But here's as an option.
 
-    return progress / 2.5;
+    int modifier = 1;
+    if (city_data.religion.osiris_double_farm_yield && building_is_floodplain_farm(b))
+        modifier = 2;
+    return (progress / 2.5) * modifier;
 }
 
 void building_industry_update_production(void) {
@@ -147,8 +162,10 @@ void building_industry_update_farms(void) {
             b->data.industry.progress = 0;
 
         // for floodplain farms: harvest is invoked here!
-        if (is_floodplain && building_farm_time_to_deliver(true))
+        if (is_floodplain && building_farm_time_to_deliver(true)) {
             b->spawn_figure_farm_harvests();
+            city_data.religion.osiris_double_farm_yield = false;
+        }
         update_farm_image(b);
     }
 }
@@ -220,17 +237,6 @@ bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     }
 }
 
-void building_bless_farms(void) {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->output_resource_id && building_is_farm(b->type)) {
-            b->data.industry.progress = MAX_PROGRESS_RAW;
-            b->data.industry.curse_days_left = 0;
-            b->data.industry.blessing_days_left = 16;
-            update_farm_image(b);
-        }
-    }
-}
 void building_curse_farms(int big_curse) {
     // TODO
 //    for (int i = 1; i < MAX_BUILDINGS; i++) {

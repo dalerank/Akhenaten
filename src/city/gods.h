@@ -4,12 +4,20 @@
 #define MAX_GODS 5
 
 void city_gods_reset(void);
-void city_gods_reset_neptune_blessing(void);
 
-int is_god_known(int god);
+int god_known_status(int god);
 
-void city_gods_calculate_moods(bool update_moods);
-int city_gods_calculate_least_happy(void);
+enum {
+    GOD_EVENT_MAJOR_BLESSING = 1,
+    GOD_EVENT_MINOR_BLESSING = 2,
+    GOD_EVENT_MAJOR_CURSE = 3,
+    GOD_EVENT_MINOR_CURSE = 4
+};
+
+void update_curses_and_blessings(int randm_god, int FORCE_EVENT = -1);
+
+void city_gods_update(bool mood_calc_only);
+bool city_gods_calculate_least_happy(void);
 int city_god_happiness(int god_id);
 int city_god_wrath_bolts(int god_id);
 int city_god_happy_angels(int god_id);

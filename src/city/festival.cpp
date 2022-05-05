@@ -10,7 +10,7 @@
 #include "core/config.h"
 #include "buildings.h"
 
-int city_festival_is_planned(void) {
+bool city_festival_is_planned(void) {
     return city_data.festival.planned.size != FESTIVAL_NONE;
 }
 int city_festival_months_since_last(void) {

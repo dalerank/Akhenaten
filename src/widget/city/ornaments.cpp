@@ -366,6 +366,15 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         case BUILDING_WOOD_CUTTERS:
             ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
             break;
+        case BUILDING_LINEN_WORKSHOP:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_JEWELS_WORKSHOP:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_SHIPYARD:
+            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+            break;
     }
 }
 static void draw_granary_stores(const building *b, int x, int y, color_t color_mask) {

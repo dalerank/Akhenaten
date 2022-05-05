@@ -149,21 +149,20 @@ static int get_max_stock_for_population(void) {
     }
 }
 
-int empire_can_export_resource_to_city(int city_id, int resource) {
+bool empire_can_export_resource_to_city(int city_id, int resource) {
     empire_city *city = empire_city_get(city_id);
     if (city_id && trade_route_limit_reached(city->route_id, resource)) {
         // quota reached
-        return 0;
+        return false;
     }
     if (city_resource_count(resource) <= city_resource_trading_amount(resource)) {
         // stocks too low
-        return 0;
+        return false;
     }
     if (city_id == 0 || city->buys_resource[resource])
         return city_int(resource) == TRADE_STATUS_EXPORT;
-    else {
-        return 0;
-    }
+    else
+        return false;
 }
 int empire_can_import_resource_from_city(int city_id, int resource) {
     empire_city *city = empire_city_get(city_id);

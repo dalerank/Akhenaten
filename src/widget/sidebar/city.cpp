@@ -193,7 +193,7 @@ static void draw_debug_ui(int x, int y) {
 
     /////// TIME
     if (true) {
-        auto time = give_me_da_time();
+        auto time = game_time_struct();
 
         draw_debug_line(str, x, y + 15, 50, "tick:", time->tick); draw_debug_line(str, x + 80, y + 15, 50, "iscycle:", game_time_absolute_tick() % 25 == 0);
         draw_debug_line(str, x, y + 25, 50, "day:", time->day);
@@ -220,7 +220,7 @@ static void draw_debug_ui(int x, int y) {
 
     /////// RANDOM
     if (false) {
-        auto randm = give_me_da_random_data();
+        auto randm = random_data_struct();
 
         int cl = 60;
         draw_debug_line(str, x, y + 15, cl, "iv1:", randm->iv1);
@@ -232,7 +232,7 @@ static void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 75, cl, "2_7b:", randm->random2_7bit);
         draw_debug_line(str, x, y + 85, cl, "2_15b:", randm->random2_15bit);
 
-        draw_debug_line(str, x, y + 105, cl, "scum:", anti_scum_random_uint16(false));
+        draw_debug_line(str, x, y + 105, cl, "scum:", anti_scum_random_15bit(false));
         y += 90;
     }
 
@@ -250,7 +250,7 @@ static void draw_debug_ui(int x, int y) {
         int c6 = 290;
         int c7 = 15;
         int c8 = 360;
-        if (is_god_known(0) != GOD_STATUS_UNKNOWN) {
+        if (god_known_status(0) != GOD_STATUS_UNKNOWN) {
             draw_debug_line_double_left(str, x, y + 15, c0, c1, "Osiris:",
                                         city_data.religion.gods[0].mood,
                                         city_data.religion.gods[0].target_mood);
@@ -263,7 +263,7 @@ static void draw_debug_ui(int x, int y) {
             draw_debug_line(str, x + c6, y + 15, c7, "%", city_culture_coverage_religion(0));
             draw_debug_line(str, x + c8, y + 15, cl, "", city_data.religion.gods[0].months_since_festival);
         }
-        if (is_god_known(1) != GOD_STATUS_UNKNOWN)
+        if (god_known_status(1) != GOD_STATUS_UNKNOWN)
         {
             draw_debug_line_double_left(str, x, y + 25, c0, c1, "Ra:",
                                         city_data.religion.gods[1].mood,
@@ -277,7 +277,7 @@ static void draw_debug_ui(int x, int y) {
             draw_debug_line(str, x + c6, y + 25, c7, "%", city_culture_coverage_religion(1));
             draw_debug_line(str, x + c8, y + 25, cl, "", city_data.religion.gods[1].months_since_festival);
         }
-        if (is_god_known(2) != GOD_STATUS_UNKNOWN) {
+        if (god_known_status(2) != GOD_STATUS_UNKNOWN) {
             draw_debug_line_double_left(str, x, y + 35, c0, c1, "Ptah:",
                                         city_data.religion.gods[2].mood,
                                         city_data.religion.gods[2].target_mood);
@@ -290,7 +290,7 @@ static void draw_debug_ui(int x, int y) {
             draw_debug_line(str, x + c6, y + 35, c7, "%", city_culture_coverage_religion(2));
             draw_debug_line(str, x + c8, y + 35, cl, "", city_data.religion.gods[2].months_since_festival);
         }
-        if (is_god_known(3) != GOD_STATUS_UNKNOWN) {
+        if (god_known_status(3) != GOD_STATUS_UNKNOWN) {
             draw_debug_line_double_left(str, x, y + 45, c0, c1, "Seth:",
                                         city_data.religion.gods[3].mood,
                                         city_data.religion.gods[3].target_mood);
@@ -303,7 +303,7 @@ static void draw_debug_ui(int x, int y) {
             draw_debug_line(str, x + c6, y + 45, c7, "%", city_culture_coverage_religion(3));
             draw_debug_line(str, x + c8, y + 45, cl, "", city_data.religion.gods[3].months_since_festival);
         }
-        if (is_god_known(4) != GOD_STATUS_UNKNOWN) {
+        if (god_known_status(4) != GOD_STATUS_UNKNOWN) {
             draw_debug_line_double_left(str, x, y + 55, c0, c1, "Bast:",
                                         city_data.religion.gods[4].mood,
                                         city_data.religion.gods[4].target_mood);
@@ -321,7 +321,7 @@ static void draw_debug_ui(int x, int y) {
 
     /////// FLOODS
     if (false) {
-        auto floods = give_me_da_floods_data();
+        auto floods = floodplain_data();
 
         int c_curr = floodplains_current_cycle();
         int c_start = floodplains_flooding_start_cycle();
@@ -392,7 +392,7 @@ static void draw_debug_ui(int x, int y) {
     }
 
     /////// TUTORIAL
-    if (false) {auto flags = give_me_da_tut_flags();
+    if (false) {auto flags = tutorial_flags_struct();
         const char* const flagnames[41] = {
                 "fire",
                 "pop_150",

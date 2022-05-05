@@ -59,9 +59,9 @@ typedef struct tutorial_flags {
         bool tut8_start;
 
     } pharaoh;
-} tutorial_flags;
+} tutorial_flags_t;
 
-tutorial_flags *give_me_da_tut_flags();
+const tutorial_flags_t * tutorial_flags_struct();
 
 void tutorial_init(void);
 

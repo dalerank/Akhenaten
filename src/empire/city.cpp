@@ -13,6 +13,7 @@
 #include "core/game_environment.h"
 
 #include <string.h>
+#include <city/data_private.h>
 
 const static int MAX_CITIES[2] = {
         41,
@@ -196,6 +197,8 @@ void empire_city_expand_empire(void) {
 }
 
 static bool generate_trader(int city_id, empire_city *city) {
+    if (city_data.religion.ra_no_traders_months_left > 0)
+        return false;
     int max_traders = 0;
     int num_resources = 0;
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
@@ -217,9 +220,8 @@ static bool generate_trader(int city_id, empire_city *city) {
     if (num_resources > 1) {
         if (max_traders % num_resources)
             max_traders = max_traders / num_resources + 1;
-        else {
+        else
             max_traders = max_traders / num_resources;
-        }
     }
     if (max_traders <= 0)
         return false;
@@ -228,17 +230,15 @@ static bool generate_trader(int city_id, empire_city *city) {
     if (max_traders == 1) {
         if (!city->trader_figure_ids[0])
             index = 0;
-        else {
+        else
             return false;
-        }
     } else if (max_traders == 2) {
         if (!city->trader_figure_ids[0])
             index = 0;
         else if (!city->trader_figure_ids[1])
             index = 1;
-        else {
+        else
             return false;
-        }
     } else { // 3
         if (!city->trader_figure_ids[0])
             index = 0;
@@ -246,9 +246,8 @@ static bool generate_trader(int city_id, empire_city *city) {
             index = 1;
         else if (!city->trader_figure_ids[2])
             index = 2;
-        else {
+        else
             return false;
-        }
     }
 
     if (city->trader_entry_delay > 0) {

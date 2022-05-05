@@ -15,8 +15,8 @@ typedef struct {
     uint8_t target_mood;
     uint8_t wrath_bolts;
     uint8_t happy_ankhs;
-    uint8_t blessing_done;
-    uint8_t small_curse_done;
+    bool blessing_done;
+    bool curse_done;
     uint32_t months_since_festival;
     int8_t unused1;
     int8_t unused2;
@@ -283,11 +283,17 @@ extern struct city_data_t {
         god_status gods[5];
         int32_t least_happy_god;
         int32_t angry_message_delay;
-        int32_t venus_curse_active;
-        int32_t neptune_double_trade_active;
+        bool venus_curse_active;
+        int32_t ra_150_export_profits_months_left;
+        int32_t ra_harshly_reduced_trading_months_left;
+        int32_t ra_no_traders_months_left;
+        int32_t ra_slightly_reduced_trading_months_left;
+        int32_t ra_slightly_increased_trading_months_left;
         int32_t neptune_sank_ships;
-        int32_t mars_spirit_power;
-        int32_t osiris_fertility_modifier;
+        int32_t seth_crush_enemy_troops;
+        int32_t seth_protect_player_troops;
+        bool osiris_double_farm_yield;
+        bool osiris_flood_will_destroy_active;
     } religion;
     struct {
         int32_t theater_shows;
@@ -450,6 +456,6 @@ extern struct city_data_t {
     } unused;
 } city_data;
 
-city_data_t *city_give_me_da_city_data();
+const city_data_t * city_data_struct();
 
 #endif // CITY_DATA_PRIVATE_H
