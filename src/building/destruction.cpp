@@ -128,6 +128,7 @@ void building_destroy_by_collapse(building *b) {
 void building_destroy_by_fire(building *b) {
     destroy_on_fire(b, false);
     destroy_linked_parts(b, true);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 void building_destroy_by_plague(building *b) {
     destroy_on_fire(b, true);

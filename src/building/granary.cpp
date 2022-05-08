@@ -467,7 +467,6 @@ void building_granary_warehouse_curse(int big) {
         city_message_disable_sound_for_next_message();
         city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
         building_destroy_by_fire(max_building);
-        sound_effect_play(SOUND_EFFECT_EXPLOSION);
         map_routing_update_land();
     } else {
         if (max_building->type == BUILDING_WAREHOUSE)

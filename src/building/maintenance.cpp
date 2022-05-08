@@ -77,19 +77,16 @@ void building_maintenance_update_burning_ruins(void) {
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
             building_destroy_by_fire(building_get(next_building_id));
-            sound_effect_play(SOUND_EFFECT_EXPLOSION);
             recalculate_terrain = 1;
         } else {
             next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir1));
             if (next_building_id && !building_get(next_building_id)->fire_proof) {
                 building_destroy_by_fire(building_get(next_building_id));
-                sound_effect_play(SOUND_EFFECT_EXPLOSION);
                 recalculate_terrain = 1;
             } else {
                 next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir2));
                 if (next_building_id && !building_get(next_building_id)->fire_proof) {
                     building_destroy_by_fire(building_get(next_building_id));
-                    sound_effect_play(SOUND_EFFECT_EXPLOSION);
                     recalculate_terrain = 1;
                 }
             }
@@ -146,7 +143,6 @@ static void fire_building(building *b) {
         city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->tile.grid_offset());
 
     building_destroy_by_fire(b);
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 void building_maintenance_check_fire_collapse(void) {

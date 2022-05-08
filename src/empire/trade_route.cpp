@@ -35,7 +35,8 @@ int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
 
     const int tiers[7] = {0, 0, 0, 1500, 2500, 4000, 4000};
     int bonus = 0;
-    switch (data[route_id][resource].limit) {
+    int base = data[route_id][resource].limit;
+    switch (base) {
         case 0:
             bonus = tiers[2 + bonus_points];
             break;
@@ -52,9 +53,9 @@ int trade_route_limit(int route_id, int resource, int bonus_inclusion) {
 
     switch (bonus_inclusion) {
         case LIMIT_WITH_BONUS:
-            return data[route_id][resource].limit + bonus;
+            return base + bonus;
         case LIMIT_BASE_ONLY:
-            return data[route_id][resource].limit;
+            return base;
         case LIMIT_BONUS_ONLY:
             return bonus;
     }

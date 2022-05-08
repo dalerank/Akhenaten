@@ -64,22 +64,23 @@ static image_button image_button_advisor[] = {
 static int ADVISOR_BUTTON_X = 0;
 
 static generic_button generic_button_trade_resource[] = {
+        // NONE
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_GRAIN,      0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MEAT, 0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_LETTUCE,      0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_STRAW,     0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_BARLEY,      0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_CHICKPEAS,     0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_POMEGRANATES,      0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_FIGS,    0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_BEER,       0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MEAT,     0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_COPPER,       0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_GEMS,  0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_CLAY,         0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_MARBLE,    0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_WEAPONS,   0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_LUXURY_GOODS,    0},
-        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_POTTERY,   0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_FISH,       0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_GAMEMEAT,     0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_STRAW,       0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_WEAPONS,  0},
         //
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_CLAY,         0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_BRICKS,    0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_POTTERY,   0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_BARLEY,    0},
+        {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_BEER,   0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_FLAX,         0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_LINEN,        0},
         {0, 0, 101, 22, button_show_resource_window, button_none, RESOURCE_GEMS,         0},
@@ -162,13 +163,16 @@ static void draw_trade_route(int route_id, int effect) {
     int image_id = 0;
     switch (effect) {
         case 0: // closed
+            return;
             image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
             break;
-        case 1: // open
-            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 181;
-            break;
         case 2: // highlighted, closed
+            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
+//            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 201;
+            break;
+        case 1: // open
             image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 201;
+//            image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 181;
             break;
         case 3: // highlighted, open
             image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 186;
@@ -203,6 +207,13 @@ static void draw_trade_route(int route_id, int effect) {
     }
 }
 
+static int column_idx(int index) {
+    return index % 2;
+}
+static int row_idx(int index) {
+    return index / 2;
+}
+
 static void draw_trade_resource(int resource, int trade_max, int x_offset, int y_offset) {
     graphics_draw_inset_rect(x_offset, y_offset, TRADE_RESOURCE_SIZE[GAME_ENV], TRADE_RESOURCE_SIZE[GAME_ENV]);
     ImageDraw::img_generic(resource_get_icon(resource), x_offset + 1, y_offset + 1);
@@ -211,12 +222,15 @@ static void draw_trade_resource(int resource, int trade_max, int x_offset, int y
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 24, 1);
 
     switch (trade_max) {
+        case 1500:
         case 15:
             ImageDraw::img_generic(image_id_from_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
             break;
+        case 2500:
         case 25:
             ImageDraw::img_generic(image_id_from_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
             break;
+        case 4000:
         case 40:
             ImageDraw::img_generic(image_id_from_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
             break;
@@ -237,8 +251,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             if (!empire_object_city_sells_resource(object->id, resource))
                 continue;
 
-            int column_offset = TRADE_COLUMN_SPACING * (index / 4) - 150;
-            int row_offset = TRADE_ROW_SPACING * (index % 4) + 20;
+            int column_offset = TRADE_COLUMN_SPACING * column_idx(index) - 150;
+            int row_offset = TRADE_ROW_SPACING * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
             draw_trade_resource(resource, trade_max, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 5);
@@ -263,8 +277,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             if (!empire_object_city_buys_resource(object->id, resource))
                 continue;
 
-            int column_offset = TRADE_COLUMN_SPACING * (index / 4) + 200;
-            int row_offset = TRADE_ROW_SPACING * (index % 4) + 20;
+            int column_offset = TRADE_COLUMN_SPACING * column_idx(index) + 200;
+            int row_offset = TRADE_ROW_SPACING * row_idx(index) + 20;
 
             int trade_max = trade_route_limit(city->route_id, resource);
             draw_trade_resource(resource, trade_max, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 5);
@@ -730,14 +744,14 @@ static void handle_input(const mouse *m, const hotkeys *h) {
                     for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
 
                         if (empire_object_city_sells_resource(obj->id, resource)) {
-                            int column_offset = TRADE_COLUMN_SPACING * (index_sell / 4) - 150;
-                            int row_offset = TRADE_ROW_SPACING * (index_sell % 4) + 20;
+                            int column_offset = TRADE_COLUMN_SPACING * column_idx(index_sell) - 150;
+                            int row_offset = TRADE_ROW_SPACING * row_idx(index_sell) + 20;
                             generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 7,
                                                          generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_sell++;
                         } else if (empire_object_city_buys_resource(obj->id, resource)) {
-                            int column_offset = TRADE_COLUMN_SPACING * (index_buy / 4) + 200;
-                            int row_offset = TRADE_ROW_SPACING * (index_buy % 4) + 20;
+                            int column_offset = TRADE_COLUMN_SPACING * column_idx(index_buy) + 200;
+                            int row_offset = TRADE_ROW_SPACING * row_idx(index_buy) + 20;
                             generic_buttons_handle_mouse(m, x_offset + column_offset + 125, y_offset + INFO_Y_TRADED + row_offset - 7,
                                                          generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_buy++;
@@ -900,7 +914,6 @@ void window_empire_show_checked(void) {
     tutorial_availability avail = tutorial_empire_availability();
     if (avail == AVAILABLE || scenario_is_custom())
         window_empire_show();
-    else {
+    else
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
-    }
 }

@@ -2,6 +2,7 @@
 #define EMPIRE_OBJECT_H
 
 #include "core/buffer.h"
+#include "game/resource.h"
 
 typedef struct {
     int id;
@@ -24,14 +25,18 @@ typedef struct {
     int invasion_years;
 } empire_object;
 
+#define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
+#define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
+
 typedef struct {
-    int in_use;
+    int in_use; // this can be 2, so it's an int!
     int city_type;
     int city_name_id;
     int trade_route_open;
     int trade_route_cost;
-    int city_sells_resource[10];
-    int city_buys_resource[8];
+    int city_sells_resource[EMPIRE_OBJ_MAX_SOLD_RESOURCES];
+    int city_buys_resource[EMPIRE_OBJ_MAX_BOUGHT_RESOURCES];
+    int trade_demand[RESOURCES_MAX];
     int trade40;
     int trade25;
     int trade15;
@@ -56,8 +61,8 @@ int empire_object_get_closest(int x, int y);
 
 void empire_object_set_expanded(int object_id, int new_city_type);
 
-int empire_object_city_buys_resource(int object_id, int resource);
-int empire_object_city_sells_resource(int object_id, int resource);
+bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object = false);
+bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object = false);
 
 int empire_object_update_animation(const empire_object *obj, int image_id);
 

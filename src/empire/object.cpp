@@ -9,6 +9,7 @@
 #include "scenario/empire.h"
 #include "core/game_environment.h"
 #include <game/io/io_buffer.h>
+#include <game/io/manager.h>
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -23,8 +24,46 @@ void empire_object_foreach(void (*callback)(const empire_object *)) {
     }
 }
 
-static int get_trade_amount_code(int index, int resource);
-static int is_sea_trade_route(int route_id);
+static bool is_trade_city(int index) {
+    if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
+        return 0;
+
+    return (objects[index].city_type == EMPIRE_CITY_OURS ||
+            objects[index].city_type == EMPIRE_CITY_PHARAOH_TRADING ||
+            objects[index].city_type == EMPIRE_CITY_EGYPTIAN_TRADING ||
+            objects[index].city_type == EMPIRE_CITY_FOREIGN_TRADING);
+}
+static int get_trade_amount_code(int index, int resource) {
+    if (!is_trade_city(index))
+        return 0;
+
+    if (GamestateIO::get_file_version() < 160) {
+        int result = 0;
+        if (resource < 32) { // only holds data up to 31 (sandstone)
+            int resource_flag = 1 << resource;
+            if (objects[index].trade40 & resource_flag)
+                result = 3;
+            else if (objects[index].trade25 & resource_flag)
+                result = 2;
+            else if (objects[index].trade15 & resource_flag)
+                result = 1;
+        }
+        objects[index].trade_demand[resource] = result; // also record into post-160 format automatically
+        return result;
+    } else
+        return objects[index].trade_demand[resource];
+}
+static bool is_sea_trade_route(int route_id) {
+    for (int i = 0; i < MAX_OBJECTS; i++) {
+        if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
+            if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
+                return true;
+            if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE)
+                return false;
+        }
+    }
+    return false;
+}
 
 static void fix_image_ids(void) {
     int image_id = 0;
@@ -57,52 +96,51 @@ static void fix_image_ids(void) {
 
 void empire_object_init_cities(void) {
     empire_city_clear_all();
-    int route_index = 1;
+//    int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY)
             continue;
 
         full_empire_object *obj = &objects[i];
-        empire_city *city = empire_city_get(route_index++);
+        if (obj->obj.trade_route_id < 0)
+            obj->obj.trade_route_id = 0;
+        if (obj->obj.trade_route_id >= MAX_ROUTES)
+            obj->obj.trade_route_id = MAX_ROUTES - 1;
+        empire_city *city = empire_city_get(obj->obj.trade_route_id);
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
-        if (obj->obj.trade_route_id < 0)
-            obj->obj.trade_route_id = 0;
 
-        if (obj->obj.trade_route_id >= MAX_ROUTES)
-            obj->obj.trade_route_id = MAX_ROUTES - 1;
 
         city->route_id = obj->obj.trade_route_id;
         city->is_open = obj->trade_route_open;
         city->cost_to_open = obj->trade_route_cost;
         city->is_sea_trade = is_sea_trade_route(obj->obj.trade_route_id);
 
-        for (int resource = RESOURCE_MIN; resource < RESOURCES_MAX; resource++) {
-            city->sells_resource[resource] = 0;
-            city->buys_resource[resource] = 0;
-            if (city->type == EMPIRE_CITY_OURS
-                || city->type == EMPIRE_CITY_EGYPTIAN
-                || city->type == EMPIRE_CITY_FOREIGN_TRADING
-                || city->type == EMPIRE_CITY_FOREIGN) {
+        for (int resource = 0; resource < RESOURCES_MAX; resource++) {
+            city->sells_resource[resource] = false;
+            city->buys_resource[resource] = false;
+            if (!is_trade_city(i))
                 continue;
-            }
-            if (empire_object_city_sells_resource(i, resource))
-                city->sells_resource[resource] = 1;
+//            if (city->type == EMPIRE_CITY_PHARAOH
+//                || city->type == EMPIRE_CITY_EGYPTIAN
+//                || city->type == EMPIRE_CITY_FOREIGN) {
+//                continue;
+//            }
 
-            if (empire_object_city_buys_resource(i, resource))
-                city->buys_resource[resource] = 1;
+            city->sells_resource[resource] = empire_object_city_sells_resource(i, resource, true);
+            city->buys_resource[resource] = empire_object_city_buys_resource(i, resource, true);
 
             int amount;
             switch (get_trade_amount_code(i, resource)) {
                 case 1:
-                    amount = 15;
+                    amount = 1500;
                     break;
                 case 2:
-                    amount = 25;
+                    amount = 2500;
                     break;
                 case 3:
-                    amount = 40;
+                    amount = 4000;
                     break;
                 default:
                     amount = 0;
@@ -205,74 +243,37 @@ void empire_object_set_expanded(int object_id, int new_city_type) {
 
 }
 
-int empire_object_city_buys_resource(int object_id, int resource) {
+bool empire_object_city_buys_resource(int object_id, int resource, bool from_raw_object) {
     if (object_id == -1)
-        return 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
+        return false;
+    if (from_raw_object) {
         const full_empire_object *object = &objects[object_id];
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < EMPIRE_OBJ_MAX_BOUGHT_RESOURCES; i++) {
             if (object->city_buys_resource[i] == resource)
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    else {
         const empire_city *city = empire_city_get(empire_city_get_for_object(object_id));
-        if (city->buys_resource[resource] == 1)
-            return 1;
-        return 0;
+        return city->buys_resource[resource];
     }
 }
-int empire_object_city_sells_resource(int object_id, int resource) {
+bool empire_object_city_sells_resource(int object_id, int resource, bool from_raw_object) {
     if (object_id == -1)
-        return 0;
-    if (GAME_ENV == ENGINE_ENV_C3) {
+        return false;
+    if (from_raw_object) {
         const full_empire_object *object = &objects[object_id];
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < EMPIRE_OBJ_MAX_SOLD_RESOURCES; i++) {
             if (object->city_sells_resource[i] == resource)
-                return 1;
+                return true;
         }
-        return 0;
+        return false;
     }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
+    else {
         const empire_city *city = empire_city_get(empire_city_get_for_object(object_id));
-        if (city->sells_resource[resource] == 1)
-            return 1;
-        return 0;
+        return city->sells_resource[resource];
     }
-}
-static int is_trade_city(int index) {
-    if (objects[index].obj.type != EMPIRE_OBJECT_CITY)
-        return 0;
-
-    return objects[index].city_type > EMPIRE_CITY_PHARAOH_TRADING && objects[index].city_type < EMPIRE_CITY_FOREIGN;
-}
-static int get_trade_amount_code(int index, int resource) {
-    if (!is_trade_city(index))
-        return 0;
-
-    int resource_flag = 1 << resource;
-    if (objects[index].trade40 & resource_flag)
-        return 3;
-
-    if (objects[index].trade25 & resource_flag)
-        return 2;
-
-    if (objects[index].trade15 & resource_flag)
-        return 1;
-
-    return 0;
-}
-static int is_sea_trade_route(int route_id) {
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
-            if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
-                return 1;
-            if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE)
-                return 0;
-        }
-    }
-    return 0;
 }
 
 static int get_animation_offset(int image_id, int current_index) {
@@ -333,7 +334,6 @@ map_route_object *empire_get_route_object(int id) {
 io_buffer *iob_empire_map_objects = new io_buffer([](io_buffer *iob) {
 //    if (objects_are_loaded)
 //        return;
-    bool expanded = (iob->get_size() != 15200);
     int last_object_was_used = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         full_empire_object *full = &objects[i];
@@ -361,27 +361,29 @@ io_buffer *iob_empire_map_objects = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &obj->trade_route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &full->trade_route_open);
         iob->bind(BIND_SIGNATURE_INT16, &full->trade_route_cost);
-        for (int r = 0; r < 10; r++)
+        for (int r = 0; r < 14; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &full->city_sells_resource[r]);
-        iob->bind____skip(2);
+        iob->bind____skip(8);
         for (int r = 0; r < 8; r++)
             iob->bind(BIND_SIGNATURE_UINT8, &full->city_buys_resource[r]);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_path_id);
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_years);
-        iob->bind(BIND_SIGNATURE_UINT16, &full->trade40);
-        iob->bind(BIND_SIGNATURE_UINT16, &full->trade25);
-        iob->bind(BIND_SIGNATURE_UINT16, &full->trade15);
-        iob->bind____skip(6);
-        if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-            if (expanded)
-                iob->bind____skip(34); // 18600 : 98 (64)
-            else
-                iob->bind____skip(12); // 15200 : 76 (64)
-            if (last_object_was_used)
-                last_object_was_used = full->in_use;
-            else
-                full->in_use = last_object_was_used;
+
+        // TODO: WRITE
+        if (GamestateIO::get_file_version() < 160) {
+            iob->bind____skip(2);
+            iob->bind(BIND_SIGNATURE_UINT32, &full->trade40);
+            iob->bind(BIND_SIGNATURE_UINT32, &full->trade25);
+            iob->bind(BIND_SIGNATURE_UINT32, &full->trade15);
+        } else {
+            for (int r = 0; r < RESOURCES_MAX; r++)
+                iob->bind(BIND_SIGNATURE_UINT8, &full->trade_demand[r]);
         }
+
+        if (last_object_was_used)
+            last_object_was_used = full->in_use;
+        else
+            full->in_use = last_object_was_used;
     }
 });
 io_buffer *iob_empire_map_routes = new io_buffer([](io_buffer *iob) {

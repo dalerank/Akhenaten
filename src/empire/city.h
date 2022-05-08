@@ -5,13 +5,13 @@
 #include "game/resource.h"
 
 typedef struct {
-    int in_use;
+    int in_use; // this can be 2, so it's an int!
     int type;
     int name_id;
     int route_id;
-    int is_open;
-    int buys_resource[RESOURCES_MAX];
-    int sells_resource[RESOURCES_MAX];
+    bool is_open;
+    bool buys_resource[RESOURCES_MAX];
+    bool sells_resource[RESOURCES_MAX];
     int cost_to_open;
     int ph_unk01;
     int ph_unk02;

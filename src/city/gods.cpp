@@ -166,7 +166,6 @@ static bool attempt_ptah_warehouse_destruction() {
 //    city_message_disable_sound_for_next_message();
 //    city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
     building_destroy_by_fire(max_building);
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
     map_routing_update_land();
     return true;
 }
@@ -212,7 +211,6 @@ static bool attempt_ptah_industry_destruction() {
                         continue;
                     if (b->type == industries[i]) {
                         building_destroy_by_fire(b);
-                        sound_effect_play(SOUND_EFFECT_EXPLOSION);
 //                        FUN_0046cf10((int)building_id,0);
 //                        FUN_004693e0(building_id,1);
                     }
@@ -252,8 +250,6 @@ static bool send_frogs() {
 static bool attempt_bast_refill_houses_and_bazaar() {
     // TODO
 //            city_sentiment_change_happiness(25);
-}
-static bool attempt_bast_houses_destruction() {
     // TODO
 //            city_sentiment_set_max_happiness(40);
 //            city_sentiment_change_happiness(-10);
@@ -265,6 +261,163 @@ static bool attempt_bast_houses_destruction() {
 //                city_health_change(-20);
 //            city_data.religion.venus_curse_active = true;
 //            city_sentiment_update();
+}
+
+static void swap(int *A, int *B) {
+    int prevA = *A;
+    *A = *B;
+    *B = prevA;
+}
+static int compare(int A, int B) {
+    auto hA = building_get(A)->subtype.house_level;
+    auto hB = building_get(B)->subtype.house_level;
+    if (hA < hB)
+        return -1;
+    else if (hA > hB)
+        return 1;
+    return 0;
+}
+static void rearrange_CHILD(int arr[20], int first, int last) {
+    if (first >= last)
+        return;
+
+    int A, B;
+    while (first < last) {
+        A = first;
+        B = first + 1;
+
+        while (B <= last) {
+            if (compare(arr[B], arr[A]) > 0) // A is more evolved
+                A = B;
+            B++;
+        }
+        swap(&arr[A], &arr[last]);
+        last--;
+    }
+}
+static void rearrange_dark_magic(int arr[20]) {
+    auto DBG = (int(*)[20])arr;
+
+    int cache_first[30];
+    int cache_last[30];
+    int j = 0;
+
+    int first = 0;
+    int last = 19;
+
+    int A, B;
+    int size;
+
+    REDO:
+    size = last - first + 1; // starts with 20
+    if (size > 8) {
+        swap(&arr[first], &arr[size / 2]);
+
+        A = first;
+        B = last + 1;
+
+        while (true) {
+
+            // finds the first house better than than the one at the top!
+            do {
+                A++;
+                if (A > last)
+                    break;
+            } while (compare(arr[A], arr[first]) < 1);
+
+            // finds the last house worse than the one at the top!
+            do {
+                B--;
+                if (B <= first)
+                    break;
+            } while (compare(arr[B], arr[first]) > -1);
+
+            if (A > B)
+                break;
+            else // continue the loop
+                swap(&arr[A], &arr[B]);
+        }
+
+        swap(&arr[first], &arr[B]);
+        if (B - 1 - first < last - A) {
+            if (A < last) {
+                cache_first[j] = A;
+                cache_last[j] = last;
+                j++;
+            }
+            if (first + 1 < B) {
+                last = B - 1;
+                goto REDO;
+            }
+        } else {
+            if (first + 1 < B) {
+                cache_first[j] = first;
+                cache_last[j] = B - 1;
+                j++;
+            }
+
+            if (A < last) {
+                first = A;
+                goto REDO;
+            }
+        }
+    } else
+        rearrange_CHILD(arr, first, last);
+    j--;
+    if (j < 0)
+        return;
+    first = cache_first[j];
+    last = cache_last[j];
+    goto REDO;
+}
+static bool attempt_bast_houses_destruction() {
+    int houses[20] = {0};
+    int houses_found = 0;
+    // first, find the first 20 houses
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type))
+            continue;
+        if (houses_found < 20)
+            houses[houses_found++] = i; // add to the list
+        else
+            break; // found 20 houses, job done!
+    }
+    if (houses_found > 19) {
+        rearrange_dark_magic(houses); // ???????????????
+//        FUN_00561c09(houses_array,20,4,&LAB_004c42d0);
+        for (int i = 20; i < MAX_BUILDINGS; ++i) {
+            building *b = building_get(i);
+            if (b->state != BUILDING_STATE_VALID || !building_is_house(b->type))
+                continue;
+            int this_house_level = b->subtype.house_level;
+            int last_house_level = building_get(houses[19])->subtype.house_level;
+            if (this_house_level > last_house_level) { // found house more evolved than the initial 20 houses
+
+                // where to stuff this new house? find the appropriate spot index
+                for (int j = 0; j < 20; ++j) {
+                    if (building_get(houses[j])->subtype.house_level < this_house_level) {
+                        // found a spot! the next in the list is an inferior house -- shift all the
+                        // items in the list from this point onward down ONE SLOT, and insert here.
+                        for (int k = 19; k > j; --k)
+                            houses[k] = houses[k - 1]; // copy from above slot
+                        houses[j] = i; // assign the new building to the original slot
+                        break;
+                    }
+                }
+            }
+            // didn't find any better houses, OR we filled the 20 houses completely AGAIN
+        }
+    }
+    if (houses_found > 0) {
+        for (int i = 0; i < houses_found; ++i) {
+            if (houses[i] != 0)
+                building_destroy_by_fire(building_get(houses[i]));
+        }
+        map_routing_update_land();
+        return true;
+    }
+    return false;
 }
 static bool send_malaria_plague() {
     // TODO
@@ -711,6 +864,7 @@ void city_gods_update(bool mood_calc_only) {
         update_moods(randm_god);
 
 //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
+        attempt_bast_houses_destruction();
 
         // at the start of every month
         if (game_time_day() == 0)

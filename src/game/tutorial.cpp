@@ -143,22 +143,13 @@ tutorial_availability tutorial_advisor_availability(void) {
     }
 }
 tutorial_availability tutorial_empire_availability(void) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (scenario_is_mission_rank(1))
-            return NOT_AVAILABLE;
-        else if (scenario_is_mission_rank(2) && !data.tutorial2.population_250_reached)
-            return NOT_AVAILABLE_YET;
-        else
-            return AVAILABLE;
-    }
-    else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (scenario_is_tutorial_before_mission_5())
-            return NOT_AVAILABLE;
-        else if (!data.pharaoh.tut5_can_trade_finally)
-            return NOT_AVAILABLE_YET;
-        else
-            return AVAILABLE;
-    }
+    if (scenario_is_tutorial_before_mission_5())
+        return NOT_AVAILABLE;
+    // TODO
+//    else if (!data.pharaoh.tut5_can_trade_finally)
+//        return NOT_AVAILABLE_YET;
+//    else
+        return AVAILABLE;
 }
 
 void tutorial_menu_update(int tut) {

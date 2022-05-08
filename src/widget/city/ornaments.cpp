@@ -360,6 +360,12 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
         case BUILDING_HUNTING_LODGE:
             ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GAMEMEAT_5) + amount, x + 61, y + 14, color_mask);
             break;
+        case BUILDING_POTTERY_WORKSHOP:
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CLAY_2) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_BEER_WORKSHOP:
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_BARLEY_2) + amount, x + 65, y + 3, color_mask);
+            break;
         case BUILDING_PAPYRUS_WORKSHOP:
             ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_REEDS_5) + amount, x + 35, y + 4, color_mask);
             break;
@@ -367,13 +373,22 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
             ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
             break;
         case BUILDING_LINEN_WORKSHOP:
-            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3, color_mask);
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_FLAX_2) + amount, x + 65, y + 3, color_mask);
             break;
         case BUILDING_JEWELS_WORKSHOP:
-            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3, color_mask);
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3, color_mask);
             break;
         case BUILDING_SHIPYARD:
-            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_WEAPONS_WORKSHOP:
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_COPPER_2) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_CHARIOTS_WORKSHOP:
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_WOOD_5) + amount, x + 65, y + 3, color_mask);
+            break;
+        case BUILDING_CHARIOT_MAKER:
+//            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y + 3, color_mask);
             break;
     }
 }
