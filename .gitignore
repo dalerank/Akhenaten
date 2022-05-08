@@ -34,8 +34,8 @@ distribution/
 *.log
 
 /wiki/*
-/ozymandias-pharaoh-wiki/*
-/ozymandias-pharaoh-wiki.wiki/*
+/ozymandias-extra/*
+/ozymandias.wiki/*
 doc
 /doc/*
 *.ods#
