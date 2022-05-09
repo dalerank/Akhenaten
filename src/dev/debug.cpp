@@ -713,8 +713,8 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 205, cl, "dat_30:", floods->flood_progress); // status 30 (???)
         draw_debug_line(str, x, y + 215, cl, "(unk01):", floods->unk01); // ???
         draw_debug_line(str, x, y + 225, cl, "state:", floods->state); // floodplains state
-        draw_debug_line(str, x, y + 235, cl, "dat_10:", floods->floodplain_width); // status 10 (???)
-        draw_debug_line(str, x, y + 245, cl, "(unk02):", floods->floodplain_width); // status 10 (???)
+        draw_debug_line(str, x, y + 235, cl, "width:", floods->floodplain_width); // status 10 (???)
+        draw_debug_line(str, x, y + 245, cl, "(unk02):", floods->unk02); // status 10 (???)
         y += 350;
     }
 

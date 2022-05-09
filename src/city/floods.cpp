@@ -22,7 +22,6 @@ const floods_data_t *floodplain_data() {
 static int cycle = 0;
 static int cycle_frame = 0;
 
-const double randomizing_double = 391.68; //0x40787ae147ae147b; // hardcoded
 static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
@@ -30,6 +29,7 @@ void floodplains_init() {
     data.floodplain_width = map_floodplain_rebuild_shoreorder();
 }
 
+const double cycles_in_a_year = 9792.0f / 25.0f; //0x40787ae147ae147b; // hardcoded
 int flood_get_cycle() {
     int total_ticks = game_time_absolute_tick() + 1;
     return total_ticks / 25;
@@ -49,9 +49,11 @@ int floodplains_current_cycle() {
     return cycle;
 }
 int floodplains_flooding_start_cycle() {
-//    int h = (int)(long long)((float)give_me_da_time()->year - (short)scenario_data.start_year) * (float)randomizing_double;
-    int h = 0;
-    return data.season * 1.05 + 15 + h;
+    int play_time = game_time_year() - scenario_data.start_year;
+    int cycle_flooding_start = (data.season * 105) / 100 + 15 + cycles_in_a_year;
+    if ((double)(cycle_flooding_start - cycle) > cycles_in_a_year * 0.5)
+        cycle_flooding_start -= (int)cycles_in_a_year;
+    return cycle_flooding_start;
 }
 int floodplains_flooding_end_cycle() {
     return floodplains_flooding_start_cycle() + data.duration + data.floodplain_width * 2;
@@ -105,11 +107,6 @@ void floodplains_tick_update() {
     int cycle_flooding_start = floodplains_flooding_start_cycle();
     int cycle_flooding_end = floodplains_flooding_end_cycle();
     int rest_period = floodplains_flooding_rest_period_cycle();
-    // ????
-//    if ((double)(cycle_flooding_start - cycle) > randomizing_double * 0.5) {
-//        cycle_flooding_start -= (int)randomizing_double;
-//        cycle_flooding_end += (int)randomizing_double;
-//    }
 
     // ???
     data.unk01 = data.season / 30;
