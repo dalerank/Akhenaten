@@ -293,7 +293,7 @@ extern struct city_data_t {
         int32_t seth_crush_enemy_troops;
         int32_t seth_protect_player_troops;
         bool osiris_double_farm_yield;
-        bool osiris_flood_will_destroy_active;
+        int32_t osiris_flood_will_destroy_active;
     } religion;
     struct {
         int32_t theater_shows;

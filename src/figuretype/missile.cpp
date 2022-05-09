@@ -57,7 +57,6 @@ void figure_create_explosion_cloud(int x, int y, int size) {
             f->speed_multiplier = CLOUD_SPEED[i];
         }
     }
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, int type) {

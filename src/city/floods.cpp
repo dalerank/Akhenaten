@@ -20,7 +20,7 @@ const floods_data_t *floodplain_data() {
 }
 
 static int cycle = 0;
-static int cycle_tick = 0;
+static int cycle_frame = 0;
 
 const double randomizing_double = 391.68; //0x40787ae147ae147b; // hardcoded
 static int randomizing_int_1 = 0;
@@ -30,8 +30,20 @@ void floodplains_init() {
     data.floodplain_width = map_floodplain_rebuild_shoreorder();
 }
 
+int flood_get_cycle() {
+    int total_ticks = game_time_absolute_tick() + 1;
+    return total_ticks / 25;
+}
+int flood_cycle_frame() {
+    int total_ticks = game_time_absolute_tick() + 1;
+    return total_ticks % 25;
+}
+bool is_flood_cycle_tick() {
+    return flood_cycle_frame() == 0;
+}
+
 int floodplains_current_cycle_tick() {
-    return cycle_tick;
+    return cycle_frame;
 }
 int floodplains_current_cycle() {
     return cycle;
@@ -64,13 +76,12 @@ int floodplains_expected_month() {
 }
 
 void floodplains_tick_update() {
-    int total_ticks = game_time_absolute_tick();
-    cycle = total_ticks / 25;
-    cycle_tick = total_ticks % 25;
+    cycle = flood_get_cycle();
+    cycle_frame = flood_cycle_frame();
     // TODO: the cycles don't match up PERFECTLY with the original game... but close enough?
 
     // ???
-//    if (data.flood_progress == 0) {
+//    if (data.unk02 == 0) {
 //        data.state = FLOOD_STATE_FARMABLE;
 //        data.quality = 0;
 //        return;
@@ -153,7 +164,7 @@ void floodplains_tick_update() {
         data.flood_progress = 30;
 
     // update at every full cycle
-    if (cycle_tick == 0) {
+    if (cycle_frame == 0) {
         if (cycle == cycle_flooding_start - 49) {
             // todo: FUN_00489310();
         }
@@ -185,15 +196,18 @@ void floodplains_tick_update() {
 
     // update tiles!!
     if (cycle >= cycle_flooding_start && cycle <= cycle_flooding_start + rest_period)
-        map_update_floodplain_inundation(1, (29 - data.flood_progress) * 25 + cycle_tick);
-    else if (cycle >= cycle_flooding_end - rest_period && cycle <= cycle_flooding_end) {
-        map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_tick);
-        city_data.religion.osiris_flood_will_destroy_active = false;
-    }
+        map_update_floodplain_inundation(1, (29 - data.flood_progress) * 25 + cycle_frame);
+    else if (cycle >= cycle_flooding_end - rest_period && cycle <= cycle_flooding_end)
+        map_update_floodplain_inundation(-1, (30 - data.flood_progress) * 25 - cycle_frame);
 
     // update grass growth
-    if (cycle_tick % 10 == 0 && (cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period))
+    if (cycle_frame % 10 == 0 && (cycle < cycle_flooding_start - 27 || cycle >= cycle_flooding_end - rest_period))
         map_advance_floodplain_growth();
+}
+void floodplains_day_update() {
+    if (floodplains_is(FLOOD_STATE_INUNDATED)) {
+        city_data.religion.osiris_flood_will_destroy_active = 0;
+    }
 }
 
 io_buffer *iob_floodplain_settings = new io_buffer([](io_buffer *iob) {

@@ -29,6 +29,7 @@
 #include "widget/sidebar/city.h"
 #include "window/advisors.h"
 #include "window/file_dialog.h"
+#include "dev/debug.h"
 
 static int selected_legion_formation_id;
 static int city_view_dirty;
@@ -159,24 +160,11 @@ static void toggle_pause(void) {
     city_warning_clear_all();
 }
 
-int debug_range_1 = 0;
-int debug_range_2 = 0;
 
 bool city_has_loaded = false;
 
 static void handle_hotkeys(const hotkeys *h) {
-    if (h->debug_1_up)
-        debug_range_1+=1;
-    if (h->debug_1_down)
-        debug_range_1-=1;
-    if (h->debug_2_up)
-        debug_range_2+=1;
-    if (h->debug_2_down)
-        debug_range_2-=1;
-//    if (debug_range_1 < 0)
-//        debug_range_1 = 0;
-//    if (debug_range_1 > 20)
-//        debug_range_1 = 20;
+    handle_debug_hotkeys(h);
     ////
     if (h->toggle_pause)
         toggle_pause();

@@ -442,16 +442,3 @@ int text_measure_multiline(const uint8_t *str, int box_width, font_t font) {
     }
     return num_lines;
 }
-
-void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color) {
-    text_draw_shadow((uint8_t *) string_from_ascii(text), x, y, color);
-    string_from_int(str, value, 0);
-    text_draw_shadow(str, x + indent, y, color);
-}
-void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color) {
-    text_draw_shadow((uint8_t *) string_from_ascii(text), x, y, color);
-    string_from_int(str, value1, 0);
-    text_draw_shadow_left(str, x + indent, y, color);
-    string_from_int(str, value2, 0);
-    text_draw_shadow_left(str, x + indent + indent2, y, color);
-}

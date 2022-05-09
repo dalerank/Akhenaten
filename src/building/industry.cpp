@@ -265,7 +265,6 @@ void building_farm_deplete_soil(building *b) {
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
             }
     }
-
     update_farm_image(b);
 }
 

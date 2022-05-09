@@ -589,6 +589,9 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/game_menu.cpp
     ${PROJECT_SOURCE_DIR}/src/window/records.cpp
 )
+set(DEV_FILES
+    ${PROJECT_SOURCE_DIR}/src/dev/debug.cpp
+)
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.cpp
     ${PROJECT_SOURCE_DIR}/src/editor/tool.cpp
@@ -630,6 +633,7 @@ set(SOURCE_FILES
     ${SOUND_FILES}
     ${WIDGET_FILES}
     ${WINDOW_FILES}
+    ${DEV_FILES}
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
     ${TINYFD_FILES}

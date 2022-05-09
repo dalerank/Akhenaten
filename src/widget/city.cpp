@@ -2,6 +2,7 @@
 #include <widget/overlays/city_overlay.h>
 #include <graphics/image.h>
 #include <city/view/lookup.h>
+#include <dev/debug.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
@@ -149,7 +150,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(
-            draw_debug,
+            draw_debug_tile,
             draw_debug_figures);
 //    city_view_foreach_map_tile(draw_debug);
 //    city_view_foreach_map_tile(draw_debug_figures);

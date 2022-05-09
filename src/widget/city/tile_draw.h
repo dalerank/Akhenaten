@@ -24,9 +24,6 @@ void draw_ornaments_overlay(pixel_coordinate pixel, map_point point);
 void draw_figures_overlay(pixel_coordinate pixel, map_point point);
 void draw_elevated_figures_overlay(pixel_coordinate pixel, map_point point);
 
-void draw_debug(pixel_coordinate pixel, map_point point);
-void draw_debug_figures(pixel_coordinate pixel, map_point point);
-
 void deletion_draw_top(pixel_coordinate pixel, map_point point);
 void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point);
 

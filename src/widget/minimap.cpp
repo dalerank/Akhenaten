@@ -16,6 +16,7 @@
 
 #include <stdlib.h>
 #include <window/city.h>
+#include <dev/debug.h>
 
 enum {
     FIGURE_COLOR_NONE = 0,

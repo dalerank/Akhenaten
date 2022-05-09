@@ -50,10 +50,10 @@ int god_known_status(int god) {
     return city_data.religion.gods[god].is_known;
 }
 
-static bool send_locusts() {
+static bool OSIRIS_locusts() {
     // TODO
 }
-static bool attempt_ptah_warehouse_restock() {
+static bool PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
     int resources[6] = {
             RESOURCE_GEMS,
@@ -101,7 +101,7 @@ static bool attempt_ptah_warehouse_restock() {
     } else
         return false;
 }
-static bool attempt_ptah_industry_restock() {
+static bool PTAH_industry_restock() {
     // restocks shipwrights, weavers and jewelers
     int industries[3] = {
             BUILDING_SHIPYARD,
@@ -144,7 +144,7 @@ static bool attempt_ptah_industry_restock() {
     }
     return false;
 }
-static bool attempt_ptah_warehouse_destruction() {
+static bool PTAH_warehouse_destruction() {
     // destroy the "best" warehouse found (most stocked up)
     int max_stored = 0;
     building *max_building = nullptr;
@@ -169,7 +169,7 @@ static bool attempt_ptah_warehouse_destruction() {
     map_routing_update_land();
     return true;
 }
-static bool attempt_ptah_industry_destruction() {
+static bool PTAH_industry_destruction() {
     // destroys random industry, if found
     int industries[6] = {
             BUILDING_GOLD_MINE,
@@ -225,16 +225,17 @@ static bool attempt_ptah_industry_destruction() {
     }
     return false;
 }
-static bool attempt_seth_fort_destruction() {
+
+static bool SETH_fort_destruction() {
     // TODO
 //            formation_legion_curse();
 }
-static bool attempt_seth_ships_destruction() {
+static bool SETH_ships_destruction() {
     // TODO
 //                figure_sink_all_ships();
 //                city_data.religion.neptune_sank_ships = 1;
 }
-static bool send_hailstorm() {
+static bool SETH_hailstorm() {
     // TODO
 //                if (formation_legion_curse()) {
 //                    city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
@@ -244,10 +245,10 @@ static bool send_hailstorm() {
 //                    return 0;
 //                }
 }
-static bool send_frogs() {
+static bool PTAH_frogs() {
     // TODO
 }
-static bool attempt_bast_refill_houses_and_bazaar() {
+static bool BAST_refill_houses_and_bazaar() {
     // TODO
 //            city_sentiment_change_happiness(25);
     // TODO
@@ -370,7 +371,7 @@ static void rearrange_dark_magic(int arr[20]) {
     last = cache_last[j];
     goto REDO;
 }
-static bool attempt_bast_houses_destruction() {
+static bool BAST_houses_destruction() {
     int houses[20] = {0};
     int houses_found = 0;
     // first, find the first 20 houses
@@ -419,7 +420,7 @@ static bool attempt_bast_houses_destruction() {
     }
     return false;
 }
-static bool send_malaria_plague() {
+static bool BAST_malaria_plague() {
     // TODO
 //            city_sentiment_set_max_happiness(50);
 //            city_sentiment_change_happiness(-5);
@@ -456,7 +457,7 @@ static void perform_major_blessing(int god) {
             }
         case GOD_PTAH:
             // gems, clay, pottery, flax, linen, or jewelry in storage yards
-            success = attempt_ptah_warehouse_restock();
+            success = PTAH_warehouse_restock();
             if (success)
                 city_message_post(true, MESSAGE_BLESSING_PTAH, 0, 0);
             else // no yard with such goods (and space) found
@@ -468,7 +469,7 @@ static void perform_major_blessing(int god) {
             return;
         case GOD_BAST:
             // fills houses and bazaars
-            attempt_bast_refill_houses_and_bazaar();
+            BAST_refill_houses_and_bazaar();
             city_message_post(true, MESSAGE_BLESSING_BAST, 0, 0);
             return;
     }
@@ -499,7 +500,7 @@ static void perform_minor_blessing(int god) {
             }
         case GOD_PTAH:
             // restocks shipwrights, weavers and jewelers
-            attempt_ptah_industry_restock(); // <-- there is no message for when this fails.
+            PTAH_industry_restock(); // <-- there is no message for when this fails.
             city_message_post(true, MESSAGE_SMALL_BLESSING_PTAH, 0, 0);
             return;
         case GOD_SETH:
@@ -533,7 +534,7 @@ static void perform_major_curse(int god) {
                 return;
             } else {
                 // locusts
-                send_locusts();
+                OSIRIS_locusts();
                 city_message_post(true, MESSAGE_CURSE_OSIRIS_2, 0, 0);
                 return;
             }
@@ -557,7 +558,7 @@ static void perform_major_curse(int god) {
         case GOD_PTAH:
             if (anti_scum_random_bool()) {
                 // destroys some industrial buildings
-                success = attempt_ptah_industry_destruction();
+                success = PTAH_industry_destruction();
                 if (success)
                     city_message_post(true, MESSAGE_CURSE_PTAH_1, 0, 0);
                 else // no yard found
@@ -565,24 +566,24 @@ static void perform_major_curse(int god) {
                 return;
             } else {
                 // frogs
-                send_frogs();
+                PTAH_frogs();
                 city_message_post(true, MESSAGE_CURSE_PTAH_2, 0, 0);
                 return;
             }
         case GOD_SETH:
             if (anti_scum_random_bool()) {
                 // destroys all ships
-                attempt_seth_ships_destruction();
+                SETH_ships_destruction();
                 city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
                 return;
             } else {
-                send_hailstorm();
+                SETH_hailstorm();
                 city_message_post(true, MESSAGE_CURSE_SETH_2, 0, 0);
                 return;
             }
         case GOD_BAST:
             // destroy some of the best houses
-            attempt_bast_houses_destruction();
+            BAST_houses_destruction();
             city_message_post(true, MESSAGE_CURSE_BAST_1, 0, 0);
             return;
     }
@@ -593,7 +594,7 @@ static void perform_minor_curse(int god) {
         case GOD_OSIRIS:
             if (anti_scum_random_bool()) {
                 // next flood will destroys farms
-                city_data.religion.osiris_flood_will_destroy_active = true;
+                city_data.religion.osiris_flood_will_destroy_active = 1;
                 city_message_post(true, MESSAGE_SMALL_CURSE_OSIRIS, 0, 0);
                 return;
             } else {
@@ -620,7 +621,7 @@ static void perform_minor_curse(int god) {
             }
         case GOD_PTAH:
             // destroys random storage yard
-            success = attempt_ptah_warehouse_destruction();
+            success = PTAH_warehouse_destruction();
             if (success)
                 city_message_post(true, MESSAGE_SMALL_CURSE_PTAH, 0, 0);
             else // no yard found
@@ -628,7 +629,7 @@ static void perform_minor_curse(int god) {
             return;
         case GOD_SETH:
             // destroys the best fort
-            success = attempt_seth_fort_destruction();
+            success = SETH_fort_destruction();
             if (success)
                 city_message_post(true, MESSAGE_SMALL_CURSE_SETH, 0, 0);
             else
@@ -636,7 +637,7 @@ static void perform_minor_curse(int god) {
             break;
         case GOD_BAST:
             // plague
-            send_malaria_plague();
+            BAST_malaria_plague();
             city_message_post(true, MESSAGE_SMALL_CURSE_BAST, 0, 0);
             break;
     }
@@ -864,7 +865,7 @@ void city_gods_update(bool mood_calc_only) {
         update_moods(randm_god);
 
 //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
-        attempt_bast_houses_destruction();
+        BAST_houses_destruction();
 
         // at the start of every month
         if (game_time_day() == 0)

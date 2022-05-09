@@ -1,5 +1,6 @@
 #include <core/game_environment.h>
 #include <scenario/events.h>
+#include <dev/debug.h>
 #include "message_list.h"
 
 #include "city/message.h"

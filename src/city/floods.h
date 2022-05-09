@@ -37,6 +37,10 @@ const floods_data_t * floodplain_data();
 
 void floodplains_init();
 
+int flood_get_cycle();
+int flood_cycle_frame();
+bool is_flood_cycle_tick();
+
 int floodplains_current_cycle_tick();
 int floodplains_current_cycle();
 int floodplains_flooding_start_cycle();
@@ -49,5 +53,6 @@ int floodplains_expected_quality();
 int floodplains_expected_month();
 
 void floodplains_tick_update();
+void floodplains_day_update();
 
 #endif //OZYMANDIAS_FLOODS_H

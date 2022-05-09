@@ -120,20 +120,40 @@ static void destroy_linked_parts(building *b, bool on_fire) {
 }
 
 void building_destroy_by_collapse(building *b) {
+    b = b->main();
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->tile.x(), b->tile.y(), b->size);
     figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
     destroy_linked_parts(b, false);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+}
+void building_destroy_by_poof(building *b, bool clouds) {
+    b = b->main();
+    if (clouds)
+        figure_create_explosion_cloud(b->tile.x(), b->tile.y(), b->size);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    do {
+        b->state = 0;
+        map_tiles_update_region_empty_land(true,
+                                           b->tile.x(), b->tile.y(),
+                                           b->tile.x() + b->size - 1, b->tile.y() + b->size - 1);
+        if (b->next_part_building_id < 1)
+            return;
+        b = b->next();
+    } while (true);
 }
 void building_destroy_by_fire(building *b) {
+    b = b->main();
     destroy_on_fire(b, false);
     destroy_linked_parts(b, true);
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 void building_destroy_by_plague(building *b) {
+    b = b->main();
     destroy_on_fire(b, true);
 }
 void building_destroy_by_rioter(building *b) {
+    b = b->main();
     destroy_on_fire(b, false);
 }
 

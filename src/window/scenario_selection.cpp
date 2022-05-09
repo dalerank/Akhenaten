@@ -31,6 +31,7 @@
 #include <cmath>
 #include <game/io/manager.h>
 #include <game/io/chunks.h>
+#include <dev/debug.h>
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
