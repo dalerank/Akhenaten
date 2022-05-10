@@ -7,12 +7,12 @@
 #include "water.h"
 
 tile_cache floodplain_tiles_cache;
-tile_cache floodplain_offsets_cache[MAX_FLOODPLAIN_ORDER_RANGE + 1];
+tile_cache floodplain_tiles_cache_by_order[MAX_FLOODPLAIN_ORDER_RANGE + 1];
 
 void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order)) {
     if (order < 0 || order > MAX_FLOODPLAIN_ORDER_RANGE)
         return;
-    auto offsets = floodplain_offsets_cache[order];
+    auto offsets = floodplain_tiles_cache_by_order[order];
     for (int i = 0; i < offsets.size(); i++) {
         int grid_offset = offsets.at(i);
         callback(grid_offset, order);
@@ -34,7 +34,7 @@ int map_floodplain_rebuild_shoreorder() {
     map_grid_fill(&terrain_floodplain_growth, 0);
     map_grid_fill(&terrain_floodplain_max_fertile, 0);
     for (int order = 0; order < MAX_FLOODPLAIN_ORDER_RANGE; order++)
-        floodplain_offsets_cache[order].clear();
+        floodplain_tiles_cache_by_order[order].clear();
 
     // fill in shore order data
     for (int order = -1; order < MAX_FLOODPLAIN_ORDER_RANGE - 1; order++) {
@@ -80,7 +80,7 @@ int map_floodplain_rebuild_shoreorder() {
 
                             // set the shore order cache
                             map_grid_set(&terrain_floodplain_shoreorder, grid_offset, order + 1);
-                            floodplain_offsets_cache[order + 1].add(grid_offset);
+                            floodplain_tiles_cache_by_order[order + 1].add(grid_offset);
 
                             // advance counter
                             found_floodplain_tiles_in_order++;
@@ -102,7 +102,7 @@ int map_floodplain_rebuild_shoreorder() {
         int grid_offset = floodplain_tiles_cache.at(i);
         if (map_get_floodplain_shoreorder(grid_offset) == -1) {
             map_grid_set(&terrain_floodplain_shoreorder, grid_offset, MAX_FLOODPLAIN_ORDER_RANGE);
-            floodplain_offsets_cache[MAX_FLOODPLAIN_ORDER_RANGE].add(grid_offset);
+            floodplain_tiles_cache_by_order[MAX_FLOODPLAIN_ORDER_RANGE].add(grid_offset);
         }
     }
 

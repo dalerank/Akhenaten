@@ -26,7 +26,15 @@ static int randomizing_int_1 = 0;
 static int randomizing_int_2 = 0;
 
 void floodplains_init() {
+    data.flood_progress = 0;
+    data.unk01 = 0;
+    data.state = FLOOD_STATE_FARMABLE;
+    data.floodplain_width = 0;
+    data.has_floodplains = false;
+
     data.floodplain_width = map_floodplain_rebuild_shoreorder();
+    if (data.floodplain_width > 0)
+        data.has_floodplains = true;
 }
 
 const double cycles_in_a_year = 9792.0f / 25.0f; //0x40787ae147ae147b; // hardcoded
@@ -78,16 +86,16 @@ int floodplains_expected_month() {
 }
 
 void floodplains_tick_update() {
+    // if no floodplains present, return
+    if (!data.has_floodplains) {
+        data.state = FLOOD_STATE_FARMABLE;
+        data.quality = 0;
+        return;
+    }
+
+    // TODO: the cycles don't match up PERFECTLY with the original game... but close enough?
     cycle = flood_get_cycle();
     cycle_frame = flood_cycle_frame();
-    // TODO: the cycles don't match up PERFECTLY with the original game... but close enough?
-
-    // ???
-//    if (data.unk02 == 0) {
-//        data.state = FLOOD_STATE_FARMABLE;
-//        data.quality = 0;
-//        return;
-//    }
 
     // clamp and update flood quality
     if (game_time_tick() == 1 && data.state != FLOOD_STATE_FLOODING) {

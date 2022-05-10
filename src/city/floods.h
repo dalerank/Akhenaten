@@ -30,7 +30,7 @@ typedef struct floods_data {
     int unk01;              // 05
     int state;              // 1 - 6
     int floodplain_width;   // 0 - 30
-    int unk02;              // 01
+    bool has_floodplains;   // 0 - 1
 } floods_data_t;
 
 const floods_data_t * floodplain_data();

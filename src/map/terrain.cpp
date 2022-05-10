@@ -363,7 +363,7 @@ void build_terrain_caches() {
             if (map_grid_inside_map_area(grid_offset)) { // only inside the valid game area!
                 if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN + TERRAIN_WATER))
                     river_tiles_cache.add(grid_offset);
-                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && !map_terrain_is(grid_offset, TERRAIN_WATER))
+                if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
                     floodplain_tiles_cache.add(grid_offset);
                 if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND))
                     marshland_tiles_cache.add(grid_offset);
@@ -372,6 +372,7 @@ void build_terrain_caches() {
             }
         }
     }
+    return;
 }
 
 
