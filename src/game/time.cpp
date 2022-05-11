@@ -32,11 +32,17 @@ int game_time_year_since_start(void) {
     return data.year - scenario_property_start_year();
 }
 
-int game_time_absolute_day() {
-    return data.month * 16 + data.day;
+int game_time_absolute_day(bool since_start) {
+    int days = data.month * 16 + data.day;
+    if (since_start)
+        days += 192 * game_time_year_since_start();
+    return days;
 }
-int game_time_absolute_tick() {
-    return game_time_absolute_day() * 51 + data.tick;
+int game_time_absolute_tick(bool since_start) {
+    int ticks = game_time_absolute_day() * 51 + data.tick;
+    if (since_start)
+        ticks += 9792 * game_time_year_since_start();
+    return ticks;
 }
 
 #include "core/game_environment.h"

@@ -161,13 +161,9 @@ void building_industry_update_farms(void) {
         if (b->data.industry.progress < 0)
             b->data.industry.progress = 0;
 
-        // for floodplain farms: harvest is invoked here!
-        if (is_floodplain && building_farm_time_to_deliver(true)) {
-            b->spawn_figure_farm_harvests();
-            city_data.religion.osiris_double_farm_yield = false;
-        }
         update_farm_image(b);
     }
+    city_data.religion.osiris_double_farm_yield = false;
 }
 void building_industry_update_wheat_production(void) {
     if (scenario_property_climate() == CLIMATE_NORTHERN)
@@ -228,9 +224,12 @@ static bool farm_harvesting_month_for_produce(int resource_id, int month) {
     return false;
 }
 bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
-    if (floodplains)
-        return floodplains_is(FLOOD_STATE_IMMINENT) && floodplains_current_cycle() >= floodplains_flooding_start_cycle() - 23;
-    else {
+    if (floodplains) {
+        auto current_cycle = floodplains_current_cycle();
+        auto start_cycle = floodplains_flooding_start_cycle();
+        auto harvest_cycle = start_cycle - 28.0f;
+        return floodplains_is(FLOOD_STATE_IMMINENT) && current_cycle >= harvest_cycle;
+    } else {
         if (game_time_day() < 2 && farm_harvesting_month_for_produce(resource_id, game_time_month()))
             return true;
         return false;

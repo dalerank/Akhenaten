@@ -13,6 +13,7 @@ extern int debug_range_4;
 void handle_debug_hotkeys(const hotkeys *h);
 
 void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color = COLOR_WHITE);
+void draw_debug_line_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color = COLOR_WHITE);
 void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color = COLOR_WHITE);
 
 void draw_debug_tile(pixel_coordinate pixel, map_point point);

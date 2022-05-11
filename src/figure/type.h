@@ -90,6 +90,9 @@ typedef enum figure_type {
     FIGURE_HUNTER_ARROW = 74,
     FIGURE_LUMBERJACK = 75,
     //
+    FIGURE_77, // TODO
+    FIGURE_78, // TODO
+    //
     FIGURE_CROCODILE = 82,
     //
     FIGURE_HIPPO = 84,
@@ -101,8 +104,13 @@ typedef enum figure_type {
     FIGURE_REED_GATHERER = 90,
     //
     FIGURE_FESTIVAL_PRIEST = 91,
+    FIGURE_92, // TODO
+    FIGURE_93, // TODO
     //
     FIGURE_FISHING_SPOT = 95,
+    //
+    FIGURE_100, // TODO
+    FIGURE_101, // TODO
 
     FIGURE_MAX = 999
 } figure_type;

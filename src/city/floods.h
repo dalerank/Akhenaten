@@ -12,6 +12,7 @@ enum {
     FLOOD_STATE_FARMABLE = 6,
 };
 
+
 typedef struct floods_data {
     int season_initial;
     int duration_initial;
@@ -27,7 +28,7 @@ typedef struct floods_data {
     // I reimplemented it via other means.
     //
     int flood_progress;     // 0 - 30
-    int unk01;              // 05
+    int unk01;              // season/floodplain_width -- probably a leftover from a previous flood system
     int state;              // 1 - 6
     int floodplain_width;   // 0 - 30
     bool has_floodplains;   // 0 - 1
@@ -37,22 +38,20 @@ const floods_data_t * floodplain_data();
 
 void floodplains_init();
 
-int flood_get_cycle();
-int flood_cycle_frame();
-bool is_flood_cycle_tick();
-
+extern const double cycles_in_a_year;
+double floodplains_current_cycle();
 int floodplains_current_cycle_tick();
-int floodplains_current_cycle();
-int floodplains_flooding_start_cycle();
-int floodplains_flooding_end_cycle();
-int floodplains_flooding_rest_period_cycle();
+bool is_flood_cycle_tick();
+double floodplains_flooding_start_cycle();
+double floodplains_flooding_end_cycle();
+double floodplains_flooding_cycles_length(bool upcoming = false);
 
 bool floodplains_is(int state);
 void floodplains_adjust_next_quality(int quality);
 int floodplains_expected_quality();
 int floodplains_expected_month();
 
-void floodplains_tick_update();
+void floodplains_tick_update(bool calc_only);
 void floodplains_day_update();
 
 #endif //OZYMANDIAS_FLOODS_H

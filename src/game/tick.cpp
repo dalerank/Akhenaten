@@ -132,7 +132,7 @@ static void advance_tick(void) {
     tutorial_starting_message();
 
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        floodplains_tick_update();
+        floodplains_tick_update(false);
 
     // NB: these ticks are noop:
     // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47

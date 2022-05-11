@@ -683,7 +683,7 @@ void building::spawn_figure_tax_collector() {
 //    }
 }
 
-#include "city/data.h"
+#include "city/data_private.h"
 
 void building::spawn_figure_industry() {
     check_labor_problem();
@@ -702,6 +702,9 @@ void building::spawn_figure_farms() {
     if (!is_floodplain && has_road_access) { // only for meadow farms
         common_spawn_labor_seeker(50);
         if (building_farm_time_to_deliver(false, output_resource_id)) // UGH!!
+            spawn_figure_farm_harvests();
+    } else if (is_floodplain) {
+        if (building_farm_time_to_deliver(true))
             spawn_figure_farm_harvests();
     }
 }

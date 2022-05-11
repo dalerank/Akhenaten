@@ -94,7 +94,7 @@ int map_floodplain_rebuild_shoreorder() {
 
         // no more shore tiles, return!
         if (found_floodplain_tiles_in_order == 0)
-            return order;
+            return std::min(order + 2, MAX_FLOODPLAIN_ORDER_RANGE);
     }
 
     // if past 29, fill in all the rest with the same order

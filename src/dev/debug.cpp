@@ -56,12 +56,21 @@ void handle_debug_hotkeys(const hotkeys *h) {
 }
 
 void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color) {
-    text_draw_shadow((uint8_t *) string_from_ascii(text), x, y, color);
+    text_draw_shadow(string_from_ascii(text), x, y, color);
     string_from_int(str, value, 0);
     text_draw_shadow(str, x + indent, y, color);
 }
+void draw_debug_line_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color) {
+    text_draw_shadow(string_from_ascii(text), x, y, color);
+    string_from_int(str, value, 0);
+    int l = string_length(str);
+    auto p = &str[l];
+    string_copy(string_from_ascii("."), p, 2);
+    string_from_int(&str[l+1], (double)(value - (double)(int)value) * 100.0f, 0);
+    text_draw_shadow(str, x + indent, y, color);
+}
 void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color) {
-    text_draw_shadow((uint8_t *) string_from_ascii(text), x, y, color);
+    text_draw_shadow(string_from_ascii(text), x, y, color);
     string_from_int(str, value1, 0);
     text_draw_shadow_left(str, x + indent, y, color);
     string_from_int(str, value2, 0);
@@ -535,8 +544,8 @@ void draw_debug_ui(int x, int y) {
 
         draw_debug_line(str, x, y + 15, 50, "tick:", time->tick);
         draw_debug_line(str, x + 80, y + 15, 50, "iscycle:", is_flood_cycle_tick());
-        draw_debug_line(str, x, y + 25, 50, "cycle:", flood_get_cycle());
-        draw_debug_line(str, x + 90, y + 25, 60, "frame:", flood_cycle_frame());
+        draw_debug_line(str, x, y + 25, 50, "cycle:", floodplains_current_cycle());
+        draw_debug_line(str, x + 90, y + 25, 60, "frame:", floodplains_current_cycle_tick());
 
         draw_debug_line(str, x, y + 35, 50, "day:", time->day);
         draw_debug_line(str, x, y + 45, 50, "month:", time->month);
@@ -678,25 +687,70 @@ void draw_debug_ui(int x, int y) {
     if (true) {
         auto floods = floodplain_data();
 
-        int c_curr = floodplains_current_cycle();
-        int c_start = floodplains_flooding_start_cycle();
-        int c_end = floodplains_flooding_end_cycle();
-        int c_hh = floodplains_flooding_rest_period_cycle();
-        int c_minus49 = c_start - 49;
-        int c_minus27 = c_start - 27;
-        int c_first_rest = c_start + c_hh;
-        int c_second_rest = c_end - c_hh;
-        int c_plus28 = c_end + 28;
+        double _c_curr = floodplains_current_cycle();
+        double _c_start = floodplains_flooding_start_cycle();
+        double _c_end = floodplains_flooding_end_cycle();
+
+        int _c_period_last = floodplains_flooding_cycles_length(false);
+        int _c_period_next = floodplains_flooding_cycles_length(true);
+
+        float rc_curr = fmod(_c_curr, cycles_in_a_year);
+        float rc_start = fmod(_c_start, cycles_in_a_year);
+        float rc_end = fmod(_c_end, cycles_in_a_year);
+        if (rc_curr < 0.1 && game_time_month() > 1)
+            rc_curr = cycles_in_a_year;
+
+        // floodplains timeline (yearly)
+        double additional_abs_ticks = cycles_in_a_year * (double)game_time_year_since_start();
+        auto dot = string_from_ascii(",");
+        for (int i = 0; i < 392; ++i) {
+            text_draw(dot, x + i - 1, y + 15, FONT_NORMAL_PLAIN, 0);
+        }
+        for (int i = 0; i < 392; ++i) {
+            int abs_i = i + additional_abs_ticks;
+            text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_WHITE);
+
+            if ((i > rc_start - 49 && i < rc_end + 28)
+            || (i > rc_start - 49 - cycles_in_a_year && i < rc_end + 28 - cycles_in_a_year)
+            || (i > rc_start - 49 + cycles_in_a_year && i < rc_end + 28 + cycles_in_a_year))
+                text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE_LIGHT);
+
+            if ((i > rc_start && i < rc_end)
+            || (i > rc_start - cycles_in_a_year && i < rc_end - cycles_in_a_year)
+            || (i > rc_start + cycles_in_a_year && i < rc_end + cycles_in_a_year))
+                text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_RED);
+
+//            if (rc_curr < rc_end + 28 - cycles_in_a_year) {
+//                if (abs_i > _c_start + _c_period_next + cycles_in_a_year && abs_i < _c_end - _c_period_next + cycles_in_a_year)
+//                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
+//            } else
+            if (rc_curr <= rc_start - 1) {
+                if (abs_i > _c_start + _c_period_next && abs_i < _c_end - _c_period_next)
+                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
+            } else {
+                if (abs_i > _c_start + _c_period_last && abs_i < _c_end - _c_period_last)
+                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
+            }
+        }
+
+        // cursor
+        text_draw_shadow(dot, x + rc_curr, y + 15, COLOR_FONT_YELLOW);
+        text_draw_shadow(string_from_ascii("\'"), x + rc_curr, y + 25, COLOR_FONT_YELLOW);
+        draw_debug_line_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr); // current cycle
+        draw_debug_line(str, x + rc_curr + 54, y + 25, 5, ":", floods->state); // current cycle
+
+        y += 30;
 
         int cl = 60;
-        draw_debug_line(str, x, y + 15, cl, "current:", c_curr); // current cycle
-        draw_debug_line(str, x, y + 25, cl, "t-49:", c_minus49); // 49 days prior
-        draw_debug_line(str, x, y + 35, cl, "t-27:", c_minus27); // 27 days prior
-        draw_debug_line(str, x, y + 45, cl, "start:", c_start); // flood start
-        draw_debug_line(str, x, y + 55, cl, "rest-1:", c_first_rest); // first rest period
-        draw_debug_line(str, x, y + 65, cl, "rest-2:", c_second_rest); // second rest period
-        draw_debug_line(str, x, y + 75, cl, "end:", c_end); // flood end
-        draw_debug_line(str, x, y + 85, cl, "final:", c_plus28); // lands farmable again
+        draw_debug_line(str, x, y + 15, cl, "current:", _c_curr); // current cycle
+        draw_debug_line(str, x + 85, y + 15, 10, "/", floodplains_current_cycle_tick()); // current cycle
+        draw_debug_line(str, x, y + 25, cl, "t-49:", _c_start - 49); // 49 cycles prior
+        draw_debug_line(str, x, y + 35, cl, "t-28:", _c_start - 28); // 28 cycles prior
+        draw_debug_line(str, x, y + 45, cl, "start:", _c_start); // flood start
+        draw_debug_line(str, x, y + 55, cl, "rest:", _c_start + _c_period_next); // first rest period
+        draw_debug_line(str, x, y + 65, cl, "retract:", _c_end - _c_period_next); // first rest period
+        draw_debug_line(str, x, y + 75, cl, "end:", _c_end); // flood end
+        draw_debug_line(str, x, y + 85, cl, "final:", _c_end + 28); // lands farmable again
 
         cl = 100;
         draw_debug_line(str, x, y + 105, cl, "season_initial:", floods->season_initial);
@@ -710,11 +764,11 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 185, cl, "quality_last:", floods->quality_last);
 
         cl = 60;
-        draw_debug_line(str, x, y + 205, cl, "dat_30:", floods->flood_progress); // status 30 (???)
+        draw_debug_line(str, x, y + 205, cl, "progress:", floods->flood_progress); // status 30 (???)
         draw_debug_line(str, x, y + 215, cl, "(unk01):", floods->unk01); // ???
         draw_debug_line(str, x, y + 225, cl, "state:", floods->state); // floodplains state
         draw_debug_line(str, x, y + 235, cl, "width:", floods->floodplain_width); // status 10 (???)
-        draw_debug_line(str, x, y + 245, cl, "plains:", floods->has_floodplains); // status 10 (???)
+        draw_debug_line(str, x, y + 245, cl, "hasplains:", floods->has_floodplains); // status 10 (???)
         y += 350;
     }
 

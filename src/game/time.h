@@ -67,8 +67,8 @@ int game_time_day(void);
  */
 int game_time_tick(void);
 
-int game_time_absolute_day();
-int game_time_absolute_tick();
+int game_time_absolute_day(bool since_start = false);
+int game_time_absolute_tick(bool since_start = false);
 
 
 /**
