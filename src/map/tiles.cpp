@@ -1108,7 +1108,7 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
     // TODO: I can not find the way the OG game determines which tile to update.
     //  I know it's deterministic, so I just used the random grid for now.
     int randm = map_random_get(grid_offset);
-    int ticks = floodplain_flooding_tick();
+    int ticks = floods_fticks();
     int local_tick_bound = calc_bound(ticks - order * 25, 0, 25);
     bool flooded = randm % 25 < local_tick_bound;
 

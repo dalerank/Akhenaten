@@ -264,9 +264,6 @@ static void advance_tick(void) {
             city_culture_calculate();
             break;
         case 50:
-            // todo
-//            flood message prediction
-            floodplains_day_update();
             break;
     }
     if (game_time_advance_tick())

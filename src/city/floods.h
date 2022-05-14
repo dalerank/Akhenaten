@@ -39,22 +39,22 @@ const floods_data_t * floodplain_data();
 void floodplains_init();
 
 int floods_debug_period();
-int floodplain_flooding_tick();
+int floods_fticks();
 
-extern const double cycles_in_a_year;
-double floodplains_current_cycle();
-int floodplains_current_cycle_tick();
-bool is_flood_cycle_tick();
-double floodplains_flooding_start_cycle();
-double floodplains_flooding_end_cycle();
-double floodplains_flooding_cycles_length(bool upcoming = false);
+extern const double CYCLES_IN_A_YEAR;
+double floods_current_cycle();
+int floods_current_subcycle();
+bool tick_is_flood_cycle();
+int floods_start_cycle();
+int floods_end_cycle();
+double floods_period_length(bool upcoming = false);
 
 bool floodplains_is(int state);
+
 void floodplains_adjust_next_quality(int quality);
 int floodplains_expected_quality();
 int floodplains_expected_month();
 
 void floodplains_tick_update(bool calc_only);
-void floodplains_day_update();
 
 #endif //OZYMANDIAS_FLOODS_H

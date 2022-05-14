@@ -225,8 +225,8 @@ static bool farm_harvesting_month_for_produce(int resource_id, int month) {
 }
 bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
-        auto current_cycle = floodplains_current_cycle();
-        auto start_cycle = floodplains_flooding_start_cycle();
+        auto current_cycle = floods_current_cycle();
+        auto start_cycle = floods_start_cycle();
         auto harvest_cycle = start_cycle - 28.0f;
         return floodplains_is(FLOOD_STATE_IMMINENT) && current_cycle >= harvest_cycle;
     } else {
