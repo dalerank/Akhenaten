@@ -10,7 +10,7 @@ enum {
     SYSTEM_DOUBLE_CLICK = 4
 };
 
-#define DOUBLE_CLICK_TIME 300
+#define DOUBLE_CLICK_TIME 500
 
 static mouse data;
 static mouse dialog;
