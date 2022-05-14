@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "tile_cache.h"
 
-#define MAX_FLOODPLAIN_ORDER_RANGE 30
+#define MAX_FLOODPLAIN_ROWS 30
 
 enum {
     FERT_NO_MALUS = 0,
@@ -14,9 +14,9 @@ enum {
 
 extern tile_cache floodplain_tiles_cache;
 
-void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order));
-int map_floodplain_rebuild_shoreorder();
-int8_t map_get_floodplain_shoreorder(int grid_offset);
+void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order));
+int map_floodplain_rebuild_rows();
+int8_t map_get_floodplain_row(int grid_offset);
 
 uint8_t map_get_floodplain_growth(int grid_offset);
 int map_get_fertility(int grid_offset, int tally_type);

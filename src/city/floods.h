@@ -38,6 +38,9 @@ const floods_data_t * floodplain_data();
 
 void floodplains_init();
 
+int floods_debug_period();
+int floodplain_flooding_tick();
+
 extern const double cycles_in_a_year;
 double floodplains_current_cycle();
 int floodplains_current_cycle_tick();

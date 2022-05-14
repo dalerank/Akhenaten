@@ -34,6 +34,7 @@
 #include <city/culture.h>
 #include <city/floods.h>
 #include <game/tutorial.h>
+#include <map/tiles.h>
 
 int debug_range_1 = 0;
 int debug_range_2 = 0;
@@ -189,7 +190,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
             }
             break;
         case 9: // FLOODPLAIN SHORE ORDER
-            d = map_get_floodplain_shoreorder(grid_offset);
+            d = map_get_floodplain_row(grid_offset);
             if (d > -1) draw_debug_line(str, x, y + 10, 0, "", d, COLOR_LIGHT_RED); break;
         case 10: // FLOODPLAIN TERRAIN FLAGS
             d = map_terrain_is(grid_offset, TERRAIN_BUILDING);
@@ -720,11 +721,7 @@ void draw_debug_ui(int x, int y) {
             || (i > rc_start + cycles_in_a_year && i < rc_end + cycles_in_a_year))
                 text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_RED);
 
-//            if (rc_curr < rc_end + 28 - cycles_in_a_year) {
-//                if (abs_i > _c_start + _c_period_next + cycles_in_a_year && abs_i < _c_end - _c_period_next + cycles_in_a_year)
-//                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
-//            } else
-            if (rc_curr <= rc_start - 1) {
+            if (floods_debug_period() > 0) {
                 if (abs_i > _c_start + _c_period_next && abs_i < _c_end - _c_period_next)
                     text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
             } else {
@@ -739,7 +736,10 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr); // current cycle
         draw_debug_line(str, x + rc_curr + 54, y + 25, 5, ":", floods->state); // current cycle
 
-        y += 30;
+        draw_debug_line(str, x, y + 35, 60, "debug:", floods_debug_period());
+        draw_debug_line(str, x, y + 45, 60, "ftick:", floodplain_flooding_tick());
+
+        y += 50;
 
         int cl = 60;
         draw_debug_line(str, x, y + 15, cl, "current:", _c_curr); // current cycle
@@ -747,8 +747,13 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 25, cl, "t-49:", _c_start - 49); // 49 cycles prior
         draw_debug_line(str, x, y + 35, cl, "t-28:", _c_start - 28); // 28 cycles prior
         draw_debug_line(str, x, y + 45, cl, "start:", _c_start); // flood start
-        draw_debug_line(str, x, y + 55, cl, "rest:", _c_start + _c_period_next); // first rest period
-        draw_debug_line(str, x, y + 65, cl, "retract:", _c_end - _c_period_next); // first rest period
+        if (floods_debug_period() > 0) {
+            draw_debug_line(str, x, y + 55, cl, "rest:", _c_start + _c_period_next); // first rest period
+            draw_debug_line(str, x, y + 65, cl, "retract:", _c_end - _c_period_next); // first rest period
+        } else {
+            draw_debug_line(str, x, y + 55, cl, "rest:", _c_start + _c_period_last); // first rest period
+            draw_debug_line(str, x, y + 65, cl, "retract:", _c_end - _c_period_last); // first rest period
+        }
         draw_debug_line(str, x, y + 75, cl, "end:", _c_end); // flood end
         draw_debug_line(str, x, y + 85, cl, "final:", _c_end + 28); // lands farmable again
 

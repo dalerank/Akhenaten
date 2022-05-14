@@ -7,39 +7,36 @@
 #include "water.h"
 
 tile_cache floodplain_tiles_cache;
-tile_cache floodplain_tiles_cache_by_order[MAX_FLOODPLAIN_ORDER_RANGE + 1];
+tile_cache floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS + 1];
 
-void foreach_floodplain_order(int order, void (*callback)(int grid_offset, int order)) {
-    if (order < 0 || order > MAX_FLOODPLAIN_ORDER_RANGE)
+void foreach_floodplain_row(int row, void (*callback)(int grid_offset, int order)) {
+    if (row < 0 || row > MAX_FLOODPLAIN_ROWS)
         return;
-    auto offsets = floodplain_tiles_cache_by_order[order];
-    for (int i = 0; i < offsets.size(); i++) {
-        int grid_offset = offsets.at(i);
-        callback(grid_offset, order);
+    auto cache = floodplain_tiles_caches_by_row[row];
+    for (int i = 0; i < cache.size(); i++) {
+        int grid_offset = cache.at(i);
+        callback(grid_offset, row);
     }
 }
 
-static grid_xx terrain_floodplain_shoreorder = {0, {FS_UINT8, FS_UINT8}};
+static grid_xx terrain_floodplain_row = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_growth = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_fertility = {0, {FS_UINT8, FS_UINT8}};
 static grid_xx terrain_floodplain_max_fertile = {0, {FS_UINT8, FS_UINT8}};
 
-static void build_shoreorder_from_tile(pixel_coordinate pixel, map_point point) {
-
-}
-int map_floodplain_rebuild_shoreorder() {
+int map_floodplain_rebuild_rows() {
 
     // reset all to zero
-    map_grid_fill(&terrain_floodplain_shoreorder, -1);
+    map_grid_fill(&terrain_floodplain_row, -1);
     map_grid_fill(&terrain_floodplain_growth, 0);
     map_grid_fill(&terrain_floodplain_max_fertile, 0);
-    for (int order = 0; order < MAX_FLOODPLAIN_ORDER_RANGE; order++)
-        floodplain_tiles_cache_by_order[order].clear();
+    for (int row = 0; row < MAX_FLOODPLAIN_ROWS; row++)
+        floodplain_tiles_caches_by_row[row].clear();
 
     // fill in shore order data
-    for (int order = -1; order < MAX_FLOODPLAIN_ORDER_RANGE - 1; order++) {
+    for (int row = -1; row < MAX_FLOODPLAIN_ROWS - 1; row++) {
 
-        int found_floodplain_tiles_in_order = 0;
+        int found_floodplain_tiles_in_row = 0;
 
         // go through every river tile
         for (int i = 0; i < river_tiles_cache.size(); i++) {
@@ -49,12 +46,12 @@ int map_floodplain_rebuild_shoreorder() {
             int tile_x = MAP_X(tile_offset);
             int tile_y = MAP_Y(tile_offset);
 
-            bool is_vergin_water = (order == -1
-                    && map_terrain_is(tile_offset, TERRAIN_WATER)
-                    && !map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN));
-            bool is_vergin_floodplain = (order > -1
-                    && map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN)
-                    && map_get_floodplain_shoreorder(tile_offset) == order);
+            bool is_vergin_water = (row == -1
+                                    && map_terrain_is(tile_offset, TERRAIN_WATER)
+                                    && !map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN));
+            bool is_vergin_floodplain = (row > -1
+                                         && map_terrain_is(tile_offset, TERRAIN_FLOODPLAIN)
+                                         && map_get_floodplain_row(tile_offset) == row);
 
             if (is_vergin_water // loop through every virgin water tile
                 || is_vergin_floodplain) { // or, through every floodplain tile of the previous round
@@ -72,18 +69,18 @@ int map_floodplain_rebuild_shoreorder() {
 
                         // do only on floodplain tiles that haven't been calculated / cached yet
                         if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN) && map_grid_is_valid_offset(grid_offset)
-                            && map_get_floodplain_shoreorder(grid_offset) == -1) {
+                            && map_get_floodplain_row(grid_offset) == -1) {
 
                             // set fertility data
-                            int tile_fert = 99 - ((99.0f/30.0f) * (float)(order + 1));
+                            int tile_fert = 99 - ((99.0f/30.0f) * (float)(row + 1));
                             map_grid_set(&terrain_floodplain_max_fertile, grid_offset, tile_fert);
 
                             // set the shore order cache
-                            map_grid_set(&terrain_floodplain_shoreorder, grid_offset, order + 1);
-                            floodplain_tiles_cache_by_order[order + 1].add(grid_offset);
+                            map_grid_set(&terrain_floodplain_row, grid_offset, row + 1);
+                            floodplain_tiles_caches_by_row[row + 1].add(grid_offset);
 
                             // advance counter
-                            found_floodplain_tiles_in_order++;
+                            found_floodplain_tiles_in_row++;
                         }
                         ++grid_offset;
                     }
@@ -93,20 +90,20 @@ int map_floodplain_rebuild_shoreorder() {
         }
 
         // no more shore tiles, return!
-        if (found_floodplain_tiles_in_order == 0)
-            return std::min(order + 2, MAX_FLOODPLAIN_ORDER_RANGE);
+        if (found_floodplain_tiles_in_row == 0)
+            return std::min(row + 2, MAX_FLOODPLAIN_ROWS);
     }
 
     // if past 29, fill in all the rest with the same order
     for (int i = 0; i < floodplain_tiles_cache.size(); i++) {
         int grid_offset = floodplain_tiles_cache.at(i);
-        if (map_get_floodplain_shoreorder(grid_offset) == -1) {
-            map_grid_set(&terrain_floodplain_shoreorder, grid_offset, MAX_FLOODPLAIN_ORDER_RANGE);
-            floodplain_tiles_cache_by_order[MAX_FLOODPLAIN_ORDER_RANGE].add(grid_offset);
+        if (map_get_floodplain_row(grid_offset) == -1) {
+            map_grid_set(&terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
+            floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].add(grid_offset);
         }
     }
 
-    return MAX_FLOODPLAIN_ORDER_RANGE;
+    return MAX_FLOODPLAIN_ROWS;
 }
 
 #ifndef min
@@ -117,8 +114,8 @@ int map_floodplain_rebuild_shoreorder() {
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-int8_t map_get_floodplain_shoreorder(int grid_offset) {
-    return map_grid_get(&terrain_floodplain_shoreorder, grid_offset);
+int8_t map_get_floodplain_row(int grid_offset) {
+    return map_grid_get(&terrain_floodplain_row, grid_offset);
 }
 uint8_t map_get_floodplain_growth(int grid_offset) {
     return map_grid_get(&terrain_floodplain_growth, grid_offset);

@@ -13,6 +13,8 @@
 #include <city/data_private.h>
 #include <building/destruction.h>
 #include <building/industry.h>
+#include <city/floods.h>
+#include <core/calc.h>
 #include "map/desirability.h"
 #include "map/elevation.h"
 #include "map/figure.h"
@@ -1091,23 +1093,24 @@ static void advance_floodplain_growth_tile(int grid_offset, int order) {
 }
 void map_advance_floodplain_growth() {
     // do groups of 12 rows at a time. every 12 cycle, do another pass over them.
-    foreach_floodplain_order( 0 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
-    foreach_floodplain_order(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_row(0 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_row(12 + floodplain_growth_advance, advance_floodplain_growth_tile);
+    foreach_floodplain_row(24 + floodplain_growth_advance, advance_floodplain_growth_tile);
 
     floodplain_growth_advance++;
     if (floodplain_growth_advance >= 12)
         floodplain_growth_advance = 0;
 }
 
-int floodplain_flood_tick = 0;
 int floodplain_is_flooding = 0;
 static void floodplain_update_inundation_row(int grid_offset, int order) {
 
-    int min = floodplain_flood_tick - 150;
-    int max = floodplain_flood_tick + 50;
-    int v = (order + 1) * 25; // every cycle (25 ticks) the order increases or decreases by one.
-    bool flooded = !random_bool_lerp_scalar_int(min, max, v);
+    // TODO: I can not find the way the OG game determines which tile to update.
+    //  I know it's deterministic, so I just used the random grid for now.
+    int randm = map_random_get(grid_offset);
+    int ticks = floodplain_flooding_tick();
+    int local_tick_bound = calc_bound(ticks - order * 25, 0, 25);
+    bool flooded = randm % 25 < local_tick_bound;
 
     int b_id = map_building_at(grid_offset);
     building *b = building_get(b_id);
@@ -1181,13 +1184,12 @@ static void floodplain_update_inundation_row(int grid_offset, int order) {
         refresh_river_at(grid_offset);
     }
 }
-void map_update_floodplain_inundation(int is_flooding, int flooding_ticks) {
-    floodplain_flood_tick = flooding_ticks * 1.5;
+void map_update_floodplain_inundation(int leading_row, int is_flooding, int flooding_ticks) {
     floodplain_is_flooding = is_flooding;
     if (floodplain_is_flooding == 0)
         return;
-    for (int i = 0; i <= MAX_FLOODPLAIN_ORDER_RANGE; i++)
-        foreach_floodplain_order(i, floodplain_update_inundation_row);
+    // no need to update every single row -- only update the "leading" shore
+    foreach_floodplain_row(29 - leading_row, floodplain_update_inundation_row);
 }
 
 static void set_earthquake_image(int grid_offset) {

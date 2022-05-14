@@ -865,7 +865,7 @@ void city_gods_update(bool mood_calc_only) {
         update_moods(randm_god);
 
 //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING
-        BAST_houses_destruction();
+//        BAST_houses_destruction();
 
         // at the start of every month
         if (game_time_day() == 0)
