@@ -1219,7 +1219,7 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer)
 //        if (img->data_length == 0)
 //            continue;
 //        SDL_Log("Creating atlas texture with size %dx%d", atlas_data->width, atlas_data->height);
-        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->bmp_buffer,
+        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->pixel_buffer,
                                                         atlas_data->width, atlas_data->height,
                                                         32, atlas_data->width * sizeof(color_t),
                                                         COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);

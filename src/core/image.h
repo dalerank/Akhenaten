@@ -35,30 +35,66 @@ enum {
 #define PAK_BMP_NAME_SIZE 200
 #define PAK_GROUPS_MAX 300
 #define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
-#define PAK_HEADER_SIZE_SG2 PAK_HEADER_SIZE_BASE + (100 * PAK_BMP_NAME_SIZE) // sg2 = 20680 bytes (100 bitmap entries)
-#define PAK_HEADER_SIZE_SG3 PAK_HEADER_SIZE_BASE + (200 * PAK_BMP_NAME_SIZE) // sg3 = 40680 bytes (200 bitmap entries)
 
 typedef struct image;
 
 typedef struct {
     SDL_Texture *texture;
     std::vector<image*> images;
-    color_t *bmp_buffer;
+    color_t *pixel_buffer;
     int bmp_size;
     int width;
     int height;
 } atlas_data_t;
 
 struct image {
+    int sg3_offset;
+    int data_length;
+    int uncompressed_length;
+    int unk00; //
+    int offset_mirror;
+    //
     int width;
     int height;
+    int unk01; //
+    int unk02; //
+    int unk03; //
     struct {
         int num_sprites;
+        int unk04; //
         int sprite_x_offset;
         int sprite_y_offset;
+        int unk05; //
+        int unk06; //
+        int unk07; //
+        int unk08; //
+        int unk09; //
         bool can_reverse;
+        int unk10; //
         int speed_id;
     } animation;
+    int type;
+    bool is_fully_compressed;
+    bool is_external;
+    int top_height;
+    int unk11; //
+    int unk12; //
+    struct {
+        char *name;
+        int group_id;
+        int entry_index;
+    } bmp;
+    int unk13; //
+    // (anim speed id)
+    int unk14; //
+    int unk15; //
+    int unk16; //
+    int unk17; //
+    int unk18; //
+
+    int unk19; //
+    int unk20; //
+
     struct {
         int index;
         int x_offset;
@@ -66,17 +102,7 @@ struct image {
         atlas_data_t *p_atlas;
     } atlas;
 
-    int offset_mirror;
-    int type;
-    bool is_fully_compressed;
-    bool is_external;
-    int top_height;
-    char *bitmap_name;
-    int bmp_index;
-    color_t *bmp_data;
-    int sg3_offset;
-    int data_length;
-    int uncompressed_length;
+    color_t *pixel_data;
 };
 
 typedef struct {
@@ -101,13 +127,13 @@ public:
     char name[MAX_FILE_NAME];
     std::vector<atlas_data_t> atlas_pages;
 
-    int id_shift_overall = 0;
+    int global_image_index_offset = 0;
 
     imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES = false);
     ~imagepak();
 
     int get_entry_count();
-    int get_id(int group);
+    int get_global_image_index(int group);
     const image *get_image(int id, bool relative = false);
 };
 
@@ -124,7 +150,7 @@ int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);
 const image *image_get_enemy(int id);
-const color_t *image_data(int id);
+//const color_t *image_data(int id);
 const color_t *image_data_letter(int letter_id);
 const color_t *image_data_enemy(int id);
 
