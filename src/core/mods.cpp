@@ -185,8 +185,8 @@ static int load_modded_image(modded_image *img) {
         load_layer(&img->layers[i]);
     }
 
-    img->data = (color_t *) malloc(img->img.draw.data_length);
-    memset(img->data, 0, img->img.draw.data_length);
+    img->data = (color_t *) malloc(img->img.data_length);
+    memset(img->data, 0, img->img.data_length);
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
         for (int i = 0; i < img->num_layers; ++i) {
@@ -460,13 +460,13 @@ static void xml_end_mod_element(void) {
 
 static void xml_end_image_element(void) {
     image *img = &data.xml.current_image->img;
-    img->draw.data_length = img->width * img->height * sizeof(color_t);
-    img->draw.uncompressed_length = img->draw.data_length;
-    if (!data.xml.current_image->num_layers || !img->draw.data_length)
+    img->data_length = img->width * img->height * sizeof(color_t);
+    img->uncompressed_length = img->data_length;
+    if (!data.xml.current_image->num_layers || !img->data_length)
         return;
-    img->draw.type = IMAGE_TYPE_MOD;
+    img->type = IMAGE_TYPE_MOD;
     data.xml.current_image->active = 1;
-    if (img->draw.data_length < IMAGE_PRELOAD_MAX_SIZE) {
+    if (img->data_length < IMAGE_PRELOAD_MAX_SIZE) {
         load_modded_image(data.xml.current_image);
     }
     data.total_images++;

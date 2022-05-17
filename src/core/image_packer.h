@@ -73,7 +73,7 @@ typedef struct {
         image_packer_fail_policy fail_policy;
     } options;
     struct {
-        unsigned int images_needed;
+        unsigned int pages_needed;
         unsigned int last_image_width;
         unsigned int last_image_height;
     } result;

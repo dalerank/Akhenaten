@@ -17,6 +17,7 @@
 #include <string.h>
 #include <input/cursor.h>
 #include <core/image_packer.h>
+#include <SDL_image.h>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -585,10 +586,10 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     int y_offset = img->atlas.y_offset;
     int height = img->height;
 
-    if (img->draw.type == IMAGE_TYPE_ISOMETRIC && img->draw.top_height) {
+    if (img->type == IMAGE_TYPE_ISOMETRIC && img->top_height) {
         if (!data.renderer_interface.isometric_images_are_joined()) {
-            y_offset += img->draw.top_height;
-            height -= img->draw.top_height;
+            y_offset += img->top_height;
+            height -= img->top_height;
         } else {
             height = (img->width + 2) / 2;
             y_offset += img->height - height;
@@ -599,7 +600,7 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     if (HAS_RENDER_GEOMETRY) {
         SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
         SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        if (img->draw.type == IMAGE_TYPE_ISOMETRIC) {
+        if (img->type == IMAGE_TYPE_ISOMETRIC) {
             draw_isometric_footprint_raw(img, texture, &src_coords, &dst_coords, color, scale);
         } else {
             draw_texture_raw(img, texture, &src_coords, &dst_coords, color, scale);
@@ -614,7 +615,7 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
         (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
 
-    int texture_coord_correction = scale != 1.0f && img->draw.type == IMAGE_TYPE_ISOMETRIC ? 1 : 0;
+    int texture_coord_correction = scale != 1.0f && img->type == IMAGE_TYPE_ISOMETRIC ? 1 : 0;
 
     SDL_Rect src_coords = { x_offset + texture_coord_correction, y_offset + texture_coord_correction,
         img->width - texture_coord_correction, height - texture_coord_correction };
@@ -641,7 +642,7 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
         color = COLOR_MASK_NONE;
     }
 
-    if (!img->draw.type == IMAGE_TYPE_ISOMETRIC || !img->draw.top_height) {
+    if (!img->type == IMAGE_TYPE_ISOMETRIC || !img->top_height) {
         return;
     }
 //    SDL_Texture *texture = get_texture(img->atlas.bitflags);
@@ -655,7 +656,7 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
 
     int x_offset = img->atlas.x_offset;
     int y_offset = img->atlas.y_offset + 1;
-    int height = img->draw.top_height;
+    int height = img->top_height;
 
 #ifdef USE_RENDER_GEOMETRY
     if (HAS_RENDER_GEOMETRY) {
@@ -928,7 +929,7 @@ static void create_blend_texture(int type)
 
     data.custom_textures[type].texture = texture;
     memset(&data.custom_textures[type].img, 0, sizeof(data.custom_textures[type].img));
-    data.custom_textures[type].img.draw.type = IMAGE_TYPE_ISOMETRIC;
+    data.custom_textures[type].img.type = IMAGE_TYPE_ISOMETRIC;
     data.custom_textures[type].img.width = 58;
     data.custom_textures[type].img.height = 30;
 //    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
@@ -957,7 +958,8 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     if (data.paused) {
         return;
     }
-    int unpacked_image_id = img->atlas.bitflags & IMAGE_ATLAS_BIT_MASK;
+//    int unpacked_image_id = img->atlas.bitflags & IMAGE_ATLAS_BIT_MASK;
+    int unpacked_image_id = 0;
     int first_empty = -1;
     int oldest_texture_index = 0;
     for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
@@ -1038,7 +1040,7 @@ static int prepare_texture_atlas(imagepak *pak, image_packer *packer)
     if (pak == nullptr || pak->get_entry_count() <= 0)
         return 0;
 //    int num_images = pak->get_entry_count();
-    int num_atlas_pages = packer->result.images_needed;
+    int num_atlas_pages = packer->result.pages_needed;
 
 //    pak->textures.clear();
 //    pak->textures_size.clear();
@@ -1102,12 +1104,95 @@ static int prepare_texture_atlas(imagepak *pak, image_packer *packer)
     return pak->atlas_pages.size();
 }
 
+static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *tex)
+{
+    SDL_Texture *ren_tex;
+    SDL_Surface *surf;
+    int st;
+    int w;
+    int h;
+    int format;
+    void *pixels;
+
+    pixels  = NULL;
+    surf    = NULL;
+    ren_tex = NULL;
+    format  = SDL_PIXELFORMAT_RGBA32;
+
+    /* Get information about texture we want to save */
+    st = SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+    if (st != 0) {
+        SDL_Log("Failed querying texture: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    ren_tex = SDL_CreateTexture(ren, format, SDL_TEXTUREACCESS_TARGET, w, h);
+    if (!ren_tex) {
+        SDL_Log("Failed creating render texture: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    /*
+     * Initialize our canvas, then copy texture to a target whose pixel data we
+     * can access
+     */
+    st = SDL_SetRenderTarget(ren, ren_tex);
+    if (st != 0) {
+        SDL_Log("Failed setting render target: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(ren);
+
+    st = SDL_RenderCopy(ren, tex, NULL, NULL);
+    if (st != 0) {
+        SDL_Log("Failed copying texture data: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    /* Create buffer to hold texture data and load it */
+    pixels = malloc(w * h * SDL_BYTESPERPIXEL(format));
+    if (!pixels) {
+        SDL_Log("Failed allocating memory\n");
+        goto cleanup;
+    }
+
+    st = SDL_RenderReadPixels(ren, NULL, format, pixels, w * SDL_BYTESPERPIXEL(format));
+    if (st != 0) {
+        SDL_Log("Failed reading pixel data: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    /* Copy pixel data over to surface */
+    surf = SDL_CreateRGBSurfaceWithFormatFrom(pixels, w, h, SDL_BITSPERPIXEL(format), w * SDL_BYTESPERPIXEL(format), format);
+    if (!surf) {
+        SDL_Log("Failed creating new surface: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    /* Save result to an image */
+    st = SDL_SaveBMP(surf, filename);
+//    st = IMG_SavePNG(surf, filename);
+    if (st != 0) {
+        SDL_Log("Failed saving image: %s\n", SDL_GetError());
+        goto cleanup;
+    }
+
+    SDL_Log("Saved texture as BMP to \"%s\"\n", filename);
+
+    cleanup:
+    SDL_FreeSurface(surf);
+    free(pixels);
+    SDL_DestroyTexture(ren_tex);
+}
+
 static bool create_texture_atlas(imagepak *pak, image_packer *packer)
 {
     if (pak == nullptr || pak->get_entry_count() <= 0)
         return false;
 //    int num_images = pak->get_entry_count();
-    int num_atlas_pages = packer->result.images_needed;
+    int num_atlas_pages = packer->result.pages_needed;
 
 //    SDL_Texture **list = data.texture_lists[atlas_data->type];
 //    pak->textures.clear();
@@ -1131,10 +1216,10 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer)
 //        const image *img = pak->get_raw_image_data(i);
         auto atlas_data = &pak->atlas_pages.at(i);
 //        auto buffer = data->raw_buffer;
-//        if (img->draw.data_length == 0)
+//        if (img->data_length == 0)
 //            continue;
 //        SDL_Log("Creating atlas texture with size %dx%d", atlas_data->width, atlas_data->height);
-        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->raw_buffer,
+        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->bmp_buffer,
                                                         atlas_data->width, atlas_data->height,
                                                         32, atlas_data->width * sizeof(color_t),
                                                         COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
@@ -1146,6 +1231,15 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer)
         auto texture = SDL_CreateTextureFromSurface(data.renderer, surface);
         atlas_data->texture = texture;
 //        pak->textures.push_back(texture);
+
+
+        // ********* DEBUGGING **********
+        char *lfile = (char *) malloc(200);
+        sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", pak->name, i); // TODO: make this a global function
+        save_texture(lfile, data.renderer, texture);
+        free(lfile);
+        // ******************************
+
         SDL_FreeSurface(surface);
 //        free(atlas_data->buffers[i]);
 //        atlas_data->buffers[i] = 0;

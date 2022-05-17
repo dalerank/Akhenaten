@@ -6,6 +6,7 @@
 #include "core/encoding.h"
 #include "core/image_group.h"
 #include "graphics/color.h"
+#include "file.h"
 
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS 2188
@@ -30,14 +31,20 @@ enum {
  * Image metadata
  */
 
+#define PAK_HEADER_INFO_BYTES 80
+#define PAK_BMP_NAME_SIZE 200
+#define PAK_GROUPS_MAX 300
+#define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
+#define PAK_HEADER_SIZE_SG2 PAK_HEADER_SIZE_BASE + (100 * PAK_BMP_NAME_SIZE) // sg2 = 20680 bytes (100 bitmap entries)
+#define PAK_HEADER_SIZE_SG3 PAK_HEADER_SIZE_BASE + (200 * PAK_BMP_NAME_SIZE) // sg3 = 40680 bytes (200 bitmap entries)
+
 typedef struct image;
 
 typedef struct {
     SDL_Texture *texture;
-    int num_images;
     std::vector<image*> images;
-    color_t *raw_buffer;
-    int raw_size;
+    color_t *bmp_buffer;
+    int bmp_size;
     int width;
     int height;
 } atlas_data_t;
@@ -51,31 +58,25 @@ struct image {
         int sprite_y_offset;
         bool can_reverse;
         int speed_id;
-//        int start_offset;
     } animation;
     struct {
-        int bitflags;
         int index;
         int x_offset;
         int y_offset;
         atlas_data_t *p_atlas;
-//        int raw_buffer_size;
-//        SDL_Texture *texture = nullptr;
     } atlas;
 
     int offset_mirror;
-    struct {
-        int type;
-        bool is_fully_compressed;
-        bool is_external;
-        int top_height;
-        char *bitmap_name;
-        int bmp_index;
-        color_t *data;
-        int sg3_offset;
-        int data_length;
-        int uncompressed_length;
-    } draw;
+    int type;
+    bool is_fully_compressed;
+    bool is_external;
+    int top_height;
+    char *bitmap_name;
+    int bmp_index;
+    color_t *bmp_data;
+    int sg3_offset;
+    int data_length;
+    int uncompressed_length;
 };
 
 typedef struct {
@@ -84,23 +85,25 @@ typedef struct {
 } texture_size_t;
 
 class imagepak {
-//    const char *name;
+    int version;
     int entries_num;
     int groups_num;
-    uint32_t header_data[10];
+    char *bmp_names;
+    int num_bmp_names;
     uint16_t *group_image_ids;
     std::vector<image> images_array;
-//    image *images;
-//    color_t *image_data;
 
-    bool load_pak(const char *filename_partial, int starting_index);
+    bool SHOULD_LOAD_SYSTEM_SPRITES;
+
+    bool load_pak(const char *pak_name, int starting_index);
 
 public:
+    char name[MAX_FILE_NAME];
     std::vector<atlas_data_t> atlas_pages;
 
     int id_shift_overall = 0;
 
-    imagepak(const char *filename_partial, int starting_index);
+    imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES = false);
     ~imagepak();
 
     int get_entry_count();

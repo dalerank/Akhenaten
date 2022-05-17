@@ -333,7 +333,7 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
         for (unsigned int i = 0; i < data->num_rects; i++) {
             image_packer_rect *rect = data->sorted_rects[i];
 
-            if (rect->output.packed && rect->output.image_index != packer->result.images_needed) {
+            if (rect->output.packed && rect->output.image_index != packer->result.pages_needed) {
                 continue;
             }
             if (!pack_rect(data, rect, packer->options.allow_rotation)) {
@@ -344,19 +344,19 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
                 }
             } else {
                 rect->output.packed = 1;
-                rect->output.image_index = packer->result.images_needed;
+                rect->output.image_index = packer->result.pages_needed;
                 images_packed_in_loop++;
                 area_packed_in_loop += rect->input.width * rect->input.height;
             }
         }
 
         if (!failed) {
-            packer->result.images_needed++;
+            packer->result.pages_needed++;
             total_images_packed += images_packed_in_loop;
             must_increase_size = 0;
         } else if (packer->result.last_image_width == data->image_width &&
               packer->result.last_image_height == data->image_height) {
-            packer->result.images_needed++;
+            packer->result.pages_needed++;
             total_images_packed += images_packed_in_loop;
             remaining_area -= area_packed_in_loop;
             needed_width = (unsigned int) sqrt(remaining_area * image_ratio) + 1;
@@ -456,20 +456,20 @@ int image_packer_pack(image_packer *packer)
                 }
                 if (data->empty_areas.first->width == data->image_width &&
                     data->empty_areas.first->height == data->image_height) {
-                    packer->result.images_needed--;
+                    packer->result.pages_needed--;
                     packer->result.last_image_width = data->image_width;
                     packer->result.last_image_height = data->image_height;
                     return packed_rects;
                 }
             } else {
-                rect->output.image_index = packer->result.images_needed;
+                rect->output.image_index = packer->result.pages_needed;
                 rect->output.packed = 1;
                 area_used_in_last_image += rect->input.width * rect->input.height;
                 packed_rects++;
             }
         }
         remaining_area -= area_used_in_last_image;
-        packer->result.images_needed++;
+        packer->result.pages_needed++;
     }
 
     packer->result.last_image_width = data->image_width;

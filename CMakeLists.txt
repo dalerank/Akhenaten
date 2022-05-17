@@ -185,6 +185,11 @@ set(TINYFD_FILES
 #    ext/zlib/zutil.c
 #)
 
+#set(SDL_IMAGE_FILES
+##    ext/SDL_image/IMG_savejpg.c
+#    ext/SDL_image/IMG_savepng.c
+#)
+
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.cpp
@@ -643,6 +648,7 @@ set(SOURCE_FILES
 #    ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
 #    ${PNG_FILES}
+#    ${SDL_IMAGE_FILES}
 #    ${ZLIB_FILES}
 )
 
@@ -671,6 +677,7 @@ endfunction()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 
@@ -884,7 +891,7 @@ else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
         target_link_libraries(${SHORT_NAME} m)
     endif()
-    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${SDL2_IMAGE_LIBRARY})
     if(NOT APPLE)
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()
