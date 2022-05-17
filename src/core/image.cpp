@@ -12,6 +12,13 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <graphics/graphics.h>
+#include <cassert>
+#include <cinttypes>
+#include <graphics/renderer.h>
+#include "core/string.h"
+#include "stopwatch.h"
+#include "image_packer.h"
 
 #define ENTRY_SIZE 64
 #define NAME_SIZE 32
@@ -64,36 +71,140 @@ static color_t to_32_bit(uint16_t c) {
            ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, int amount, color_t *dst) {
-    for (int i = 0; i < amount; i += 2) {
-        color_t c = to_32_bit(buf->read_u16());
-        *dst = c;
-        dst++;
+static int convert_uncompressed(buffer *buf, const image *img) {
+    int pixels_count = 0;
+    auto p_atlas = img->atlas.p_atlas;
+
+    for (int y = 0; y < img->height; y++) {
+        color_t *pixel = &p_atlas->raw_buffer[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        for (int x = 0; x < img->width; x++) {
+            color_t color = to_32_bit(buf->read_u16());
+            pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
+            pixels_count++;
+        }
     }
-    return amount / 2;
+//    for (int i = 0; i < buf_length; i += 2) {
+//        color_t c = to_32_bit(buf->read_u16());
+//        *dst = c;
+//        dst++;
+//    }
+    return pixels_count;
 }
-static int convert_compressed(buffer *buf, int amount, color_t *dst) {
-    int dst_length = 0;
-    while (amount > 0) {
+static int convert_compressed(buffer *buf, int data_length, const image *img) {
+    int pixels_count = 0;
+    auto p_atlas = img->atlas.p_atlas;
+//    int atlas_x = img->atlas.x_offset;
+//    int atlas_y = img->atlas.y_offset;
+    int atlas_dst = (img->atlas.y_offset * p_atlas->width) + img->atlas.x_offset;
+    int y = 0;
+    int x = 0;
+    while (data_length > 0) {
         int control = buf->read_u8();
         if (control == 255) {
             // next byte = transparent pixels to skip
-            *dst++ = 255;
-            *dst++ = buf->read_u8();
-            dst_length += 2;
-            amount -= 2;
+            int skip = buf->read_u8();
+            y += skip / img->width;
+            x += skip % img->width;
+            if (x >= img->width) {
+                y++;
+                x -= img->width;
+            }
+            data_length -= 2;
         } else {
             // control = number of concrete pixels
-            *dst++ = control;
             for (int i = 0; i < control; i++) {
-                *dst++ = to_32_bit(buf->read_u16());
+//                color_t *pixel = &p_atlas->raw_buffer[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset + x];
+//                *pixel = to_32_bit(buf->read_u16());
+                int dst = atlas_dst + y * p_atlas->width + x;
+                p_atlas->raw_buffer[dst] = to_32_bit(buf->read_u16());
+                x++;
+                if (x >= img->width) {
+                    y++;
+                    x -= img->width;
+                }
             }
-            dst_length += control + 1;
-            amount -= control * 2 + 1;
+            data_length -= control * 2 + 1;
         }
     }
-    return dst_length;
+//    int dst_length = 0;
+//    while (buf_length > 0) {
+//        int control = buf->read_u8();
+//        if (control == 255) {
+//            // next byte = transparent pixels to skip
+//            *dst++ = 255;
+//            *dst++ = buf->read_u8();
+//            dst_length += 2;
+//            buf_length -= 2;
+//        } else {
+//            // control = number of concrete pixels
+//            *dst++ = control;
+//            for (int i = 0; i < control; i++) {
+//                *dst++ = to_32_bit(buf->read_u16());
+//            }
+//            dst_length += control + 1;
+//            buf_length -= control * 2 + 1;
+//        }
+//    }
+    return pixels_count;
 }
+
+static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
+        28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
+        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
+};
+
+static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
+        0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
+        508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
+};
+
+static int convert_footprint_tile(buffer *buf, const image *img, int x_offset, int y_offset) {
+    int pixels_count = 0;
+    auto p_atlas = img->atlas.p_atlas;
+
+    for (int y = 0; y < FOOTPRINT_HEIGHT; y++) {
+        int x_start = FOOTPRINT_X_START_PER_HEIGHT[y];
+        int x_max = FOOTPRINT_WIDTH - x_start;
+        for (int x = x_start; x < x_max; x++) {
+            p_atlas->raw_buffer[(y + y_offset + img->atlas.y_offset) * p_atlas->width + img->atlas.x_offset + x + x_offset] =
+                    to_32_bit(buf->read_u16());
+        }
+    }
+    return pixels_count;
+}
+static int convert_isometric_footprint(buffer *buf, const image *img) {
+    int pixels_count = 0;
+    auto p_atlas = img->atlas.p_atlas;
+
+    int num_tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+    int x_start = (num_tiles - 1) * 30;
+    int y_offset;
+
+    if (graphics_renderer()->isometric_images_are_joined()) {
+        y_offset = img->height - 30 * num_tiles;
+    } else {
+        y_offset = img->draw.top_height;
+    }
+
+    for (int i = 0; i < num_tiles; i++) {
+        int x = -30 * i + x_start;
+        int y = FOOTPRINT_HALF_HEIGHT * i + y_offset;
+        for (int j = 0; j <= i; j++) {
+            convert_footprint_tile(buf, img, x, y);
+            x += 60;
+        }
+    }
+    for (int i = num_tiles - 2; i >= 0; i--) {
+        int x = -30 * i + x_start;
+        int y = FOOTPRINT_HALF_HEIGHT * (num_tiles * 2 - i - 2) + y_offset;
+        for (int j = 0; j <= i; j++) {
+            convert_footprint_tile(buf, img, x, y);
+            x += 60;
+        }
+    }
+    return pixels_count;
+}
+
 static buffer *temp_external_image_buf = nullptr;
 static const color_t *load_external_data(const image *img) {
     char filename[MAX_FILE_NAME];
@@ -106,7 +217,7 @@ static const color_t *load_external_data(const image *img) {
             file_change_extension(filename, "555");
             size = io_read_file_part_into_buffer(
                     &filename[5], MAY_BE_LOCALIZED, temp_external_image_buf,
-                    img->draw.data_length, img->draw.offset - 1
+                    img->draw.data_length, img->draw.sg3_offset - 1
             );
             break;
     }
@@ -114,7 +225,7 @@ static const color_t *load_external_data(const image *img) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
                 filename, MAY_BE_LOCALIZED, temp_external_image_buf,
-                img->draw.data_length, img->draw.offset - 1
+                img->draw.data_length, img->draw.sg3_offset - 1
         );
         if (!size) {
             log_error("unable to load external image", img->draw.bitmap_name, 0);
@@ -125,33 +236,44 @@ static const color_t *load_external_data(const image *img) {
 
     // NB: isometric images are never external
     if (img->draw.is_fully_compressed)
-        convert_compressed(temp_external_image_buf, img->draw.data_length, data.tmp_image_data);
+        convert_compressed(temp_external_image_buf, img->draw.data_length, img);
     else {
-        convert_uncompressed(temp_external_image_buf, img->draw.data_length, data.tmp_image_data);
+        convert_uncompressed(temp_external_image_buf, img);
     }
     return data.tmp_image_data;
 }
 
-//////////////////////// IMAGEPAK
+static int convert_image_data(buffer *buf, image *img) {
+    if (img->draw.is_fully_compressed)
+        convert_compressed(buf, img->draw.data_length, img);
+    else if (img->draw.top_height) { // isometric tile
+        convert_isometric_footprint(buf, img);
+        convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, img);
+    } else if(img->draw.type == IMAGE_TYPE_ISOMETRIC)
+        convert_isometric_footprint(buf, img);
+    else
+        convert_uncompressed(buf, img);
 
-#include <cassert>
-#include <cinttypes>
-#include "core/string.h"
-#include "stopwatch.h"
+    img->draw.data = &img->atlas.p_atlas->raw_buffer[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
+//    img->draw.data = dst;
+    img->draw.uncompressed_length /= 2;
+}
+
+//////////////////////// IMAGEPAK
 
 static stopwatch WATCH;
 
 imagepak::imagepak(const char *filename_partial, int starting_index) {
-    images = nullptr;
-    image_data = nullptr;
+//    images = nullptr;
+//    image_data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
 
     load_pak(filename_partial, starting_index);
 }
 imagepak::~imagepak() {
-    delete images;
-    delete image_data;
+//    delete images;
+//    delete image_data;
 }
 
 buffer *scratch_data_buf = nullptr;
@@ -198,9 +320,10 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
 
     // allocate arrays
     entries_num = (size_t) header_data[4] + 1;
-    name = (const char*)filename_sgx;
-    images = new image[entries_num];
-    image_data = new color_t[entries_num * 10000];
+//    name = (const char*)filename_sgx;
+//    images = new image[entries_num];
+    images_array.reserve(entries_num);
+//    image_data = new color_t[entries_num * 10000];
 
     scratch_data_buf->skip(40); // skip remaining 40 bytes
 
@@ -230,95 +353,187 @@ bool imagepak::load_pak(const char *filename_partial, int starting_index) {
     // fill in image data
     int bmp_lastbmp = 0;
     int bmp_lastindex = 1;
-    for (int i = 0; i < entries_num; i++) {
+    const int entries_num_original = entries_num; // TODO
+    for (int i = 0; i < entries_num_original; i++) {
         image img;
-        img.draw.offset = scratch_data_buf->read_i32();
+        img.draw.sg3_offset = scratch_data_buf->read_i32();
         img.draw.data_length = scratch_data_buf->read_i32();
         img.draw.uncompressed_length = scratch_data_buf->read_i32();
         scratch_data_buf->skip(4);
         img.offset_mirror = scratch_data_buf->read_i32(); // .sg3 only
-        img.width = scratch_data_buf->read_u16();
-        img.height = scratch_data_buf->read_u16();
+        // clamp dimensions so that it's not below zero!
+        img.width = scratch_data_buf->read_i16(); img.width = img.width < 0 ? 0 : img.width;
+        img.height = scratch_data_buf->read_i16(); img.height = img.height < 0 ? 0 : img.height;
         scratch_data_buf->skip(6);
-        img.num_animation_sprites = scratch_data_buf->read_u16();
+        img.animation.num_sprites = scratch_data_buf->read_u16();
         scratch_data_buf->skip(2);
-        img.sprite_offset_x = scratch_data_buf->read_i16();
-        img.sprite_offset_y = scratch_data_buf->read_i16();
+        img.animation.sprite_x_offset = scratch_data_buf->read_i16();
+        img.animation.sprite_y_offset = scratch_data_buf->read_i16();
         scratch_data_buf->skip(10);
-        img.animation_can_reverse = scratch_data_buf->read_i8();
+        img.animation.can_reverse = scratch_data_buf->read_i8();
         scratch_data_buf->skip(1);
         img.draw.type = scratch_data_buf->read_u8();
         img.draw.is_fully_compressed = scratch_data_buf->read_i8();
         img.draw.is_external = scratch_data_buf->read_i8();
-        img.draw.has_compressed_part = scratch_data_buf->read_i8();
+        img.draw.top_height = scratch_data_buf->read_i8();
         scratch_data_buf->skip(2);
         int bitmap_id = scratch_data_buf->read_u8();
-        const char *bmn = bmp_names[bitmap_id];
-        strncpy(img.draw.bitmap_name, bmn, 200);
-        if (bitmap_id != bmp_lastbmp) {// new bitmap name, reset bitmap grouping index
+        img.draw.bitmap_name = bmp_names[bitmap_id];
+//        strncpy(img.draw.bitmap_name, bmn, 200);
+        if (bitmap_id != bmp_lastbmp) { // new bitmap name, reset bitmap grouping index
             bmp_lastindex = 1;
             bmp_lastbmp = bitmap_id;
         }
         img.draw.bmp_index = bmp_lastindex;
         bmp_lastindex++;
         scratch_data_buf->skip(1);
-        img.animation_speed_id = scratch_data_buf->read_u8();
+        img.animation.speed_id = scratch_data_buf->read_u8();
         if (header_data[1] < 214)
             scratch_data_buf->skip(5);
         else
             scratch_data_buf->skip(5 + 8);
-        images[i] = img;
+        images_array.push_back(img);
+//        images[i] = img;
         int f = 1;
     }
 
-    // fill in bmp offset data
-    int offset = 4;
-    for (int i = 1; i < entries_num; i++) {
-        image *img = &images[i];
-        if (img->draw.is_external) {
-            if (!img->draw.offset)
-                img->draw.offset = 1;
-        } else {
-            img->draw.offset = offset;
-            offset += img->draw.data_length;
-        }
-    }
+    // prepare image packer & renderer
+    int max_texture_width;
+    int max_texture_height;
+    graphics_renderer()->get_max_image_size(&max_texture_width, &max_texture_height);
+    if (image_packer_init(&packer, entries_num, max_texture_width, max_texture_height) != IMAGE_PACKER_OK)
+        return false;
+    packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
+    packer.options.reduce_image_size = 1;
+    packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
-    // prepare bitmap data
+    // TODO
+//    image_data = new color_t[entries_num * 10000];
+
+    // read bitmap data into buffer
     scratch_data_buf->clear();
     int data_size = io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, scratch_data_buf, SCRATCH_DATA_SIZE);
     if (!data_size)
         return false;
 
-    // convert bitmap data for image pool
-    color_t *start_dst = image_data;
-    color_t *dst = image_data;
-    dst++; // make sure img->offset > 0
+    // fill in bmp offset data
+    int offset = 4;
+    for (int i = 1; i < entries_num; i++) {
+        image *img = &images_array.at(i);
+        if (img->draw.is_external) {
+            if (!img->draw.sg3_offset)
+                img->draw.sg3_offset = 1;
+        } else {
+            img->draw.sg3_offset = offset;
+            offset += img->draw.data_length;
+
+            // record packer rect
+            image_packer_rect *rect = &packer.rects[i];
+            rect->input.width = img->width;
+            rect->input.height = img->height;
+        }
+    }
+
+    // generate atlas pages
+//    SDL_Log("%s -> %i images, %i size", filename_sgx, entries_num, data_size);
+    image_packer_pack(&packer);
+    atlas_pages.reserve(packer.result.images_needed);
+    for (int i = 0; i < packer.result.images_needed; ++i) {
+        atlas_data_t atlas_data;
+        atlas_data.width = i == packer.result.images_needed - 1 ? packer.result.last_image_width : max_texture_width;
+        atlas_data.height = i == packer.result.images_needed - 1 ? packer.result.last_image_height : max_texture_height;
+        atlas_data.raw_size = atlas_data.width * atlas_data.height;
+        atlas_data.raw_buffer = new color_t[atlas_data.raw_size];
+        atlas_data.texture = nullptr;
+        atlas_pages.push_back(atlas_data);
+    }
+
+    // finish filling in image and atlas information
+//    color_t *start_dst = image_data;
+//    color_t *dst = image_data;
+//    dst++; // make sure img->offset > 0
     for (int i = 0; i < entries_num; i++) {
-        image *img = &images[i];
+        image *img = &images_array.at(i);
         if (img->draw.is_external)
             continue;
-        scratch_data_buf->set_offset(img->draw.offset);
-        int img_offset = (int) (dst - start_dst);
+        image_packer_rect *rect = &packer.rects[i];
+//        img->atlas.id = (type << IMAGE_ATLAS_BIT_OFFSET) + rect->output.image_index;
+        img->atlas.index = rect->output.image_index;
+        atlas_data_t *p_data = &atlas_pages.at(img->atlas.index);
+        img->atlas.p_atlas = p_data;
+        img->atlas.x_offset = rect->output.x;
+        img->atlas.y_offset = rect->output.y;
+        if (img->atlas.index != 0)
+            int a = 5;
+        p_data->num_images++;
+        p_data->images.push_back(img);
 
-        if (img->draw.is_fully_compressed)
-            dst += convert_compressed(scratch_data_buf, img->draw.data_length, dst);
-        else if (img->draw.has_compressed_part) { // isometric tile
-            dst += convert_uncompressed(scratch_data_buf, img->draw.uncompressed_length, dst);
-            dst += convert_compressed(scratch_data_buf, img->draw.data_length - img->draw.uncompressed_length, dst);
-        } else
-            dst += convert_uncompressed(scratch_data_buf, img->draw.data_length, dst);
 
-        img->draw.offset = img_offset;
-        img->draw.uncompressed_length /= 2;
-        img->draw.data = &image_data[img_offset];
+        // convert bitmap data for image pool
+        if (img->draw.is_external)
+            continue;
+        scratch_data_buf->set_offset(img->draw.sg3_offset);
+//        int img_offset = (int) (dst - start_dst);
+
+//        color_t *dst = atlas_data->buffers[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+//        atlas_data->buffers[img->atlas.id & IMAGE_ATLAS_BIT_MASK] = dst;
+//        int dst_width = atlas_data->image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+//        atlas_data->image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK] = img->draw.data_length;
+
+//        color_t *dst = &p_data->raw_buffer[rect->output.x + p_data->width * rect->output.y];
+        int r = convert_image_data(scratch_data_buf, img);
+
+//        if (img->draw.is_fully_compressed)
+//            convert_compressed(scratch_data_buf, img->draw.data_length, img);
+//        else if (img->draw.top_height) { // isometric tile
+//            convert_uncompressed(scratch_data_buf, img);
+//            convert_compressed(scratch_data_buf, img->draw.data_length - img->draw.uncompressed_length, img);
+//        } else
+//            convert_uncompressed(scratch_data_buf, img);
+
+//        if (!img->draw.top_height && img->draw.is_fully_compressed) {
+//            img->draw.data = malloc(img->width * img->height * sizeof(color_t));
+//            if (draw_data->buffer) {
+//                int reduce_width = type != ATLAS_FONT;
+//                if (type == ATLAS_MAIN) {
+//                    reduce_width = i < image_group(GROUP_FONT) || i >= image_group(GROUP_FONT) + BASE_FONT_ENTRIES;
+//                }
+//                draw_data->original_width = img->width;
+//                memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
+//                buffer_set(buf, draw_data->offset);
+//                convert_compressed(buf, img, draw_data->data_length, draw_data->buffer, img->width);
+//                image_crop(img, draw_data->buffer, reduce_width);
+//            }
+//        }
+
+//        img->draw.sg3_offset = img_offset;
+//        img->draw.uncompressed_length /= 2;
+//        img->draw.data = dst;
 //        SDL_Log("Loading... %s : %i", filename_555, i);
     }
 
-    SDL_Log("Loading image collection from file '%s' ---- %i images, %i groups, %" PRIu64 " milliseconds.",
+    int r = graphics_renderer()->prepare_image_atlas(this, &packer);
+//    if (!atlas_data) {
+//        image_packer_free(&data.packer);
+////        free(tmp_data);
+////        free(draw_data);
+////        free(data.external_draw_data);
+////        data.external_draw_data = 0;
+//        SDL_Log("Atlas data init failed!");
+//        return false;
+//    }
+
+//    assets_init(atlas_data->buffers, atlas_data->image_widths);
+    graphics_renderer()->create_image_atlas(this, &packer);
+    image_packer_free(&packer);
+
+    SDL_Log("Loaded imagepak from '%s' ---- %i images, %i groups, %ix%i atlas pages (%i), %" PRIu64 " milliseconds.",
             filename_sgx,
             entries_num,
             groups_num,
+            atlas_pages.at(atlas_pages.size() - 1).width,
+            atlas_pages.at(atlas_pages.size() - 1).height,
+            atlas_pages.size(),
             WATCH.STOP());
 
     return true;
@@ -339,7 +554,7 @@ const image *imagepak::get_image(int id, bool relative) {
         id -= id_shift_overall;
     if (id < 0 || id >= entries_num)
         return nullptr;
-    return &images[id];
+    return &images_array.at(id);
 }
 
 ////////////////////////
@@ -445,7 +660,7 @@ const color_t *image_data_enemy(int id) {
     const image *lookup = image_get(id);
     const image *img = image_get(id + lookup->offset_mirror);
     id += img->offset_mirror;
-    if (img->draw.offset > 0)
+    if (img->draw.sg3_offset > 0)
         return img->draw.data;
     return NULL;
 }

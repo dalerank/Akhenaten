@@ -11,15 +11,15 @@
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
 //    const image *img = image_get(image_id);
 //    if (!max_frames)
-//        max_frames = img->num_animation_sprites;
-//    int anim_speed = img->animation_speed_id;
+//        max_frames = img->animation.num_sprites;
+//    int anim_speed = img->animation.speed_id;
     if (!game_animation_should_advance(anim_speed))
         return map_sprite_animation_at(grid_offset) & 0x7f;
 
     // advance animation
     int new_sprite = 0;
 //    bool is_reverse = false;
-//    if (img->animation_can_reverse) {
+//    if (img->animation.can_reverse) {
 //        if (map_sprite_animation_at(grid_offset) & 0x80)
 //            is_reverse = true;
 //
@@ -116,8 +116,8 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
 
     const image *img = image_get(image_id);
     if (!max_frames)
-        max_frames = img->num_animation_sprites;
-    int anim_speed = img->animation_speed_id;
+        max_frames = img->animation.num_sprites;
+    int anim_speed = img->animation.speed_id;
     // Bugfix: some wrong values from Pharaoh
     switch(b->type) {
         case BUILDING_APOTHECARY:
@@ -159,7 +159,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
                     new_sprite = 12;
             }
         }
-    } else if (img->animation_can_reverse) {
+    } else if (img->animation.can_reverse) {
         if (map_sprite_animation_at(grid_offset) & 0x80)
             is_reverse = true;
 

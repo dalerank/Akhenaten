@@ -18,7 +18,7 @@ static const int CLOUD_SPEED[] = {
         1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1
 };
 
-static const coords CLOUD_DIRECTION[] = {
+static const coords_t CLOUD_DIRECTION[] = {
         {0,  -6},
         {-2, -5},
         {-4, -4},

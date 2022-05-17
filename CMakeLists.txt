@@ -198,6 +198,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/touch.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/version.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.cpp
+    ${PROJECT_SOURCE_DIR}/src/platform/renderer.cpp
 )
 
 if (VITA_BUILD)
@@ -237,6 +238,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/file.cpp
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.cpp
     ${PROJECT_SOURCE_DIR}/src/core/image.cpp
+    ${PROJECT_SOURCE_DIR}/src/core/image_packer.cpp
     ${PROJECT_SOURCE_DIR}/src/core/io.cpp
     ${PROJECT_SOURCE_DIR}/src/core/lang.cpp
     ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
@@ -456,6 +458,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/graphics.cpp
+    ${PROJECT_SOURCE_DIR}/src/graphics/renderer.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/image_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.cpp

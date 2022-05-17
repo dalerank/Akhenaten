@@ -3,6 +3,10 @@
 
 #include "graphics/color.h"
 
+#define FOOTPRINT_WIDTH 58
+#define FOOTPRINT_HEIGHT 30
+#define FOOTPRINT_HALF_HEIGHT 15
+
 typedef enum {
     CANVAS_UI = 0,
     CANVAS_CITY = 1,
@@ -39,6 +43,7 @@ void graphics_set_custom_canvas(color_t *pixels, int width, int height);
 canvas_type graphics_get_canvas_type(void);
 
 void graphics_in_dialog(void);
+void graphics_in_dialog_with_size(int width, int height);
 void graphics_reset_dialog(void);
 
 void graphics_set_clip_rectangle(int x, int y, int width, int height);
@@ -54,13 +59,16 @@ void graphics_clear_screen(canvas_type type);
 void graphics_clear_city_viewport(void);
 void graphics_clear_screens(void);
 
+void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color_t color);
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color);
 void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color);
-
 void graphics_draw_rect(int x, int y, int width, int height, color_t color);
 void graphics_draw_inset_rect(int x, int y, int width, int height);
 
 void graphics_fill_rect(int x, int y, int width, int height, color_t color);
 void graphics_shade_rect(int x, int y, int width, int height, int darkness);
+
+int graphics_save_to_image(int image_id, int x, int y, int width, int height);
+void graphics_draw_from_image(int image_id, int x, int y);
 
 #endif // GRAPHICS_GRAPHICS_H

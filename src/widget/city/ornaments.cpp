@@ -38,8 +38,8 @@ static void draw_normal_anim(int x, int y, building *b, int grid_offset, int spr
     if (base_id != sprite_id)
         ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
     else
-        ImageDraw::img_generic(sprite_id + animation_offset, x + base->sprite_offset_x,
-                               y + base->sprite_offset_y - base->height + ydiff, color_mask);
+        ImageDraw::img_generic(sprite_id + animation_offset, x + base->animation.sprite_x_offset,
+                               y + base->animation.sprite_y_offset - base->height + ydiff, color_mask);
 }
 static void draw_water_lift_anim(building *b, int x, int y, color_t color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
@@ -335,7 +335,7 @@ static void draw_dock_workers(building *b, int x, int y, color_t color_mask) {
             image_dockers += 2;
 
         const image *img = image_get(image_dockers);
-        ImageDraw::img_generic(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
+        ImageDraw::img_generic(image_dockers, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset, color_mask);
     }
 }
 
@@ -437,11 +437,11 @@ static void draw_hippodrome_ornaments(pixel_coordinate pixel, map_point point) {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
     building *b = building_at(grid_offset);
-    if (img->num_animation_sprites
+    if (img->animation.num_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_SENET_HOUSE) {
         ImageDraw::img_generic(image_id + 1,
-                               x + img->sprite_offset_x, y + img->sprite_offset_y - img->height + 90,
+                               x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset - img->height + 90,
                                drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0
         );
     }
@@ -552,8 +552,8 @@ void draw_ornaments_and_animations(pixel_coordinate pixel, map_point point) {
         case BUILDING_WELL:
             if (map_water_supply_is_well_unnecessary(b->id, 3) == WELL_NECESSARY) {
                 const image *img = image_get(image_id_from_group(GROUP_BUILDING_WELL));
-                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->sprite_offset_x,
-                                       y + img->sprite_offset_y - 20, color_mask);
+                ImageDraw::img_generic(image_id_from_group(GROUP_BUILDING_WELL) + 1, x + img->animation.sprite_x_offset,
+                                       y + img->animation.sprite_y_offset - 20, color_mask);
             }
             break;
         case BUILDING_BOOTH:

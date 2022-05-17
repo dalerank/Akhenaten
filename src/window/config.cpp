@@ -51,7 +51,7 @@ static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static int config_change_basic(int key);
-static int config_change_zoom(int key);
+//static int config_change_zoom(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
@@ -178,11 +178,11 @@ static int config_change_string_basic(int key) {
             CONFIG_STRING_VALUE_MAX - 1);
     return 1;
 }
-static int config_change_zoom(int key) {
-    config_change_basic(key);
-    system_reload_textures();
-    return 1;
-}
+//static int config_change_zoom(int key) {
+//    config_change_basic(key);
+////    system_reload_textures();
+//    return 1;
+//}
 static int config_change_string_language(int key) {
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
@@ -299,7 +299,7 @@ static void init(void) {
         strncpy(data.config_string_values[i].original_value, value, CONFIG_STRING_VALUE_MAX - 1);
         strncpy(data.config_string_values[i].new_value, value, CONFIG_STRING_VALUE_MAX - 1);
     }
-    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
+//    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
     data.config_string_values[0].change_action = config_change_string_language;
 
     string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);

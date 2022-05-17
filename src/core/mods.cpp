@@ -422,7 +422,7 @@ static void xml_start_layer_element(const char **attributes) {
 
 static void xml_start_animation_element(const char **attributes) {
     modded_image *img = data.xml.current_image;
-    if (img->img.num_animation_sprites)
+    if (img->img.animation.num_sprites)
         return;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes % 2) {
@@ -432,16 +432,16 @@ static void xml_start_animation_element(const char **attributes) {
 
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][0]) == 0) {
-            img->img.num_animation_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation.num_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
         }
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][1]) == 0) {
-            img->img.animation_speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
+            img->img.animation.speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
         }
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][2]) == 0) {
             const char *value = attributes[i + 1];
             if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "reversible") == 0 ||
                 strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
-                img->img.animation_can_reverse = 1;
+                img->img.animation.can_reverse = true;
             }
         }
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][3]) == 0) {

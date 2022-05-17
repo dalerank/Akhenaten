@@ -20,6 +20,7 @@
 #include "platform/touch.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
+#include "renderer.h"
 
 #include <signal.h>
 #include <stdio.h>
@@ -327,7 +328,7 @@ static void run_and_draw(void) {
     game_run();
     game_draw();
 
-    platform_screen_render();
+    platform_renderer_render();
 }
 #endif
 

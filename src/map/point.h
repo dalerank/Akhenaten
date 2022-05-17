@@ -16,7 +16,7 @@ enum {
 typedef struct {
     int x;
     int y;
-} coords;
+} coords_t;
 
 class map_point {
 private:

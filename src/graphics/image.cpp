@@ -6,10 +6,6 @@
 
 #include <string.h>
 
-#define FOOTPRINT_WIDTH 58
-#define FOOTPRINT_HEIGHT 30
-#define FOOTPRINT_HALF_HEIGHT 15
-
 typedef enum {
     DRAW_TYPE_SET,
     DRAW_TYPE_AND,
@@ -41,6 +37,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
 }
 
 #include "SDL.h"
+#include "renderer.h"
 
 static void draw_modded_footprint(int image_id, int x_offset, int y_offset, color_t color) {
     const image *img = image_get(image_id);
@@ -201,7 +198,6 @@ static void draw_modded_image(const image *img, const color_t *data, int x_offse
                     *dst = *data & color;
                 else if (alpha != ALPHA_TRANSPARENT)
                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA) & color;
-
                 data++;
             }
         } else {
@@ -211,174 +207,117 @@ static void draw_modded_image(const image *img, const color_t *data, int x_offse
                     *dst = *data;
                 else if (alpha != ALPHA_TRANSPARENT)
                     *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data, *dst, alpha >> COLOR_BITSHIFT_ALPHA);
-
                 data++;
             }
         }
         data += clip->clipped_pixels_right;
     }
 }
+
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type) {
-    if (img->draw.type == IMAGE_TYPE_MOD) {
-        draw_modded_image(img, data, x_offset, y_offset, color);
-        return;
-    }
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
-    if (!clip->is_visible)
-        return;
-    data += img->width * clip->clipped_pixels_top;
-    for (int y = clip->clipped_pixels_top; y < img->height - clip->clipped_pixels_bottom; y++) {
-        data += clip->clipped_pixels_left;
-        color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
-        int x_max = img->width - clip->clipped_pixels_right;
-        if (type == DRAW_TYPE_NONE) {
-            if (img->draw.type == IMAGE_TYPE_WITH_TRANSPARENCY || img->draw.is_external) { // can be transparent
-                for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                    if (*data != COLOR_SG2_TRANSPARENT)
-                        *dst = *data;
-
-                    data++;
-                }
-            } else {
-                int num_pixels = x_max - clip->clipped_pixels_left;
-                memcpy(dst, data, num_pixels * sizeof(color_t));
-                data += num_pixels;
-            }
-        } else if (type == DRAW_TYPE_SET) {
-            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_SG2_TRANSPARENT)
-                    *dst = color;
-
-                data++;
-            }
-        } else if (type == DRAW_TYPE_AND) {
-            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_SG2_TRANSPARENT)
-                    *dst = *data & color;
-
-                data++;
-            }
-        } else if (type == DRAW_TYPE_BLEND) {
-            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_SG2_TRANSPARENT)
-                    *dst &= color;
-
-                data++;
-            }
-        } else if (type == DRAW_TYPE_BLEND_ALPHA) {
-            for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
-                if (*data != COLOR_SG2_TRANSPARENT) {
-                    color_t alpha = COLOR_COMPONENT(*data, COLOR_BITSHIFT_ALPHA);
-                    if (alpha == 255)
-                        *dst = color;
-                    else {
-                        color_t s = color;
-                        color_t d = *dst;
-                        *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(s, d, alpha);
-                    }
-                }
-                data++;
-            }
-        }
-        data += clip->clipped_pixels_right;
-    }
+//    if (image_is_external(image_id)) {
+//        image_load_external_data(image_id);
+//    } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
+//        assets_load_unpacked_asset(image_id);
+//    }
+    graphics_renderer()->draw_image(img, x_offset, y_offset, color, 1.0f);
 }
 static void draw_compressed(const image *img, const color_t *data, int x_offset, int y_offset, int height) {
-    bool mirr = (img->offset_mirror != 0);
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height, mirr);
-    if (!clip->is_visible)
-        return;
-    int unclipped = clip->clip_x == CLIP_NONE;
-
-    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
-        int x = 0;
-        while (x < img->width) {
-            color_t b = *data;
-            data++;
-            if (b == 255) {
-                // transparent pixels to skip
-                x += *data;
-                data++;
-            } else if (y < clip->clipped_pixels_top) {
-                data += b;
-                x += b;
-            } else {
-                // number of concrete pixels
-                const color_t *pixels = data;
-                data += b;
-                color_t *dst;
-                if (mirr)
-                    dst = graphics_get_pixel(x_offset + img->width - x - b, y_offset + y);
-                else
-                    dst = graphics_get_pixel(x_offset + x, y_offset + y);
-                if (unclipped) {
-                    x += b;
-                    if (mirr)
-                        for (int px = 0; px < b; px++) {
-                            int pcorr = b - px - 1;
-                            memcpy(dst + px, pixels + pcorr, sizeof(color_t));
-                        }
-                    else
-                        memcpy(dst, pixels, b * sizeof(color_t));
-                } else {
-                    if (mirr)
-                        int a = 3565;
-
-                    while (b) {
-                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right)
-                            *dst = *pixels;
-
-                        dst++;
-                        x++;
-                        pixels++;
-                        b--;
-                    }
-                }
-            }
-        }
-    }
+//    bool mirr = (img->offset_mirror != 0);
+//    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height, mirr);
+//    if (!clip->is_visible)
+//        return;
+//    int unclipped = clip->clip_x == CLIP_NONE;
+//
+//    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
+//        int x = 0;
+//        while (x < img->width) {
+//            color_t b = *data;
+//            data++;
+//            if (b == 255) {
+//                // transparent pixels to skip
+//                x += *data;
+//                data++;
+//            } else if (y < clip->clipped_pixels_top) {
+//                data += b;
+//                x += b;
+//            } else {
+//                // number of concrete pixels
+//                const color_t *pixels = data;
+//                data += b;
+//                color_t *dst;
+//                if (mirr)
+//                    dst = graphics_get_pixel(x_offset + img->width - x - b, y_offset + y);
+//                else
+//                    dst = graphics_get_pixel(x_offset + x, y_offset + y);
+//                if (unclipped) {
+//                    x += b;
+//                    if (mirr)
+//                        for (int px = 0; px < b; px++) {
+//                            int pcorr = b - px - 1;
+//                            memcpy(dst + px, pixels + pcorr, sizeof(color_t));
+//                        }
+//                    else
+//                        memcpy(dst, pixels, b * sizeof(color_t));
+//                } else {
+//                    if (mirr)
+//                        int a = 3565;
+//
+//                    while (b) {
+//                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right)
+//                            *dst = *pixels;
+//
+//                        dst++;
+//                        x++;
+//                        pixels++;
+//                        b--;
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 static void draw_compressed_set(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
-    if (!clip->is_visible)
-        return;
-    int unclipped = clip->clip_x == CLIP_NONE;
-
-    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
-        int x = 0;
-        while (x < img->width) {
-            color_t b = *data;
-            data++;
-            if (b == 255) {
-                // transparent pixels to skip
-                x += *data;
-                data++;
-            } else if (y < clip->clipped_pixels_top) {
-                data += b;
-                x += b;
-            } else {
-                data += b;
-                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
-                if (unclipped) {
-                    x += b;
-                    while (b) {
-                        *dst = color;
-                        dst++;
-                        b--;
-                    }
-                } else {
-                    while (b) {
-                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right)
-                            *dst = color;
-
-                        dst++;
-                        x++;
-                        b--;
-                    }
-                }
-            }
-        }
-    }
+//    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
+//    if (!clip->is_visible)
+//        return;
+//    int unclipped = clip->clip_x == CLIP_NONE;
+//
+//    for (int y = 0; y < height - clip->clipped_pixels_bottom; y++) {
+//        int x = 0;
+//        while (x < img->width) {
+//            color_t b = *data;
+//            data++;
+//            if (b == 255) {
+//                // transparent pixels to skip
+//                x += *data;
+//                data++;
+//            } else if (y < clip->clipped_pixels_top) {
+//                data += b;
+//                x += b;
+//            } else {
+//                data += b;
+//                color_t *dst = graphics_get_pixel(x_offset + x, y_offset + y);
+//                if (unclipped) {
+//                    x += b;
+//                    while (b) {
+//                        *dst = color;
+//                        dst++;
+//                        b--;
+//                    }
+//                } else {
+//                    while (b) {
+//                        if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right)
+//                            *dst = color;
+//
+//                        dst++;
+//                        x++;
+//                        b--;
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 static void draw_compressed_and(const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color) {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, height);
@@ -699,11 +638,11 @@ void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask) {
 }
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
-    ImageDraw::img_generic(image_id, x - img->sprite_offset_x, y - img->sprite_offset_y, color_mask);
+    ImageDraw::img_generic(image_id, x - img->animation.sprite_x_offset, y - img->animation.sprite_y_offset, color_mask);
 }
 void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
-    ImageDraw::img_generic(image_id, x - img->sprite_offset_x, y - img->height, color_mask);
+    ImageDraw::img_generic(image_id, x - img->animation.sprite_x_offset, y - img->height, color_mask);
 }
 void ImageDraw::img_enemy(int image_id, int x, int y) {
     if (image_id <= 0 || image_id >= 801)
@@ -806,7 +745,7 @@ void ImageDraw::isometric_top(int image_id, int x, int y, color_t color_mask) {
             draw_modded_top(image_id, x, y, color_mask);
         return;
     }
-    if (!img->draw.has_compressed_part)
+    if (!img->draw.top_height)
         return;
     const color_t *data = &image_data(image_id)[img->draw.uncompressed_length];
 
@@ -828,7 +767,7 @@ void ImageDraw::isometric_top_from_drawtile(int image_id, int x, int y, color_t 
             draw_modded_top(image_id, x, y, color_mask);
         return;
     }
-    if (!img->draw.has_compressed_part)
+    if (!img->draw.top_height)
         return;
     const color_t *data = &image_data(image_id)[img->draw.uncompressed_length];
 

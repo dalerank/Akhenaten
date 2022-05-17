@@ -6,6 +6,7 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "core/game_environment.h"
+#include "graphics/renderer.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -66,26 +67,22 @@ void graphics_init_canvas(int width, int height) {
     graphics_clear_screens();
     graphics_set_clip_rectangle(0, 0, width, height);
 }
-
 const void *graphics_canvas(canvas_type type) {
     if (!config_get(CONFIG_UI_ZOOM))
         return canvas[CANVAS_UI].pixels;
 
     return canvas[type].pixels;
 }
-
 void graphics_set_active_canvas(canvas_type type) {
     active_canvas = type;
     graphics_reset_clip_rectangle();
 }
-
 void graphics_set_custom_canvas(color_t *pixels, int width, int height) {
     canvas[CANVAS_CUSTOM].pixels = pixels;
     canvas[CANVAS_CUSTOM].width = width;
     canvas[CANVAS_CUSTOM].height = height;
     graphics_set_active_canvas(CANVAS_CUSTOM);
 }
-
 canvas_type graphics_get_canvas_type(void) {
     return active_canvas;
 }
@@ -96,51 +93,29 @@ static void translate_clip(int dx, int dy) {
     clip_rectangle.y_start -= dy;
     clip_rectangle.y_end -= dy;
 }
-
 static void set_translation(int x, int y) {
-    int dx = x - translation.x;
-    int dy = y - translation.y;
-    translation.x = x;
-    translation.y = y;
-    translate_clip(dx, dy);
+    if (x != 0 || y != 0)
+        graphics_renderer()->set_viewport(x, y, screen_width() - x, screen_height() - y);
+    else
+        graphics_renderer()->reset_viewport();
 }
 
 void graphics_in_dialog(void) {
     set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
 }
-
+void graphics_in_dialog_with_size(int width, int height)
+{
+    set_translation((screen_width() - width) / 2, (screen_height() - height) / 2);
+}
 void graphics_reset_dialog(void) {
     set_translation(0, 0);
 }
 
 void graphics_set_clip_rectangle(int x, int y, int width, int height) {
-    clip_rectangle.x_start = x;
-    clip_rectangle.x_end = x + width;
-    clip_rectangle.y_start = y;
-    clip_rectangle.y_end = y + height;
-    // fix clip rectangle going over the edges of the screen
-    if (translation.x + clip_rectangle.x_start < 0)
-        clip_rectangle.x_start = -translation.x;
-
-    if (translation.y + clip_rectangle.y_start < 0)
-        clip_rectangle.y_start = -translation.y;
-
-    if (translation.x + clip_rectangle.x_end > canvas[active_canvas].width)
-        clip_rectangle.x_end = canvas[active_canvas].width - translation.x;
-
-    if (translation.y + clip_rectangle.y_end > canvas[active_canvas].height)
-        clip_rectangle.y_end = canvas[active_canvas].height - translation.y;
-
+    graphics_renderer()->set_clip_rectangle(x, y, width, height);
 }
-
 void graphics_reset_clip_rectangle(void) {
-    clip_rectangle.x_start = 0;
-    clip_rectangle.x_end = canvas[active_canvas].width;
-    clip_rectangle.y_start = 0;
-    clip_rectangle.y_end = canvas[active_canvas].height;
-    if (active_canvas == CANVAS_UI)
-        translate_clip(translation.x, translation.y);
-
+    graphics_renderer()->reset_clip_rectangle();
 }
 
 static void set_clip_x(int x_offset, int width) {
@@ -170,7 +145,6 @@ static void set_clip_x(int x_offset, int width) {
     }
     clip.visible_pixels_x = width - clip.clipped_pixels_left - clip.clipped_pixels_right;
 }
-
 static void set_clip_y(int y_offset, int height) {
     clip.clipped_pixels_top = 0;
     clip.clipped_pixels_bottom = 0;
@@ -222,7 +196,6 @@ void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffe
                sizeof(color_t) * current_clip->visible_pixels_x);
     }
 }
-
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer) {
     const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
     if (!current_clip->is_visible)
@@ -245,9 +218,8 @@ color_t *graphics_get_pixel(int x, int y) {
 }
 
 void graphics_clear_screen(canvas_type type) {
-    memset(canvas[type].pixels, 0, sizeof(color_t) * canvas[type].width * canvas[type].height);
+    graphics_renderer()->clear_screen();
 }
-
 void graphics_clear_city_viewport(void) {
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
@@ -257,7 +229,6 @@ void graphics_clear_city_viewport(void) {
         y++;
     }
 }
-
 void graphics_clear_screens(void) {
     graphics_clear_screen(CANVAS_UI);
     if (config_get(CONFIG_UI_ZOOM))
@@ -265,69 +236,43 @@ void graphics_clear_screens(void) {
 
 }
 
+void graphics_draw_line(int x_start, int x_end, int y_start, int y_end, color_t color)
+{
+    graphics_renderer()->draw_line(x_start, x_end, y_start, y_end, color);
+}
 void graphics_draw_vertical_line(int x, int y1, int y2, color_t color) {
-    if (x < clip_rectangle.x_start || x >= clip_rectangle.x_end)
-        return;
-    int y_min = y1 < y2 ? y1 : y2;
-    int y_max = y1 < y2 ? y2 : y1;
-    y_min = y_min < clip_rectangle.y_start ? clip_rectangle.y_start : y_min;
-    y_max = y_max >= clip_rectangle.y_end ? clip_rectangle.y_end - 1 : y_max;
-    color_t *pixel = graphics_get_pixel(x, y_min);
-    color_t *end_pixel = pixel + ((y_max - y_min) * canvas[active_canvas].width);
-    while (pixel <= end_pixel) {
-        *pixel = color;
-        pixel += canvas[active_canvas].width;
-    }
+    graphics_renderer()->draw_line(x, x, y1, y2, color);
 }
-
 void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color) {
-    if (y < clip_rectangle.y_start || y >= clip_rectangle.y_end)
-        return;
-    int x_min = x1 < x2 ? x1 : x2;
-    int x_max = x1 < x2 ? x2 : x1;
-    x_min = x_min < clip_rectangle.x_start ? clip_rectangle.x_start : x_min;
-    x_max = x_max >= clip_rectangle.x_end ? clip_rectangle.x_end - 1 : x_max;
-    color_t *pixel = graphics_get_pixel(x_min, y);
-    color_t *end_pixel = pixel + (x_max - x_min);
-    while (pixel <= end_pixel) {
-        *pixel = color;
-        ++pixel;
-    }
+    graphics_renderer()->draw_line(x1, x2, y, y, color);
 }
-
 void graphics_draw_rect(int x, int y, int width, int height, color_t color) {
-    graphics_draw_horizontal_line(x, x + width - 1, y, color);
-    graphics_draw_horizontal_line(x, x + width - 1, y + height - 1, color);
-    graphics_draw_vertical_line(x, y, y + height - 1, color);
-    graphics_draw_vertical_line(x + width - 1, y, y + height - 1, color);
+    graphics_renderer()->draw_rect(x, width, y, height, color);
 }
-
 void graphics_draw_inset_rect(int x, int y, int width, int height) {
-    graphics_draw_horizontal_line(x, x + width - 1, y, COLOR_INSET_DARK);
-    graphics_draw_vertical_line(x + width - 1, y, y + height - 1, COLOR_INSET_LIGHT);
-    graphics_draw_horizontal_line(x, x + width - 1, y + height - 1, COLOR_INSET_LIGHT);
-    graphics_draw_vertical_line(x, y, y + height - 1, COLOR_INSET_DARK);
+    int x_end = x + width - 1;
+    int y_end = y + height - 1;
+    graphics_renderer()->draw_line(x, x_end, y, y, COLOR_INSET_DARK);
+    graphics_renderer()->draw_line(x_end, x_end, y, y_end, COLOR_INSET_LIGHT);
+    graphics_renderer()->draw_line(x, x_end, y_end, y_end, COLOR_INSET_LIGHT);
+    graphics_renderer()->draw_line(x, x, y, y_end, COLOR_INSET_DARK);
 }
 
 void graphics_fill_rect(int x, int y, int width, int height, color_t color) {
-    for (int yy = y; yy < height + y; yy++) {
-        graphics_draw_horizontal_line(x, x + width - 1, yy, color);
-    }
+    graphics_renderer()->fill_rect(x, width, y, height, color);
+}
+void graphics_shade_rect(int x, int y, int width, int height, int darkness) {
+    color_t alpha = (0x11 * darkness) << COLOR_BITSHIFT_ALPHA;
+    graphics_renderer()->fill_rect(x, width, y, height, alpha);
 }
 
-void graphics_shade_rect(int x, int y, int width, int height, int darkness) {
-    const clip_info *cur_clip = graphics_get_clip_info(x, y, width, height);
-    if (!cur_clip->is_visible)
-        return;
-    for (int yy = y + cur_clip->clipped_pixels_top; yy < y + height - cur_clip->clipped_pixels_bottom; yy++) {
-        for (int xx = x + cur_clip->clipped_pixels_left; xx < x + width - cur_clip->clipped_pixels_right; xx++) {
-            color_t *pixel = graphics_get_pixel(xx, yy);
-            int r = (*pixel & 0xff0000) >> 16;
-            int g = (*pixel & 0xff00) >> 8;
-            int b = (*pixel & 0xff);
-            int grey = (r + g + b) / 3 >> darkness;
-            color_t new_pixel = (color_t) (ALPHA_OPAQUE | grey << 16 | grey << 8 | grey);
-            *pixel = new_pixel;
-        }
-    }
+//////////////
+
+int graphics_save_to_image(int image_id, int x, int y, int width, int height)
+{
+    return graphics_renderer()->save_image_from_screen(image_id, x, y, width, height);
+}
+void graphics_draw_from_image(int image_id, int x, int y)
+{
+    graphics_renderer()->draw_image_to_screen(image_id, x, y);
 }
