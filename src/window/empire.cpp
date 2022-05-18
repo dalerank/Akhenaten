@@ -646,7 +646,7 @@ static void draw_background(void) {
     data.y_max = s_height <= EMPIRE_HEIGHT[GAME_ENV] ? s_height : data.y_min + EMPIRE_HEIGHT[GAME_ENV];
 
     if (data.x_min || data.y_min)
-        graphics_clear_screens();
+        graphics_clear_screen();
 }
 static void draw_foreground(void) {
 //    fade_in_out++;

@@ -92,7 +92,7 @@ static void init(intermezzo_type type, void (*callback)(void)) {
 #include "core/game_environment.h"
 
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
     graphics_reset_dialog();
     int x_offset = (screen_width() - 1024) / 2;
     int y_offset = (screen_height() - 768) / 2;

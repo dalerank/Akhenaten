@@ -95,7 +95,7 @@ void window_player_selection_init() {
 }
 
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_PLAYER_SELECTION), 0, 0);
     graphics_reset_dialog();

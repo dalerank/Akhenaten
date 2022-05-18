@@ -22,7 +22,7 @@
 static int city_view_dirty;
 
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
     widget_sidebar_editor_draw_background();
     widget_top_menu_editor_draw();
 }
@@ -31,7 +31,7 @@ static void draw_cancel_construction(void) {
     if (!mouse_get()->is_touch || !editor_tool_is_active())
         return;
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
     ImageDraw::img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
@@ -40,7 +40,7 @@ static void draw_cancel_construction(void) {
 
 static void clear_city_view(void) {
     if (config_get(CONFIG_UI_ZOOM) && city_view_dirty)
-        graphics_clear_city_viewport();
+        graphics_clear_screen();
 
     city_view_dirty = 0;
 }

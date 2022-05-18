@@ -70,7 +70,7 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
 
 static void set_city_scaled_clip_rectangle(void) {
     int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
@@ -86,18 +86,13 @@ static void update_zoom_level(void) {
 }
 
 void widget_map_editor_draw(void) {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        update_zoom_level();
-        graphics_set_active_canvas(CANVAS_CITY);
-    }
+    update_zoom_level();
     set_city_scaled_clip_rectangle();
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
-    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
+//    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(data.current_tile);
-
-    graphics_set_active_canvas(CANVAS_UI);
 }
 
 static void update_city_view_coords(int x, int y, map_point *tile) {
@@ -119,7 +114,7 @@ static void scroll_map(const mouse *m) {
 
 static int input_coords_in_map(int x, int y) {
     int x_offset, y_offset, width, height;
-    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
     x -= x_offset;
     y -= y_offset;
@@ -131,7 +126,7 @@ static void handle_touch_scroll(const touch *t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended)
@@ -184,7 +179,7 @@ static bool handle_cancel_construction_button(const touch *t) {
         return false;
 
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
     width -= box_size;
 

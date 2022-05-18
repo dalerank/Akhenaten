@@ -183,7 +183,7 @@ static void init(void) {
 }
 
 static void draw_background(void) {
-    graphics_clear_screen(CANVAS_UI);
+    graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
 

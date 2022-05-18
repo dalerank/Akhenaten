@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <window/city.h>
 #include <dev/debug.h>
+#include <graphics/renderer.h>
 
 enum {
     FIGURE_COLOR_NONE = 0,
@@ -40,6 +41,7 @@ static struct {
     int y_offset;
     int width;
     int height;
+    int cache_width;
     color_t enemy_color;
     color_t *cache;
     struct {
@@ -260,19 +262,26 @@ static void draw_viewport_rectangle(void) {
 }
 
 static void prepare_minimap_cache(int width, int height) {
-    if (width != data.width || height != data.height) {
-        free(data.cache);
-        data.cache = (color_t *) malloc(sizeof(color_t) * width * height);
+    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
     }
+    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
-static void cache_minimap(void) {
-    graphics_save_to_buffer(data.x_offset, data.y_offset, data.width, data.height, data.cache);
+static void clear_minimap(void) {
+    for (int y = 0; y < data.height; y++) {
+        color_t *line = &data.cache[y * data.cache_width];
+        for (int x = 0; x < data.cache_width; x++) {
+            line[x] = COLOR_BLACK;
+        }
+    }
 }
 
 static void draw_minimap(void) {
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
+    clear_minimap();
     foreach_map_tile(draw_minimap_tile);
-    cache_minimap();
+    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
@@ -299,26 +308,26 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
-    graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width_tiles, int height_tiles, int force) {
     if (data.refresh_requested || scroll_in_progress() || force) {
-        if (data.refresh_requested) {
+//        if (data.refresh_requested) {
             draw_uncached(x_offset, y_offset, width_tiles, height_tiles);
             data.refresh_requested = 0;
-        } else {
-            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
-        }
-        if (GAME_ENV == ENGINE_ENV_C3) {
-            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
-                                          COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
-            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
-                                        COLOR_MINIMAP_LIGHT);
-        }
+//        } else {
+//            draw_using_cache(x_offset, y_offset, width_tiles, height_tiles, scroll_in_progress());
+//        }
+//        if (GAME_ENV == ENGINE_ENV_C3) {
+//            graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width_tiles * 2, y_offset - 1,
+//                                          COLOR_MINIMAP_DARK);
+//            graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height_tiles, COLOR_MINIMAP_DARK);
+//            graphics_draw_vertical_line(x_offset - 1 + width_tiles * 2, y_offset, y_offset + height_tiles,
+//                                        COLOR_MINIMAP_LIGHT);
+//        }
     }
 }
 

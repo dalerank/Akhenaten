@@ -227,9 +227,9 @@ void figure::draw_figure_main(int x, int y) {
 
     const image *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     if (is_enemy_image)
-        ImageDraw::img_enemy(sprite_image_id, x + x_correction, y + y_correction);
+        ImageDraw::img_enemy(sprite_image_id, x + x_correction, y + y_correction, city_view_get_scale_float());
     else
-        ImageDraw::img_generic(sprite_image_id, x + x_correction, y + y_correction);
+        ImageDraw::img_generic(sprite_image_id, x + x_correction, y + y_correction, city_view_get_scale_float());
 }
 void figure::draw_figure_cart(int x, int y) {
     const image *img = image_get(cart_image_id);
@@ -286,7 +286,7 @@ void figure::city_draw_figure(int x, int y, int highlight, pixel_coordinate *coo
     } else {
         draw_figure_main(x, y);
         if (!is_enemy_image && highlight)
-            ImageDraw::img_alpha_blended(sprite_image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT);
+            ImageDraw::img_alpha_blended(sprite_image_id, x, y, COLOR_MASK_LEGION_HIGHLIGHT, city_view_get_scale_float());
     }
 //    draw_debug();
 }

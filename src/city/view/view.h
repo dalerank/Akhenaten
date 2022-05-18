@@ -54,6 +54,7 @@ int city_view_absolute_orientation(int orientation_relative);
 void city_view_reset_orientation(void);
 
 int city_view_get_scale(void);
+float city_view_get_scale_float();
 void city_view_set_scale(int scale);
 
 map_point city_view_get_camera_tile();
@@ -77,8 +78,7 @@ void city_view_rotate_left(void);
 void city_view_rotate_right(void);
 
 void city_view_set_viewport(int screen_width, int screen_height);
-void city_view_get_scaled_viewport(int *x, int *y, int *width, int *height);
-void city_view_get_unscaled_viewport(int *x, int *y, int *width, int *height);
+void city_view_get_viewport(int *x, int *y, int *width, int *height);
 void city_view_get_viewport_size_tiles(int *width, int *height);
 
 int city_view_is_sidebar_collapsed(void);

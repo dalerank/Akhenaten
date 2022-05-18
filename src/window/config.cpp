@@ -321,7 +321,7 @@ static void init(void) {
 
 }
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
 

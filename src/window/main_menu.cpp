@@ -62,7 +62,7 @@ static void draw_version_string(void) {
         text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_FONT_LIGHT_GRAY);
 }
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
     graphics_reset_dialog();

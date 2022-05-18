@@ -6,13 +6,15 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
+#include "graphics/renderer.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "screen.h"
 
 static struct {
-    int is_playing;
-    int is_ended;
+    bool is_playing;
+    bool is_ended;
 
     smacker s;
     struct {
@@ -29,6 +31,10 @@ static struct {
         int channels;
         int rate;
     } audio;
+    struct {
+        color_t *pixels;
+        int width;
+    } buffer;
 } data;
 
 static void close_smk(void) {
@@ -82,20 +88,22 @@ static int load_smk(const char *filename) {
 static void end_video(void) {
     sound_device_use_default_music_player();
     sound_music_update(true);
+    graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
-int video_start(const char *filename) {
-    data.is_playing = 0;
-    data.is_ended = 0;
+bool video_start(const char *filename) {
+    data.is_playing = false;
+    data.is_ended = false;
 
     if (load_smk(filename)) {
         sound_music_stop();
         sound_speech_stop();
-        data.is_playing = 1;
-        return 1;
-    } else {
-        return 0;
-    }
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
+        data.buffer.pixels = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
+        data.is_playing = true;
+        return true;
+    } else
+        return false;
 }
 
 void video_size(int *width, int *height) {
@@ -138,9 +146,11 @@ void video_shutdown(void) {
     }
 }
 
-void video_draw(int x_offset, int y_offset) {
-    if (!data.s)
-        return;
+static int get_next_frame(void)
+{
+    if (!data.s) {
+        return 0;
+    }
     time_millis now_millis = time_get_millis();
 
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
@@ -151,35 +161,61 @@ void video_draw(int x_offset, int y_offset) {
             data.is_ended = 1;
             data.is_playing = 0;
             end_video();
-            return;
+            return 0;
         }
         data.video.current_frame++;
         draw_frame = 1;
 
         if (data.audio.has_audio) {
             int audio_len = smacker_get_frame_audio_size(data.s, 0);
-            if (audio_len > 0)
+            if (audio_len > 0) {
                 sound_device_write_custom_music_data(smacker_get_frame_audio(data.s, 0), audio_len);
-
+            }
         }
     }
-    if (!draw_frame)
-        return;
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
-    if (!clip->is_visible)
-        return;
+    return draw_frame;
+}
+static void update_video_frame(void)
+{
     const unsigned char *frame = smacker_get_frame_video(data.s);
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
-        for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
-            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left,
-                                                y + y_offset + clip->clipped_pixels_top);
+        for (int y = 0; y < data.video.height; y++) {
+            color_t *pixel = &data.buffer.pixels[y * data.buffer.width];
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
-            for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
+            for (int x = 0; x < data.video.width; x++) {
                 *pixel = ALPHA_OPAQUE | pal[line[x]];
                 ++pixel;
             }
         }
     }
+    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_VIDEO);
+}
+
+void video_draw(int x_offset, int y_offset)
+{
+    if (get_next_frame())
+        update_video_frame();
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
+}
+void video_draw_fullscreen(void)
+{
+    if (get_next_frame())
+        update_video_frame();
+
+    int s_width = screen_width();
+    int s_height = screen_height();
+    float scale_w = data.video.width / (float) screen_width();
+    float scale_h = data.video.height / (float) screen_height();
+    float scale = scale_w > scale_h ? scale_w : scale_h;
+
+    int x = 0;
+    int y = 0;
+    if (scale == scale_h)
+        x = (int) ((s_width - data.video.width / scale) / 2 * scale);
+    if (scale == scale_w)
+        y = (int) ((s_height - data.video.height / scale) / 2 * scale);
+
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

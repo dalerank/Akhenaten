@@ -163,6 +163,9 @@ void city_view_reset_orientation(void) {
 int city_view_get_scale(void) {
     return data.scale;
 }
+float city_view_get_scale_float() {
+    return data.scale / 100.0f;
+}
 map_point city_view_get_camera_tile() {
     return map_point(data.camera.tile_internal.x, data.camera.tile_internal.y);
 //    point->x = data.camera.tile_internal.x;
@@ -258,13 +261,19 @@ void city_view_rotate_right(void) {
 }
 
 static void set_viewport(int x_offset, int y_offset, int width, int height) {
-    width = calc_adjust_with_percentage(width, data.scale);
-    height = calc_adjust_with_percentage(height, data.scale);
-    data.viewport.offset = pixel_coordinate(x_offset, y_offset);
-    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
+//    width = calc_adjust_with_percentage(width, data.scale);
+//    height = calc_adjust_with_percentage(height, data.scale);
+//    data.viewport.offset = pixel_coordinate(x_offset, y_offset);
+//    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
+//    data.viewport.height_pixels = height;
+//    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
+//    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
+    data.viewport.offset.x = x_offset;
+    data.viewport.offset.y = y_offset;
+    data.viewport.width_pixels = width - 2;
     data.viewport.height_pixels = height;
-    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
-    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
+    data.viewport.width_tiles = calc_adjust_with_percentage(width, data.scale) / TILE_WIDTH_PIXELS;
+    data.viewport.height_tiles = calc_adjust_with_percentage(height, data.scale) / HALF_TILE_HEIGHT_PIXELS;
 }
 
 #include "core/game_environment.h"
@@ -306,20 +315,11 @@ void city_view_set_viewport(int screen_width, int screen_height) {
     camera_validate_position();
 }
 
-void city_view_get_scaled_viewport(int *x, int *y, int *width, int *height) {
+void city_view_get_viewport(int *x, int *y, int *width, int *height) {
     *x = data.viewport.offset.x;
     *y = data.viewport.offset.y;
     *width = data.viewport.width_pixels;
     *height = data.viewport.height_pixels;
-}
-void city_view_get_unscaled_viewport(int *x, int *y, int *width, int *height) {
-    *x = data.viewport.offset.x;
-    *y = data.viewport.offset.y;
-    if (!data.scale)
-        data.scale = 100;
-
-    *width = (int) ((data.viewport.width_pixels / (float) data.scale) * 100);
-    *height = (int) ((data.viewport.height_pixels / (float) data.scale) * 100);
 }
 void city_view_get_viewport_size_tiles(int *width, int *height) {
     *width = data.viewport.width_tiles;

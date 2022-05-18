@@ -14,7 +14,7 @@ static void init(void) {
     sound_music_play_intro();
 }
 static void draw_logo(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
 
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_LOGO), 0, 0);

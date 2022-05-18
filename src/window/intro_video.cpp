@@ -39,7 +39,7 @@ static int init(void) {
     return start_next_video();
 }
 static void draw_background(void) {
-    graphics_clear_screens();
+    graphics_clear_screen();
 }
 static void draw_foreground(void) {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);

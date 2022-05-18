@@ -46,12 +46,7 @@ static struct {
 
 static void set_city_scaled_clip_rectangle(void) {
     int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
-    graphics_set_clip_rectangle(x, y, width, height);
-}
-static void set_city_unscaled_clip_rectangle(void) {
-    int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
@@ -84,7 +79,7 @@ static map_point update_city_view_coords(pixel_coordinate pixel) {
 }
 static int input_coords_in_city(int x, int y) {
     int x_offset, y_offset, width, height;
-    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
     x -= x_offset;
     y -= y_offset;
@@ -105,7 +100,8 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
 //    if (tx==40 && ty==44)
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
     if (map_grid_inside_map_area(grid_offset, 1))
-        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
+        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN,
+                                                  1.0f);
 //    if (!map_grid_is_inside(tx, ty, 1))
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
 //    else
@@ -151,7 +147,8 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     } else {
 //        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                deletion_draw_top,
+                draw_footprint,
+//                deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures);
     }
@@ -176,36 +173,33 @@ void widget_city_draw_with_overlay(map_point tile) {
     city_view_foreach_map_tile(draw_empty_tile);
 
     if (!city_building_ghost_mark_deleting(tile)) {
-        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
+//        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_top_overlay,
+                draw_footprint_overlay,
+//                draw_top_overlay,
                 draw_ornaments_overlay,
                 draw_figures_overlay);
         city_view_foreach_map_tile(draw_elevated_figures);
         Planner.update(tile);
         Planner.draw();
     } else {
-        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
+//        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                deletion_draw_top,
+                draw_footprint_overlay,
+//                deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures_overlay);
     }
 }
 
 void widget_city_draw(void) {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        update_zoom_level();
-        graphics_set_active_canvas(CANVAS_CITY);
-    }
+    update_zoom_level();
     set_city_scaled_clip_rectangle();
-
     if (game_state_overlay())
         widget_city_draw_with_overlay(data.current_tile);
     else
         widget_city_draw_without_overlay(0, 0, data.current_tile);
-
-    graphics_set_active_canvas(CANVAS_UI);
+    graphics_reset_clip_rectangle();
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
     set_city_scaled_clip_rectangle();
@@ -227,7 +221,7 @@ bool widget_city_draw_construction_cost_and_size(void) {
     if (!cost && !has_size)
         return false;
 
-    set_city_unscaled_clip_rectangle();
+    set_city_scaled_clip_rectangle();
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
     int inverted_scale = calc_percentage(100, city_view_get_scale());
@@ -331,7 +325,7 @@ static bool handle_cancel_construction_button(const touch *t) {
         return false;
 
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     int box_size = 5 * 16;
     width -= box_size;
 
@@ -355,7 +349,7 @@ static void handle_touch_scroll(const touch *t) {
     if (Planner.build_type) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended)

@@ -36,10 +36,10 @@ static void draw_normal_anim(int x, int y, building *b, int grid_offset, int spr
     int ydiff = 15 * (map_property_multi_tile_size(grid_offset) + 1);
     const image *base = image_get(base_id);
     if (base_id != sprite_id)
-        ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask);
+        ImageDraw::img_sprite(sprite_id + animation_offset, x, y, color_mask, city_view_get_scale_float());
     else
         ImageDraw::img_generic(sprite_id + animation_offset, x + base->animation.sprite_x_offset,
-                               y + base->animation.sprite_y_offset - base->height + ydiff, color_mask);
+                               y + base->animation.sprite_y_offset - base->height + ydiff, color_mask, city_view_get_scale_float());
 }
 static void draw_water_lift_anim(building *b, int x, int y, color_t color_mask) {
     int orientation_rel = city_view_relative_orientation(b->data.industry.orientation);
@@ -235,14 +235,14 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
             ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0],
-                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1], color_mask);
+                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1], color_mask, city_view_get_scale_float());
         }
     } else { // on dry meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*400)/100));
 
             ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_MEADOW[i][0],
-                                      y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask);
+                                      y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask, city_view_get_scale_float());
         }
     }
 }
@@ -259,7 +259,7 @@ static void draw_ph_worker(int direction, int action, int frame_offset, pixel_co
             action_offset = 312; break;
     }
     int final_offset = action_offset + direction + 8 * (frame_offset - 1);
-    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, coords.x, coords.y, 0);
+    ImageDraw::img_sprite(image_id_from_group(GROUP_FIGURE_WORKER_PH) + final_offset, coords.x, coords.y, 0, city_view_get_scale_float());
 }
 static void draw_farm_workers(building *b, int grid_offset, int x, int y) {
     if (b->num_workers == 0)

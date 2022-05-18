@@ -693,10 +693,8 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
-static void create_custom_texture(int type, int width, int height, int is_yuv) {
-    if (data.paused) {
-        return;
-    }
+static void create_custom_texture(int type, int width, int height)
+{
     if (data.custom_textures[type].texture) {
         SDL_DestroyTexture(data.custom_textures[type].texture);
         data.custom_textures[type].texture = 0;
@@ -710,12 +708,11 @@ static void create_custom_texture(int type, int width, int height, int is_yuv) {
 #endif
 
     data.custom_textures[type].texture = SDL_CreateTexture(data.renderer,
-        is_yuv ? SDL_PIXELFORMAT_YV12 : SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+                                                           SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
     data.custom_textures[type].img.width = width;
     data.custom_textures[type].img.height = height;
-//    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
-    SDL_SetTextureBlendMode(data.custom_textures[type].texture,
-        type == CUSTOM_IMAGE_VIDEO ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
+//    data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
+    SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
 
 static color_t *get_custom_texture_buffer(int type, int *actual_texture_width) {
@@ -870,16 +867,14 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height) 
     return texture_info->id;
 }
 
-static void draw_saved_texture(int texture_id, int x, int y) {
-    if (data.paused) {
-        return;
-    }
+static void draw_saved_texture(int texture_id, int x, int y, int width, int height)
+{
     buffer_texture *texture_info = get_saved_texture_info(texture_id);
     if (!texture_info) {
         return;
     }
     SDL_Rect src_coords = { 0, 0, texture_info->width, texture_info->height };
-    SDL_Rect dst_coords = { x, y, texture_info->width, texture_info->height };
+    SDL_Rect dst_coords = { x, y, width, height };
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
 
@@ -937,7 +932,7 @@ static void draw_custom_texture(int type, int x, int y, float scale) {
             create_blend_texture(type);
         }
     }
-    draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
+//    draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
 }
 
 static int has_custom_texture(int type) {
@@ -1304,6 +1299,8 @@ int platform_renderer_init(SDL_Window *window) {
         }
     }
 #endif
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
     data.is_software_renderer = info.flags & SDL_RENDERER_SOFTWARE;
     if (data.is_software_renderer) {

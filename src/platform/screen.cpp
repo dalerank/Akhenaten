@@ -334,7 +334,7 @@ void system_get_max_resolution(int *width, int *height) {
 //void platform_screen_render(void) {
 //    if (config_get(CONFIG_UI_ZOOM)) {
 //        SDL_RenderClear(SDL.renderer);
-//        city_view_get_unscaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
+//        city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
 //                                        &city_texture_position.renderer.w, &city_texture_position.offset.h);
 //        city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
 //                                      &city_texture_position.offset.w, &city_texture_position.offset.h);

@@ -71,7 +71,7 @@ static void init() {
 }
 
 static void draw_background() {
-    graphics_clear_screens();
+    graphics_clear_screen();
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_GAME_MENU), 0, 0);
     graphics_reset_dialog();

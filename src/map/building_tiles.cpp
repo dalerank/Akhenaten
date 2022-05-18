@@ -54,8 +54,8 @@ static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int cro
         map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
         map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        ImageDraw::isometric_footprint(crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset),
-                                       MAP_Y(grid_offset), 0);
+        ImageDraw::isometric(crop_image_id + (growth < 4 ? growth : 4), MAP_X(grid_offset),
+                             MAP_Y(grid_offset), 0, city_view_get_scale_float());
 }
 
 void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain) {

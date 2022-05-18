@@ -722,11 +722,11 @@ void ImageDraw::img_background(int image_id, float scale) {
     int s_width = screen_width();
     int s_height = screen_height();
     if (s_width > 1024 || s_height > 768)
-        graphics_clear_screens();
+        graphics_clear_screen();
 
     ImageDraw::img_generic(image_id, (s_width - 1024) / 2, (s_height - 768) / 2, scale);
 }
-void ImageDraw::isometric_footprint(int image_id, int x, int y, color_t color_mask, float scale) {
+void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
 //    if (img->type != IMAGE_TYPE_ISOMETRIC) {
 //        if (img->type == IMAGE_TYPE_MOD)
@@ -739,7 +739,7 @@ void ImageDraw::isometric_footprint(int image_id, int x, int y, color_t color_ma
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 //    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
 }
-void ImageDraw::isometric_footprint_from_drawtile(int image_id, int x, int y, color_t color_mask, float scale) {
+void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask, float scale) {
 
 
     const image *img = image_get(image_id);
@@ -768,67 +768,5 @@ void ImageDraw::isometric_footprint_from_drawtile(int image_id, int x, int y, co
 ////    draw_footprint_size_any(image_id, x, y, tile_size, color_mask, scale);
 //    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 ////    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
-////    isometric_footprint(image_id, x, y, color_mask, scale);
-}
-void ImageDraw::isometric_top(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
-//    if (img->type != IMAGE_TYPE_ISOMETRIC) {
-//        if (img->type == IMAGE_TYPE_MOD)
-//            draw_modded_top(image_id, x, y, color_mask);
-//        return;
-//    }
-//    if (!img->top_height)
-//        return;
-//    const color_t *data = &image_data(image_id)[img->uncompressed_length];
-
-    int height = img->height;
-    int tile_size = (img->width + 2) / 60;
-
-    x -= 30 * (tile_size - 1);
-    y -= img->height - 30 * tile_size;
-    height -= 1 + 15 * tile_size;
-//    if (!color_mask)
-//        draw_compressed(img, data, x, y, height);
-//    else
-//        draw_compressed_and(img, data, x, y, height, color_mask);
-    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-//    graphics_renderer()->draw_isometric_top(img, x, y, color_mask, scale);
-}
-void ImageDraw::isometric_top_from_drawtile(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
-//    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
-//        assets_load_unpacked_asset(image_id);
-//    }
-    int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
-    y -= img->top_height - FOOTPRINT_HALF_HEIGHT * tile_size;
-    graphics_renderer()->draw_isometric_top(img, x, y, color_mask, scale);
-
-
-
-
-
-
-
-//    const image *img = image_get(image_id);
-////    if (img->type != IMAGE_TYPE_ISOMETRIC) {
-////        if (img->type == IMAGE_TYPE_MOD)
-////            draw_modded_top(image_id, x, y, color_mask);
-////        return;
-////    }
-////    if (!img->top_height)
-////        return;
-////    const color_t *data = &image_data(image_id)[img->uncompressed_length];
-//
-//    int height = img->height;
-//    int tile_size = (img->width + 2) / 60;
-//
-//    y -= img->height - 15 * (tile_size + 1);
-//    height -= 1 + 15 * tile_size;
-////    if (!color_mask)
-////        draw_compressed(img, data, x, y, height);
-////    else
-////        draw_compressed_and(img, data, x, y, height, color_mask);
-//    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-////    graphics_renderer()->draw_isometric_top(img, x, y, color_mask, scale);
+////    isometric(image_id, x, y, color_mask, scale);
 }
