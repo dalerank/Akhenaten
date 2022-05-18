@@ -1,6 +1,7 @@
 #include <core/string.h>
 #include <cmath>
 #include <city/view/lookup.h>
+#include <dev/debug.h>
 
 #include "city/view/view.h"
 #include "formation.h"
@@ -210,12 +211,12 @@ void figure::adjust_pixel_offset(int *x, int *y) {
 }
 void figure::draw_figure_main(int x, int y) {
 
-    int _x = 0;
-    int _y = 3;
+    int x_correction = 0;
+    int y_correction = 3;
 
     switch (type) {
         case FIGURE_IMMIGRANT: // todo: mmmmmmaybe I was using the wrong draw function all along. look into this
-            _y = 10;
+            y_correction = 10;
             break;
 //        case FIGURE_TRADE_CARAVAN:
 //        case FIGURE_TRADE_CARAVAN_DONKEY:
@@ -226,9 +227,9 @@ void figure::draw_figure_main(int x, int y) {
 
     const image *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     if (is_enemy_image)
-        ImageDraw::img_enemy(sprite_image_id, x + _x - img->animation.sprite_x_offset, y + _y - img->animation.sprite_y_offset);
+        ImageDraw::img_enemy(sprite_image_id, x + x_correction, y + y_correction);
     else
-        ImageDraw::img_generic(sprite_image_id, x + _x - img->animation.sprite_x_offset, y + _y - img->animation.sprite_y_offset);
+        ImageDraw::img_generic(sprite_image_id, x + x_correction, y + y_correction);
 }
 void figure::draw_figure_cart(int x, int y) {
     const image *img = image_get(cart_image_id);

@@ -35,6 +35,7 @@
 #include <city/floods.h>
 #include <game/tutorial.h>
 #include <map/tiles.h>
+#include <graphics/renderer.h>
 
 int debug_range_1 = 0;
 int debug_range_2 = 0;
@@ -76,6 +77,35 @@ void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int ind
     text_draw_shadow_left(str, x + indent, y, color);
     string_from_int(str, value2, 0);
     text_draw_shadow_left(str, x + indent + indent2, y, color);
+}
+
+void draw_debug_crosshair(int x, int y) {
+    graphics_renderer()->draw_line(x, x + 10, y, y, COLOR_GREEN);
+    graphics_renderer()->draw_line(x, x, y, y + 10, COLOR_RED);
+}
+void draw_debug_sprite_box(int x, int y, const image *img) {
+    int x2 = x - img->animation.sprite_x_offset;
+    int y2 = y - img->animation.sprite_y_offset;
+    graphics_renderer()->draw_rect(x2, y2, img->width, img->height, COLOR_GREEN);
+    draw_debug_crosshair(x2 + img->animation.sprite_x_offset, y2 + img->animation.sprite_y_offset);
+}
+void draw_debug_tile_box(int x, int y, int tile_size_x, int tile_size_y) {
+    int left_x = x;
+    int left_y = y + HALF_TILE_HEIGHT_PIXELS;
+
+    int top_x = left_x + (tile_size_y * HALF_TILE_WIDTH_PIXELS);
+    int top_y = left_y - (tile_size_y * HALF_TILE_HEIGHT_PIXELS);
+
+    int right_x = top_x + (tile_size_x * HALF_TILE_WIDTH_PIXELS);
+    int right_y = top_y + (tile_size_x * HALF_TILE_HEIGHT_PIXELS);
+
+    int bottom_x = left_x + (tile_size_x * HALF_TILE_WIDTH_PIXELS);
+    int bottom_y = left_y + (tile_size_x * HALF_TILE_HEIGHT_PIXELS);
+
+    graphics_renderer()->draw_line(left_x, top_x, left_y, top_y, COLOR_GREEN);
+    graphics_renderer()->draw_line(top_x, right_x, top_y, right_y, COLOR_GREEN);
+    graphics_renderer()->draw_line(right_x, bottom_x, right_y, bottom_y, COLOR_GREEN);
+    graphics_renderer()->draw_line(bottom_x, left_x, bottom_y, left_y, COLOR_GREEN);
 }
 
 //////////

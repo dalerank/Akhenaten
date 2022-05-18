@@ -48,11 +48,13 @@ typedef struct {
 } atlas_data_t;
 
 struct image {
-    int sg3_offset;
+    int sgx_index;
+    int sgx_data_offset;
     int data_length;
     int uncompressed_length;
     int unk00; //
     int offset_mirror;
+    image *mirrored_img;
     //
     int width;
     int height;
@@ -120,6 +122,7 @@ class imagepak {
     std::vector<image> images_array;
 
     bool SHOULD_LOAD_SYSTEM_SPRITES;
+    bool SHOULD_CONVERT_FONTS;
 
     bool load_pak(const char *pak_name, int starting_index);
 
@@ -129,7 +132,7 @@ public:
 
     int global_image_index_offset = 0;
 
-    imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES = false);
+    imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES = false, bool FONTS = false);
     ~imagepak();
 
     int get_entry_count();

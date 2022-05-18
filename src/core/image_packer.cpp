@@ -8,52 +8,43 @@
 
 image_packer packer;
 
-static int compare_rect_perimeters(const void *a, const void *b)
-{
+static int compare_rect_perimeters(const void *a, const void *b) {
     // Since we're just comparing perimeters and don't actually need the values,
     // we don't need to actually calculate them. Check documentation for qsort to see how this works
     return (*(image_packer_rect **) b)->input.height + (*(image_packer_rect **) b)->input.width -
         (*(image_packer_rect **) a)->input.height - (*(image_packer_rect **) a)->input.width;
 }
 
-static int compare_rect_areas(const void *a, const void *b)
-{
+static int compare_rect_areas(const void *a, const void *b) {
     return (*(image_packer_rect **) b)->input.height * (*(image_packer_rect **) b)->input.width -
         (*(image_packer_rect **) a)->input.height * (*(image_packer_rect **) a)->input.width;
 }
 
-static int compare_rect_heights(const void *a, const void *b)
-{
+static int compare_rect_heights(const void *a, const void *b) {
     return (*(image_packer_rect **) b)->input.height - (*(image_packer_rect **) a)->input.height;
 }
 
-static int compare_rect_widths(const void *a, const void *b)
-{
+static int compare_rect_widths(const void *a, const void *b) {
     return (*(image_packer_rect **) b)->input.width - (*(image_packer_rect **) a)->input.width;
 }
 
-static void set_perimeter_comparator(empty_area *area)
-{
+static void set_perimeter_comparator(empty_area *area) {
     area->comparator = area->height + area->width;
 }
 
-static void set_area_comparator(empty_area *area)
-{
+static void set_area_comparator(empty_area *area) {
     area->comparator = area->height * area->width;
 }
 
-static void set_width_comparator(empty_area *area)
-{
+static void set_width_comparator(empty_area *area) {
     area->comparator = area->width;
 }
 
-static void set_height_comparator(empty_area *area)
-{
+static void set_height_comparator(empty_area *area) {
     area->comparator = area->height;
 }
 
-static int sort_rects(image_packer *packer)
-{
+static int sort_rects(image_packer *packer) {
     internal_data_t *data = packer->internal_data;
     data->sorted_rects = (image_packer_rect **) malloc(data->num_rects * sizeof(image_packer_rect *));
 
@@ -91,8 +82,7 @@ static int sort_rects(image_packer *packer)
     return 1;
 }
 
-static void reset_empty_areas(internal_data_t *data, unsigned int width, unsigned int height)
-{
+static void reset_empty_areas(internal_data_t *data, unsigned int width, unsigned int height) {
     memset(data->empty_areas.list, 0, sizeof(empty_area) * data->empty_areas.size);
 
     data->empty_areas.index = 0;
@@ -104,8 +94,7 @@ static void reset_empty_areas(internal_data_t *data, unsigned int width, unsigne
     data->empty_areas.first->height = height;
 }
 
-static void sort_empty_area(internal_data_t *data, empty_area *area, empty_area *current)
-{
+static void sort_empty_area(internal_data_t *data, empty_area *area, empty_area *current) {
     if (!data->empty_areas.first) {
         data->empty_areas.first = area;
         data->empty_areas.last = area;
@@ -130,8 +119,7 @@ static void sort_empty_area(internal_data_t *data, empty_area *area, empty_area 
     data->empty_areas.first = area;
 }
 
-static void delist_empty_area(internal_data_t *data, empty_area *area)
-{
+static void delist_empty_area(internal_data_t *data, empty_area *area) {
     if (area == data->empty_areas.first) {
         data->empty_areas.first = area->next;
     }
@@ -148,8 +136,7 @@ static void delist_empty_area(internal_data_t *data, empty_area *area)
     area->next = 0;
 }
 
-static int merge_adjacent_empty_areas(internal_data_t *data, empty_area *area)
-{
+static int merge_adjacent_empty_areas(internal_data_t *data, empty_area *area) {
     for (empty_area *current = data->empty_areas.first; current; current = current->next) {
         int same_height = current->y == area->y && current->height == area->height;
         // Adjacent area to the left
@@ -187,8 +174,7 @@ static int merge_adjacent_empty_areas(internal_data_t *data, empty_area *area)
     return 0;
 }
 
-static void split_empty_area(internal_data_t *data, empty_area *area, unsigned int width, unsigned int height)
-{
+static void split_empty_area(internal_data_t *data, empty_area *area, unsigned int width, unsigned int height) {
     empty_area *new_area = &data->empty_areas.list[++data->empty_areas.index];
 
     int remaining_width = area->width - width;
@@ -232,8 +218,7 @@ static void split_empty_area(internal_data_t *data, empty_area *area, unsigned i
     }
 }
 
-static int pack_rect(internal_data_t *data, image_packer_rect *rect, int allow_rotation)
-{
+static int pack_rect(internal_data_t *data, image_packer_rect *rect, int allow_rotation) {
     unsigned int width, height;
 
     if (!rect->output.rotated) {
@@ -297,8 +282,7 @@ static int pack_rect(internal_data_t *data, image_packer_rect *rect, int allow_r
     return 0;
 }
 
-static int create_last_image(image_packer *packer, unsigned int remaining_area)
-{
+static int create_last_image(image_packer *packer, unsigned int remaining_area) {
     internal_data_t *data = packer->internal_data;
 
     float image_ratio = data->image_width / (float) data->image_height;
@@ -370,8 +354,7 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
     return total_images_packed;
 }
 
-int image_packer_init(image_packer *packer, unsigned int num_rectangles, unsigned int width, unsigned int height)
-{
+int image_packer_init(image_packer *packer, unsigned int num_rectangles, unsigned int width, unsigned int height) {
     memset(packer, 0, sizeof(image_packer));
 
     packer->internal_data = (internal_data_t *)malloc(sizeof(internal_data_t));
@@ -402,15 +385,13 @@ int image_packer_init(image_packer *packer, unsigned int num_rectangles, unsigne
     return IMAGE_PACKER_OK;
 }
 
-void image_packer_resize_image(image_packer *packer, unsigned int image_width, unsigned int image_height)
-{
+void image_packer_resize_image(image_packer *packer, unsigned int image_width, unsigned int image_height) {
     internal_data_t *data = packer->internal_data;
     data->image_width = image_width;
     data->image_height = image_height;
 }
 
-int image_packer_pack(image_packer *packer)
-{
+int image_packer_pack(image_packer *packer) {
     internal_data_t *data = packer->internal_data;
 
     if (!data->num_rects || !data->image_width || !data->image_height ||
@@ -482,8 +463,7 @@ int image_packer_pack(image_packer *packer)
     return packed_rects;
 }
 
-void image_packer_free(image_packer *packer)
-{
+void image_packer_free(image_packer *packer) {
     internal_data_t *data = packer->internal_data;
     if (data) {
         free(data->empty_areas.list);

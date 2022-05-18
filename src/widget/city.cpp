@@ -3,6 +3,7 @@
 #include <graphics/image.h>
 #include <city/view/lookup.h>
 #include <dev/debug.h>
+#include <map/property.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
@@ -110,6 +111,12 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
 //    else
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
 }
+static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
+    if (map_property_is_draw_tile(point.grid_offset())) {
+        int tile_size = map_property_multi_tile_size(point.grid_offset());
+        draw_debug_tile_box(pixel.x, pixel.y, tile_size, tile_size);
+    }
+};
 void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, map_point tile) {
     int highlighted_formation = 0;
     if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
@@ -131,9 +138,10 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     city_view_foreach_map_tile(draw_empty_tile);
 
     if (!city_building_ghost_mark_deleting(tile)) {
-        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
+//        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_top,
+                draw_footprint,
+//                draw_top,
                 draw_ornaments,
                 draw_figures);
         if (!selected_figure_id) {
@@ -141,7 +149,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
             Planner.draw();
         }
     } else {
-        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
+//        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
                 deletion_draw_top,
                 deletion_draw_figures_animations,
@@ -156,6 +164,8 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    city_view_foreach_map_tile(draw_debug_figures);
 //    city_view_foreach_map_tile(draw_TEST);
 
+
+//    city_view_foreach_map_tile(draw_tile_boxes);
 }
 void widget_city_draw_with_overlay(map_point tile) {
     if (!select_city_overlay())

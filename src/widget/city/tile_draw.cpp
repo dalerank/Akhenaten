@@ -2,6 +2,7 @@
 #include <map/random.h>
 #include <widget/overlays/city_overlay_risks.h>
 #include <city/view/lookup.h>
+#include <dev/debug.h>
 #include "tile_draw.h"
 
 #include "building/animation.h"

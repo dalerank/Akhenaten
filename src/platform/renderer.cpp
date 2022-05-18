@@ -18,6 +18,8 @@
 #include <input/cursor.h>
 #include <core/image_packer.h>
 #include <SDL_image.h>
+#include <graphics/graphics.h>
+#include <dev/debug.h>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -115,8 +117,7 @@ static struct {
 #endif
 } data;
 
-static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width)
-{
+static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width) {
     if (data.paused) {
         return 0;
     }
@@ -124,8 +125,7 @@ static int save_screen_buffer(color_t *pixels, int x, int y, int width, int heig
     return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color_t)) == 0;
 }
 
-static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color)
-{
+static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color) {
     if (data.paused) {
         return;
     }
@@ -137,8 +137,7 @@ static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t co
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
 
-static void draw_rect(int x_start, int x_end, int y_start, int y_end, color_t color)
-{
+static void draw_rect(int x, int y, int width, int height, color_t color) {
     if (data.paused) {
         return;
     }
@@ -147,12 +146,11 @@ static void draw_rect(int x_start, int x_end, int y_start, int y_end, color_t co
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
         (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
         (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_Rect rect = { x_start, y_start, x_end, y_end };
+    SDL_Rect rect = { x, y, width + 1, height + 1 };
     SDL_RenderDrawRect(data.renderer, &rect);
 }
 
-static void fill_rect(int x_start, int x_end, int y_start, int y_end, color_t color)
-{
+static void fill_rect(int x, int y, int width, int height, color_t color) {
     if (data.paused) {
         return;
     }
@@ -161,12 +159,11 @@ static void fill_rect(int x_start, int x_end, int y_start, int y_end, color_t co
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
         (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
         (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-    SDL_Rect rect = { x_start, y_start, x_end, y_end };
+    SDL_Rect rect = { x, y, width + 1, height + 1 };
     SDL_RenderFillRect(data.renderer, &rect);
 }
 
-static void set_clip_rectangle(int x, int y, int width, int height)
-{
+static void set_clip_rectangle(int x, int y, int width, int height) {
     if (data.paused) {
         return;
     }
@@ -174,16 +171,14 @@ static void set_clip_rectangle(int x, int y, int width, int height)
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
 
-static void reset_clip_rectangle(void)
-{
+static void reset_clip_rectangle(void) {
     if (data.paused) {
         return;
     }
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
-static void set_viewport(int x, int y, int width, int height)
-{
+static void set_viewport(int x, int y, int width, int height) {
     if (data.paused) {
         return;
     }
@@ -191,8 +186,7 @@ static void set_viewport(int x, int y, int width, int height)
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 
-static void reset_viewport(void)
-{
+static void reset_viewport(void) {
     if (data.paused) {
         return;
     }
@@ -200,8 +194,7 @@ static void reset_viewport(void)
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
-static void clear_screen(void)
-{
+static void clear_screen(void) {
     if (data.paused) {
         return;
     }
@@ -209,14 +202,12 @@ static void clear_screen(void)
     SDL_RenderClear(data.renderer);
 }
 
-static void get_max_image_size(int *width, int *height)
-{
+static void get_max_image_size(int *width, int *height) {
     *width = data.max_texture_size.width;
     *height = data.max_texture_size.height;
 }
 
-static void free_texture_atlas(imagepak *pak)
-{
+static void free_texture_atlas(imagepak *pak) {
     if (pak == nullptr || pak->get_entry_count() <= 0)
         return;
 //    int num_images = pak->get_entry_count();
@@ -434,8 +425,7 @@ static void free_texture_atlas(imagepak *pak)
 //}
 
 #ifdef USE_RENDER_GEOMETRY
-static const SDL_Color *convert_color(color_t color)
-{
+static const SDL_Color *convert_color(color_t color) {
     static SDL_Color new_color;
     new_color.a = (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA;
     new_color.r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
@@ -445,8 +435,7 @@ static const SDL_Color *convert_color(color_t color)
 }
 
 static void draw_texture_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
+    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
     int texture_width, texture_height;
     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
@@ -469,8 +458,7 @@ static void draw_texture_raw(const image *img, SDL_Texture *texture,
 }
 
 static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
+    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
     int tiles = (img->width + 2) / 60;
     int width = tiles * 60 - 2;
     int half_width = tiles * 30 - 1;
@@ -510,8 +498,7 @@ static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
 }
 
 static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
+    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale) {
     int tiles = (img->width + 2) / 60;
     int half_width = tiles * 30 - 1;
     int half_height = tiles * 15;
@@ -546,8 +533,7 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 }
 #endif
 
-static void set_texture_scale_mode(SDL_Texture *texture, float scale)
-{
+static void set_texture_scale_mode(SDL_Texture *texture, float scale) {
 #ifdef USE_TEXTURE_SCALE_MODE
     if (!data.paused && HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
@@ -563,37 +549,46 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale)
 #endif
 }
 
-static void draw_texture(const image *img, int x, int y, color_t color, float scale)
-{
-    if (data.paused) {
+static void draw_texture(const image *img, int x, int y, color_t color, float scale) {
+    if (data.paused)
         return;
-    }
-    if (!color) {
+    if (!color)
         color = COLOR_MASK_NONE;
-    }
-//    SDL_Texture *texture = get_texture(img->atlas.bitflags);
-    SDL_Texture *texture = img->atlas.p_atlas->texture;
 
-    if (!texture) {
+    bool mirrored = (img->offset_mirror != 0);
+    if (mirrored)
+        img = img->mirrored_img;
+
+    SDL_Texture *texture = img->atlas.p_atlas->texture;
+    if (!texture)
         return;
-    }
 
     set_texture_scale_mode(texture, scale);
 
-    x += img->animation.sprite_x_offset;
-    y += img->animation.sprite_y_offset;
     int x_offset = img->atlas.x_offset;
     int y_offset = img->atlas.y_offset;
     int height = img->height;
 
     if (img->type == IMAGE_TYPE_ISOMETRIC && img->top_height) {
-        if (!data.renderer_interface.isometric_images_are_joined()) {
-            y_offset += img->top_height;
-            height -= img->top_height;
-        } else {
-            height = (img->width + 2) / 2;
-            y_offset += img->height - height;
-        }
+        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+        y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
+
+        int y_correction = height - FOOTPRINT_HEIGHT * tile_size;
+        y -= y_correction;
+
+//        if (!data.renderer_interface.isometric_images_are_joined()) {
+//            y_offset += img->top_height;
+//            height -= img->top_height;
+//        } else {
+//        height = (img->width + 2) / 2;
+//        y_offset += img->height - height;
+//        }
+    } else {
+        if (mirrored)
+            x -= (img->width - img->animation.sprite_x_offset);
+        else
+            x -= img->animation.sprite_x_offset;
+        y -= img->animation.sprite_y_offset;
     }
 
 #ifdef USE_RENDER_GEOMETRY
@@ -620,21 +615,28 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     SDL_Rect src_coords = { x_offset + texture_coord_correction, y_offset + texture_coord_correction,
         img->width - texture_coord_correction, height - texture_coord_correction };
 
-#ifdef USE_RENDERCOPYF
-    if (HAS_RENDERCOPYF) {
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
-        return;
-    }
-#endif
+    SDL_Rect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
+    SDL_Point center = {0, 0};
+    if (mirrored)
+        SDL_RenderCopyEx(data.renderer, texture, &src_coords, &dst_coords, 0, &center, SDL_FLIP_HORIZONTAL);
+    else
+        SDL_RenderCopyEx(data.renderer, texture, &src_coords, &dst_coords, 0, &center, SDL_FLIP_NONE);
 
-    SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
-        (int) round(img->width / scale), (int) round(height / scale) };
-    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
+//#ifdef USE_RENDERCOPYF
+//    if (HAS_RENDERCOPYF) {
+//        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
+//        SDL_Point center = {0, 0};
+//        SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
+//        return;
+//    }
+//#endif
+//
+//    SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
+//        (int) round(img->width / scale), (int) round(height / scale) };
+//    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
-static void draw_isometric_top(const image *img, int x, int y, color_t color, float scale)
-{
+static void draw_isometric_top(const image *img, int x, int y, color_t color, float scale) {
     if (data.paused) {
         return;
     }
@@ -691,8 +693,7 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
-static void create_custom_texture(int type, int width, int height, int is_yuv)
-{
+static void create_custom_texture(int type, int width, int height, int is_yuv) {
     if (data.paused) {
         return;
     }
@@ -717,8 +718,7 @@ static void create_custom_texture(int type, int width, int height, int is_yuv)
         type == CUSTOM_IMAGE_VIDEO ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
 }
 
-static color_t *get_custom_texture_buffer(int type, int *actual_texture_width)
-{
+static color_t *get_custom_texture_buffer(int type, int *actual_texture_width) {
     if (data.paused || !data.custom_textures[type].texture) {
         return 0;
     }
@@ -747,16 +747,14 @@ static color_t *get_custom_texture_buffer(int type, int *actual_texture_width)
     return data.custom_textures[type].buffer;
 }
 
-static void release_custom_texture_buffer(int type)
-{
+static void release_custom_texture_buffer(int type) {
 #ifndef __vita__
     free(data.custom_textures[type].buffer);
     data.custom_textures[type].buffer = 0;
 #endif
 }
 
-static void update_custom_texture(int type)
-{
+static void update_custom_texture(int type) {
 #ifndef __vita__
     if (data.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
@@ -769,8 +767,7 @@ static void update_custom_texture(int type)
 }
 
 static void update_custom_texture_yuv(int type, const uint8_t *y_data, int y_width,
-    const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width)
-{
+    const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width) {
 #ifdef USE_YUV_TEXTURES
     if (data.paused || !data.supports_yuv_textures || !data.custom_textures[type].texture) {
         return;
@@ -787,8 +784,7 @@ static void update_custom_texture_yuv(int type, const uint8_t *y_data, int y_wid
 #endif
 }
 
-static buffer_texture *get_saved_texture_info(int texture_id)
-{
+static buffer_texture *get_saved_texture_info(int texture_id) {
     if (!texture_id || !data.texture_buffers.first) {
         return 0;
     }
@@ -800,8 +796,7 @@ static buffer_texture *get_saved_texture_info(int texture_id)
     return 0;
 }
 
-static int save_to_texture(int texture_id, int x, int y, int width, int height)
-{
+static int save_to_texture(int texture_id, int x, int y, int width, int height) {
     if (data.paused) {
         return 0;
     }
@@ -875,8 +870,7 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
     return texture_info->id;
 }
 
-static void draw_saved_texture(int texture_id, int x, int y)
-{
+static void draw_saved_texture(int texture_id, int x, int y) {
     if (data.paused) {
         return;
     }
@@ -889,8 +883,7 @@ static void draw_saved_texture(int texture_id, int x, int y)
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
 
-static void create_blend_texture(int type)
-{
+static void create_blend_texture(int type) {
     SDL_Texture *texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 58, 30);
     if (!texture) {
         return;
@@ -935,8 +928,7 @@ static void create_blend_texture(int type)
 //    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
 
-static void draw_custom_texture(int type, int x, int y, float scale)
-{
+static void draw_custom_texture(int type, int x, int y, float scale) {
     if (data.paused) {
         return;
     }
@@ -948,13 +940,11 @@ static void draw_custom_texture(int type, int x, int y, float scale)
     draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
 }
 
-static int has_custom_texture(int type)
-{
+static int has_custom_texture(int type) {
     return data.custom_textures[type].texture != 0;
 }
 
-static void load_unpacked_image(const image *img, const color_t *pixels)
-{
+static void load_unpacked_image(const image *img, const color_t *pixels) {
     if (data.paused) {
         return;
     }
@@ -1012,31 +1002,26 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     SDL_FreeSurface(surface);
 }
 
-static int should_pack_image(int width, int height)
-{
+static int should_pack_image(int width, int height) {
     return width * height < MAX_PACKED_IMAGE_SIZE;
 }
 
-static int isometric_images_are_joined(void)
-{
+static int isometric_images_are_joined(void) {
     return HAS_RENDER_GEOMETRY;
 }
 
-static void update_scale_mode(int city_scale)
-{
+static void update_scale_mode(int city_scale) {
 #ifdef USE_TEXTURE_SCALE_MODE
     data.city_scale = city_scale / 100.0f;
 #endif
 }
 
-static int supports_yuv_texture(void)
-{
+static int supports_yuv_texture(void) {
     return data.supports_yuv_textures;
 }
 
 
-static int prepare_texture_atlas(imagepak *pak, image_packer *packer)
-{
+static int prepare_texture_atlas(imagepak *pak, image_packer *packer) {
     if (pak == nullptr || pak->get_entry_count() <= 0)
         return 0;
 //    int num_images = pak->get_entry_count();
@@ -1104,8 +1089,7 @@ static int prepare_texture_atlas(imagepak *pak, image_packer *packer)
     return pak->atlas_pages.size();
 }
 
-static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *tex)
-{
+static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *tex) {
     SDL_Texture *ren_tex;
     SDL_Surface *surf;
     int st;
@@ -1187,8 +1171,7 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
     SDL_DestroyTexture(ren_tex);
 }
 
-static bool create_texture_atlas(imagepak *pak, image_packer *packer)
-{
+static bool create_texture_atlas(imagepak *pak, image_packer *packer) {
     if (pak == nullptr || pak->get_entry_count() <= 0)
         return false;
 //    int num_images = pak->get_entry_count();
@@ -1234,10 +1217,12 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer)
 
 
         // ********* DEBUGGING **********
-        char *lfile = (char *) malloc(200);
-        sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", pak->name, i); // TODO: make this a global function
-        save_texture(lfile, data.renderer, texture);
-        free(lfile);
+        if (false) {
+            char *lfile = (char *) malloc(200);
+            sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", pak->name, i); // TODO: make this a global function
+            save_texture(lfile, data.renderer, texture);
+            free(lfile);
+        }
         // ******************************
 
         SDL_FreeSurface(surface);
@@ -1256,8 +1241,7 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer)
 }
 
 
-static void create_renderer_interface(void)
-{
+static void create_renderer_interface(void) {
     data.renderer_interface.clear_screen = clear_screen;
     data.renderer_interface.set_viewport = set_viewport;
     data.renderer_interface.reset_viewport = reset_viewport;
@@ -1292,8 +1276,7 @@ static void create_renderer_interface(void)
     graphics_renderer_set_interface(&data.renderer_interface);
 }
 
-int platform_renderer_init(SDL_Window *window)
-{
+int platform_renderer_init(SDL_Window *window) {
 //    free_all_textures();
 
     SDL_Log("Creating renderer");
@@ -1348,16 +1331,14 @@ int platform_renderer_init(SDL_Window *window)
     return 1;
 }
 
-static void destroy_render_texture(void)
-{
+static void destroy_render_texture(void) {
     if (data.render_texture) {
         SDL_DestroyTexture(data.render_texture);
         data.render_texture = 0;
     }
 }
 
-int platform_renderer_create_render_texture(int width, int height)
-{
+int platform_renderer_create_render_texture(int width, int height) {
     if (data.paused) {
         return 1;
     }
@@ -1414,13 +1395,11 @@ int platform_renderer_create_render_texture(int width, int height)
     }
 }
 
-int platform_renderer_lost_render_texture(void)
-{
+int platform_renderer_lost_render_texture(void) {
     return !data.render_texture && data.renderer;
 }
 
-void platform_renderer_invalidate_target_textures(void)
-{
+void platform_renderer_invalidate_target_textures(void) {
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
         data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;
@@ -1433,14 +1412,12 @@ void platform_renderer_invalidate_target_textures(void)
     }
 }
 
-void platform_renderer_clear(void)
-{
+void platform_renderer_clear(void) {
     clear_screen();
 }
 
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
-static void draw_software_mouse_cursor(void)
-{
+static void draw_software_mouse_cursor(void) {
     const mouse *mouse = mouse_get();
     if (!mouse->is_touch) {
         cursor_shape current = platform_cursor_get_current_shape();
@@ -1456,8 +1433,7 @@ static void draw_software_mouse_cursor(void)
 }
 #endif
 
-void platform_renderer_render(void)
-{
+void platform_renderer_render(void) {
     if (data.paused) {
         return;
     }
@@ -1471,8 +1447,7 @@ void platform_renderer_render(void)
 }
 
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
-    int hotspot_x, int hotspot_y)
-{
+    int hotspot_x, int hotspot_y) {
     if (data.paused) {
         return;
     }
@@ -1493,21 +1468,18 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
     SDL_SetTextureBlendMode(data.cursors[cursor_id].texture, SDL_BLENDMODE_BLEND);
 }
 
-void platform_renderer_pause(void)
-{
+void platform_renderer_pause(void) {
     SDL_SetRenderTarget(data.renderer, NULL);
     data.paused = 1;
 }
 
-void platform_renderer_resume(void)
-{
+void platform_renderer_resume(void) {
     data.paused = 0;
     platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
 
-void platform_renderer_destroy(void)
-{
+void platform_renderer_destroy(void) {
     destroy_render_texture();
     if (data.renderer) {
         SDL_DestroyRenderer(data.renderer);

@@ -37,25 +37,21 @@ static struct {
 
 static int scale_percentage = 100;
 
-static int scale_logical_to_pixels(int logical_value)
-{
+static int scale_logical_to_pixels(int logical_value) {
     return logical_value * scale_percentage / 100;
 }
 
-static int scale_pixels_to_logical(int pixel_value)
-{
+static int scale_pixels_to_logical(int pixel_value) {
     return pixel_value * 100 / scale_percentage;
 }
 
-static int get_max_scale_percentage(int pixel_width, int pixel_height)
-{
+static int get_max_scale_percentage(int pixel_width, int pixel_height) {
     int width_scale_pct = pixel_width * 100 / MINIMUM.WIDTH;
     int height_scale_pct = pixel_height * 100 / MINIMUM.HEIGHT;
     return SDL_min(width_scale_pct, height_scale_pct);
 }
 
-static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height)
-{
+static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height) {
 #ifdef __vita__
     scale_percentage = 100;
 #else
@@ -77,8 +73,7 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
 }
 
 #ifdef __ANDROID__
-static void set_scale_for_screen(int pixel_width, int pixel_height)
-{
+static void set_scale_for_screen(int pixel_width, int pixel_height) {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
     config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
     if (SDL.window) {
@@ -88,14 +83,12 @@ static void set_scale_for_screen(int pixel_width, int pixel_height)
 }
 #endif
 
-int platform_screen_get_scale(void)
-{
+int platform_screen_get_scale(void) {
     return scale_percentage;
 }
 
 #if !defined(_WIN32) && !defined(__APPLE__)
-static void set_window_icon(void)
-{
+static void set_window_icon(void) {
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
         0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     if (!surface) {
@@ -106,8 +99,7 @@ static void set_window_icon(void)
 }
 #endif
 
-int platform_screen_create(const char *title, int display_scale_percentage)
-{
+int platform_screen_create(const char *title, int display_scale_percentage) {
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     int width, height;
@@ -175,8 +167,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     return platform_screen_resize(width, height, 1);
 }
 
-void platform_screen_destroy(void)
-{
+void platform_screen_destroy(void) {
     platform_renderer_destroy();
     if (SDL.window) {
         SDL_DestroyWindow(SDL.window);
@@ -184,8 +175,7 @@ void platform_screen_destroy(void)
     }
 }
 
-int platform_screen_resize(int pixel_width, int pixel_height, int save)
-{
+int platform_screen_resize(int pixel_width, int pixel_height, int save) {
 #ifdef __ANDROID__
     set_scale_for_screen(pixel_width, pixel_height);
 #endif
@@ -205,8 +195,7 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save)
     }
 }
 
-int system_scale_display(int display_scale_percentage)
-{
+int system_scale_display(int display_scale_percentage) {
     int width, height;
     SDL_GetWindowSize(SDL.window, &width, &height);
     set_scale_percentage(display_scale_percentage, width, height);
@@ -214,15 +203,13 @@ int system_scale_display(int display_scale_percentage)
     return scale_percentage;
 }
 
-int system_get_max_display_scale(void)
-{
+int system_get_max_display_scale(void) {
     int width, height;
     SDL_GetWindowSize(SDL.window, &width, &height);
     return get_max_scale_percentage(width, height);
 }
 
-void platform_screen_move(int x, int y)
-{
+void platform_screen_move(int x, int y) {
     if (!setting_fullscreen()) {
         window_pos.x = x;
         window_pos.y = y;
@@ -230,8 +217,7 @@ void platform_screen_move(int x, int y)
     }
 }
 
-void platform_screen_set_fullscreen(void)
-{
+void platform_screen_set_fullscreen(void) {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_DisplayMode mode;
@@ -251,8 +237,7 @@ void platform_screen_set_fullscreen(void)
     setting_set_display(1, mode.w, mode.h);
 }
 
-void platform_screen_set_windowed(void)
-{
+void platform_screen_set_windowed(void) {
     if (system_is_fullscreen_only()) {
         return;
     }
@@ -273,8 +258,7 @@ void platform_screen_set_windowed(void)
     setting_set_display(0, pixel_width, pixel_height);
 }
 
-void platform_screen_set_window_size(int logical_width, int logical_height)
-{
+void platform_screen_set_window_size(int logical_width, int logical_height) {
     if (system_is_fullscreen_only()) {
         return;
     }
@@ -300,8 +284,7 @@ void platform_screen_set_window_size(int logical_width, int logical_height)
     setting_set_display(0, pixel_width, pixel_height);
 }
 
-void platform_screen_center_window(void)
-{
+void platform_screen_center_window(void) {
     int display = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_SetWindowPosition(SDL.window,
                           SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
@@ -309,8 +292,7 @@ void platform_screen_center_window(void)
 }
 
 #ifdef _WIN32
-void platform_screen_recreate_texture(void)
-{
+void platform_screen_recreate_texture(void) {
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
@@ -323,20 +305,17 @@ void platform_screen_recreate_texture(void)
 }
 #endif
 
-void platform_screen_show_error_message_box(const char *title, const char *message)
-{
+void platform_screen_show_error_message_box(const char *title, const char *message) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, SDL.window);
 }
 
-void system_set_mouse_position(int *x, int *y)
-{
+void system_set_mouse_position(int *x, int *y) {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
     SDL_WarpMouseInWindow(SDL.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
 }
 
-int system_is_fullscreen_only(void)
-{
+int system_is_fullscreen_only(void) {
 #if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__)
     return 1;
 #else
@@ -344,8 +323,7 @@ int system_is_fullscreen_only(void)
 #endif
 }
 
-void system_get_max_resolution(int *width, int *height)
-{
+void system_get_max_resolution(int *width, int *height) {
     SDL_DisplayMode mode;
     int index = SDL_GetWindowDisplayIndex(SDL.window);
     SDL_GetCurrentDisplayMode(index, &mode);

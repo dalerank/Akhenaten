@@ -16,6 +16,7 @@
 #include <cassert>
 #include <cinttypes>
 #include <graphics/renderer.h>
+#include <graphics/font.h>
 #include "core/string.h"
 #include "stopwatch.h"
 #include "image_packer.h"
@@ -83,11 +84,6 @@ static int convert_uncompressed(buffer *buf, const image *img) {
             pixels_count++;
         }
     }
-//    for (int i = 0; i < buf_length; i += 2) {
-//        color_t c = to_32_bit(buf->read_u16());
-//        *dst = c;
-//        dst++;
-//    }
     return pixels_count;
 }
 static int convert_compressed(buffer *buf, int data_length, const image *img) {
@@ -207,11 +203,37 @@ static int convert_isometric_footprint(buffer *buf, const image *img) {
     return pixels_count;
 }
 
-static buffer *temp_external_image_buf = nullptr;
+static void convert_to_plain_white(const image *img) {
+    color_t *pixels = img->pixel_data;
+    int atlas_width = img->atlas.p_atlas->width;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
+            if ((pixels[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+                pixels[x] |= 0x00ffffff;
+        }
+        pixels += atlas_width;
+    }
+}
+static void make_plain_fonts_white(std::vector<image> *images, int start_index) {
+    for (int i = font_definition_for(FONT_NORMAL_PLAIN)->image_offset; i < font_definition_for(FONT_NORMAL_BLACK_ON_LIGHT)->image_offset; ++i) {
+        const image *img = &images->at(i + start_index);
+        convert_to_plain_white(img);
+    }
+    for (int i = font_definition_for(FONT_SMALL_PLAIN)->image_offset; i < font_definition_for(FONT_NORMAL_BLACK_ON_DARK)->image_offset; ++i) {
+        const image *img = &images->at(i + start_index);
+        convert_to_plain_white(img);
+    }
+    for (int i = font_definition_for(FONT_SMALL_BLACK)->image_offset; i < images->size() - start_index; ++i) {
+        const image *img = &images->at(i + start_index);
+        convert_to_plain_white(img);
+    }
+}
+
+static buffer *external_image_buf = nullptr;
 static buffer *load_external_data(const image *img) {
     char filename[MAX_FILE_NAME];
     int size = 0;
-    safe_realloc_for_size(&temp_external_image_buf, img->data_length);
+    safe_realloc_for_size(&external_image_buf, img->data_length);
 
     // file path
     strcpy(&filename[0], "Data/");
@@ -220,30 +242,21 @@ static buffer *load_external_data(const image *img) {
 
     // load external file
     size = io_read_file_part_into_buffer(
-            &filename[5], MAY_BE_LOCALIZED, temp_external_image_buf,
-            img->data_length, img->sg3_offset - 1
+            &filename[5], MAY_BE_LOCALIZED, external_image_buf,
+            img->data_length, img->sgx_data_offset - 1
     );
     if (!size) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-                filename, MAY_BE_LOCALIZED, temp_external_image_buf,
-                img->data_length, img->sg3_offset - 1
+                filename, MAY_BE_LOCALIZED, external_image_buf,
+                img->data_length, img->sgx_data_offset - 1
         );
         if (!size) {
             log_error("unable to load external image", img->bmp.name, 0);
             return nullptr;
         }
     }
-    return temp_external_image_buf;
-//    color_t *dst = (color_t *) &data.tmp_data[4000000];
-
-    // NB: isometric images are never external
-//    if (img->is_fully_compressed)
-//        convert_compressed(temp_external_image_buf, img->data_length, img);
-//    else {
-//        convert_uncompressed(temp_external_image_buf, img);
-//    }
-//    return data.tmp_image_data;
+    return external_image_buf;
 }
 
 static int convert_image_data(buffer *buf, image *img) {
@@ -269,12 +282,13 @@ static int convert_image_data(buffer *buf, image *img) {
 
 static stopwatch WATCH;
 
-imagepak::imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES) {
+imagepak::imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES, bool FONTS) {
 //    images = nullptr;
 //    image_data = nullptr;
     entries_num = 0;
     group_image_ids = new uint16_t[300];
     SHOULD_LOAD_SYSTEM_SPRITES = SYSTEM_SPRITES;
+    SHOULD_CONVERT_FONTS = FONTS;
 
     load_pak(pak_name, starting_index);
 }
@@ -360,11 +374,8 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
 
     // determine if and when to load SYSTEM.BMP sprites
     bool has_system_bmp = false;
-    if (groups_num > 0 && group_image_ids[0] == 0) {
+    if (groups_num > 0 && group_image_ids[0] == 0)
         has_system_bmp = true;
-        SDL_Log("group 0 : id %i --- group 1 : id %i --- TRUE", group_image_ids[0], group_image_ids[1]);
-    } else
-        SDL_Log("group 0 : id %i --- group 1 : id %i --- FALSE", group_image_ids[0], group_image_ids[1]);
 
     // parse bitmap names
     bmp_names = (char*)malloc(sizeof(char) * (num_bmp_names * PAK_BMP_NAME_SIZE));
@@ -392,7 +403,8 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     images_array.reserve(entries_num);
     for (int i = 0; i < entries_num; i++) {
         image img;
-        img.sg3_offset = pak_buf->read_i32();
+        img.sgx_index = i;
+        img.sgx_data_offset = pak_buf->read_i32();
         img.data_length = pak_buf->read_i32();
         img.uncompressed_length = pak_buf->read_i32();
         img.unk00 = pak_buf->read_i32();
@@ -478,6 +490,8 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         image *img = &images_array.at(i);
         if (has_system_bmp && !SHOULD_LOAD_SYSTEM_SPRITES && i < 201)
             continue;
+        if (img->offset_mirror != 0)
+            img->mirrored_img = &images_array.at(i + img->offset_mirror);
 //        if (img->is_external)
 //            continue;
         image_packer_rect *rect = &packer.rects[i];
@@ -491,9 +505,12 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         // convert bitmap data for image pool
 //        if (img->is_external)
 //            continue;
-        pak_buf->set_offset(img->sg3_offset);
+        pak_buf->set_offset(img->sgx_data_offset);
         int r = convert_image_data(pak_buf, img);
     }
+
+    if (SHOULD_CONVERT_FONTS)
+        make_plain_fonts_white(&images_array, 1 + (200 * (!SHOULD_LOAD_SYSTEM_SPRITES)));
 
 //    assets_init(atlas_data->buffers, atlas_data->image_widths);
     graphics_renderer()->create_image_atlas(this, &packer);
@@ -631,7 +648,7 @@ const color_t *image_data_enemy(int id) {
     const image *lookup = image_get(id);
     const image *img = image_get(id + lookup->offset_mirror);
     id += img->offset_mirror;
-    if (img->sg3_offset > 0)
+    if (img->sgx_data_offset > 0)
         return img->pixel_data;
     return NULL;
 }
@@ -681,59 +698,56 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
 
     const char *filename_555;
     const char *filename_sgx;
-    switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
 
-            // Pharaoh loads every image into a global listed cache; however, some
-            // display systems use discordant indexes; The sprites cached in the
-            // save files, for examples, appear to start at 700 while the terrain
-            // system displays them starting at the immediate index after the first
-            // pak has ended (683).
-            // Moreover, the monuments, temple complexes, and enemies all make use
-            // of a single shared index, which is swapped in "real time" for the
-            // correct pak in use by the mission, or even depending on buildings
-            // present on the map, like the Temple Complexes.
-            // What an absolute mess!
+    // Pharaoh loads every image into a global listed cache; however, some
+    // display systems use discordant indexes; The sprites cached in the
+    // save files, for examples, appear to start at 700 while the terrain
+    // system displays them starting at the immediate index after the first
+    // pak has ended (683).
+    // Moreover, the monuments, temple complexes, and enemies all make use
+    // of a single shared index, which is swapped in "real time" for the
+    // correct pak in use by the mission, or even depending on buildings
+    // present on the map, like the Temple Complexes.
+    // What an absolute mess!
 
-            data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true);   // 0     --> 682
-            data.sprmain = new imagepak("SprMain", 700);                              // 700   --> 11007
-            // <--- original enemy pak in here                                                               // 11008 --> 11866
-            data.main = new imagepak("Pharaoh_General", 11906 -200);                  // 11906 --> 11866
-            data.terrain = new imagepak("Pharaoh_Terrain", 14452 -200);               // 14252 --> 15767 (+64)
-            // <--- original temple complex pak here
-            data.sprambient = new imagepak("SprAmbient", 15831);                      // 15831 --> 18765
-            data.font = new imagepak("Pharaoh_Fonts", 18765);                         // 18765 --> 20305
-            data.empire = new imagepak("Empire", 20305);                              // 20305 --> 20506 (+177)
-            data.sprmain2 = new imagepak("SprMain2", 20683);                          // 20683 --> 23035
-            data.expansion = new imagepak("Expansion", 23035);                        // 23035 --> 23935 (-200)
-            // <--- original pyramid pak in here                                                             // 23735 --> 24163
+    data.unloaded = new imagepak("Pharaoh_Unloaded", 0, true);                 // 0     --> 682
+    data.sprmain = new imagepak("SprMain", 700);                                            // 700   --> 11007
+    // <--- original enemy pak in here                                                                              // 11008 --> 11866
+    data.main = new imagepak("Pharaoh_General", 11906 -200);                                // 11906 --> 11866
+    data.terrain = new imagepak("Pharaoh_Terrain", 14452 -200);                             // 14252 --> 15767 (+64)
+    // <--- original temple complex pak here
+    data.sprambient = new imagepak("SprAmbient", 15831);                                    // 15831 --> 18765
+    data.font = new imagepak("Pharaoh_Fonts", 18765, false, true);       // 18765 --> 20305
+    data.empire = new imagepak("Empire", 20305);                                            // 20305 --> 20506 (+177)
+    data.sprmain2 = new imagepak("SprMain2", 20683);                                        // 20683 --> 23035
+    data.expansion = new imagepak("Expansion", 23035);                                      // 23035 --> 23935 (-200)
+    // <--- original pyramid pak in here                                                                            // 23735 --> 24163
 
-            // the 5 Temple Complex paks.
-            data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
-            data.temple_paks.push_back(new imagepak("Temple_ra", 15591));
-            data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));
-            data.temple_paks.push_back(new imagepak("Temple_seth", 15591));
-            data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
+    // the 5 Temple Complex paks.
+    data.temple_paks.push_back(new imagepak("Temple_nile", 15591));
+    data.temple_paks.push_back(new imagepak("Temple_ra", 15591));
+    data.temple_paks.push_back(new imagepak("Temple_ptah", 15591));
+    data.temple_paks.push_back(new imagepak("Temple_seth", 15591));
+    data.temple_paks.push_back(new imagepak("Temple_bast", 15591));
 
-            // the various Monument paks.
-            data.monument_paks.push_back(new imagepak("Mastaba", 23735));
-            data.monument_paks.push_back(new imagepak("Pyramid", 23735));
-            data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
+    // the various Monument paks.
+    data.monument_paks.push_back(new imagepak("Mastaba", 23735));
+    data.monument_paks.push_back(new imagepak("Pyramid", 23735));
+    data.monument_paks.push_back(new imagepak("bent_pyramid", 23735));
 
-            // the various Enemy paks.
-            for (int i = 0; i < 14; ++i) {
-                if (enemy_file_names_ph[i] != "")
-                    data.enemy_paks.push_back(new imagepak(enemy_file_names_ph[i], 11026));
-            }
-
-            // (set the first in the bunch as active initially, just for defaults)
-            data.temple = data.temple_paks.at(0);
-            data.monument = data.monument_paks.at(0);
-            data.enemy = data.enemy_paks.at(0);
-            break;
+    // the various Enemy paks.
+    for (int i = 0; i < 14; ++i) {
+        if (enemy_file_names_ph[i] != "")
+            data.enemy_paks.push_back(new imagepak(enemy_file_names_ph[i], 11026));
     }
 
+    // (set the first in the bunch as active initially, just for defaults)
+    data.temple = data.temple_paks.at(0);
+    data.monument = data.monument_paks.at(0);
+    data.enemy = data.enemy_paks.at(0);
+
     data.is_editor = is_editor;
+
     return true;
 }
 
