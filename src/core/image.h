@@ -48,6 +48,7 @@ typedef struct {
 } atlas_data_t;
 
 struct image {
+    char *pak_name;
     int sgx_index;
     int sgx_data_offset;
     int data_length;

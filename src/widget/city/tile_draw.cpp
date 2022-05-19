@@ -298,24 +298,6 @@ void draw_footprint(pixel_coordinate pixel, map_point point) {
     // ******** TEMP ********
 //    if (grid_offset == map_grid_offset(135, 66))
 }
-//void draw_top(pixel_coordinate pixel, map_point point) {
-//    int grid_offset = point.grid_offset();
-//    int x = pixel.x;
-//    int y = pixel.y;
-//    // tile must contain image draw data
-//    if (!map_property_is_draw_tile(grid_offset))
-//        return;
-//
-//    // get tile image
-//    int image_id = map_image_at(grid_offset);
-//    color_t color_mask = 0;
-//
-//    building *b = building_at(grid_offset);
-//    if (drawing_building_as_deleted(b) || (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)))
-//        color_mask = COLOR_MASK_RED;
-//
-//    ImageDraw::isometric_top_from_drawtile(image_id, x, y, color_mask);
-//}
 void draw_ornaments(pixel_coordinate pixel, map_point point) {
     // defined separately in ornaments.cpp
     // cuz it's too much stuff.
@@ -323,21 +305,21 @@ void draw_ornaments(pixel_coordinate pixel, map_point point) {
 }
 void draw_figures(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
+//    int x = pixel.x;
+//    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
 
-        pixel_coordinate coords;
-        coords = mappoint_to_pixel(map_point(f->tile.x(), f->tile.y()));
+//        pixel_coordinate coords;
+//        coords = mappoint_to_pixel(map_point(f->tile.x(), f->tile.y()));
 
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
                 int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                f->city_draw_figure(x, y, highlight);
+                f->city_draw_figure(pixel, highlight);
             } else if (figure_id == draw_context.selected_figure_id)
-                f->city_draw_figure(x, y, 0, draw_context.selected_figure_coord);
+                f->city_draw_figure(pixel, 0, draw_context.selected_figure_coord);
         }
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
@@ -353,7 +335,7 @@ void draw_elevated_figures(pixel_coordinate pixel, map_point point) {
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
         if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks)
-            f->city_draw_figure(x, y, 0);
+            f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
@@ -453,13 +435,11 @@ void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
 }
 void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (!f->is_ghost && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(x, y, 0);
+            f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;
@@ -475,7 +455,7 @@ void draw_elevated_figures_overlay(pixel_coordinate pixel, map_point point) {
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
         if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(x, y, 0);
+            f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;

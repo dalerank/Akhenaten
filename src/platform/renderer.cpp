@@ -549,15 +549,15 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale) {
 #endif
 }
 
-static void draw_texture(const image *img, int x, int y, color_t color, float scale) {
+static void draw_texture(const image *img, int x, int y, color_t color, float scale, bool mirrored) {
     if (data.paused)
         return;
     if (!color)
         color = COLOR_MASK_NONE;
 
-    bool mirrored = (img->offset_mirror != 0);
-    if (mirrored)
-        img = img->mirrored_img;
+//    bool mirrored = (img->offset_mirror != 0);
+//    if (mirrored)
+//        img = img->mirrored_img;
 
     SDL_Texture *texture = img->atlas.p_atlas->texture;
     if (!texture)
@@ -570,11 +570,11 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     int height = img->height;
 
     if (img->type == IMAGE_TYPE_ISOMETRIC && img->top_height) {
-        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-        y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
-
-        int y_correction = height - FOOTPRINT_HEIGHT * tile_size;
-        y -= y_correction;
+//        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+//        y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
+//
+//        int y_correction = height - FOOTPRINT_HEIGHT * tile_size;
+//        y -= y_correction;
 
 //        if (!data.renderer_interface.isometric_images_are_joined()) {
 //            y_offset += img->top_height;
@@ -584,11 +584,11 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
 //        y_offset += img->height - height;
 //        }
     } else {
-        if (mirrored)
-            x -= (img->width - img->animation.sprite_x_offset);
-        else
-            x -= img->animation.sprite_x_offset;
-        y -= img->animation.sprite_y_offset;
+//        if (mirrored)
+//            x -= (img->width - img->animation.sprite_x_offset);
+//        else
+//            x -= img->animation.sprite_x_offset;
+//        y -= img->animation.sprite_y_offset;
     }
 
 #ifdef USE_RENDER_GEOMETRY

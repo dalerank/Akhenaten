@@ -249,16 +249,16 @@ public:
 
     // city_figure.c
     void draw_debug();
-    void adjust_pixel_offset(int *x, int *y);
+    void adjust_pixel_offset(pixel_coordinate *pixel);
 //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(int x, int y);
-    void draw_figure_cart(int x, int y);
-    void city_draw_figure(int x, int y, int highlight, pixel_coordinate *coord = nullptr);
+    void draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(int x, int y);
+    void draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 //    void draw_hippodrome_horse(int x, int y);
-    void draw_fort_standard(int x, int y);
-    void draw_map_flag(int x, int y);
+    void draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
+    void draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out = nullptr);
 
     // movement.c
     void advance_figure_tick();

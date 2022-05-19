@@ -586,7 +586,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color_
             int y_offset = k * 15;
 
 //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            graphics_renderer()->draw_image(img, x, y, color_mask, scale);
+            graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
         }
     }
 }
@@ -597,64 +597,86 @@ static color_t base_color_for_font(font_t font) {
     return COLOR_MASK_NONE;
 }
 
-static void draw_multibyte_letter(font_t font, const image *img, int x, int y, color_t color, float scale) {
+static void draw_multibyte_letter(font_t font, const image *img, int x, int y, color_t color_mask, float scale) {
     switch (font) {
         case FONT_NORMAL_WHITE_ON_DARK:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale);
-            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale);
+            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
+            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale, false);
             break;
         case FONT_NORMAL_YELLOW:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale);
-            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale);
+            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale, false);
             break;
         case FONT_NORMAL_BLACK_ON_DARK:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale);
-            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale);
+            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
             break;
         case FONT_NORMAL_PLAIN:
-            if (!color) {
-                color = base_color_for_font(font);
+            if (!color_mask) {
+                color_mask = base_color_for_font(font);
             }
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color, scale);
+            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
             break;
         case FONT_NORMAL_BLACK_ON_LIGHT:
         case FONT_LARGE_BLACK_ON_LIGHT:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale);
-            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale);
+            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
+            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
             break;
         case FONT_NORMAL_SHADED:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_BLACK, scale);
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color, scale);
+            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_BLACK, scale, false);
+            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
         default:
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color, scale);
+            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
             break;
     }
 }
 
 void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
+    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
-    ImageDraw::img_generic(image_id, x, y, 0);
+    if (!scale)
+        scale = city_view_get_scale_float();
+
+    bool mirrored = (img->offset_mirror != 0);
+    if (mirrored) {
+        img = img->mirrored_img;
+        x -= (img->width - img->animation.sprite_x_offset);
+    } else
+        x -= img->animation.sprite_x_offset;
+    y -= img->animation.sprite_y_offset;
+    graphics_renderer()->draw_image(img, x, y, color_mask, scale, mirrored);
+}
+void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t color_mask, float scale) {
+    const image *img = image_get(image_id);
+    const image *base = image_get(base_id);
+    if (!scale)
+        scale = city_view_get_scale_float();
+    int tile_size = (base->width + 2) / (FOOTPRINT_WIDTH + 2);
+    int ydiff = FOOTPRINT_HALF_HEIGHT * (tile_size + 1);
+    x += base->animation.sprite_x_offset;
+    y += base->animation.sprite_y_offset - base->height + ydiff;
+    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
-//    ImageDraw::img_generic(image_id, x - img->animation.sprite_x_offset, y - img->height, color_mask);
-    ImageDraw::img_generic(image_id, x, y - img->height, color_mask);
+    graphics_renderer()->draw_image(img, x, y - img->height, color_mask, scale, false);
 }
-void ImageDraw::img_enemy(int image_id, int x, int y, float scale) {
+void ImageDraw::img_enemy(int image_id, int x, int y, color_t color_mask, float scale) {
     if (image_id <= 0 || image_id >= 801)
         return;
+    ImageDraw::img_sprite(image_id, x, y, color_mask, scale);
+
 //    const image *img = image_get_enemy(image_id);
 //    const color_t *data = image_data_enemy(image_id);
 //    if (data)
 //        draw_compressed(img, data, x, y, img->height);
 //    graphics_renderer()->draw_image(img, x, y, 0, scale);
-    ImageDraw::img_generic(image_id, x, y, 0, scale);
+//    ImageDraw::img_generic(image_id, x, y, 0, scale);
 }
-void ImageDraw::img_blended(int image_id, int x, int y, color_t color, float scale) {
+void ImageDraw::img_blended(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
 //    const color_t *data = image_data(image_id);
 //    if (!data)
@@ -669,9 +691,9 @@ void ImageDraw::img_blended(int image_id, int x, int y, color_t color, float sca
 //        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND);
 //    }
 //    graphics_renderer()->draw_image(img, x, y, color, scale);
-    ImageDraw::img_generic(image_id, x, y, color, scale);
+    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
-void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color, float scale) {
+void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
 //    const color_t *data = image_data(image_id);
 //    if (!data)
@@ -685,9 +707,9 @@ void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color, flo
 //    else
 //        draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
 //    graphics_renderer()->draw_image(img, x, y, color, scale);
-    ImageDraw::img_generic(image_id, x, y, color, scale);
+    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
-void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t color, float scale) {
+void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t color_mask, float scale) {
 //    const image *img = image_letter(letter_id);
 //    const color_t *data = image_data_letter(letter_id);
 //    if (!data)
@@ -711,12 +733,12 @@ void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t col
 //        draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
     const image *img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        draw_multibyte_letter(font, img, x, y, color, scale);
+        draw_multibyte_letter(font, img, x, y, color_mask, scale);
         return;
     }
-    if (!color)
-        color = base_color_for_font(font);
-    graphics_renderer()->draw_image(img, x, y, color, scale);
+    if (!color_mask)
+        color_mask = base_color_for_font(font);
+    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_background(int image_id, float scale) {
     int s_width = screen_width();
@@ -740,17 +762,17 @@ void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float 
 //    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
 }
 void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask, float scale) {
-
-
     const image *img = image_get(image_id);
 //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
 //        assets_load_unpacked_asset(image_id);
 //    }
     int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-//    y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
-
+    y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
+    int y_diff = img->height - FOOTPRINT_HEIGHT * tile_size;
+    y -= y_diff;
+    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 //    draw_debug_tile_box(x, y, tile_size, tile_size);
+
 
 
 //    const image *img = image_get(image_id, 1);

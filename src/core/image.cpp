@@ -403,6 +403,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     images_array.reserve(entries_num);
     for (int i = 0; i < entries_num; i++) {
         image img;
+        img.pak_name = name;
         img.sgx_index = i;
         img.sgx_data_offset = pak_buf->read_i32();
         img.data_length = pak_buf->read_i32();

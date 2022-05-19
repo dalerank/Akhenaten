@@ -59,7 +59,7 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (!f->is_ghost)
-            f->city_draw_figure(x, y, 0);
+            f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
             figure_id = f->next_figure;

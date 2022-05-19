@@ -368,33 +368,33 @@ void figure::draw_debug() {
     building *bdest = destination();
 
     uint8_t str[10];
-    pixel_coordinate coords;
-    coords = mappoint_to_pixel(map_point(tile.x(), tile.y()));
-    adjust_pixel_offset(&coords.x, &coords.y);
-    coords.x -= 10;
-    coords.y -= 80;
+    pixel_coordinate pixel;
+    pixel = mappoint_to_pixel(map_point(tile.x(), tile.y()));
+    adjust_pixel_offset(&pixel);
+    pixel.x -= 10;
+    pixel.y -= 80;
     int indent = 0;
 
     switch (DB1) {
         case 1: // ACTION & STATE IDS
-            draw_debug_line(str, coords.x, coords.y, indent, "", id, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
-            draw_debug_line(str, coords.x, coords.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x, coords.y + 30, indent, "", wait_ticks, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 40, indent, "", roam_length, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y, indent, "", id, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
+            draw_debug_line(str, pixel.x, pixel.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x, pixel.y + 30, indent, "", wait_ticks, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y + 40, indent, "", roam_length, COLOR_WHITE);
 
-            coords.y += 80;
+            pixel.y += 80;
 
             string_from_int(str, tile.x(), 0);
-            text_draw(str, coords.x, coords.y, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y, FONT_NORMAL_PLAIN, 0);
             string_from_int(str, tile.y(), 0);
-            text_draw(str, coords.x, coords.y+10, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 10, FONT_NORMAL_PLAIN, 0);
             string_from_int(str, tile.grid_offset(), 0);
-            text_draw(str, coords.x, coords.y+20, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 20, FONT_NORMAL_PLAIN, 0);
             string_from_int(str, progress_on_tile, 0);
-            text_draw(str, coords.x, coords.y+30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
             string_from_int(str, routing_path_current_tile, 0);
-            text_draw(str, coords.x+30, coords.y+30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x + 30, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
             break;
         case 2: // ROUTING
             // draw path
@@ -451,56 +451,56 @@ void figure::draw_debug() {
 
             // the rest of values, on top of all else
             if (routing_path_id) {
-                draw_debug_line(str, coords.x, coords.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
+                draw_debug_line(str, pixel.x, pixel.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
+                draw_debug_line(str, pixel.x, pixel.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
+                draw_debug_line(str, pixel.x, pixel.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
             } else {
-                draw_debug_line(str, coords.x, coords.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, pixel.x, pixel.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, pixel.x, pixel.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
+                draw_debug_line(str, pixel.x, pixel.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
             }
-            draw_debug_line(str, coords.x, coords.y + 30, indent, "", terrain_usage, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y + 30, indent, "", terrain_usage, COLOR_WHITE);
             switch (direction) {
                 case DIR_FIGURE_CAN_NOT_REACH:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_RED);
+                    draw_debug_line(str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_LIGHT_RED);
                     break;
                 case DIR_FIGURE_REROUTE:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
+                    draw_debug_line(str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
                     break;
                 case DIR_FIGURE_NONE:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_GREEN);
+                    draw_debug_line(str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_GREEN);
                     break;
                 default:
-                    draw_debug_line(str, coords.x, coords.y + 40, indent, "", direction, COLOR_WHITE);
+                    draw_debug_line(str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_WHITE);
                     break;
             }
-            draw_debug_line(str, coords.x + 10, coords.y + 40, 5, ":", roam_turn_direction,
+            draw_debug_line(str, pixel.x + 10, pixel.y + 40, 5, ":", roam_turn_direction,
                             roam_turn_direction ? COLOR_LIGHT_BLUE : 0xff777777);
 
-            coords.y += 50;
+            pixel.y += 50;
             string_from_int(str, progress_on_tile, 0);
-            text_draw(str, coords.x, coords.y + 30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
             break;
         case 3: // RESOURCE CARRY
             if (resource_id) {
-                draw_debug_line(str, coords.x, coords.y, indent, "",  resource_id, COLOR_GREEN);
-                draw_debug_line(str, coords.x, coords.y + 10, indent, "",  resource_amount_full, resource_amount_full ? COLOR_GREEN : 0xff777777);
-                draw_debug_line(str, coords.x, coords.y + 20, indent, "",  collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : 0xff777777);
+                draw_debug_line(str, pixel.x, pixel.y, indent, "", resource_id, COLOR_GREEN);
+                draw_debug_line(str, pixel.x, pixel.y + 10, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : 0xff777777);
+                draw_debug_line(str, pixel.x, pixel.y + 20, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : 0xff777777);
             }
             break;
         case 4: // BUILDING DATA
-            draw_debug_line(str, coords.x + 0, coords.y, indent, "",  homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x + 20, coords.y, 8, ":",  home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x + 0, coords.y + 10, indent, "",  destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x + 20, coords.y + 10, 8, ":",  destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x + 0, coords.y + 20, indent, "",  immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-            draw_debug_line(str, coords.x + 20, coords.y + 20, 8, ":",  immigrant_home()->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 0, pixel.y, indent, "", homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+            draw_debug_line(str, pixel.x + 20, pixel.y + 20, 8, ":", immigrant_home()->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
             break;
         case 5: // FESTIVAL
-            coords.y += 30;
-            draw_debug_line(str, coords.x, coords.y, indent, "", unk_ph1_269, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 10, indent, "", unk_ph4_ffff, COLOR_WHITE);
-            draw_debug_line(str, coords.x, coords.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
+            pixel.y += 30;
+            draw_debug_line(str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y + 10, indent, "", unk_ph4_ffff, COLOR_WHITE);
+            draw_debug_line(str, pixel.x, pixel.y + 20, indent, "", festival_remaining_dances, COLOR_WHITE);
             break;
     }
 }
