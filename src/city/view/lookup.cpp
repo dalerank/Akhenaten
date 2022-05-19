@@ -34,6 +34,9 @@ pixel_coordinate mappoint_to_pixel(map_point point) {
     return MAPPOINT_TO_PIXELCOORD_LOOKUP[point.grid_offset()];
 }
 void record_pixel_coord(map_point point, pixel_coordinate coord) {
+//    float zoom = zoom_get_scale();
+//    coord.x /= zoom;
+//    coord.y /= zoom;
     MAPPOINT_TO_PIXELCOORD_LOOKUP[point.grid_offset()] = {coord.x, coord.y};
 }
 

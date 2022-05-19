@@ -5,6 +5,7 @@
 #include <dev/debug.h>
 #include <map/property.h>
 #include <city/view/zoom.h>
+#include <graphics/renderer.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
@@ -192,12 +193,14 @@ void widget_city_draw_with_overlay(map_point tile) {
 
 void widget_city_draw(void) {
     update_zoom_level();
+    SET_RENDER_SCALE(zoom_get_scale());
     set_city_clip_rectangle();
     if (game_state_overlay())
         widget_city_draw_with_overlay(data.current_tile);
     else
         widget_city_draw_without_overlay(0, 0, data.current_tile);
     graphics_reset_clip_rectangle();
+    SET_RENDER_SCALE(1.0f);
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
     set_city_clip_rectangle();

@@ -8,7 +8,7 @@ struct {
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
     float delta;
-    float zoom_speed = 20.0f; // TODO: settings
+    float zoom_speed = 10.0f; // TODO: settings
     pixel_coordinate input_offset;
     struct {
         bool active;
@@ -135,10 +135,11 @@ float zoom_debug_delta() {
 }
 
 float zoom_get_scale() {
-    return (data.zoom + 0.5f) / 100.0f;
+//    return (float)(int)(data.zoom + 0.5f) / 100.0f;
+    return 1.0f / (data.zoom / 100.0f);
 }
 float zoom_get_percentage() {
-    return (data.zoom + 0.5f);
+    return (float)(int)(data.zoom + 0.5f);
 }
 void zoom_set(float z) {
     z = calc_bound(z, 50, 200);

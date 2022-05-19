@@ -236,8 +236,8 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 /////////
 
 void draw_empty_tile(pixel_coordinate pixel, map_point point) {
-    if (!map_property_is_draw_tile(point.grid_offset()))
-        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
+//    if (!map_property_is_draw_tile(point.grid_offset()))
+//        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
 };
 
 void draw_footprint(pixel_coordinate pixel, map_point point) {
@@ -356,8 +356,7 @@ void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point) {
     int x = pixel.x;
     int y = pixel.y;
     if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_at(grid_offset)))
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED,
-                               zoom_get_scale());
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_footprint(pixel, point);

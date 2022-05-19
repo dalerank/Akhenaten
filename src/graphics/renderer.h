@@ -41,6 +41,8 @@ enum {
 //    int *image_heights;
 //} image_atlas_data;
 
+void SET_RENDER_SCALE(float scale);
+
 typedef struct {
     void (*clear_screen)(void);
 
@@ -54,8 +56,8 @@ typedef struct {
     void (*draw_rect)(int x, int y, int width, int height, color_t color);
     void (*fill_rect)(int x, int y, int width, int height, color_t color);
 
-    void (*draw_image)(const image *img, int x, int y, color_t color, float scale, bool mirrored);
-    void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);
+    void (*draw_image)(const image *img, float x, float y, color_t color, float scale, bool mirrored);
+//    void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);
 
     void (*create_custom_image)(int type, int width, int height);
     int (*has_custom_image)(int type);

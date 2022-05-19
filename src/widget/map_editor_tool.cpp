@@ -24,10 +24,9 @@ static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy) {
 static void draw_flat_tile(int x, int y, color_t color_mask) {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
         ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y,
-                                     ALPHA_MASK_SEMI_TRANSPARENT & color_mask, zoom_get_scale());
+                                     ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
     else {
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask,
-                               zoom_get_scale());
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
     }
 }
 
@@ -44,7 +43,7 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int *blocked_til
 }
 
 static void draw_building_image(int image_id, int x, int y) {
-    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN, zoom_get_scale());
+    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN);
 //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 

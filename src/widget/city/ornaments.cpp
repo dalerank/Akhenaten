@@ -232,14 +232,14 @@ void draw_farm_crops(int type, int progress, int grid_offset, int x, int y, colo
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*200)/100));
             ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_FLOODPLAIN[i][0],
-                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1], color_mask, zoom_get_scale());
+                                      y + FARM_TILE_OFFSETS_FLOODPLAIN[i][1], color_mask);
         }
     } else { // on dry meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i*400)/100));
 
             ImageDraw::img_from_below(image_crops + growth_offset, x + FARM_TILE_OFFSETS_MEADOW[i][0],
-                                      y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask, zoom_get_scale());
+                                      y + FARM_TILE_OFFSETS_MEADOW[i][1], color_mask);
         }
     }
 }

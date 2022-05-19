@@ -274,7 +274,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
 }
 
 static void draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, zoom_get_scale());
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
@@ -611,7 +611,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, zoom_get_scale());
+                                         COLOR_MASK_GREEN);
                 switch (orientation) {
                     case 0:
                         draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), x, y, COLOR_MASK_GREEN);
@@ -668,7 +668,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, zoom_get_scale());
+                                         COLOR_MASK_GREEN);
                 break;
         }
     }
@@ -693,7 +693,7 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     return true;
 }
 void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, zoom_get_scale());
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask);
 }
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {
