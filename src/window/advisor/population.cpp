@@ -391,7 +391,7 @@ static void print_history_info(void) {
 }
 
 static void draw_housing_button(int full_size, int x, int y) {
-    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE, city_view_get_scale_float());
+    ImageDraw::isometric(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE, 1.0f);
 //    ImageDraw::isometric_top(image_id_from_group(GROUP_BUILDING_HOUSE_CASA) + 2, x, y, COLOR_MASK_NONE);
 }
 

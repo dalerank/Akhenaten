@@ -225,8 +225,7 @@ void draw_flattened_footprint_anysize(int x, int y, int size_x, int size_y, int 
             } else if (yy == size_y - 1)
                 shape_offset = 2;
 
-            ImageDraw::isometric_from_drawtile(image_base + shape_offset, t_x, t_y, color_mask,
-                                               city_view_get_scale_float());
+            ImageDraw::isometric_from_drawtile(image_base + shape_offset, t_x, t_y, color_mask);
         }
     }
 }
@@ -238,8 +237,7 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 void draw_empty_tile(pixel_coordinate pixel, map_point point) {
     if (!map_property_is_draw_tile(point.grid_offset()))
-        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0,
-                                           city_view_get_scale_float());
+        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
 };
 
 void draw_footprint(pixel_coordinate pixel, map_point point) {
@@ -248,8 +246,7 @@ void draw_footprint(pixel_coordinate pixel, map_point point) {
     int y = pixel.y;
     // black tile outside of map
     if (grid_offset < 0)
-        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK,
-                                                  city_view_get_scale_float());
+        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, COLOR_BLACK);
 
     Planner.construction_record_view_position(pixel, point);
     if (map_property_is_draw_tile(grid_offset)) {
@@ -292,7 +289,7 @@ void draw_footprint(pixel_coordinate pixel, map_point point) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
 
-        ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask, city_view_get_scale_float());
+        ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
     }
 
     // ******** TEMP ********
@@ -359,7 +356,8 @@ void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point) {
     int x = pixel.x;
     int y = pixel.y;
     if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_at(grid_offset)))
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED, city_view_get_scale_float());
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED,
+                               zoom_get_scale());
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
         draw_footprint(pixel, point);
@@ -377,8 +375,7 @@ void draw_footprint_overlay(pixel_coordinate pixel, map_point point) {
     Planner.construction_record_view_position(pixel, point);
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0,
-                                           city_view_get_scale_float());
+        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), x, y, 0);
     } else if (get_city_overlay()->draw_custom_footprint)
         get_city_overlay()->draw_custom_footprint(pixel, point);
     else if (map_property_is_draw_tile(grid_offset)) {
@@ -387,17 +384,15 @@ void draw_footprint_overlay(pixel_coordinate pixel, map_point point) {
             // display groundwater
             int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
             ImageDraw::isometric_from_drawtile(image_id, x, y,
-                                               map_is_highlighted(grid_offset) ? COLOR_BLUE : 0,
-                                               city_view_get_scale_float());
+                                               map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y,
-                                               map_is_highlighted(grid_offset) ? COLOR_BLUE : 0,
-                                               city_view_get_scale_float());
+                                               map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
         }
         else if (terrain & TERRAIN_BUILDING)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0, city_view_get_scale_float());
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
 }
 //void draw_top_overlay(pixel_coordinate pixel, map_point point) {
@@ -505,11 +500,11 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     if (get_city_overlay()->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation()))
-                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0, city_view_get_scale_float());
+                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
             else if (map_property_is_draw_tile(grid_offset))
-                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0, city_view_get_scale_float());
+                ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
         } else
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0, city_view_get_scale_float());
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
     } else {
         if (b->type == BUILDING_FESTIVAL_SQUARE)
             return;

@@ -10,6 +10,7 @@
 #include "figure/route.h"
 #include "map/building.h"
 #include "map/road_access.h"
+#include "core/image_group.h"
 
 void figure::school_child_action() {
     switch (action_state) {

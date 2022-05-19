@@ -25,6 +25,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/map.h"
+#include "core/image_group.h"
 
 //#define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 

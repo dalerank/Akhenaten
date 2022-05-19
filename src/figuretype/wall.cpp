@@ -17,6 +17,7 @@
 #include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
 #include "sound/effect.h"
+#include "core/image_group.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
         0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,

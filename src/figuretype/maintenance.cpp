@@ -17,6 +17,7 @@
 #include "sound/effect.h"
 
 #include "core/game_environment.h"
+#include "core/image_group.h"
 
 #include "figure/properties.h"
 

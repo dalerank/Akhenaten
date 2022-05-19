@@ -20,6 +20,7 @@
 #include "map/water.h"
 #include "image.h"
 #include "building.h"
+#include "core/image_group.h"
 
 static void determine_leftmost_tile(void) {
     int orientation = city_view_orientation();

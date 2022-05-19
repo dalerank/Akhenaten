@@ -4,7 +4,7 @@
 #include <SDL_render.h>
 #include <vector>
 #include "core/encoding.h"
-#include "core/image_group.h"
+//#include "core/image_group.h"
 #include "graphics/color.h"
 #include "file.h"
 

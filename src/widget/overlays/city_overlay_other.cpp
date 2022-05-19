@@ -260,7 +260,7 @@ static void draw_footprint_water(pixel_coordinate pixel, map_point point) {
         if (building_at(grid_offset)->type == BUILDING_ROADBLOCK)
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         else if (map_property_is_draw_tile(grid_offset))
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0, city_view_get_scale_float());
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
     else {
         int terrain = map_terrain_get(grid_offset);
@@ -284,7 +284,7 @@ static void draw_footprint_water(pixel_coordinate pixel, map_point point) {
                     image_id += 1;
                     break;
             }
-            ImageDraw::isometric(image_id, x, y, 0, city_view_get_scale_float());
+            ImageDraw::isometric(image_id, x, y);
         }
     }
 }
@@ -356,21 +356,21 @@ static void draw_footprint_desirability(pixel_coordinate pixel, map_point point)
         !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         // display normal tile
         if (map_property_is_draw_tile(grid_offset))
-            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask, city_view_get_scale_float());
+            ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 
     } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
         // display empty land/groundwater
         int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask, city_view_get_scale_float());
+        ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
     } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_desirability_get(grid_offset)) {
         if (has_deleted_building(grid_offset))
             color_mask = COLOR_MASK_RED;
 
         int offset = get_desirability_image_offset(map_desirability_get(grid_offset));
         ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + offset, x, y,
-                                           color_mask, city_view_get_scale_float());
+                                           color_mask);
     } else
-        ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask, city_view_get_scale_float());
+        ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, color_mask);
 }
 //static void draw_top_desirability(pixel_coordinate pixel, map_point point) {
 //    int grid_offset = point.grid_offset();

@@ -10,6 +10,7 @@
 #include "core/game_environment.h"
 #include <game/io/io_buffer.h>
 #include <game/io/manager.h>
+#include "core/image_group.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20

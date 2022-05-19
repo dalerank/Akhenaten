@@ -9,6 +9,7 @@
 #include "map/figure.h"
 #include "map/point.h"
 #include "sound/effect.h"
+#include "core/image_group.h"
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 

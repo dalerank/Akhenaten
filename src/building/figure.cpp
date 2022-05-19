@@ -25,6 +25,7 @@
 #include "map/road_access.h"
 #include "map/terrain.h"
 #include "map/water.h"
+#include "core/image_group.h"
 
 #include <math.h>
 #include <city/floods.h>

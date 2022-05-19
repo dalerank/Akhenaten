@@ -19,7 +19,6 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/resource.h"
-#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -44,6 +43,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 #include "building/monuments.h"
+#include "core/image_group.h"
 
 struct reservoir_info {
     int cost;

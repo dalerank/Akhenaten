@@ -4,6 +4,7 @@
 #include <city/view/lookup.h>
 #include <dev/debug.h>
 #include <map/property.h>
+#include <city/view/zoom.h>
 #include "city.h"
 
 #include "building/construction/build_planner.h"
@@ -24,7 +25,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "input/zoom.h"
 #include "input/touch.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -44,18 +44,17 @@ static struct {
     bool capture_input;
 } data;
 
-static void set_city_scaled_clip_rectangle(void) {
+static void set_city_clip_rectangle(void) {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
 static void update_zoom_level(void) {
-    int zoom = city_view_get_scale();
     pixel_coordinate offset;
     city_view_get_camera_position(&offset.x, &offset.y);
-    if (zoom_update_value(&zoom, &offset)) {
-        city_view_set_scale(zoom);
+    if (zoom_update_value(&offset)) {
+        city_view_refresh_viewport();
         city_view_go_to_pixel_coord(offset.x, offset.y, true);
         sound_city_decay_views();
     }
@@ -100,8 +99,7 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
 //    if (tx==40 && ty==44)
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
     if (map_grid_inside_map_area(grid_offset, 1))
-        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN,
-                                                  1.0f);
+        return ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_GREEN);
 //    if (!map_grid_is_inside(tx, ty, 1))
 //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y, COLOR_CHANNEL_RED);
 //    else
@@ -194,7 +192,7 @@ void widget_city_draw_with_overlay(map_point tile) {
 
 void widget_city_draw(void) {
     update_zoom_level();
-    set_city_scaled_clip_rectangle();
+    set_city_clip_rectangle();
     if (game_state_overlay())
         widget_city_draw_with_overlay(data.current_tile);
     else
@@ -202,7 +200,7 @@ void widget_city_draw(void) {
     graphics_reset_clip_rectangle();
 }
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord) {
-    set_city_scaled_clip_rectangle();
+    set_city_clip_rectangle();
 
     widget_city_draw_without_overlay(figure_id, coord, data.current_tile);
 
@@ -221,10 +219,10 @@ bool widget_city_draw_construction_cost_and_size(void) {
     if (!cost && !has_size)
         return false;
 
-    set_city_scaled_clip_rectangle();
+    set_city_clip_rectangle();
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
-    int inverted_scale = calc_percentage(100, city_view_get_scale());
+    int inverted_scale = calc_percentage(100, zoom_get_percentage());
     x = calc_adjust_with_percentage(x, inverted_scale);
     y = calc_adjust_with_percentage(y, inverted_scale);
 
@@ -374,7 +372,7 @@ static void handle_touch_scroll(const touch *t) {
 }
 static void handle_touch_zoom(const touch *first, const touch *last) {
     if (touch_not_click(first))
-        zoom_update_touch(first, last, city_view_get_scale());
+        zoom_update_touch(first, last, zoom_get_percentage());
 
     if (first->has_ended || last->has_ended)
         zoom_end_touch();

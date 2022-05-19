@@ -619,7 +619,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// RELIGION
-    if (true) {
+    if (false) {
         int cl = 0;
         text_draw_shadow((uint8_t *) string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"), x, y + 15, COLOR_WHITE);
         y += 15;
@@ -715,7 +715,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// FLOODS
-    if (true) {
+    if (false) {
         auto floods = floodplain_data();
 
         double _c_curr = floods_current_cycle();
@@ -810,7 +810,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// CAMERA
-    if (false) {
+    if (true) {
         map_point camera_tile = city_view_get_camera_tile();
         pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
 
@@ -834,7 +834,14 @@ void draw_debug_ui(int x, int y) {
 
         draw_debug_line_double_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata->viewport.width_pixels / 60, viewdata->viewport.height_pixels / 30);
         draw_debug_line_double_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata->viewport.width_pixels, viewdata->viewport.height_pixels);
-        y += 120;
+
+        draw_debug_line(str, x, y + 125, 50, "zoom:", zoom_get_percentage());
+        draw_debug_line_float(str, x, y + 125, 50 + 40, "", zoom_get_scale());
+
+        draw_debug_line_float(str, x, y + 135, 50, "target:", zoom_debug_target());
+        draw_debug_line_float(str, x + 100, y + 135, 50, "delta:", zoom_debug_delta());
+
+        y += 140;
     }
 
     /////// TUTORIAL

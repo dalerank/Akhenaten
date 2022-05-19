@@ -11,6 +11,7 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "map/road_access.h"
+#include "core/image_group.h"
 
 void figure_create_immigrant(building *house, int num_people) {
     map_point *entry = city_map_entry_point();

@@ -15,6 +15,7 @@
 #include "map/terrain.h"
 #include "scenario/property.h"
 #include "tiles.h"
+#include "core/image_group.h"
 
 #include <string.h>
 #include <scenario/map.h>

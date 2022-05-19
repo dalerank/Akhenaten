@@ -9,7 +9,6 @@
 #include "graphics/menu.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "input/zoom.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -68,18 +67,17 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     }
 }
 
-static void set_city_scaled_clip_rectangle(void) {
+static void set_city_clip_rectangle(void) {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
 static void update_zoom_level(void) {
-    int zoom = city_view_get_scale();
     pixel_coordinate offset;
     city_view_get_camera_position(&offset.x, &offset.y);
-    if (zoom_update_value(&zoom, &offset)) {
-        city_view_set_scale(zoom);
+    if (zoom_update_value(&offset)) {
+        city_view_refresh_viewport();
         city_view_go_to_pixel_coord(offset.x, offset.y, true);
         sound_city_decay_views();
     }
@@ -87,7 +85,7 @@ static void update_zoom_level(void) {
 
 void widget_map_editor_draw(void) {
     update_zoom_level();
-    set_city_scaled_clip_rectangle();
+    set_city_clip_rectangle();
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
@@ -154,7 +152,7 @@ static void handle_touch_scroll(const touch *t) {
 
 static void handle_touch_zoom(const touch *first, const touch *last) {
     if (touch_not_click(first))
-        zoom_update_touch(first, last, city_view_get_scale());
+        zoom_update_touch(first, last, zoom_get_percentage());
 
     if (first->has_ended || last->has_ended)
         zoom_end_touch();

@@ -39,7 +39,7 @@ static void draw_cancel_construction(void) {
 }
 
 static void clear_city_view(void) {
-    if (config_get(CONFIG_UI_ZOOM) && city_view_dirty)
+    if (city_view_dirty)
         graphics_clear_screen();
 
     city_view_dirty = 0;

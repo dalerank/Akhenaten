@@ -11,6 +11,7 @@
 #include "map/image.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "core/image_group.h"
 
 #define MAX_DIR 4
 

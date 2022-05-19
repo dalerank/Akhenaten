@@ -3,6 +3,7 @@
 
 #include "core/buffer.h"
 #include "map/point.h"
+#include "zoom.h"
 
 int MAP_TILE_UPPER_LIMIT_X();
 int MAP_TILE_UPPER_LIMIT_Y();
@@ -12,12 +13,6 @@ int SCROLLABLE_Y_MIN_TILE();
 int SCROLLABLE_X_MAX_TILE();
 int SCROLLABLE_Y_MAX_TILE();
 
-typedef struct pixel_coordinate {
-    int x = 0;
-    int y = 0;
-    pixel_coordinate() {}
-    pixel_coordinate(int _x, int _y) : x(_x), y(_y) {}
-} pixel_coordinate;
 typedef pixel_coordinate screen_tile;
 
 typedef struct {
@@ -25,7 +20,6 @@ typedef struct {
     int screen_height;
     int sidebar_collapsed;
     int orientation;
-    int scale;
     struct {
         screen_tile tile_internal;
         pixel_coordinate pixel_offset_internal;
@@ -53,10 +47,6 @@ int city_view_relative_orientation(int orientation);
 int city_view_absolute_orientation(int orientation_relative);
 void city_view_reset_orientation(void);
 
-int city_view_get_scale(void);
-float city_view_get_scale_float();
-void city_view_set_scale(int scale);
-
 map_point city_view_get_camera_tile();
 pixel_coordinate city_view_get_camera_pixel_offset();
 void city_view_get_camera_position(int *x, int *y);
@@ -76,6 +66,8 @@ void city_view_set_selected_view_tile(const screen_tile *tile);
 
 void city_view_rotate_left(void);
 void city_view_rotate_right(void);
+
+void city_view_refresh_viewport();
 
 void city_view_set_viewport(int screen_width, int screen_height);
 void city_view_get_viewport(int *x, int *y, int *width, int *height);

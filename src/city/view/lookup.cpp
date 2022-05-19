@@ -3,6 +3,7 @@
 #include <core/calc.h>
 #include <map/grid.h>
 #include "lookup.h"
+#include "zoom.h"
 
 // TODO: get rid of these!!!
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[500][500];
@@ -39,14 +40,13 @@ void record_pixel_coord(map_point point, pixel_coordinate coord) {
 ///
 
 screen_tile pixel_to_screentile(pixel_coordinate pixel) {
-    if (config_get(CONFIG_UI_ZOOM))
-        pixel.y -= TOP_MENU_HEIGHT;
+    pixel.y -= TOP_MENU_HEIGHT;
 
     auto data = *city_view_data_unsafe();
 
     // adjust by zoom scale
-    pixel.x = calc_adjust_with_percentage(pixel.x, data.scale);
-    pixel.y = calc_adjust_with_percentage(pixel.y, data.scale);
+    pixel.x = calc_adjust_with_percentage(pixel.x, zoom_get_percentage());
+    pixel.y = calc_adjust_with_percentage(pixel.y, zoom_get_percentage());
 
     // check if within viewport
     if (pixel.x < data.viewport.offset.x ||

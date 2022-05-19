@@ -16,6 +16,7 @@
 #include "map/image.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
+#include "core/image_group.h"
 
 #include <math.h>
 #include <core/config.h>

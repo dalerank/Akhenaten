@@ -14,6 +14,7 @@
 #include "map/grid.h"
 #include "map/water.h"
 #include "scenario/map.h"
+#include "core/image_group.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {
         3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1

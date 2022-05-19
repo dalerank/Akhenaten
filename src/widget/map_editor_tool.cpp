@@ -1,3 +1,4 @@
+#include <city/view/zoom.h>
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
@@ -23,9 +24,10 @@ static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy) {
 static void draw_flat_tile(int x, int y, color_t color_mask) {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
         ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y,
-                                     ALPHA_MASK_SEMI_TRANSPARENT & color_mask, city_view_get_scale_float());
+                                     ALPHA_MASK_SEMI_TRANSPARENT & color_mask, zoom_get_scale());
     else {
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, city_view_get_scale_float());
+        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask,
+                               zoom_get_scale());
     }
 }
 
@@ -42,7 +44,7 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int *blocked_til
 }
 
 static void draw_building_image(int image_id, int x, int y) {
-    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
+    ImageDraw::isometric(image_id, x, y, COLOR_MASK_GREEN, zoom_get_scale());
 //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
@@ -60,7 +62,7 @@ static void draw_building(map_point tile, int screen_x, int screen_y, int type) 
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ImageDraw::isometric(image_id, x_offset, y_offset, 0, city_view_get_scale_float());
+            ImageDraw::isometric(image_id, x_offset, y_offset);
         }
     } else {
         int image_id;

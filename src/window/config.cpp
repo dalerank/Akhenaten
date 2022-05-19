@@ -64,7 +64,7 @@ static generic_button checkbox_buttons[] = {
         {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE,              TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
         {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE,             TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
         {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE,                 TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
-        {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM,                                   TR_CONFIG_ENABLE_ZOOM},
+        {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM_STEPPED,                           TR_CONFIG_ZOOM_STEPPED},
         {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS,                TR_CONFIG_COMPLETE_RATING_COLUMNS},
         {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS,                      TR_CONFIG_HIGHLIGHT_LEGIONS},
         {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY,                        TR_CONFIG_ROTATE_MANUALLY},

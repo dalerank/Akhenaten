@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "city/view/view.h"
+#include "core/image_group.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
         0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,

@@ -16,6 +16,7 @@
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
+#include "core/image_group.h"
 
 void figure::enemy_initial(formation *m) {
     map_figure_update();

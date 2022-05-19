@@ -15,6 +15,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "sound/effect.h"
+#include "core/image_group.h"
 
 #include <string.h>
 #include <core/random.h>

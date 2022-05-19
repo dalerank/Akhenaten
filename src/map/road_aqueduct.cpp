@@ -10,6 +10,7 @@
 #include "map/routing/routing.h"
 #include "map/routing/routing_terrain.h"
 #include "map/terrain.h"
+#include "core/image_group.h"
 
 bool map_can_place_road_under_aqueduct(int grid_offset) {
 

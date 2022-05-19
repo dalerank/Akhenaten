@@ -24,6 +24,7 @@
 #include "map/figure.h"
 #include "map/road_access.h"
 #include "scenario/map.h"
+#include "core/image_group.h"
 
 void figure::trader_buy(int amounts) {
     trader_amount_bought += amounts;

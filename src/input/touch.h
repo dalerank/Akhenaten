@@ -2,7 +2,7 @@
 #define INPUT_TOUCH_H
 
 #include "core/time.h"
-#include "city/view/view.h"
+#include "core/struct_types.h"
 
 #define MAX_ACTIVE_TOUCHES 2
 

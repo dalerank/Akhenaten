@@ -20,6 +20,7 @@
 #include "scenario/property.h"
 #include "map/terrain.h"
 #include "map/building.h"
+#include "core/image_group.h"
 
 static const coords_t SEAGULL_OFFSETS[] = {
         {0,  0},

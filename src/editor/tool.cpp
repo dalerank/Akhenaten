@@ -19,6 +19,7 @@
 #include "scenario/editor_map.h"
 #include "city/warning.h"
 #include "widget/minimap.h"
+#include "core/image_group.h"
 
 #define TERRAIN_PAINT_MASK ~(TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING |\
                             TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW)

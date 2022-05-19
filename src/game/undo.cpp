@@ -19,6 +19,7 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/earthquake.h"
+#include "core/image_group.h"
 
 #include <string.h>
 

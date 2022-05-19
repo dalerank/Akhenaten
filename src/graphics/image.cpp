@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <dev/debug.h>
+#include <city/view/zoom.h>
 
 typedef enum {
     DRAW_TYPE_SET,
@@ -638,7 +639,7 @@ void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, floa
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
     if (!scale)
-        scale = city_view_get_scale_float();
+        scale = zoom_get_scale();
 
     bool mirrored = (img->offset_mirror != 0);
     if (mirrored) {
@@ -653,7 +654,7 @@ void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t co
     const image *img = image_get(image_id);
     const image *base = image_get(base_id);
     if (!scale)
-        scale = city_view_get_scale_float();
+        scale = zoom_get_scale();
     int tile_size = (base->width + 2) / (FOOTPRINT_WIDTH + 2);
     int ydiff = FOOTPRINT_HALF_HEIGHT * (tile_size + 1);
     x += base->animation.sprite_x_offset;
@@ -750,6 +751,8 @@ void ImageDraw::img_background(int image_id, float scale) {
 }
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
     const image *img = image_get(image_id);
+    if (!scale)
+        scale = zoom_get_scale();
 //    if (img->type != IMAGE_TYPE_ISOMETRIC) {
 //        if (img->type == IMAGE_TYPE_MOD)
 //            draw_modded_footprint(image_id, x, y, color_mask);
@@ -761,7 +764,7 @@ void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float 
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 //    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
 }
-void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask, float scale) {
+void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask) {
     const image *img = image_get(image_id);
 //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
 //        assets_load_unpacked_asset(image_id);
@@ -770,7 +773,7 @@ void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t colo
     y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
     int y_diff = img->height - FOOTPRINT_HEIGHT * tile_size;
     y -= y_diff;
-    graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
+    graphics_renderer()->draw_image(img, x, y, color_mask, zoom_get_scale(), false);
 //    draw_debug_tile_box(x, y, tile_size, tile_size);
 
 

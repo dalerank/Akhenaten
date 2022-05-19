@@ -1,6 +1,7 @@
 #include "monuments.h"
 #include "building.h"
 #include "core/image.h"
+#include "core/image_group.h"
 
 int get_statue_image(int type, int orientation, int variant) {
     int image_id = 0;

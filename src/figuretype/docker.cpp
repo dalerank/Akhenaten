@@ -17,6 +17,7 @@
 #include "figure/trader.h"
 #include "map/road_access.h"
 #include "core/game_environment.h"
+#include "core/image_group.h"
 
 static int try_import_resource(building *warehouse, int resource, int city_id) {
 //    building *warehouse = building_get(b);

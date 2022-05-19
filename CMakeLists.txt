@@ -319,6 +319,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/floods.cpp
     ${PROJECT_SOURCE_DIR}/src/city/view/view.cpp
     ${PROJECT_SOURCE_DIR}/src/city/view/lookup.cpp
+    ${PROJECT_SOURCE_DIR}/src/city/view/zoom.cpp
 )
 set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.cpp
@@ -398,7 +399,6 @@ set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/mouse.cpp
     ${PROJECT_SOURCE_DIR}/src/input/scroll.cpp
     ${PROJECT_SOURCE_DIR}/src/input/touch.cpp
-    ${PROJECT_SOURCE_DIR}/src/input/zoom.cpp
 )
 set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/aqueduct.cpp

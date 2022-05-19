@@ -15,6 +15,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/point.h"
+#include "core/image_group.h"
 
 static const coords_t ALTERNATIVE_POINTS[] = {{-1, -6},
                                               {0,  -1},

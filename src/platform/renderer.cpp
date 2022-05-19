@@ -11,6 +11,7 @@
 #include "platform/screen.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "core/image_group.h"
 
 #include <math.h>
 #include <stdlib.h>

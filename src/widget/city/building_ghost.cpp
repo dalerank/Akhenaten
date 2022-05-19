@@ -274,7 +274,7 @@ static int is_blocked_for_building(int grid_offset, int num_tiles, int *blocked_
 }
 
 static void draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, city_view_get_scale_float());
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, zoom_get_scale());
 }
 static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tiles, int *blocked_tiles) {
     for (int i = 0; i < num_tiles; i++) {
@@ -287,11 +287,12 @@ static void draw_partially_blocked(int x, int y, int fully_blocked, int num_tile
     }
 }
 void draw_building(int image_id, int x, int y, color_t color_mask) {
-    ImageDraw::isometric(image_id, x, y, color_mask, city_view_get_scale_float());
+    ImageDraw::isometric(image_id, x, y, color_mask);
 }
 
 static void draw_fountain_range(pixel_coordinate pixel, map_point point) {
-    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE, city_view_get_scale_float());
+    ImageDraw::img_alpha_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, COLOR_MASK_BLUE,
+                                 zoom_get_scale());
 }
 static void draw_warehouse(int x, int y) {
     int image_id_space = image_id_from_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
@@ -311,8 +312,7 @@ static void draw_farm(int type, int x, int y, int grid_offset) {
     // fields
     if (GAME_ENV == ENGINE_ENV_C3) {
         for (int i = 4; i < 9; i++)
-            ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i],
-                                 COLOR_MASK_GREEN, city_view_get_scale_float());
+            ImageDraw::isometric(image_id + 1, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
     } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
         draw_farm_crops(type, 0, grid_offset, x - 60, y + 30, COLOR_MASK_GREEN);
 }
@@ -552,7 +552,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                 ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
                                      x + ((i % size) - (i / size)) * 30,
                                      y + ((i % size) + (i / size)) * 15,
-                                     COLOR_MASK_RED, city_view_get_scale_float());
+                                     COLOR_MASK_RED);
             return;
         }
         switch (type) {
@@ -561,7 +561,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_BOOTH_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, city_view_get_scale_float());
+                                         COLOR_MASK_GREEN);
                 switch (orientation / 2) {
                     case 0:
                         draw_building(image_id_from_group(GROUP_BUILDING_BOOTH), x, y, COLOR_MASK_GREEN);
@@ -582,7 +582,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_BANDSTAND_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, city_view_get_scale_float());
+                                         COLOR_MASK_GREEN);
                 switch (orientation / 2) {
                     case 0:
                         draw_building(image_id_from_group(GROUP_BUILDING_BANDSTAND) + 1, x, y, COLOR_MASK_GREEN);
@@ -611,7 +611,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_PAVILLION_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, city_view_get_scale_float());
+                                         COLOR_MASK_GREEN, zoom_get_scale());
                 switch (orientation) {
                     case 0:
                         draw_building(image_id_from_group(GROUP_BUILDING_PAVILLION), x, y, COLOR_MASK_GREEN);
@@ -668,7 +668,7 @@ static void draw_entertainment_venue(map_point tile, int x, int y, int type) {
                     ImageDraw::isometric(image_id_from_group(GROUP_FESTIVAL_SQUARE) + i,
                                          x + ((i % size) - (i / size)) * 30,
                                          y + ((i % size) + (i / size)) * 15,
-                                         COLOR_MASK_GREEN, city_view_get_scale_float());
+                                         COLOR_MASK_GREEN, zoom_get_scale());
                 break;
         }
     }
@@ -693,7 +693,7 @@ bool city_building_ghost_mark_deleting(map_point tile) {
     return true;
 }
 void BuildPlanner::draw_flat_tile(int x, int y, color_t color_mask) {
-    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, city_view_get_scale_float());
+    ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, color_mask, zoom_get_scale());
 }
 void BuildPlanner::draw_blueprints(bool fully_blocked) {
     for (int row = 0; row < size.y; row++) {
@@ -759,8 +759,7 @@ void BuildPlanner::draw_graphics() {
             int image_id = tile_graphics_array[row][column];
             if (image_id > 0) {
                 pixel_coordinate current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN,
-                                                   city_view_get_scale_float());
+                ImageDraw::isometric_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN);
 //                ImageDraw::isometric_top_from_drawtile(image_id, current_coord.x, current_coord.y, COLOR_MASK_GREEN, city_view_get_scale_float());
             }
         }

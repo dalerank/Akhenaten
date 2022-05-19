@@ -10,6 +10,7 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
+#include "core/image_group.h"
 
 void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_LADY);

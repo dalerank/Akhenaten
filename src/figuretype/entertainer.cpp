@@ -12,6 +12,7 @@
 #include "map/road_access.h"
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
+#include "core/image_group.h"
 
 int determine_venue_destination(int x, int y, int type1, int type2, int type3) {
     int road_network = map_road_network_get(MAP_OFFSET(x, y));

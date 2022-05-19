@@ -9,6 +9,7 @@
 #include "core/mods.h"
 #include "core/config.h"
 #include "core/game_environment.h"
+#include "core/image_group.h"
 
 #include <stdlib.h>
 #include <string.h>

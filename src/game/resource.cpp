@@ -3,6 +3,7 @@
 #include "building/type.h"
 #include "scenario/building.h"
 #include "core/game_environment.h"
+#include "core/image_group.h"
 
 int resource_image_offset(int resource, int type) {
     switch (type) {

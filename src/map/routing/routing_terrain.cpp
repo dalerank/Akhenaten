@@ -12,6 +12,7 @@
 #include "routing_grids.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "core/image_group.h"
 
 static int get_land_type_citizen_building(int grid_offset) {
     building *b = building_at(grid_offset);
