@@ -113,10 +113,10 @@ static struct {
     } unpacked_images[MAX_UNPACKED_IMAGES];
     graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
-#ifdef USE_TEXTURE_SCALE_MODE
-    float texture_scale;
+
     float city_scale = 1.0f;
-#endif
+    SDL_Texture *city_renderTarget = nullptr;
+    SDL_Texture *prev_renderTarget = nullptr;
 } data;
 
 static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width) {
@@ -544,31 +544,34 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale_factor) {
     if (!data.paused && HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
         SDL_GetTextureScaleMode(texture, &current_scale_mode);
-//        SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.texture_scale > 2.0f) ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-        SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.texture_scale > 2.0f) ? SDL_ScaleModeBest : SDL_ScaleModeNearest;
-//        SDL_ScaleMode texture_scale_mode = scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-        SDL_ScaleMode texture_scale_mode = scale_factor < 1.0f ? SDL_ScaleModeBest : SDL_ScaleModeNearest;
-        SDL_ScaleMode desired_scale_mode = data.texture_scale == scale_factor ? city_scale_mode : texture_scale_mode;
-        if (current_scale_mode != desired_scale_mode) {
+        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
+//        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
+        if (current_scale_mode != desired_scale_mode)
             SDL_SetTextureScaleMode(texture, desired_scale_mode);
-        }
     }
 #endif
 }
 
+static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD,
+                                                                      SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD);
 static void draw_texture(const image *img, float x, float y, color_t color, float scale, bool mirrored) {
     if (data.paused)
         return;
     if (!color)
         color = COLOR_MASK_NONE;
 
-//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-
     SDL_Texture *texture = img->atlas.p_atlas->texture;
     if (!texture)
         return;
 
     float overall_scale_factor = scale * data.city_scale;
+    bool DOWNSCALED_CITY = false;
+    if (data.city_scale < 1.0f)
+        DOWNSCALED_CITY = true;
     set_texture_scale_mode(texture, overall_scale_factor);
 
     float x_offset = img->atlas.x_offset;
@@ -593,29 +596,30 @@ static void draw_texture(const image *img, float x, float y, color_t color, floa
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
         (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    SDL_SetTextureBlendMode(texture, premult_alpha);
 
     float texture_coord_correction = 0;
     SDL_Rect texture_coords = {x_offset + texture_coord_correction, y_offset + texture_coord_correction,
         img->width - texture_coord_correction, height - texture_coord_correction };
 
-    SDL_Rect screen_coords = {x * data.city_scale,
-                               y * data.city_scale,
-                               img->width * overall_scale_factor,
-                               height * overall_scale_factor };
-
-    if (img->type == IMAGE_TYPE_ISOMETRIC && data.city_scale < 1.0f) {
-        SDL_Rect screen_coords_hack = screen_coords;
-        screen_coords_hack.x -= 2;
-        screen_coords_hack.y -= 2;
-        screen_coords_hack.w += 4;
-        screen_coords_hack.h += 4;
-        SDL_RenderCopyEx(data.renderer, texture, &texture_coords, &screen_coords_hack, 0, nullptr,SDL_FLIP_NONE);
+    SDL_FRect screen_coords;
+    if (DOWNSCALED_CITY) {
+        // hack to prevent ugly dark borders around sprites -- yes, there's DEFINITELY a better way to do this,
+        // but I can't be arsed to find it. I tried, I gave up.
+        screen_coords = {x * data.city_scale - 0.25,
+                         y * data.city_scale - 0.25,
+                         img->width * overall_scale_factor + 0.5,
+                         height * overall_scale_factor + 0.5 };
     } else {
-        if (mirrored)
-            SDL_RenderCopyEx(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_HORIZONTAL);
-        else
-            SDL_RenderCopyEx(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
+        screen_coords = {x * data.city_scale,
+                         y * data.city_scale,
+                         img->width * overall_scale_factor,
+                         height * overall_scale_factor };
     }
+    if (mirrored)
+        SDL_RenderCopyExF(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    else
+        SDL_RenderCopyExF(data.renderer, texture, &texture_coords, &screen_coords, 0, nullptr, SDL_FLIP_NONE);
 
 //#ifdef USE_RENDERCOPYF
 //    if (HAS_RENDERCOPYF) {
@@ -943,11 +947,6 @@ static int isometric_images_are_joined(void) {
     return HAS_RENDER_GEOMETRY;
 }
 
-static void update_scale_mode(int city_scale) {
-#ifdef USE_TEXTURE_SCALE_MODE
-    data.texture_scale = city_scale / 100.0f;
-#endif
-}
 
 static int supports_yuv_texture(void) {
     return data.supports_yuv_textures;
@@ -1136,7 +1135,7 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer) {
 //        if (img->data_length == 0)
 //            continue;
 //        SDL_Log("Creating atlas texture with size %dx%d", atlas_data->width, atlas_data->height);
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+//        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
         SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->pixel_buffer,
                                                         atlas_data->width, atlas_data->height,
                                                         32, atlas_data->width * sizeof(color_t),
@@ -1206,7 +1205,6 @@ static void create_renderer_interface(void) {
     data.renderer_interface.load_unpacked_image = load_unpacked_image;
     data.renderer_interface.should_pack_image = should_pack_image;
     data.renderer_interface.isometric_images_are_joined = isometric_images_are_joined;
-    data.renderer_interface.update_scale_mode = update_scale_mode;
 
     graphics_renderer_set_interface(&data.renderer_interface);
 }

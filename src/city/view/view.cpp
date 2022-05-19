@@ -1,5 +1,6 @@
 #include <cmath>
 #include <game/io/io_buffer.h>
+#include <graphics/renderer.h>
 #include "view.h"
 
 #include "core/calc.h"

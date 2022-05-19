@@ -88,7 +88,7 @@ typedef struct {
 
     int (*isometric_images_are_joined)(void);
 
-    void (*update_scale_mode)(int city_scale);
+//    void (*update_scale_mode)(int city_scale);
 } graphics_renderer_interface;
 
 const graphics_renderer_interface *graphics_renderer(void);
