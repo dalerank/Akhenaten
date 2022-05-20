@@ -100,9 +100,9 @@ static int items_in_first_list(void) {
 static void draw_item(int item_id, int x, int y, int selected) {
     color_t color = selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     if (data.mode == MODE_GROUP)
-        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_SMALL_PLAIN, color);
     else {
-        text_draw_centered(data.items[item_id], data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+        text_draw_centered(data.items[item_id], data.x + x, data.y + y, 190, FONT_SMALL_PLAIN, color);
     }
 }
 

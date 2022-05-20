@@ -241,7 +241,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
     int y_offset = data.y_max - 113;
 
     if (city->is_open) {
-        font_t traded_font = FONT_NORMAL_PLAIN;
+        font_t traded_font = FONT_SMALL_PLAIN;
 //        font_t traded_font = FONT_OBJECT_INFO[GAME_ENV];
 
         // city sells
@@ -494,16 +494,16 @@ static void draw_empire_object(const empire_object *obj) {
 
             switch (obj->text_align) {
                 case 0:
-                    lang_text_draw_left_colored(text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_left_colored(text_group, city->name_id, text_x, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 1:
-                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y - 10, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 2:
-                    lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_colored(text_group, city->name_id, text_x + obj->width, text_y + (obj->height / 2), FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
                 case 3:
-                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_NORMAL_PLAIN, COLOR_FONT_DARK_RED);
+                    lang_text_draw_centered_colored(text_group, city->name_id, text_x - 150 + (obj->width / 2), text_y + obj->height + 5, 300, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED);
                     break;
             }
         }
@@ -512,7 +512,7 @@ static void draw_empire_object(const empire_object *obj) {
             int text_x = data.x_draw_offset + x + 0;
             int text_y = data.y_draw_offset + y + 0;
 
-            lang_text_draw_centered_colored(196, full->city_name_id, text_x - 5, text_y, 100, FONT_NORMAL_SHADED, COLOR_FONT_SHITTY_BROWN);
+            lang_text_draw_centered_colored(196, full->city_name_id, text_x - 5, text_y, 100, FONT_SMALL_PLAIN, COLOR_FONT_SHITTY_BROWN);
             return;
         }
     }

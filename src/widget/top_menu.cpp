@@ -291,8 +291,8 @@ void widget_top_menu_draw(int force) {
             data.offset_date = 547;
             data.offset_rotate = data.offset_date - 50;
 
-            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_SMALL_PLAIN, treasure_color);
+            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_SMALL_PLAIN, treasure_color);
 
             width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_BLACK_ON_DARK);
             text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_BLACK_ON_DARK);
@@ -309,13 +309,13 @@ void widget_top_menu_draw(int force) {
             data.offset_date = 652;
             data.offset_rotate = data.offset_date - 50;
 
-            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 341, 5, FONT_SMALL_PLAIN, treasure_color);
+            text_draw_number_colored(treasury, '@', " ", 346 + width, 5, FONT_SMALL_PLAIN, treasure_color);
 
-            width = lang_text_draw_colored(6, 1, 460, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-            text_draw_number_colored(city_population(), '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+            width = lang_text_draw_colored(6, 1, 460, 5, FONT_SMALL_PLAIN, COLOR_WHITE);
+            text_draw_number_colored(city_population(), '@', " ", 466 + width, 5, FONT_SMALL_PLAIN, COLOR_WHITE);
 
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_NORMAL_PLAIN,
+            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 655, 5, 110, FONT_SMALL_PLAIN,
                                                 COLOR_FONT_YELLOW);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             int width = lang_text_draw_colored(6, 0, data.offset_funds + 2 + 100, 5, treasure_font, 0);
@@ -332,13 +332,13 @@ void widget_top_menu_draw(int force) {
             data.offset_date = 852;
             data.offset_rotate = data.offset_date - 50;
 
-            int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
-            text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
+            int width = lang_text_draw_colored(6, 0, 495, 5, FONT_SMALL_PLAIN, treasure_color);
+            text_draw_number_colored(treasury, '@', " ", 501 + width, 5, FONT_SMALL_PLAIN, treasure_color);
 
-            width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-            text_draw_number_colored(city_population(), '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+            width = lang_text_draw_colored(6, 1, 645, 5, FONT_SMALL_PLAIN, COLOR_WHITE);
+            text_draw_number_colored(city_population(), '@', " ", 651 + width, 5, FONT_SMALL_PLAIN, COLOR_WHITE);
 
-            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_NORMAL_PLAIN,
+            lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 850, 5, 110, FONT_SMALL_PLAIN,
                                                 COLOR_FONT_YELLOW);
         } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
             int width = lang_text_draw_colored(6, 0, data.offset_funds + 2, 5, treasure_font, 0);

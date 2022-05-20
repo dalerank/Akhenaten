@@ -1136,7 +1136,7 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer) {
 //            continue;
 //        SDL_Log("Creating atlas texture with size %dx%d", atlas_data->width, atlas_data->height);
 //        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->pixel_buffer,
+        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->TEMP_PIXEL_BUFFER,
                                                         atlas_data->width, atlas_data->height,
                                                         32, atlas_data->width * sizeof(color_t),
                                                         COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
@@ -1160,8 +1160,12 @@ static bool create_texture_atlas(imagepak *pak, image_packer *packer) {
         // ******************************
 
         SDL_FreeSurface(surface);
-//        free(atlas_data->buffers[i]);
-//        atlas_data->buffers[i] = 0;
+        delete atlas_data->TEMP_PIXEL_BUFFER;
+        atlas_data->TEMP_PIXEL_BUFFER = nullptr;
+        for (int j = 0; j < atlas_data->images.size(); ++j) {
+            auto img = atlas_data->images.at(i);
+            img->TEMP_PIXEL_DATA = nullptr;
+        }
         if (!texture) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture. Reason: %s", SDL_GetError());
             free_texture_atlas(pak);

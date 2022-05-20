@@ -72,81 +72,81 @@ static const int CHAR_TO_FONT_IMAGE_CYRILLIC[] = {
 };
 
 static const font_definition DEFINITIONS_DEFAULT[] = {
-        {FONT_NORMAL_PLAIN,          0,    0, 6, 1, 11, image_y_offset_default},
+        {FONT_SMALL_PLAIN,           0,    0, 6, 1, 11, image_y_offset_default},
         {FONT_NORMAL_BLACK_ON_LIGHT, 134,  0, 6, 0, 11, image_y_offset_default},
         {FONT_NORMAL_WHITE_ON_DARK,  268,  0, 6, 0, 11, image_y_offset_default},
         {FONT_NORMAL_YELLOW,         402,  0, 6, 0, 11, image_y_offset_default},
         {FONT_NORMAL_BLUE,           536,  0, 8, 1, 23, image_y_offset_default},
         {FONT_LARGE_BLACK_ON_LIGHT,  670,  0, 8, 0, 23, image_y_offset_default},
         {FONT_LARGE_BLACK_ON_DARK,   804,  0, 8, 0, 24, image_y_offset_default},
-        {FONT_SMALL_PLAIN,           938,  0, 4, 1, 9,  image_y_offset_default},
+        {FONT_SMALL_SHADED,          938,  0, 2, -1, 9,  image_y_offset_default},
         {FONT_NORMAL_BLACK_ON_DARK,  1072, 0, 6, 0, 11, image_y_offset_default},
-        {FONT_SMALL_BLACK,           1206, 0, 6, 0, 11, image_y_offset_default}
+        {FONT_SMALL_PLAIN2,          1206, 0, 6, 0, 11, image_y_offset_default}
 };
 
 static const font_definition DEFINITIONS_EASTERN[] = {
-        {FONT_NORMAL_PLAIN,          0,    0, 6, 1, 11, image_y_offset_eastern},
+        {FONT_SMALL_PLAIN,           0,    0, 6, 1, 11, image_y_offset_eastern},
         {FONT_NORMAL_BLACK_ON_LIGHT, 134,  0, 6, 0, 11, image_y_offset_eastern},
         {FONT_NORMAL_WHITE_ON_DARK,  268,  0, 6, 0, 11, image_y_offset_eastern},
         {FONT_NORMAL_YELLOW,         402,  0, 6, 0, 11, image_y_offset_eastern},
         {FONT_NORMAL_BLUE,           536,  0, 8, 1, 23, image_y_offset_eastern},
         {FONT_LARGE_BLACK_ON_LIGHT,  670,  0, 8, 0, 23, image_y_offset_eastern},
         {FONT_LARGE_BLACK_ON_DARK,   804,  0, 8, 0, 24, image_y_offset_eastern},
-        {FONT_SMALL_PLAIN,           938,  0, 4, 1, 9,  image_y_offset_eastern},
+        {FONT_SMALL_SHADED,          938,  0, 4, 1, 9,  image_y_offset_eastern},
         {FONT_NORMAL_BLACK_ON_DARK,  1072, 0, 6, 0, 11, image_y_offset_eastern},
-        {FONT_SMALL_BLACK,           1206, 0, 6, 0, 11, image_y_offset_eastern}
+        {FONT_SMALL_PLAIN2,          1206, 0, 6, 0, 11, image_y_offset_eastern}
 };
 
 static const font_definition DEFINITIONS_CYRILLIC[] = {
-        {FONT_NORMAL_PLAIN,          0,    0, 6, 1, 11, image_y_offset_cyrillic_normal_small_plain},
+        {FONT_SMALL_PLAIN,           0,    0, 6, 1, 11, image_y_offset_cyrillic_normal_small_plain},
         {FONT_NORMAL_BLACK_ON_LIGHT, 158,  0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
         {FONT_NORMAL_WHITE_ON_DARK,  316,  0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
         {FONT_NORMAL_YELLOW,         474,  0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
         {FONT_NORMAL_BLUE,           632,  0, 8, 1, 23, image_y_offset_cyrillic_large_plain},
         {FONT_LARGE_BLACK_ON_LIGHT,  790,  0, 8, 0, 23, image_y_offset_cyrillic_large_black},
         {FONT_LARGE_BLACK_ON_DARK,   948,  0, 8, 0, 24, image_y_offset_cyrillic_large_brown},
-        {FONT_SMALL_PLAIN,           1106, 0, 4, 1, 9,  image_y_offset_cyrillic_normal_small_plain},
+        {FONT_SMALL_SHADED,          1106, 0, 4, 1, 9,  image_y_offset_cyrillic_normal_small_plain},
         {FONT_NORMAL_BLACK_ON_DARK,  1264, 0, 6, 0, 11, image_y_offset_cyrillic_normal_colored},
-        {FONT_SMALL_BLACK,           1422, 0, 6, 0, 11, image_y_offset_cyrillic_small_black}
+        {FONT_SMALL_PLAIN2,          1422, 0, 6, 0, 11, image_y_offset_cyrillic_small_black}
 };
 
 static const font_definition DEFINITIONS_TRADITIONAL_CHINESE[] = {
-        {FONT_NORMAL_PLAIN,          0,   IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_none},
+        {FONT_SMALL_PLAIN,           0,   IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_none},
         {FONT_NORMAL_BLACK_ON_LIGHT, 134,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_WHITE_ON_DARK,  268,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_YELLOW,         402,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_BLUE,           536, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_none},
         {FONT_LARGE_BLACK_ON_LIGHT,  670, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_none},
         {FONT_LARGE_BLACK_ON_DARK,   804, IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_none},
-        {FONT_SMALL_PLAIN,           938,  0,                                          4, 1, 9,  image_y_offset_none},
+        {FONT_SMALL_SHADED,          938,  0,                                          4, 1, 9,  image_y_offset_none},
         {FONT_NORMAL_BLACK_ON_DARK,  1072, 0,                                          6, 0, 11, image_y_offset_none},
-        {FONT_SMALL_BLACK,           1206, 0,                                          6, 0, 11, image_y_offset_none}
+        {FONT_SMALL_PLAIN2,          1206, 0,                                          6, 0, 11, image_y_offset_none}
 };
 
 static const font_definition DEFINITIONS_SIMPLIFIED_CHINESE[] = {
-        {FONT_NORMAL_PLAIN,          0,   IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_none},
+        {FONT_SMALL_PLAIN,           0,   IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS, 6, 1, 11, image_y_offset_none},
         {FONT_NORMAL_BLACK_ON_LIGHT, 134,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_WHITE_ON_DARK,  268,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_YELLOW,         402,  0,                                          6, 0, 11, image_y_offset_none},
         {FONT_NORMAL_BLUE,           536, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_none},
         {FONT_LARGE_BLACK_ON_LIGHT,  670, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_none},
         {FONT_LARGE_BLACK_ON_DARK,   804, IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_none},
-        {FONT_SMALL_PLAIN,           938,  0,                                          4, 1, 9,  image_y_offset_none},
+        {FONT_SMALL_SHADED,          938,  0,                                          4, 1, 9,  image_y_offset_none},
         {FONT_NORMAL_BLACK_ON_DARK,  1072, 0,                                          6, 0, 11, image_y_offset_none},
-        {FONT_SMALL_BLACK,           1206, 0,                                          6, 0, 11, image_y_offset_none}
+        {FONT_SMALL_PLAIN2,          1206, 0,                                          6, 0, 11, image_y_offset_none}
 };
 
 static const font_definition DEFINITIONS_KOREAN[] = {
-        {FONT_NORMAL_PLAIN,          0,   IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 1, 6, 1, 11, image_y_offset_korean},
+        {FONT_SMALL_PLAIN,           0,   IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 1, 6, 1, 11, image_y_offset_korean},
         {FONT_NORMAL_BLACK_ON_LIGHT, 134,  0, 6, 0, 11, image_y_offset_korean},
         {FONT_NORMAL_WHITE_ON_DARK,  268,  0, 6, 0, 11, image_y_offset_korean},
         {FONT_NORMAL_YELLOW,         402,  0, 6, 0, 11, image_y_offset_korean},
         {FONT_NORMAL_BLUE,           536, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 1, 23, image_y_offset_korean},
         {FONT_LARGE_BLACK_ON_LIGHT,  670, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 0, 23, image_y_offset_korean},
         {FONT_LARGE_BLACK_ON_DARK,   804, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2, 8, 0, 24, image_y_offset_korean},
-        {FONT_SMALL_PLAIN,           938,  0, 4, 1, 9,  image_y_offset_korean},
+        {FONT_SMALL_SHADED,          938,  0, 4, 1, 9,  image_y_offset_korean},
         {FONT_NORMAL_BLACK_ON_DARK,  1072, 0, 6, 0, 11, image_y_offset_korean},
-        {FONT_SMALL_BLACK,           1206, 0, 6, 0, 11, image_y_offset_korean}
+        {FONT_SMALL_PLAIN2,          1206, 0, 6, 0, 11, image_y_offset_korean}
 };
 
 enum {

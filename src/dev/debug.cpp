@@ -386,15 +386,15 @@ void figure::draw_debug() {
             pixel.y += 80;
 
             string_from_int(str, tile.x(), 0);
-            text_draw(str, pixel.x, pixel.y, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y, FONT_SMALL_PLAIN, 0);
             string_from_int(str, tile.y(), 0);
-            text_draw(str, pixel.x, pixel.y + 10, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 10, FONT_SMALL_PLAIN, 0);
             string_from_int(str, tile.grid_offset(), 0);
-            text_draw(str, pixel.x, pixel.y + 20, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 20, FONT_SMALL_PLAIN, 0);
             string_from_int(str, progress_on_tile, 0);
-            text_draw(str, pixel.x, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
             string_from_int(str, routing_path_current_tile, 0);
-            text_draw(str, pixel.x + 30, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x + 30, pixel.y + 30, FONT_SMALL_PLAIN, 0);
             break;
         case 2: // ROUTING
             // draw path
@@ -479,7 +479,7 @@ void figure::draw_debug() {
 
             pixel.y += 50;
             string_from_int(str, progress_on_tile, 0);
-            text_draw(str, pixel.x, pixel.y + 30, FONT_NORMAL_PLAIN, 0);
+            text_draw(str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
             break;
         case 3: // RESOURCE CARRY
             if (resource_id) {
@@ -735,28 +735,28 @@ void draw_debug_ui(int x, int y) {
         double additional_abs_ticks = CYCLES_IN_A_YEAR * (double)game_time_year_since_start();
         auto dot = string_from_ascii(",");
         for (int i = 0; i < 392; ++i) {
-            text_draw(dot, x + i - 1, y + 15, FONT_NORMAL_PLAIN, 0);
+            text_draw(dot, x + i - 1, y + 15, FONT_SMALL_PLAIN, 0);
         }
         for (int i = 0; i < 392; ++i) {
             int abs_i = i + additional_abs_ticks;
-            text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_WHITE);
+            text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
 
             if ((i > rc_start - 28 && i < rc_end + 28)
             || (i > rc_start - 28 - CYCLES_IN_A_YEAR && i < rc_end + 28 - CYCLES_IN_A_YEAR)
             || (i > rc_start - 28 + CYCLES_IN_A_YEAR && i < rc_end + 28 + CYCLES_IN_A_YEAR))
-                text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE_LIGHT);
+                text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE_LIGHT);
 
             if ((i > rc_start && i < rc_end)
             || (i > rc_start - CYCLES_IN_A_YEAR && i < rc_end - CYCLES_IN_A_YEAR)
             || (i > rc_start + CYCLES_IN_A_YEAR && i < rc_end + CYCLES_IN_A_YEAR))
-                text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_RED);
+                text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_RED);
 
             if (floods_debug_period() > 0) {
                 if (abs_i > _c_start + _c_period_next && abs_i < _c_end - _c_period_next)
-                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
+                    text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_GREEN);
             } else {
                 if (abs_i > _c_start + _c_period_last && abs_i < _c_end - _c_period_last)
-                    text_draw(dot, x + i, y + 15, FONT_NORMAL_PLAIN, COLOR_GREEN);
+                    text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_GREEN);
             }
         }
 

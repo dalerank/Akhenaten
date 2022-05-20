@@ -18,7 +18,7 @@ static void draw_logo(void) {
 
     graphics_in_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_LOGO), 0, 0);
-    lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
+    lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_SMALL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }
 static void handle_input(const mouse *m, const hotkeys *h) {

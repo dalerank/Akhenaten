@@ -593,7 +593,7 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color_
 }
 
 static color_t base_color_for_font(font_t font) {
-    if (font == FONT_NORMAL_PLAIN || font == FONT_SMALL_PLAIN || font == FONT_SMALL_BLACK)
+    if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_SHADED || font == FONT_SMALL_PLAIN2)
         return COLOR_FONT_PLAIN;
     return COLOR_MASK_NONE;
 }
@@ -612,7 +612,7 @@ static void draw_multibyte_letter(font_t font, const image *img, int x, int y, c
             graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
             graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
             break;
-        case FONT_NORMAL_PLAIN:
+        case FONT_SMALL_PLAIN:
             if (!color_mask) {
                 color_mask = base_color_for_font(font);
             }
@@ -623,9 +623,9 @@ static void draw_multibyte_letter(font_t font, const image *img, int x, int y, c
             graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
             graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
             break;
-        case FONT_NORMAL_SHADED:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_BLACK, scale, false);
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+//        case FONT_NORMAL_SHADED_TOREMOVE:
+//            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_BLACK, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
         default:
             graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
             break;

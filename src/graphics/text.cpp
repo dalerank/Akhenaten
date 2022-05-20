@@ -219,18 +219,18 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width) {
 }
 
 int text_draw_shadow(const uint8_t *str, int _x, int _y, color_t color) {
-    for (int x = -1; x < 2; x++)
-        for (int y = -1; y < 2; y++)
-            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, COLOR_BLACK);
-    return text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
+//    for (int x = -1; x < 2; x++)
+//        for (int y = -1; y < 2; y++)
+//            text_draw(str, _x+x, _y+y, FONT_SMALL_PLAIN, COLOR_BLACK);
+    return text_draw(str, _x, _y, FONT_SMALL_SHADED, color);
 }
 int text_draw_shadow_left(uint8_t *str, int _x, int _y, color_t color) {
-    int width = text_get_width(str, FONT_NORMAL_PLAIN);
+    int width = text_get_width(str, FONT_SMALL_PLAIN);
     _x -= width;
     for (int x = -1; x < 2; x++)
         for (int y = -1; y < 2; y++)
-            text_draw(str, _x+x, _y+y, FONT_NORMAL_PLAIN, COLOR_BLACK);
-    return text_draw(str, _x, _y, FONT_NORMAL_PLAIN, color);
+            text_draw(str, _x+x, _y+y, FONT_SMALL_PLAIN, COLOR_BLACK);
+    return text_draw(str, _x, _y, FONT_SMALL_PLAIN, color);
 }
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -242,9 +242,9 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
         default:
             def = font_definition_for(font);
             break;
-        case FONT_NORMAL_SHADED:
-            def = font_definition_for(FONT_NORMAL_PLAIN);
-            break;
+//        case FONT_NORMAL_SHADED_TOREMOVE:
+//            def = font_definition_for(FONT_SMALL_PLAIN);
+//            break;
     }
 
     int length = string_length(str);

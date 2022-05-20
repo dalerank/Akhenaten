@@ -77,7 +77,7 @@ void menu_draw(menu_bar_item *menu, int focus_item_id) {
                 graphics_fill_rect(menu->x_start, y_offset - 4,
                                    16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
                 lang_text_draw_colored(sub->text_group, sub->text_number,
-                                       menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE);
+                                       menu->x_start + 8, y_offset, FONT_SMALL_PLAIN, COLOR_FONT_ORANGE);
             } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
                 lang_text_draw(sub->text_group, sub->text_number,
                                menu->x_start + 8, y_offset, FONT_NORMAL_YELLOW);

@@ -58,11 +58,11 @@ static void draw_foreground(void) {
     lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_BLACK_ON_DARK);
     lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
     // game speed
-    lang_text_draw(45, 2, 112, 146, FONT_NORMAL_PLAIN);
-    text_draw_percentage(setting_game_speed(), 328, 146, FONT_NORMAL_PLAIN);
+    lang_text_draw(45, 2, 112, 146, FONT_SMALL_PLAIN);
+    text_draw_percentage(setting_game_speed(), 328, 146, FONT_SMALL_PLAIN);
     // scroll speed
-    lang_text_draw(45, 3, 112, 182, FONT_NORMAL_PLAIN);
-    text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_NORMAL_PLAIN);
+    lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
+    text_draw_percentage(setting_scroll_speed(), 328, 182, FONT_SMALL_PLAIN);
 
     arrow_buttons_draw(160, 40, arrow_buttons, 4);
     graphics_reset_dialog();

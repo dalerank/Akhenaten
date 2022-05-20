@@ -43,7 +43,7 @@ static void draw_foreground(void) {
     lang_text_draw_centered(296, 0, 160, 20, 304, FONT_LARGE_BLACK_ON_LIGHT);
 
     // high scores
-    font_t font = FONT_SMALL_BLACK;
+    font_t font = FONT_SMALL_PLAIN2;
     for (int i = 0; i < LIST_MAX_SIZE; i++) {
         const player_record *record = highscores_get(scrollbar.scroll_position + i);
         if (record->nonempty) {

@@ -41,7 +41,7 @@ typedef struct image;
 typedef struct {
     SDL_Texture *texture;
     std::vector<image*> images;
-    color_t *pixel_buffer;
+    color_t *TEMP_PIXEL_BUFFER;
     int bmp_size;
     int width;
     int height;
@@ -105,7 +105,7 @@ struct image {
         atlas_data_t *p_atlas;
     } atlas;
 
-    color_t *pixel_data;
+    color_t *TEMP_PIXEL_DATA;
 };
 
 typedef struct {

@@ -61,7 +61,7 @@ void figure::draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordina
         number = id - MAP_FLAG_HERD_MIN + 1;
 
     if (number > 0)
-        text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE);
+        text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
 
 }
 

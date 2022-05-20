@@ -78,7 +78,7 @@ static int convert_uncompressed(buffer *buf, const image *img) {
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height; y++) {
-        color_t *pixel = &p_atlas->pixel_buffer[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        color_t *pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
         for (int x = 0; x < img->width; x++) {
             color_t color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
@@ -90,8 +90,6 @@ static int convert_uncompressed(buffer *buf, const image *img) {
 static int convert_compressed(buffer *buf, int data_length, const image *img) {
     int pixels_count = 0;
     auto p_atlas = img->atlas.p_atlas;
-//    int atlas_x = img->atlas.x_offset;
-//    int atlas_y = img->atlas.y_offset;
     int atlas_dst = (img->atlas.y_offset * p_atlas->width) + img->atlas.x_offset;
     int y = 0;
     int x = 0;
@@ -110,10 +108,8 @@ static int convert_compressed(buffer *buf, int data_length, const image *img) {
         } else {
             // control = number of concrete pixels
             for (int i = 0; i < control; i++) {
-//                color_t *pixel = &p_atlas->raw_buffer[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset + x];
-//                *pixel = to_32_bit(buf->read_u16());
                 int dst = atlas_dst + y * p_atlas->width + x;
-                p_atlas->pixel_buffer[dst] = to_32_bit(buf->read_u16());
+                p_atlas->TEMP_PIXEL_BUFFER[dst] = to_32_bit(buf->read_u16());
                 x++;
                 if (x >= img->width) {
                     y++;
@@ -123,25 +119,6 @@ static int convert_compressed(buffer *buf, int data_length, const image *img) {
             data_length -= control * 2 + 1;
         }
     }
-//    int dst_length = 0;
-//    while (buf_length > 0) {
-//        int control = buf->read_u8();
-//        if (control == 255) {
-//            // next byte = transparent pixels to skip
-//            *dst++ = 255;
-//            *dst++ = buf->read_u8();
-//            dst_length += 2;
-//            buf_length -= 2;
-//        } else {
-//            // control = number of concrete pixels
-//            *dst++ = control;
-//            for (int i = 0; i < control; i++) {
-//                *dst++ = to_32_bit(buf->read_u16());
-//            }
-//            dst_length += control + 1;
-//            buf_length -= control * 2 + 1;
-//        }
-//    }
     return pixels_count;
 }
 
@@ -166,7 +143,7 @@ static int convert_footprint_tile(buffer *buf, const image *img, int x_offset, i
             int dst_index = (y + y_offset + img->atlas.y_offset) * p_atlas->width + img->atlas.x_offset + x + x_offset;
             if (dst_index >= p_atlas->bmp_size)
                 continue;
-            p_atlas->pixel_buffer[dst_index] = to_32_bit(buf->read_u16());
+            p_atlas->TEMP_PIXEL_BUFFER[dst_index] = to_32_bit(buf->read_u16());
         }
     }
     return pixels_count;
@@ -205,7 +182,7 @@ static int convert_isometric_footprint(buffer *buf, const image *img) {
 }
 
 static void convert_to_plain_white(const image *img) {
-    color_t *pixels = img->pixel_data;
+    color_t *pixels = img->TEMP_PIXEL_DATA;
     int atlas_width = img->atlas.p_atlas->width;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
@@ -215,19 +192,86 @@ static void convert_to_plain_white(const image *img) {
         pixels += atlas_width;
     }
 }
-static void make_plain_fonts_white(std::vector<image> *images, int start_index) {
-    for (int i = font_definition_for(FONT_NORMAL_PLAIN)->image_offset; i < font_definition_for(FONT_NORMAL_BLACK_ON_LIGHT)->image_offset; ++i) {
-        const image *img = &images->at(i + start_index);
-        convert_to_plain_white(img);
+static void add_edge_to_letter(const image *img) {
+    int atlas_width = img->atlas.p_atlas->width;
+    int oldsize = img->width * img->height;
+    color_t *TEMP_BUFFER = new color_t[oldsize];
+
+    // copy original glyph to the buffer
+    color_t *pixels = img->TEMP_PIXEL_DATA;
+    auto p_buffer = TEMP_BUFFER;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++)
+            p_buffer[x] = pixels[x];
+        pixels += atlas_width;
+        p_buffer += atlas_width;
     }
-    for (int i = font_definition_for(FONT_SMALL_PLAIN)->image_offset; i < font_definition_for(FONT_NORMAL_BLACK_ON_DARK)->image_offset; ++i) {
-        const image *img = &images->at(i + start_index);
-        convert_to_plain_white(img);
+
+    // paste back and create edges
+    pixels = img->TEMP_PIXEL_DATA;
+    p_buffer = TEMP_BUFFER;
+    auto edge_color = COLOR_BLACK;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
+            if ((p_buffer[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+//                pixels[atlas_width * 0 + x + 0] = COLOR_BLACK;
+                pixels[atlas_width * 0 + x + 1] = edge_color;
+                pixels[atlas_width * 0 + x + 2] = edge_color;
+                pixels[atlas_width * 1 + x + 0] = edge_color;
+                pixels[atlas_width * 1 + x + 1] = edge_color;
+                pixels[atlas_width * 1 + x + 2] = edge_color;
+                pixels[atlas_width * 2 + x + 0] = edge_color;
+                pixels[atlas_width * 2 + x + 1] = edge_color;
+                pixels[atlas_width * 2 + x + 2] = edge_color;
+            }
+        }
+        pixels += atlas_width;
+        p_buffer += atlas_width;
     }
-    for (int i = font_definition_for(FONT_SMALL_BLACK)->image_offset; i < images->size() - start_index; ++i) {
-        const image *img = &images->at(i + start_index);
-        convert_to_plain_white(img);
+
+    // paste white glyph in the center
+    pixels = img->TEMP_PIXEL_DATA;
+    p_buffer = TEMP_BUFFER;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
+            if ((p_buffer[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+                pixels[atlas_width * 1 + x + 1] = COLOR_WHITE;
+        }
+        pixels += atlas_width;
+        p_buffer += atlas_width;
     }
+
+    delete TEMP_BUFFER;
+}
+static int convert_font_glyph_to_bigger_space(buffer *buf, const image *img) {
+    int pixels_count = 0;
+    auto p_atlas = img->atlas.p_atlas;
+
+    for (int y = 0; y < img->height - 2; y++) {
+        color_t *pixel = &p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset + y) * p_atlas->width + img->atlas.x_offset];
+        for (int x = 0; x < img->width - 2; x++) {
+            color_t color = to_32_bit(buf->read_u16());
+            pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
+            pixels_count++;
+        }
+    }
+    return pixels_count;
+}
+static void create_special_fonts(std::vector<image> *images, int start_index) {
+    for (int i = font_definition_for(FONT_SMALL_SHADED)->image_offset; i < images->size() - start_index; ++i) {
+        const image *img = &images->at(i + start_index);
+        image_packer_rect *rect = &packer.rects[i + start_index];
+        rect->input.width = img->width + 2;
+        rect->input.height = img->height + 2;
+    }
+}
+static bool is_font_glyph_in_range(const image *img, font_t font_start, font_t font_end) {
+    int i = img->sgx_index - 201;
+    int starting_offset = font_definition_for(font_start)->image_offset;
+    int ending_offset = font_definition_for(font_end)->image_offset;
+    if (i >= starting_offset && i < ending_offset)
+        return true;
+    return false;
 }
 
 static buffer *external_image_buf = nullptr;
@@ -259,23 +303,31 @@ static buffer *load_external_data(const image *img) {
     }
     return external_image_buf;
 }
-
-static int convert_image_data(buffer *buf, image *img) {
+static int convert_image_data(buffer *buf, image *img, bool convert_fonts) {
     if (img->is_external)
         buf = load_external_data(img);
     if (buf == nullptr)
         return 0;
-    if (img->is_fully_compressed)
+    img->TEMP_PIXEL_DATA = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
+    if (img->is_fully_compressed) {
         convert_compressed(buf, img->data_length, img);
-    else if (img->top_height) { // isometric tile
+        if (convert_fonts) { // special font conversions
+            if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT))
+                convert_to_plain_white(img);
+            else if (is_font_glyph_in_range(img, FONT_SMALL_SHADED, FONT_NORMAL_BLACK_ON_DARK)) {
+                add_edge_to_letter(img);
+                img->width += 2;
+                img->height += 2;
+            }
+        }
+    } else if (img->top_height) { // isometric tile
         convert_isometric_footprint(buf, img);
         convert_compressed(buf, img->data_length - img->uncompressed_length, img);
-    } else if(img->type == IMAGE_TYPE_ISOMETRIC)
+    } else if (img->type == IMAGE_TYPE_ISOMETRIC)
         convert_isometric_footprint(buf, img);
     else
         convert_uncompressed(buf, img);
 
-    img->pixel_data = &img->atlas.p_atlas->pixel_buffer[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
     img->uncompressed_length /= 2;
 }
 
@@ -458,13 +510,16 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
             //continue;
         } else {
             // record atlas rect sizes in the packer
-//            if (!img.is_external) {
-                image_packer_rect *rect = &packer.rects[i];
-                rect->input.width = img.width;
-                rect->input.height = img.height;
-//            }
+            image_packer_rect *rect = &packer.rects[i];
+            rect->input.width = img.width;
+            rect->input.height = img.height;
         }
         images_array.push_back(img);
+    }
+
+    // create special fonts
+    if (SHOULD_CONVERT_FONTS) {
+        create_special_fonts(&images_array, 1 + (200 * (!SHOULD_LOAD_SYSTEM_SPRITES)));
     }
 
     // repack and generate atlas pages
@@ -475,7 +530,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         atlas_data.width = i == packer.result.pages_needed - 1 ? packer.result.last_image_width : max_texture_width;
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_height;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
-        atlas_data.pixel_buffer = new color_t[atlas_data.bmp_size];
+        atlas_data.TEMP_PIXEL_BUFFER = new color_t[atlas_data.bmp_size];
         atlas_data.texture = nullptr;
         atlas_pages.push_back(atlas_data);
     }
@@ -494,8 +549,6 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
             continue;
         if (img->offset_mirror != 0)
             img->mirrored_img = &images_array.at(i + img->offset_mirror);
-//        if (img->is_external)
-//            continue;
         image_packer_rect *rect = &packer.rects[i];
         img->atlas.index = rect->output.image_index;
         atlas_data_t *p_data = &atlas_pages.at(img->atlas.index);
@@ -504,15 +557,10 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         img->atlas.y_offset = rect->output.y;
         p_data->images.push_back(img);
 
-        // convert bitmap data for image pool
-//        if (img->is_external)
-//            continue;
+        // load and convert image bitmap data
         pak_buf->set_offset(img->sgx_data_offset);
-        int r = convert_image_data(pak_buf, img);
+        int r = convert_image_data(pak_buf, img, SHOULD_CONVERT_FONTS);
     }
-
-    if (SHOULD_CONVERT_FONTS)
-        make_plain_fonts_white(&images_array, 1 + (200 * (!SHOULD_LOAD_SYSTEM_SPRITES)));
 
 //    assets_init(atlas_data->buffers, atlas_data->image_widths);
     graphics_renderer()->create_image_atlas(this, &packer);
@@ -644,14 +692,14 @@ const image *image_get_enemy(int id) {
 //        return img->pixel_data; // todo: mods
 //}
 const color_t *image_data_letter(int letter_id) {
-    return image_letter(letter_id)->pixel_data;
+    return image_letter(letter_id)->TEMP_PIXEL_DATA;
 }
 const color_t *image_data_enemy(int id) {
     const image *lookup = image_get(id);
     const image *img = image_get(id + lookup->offset_mirror);
     id += img->offset_mirror;
     if (img->sgx_data_offset > 0)
-        return img->pixel_data;
+        return img->TEMP_PIXEL_DATA;
     return NULL;
 }
 
