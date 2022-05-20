@@ -71,7 +71,6 @@ static void restore_window_under_tooltip_from_buffer(void) {
 }
 
 static void save_window_under_tooltip_to_buffer(int x, int y, int width, int height) {
-    return;
     if (button_tooltip_info.is_active &&
         x == button_tooltip_info.x && y == button_tooltip_info.y &&
         width == button_tooltip_info.width && height == button_tooltip_info.height)
@@ -89,10 +88,10 @@ static void draw_button_tooltip(tooltip_context *c) {
     const uint8_t *text = lang_get_string(c->text_group, c->text_id);
 
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+        lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
     }
     int height = 16 * lines + 10;
 
@@ -156,7 +155,7 @@ static void draw_button_tooltip(tooltip_context *c) {
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
 }
 
 static void draw_overlay_tooltip(tooltip_context *c) {
@@ -183,10 +182,10 @@ static void draw_overlay_tooltip(tooltip_context *c) {
     }
 
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+        lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
     }
     int height = 16 * lines + 10;
 
@@ -208,7 +207,7 @@ static void draw_overlay_tooltip(tooltip_context *c) {
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
 }
 
 static void draw_senate_tooltip(tooltip_context *c) {
@@ -234,43 +233,43 @@ static void draw_senate_tooltip(tooltip_context *c) {
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
 
     // unemployment
-    lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     width = text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
-                                     x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                     x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     text_draw_number_colored(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
-                             x + 140 + width, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
 
     // ratings
-    lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_culture(), '@', " ",
-                             x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && winning_culture()) {
         text_draw_number_colored(winning_culture(), '(', ")",
-                                 x + 140 + width, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     }
 
-    lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_prosperity(), '@', " ",
-                             x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && winning_prosperity()) {
         text_draw_number_colored(winning_prosperity(), '(', ")",
-                                 x + 140 + width, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     }
 
-    lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_monument(), '@', " ",
-                             x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && winning_monuments()) {
         text_draw_number_colored(winning_monuments(), '(', ")",
-                                 x + 140 + width, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     }
 
-    lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     text_draw_number_colored(city_rating_kingdom(), '@', " ",
-                             x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                             x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && winning_kingdom()) {
         text_draw_number_colored(winning_kingdom(), '(', ")",
-                                 x + 140 + width, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+                                 x + 140 + width, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     }
 }
 
@@ -302,8 +301,8 @@ static void draw_tile_tooltip(tooltip_context *c) {
 
         graphics_draw_rect(x, y, width, height, COLOR_BLACK);
         graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-        text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-        text_draw_label_and_number("y: ", y_tile, " ", x + 2, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+        text_draw_label_and_number("x: ", x_tile, " ", x + 2, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP);
+        text_draw_label_and_number("y: ", y_tile, " ", x + 2, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP);
     }
 }
 

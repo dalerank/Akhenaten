@@ -149,14 +149,14 @@ void figure::draw_figure_main(pixel_coordinate pixel, int highlight, pixel_coord
 //            break;
     }
 
-    const image *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
+    const image_t *img = is_enemy_image ? image_get_enemy(sprite_image_id) : image_get(sprite_image_id);
     if (is_enemy_image)
         ImageDraw::img_enemy(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
     else
         ImageDraw::img_sprite(sprite_image_id, pixel.x + x_correction, pixel.y + y_correction, COLOR_MASK_NONE);
 }
 void figure::draw_figure_cart(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
-    const image *img = image_get(cart_image_id);
+    const image_t *img = image_get(cart_image_id);
     ImageDraw::img_generic(cart_image_id, pixel.x + cart_offset.x - img->animation.sprite_x_offset,
                            pixel.y + cart_offset.y - img->animation.sprite_y_offset - 7);
 }

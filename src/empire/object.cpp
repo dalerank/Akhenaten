@@ -281,7 +281,7 @@ static int get_animation_offset(int image_id, int current_index) {
     if (current_index <= 0)
         current_index = 1;
 
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     int animation_speed = img->animation.speed_id;
     if (!game_animation_should_advance(animation_speed))
         return current_index;

@@ -262,10 +262,11 @@ static void draw_viewport_rectangle(void) {
 }
 
 static void prepare_minimap_cache(int width, int height) {
-    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
-        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
-    }
-    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
+    return;
+//    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+//        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
+//    }
+//    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
 static void clear_minimap(void) {
     for (int y = 0; y < data.height; y++) {
@@ -280,8 +281,8 @@ static void draw_minimap(void) {
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
-    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+//    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
@@ -308,7 +309,7 @@ void draw_using_cache(int x_offset, int y_offset, int width_tiles, int height_ti
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, 2 * width_tiles, height_tiles);
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
+//    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, 1.0f);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }

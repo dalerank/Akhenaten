@@ -88,7 +88,7 @@ static int load_smk(const char *filename) {
 static void end_video(void) {
     sound_device_use_default_music_player();
     sound_music_update(true);
-    graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_VIDEO);
+    graphics_renderer()->release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
 bool video_start(const char *filename) {
@@ -98,8 +98,8 @@ bool video_start(const char *filename) {
     if (load_smk(filename)) {
         sound_music_stop();
         sound_speech_stop();
-        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
-        data.buffer.pixels = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
+        graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
+        data.buffer.pixels = graphics_renderer()->get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = true;
         return true;
     } else
@@ -146,8 +146,7 @@ void video_shutdown(void) {
     }
 }
 
-static int get_next_frame(void)
-{
+static int get_next_frame(void) {
     if (!data.s) {
         return 0;
     }
@@ -175,8 +174,7 @@ static int get_next_frame(void)
     }
     return draw_frame;
 }
-static void update_video_frame(void)
-{
+static void update_video_frame(void) {
     const unsigned char *frame = smacker_get_frame_video(data.s);
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
@@ -190,17 +188,15 @@ static void update_video_frame(void)
             }
         }
     }
-    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_VIDEO);
+    graphics_renderer()->update_custom_texture(CUSTOM_IMAGE_VIDEO);
 }
 
-void video_draw(int x_offset, int y_offset)
-{
+void video_draw(int x_offset, int y_offset) {
     if (get_next_frame())
         update_video_frame();
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
+    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
 }
-void video_draw_fullscreen(void)
-{
+void video_draw_fullscreen(void) {
     if (get_next_frame())
         update_video_frame();
 
@@ -217,5 +213,5 @@ void video_draw_fullscreen(void)
     if (scale == scale_w)
         y = (int) ((s_height - data.video.height / scale) / 2 * scale);
 
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x, y, scale);
+    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

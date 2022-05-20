@@ -3,6 +3,7 @@
 
 #include <SDL_render.h>
 #include <vector>
+#include "graphics/renderer.h"
 #include "core/encoding.h"
 //#include "core/image_group.h"
 #include "graphics/color.h"
@@ -36,18 +37,19 @@ enum {
 #define PAK_GROUPS_MAX 300
 #define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
 
-typedef struct image;
+//typedef struct image;
 
 typedef struct {
     SDL_Texture *texture;
-    std::vector<image*> images;
+//    std::vector<image*> images;
     color_t *TEMP_PIXEL_BUFFER;
     int bmp_size;
     int width;
     int height;
 } atlas_data_t;
 
-struct image {
+struct image_t;
+struct image_t {
     char *pak_name;
     int sgx_index;
     int sgx_data_offset;
@@ -55,7 +57,7 @@ struct image {
     int uncompressed_length;
     int unk00; //
     int offset_mirror;
-    image *mirrored_img;
+    image_t *mirrored_img;
     //
     int width;
     int height;
@@ -120,7 +122,7 @@ class imagepak {
     char *bmp_names;
     int num_bmp_names;
     uint16_t *group_image_ids;
-    std::vector<image> images_array;
+    std::vector<image_t> images_array;
 
     bool SHOULD_LOAD_SYSTEM_SPRITES;
     bool SHOULD_CONVERT_FONTS;
@@ -138,7 +140,7 @@ public:
 
     int get_entry_count();
     int get_global_image_index(int group);
-    const image *get_image(int id, bool relative = false);
+    const image_t *get_image(int id, bool relative = false);
 };
 
 extern int terrain_ph_offset;
@@ -151,9 +153,9 @@ bool image_set_enemy_pak(int enemy_id);
 
 int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 
-const image *image_get(int id, int mode = 0);
-const image *image_letter(int letter_id);
-const image *image_get_enemy(int id);
+const image_t *image_get(int id, int mode = 0);
+const image_t *image_letter(int letter_id);
+const image_t *image_get_enemy(int id);
 //const color_t *image_data(int id);
 const color_t *image_data_letter(int letter_id);
 const color_t *image_data_enemy(int id);

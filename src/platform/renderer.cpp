@@ -1,26 +1,27 @@
 #include "renderer.h"
 
-#include "core/calc.h"
-#include "core/config.h"
+//#include "core/calc.h"
+//#include "core/config.h"
 #include "core/time.h"
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
-#include "platform/cursor.h"
+//#include "platform/cursor.h"
 //#include "platform/haiku/haiku.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
-#include "platform/switch/switch.h"
-#include "platform/vita/vita.h"
+//#include "platform/switch/switch.h"
+//#include "platform/vita/vita.h"
 #include "core/image_group.h"
 
-#include <math.h>
-#include <stdlib.h>
+//#include <math.h>
+//#include <stdlib.h>
 #include <string.h>
-#include <input/cursor.h>
-#include <core/image_packer.h>
+#include "input/cursor.h"
 #include <SDL_image.h>
-#include <graphics/graphics.h>
-#include <dev/debug.h>
+//#include <core/image_packer.h>
+//#include <SDL_image.h>
+//#include <graphics/graphics.h>
+//#include <dev/debug.h>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -90,12 +91,10 @@ static struct {
         } hotspot;
     } cursors[CURSOR_MAX];
 
-//    SDL_Texture **texture_lists[ATLAS_MAX];
-//    image_atlas_data atlas_data[ATLAS_MAX];
     struct {
         SDL_Texture *texture;
         color_t *buffer;
-        image img;
+        image_t img;
     } custom_textures[CUSTOM_IMAGE_MAX];
     struct {
         int width;
@@ -114,9 +113,7 @@ static struct {
     graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
 
-    float city_scale = 1.0f;
-    SDL_Texture *city_renderTarget = nullptr;
-    SDL_Texture *prev_renderTarget = nullptr;
+    float global_render_scale = 1.0f;
 } data;
 
 static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width) {
@@ -127,7 +124,7 @@ static int save_screen_buffer(color_t *pixels, int x, int y, int width, int heig
     return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color_t)) == 0;
 }
 
-static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color) {
+void graphics_renderer_interface::draw_line(int x_start, int x_end, int y_start, int y_end, color_t color) {
     if (data.paused) {
         return;
     }
@@ -138,8 +135,7 @@ static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t co
         (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
     SDL_RenderDrawLine(data.renderer, x_start, y_start, x_end, y_end);
 }
-
-static void draw_rect(int x, int y, int width, int height, color_t color) {
+void graphics_renderer_interface::draw_rect(int x, int y, int width, int height, color_t color) {
     if (data.paused) {
         return;
     }
@@ -151,8 +147,7 @@ static void draw_rect(int x, int y, int width, int height, color_t color) {
     SDL_Rect rect = { x, y, width + 1, height + 1 };
     SDL_RenderDrawRect(data.renderer, &rect);
 }
-
-static void fill_rect(int x, int y, int width, int height, color_t color) {
+void graphics_renderer_interface::fill_rect(int x, int y, int width, int height, color_t color) {
     if (data.paused) {
         return;
     }
@@ -165,66 +160,45 @@ static void fill_rect(int x, int y, int width, int height, color_t color) {
     SDL_RenderFillRect(data.renderer, &rect);
 }
 
-static void set_clip_rectangle(int x, int y, int width, int height) {
-    if (data.paused) {
-        return;
-    }
-    SDL_Rect clip = { x, y, width, height };
-    SDL_RenderSetClipRect(data.renderer, &clip);
-}
 
-static void reset_clip_rectangle(void) {
-    if (data.paused) {
-        return;
-    }
-    SDL_RenderSetClipRect(data.renderer, NULL);
-}
 
-static void set_viewport(int x, int y, int width, int height) {
-    if (data.paused) {
-        return;
-    }
-    SDL_Rect viewport = { x, y, width, height };
-    SDL_RenderSetViewport(data.renderer, &viewport);
-}
-
-static void reset_viewport(void) {
-    if (data.paused) {
-        return;
-    }
-    SDL_RenderSetViewport(data.renderer, NULL);
-    SDL_RenderSetClipRect(data.renderer, NULL);
-}
-
-static void clear_screen(void) {
+void graphics_renderer_interface::clear_screen(void) {
     if (data.paused) {
         return;
     }
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
-
-static void get_max_image_size(int *width, int *height) {
-    *width = data.max_texture_size.width;
-    *height = data.max_texture_size.height;
+void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
+    if (data.paused) {
+        return;
+    }
+    SDL_Rect viewport = { x, y, width, height };
+    SDL_RenderSetViewport(data.renderer, &viewport);
+}
+void graphics_renderer_interface::reset_viewport(void) {
+    if (data.paused) {
+        return;
+    }
+    SDL_RenderSetViewport(data.renderer, NULL);
+    SDL_RenderSetClipRect(data.renderer, NULL);
+}
+void graphics_renderer_interface::set_clip_rectangle(int x, int y, int width, int height) {
+    if (data.paused) {
+        return;
+    }
+    SDL_Rect clip = { x, y, width, height };
+    SDL_RenderSetClipRect(data.renderer, &clip);
+}
+void graphics_renderer_interface::reset_clip_rectangle(void) {
+    if (data.paused) {
+        return;
+    }
+    SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
-static void free_texture_atlas(imagepak *pak) {
-    if (pak == nullptr || pak->get_entry_count() <= 0)
-        return;
-//    int num_images = pak->get_entry_count();
-//    auto list = pak->textures;
-//    if (list.size() == 0)
-//        return;
-//    data.texture_lists[type] = 0;
-    for (int i = 0; i < pak->atlas_pages.size(); i++) {
-//        if (list[i]) {
-            SDL_DestroyTexture(pak->atlas_pages.at(i).texture);
-//        }
-    }
-//    free(list);
-//    pak->textures.clear();
-//    pak->textures_size.clear();
+pixel_coordinate graphics_renderer_interface::get_max_image_size() {
+    return { data.max_texture_size.width ,data.max_texture_size.height };
 }
 
 //static void free_atlas_data_buffers(imagepak *pak)
@@ -535,8 +509,19 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 }
 #endif
 
+graphics_renderer_interface *graphics_renderer(void) {
+    return &data.renderer_interface;
+}
+
+static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD,
+                                                                      SDL_BLENDFACTOR_ONE,
+                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                      SDL_BLENDOPERATION_ADD);
+
 void SET_RENDER_SCALE(float scale) {
-    data.city_scale = scale;
+    data.global_render_scale = scale;
 }
 
 static void set_texture_scale_mode(SDL_Texture *texture, float scale_factor) {
@@ -551,14 +536,7 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale_factor) {
     }
 #endif
 }
-
-static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
-                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
-                                                                      SDL_BLENDOPERATION_ADD,
-                                                                      SDL_BLENDFACTOR_ONE,
-                                                                      SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
-                                                                      SDL_BLENDOPERATION_ADD);
-static void draw_texture(const image *img, float x, float y, color_t color, float scale, bool mirrored) {
+void graphics_renderer_interface::draw_image(const image_t *img, float x, float y, color_t color, float scale, bool mirrored) {
     if (data.paused)
         return;
     if (!color)
@@ -568,9 +546,9 @@ static void draw_texture(const image *img, float x, float y, color_t color, floa
     if (!texture)
         return;
 
-    float overall_scale_factor = scale * data.city_scale;
+    float overall_scale_factor = scale * data.global_render_scale;
     bool DOWNSCALED_CITY = false;
-    if (data.city_scale < 1.0f)
+    if (data.global_render_scale < 1.0f)
         DOWNSCALED_CITY = true;
     set_texture_scale_mode(texture, overall_scale_factor);
 
@@ -606,13 +584,13 @@ static void draw_texture(const image *img, float x, float y, color_t color, floa
     if (DOWNSCALED_CITY) {
         // hack to prevent ugly dark borders around sprites -- yes, there's DEFINITELY a better way to do this,
         // but I can't be arsed to find it. I tried, I gave up.
-        screen_coords = {x * data.city_scale - 0.25,
-                         y * data.city_scale - 0.25,
+        screen_coords = {x * data.global_render_scale - 0.25,
+                         y * data.global_render_scale - 0.25,
                          img->width * overall_scale_factor + 0.5,
                          height * overall_scale_factor + 0.5 };
     } else {
-        screen_coords = {x * data.city_scale,
-                         y * data.city_scale,
+        screen_coords = {x * data.global_render_scale,
+                         y * data.global_render_scale,
                          img->width * overall_scale_factor,
                          height * overall_scale_factor };
     }
@@ -635,7 +613,7 @@ static void draw_texture(const image *img, float x, float y, color_t color, floa
 //    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
-static void create_custom_texture(int type, int width, int height)
+void graphics_renderer_interface::create_custom_texture(int type, int width, int height)
 {
     if (data.custom_textures[type].texture) {
         SDL_DestroyTexture(data.custom_textures[type].texture);
@@ -656,8 +634,7 @@ static void create_custom_texture(int type, int width, int height)
 //    data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
     SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
-
-static color_t *get_custom_texture_buffer(int type, int *actual_texture_width) {
+color_t *graphics_renderer_interface::get_custom_texture_buffer(int type, int *actual_texture_width) {
     if (data.paused || !data.custom_textures[type].texture) {
         return 0;
     }
@@ -685,15 +662,13 @@ static color_t *get_custom_texture_buffer(int type, int *actual_texture_width) {
 #endif
     return data.custom_textures[type].buffer;
 }
-
-static void release_custom_texture_buffer(int type) {
+void graphics_renderer_interface::release_custom_texture_buffer(int type) {
 #ifndef __vita__
     free(data.custom_textures[type].buffer);
     data.custom_textures[type].buffer = 0;
 #endif
 }
-
-static void update_custom_texture(int type) {
+void graphics_renderer_interface::update_custom_texture(int type) {
 #ifndef __vita__
     if (data.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
@@ -704,9 +679,7 @@ static void update_custom_texture(int type) {
         data.custom_textures[type].buffer, sizeof(color_t) * width);
 #endif
 }
-
-static void update_custom_texture_yuv(int type, const uint8_t *y_data, int y_width,
-    const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width) {
+void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint8_t *y_data, int y_width, const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width) {
 #ifdef USE_YUV_TEXTURES
     if (data.paused || !data.supports_yuv_textures || !data.custom_textures[type].texture) {
         return;
@@ -722,7 +695,6 @@ static void update_custom_texture_yuv(int type, const uint8_t *y_data, int y_wid
         y_data, y_width, cb_data, cb_width, cr_data, cr_width);
 #endif
 }
-
 static buffer_texture *get_saved_texture_info(int texture_id) {
     if (!texture_id || !data.texture_buffers.first) {
         return 0;
@@ -734,8 +706,7 @@ static buffer_texture *get_saved_texture_info(int texture_id) {
     }
     return 0;
 }
-
-static int save_to_texture(int texture_id, int x, int y, int width, int height) {
+int graphics_renderer_interface::save_texture_from_screen(int texture_id, int x, int y, int width, int height) {
     if (data.paused) {
         return 0;
     }
@@ -808,8 +779,7 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height) 
 
     return texture_info->id;
 }
-
-static void draw_saved_texture(int texture_id, int x, int y, int width, int height)
+void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, int x, int y, int width, int height)
 {
     buffer_texture *texture_info = get_saved_texture_info(texture_id);
     if (!texture_info) {
@@ -819,13 +789,12 @@ static void draw_saved_texture(int texture_id, int x, int y, int width, int heig
     SDL_Rect dst_coords = { x, y, width, height };
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
-
 static void create_blend_texture(int type) {
     SDL_Texture *texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, 58, 30);
     if (!texture) {
         return;
     }
-    const image *img = image_get(image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT));
+    const image_t *img = image_get(image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT));
 //    SDL_Texture *flat_tile = get_texture(img->atlas.bitflags);
     SDL_Texture *flat_tile = img->atlas.p_atlas->texture;
     SDL_Texture *former_target = SDL_GetRenderTarget(data.renderer);
@@ -864,8 +833,7 @@ static void create_blend_texture(int type) {
     data.custom_textures[type].img.height = 30;
 //    data.custom_textures[type].img.atlas.bitflags = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
-
-static void draw_custom_texture(int type, int x, int y, float scale) {
+void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {
     if (data.paused) {
         return;
     }
@@ -876,12 +844,11 @@ static void draw_custom_texture(int type, int x, int y, float scale) {
     }
 //    draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
 }
-
-static int has_custom_texture(int type) {
+int graphics_renderer_interface::has_custom_texture(int type) {
     return data.custom_textures[type].texture != 0;
 }
 
-static void load_unpacked_image(const image *img, const color_t *pixels) {
+void load_unpacked_image(const image_t *img, const color_t *pixels) {
     if (data.paused) {
         return;
     }
@@ -939,89 +906,47 @@ static void load_unpacked_image(const image *img, const color_t *pixels) {
     SDL_FreeSurface(surface);
 }
 
-static int should_pack_image(int width, int height) {
-    return width * height < MAX_PACKED_IMAGE_SIZE;
-}
+//int graphics_renderer_interface::should_pack_image(int width, int height) {
+//    return width * height < MAX_PACKED_IMAGE_SIZE;
+//}
+//int graphics_renderer_interface::isometric_images_are_joined(void) {
+//    return HAS_RENDER_GEOMETRY;
+//}
+//int graphics_renderer_interface::supports_yuv_texture(void) {
+//    return data.supports_yuv_textures;
+//}
 
-static int isometric_images_are_joined(void) {
-    return HAS_RENDER_GEOMETRY;
-}
-
-
-static int supports_yuv_texture(void) {
-    return data.supports_yuv_textures;
-}
-
-
-static int prepare_texture_atlas(imagepak *pak, image_packer *packer) {
-    if (pak == nullptr || pak->get_entry_count() <= 0)
-        return 0;
-//    int num_images = pak->get_entry_count();
-    int num_atlas_pages = packer->result.pages_needed;
-
-//    pak->textures.clear();
-//    pak->textures_size.clear();
-//    pak->textures.reserve(num_images);
-//    pak->textures_size.reserve(num_atlas_pages);
-
-    free_texture_atlas(pak);
-//    image_atlas_data *atlas_data = &data.atlas_data[type];
-//    atlas_data->num_images = num_images;
-//    atlas_data->image_widths = (int*)malloc(sizeof(int) * num_images);
-//    atlas_data->image_heights = (int*)malloc(sizeof(int) * num_images);
-//    atlas_data->buffers = (color_t **)malloc(sizeof(color_t *) * num_images);
-//    if (!atlas_data->image_widths || !atlas_data->image_heights || !atlas_data->buffers) {
-//        reset_atlas_data(type);
-//        return 0;
-//    }
+SDL_Texture *graphics_renderer_interface::create_texture_atlas(color_t *p_data, int width, int height) {
+    if (p_data == nullptr)
+        return nullptr;
 #ifdef __VITA__
-    SDL_Texture **list = malloc(sizeof(SDL_Texture *) * num_images);
-    if (!list) {
-        reset_atlas_data(type);
-        return 0;
-    }
-    memset(list, 0, sizeof(SDL_Texture *) * num_images);
     for (int i = 0; i < num_images; i++) {
-        int width = i == num_images - 1 ? last_width : data.max_texture_size.width;
-        atlas_data->image_heights[i] = i == num_images - 1 ? last_height : data.max_texture_size.height;
-        SDL_Log("Creating atlas texture with size %dx%d", width, atlas_data->image_heights[i]);
-        list[i] = SDL_CreateTexture(data.renderer,
-            SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, atlas_data->image_heights[i]);
-        if (!list[i]) {
-            SDL_LogError(SDL_LOG_PRIORITY_ERROR, "Unable to create texture. Reason: %s", SDL_GetError());
-            free_texture_atlas(type);
-            reset_atlas_data(type);
-            continue;
-        }
-        SDL_Log("Texture created");
-        SDL_LockTexture(list[i], NULL, (void **) &atlas_data->buffers[i], &atlas_data->image_widths[i]);
-        atlas_data->image_widths[i] /= sizeof(color_t);
-        SDL_SetTextureBlendMode(list[i], SDL_BLENDMODE_BLEND);
+        SDL_UnlockTexture(list[i]);
     }
-    data.texture_lists[type] = list;
 #else
-//    for (int i = 0; i < num_atlas_pages; i++) {
-////        atlas_data->image_widths[i] = i == num_images - 1 ? packer->result.last_image_width : data.max_texture_size.width;
-////        atlas_data->image_heights[i] = i == num_images - 1 ? packer->result.last_image_height : data.max_texture_size.height;
-////        pak->textures_size[i].width = i == num_images - 1 ? packer->result.last_image_width : data.max_texture_size.width;
-////        pak->textures_size[i].height = i == num_images - 1 ? packer->result.last_image_height : data.max_texture_size.height;
-//
-//        int w = i == num_atlas_pages - 1 ? packer->result.last_image_width : data.max_texture_size.width;
-//        int h = i == num_atlas_pages - 1 ? packer->result.last_image_height : data.max_texture_size.height;
-//        pak->textures_size.push_back({w, h});
-////        int size = atlas_data->image_widths[i] * atlas_data->image_heights[i] * sizeof(color_t);
-////        atlas_data->buffers[i] = (color_t *)malloc(size);
-////        if (!atlas_data->buffers[i]) {
-////            reset_atlas_data(type);
-////            return false;
-////        }
-////        memset(atlas_data->buffers[i], 0, size);
-//    }
+    // create RGB surface, and texture atlas from that surface
+    SDL_Log("Creating atlas texture with size %dx%d", width, height);
+    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) p_data,
+                                                    width, height,
+                                                    32, width * sizeof(color_t),
+                                                    COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
+    if (!surface) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
+        return nullptr;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(data.renderer, surface);
+    if (!texture) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture. Reason: %s", SDL_GetError());
+        return nullptr;
+    }
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_FreeSurface(surface);
 #endif
-    return pak->atlas_pages.size();
+
+    return texture;
 }
 
-static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *tex) {
+bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL_Texture *tex, file_format_t file_format) {
     SDL_Texture *ren_tex;
     SDL_Surface *surf;
     int st;
@@ -1042,7 +967,7 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
         goto cleanup;
     }
 
-    ren_tex = SDL_CreateTexture(ren, format, SDL_TEXTUREACCESS_TARGET, w, h);
+    ren_tex = SDL_CreateTexture(data.renderer, format, SDL_TEXTUREACCESS_TARGET, w, h);
     if (!ren_tex) {
         SDL_Log("Failed creating render texture: %s\n", SDL_GetError());
         goto cleanup;
@@ -1052,16 +977,16 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
      * Initialize our canvas, then copy texture to a target whose pixel data we
      * can access
      */
-    st = SDL_SetRenderTarget(ren, ren_tex);
+    st = SDL_SetRenderTarget(data.renderer, ren_tex);
     if (st != 0) {
         SDL_Log("Failed setting render target: %s\n", SDL_GetError());
         goto cleanup;
     }
 
-    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(ren);
+    SDL_SetRenderDrawColor(data.renderer, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(data.renderer);
 
-    st = SDL_RenderCopy(ren, tex, NULL, NULL);
+    st = SDL_RenderCopy(data.renderer, tex, NULL, NULL);
     if (st != 0) {
         SDL_Log("Failed copying texture data: %s\n", SDL_GetError());
         goto cleanup;
@@ -1074,7 +999,7 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
         goto cleanup;
     }
 
-    st = SDL_RenderReadPixels(ren, NULL, format, pixels, w * SDL_BYTESPERPIXEL(format));
+    st = SDL_RenderReadPixels(data.renderer, NULL, format, pixels, w * SDL_BYTESPERPIXEL(format));
     if (st != 0) {
         SDL_Log("Failed reading pixel data: %s\n", SDL_GetError());
         goto cleanup;
@@ -1088,14 +1013,20 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
     }
 
     /* Save result to an image */
-    st = SDL_SaveBMP(surf, filename);
-//    st = IMG_SavePNG(surf, filename);
+    switch (file_format) {
+        case FILE_FORMAT_BMP:
+            st = SDL_SaveBMP(surf, filename);
+            break;
+        case FILE_FORMAT_PNG:
+            st = IMG_SavePNG(surf, filename);
+            break;
+    }
     if (st != 0) {
         SDL_Log("Failed saving image: %s\n", SDL_GetError());
         goto cleanup;
     }
 
-    SDL_Log("Saved texture as BMP to \"%s\"\n", filename);
+    SDL_Log("Saved texture to \"%s\"\n", filename);
 
     cleanup:
     SDL_FreeSurface(surf);
@@ -1103,115 +1034,7 @@ static void save_texture(const char *filename, SDL_Renderer *ren, SDL_Texture *t
     SDL_DestroyTexture(ren_tex);
 }
 
-static bool create_texture_atlas(imagepak *pak, image_packer *packer) {
-    if (pak == nullptr || pak->get_entry_count() <= 0)
-        return false;
-//    int num_images = pak->get_entry_count();
-    int num_atlas_pages = packer->result.pages_needed;
-
-//    SDL_Texture **list = data.texture_lists[atlas_data->type];
-//    pak->textures.clear();
-//    pak->textures.reserve(num_atlas_pages);
-
-#ifdef __VITA__
-    for (int i = 0; i < num_images; i++) {
-        SDL_UnlockTexture(list[i]);
-    }
-#else
-//    data.texture_lists[atlas_data->type] = (SDL_Texture**)malloc(sizeof(SDL_Texture *) * num_images);
-//    SDL_Texture **list = data.texture_lists[atlas_data->type];
-//    if (!list) {
-//        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture lists for atlas %d - out of memory",
-//                     atlas_data->type);
-//        return false;
-//    }
-//    memset(list, 0, sizeof(SDL_Texture *) * num_images);
-//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-    for (int i = 0; i < num_atlas_pages; i++) {
-//        auto size = pak->textures_size[i];
-//        const image *img = pak->get_raw_image_data(i);
-        auto atlas_data = &pak->atlas_pages.at(i);
-//        auto buffer = data->raw_buffer;
-//        if (img->data_length == 0)
-//            continue;
-//        SDL_Log("Creating atlas texture with size %dx%d", atlas_data->width, atlas_data->height);
-//        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-        SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) atlas_data->TEMP_PIXEL_BUFFER,
-                                                        atlas_data->width, atlas_data->height,
-                                                        32, atlas_data->width * sizeof(color_t),
-                                                        COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
-        if (!surface) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
-            free_texture_atlas(pak);
-            return false;
-        }
-        auto texture = SDL_CreateTextureFromSurface(data.renderer, surface);
-        atlas_data->texture = texture;
-//        pak->textures.push_back(texture);
-
-
-        // ********* DEBUGGING **********
-        if (false) {
-            char *lfile = (char *) malloc(200);
-            sprintf(lfile, "DEV_TESTING/tex/%s_%i.bmp", pak->name, i); // TODO: make this a global function
-            save_texture(lfile, data.renderer, texture);
-            free(lfile);
-        }
-        // ******************************
-
-        SDL_FreeSurface(surface);
-        delete atlas_data->TEMP_PIXEL_BUFFER;
-        atlas_data->TEMP_PIXEL_BUFFER = nullptr;
-        for (int j = 0; j < atlas_data->images.size(); ++j) {
-            auto img = atlas_data->images.at(i);
-            img->TEMP_PIXEL_DATA = nullptr;
-        }
-        if (!texture) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture. Reason: %s", SDL_GetError());
-            free_texture_atlas(pak);
-            return false;
-        }
-        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    }
-#endif
-//    free_atlas_data_buffers(pak);
-    return true;
-}
-
-
-static void create_renderer_interface(void) {
-    data.renderer_interface.clear_screen = clear_screen;
-    data.renderer_interface.set_viewport = set_viewport;
-    data.renderer_interface.reset_viewport = reset_viewport;
-    data.renderer_interface.set_clip_rectangle = set_clip_rectangle;
-    data.renderer_interface.reset_clip_rectangle = reset_clip_rectangle;
-    data.renderer_interface.draw_line = draw_line;
-    data.renderer_interface.draw_rect = draw_rect;
-    data.renderer_interface.fill_rect = fill_rect;
-    data.renderer_interface.draw_image = draw_texture;
-//    data.renderer_interface.draw_isometric_top = draw_isometric_top;
-    data.renderer_interface.create_custom_image = create_custom_texture;
-    data.renderer_interface.has_custom_image = has_custom_texture;
-    data.renderer_interface.get_custom_image_buffer = get_custom_texture_buffer;
-    data.renderer_interface.release_custom_image_buffer = release_custom_texture_buffer;
-    data.renderer_interface.update_custom_image = update_custom_texture;
-    data.renderer_interface.update_custom_image_yuv = update_custom_texture_yuv;
-    data.renderer_interface.draw_custom_image = draw_custom_texture;
-    data.renderer_interface.supports_yuv_image_format = supports_yuv_texture;
-    data.renderer_interface.save_image_from_screen = save_to_texture;
-    data.renderer_interface.draw_image_to_screen = draw_saved_texture;
-    data.renderer_interface.save_screen_buffer = save_screen_buffer;
-    data.renderer_interface.get_max_image_size = get_max_image_size;
-    data.renderer_interface.prepare_image_atlas = prepare_texture_atlas;
-    data.renderer_interface.create_image_atlas = create_texture_atlas;
-//    data.renderer_interface.has_image_atlas = has_texture_atlas;
-    data.renderer_interface.free_image_atlas = free_texture_atlas;
-    data.renderer_interface.load_unpacked_image = load_unpacked_image;
-    data.renderer_interface.should_pack_image = should_pack_image;
-    data.renderer_interface.isometric_images_are_joined = isometric_images_are_joined;
-
-    graphics_renderer_set_interface(&data.renderer_interface);
-}
+/////////
 
 int platform_renderer_init(SDL_Window *window) {
 //    free_all_textures();
@@ -1265,7 +1088,8 @@ int platform_renderer_init(SDL_Window *window) {
 
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
 
-    create_renderer_interface();
+//    graphics_renderer_set_interface(&data.renderer_interface);
+//    graphics_renderer = &data.renderer_interface;
 
     return 1;
 }
@@ -1333,11 +1157,9 @@ int platform_renderer_create_render_texture(int width, int height) {
         return 0;
     }
 }
-
 int platform_renderer_lost_render_texture(void) {
     return !data.render_texture && data.renderer;
 }
-
 void platform_renderer_invalidate_target_textures(void) {
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
@@ -1350,10 +1172,9 @@ void platform_renderer_invalidate_target_textures(void) {
         create_blend_texture(CUSTOM_IMAGE_GREEN_FOOTPRINT);
     }
 }
-
-void platform_renderer_clear(void) {
-    clear_screen();
-}
+//void platform_renderer_clear(void) {
+//    clear_screen();
+//}
 
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
 static void draw_software_mouse_cursor(void) {
@@ -1384,9 +1205,7 @@ void platform_renderer_render(void) {
     SDL_RenderPresent(data.renderer);
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
-
-void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
-    int hotspot_x, int hotspot_y) {
+void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels, int hotspot_x, int hotspot_y) {
     if (data.paused) {
         return;
     }
@@ -1411,13 +1230,11 @@ void platform_renderer_pause(void) {
     SDL_SetRenderTarget(data.renderer, NULL);
     data.paused = 1;
 }
-
 void platform_renderer_resume(void) {
     data.paused = 0;
     platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
-
 void platform_renderer_destroy(void) {
     destroy_render_texture();
     if (data.renderer) {

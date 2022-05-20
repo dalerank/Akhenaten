@@ -1,20 +1,10 @@
 #ifndef GRAPHICS_RENDERER_H
 #define GRAPHICS_RENDERER_H
 
-#include <core/image_packer.h>
+#include "core/file_formats.h"
+#include "color.h"
 #include "core/image.h"
-
-//enum {
-//    ATLAS_FIRST = 0,
-//    ATLAS_MAIN = 0,
-//    ATLAS_ENEMY = 1,
-//    ATLAS_FONT = 2,
-//    ATLAS_EXTRA_ASSET = 3,
-//    ATLAS_UNPACKED_EXTRA_ASSET = 4,
-//    ATLAS_CUSTOM = 5,
-//    ATLAS_EXTERNAL = 6,
-//    ATLAS_MAX = 7
-//};
+#include "core/struct_types.h"
 
 enum {
     CUSTOM_IMAGE_NONE = 0,
@@ -32,67 +22,56 @@ enum {
     IMAGE_FILTER_LINEAR = 1
 };
 
-//typedef struct {
-//    int type;
-//    int num_images;
-//    color_t **buffers;
-//    SDL_Texture **textures;
-//    int *image_widths;
-//    int *image_heights;
-//} image_atlas_data;
+typedef struct image_t;
 
-void SET_RENDER_SCALE(float scale);
+class graphics_renderer_interface {
 
-typedef struct {
-    void (*clear_screen)(void);
+public:
+    void clear_screen();
+    void set_viewport(int x, int y, int width, int height);
+    void reset_viewport();
+    void set_clip_rectangle(int x, int y, int width, int height);
+    void reset_clip_rectangle();
 
-    void (*set_viewport)(int x, int y, int width, int height);
-    void (*reset_viewport)(void);
+    void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color);
+    void draw_rect(int x, int y, int width, int height, color_t color);
+    void fill_rect(int x, int y, int width, int height, color_t color);
 
-    void (*set_clip_rectangle)(int x, int y, int width, int height);
-    void (*reset_clip_rectangle)(void);
+    void draw_image(const image_t *img, float x, float y, color_t color, float scale, bool mirrored);
+//    void draw_isometric_top(const image_t *img, int x, int y, color_t color, float scale);
 
-    void (*draw_line)(int x_start, int x_end, int y_start, int y_end, color_t color);
-    void (*draw_rect)(int x, int y, int width, int height, color_t color);
-    void (*fill_rect)(int x, int y, int width, int height, color_t color);
+    void create_custom_texture(int type, int width, int height);
+    int has_custom_texture(int type);
+    color_t *get_custom_texture_buffer(int type, int *actual_texture_width);
+    void release_custom_texture_buffer(int type);
+    void update_custom_texture(int type);
+    void update_custom_texture_yuv(int type, const uint8_t *y_data, int y_width, const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width);
+    void draw_custom_texture(int type, int x, int y, float scale);
+//    int supports_yuv_texture_format(void);
 
-    void (*draw_image)(const image *img, float x, float y, color_t color, float scale, bool mirrored);
-//    void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);
+    int save_texture_from_screen(int image_id, int x, int y, int width, int height);
+    void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
+//    int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width);
 
-    void (*create_custom_image)(int type, int width, int height);
-    int (*has_custom_image)(int type);
-    color_t *(*get_custom_image_buffer)(int type, int *actual_texture_width);
-    void (*release_custom_image_buffer)(int type);
-    void (*update_custom_image)(int type);
-    void (*update_custom_image_yuv)(int type, const uint8_t *y_data, int y_width,
-        const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width);
-    void (*draw_custom_image)(int type, int x, int y, float scale);
-    int (*supports_yuv_image_format)(void);
+    pixel_coordinate get_max_image_size();
 
-    int (*save_image_from_screen)(int image_id, int x, int y, int width, int height);
-    void (*draw_image_to_screen)(int image_id, int x, int y, int width, int height);
-    int (*save_screen_buffer)(color_t *pixels, int x, int y, int width, int height, int row_width);
+//    int prepare_image_atlas(atlas_data_t *atlas, image_packer *packer);
+    SDL_Texture *create_texture_atlas(color_t *p_data, int width, int height);
 
-    void (*get_max_image_size)(int *width, int *height);
-
-//    const image_atlas_data *(*prepare_image_atlas)(int type, int num_images, int last_width, int last_height);
-    int (*prepare_image_atlas)(imagepak *pak, image_packer *packer);
-//    int (*create_image_atlas)(const image_atlas_data *data);
-    bool (*create_image_atlas)(imagepak *pak, image_packer *packer);
-//    int (*has_image_atlas)(int type);
-    void (*free_image_atlas)(imagepak *pak);
-
-    void (*load_unpacked_image)(const image *img, const color_t *pixels);
-
-    int (*should_pack_image)(int width, int height);
-
-    int (*isometric_images_are_joined)(void);
+//    void load_unpacked_image(const image *img, const color_t *pixels);
+//    bool should_pack_image(int width, int height);
+//    bool isometric_images_are_joined(void);
 
 //    void (*update_scale_mode)(int city_scale);
-} graphics_renderer_interface;
 
-const graphics_renderer_interface *graphics_renderer(void);
+    bool save_texture_to_file(const char *filename, SDL_Texture *tex, file_format_t file_format = FILE_FORMAT_BMP);
+};
 
-void graphics_renderer_set_interface(const graphics_renderer_interface *new_renderer);
+
+//extern graphics_renderer_interface *graphics_renderer;
+graphics_renderer_interface *graphics_renderer(void);
+//void graphics_renderer_set_interface(const graphics_renderer_interface *new_renderer);
+
+void SET_RENDER_SCALE(float scale);
 
 #endif // GRAPHICS_RENDERER_H

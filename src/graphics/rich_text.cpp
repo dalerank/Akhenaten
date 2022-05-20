@@ -202,7 +202,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, bool meas
                     x += def->space_width;
                     start_link = 0;
                 }
-                const image *img = image_letter(letter_id);
+                const image_t *img = image_letter(letter_id);
                 if (!measure_only) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
                     ImageDraw::img_letter(def->font, letter_id, x, y - height, color);
@@ -309,7 +309,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                 if (lines_before_image)
                     lines_before_image--;
                 else {
-                    const image *img = image_get(image_id);
+                    const image_t *img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {

@@ -1,15 +1,16 @@
 #include "graphics.h"
 
-#include "city/view/view.h"
-#include "core/config.h"
-#include "graphics/color.h"
-#include "graphics/menu.h"
-#include "graphics/screen.h"
-#include "core/game_environment.h"
+//#include "city/view/view.h"
+//#include "core/config.h"
+//#include "graphics/color.h"
+//#include "graphics/menu.h"
+//#include "graphics/screen.h"
+//#include "core/game_environment.h"
 #include "graphics/renderer.h"
+#include "screen.h"
 
-#include <stdlib.h>
-#include <string.h>
+//#include <stdlib.h>
+//#include <string.h>
 
 #ifdef __vita__
 #include <vita2d.h>
@@ -80,8 +81,8 @@ void graphics_shade_rect(int x, int y, int width, int height, int darkness) {
 //////////////
 
 int graphics_save_to_texture(int image_id, int x, int y, int width, int height) {
-    return graphics_renderer()->save_image_from_screen(image_id, x, y, width, height);
+    return graphics_renderer()->save_texture_from_screen(image_id, x, y, width, height);
 }
 void graphics_draw_from_texture(int image_id, int x, int y, int width, int height) {
-    graphics_renderer()->draw_image_to_screen(image_id, x, y, width, height);
+    graphics_renderer()->draw_saved_texture_to_screen(image_id, x, y, width, height);
 }

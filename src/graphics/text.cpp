@@ -263,7 +263,7 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color) {
             if (*str == ' ' || *str == '_' || letter_id < 0)
                 width = def->space_width;
             else {
-                const image *img = image_letter(letter_id);
+                const image_t *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height, def->line_height);
                 ImageDraw::img_letter(font, letter_id, current_x, y - height, color);
                 width = def->letter_spacing + img->width;

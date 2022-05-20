@@ -331,7 +331,7 @@ static void draw_dock_workers(building *b, int x, int y, color_t color_mask) {
         else if (num_dockers == 3)
             image_dockers += 2;
 
-        const image *img = image_get(image_dockers);
+        const image_t *img = image_get(image_dockers);
         ImageDraw::img_generic(image_dockers, x + img->animation.sprite_x_offset, y + img->animation.sprite_y_offset, color_mask);
     }
 }
@@ -432,7 +432,7 @@ static void draw_hippodrome_ornaments(pixel_coordinate pixel, map_point point) {
     int x = pixel.x;
     int y = pixel.y;
     int image_id = map_image_at(grid_offset);
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     building *b = building_at(grid_offset);
     if (img->animation.num_sprites
         && map_property_is_draw_tile(grid_offset)

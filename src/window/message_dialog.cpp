@@ -341,7 +341,7 @@ static void draw_title(const lang_message *msg) {
     if (!text)
         return;
     int image_id = get_message_image_id(msg);
-    const image *img = image_id ? image_get(image_id) : 0;
+    const image_t *img = image_id ? image_get(image_id) : 0;
     // title
     if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
         text_draw_centered(text,

@@ -83,7 +83,7 @@ void draw_debug_crosshair(int x, int y) {
     graphics_renderer()->draw_line(x, x + 10, y, y, COLOR_GREEN);
     graphics_renderer()->draw_line(x, x, y, y + 10, COLOR_RED);
 }
-void draw_debug_sprite_box(int x, int y, const image *img) {
+void draw_debug_sprite_box(int x, int y, const image_t *img) {
     int x2 = x - img->animation.sprite_x_offset;
     int y2 = y - img->animation.sprite_y_offset;
     graphics_renderer()->draw_rect(x2, y2, img->width, img->height, COLOR_GREEN);

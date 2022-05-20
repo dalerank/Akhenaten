@@ -119,7 +119,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset, int ma
             break;
     }
 
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     if (!max_frames)
         max_frames = img->animation.num_sprites;
     int anim_speed = img->animation.speed_id;

@@ -566,7 +566,7 @@ static const color_t *tile_data(const color_t *data, int index) {
 
 static void draw_footprint_size_any(int image_id, int x, int y, int size, color_t color_mask, float scale) {
 //    const color_t *data = image_data(image_id);
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
 
     // The offsets alternate very annoyingly.
     // The y offsets grow by 15 each "batch"
@@ -598,7 +598,7 @@ static color_t base_color_for_font(font_t font) {
     return COLOR_MASK_NONE;
 }
 
-static void draw_multibyte_letter(font_t font, const image *img, int x, int y, color_t color_mask, float scale) {
+static void draw_multibyte_letter(font_t font, const image_t *img, int x, int y, color_t color_mask, float scale) {
     switch (font) {
         case FONT_NORMAL_WHITE_ON_DARK:
             graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
@@ -633,11 +633,11 @@ static void draw_multibyte_letter(font_t font, const image *img, int x, int y, c
 }
 
 void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     bool mirrored = (img->offset_mirror != 0);
     if (mirrored) {
         img = img->mirrored_img;
@@ -648,8 +648,8 @@ void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, mirrored);
 }
 void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
-    const image *base = image_get(base_id);
+    const image_t *img = image_get(image_id);
+    const image_t *base = image_get(base_id);
     int tile_size = (base->width + 2) / (FOOTPRINT_WIDTH + 2);
     int ydiff = FOOTPRINT_HALF_HEIGHT * (tile_size + 1);
     x += base->animation.sprite_x_offset;
@@ -657,7 +657,7 @@ void ImageDraw::img_ornament(int image_id, int base_id, int x, int y, color_t co
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_from_below(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
     graphics_renderer()->draw_image(img, x, y - img->height, color_mask, scale, false);
 }
 void ImageDraw::img_enemy(int image_id, int x, int y, color_t color_mask, float scale) {
@@ -673,7 +673,7 @@ void ImageDraw::img_enemy(int image_id, int x, int y, color_t color_mask, float 
 //    ImageDraw::img_generic(image_id, x, y, 0, scale);
 }
 void ImageDraw::img_blended(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
 //    const color_t *data = image_data(image_id);
 //    if (!data)
 //        return;
@@ -690,7 +690,7 @@ void ImageDraw::img_blended(int image_id, int x, int y, color_t color_mask, floa
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
 void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
 //    const color_t *data = image_data(image_id);
 //    if (!data)
 //        return;
@@ -727,7 +727,7 @@ void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t col
 //            draw_compressed(img, data, x, y, img->height);
 //    } else
 //        draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
-    const image *img = image_letter(letter_id);
+    const image_t *img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         draw_multibyte_letter(font, img, x, y, color_mask, scale);
         return;
@@ -745,7 +745,7 @@ void ImageDraw::img_background(int image_id, float scale) {
     ImageDraw::img_generic(image_id, (s_width - 1024) / 2, (s_height - 768) / 2, scale);
 }
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
 //    if (img->type != IMAGE_TYPE_ISOMETRIC) {
 //        if (img->type == IMAGE_TYPE_MOD)
 //            draw_modded_footprint(image_id, x, y, color_mask);
@@ -758,7 +758,7 @@ void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float 
 //    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
 }
 void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask) {
-    const image *img = image_get(image_id);
+    const image_t *img = image_get(image_id);
 //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
 //        assets_load_unpacked_asset(image_id);
 //    }
