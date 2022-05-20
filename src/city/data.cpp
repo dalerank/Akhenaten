@@ -7,7 +7,7 @@
 #include "scenario/property.h"
 
 #include <string.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include <core/string.h>
 
 const city_data_t *city_data_struct() {

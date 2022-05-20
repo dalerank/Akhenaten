@@ -1,16 +1,12 @@
 #include "manager.h"
 #include "chunks.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <city/floods.h>
 #include <cinttypes>
-#include <core/io.h>
-#include <core/string.h>
-#include <core/zip.h>
-#include <core/log.h>
-#include <core/image.h>
-#include <map/image.h>
+#include "core/io.h"
+#include "core/string.h"
+#include "core/zip.h"
+#include "core/log.h"
+#include "map/image.h"
 #include "core/stopwatch.h"
 
 #define COMPRESS_BUFFER_SIZE 3000000

@@ -8,8 +8,8 @@
 #include "game/animation.h"
 #include "scenario/empire.h"
 #include "core/game_environment.h"
-#include <game/io/io_buffer.h>
-#include <game/io/manager.h>
+#include "io/io_buffer.h"
+#include "io/gamestate/manager.h"
 #include "core/image_group.h"
 
 #define MAX_OBJECTS 200

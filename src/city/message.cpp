@@ -1,5 +1,5 @@
 #include <scenario/events.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include "message.h"
 
 #include "core/encoding.h"

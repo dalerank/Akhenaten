@@ -1,4 +1,4 @@
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include "figure/name.h"
 
 #include "core/random.h"

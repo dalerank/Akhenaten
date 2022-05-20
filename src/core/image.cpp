@@ -3,21 +3,15 @@
 #include "SDL.h"
 
 #include "core/buffer.h"
-#include "core/file.h"
 #include "core/io.h"
 #include "core/log.h"
-#include "core/mods.h"
-#include "core/config.h"
 #include "core/game_environment.h"
 #include "core/image_group.h"
 
-#include <stdlib.h>
 #include <string.h>
-#include <graphics/graphics.h>
-#include <cassert>
 #include <cinttypes>
-#include <graphics/renderer.h>
-#include <graphics/font.h>
+#include "graphics/graphics.h"
+#include "graphics/font.h"
 #include "core/string.h"
 #include "stopwatch.h"
 #include "image_packer.h"
@@ -315,7 +309,7 @@ static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
             if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT))
                 convert_to_plain_white(img);
             else if (is_font_glyph_in_range(img, FONT_SMALL_SHADED, FONT_NORMAL_BLACK_ON_DARK)) {
-                add_edge_to_letter(img);
+//                add_edge_to_letter(img); // TODO: FIX (it crashes)
                 img->width += 2;
                 img->height += 2;
             }

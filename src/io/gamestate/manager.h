@@ -4,7 +4,7 @@
 #include <vector>
 #include <core/buffer.h>
 #include <core/file.h>
-#include "io_buffer.h"
+#include "io/io_buffer.h"
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 

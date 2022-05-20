@@ -1,13 +1,13 @@
 #include <tgmath.h>
 #include <window/game_menu.h>
 #include <city/data.h>
-#include <game/io/manager.h>
+#include "io/gamestate/manager.h"
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"
 #include "city/finance.h"
 #include "city/population.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"

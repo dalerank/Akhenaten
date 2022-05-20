@@ -12,7 +12,7 @@ int map_figure_at(int grid_offset) {
 }
 
 #include <assert.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 
 int map_figure_foreach_until(int grid_offset, int test) {
     if (map_grid_get(&figures, grid_offset) > 0) {

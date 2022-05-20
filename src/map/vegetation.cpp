@@ -1,4 +1,4 @@
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 #include <core/calc.h>
 #include <figure/figure.h>
 #include <game/resource.h>

@@ -1,6 +1,6 @@
 #include <city/floods.h>
 #include <scenario/events.h>
-#include <game/io/manager.h>
+#include "io/gamestate/manager.h"
 #include <map/vegetation.h>
 #include "tick.h"
 
@@ -35,7 +35,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figuretype/crime.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"

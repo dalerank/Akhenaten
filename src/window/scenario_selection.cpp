@@ -4,7 +4,7 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/image_group.h"
-#include "game/io/boilerplate.h"
+#include "io/gamestate/boilerplate.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -29,8 +29,8 @@
 #include <game/player_data.h>
 #include <core/lang.h>
 #include <cmath>
-#include <game/io/manager.h>
-#include <game/io/chunks.h>
+#include "io/gamestate/manager.h"
+#include "io/gamestate/chunks.h"
 #include <dev/debug.h>
 
 static void button_select_item(int index, int param2);

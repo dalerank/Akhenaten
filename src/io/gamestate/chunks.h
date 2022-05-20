@@ -1,7 +1,7 @@
 #ifndef OZYMANDIAS_CHUNKS_H
 #define OZYMANDIAS_CHUNKS_H
 
-#include "io_buffer.h"
+#include "io/io_buffer.h"
 
 extern io_buffer *iob_none;
 

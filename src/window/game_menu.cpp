@@ -1,8 +1,6 @@
 #include "game_menu.h"
 #include "message_dialog.h"
 #include "file_dialog.h"
-#include "mission_next.h"
-#include "mission_briefing.h"
 #include "player_selection.h"
 #include "scenario_selection.h"
 #include "city.h"
@@ -18,11 +16,8 @@
 #include <game/settings.h>
 #include <graphics/text.h>
 #include <game/player_data.h>
-#include <core/file.h>
-#include <game/io/boilerplate.h>
-#include <scenario/property.h>
 #include <game/mission.h>
-#include <game/io/manager.h>
+#include "io/gamestate/manager.h"
 
 static void button_click(int param1, int param2);
 

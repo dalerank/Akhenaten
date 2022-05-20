@@ -37,7 +37,7 @@ void map_aqueduct_clear(void) {
 }
 
 #include <stdlib.h>
-#include <game/io/io_buffer.h>
+#include "io/io_buffer.h"
 
 void map_aqueduct_backup(void) {
 

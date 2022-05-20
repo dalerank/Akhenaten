@@ -258,6 +258,13 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
     ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp)
 
+set(IO_FILES
+    ${PROJECT_SOURCE_DIR}/src/io/io_buffer.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamestate/manager.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp)
+
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp
     ${PROJECT_SOURCE_DIR}/src/building/barracks.cpp
@@ -385,10 +392,6 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.cpp
     ${PROJECT_SOURCE_DIR}/src/game/undo.cpp
     ${PROJECT_SOURCE_DIR}/src/game/player_data.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/io_buffer.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/chunks.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/manager.cpp
-    ${PROJECT_SOURCE_DIR}/src/game/io/boilerplate.cpp
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.cpp
@@ -628,6 +631,7 @@ endif()
 set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
+    ${IO_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
