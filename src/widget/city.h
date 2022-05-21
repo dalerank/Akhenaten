@@ -1,10 +1,10 @@
 #ifndef WIDGET_CITY_H
 #define WIDGET_CITY_H
 
-#include "graphics/tooltip.h"
+#include "graphics/elements/tooltip.h"
 #include "input/hotkey.h"
 #include "input/mouse.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);

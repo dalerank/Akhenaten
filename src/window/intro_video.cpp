@@ -1,6 +1,6 @@
 #include "intro_video.h"
 
-#include "graphics/graphics.h"
+#include "graphics/boilerplate.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/window.h"

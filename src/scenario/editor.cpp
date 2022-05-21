@@ -1,8 +1,8 @@
 #include "editor.h"
 
-#include "core/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
 

@@ -7,7 +7,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/sentiment.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "buildings.h"
 
 bool city_festival_is_planned(void) {
@@ -196,7 +196,7 @@ void city_festival_calculate_costs(void) {
     }
 }
 
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 void figure::festival_guy_action() {
     building *b = home();

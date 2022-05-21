@@ -2,8 +2,8 @@
 
 #include "core/backtrace.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/lang.h"
+#include "io/file.h"
+#include "io/gamefiles/lang.h"
 #include "core/time.h"
 #include "core/game_environment.h"
 #include "game/game.h"
@@ -45,7 +45,7 @@
 
 #ifdef DRAW_FPS
 #include "graphics/window.h"
-#include "graphics/graphics.h"
+#include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #endif
 

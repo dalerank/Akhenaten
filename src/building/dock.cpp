@@ -4,10 +4,10 @@
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "empire/city.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/routing/routing.h"
-#include "map/terrain.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/routing/routing.h"
+#include "grid/terrain.h"
 #include "scenario/map.h"
 
 int building_dock_count_idle_dockers(const building *dock) {

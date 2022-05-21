@@ -1,11 +1,11 @@
 #include "state.h"
 
 #include "city/victory.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "city/warning.h"
 #include "core/random.h"
-#include "map/ring.h"
-#include "map/building.h"
+#include "grid/ring.h"
+#include "grid/building.h"
 
 static struct {
     bool paused;

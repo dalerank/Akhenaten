@@ -2,7 +2,7 @@
 #define OZYMANDIAS_IO_BUFFER_H
 
 #include <core/buffer.h>
-#include <map/grid.h>
+#include <grid/grid.h>
 
 typedef enum {
     CHUNK_ACCESS_REVOKED,

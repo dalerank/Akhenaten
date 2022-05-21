@@ -3,7 +3,7 @@
 #include "city/figures.h"
 #include "city/sound.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/formation_enemy.h"
 #include "figure/formation_layout.h"
@@ -12,11 +12,11 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
-#include "map/figure.h"
+#include "grid/figure.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 void figure::enemy_initial(formation *m) {
     map_figure_update();

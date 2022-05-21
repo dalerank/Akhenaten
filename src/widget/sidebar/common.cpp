@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "city/view/view.h"
-#include "graphics/image.h"
+#include "graphics/view/view.h"
+#include "graphics/boilerplate.h"
 #include "graphics/screen.h"
 #include "widget/minimap.h"
 #include "core/game_environment.h"

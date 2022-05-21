@@ -4,9 +4,9 @@
 #include "graphics/color.h"
 
 #include "SDL.h"
-#include "core/file_formats.h"
+#include "io/file.h"
 #include "core/struct_types.h"
-#include "core/image.h"
+#include "graphics/image.h"
 
 enum {
     CUSTOM_IMAGE_NONE = 0,
@@ -29,13 +29,10 @@ int platform_renderer_create_render_texture(int width, int height);
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels, int hotspot_x, int hotspot_y);
-//void platform_renderer_clear(void);
 void platform_renderer_render(void);
 void platform_renderer_pause(void);
 void platform_renderer_resume(void);
 void platform_renderer_destroy(void);
-
-//typedef struct image_t;
 
 class graphics_renderer_interface {
 
@@ -79,11 +76,7 @@ public:
 
     bool save_texture_to_file(const char *filename, SDL_Texture *tex, file_format_t file_format = FILE_FORMAT_BMP);
 };
-
-
-//extern graphics_renderer_interface *graphics_renderer;
 graphics_renderer_interface *graphics_renderer(void);
-//void graphics_renderer_set_interface(const graphics_renderer_interface *new_renderer);
 
 void SET_RENDER_SCALE(float scale);
 

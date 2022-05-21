@@ -1,17 +1,17 @@
 #include "scenario_selection.h"
 
-#include "core/dir.h"
+#include "io/dir.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/image_group.h"
+#include "io/file.h"
+#include "graphics/image_groups.h"
 #include "io/gamestate/boilerplate.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -24,10 +24,10 @@
 #include "message_dialog.h"
 
 #include <string.h>
-#include <graphics/scroll_list_panel.h>
+#include "graphics/elements/scroll_list_panel.h"
 #include <game/mission.h>
-#include <game/player_data.h>
-#include <core/lang.h>
+#include "io/playerdata/player_data.h"
+#include "io/gamefiles/lang.h"
 #include <cmath>
 #include "io/gamestate/manager.h"
 #include "io/gamestate/chunks.h"

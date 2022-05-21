@@ -1,10 +1,10 @@
 #include "wall.h"
 
 #include "building/building.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "core/calc.h"
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
@@ -12,12 +12,12 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
 #include "sound/effect.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
         0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,

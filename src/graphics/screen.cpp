@@ -1,10 +1,9 @@
 #include "screen.h"
-
-#include "city/view/view.h"
-#include "city/warning.h"
+#include "boilerplate.h"
 #include "platform/renderer.h"
-#include "graphics/window.h"
-#include "graphics.h"
+#include "graphics/view/view.h"
+#include "city/warning.h"
+#include "window.h"
 
 static struct {
     int width;
@@ -32,7 +31,6 @@ void screen_set_resolution(int width, int height) {
 int screen_width(void) {
     return data.width;
 }
-
 int screen_height(void) {
     return data.height;
 }
@@ -40,7 +38,6 @@ int screen_height(void) {
 int screen_dialog_offset_x(void) {
     return data.dialog_offset.x;
 }
-
 int screen_dialog_offset_y(void) {
     return data.dialog_offset.y;
 }

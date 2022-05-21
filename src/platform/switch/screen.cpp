@@ -2,13 +2,13 @@
 
 #include "SDL.h"
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "game/settings.h"
 #include "game/system.h"
-#include "graphics/graphics.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
 #include "graphics/screen.h"
 #include "input/mouse.h"
 

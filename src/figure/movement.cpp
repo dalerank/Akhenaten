@@ -1,4 +1,4 @@
-#include <map/road_network.h>
+#include <grid/road_network.h>
 #include "movement.h"
 
 #include "building/building.h"
@@ -8,15 +8,15 @@
 #include "figure/combat.h"
 #include "figure/route.h"
 #include "game/time.h"
-#include "map/bridge.h"
-#include "map/building.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/road_access.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
+#include "grid/bridge.h"
+#include "grid/building.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/road_access.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
 
 void figure::advance_figure_tick() {
     switch (direction) {

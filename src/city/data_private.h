@@ -8,7 +8,7 @@
 #include "city/houses.h"
 #include "city/labor.h"
 #include "city/resource.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 typedef struct {
     uint8_t mood;

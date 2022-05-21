@@ -1,15 +1,15 @@
 #include "speed_options.h"
 
 #include "game/settings.h"
-#include "graphics/arrow_button.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/arrow_button.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "core/image.h"
+#include "graphics/image.h"
 
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);

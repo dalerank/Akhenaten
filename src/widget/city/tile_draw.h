@@ -1,7 +1,7 @@
 #ifndef WIDGET_CITY_WITHOUT_OVERLAY_H
 #define WIDGET_CITY_WITHOUT_OVERLAY_H
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "graphics/color.h"
 #include "building/building.h"
 

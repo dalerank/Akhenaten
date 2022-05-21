@@ -7,8 +7,8 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "map/figure.h"
-#include "map/grid.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
 
 #include <string.h>
 #include "io/io_buffer.h"

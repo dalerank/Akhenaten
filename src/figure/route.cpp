@@ -1,7 +1,7 @@
 #include "route.h"
 
-#include "map/routing/routing.h"
-#include "map/routing/queue.h"
+#include "grid/routing/routing.h"
+#include "grid/routing/queue.h"
 #include "core/game_environment.h"
 
 #define MAX_PATH_LENGTH 500
@@ -126,9 +126,9 @@ io_buffer *iob_route_paths = new io_buffer([](io_buffer *iob) {
 
 #include "core/calc.h"
 #include "core/random.h"
-#include "map/grid.h"
-#include "map/random.h"
-#include "map/routing/routing.h"
+#include "grid/grid.h"
+#include "grid/random.h"
+#include "grid/routing/routing.h"
 
 static int direction_path[MAX_PATH_LENGTH];
 

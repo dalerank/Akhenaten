@@ -1,8 +1,8 @@
 #include <widget/sidebar/city.h>
 #include <figure/formation_herd.h>
 #include <SDL_log.h>
-#include <map/floodplain.h>
-#include <city/view/lookup.h>
+#include <grid/floodplain.h>
+#include <graphics/view/lookup.h>
 #include "build_planner.h"
 
 #include "clear.h"
@@ -21,29 +21,29 @@
 #include "city/resource.h"
 #include "city/warning.h"
 #include "core/calc.h"
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "graphics/window.h"
-#include "map/aqueduct.h"
-#include "map/bridge.h"
-#include "map/building.h"
-#include "map/building_tiles.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/orientation.h"
-#include "map/point.h"
-#include "map/property.h"
-#include "map/routing/routing.h"
-#include "map/routing/routing_terrain.h"
-#include "map/terrain.h"
-#include "map/tiles.h"
-#include "map/water.h"
+#include "grid/aqueduct.h"
+#include "grid/bridge.h"
+#include "grid/building.h"
+#include "grid/building_tiles.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/orientation.h"
+#include "grid/point.h"
+#include "grid/property.h"
+#include "grid/routing/routing.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
+#include "grid/tiles.h"
+#include "grid/water.h"
 #include "building/monuments.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 struct reservoir_info {
     int cost;

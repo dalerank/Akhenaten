@@ -1,7 +1,5 @@
 #include "renderer.h"
 
-//#include "core/calc.h"
-//#include "core/config.h"
 #include "core/time.h"
 #include "graphics/screen.h"
 //#include "platform/cursor.h"
@@ -10,17 +8,11 @@
 #include "platform/screen.h"
 //#include "platform/switch/switch.h"
 //#include "platform/vita/vita.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
-//#include <math.h>
-//#include <stdlib.h>
 #include <string.h>
 #include "input/cursor.h"
 #include "SDL_image.h"
-//#include <core/image_packer.h>
-//#include <SDL_image.h>
-//#include <graphics/graphics.h>
-//#include <dev/debug.h>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -1017,18 +1009,27 @@ bool graphics_renderer_interface::save_texture_to_file(const char *filename, SDL
         case FILE_FORMAT_PNG:
             st = IMG_SavePNG(surf, filename);
             break;
+        case FILE_FORMAT_JPG:
+            st = IMG_SaveJPG(surf, filename, 60);
+            break;
+        default:
+            st = -1;
+            break;
     }
     if (st != 0) {
         SDL_Log("Failed saving image: %s\n", SDL_GetError());
-        goto cleanup;
-    }
-
-    SDL_Log("Saved texture to \"%s\"\n", filename);
+        goto cleanup; // technically redundant
+    } else
+        SDL_Log("Saved texture to %s\n", filename);
 
     cleanup:
     SDL_FreeSurface(surf);
     free(pixels);
     SDL_DestroyTexture(ren_tex);
+    if (st == -1)
+        return false;
+    else
+        return true;
 }
 
 /////////
@@ -1169,9 +1170,6 @@ void platform_renderer_invalidate_target_textures(void) {
         create_blend_texture(CUSTOM_IMAGE_GREEN_FOOTPRINT);
     }
 }
-//void platform_renderer_clear(void) {
-//    clear_screen();
-//}
 
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
 static void draw_software_mouse_cursor(void) {

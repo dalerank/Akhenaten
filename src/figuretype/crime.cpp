@@ -8,7 +8,7 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/sentiment.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/formation_enemy.h"
@@ -16,11 +16,11 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/tutorial.h"
-#include "map/building.h"
-#include "map/grid.h"
-#include "map/road_access.h"
+#include "grid/building.h"
+#include "grid/grid.h"
+#include "grid/road_access.h"
 #include "scenario/property.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 static const int CRIMINAL_OFFSETS[] = {
         0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1

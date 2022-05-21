@@ -1,9 +1,9 @@
 #include "bridges.h"
 
-#include "graphics/image.h"
-#include "map/property.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
+#include "graphics/boilerplate.h"
+#include "grid/property.h"
+#include "grid/sprite.h"
+#include "grid/terrain.h"
 
 void city_draw_bridge(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();

@@ -3,8 +3,8 @@
 
 #include "input/hotkey.h"
 #include "graphics/color.h"
-#include "city/view/view.h"
-#include "core/image.h"
+#include "graphics/view/view.h"
+#include "graphics/image.h"
 
 extern int debug_range_1;
 extern int debug_range_2;

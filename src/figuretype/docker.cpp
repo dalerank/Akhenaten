@@ -6,7 +6,7 @@
 #include "city/buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
@@ -15,9 +15,9 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "map/road_access.h"
+#include "grid/road_access.h"
 #include "core/game_environment.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 static int try_import_resource(building *warehouse, int resource, int city_id) {
 //    building *warehouse = building_get(b);

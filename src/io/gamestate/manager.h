@@ -2,8 +2,8 @@
 #define OZYMANDIAS_MANAGER_H
 
 #include <vector>
-#include <core/buffer.h>
-#include <core/file.h>
+#include "core/buffer.h"
+#include "io/file.h"
 #include "io/io_buffer.h"
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";

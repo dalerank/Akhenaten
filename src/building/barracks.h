@@ -2,7 +2,7 @@
 #define BUILDING_BARRACKS_H
 
 #include "building/building.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 #define MAX_WEAPONS_BARRACKS 4
 

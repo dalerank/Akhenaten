@@ -2,11 +2,11 @@
 
 #include "building/building.h"
 #include "building/model.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
-#include "map/building.h"
-#include "map/grid.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 
 #define MAX_COVERAGE 96
 

@@ -2,8 +2,8 @@
 #define OZYMANDIAS_IMAGEPAK_H
 
 #include <vector>
-#include "core/image.h"
-#include "core/file.h"
+#include "graphics/image.h"
+#include "io/file.h"
 
 #define PAK_HEADER_INFO_BYTES 80
 #define PAK_BMP_NAME_SIZE 200

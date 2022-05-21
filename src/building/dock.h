@@ -2,7 +2,7 @@
 #define BUILDING_DOCK_H
 
 #include "building/building.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 int building_dock_count_idle_dockers(const building *dock);
 

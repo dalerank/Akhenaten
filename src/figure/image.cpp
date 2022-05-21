@@ -1,7 +1,7 @@
 #include "image.h"
 
-#include "city/view/view.h"
-#include "core/image_group.h"
+#include "graphics/view/view.h"
+#include "graphics/image_groups.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
         0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -28,7 +28,7 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-#include "core/image.h"
+#include "graphics/image.h"
 #include "game/resource.h"
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {

@@ -2,7 +2,7 @@
 #define WIDGET_CITY_BRIDGE_H
 
 #include "graphics/color.h"
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 
 void city_draw_bridge(pixel_coordinate pixel, map_point point);
 

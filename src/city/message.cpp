@@ -3,8 +3,8 @@
 #include "message.h"
 
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/lang.h"
+#include "io/file.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "figure/formation.h"

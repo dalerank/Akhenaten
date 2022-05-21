@@ -14,15 +14,15 @@
 #include "game/time.h"
 #include "game/undo.h"
 #include "game/orientation.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/menu.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "graphics/image_button.h"
-#include "graphics/generic_button.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/generic_button.h"
 #include "scenario/property.h"
 #include "widget/city.h"
 #include "window/advisors.h"
@@ -216,7 +216,7 @@ static void top_menu_window_show(void) {
     window_show(&window);
 }
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;

@@ -5,7 +5,7 @@
 #include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "core/random.h"
 
 static const int BIRTHS_PER_AGE_DECENNIUM[10] = {

@@ -5,16 +5,16 @@
 #include "city/gods.h"
 #include "city/message.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "core/random.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/water.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/water.h"
 #include "scenario/map.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {
         3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1

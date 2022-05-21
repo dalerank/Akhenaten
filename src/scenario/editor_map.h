@@ -1,7 +1,7 @@
 #ifndef SCENARIO_EDITOR_MAP_H
 #define SCENARIO_EDITOR_MAP_H
 
-#include "map/point.h"
+#include "grid/point.h"
 
 void scenario_editor_set_entry_point(int x, int y);
 

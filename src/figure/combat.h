@@ -2,7 +2,7 @@
 #define FIGURE_COMBAT_H
 //
 #include "figure/figure.h"
-#include "map/point.h"
+#include "grid/point.h"
 //
 ////void figure_combat_handle_corpse();
 ////void figure_combat_handle_attack();

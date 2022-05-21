@@ -1,5 +1,5 @@
-#include "core/file.h"
-#include "core/log.h"
+#include "io/file.h"
+#include "io/log.h"
 #include "core/game_environment.h"
 #include "sound/device.h"
 #include "game/settings.h"

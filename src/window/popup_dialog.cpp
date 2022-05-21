@@ -1,10 +1,10 @@
 #include "popup_dialog.h"
 
-#include "core/image_group.h"
-#include "graphics/graphics.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/image_groups.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 

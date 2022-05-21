@@ -2,14 +2,14 @@
 
 #include "city/military.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation_enemy.h"
 #include "figure/formation_herd.h"
 #include "figure/formation_legion.h"
 #include "figure/properties.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 #include "sound/effect.h"
 
 #include <string.h>

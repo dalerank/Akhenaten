@@ -1,12 +1,12 @@
 
-#include "map/terrain.h"
+#include "grid/terrain.h"
 #include "action.h"
 
 #include "city/entertainment.h"
 #include "city/figures.h"
 #include "figure/figure.h"
-#include "map/road_access.h"
-#include "core/image_group.h"
+#include "grid/road_access.h"
+#include "graphics/image_groups.h"
 
 typedef struct {
     char speed_mult;

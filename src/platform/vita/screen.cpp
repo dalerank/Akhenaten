@@ -1,13 +1,13 @@
 #include "platform/screen.h"
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "input/mouse.h"
 #include "game/settings.h"
 #include "game/system.h"
-#include "graphics/graphics.h"
-#include "graphics/menu.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/menu.h"
 #include "graphics/screen.h"
 
 #include <vita2d.h>

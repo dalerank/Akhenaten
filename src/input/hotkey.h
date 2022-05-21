@@ -1,7 +1,7 @@
 #ifndef INPUT_HOTKEY_H
 #define INPUT_HOTKEY_H
 
-#include "core/hotkey_config.h"
+#include "io/config/hotkeys.h"
 #include "input/keys.h"
 
 typedef struct {

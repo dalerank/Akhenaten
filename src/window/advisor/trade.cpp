@@ -1,14 +1,14 @@
-#include <graphics/rich_text.h>
-#include <graphics/graphics.h>
-#include <graphics/scrollbar.h>
+#include "graphics/elements/rich_text.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/scrollbar.h"
 #include "trade.h"
 
 #include "city/resource.h"
 #include "game/resource.h"
-#include "graphics/generic_button.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "window/empire.h"

@@ -1,16 +1,16 @@
 #include "object.h"
 
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "game/animation.h"
+#include "graphics/animation_timers.h"
 #include "scenario/empire.h"
 #include "core/game_environment.h"
 #include "io/io_buffer.h"
 #include "io/gamestate/manager.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20

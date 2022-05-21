@@ -18,7 +18,6 @@ void speed_clear(speed_type *speed) {
 static double adjust_speed_for_elapsed_time(double delta, int adjust_for_time, time_millis last_time) {
     return adjust_for_time ? (delta / FRAME_TIME) * (time_get_millis() - last_time) : delta;
 }
-
 static double adjust_speed_for_frame_time(double delta, int adjust_for_time, time_millis last_time) {
     return adjust_for_time ? ((delta / (double) (time_get_millis() - last_time)) * FRAME_TIME) : delta;
 }
@@ -46,7 +45,6 @@ void speed_set_target(speed_type *speed, double new_speed, time_millis total_tim
     speed->start_time = time_get_millis();
     speed->total_time = total_time;
 }
-
 void speed_invert(speed_type *speed) {
     speed_set_target(speed, -speed->current_speed, SPEED_CHANGE_IMMEDIATE, speed->adjust_for_time);
 }
@@ -57,15 +55,13 @@ int speed_get_current_direction(const speed_type *speed) {
 
     return (speed->current_speed > 0) ? SPEED_DIRECTION_POSITIVE : SPEED_DIRECTION_NEGATIVE;
 }
-
-int handle_fine_position(speed_type *speed, double delta) {
+static int handle_fine_position(speed_type *speed, double delta) {
     int delta_rounded = (int) delta;
     speed->fine_position += delta - delta_rounded;
     int extra_position = (int) speed->fine_position;
     speed->fine_position -= extra_position;
     return delta_rounded + extra_position;
 }
-
 int speed_get_delta(speed_type *speed) {
     if (speed->adjust_for_time && speed->last_speed_check == time_get_millis())
         return 0;
@@ -97,7 +93,6 @@ int speed_get_delta(speed_type *speed) {
     speed->last_speed_check = time_get_millis();
     return handle_fine_position(speed, delta);
 }
-
-int speed_is_changing(const speed_type *speed) {
+bool speed_is_changing(const speed_type *speed) {
     return speed->current_speed != speed->desired_speed;
 }

@@ -10,9 +10,9 @@
 #include "city/warning.h"
 #include "core/calc.h"
 #include "empire/city.h"
-#include "map/grid.h"
-#include "map/road_access.h"
-#include "map/terrain.h"
+#include "grid/grid.h"
+#include "grid/road_access.h"
+#include "grid/terrain.h"
 #include "scenario/property.h"
 
 static bool has_warning = false;

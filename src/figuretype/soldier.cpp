@@ -3,7 +3,7 @@
 #include "city/figures.h"
 #include "city/map.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
@@ -12,10 +12,10 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/point.h"
-#include "core/image_group.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/point.h"
+#include "graphics/image_groups.h"
 
 static const coords_t ALTERNATIVE_POINTS[] = {{-1, -6},
                                               {0,  -1},

@@ -1,9 +1,9 @@
 #include "culture.h"
 
 #include "building/building.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 
 static void draw_culture_info(building_info_context *c, int help_id, const char *sound_file, int group_id) {
     c->help_id = help_id;

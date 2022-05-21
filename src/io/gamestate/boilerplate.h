@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-void path_build_saves(char *full, const char *filename);
-void path_build_maps(char *full, const char *filename);
+void fullpath_saves(char *full, const char *filename);
+void fullpath_maps(char *full, const char *filename);
 
 #endif // GAME_FILE_H

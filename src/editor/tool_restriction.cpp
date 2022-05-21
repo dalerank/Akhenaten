@@ -1,10 +1,10 @@
 #include "tool_restriction.h"
 
 #include "city/warning.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/terrain.h"
+#include "grid/elevation.h"
+#include "grid/figure.h"
+#include "grid/grid.h"
+#include "grid/terrain.h"
 
 //#define OFFSET(x,y) (x + GRID_SIZE_PH * y)
 

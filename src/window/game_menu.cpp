@@ -6,16 +6,16 @@
 #include "city.h"
 
 #include <graphics/window.h>
-#include <graphics/graphics.h>
-#include <graphics/image.h>
-#include <graphics/panel.h>
+#include "graphics/boilerplate.h"
+#include <graphics/boilerplate.h>
+#include "graphics/elements/panel.h"
 #include <input/input.h>
-#include <graphics/generic_button.h>
-#include <graphics/lang_text.h>
-#include <core/lang.h>
+#include "graphics/elements/generic_button.h"
+#include "graphics/elements/lang_text.h"
+#include "io/gamefiles/lang.h"
 #include <game/settings.h>
 #include <graphics/text.h>
-#include <game/player_data.h>
+#include "io/playerdata/player_data.h"
 #include <game/mission.h>
 #include "io/gamestate/manager.h"
 

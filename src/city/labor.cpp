@@ -2,7 +2,7 @@
 
 #include "building/building.h"
 #include "building/model.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "city/data_private.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -243,7 +243,7 @@ static int CATEGORY_FOR_int_arr_PH[] = {
 };
 
 #include "building/industry.h"
-#include "map/terrain.h"
+#include "grid/terrain.h"
 
 const int CATEGORY_FOR_building(building *b) {
     int type = b->type;

@@ -1,6 +1,6 @@
 #include "system.h"
 
-#include "core/dir.h"
+#include "io/dir.h"
 #include "core/game_environment.h"
 #include "game/settings.h"
 #include "sound/channel.h"

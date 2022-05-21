@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/log.h"
+#include "io/log.h"
 
 #include <cassert>
 

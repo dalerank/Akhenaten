@@ -3,12 +3,12 @@
 
 #include "building/industry.h"
 #include "game/state.h"
-#include "graphics/image.h"
-#include "map/building.h"
-#include "map/image.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/terrain.h"
+#include "graphics/boilerplate.h"
+#include "grid/building.h"
+#include "grid/image.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
 
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0)

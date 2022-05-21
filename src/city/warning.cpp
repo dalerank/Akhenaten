@@ -1,7 +1,7 @@
 #include "warning.h"
 
-#include "city/view/view.h"
-#include "core/lang.h"
+#include "graphics/view/view.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "game/settings.h"

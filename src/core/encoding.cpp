@@ -1,10 +1,8 @@
 #include "core/encoding.h"
 
-#include "core/encoding_korean.h"
-#include "core/encoding_simp_chinese.h"
-#include "core/encoding_trad_chinese.h"
-#include "core/locale.h"
-#include "core/string.h"
+#include "core/encoding/korean.h"
+#include "core/encoding/simp_chinese.h"
+#include "core/encoding/trad_chinese.h"
 
 #include <stdlib.h>
 

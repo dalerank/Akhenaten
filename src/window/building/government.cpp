@@ -2,9 +2,9 @@
 
 #include "building/building.h"
 #include "game/resource.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "window/building/figures.h"
 
 void window_building_draw_forum(building_info_context *c) {

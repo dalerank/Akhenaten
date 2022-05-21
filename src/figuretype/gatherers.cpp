@@ -1,8 +1,8 @@
 #include <figure/figure.h>
 #include <game/resource.h>
-#include <core/image_group.h>
-#include <map/vegetation.h>
-#include <core/config.h>
+#include "graphics/image_groups.h"
+#include <grid/vegetation.h>
+#include "io/config/config.h"
 
 void figure::gatherer_action() {
     switch (action_state) {

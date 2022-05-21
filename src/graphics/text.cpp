@@ -1,13 +1,9 @@
 #include "text.h"
 
-#include "core/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "core/game_environment.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-
-#include <string.h>
+#include "graphics/boilerplate.h"
 
 #define ELLIPSIS_LENGTH 4
 #define NUMBER_BUFFER_LENGTH 100

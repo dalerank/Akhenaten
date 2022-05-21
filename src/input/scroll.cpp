@@ -1,7 +1,7 @@
 #include "scroll.h"
 
 #include "core/calc.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "core/direction.h"
 #include "core/speed.h"
 #include "core/time.h"

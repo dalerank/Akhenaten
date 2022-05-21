@@ -4,13 +4,13 @@
 #include "building/granary.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 void figure::market_buyer_action() {
     image_set_animation(GROUP_FIGURE_MARKET_LADY);

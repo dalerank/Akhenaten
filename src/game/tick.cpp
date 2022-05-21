@@ -1,7 +1,7 @@
 #include <city/floods.h>
 #include <scenario/events.h>
 #include "io/gamestate/manager.h"
-#include <map/vegetation.h>
+#include <grid/vegetation.h>
 #include "tick.h"
 
 #include "building/count.h"
@@ -40,12 +40,12 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
-#include "map/desirability.h"
-#include "map/natives.h"
-#include "map/road_network.h"
-#include "map/routing/routing_terrain.h"
-#include "map/tiles.h"
-#include "map/water_supply.h"
+#include "grid/desirability.h"
+#include "grid/natives.h"
+#include "grid/road_network.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/tiles.h"
+#include "grid/water_supply.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"

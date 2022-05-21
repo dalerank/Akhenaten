@@ -8,7 +8,7 @@
 #include "figure/action.h"
 #include "figure/type.h"
 #include "figure/formation.h"
-#include "map/point.h"
+#include "grid/point.h"
 #include "window/building/common.h"
 #include "widget/city.h"
 
@@ -232,7 +232,7 @@ public:
 
 //    bool is_roamer();
 
-    // map/figure.c
+    // grid/figure.c
     void map_figure_add();
     void map_figure_update();
     void map_figure_remove();
@@ -479,7 +479,7 @@ public:
     void draw_market_buyer(building_info_context *c);
     void draw_normal_figure(building_info_context *c);
 
-    // map/marshland.c
+    // grid/marshland.c
     bool find_resource_tile(int resource_type, int *out_x, int *out_y);
 };
 

@@ -5,13 +5,13 @@
 #include "city/map.h"
 #include "city/population.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/road_access.h"
-#include "core/image_group.h"
+#include "grid/road_access.h"
+#include "graphics/image_groups.h"
 
 void figure_create_immigrant(building *house, int num_people) {
     map_point *entry = city_map_entry_point();

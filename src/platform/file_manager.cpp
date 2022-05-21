@@ -1,7 +1,7 @@
 #include "file_manager.h"
 
-#include "core/file.h"
-#include "core/log.h"
+#include "io/file.h"
+#include "io/log.h"
 #include "core/string.h"
 #include "platform/vita/vita.h"
 

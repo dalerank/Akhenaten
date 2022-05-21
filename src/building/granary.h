@@ -2,7 +2,7 @@
 #define BUILDING_GRANARY_H
 
 #include "building/building.h"
-#include "map/point.h"
+#include "grid/point.h"
 
 enum {
     GRANARY_TASK_NONE = -1,

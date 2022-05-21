@@ -2,15 +2,15 @@
 
 #include "building/building.h"
 #include "building/market.h"
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "map/building.h"
-#include "map/road_access.h"
-#include "core/image_group.h"
+#include "grid/building.h"
+#include "grid/road_access.h"
+#include "graphics/image_groups.h"
 
 void figure::school_child_action() {
     switch (action_state) {

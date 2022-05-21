@@ -1,9 +1,9 @@
 #include "logo.h"
 
-#include "core/config.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/lang_text.h"
+#include "io/config/config.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/lang_text.h"
 #include "graphics/window.h"
 #include "sound/music.h"
 #include "window/intro_video.h"

@@ -5,7 +5,7 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/log.h"
+#include "io/log.h"
 #include "io/io.h"
 #include "empire/city.h"
 #include "empire/object.h"

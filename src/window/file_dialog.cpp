@@ -1,23 +1,23 @@
 #include "file_dialog.h"
 
 #include "core/calc.h"
-#include "core/dir.h"
+#include "io/dir.h"
 #include "core/encoding.h"
-#include "core/file.h"
-#include "core/image_group.h"
-#include "core/lang.h"
+#include "io/file.h"
+#include "graphics/image_groups.h"
+#include "io/gamefiles/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "core/game_environment.h"
 #include "io/gamestate/boilerplate.h"
 #include "game/file_editor.h"
-#include "graphics/generic_button.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_button.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
-#include "graphics/scrollbar.h"
+#include "graphics/elements/generic_button.h"
+#include "graphics/boilerplate.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/image_button.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
+#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -27,7 +27,7 @@
 
 #include <string.h>
 #include <game/settings.h>
-#include <graphics/scroll_list_panel.h>
+#include "graphics/elements/scroll_list_panel.h"
 #include "io/gamestate/manager.h"
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
@@ -187,7 +187,7 @@ static void button_ok_cancel(int is_ok, int param2) {
     strcat(filename, get_chosen_filename());
     strcat(filename, ".sav");
     char full[MAX_FILE_NAME] = "";
-    path_build_saves(full, filename);
+    fullpath_saves(full, filename);
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(full, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();

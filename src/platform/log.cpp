@@ -1,4 +1,4 @@
-#include "core/log.h"
+#include "io/log.h"
 #include "SDL.h"
 
 #include <stdio.h>

@@ -1,6 +1,6 @@
 #include "properties.h"
 #include "core/game_environment.h"
-#include "core/image_group.h"
+#include "graphics/image_groups.h"
 
 static int BUILD_MAX[2] = {
         140,

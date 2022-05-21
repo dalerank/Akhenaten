@@ -1,4 +1,4 @@
-#include <core/lang.h>
+#include "io/gamefiles/lang.h"
 #include <game/time.h>
 #include <ios>
 #include <core/random.h>
@@ -6,7 +6,7 @@
 #include "event_phrases.h"
 #include "city/message.h"
 #include "io/io.h"
-#include "core/log.h"
+#include "io/log.h"
 #include "core/string.h"
 #include "io/io_buffer.h"
 

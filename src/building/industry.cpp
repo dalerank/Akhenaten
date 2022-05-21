@@ -3,10 +3,10 @@
 
 #include "city/resource.h"
 #include "core/calc.h"
-#include "core/image.h"
+#include "graphics/image.h"
 #include "game/resource.h"
-#include "map/building_tiles.h"
-#include "map/road_access.h"
+#include "grid/building_tiles.h"
+#include "grid/road_access.h"
 #include "scenario/property.h"
 
 #define MAX_PROGRESS_RAW 200
@@ -14,15 +14,15 @@
 #define MAX_PROGRESS_FARM_PH 2000
 #define INFINITE 10000
 
-#include "map/terrain.h"
-#include "core/image_group.h"
+#include "grid/terrain.h"
+#include "graphics/image_groups.h"
 
 #include <math.h>
 #include <city/floods.h>
-#include <map/grid.h>
-#include <core/config.h>
+#include <grid/grid.h>
+#include "io/config/config.h"
 #include <game/time.h>
-#include <map/floodplain.h>
+#include <grid/floodplain.h>
 #include <city/data_private.h>
 
 static int max_progress(building *b) {

@@ -1,13 +1,13 @@
-#include <city/view/zoom.h>
+#include <graphics/view/zoom.h>
 #include "map_editor_tool.h"
 
 #include "building/properties.h"
-#include "core/image_group_editor.h"
+#include "graphics/image_groups.h"
 #include "editor/tool.h"
 #include "editor/tool_restriction.h"
-#include "graphics/image.h"
+#include "graphics/boilerplate.h"
 #include "input/scroll.h"
-#include "map/terrain.h"
+#include "grid/terrain.h"
 #include "scenario/property.h"
 
 #define MAX_TILES 4

@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 #include "figure/figure.h"
-#include "graphics/tooltip.h"
+#include "graphics/elements/tooltip.h"
 
 #define NO_COLUMN -1
 

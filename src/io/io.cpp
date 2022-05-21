@@ -1,6 +1,6 @@
 #include "io.h"
 
-#include "core/file.h"
+#include "file.h"
 
 int io_read_file_into_buffer(const char *filepath, int localizable, buffer *buf, int max_size) {
     if (buf == nullptr)

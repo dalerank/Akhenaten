@@ -8,10 +8,10 @@
 #include "figure/formation.h"
 #include "figure/formation_enemy.h"
 #include "figure/route.h"
-#include "map/desirability.h"
-#include "map/grid.h"
-#include "map/soldier_strength.h"
-#include "map/terrain.h"
+#include "grid/desirability.h"
+#include "grid/grid.h"
+#include "grid/soldier_strength.h"
+#include "grid/terrain.h"
 #include "sound/effect.h"
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile) {

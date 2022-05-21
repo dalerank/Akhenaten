@@ -1,9 +1,9 @@
 #include <game/time.h>
-#include <map/tiles.h>
-#include <map/building.h>
-#include <map/terrain.h>
+#include <grid/tiles.h>
+#include <grid/building.h>
+#include <grid/terrain.h>
 #include "io/gamestate/manager.h"
-#include <map/floodplain.h>
+#include <grid/floodplain.h>
 #include <core/calc.h>
 #include <core/random.h>
 #include <cmath>

@@ -1,14 +1,14 @@
 #include <core/string.h>
 #include <cmath>
-#include <city/view/lookup.h>
+#include <graphics/view/lookup.h>
 #include <dev/debug.h>
 #include <d2d1.h>
 
-#include "city/view/view.h"
+#include "graphics/view/view.h"
 #include "formation.h"
 #include "image.h"
 #include "figuretype/editor.h"
-#include "graphics/image.h"
+#include "graphics/boilerplate.h"
 #include "graphics/text.h"
 
 

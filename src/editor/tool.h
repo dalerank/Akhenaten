@@ -1,7 +1,7 @@
 #ifndef EDITOR_TOOL_H
 #define EDITOR_TOOL_H
 
-#include "map/point.h"
+#include "grid/point.h"
 
 enum {
     TOOL_GRASS = 0,

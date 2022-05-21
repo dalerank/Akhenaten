@@ -1,7 +1,7 @@
 #ifndef CORE_IO_H
 #define CORE_IO_H
 
-#include "core/dir.h"
+#include "dir.h"
 #include "core/buffer.h"
 
 /**

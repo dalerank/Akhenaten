@@ -13,8 +13,8 @@
 #include "city/mission.h"
 #include "city/victory.h"
 #include "city/resource.h"
-#include "core/file.h"
-#include "core/image.h"
+#include "io/file.h"
+#include "graphics/image.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
@@ -23,30 +23,29 @@
 #include "figure/trader.h"
 #include "figuretype/animal.h"
 #include "figuretype/water.h"
-#include "game/animation.h"
+#include "graphics/animation_timers.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
-#include "map/aqueduct.h"
-#include "map/bookmark.h"
-#include "map/building.h"
-#include "map/desirability.h"
-#include "map/elevation.h"
-#include "map/figure.h"
-#include "map/grid.h"
-#include "map/image.h"
-#include "map/image_context.h"
-#include "map/orientation.h"
-#include "map/property.h"
-#include "map/random.h"
-#include "map/road_network.h"
-#include "map/routing/routing_terrain.h"
-#include "map/soldier_strength.h"
-#include "map/sprite.h"
-#include "map/terrain.h"
-#include "map/tiles.h"
+#include "grid/aqueduct.h"
+#include "grid/bookmark.h"
+#include "grid/building.h"
+#include "grid/desirability.h"
+#include "grid/elevation.h"
+#include "grid/figure.h"
+#include "grid/image.h"
+#include "grid/image_context.h"
+#include "grid/orientation.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/road_network.h"
+#include "grid/routing/routing_terrain.h"
+#include "grid/soldier_strength.h"
+#include "grid/sprite.h"
+#include "grid/terrain.h"
+#include "grid/tiles.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
@@ -69,7 +68,7 @@
 #include "city/culture.h"
 #include "manager.h"
 
-void path_build_saves(char *full, const char *filename) {
+void fullpath_saves(char *full, const char *filename) {
     strcpy(full, "");
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         strcat(full, filename);
@@ -80,7 +79,7 @@ void path_build_saves(char *full, const char *filename) {
     strcat(full, "/");
     strcat(full, filename);
 }
-void path_build_maps(char *full, const char *filename) {
+void fullpath_maps(char *full, const char *filename) {
     strcpy(full, "");
     if (strncasecmp(filename, "Maps/", 5) == 0 || strncasecmp(filename, "Maps\\", 5) == 0) {
         strcat(full, filename);
@@ -212,7 +211,7 @@ bool GamestateIO::write_mission(const int scenario_id) {
 bool GamestateIO::write_savegame(const char *filename_short) {
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_saves(full, filename_short);
+    fullpath_saves(full, filename_short);
 
     // write file
     return SFIO.write_to_file(filename_short, 0, FILE_SCHEMA_SAV, 160);
@@ -222,7 +221,7 @@ bool GamestateIO::write_map(const char *filename_short) {
 
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_maps(full, filename_short);
+    fullpath_maps(full, filename_short);
 
     // write file
     return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, 160);
@@ -253,7 +252,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 bool GamestateIO::load_savegame(const char *filename_short, bool start_immediately) {
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_saves(full, filename_short);
+    fullpath_saves(full, filename_short);
 
     // read file
     pre_load();
@@ -273,7 +272,7 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_maps(full, filename_short);
+    fullpath_maps(full, filename_short);
 
     // read file
     pre_load();
@@ -374,7 +373,7 @@ bool GamestateIO::delete_mission(const int scenario_id) {
 bool GamestateIO::delete_savegame(const char *filename_short) {
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_saves(full, filename_short);
+    fullpath_saves(full, filename_short);
 
     // delete file
     return file_remove(full);
@@ -382,7 +381,7 @@ bool GamestateIO::delete_savegame(const char *filename_short) {
 bool GamestateIO::delete_map(const char *filename_short) {
     // concatenate string
     char full[MAX_FILE_NAME];
-    path_build_maps(full, filename_short);
+    fullpath_maps(full, filename_short);
 
     // delete file
     return file_remove(full);

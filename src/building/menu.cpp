@@ -1,7 +1,7 @@
 #include "menu.h"
 
 #include "city/buildings.h"
-#include "core/config.h"
+#include "io/config/config.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"
@@ -104,7 +104,7 @@ static int menu_enabled[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX];
 static int changed = 1;
 
 #include "SDL.h"
-#include "core/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/game_environment.h"
 
 void building_menu_disable_all() {

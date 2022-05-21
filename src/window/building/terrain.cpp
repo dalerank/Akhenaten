@@ -5,8 +5,8 @@
 #include "utility.h"
 
 #include "figure/figure.h"
-#include "graphics/lang_text.h"
-#include "graphics/panel.h"
+#include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "sound/speech.h"
 #include "window/building/figures.h"
 

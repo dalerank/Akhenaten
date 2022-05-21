@@ -1,7 +1,7 @@
 #ifndef SCENARIO_DATA_H
 #define SCENARIO_DATA_H
 
-#include "map/point.h"
+#include "grid/point.h"
 #include "scenario/types.h"
 #include "core/game_environment.h"
 #include "events.h"

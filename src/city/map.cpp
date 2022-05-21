@@ -1,7 +1,7 @@
 #include "map.h"
 
 #include "city/data_private.h"
-#include "map/grid.h"
+#include "grid/grid.h"
 
 map_point *city_map_entry_point(void) {
     return &city_data.map.entry_point;

@@ -12,25 +12,25 @@
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
-#include "core/config.h"
-#include "core/image.h"
+#include "io/config/config.h"
+#include "graphics/image.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "figure/movement.h"
 #include "game/resource.h"
-#include "map/building_tiles.h"
-#include "map/desirability.h"
-#include "map/image.h"
-#include "map/random.h"
-#include "map/road_access.h"
-#include "map/terrain.h"
-#include "map/water.h"
-#include "core/image_group.h"
+#include "grid/building_tiles.h"
+#include "grid/desirability.h"
+#include "grid/image.h"
+#include "grid/random.h"
+#include "grid/road_access.h"
+#include "grid/terrain.h"
+#include "grid/water.h"
+#include "graphics/image_groups.h"
 
 #include <math.h>
 #include <city/floods.h>
 #include <core/random.h>
-#include <map/routing/routing.h>
+#include <grid/routing/routing.h>
 
 const int generic_delay_table[] = {
         0,

@@ -1,12 +1,9 @@
 #include "window.h"
 
-#include "graphics/graphics.h"
-#include "graphics/warning.h"
+#include "graphics/boilerplate.h"
+#include "graphics/elements/warning.h"
 #include "input/cursor.h"
-#include "input/hotkey.h"
 #include "input/scroll.h"
-#include "input/touch.h"
-#include "window/city.h"
 
 #define MAX_QUEUE 6
 

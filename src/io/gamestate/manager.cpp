@@ -5,8 +5,8 @@
 #include "io/io.h"
 #include "core/string.h"
 #include "core/zip.h"
-#include "core/log.h"
-#include "map/image.h"
+#include "io/log.h"
+#include "grid/image.h"
 #include "core/stopwatch.h"
 
 #define COMPRESS_BUFFER_SIZE 3000000
