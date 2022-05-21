@@ -1,12 +1,8 @@
 #include "image.h"
 
-#include "core/log.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
-
-#include <string.h>
-#include <dev/debug.h>
-#include <city/view/zoom.h>
+#include "platform/renderer.h"
 
 typedef enum {
     DRAW_TYPE_SET,
@@ -16,15 +12,15 @@ typedef enum {
     DRAW_TYPE_BLEND_ALPHA
 } draw_type;
 
-static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
-        28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
-        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
-};
-
-static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
-        0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
-        508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
-};
+//static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
+//        28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
+//        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
+//};
+//
+//static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
+//        0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
+//        508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
+//};
 
 static int get_visible_footprint_pixels_per_row(int tiles, int width, int height, int row) {
     int base_height = tiles * FOOTPRINT_HEIGHT;
@@ -37,9 +33,6 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
         return 2 + 4 * (base_height - 1 - footprint_row);
     }
 }
-
-#include "SDL.h"
-#include "renderer.h"
 
 //static void draw_modded_footprint(int image_id, int x, int y, color_t color) {
 //    const image *img = image_get(image_id);

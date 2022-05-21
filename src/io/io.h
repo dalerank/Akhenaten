@@ -2,7 +2,7 @@
 #define CORE_IO_H
 
 #include "core/dir.h"
-#include "buffer.h"
+#include "core/buffer.h"
 
 /**
  * @file

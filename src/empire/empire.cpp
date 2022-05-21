@@ -6,7 +6,7 @@
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/log.h"
-#include "core/io.h"
+#include "io/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"

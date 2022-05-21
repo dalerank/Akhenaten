@@ -2,40 +2,38 @@
 
 #include <cmath>
 
-#include <graphics/text.h>
-#include <core/string.h>
+#include "graphics/text.h"
+#include "core/string.h"
 
-#include <graphics/image.h>
-#include <core/image_group.h>
+#include "graphics/image.h"
 
-#include <city/view/lookup.h>
-#include <widget/city/building_ghost.h>
-#include <map/building.h>
-#include <map/property.h>
-#include <map/terrain.h>
-#include <map/road_network.h>
-#include <map/routing/routing.h>
-#include <map/moisture.h>
-#include <map/floodplain.h>
-#include <map/aqueduct.h>
-#include <city/data_private.h>
-#include <building/industry.h>
-#include <map/sprite.h>
-#include <map/image.h>
-#include <map/vegetation.h>
+#include "city/view/lookup.h"
+#include "widget/city/building_ghost.h"
+#include "map/building.h"
+#include "map/property.h"
+#include "map/terrain.h"
+#include "map/road_network.h"
+#include "map/routing/routing.h"
+#include "map/moisture.h"
+#include "map/floodplain.h"
+#include "map/aqueduct.h"
+#include "city/data_private.h"
+#include "building/industry.h"
+#include "map/sprite.h"
+#include "map/image.h"
+#include "map/vegetation.h"
 
-#include <figure/route.h>
-#include <map/figure.h>
-#include <game/time.h>
-#include <building/construction/build_planner.h>
-#include <core/random.h>
-#include <city/gods.h>
-#include <building/count.h>
-#include <city/culture.h>
-#include <city/floods.h>
-#include <game/tutorial.h>
-#include <map/tiles.h>
-#include <graphics/renderer.h>
+#include "figure/route.h"
+#include "map/figure.h"
+#include "game/time.h"
+#include "building/construction/build_planner.h"
+#include "core/random.h"
+#include "city/gods.h"
+#include "building/count.h"
+#include "city/culture.h"
+#include "city/floods.h"
+#include "game/tutorial.h"
+#include "platform/renderer.h"
 
 int debug_range_1 = 0;
 int debug_range_2 = 0;
@@ -43,14 +41,10 @@ int debug_range_3 = 0;
 int debug_range_4 = 0;
 
 void handle_debug_hotkeys(const hotkeys *h) {
-    if (h->debug_1_up)
-        debug_range_1+=1;
-    if (h->debug_1_down)
-        debug_range_1-=1;
-    if (h->debug_2_up)
-        debug_range_2+=1;
-    if (h->debug_2_down)
-        debug_range_2-=1;
+    if (h->debug_1_up) debug_range_1 += 1;
+    if (h->debug_1_down) debug_range_1 -= 1;
+    if (h->debug_2_up) debug_range_2 += 1;
+    if (h->debug_2_down) debug_range_2 -= 1;
 //    if (debug_range_1 < 0)
 //        debug_range_1 = 0;
 //    if (debug_range_1 > 20)

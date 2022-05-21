@@ -1,16 +1,7 @@
 #include "graphics.h"
 
-//#include "city/view/view.h"
-//#include "core/config.h"
-//#include "graphics/color.h"
-//#include "graphics/menu.h"
-//#include "graphics/screen.h"
-//#include "core/game_environment.h"
-#include "graphics/renderer.h"
+#include "platform/renderer.h"
 #include "screen.h"
-
-//#include <stdlib.h>
-//#include <string.h>
 
 #ifdef __vita__
 #include <vita2d.h>

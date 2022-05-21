@@ -1,34 +1,26 @@
-#include <widget/city/building_ghost.h>
-#include <widget/overlays/city_overlay.h>
-#include <graphics/image.h>
-#include <city/view/lookup.h>
-#include <dev/debug.h>
-#include <map/property.h>
-#include <city/view/zoom.h>
-#include <graphics/renderer.h>
-#include "city.h"
+#include "widget/city/building_ghost.h"
+#include "widget/overlays/city_overlay.h"
+#include "graphics/image.h"
+#include "city/view/lookup.h"
+#include "dev/debug.h"
+#include "map/property.h"
 
 #include "building/construction/build_planner.h"
 #include "building/properties.h"
 #include "city/finance.h"
-#include "city/view/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/config.h"
-#include "core/direction.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
-#include "graphics/menu.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
-#include "input/touch.h"
 #include "map/building.h"
-#include "map/grid.h"
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/speech.h"
@@ -37,6 +29,7 @@
 #include "widget/minimap.h"
 #include "window/building_info.h"
 #include "window/city.h"
+#include "platform/renderer.h"
 
 static struct {
     map_point current_tile;

@@ -1,23 +1,16 @@
 #include "minimap.h"
 
 #include "building/building.h"
-#include "city/view/view.h"
-#include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "input/scroll.h"
-#include "map/building.h"
 #include "map/figure.h"
-#include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
 
-#include <stdlib.h>
-#include <window/city.h>
-#include <dev/debug.h>
-#include <graphics/renderer.h>
+#include "dev/debug.h"
 
 enum {
     FIGURE_COLOR_NONE = 0,

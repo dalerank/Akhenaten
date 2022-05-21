@@ -2,7 +2,7 @@
 #include "chunks.h"
 #include <string.h>
 #include <cinttypes>
-#include "core/io.h"
+#include "io/io.h"
 #include "core/string.h"
 #include "core/zip.h"
 #include "core/log.h"

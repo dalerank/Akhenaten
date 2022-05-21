@@ -2,7 +2,7 @@
 
 #include "city/view/view.h"
 #include "city/warning.h"
-#include "graphics/renderer.h"
+#include "platform/renderer.h"
 #include "graphics/window.h"
 #include "graphics.h"
 

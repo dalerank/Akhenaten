@@ -3,7 +3,6 @@
 //#include "core/calc.h"
 //#include "core/config.h"
 #include "core/time.h"
-#include "graphics/renderer.h"
 #include "graphics/screen.h"
 //#include "platform/cursor.h"
 //#include "platform/haiku/haiku.h"
@@ -17,7 +16,7 @@
 //#include <stdlib.h>
 #include <string.h>
 #include "input/cursor.h"
-#include <SDL_image.h>
+#include "SDL_image.h"
 //#include <core/image_packer.h>
 //#include <SDL_image.h>
 //#include <graphics/graphics.h>
@@ -159,8 +158,6 @@ void graphics_renderer_interface::fill_rect(int x, int y, int width, int height,
     SDL_Rect rect = { x, y, width + 1, height + 1 };
     SDL_RenderFillRect(data.renderer, &rect);
 }
-
-
 
 void graphics_renderer_interface::clear_screen(void) {
     if (data.paused) {

@@ -1,18 +1,12 @@
 #include <cmath>
 #include "io/io_buffer.h"
-#include <graphics/renderer.h>
 #include "view.h"
 
 #include "core/calc.h"
-#include "core/config.h"
-#include "core/direction.h"
-#include "core/game_environment.h"
 #include "graphics/menu.h"
-#include "map/grid.h"
 #include "map/image.h"
 #include "widget/minimap.h"
 #include "lookup.h"
-#include "zoom.h"
 
 ///////
 
@@ -255,8 +249,6 @@ void city_view_rotate_right(void) {
         city_view_go_to_screen_tile(screen, true);
     }
 }
-
-#include "core/game_environment.h"
 
 static void set_viewport(int x_offset, int y_offset, int width, int height) {
     auto zoom = zoom_get_percentage();

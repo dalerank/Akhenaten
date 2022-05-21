@@ -91,7 +91,7 @@ struct image_t {
     color_t *TEMP_PIXEL_DATA;
 };
 
-extern int terrain_ph_offset;
+inline int terrain_ph_offset;
 
 void image_data_init();
 

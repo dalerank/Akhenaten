@@ -1,6 +1,6 @@
 #include <core/file.h>
 #include <core/buffer.h>
-#include <core/io.h>
+#include "io/io.h"
 #include <core/log.h>
 #include <core/string.h>
 #include "mission.h"

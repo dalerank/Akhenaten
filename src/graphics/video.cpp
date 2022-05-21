@@ -6,7 +6,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
-#include "graphics/renderer.h"
+#include "platform/renderer.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"

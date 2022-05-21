@@ -1,13 +1,10 @@
-#include <map/water_supply.h>
+#include "map/water_supply.h"
 #include "animation.h"
 
 #include "building/industry.h"
-#include "building/model.h"
 #include "core/calc.h"
-#include "core/image.h"
 #include "game/animation.h"
 #include "map/sprite.h"
-#include "core/game_environment.h"
 
 int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
 //    const image *img = image_get(image_id);

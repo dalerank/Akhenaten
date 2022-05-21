@@ -242,8 +242,6 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/encoding_trad_chinese.cpp
     ${PROJECT_SOURCE_DIR}/src/core/file.cpp
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/io.cpp
     ${PROJECT_SOURCE_DIR}/src/core/lang.cpp
     ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
 #    ${PROJECT_SOURCE_DIR}/src/core/mods.cpp
@@ -258,6 +256,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/stopwatch.cpp)
 
 set(IO_FILES
+    ${PROJECT_SOURCE_DIR}/src/io/io.cpp
     ${PROJECT_SOURCE_DIR}/src/io/io_buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/manager.cpp
@@ -466,7 +465,6 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/font.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/graphics.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/renderer.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/image.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/image_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.cpp

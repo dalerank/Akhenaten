@@ -5,7 +5,7 @@
 #include "data.h"
 #include "event_phrases.h"
 #include "city/message.h"
-#include "core/io.h"
+#include "io/io.h"
 #include "core/log.h"
 #include "core/string.h"
 #include "io/io_buffer.h"

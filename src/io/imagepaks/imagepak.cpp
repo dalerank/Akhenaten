@@ -4,7 +4,7 @@
 #include "core/stopwatch.h"
 #include "core/buffer.h"
 #include "core/string.h"
-#include "core/io.h"
+#include "io/io.h"
 #include "atlas_packer.h"
 #include "graphics/font.h"
 #include "graphics/graphics.h"
@@ -12,7 +12,7 @@
 #include "SDL_log.h"
 #include "core/image_group.h"
 #include "core/struct_types.h"
-#include "graphics/renderer.h"
+#include "platform/renderer.h"
 
 ///////// IMAGE DATA CONVERSION
 
@@ -75,11 +75,6 @@ static int convert_compressed(buffer *buf, int data_length, const image_t *img) 
 static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
         28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
-};
-
-static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
-        0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
-        508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
 };
 
 static int convert_footprint_tile(buffer *buf, const image_t *img, int x_offset, int y_offset) {

@@ -1,39 +1,18 @@
-#include <cmath>
-#include <map/random.h>
-#include <widget/overlays/city_overlay_risks.h>
-#include <city/view/lookup.h>
-#include <dev/debug.h>
+
+#include "map/random.h"
+#include "widget/overlays/city_overlay_risks.h"
+#include "dev/debug.h"
 #include "tile_draw.h"
 
-#include "building/animation.h"
 #include "building/construction/build_planner.h"
-#include "building/dock.h"
-#include "building/rotation.h"
-#include "building/type.h"
-#include "city/buildings.h"
-#include "city/entertainment.h"
-#include "city/labor.h"
-#include "city/population.h"
-#include "city/ratings.h"
-#include "city/view/view.h"
 #include "core/config.h"
-#include "core/time.h"
-#include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/figure.h"
-#include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
-#include "map/sprite.h"
 #include "map/terrain.h"
 #include "sound/city.h"
-#include "widget/city/bridges.h"
-#include "widget/city/building_ghost.h"
-#include "map/terrain.h"
-#include "graphics/text.h"
-#include "core/string.h"
-#include "map/property.h"
 #include "game/state.h"
 #include "ornaments.h"
 

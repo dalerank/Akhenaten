@@ -2,7 +2,7 @@
 
 #include "core/buffer.h"
 #include "core/file.h"
-#include "core/io.h"
+#include "io/io.h"
 #include "core/game_environment.h"
 #include "translation/translation.h"
 
