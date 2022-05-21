@@ -1,13 +1,9 @@
 #ifndef CORE_IMAGE_H
 #define CORE_IMAGE_H
 
-#include <SDL_render.h>
-#include <vector>
-#include "graphics/renderer.h"
+#include "SDL_render.h"
 #include "core/encoding.h"
-//#include "core/image_group.h"
 #include "graphics/color.h"
-#include "file.h"
 
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS 2188
@@ -23,22 +19,7 @@ enum {
     IMAGE_TYPE_MOD = 40
 };
 
-/**
- * @file
- * Image functions
- */
-
-/**
- * Image metadata
- */
-
-#define PAK_HEADER_INFO_BYTES 80
-#define PAK_BMP_NAME_SIZE 200
-#define PAK_GROUPS_MAX 300
-#define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
-
 //typedef struct image;
-
 typedef struct {
     SDL_Texture *texture;
 //    std::vector<image*> images;
@@ -110,39 +91,6 @@ struct image_t {
     color_t *TEMP_PIXEL_DATA;
 };
 
-typedef struct {
-    int width;
-    int height;
-} texture_size_t;
-
-class imagepak {
-    int version;
-    int entries_num;
-    int groups_num;
-    char *bmp_names;
-    int num_bmp_names;
-    uint16_t *group_image_ids;
-    std::vector<image_t> images_array;
-
-    bool SHOULD_LOAD_SYSTEM_SPRITES;
-    bool SHOULD_CONVERT_FONTS;
-
-    bool load_pak(const char *pak_name, int starting_index);
-
-public:
-    char name[MAX_FILE_NAME];
-    std::vector<atlas_data_t> atlas_pages;
-
-    int global_image_index_offset = 0;
-
-    imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES = false, bool FONTS = false);
-    ~imagepak();
-
-    int get_entry_count();
-    int get_global_image_index(int group);
-    const image_t *get_image(int id, bool relative = false);
-};
-
 extern int terrain_ph_offset;
 
 void image_data_init();
@@ -156,8 +104,5 @@ int image_id_from_group(int collection, int group, int pak_cache_idx = -1);
 const image_t *image_get(int id, int mode = 0);
 const image_t *image_letter(int letter_id);
 const image_t *image_get_enemy(int id);
-//const color_t *image_data(int id);
-const color_t *image_data_letter(int letter_id);
-const color_t *image_data_enemy(int id);
 
 #endif // CORE_IMAGE_H

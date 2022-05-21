@@ -1,15 +1,11 @@
 #include "core/lang.h"
 
-#include "SDL.h"
-
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
-#include "core/string.h"
 #include "core/game_environment.h"
 #include "translation/translation.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 #define MAX_TEXT_ENTRIES 1000
@@ -127,11 +123,10 @@ static void parse_MM_file(buffer *buf) {
 }
 static bool load_files(const char *text_filename, const char *message_filename, int localizable) {
     // load text into buffer
-    buffer buf(BUFFER_SIZE);
+    buffer buf = buffer(BUFFER_SIZE);
     int filesize = io_read_file_into_buffer(text_filename, localizable, &buf, BUFFER_SIZE);
-    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
+    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE)
         return false;
-    }
 
     // parse text
     buf.skip(28); // header

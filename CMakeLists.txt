@@ -243,7 +243,6 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/file.cpp
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.cpp
     ${PROJECT_SOURCE_DIR}/src/core/image.cpp
-    ${PROJECT_SOURCE_DIR}/src/core/image_packer.cpp
     ${PROJECT_SOURCE_DIR}/src/core/io.cpp
     ${PROJECT_SOURCE_DIR}/src/core/lang.cpp
     ${PROJECT_SOURCE_DIR}/src/core/locale.cpp
@@ -263,7 +262,8 @@ set(IO_FILES
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/manager.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp)
+    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/imagepaks/atlas_packer.cpp)
 
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.cpp

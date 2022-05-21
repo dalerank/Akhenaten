@@ -1,4 +1,4 @@
-#include "image_packer.h"
+#include "atlas_packer.h"
 
 #include <math.h>
 #include <stdlib.h>

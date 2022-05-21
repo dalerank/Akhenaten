@@ -1,10 +1,10 @@
 #include "core/io.h"
 
-#include <stdio.h>
-
 #include "core/file.h"
 
 int io_read_file_into_buffer(const char *filepath, int localizable, buffer *buf, int max_size) {
+    if (buf == nullptr)
+        return 0;
     const char *cased_file = dir_get_file(filepath, localizable);
     if (!cased_file)
         return 0;
@@ -17,6 +17,8 @@ int io_read_file_into_buffer(const char *filepath, int localizable, buffer *buf,
     long size = ftell(fp);
     if (size > max_size)
         size = max_size;
+    if (size > buf->size())
+        return 0;
 
     fseek(fp, 0, SEEK_SET);
     int bytes_read = buf->from_file((size_t) size, fp);
