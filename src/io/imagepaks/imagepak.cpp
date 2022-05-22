@@ -289,7 +289,7 @@ imagepak::imagepak(const char *pak_name, int starting_index, bool SYSTEM_SPRITES
     SHOULD_LOAD_SYSTEM_SPRITES = SYSTEM_SPRITES;
     SHOULD_CONVERT_FONTS = FONTS;
 
-    if (load_pak(pak_name, starting_index))
+    if (!load_pak(pak_name, starting_index))
         cleanup_and_destroy();
 }
 imagepak::~imagepak() {
@@ -345,7 +345,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     // read sgx data into buffer
     safe_realloc_for_size(&pak_buf, MAX_FILE_SCRATCH_SIZE);
     if (!io_read_file_into_buffer((const char*)filename_sgx, MAY_BE_LOCALIZED, pak_buf, MAX_FILE_SCRATCH_SIZE))
-        goto failure;
+        return false;
 
     // sgx files are always:
     // - 695080
@@ -403,7 +403,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     // prepare atlas packer & renderer
     pixel_coordinate max_texture_sizes = graphics_renderer()->get_max_image_size();
     if (image_packer_init(&packer, entries_num, max_texture_sizes.x, max_texture_sizes.y) != IMAGE_PACKER_OK)
-        goto failure;
+        return false;
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
     packer.options.reduce_image_size = 1;
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
@@ -498,7 +498,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
     // read bitmap data into buffer
     safe_realloc_for_size(&pak_buf, MAX_FILE_SCRATCH_SIZE);
     if (!io_read_file_into_buffer((const char*)filename_555, MAY_BE_LOCALIZED, pak_buf, MAX_FILE_SCRATCH_SIZE))
-        goto failure;
+        return false;
 
     // finish filling in image and atlas information
     for (int i = 0; i < entries_num; i++) {
@@ -526,7 +526,7 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
         atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->TEMP_PIXEL_BUFFER,
                                                                               atlas_data->width, atlas_data->height);
         if (atlas_data->texture == nullptr)
-            goto failure;
+            return false;
 
         // delete temp data buffer in the atlas
         delete atlas_data->TEMP_PIXEL_BUFFER;
@@ -560,10 +560,6 @@ bool imagepak::load_pak(const char *pak_name, int starting_index) {
             WATCH.STOP());
 
     return true;
-
-failure:
-    cleanup_and_destroy();
-    return false;
 }
 
 int imagepak::get_entry_count() {
