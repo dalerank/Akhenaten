@@ -42,7 +42,7 @@ static struct {
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(64, 160, 32, 10);
     ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_ICONS) + RESOURCE_DEBEN, 80, 176);
@@ -74,7 +74,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     button_border_draw(128, 216, 64, 20, data.focus_button_id == 3);
     button_border_draw(208, 216, 64, 20, data.focus_button_id == 4);

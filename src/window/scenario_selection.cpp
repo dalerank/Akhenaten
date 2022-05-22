@@ -1,17 +1,14 @@
 #include "scenario_selection.h"
 
-#include "io/dir.h"
 #include "core/encoding.h"
 #include "io/file.h"
 #include "graphics/image_groups.h"
 #include "io/gamestate/boilerplate.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
-#include "graphics/elements/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -19,19 +16,14 @@
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
-#include "sound/music.h"
-#include "window/city.h"
 #include "message_dialog.h"
 
-#include <string.h>
 #include "graphics/elements/scroll_list_panel.h"
-#include <game/mission.h>
+#include "game/mission.h"
 #include "io/playerdata/player_data.h"
-#include "io/gamefiles/lang.h"
 #include <cmath>
 #include "io/manager.h"
-#include "io/gamestate/chunks.h"
-#include <dev/debug.h>
+#include "dev/debug.h"
 
 static void button_select_item(int index, int param2);
 static void button_select_campaign(int index, int param2);
@@ -378,7 +370,6 @@ static void draw_side_panel_info() {
 }
 
 static void draw_background(void) {
-    graphics_reset_dialog();
     switch (data.dialog) {
         case MAP_SELECTION_CCK_LEGACY:
             ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_CCK));
@@ -391,7 +382,7 @@ static void draw_background(void) {
             ImageDraw::img_background(image_id_from_group(GROUP_MAP_SELECTION_HISTORY));
             break;
     }
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.dialog != MAP_SELECTION_CAMPAIGN) {
         panel->draw();
         draw_side_panel_info();
@@ -399,7 +390,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     switch (data.dialog) {
         case MAP_SELECTION_CUSTOM:

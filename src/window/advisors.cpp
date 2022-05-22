@@ -195,7 +195,7 @@ static void init(void) {
 
 void window_advisors_draw_dialog_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_ADVISOR_BACKGROUND));
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (GAME_ENV == ENGINE_ENV_C3)
         ImageDraw::img_generic(image_id_from_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
     else if (GAME_ENV == ENGINE_ENV_PHARAOH)
@@ -218,19 +218,19 @@ void window_advisors_draw_dialog_background(void) {
 
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     advisor_height = current_advisor_window->draw_background();
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
     if (GAME_ENV == ENGINE_ENV_PHARAOH)
         image_buttons_draw(0, 440, advisor_buttons_PH, 14);
     graphics_reset_dialog();
 
     if (current_advisor_window->draw_foreground) {
-        graphics_in_dialog();
+        graphics_set_to_dialog();
         current_advisor_window->draw_foreground();
         graphics_reset_dialog();
     }

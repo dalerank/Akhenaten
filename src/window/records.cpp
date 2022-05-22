@@ -34,7 +34,7 @@ static void draw_background(void) {
     ImageDraw::img_background(image_id_from_group(GROUP_SCORES_BACKGROUND));
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(0, 0, 40, 30);
     inner_panel_draw(LIST_X, LIST_Y - 12, LIST_WIDTH, LIST_MAX_SIZE + 1);

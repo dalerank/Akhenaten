@@ -96,12 +96,10 @@ void window_player_selection_init() {
 
 static void draw_background(void) {
     graphics_clear_screen();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_PLAYER_SELECTION), 0, 0);
-    graphics_reset_dialog();
+    ImageDraw::img_background(image_id_from_group(GROUP_PLAYER_SELECTION));
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(128, 40, 24, 21);
 

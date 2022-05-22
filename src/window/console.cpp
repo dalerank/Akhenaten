@@ -31,7 +31,7 @@ static void init(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(128, 160, 24, 8);
     text_draw_centered((uint8_t *) "Console", 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT, 0);
     lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);

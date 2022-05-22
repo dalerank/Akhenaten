@@ -14,7 +14,7 @@
 static void draw_background(void) {
     window_draw_underlying_window();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     graphics_shade_rect(33, 53, 574, 334, 0);
     outer_panel_draw(16, 144, 38, 11);

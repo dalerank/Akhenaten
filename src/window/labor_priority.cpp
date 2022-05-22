@@ -51,7 +51,7 @@ static int get_dialog_width(void) {
 static void draw_background(void) {
     window_draw_underlying_window();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     int dialog_width = get_dialog_width();
     int dialog_x = 160 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
@@ -72,7 +72,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     color_t color;
     for (int i = 0; i < 9; i++) {

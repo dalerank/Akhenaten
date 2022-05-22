@@ -63,7 +63,7 @@ static void draw_background(void) {
 
     window_draw_underlying_window();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     int text_id = 200 + scenario_campaign_scenario_id();
     const lang_message *msg = lang_get_message(text_id);
 
@@ -146,7 +146,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);

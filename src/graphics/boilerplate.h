@@ -10,7 +10,7 @@
 #define FOOTPRINT_HEIGHT 30
 #define FOOTPRINT_HALF_HEIGHT 15
 
-void graphics_in_dialog(void);
+void graphics_set_to_dialog(void);
 void graphics_in_dialog_with_size(int width, int height);
 void graphics_reset_dialog(void);
 

@@ -48,7 +48,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(0, 100, 38, 11);
     lang_text_draw(44, 95, 20, 114, FONT_LARGE_BLACK_ON_LIGHT);

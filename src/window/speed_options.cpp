@@ -45,7 +45,7 @@ static void init(void (*close_callback)(void)) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(80, 80, 20, 14);
     // ok/cancel labels

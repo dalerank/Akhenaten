@@ -2,11 +2,9 @@
 
 #include "io/config/config.h"
 #include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/window.h"
 #include "sound/music.h"
-#include "window/intro_video.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
 
@@ -16,8 +14,8 @@ static void init(void) {
 static void draw_logo(void) {
     graphics_clear_screen();
 
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_LOGO), 0, 0);
+    ImageDraw::img_background(image_id_from_group(GROUP_LOGO));
+    graphics_set_to_dialog();
     lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_SMALL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }

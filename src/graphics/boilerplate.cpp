@@ -19,7 +19,7 @@ static void set_translation(int x, int y) {
         graphics_renderer()->reset_viewport();
 }
 
-void graphics_in_dialog(void) {
+void graphics_set_to_dialog(void) {
     set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
 }
 void graphics_in_dialog_with_size(int width, int height) {
@@ -793,12 +793,19 @@ void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t col
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_background(int image_id, float scale) {
+//    graphics_set_to_dialog();
+//    ImageDraw::img_generic(image_id, 0, 0, COLOR_MASK_NONE, scale);
+//    graphics_reset_dialog();
+    const image_t *img = image_get(image_id);
     int s_width = screen_width();
     int s_height = screen_height();
-    if (s_width > 1024 || s_height > 768)
-        graphics_clear_screen();
-
-    ImageDraw::img_generic(image_id, (s_width - 1024) / 2, (s_height - 768) / 2, scale);
+    if (scale == -1) {
+//        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
+    } else {
+        int x = (s_width - img->width) / 2;
+        int y = (s_height - img->height) / 2;
+        graphics_renderer()->draw_image(img, x, y, COLOR_MASK_NONE, scale, false);
+    }
 }
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
     const image_t *img = image_get(image_id);

@@ -84,7 +84,7 @@ static void draw_buttons(void) {
 static void draw_background(void) {
     window_advisors_draw_dialog_background();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(48, 48, 34, 20);
     lang_text_draw_centered(58, 25 + city_festival_selected_god(), 48, 60, 544, FONT_LARGE_BLACK_ON_LIGHT);
@@ -102,7 +102,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     draw_buttons();
     image_buttons_draw(0, 0, image_buttons_bottom, 4);
     graphics_reset_dialog();

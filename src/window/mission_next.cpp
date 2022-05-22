@@ -50,7 +50,7 @@ static void draw_background(void) {
     int rank = scenario_campaign_rank();
 
     ImageDraw::img_background(image_id_from_group(GROUP_SELECT_MISSION_BACKGROUND));
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     ImageDraw::img_generic(image_id_from_group(GROUP_NEXT_MISSION_SELECT) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK_ON_LIGHT);
     if (data.choice)
@@ -61,7 +61,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     if (data.choice > 0)
         image_buttons_draw(580, 410, &image_button_start_mission, 1);

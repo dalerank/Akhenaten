@@ -146,7 +146,7 @@ static void init(file_type type, file_dialog_type dialog_type) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     uint8_t file[MAX_FILE_NAME];
 
     outer_panel_draw(128, 40, 24, 21);

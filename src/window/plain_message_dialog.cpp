@@ -31,7 +31,7 @@ static int init(int title, int message) {
 }
 
 static void draw_background(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(80, 80, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT, 0);
     text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK_ON_LIGHT, 0);
@@ -39,7 +39,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     image_buttons_draw(80, 80, buttons, 1);
     graphics_reset_dialog();
 }

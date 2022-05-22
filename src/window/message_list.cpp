@@ -68,7 +68,7 @@ static void init(void) {
 static void draw_background(void) {
     window_city_draw_all();
 
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     data.width_blocks = 30;
     data.height_blocks = 22;
     data.x_text = 16;
@@ -157,7 +157,7 @@ static void draw_messages(int total_messages) {
     scrollbar_draw(&scrollbar);
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     image_buttons_draw(16, 32 + 16 * data.height_blocks - 42, &image_button_help, 1);
     image_buttons_draw(16 * data.width_blocks - 38, 32 + 16 * data.height_blocks - 36, &image_button_close, 1);
 

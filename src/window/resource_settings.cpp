@@ -73,7 +73,7 @@ static void draw_background(void) {
     window_draw_underlying_window();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(32, 128, 36, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);

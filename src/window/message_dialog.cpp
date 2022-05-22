@@ -497,7 +497,7 @@ static void draw_background(void) {
     else {
         window_draw_underlying_window();
     }
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.show_video)
         draw_background_video();
     else {
@@ -558,7 +558,7 @@ static void draw_foreground_video(void) {
 
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     if (data.show_video)
         draw_foreground_video();
     else {

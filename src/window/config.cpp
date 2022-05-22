@@ -324,8 +324,7 @@ static void draw_background(void) {
     graphics_clear_screen();
 
     ImageDraw::img_background(image_id_from_group(GROUP_CONFIG_BACKGROUND));
-
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     outer_panel_draw(0, 0, 40, 30);
 
     text_draw_centered(translation_for(page_names[data.page]), 16, 16, 608, FONT_LARGE_BLACK_ON_LIGHT, 0);
@@ -366,7 +365,7 @@ static void draw_background(void) {
     graphics_reset_dialog();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = data.starting_option + i;

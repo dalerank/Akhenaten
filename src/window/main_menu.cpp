@@ -63,14 +63,12 @@ static void draw_version_string(void) {
 }
 static void draw_background(void) {
     graphics_clear_screen();
-    graphics_in_dialog();
-    ImageDraw::img_generic(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND), 0, 0);
-    graphics_reset_dialog();
+    ImageDraw::img_background(image_id_from_group(GROUP_MAIN_MENU_BACKGROUND));
     if (window_is(WINDOW_MAIN_MENU))
         draw_version_string();
 }
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     switch (GAME_ENV) {
         case ENGINE_ENV_PHARAOH: {

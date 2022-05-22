@@ -23,7 +23,7 @@ static int selected_city;
 
 static void draw_background(void) {
     window_draw_underlying_window();
-    graphics_in_dialog();
+    graphics_set_to_dialog();
 
     outer_panel_draw(80, 64, 30, 14);
     lang_text_draw_centered(142, 0, 80, 80, 480, FONT_LARGE_BLACK_ON_LIGHT);
@@ -39,7 +39,7 @@ static void draw_background(void) {
 }
 
 static void draw_foreground(void) {
-    graphics_in_dialog();
+    graphics_set_to_dialog();
     image_buttons_draw(0, 0, image_buttons, 2);
     graphics_reset_dialog();
 }
