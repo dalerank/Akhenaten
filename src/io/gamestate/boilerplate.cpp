@@ -66,7 +66,10 @@
 #include "window/city.h"
 #include "core/stopwatch.h"
 #include "city/culture.h"
-#include "manager.h"
+#include "io/manager.h"
+#include "io/io.h"
+
+static const char MISSION_PACK_FILE[] = "mission1.pak";
 
 void fullpath_saves(char *full, const char *filename) {
     strcpy(full, "");
@@ -89,6 +92,29 @@ void fullpath_maps(char *full, const char *filename) {
     strcat(full, filename);
 }
 
+static buffer *small_buffer = new buffer(4);
+const int GamestateIO::get_campaign_scenario_offset(int scenario_id) {
+    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
+    small_buffer->clear();
+    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, small_buffer, 4, 4 * scenario_id))
+        return 0;
+    return small_buffer->read_i32();
+}
+const int GamestateIO::read_file_version(const char *filename, int offset) {
+    small_buffer->clear();
+    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, small_buffer, 4, offset + 4))
+        return -1;
+    return small_buffer->read_i32();
+}
+
+static int file_version;
+//const int GamestateIO::get_file_version() {
+//    return file_version;
+//}
+io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &file_version);
+});
+
 enum {
     LOADED_NULL = -1,
     LOADED_MISSION = 0,
@@ -97,7 +123,6 @@ enum {
 };
 
 static stopwatch WATCH;
-
 static int last_loaded = LOADED_NULL;
 static void pre_load() { // do we NEED this...?
     scenario_set_campaign_scenario(-1);
@@ -203,7 +228,6 @@ static void post_load() {
     WATCH.LOG();
 }
 
-GamestateIO SFIO;
 bool GamestateIO::write_mission(const int scenario_id) {
     // TODO?
     return false;
@@ -214,7 +238,7 @@ bool GamestateIO::write_savegame(const char *filename_short) {
     fullpath_saves(full, filename_short);
 
     // write file
-    return SFIO.write_to_file(filename_short, 0, FILE_SCHEMA_SAV, 160);
+    return FILEIO.serialize(filename_short, 0, FILE_FORMAT_SAV, 160);
 }
 bool GamestateIO::write_map(const char *filename_short) {
     return false; //TODO
@@ -224,7 +248,7 @@ bool GamestateIO::write_map(const char *filename_short) {
     fullpath_maps(full, filename_short);
 
     // write file
-    return SFIO.write_to_file(full, 0, FILE_SCHEMA_MAP, 160);
+    return FILEIO.serialize(full, 0, FILE_FORMAT_MAP, 160);
 }
 
 bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
@@ -235,7 +259,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!SFIO.read_from_file(MISSION_PACK_FILE, offset))
+    if (!FILEIO.unserialize(MISSION_PACK_FILE, offset, FILE_FORMAT_PAK, GamestateIO::read_file_version))
         return false;
     last_loaded = LOADED_MISSION;
     scenario_set_campaign_scenario(scenario_id);
@@ -256,15 +280,14 @@ bool GamestateIO::load_savegame(const char *filename_short, bool start_immediate
 
     // read file
     pre_load();
-    if (!SFIO.read_from_file(full, 0))
+    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_SAV, GamestateIO::read_file_version))
         return false;
     last_loaded = LOADED_SAVE;
     post_load();
 
     // finish loading and start
-    if (start_immediately) {
+    if (start_immediately)
         start_loaded_file();
-    }
     return true;
 }
 bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
@@ -276,7 +299,7 @@ bool GamestateIO::load_map(const char *filename_short, bool start_immediately) {
 
     // read file
     pre_load();
-    if (!SFIO.read_from_file(full, 0))
+    if (!FILEIO.unserialize(full, 0, FILE_FORMAT_MAP, GamestateIO::read_file_version))
         return false;
     last_loaded = LOADED_CUSTOM_MAP;
     post_load();

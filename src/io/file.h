@@ -18,16 +18,6 @@
 
 #define MAX_FILE_NAME 300
 
-typedef enum {
-    FILE_FORMAT_BMP,
-    FILE_FORMAT_PNG,
-    FILE_FORMAT_JPG,
-    //
-    FILE_FORMAT_SG2,
-    FILE_FORMAT_SG3,
-    FILE_FORMAT_555,
-} file_format_t;
-
 /**
  * Wrapper for fopen converting filename to path in current working directory
  * @param filename Filename

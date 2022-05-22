@@ -7,6 +7,7 @@
 #include "io/file.h"
 #include "core/struct_types.h"
 #include "graphics/image.h"
+#include "io/file_formats.h"
 
 enum {
     CUSTOM_IMAGE_NONE = 0,

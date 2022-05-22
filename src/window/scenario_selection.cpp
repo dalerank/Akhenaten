@@ -29,7 +29,7 @@
 #include "io/playerdata/player_data.h"
 #include "io/gamefiles/lang.h"
 #include <cmath>
-#include "io/gamestate/manager.h"
+#include "io/manager.h"
 #include "io/gamestate/chunks.h"
 #include <dev/debug.h>
 
@@ -430,7 +430,7 @@ static void draw_foreground(void) {
     }
 
     uint8_t txt[200];
-    draw_debug_line(txt, INFO_X, -120, 0, "", GamestateIO::get_file_version(), COLOR_FONT_YELLOW);
+    draw_debug_line(txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
 //    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 
     image_buttons_draw(0, 0, &start_button, 1);

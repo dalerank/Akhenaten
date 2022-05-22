@@ -1,6 +1,7 @@
 #include <cstring>
 #include "chunks.h"
-#include "manager.h"
+#include "boilerplate.h"
+#include "io/manager.h"
 
 static void default_bind(io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_NONE);
@@ -82,7 +83,7 @@ struct {
     } fields[MAX_JUNK10_FIELDS];
 } junk10;
 io_buffer *iob_junk10a = new io_buffer([](io_buffer *iob) {
-    const int version = GamestateIO::get_file_version();
+    const int version = FILEIO.get_file_version();
 
     FILE *debug_file = fopen("DEV_TESTING/JUNK10.txt", "wb+");
     char temp_string[200] = "";

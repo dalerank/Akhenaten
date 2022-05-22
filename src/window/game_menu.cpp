@@ -5,19 +5,19 @@
 #include "scenario_selection.h"
 #include "city.h"
 
-#include <graphics/window.h>
+#include "graphics/window.h"
 #include "graphics/boilerplate.h"
-#include <graphics/boilerplate.h>
 #include "graphics/elements/panel.h"
-#include <input/input.h>
+#include "input/input.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "io/gamefiles/lang.h"
-#include <game/settings.h>
-#include <graphics/text.h>
+#include "game/settings.h"
+#include "graphics/text.h"
 #include "io/playerdata/player_data.h"
-#include <game/mission.h>
-#include "io/gamestate/manager.h"
+#include "game/mission.h"
+#include "io/manager.h"
+#include "io/gamestate/boilerplate.h"
 
 static void button_click(int param1, int param2);
 

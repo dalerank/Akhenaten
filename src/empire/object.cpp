@@ -9,8 +9,9 @@
 #include "scenario/empire.h"
 #include "core/game_environment.h"
 #include "io/io_buffer.h"
-#include "io/gamestate/manager.h"
+#include "io/manager.h"
 #include "graphics/image_groups.h"
+#include "io/gamestate/boilerplate.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -38,7 +39,7 @@ static int get_trade_amount_code(int index, int resource) {
     if (!is_trade_city(index))
         return 0;
 
-    if (GamestateIO::get_file_version() < 160) {
+    if (FILEIO.get_file_version() < 160) {
         int result = 0;
         if (resource < 32) { // only holds data up to 31 (sandstone)
             int resource_flag = 1 << resource;
@@ -371,7 +372,7 @@ io_buffer *iob_empire_map_objects = new io_buffer([](io_buffer *iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &obj->invasion_years);
 
         // TODO: WRITE
-        if (GamestateIO::get_file_version() < 160) {
+        if (FILEIO.get_file_version() < 160) {
             iob->bind____skip(2);
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade40);
             iob->bind(BIND_SIGNATURE_UINT32, &full->trade25);

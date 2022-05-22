@@ -2,7 +2,7 @@
 #include <grid/tiles.h>
 #include <grid/building.h>
 #include <grid/terrain.h>
-#include "io/gamestate/manager.h"
+#include "io/manager.h"
 #include <grid/floodplain.h>
 #include <core/calc.h>
 #include <core/random.h>
@@ -14,6 +14,7 @@
 #include "scenario/data.h"
 #include "buildings.h"
 #include "message.h"
+#include "io/gamestate/boilerplate.h"
 
 static floods_data_t data;
 
@@ -289,7 +290,7 @@ io_buffer *iob_floodplain_settings = new io_buffer([](io_buffer *iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.quality);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_next);
-    if (GamestateIO::get_file_version() >= 149)
+    if (FILEIO.get_file_version() >= 149)
         iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
 
     data.flood_progress = 30;

@@ -13,6 +13,7 @@
 #include <string.h>
 #include "input/cursor.h"
 #include "SDL_image.h"
+#include "io/file_formats.h"
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES

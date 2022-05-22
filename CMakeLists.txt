@@ -250,12 +250,13 @@ set(CORE_FILES
 set(IO_FILES
     ${PROJECT_SOURCE_DIR}/src/io/dir.cpp
     ${PROJECT_SOURCE_DIR}/src/io/file.cpp
+    ${PROJECT_SOURCE_DIR}/src/io/file_formats.cpp
     ${PROJECT_SOURCE_DIR}/src/io/io.cpp
     ${PROJECT_SOURCE_DIR}/src/io/io_buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/io/config/config.cpp
     ${PROJECT_SOURCE_DIR}/src/io/config/hotkeys.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/chunks.cpp
-    ${PROJECT_SOURCE_DIR}/src/io/gamestate/manager.cpp
+    src/io/manager.cpp
     ${PROJECT_SOURCE_DIR}/src/io/gamestate/boilerplate.cpp
     ${PROJECT_SOURCE_DIR}/src/io/imagepaks/imagepak.cpp
     ${PROJECT_SOURCE_DIR}/src/io/imagepaks/atlas_packer.cpp

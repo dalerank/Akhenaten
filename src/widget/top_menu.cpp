@@ -1,7 +1,7 @@
 #include <tgmath.h>
 #include <window/game_menu.h>
 #include <city/data.h>
-#include "io/gamestate/manager.h"
+#include "io/manager.h"
 #include "top_menu.h"
 
 #include "building/construction/build_planner.h"

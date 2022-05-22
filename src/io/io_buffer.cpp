@@ -1,5 +1,5 @@
 #include <cassert>
-#include <core/string.h>
+#include "core/string.h"
 #include "io_buffer.h"
 
 void io_buffer::hook(buffer *buf, int _size, bool _compressed, const char *_name) {

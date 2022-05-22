@@ -1,5 +1,5 @@
 #include "manager.h"
-#include "chunks.h"
+#include "io/gamestate/chunks.h"
 #include <string.h>
 #include <cinttypes>
 #include "io/io.h"
@@ -24,51 +24,24 @@
 #  define PRI_SIZET "zu"
 #endif
 
-extern GamestateIO SFIO;
+FileIOManager FILEIO;
 
 ///
 
-static buffer *small_buffer = new buffer(4);
-const int get_campaign_scenario_offset(int scenario_id) {
-    // init 4-byte buffer and read from file header corresponding to scenario index (i.e. mission 20 = offset 20*4 = 80)
-    small_buffer->clear();
-    if (!io_read_file_part_into_buffer(MISSION_PACK_FILE, NOT_LOCALIZED, small_buffer, 4, 4 * scenario_id))
-        return 0;
-    return small_buffer->read_i32();
-}
-const int read_file_version(const char *filename, int offset) {
-    small_buffer->clear();
-    if (!io_read_file_part_into_buffer(filename, NOT_LOCALIZED, small_buffer, 4, offset + 4))
-        return -1;
-    return small_buffer->read_i32();
-}
-
-static int file_version;
-const int GamestateIO::get_file_version() {
-    return file_version;
-}
-io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_INT32, &file_version);
-});
-
-///
-
-void GamestateIO::clear() {
+void FileIOManager::clear() {
     loaded = false;
     strncpy_safe(file_path, "", MAX_FILE_NAME);
     file_size = 0;
     file_offset = 0;
+    file_format = FILE_FORMAT_NULL;
     file_version = -1;
     for (int i = 0; i < num_chunks(); ++i)
         file_chunks.at(i).VALID = false;
     alloc_index = 0;
 }
-void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int version) {
-    if (loaded)
-        clear(); // make sure the pieces
-    file_version = version;
-    switch (mapping_schema) {
-        case FILE_SCHEMA_MAP:
+void FileIOManager::init_chunk_schema() {
+    switch (file_format) {
+        case FILE_FORMAT_MAP:
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
             push_chunk(4, false, "file_version", iob_file_version);
             push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
@@ -88,16 +61,17 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             push_chunk(18600, false, "scenario_events", iob_scenario_events);
             push_chunk(28, false, "scenario_events_extra", iob_scenario_events_extra);
             push_chunk(1280, true, "junk11", iob_junk11);
-            push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
+            push_chunk(file_version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
             push_chunk(51984, false, "vegetation_growth", iob_vegetation_growth); // not sure what's the point of this in MAP...
 
-            push_chunk(version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
+            push_chunk(file_version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
             push_chunk(288, false, "trade_prices", iob_trade_prices);
             push_chunk(51984, true, "moisture_grid", iob_moisture_grid);
 
             break;
-        case FILE_SCHEMA_SAV: {
+        case FILE_FORMAT_PAK:
+        case FILE_FORMAT_SAV:
             push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
             push_chunk(4, false, "file_version", iob_file_version);
             push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
@@ -215,7 +189,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 2200 bytes   00 00 00 00 ??? 50 x 44-byte chunk
             // 16 bytes     00 00 00 00 ??? 4 x int
             // 8200 bytes   00 00 00 00 ??? 10 x 820-byte chunk
-            push_chunk(version < 149 ? 11000 : 11200, false, "junk10a", iob_junk10a);
+            push_chunk(file_version < 149 ? 11000 : 11200, false, "junk10a", iob_junk10a);
             push_chunk(2200, false, "junk10b", iob_junk10b);
             push_chunk(16, false, "junk10c", iob_junk10c);
             push_chunk(8200, false, "junk10d", iob_junk10d);
@@ -223,7 +197,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 1280 bytes   00 00 00 00 ??? 40 x 32-byte chunk
             push_chunk(1280, true, "junk11", iob_junk11); // unknown compressed data
 
-            push_chunk(version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
+            push_chunk(file_version < 160 ? 15200 : 19600, true, "empire_map_objects", iob_empire_map_objects);
             push_chunk(16200, true, "empire_map_routes", iob_empire_map_routes);
 
             // 51984 bytes  FF FF FF FF ???          // (228²) * 1 ?????????????????
@@ -235,7 +209,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 528 bytes    00 00 00 00 ??? 22 x 24-byte chunk
             push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
 
-            push_chunk(version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
+            push_chunk(file_version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
             push_chunk(207936, true, "GRID03_32BIT", iob_GRID03_32BIT); // todo: 4-byte grid
 
             // 312 bytes    2B 00 00 00 ??? 13 x 24-byte chunk
@@ -258,7 +232,7 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
             // 8 bytes      00 00 00 00 ??? 2 x int
             push_chunk(8, false, "junk18", iob_junk18);
 
-            if (version >= 160) {
+            if (file_version >= 160) {
 
                 // 12 bytes     00 00 00 00 ??? 3 x int
                 push_chunk(20, false, "junk19", iob_junk19);
@@ -276,11 +250,30 @@ void GamestateIO::init_with_schema(file_schema_enum_t mapping_schema, const int 
 
             }
             break;
-        }
     }
 }
+//bool FileIOManager::determine_version_from_file(const char *filename, const int offset) {
+//
+//
+//
+//    // read file header data (required for schema...)
+//    GamestateIO::read_file_version
+//    file_version = read_file_version(file_path, file_offset);
+//
+//    // determine appropriate schema and related data
+//    if (file_has_extension(filename, "pak") || file_has_extension(filename, "sav"))
+//        file_format = FILE_FORMAT_SAV;
+//    else if (file_has_extension(filename, "map"))
+//        file_format = FILE_FORMAT_MAP;
+//    if (file_has_extension(filename, "pak") && file_version < 149)
+//        set_image_grid_correction_shift(539); //14791
+//    else
+//        set_image_grid_correction_shift(0); //14252
+//
+//    return true;
+//}
 
-buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
+buffer *FileIOManager::push_chunk(int size, bool compressed, const char *name, io_buffer *iob) {
     // add empty piece onto the stack if we're beyond the current capacity
     if (alloc_index >= file_chunks.size())
         file_chunks.push_back(file_chunk_t());
@@ -304,7 +297,7 @@ buffer *GamestateIO::push_chunk(int size, bool compressed, const char *name, io_
     // return linked buffer pointer so that it can be assigned for read/write access later
     return chunk->buf;
 }
-const int GamestateIO::num_chunks() {
+const int FileIOManager::num_chunks() {
     return alloc_index;
 }
 
@@ -320,7 +313,7 @@ static void export_unzipped(file_chunk_t *chunk) {
     fclose(log);
     free(lfile);
 }
-static void log_hex(file_chunk_t *chunk, int i, int offs) {
+static void log_hex(file_chunk_t *chunk, int i, int offs, int num_chunks) {
     // log first few bytes of the filepiece
     size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
     char hexstr[40] = {0};
@@ -334,7 +327,7 @@ static void log_hex(file_chunk_t *chunk, int i, int offs) {
     }
 
     // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, SFIO.num_chunks(),
+    SDL_Log("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s", chunk->compressed ? "(C)" : "---", i + 1, num_chunks,
             offs, hexstr, chunk->buf->size(), fname);
 }
 
@@ -394,7 +387,7 @@ static bool write_compressed_chunk(FILE *fp, buffer *buf, int bytes_to_write) {
 
 static stopwatch WATCH;
 
-bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_enum_t mapping_schema, const int version) {
+bool FileIOManager::serialize(const char *filename, int offset, file_format_t format, const int version) {
 
     WATCH.START();
 
@@ -402,12 +395,14 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
     clear();
     strncpy_safe(file_path, filename, MAX_FILE_NAME);
     file_offset = offset;
+    file_format = format;
+    file_version = version;
 
     // open file handle
     FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "wb");
     if (!fp) {
         log_error("Unable to save game, access denied.", 0, 0);
-        return false;
+        goto failure;
     } else if (file_offset)
         fseek(fp, file_offset, SEEK_SET);
 
@@ -418,7 +413,7 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
     }
 
     // init file chunks and buffer collection
-    init_with_schema(mapping_schema, version);
+    init_chunk_schema();
 
     for (int i = 0; i < num_chunks(); i++) {
         file_chunk_t *chunk = &file_chunks.at(i);
@@ -432,7 +427,7 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
         // The last piece may be smaller than buf->size
         if (!result) {
             log_error("Unable to save game, write failure.", 0, 0);
-            return false;
+            goto failure;
         }
     }
 
@@ -443,8 +438,12 @@ bool GamestateIO::write_to_file(const char *filename, int offset, file_schema_en
             WATCH.STOP());
 
     return true;
+
+failure:
+    clear();
+    return false;
 }
-bool GamestateIO::read_from_file(const char *filename, int offset) {
+bool FileIOManager::unserialize(const char *filename, int offset, file_format_t format, const int(*determine_file_version)(const char *fnm, int ofst)) {
 
     WATCH.START();
 
@@ -452,34 +451,25 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
     clear();
     strncpy_safe(file_path, filename, MAX_FILE_NAME);
     file_offset = offset;
+    file_format = format;
 
     // open file handle
     FILE *fp = file_open(dir_get_file(file_path, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
-        return false;
+        goto failure;
     } else if (file_offset)
         fseek(fp, file_offset, SEEK_SET);
 
-    // read file header data (required for schema...)
-    file_version = read_file_version(file_path, file_offset);
+    // determine file version based on provided format
+    file_version = determine_file_version(file_path, offset);
     if (file_version == -1) {
         log_info("Invalid file and/or version header!", filename, 0);
-        return false;
+        goto failure;
     }
 
-    // determine appropriate schema and related data
-    if (file_has_extension(filename, "pak") || file_has_extension(filename, "sav"))
-        file_schema = FILE_SCHEMA_SAV;
-    else if (file_has_extension(filename, "map"))
-        file_schema = FILE_SCHEMA_MAP;
-    if (file_has_extension(filename, "pak") && file_version < 149)
-        set_image_grid_correction_shift(539); //14791
-    else
-        set_image_grid_correction_shift(0); //14252
-
     // init file chunks and buffer collection
-    init_with_schema(file_schema, file_version);
+    init_chunk_schema();
 
     // read file contents into buffers
     for (int i = 0; i < num_chunks(); i++) {
@@ -494,7 +484,7 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
             result = read_compressed_chunk(fp, chunk->buf, chunk->buf->size());
             if (!result) {
                 log_error("Unable to read file, decompression failed.", 0, 0);
-                return false;
+                goto failure;
             }
         } else {
             int got = chunk->buf->from_file(chunk->buf->size(), fp);
@@ -503,13 +493,13 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
             if (!result) {
                 SDL_Log("Incorrect buffer size, expected %i, found %i", exp, got);
                 log_error("Unable to read file, chunk size incorrect.", 0, 0);
-                return false;
+                goto failure;
             }
         }
 
         // ******** DEBUGGING ********
         export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (true) log_hex(chunk, i, offs); // print full chunk read log info
+        if (true) log_hex(chunk, i, offs, num_chunks()); // print full chunk read log info
         // ***************************
     }
 
@@ -526,4 +516,8 @@ bool GamestateIO::read_from_file(const char *filename, int offset) {
             WATCH.STOP());
 
     return true;
+
+failure:
+    clear();
+    return false;
 }
