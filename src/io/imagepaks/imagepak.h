@@ -26,7 +26,7 @@ class imagepak {
     bool SHOULD_CONVERT_FONTS;
 
     bool load_pak(const char *pak_name, int starting_index);
-
+    void cleanup_and_destroy();
 public:
     char name[MAX_FILE_NAME];
     std::vector<atlas_data_t> atlas_pages;

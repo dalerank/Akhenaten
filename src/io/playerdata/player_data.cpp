@@ -16,7 +16,7 @@
 
 #define MAX_AUTOSAVE_PATH 64
 
-player_record dummy_record;
+player_record DUMMY_RECORD;
 
 static struct {
     // highscores.jas
@@ -66,7 +66,7 @@ const player_record *highscores_get(int rank) {
             else
                 return &data.highscores[i];
     }
-    return &dummy_record; // return empty record when reached the end of the list
+    return &DUMMY_RECORD; // return empty record when reached the end of the list
 }
 int highscores_count() {
     return data.num_highscore_entries;

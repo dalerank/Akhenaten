@@ -21,9 +21,9 @@ enum {
 
 //typedef struct image;
 typedef struct {
-    SDL_Texture *texture;
+    SDL_Texture *texture = nullptr;
 //    std::vector<image*> images;
-    color_t *TEMP_PIXEL_BUFFER;
+    color_t *TEMP_PIXEL_BUFFER = nullptr;
     int bmp_size;
     int width;
     int height;
@@ -38,7 +38,7 @@ struct image_t {
     int uncompressed_length;
     int unk00; //
     int offset_mirror;
-    image_t *mirrored_img;
+    image_t *mirrored_img = nullptr;
     //
     int width;
     int height;
@@ -85,17 +85,15 @@ struct image_t {
         int index;
         int x_offset;
         int y_offset;
-        atlas_data_t *p_atlas;
+        atlas_data_t *p_atlas = nullptr;
     } atlas;
 
-    color_t *TEMP_PIXEL_DATA;
+    color_t *TEMP_PIXEL_DATA = nullptr;
 };
 
 inline int terrain_ph_offset;
 
-void image_data_init();
-
-bool image_load_main_paks(int climate_id, int is_editor, int force_reload);
+bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);
 bool image_set_enemy_pak(int enemy_id);
 bool image_set_temple_complex_pak(int temple_id);

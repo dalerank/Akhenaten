@@ -66,8 +66,7 @@ public:
 
     pixel_coordinate get_max_image_size();
 
-//    int prepare_image_atlas(atlas_data_t *atlas, image_packer *packer);
-    SDL_Texture *create_texture_atlas(color_t *p_data, int width, int height);
+    SDL_Texture *create_texture_from_buffer(color_t *p_data, int width, int height);
 
 //    void load_unpacked_image(const image *img, const color_t *pixels);
 //    bool should_pack_image(int width, int height);

@@ -4,8 +4,6 @@
 #include "font.h"
 
 static struct {
-    int current_climate;
-    bool is_editor;
     bool fonts_enabled;
     int font_base_offset;
 
@@ -34,25 +32,8 @@ static struct {
     color_t *tmp_image_data;
 } data;
 
-void image_data_init() {
-    data.current_climate = -1;
-    data.is_editor = false;
-    data.fonts_enabled = false;
-    data.font_base_offset = 0;
-
-    // add paks to parsing list cache
-    data.pak_list.push_back(&data.sprmain);
-    data.pak_list.push_back(&data.unloaded);
-    data.pak_list.push_back(&data.main);
-    data.pak_list.push_back(&data.terrain);
-    data.pak_list.push_back(&data.temple);
-    data.pak_list.push_back(&data.sprambient);
-    data.pak_list.push_back(&data.font);
-    data.pak_list.push_back(&data.empire);
-    data.pak_list.push_back(&data.sprmain2);
-    data.pak_list.push_back(&data.expansion);
-    data.pak_list.push_back(&data.monument);
-}
+// These functions are actually related to the imagepak class I/O, but it made slightly more
+// sense to me to have here as "core" image struct/class & game graphics related functions.
 
 bool set_pak_in_collection(int pak_id, imagepak **pak, std::vector<imagepak*> *collection) {
     if (pak_id >= collection->size())
@@ -88,9 +69,22 @@ bool image_set_temple_complex_pak(int temple_id) {
 bool image_set_monument_pak(int monument_id) {
     return set_pak_in_collection(monument_id, &data.monument, &data.monument_paks);
 }
-bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
-    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload)
-        return true;
+bool image_load_paks() {
+    data.fonts_enabled = false;
+    data.font_base_offset = 0;
+
+    // add paks to parsing list cache
+    data.pak_list.push_back(&data.sprmain);
+    data.pak_list.push_back(&data.unloaded);
+    data.pak_list.push_back(&data.main);
+    data.pak_list.push_back(&data.terrain);
+    data.pak_list.push_back(&data.temple);
+    data.pak_list.push_back(&data.sprambient);
+    data.pak_list.push_back(&data.font);
+    data.pak_list.push_back(&data.empire);
+    data.pak_list.push_back(&data.sprmain2);
+    data.pak_list.push_back(&data.expansion);
+    data.pak_list.push_back(&data.monument);
 
     const char *filename_555;
     const char *filename_sgx;
@@ -158,8 +152,6 @@ bool image_load_main_paks(int climate_id, int is_editor, int force_reload) {
     data.monument = data.monument_paks.at(0);
     data.enemy = data.enemy_paks.at(0);
 
-    data.is_editor = is_editor;
-
     return true;
 }
 
@@ -226,7 +218,6 @@ const image_t *image_get(int id, int mode) {
             return img;
     }
     // default (failure)
-    return image_get(image_id_from_group(GROUP_TERRAIN_BLACK));
     return nullptr;
 }
 const image_t *image_letter(int letter_id) {

@@ -1,5 +1,5 @@
-#include <scenario/events.h>
-#include <window/city.h>
+#include "scenario/events.h"
+#include "window/city.h"
 #include "game.h"
 
 #include "building/construction/build_planner.h"
@@ -8,15 +8,10 @@
 #include "io/config/hotkeys.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "core/locale.h"
 #include "io/log.h"
-#include "io/gamefiles/mods.h"
 #include "core/random.h"
-#include "core/time.h"
 #include "editor/editor.h"
-#include "figure/type.h"
 #include "graphics/animation_timers.h"
-#include "io/gamestate/boilerplate.h"
 #include "game/file_editor.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -24,9 +19,7 @@
 #include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
-#include "input/cursor.h"
 #include "input/scroll.h"
-#include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
 #include "sound/system.h"
@@ -75,10 +68,6 @@ static bool reload_language(int is_editor, int reload_images) {
 
     if (!image_set_font_pak(encoding)) {
         errlog("unable to load font graphics");
-        return false;
-    }
-    if (!image_load_main_paks(CLIMATE_CENTRAL, is_editor, reload_images)) {
-        errlog("unable to load main graphics");
         return false;
     }
 
@@ -140,8 +129,7 @@ bool game_pre_init(void) {
     return true;
 }
 bool game_init(void) {
-    image_data_init();
-    if (!image_load_main_paks(CLIMATE_CENTRAL, 0, 0)) {
+    if (!image_load_paks()) {
         errlog("unable to load main graphics");
         return false;
     }

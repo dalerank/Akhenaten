@@ -195,7 +195,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/julius.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.cpp
-    ${PROJECT_SOURCE_DIR}/src/platform/log.cpp
+    src/io/log.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/platform.cpp
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.cpp

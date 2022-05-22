@@ -526,7 +526,7 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale_factor) {
 #endif
 }
 void graphics_renderer_interface::draw_image(const image_t *img, float x, float y, color_t color, float scale, bool mirrored) {
-    if (data.paused)
+    if (data.paused || img == nullptr)
         return;
     if (!color)
         color = COLOR_MASK_NONE;
@@ -905,7 +905,7 @@ void load_unpacked_image(const image_t *img, const color_t *pixels) {
 //    return data.supports_yuv_textures;
 //}
 
-SDL_Texture *graphics_renderer_interface::create_texture_atlas(color_t *p_data, int width, int height) {
+SDL_Texture *graphics_renderer_interface::create_texture_from_buffer(color_t *p_data, int width, int height) {
     if (p_data == nullptr)
         return nullptr;
 #ifdef __VITA__
