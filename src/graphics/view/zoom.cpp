@@ -3,12 +3,13 @@
 #include <cmath>
 #include "io/config/config.h"
 #include "zoom.h"
+#include "dev/debug.h"
 
 struct {
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
     float delta;
-    float zoom_speed = 10.0f; // TODO: settings
+    float zoom_speed = 20.0f; // TODO: settings
     pixel_coordinate input_offset;
     struct {
         bool active;
@@ -63,11 +64,8 @@ int allowed_zoom_levels[8] = {
 void zoom_map(const mouse *m) {
     if (data.touch.active || m->is_touch)
         return;
-    if (m->middle.went_up) { // todo: panning with middle mouse
+    if (m->middle.went_up && data.input_offset.x == m->x && data.input_offset.y == m->y)
         data.target = ZOOM_DEFAULT;
-        data.input_offset.x = m->x;
-        data.input_offset.y = m->y - TOP_MENU_HEIGHT;
-    }
     if (m->scrolled != SCROLL_NONE) {
         if (false) {
             int current_zoom = data.zoom;
@@ -87,16 +85,17 @@ void zoom_map(const mouse *m) {
             if (data.target > ZOOM_MAX)
                 data.target = ZOOM_MAX;
         }
-        data.input_offset.x = m->x;
-        data.input_offset.y = m->y - TOP_MENU_HEIGHT;
     }
+    data.input_offset.x = m->x;
+    data.input_offset.y = m->y;
 }
 bool zoom_update_value(pixel_coordinate *camera_position) {
     if (data.zoom == data.target)
         return false;
     auto old_zoom = data.zoom;
+//    data.delta = (float)(data.target - data.zoom) * ZOOM_LERP_COEFF;
     if (!data.touch.active)
-        data.delta = (float)(data.target - data.zoom) * ZOOM_LERP_COEFF;
+        data.delta = calc_bound(data.target - data.zoom, -data.zoom_speed, data.zoom_speed);
     else
         data.delta = (float)(data.touch.current_zoom - data.zoom);
     data.zoom = bound_zoom(data.zoom + data.delta); // todo: bind camera to max window size... or find a way to mask the borders
@@ -104,15 +103,17 @@ bool zoom_update_value(pixel_coordinate *camera_position) {
         data.zoom = data.target;
         data.delta = 0.0f;
     }
-//    pixel_coordinate old_offset, new_offset;
-//    old_offset.x = calc_adjust_with_percentage(data.input_offset.x, old_zoom);
-//    old_offset.y = calc_adjust_with_percentage(data.input_offset.y, old_zoom);
-//
-//    new_offset.x = calc_adjust_with_percentage(data.input_offset.x, data.zoom);
-//    new_offset.y = calc_adjust_with_percentage(data.input_offset.y, data.zoom);
-//
-//    camera_position->x -= new_offset.x - old_offset.x;
-//    camera_position->y -= new_offset.y - old_offset.y;
+
+    // re-center camera around the input point
+    pixel_coordinate old_offset, new_offset;
+    old_offset.x = calc_adjust_with_percentage(data.input_offset.x, old_zoom);
+    old_offset.y = calc_adjust_with_percentage(data.input_offset.y, old_zoom);
+
+    new_offset.x = calc_adjust_with_percentage(data.input_offset.x, data.zoom);
+    new_offset.y = calc_adjust_with_percentage(data.input_offset.y, data.zoom);
+
+    camera_position->x -= new_offset.x - old_offset.x;
+    camera_position->y -= new_offset.y - old_offset.y;
 
     if (!config_get(CONFIG_UI_SMOOTH_SCROLLING) && !data.touch.active) {
         int remaining_x = camera_position->x & 60;

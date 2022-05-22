@@ -233,3 +233,5 @@ const image_t *image_letter(int letter_id) {
 const image_t *image_get_enemy(int id) {
     return data.enemy->get_image(id);
 }
+
+int terrain_ph_offset;

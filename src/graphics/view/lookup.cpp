@@ -43,7 +43,7 @@ void record_pixel_coord(map_point point, pixel_coordinate coord) {
 ///
 
 screen_tile pixel_to_screentile(pixel_coordinate pixel) {
-    pixel.y -= TOP_MENU_HEIGHT;
+//    pixel.y -= TOP_MENU_HEIGHT;
 
     auto data = *city_view_data_unsafe();
 

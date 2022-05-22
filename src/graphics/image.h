@@ -91,7 +91,7 @@ struct image_t {
     color_t *TEMP_PIXEL_DATA = nullptr;
 };
 
-inline int terrain_ph_offset;
+extern int terrain_ph_offset;
 
 bool image_load_paks();
 bool image_set_font_pak(encoding_type encoding);

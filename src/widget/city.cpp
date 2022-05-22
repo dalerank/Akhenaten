@@ -16,7 +16,6 @@
 #include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
-#include "graphics/boilerplate.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
@@ -102,7 +101,7 @@ static void draw_TEST(pixel_coordinate pixel, map_point point) {
 static void draw_tile_boxes(pixel_coordinate pixel, map_point point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
         int tile_size = map_property_multi_tile_size(point.grid_offset());
-        draw_debug_tile_box(pixel.x, pixel.y, tile_size, tile_size);
+        debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
 void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *figure_coord, map_point tile) {

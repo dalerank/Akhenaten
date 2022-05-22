@@ -17,9 +17,9 @@ void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, i
 void draw_debug_line_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color = COLOR_WHITE);
 void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color = COLOR_WHITE);
 
-void draw_debug_crosshair(int x, int y);
-void draw_debug_sprite_box(int x, int y, const image_t *img);
-void draw_debug_tile_box(int x, int y, int tile_size_x = 1, int tile_size_y = 1);
+void debug_draw_crosshair(int x, int y);
+void debug_draw_sprite_box(int x, int y, const image_t *img);
+void debug_draw_tile_box(int x, int y, int tile_size_x = 1, int tile_size_y = 1);
 
 void draw_debug_tile(pixel_coordinate pixel, map_point point);
 void draw_debug_figures(pixel_coordinate pixel, map_point point);

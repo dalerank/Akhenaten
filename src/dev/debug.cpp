@@ -73,17 +73,17 @@ void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int ind
     text_draw_shadow_left(str, x + indent + indent2, y, color);
 }
 
-void draw_debug_crosshair(int x, int y) {
+void debug_draw_crosshair(int x, int y) {
     graphics_renderer()->draw_line(x, x + 10, y, y, COLOR_GREEN);
     graphics_renderer()->draw_line(x, x, y, y + 10, COLOR_RED);
 }
-void draw_debug_sprite_box(int x, int y, const image_t *img) {
+void debug_draw_sprite_box(int x, int y, const image_t *img) {
     int x2 = x - img->animation.sprite_x_offset;
     int y2 = y - img->animation.sprite_y_offset;
     graphics_renderer()->draw_rect(x2, y2, img->width, img->height, COLOR_GREEN);
-    draw_debug_crosshair(x2 + img->animation.sprite_x_offset, y2 + img->animation.sprite_y_offset);
+    debug_draw_crosshair(x2 + img->animation.sprite_x_offset, y2 + img->animation.sprite_y_offset);
 }
-void draw_debug_tile_box(int x, int y, int tile_size_x, int tile_size_y) {
+void debug_draw_tile_box(int x, int y, int tile_size_x, int tile_size_y) {
     int left_x = x;
     int left_y = y + HALF_TILE_HEIGHT_PIXELS;
 
