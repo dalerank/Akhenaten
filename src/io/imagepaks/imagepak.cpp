@@ -142,47 +142,47 @@ static void add_edge_to_letter(const image_t *img) {
     color_t *TEMP_BUFFER = new color_t[oldsize];
 
     // copy original glyph to the buffer
-    color_t *pixels = img->TEMP_PIXEL_DATA;
-    auto p_buffer = TEMP_BUFFER;
+    color_t *pixels_row = img->TEMP_PIXEL_DATA;
+    auto p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++)
-            p_buffer[x] = pixels[x];
-        pixels += atlas_width;
-        p_buffer += atlas_width;
+            p_buffer_row[x] = pixels_row[x];
+        pixels_row += atlas_width;
+        p_buffer_row += img->width;
     }
 
     // paste back and create edges
-    pixels = img->TEMP_PIXEL_DATA;
-    p_buffer = TEMP_BUFFER;
+    pixels_row = img->TEMP_PIXEL_DATA;
+    p_buffer_row = TEMP_BUFFER;
     auto edge_color = COLOR_BLACK;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
-            if ((p_buffer[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
 //                pixels[atlas_width * 0 + x + 0] = COLOR_BLACK;
-                pixels[atlas_width * 0 + x + 1] = edge_color;
-                pixels[atlas_width * 0 + x + 2] = edge_color;
-                pixels[atlas_width * 1 + x + 0] = edge_color;
-                pixels[atlas_width * 1 + x + 1] = edge_color;
-                pixels[atlas_width * 1 + x + 2] = edge_color;
-                pixels[atlas_width * 2 + x + 0] = edge_color;
-                pixels[atlas_width * 2 + x + 1] = edge_color;
-                pixels[atlas_width * 2 + x + 2] = edge_color;
+                pixels_row[atlas_width * 0 + x + 1] = edge_color;
+                pixels_row[atlas_width * 0 + x + 2] = edge_color;
+                pixels_row[atlas_width * 1 + x + 0] = edge_color;
+                pixels_row[atlas_width * 1 + x + 1] = edge_color;
+                pixels_row[atlas_width * 1 + x + 2] = edge_color;
+                pixels_row[atlas_width * 2 + x + 0] = edge_color;
+                pixels_row[atlas_width * 2 + x + 1] = edge_color;
+                pixels_row[atlas_width * 2 + x + 2] = edge_color;
             }
         }
-        pixels += atlas_width;
-        p_buffer += atlas_width;
+        pixels_row += atlas_width;
+        p_buffer_row += img->width;
     }
 
     // paste white glyph in the center
-    pixels = img->TEMP_PIXEL_DATA;
-    p_buffer = TEMP_BUFFER;
+    pixels_row = img->TEMP_PIXEL_DATA;
+    p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img->height; y++) {
         for (int x = 0; x < img->width; x++) {
-            if ((p_buffer[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
-                pixels[atlas_width * 1 + x + 1] = COLOR_WHITE;
+            if ((p_buffer_row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT)
+                pixels_row[atlas_width * 1 + x + 1] = COLOR_WHITE;
         }
-        pixels += atlas_width;
-        p_buffer += atlas_width;
+        pixels_row += atlas_width;
+        p_buffer_row += img->width;
     }
 
     delete TEMP_BUFFER;
@@ -259,7 +259,7 @@ static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
             if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT))
                 convert_to_plain_white(img);
             else if (is_font_glyph_in_range(img, FONT_SMALL_SHADED, FONT_NORMAL_BLACK_ON_DARK)) {
-//                add_edge_to_letter(img); // TODO: FIX (it crashes)
+                add_edge_to_letter(img); // TODO: FIX (it crashes)
                 img->width += 2;
                 img->height += 2;
             }
