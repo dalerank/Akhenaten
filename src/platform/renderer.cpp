@@ -13,7 +13,6 @@
 #include <string.h>
 #include "input/cursor.h"
 #include "SDL_image.h"
-#include "io/file_formats.h"
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
 #define USE_YUV_TEXTURES
@@ -915,7 +914,7 @@ SDL_Texture *graphics_renderer_interface::create_texture_atlas(color_t *p_data, 
     }
 #else
     // create RGB surface, and texture atlas from that surface
-    SDL_Log("Creating atlas texture with size %dx%d", width, height);
+//    SDL_Log("Creating atlas texture with size %dx%d", width, height);
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) p_data,
                                                     width, height,
                                                     32, width * sizeof(color_t),

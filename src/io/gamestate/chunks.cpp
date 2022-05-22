@@ -1,18 +1,11 @@
 #include <cstring>
 #include "chunks.h"
-#include "boilerplate.h"
 #include "io/manager.h"
 
-static void default_bind(io_buffer *iob) {
-    iob->bind(BIND_SIGNATURE_NONE);
-}
-
-io_buffer *iob_none = new io_buffer(default_bind);
-
-io_buffer *iob_ = new io_buffer([](io_buffer *iob) {
-
+static int file_version;
+io_buffer *iob_file_version = new io_buffer([](io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_INT32, &file_version);
 });
-
 struct {
     struct {
         uint32_t compressed = 0; // 0, 1
@@ -38,7 +31,10 @@ io_buffer *iob_chunks_schema = new io_buffer([](io_buffer *iob) {
         fwrite(temp_string, strlen(temp_string), 1, debug_file);
     }
     for (int i = 0; i < data.chunks_in_used; ++i) {
-
+        // schema chunk nums found so far:
+        //    MAP: 24
+        //    SAV: 175
+        //    SAV (v.160+): 181
         if (i == 77)
             int a = 5;
         auto chunk = &data.chunks[i];

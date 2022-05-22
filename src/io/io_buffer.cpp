@@ -47,3 +47,13 @@ io_buffer::~io_buffer() {
     // this DOES NOT free up the internal buffer memory (for now)!!!
     // it WILL become a dangling pointer!
 }
+
+////
+
+void default_bind(io_buffer *iob) {
+    iob->bind(BIND_SIGNATURE_NONE);
+}
+io_buffer *iob_none = new io_buffer(default_bind);
+io_buffer *iob_ = new io_buffer([](io_buffer *iob) {
+    //
+});

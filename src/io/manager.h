@@ -45,13 +45,11 @@ private:
     int alloc_index = 0;
 
     void clear();
+    bool io_failure_cleanup(const char *action, const char *reason); // because I'm anal about reusing code...
+public:
+    // push parametric chunk onto the schema
     buffer *push_chunk(int size, bool compressed, const char *name, io_buffer *iob);
 
-    // set up list of io_buffer chunks in correct order for specific file format read/write operations
-    void init_chunk_schema();
-//    bool determine_version_from_file(const char *filename);
-
-public:
     const int num_chunks();
     const int get_file_version() {
         return file_version;
@@ -61,8 +59,11 @@ public:
     }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
-    bool serialize(const char *filename, int offset, file_format_t format, const int version);
-    bool unserialize(const char *filename, int offset, file_format_t format, const int(*determine_file_version)(const char *_filename, int _offset));
+    bool serialize(const char *filename, int offset, file_format_t format, const int version,
+                   void(*init_schema)(file_format_t _format, const int _version));
+    bool unserialize(const char *filename, int offset, file_format_t format,
+                     const int(*determine_file_version)(const char *_filename, int _offset),
+                     void(*init_schema)(file_format_t _format, const int _version));
 };
 
 extern FileIOManager FILEIO;

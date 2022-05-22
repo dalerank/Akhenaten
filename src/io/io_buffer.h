@@ -104,5 +104,7 @@ public:
     ~io_buffer();
 };
 
+void default_bind(io_buffer *iob);
+extern io_buffer *iob_none;
 
 #endif //OZYMANDIAS_IO_BUFFER_H

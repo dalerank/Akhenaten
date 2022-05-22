@@ -1,9 +1,7 @@
-#ifndef OZYMANDIAS_CHUNKS_H
-#define OZYMANDIAS_CHUNKS_H
+#ifndef OZYMANDIAS_GAMESTATE_CHUNKS_H
+#define OZYMANDIAS_GAMESTATE_CHUNKS_H
 
 #include "io/io_buffer.h"
-
-extern io_buffer *iob_none;
 
 extern io_buffer *iob_scenario_mission_id;
 extern io_buffer *iob_file_version;
@@ -124,4 +122,4 @@ extern io_buffer *iob_bizarre_ordered_fields_8;
 extern io_buffer *iob_bizarre_ordered_fields_9;
 
 
-#endif //OZYMANDIAS_CHUNKS_H
+#endif //OZYMANDIAS_GAMESTATE_CHUNKS_H

@@ -8,18 +8,17 @@ typedef enum {
     FILE_FORMAT_PNG,
     FILE_FORMAT_JPG,
     //
-    FILE_FORMAT_SG2,
-    FILE_FORMAT_SG3,
+    FILE_FORMAT_SGX,
     FILE_FORMAT_555,
     //
-//    FILE_SCHEMA_SAV_147,
-//    FILE_SCHEMA_SAV_160,
-//    FILE_SCHEMA_SAV_149,
-    FILE_FORMAT_PAK,
-    FILE_FORMAT_SAV,
-    FILE_FORMAT_MAP
+    FILE_FORMAT_MISSION_PAK,
+    FILE_FORMAT_SAVE_FILE,
+    FILE_FORMAT_MAP_FILE,
+    //
+    FILE_FORMAT_JAS_RECORDS,
+    FILE_FORMAT_PLAYER_DATA,
 } file_format_t;
 
-file_format_t fet_format_from_file(const char *filename);
+file_format_t get_format_from_file(const char *filename);
 
 #endif //OZYMANDIAS_FILE_FORMATS_H

@@ -3,25 +3,10 @@
 
 #include <string.h>
 
-//enum { // MINOR versioning found so far
-//    FILE_144 = 144,
-//    FILE_147 = 147,
-//    FILE_149 = 149,
-//    FILE_150 = 150,
-//    FILE_160 = 160,
-//};
-
-//enum { // MAJOR versioning found so far
-//    FILE_MAP = 24,
-//    FILE_SAVESTATE = 175,
-//    FILE_SAVESTATE_EXP = 181
-//};
-
 void fullpath_saves(char *full, const char *filename);
 void fullpath_maps(char *full, const char *filename);
 
 namespace GamestateIO {
-//    const int get_file_version();
     const int get_campaign_scenario_offset(int scenario_id);
     const int read_file_version(const char *filename, int offset);
 
