@@ -64,8 +64,6 @@ static map_point update_city_view_coords(pixel_coordinate pixel) {
     if (screen.x != -1 && screen.y != -1) {
         city_view_set_selected_view_tile(&screen);
         return screentile_to_mappoint(screen);
-//        tile->x = map_grid_offset_to_x(tile.grid_offset());
-//        tile->y = map_grid_offset_to_y(tile.grid_offset());
     } else
         return map_point(0);
 }

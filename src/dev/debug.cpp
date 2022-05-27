@@ -581,7 +581,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// BUILD PLANNER
-    if (false) {
+    if (true) {
         int cl = 90;
         draw_debug_line(str, x, y + 15, cl, "type:", Planner.build_type);
         draw_debug_line(str, x, y + 25, cl, "in progress:", Planner.in_progress);

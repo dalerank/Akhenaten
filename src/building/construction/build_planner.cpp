@@ -1,14 +1,13 @@
-#include <widget/sidebar/city.h>
-#include <figure/formation_herd.h>
-#include <SDL_log.h>
-#include <grid/floodplain.h>
-#include <graphics/view/lookup.h>
+#include "widget/sidebar/city.h"
+#include "figure/formation_herd.h"
+#include "SDL_log.h"
+#include "grid/floodplain.h"
+#include "graphics/view/lookup.h"
 #include "build_planner.h"
 
 #include "clear.h"
 #include "routed.h"
 #include "warnings.h"
-#include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
@@ -20,36 +19,23 @@
 #include "city/finance.h"
 #include "city/resource.h"
 #include "city/warning.h"
-#include "core/calc.h"
 #include "io/config/config.h"
 #include "graphics/image.h"
-#include "core/random.h"
-#include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "game/undo.h"
 #include "graphics/window.h"
-#include "grid/aqueduct.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
-#include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/orientation.h"
-#include "grid/point.h"
 #include "grid/property.h"
-#include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/water.h"
 #include "building/monuments.h"
 #include "graphics/image_groups.h"
-
-struct reservoir_info {
-    int cost;
-    int place_reservoir_at_start;
-    int place_reservoir_at_end;
-};
 
 enum {
     PLACE_RESERVOIR_BLOCKED = -1,
@@ -1593,13 +1579,8 @@ void BuildPlanner::construction_cancel() {
 }
 void BuildPlanner::construction_update(map_point tile) {
     end = tile;
-//    if (grid_offset) {
-//        end = map_point(grid_offset);
-//    } else {
-//        x = end.x();
-//        y = end.y();
-//        grid_offset = end.grid_offset();
-//    }
+    if (end == map_point(-1, -1))
+        return;
     int x = end.x();
     int y = end.y();
     if (!build_type || city_finance_out_of_money()) {
@@ -1786,6 +1767,9 @@ bool BuildPlanner::place() {
     // attempt placing!
     int x = end.x();
     int y = end.y();
+
+    if (end == map_point(-1, -1))
+        return false;
 
     // for debugging...
     SDL_Log("Attempting to place at: %03i %03i %06i", x, y, MAP_OFFSET(x, y));

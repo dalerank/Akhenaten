@@ -1,9 +1,7 @@
-#include "io/config/config.h"
 #include "graphics/elements/menu.h"
 #include "core/calc.h"
 #include "grid/grid.h"
 #include "lookup.h"
-#include "zoom.h"
 
 // TODO: get rid of these!!!
 static map_point SCREENTILE_TO_MAPPOINT_LOOKUP[500][500];
@@ -47,10 +45,6 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
 
     auto data = *city_view_data_unsafe();
 
-    // adjust by zoom scale
-    pixel.x = calc_adjust_with_percentage(pixel.x, zoom_get_percentage());
-    pixel.y = calc_adjust_with_percentage(pixel.y, zoom_get_percentage());
-
     // check if within viewport
     if (pixel.x < data.viewport.offset.x ||
         pixel.x >= data.viewport.offset.x + data.viewport.width_pixels ||
@@ -58,6 +52,10 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
         pixel.y >= data.viewport.offset.y + data.viewport.height_pixels) {
         return {-1, -1};
     }
+
+    // adjust by zoom scale
+    pixel.x = calc_adjust_with_percentage(pixel.x, zoom_get_percentage());
+    pixel.y = calc_adjust_with_percentage(pixel.y, zoom_get_percentage());
 
     pixel.x += data.camera.pixel_offset_internal.x;
     pixel.y += data.camera.pixel_offset_internal.y;
