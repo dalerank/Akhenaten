@@ -57,8 +57,9 @@ screen_tile pixel_to_screentile(pixel_coordinate pixel) {
     pixel.x = calc_adjust_with_percentage(pixel.x, zoom_get_percentage());
     pixel.y = calc_adjust_with_percentage(pixel.y, zoom_get_percentage());
 
-    pixel.x += data.camera.pixel_offset_internal.x;
-    pixel.y += data.camera.pixel_offset_internal.y;
+//    pixel.x += data.camera.pixel_offset_internal.x;
+//    pixel.y += data.camera.pixel_offset_internal.y;
+    pixel += camera_get_pixel_offset_internal();
     int odd = ((pixel.x - data.viewport.offset.x) / HALF_TILE_WIDTH_PIXELS +
                (pixel.y - data.viewport.offset.y) / HALF_TILE_HEIGHT_PIXELS) & 1;
     int x_is_odd = ((pixel.x - data.viewport.offset.x) / HALF_TILE_WIDTH_PIXELS) & 1;

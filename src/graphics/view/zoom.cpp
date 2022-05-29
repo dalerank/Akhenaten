@@ -144,4 +144,5 @@ float zoom_get_percentage() {
 void zoom_set(float z) {
     z = calc_bound(z, 50, 200);
     data.zoom = z;
+    data.target = z;
 }

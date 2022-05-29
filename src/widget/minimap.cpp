@@ -236,7 +236,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
 }
 static void draw_viewport_rectangle(void) {
     map_point camera_tile = city_view_get_camera_tile();
-    pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
+    pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 

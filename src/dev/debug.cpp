@@ -835,7 +835,7 @@ void draw_debug_ui(int x, int y) {
     /////// CAMERA
     if (true) {
         map_point camera_tile = city_view_get_camera_tile();
-        pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
+        pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
 
         view_data* viewdata = city_view_data_unsafe();
         int real_max_x;

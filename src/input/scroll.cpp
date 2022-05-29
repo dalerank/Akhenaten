@@ -385,16 +385,16 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
                                                                                                  -direction);
 }
 
-static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
+static bool set_scroll_speed_from_input(const mouse *m, scroll_type type) {
     if (set_scroll_speed_from_drag(config_get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
-        return 1;
+        return true;
 
     int direction = get_direction(m);
     if (direction == DIR_8_NONE) {
         time_millis time = config_get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
         speed_set_target(&data.speed.x, 0, time, 1);
         speed_set_target(&data.speed.y, 0, time, 1);
-        return 0;
+        return false;
     }
     if (data.speed.decaying)
         clear_scroll_speed();
@@ -409,13 +409,13 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
         int align_x = 0;
         int align_y = 0;
         if (type == SCROLL_TYPE_CITY) {
-            pixel_coordinate camera_pixels = city_view_get_camera_pixel_offset();
+            pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
             align_x = get_alignment_delta(dir_x, TILE_X_PIXELS, camera_pixels.x);
             align_y = get_alignment_delta(dir_y, TILE_Y_PIXELS, camera_pixels.y);
         }
         speed_set_target(&data.speed.x, (step + align_x) * dir_x * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
         speed_set_target(&data.speed.y, ((step / y_fraction) + align_y) * dir_y * do_scroll, SPEED_CHANGE_IMMEDIATE, 0);
-        return 1;
+        return true;
     }
 
     int max_speed = SCROLL_STEP[type][get_scroll_speed_factor()];
@@ -439,7 +439,7 @@ static int set_scroll_speed_from_input(const mouse *m, scroll_type type) {
         speed_set_target(&data.speed.x, (int) (max_speed_x * data.speed.modifier_x), SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(&data.speed.y, (int) (max_speed_y * data.speed.modifier_y), SPEED_CHANGE_IMMEDIATE, 1);
     }
-    return 1;
+    return true;
 }
 
 int scroll_get_delta(const mouse *m, pixel_coordinate *delta, scroll_type type) {

@@ -175,6 +175,9 @@ static void post_load() {
     city_set_player_name(setting_player_name());
     scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
 
+    // camera
+    city_view_camera_position_refresh();
+
     // problems / overlays
     city_message_init_problem_areas();
     city_mission_tutorial_set_fire_message_shown(1);

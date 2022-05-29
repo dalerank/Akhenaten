@@ -22,7 +22,7 @@ typedef struct {
     int orientation;
     struct {
         screen_tile tile_internal;
-        pixel_coordinate pixel_offset_internal;
+//        pixel_coordinate pixel_offset_internal;
         pixel_coordinate position;
     } camera;
     struct {
@@ -32,13 +32,15 @@ typedef struct {
         int width_tiles;
         int height_tiles;
     } viewport;
-    pixel_coordinate selected_tile;
+    screen_tile selected_tile;
 } view_data;
 
 typedef void (tile_draw_callback)(pixel_coordinate pixel, map_point point);
 typedef void (minimap_draw_callback)(screen_tile screen, map_point point);
 
 view_data *city_view_data_unsafe();
+
+void city_view_camera_position_refresh();
 
 void city_view_init(void);
 
@@ -48,8 +50,8 @@ int city_view_absolute_orientation(int orientation_relative);
 void city_view_reset_orientation(void);
 
 map_point city_view_get_camera_tile();
-pixel_coordinate city_view_get_camera_pixel_offset();
-void city_view_get_camera_position(int *x, int *y);
+pixel_coordinate camera_get_position();
+pixel_coordinate camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int *x, int *y);
 void city_view_get_camera_max_pixel_offset(int *x, int *y);
 void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y);

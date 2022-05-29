@@ -44,8 +44,7 @@ static void set_city_clip_rectangle(void) {
 }
 
 static void update_zoom_level(void) {
-    pixel_coordinate offset;
-    city_view_get_camera_position(&offset.x, &offset.y);
+    pixel_coordinate offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
         city_view_go_to_pixel_coord(offset.x, offset.y, true);
