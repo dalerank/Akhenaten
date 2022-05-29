@@ -17,9 +17,6 @@ uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength) {
     *dst = 0;
     return dst;
 }
-//uint8_t *string_copy(const char *src, uint8_t *dst, int maxlength) {
-//    return string_copy((const char *) src, dst, maxlength);
-//}
 int string_length(const uint8_t *str) {
     int length = 0;
     while (*str) {
@@ -28,10 +25,10 @@ int string_length(const uint8_t *str) {
     }
     return length;
 }
-const uint8_t *string_from_ascii(const char *str) {
+const uint8_t *string_from_ascii(const char *str, bool extended) {
     const char *s = str;
     while (*s) {
-        if (*s & 0x80)
+        if (*s & 0x80 && !extended)
             return 0;
         s++;
     }

@@ -1,26 +1,20 @@
 #include <tgmath.h>
-#include <dev/debug.h>
+#include "dev/debug.h"
 #include "city.h"
 
 #include "building/menu.h"
 #include "city/message.h"
-#include "graphics/view/view.h"
-#include "city/warning.h"
-#include "core/direction.h"
 #include "core/game_environment.h"
 #include "game/orientation.h"
 #include "game/state.h"
 #include "game/undo.h"
-#include "graphics/boilerplate.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "grid/orientation.h"
 #include "scenario/property.h"
-#include "widget/city.h"
 #include "widget/minimap.h"
 #include "widget/sidebar/common.h"
 #include "widget/sidebar/extra.h"
@@ -61,8 +55,8 @@ static image_button button_expand_sidebar[1] = {
 
 static image_button buttons_build_collapsed[12] = {
         {9, CL_ROW0, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 90, button_build, button_none, BUILD_MENU_VACANT_HOUSE, 0, 1},
-        {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
-        {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
+        {9, CL_ROW0 + 36, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 94, button_build, button_none, BUILD_MENU_ROAD, 0, 1},
+        {9, CL_ROW0 + 71, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 98, button_build, button_none, BUILD_MENU_CLEAR_LAND, 0, 1},
         {9, CL_ROW0 + 108, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 102, button_build, button_none, BUILD_MENU_FOOD, 0, 1},
         {9, CL_ROW0 + 142, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 106, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
         {9, CL_ROW0 + 177, 36, 48, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 110, button_build, button_none, BUILD_MENU_DISTRIBUTION, 0, 1},
@@ -113,28 +107,14 @@ static image_button buttons_top_expanded[3] = {
 };
 
 static struct {
-    int focus_button_for_tooltip;
+    int focus_tooltip_text_id;
 } data;
 
-#include "game/time.h"
-#include "city/data_private.h"
-#include "city/data_private.h"
-#include "game/tutorial.h"
-#include "core/string.h"
-
 static void draw_overlay_text(int x_offset) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        if (game_state_overlay())
-            lang_text_draw_centered(14, game_state_overlay(), x_offset, 32, 117, FONT_NORMAL_BLACK_ON_DARK);
-        else
-            lang_text_draw_centered(6, 4, x_offset, 32, 117, FONT_NORMAL_BLACK_ON_DARK);
-    }
-    if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        if (game_state_overlay())
-            lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_DARK);
-        else
-            lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_DARK);
-    }
+    if (game_state_overlay())
+        lang_text_draw_centered(14, game_state_overlay(), x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
+    else
+        lang_text_draw_centered(6, 4, x_offset - 15, 30, 117, FONT_NORMAL_BLACK_ON_LIGHT);
 }
 static void draw_sidebar_remainder(int x_offset, bool is_collapsed) {
     int width = SIDEBAR_EXPANDED_WIDTH;
@@ -195,27 +175,21 @@ static void draw_collapsed_background(void) {
     draw_sidebar_remainder(x_offset, true);
 }
 static void draw_expanded_background(int x_offset) {
-    if (GAME_ENV == ENGINE_ENV_C3) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 1, x_offset, TOP_MENU_HEIGHT);
-        ImageDraw::img_generic(window_build_menu_image(), x_offset + 6, 225 + TOP_MENU_HEIGHT);
-        widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
-        draw_number_of_messages(x_offset);
-    } else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
-        ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
-        widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL), x_offset, TOP_MENU_HEIGHT);
+    ImageDraw::img_generic(window_build_menu_image(), x_offset + 11, 181 + TOP_MENU_HEIGHT);
+    widget_minimap_draw(x_offset + 12, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 
-        // extra bar spacing on the right
-        int block_height = 702;
-        int s_end = 768;
-        int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
-        int s_start = s_num * block_height;
-        for (int i = 0; i < s_num; i++)
-            ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162,
-                                   s_start + i * block_height);
-        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
-        draw_number_of_messages(x_offset - 26);
-    }
+    // extra bar spacing on the right
+    int block_height = 702;
+    int s_end = 768;
+    int s_num = ceil((float) (screen_height() - s_end) / (float) block_height);
+    int s_start = s_num * block_height;
+    for (int i = 0; i < s_num; i++)
+        ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162,
+                               s_start + i * block_height);
+    ImageDraw::img_generic(image_id_from_group(GROUP_SIDE_PANEL) + 2, x_offset + 162, 0);
+    draw_number_of_messages(x_offset - 26);
+
     draw_buttons_expanded(x_offset);
     draw_overlay_text(x_offset + 4);
 
@@ -262,38 +236,36 @@ int widget_sidebar_city_handle_mouse(const mouse *m) {
 
     bool handled = false;
     int button_id;
-    data.focus_button_for_tooltip = 0;
+    data.focus_tooltip_text_id = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
         handled |= image_buttons_handle_mouse(m, x_offset, 24, button_expand_sidebar, 1, &button_id);
         if (button_id)
-            data.focus_button_for_tooltip = 12;
+            data.focus_tooltip_text_id = 12;
 
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_collapsed, 12, &button_id);
         if (button_id)
-            data.focus_button_for_tooltip = button_id + 19;
+            data.focus_tooltip_text_id = button_id + 19;
 
     } else {
         if (widget_minimap_handle_mouse(m))
             return true;
 
         int x_offset = sidebar_common_get_x_offset_expanded();
-        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2,
-                                              &button_id);
+        handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_overlays_collapse_sidebar, 2, &button_id);
         if (button_id)
-            data.focus_button_for_tooltip = button_id + 9;
+            data.focus_tooltip_text_id = button_id + 9;
 
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_build_expanded, 15, &button_id);
         if (button_id)
-            data.focus_button_for_tooltip = button_id + 19;
+            data.focus_tooltip_text_id = button_id + 19;
 
         handled |= image_buttons_handle_mouse(m, x_offset, 24, buttons_top_expanded, 6, &button_id);
         if (button_id)
-            data.focus_button_for_tooltip = button_id + 39;
+            data.focus_tooltip_text_id = button_id + 40;
 
         handled |= sidebar_extra_handle_mouse(m);
     }
-//    return 0;
     return handled;
 }
 int widget_sidebar_city_handle_mouse_build_menu(const mouse *m) {
@@ -305,7 +277,7 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse *m) {
                                           buttons_build_expanded, 15, 0);
 }
 int widget_sidebar_city_get_tooltip_text(void) {
-    return data.focus_button_for_tooltip;
+    return data.focus_tooltip_text_id;
 }
 
 void widget_sidebar_city_release_build_buttons() {

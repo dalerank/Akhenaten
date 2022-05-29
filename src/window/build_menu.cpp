@@ -1,9 +1,8 @@
-#include <city/buildings.h>
+#include "city/buildings.h"
 #include "build_menu.h"
 
 #include "building/construction/build_planner.h"
 #include "building/model.h"
-#include "graphics/view/view.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/boilerplate.h"
 #include "graphics/elements/lang_text.h"
@@ -11,11 +10,8 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "scenario/property.h"
-#include "widget/city.h"
 #include "widget/sidebar/city.h"
 #include "window/city.h"
-#include "core/game_environment.h"
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -72,22 +68,19 @@ static struct {
     int focus_button_id;
 } data;
 
-static int init(int submenu) {
+static bool init(int submenu) {
     data.selected_submenu = submenu;
     data.num_items = building_menu_count_items(submenu);
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
-
-//    int type = building_menu_type(data.selected_submenu, item);
-//    BuildPlanner::set_building_type(type);
 
     Planner.setup_build(BUILDING_NONE);
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
         submenu == BUILD_MENU_CLEAR_LAND ||
         submenu == BUILD_MENU_ROAD) {
         button_menu_item(0);
-        return 0;
+        return false;
     } else
-        return 1;
+        return true;
 }
 
 static int get_sidebar_x_offset(void) {
@@ -147,8 +140,6 @@ static int set_submenu_for_type(int type) {
     }
     return current_menu != data.selected_submenu;
 }
-
-#include "window/city.h"
 
 static void draw_background(void) {
     window_city_draw_panels();
@@ -231,53 +222,46 @@ static void button_menu_item(int item) {
 }
 
 int window_build_menu_image(void) {
-    int image_base = image_id_from_group(GROUP_PANEL_WINDOWS);
-    switch (GAME_ENV) {
-        case ENGINE_ENV_PHARAOH:
-            image_base = image_id_from_group(GROUP_PANEL_WINDOWS_PH);
-//            if (Planner.building_type == BUILDING_NONE)
-//                return image_base;
-            switch (data.selected_submenu) {
-                default:
-                case BUILD_MENU_VACANT_HOUSE:
-                    return image_base + 1;
-                case BUILD_MENU_ROAD:
-                    return image_base + 5;
-                case BUILD_MENU_CLEAR_LAND:
-                    return image_base + 9;
-                case BUILD_MENU_FARMS:
-                case BUILD_MENU_FOOD:
-                    return image_base + 10;
-                case BUILD_MENU_GUILDS:
-                case BUILD_MENU_RAW_MATERIALS:
-                case BUILD_MENU_INDUSTRY:
-                    return image_base + 6;
-                case BUILD_MENU_DISTRIBUTION:
-                    return image_base + 2;
-                case BUILD_MENU_ENTERTAINMENT:
-                    return image_base + 3;
-                case BUILD_MENU_SHRINES:
-                case BUILD_MENU_TEMPLES:
-                case BUILD_MENU_LARGE_TEMPLES:
-                case BUILD_MENU_MONUMENTS:
-                case BUILD_MENU_RELIGION:
-                    return image_base + 7;
-                case BUILD_MENU_EDUCATION:
-                    return image_base + 11;
-                case BUILD_MENU_HEALTH:
-                    return image_base + 4;
-                case BUILD_MENU_WATER_CROSSINGS:
-                case BUILD_MENU_BEAUTIFICATION:
-                case BUILD_MENU_ADMINISTRATION:
-                    return image_base + 8;
-                case BUILD_MENU_DEFENCES:
-                case BUILD_MENU_FORTS:
-                case BUILD_MENU_SECURITY:
-                    return image_base + 12;
-            }
-            break;
+    int image_base = image_id_from_group(GROUP_BUILD_MENU_CATEGORIES);
+    switch (data.selected_submenu) {
+        default:
+//            return image_base;
+        case BUILD_MENU_VACANT_HOUSE:
+            return image_base + 1;
+        case BUILD_MENU_ROAD:
+            return image_base + 5;
+        case BUILD_MENU_CLEAR_LAND:
+            return image_base + 9;
+        case BUILD_MENU_FARMS:
+        case BUILD_MENU_FOOD:
+            return image_base + 10;
+        case BUILD_MENU_GUILDS:
+        case BUILD_MENU_RAW_MATERIALS:
+        case BUILD_MENU_INDUSTRY:
+            return image_base + 6;
+        case BUILD_MENU_DISTRIBUTION:
+            return image_base + 2;
+        case BUILD_MENU_ENTERTAINMENT:
+            return image_base + 3;
+        case BUILD_MENU_SHRINES:
+        case BUILD_MENU_TEMPLES:
+        case BUILD_MENU_LARGE_TEMPLES:
+        case BUILD_MENU_MONUMENTS:
+        case BUILD_MENU_RELIGION:
+            return image_base + 7;
+        case BUILD_MENU_EDUCATION:
+            return image_base + 11;
+        case BUILD_MENU_HEALTH:
+            return image_base + 4;
+        case BUILD_MENU_WATER_CROSSINGS:
+        case BUILD_MENU_BEAUTIFICATION:
+        case BUILD_MENU_ADMINISTRATION:
+            return image_base + 8;
+        case BUILD_MENU_DEFENCES:
+        case BUILD_MENU_FORTS:
+        case BUILD_MENU_SECURITY:
+            return image_base + 12;
     }
-
 }
 void window_build_menu_show(int submenu) {
     if (init(submenu)) {

@@ -202,7 +202,7 @@ static int convert_font_glyph_to_bigger_space(buffer *buf, const image_t *img) {
     return pixels_count;
 }
 static void create_special_fonts(std::vector<image_t> *images, int start_index) {
-    for (int i = font_definition_for(FONT_SMALL_SHADED)->image_offset; i < images->size() - start_index; ++i) {
+    for (int i = font_definition_for(FONT_SMALL_OUTLINED)->image_offset; i < images->size() - start_index; ++i) {
         const image_t *img = &images->at(i + start_index);
         image_packer_rect *rect = &packer.rects[i + start_index];
         rect->input.width = img->width + 2;
@@ -212,9 +212,14 @@ static void create_special_fonts(std::vector<image_t> *images, int start_index) 
 static bool is_font_glyph_in_range(const image_t *img, font_t font_start, font_t font_end) {
     int i = img->sgx_index - 201;
     int starting_offset = font_definition_for(font_start)->image_offset;
-    int ending_offset = font_definition_for(font_end)->image_offset;
-    if (i >= starting_offset && i < ending_offset)
+    int ending_offset = 999999;
+    if (font_end != FONT_TYPES_MAX)
+        ending_offset = font_definition_for(font_end)->image_offset;
+    if (i >= starting_offset && i < ending_offset) {
+        if (font_end == FONT_TYPES_MAX)
+            int a = 5;
         return true;
+    }
     return false;
 }
 
@@ -253,24 +258,26 @@ static int convert_image_data(buffer *buf, image_t *img, bool convert_fonts) {
     if (buf == nullptr)
         return 0;
     img->TEMP_PIXEL_DATA = &img->atlas.p_atlas->TEMP_PIXEL_BUFFER[(img->atlas.y_offset * img->atlas.p_atlas->width) + img->atlas.x_offset];
-    if (img->is_fully_compressed) {
+    if (img->is_fully_compressed)
         convert_compressed(buf, img->data_length, img);
-        if (convert_fonts) { // special font conversions
-            if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT))
-                convert_to_plain_white(img);
-            else if (is_font_glyph_in_range(img, FONT_SMALL_SHADED, FONT_NORMAL_BLACK_ON_DARK)) {
-                add_edge_to_letter(img); // TODO: FIX (it crashes)
-                img->width += 2;
-                img->height += 2;
-            }
-        }
-    } else if (img->top_height) { // isometric tile
+    else if (img->top_height) { // isometric tile
         convert_isometric_footprint(buf, img);
         convert_compressed(buf, img->data_length - img->uncompressed_length, img);
     } else if (img->type == IMAGE_TYPE_ISOMETRIC)
         convert_isometric_footprint(buf, img);
     else
         convert_uncompressed(buf, img);
+
+    if (convert_fonts) { // special font conversions
+        if (is_font_glyph_in_range(img, FONT_SMALL_PLAIN, FONT_NORMAL_BLACK_ON_LIGHT)
+            || is_font_glyph_in_range(img, FONT_SMALL_SHADED, FONT_TYPES_MAX))
+            convert_to_plain_white(img);
+        else if (is_font_glyph_in_range(img, FONT_SMALL_OUTLINED, FONT_NORMAL_BLACK_ON_DARK)) {
+            add_edge_to_letter(img);
+            img->width += 2;
+            img->height += 2;
+        }
+    }
 
     img->uncompressed_length /= 2;
 }

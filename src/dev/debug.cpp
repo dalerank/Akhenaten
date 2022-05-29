@@ -51,26 +51,55 @@ void handle_debug_hotkeys(const hotkeys *h) {
 //        debug_range_1 = 20;
 }
 
+static const uint8_t* font_test_str = (uint8_t*)(char*)
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
+static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
+static const uint8_t* font_test_str_extended = (uint8_t*)(char*)"äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
+
+static void debug_font_line(int *y, font_t font) {
+    int line_height = font_definition_for(font)->line_height;
+    if (line_height < 11)
+        line_height = 11;
+    line_height += 5;
+    text_draw(font_test_str_ascii, 5, *y, font, COLOR_MASK_NONE); *y += line_height;
+//    text_draw(font_test_str_extended, 5, *y, font, COLOR_MASK_NONE); *y += line_height;
+}
+void draw_debug_font_text() {
+    graphics_fill_rect(0, 0, 1600, 300, COLOR_FONT_LIGHT_GRAY);
+//    auto str = string_from_ascii(font_test_str, true);
+    int y = 10;
+    debug_font_line(&y, FONT_SMALL_PLAIN);
+    debug_font_line(&y, FONT_NORMAL_BLACK_ON_LIGHT);
+    debug_font_line(&y, FONT_NORMAL_WHITE_ON_DARK);
+    debug_font_line(&y, FONT_NORMAL_YELLOW);
+    debug_font_line(&y, FONT_NORMAL_BLUE);
+    debug_font_line(&y, FONT_LARGE_BLACK_ON_LIGHT);
+    debug_font_line(&y, FONT_LARGE_BLACK_ON_DARK);
+    debug_font_line(&y, FONT_SMALL_OUTLINED);
+    debug_font_line(&y, FONT_NORMAL_BLACK_ON_DARK);
+    debug_font_line(&y, FONT_SMALL_SHADED);
+}
+
 void draw_debug_line(uint8_t* str, int x, int y, int indent, const char *text, int value, color_t color) {
-    text_draw_shadow(string_from_ascii(text), x, y, color);
+    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value, 0);
-    text_draw_shadow(str, x + indent, y, color);
+    text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
 void draw_debug_line_float(uint8_t* str, int x, int y, int indent, const char *text, double value, color_t color) {
-    text_draw_shadow(string_from_ascii(text), x, y, color);
+    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value, 0);
     int l = string_length(str);
     auto p = &str[l];
     string_copy(string_from_ascii("."), p, 2);
     string_from_int(&str[l+1], (double)(value - (double)(int)value) * 100.0f, 0);
-    text_draw_shadow(str, x + indent, y, color);
+    text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
 }
 void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color) {
-    text_draw_shadow(string_from_ascii(text), x, y, color);
+    text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value1, 0);
-    text_draw_shadow_left(str, x + indent, y, color);
+    text_draw_left(str, x + indent, y, FONT_SMALL_OUTLINED, color);
     string_from_int(str, value2, 0);
-    text_draw_shadow_left(str, x + indent + indent2, y, color);
+    text_draw_left(str, x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
 }
 
 void debug_draw_crosshair(int x, int y) {
@@ -144,7 +173,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
                 draw_debug_line(str, x0, y + 0, 0, "", b_id, red ? COLOR_LIGHT_RED : COLOR_WHITE);
                 draw_debug_line(str, x0, y + 10, 0, "", b->type, red ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
                 if (!b->is_main())
-                    text_draw_shadow((uint8_t *)string_from_ascii("sub"), x0, y - 10, COLOR_RED);
+                    text_draw((uint8_t *)string_from_ascii("sub"), x0, y - 10, FONT_SMALL_OUTLINED, COLOR_RED);
             }
             break;
         case 2: // DRAW-TILES AND SIZES
@@ -280,7 +309,7 @@ void draw_debug_tile(pixel_coordinate pixel, map_point point) {
             d = map_sprite_animation_at(grid_offset);
             if (d) {
                 string_from_int(str, d, 0);
-                text_draw_shadow(str, x, y + 10, COLOR_WHITE);
+                text_draw(str, x, y + 10, FONT_SMALL_OUTLINED, COLOR_WHITE);
             }
 
             // STATUES & MONUMENTS
@@ -511,53 +540,53 @@ void draw_debug_ui(int x, int y) {
         color_t col = COLOR_GREEN;
 
         string_from_int(str, DB1);
-        text_draw_shadow(str, x, y, col);
-        text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 14, y, col);
+        text_draw(str, x, y, FONT_SMALL_OUTLINED, col);
+        text_draw((uint8_t *) string_from_ascii(":"), x + 14, y, FONT_SMALL_OUTLINED, col);
         x += 20;
         switch (DB1) {
             case 1:
-                text_draw_shadow((uint8_t *) string_from_ascii("ACTION / STATE IDS"), x, y, col);
+                text_draw((uint8_t *) string_from_ascii("ACTION / STATE IDS"), x, y, FONT_SMALL_OUTLINED, col);
                 break;
             case 2:
-                text_draw_shadow((uint8_t *) string_from_ascii("ROUTING"), x, y, col);
+                text_draw((uint8_t *) string_from_ascii("ROUTING"), x, y, FONT_SMALL_OUTLINED, col);
                 break;
             case 3:
-                text_draw_shadow((uint8_t *) string_from_ascii("RESOURCES / CARRYING"), x, y, col);
+                text_draw((uint8_t *) string_from_ascii("RESOURCES / CARRYING"), x, y, FONT_SMALL_OUTLINED, col);
                 break;
             case 4:
-                text_draw_shadow((uint8_t *) string_from_ascii("N/A"), x, y, col);
+                text_draw((uint8_t *) string_from_ascii("N/A"), x, y, FONT_SMALL_OUTLINED, col);
                 break;
             case 5:
-                text_draw_shadow((uint8_t *) string_from_ascii("FESTIVAL"), x, y, col);
+                text_draw((uint8_t *) string_from_ascii("FESTIVAL"), x, y, FONT_SMALL_OUTLINED, col);
                 break;
         }
         y += 3;
         x -= 20;
         string_from_int(str, DB2);
-        text_draw_shadow(str, x, y + 10, col);
-        text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 14, y + 10, col);
+        text_draw(str, x, y + 10, FONT_SMALL_OUTLINED, col);
+        text_draw((uint8_t *) string_from_ascii(":"), x + 14, y + 10, FONT_SMALL_OUTLINED, col);
         x += 20;
         switch (DB2) {
             default: break;
-            case 1: text_draw_shadow((uint8_t *) string_from_ascii("BUILDING IDS"), x, y + 10, col); break;
-            case 2: text_draw_shadow((uint8_t *) string_from_ascii("DRAW-TILES AND SIZES"), x, y + 10, col); break;
-            case 3: text_draw_shadow((uint8_t *) string_from_ascii("ROADS"), x, y + 10, col); break;
-            case 4: text_draw_shadow((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, col); break;
-            case 5: text_draw_shadow((uint8_t *) string_from_ascii("CITIZEN ROUTING GRID"), x, y + 10, col); break;
-            case 6: text_draw_shadow((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, col); break;
-            case 7: text_draw_shadow((uint8_t *) string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, col); break;
-            case 8: text_draw_shadow((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, col); break;
-            case 9: text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, col); break;
-            case 10: text_draw_shadow((uint8_t *) string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, col); break;
-            case 11: text_draw_shadow((uint8_t *) string_from_ascii("LABOR"), x, y + 10, col); break;
-            case 12: text_draw_shadow((uint8_t *) string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, col); break;
-            case 13: text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, col); break;
-            case 14: text_draw_shadow((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, col); break;
-            case 15: text_draw_shadow((uint8_t *) string_from_ascii("MARSHLAND DEPLETION"), x, y + 10, col); break;
-            case 16: text_draw_shadow((uint8_t *) string_from_ascii("MARSHLAND"), x, y + 10, col); break;
-            case 17: text_draw_shadow((uint8_t *) string_from_ascii("TERRAIN TYPE"), x, y + 10, col); break;
-            case 18: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, col); break;
-            case 19: text_draw_shadow((uint8_t *) string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, col); break;
+            case 1: text_draw((uint8_t *) string_from_ascii("BUILDING IDS"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 2: text_draw((uint8_t *) string_from_ascii("DRAW-TILES AND SIZES"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 3: text_draw((uint8_t *) string_from_ascii("ROADS"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 4: text_draw((uint8_t *) string_from_ascii("ROUTING DISTANCE"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 5: text_draw((uint8_t *) string_from_ascii("CITIZEN ROUTING GRID"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 6: text_draw((uint8_t *) string_from_ascii("MOISTURE"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 7: text_draw((uint8_t *) string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 8: text_draw((uint8_t *) string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 9: text_draw((uint8_t *) string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 10: text_draw((uint8_t *) string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 11: text_draw((uint8_t *) string_from_ascii("LABOR"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 12: text_draw((uint8_t *) string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 13: text_draw((uint8_t *) string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 14: text_draw((uint8_t *) string_from_ascii("IMAGE FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 15: text_draw((uint8_t *) string_from_ascii("MARSHLAND DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 16: text_draw((uint8_t *) string_from_ascii("MARSHLAND"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 17: text_draw((uint8_t *) string_from_ascii("TERRAIN TYPE"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 18: text_draw((uint8_t *) string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
+            case 19: text_draw((uint8_t *) string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, FONT_SMALL_OUTLINED, col); break;
         }
         y += 10;
         x -= 20;
@@ -615,7 +644,7 @@ void draw_debug_ui(int x, int y) {
     /////// RELIGION
     if (false) {
         int cl = 0;
-        text_draw_shadow((uint8_t *) string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"), x, y + 15, COLOR_WHITE);
+        text_draw((uint8_t *) string_from_ascii("      mood/target  wrath/ankhs   buildings  coverage  festival"), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
         y += 15;
         int c0 = 60;
         int c1 = 40;
@@ -755,8 +784,8 @@ void draw_debug_ui(int x, int y) {
         }
 
         // cursor
-        text_draw_shadow(dot, x + rc_curr, y + 15, COLOR_FONT_YELLOW);
-        text_draw_shadow(string_from_ascii("\'"), x + rc_curr, y + 25, COLOR_FONT_YELLOW);
+        text_draw(dot, x + rc_curr, y + 15, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
+        text_draw(string_from_ascii("\'"), x + rc_curr, y + 25, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
         draw_debug_line_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr); // current cycle
         draw_debug_line(str, x + rc_curr + 54, y + 25, 5, ":", floods->state); // current cycle
 
@@ -914,11 +943,11 @@ void draw_debug_ui(int x, int y) {
             if (f)
                 color = COLOR_GREEN;
             string_from_int(str, i, 0);
-            text_draw_shadow(str, x + 3, y + 115 + i * 10, color);
-            text_draw_shadow((uint8_t *) string_from_ascii(":"), x + 3 + 20, y + 115 + i * 10, color);
+            text_draw(str, x + 3, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
+            text_draw((uint8_t *) string_from_ascii(":"), x + 3 + 20, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
             string_from_int(str, f, 0);
-            text_draw_shadow(str, x + 3 + 30, y + 115 + i * 10, color);
-            text_draw_shadow((uint8_t *) string_from_ascii(flagnames[i]), x + 3 + 45, y + 115 + i * 10, color);
+            text_draw(str, x + 3 + 30, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
+            text_draw((uint8_t *) string_from_ascii(flagnames[i]), x + 3 + 45, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
         }
     }
 }

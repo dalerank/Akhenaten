@@ -3,7 +3,6 @@
 #include <cmath>
 #include "io/config/config.h"
 #include "zoom.h"
-#include "dev/debug.h"
 
 struct {
     float zoom = ZOOM_DEFAULT;

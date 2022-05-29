@@ -474,7 +474,6 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/arrow_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/generic_button.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/image_button.cpp
-    ${PROJECT_SOURCE_DIR}/src/graphics/elements/menu.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/panel.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/scrollbar.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/elements/scroll_list_panel.cpp

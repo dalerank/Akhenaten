@@ -50,7 +50,7 @@ void graphics_draw_horizontal_line(int x1, int x2, int y, color_t color) {
     graphics_renderer()->draw_line(x1, x2, y, y, color);
 }
 void graphics_draw_rect(int x, int y, int width, int height, color_t color) {
-    graphics_renderer()->draw_rect(x, width, y, height, color);
+    graphics_renderer()->draw_rect(x, y, width, height, color);
 }
 void graphics_draw_inset_rect(int x, int y, int width, int height) {
     int x_end = x + width - 1;
@@ -650,42 +650,43 @@ static void draw_footprint_size_any(int image_id, int x, int y, int size, color_
     }
 }
 static color_t base_color_for_font(font_t font) {
-    if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_SHADED || font == FONT_SMALL_PLAIN2)
+    if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_OUTLINED || font == FONT_SMALL_SHADED)
         return COLOR_FONT_PLAIN;
     return COLOR_MASK_NONE;
 }
 static void draw_multibyte_letter(font_t font, const image_t *img, int x, int y, color_t color_mask, float scale) {
-    switch (font) {
-        case FONT_NORMAL_WHITE_ON_DARK:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
-            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale, false);
-            break;
-        case FONT_NORMAL_YELLOW:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
-            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale, false);
-            break;
-        case FONT_NORMAL_BLACK_ON_DARK:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
-            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
-            break;
-        case FONT_SMALL_PLAIN:
-            if (!color_mask) {
-                color_mask = base_color_for_font(font);
-            }
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-            break;
-        case FONT_NORMAL_BLACK_ON_LIGHT:
-        case FONT_LARGE_BLACK_ON_LIGHT:
-            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
-            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
-            break;
-//        case FONT_NORMAL_SHADED_TOREMOVE:
-//            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_BLACK, scale, false);
+//    switch (font) {
+//        case FONT_NORMAL_WHITE_ON_DARK:
+////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xff311c10, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, COLOR_WHITE, scale, false);
+//            break;
+//        case FONT_NORMAL_YELLOW:
+////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, 0xff731408, scale, false);
+//            break;
+//        case FONT_NORMAL_BLACK_ON_DARK:
+////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffe7cfad, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, 0xff311c10, scale, false);
+//            break;
+//        case FONT_SMALL_PLAIN:
+//            if (!color_mask)
+//                color_mask = base_color_for_font(font);
 //            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-        default:
-            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
-            break;
-    }
+//            break;
+//        case FONT_NORMAL_BLACK_ON_LIGHT:
+//        case FONT_LARGE_BLACK_ON_LIGHT:
+////            graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale, false);
+//            break;
+//        case FONT_SMALL_SHADED:
+//            if (!color_mask)
+//                color_mask = base_color_for_font(font);
+////            graphics_renderer()->draw_image(img, x + 1, y + 1, ALPHA_OPAQUE | COLOR_TOOLTIP_SHADOW, scale, false);
+//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+//        default:
+//            graphics_renderer()->draw_image(img, x, y, ALPHA_OPAQUE | color_mask, scale, false);
+//            break;
+//    }
 }
 
 void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, float scale) {
@@ -762,34 +763,15 @@ void ImageDraw::img_alpha_blended(int image_id, int x, int y, color_t color_mask
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
 }
 void ImageDraw::img_letter(font_t font, int letter_id, int x, int y, color_t color_mask, float scale) {
-//    const image *img = image_letter(letter_id);
-//    const color_t *data = image_data_letter(letter_id);
-//    if (!data)
-//        return;
-//    if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-//        draw_multibyte_letter(font, img, data, x, y, color);
-//        return;
-//    }
-//    if (font == FONT_NORMAL_SHADED) {
-//        if (img->is_fully_compressed) {
-//            draw_compressed(img, data, x + 1, y + 1, img->height);
-//        } else
-//            draw_uncompressed(img, data, x + 1, y + 1, 0, DRAW_TYPE_NONE);
-//    }
-//    if (img->is_fully_compressed) {
-//        if (color)
-//            draw_compressed_set(img, data, x, y, img->height, color);
-//        else
-//            draw_compressed(img, data, x, y, img->height);
-//    } else
-//        draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
     const image_t *img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        draw_multibyte_letter(font, img, x, y, color_mask, scale);
+//        draw_multibyte_letter(font, img, x, y, color_mask, scale);
         return;
     }
     if (!color_mask)
         color_mask = base_color_for_font(font);
+    if (font == FONT_SMALL_SHADED)
+        graphics_renderer()->draw_image(img, x + 1, y + 1, COLOR_BLACK, scale, false);
     graphics_renderer()->draw_image(img, x, y, color_mask, scale, false);
 }
 void ImageDraw::img_background(int image_id, float scale) {
