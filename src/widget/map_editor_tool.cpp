@@ -125,8 +125,9 @@ void map_editor_tool_draw(map_point tile) {
         return;
 
     int type = editor_tool_type();
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
+    screen_tile screen = camera_get_selected_screen_tile();
+    int x = screen.x;
+    int y = screen.y;
     switch (type) {
         case TOOL_NATIVE_CENTER:
             draw_building(tile, x, y, BUILDING_NATIVE_MEETING);

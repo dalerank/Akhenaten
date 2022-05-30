@@ -22,6 +22,9 @@ struct pixel_coordinate {
     inline bool operator==(pixel_coordinate rhs) {
         return (x == rhs.x && y == rhs.y);
     }
+    inline bool operator!=(pixel_coordinate rhs) {
+        return !(*this == rhs);
+    }
 };
 
 #endif //OZYMANDIAS_STRUCT_TYPES_H

@@ -17,7 +17,7 @@ void map_bookmarks_clear(void) {
 
 void map_bookmark_save(int number) {
     if (number >= 0 && number < MAX_BOOKMARKS)
-        bookmarks[number] = city_view_get_camera_tile();
+        bookmarks[number] = city_view_get_camera_mappoint();
 }
 
 bool map_bookmark_go_to(int number) {
@@ -25,7 +25,7 @@ bool map_bookmark_go_to(int number) {
         int x = bookmarks[number].x();
         int y = bookmarks[number].y();
         if (x > -1 && MAP_OFFSET(x, y) > -1) {
-            city_view_go_to_screen_tile_corner(screen_tile(x, y), true);
+            camera_go_to_corner_tile(screen_tile(x, y), true);
             return true;
         }
     }

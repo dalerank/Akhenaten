@@ -421,7 +421,7 @@ void window_building_draw_figure_list(building_info_context *c) {
 }
 
 static void draw_figure_in_city(int figure_id, pixel_coordinate *coord) {
-    map_point camera_tile = city_view_get_camera_tile();
+    map_point camera_tile = city_view_get_camera_mappoint();
 
     int grid_offset = figure_get(figure_id)->tile.grid_offset();
 //    int x, y;

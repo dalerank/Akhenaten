@@ -47,24 +47,28 @@ static void update_zoom_level(void) {
     pixel_coordinate offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        city_view_go_to_pixel_coord(offset.x, offset.y, true);
+        camera_go_to_pixel(offset, true);
         sound_city_decay_views();
     }
 }
 static void scroll_map(const mouse *m) {
     pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
-        city_view_scroll(delta.x, delta.y);
+        camera_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }
 static map_point update_city_view_coords(pixel_coordinate pixel) {
-    screen_tile screen = pixel_to_screentile(pixel);
-    if (screen.x != -1 && screen.y != -1) {
-        city_view_set_selected_view_tile(&screen);
-        return screentile_to_mappoint(screen);
-    } else
+    if (!pixel_is_inside_viewport(pixel))
         return map_point(0);
+    else {
+        screen_tile screen = pixel_to_screentile(pixel);
+        if (screen.x != -1 && screen.y != -1) {
+            city_view_set_selected_view_tile(&screen);
+            return screentile_to_mappoint(screen);
+        } else
+            return map_point(0);
+    }
 }
 static int input_coords_in_city(int x, int y) {
     int x_offset, y_offset, width, height;
@@ -212,8 +216,9 @@ bool widget_city_draw_construction_cost_and_size(void) {
         return false;
 
     set_city_clip_rectangle();
-    int x, y;
-    city_view_get_selected_tile_pixels(&x, &y);
+    screen_tile screen = camera_get_selected_screen_tile();
+    int x = screen.x;
+    int y = screen.y;
     int inverted_scale = calc_percentage(100, zoom_get_percentage());
     x = calc_adjust_with_percentage(x, inverted_scale);
     y = calc_adjust_with_percentage(y, inverted_scale);

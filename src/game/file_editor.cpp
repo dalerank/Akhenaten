@@ -93,7 +93,7 @@ static void create_blank_map(int size) {
     scenario_editor_create(size);
     clear_map_data();
     map_image_init_edges();
-    city_view_go_to_screen_tile_corner(screen_tile(76, 152), true);
+    camera_go_to_corner_tile(screen_tile(76, 152), true);
     city_view_reset_orientation();
 }
 

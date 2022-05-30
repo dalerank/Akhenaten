@@ -77,7 +77,7 @@ static void update_zoom_level(void) {
     pixel_coordinate offset = camera_get_position();
     if (zoom_update_value(&offset)) {
         city_view_refresh_viewport();
-        city_view_go_to_pixel_coord(offset.x, offset.y, true);
+        camera_go_to_pixel(offset, true);
         sound_city_decay_views();
     }
 }
@@ -104,7 +104,7 @@ static void update_city_view_coords(int x, int y, map_point *tile) {
 static void scroll_map(const mouse *m) {
     pixel_coordinate delta;
     if (scroll_get_delta(m, &delta, SCROLL_TYPE_CITY)) {
-        city_view_scroll(delta.x, delta.y);
+        camera_scroll(delta.x, delta.y);
         sound_city_decay_views();
     }
 }

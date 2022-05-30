@@ -176,7 +176,7 @@ static void post_load() {
     scenario_set_campaign_rank(get_scenario_mission_rank(scenario_campaign_scenario_id()));
 
     // camera
-    city_view_camera_position_refresh();
+//    city_view_camera_position_refresh();
 
     // problems / overlays
     city_message_init_problem_areas();

@@ -619,6 +619,19 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line(str, x, y + 55, cl, "variant:", Planner.variant);
         draw_debug_line(str, x, y + 65, cl, "start:", Planner.start.x()); draw_debug_line(str, x + 40, y + 65, cl, "", Planner.start.y());
         draw_debug_line(str, x, y + 75, cl, "end:", Planner.end.x()); draw_debug_line(str, x + 40, y + 75, cl, "", Planner.end.y());
+
+        screen_tile screen_start = mappoint_to_screentile(Planner.start);
+        screen_tile screen_end = mappoint_to_screentile(Planner.end);
+        draw_debug_line(str, x + 170, y + 65, 60, "screen:", screen_start.x); draw_debug_line(str, x + 170 + 40, y + 65, 60, "", screen_start.y);
+        draw_debug_line(str, x + 170, y + 75, 60, "screen:", screen_end.x); draw_debug_line(str, x + 170 + 40, y + 75, 60, "", screen_end.y);
+
+//        screen_tile screen_start2 = attempt_mappoint_to_screen(Planner.start);
+//        screen_tile screen_end2 = attempt_mappoint_to_screen(Planner.end);
+//        color_t col = (screen_start != screen_start2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
+//        draw_debug_line(str, x + 300, y + 65, 60, "direct:", screen_start2.x, col); draw_debug_line(str, x + 300 + 40, y + 65, 60, "", screen_start2.y, col);
+//        col = (screen_end != screen_end2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
+//        draw_debug_line(str, x + 300, y + 75, 60, "direct:", screen_end2.x, col); draw_debug_line(str, x + 300 + 40, y + 75, 60, "", screen_end2.y, col);
+
         draw_debug_line(str, x, y + 85, cl, "cost:", Planner.total_cost);
         y += 90;
     }
@@ -834,7 +847,7 @@ void draw_debug_ui(int x, int y) {
 
     /////// CAMERA
     if (true) {
-        map_point camera_tile = city_view_get_camera_tile();
+        map_point camera_tile = city_view_get_camera_mappoint();
         pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
 
         view_data* viewdata = city_view_data_unsafe();

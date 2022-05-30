@@ -61,11 +61,11 @@ static void set_bounds(int x_offset, int y_offset, int width_tiles, int height_t
     data.y_offset = y_offset;
     data.width = 2 * width_tiles;
     data.height = height_tiles;
-    data.absolute_x = (MAP_TILE_UPPER_LIMIT_X() - width_tiles) / 2;
-    data.absolute_y = (MAP_TILE_UPPER_LIMIT_Y() - height_tiles) / 2;
+    data.absolute_x = (GRID_LENGTH - width_tiles) / 2 + 1;
+    data.absolute_y = ((2 * GRID_LENGTH) + 1 - height_tiles) / 2;
 
 //    int camera_x, camera_y;
-    map_point camera_tile = city_view_get_camera_tile();
+    map_point camera_tile = city_view_get_camera_mappoint();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
 
@@ -235,7 +235,7 @@ static void draw_minimap_tile(screen_tile screen, map_point point) {
     }
 }
 static void draw_viewport_rectangle(void) {
-    map_point camera_tile = city_view_get_camera_tile();
+    map_point camera_tile = city_view_get_camera_mappoint();
     pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
     int view_width_tiles, view_height_tiles;
     city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
@@ -357,7 +357,7 @@ bool widget_minimap_handle_mouse(const mouse *m) {
     || ((m->left.is_down || m->right.is_down) && mouse_is_moving)) {
         int grid_offset = get_mouse_grid_offset(m);
         if (grid_offset > 0) {
-            city_view_go_to_point(map_point(grid_offset));
+            camera_go_to_mappoint(map_point(grid_offset));
             widget_minimap_invalidate();
             mouse_last_coords = {m->x, m->y};
             return true;

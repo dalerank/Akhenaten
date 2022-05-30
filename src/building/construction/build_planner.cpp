@@ -1419,7 +1419,7 @@ void BuildPlanner::update_coord_caches() {
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
-        city_view_get_selected_tile_pixels(&view_tile.x, &view_tile.y);
+        view_tile = camera_get_selected_screen_tile();
     int orientation = city_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {

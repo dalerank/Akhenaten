@@ -8,15 +8,15 @@
 #define HALF_TILE_WIDTH_PIXELS 30
 #define HALF_TILE_HEIGHT_PIXELS 15
 
-
+void calculate_screentile_lookup_tables();
 map_point screentile_to_mappoint(screen_tile screen);
 screen_tile mappoint_to_screentile(map_point point);
 
+void record_mappoint_pixel_coord(map_point point, pixel_coordinate coord);
 pixel_coordinate mappoint_to_pixel(map_point point);
-void record_pixel_coord(map_point point, pixel_coordinate coord);
 
+camera_coordinate pixel_to_camera_coord(pixel_coordinate pixel);
 screen_tile pixel_to_screentile(pixel_coordinate pixel);
 
-void calculate_lookup();
 
 #endif //OZYMANDIAS_LOOKUP_H

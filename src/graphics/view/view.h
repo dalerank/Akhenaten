@@ -5,8 +5,8 @@
 #include "grid/point.h"
 #include "zoom.h"
 
-int MAP_TILE_UPPER_LIMIT_X();
-int MAP_TILE_UPPER_LIMIT_Y();
+//int MAP_TILE_UPPER_LIMIT_X();
+//int MAP_TILE_UPPER_LIMIT_Y();
 
 int SCROLLABLE_X_MIN_TILE();
 int SCROLLABLE_Y_MIN_TILE();
@@ -14,16 +14,16 @@ int SCROLLABLE_X_MAX_TILE();
 int SCROLLABLE_Y_MAX_TILE();
 
 typedef pixel_coordinate screen_tile;
+typedef pixel_coordinate camera_coordinate;
 
 typedef struct {
     int screen_width;
     int screen_height;
-    int sidebar_collapsed;
+    bool sidebar_collapsed;
     int orientation;
     struct {
         screen_tile tile_internal;
-//        pixel_coordinate pixel_offset_internal;
-        pixel_coordinate position;
+        camera_coordinate position;
     } camera;
     struct {
         pixel_coordinate offset;
@@ -49,7 +49,8 @@ int city_view_relative_orientation(int orientation);
 int city_view_absolute_orientation(int orientation_relative);
 void city_view_reset_orientation(void);
 
-map_point city_view_get_camera_tile();
+screen_tile city_view_get_camera_screentile();
+map_point city_view_get_camera_mappoint();
 pixel_coordinate camera_get_position();
 pixel_coordinate camera_get_pixel_offset_internal();
 void city_view_get_camera_max_tile(int *x, int *y);
@@ -57,13 +58,13 @@ void city_view_get_camera_max_pixel_offset(int *x, int *y);
 void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y);
 void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y);
 
-void city_view_go_to_pixel_coord(int x, int y, bool validate);
-void city_view_go_to_screen_tile_corner(screen_tile screen, bool validate);
-void city_view_go_to_screen_tile(screen_tile screen, bool validate);
-void city_view_go_to_point(map_point point);
-void city_view_scroll(int x, int y);
+void camera_go_to_pixel(pixel_coordinate pixel, bool validate);
+void camera_go_to_corner_tile(screen_tile screen, bool validate);
+void camera_go_to_screen_tile(screen_tile screen, bool validate);
+void camera_go_to_mappoint(map_point point);
+void camera_scroll(int x, int y);
 
-void city_view_get_selected_tile_pixels(int *x, int *y);
+screen_tile camera_get_selected_screen_tile();
 void city_view_set_selected_view_tile(const screen_tile *tile);
 
 void city_view_rotate_left(void);
@@ -75,7 +76,8 @@ void city_view_set_viewport(int screen_width, int screen_height);
 void city_view_get_viewport(int *x, int *y, int *width, int *height);
 void city_view_get_viewport_size_tiles(int *width, int *height);
 
-int city_view_is_sidebar_collapsed(void);
+bool pixel_is_inside_viewport(pixel_coordinate pixel);
+bool city_view_is_sidebar_collapsed(void);
 void city_view_start_sidebar_toggle(void);
 void city_view_toggle_sidebar(void);
 

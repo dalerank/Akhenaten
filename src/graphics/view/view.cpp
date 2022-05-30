@@ -19,7 +19,7 @@ view_data *city_view_data_unsafe() {
 ///////
 
 void city_view_init(void) {
-    calculate_lookup();
+    calculate_screentile_lookup_tables();
     zoom_set(100.0f);
     widget_minimap_invalidate();
 }
@@ -34,36 +34,30 @@ int city_view_absolute_orientation(int orientation_relative) {
 }
 void city_view_reset_orientation(void) {
     data.orientation = 0;
-    calculate_lookup();
+//    calculate_lookup();
 }
 
 static const int X_DIRECTION_FOR_ORIENTATION[] = {1, 1, -1, -1};
 static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
 
-int MAP_TILE_UPPER_LIMIT_X() {
-    return GRID_LENGTH + 3;
-}
-int MAP_TILE_UPPER_LIMIT_Y() {
-    return GRID_LENGTH * 2 + 1;
-}
+//int MAP_TILE_UPPER_LIMIT_X() {
+//    return GRID_LENGTH + 3;
+//}
+//int MAP_TILE_UPPER_LIMIT_Y() {
+//    return (2 * GRID_LENGTH) + 1;
+//}
 
 int SCROLLABLE_X_MIN_TILE() {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return (MAP_TILE_UPPER_LIMIT_X() - scenario_map_data()->width) / 2 - 1;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return (MAP_TILE_UPPER_LIMIT_X() - scenario_map_data()->width / 2) / 2 + 1;
+    return (GRID_LENGTH - (scenario_map_data()->width / 2) + 4) / 2;
 }
 int SCROLLABLE_Y_MIN_TILE() {
-    if (GAME_ENV == ENGINE_ENV_C3)
-        return (MAP_TILE_UPPER_LIMIT_Y() - 2 * scenario_map_data()->height) / 2;
-    if (GAME_ENV == ENGINE_ENV_PHARAOH)
-        return (MAP_TILE_UPPER_LIMIT_Y() - scenario_map_data()->height) / 2;
+    return ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2;
 }
 int SCROLLABLE_X_MAX_TILE() {
-    return MAP_TILE_UPPER_LIMIT_X() - SCROLLABLE_X_MIN_TILE() - 2;
+    return GRID_LENGTH - SCROLLABLE_X_MIN_TILE() + 1;
 }
 int SCROLLABLE_Y_MAX_TILE() {
-    return MAP_TILE_UPPER_LIMIT_Y() - SCROLLABLE_Y_MIN_TILE() - 4;
+    return (2 * GRID_LENGTH) - SCROLLABLE_Y_MIN_TILE() - 3;
 }
 
 void city_view_get_camera_max_tile(int *x, int *y) {
@@ -137,13 +131,14 @@ static void camera_validate_position(void) {
     data.camera.tile_internal.y &= ~1;
 }
 void city_view_camera_position_refresh() {
-    city_view_go_to_screen_tile_corner(data.camera.tile_internal, true);
+    camera_go_to_corner_tile(data.camera.tile_internal, true);
 }
 
-map_point city_view_get_camera_tile() {
+screen_tile city_view_get_camera_screentile() {
+    return data.camera.tile_internal;
+}
+map_point city_view_get_camera_mappoint() {
     return map_point(data.camera.tile_internal.x, data.camera.tile_internal.y);
-//    point->x = data.camera.tile_internal.x;
-//    point->y = data.camera.tile_internal.y;
 }
 pixel_coordinate camera_get_position() {
     return data.camera.position;
@@ -155,39 +150,38 @@ pixel_coordinate camera_get_pixel_offset_internal() {
     return pixel_offset_internal;
 }
 
-void city_view_go_to_pixel_coord(int x, int y, bool validate) {
-    data.camera.position.x = x;
-    data.camera.position.y = y;
+void camera_go_to_pixel(pixel_coordinate pixel, bool validate) {
+    data.camera.position = pixel;
     if (validate)
         camera_validate_position();
 }
-void city_view_go_to_screen_tile_corner(screen_tile screen, bool validate) {
+void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     int x = screen.x * TILE_WIDTH_PIXELS;
     int y = screen.y * HALF_TILE_HEIGHT_PIXELS;
-    city_view_go_to_pixel_coord(x, y, validate);
+    camera_go_to_pixel({x, y}, validate);
 }
-void city_view_go_to_screen_tile(screen_tile screen, bool validate) {
+void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
-    city_view_go_to_pixel_coord(x, y, validate);
+    camera_go_to_pixel({x, y}, validate);
 }
-void city_view_go_to_point(map_point point) {
+void camera_go_to_mappoint(map_point point) {
+    camera_go_to_pixel(mappoint_to_pixel(point), true);
 //    int tile_x, tile_y;
-    screen_tile screen = mappoint_to_screentile(point);
-    screen.x -= data.viewport.width_tiles / 2;
-    screen.y -= data.viewport.height_tiles / 2;
-    screen.y &= ~1;
-    city_view_go_to_screen_tile_corner(screen, true);
+//    screen_tile screen = mappoint_to_screentile(point);
+//    screen.x -= data.viewport.width_tiles / 2;
+//    screen.y -= data.viewport.height_tiles / 2;
+//    screen.y &= ~1;
+//    camera_go_to_corner_tile(screen, true);
 }
-void city_view_scroll(int x, int y) {
+void camera_scroll(int x, int y) {
     data.camera.position.x += x;
     data.camera.position.y += y;
     camera_validate_position();
 }
 
-void city_view_get_selected_tile_pixels(int *x, int *y) {
-    *x = data.selected_tile.x;
-    *y = data.selected_tile.y;
+screen_tile camera_get_selected_screen_tile() {
+    return data.selected_tile;
 }
 void city_view_set_selected_view_tile(const screen_tile *tile) {
     int screen_x_offset = tile->x - data.camera.tile_internal.x;
@@ -198,6 +192,7 @@ void city_view_set_selected_view_tile(const screen_tile *tile) {
 
     data.selected_tile.y =
             data.viewport.offset.y + HALF_TILE_HEIGHT_PIXELS * y_view_offset - HALF_TILE_HEIGHT_PIXELS; // - data.camera.pixel_offset_internal.y; // TODO why -1?
+    data.selected_tile -= camera_get_pixel_offset_internal();
 }
 
 static int get_camera_corner_offset(void) {
@@ -210,27 +205,29 @@ static int get_center_grid_offset(void) {
 }
 
 void city_view_rotate_left(void) {
+    int center_grid_offset = get_center_grid_offset();
     data.orientation -= 2;
     if (data.orientation < 0)
         data.orientation = DIR_6_TOP_LEFT;
 
-    int center_grid_offset = get_center_grid_offset();
+//    calculate_lookup();
     if (center_grid_offset >= 0) {
 //        int x, y;
         screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
-        city_view_go_to_screen_tile(screen, true);
+        camera_go_to_screen_tile(screen, true);
     }
 }
 void city_view_rotate_right(void) {
+    int center_grid_offset = get_center_grid_offset();
     data.orientation += 2;
     if (data.orientation > 6)
         data.orientation = DIR_0_TOP_RIGHT;
 
-    int center_grid_offset = get_center_grid_offset();
+//    calculate_lookup();
     if (center_grid_offset >= 0) {
 //        int x, y;
         screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
-        city_view_go_to_screen_tile(screen, true);
+        camera_go_to_screen_tile(screen, true);
     }
 }
 
@@ -288,7 +285,16 @@ void city_view_get_viewport_size_tiles(int *width, int *height) {
     *height = data.viewport.height_tiles;
 }
 
-int city_view_is_sidebar_collapsed(void) {
+bool pixel_is_inside_viewport(pixel_coordinate pixel) {
+    if (pixel.x < data.viewport.offset.x ||
+        pixel.x >= data.viewport.offset.x + data.viewport.width_pixels ||
+        pixel.y < data.viewport.offset.y ||
+        pixel.y >= data.viewport.offset.y + data.viewport.height_pixels) {
+        return false;
+    }
+    return true;
+}
+bool city_view_is_sidebar_collapsed(void) {
     return data.sidebar_collapsed;
 }
 
@@ -298,10 +304,10 @@ void city_view_start_sidebar_toggle(void) {
 }
 void city_view_toggle_sidebar(void) {
     if (data.sidebar_collapsed) {
-        data.sidebar_collapsed = 0;
+        data.sidebar_collapsed = false;
         set_viewport_with_sidebar();
     } else {
-        data.sidebar_collapsed = 1;
+        data.sidebar_collapsed = true;
         set_viewport_without_sidebar();
     }
     camera_validate_position();
@@ -321,7 +327,7 @@ io_buffer *iob_city_view_camera = new io_buffer([](io_buffer *iob) {
 
 //    city_view_go_to_position(x, y);
 //    set_viewport_with_sidebar();
-//    city_view_go_to_screen_tile_corner(data.camera.tile_internal, true);
+    camera_go_to_corner_tile(data.camera.tile_internal, false);
 });
 
 static screen_tile starting_tile() {
@@ -330,7 +336,7 @@ static screen_tile starting_tile() {
     screen.y = data.camera.tile_internal.y - 8;
     return screen;
 }
-static pixel_coordinate starting_coords() {
+static pixel_coordinate starting_pixel_coord() {
     pixel_coordinate pixel;
     pixel.x = -(4 * TILE_WIDTH_PIXELS); // - pixel_offset_internal().x;
     pixel.y = data.viewport.offset.y - 9 * HALF_TILE_HEIGHT_PIXELS; // - pixel_offset_internal().y;
@@ -340,10 +346,10 @@ void city_view_foreach_map_tile(tile_draw_callback *callback) {
     int odd = 0;
     screen_tile screen_0 = starting_tile();
     screen_tile screen = screen_0;
-    pixel_coordinate pixel_0 = starting_coords();
+    pixel_coordinate pixel_0 = starting_pixel_coord();
     pixel_coordinate pixel = pixel_0;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
-        if (screen.y >= 0 && screen.y < MAP_TILE_UPPER_LIMIT_Y()) {
+        if (screen.y >= 0 && screen.y < (2 * GRID_LENGTH) + 1) {
             screen.x = screen_0.x;
             pixel.x = pixel_0.x;
             if (odd)
@@ -351,9 +357,9 @@ void city_view_foreach_map_tile(tile_draw_callback *callback) {
             else
                 pixel.x += data.viewport.offset.x;
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                if (screen.x >= 0 && screen.x < MAP_TILE_UPPER_LIMIT_X()) {
+                if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
                     map_point point = screentile_to_mappoint(screen);
-                    record_pixel_coord(point, pixel);
+                    record_mappoint_pixel_coord(point, pixel);
                     if (callback)
                         callback(pixel, point);
                 }
@@ -371,10 +377,10 @@ void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_c
     int odd = 0;
     screen_tile screen_0 = starting_tile();
     screen_tile screen = screen_0;
-    pixel_coordinate pixel_0 = starting_coords();
+    pixel_coordinate pixel_0 = starting_pixel_coord();
     pixel_coordinate pixel = pixel_0;
     for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
-        if (screen.y >= 0 && screen.y < MAP_TILE_UPPER_LIMIT_Y()) {
+        if (screen.y >= 0 && screen.y < (2 * GRID_LENGTH) + 1) {
             screen.x = screen_0.x;
             pixel.x = pixel_0.x;
             if (odd)
@@ -382,7 +388,7 @@ void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_c
             else
                 pixel.x += data.viewport.offset.x;
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                if (screen.x >= 0 && screen.x < MAP_TILE_UPPER_LIMIT_X()) {
+                if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
                     map_point point = screentile_to_mappoint(screen);
                     if (point.grid_offset() >= 0) {
                         if (callback1)
@@ -497,7 +503,7 @@ void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, 
         }
         int x_abs = absolute_x - 4;
         for (int x_rel = -4; x_rel < width_tiles; x_rel++, x_abs++, screen_x += 2) {
-            if (x_abs >= 0 && x_abs < MAP_TILE_UPPER_LIMIT_X() && y_abs >= 0 && y_abs < MAP_TILE_UPPER_LIMIT_Y())
+            if (x_abs >= 0 && x_abs < (2 * GRID_LENGTH) + 1 && y_abs >= 0 && y_abs < (2 * GRID_LENGTH) + 1)
                 callback({screen_x, screen_y}, screentile_to_mappoint({x_abs, y_abs}));
 
         }
