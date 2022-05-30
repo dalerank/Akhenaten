@@ -23,15 +23,15 @@ void game_orientation_rotate_right(void) {
 void game_orientation_rotate_north(void) {
     switch (city_view_orientation()) {
         case DIR_2_BOTTOM_RIGHT:
-            city_view_rotate_right();
+            city_view_rotate_left();
             map_orientation_change(1);
             break;
         case DIR_4_BOTTOM_LEFT:
-            city_view_rotate_left();
+            city_view_rotate_right();
             map_orientation_change(0);
             // fallthrough
         case DIR_6_TOP_LEFT:
-            city_view_rotate_left();
+            city_view_rotate_right();
             map_orientation_change(0);
             break;
         default: // already north

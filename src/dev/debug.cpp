@@ -113,6 +113,8 @@ void debug_draw_sprite_box(int x, int y, const image_t *img) {
     debug_draw_crosshair(x2 + img->animation.sprite_x_offset, y2 + img->animation.sprite_y_offset);
 }
 void debug_draw_tile_box(int x, int y, int tile_size_x, int tile_size_y) {
+    float scale = zoom_get_scale();
+
     int left_x = x;
     int left_y = y + HALF_TILE_HEIGHT_PIXELS;
 
@@ -125,10 +127,12 @@ void debug_draw_tile_box(int x, int y, int tile_size_x, int tile_size_y) {
     int bottom_x = left_x + (tile_size_x * HALF_TILE_WIDTH_PIXELS);
     int bottom_y = left_y + (tile_size_x * HALF_TILE_HEIGHT_PIXELS);
 
-    graphics_renderer()->draw_line(left_x, top_x, left_y, top_y, COLOR_GREEN);
-    graphics_renderer()->draw_line(top_x, right_x, top_y, right_y, COLOR_GREEN);
-    graphics_renderer()->draw_line(right_x, bottom_x, right_y, bottom_y, COLOR_GREEN);
-    graphics_renderer()->draw_line(bottom_x, left_x, bottom_y, left_y, COLOR_GREEN);
+    graphics_renderer()->draw_rect(x * scale, y * scale, TILE_WIDTH_PIXELS * scale, TILE_HEIGHT_PIXELS * scale, COLOR_RED);
+
+    graphics_renderer()->draw_line(left_x * scale, top_x * scale, left_y * scale, top_y * scale, COLOR_GREEN);
+    graphics_renderer()->draw_line(top_x * scale, right_x * scale, top_y * scale, right_y * scale, COLOR_GREEN);
+    graphics_renderer()->draw_line(right_x * scale, bottom_x * scale, right_y * scale, bottom_y * scale, COLOR_GREEN);
+    graphics_renderer()->draw_line(bottom_x * scale, left_x * scale, bottom_y * scale, left_y * scale, COLOR_GREEN);
 }
 
 //////////
@@ -850,6 +854,9 @@ void draw_debug_ui(int x, int y) {
         map_point camera_tile = city_view_get_camera_mappoint();
         pixel_coordinate camera_pixels = camera_get_pixel_offset_internal();
 
+        int min_x, max_x, min_y, max_y;
+        city_view_get_camera_scrollable_pixel_limits(&min_x, &max_x, &min_y, &max_y);
+
         view_data* viewdata = city_view_data_unsafe();
         int real_max_x;
         int real_max_y;
@@ -859,8 +866,12 @@ void draw_debug_ui(int x, int y) {
         int max_y_pixel_offset;
         city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
-        draw_debug_line_double_left(str, x, y + 15, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
-        draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLLABLE_X_MIN_TILE(), SCROLLABLE_Y_MIN_TILE());
+        y += 30;
+        draw_debug_line_double_left(str, x, y - 15, 90, 40, "---min:", min_x, min_y);
+        draw_debug_line_double_left(str, x, y - 5, 90, 40, "camera:", viewdata->camera.position.x, viewdata->camera.position.y);
+        draw_debug_line_double_left(str, x, y + 5, 90, 40, "---max:", max_x, max_y);
+
+        draw_debug_line_double_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
         draw_debug_line_double_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
         draw_debug_line_double_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
@@ -877,7 +888,35 @@ void draw_debug_ui(int x, int y) {
         draw_debug_line_float(str, x, y + 135, 50, "target:", zoom_debug_target());
         draw_debug_line_float(str, x + 100, y + 135, 50, "delta:", zoom_debug_delta());
 
-        y += 140;
+        pixel_coordinate pixel = {mouse_get()->x, mouse_get()->y};
+        draw_debug_line(str, x, y + 145, 50, "mouse:", pixel.x);
+        draw_debug_line(str, x + 40, y + 145, 50, "", pixel.y);
+        pixel_coordinate viewp = pixel_to_viewport_coord(pixel);
+        draw_debug_line(str, x, y + 155, 50, "viewp:", viewp.x);
+        draw_debug_line(str, x + 40, y + 155, 50, "", viewp.y);
+        camera_coordinate coord = pixel_to_camera_coord(pixel, false);
+        draw_debug_line(str, x, y + 165, 50, "coord:", coord.x);
+        draw_debug_line(str, x + 40, y + 165, 50, "", coord.y);
+        screen_tile screen = pixel_to_screentile(pixel);
+        draw_debug_line(str, x, y + 175, 50, "tile:", screen.x);
+        draw_debug_line(str, x + 40, y + 175, 50, "", screen.y);
+        pixel_coordinate offset = {coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS};
+        draw_debug_line(str, x, y + 185, 50, "offset:", offset.x);
+        draw_debug_line(str, x + 40, y + 185, 50, "", offset.y);
+        map_point point = screentile_to_mappoint(screen);
+        draw_debug_line(str, x, y + 195, 50, "point:", point.x());
+        draw_debug_line(str, x + 40, y + 195, 50, "", point.y());
+        draw_debug_line(str, x + 80, y + 195, 50, "", point.grid_offset());
+        pixel = mappoint_to_pixel(point);
+        draw_debug_line(str, x, y + 205, 50, "pixel:", pixel.x);
+        draw_debug_line(str, x + 40, y + 205, 50, "", pixel.y);
+//        if (point.grid_offset() != -1)
+//            debug_draw_tile_box(pixel.x, pixel.y);
+
+//        pixel = mappoint_to_pixel(screentile_to_mappoint(city_view_data_unsafe()->camera.tile_internal));
+//        debug_draw_tile_box(pixel.x, pixel.y);
+
+        y += 200;
     }
 
     /////// TUTORIAL

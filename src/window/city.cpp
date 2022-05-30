@@ -26,7 +26,6 @@
 #include "dev/debug.h"
 
 static int selected_legion_formation_id;
-//static int city_view_dirty;
 
 static int center_in_city(int element_width_pixels) {
     int x, y, width, height;
@@ -34,15 +33,8 @@ static int center_in_city(int element_width_pixels) {
     int margin = (width - element_width_pixels) / 2;
     return x + margin;
 }
-//static void clear_city_view(int force) {
-//    if (config_get(CONFIG_UI_ZOOM) && (force || city_view_dirty))
-//        graphics_clear_city_viewport();
-//
-//    city_view_dirty = 0;
-//}
 
 static void draw_background(void) {
-//    clear_city_view(1);
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }

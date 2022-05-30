@@ -20,6 +20,7 @@ view_data *city_view_data_unsafe() {
 
 void city_view_init(void) {
     calculate_screentile_lookup_tables();
+    camera_calc_scroll_limits();
     zoom_set(100.0f);
     widget_minimap_invalidate();
 }
@@ -47,44 +48,38 @@ static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
 //    return (2 * GRID_LENGTH) + 1;
 //}
 
-int SCROLLABLE_X_MIN_TILE() {
-    return (GRID_LENGTH - (scenario_map_data()->width / 2) + 4) / 2;
-}
-int SCROLLABLE_Y_MIN_TILE() {
-    return ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2;
-}
-int SCROLLABLE_X_MAX_TILE() {
-    return GRID_LENGTH - SCROLLABLE_X_MIN_TILE() + 1;
-}
-int SCROLLABLE_Y_MAX_TILE() {
-    return (2 * GRID_LENGTH) - SCROLLABLE_Y_MIN_TILE() - 3;
+int SCROLL_MIN_SCREENTILE_X = 0;
+int SCROLL_MIN_SCREENTILE_Y = 0;
+int SCROLL_MAX_SCREENTILE_X = 0;
+int SCROLL_MAX_SCREENTILE_Y = 0;
+void camera_calc_scroll_limits() {
+    SCROLL_MIN_SCREENTILE_X = (GRID_LENGTH - (scenario_map_data()->width / 2) + 4) / 2;
+    SCROLL_MIN_SCREENTILE_Y = ((2 * GRID_LENGTH) - scenario_map_data()->height) / 2 + 1;
+    SCROLL_MAX_SCREENTILE_X = GRID_LENGTH - SCROLL_MIN_SCREENTILE_X + 1;
+    SCROLL_MAX_SCREENTILE_Y = (2 * GRID_LENGTH) - SCROLL_MIN_SCREENTILE_Y - 3;
 }
 
 void city_view_get_camera_max_tile(int *x, int *y) {
-//    int mx, my;
-//    city_view_get_camera_max_pixel_offset(&mx, &my);
-//    mx = mx > 0 ? 1 : 0;
-//    my = my > 0 ? 1 : 0;
-
     int tx = (data.viewport.width_pixels / (TILE_WIDTH_PIXELS * zoom_get_scale()));
     int ty = (2 * data.viewport.height_pixels / (TILE_HEIGHT_PIXELS * zoom_get_scale()));
 
-    *x = SCROLLABLE_X_MAX_TILE() - tx;
-    *y = (SCROLLABLE_Y_MAX_TILE() - ty) & ~1;
+    *x = SCROLL_MAX_SCREENTILE_X - tx;
+    *y = (SCROLL_MAX_SCREENTILE_Y - ty) & ~1;
 }
 void city_view_get_camera_max_pixel_offset(int *x, int *y) {
     *x = TILE_WIDTH_PIXELS - (data.viewport.width_pixels % TILE_WIDTH_PIXELS);
     *y = TILE_HEIGHT_PIXELS - (data.viewport.height_pixels % TILE_HEIGHT_PIXELS);
 }
 void city_view_get_camera_scrollable_pixel_limits(int *min_x, int *max_x, int *min_y, int *max_y) {
-    *min_x = SCROLLABLE_X_MIN_TILE() * TILE_WIDTH_PIXELS;
-    *max_x = SCROLLABLE_X_MAX_TILE() * TILE_WIDTH_PIXELS - (data.viewport.width_pixels * zoom_get_scale());
-    *min_y = SCROLLABLE_Y_MIN_TILE() * HALF_TILE_HEIGHT_PIXELS;
-    *max_y = SCROLLABLE_Y_MAX_TILE() * HALF_TILE_HEIGHT_PIXELS - (data.viewport.height_pixels * zoom_get_scale());
+    *min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
+    *max_x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage(data.viewport.width_pixels, zoom_get_percentage());
+//    *min_y = (SCROLL_MIN_SCREENTILE_Y + 4) * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(TILE_HEIGHT_PIXELS, zoom_get_percentage());
+    *min_y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
+    *max_y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage(data.viewport.height_pixels, zoom_get_percentage());
 }
 void city_view_get_camera_scrollable_viewspace_clip(int *x, int *y) {
-    int min_x = SCROLLABLE_X_MIN_TILE() * TILE_WIDTH_PIXELS;
-    int min_y = SCROLLABLE_Y_MIN_TILE() * HALF_TILE_HEIGHT_PIXELS;
+    int min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
+    int min_y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
 //
 //    float scale = 100.0f / (float)city_view_get_scale();
 //
@@ -125,8 +120,6 @@ static void camera_validate_position(void) {
 
     data.camera.tile_internal.x = data.camera.position.x / TILE_WIDTH_PIXELS;
     data.camera.tile_internal.y = data.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
-//    data.camera.pixel_offset_internal.x = data.camera.position.x % TILE_WIDTH_PIXELS;
-//    data.camera.pixel_offset_internal.y = data.camera.position.y % TILE_HEIGHT_PIXELS;
 
     data.camera.tile_internal.y &= ~1;
 }
@@ -210,9 +203,7 @@ void city_view_rotate_left(void) {
     if (data.orientation < 0)
         data.orientation = DIR_6_TOP_LEFT;
 
-//    calculate_lookup();
     if (center_grid_offset >= 0) {
-//        int x, y;
         screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
@@ -223,9 +214,7 @@ void city_view_rotate_right(void) {
     if (data.orientation > 6)
         data.orientation = DIR_0_TOP_RIGHT;
 
-//    calculate_lookup();
     if (center_grid_offset >= 0) {
-//        int x, y;
         screen_tile screen = mappoint_to_screentile(map_point(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
@@ -339,7 +328,7 @@ static screen_tile starting_tile() {
 static pixel_coordinate starting_pixel_coord() {
     pixel_coordinate pixel;
     pixel.x = -(4 * TILE_WIDTH_PIXELS); // - pixel_offset_internal().x;
-    pixel.y = data.viewport.offset.y - 9 * HALF_TILE_HEIGHT_PIXELS; // - pixel_offset_internal().y;
+    pixel.y = data.viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
     return pixel - camera_get_pixel_offset_internal();
 }
 void city_view_foreach_map_tile(tile_draw_callback *callback) {
@@ -359,7 +348,7 @@ void city_view_foreach_map_tile(tile_draw_callback *callback) {
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
                     map_point point = screentile_to_mappoint(screen);
-                    record_mappoint_pixel_coord(point, pixel);
+                    record_mappoint_pixelcoord(point, pixel);
                     if (callback)
                         callback(pixel, point);
                 }

@@ -8,10 +8,15 @@
 //int MAP_TILE_UPPER_LIMIT_X();
 //int MAP_TILE_UPPER_LIMIT_Y();
 
-int SCROLLABLE_X_MIN_TILE();
-int SCROLLABLE_Y_MIN_TILE();
-int SCROLLABLE_X_MAX_TILE();
-int SCROLLABLE_Y_MAX_TILE();
+//int SCROLL_MIN_SCREENTILE_X();
+//int SCROLL_MIN_SCREENTILE_Y();
+//int SCROLL_MAX_SCREENTILE_X();
+//int SCROLL_MAX_SCREENTILE_Y();
+extern int SCROLL_MIN_SCREENTILE_X;
+extern int SCROLL_MIN_SCREENTILE_Y;
+extern int SCROLL_MAX_SCREENTILE_X;
+extern int SCROLL_MAX_SCREENTILE_Y;
+void camera_calc_scroll_limits();
 
 typedef pixel_coordinate screen_tile;
 typedef pixel_coordinate camera_coordinate;

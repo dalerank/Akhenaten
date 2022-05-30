@@ -1,6 +1,4 @@
-#include <algorithm>
-#include <scenario/map.h>
-#include "grid/point.h"
+#include "scenario/map.h"
 #include "grid.h"
 
 int *map_point::private_access(int i) {
@@ -106,14 +104,14 @@ void map_point::set(int _x, int _y) {
     p_ABS_Y = GRID_Y(p_GRID_OFFSET);
 }
 void map_point::set(int _grid_offset) {
-//    if (_grid_offset < 0) {
-//        p_GRID_OFFSET = _INVALID_COORD;
-//        p_X = _INVALID_COORD;
-//        p_Y = _INVALID_COORD;
-//        p_ABS_X = _INVALID_COORD;
-//        p_ABS_Y = _INVALID_COORD;
-//        return;
-//    }
+    if (_grid_offset < 0) {
+        p_GRID_OFFSET = _INVALID_COORD;
+        p_X = _INVALID_COORD;
+        p_Y = _INVALID_COORD;
+        p_ABS_X = _INVALID_COORD;
+        p_ABS_Y = _INVALID_COORD;
+        return;
+    }
     p_GRID_OFFSET = _grid_offset;
 
     p_X = MAP_X(p_GRID_OFFSET);

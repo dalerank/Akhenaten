@@ -3,6 +3,7 @@
 #include <cmath>
 #include "io/config/config.h"
 #include "zoom.h"
+#include "lookup.h"
 
 struct {
     float zoom = ZOOM_DEFAULT;
@@ -85,6 +86,7 @@ void zoom_map(const mouse *m) {
                 data.target = ZOOM_MAX;
         }
     }
+//    data.input_offset = pixel_to_viewport_coord({m->x, m->y});
     data.input_offset.x = m->x;
     data.input_offset.y = m->y;
 }
