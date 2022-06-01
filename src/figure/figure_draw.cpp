@@ -1,10 +1,7 @@
-#include <core/string.h>
-#include <cmath>
-#include <graphics/view/lookup.h>
-#include <dev/debug.h>
-#include <d2d1.h>
+#include "core/string.h"
+#include "graphics/view/lookup.h"
+#include "dev/debug.h"
 
-#include "graphics/view/view.h"
 #include "formation.h"
 #include "image.h"
 #include "figuretype/editor.h"
@@ -26,11 +23,6 @@ static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int c
         *pixel_y = dir == DIR_6_TOP_LEFT ? base_pixel_y : -base_pixel_y;
     }
 }
-
-#include "widget/city/building_ghost.h"
-#include "building/properties.h"
-#include "figure/route.h"
-#include "window/city.h"
 
 void figure::draw_fort_standard(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
     if (!formation_get(formation_id)->in_distant_battle) {
@@ -64,8 +56,6 @@ void figure::draw_map_flag(pixel_coordinate pixel, int highlight, pixel_coordina
         text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
 
 }
-
-#include "window/city.h"
 
 void figure::adjust_pixel_offset(pixel_coordinate *pixel) {
     // determining x/y offset on tile
@@ -174,7 +164,12 @@ void figure::draw_figure_with_cart(pixel_coordinate pixel, int highlight, pixel_
     }
 }
 void figure::city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coordinate *coord_out) {
-//    pixel_coordinate coords2 = mappoint_to_pixel(map_point(tile.x(), tile.y()));
+    // This is to update the sprite's direction when rotating the city view.
+    // Unfortunately, because the only thing we have at the time of file loading is
+    // the raw sprite image id, it doesn't work if we haven't performed at least a
+    // single frame of figure action after loading a file (i.e. if paused instantly)
+    figure_image_update(true);
+
     adjust_pixel_offset(&pixel);
     if (coord_out != nullptr) {
         highlight = 0;

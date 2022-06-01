@@ -514,7 +514,7 @@ void figure::action_perform() {
             poof();
 
         // advance sprite offset
-        figure_image_update();
+        figure_image_update(false);
     }
 }
 

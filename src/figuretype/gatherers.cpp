@@ -1,7 +1,6 @@
-#include <figure/figure.h>
-#include <game/resource.h>
+#include "figure/figure.h"
 #include "graphics/image_groups.h"
-#include <grid/vegetation.h>
+#include "grid/vegetation.h"
 #include "io/config/config.h"
 
 void figure::gatherer_action() {

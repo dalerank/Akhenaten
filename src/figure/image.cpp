@@ -1,6 +1,5 @@
 #include "image.h"
 
-#include "graphics/view/view.h"
 #include "graphics/image_groups.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
@@ -29,7 +28,6 @@ static const int CART_OFFSETS_X[] = {17, 22, 17, 0, -17, -22, -17, 0};
 static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
 #include "graphics/image.h"
-#include "game/resource.h"
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration) {
     anim_base = image_id_from_group(collection, group);
@@ -39,9 +37,15 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
         duration = 1;
     anim_frame_duration = duration;
 }
-void figure::figure_image_update() {
+void figure::figure_image_update(bool refresh_only) {
+
+    // null images
+    if (anim_base <= 0)
+        return;
+
     // advance animation frame
-    anim_frame++;
+    if (!refresh_only)
+        anim_frame++;
     if (anim_frame >= anim_max_frames * anim_frame_duration)
         anim_frame = 0;
 
@@ -63,10 +67,6 @@ void figure::figure_image_update() {
                 int effective_frame = anim_frame / anim_frame_duration;
                 sprite_image_id = anim_base + anim_offset + figure_image_direction() + 8 * effective_frame;
             }
-
-            // null images
-            if (anim_base <= 0)
-                sprite_image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + 3;
             break;
     }
 }
