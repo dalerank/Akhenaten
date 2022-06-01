@@ -120,68 +120,32 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
 //    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
 
-
-    // do this for EVERY tile (not just valid ones)
-    // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_empty_tile);
-
-    if (!city_building_ghost_mark_deleting(tile)) {
-//        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
-        city_view_foreach_valid_map_tile(
-                draw_buildings,
-//                draw_top,
-                draw_ornaments,
-                draw_figures);
-        if (!selected_figure_id) {
-            Planner.update(tile);
-            Planner.draw();
-        }
-    } else {
-//        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
-        city_view_foreach_valid_map_tile(
-                draw_buildings,
-//                deletion_draw_top,
-                deletion_draw_figures_animations,
-                draw_elevated_figures);
+    city_building_ghost_mark_deleting(tile);
+    city_view_foreach_valid_map_tile(
+            draw_isometrics,
+            draw_ornaments,
+            draw_figures);
+    if (!selected_figure_id) {
+        Planner.update(tile);
+        Planner.draw();
     }
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(
             draw_debug_tile,
             draw_debug_figures);
-//    city_view_foreach_map_tile(draw_debug);
-//    city_view_foreach_map_tile(draw_debug_figures);
-//    city_view_foreach_map_tile(draw_TEST);
-
-
-//    city_view_foreach_map_tile(draw_tile_boxes);
 }
 void widget_city_draw_with_overlay(map_point tile) {
     if (!select_city_overlay())
         return;
 
-    // do this for EVERY tile (not just valid ones)
-    // to recalculate the pixel lookup offsets
-    city_view_foreach_map_tile(draw_empty_tile);
-
-    if (!city_building_ghost_mark_deleting(tile)) {
-//        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
-        city_view_foreach_valid_map_tile(
-                draw_footprint_overlay,
-//                draw_top_overlay,
-                draw_ornaments_overlay,
-                draw_figures_overlay);
-        city_view_foreach_map_tile(draw_elevated_figures);
-        Planner.update(tile);
-        Planner.draw();
-    } else {
-//        city_view_foreach_valid_map_tile(draw_footprint_overlay); // this needs to be done in a separate loop to avoid bleeding over figures
-        city_view_foreach_valid_map_tile(
-                draw_footprint_overlay,
-//                deletion_draw_top,
-                deletion_draw_figures_animations,
-                draw_elevated_figures_overlay);
-    }
+    city_building_ghost_mark_deleting(tile);
+    city_view_foreach_valid_map_tile(
+            draw_isometrics_overlay,
+            draw_ornaments_overlay,
+            draw_figures_overlay);
+    Planner.update(tile);
+    Planner.draw();
 }
 
 void widget_city_draw(void) {

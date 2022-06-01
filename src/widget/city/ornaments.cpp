@@ -1,21 +1,19 @@
-#include <building/building.h>
-#include <grid/property.h>
-#include <grid/image.h>
-#include <building/animation.h>
+#include "building/building.h"
+#include "grid/property.h"
+#include "grid/image.h"
+#include "building/animation.h"
 #include "graphics/image.h"
-#include <graphics/boilerplate.h>
+#include "graphics/boilerplate.h"
 #include <cmath>
-#include <grid/terrain.h>
-#include <grid/floodplain.h>
-#include <game/time.h>
-#include <grid/random.h>
-#include <city/floods.h>
-#include <building/dock.h>
-#include <game/resource.h>
-#include <city/buildings.h>
-#include <city/ratings.h>
-#include <city/labor.h>
-#include <grid/water_supply.h>
+#include "grid/terrain.h"
+#include "grid/floodplain.h"
+#include "game/time.h"
+#include "grid/random.h"
+#include "city/floods.h"
+#include "building/dock.h"
+#include "city/buildings.h"
+#include "city/ratings.h"
+#include "city/labor.h"
 #include "ornaments.h"
 
 static bool drawing_building_as_deleted(building *b) {

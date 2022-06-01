@@ -1,28 +1,19 @@
-#include <widget/city/tile_draw.h>
-#include <widget/city/ornaments.h>
-#include <building/monuments.h>
-#include <graphics/view/zoom.h>
+#include "widget/city/tile_draw.h"
+#include "widget/city/ornaments.h"
+#include "building/monuments.h"
 #include "building_tiles.h"
 
-#include "building/building.h"
 #include "building/industry.h"
-#include "graphics/view/view.h"
-#include "core/direction.h"
-#include "graphics/image.h"
 #include "grid/aqueduct.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/figure.h"
-#include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/property.h"
 #include "grid/random.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "graphics/image_groups.h"
-
-#include "graphics/boilerplate.h"
 
 static int north_tile_grid_offset(int x, int y, int *size) {
     int grid_offset = MAP_OFFSET(x, y);

@@ -422,6 +422,12 @@ void figure::draw_debug() {
             text_draw(str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
             string_from_int(str, routing_path_current_tile, 0);
             text_draw(str, pixel.x + 30, pixel.y + 30, FONT_SMALL_PLAIN, 0);
+
+            if (true) {
+                pixel_coordinate tp = mappoint_to_pixel(tile);
+                if (tile.grid_offset() != -1)
+                    debug_draw_tile_box(tp.x, tp.y);
+            }
             break;
         case 2: // ROUTING
             // draw path

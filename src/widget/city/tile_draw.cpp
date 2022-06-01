@@ -15,6 +15,7 @@
 #include "sound/city.h"
 #include "game/state.h"
 #include "ornaments.h"
+#include "graphics/view/lookup.h"
 
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {
@@ -214,12 +215,7 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
-void draw_empty_tile(pixel_coordinate pixel, map_point point) {
-//    if (!map_property_is_draw_tile(point.grid_offset()))
-//        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
-};
-
-void draw_buildings(pixel_coordinate pixel, map_point point) {
+void draw_isometrics(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -231,7 +227,10 @@ void draw_buildings(pixel_coordinate pixel, map_point point) {
     if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset_figure and leftmost tile -> draw
         int building_id = map_building_at(grid_offset);
-        color_t color_mask = 0;
+        color_t color_mask = COLOR_MASK_NONE;
+        bool deletion_tool = (Planner.build_type == BUILDING_CLEAR_LAND && Planner.end == point);
+        if (deletion_tool || map_property_is_deleted(point.grid_offset()))
+            color_mask = COLOR_MASK_RED;
         if (building_id) {
             building *b = building_get(building_id);
             if (config_get(CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE) && drawing_building_as_deleted(b))
@@ -270,9 +269,6 @@ void draw_buildings(pixel_coordinate pixel, map_point point) {
 
         ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
     }
-
-    // ******** TEMP ********
-//    if (grid_offset == map_grid_offset(135, 66))
 }
 void draw_ornaments(pixel_coordinate pixel, map_point point) {
     // defined separately in ornaments.cpp
@@ -280,15 +276,24 @@ void draw_ornaments(pixel_coordinate pixel, map_point point) {
     draw_ornaments_and_animations(pixel, point);
 }
 void draw_figures(pixel_coordinate pixel, map_point point) {
+    // A hacky way to prevent tiles bleeding over the figures -- a lazy alternative
+    // to having to split tiles into FOOTPRINT and TOP for every single tile draw.
+    switch (city_view_orientation()) {
+        case 0:
+            point.shift(-1, 0); break;
+        case 2:
+            point.shift(0, -1); break;
+        case 4:
+            point.shift(1, 0); break;
+        case 6:
+            point.shift(0, 1); break;
+    }
+    pixel -= {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
+
     int grid_offset = point.grid_offset();
-//    int x = pixel.x;
-//    int y = pixel.y;
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-
-//        pixel_coordinate coords;
-//        coords = mappoint_to_pixel(map_point(f->tile.x(), f->tile.y()));
 
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
@@ -303,50 +308,8 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
             figure_id = 0;
     }
 }
-void draw_elevated_figures(pixel_coordinate pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id > 0) {
-        figure *f = figure_get(figure_id);
-        if ((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks)
-            f->city_draw_figure(pixel, 0);
 
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
-    }
-}
-
-static bool should_draw_top_before_deletion(int grid_offset) {
-    return is_multi_tile_terrain(grid_offset) && has_adjacent_deletion(grid_offset);
-}
-//void deletion_draw_top(pixel_coordinate pixel, map_point point) {
-//    int grid_offset = point.grid_offset();
-//    int x = pixel.x;
-//    int y = pixel.y;
-//    if (map_property_is_draw_tile(grid_offset) && should_draw_top_before_deletion(grid_offset))
-//        draw_top(pixel, point);
-//}
-void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    if (map_property_is_deleted(grid_offset) || drawing_building_as_deleted(building_at(grid_offset)))
-        ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED);
-
-    if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
-        draw_buildings(pixel, point);
-
-    draw_figures(pixel, point);
-    draw_ornaments(pixel, point);
-}
-
-/////////
-
-void draw_footprint_overlay(pixel_coordinate pixel, map_point point) {
+void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -373,27 +336,6 @@ void draw_footprint_overlay(pixel_coordinate pixel, map_point point) {
             ImageDraw::isometric_from_drawtile(map_image_at(grid_offset), x, y, 0);
     }
 }
-//void draw_top_overlay(pixel_coordinate pixel, map_point point) {
-//    int grid_offset = point.grid_offset();
-//    int x = pixel.x;
-//    int y = pixel.y;
-//    if (get_city_overlay()->draw_custom_top)
-//        get_city_overlay()->draw_custom_top(pixel, point);
-//    else if (map_property_is_draw_tile(grid_offset)) {
-//        if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
-//            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset))
-//                city_with_overlay_draw_building_top(pixel, point);
-//            else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-//                color_t color_mask = 0;
-//                if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset))
-//                    color_mask = COLOR_MASK_RED;
-//
-//                // terrain
-//                ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask, city_view_get_scale_float());
-//            }
-//        }
-//    }
-//}
 void draw_ornaments_overlay(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
@@ -412,22 +354,6 @@ void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (!f->is_ghost && get_city_overlay()->show_figure(f))
-            f->city_draw_figure(pixel, 0);
-
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
-    }
-}
-void draw_elevated_figures_overlay(pixel_coordinate pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id > 0) {
-        figure *f = figure_get(figure_id);
-        if (((f->use_cross_country && !f->is_ghost) || f->height_adjusted_ticks) && get_city_overlay()->show_figure(f))
             f->city_draw_figure(pixel, 0);
 
         if (figure_id != f->next_figure)
@@ -503,7 +429,7 @@ void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point
 
     if (get_city_overlay()->show_building(b))
 //        draw_top(pixel, point);
-        draw_buildings(pixel, point);
+        draw_isometrics(pixel, point);
     else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {

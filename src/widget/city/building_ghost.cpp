@@ -1,37 +1,25 @@
 #include <cmath>
-#include <grid/routing/routing.h>
+#include "grid/routing/routing.h"
 #include "building_ghost.h"
 
 #include "building/construction/build_planner.h"
-#include "building/count.h"
 #include "building/industry.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "city/buildings.h"
 #include "city/finance.h"
-#include "graphics/view/view.h"
 #include "io/config/config.h"
-#include "core/game_environment.h"
-#include "figure/formation.h"
-#include "graphics/boilerplate.h"
-#include "input/scroll.h"
 #include "grid/bridge.h"
-#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
-#include "grid/grid.h"
 #include "grid/image_context.h"
 #include "grid/orientation.h"
 #include "grid/property.h"
 #include "grid/road_aqueduct.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "grid/water.h"
-#include "scenario/property.h"
 #include "widget/city/bridges.h"
-#include "tile_draw.h"
 #include "ornaments.h"
-#include "building/monuments.h"
 
 #define MAX_TILES 25
 
@@ -682,10 +670,8 @@ bool city_building_ghost_mark_deleting(map_point tile) {
         return false;
 
     int construction_type = Planner.build_type;
-    if (!tile.grid_offset() || Planner.draw_as_constructing ||
-        scroll_in_progress() || construction_type != BUILDING_CLEAR_LAND) {
+    if (!tile.grid_offset() || Planner.draw_as_constructing || construction_type != BUILDING_CLEAR_LAND)
         return (construction_type == BUILDING_CLEAR_LAND);
-    }
     if (!Planner.in_progress)
         map_property_clear_constructing_and_deleted();
 

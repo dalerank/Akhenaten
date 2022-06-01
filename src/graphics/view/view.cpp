@@ -331,36 +331,6 @@ static pixel_coordinate starting_pixel_coord() {
     pixel.y = data.viewport.offset.y - 11 * HALF_TILE_HEIGHT_PIXELS + calc_adjust_with_percentage(TOP_MENU_HEIGHT, zoom_get_percentage()); // - pixel_offset_internal().y;
     return pixel - camera_get_pixel_offset_internal();
 }
-void city_view_foreach_map_tile(tile_draw_callback *callback) {
-    int odd = 0;
-    screen_tile screen_0 = starting_tile();
-    screen_tile screen = screen_0;
-    pixel_coordinate pixel_0 = starting_pixel_coord();
-    pixel_coordinate pixel = pixel_0;
-    for (int y = 0; y < data.viewport.height_tiles + 21; y++) {
-        if (screen.y >= 0 && screen.y < (2 * GRID_LENGTH) + 1) {
-            screen.x = screen_0.x;
-            pixel.x = pixel_0.x;
-            if (odd)
-                pixel.x += data.viewport.offset.x - HALF_TILE_WIDTH_PIXELS;
-            else
-                pixel.x += data.viewport.offset.x;
-            for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
-                if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
-                    map_point point = screentile_to_mappoint(screen);
-                    record_mappoint_pixelcoord(point, pixel);
-                    if (callback)
-                        callback(pixel, point);
-                }
-                pixel.x += TILE_WIDTH_PIXELS;
-                screen.x++;
-            }
-        }
-        odd = 1 - odd;
-        pixel.y += HALF_TILE_HEIGHT_PIXELS;
-        screen.y++;
-    }
-}
 void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_callback *callback2, tile_draw_callback *callback3,
                                       tile_draw_callback *callback4, tile_draw_callback *callback5, tile_draw_callback *callback6) {
     int odd = 0;
@@ -379,6 +349,7 @@ void city_view_foreach_valid_map_tile(tile_draw_callback *callback1, tile_draw_c
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
                     map_point point = screentile_to_mappoint(screen);
+                    record_mappoint_pixelcoord(point, pixel);
                     if (point.grid_offset() >= 0) {
                         if (callback1)
                             callback1(pixel, point);
