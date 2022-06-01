@@ -212,14 +212,11 @@ static void create_special_fonts(std::vector<image_t> *images, int start_index) 
 static bool is_font_glyph_in_range(const image_t *img, font_t font_start, font_t font_end) {
     int i = img->sgx_index - 201;
     int starting_offset = font_definition_for(font_start)->image_offset;
-    int ending_offset = 999999;
+    int ending_offset = -1;
     if (font_end != FONT_TYPES_MAX)
         ending_offset = font_definition_for(font_end)->image_offset;
-    if (i >= starting_offset && i < ending_offset) {
-        if (font_end == FONT_TYPES_MAX)
-            int a = 5;
+    if (i >= starting_offset && (i < ending_offset || font_end == FONT_TYPES_MAX))
         return true;
-    }
     return false;
 }
 

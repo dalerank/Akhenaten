@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "graphics/boilerplate.h"
-#include "graphics/boilerplate.h"
 #include "input/scroll.h"
 #include "grid/figure.h"
 #include "grid/property.h"
