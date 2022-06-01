@@ -20,7 +20,7 @@ void draw_debug_line_float(uint8_t* str, int x, int y, int indent, const char *t
 void draw_debug_line_double_left(uint8_t* str, int x, int y, int indent, int indent2, const char *text, int value1, int value2, color_t color = COLOR_WHITE);
 
 void debug_draw_crosshair(int x, int y);
-void debug_draw_sprite_box(int x, int y, const image_t *img);
+void debug_draw_sprite_box(int x, int y, const image_t *img, float scale, color_t color_mask);
 void debug_draw_tile_box(int x, int y, int tile_size_x = 1, int tile_size_y = 1);
 
 void draw_debug_tile(pixel_coordinate pixel, map_point point);

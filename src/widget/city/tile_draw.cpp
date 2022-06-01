@@ -215,6 +215,13 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
+std::vector<map_point> cached_figuredraw_extra_points;
+std::vector<std::vector<figure*>> cached_figuredraw_arrays;
+void reset_tiledraw_caches() {
+    cached_figuredraw_extra_points.clear();
+    cached_figuredraw_arrays.clear();
+}
+
 void draw_isometrics(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
@@ -267,7 +274,19 @@ void draw_isometrics(pixel_coordinate pixel, map_point point) {
         if (map_property_is_constructing(grid_offset))
             image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
 
+
+//        const image_t *img = image_get(image_id);
+//
+//        int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+//        int footprint_height = img->height - (FOOTPRINT_HEIGHT * (tile_size));
+//
+//        int y_start = y + FOOTPRINT_HALF_HEIGHT;
+//        graphics_draw_line(x * zoom_get_scale(), x * zoom_get_scale(), y_start * zoom_get_scale(), (y_start - footprint_height) * zoom_get_scale(), COLOR_RED);
+
         ImageDraw::isometric_from_drawtile(image_id, x, y, color_mask);
+//        if ((footprint_height > FOOTPRINT_HALF_HEIGHT) || !tall) {
+////            color_mask = COLOR_FONT_YELLOW;
+//        }
     }
 }
 void draw_ornaments(pixel_coordinate pixel, map_point point) {
@@ -275,26 +294,119 @@ void draw_ornaments(pixel_coordinate pixel, map_point point) {
     // cuz it's too much stuff.
     draw_ornaments_and_animations(pixel, point);
 }
-void draw_figures(pixel_coordinate pixel, map_point point) {
-    // A hacky way to prevent tiles bleeding over the figures -- a lazy alternative
-    // to having to split tiles into FOOTPRINT and TOP for every single tile draw.
-    switch (city_view_orientation()) {
-        case 0:
-            point.shift(-1, 0); break;
-        case 2:
-            point.shift(0, -1); break;
-        case 4:
-            point.shift(1, 0); break;
-        case 6:
-            point.shift(0, 1); break;
-    }
-    pixel -= {HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS};
 
+static bool figure_is_bleeding_over_tile_below(pixel_coordinate pixel, figure *f) {
+    // test if the figure is bleeding over bottom tiles
+    pixel_coordinate adj = pixel;
+    f->adjust_pixel_offset(&adj);
+    adj.y += 3;
+    if (f->is(FIGURE_IMMIGRANT))
+        adj.y += 10;
+    else
+        adj.y += 3;
+
+    const image_t *img = image_get(f->sprite_image_id);
+//    int y_bottom = adj.y - img->animation.sprite_y_offset + img->height;
+//    int y_tile_center = pixel.y + HALF_TILE_HEIGHT_PIXELS;
+
+//    bool is_bleeding = y_bottom > y_tile_center;
+    bool is_bleeding = false;
+    int rel_dir = (8 + f->direction - city_view_orientation()) % 8;
+    switch (rel_dir) {
+        case 6:
+        case 7:
+        case 0:
+            is_bleeding = f->progress_on_tile >= 8;
+            break;
+        case 1:
+        case 5:
+            break;
+        default:
+            is_bleeding = f->progress_on_tile < 8;
+            break;
+    }
+
+    debug_draw_sprite_box(adj.x, adj.y, img, zoom_get_scale(), is_bleeding ? COLOR_RED : COLOR_GREEN);
+//    graphics_draw_line((adj.x - 15) * zoom_get_scale(), (adj.x + 15) * zoom_get_scale(), y_bottom * zoom_get_scale(), y_bottom * zoom_get_scale(), COLOR_RED);
+//    debug_draw_crosshair(adj.x * zoom_get_scale(), y_bottom * zoom_get_scale());
+//    debug_draw_crosshair((pixel.x + HALF_TILE_WIDTH_PIXELS) * zoom_get_scale(), y_tile_center * zoom_get_scale());
+
+    return is_bleeding;
+}
+static std::vector<figure*> *get_figure_cache_for_point(map_point point) {
+    for (int i = 0; i < cached_figuredraw_extra_points.size(); ++i) {
+        auto _point = cached_figuredraw_extra_points.at(i);
+        // point already in memory
+        if (_point == point)
+            return &cached_figuredraw_arrays.at(i);
+    }
+    return nullptr;
+}
+static void record_figure_over_tile(figure *f, map_point point) {
+    auto arr = get_figure_cache_for_point(point);
+    if (arr != nullptr) {
+        for (int i = 0; i < arr->size(); ++i) {
+            if (arr->at(i) == f) // make sure the figure is not already in the cache
+                return;
+        }
+        arr->push_back(f);
+    } else {
+        // no matching point found in memory, push a new one
+        std::vector<figure *> new_arr;
+        new_arr.push_back(f);
+        cached_figuredraw_arrays.push_back(new_arr);
+        cached_figuredraw_extra_points.push_back(point);
+    }
+}
+static void cache_figure(figure *f) {
+    map_point point = f->tile;
+//    int rel_dir = (8 + f->direction - city_view_orientation()) % 8;
+    switch (f->direction) {
+        case 0:
+        case 4:
+            // Y-axis aligned
+            record_figure_over_tile(f, f->tile.shifted(0, 1));
+            record_figure_over_tile(f, f->tile.shifted(0, -1));
+            break;
+        case 1:
+        case 5:
+            // horizontal movement
+            record_figure_over_tile(f, f->tile.shifted(-1, 1));
+            record_figure_over_tile(f, f->tile.shifted(1, -1));
+            break;
+        case 2:
+        case 6:
+            // X-axis aligned
+            record_figure_over_tile(f, f->tile.shifted(1, 0));
+            record_figure_over_tile(f, f->tile.shifted(-1, 0));
+            break;
+        case 3:
+        case 7:
+            record_figure_over_tile(f, f->tile.shifted(1, 1));
+            record_figure_over_tile(f, f->tile.shifted(-1, -1));
+            // vertical movement
+            break;
+    }
+    record_figure_over_tile(f, f->previous_tile);
+}
+void cache_figures(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-
+        if (!f->is_ghost)
+            cache_figure(f);
+        if (figure_id != f->next_figure)
+            figure_id = f->next_figure;
+        else
+            figure_id = 0;
+    }
+}
+void draw_figures(pixel_coordinate pixel, map_point point) {
+    int grid_offset = point.grid_offset();
+    int figure_id = map_figure_at(grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
                 int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
@@ -306,6 +418,28 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
             figure_id = f->next_figure;
         else
             figure_id = 0;
+    }
+
+    /// SECOND DRAW -- DRAW FIGURES FROM CACHE TO BE DRAWN ON TOP OF OTHER TILES
+    auto arr = get_figure_cache_for_point(point);
+    if (arr == nullptr || arr->size() == 0)
+        return;
+    for (int i = 0; i < arr->size(); ++i) {
+        graphics_set_clip_rectangle(
+                pixel.x * zoom_get_scale(), pixel.y * zoom_get_scale(),
+                TILE_WIDTH_PIXELS * zoom_get_scale(), TILE_HEIGHT_PIXELS * zoom_get_scale());
+
+        figure *f = arr->at(i);
+        pixel_coordinate ghost_pixel = mappoint_to_pixel(f->tile);
+        if (!f->is_ghost) {
+            if (!draw_context.selected_figure_id) {
+                int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+                f->city_draw_figure(ghost_pixel, highlight);
+            } else if (figure_id == draw_context.selected_figure_id)
+                f->city_draw_figure(ghost_pixel, 0, draw_context.selected_figure_coord);
+        }
+
+        set_city_clip_rectangle();
     }
 }
 
@@ -360,6 +494,23 @@ void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
             figure_id = f->next_figure;
         else
             figure_id = 0;
+    }
+
+    /// SECOND DRAW -- DRAW FIGURES FROM CACHE TO BE DRAWN ON TOP OF OTHER TILES
+    auto arr = get_figure_cache_for_point(point);
+    if (arr == nullptr || arr->size() == 0)
+        return;
+    for (int i = 0; i < arr->size(); ++i) {
+        graphics_set_clip_rectangle(
+                pixel.x * zoom_get_scale(), pixel.y * zoom_get_scale(),
+                TILE_WIDTH_PIXELS * zoom_get_scale(), TILE_HEIGHT_PIXELS * zoom_get_scale());
+
+        figure *f = arr->at(i);
+        pixel_coordinate ghost_pixel = mappoint_to_pixel(f->tile);
+        if (!f->is_ghost && get_city_overlay()->show_figure(f))
+            f->city_draw_figure(pixel, 0);
+
+        set_city_clip_rectangle();
     }
 }
 

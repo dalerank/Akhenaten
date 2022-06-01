@@ -206,7 +206,5 @@ void figure::city_draw_figure(pixel_coordinate pixel, int highlight, pixel_coord
         draw_figure_main(pixel, highlight, coord_out);
         if (!is_enemy_image && highlight)
             ImageDraw::img_sprite(sprite_image_id, pixel.x, pixel.y, COLOR_MASK_LEGION_HIGHLIGHT);
-//            ImageDraw::img_alpha_blended(sprite_image_id, pixel.x, pixel.y, COLOR_MASK_LEGION_HIGHLIGHT);
     }
-//    draw_debug();
 }

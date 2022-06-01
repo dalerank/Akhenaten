@@ -6,6 +6,8 @@
 #include "input/mouse.h"
 #include "graphics/view/view.h"
 
+void set_city_clip_rectangle(void);
+
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 

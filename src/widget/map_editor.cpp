@@ -67,11 +67,11 @@ static void draw_flags(pixel_coordinate pixel, map_point point) {
     }
 }
 
-static void set_city_clip_rectangle(void) {
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    graphics_set_clip_rectangle(x, y, width, height);
-}
+//static void set_city_clip_rectangle(void) {
+//    int x, y, width, height;
+//    city_view_get_viewport(&x, &y, &width, &height);
+//    graphics_set_clip_rectangle(x, y, width, height);
+//}
 
 static void update_zoom_level(void) {
     pixel_coordinate offset = camera_get_position();

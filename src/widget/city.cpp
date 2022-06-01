@@ -37,7 +37,7 @@ static struct {
     bool capture_input;
 } data;
 
-static void set_city_clip_rectangle(void) {
+void set_city_clip_rectangle(void) {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
@@ -121,6 +121,8 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
 //    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
 
     city_building_ghost_mark_deleting(tile);
+    reset_tiledraw_caches();
+    city_view_foreach_valid_map_tile(cache_figures);
     city_view_foreach_valid_map_tile(
             draw_isometrics,
             draw_ornaments,
@@ -140,6 +142,8 @@ void widget_city_draw_with_overlay(map_point tile) {
         return;
 
     city_building_ghost_mark_deleting(tile);
+    reset_tiledraw_caches();
+    city_view_foreach_valid_map_tile(cache_figures);
     city_view_foreach_valid_map_tile(
             draw_isometrics_overlay,
             draw_ornaments_overlay,

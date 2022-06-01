@@ -2,6 +2,7 @@
 
 #include "graphics/screen.h"
 #include "platform/renderer.h"
+#include "dev/debug.h"
 
 #ifdef __vita__
 #include <vita2d.h>
@@ -695,6 +696,7 @@ void ImageDraw::img_generic(int image_id, int x, int y, color_t color_mask, floa
 }
 void ImageDraw::img_sprite(int image_id, int x, int y, color_t color_mask, float scale) {
     const image_t *img = image_get(image_id);
+//    debug_draw_sprite_box(x, y, img, zoom_get_scale());
     bool mirrored = (img->offset_mirror != 0);
     if (mirrored) {
         img = img->mirrored_img;
@@ -790,16 +792,7 @@ void ImageDraw::img_background(int image_id, float scale) {
 }
 void ImageDraw::isometric(int image_id, int x, int y, color_t color_mask, float scale) {
     const image_t *img = image_get(image_id);
-//    if (img->type != IMAGE_TYPE_ISOMETRIC) {
-//        if (img->type == IMAGE_TYPE_MOD)
-//            draw_modded_footprint(image_id, x, y, color_mask);
-//        return;
-//    }
-//
-//    int tile_size = (img->width + 2) / 60;
-//    draw_footprint_size_any(image_id, x, y, tile_size, color_mask, scale);
     ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-//    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
 }
 void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t color_mask) {
     const image_t *img = image_get(image_id);
@@ -807,28 +800,6 @@ void ImageDraw::isometric_from_drawtile(int image_id, int x, int y, color_t colo
 //        assets_load_unpacked_asset(image_id);
 //    }
     int tile_size = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    y -= FOOTPRINT_HALF_HEIGHT * (tile_size - 1);
-    int y_diff = img->height - FOOTPRINT_HEIGHT * tile_size;
-    y -= y_diff;
+    y += FOOTPRINT_HALF_HEIGHT * (tile_size + 1) - img->height;
     graphics_renderer()->draw_image(img, x, y, color_mask, 1.0f, false);
-//    draw_debug_tile_box(x, y, tile_size, tile_size);
-
-
-
-//    const image *img = image_get(image_id, 1);
-////    if (img->type != IMAGE_TYPE_ISOMETRIC) {
-////        if (img->type == IMAGE_TYPE_MOD)
-////            draw_modded_footprint(image_id, x, y, color_mask);
-////        else
-////            draw_footprint_size_any(image_id, x, y, 1, color_mask);
-////        return;
-////    }
-////
-//    int tile_size = (img->width + 2) / 60;
-////    x += 30 * (tile_size - 1);
-////    y -= 15 * (tile_size - 1);
-////    draw_footprint_size_any(image_id, x, y, tile_size, color_mask, scale);
-//    ImageDraw::img_generic(image_id, x, y, color_mask, scale);
-////    graphics_renderer()->draw_image(img, x, y, color_mask, scale);
-////    isometric(image_id, x, y, color_mask, scale);
 }
