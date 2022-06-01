@@ -12,7 +12,7 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 void draw_empty_tile(pixel_coordinate pixel, map_point point);
 
-void draw_footprint(pixel_coordinate pixel, map_point point);
+void draw_buildings(pixel_coordinate pixel, map_point point);
 //void draw_top(pixel_coordinate pixel, map_point point);
 void draw_ornaments(pixel_coordinate pixel, map_point point);
 void draw_figures(pixel_coordinate pixel, map_point point);

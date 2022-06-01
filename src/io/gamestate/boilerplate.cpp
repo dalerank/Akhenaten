@@ -177,6 +177,7 @@ static void post_load() {
 
     // camera
 //    city_view_camera_position_refresh();
+//    city_view_refresh_viewport();
 
     // problems / overlays
     city_message_init_problem_areas();

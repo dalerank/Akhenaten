@@ -128,7 +128,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     if (!city_building_ghost_mark_deleting(tile)) {
 //        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint,
+                draw_buildings,
 //                draw_top,
                 draw_ornaments,
                 draw_figures);
@@ -139,7 +139,7 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
     } else {
 //        city_view_foreach_valid_map_tile(draw_footprint); // this needs to be done in a separate loop to avoid bleeding over figures
         city_view_foreach_valid_map_tile(
-                draw_footprint,
+                draw_buildings,
 //                deletion_draw_top,
                 deletion_draw_figures_animations,
                 draw_elevated_figures);

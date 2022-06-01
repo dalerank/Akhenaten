@@ -219,7 +219,7 @@ void draw_empty_tile(pixel_coordinate pixel, map_point point) {
 //        ImageDraw::isometric_from_drawtile(image_id_from_group(GROUP_TERRAIN_BLACK), pixel.x, pixel.y, 0);
 };
 
-void draw_footprint(pixel_coordinate pixel, map_point point) {
+void draw_buildings(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
@@ -338,7 +338,7 @@ void deletion_draw_figures_animations(pixel_coordinate pixel, map_point point) {
         ImageDraw::img_blended(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), x, y, COLOR_MASK_RED);
 
     if (map_property_is_draw_tile(grid_offset) && !should_draw_top_before_deletion(grid_offset))
-        draw_footprint(pixel, point);
+        draw_buildings(pixel, point);
 
     draw_figures(pixel, point);
     draw_ornaments(pixel, point);
@@ -503,7 +503,7 @@ void city_with_overlay_draw_building_top(pixel_coordinate pixel, map_point point
 
     if (get_city_overlay()->show_building(b))
 //        draw_top(pixel, point);
-        draw_footprint(pixel, point);
+        draw_buildings(pixel, point);
     else {
         int column_height = get_city_overlay()->get_column_height(b);
         if (column_height != NO_COLUMN) {
