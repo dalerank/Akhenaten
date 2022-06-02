@@ -82,7 +82,7 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
     }
 }
 static void setup_logging(void) {
-    log_file = file_open("augustus-log.txt", "wt");
+    log_file = file_open("ozymandias-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 static void teardown_logging(void) {

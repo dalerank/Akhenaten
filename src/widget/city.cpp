@@ -29,6 +29,7 @@
 #include "window/building_info.h"
 #include "window/city.h"
 #include "platform/renderer.h"
+#include "widget/city/figures_cached_draw.h"
 
 static struct {
     map_point current_tile;
@@ -41,6 +42,13 @@ void set_city_clip_rectangle(void) {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
+
+    // TODO?
+//    city_view_foreach_map_tile(draw_outside_map);
+//    int x;
+//    int y;
+//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
+//    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
 }
 
 static void update_zoom_level(void) {
@@ -113,12 +121,6 @@ void widget_city_draw_without_overlay(int selected_figure_id, pixel_coordinate *
             highlighted_formation = 0;
     }
     init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
-
-//    city_view_foreach_map_tile(draw_outside_map);
-//    int x;
-//    int y;
-//    city_view_get_camera_scrollable_viewspace_clip(&x, &y);
-//    graphics_set_clip_rectangle(x - 30, y, scenario_map_data()->width * 30 - 60, scenario_map_data()->height * 15 - 30);
 
     city_building_ghost_mark_deleting(tile);
     reset_tiledraw_caches();

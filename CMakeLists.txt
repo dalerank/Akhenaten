@@ -497,6 +497,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/tile_draw.cpp
+    ${PROJECT_SOURCE_DIR}/src/widget/city/figures_cached_draw.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/bridges.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/building_ghost.cpp
     ${PROJECT_SOURCE_DIR}/src/widget/city/ornaments.cpp

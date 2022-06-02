@@ -16,6 +16,7 @@
 #include "game/state.h"
 #include "ornaments.h"
 #include "graphics/view/lookup.h"
+#include "figures_cached_draw.h"
 
 static const int ADJACENT_OFFSETS_PH[2][4][7] = {
   {
@@ -215,11 +216,22 @@ void draw_flattened_footprint_building(const building *b, int x, int y, int imag
 
 /////////
 
-std::vector<map_point> cached_figuredraw_extra_points;
-std::vector<std::vector<figure*>> cached_figuredraw_arrays;
-void reset_tiledraw_caches() {
-    cached_figuredraw_extra_points.clear();
-    cached_figuredraw_arrays.clear();
+static bool USE_BLEEDING_CACHE = true;
+static void clip_between_rectangles(int *xOut, int *yOut, int *wOut, int *hOut,
+                                    int xA, int yA, int wA, int hA,
+                                    int xB, int yB, int wB, int hB) {
+    *xOut = (xA > xB) ? xA : xB;
+    *yOut = (yA > yB) ? yA : yB;
+    int x_end_A = (xA + wA);
+    int x_end_B = (xB + wB);
+    int x_end_Out = (x_end_A < x_end_B) ? x_end_A : x_end_B;
+    int y_end_A = (yA + hA);
+    int y_end_B = (yB + hB);
+    int y_end_Out = (y_end_A < y_end_B) ? y_end_A : y_end_B;
+    *wOut = x_end_Out - *xOut;
+    *hOut = y_end_Out - *yOut;
+    if (*wOut < 0) *wOut = 0;
+    if (*hOut < 0) *hOut = 0;
 }
 
 void draw_isometrics(pixel_coordinate pixel, map_point point) {
@@ -294,114 +306,6 @@ void draw_ornaments(pixel_coordinate pixel, map_point point) {
     // cuz it's too much stuff.
     draw_ornaments_and_animations(pixel, point);
 }
-
-static bool figure_is_bleeding_over_tile_below(pixel_coordinate pixel, figure *f) {
-    // test if the figure is bleeding over bottom tiles
-    pixel_coordinate adj = pixel;
-    f->adjust_pixel_offset(&adj);
-    adj.y += 3;
-    if (f->is(FIGURE_IMMIGRANT))
-        adj.y += 10;
-    else
-        adj.y += 3;
-
-    const image_t *img = image_get(f->sprite_image_id);
-//    int y_bottom = adj.y - img->animation.sprite_y_offset + img->height;
-//    int y_tile_center = pixel.y + HALF_TILE_HEIGHT_PIXELS;
-
-//    bool is_bleeding = y_bottom > y_tile_center;
-    bool is_bleeding = false;
-    int rel_dir = (8 + f->direction - city_view_orientation()) % 8;
-    switch (rel_dir) {
-        case 6:
-        case 7:
-        case 0:
-            is_bleeding = f->progress_on_tile >= 8;
-            break;
-        case 1:
-        case 5:
-            break;
-        default:
-            is_bleeding = f->progress_on_tile < 8;
-            break;
-    }
-
-    debug_draw_sprite_box(adj.x, adj.y, img, zoom_get_scale(), is_bleeding ? COLOR_RED : COLOR_GREEN);
-//    graphics_draw_line((adj.x - 15) * zoom_get_scale(), (adj.x + 15) * zoom_get_scale(), y_bottom * zoom_get_scale(), y_bottom * zoom_get_scale(), COLOR_RED);
-//    debug_draw_crosshair(adj.x * zoom_get_scale(), y_bottom * zoom_get_scale());
-//    debug_draw_crosshair((pixel.x + HALF_TILE_WIDTH_PIXELS) * zoom_get_scale(), y_tile_center * zoom_get_scale());
-
-    return is_bleeding;
-}
-static std::vector<figure*> *get_figure_cache_for_point(map_point point) {
-    for (int i = 0; i < cached_figuredraw_extra_points.size(); ++i) {
-        auto _point = cached_figuredraw_extra_points.at(i);
-        // point already in memory
-        if (_point == point)
-            return &cached_figuredraw_arrays.at(i);
-    }
-    return nullptr;
-}
-static void record_figure_over_tile(figure *f, map_point point) {
-    auto arr = get_figure_cache_for_point(point);
-    if (arr != nullptr) {
-        for (int i = 0; i < arr->size(); ++i) {
-            if (arr->at(i) == f) // make sure the figure is not already in the cache
-                return;
-        }
-        arr->push_back(f);
-    } else {
-        // no matching point found in memory, push a new one
-        std::vector<figure *> new_arr;
-        new_arr.push_back(f);
-        cached_figuredraw_arrays.push_back(new_arr);
-        cached_figuredraw_extra_points.push_back(point);
-    }
-}
-static void cache_figure(figure *f) {
-    map_point point = f->tile;
-//    int rel_dir = (8 + f->direction - city_view_orientation()) % 8;
-    switch (f->direction) {
-        case 0:
-        case 4:
-            // Y-axis aligned
-            record_figure_over_tile(f, f->tile.shifted(0, 1));
-            record_figure_over_tile(f, f->tile.shifted(0, -1));
-            break;
-        case 1:
-        case 5:
-            // horizontal movement
-            record_figure_over_tile(f, f->tile.shifted(-1, 1));
-            record_figure_over_tile(f, f->tile.shifted(1, -1));
-            break;
-        case 2:
-        case 6:
-            // X-axis aligned
-            record_figure_over_tile(f, f->tile.shifted(1, 0));
-            record_figure_over_tile(f, f->tile.shifted(-1, 0));
-            break;
-        case 3:
-        case 7:
-            record_figure_over_tile(f, f->tile.shifted(1, 1));
-            record_figure_over_tile(f, f->tile.shifted(-1, -1));
-            // vertical movement
-            break;
-    }
-    record_figure_over_tile(f, f->previous_tile);
-}
-void cache_figures(pixel_coordinate pixel, map_point point) {
-    int grid_offset = point.grid_offset();
-    int figure_id = map_figure_at(grid_offset);
-    while (figure_id) {
-        figure *f = figure_get(figure_id);
-        if (!f->is_ghost)
-            cache_figure(f);
-        if (figure_id != f->next_figure)
-            figure_id = f->next_figure;
-        else
-            figure_id = 0;
-    }
-}
 void draw_figures(pixel_coordinate pixel, map_point point) {
     int grid_offset = point.grid_offset();
     int figure_id = map_figure_at(grid_offset);
@@ -421,16 +325,32 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
     }
 
     /// SECOND DRAW -- DRAW FIGURES FROM CACHE TO BE DRAWN ON TOP OF OTHER TILES
-    auto arr = get_figure_cache_for_point(point);
-    if (arr == nullptr || arr->size() == 0)
+    if (!USE_BLEEDING_CACHE)
         return;
-    for (int i = 0; i < arr->size(); ++i) {
-        graphics_set_clip_rectangle(
-                pixel.x * zoom_get_scale(), pixel.y * zoom_get_scale(),
-                TILE_WIDTH_PIXELS * zoom_get_scale(), TILE_HEIGHT_PIXELS * zoom_get_scale());
+    auto cache = get_figure_cache_for_tile(point);
+    if (cache == nullptr || cache->num_figures == 0)
+        return;
 
-        figure *f = arr->at(i);
-        pixel_coordinate ghost_pixel = mappoint_to_pixel(f->tile);
+    // city zoom & viewport params
+    float scale = zoom_get_scale();
+    int viewport_x, viewport_y, viewport_width, viewport_height;
+    city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
+
+    // record tile's rendering coords
+    int clip_x, clip_y, clip_width, clip_height;
+    clip_between_rectangles(&clip_x, &clip_y, &clip_width, &clip_height,
+                            pixel.x, pixel.y, TILE_WIDTH_PIXELS, TILE_HEIGHT_PIXELS,
+                            viewport_x / scale, viewport_y / scale, viewport_width / scale, viewport_height / scale);
+
+    // set rendering clip around the current tile
+    if (clip_width == 0 || clip_height == 0)
+        return;
+    graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
+//    graphics_fill_rect(0,0,10000,10000,COLOR_BLACK); // for debugging
+    for (int i = 0; i < cache->num_figures; ++i) {
+        figure_id = cache->figures[i].id;
+        figure *f = figure_get(figure_id);
+        pixel_coordinate ghost_pixel = cache->figures[i].pixel;
         if (!f->is_ghost) {
             if (!draw_context.selected_figure_id) {
                 int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
@@ -438,9 +358,9 @@ void draw_figures(pixel_coordinate pixel, map_point point) {
             } else if (figure_id == draw_context.selected_figure_id)
                 f->city_draw_figure(ghost_pixel, 0, draw_context.selected_figure_coord);
         }
-
-        set_city_clip_rectangle();
     }
+    // reset rendering clip
+    set_city_clip_rectangle();
 }
 
 void draw_isometrics_overlay(pixel_coordinate pixel, map_point point) {
@@ -497,21 +417,37 @@ void draw_figures_overlay(pixel_coordinate pixel, map_point point) {
     }
 
     /// SECOND DRAW -- DRAW FIGURES FROM CACHE TO BE DRAWN ON TOP OF OTHER TILES
-    auto arr = get_figure_cache_for_point(point);
-    if (arr == nullptr || arr->size() == 0)
+    if (!USE_BLEEDING_CACHE)
         return;
-    for (int i = 0; i < arr->size(); ++i) {
-        graphics_set_clip_rectangle(
-                pixel.x * zoom_get_scale(), pixel.y * zoom_get_scale(),
-                TILE_WIDTH_PIXELS * zoom_get_scale(), TILE_HEIGHT_PIXELS * zoom_get_scale());
+    auto cache = get_figure_cache_for_tile(point);
+    if (cache == nullptr || cache->num_figures == 0)
+        return;
 
-        figure *f = arr->at(i);
-        pixel_coordinate ghost_pixel = mappoint_to_pixel(f->tile);
+    // city zoom & viewport params
+    float scale = zoom_get_scale();
+    int viewport_x, viewport_y, viewport_width, viewport_height;
+    city_view_get_viewport(&viewport_x, &viewport_y, &viewport_width, &viewport_height);
+
+    // record tile's rendering coords
+    int clip_x, clip_y, clip_width, clip_height;
+    clip_between_rectangles(&clip_x, &clip_y, &clip_width, &clip_height,
+                            pixel.x, pixel.y, TILE_WIDTH_PIXELS, TILE_HEIGHT_PIXELS,
+                            viewport_x / scale, viewport_y / scale, viewport_width / scale, viewport_height / scale);
+
+    // set rendering clip around the current tile
+    if (clip_width == 0 || clip_height == 0)
+        return;
+    graphics_set_clip_rectangle(scale * clip_x, scale * clip_y, scale * clip_width, scale * clip_height);
+//    graphics_fill_rect(0,0,10000,10000,COLOR_BLACK); // for debugging
+    for (int i = 0; i < cache->num_figures; ++i) {
+        figure_id = cache->figures[i].id;
+        figure *f = figure_get(figure_id);
+        pixel_coordinate ghost_pixel = cache->figures[i].pixel;
         if (!f->is_ghost && get_city_overlay()->show_figure(f))
             f->city_draw_figure(pixel, 0);
-
-        set_city_clip_rectangle();
     }
+    // reset rendering clip
+    set_city_clip_rectangle();
 }
 
 static void draw_overlay_column(int x, int y, int height, int column_style) {
